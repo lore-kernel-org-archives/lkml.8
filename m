@@ -2,85 +2,111 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84124C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CD4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538DB206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985EE20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585554273;
+	bh=+A3gTkI/ug5ftQTazxn0GQRu8am1syO1/fPzFWLAqzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aIe+PT9su7Sc8uAsPnU2iY29UjmOTIclhpPsA9MN81HRhjbk0EtLuE5/LxyCfpfZL
+	 ewTUdUPW/IEJ9Iy9NuKE3OG2VPo96MShlbh6HVxJTDQ3RDg38UFkZnjtpwUi6sevS6
+	 w0GrVDEPiawHkbO3Hfz0iZ5JIPS//c6pOesYiCnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbgC3HoO (ORCPT
+        id S1729559AbgC3Hoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:44:14 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:50258 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgC3HoO (ORCPT
+        Mon, 30 Mar 2020 03:44:32 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40909 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728766AbgC3Hob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:44:14 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jIp5V-005JU9-00; Mon, 30 Mar 2020 09:44:01 +0200
-Message-ID: <2cee72779294550a3ad143146283745b5cccb5fc.camel@sipsolutions.net>
-Subject: Re: [PATCH] UML: add support for KASAN under x86_64
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Patricia Alfonso <trishalfonso@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        anton.ivanov@cambridgegreys.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Date:   Mon, 30 Mar 2020 09:43:58 +0200
-In-Reply-To: <CACT4Y+YzM5bwvJ=yryrz1_y=uh=NX+2PNu4pLFaqQ2BMS39Fdg@mail.gmail.com> (sfid-20200320_161845_514535_9A0BEF71)
-References: <20200226004608.8128-1-trishalfonso@google.com>
-         <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com>
-         <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
-         <674ad16d7de34db7b562a08b971bdde179158902.camel@sipsolutions.net>
-         <CACT4Y+bdxmRmr57JO_k0whhnT2BqcSA=Jwa5M6=9wdyOryv6Ug@mail.gmail.com>
-         <ded22d68e623d2663c96a0e1c81d660b9da747bc.camel@sipsolutions.net>
-         <CACT4Y+YzM5bwvJ=yryrz1_y=uh=NX+2PNu4pLFaqQ2BMS39Fdg@mail.gmail.com>
-         (sfid-20200320_161845_514535_9A0BEF71)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 30 Mar 2020 03:44:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a81so20714147wmf.5;
+        Mon, 30 Mar 2020 00:44:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+lQxT4rOXYS7igvmWe+aSLt8H9b/hooDSaFj9dpIoBo=;
+        b=sXB3Axt3bNhLZM4yzWIsP8VuxlH6kiWXUpjSZd93e6MR4/ML7UYW7UltVKYUH0rV93
+         Ev80J0qi5a9JpLUExrvqq0XFdw3GwLqk2T+quHuw55eio69i1xnbNpyF2bThds3+jNEb
+         V2U+nBHDuWacYhv5s88y8Ozcy49+oJ7w1Eky0yRA4GPdb/64PCT1D4oqPAic/4FD5e9G
+         WH1DzkV82oO+RLuzoLZIbfBIklx657PvJGkhEotRL1TIezZHCCTTUV3E+VmysclcefZk
+         2iSbjt27A+/KsuAr6ebt0YeZVI66NiG4cyoPNofKmHpQigs5gU9y/9eJoQiOwC7dVsh1
+         FhDA==
+X-Gm-Message-State: ANhLgQ2Ct3curkqzdWT/eevI4jDwwpVc1+sK4Schy/AqqRtb7EWn4Ke+
+        J3/9SwzFGjBAZRXMM7dorDQ=
+X-Google-Smtp-Source: ADFU+vv5zPfvR6n12LY62/oTKOim3ahnJoTy88I5ftZ61ckUgrrKlF39ljyabbjxRYuNzhw3oecv9w==
+X-Received: by 2002:a7b:cc06:: with SMTP id f6mr11831239wmh.65.1585554268222;
+        Mon, 30 Mar 2020 00:44:28 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id p16sm20037964wmi.40.2020.03.30.00.44.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 00:44:27 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 09:44:26 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20200330074426.GB14243@dhcp22.suse.cz>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200329001924.GS3039@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200329001924.GS3039@MiWiFi-R3L-srv>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-20 at 16:18 +0100, Dmitry Vyukov wrote:
+On Sun 29-03-20 08:19:24, Baoquan He wrote:
+> On 03/28/20 at 11:31am, Hoan Tran wrote:
+> > In NUMA layout which nodes have memory ranges that span across other nodes,
+> > the mm driver can detect the memory node id incorrectly.
+> > 
+> > For example, with layout below
+> > Node 0 address: 0000 xxxx 0000 xxxx
+> > Node 1 address: xxxx 1111 xxxx 1111
 > 
-> > Wait ... Now you say 0x7fbfffc000, but that is almost fine? I think you
-> > confused the values - because I see, on userspace, the following:
-> 
-> Oh, sorry, I copy-pasted wrong number. I meant 0x7fff8000. 
+> Sorry, I read this example several times, but still don't get what it
+> means. Can it be given with real hex number address as an exmaple? I
+> mean just using the memory layout you have seen from some systems. The
+> change looks interesting though.
 
-Right, ok.
-
-> Then I would expect 0x1000 0000 0000 to work, but you say it doesn't...
-
-So it just occurred to me - as I was mentioning this whole thing to
-Richard - that there's probably somewhere some check about whether some
-space is userspace or not.
-
-I'm beginning to think that we shouldn't just map this outside of the
-kernel memory system, but properly treat it as part of the memory that's
-inside. And also use KASAN_VMALLOC.
-
-We can probably still have it at 0x7fff8000, just need to make sure we
-actually map it? I tried with vm_area_add_early() but it didn't really
-work once you have vmalloc() stuff...
-
-I dunno.
-
-johannes
-
-
+Does this make it more clear?
+           physical address range and its node associaion
+         [0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1]
+-- 
+Michal Hocko
+SUSE Labs
