@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAF2C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84881C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C16B2206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB55206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aN8OnYUQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxyIomrI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgC3Mhm (ORCPT
+        id S1730327AbgC3Mhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:37:42 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40606 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730248AbgC3MhR (ORCPT
+        Mon, 30 Mar 2020 08:37:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50874 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730113AbgC3MhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:37:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id u10so21399034wro.7;
-        Mon, 30 Mar 2020 05:37:17 -0700 (PDT)
+        Mon, 30 Mar 2020 08:37:14 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t128so1345279wma.0;
+        Mon, 30 Mar 2020 05:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VUsSnudtXdVgGkOCyPuKO1wMS8K2vY7BbsC18XQpp2g=;
-        b=aN8OnYUQaUjPiOUuMlAxIGuQ6G3wHwnuIjlY3p4OSIY1c2DN9n8SLU4fAqlo0E7IN8
-         RI1EPry+Caixn7t7rv0ssg4EQv5zbdwoU2deXDjR2z0/uET5Y6rWC3fckZYvlOprVLl+
-         0vTTBYx3WlPCPZbBmwKOGbzIzq9VN0V1NpQLuvpYPNeK9y9MQLJuTC+YGdCN1+mr7Fs0
-         8GSIreW082aAxa//gqq9ri5laowIC+G9PgaexacIXU2IyIFEu9p4GHMUHwvS6j8vBBm9
-         UA/Pj0v7PntuudvdI3pexhOKTrxoF1pSOe5kzudbh0QHQKPxVJU3RGYB6gf6mqS3KijS
-         AD5A==
+        bh=ts5vXUGa6M9Ix7l/jt04Pf2FXgkCXY+/E2UqD108cKQ=;
+        b=pxyIomrIpX1uLyk4BVT+G639xGIMh/FNDG2MSWLObXyunVFpQ6kqa/FjegVc1YBB/+
+         lcRKT13+DA16cTPzoGrEh6RdUwoT1lQlclobu9j962ndxNJwhwNnfJIIf0F32hhUguE/
+         u4WdMzgtyXfntDKygG0DvU5S92RxYRS7suuPYnGXg1llVC58eEbTw4rgVseG28vjuPDb
+         6mV74xSqfKaydHoBpslOQVX9vAthvsAUOSBaJZyjNtVQNSTs77+7UBLFZukJWcZRn4R6
+         E0nqE4sj3nmaBfvg8bhUlXVJkaKe4IrpKSVUhLdgrbRlTLu8/RlyyMUbK8WNogCJKouW
+         07Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=VUsSnudtXdVgGkOCyPuKO1wMS8K2vY7BbsC18XQpp2g=;
-        b=rhC4BEKzRtx8/lGCmVoGY8XJtXaHn66iJ9ODg1WbQ4ZgZaOLTELK69LDOG0x9qph6X
-         lHF5hwnoO1vmDOTDPwrf7VapzzuxFO9qmn/fnPQuqvkpS5L9nYKjabaKkWMMnNsMh6UZ
-         Xs5OCQ2AMNAsDBYdGyZBfr2Ff833k+QOTI/5gpIxPI2+dk/IPotGfF2wVcKLHyIx43sJ
-         OT+CtXVSrg+3XSOIyibmGYBVfCCypRT6J4iObT6i3cB6zfJZteRA8Y2nohS+Cs7Hy9fk
-         OdhjF1lAxboV8wPVItpUUPZn/78jPi8FZ61rX7Vrj/rhaw7X9iOH0Wl5EBwD5buqydhQ
-         F5rw==
-X-Gm-Message-State: ANhLgQ2jWfuyEAkPj3sNT8To6fqsAcdGF8x3p2XaU4IZgawml4XjX67r
-        2O9eJLiBhsLCsSCZYX3gvDS4u2rn
-X-Google-Smtp-Source: ADFU+vsunku2VDvNNmS9tn9ToK7xiL/0rgKMQfjzVLsgNC6aM3tdFVaOg6Bqvgq3FFCAf7Le+PPUiw==
-X-Received: by 2002:a05:6000:4d:: with SMTP id k13mr14908570wrx.356.1585571836590;
-        Mon, 30 Mar 2020 05:37:16 -0700 (PDT)
+        bh=ts5vXUGa6M9Ix7l/jt04Pf2FXgkCXY+/E2UqD108cKQ=;
+        b=r0hmx2fao0h6LsuEGTSivWPLXt0FVfVS6pj4LaiblC0GT9nIP9j0MncsHgR2+5eI51
+         VXPoeCfVHkSOiKqci1p4GHum+6R9HVhA69YEffPno/lgocy/ejtvmdE+LJY6umqSpSmV
+         ZYEnREmLRveNgF8VZA01viiMZWttrfIrFL3+TgCq1EpPZwDjklnqDxz405ymFyySiOQc
+         7lZgDZ8btTPgFDO2dqXUvOMHZNX2eC7fegC8n/ixIu7vAspZAxiJiqFH38z0BgK+t/hV
+         j3AkX3Guo6Q00541p3d0pMl/roEkbaDDhj1y/v94wUptGHgE60+limsVjAltRJDkmlNS
+         ZX1w==
+X-Gm-Message-State: ANhLgQ1rtkLtw+8ymarxjJw2LqlBZKgalk/2ljMdSth/6DFNhnJpZA8T
+        BGbj2yizkotlSHyi6qM/S+4=
+X-Google-Smtp-Source: ADFU+vumB110DIIq/yWaOVwDzU+J8UzUvYmpJiCR4iyNBAhqx4VoL7pTeHyefWuFuZBm7/E10wIg4A==
+X-Received: by 2002:a1c:62c5:: with SMTP id w188mr13369369wmb.112.1585571832661;
+        Mon, 30 Mar 2020 05:37:12 -0700 (PDT)
 Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id h5sm21671884wro.83.2020.03.30.05.37.16
+        by smtp.gmail.com with ESMTPSA id v129sm18359047wmg.1.2020.03.30.05.37.11
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 05:37:16 -0700 (PDT)
+        Mon, 30 Mar 2020 05:37:12 -0700 (PDT)
 From:   Wei Yang <richard.weiyang@gmail.com>
 To:     willy@infradead.org
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH 7/9] XArray: the NULL xa_node condition is handled in xas_top
-Date:   Mon, 30 Mar 2020 12:36:41 +0000
-Message-Id: <20200330123643.17120-8-richard.weiyang@gmail.com>
+Subject: [PATCH 3/9] XArray: handle a NULL head by itself
+Date:   Mon, 30 Mar 2020 12:36:37 +0000
+Message-Id: <20200330123643.17120-4-richard.weiyang@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200330123643.17120-1-richard.weiyang@gmail.com>
 References: <20200330123643.17120-1-richard.weiyang@gmail.com>
@@ -71,39 +71,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From the last if/else check, it handles the NULL/non-NULL xa_node
-mutually exclusively. While the NULL xa_node case is handled in the
-first condition xas_top().
+For a NULL head, xas_expand() return the proper shift directly without
+other handling.
 
-Just remove the redundant handling for NULL xa_node.
+Let's take this out to emphasize it is handled specially.
 
 Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
 ---
- lib/xarray.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ lib/xarray.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/lib/xarray.c b/lib/xarray.c
-index 0c5b44def3aa..82570bbbf2a5 100644
+index 6454cf3f5b4c..1a092c87fca5 100644
 --- a/lib/xarray.c
 +++ b/lib/xarray.c
-@@ -650,16 +650,12 @@ static void *xas_create(struct xa_state *xas, bool allow_root)
- 		slot = &xa->xa_head;
- 	} else if (xas_error(xas)) {
- 		return NULL;
--	} else if (node) {
-+	} else {
- 		unsigned int offset = xas->xa_offset;
+@@ -559,9 +559,10 @@ static int xas_expand(struct xa_state *xas, void *head)
+ 	unsigned int shift = 0;
+ 	unsigned long max = xas_max(xas);
  
- 		shift = node->shift;
- 		entry = xa_entry_locked(xa, node, offset);
- 		slot = &node->slots[offset];
--	} else {
--		shift = 0;
--		entry = xa_head_locked(xa);
--		slot = &xa->xa_head;
+-	if (!head) {
++	if (!head)
+ 		return roundup(fls_long(max), XA_CHUNK_SHIFT);
+-	} else if (xa_is_node(head)) {
++
++	if (xa_is_node(head)) {
+ 		node = xa_to_node(head);
+ 		shift = node->shift + XA_CHUNK_SHIFT;
  	}
- 
- 	while (shift > order) {
 -- 
 2.23.0
 
