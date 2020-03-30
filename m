@@ -2,103 +2,144 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10D7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6EEC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC2920774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C472320776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:02:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyasPbmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgC3HCO (ORCPT
+        id S1729410AbgC3HCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:02:14 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47063 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729378AbgC3HCN (ORCPT
+        Mon, 30 Mar 2020 03:02:43 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38753 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729067AbgC3HCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:02:13 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jIoQx-0000IP-Kx; Mon, 30 Mar 2020 09:02:07 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jIoQv-0007Uu-Bq; Mon, 30 Mar 2020 09:02:05 +0200
-Date:   Mon, 30 Mar 2020 09:02:05 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Christian Herber <christian.herber@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marek Vasut <marex@denx.de>, netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
- TJA11xx
-Message-ID: <20200330070205.pi5oaju5kjzjms5s@pengutronix.de>
-References: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
- <20200323151423.GA32387@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200323151423.GA32387@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:00:16 up 135 days, 22:18, 153 users,  load average: 0.23, 0.08,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 30 Mar 2020 03:02:43 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w3so6360618plz.5;
+        Mon, 30 Mar 2020 00:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WSdIM68tHzXnLZUsgjyCMVOpl5rBtPh7gWtcNiSwSsk=;
+        b=QyasPbmmPxerMFArkA1gDdpKEP41IocDlkn9N7Jc+iF5d15WDnjeT283rEGTaE2ctJ
+         r/dZwD/O9knVv8XQnyUroAALQYsBYDAstv06HRCErgGsFIxdw97NOAP/JR+v1Y6hgSWw
+         QigDXiODhqBMco9nlVLVdPpiV3SubitgfXAf8Vql1A2F0yVJyvt9xDaf+WYpWB1aNEuq
+         MMl+1JhZXKWMNPX7hpv6uHV8t+uKD9q5/coDf9i1LyTUJvGUqquxMqi4ROJfWEsgjzIT
+         n0S5hkjoRVwP2n1LLNPyZk6jB4mY4DnYTgIjLV3thwdZ+OuVz3+OMo+hKwJRVUEH0Pm7
+         ymLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WSdIM68tHzXnLZUsgjyCMVOpl5rBtPh7gWtcNiSwSsk=;
+        b=JzovIn57/i4DYu2V+kJCBchYa7ufeuaz8eiTSVqEspa1BpKQ/fbpg7AhFu7rXTLNsp
+         LdNzqjTDR6Z0k0A1qX+ScQmAhcwjgYMweqjPtxhCpTSeRnzF19Fi9RPWia/BQrgbS5WC
+         oaeVexRVCBgZxlU72+8Ppvg8FvmVMxNG5Uy2hdm6V4YqsblYvBpPeJTpqLhZdVpiN6Da
+         3rgne3bVe97Ezg7vTciwSE8O1NdTTSL7lYiLDwPxAXj7osTlECK5JrsCRXzxxpihfN7W
+         wCHR8yvZqRN/blhfZOBBQolSP/ana70ce3TqlGwveAC7BaGaclkywUYhzlJiaCQZSOX9
+         70Fg==
+X-Gm-Message-State: ANhLgQ1uhOhSIIq3cVi+lDYhJvDETnojRVERzawE9mYWou9L5iSskGfw
+        EH3uguXf6TfErjf6BIGsjII=
+X-Google-Smtp-Source: ADFU+vsD6jXFSfAjV+dy/g3D8rHYB80TTTxdHjXDxn+8JmS6ZIz0amKobPYbCB+UU/ax01VI6cMnHA==
+X-Received: by 2002:a17:902:ee93:: with SMTP id a19mr11574832pld.258.1585551762617;
+        Mon, 30 Mar 2020 00:02:42 -0700 (PDT)
+Received: from localhost.localdomain ([2401:e180:8810:336b:8876:e9fa:cdda:cda2])
+        by smtp.gmail.com with ESMTPSA id r14sm9566861pjj.48.2020.03.30.00.02.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 30 Mar 2020 00:02:42 -0700 (PDT)
+From:   Johnny Chuang <johnny.chuang.emc@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Rob Schonberger <robsc@google.com>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>
+Cc:     James Chen <james.chen@emc.com.tw>,
+        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
+        Paul Liang <paul.liang@emc.com.tw>,
+        Jeff Chuang <jeff.chuang@emc.com.tw>
+Subject: [PATCH v2] Input: elants_i2c - support palm detection
+Date:   Mon, 30 Mar 2020 15:02:36 +0800
+Message-Id: <1585551756-29066-1-git-send-email-johnny.chuang.emc@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Johnny Chuang <johnny.chuang@emc.com.tw>
 
-On Mon, Mar 23, 2020 at 04:14:23PM +0100, Andrew Lunn wrote:
-> > Yes, it is one device with two address. This is if you call the entire IC a device. If you look at it from a PHY perspective, it is two devices with 1 address.
-> > If you just look at it as a single device, it gets difficult to add PHY specific properties in the future, e.g. master/slave selection.
-> 
-> > In my opinion its important to have some kind of container for the
-> > entire IC, but likewise for the individual PHYs.
-> 
-> Yes, we need some sort of representation of two devices.
-> 
-> Logically, the two PHYs are on the same MDIO bus, so you could have
-> two nodes on the main bus.
-> 
-> Or you consider the secondary PHY as being on an internal MDIO bus
-> which is transparently bridged to the main bus. This is what was
-> proposed in the last patchset.
-> 
-> Because this bridge is transparent, the rest of the PHY/MDIO framework
-> has no idea about it. So i prefer that we keep with two PHY nodes on
-> the main bus. But i still think we need the master PHY to register the
-> secondary PHY, due to the missing PHY ID, and the other constrains
-> like resets which the master PHY has to handle.
+Elan define finger/palm detection on the least significant bit of byte 33.
+The default value is 1 for all firmwares, which report as MT_TOOL_FINGER.
+If firmware support palm detection, the bit will change to 0 and
+report as MT_TOOL_PALM when firmware detecting palm.
 
-this discussion is stalled.
-What is the final decision? What is the proper and mainlinable way?
+Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+---
+Changes in v2:
+	- Modify MT_TOOL_MAX to MT_TOOL_PALM
 
-Regards,
-Oleksij
---
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+ drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index 14c577c..93211fe 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -73,6 +73,7 @@
+ #define FW_POS_STATE		1
+ #define FW_POS_TOTAL		2
+ #define FW_POS_XY		3
++#define FW_POS_TOOL_TYPE	33
+ #define FW_POS_CHECKSUM		34
+ #define FW_POS_WIDTH		35
+ #define FW_POS_PRESSURE		45
+@@ -842,6 +843,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+ {
+ 	struct input_dev *input = ts->input;
+ 	unsigned int n_fingers;
++	unsigned int tool_type;
+ 	u16 finger_state;
+ 	int i;
+ 
+@@ -852,6 +854,12 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+ 	dev_dbg(&ts->client->dev,
+ 		"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
+ 
++	/* Note: all fingers have the same tool type */
++	if (buf[FW_POS_TOOL_TYPE] & 0x01)
++		tool_type = MT_TOOL_FINGER;
++	else
++		tool_type = MT_TOOL_PALM;
++
+ 	for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
+ 		if (finger_state & 1) {
+ 			unsigned int x, y, p, w;
+@@ -867,7 +875,7 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+ 				i, x, y, p, w);
+ 
+ 			input_mt_slot(input, i);
+-			input_mt_report_slot_state(input, MT_TOOL_FINGER, true);
++			input_mt_report_slot_state(input, tool_type, true);
+ 			input_event(input, EV_ABS, ABS_MT_POSITION_X, x);
+ 			input_event(input, EV_ABS, ABS_MT_POSITION_Y, y);
+ 			input_event(input, EV_ABS, ABS_MT_PRESSURE, p);
+@@ -1307,6 +1315,7 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 	input_set_abs_params(ts->input, ABS_MT_POSITION_Y, 0, ts->y_max, 0, 0);
+ 	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
+ 	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
++	input_set_abs_params(ts->input, ABS_MT_TOOL_TYPE, 0, MT_TOOL_PALM, 0, 0);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
+ 	input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, 1);
+-- 
+2.7.4
+
