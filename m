@@ -2,85 +2,165 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EB6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFBBC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F39A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:34:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTKn3CoZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3293420774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585557494;
+	bh=BkHx8NFiQ75YGJGHV3YLzUBEEQCGCQ6ZgXds5RE21G4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tvPdq0IAwyRAqgrdzgoGsV0DUlDH71TVsfsjhvBkkX1kLqgsAY2x7eQRu/agBQ2xR
+	 EmoCBoL48e61hdeqVLfRJ/txFi0H4+uzogGNLW0tboBUOLctooOuD9eGkzKqgTJbot
+	 ybWsKWUjgd7e1uNGMJZ3k6Os0GIoZaZawze4Pz70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgC3Ie6 (ORCPT
+        id S1729687AbgC3IiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:34:58 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:34520 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729594AbgC3Ie5 (ORCPT
+        Mon, 30 Mar 2020 04:38:12 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:56073 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgC3IiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:34:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585557296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VI4VJLvwA2Wnz1xcO7Y+Io0RjGUfdGgCzJ2iSp2r2DU=;
-        b=iTKn3CoZXapbq49bu6BdujZ63BNuVMTASDQi53Sb/KRfXsKAnlLtu0w2LLe86R8Fuk4o8m
-        SDO4NDDL7a8iWmTT5RBKLafolQ/s6rBNxbXw/o4bR79jYkGnJDhlZXu9dBIzheT16N74Rc
-        2sS3JH3vNhwWdVYpCRhJwHMsRC/CMXo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-VzhFc2_pNWWc7DodrKjNHA-1; Mon, 30 Mar 2020 04:34:52 -0400
-X-MC-Unique: VzhFc2_pNWWc7DodrKjNHA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6191E8010C8;
-        Mon, 30 Mar 2020 08:34:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.36])
-        by smtp.corp.redhat.com (Postfix) with SMTP id ACE89100EBAF;
-        Mon, 30 Mar 2020 08:34:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 30 Mar 2020 10:34:50 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 10:34:46 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Adam Zabrocki <pi3@pi3.com.pl>, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>
-Subject: Re: Curiosity around 'exec_id' and some problems associated with it
-Message-ID: <20200330083446.GA13522@redhat.com>
-References: <20200324215049.GA3710@pi3.com.pl>
- <202003291528.730A329@keescook>
+        Mon, 30 Mar 2020 04:38:12 -0400
+X-Greylist: delayed 5280 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 04:38:09 EDT
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 02U8bmN8026273;
+        Mon, 30 Mar 2020 17:37:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 02U8bmN8026273
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585557470;
+        bh=PxRmu3HuDIYTqEJxiJ5PqE2LXmQuo3D9zlavzY5jVI4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=brVEPKJScKZunXMPy14SQD8gmdtXfD/Z7CL8ZRWvjqvg8UYOEXDjY45m6LQp+Upry
+         SgIqRIt+Vbfvxsnbg1Sa4ESbah6Ht4e+ygLsb2zMtFxzxi6m+CL+3akLM9W4IRUtrC
+         8IrkWOugyFCF6k+q9DWaJ/RylMYkLVAXmcO1Y053y79in1DJ1SYDKl6QryZcJvymZW
+         zhUI92s1QDExgPzlgqMqS+2VzRW+Hf/0CueUJkv89pUXdRGkEy/yT1U57PQSLpZHL5
+         dpuemg5XzFyFNtnhwxT9TEaThfuk/wESfJfRmQy4YDPJPK/eWz1pRIvn+23Xa8wREx
+         iiOBT5PkS+9Hg==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id r47so5951861uad.11;
+        Mon, 30 Mar 2020 01:37:49 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYfI1t4jOABvMJbBeheO5K31RVjKrp+v3PMdlyhGrfyx/pJ5lj8
+        56rX/6bnMc6mi60tJtnMdm1005lbsmAaPgRPoO8=
+X-Google-Smtp-Source: APiQypJeTOypTow5s/orWLiqA+luxDBNhpwR1xE86uZ7tA8NnJnWdBsJgIswlbl89EaZoapGrF/J2WDHqcRU1fH6V1M=
+X-Received: by 2002:a9f:28c5:: with SMTP id d63mr6911883uad.25.1585557468135;
+ Mon, 30 Mar 2020 01:37:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003291528.730A329@keescook>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-5-robh@kernel.org>
+ <CAK7LNARJn4uugHxcjK+WOWBs0gPVZQsCu4y6M8hkNK1U5FehRA@mail.gmail.com>
+In-Reply-To: <CAK7LNARJn4uugHxcjK+WOWBs0gPVZQsCu4y6M8hkNK1U5FehRA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 30 Mar 2020 17:37:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
+Message-ID: <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: Add missing 'additionalProperties: false'
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/29, Kees Cook wrote:
+Hi Rob,
+
+On Mon, Mar 30, 2020 at 4:09 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> On Tue, Mar 24, 2020 at 10:50:49PM +0100, Adam Zabrocki wrote:
+> On Thu, Mar 26, 2020 at 7:06 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > In short, if you hold the file descriptor open over an execve() (e.g. share it
-> > with child) the old VM is preserved (refcounted) and might be never released.
-> > Essentially, mother process' VM will be still in memory (and pointer to it is
-> > valid) even if the mother process passed an execve().
+> > Setting 'additionalProperties: false' is frequently omitted, but is
+> > important in order to check that there aren't extra undocumented
+> > properties in a binding.
+> >
+> > Ideally, we'd just add this automatically and make this the default, but
+> > there's some cases where it doesn't work. For example, if a common
+> > schema is referenced, then properties in the common schema aren't part
+> > of what's considered for 'additionalProperties'. Also, sometimes there
+> > are bus specific properties such as 'spi-max-frequency' that go into
+> > bus child nodes, but aren't defined in the child node's schema.
+> >
+> > So let's stick with the json-schema defined default and add
+> > 'additionalProperties: false' where needed. This will be a continual
+> > review comment and game of wack-a-mole.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+>
+>
+> >  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 2 ++
+>
+>
+> You may have already queue this up, but just in case.
+>
+> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-This was true after e268337dfe26dfc7efd422a804dbb27977a3cccc, but please see
-6d08f2c7139790c ("proc: make sure mem_open() doesn't pin the target's memory"),
-iir it was merged soon after the 1st commit.
 
-Oleg.
 
+I take back Ack for socionext,uniphier-gpio.yaml
+
+
+
+Now "make dt_binding_check" produces a new warning.
+
+gpio@55000000: 'interrupt-parent' does not match any of the regexes:
+'pinctrl-[0-9]+'
+
+
+This binding uses 'interrupt-parent'
+without 'interrupts'.
+
+Instead, the mapping of the interrupt numbers
+is specified by the vendor-specific property
+socionext,interrupt-ranges
+
+
+
+I cannot add   "interrupt-parent: true" because
+dt-schema/meta-schemas/interrupts.yaml
+has "interrupt-parent: false".
+
+
+Is there any solution?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
