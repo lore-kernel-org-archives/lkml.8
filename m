@@ -2,185 +2,193 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A462DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E431C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBFA206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrLDXXXt"
+	by mail.kernel.org (Postfix) with ESMTP id 5E49D206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585604152;
+	bh=aiIETxsRU9cWHGPKABH0F6Ne4u49MEXFd7rXnrdkb7o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=KaAcyU0MmCOgJNSIufjO6E5OHdEQEsVj/lWGntOdsAwXrnbxE/FtmUJqNfPkaUfql
+	 p3AR3Wa+FTLqYtSx2sKthCL0ibDMLffDmCu1f6wb6kiSwARiJ2iXR/mCkfqhAY0/yR
+	 lwLUlYxUEtPtgpzLus9ZpnwWiz8raVEXgMN7PeZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgC3VeK (ORCPT
+        id S1729111AbgC3Vfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:34:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39417 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728537AbgC3VeJ (ORCPT
+        Mon, 30 Mar 2020 17:35:51 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32842 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbgC3Vfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:34:09 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x11so19825303otp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:34:09 -0700 (PDT)
+        Mon, 30 Mar 2020 17:35:51 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f20so19820652ljm.0;
+        Mon, 30 Mar 2020 14:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eJ9iVLSHIFSUq96XznsAAHwNQ6GF7Gxs04ont8jFwbk=;
-        b=HrLDXXXtUGChAkqyq9OS96wJHHa21T4l9IWr8hwl9TuYETxy7KpV7d5MTDBv4LQKAX
-         5cfg0yjF5bynK1UDrwY8X2zpOQg6c+t90L2LQeuGPByXV1U9tZYT7Y5SfKUbb8MZZICP
-         akM0UGW7/iQ31YAtdsNbvHCTWHOVi25tSteZnHAgn6R1MBkvT1kZchfEK0vAZpYfmVxi
-         4muufN+Xm6LNlVTHfSzhW77Kw/0CgJkAxopVhvOu5OQlpd1GGGXUPF/Yt2WjjTlsxEsq
-         AzUM/Qrwaq3OXoTJUftlTvJiEhyW0HbDgPJIYkA0BH1tL6VMEA9QG0rmOm7iMhe4x8kl
-         zFpw==
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=WSt+AV7Um/5j64JardkiDA0adpMNTurHI5wI61uphv0=;
+        b=HIvQu3phGCWVkZ9DCay3XYK3Kfyn2+4cKzw8ERzWrog/cBnDNuZxBVUxKyh2yIw0Uq
+         6b0JMiAOWxwVtl76ZbYi6ZLUCEtFkVfR2EHPUSs/6MKx9GNz3ao52n4CPLVWb7Rax/V1
+         oZjrjmIBWLpuJlNhX6dctbGqG2nSKx0gjeEFAzXWOU+liFtk2Vo6WKJVVEb6zoAD0O73
+         t8CVriQLM6iIMTDt7rRY6GJkLK6EBXTVlpp5Al6+zrkQJNQyrsvc18aPf4k/zYtoXaUJ
+         DG/VTLjSCJgWGTCBrz+G7VgFRTK9/ANArqe4dZV/VXnOyTU3p0x8tWQlQYbTAd1Md/Gz
+         vdkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eJ9iVLSHIFSUq96XznsAAHwNQ6GF7Gxs04ont8jFwbk=;
-        b=jB3DqCboMkalVDIxHJ1Uq7spf31RZ5Bm3UtBXjg1AvztYXzoaSgO54GlMPyW8WJHUL
-         z6DScF91MJ2x1e4bnrGPky0pd5iqNTYns466SBjDS9HbkOSaWcXQ1YvjPI1ccxxKIuVJ
-         ldX36u9tKDpR7Is/DU5sRhDCJuVdu2muOQAjPFMuCitRTvOdG7ntnRWFGBimd2Hli75W
-         XJARGTxP++rvZtL97GBSwPZ7GzkQXBiyFrWNHSaa+13LGkFBybrxLKwDJ4glxax4ZgzS
-         UsjPm2gw2ZjkRVlbtCJrsmHvIlNEI9DPhxnMqFWg+rtJSeX9BNS7WmrIfv7011trF/x/
-         WA7A==
-X-Gm-Message-State: ANhLgQ2BXbhr7r+SfbA6EjmSsNLflQfY4v2L5HxUgZOdhHRQPZ/v36tr
-        qCgoQeGuWufIuQKBR8104cE=
-X-Google-Smtp-Source: ADFU+vv5iXxjbxyhjuo9A/sr2AMYQ9LtOejezRgV/oA7KRUe+sh8Y+HtmaHOpMpYfbQDrB+qWwA7fg==
-X-Received: by 2002:a05:6830:11c1:: with SMTP id v1mr10963169otq.264.1585604048763;
-        Mon, 30 Mar 2020 14:34:08 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id h65sm4741444oth.34.2020.03.30.14.34.07
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=WSt+AV7Um/5j64JardkiDA0adpMNTurHI5wI61uphv0=;
+        b=uPFL5iOREZEWlCbRPOyVwTUaDmXd+ipMAzKLNraOewayVf/DJooHcQQTtlul5cqmYv
+         3cd7Wee/kI01uSYbNVk5ViVwnUq0H4ivgFApzC5AiigjSNyVrlNsg8lu41zE7BNK0Z9P
+         zNl0n9VDnIW1qqBA1oWtsaTL05qFjsUT6YeRG8Hh3gxqiA5L7aj9XSkP5OahcwS8fzDi
+         jRb1M5eDMseuN3uV/sVt2T3bY0q/UGK8UV1BUUjDtqbz+HTcdGl//9R/LF9EPXPQB07l
+         ilM9iHY55XW3hv0VtFn7o9K4ECmsjWVK+aos/RXKA/qUiYPjKXzUiXNGWb8Lpj5zv7Fa
+         7u2w==
+X-Gm-Message-State: AGi0PuaZrhRJKlDd3hck1FWraww8StosDfCiB04E5sFDg8xwRcULjrFE
+        CX4TIYGngogM+6GRZXYm3VM=
+X-Google-Smtp-Source: APiQypK4zOFj7xjPNhBxV8d6hcKJ84vdq3BXLMd1kyZXNCG2zm7Q6Cm8uv46OaF0KLIsL7sjDV2RCw==
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr5750072ljg.114.1585604146990;
+        Mon, 30 Mar 2020 14:35:46 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id p7sm7388655ljg.5.2020.03.30.14.35.45
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 14:34:08 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 14:34:06 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Dirk Mueller <dmueller@suse.com>, kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Philip Li <philip.li@intel.com>
-Subject: Re: ld.lld: error:
- drivers/staging/rtl8192e/rtllib_wx.o:(.rodata.str1.1): offset is outside the
- section
-Message-ID: <20200330213406.GA3170@ubuntu-m2-xlarge-x86>
-References: <202003310500.8jcJ6fgm%lkp@intel.com>
- <CAKwvOdnwaoPSB_pavQimvNEuFdt9wF4xSHBbLtjzQUC=urJAxw@mail.gmail.com>
+        Mon, 30 Mar 2020 14:35:46 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+In-Reply-To: <20200330155038.GC199755@google.com>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org> <1585302203-11008-3-git-send-email-sanm@codeaurora.org> <20200329171756.GA199755@google.com> <87h7y62r28.fsf@kernel.org> <20200330155038.GC199755@google.com>
+Date:   Tue, 31 Mar 2020 00:35:41 +0300
+Message-ID: <87zhbx1q6q.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdnwaoPSB_pavQimvNEuFdt9wF4xSHBbLtjzQUC=urJAxw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 02:21:20PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> Apologies, we're in the process of getting LLD turned on.  These
-> warnings look new to me, so I'll file an issue to follow up on.  It's
-> unrelated to the yyloc change.
-> https://github.com/ClangBuiltLinux/linux/issues/959
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-$ gzip -d .config.gz
 
-$ rg ENDIAN .config
-781:CONFIG_CPU_BIG_ENDIAN=y
-782:CONFIG_CPU_ENDIAN_BE8=y
-810:CONFIG_ARCH_SUPPORTS_BIG_ENDIAN=y
-1112:CONFIG_VHOST_CROSS_ENDIAN_LEGACY=y
-7875:CONFIG_FB_FOREIGN_ENDIAN=y
-7876:CONFIG_FB_BOTH_ENDIAN=y
-7877:# CONFIG_FB_BIG_ENDIAN is not set
-7878:# CONFIG_FB_LITTLE_ENDIAN is not set
-9047:CONFIG_USB_OHCI_LITTLE_ENDIAN=y
+Hi,
 
-ld.lld does not support AArch64 or ARM big endian:
+Matthias Kaehlcke <mka@chromium.org> writes:
+>> Matthias Kaehlcke <mka@chromium.org> writes:
+>> >> Add interconnect support in dwc3-qcom driver to vote for bus
+>> >> bandwidth.
+>> >>=20
+>> >> This requires for two different paths - from USB master to
+>> >> DDR slave. The other is from APPS master to USB slave.
+>> >>=20
+>> >> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>> >> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+>> >> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> >> ---
+>> >>  drivers/usb/dwc3/dwc3-qcom.c | 128 +++++++++++++++++++++++++++++++++=
++++++++++-
+>> >>  1 file changed, 126 insertions(+), 2 deletions(-)
+>> >>=20
+>> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qco=
+m.c
+>> >> index 1dfd024..7e85fe6 100644
+>> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
+>> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>> >>
+>> >> ...
+>> >>
+>> >> +/* To disable an interconnect, we just set its bandwidth to 0 */
+>> >> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+>> >> +{
+>> >> +	int ret;
+>> >> +
+>> >> +	ret =3D icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+>> >> +	if (ret)
+>> >> +		return ret;
+>> >> +
+>> >> +	ret =3D icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+>> >> +	if (ret)
+>> >> +		goto err_reenable_memory_path;
+>> >> +
+>> >> +	return 0;
+>> >> +
+>> >> +	/* Re-enable things in the event of an error */
+>> >> +err_reenable_memory_path:
+>> >> +	ret =3D dwc3_qcom_interconnect_enable(qcom);
+>> >
+>> > This overwrites the error that led to the execution of this code path.
+>> > The function should return original error, not the result of the
+>> > _interconnect_enable() call.
+>> >
+>> > I saw Felipe queued the patch for v5.8. I think the main options to fi=
+x this
+>> > are:
+>> >
+>> > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will b=
+e rebased
+>> >   anyway once there is a v5.7-rc)
+>> > - send the fix as a separate patch
+>> > - Felipe amends the patch in his tree
+>> >
+>> > Felipe, what would work best for you?
+>>=20
+>> Let's go for a v6, which commits should I drop? I can't find anything
+>> related to $subject in my queue:
+>>=20
+>> $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dw=
+c3-qcom.c
+>> 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/o=
+f_clk.h>
+>
+> I thought I saw a "queued for v5.8" message from you, but can't find that=
+ back.
+> I guess I saw the "queued" message for the "Add USB DWC3 support for SC71=
+80"
+> series and thought it was for this one. Sorry for the confusion.
 
-https://reviews.llvm.org/D58655#1410281
+no worries :-)
 
-https://github.com/ClangBuiltLinux/linux/issues/380
+=2D-=20
+balbi
 
-Does 0day do an allyesconfig little endian? I know that arm64 defaults
-to little endian after commit d8e85e144bbe ("arm64: Kconfig: add a
-choice for endianness") but arm does not have something like that (maybe
-it should?). I've always forced CONFIG_CPU_LITTLE_ENDIAN with the
-KCONFIG_ALLCONFIG variable, as I note in issue #380 above.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kind of surprised that it got to drivers/staging though, I error out in
-arch/arm/vdso/Makefile:
+-----BEGIN PGP SIGNATURE-----
 
-$ mkdir -p out/arm32 && curl -LSs 'https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/message/V6YPX24H2YFOKOE7FWFJ66DQI63R3WKZ/attachment/2/config.gz' | gzip -d > out/arm32/.config
-
-$ make -j$(nproc) -s ARCH=arm CC=clang CROSS_COMPILE=arm-linux-gnueabi- LD=ld.lld O=out/arm32 olddefconfig all
-ld.lld: error: unknown argument: --be8
-make[3]: *** [/home/nathan/src/linux/arch/arm/vdso/Makefile:50: arch/arm/vdso/vdso.so.raw] Error 1
-
-> On Mon, Mar 30, 2020 at 2:17 PM kbuild test robot <lkp@intel.com> wrote:
-> >
-> > Hi Dirk,
-> >
-> > First bad commit (maybe != root cause):
-> >
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > head:   7111951b8d4973bda27ff663f2cf18b663d15b48
-> > commit: e33a814e772cdc36436c8c188d8c42d019fda639 scripts/dtc: Remove redundant YYLOC global declaration
-> > date:   3 days ago
-> > config: arm-allyesconfig (attached as .config)
-> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project b4695351cb4ce1c4450a029a0c226dc8bb5f5d55)
-> > reproduce:
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         git checkout e33a814e772cdc36436c8c188d8c42d019fda639
-> >         # save the attached .config to linux build tree
-> >         COMPILER=clang make.cross ARCH=arm
-> >
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> > >> ld.lld: error: drivers/staging/rtl8192e/rtllib_wx.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8192e/rtllib_softmac.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8192e/rtllib_tx.o:(.rodata.str1.1): offset is outside the section
-> > --
-> > >> ld.lld: error: drivers/staging/rtl8192u/ieee80211/dot11d.o:(.rodata.str1.1): offset is outside the section
-> > --
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_debug.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_sta_mgt.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_security.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_wlan_util.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_ieee80211.o:(.rodata.cst4): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_odm.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_recv.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/hal/hal_com.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_ioctl_set.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_xmit.o:(.rodata.str1.1): offset is outside the section
-> >    ld.lld
-> > --
-> > >> ld.lld: error: drivers/misc/mic/vop/vop_vringh.o:(.rodata.str1.1): offset is outside the section
-> > --
-> >    ld.lld: error: drivers/staging/rtl8188eu/core/rtw_efuse.o:(.rodata.str1.1): offset is outside the section
-> > >> ld.lld: error: drivers/staging/rtl8188eu/os_dep/xmit_linux.o:(.rodata.str1.1): offset is outside the section
-> > --
-> > >> ld.lld: error: drivers/staging/kpc2000/kpc_dma/fileops.o:(.rodata.str1.1): offset is outside the section
-> >    ld.lld: error: drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.o:(.rodata.str1.1): offset is outside the section
-> >
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-> >
-> 
-> 
-> 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
-> 
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6CZi0ACgkQzL64meEa
+mQY+7g/+KJ/u05ouSFK7ldMY2YfeD/JN7oamyhJSMtVd+EDFXyzVBYcSRD4m+P2c
+l0L8DLKvPTfQ609Gc0B4RBra2tg1H7m2vGdKPbGIDxWXQoMyIXFYp7E7b8+UjJ87
+MNSwuzqyvC8ZFOd0ILPecBxUjFzdzEPhbHr2W6jdyfT5kIl4wcAxchcTGnus8ujb
+KlwUWUjyuGyX5r7axrdjXe55MS2aouKtYQLojXtwhVyegGS0xlJtVF5+so2l89v9
+GAgDe9Srw9eNfg/pmNHjK+PwRjkKLFnGiT/m4jPCb5roRWmX8P83JnA3rp+DCjpF
++plyrINP+MjoWH+rl1eifOSmTktORDFzyHEdfx2O38XYxHMjD1ap6OhOEc2WveY9
+f0G/eRN7DctjpxFwp6IBDywhUgSo5YH/L3q2ojaG0AfBgxD42hCdTU7OWFepvhab
+DFldPJwBjqbVupLSMEzOmgvM9wnBuqzXERzcEncl19f7Sh1vx6NFqY+5/iABFJKQ
+0hhWlQ+DRrGWKxam9ft0ddEtco+Nla2IOVr2vk63DysSKkGEbQeU8a4BxJ9kY/Jo
+hZCMdci6ePlYa63VCrZ+u1F6+DSRQ9lvPxjnUmy4T7InCL1dOezT6WttAgB1DO1T
+oX1o6+tY1DlUOemO6Mlg0ueBWg59hZYTeg2NSVbal5VoMzO9BSk=
+=lyM0
+-----END PGP SIGNATURE-----
+--=-=-=--
