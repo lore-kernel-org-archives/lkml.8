@@ -2,295 +2,169 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE055C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4344C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABE120774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585559663;
-	bh=xQQ0SbWYahN2KSTCm8qNHH+4zd3tIw7YmSh5hEQ8xv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YbX5pUhO5qyrYW1a2RB6EAt+JyKvsxGAectjkLexVYuoPUeMRAiqp90cgtXO8IUgW
-	 Jl3duDF58H4YJ2L+e0GmeV1O1pQYF+w+kfBhBuHOy31i4WkMa8M2KLQhx/xoodBonq
-	 vE266IYBW7fq+yQlullIZh6644rGqyvKnpNCy3ws=
+	by mail.kernel.org (Postfix) with ESMTP id 9B14F20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijkjwL5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgC3JOW (ORCPT
+        id S1728285AbgC3JP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgC3JOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:14:22 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8C620716;
-        Mon, 30 Mar 2020 09:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585559661;
-        bh=xQQ0SbWYahN2KSTCm8qNHH+4zd3tIw7YmSh5hEQ8xv0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VtE7G6iPbBmP0BRX/c21YSsjY+jzxED6tamiRGlj3QdfyPlKgpAeqmXTaD8tTMK+y
-         yuy4bz9napYHKx7O9+8LZG8dyC/J8t27w/KU6uP56ae1br9+sscrKaT8U5AwaiRTVF
-         Rs9HZBoAEIgDUfuQ+eRZ7NGvmbmAb7CD9UJx7k6o=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jIqUt-00GpFM-Qp; Mon, 30 Mar 2020 10:14:19 +0100
+        Mon, 30 Mar 2020 05:15:59 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:35136 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727903AbgC3JP7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:15:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585559757;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zemqa+eFWbSRqKFbVoTd6828wtJbQvKtR1Vj/t4nfws=;
+        b=ijkjwL5FqXjDfXTK6tSFRz/dMNqOl08HOKnAvrEWech/P8+rbowSpc9X5Y++NKQ24UNB0H
+        UHbqdTyh7sFzcQGMXdOP7ltvff1g45ILPVpg/fLNMhAgkeJHpNiur7C5E3GvT2IOIVvu1X
+        MOmyTpbgMbB09RzV3mQn4YJT7agPVFk=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-213-SG8S0r-VN1ONc6mbmzLAKg-1; Mon, 30 Mar 2020 05:15:55 -0400
+X-MC-Unique: SG8S0r-VN1ONc6mbmzLAKg-1
+Received: by mail-qt1-f198.google.com with SMTP id b3so10002907qte.13
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 02:15:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zemqa+eFWbSRqKFbVoTd6828wtJbQvKtR1Vj/t4nfws=;
+        b=ZO55XHyYa9+OEujxhO7aT6N3a3r2cy7RqgKC3/JByv26dM2PC1KFnD2Fh9comztIsc
+         bnohczMSB7XHrhkG5/GxszDiR/yslyBzPjSkRPT+pU+YHHEjR2lHhGu66BClWQlQStj3
+         6FfqccoUur+yWtdy0iUjGp0CzcAYndAEZKJ1BvnxmvTZX5jzdHXDDGu4yFsP/00W9ONs
+         pYJfmKMrIixvNIpJcEl7d3QZb2lBqNVp2FOd1rh6Hj1QXuqGXeb3z/X1Zd+/y1CpSttA
+         xBlyDUDF1xKUdWD/WF+dwas61SZNDqJTsXRf1mYqHMsdIn6A43cOBeGg3uvDhimLgqjK
+         oDwA==
+X-Gm-Message-State: ANhLgQ3FMsjk6zWjj+mYazSWLgTS+NVNwzYSXMRCyHXrzsBjsgADEAQU
+        lo0dUq3ZSM0U0oqI2PcsrLOVABB9v85Vgx4HjvZ2h8MVztYTZRlcQTm+EHHLHx6pnm3rQKVpwqL
+        EdFgYsMP3HjIm3QSwZ30dztz9y0pOI+XKOyJojO1n
+X-Received: by 2002:ae9:eb12:: with SMTP id b18mr4617819qkg.168.1585559755410;
+        Mon, 30 Mar 2020 02:15:55 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtmZS/6wgLxWT3ZU/CS/qVPDcBOgRfiDiQ203JJ58Kdixi7MMbXpUC+A+8C7IiEGVQnJsaMv5FmAfbHLS/iB3g=
+X-Received: by 2002:ae9:eb12:: with SMTP id b18mr4617794qkg.168.1585559754968;
+ Mon, 30 Mar 2020 02:15:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 30 Mar 2020 10:14:19 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        x86 <x86@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [tip: irq/core] irqchip/xilinx: Enable generic irq multi handler
-In-Reply-To: <895eba40-2e77-db1b-ea82-035c05f0b77e@xilinx.com>
-References: <20200317125600.15913-4-mubin.usman.sayyed@xilinx.com>
- <158551357076.28353.1716269552245308352.tip-bot2@tip-bot2>
- <083ad708-ea4d-ed53-598e-84d911ca4177@xilinx.com>
- <085188fea81d5ddc88b488124596a4a3@kernel.org>
- <895eba40-2e77-db1b-ea82-035c05f0b77e@xilinx.com>
-Message-ID: <409514e35f5ed32de8a31977f6857077@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: michal.simek@xilinx.com, linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, tglx@linutronix.de, stefan.asserhall@xilinx.com, x86@kernel.org, sfr@canb.auug.org.au
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200329113359.30960-1-eperezma@redhat.com> <bb95e827-f219-32fd-0046-41046eec058b@de.ibm.com>
+ <CAJaqyWePfMcXhYEPxKYV22J3cYtO=DUXCj1Yf=7XH+khXHop9A@mail.gmail.com> <41dfa0e5-8013-db15-cbfe-aa4574cfb9a0@de.ibm.com>
+In-Reply-To: <41dfa0e5-8013-db15-cbfe-aa4574cfb9a0@de.ibm.com>
+From:   Eugenio Perez Martin <eperezma@redhat.com>
+Date:   Mon, 30 Mar 2020 11:15:18 +0200
+Message-ID: <CAJaqyWfq3TGiQ9GSqdFVAZyydg29BoKiJFGKep+h3BoV5POLHQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] vhost: Reset batched descriptors on SET_VRING_BASE call
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-30 10:03, Michal Simek wrote:
-> On 30. 03. 20 10:45, Marc Zyngier wrote:
->> On 2020-03-30 09:32, Michal Simek wrote:
->>> Hi Thomas and Marc,
->>> 
->>> On 29. 03. 20 22:26, tip-bot2 for Michal Simek wrote:
->>>> The following commit has been merged into the irq/core branch of 
->>>> tip:
->>>> 
->>>> Commit-ID:     a0789993bf8266e62fea6b4613945ba081c71e7d
->>>> Gitweb:       
->>>> https://git.kernel.org/tip/a0789993bf8266e62fea6b4613945ba081c71e7d
->>>> Author:        Michal Simek <michal.simek@xilinx.com>
->>>> AuthorDate:    Tue, 17 Mar 2020 18:25:59 +05:30
->>>> Committer:     Marc Zyngier <maz@kernel.org>
->>>> CommitterDate: Sun, 22 Mar 2020 11:52:53
->>>> 
->>>> irqchip/xilinx: Enable generic irq multi handler
->>>> 
->>>> Register default arch handler via driver instead of directly 
->>>> pointing to
->>>> xilinx intc controller. This patch makes architecture code more 
->>>> generic.
->>>> 
->>>> Driver calls generic domain specific irq handler which does the most 
->>>> of
->>>> things self. Also get rid of concurrent_irq counting which hasn't 
->>>> been
->>>> exported anywhere.
->>>> Based on this loop was also optimized by using do/while loop instead 
->>>> of
->>>> goto loop.
->>>> 
->>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>>> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
->>>> Link:
->>>> https://lore.kernel.org/r/20200317125600.15913-4-mubin.usman.sayyed@xilinx.com
->>>> 
->>>> ---
->>>>  arch/microblaze/Kconfig           |  2 ++-
->>>>  arch/microblaze/include/asm/irq.h |  3 +---
->>>>  arch/microblaze/kernel/irq.c      | 21 +-------------------
->>>>  drivers/irqchip/irq-xilinx-intc.c | 34 
->>>> +++++++++++++++++-------------
->>>>  4 files changed, 23 insertions(+), 37 deletions(-)
->>>> 
->>>> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
->>>> index 6a331bd..242f58e 100644
->>>> --- a/arch/microblaze/Kconfig
->>>> +++ b/arch/microblaze/Kconfig
->>>> @@ -47,6 +47,8 @@ config MICROBLAZE
->>>>      select CPU_NO_EFFICIENT_FFS
->>>>      select MMU_GATHER_NO_RANGE if MMU
->>>>      select SPARSE_IRQ
->>>> +    select GENERIC_IRQ_MULTI_HANDLER
->>>> +    select HANDLE_DOMAIN_IRQ
->>>> 
->>>>  # Endianness selection
->>>>  choice
->>>> diff --git a/arch/microblaze/include/asm/irq.h
->>>> b/arch/microblaze/include/asm/irq.h
->>>> index eac2fb4..5166f08 100644
->>>> --- a/arch/microblaze/include/asm/irq.h
->>>> +++ b/arch/microblaze/include/asm/irq.h
->>>> @@ -14,7 +14,4 @@
->>>>  struct pt_regs;
->>>>  extern void do_IRQ(struct pt_regs *regs);
->>>> 
->>>> -/* should be defined in each interrupt controller driver */
->>>> -extern unsigned int xintc_get_irq(void);
->>>> -
->>>>  #endif /* _ASM_MICROBLAZE_IRQ_H */
->>>> diff --git a/arch/microblaze/kernel/irq.c 
->>>> b/arch/microblaze/kernel/irq.c
->>>> index 903dad8..0b37dde 100644
->>>> --- a/arch/microblaze/kernel/irq.c
->>>> +++ b/arch/microblaze/kernel/irq.c
->>>> @@ -20,29 +20,10 @@
->>>>  #include <linux/irqchip.h>
->>>>  #include <linux/of_irq.h>
->>>> 
->>>> -static u32 concurrent_irq;
->>>> -
->>>>  void __irq_entry do_IRQ(struct pt_regs *regs)
->>>>  {
->>>> -    unsigned int irq;
->>>> -    struct pt_regs *old_regs = set_irq_regs(regs);
->>>>      trace_hardirqs_off();
->>>> -
->>>> -    irq_enter();
->>>> -    irq = xintc_get_irq();
->>>> -next_irq:
->>>> -    BUG_ON(!irq);
->>>> -    generic_handle_irq(irq);
->>>> -
->>>> -    irq = xintc_get_irq();
->>>> -    if (irq != -1U) {
->>>> -        pr_debug("next irq: %d\n", irq);
->>>> -        ++concurrent_irq;
->>>> -        goto next_irq;
->>>> -    }
->>>> -
->>>> -    irq_exit();
->>>> -    set_irq_regs(old_regs);
->>>> +    handle_arch_irq(regs);
->>>>      trace_hardirqs_on();
->>>>  }
->>>> 
->>>> diff --git a/drivers/irqchip/irq-xilinx-intc.c
->>>> b/drivers/irqchip/irq-xilinx-intc.c
->>>> index 1d3d273..ea74181 100644
->>>> --- a/drivers/irqchip/irq-xilinx-intc.c
->>>> +++ b/drivers/irqchip/irq-xilinx-intc.c
->>>> @@ -124,20 +124,6 @@ static unsigned int xintc_get_irq_local(struct
->>>> xintc_irq_chip *irqc)
->>>>      return irq;
->>>>  }
->>>> 
->>>> -unsigned int xintc_get_irq(void)
->>>> -{
->>>> -    unsigned int irq = -1;
->>>> -    u32 hwirq;
->>>> -
->>>> -    hwirq = xintc_read(primary_intc, IVR);
->>>> -    if (hwirq != -1U)
->>>> -        irq = irq_find_mapping(primary_intc->root_domain, hwirq);
->>>> -
->>>> -    pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
->>>> -
->>>> -    return irq;
->>>> -}
->>>> -
->>>>  static int xintc_map(struct irq_domain *d, unsigned int irq,
->>>> irq_hw_number_t hw)
->>>>  {
->>>>      struct xintc_irq_chip *irqc = d->host_data;
->>>> @@ -177,6 +163,25 @@ static void xil_intc_irq_handler(struct 
->>>> irq_desc
->>>> *desc)
->>>>      chained_irq_exit(chip, desc);
->>>>  }
->>>> 
->>>> +static void xil_intc_handle_irq(struct pt_regs *regs)
->>>> +{
->>>> +    u32 hwirq;
->>>> +    struct xintc_irq_chip *irqc = primary_intc;
->>>> +
->>>> +    do {
->>>> +        hwirq = xintc_read(irqc, IVR);
->>>> +        if (likely(hwirq != -1U)) {
->>>> +            int ret;
->>>> +
->>>> +            ret = handle_domain_irq(irqc->root_domain, hwirq, 
->>>> regs);
->>>> +            WARN_ONCE(ret, "Unhandled HWIRQ %d\n", hwirq);
->>>> +            continue;
->>>> +        }
->>>> +
->>>> +        break;
->>>> +    } while (1);
->>>> +}
->>>> +
->>>>  static int __init xilinx_intc_of_init(struct device_node *intc,
->>>>                           struct device_node *parent)
->>>>  {
->>>> @@ -246,6 +251,7 @@ static int __init xilinx_intc_of_init(struct
->>>> device_node *intc,
->>>>      } else {
->>>>          primary_intc = irqc;
->>>>          irq_set_default_host(primary_intc->root_domain);
->>>> +        set_handle_irq(xil_intc_handle_irq);
->>>>      }
->>>> 
->>>>      return 0;
->>>> 
->>> 
->>> Stephen reported compilation issue when this patch is applied because 
->>> of
->>> removal of xintc_get_irq() which is also used by ancient 
->>> ppc405/ppc440
->>> xilinx platforms. I have reported this twice to Marc already last 
->>> week.
->> 
->> Did you? I can't possibly find these emails.
-> 
-> Stephen was using your arm.com email.
-> 
-> https://lore.kernel.org/linux-next/48d3232d-0f1d-42ea-3109-f44bbabfa2e8@xilinx.com/
+On Mon, Mar 30, 2020 at 9:34 AM Christian Borntraeger
+<borntraeger@de.ibm.com> wrote:
+>
+>
+>
+> On 30.03.20 09:18, Eugenio Perez Martin wrote:
+> > On Mon, Mar 30, 2020 at 9:14 AM Christian Borntraeger
+> > <borntraeger@de.ibm.com> wrote:
+> >>
+> >>
+> >> On 29.03.20 13:33, Eugenio P=C3=A9rez wrote:
+> >>> Vhost did not reset properly the batched descriptors on SET_VRING_BAS=
+E event. Because of that, is possible to return an invalid descriptor to th=
+e guest.
+> >>
+> >> I guess this could explain my problems that I have seen during reset?
+> >>
+> >
+> > Yes, I think so. The series has a test that should reproduce more or
+> > less what you are seeing. However, it would be useful to reproduce on
+> > your system and to know what causes qemu to send the reset :).
+>
+> I do see SET_VRING_BASE in the debug output
+> [228101.438630] [2113] vhost:vhost_vring_ioctl:1668: VHOST_GET_VRING_BASE=
+ [vq=3D00000000618905fc][s.index=3D1][s.num=3D42424][vq->avail_idx=3D42424]=
+[vq->last_avail_idx=3D42424][vq->ndescs=3D0][vq->first_desc=3D0]
+> [228101.438631] CPU: 54 PID: 2113 Comm: qemu-system-s39 Not tainted 5.5.0=
++ #344
+> [228101.438632] Hardware name: IBM 3906 M04 704 (LPAR)
+> [228101.438633] Call Trace:
+> [228101.438634]  [<00000004fc71c132>] show_stack+0x8a/0xd0
+> [228101.438636]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8
+> [228101.438639]  [<000003ff80377600>] vhost_vring_ioctl+0x668/0x848 [vhos=
+t]
+> [228101.438640]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_=
+net]
+> [228101.438642]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8
+> [228101.438643]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0
+> [228101.438645]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38
+> [228101.438646]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8
+> [228103.682732] [2122] vhost:vhost_vring_ioctl:1653: VHOST_SET_VRING_BASE=
+ [vq=3D000000009e1ac3e7][s.index=3D0][s.num=3D0][vq->avail_idx=3D27875][vq-=
+>last_avail_idx=3D27709][vq->ndescs=3D65][vq->first_desc=3D22]
+> [228103.682735] CPU: 44 PID: 2122 Comm: CPU 0/KVM Not tainted 5.5.0+ #344
+> [228103.682739] Hardware name: IBM 3906 M04 704 (LPAR)
+> [228103.682741] Call Trace:
+> [228103.682748]  [<00000004fc71c132>] show_stack+0x8a/0xd0
+> [228103.682752]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8
+> [228103.682761]  [<000003ff80377422>] vhost_vring_ioctl+0x48a/0x848 [vhos=
+t]
+> [228103.682764]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_=
+net]
+> [228103.682767]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8
+> [228103.682769]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0
+> [228103.682771]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38
+> [228103.682773]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8
+> [228103.682794] [2122] vhost:vhost_vring_ioctl:1653: VHOST_SET_VRING_BASE=
+ [vq=3D00000000618905fc][s.index=3D1][s.num=3D0][vq->avail_idx=3D42424][vq-=
+>last_avail_idx=3D42424][vq->ndescs=3D0][vq->first_desc=3D0]
+> [228103.682795] CPU: 44 PID: 2122 Comm: CPU 0/KVM Not tainted 5.5.0+ #344
+> [228103.682797] Hardware name: IBM 3906 M04 704 (LPAR)
+> [228103.682797] Call Trace:
+> [228103.682799]  [<00000004fc71c132>] show_stack+0x8a/0xd0
+> [228103.682801]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8
+> [228103.682804]  [<000003ff80377422>] vhost_vring_ioctl+0x48a/0x848 [vhos=
+t]
+> [228103.682806]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_=
+net]
+> [228103.682808]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8
+> [228103.682810]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0
+> [228103.682812]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38
+> [228103.682813]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8
+>
+>
+> Isnt that triggered by resetting the virtio devices during system reboot?
+>
 
-Yeah, no chance I could read that, unfortunately. I've sent a separate
-email to Stephen to update my email address.
+Yes. I don't know exactly why qemu is sending them, but vhost should
+be able to "protect/continue" the same way it used to be before
+batching patches.
 
->> 
->>> On Friday I have also send v1 of removal of that platforms (need to
->>> send v2)
->>> https://lore.kernel.org/alsa-devel/cover.1585311091.git.michal.simek@xilinx.com/
->>> 
->> 
->> You want to remove exising platforms two days before the start of the
->> merge window?
->> I don't think this is acceptable with such short notice.
-> 
-> I also don't think that will go through.
-> 
->> 
->>> That's why please really consider next steps and let us know.
->> 
->> I think the only option is to revert (at least partially) the Xilinx
->> series.
-> 
-> Unfortunately.
+Did you lose connectivity or experienced rebooting with this patches applie=
+d?
 
-Can you please check that we're OK reverting just the last two patches?
-Or what is the minimal revert that can be done for everything to keep 
-working?
+Thanks!
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
