@@ -2,179 +2,143 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4A3C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A70C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20982072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469A72072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2UiTkYa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsiQlVU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgC3TDk (ORCPT
+        id S1727736AbgC3TH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:03:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38308 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgC3TDk (ORCPT
+        Mon, 30 Mar 2020 15:07:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46344 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC3TH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:03:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=TQ9cYkWVRMY5HM+PVzYLu4H7z2n9HAf8wAGBPwbykN4=; b=n2UiTkYaKNMRkhxvNvOONgFBJX
-        tKGNJfEho4dR45vF9PtV8trcvHo+CGSa6Ux8eCcbOWCyelt2DIHyBm6bxCjWQl2xt8iFFWdVOnl5t
-        sFqyUn6q/JIrdOv/lI2VsJfjy2KLn18LgHylbdACnFpJmoI1ctBOnA5W6EyWt4kYh9CkQnDpihITV
-        1GqprvOK95H7ueJ4mcj0dVCAh+rEnyFJeN3EuSDFWyn+OgKl48o2AIS6KI0k/KOkVDReCOhCBqinY
-        k7K2oXZqA3kcMCDxvz0rwMndL+cNi3hHfVVEXzBrHXZUEY1BbLFftE8QsxcPxNHzXBKY0QpM5zYfP
-        eZQAz3BA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jIzhD-00011g-HA; Mon, 30 Mar 2020 19:03:39 +0000
-Subject: Re: [PATCH 1/1] mnt: add support for non-rootfs initramfs
-To:     Ignat Korchagin <ignat@cloudflare.com>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kernel-team@cloudflare.com
-References: <20200330131439.2405-1-ignat@cloudflare.com>
- <20200330131439.2405-2-ignat@cloudflare.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f96ad8b8-0a26-448a-4a27-8712a82001c4@infradead.org>
-Date:   Mon, 30 Mar 2020 12:03:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 15:07:57 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q3so9032573pff.13;
+        Mon, 30 Mar 2020 12:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bmnH3rera8wNeq52dRP7sYLJorb76j9t1Bss52B1zk0=;
+        b=CsiQlVU+bjcbRdarIqig2kKkx7cqpd37z4dUL2RENjJy7mMb3bG89IV5kXriYeu2Z6
+         z2NpmIQryXLDaswoiLnK9DOtnsVkk2pVOpAeeXJ78PegWPaFZdXjIhS6wYb+HC6kyW5g
+         pOvu/zqM6i/kPuDhjTMn5ucxPkbMhlpQx+yIyODYB7CCBSAfsPEWpqnWvb03BYmqbqJU
+         KWYUl3wo31GoIlI4N7X+AXH21bqePVzDmU7tKoOUBAlhtUL1KHibGRuJq91byiKz4X5v
+         Y/yYx9kw8BXWMJiW2obPjc6nAy9XsMA18xI6rTyf22ctRYLYwD/DcbrH+bJbavKcmi4H
+         TuvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bmnH3rera8wNeq52dRP7sYLJorb76j9t1Bss52B1zk0=;
+        b=c2TbBXGCh54C5t+ixFQmatZvF3BHuOXJkZ4Vv3Kpb82WWELZ2029D5EdCNPQMP/1EP
+         0JOddwWrqGDsNtOHHkQH3NZBli8f78nc9Ml5xofsBhE79PtBj8/fq3oobk0XvE8As1Js
+         gW+4M+ixU5t5a+1jnzxXVv840MR2y/tpIQVEmcrvJ4lV0iL9VYLMLCzXwGidvYNqDbRt
+         cdiTte1vJKYGTXxAATQGEThtyrNm+DwnZJW0x7dNR1yHN+gQMn5fpQv66A3fi7fZ3ZzN
+         IZwZ+dyWBBQybtrqXQVAkFtPo/osz5KK2om3ENaeYShOtNk6s1xbjAm0StVYnCoY74wY
+         bkew==
+X-Gm-Message-State: ANhLgQ3A98B/cPoAuUKlYnVnLNEPwgp5gpeYToXvRlvbont+cphooBgH
+        RQud6y+dgZgLJZlOP1sVmhK2aW6BW1OKBjlqn33LYKelA3k=
+X-Google-Smtp-Source: ADFU+vv2/Ok8QRFv88ZZ2f0YVmbslivXbBYtvIVBvtbsp2Z8sMjUFrqmY+CiQtz4GCTtDv7Ki2aFG00s/SveGo9LLpA=
+X-Received: by 2002:aa7:958f:: with SMTP id z15mr13828976pfj.130.1585595275509;
+ Mon, 30 Mar 2020 12:07:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200330131439.2405-2-ignat@cloudflare.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200330152711.8769-1-i.mikhaylov@yadro.com> <20200330152711.8769-3-i.mikhaylov@yadro.com>
+In-Reply-To: <20200330152711.8769-3-i.mikhaylov@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 30 Mar 2020 22:07:43 +0300
+Message-ID: <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 6:14 AM, Ignat Korchagin wrote:
-> The main need for this is to support container runtimes on stateless Linux
-> system (pivot_root system call from initramfs).
-> 
-> Normally, the task of initramfs is to mount and switch to a "real" root
-> filesystem. However, on stateless systems (booting over the network) it is just
-> convenient to have your "real" filesystem as initramfs from the start.
-> 
-> This, however, breaks different container runtimes, because they usually use
-> pivot_root system call after creating their mount namespace. But pivot_root does
-> not work from initramfs, because initramfs runs form rootfs, which is the root
-> of the mount tree and can't be unmounted.
-> 
-> One workaround is to do:
-> 
->   mount --bind / /
-> 
-> However, that defeats one of the purposes of using pivot_root in the cloned
-> containers: get rid of host root filesystem, should the code somehow escapes the
-> chroot.
-> 
-> There is a way to solve this problem from userspace, but it is much more
-> cumbersome:
->   * either have to create a multilayered archive for initramfs, where the outer
->     layer creates a tmpfs filesystem and unpacks the inner layer, switches root
->     and does not forget to properly cleanup the old rootfs
->   * or we need to use keepinitrd kernel cmdline option, unpack initramfs to
->     rootfs, run a script to create our target tmpfs root, unpack the same
->     initramfs there, switch root to it and again properly cleanup the old root,
->     thus unpacking the same archive twice and also wasting memory, because
->     the kernel stores compressed initramfs image indefinitely.
-> 
-> With this change we can ask the kernel (by specifying nonroot_initramfs kernel
-> cmdline option) to create a "leaf" tmpfs mount for us and switch root to it
-> before the initramfs handling code, so initramfs gets unpacked directly into
-> the "leaf" tmpfs with rootfs being empty and no need to clean up anything.
-> 
-> This also bring the behaviour in line with the older style initrd, where the
-> initrd is located on some leaf filesystem in the mount tree and rootfs remaining
-> empty.
-> 
-> Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
-> ---
->  fs/namespace.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
+On Mon, Mar 30, 2020 at 6:27 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+>
+> Proximity sensor driver based on light/vcnl4000.c code.
+> For now supports only the single on-demand measurement.
+>
+> The VCNL3020 is a fully integrated proximity sensor. Fully
+> integrated means that the infrared emitter is included in the
+> package. It has 16-bit resolution. It includes a signal
+> processing IC and features standard I2C communication
+> interface. It features an interrupt function.
 
-Hi,
-Please document "nonroot_initramfs" in
-Documentation/admin-guide/kernel-parameters.txt.
+Still my tag applies, but
+I have few more comments below.
 
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 85b5f7bea82e..a1ec862e8146 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -3701,6 +3701,49 @@ static void __init init_mount_tree(void)
->  	set_fs_root(current->fs, &root);
->  }
->  
-> +#if IS_ENABLED(CONFIG_TMPFS)
-> +static int __initdata nonroot_initramfs;
-> +
-> +static int __init nonroot_initramfs_param(char *str)
-> +{
-> +	if (*str)
-> +		return 0;
-> +	nonroot_initramfs = 1;
-> +	return 1;
-> +}
-> +__setup("nonroot_initramfs", nonroot_initramfs_param);
-> +
-> +static void __init init_nonroot_initramfs(void)
-> +{
-> +	int err;
-> +
-> +	if (!nonroot_initramfs)
-> +		return;
-> +
-> +	err = ksys_mkdir("/root", 0700);
-> +	if (err < 0)
-> +		goto out;
-> +
-> +	err = do_mount("tmpfs", "/root", "tmpfs", 0, NULL);
-> +	if (err)
-> +		goto out;
-> +
-> +	err = ksys_chdir("/root");
-> +	if (err)
-> +		goto out;
-> +
-> +	err = do_mount(".", "/", NULL, MS_MOVE, NULL);
-> +	if (err)
-> +		goto out;
-> +
-> +	err = ksys_chroot(".");
-> +	if (!err)
-> +		return;
-> +out:
-> +	printk(KERN_WARNING "Failed to create a non-root filesystem for initramfs\n");
-> +}
-> +#endif /* IS_ENABLED(CONFIG_TMPFS) */
-> +
->  void __init mnt_init(void)
->  {
->  	int err;
-> @@ -3734,6 +3777,10 @@ void __init mnt_init(void)
->  	shmem_init();
->  	init_rootfs();
->  	init_mount_tree();
-> +
-> +#if IS_ENABLED(CONFIG_TMPFS)
-> +	init_nonroot_initramfs();
-> +#endif
->  }
->  
->  void put_mnt_ns(struct mnt_namespace *ns)
-> 
+...
 
-thanks.
+> +#define VCNL_DRV_NAME          "vcnl3020"
+> +#define VCNL_REGMAP_NAME       "vcnl3020_regmap"
+
+I'm wondering why you need the second one.
+
+...
+
+> +       rc = device_property_read_u32(data->dev, "vishay,led-current-milliamp",
+> +                                     &led_current);
+
+> +       if (rc == 0) {
+> +               rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
+> +               if (rc)
+> +                       dev_err(data->dev,
+> +                               "Error (%d) setting LED current", rc);
+> +       }
+> +
+> +       return rc;
+
+Why not to use standard pattern, i.e.
+
+  if (rc)
+    return rc;
+  ...
+  rc = regmap_write(...);
+
+?
+
+...
+
+> +       if (rc) {
+> +               dev_err(data->dev,
+
+> +                       "vcnl3020_measure() failed with error (%d)", rc);
+
+Perhaps you keep same pattern for error messages as in previous function(s).
+
+> +               goto err_unlock;
+> +       }
+
+> +       rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res, 2);
+
+sizeof(res)
+
+> +       if (rc)
+> +               goto err_unlock;
+
 -- 
-~Randy
-
+With Best Regards,
+Andy Shevchenko
