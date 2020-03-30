@@ -2,171 +2,184 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18875C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A294C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0240206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:26:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ByEYRusV"
+	by mail.kernel.org (Postfix) with ESMTP id 3C464206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgC3J0T (ORCPT
+        id S1728580AbgC3J07 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:26:19 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:59172 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727376AbgC3J0S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:26:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585560377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=P7KONnLRBt7Zi6IX/bJ2rtifHakTT+zqNud06VP531U=;
-        b=ByEYRusVLs3NWG4WNPMWE7dVfN2uyuWqOvh03tk4DBTiYZLGnE2eaiw+DT0deREIN6nSED
-        0rs5YyAraUaExouH5W34GZ4yiOuWw0/dEuDw/MguMew5b+hu0+4AMISqelCqjnpJamtjAa
-        N5fSMHdi/N+OJPMiAAeBwb/+WxL/qfU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-v6Tx4dfaPXm-1wc0_ZqlsA-1; Mon, 30 Mar 2020 05:26:14 -0400
-X-MC-Unique: v6Tx4dfaPXm-1wc0_ZqlsA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4A2518A552A;
-        Mon, 30 Mar 2020 09:26:10 +0000 (UTC)
-Received: from localhost (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A853510027AA;
-        Mon, 30 Mar 2020 09:26:09 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 17:26:06 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200330092606.GC6352@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
+        Mon, 30 Mar 2020 05:26:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63617 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727255AbgC3J06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:26:58 -0400
+IronPort-SDR: C7WADk8mPcv19UGnKxRrE+USSZ5YQgtZTt4vamZmkbAMTJBsAxdnFhKZjtfq44Op9EMrJBaaj6
+ mUjYDGgiBVSA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 02:26:58 -0700
+IronPort-SDR: 94phFjaHxIasgNLV5x9F/Y59NUW+TEzHZGsZZBXmxT5JANcvNFzRqoyYNuhAXXiFkCJJGqav4r
+ teAmesN35kBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,323,1580803200"; 
+   d="scan'208";a="421871454"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by orsmga005.jf.intel.com with ESMTP; 30 Mar 2020 02:26:57 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 02:26:56 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 02:26:56 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Mon, 30 Mar 2020 17:26:52 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
+ quota tuning
+Thread-Topic: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
+ quota tuning
+Thread-Index: AQHWAEUbHl/tnnhWl0eaKvrwJMb1AqhgVzOAgACGb+D//4RdgIAAh3wg
+Date:   Mon, 30 Mar 2020 09:26:51 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A217D97@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A217C68@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF46F@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF46F@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330074246.GA14243@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/30/20 at 09:42am, Michal Hocko wrote:
-> On Sat 28-03-20 11:31:17, Hoan Tran wrote:
-> > In NUMA layout which nodes have memory ranges that span across other nodes,
-> > the mm driver can detect the memory node id incorrectly.
-> > 
-> > For example, with layout below
-> > Node 0 address: 0000 xxxx 0000 xxxx
-> > Node 1 address: xxxx 1111 xxxx 1111
-> > 
-> > Note:
-> >  - Memory from low to high
-> >  - 0/1: Node id
-> >  - x: Invalid memory of a node
-> > 
-> > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> > config, mm only checks the memory validity but not the node id.
-> > Because of that, Node 1 also detects the memory from node 0 as below
-> > when it scans from the start address to the end address of node 1.
-> > 
-> > Node 0 address: 0000 xxxx xxxx xxxx
-> > Node 1 address: xxxx 1111 1111 1111
-> > 
-> > This layout could occur on any architecture. Most of them enables
-> > this config by default with CONFIG_NUMA. This patch, by default, enables
-> > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
+> From: Tian, Kevin <kevin.tian@intel.com>
+> Sent: Monday, March 30, 2020 5:20 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for quota
+> tuning
 > 
-> I am not opposed to this at all. It reduces the config space and that is
-> a good thing on its own. The history has shown that meory layout might
-> be really wild wrt NUMA. The config is only used for early_pfn_in_nid
-> which is clearly an overkill.
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Monday, March 30, 2020 4:53 PM
+> >
+> > > From: Tian, Kevin <kevin.tian@intel.com>
+> > > Sent: Monday, March 30, 2020 4:41 PM
+> > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> > > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1
+> > > parameter
+> > for quota
+> > > tuning
+> > >
+> > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > Sent: Sunday, March 22, 2020 8:32 PM
+> > > >
+> > > > From: Liu Yi L <yi.l.liu@intel.com>
+> > > >
+> > > > This patch adds a module option to make the PASID quota tunable by
+> > > > administrator.
+> > > >
+> > > > TODO: needs to think more on how to  make the tuning to be per-process.
+> > > >
+> > > > Previous discussions:
+> > > > https://patchwork.kernel.org/patch/11209429/
+> > > >
+> > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > ---
+> > > >  drivers/vfio/vfio.c             | 8 +++++++-
+> > > >  drivers/vfio/vfio_iommu_type1.c | 7 ++++++-
+> > > >  include/linux/vfio.h            | 3 ++-
+> > > >  3 files changed, 15 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c index
+> > > > d13b483..020a792 100644
+> > > > --- a/drivers/vfio/vfio.c
+> > > > +++ b/drivers/vfio/vfio.c
+> > > > @@ -2217,13 +2217,19 @@ struct vfio_mm
+> > *vfio_mm_get_from_task(struct
+> > > > task_struct *task)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
+> > > >
+> > > > -int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max)
+> > > > +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int quota, int min,
+> > > > +int
+> > max)
+> > > >  {
+> > > >  	ioasid_t pasid;
+> > > >  	int ret = -ENOSPC;
+> > > >
+> > > >  	mutex_lock(&vmm->pasid_lock);
+> > > >
+> > > > +	/* update quota as it is tunable by admin */
+> > > > +	if (vmm->pasid_quota != quota) {
+> > > > +		vmm->pasid_quota = quota;
+> > > > +		ioasid_adjust_set(vmm->ioasid_sid, quota);
+> > > > +	}
+> > > > +
+> > >
+> > > It's a bit weird to have quota adjusted in the alloc path, since the
+> > > latter
+> > might
+> > > be initiated by non-privileged users. Why not doing the simple math
+> > > in
+> > vfio_
+> > > create_mm to set the quota when the ioasid set is created? even in
+> > > the
+> > future
+> > > you may allow per-process quota setting, that should come from
+> > > separate privileged path instead of thru alloc..
+> >
+> > The reason is the kernel parameter modification has no event which can
+> > be used to adjust the quota. So I chose to adjust it in pasid_alloc
+> > path. If it's not good, how about adding one more IOCTL to let user-
+> > space trigger a quota adjustment event? Then even non-privileged user
+> > could trigger quota adjustment, the quota is actually controlled by
+> > privileged user. How about your opinion?
+> >
 > 
-> Your description doesn't really explain why this is safe though. The
-> history of this config is somehow messy, though. Mike has tried
-> to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
-> NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
-> ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
-> reasoning what so ever. This doesn't make it really easy see whether
-> reasons for reintroduction are still there. Maybe there are some subtle
-> dependencies. I do not see any TBH but that might be burried deep in an
-> arch specific code.
+> why do you need an event to adjust? As I said, you can set the quota when the set is
+> created in vfio_create_mm...
 
-Since on all ARCHes NODES_SPAN_OTHER_NODES has dependency on NUMA,
-replacing it with CONFIG_NUMA seems no risk. Just for those ARCHes which
-don't have CONFIG_NODES_SPAN_OTHER_NODES before, it involves a tiny
-performance degradation. Besides, s390 has removed support of
-NODES_SPAN_OTHER_NODES already.
+oh, it's to support runtime adjustments. I guess it may be helpful to let
+per-VM quota tunable even the VM is running. If just set the quota in
+vfio_create_mm(), it is not able to adjust at runtime.
 
-commit 701dc81e7412daaf3c5bf4bc55d35c8b1525112a
-Author: Heiko Carstens <heiko.carstens@de.ibm.com>
-Date:   Wed Feb 19 13:29:15 2020 +0100
-
-    s390/mm: remove fake numa support
-
-> 
-> > v3:
-> >  * Revise the patch description
-> > 
-> > V2:
-> >  * Revise the patch description
-> > 
-> > Hoan Tran (5):
-> >   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
-> >   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> > 
-> >  arch/powerpc/Kconfig | 9 ---------
-> >  arch/s390/Kconfig    | 8 --------
-> >  arch/sparc/Kconfig   | 9 ---------
-> >  arch/x86/Kconfig     | 9 ---------
-> >  mm/page_alloc.c      | 2 +-
-> >  5 files changed, 1 insertion(+), 36 deletions(-)
-> > 
-> > -- 
-> > 1.8.3.1
-> > 
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
-
+Regards,
+Yi Liu
