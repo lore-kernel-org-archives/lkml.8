@@ -7,85 +7,89 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E566C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581CC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD97720733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A0A20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585610479;
-	bh=zILe5TYBD6EPX4rdyC32BjLoxtx3ksb3icQbmKk/pkg=;
+	s=default; t=1585610501;
+	bh=+srPd4Oc/I3TPZow92d/pRFhLp6+7ZpR+E8KGN4O2pE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XDwVYZfpsYecjQUg23Ae+m8ThBF+H0uyq7osUSTUTGbJpa0yG9JtJbqEwJpGuXu0N
-	 OPKsuhl592BEcjmVh5dSpoCYhxsrA+iKd8J4HerE6+Z/PthMt66CU3ePzKk2cogjdq
-	 FAqD3X70eIKdSvYTSuHrkJ9z3T5+eSn67DTcvzkI=
+	b=g1i5JM0AnvVfY1vlP9inbD8qKSqtot1q7EBlrdd0MoErTKoZddMddGLDvj2K/4xEZ
+	 FRscadx/6g05NUPR8BfYZ1Xxt3gNcyWEBZYzWwccIEEHgMWJp+FJgc3JPOojKX+APi
+	 lrYbjkSmjDqch625vnA6MaFDfrNW+zA9hRvFQQgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgC3XVT (ORCPT
+        id S1729858AbgC3XVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:21:19 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43690 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728991AbgC3XVS (ORCPT
+        Mon, 30 Mar 2020 19:21:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41220 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728880AbgC3XVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:21:18 -0400
-Received: by mail-il1-f193.google.com with SMTP id g15so17625011ilj.10;
-        Mon, 30 Mar 2020 16:21:17 -0700 (PDT)
+        Mon, 30 Mar 2020 19:21:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id b12so3539801ion.8;
+        Mon, 30 Mar 2020 16:21:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J6CtYXa3sClSqnbvBiuHvvlUuxEGfNZdWolqywsT7lk=;
-        b=F1kjGAdgCYgRzZnfNXO0634hDe2IOFAVhnf/XVqU6U6lcQZhxr4DDONwZj9D71qd2w
-         ELvimVuy4QBSsxBp6TbKVGbB/uP7bHZEWXM5eWPIeSMlntXPQLqpG0UhaQfwNowwMHFH
-         GfaqYgEXxdQkaWWDkYAjNi+1HggS49DGy80O5wEqPxTypILiLIIx7usNdKhqQisqpC8S
-         BM57Jpk01XktEF8eiqmw1NOVJ01C6F9YSCZK+b4gIHvVgn/77mPEuynOAgdHm/EGgYii
-         ka+0RPMpVHMB24YMCh7C5S0AQ0nq5ENH+kB/sOTx8f/HR3SphdWdOJ2F+ht+/AAm1Jpx
-         L8Gg==
-X-Gm-Message-State: ANhLgQ0Kd5+vS06rwazyhhIDoAUOlglxbZReuRWmPQ8d+2XrZZBE7Zn3
-        cuGR9S9Aw1/QOB+yCTklzw==
-X-Google-Smtp-Source: ADFU+vuaKs6BtYALVaqgUXUnIFTShETJESYag2YrRrycS+2I8mzQdSm2bGh9kir55sPT0pkBtVUhBA==
-X-Received: by 2002:a05:6e02:be7:: with SMTP id d7mr14208948ilu.238.1585610477255;
-        Mon, 30 Mar 2020 16:21:17 -0700 (PDT)
+        bh=dVnw6FbVGtknI/LXqWPEB0fCBLV8ok47WPEsicGJKgc=;
+        b=UTZXXajbyMtlnjw0IM251oLIrn08qXfCtNA44hqb+ZF6DNI+DF/im6iC4QQaeojrHs
+         pAS05T5rPWDZ7iFn5UidaycMPdG6L4HbnMqgF+9Cj1b1jRHLKT5um/4cohXD1Qld7GI3
+         xtDLyWuLx7L0r4rODLA0RTvHjTsl4n7FqDRsDHACnnNey+FEAF3wRElNG9DjfruBeATz
+         No6gGuaTAnZ4B052BWlaMDH7S+K+eB2jG8Colht/mkHnIgtmhaHY/Qv4I0mAbuCsasgk
+         x9g6lNjJMR1Gzk1obyOYefCTXXOlVYRQc1Axvw4qqDa+RAKLZUI1BnqkHyGKlzeZW3+b
+         7QUw==
+X-Gm-Message-State: ANhLgQ2AHAlpyGQ5qlUhexFZI6G9QSmVXBHpL1ROaWPaN2SjlodHl+3U
+        LtZJupICmpy1UQ0IW1X3qw==
+X-Google-Smtp-Source: ADFU+vvLjBYxSJO2if2o0gwQCWJ+uAWhliFrL8r8v9ZHNOquhf0xFKTFptjnxSL3vxEJ724p7DSufA==
+X-Received: by 2002:a5e:c104:: with SMTP id v4mr12880353iol.122.1585610498381;
+        Mon, 30 Mar 2020 16:21:38 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t5sm3578511iom.3.2020.03.30.16.21.15
+        by smtp.gmail.com with ESMTPSA id i16sm5401647ils.40.2020.03.30.16.21.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:21:16 -0700 (PDT)
-Received: (nullmailer pid 17537 invoked by uid 1000);
-        Mon, 30 Mar 2020 23:21:15 -0000
-Date:   Mon, 30 Mar 2020 17:21:15 -0600
+        Mon, 30 Mar 2020 16:21:37 -0700 (PDT)
+Received: (nullmailer pid 18111 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:21:36 -0000
+Date:   Mon, 30 Mar 2020 17:21:36 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, alexandre.torgue@st.com,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com,
-        olivier.moysan@st.com, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: iio: adc: stm32-adc: fix id relative path
-Message-ID: <20200330232115.GA17380@bogus>
-References: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
+To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        pierre-louis.bossart@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
+        daniel.baluta@gmail.com, linux-imx@nxp.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        yuehaibing@huawei.com, krzk@kernel.org,
+        linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH 5/5] dt-bindings: dsp: fsl: Add fsl,imx8mp-dsp entry
+Message-ID: <20200330232136.GA18056@bogus>
+References: <20200319194957.9569-1-daniel.baluta@oss.nxp.com>
+ <20200319194957.9569-6-daniel.baluta@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20200319194957.9569-6-daniel.baluta@oss.nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 19:18:27 +0100, Fabrice Gasnier wrote:
-> Fix id relative path that shouldn't contain 'bindings', as pointed out
-> when submitting st,stm32-dac bindings conversion to json-schema [1].
-> [1] https://patchwork.ozlabs.org/patch/1257568/
+On Thu, 19 Mar 2020 21:49:57 +0200, Daniel Baluta wrote:
+> From: Daniel Baluta <daniel.baluta@nxp.com>
 > 
-> Fixes: a8cf1723c4b7 ("dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema")
+> Minimal implementation needs the same DT properties as
+> existing compatible strings. So, we just add the new
+> compatible string in the list.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 > ---
->  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
