@@ -2,101 +2,167 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882E8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C91C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BCD20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B411520733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iZf7im/x"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="QBfuYm3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgC3UlF (ORCPT
+        id S1729435AbgC3UlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:41:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38754 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbgC3UlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:41:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f6so310525wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:41:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=diBJ0x79+6O/wxFqEKBl8ch1Vskurhroixe+etKg5ds=;
-        b=iZf7im/xB2B8gsISeTSt6aduVdGAss3K01k9DkivavNEydV0FoEpJ1r82SpBLvmavJ
-         +Vz3Lgj5/BAtjn8epPfJydi5sCistPfYs7bAlrv0Dn1PhziubG5wDMVxLdF1iJ7fzFc6
-         F6DKQuKnAC74stkr/1GzCKXNfgFPebUCEvuYU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=diBJ0x79+6O/wxFqEKBl8ch1Vskurhroixe+etKg5ds=;
-        b=EJCTFdrdJRv7V9fDbgDPhoqUgqdwNf6YFBiB2k/56+CGE+5CRUmWtIVuwmi8YTU6Uj
-         TM5tvnkQNS6uYUbhfv3l/dqElDplGySe1P10fNLQZeIgZoTDSKF4jKWnpu5S2SOTjjWh
-         sfnS2OYJeoj6UOZELrFJzoEloiUcEuyQd7eVj6JiKP5t21dXEGhWEGJX+5T9UicdnmMe
-         9zDxCIWuem1Mtt2IX/wORwa4GBw6EAbVHrrMDUKxL7i7E6jX7ADXh/CO9RPr6wQyRlZk
-         U6sovquP6JMH3cs95N2NIW5Xuw7imYXLgC64gS4oI85V6EW4LynYKf7nEZHZtHb8jAHY
-         7KWA==
-X-Gm-Message-State: ANhLgQ0+FFwGI1weKUQzLadIvKHZgoygMb1TVUMBXnm86ejeu+zxMMFu
-        x1COLDw7WFRoxyraOYKp387FpFlTYNs=
-X-Google-Smtp-Source: ADFU+vs0+WO+HMZReh+CV4b+EKUCIVkXRdBnzid39Ti1/WKMh5uSQ/VzWIEU+mU3N4lZ4g7u9xHuxA==
-X-Received: by 2002:a1c:f407:: with SMTP id z7mr1087478wma.36.1585600862543;
-        Mon, 30 Mar 2020 13:41:02 -0700 (PDT)
-Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id w81sm890156wmg.19.2020.03.30.13.41.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 13:41:02 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH bpf-next] bpf: lsm: Make BPF_LSM depend on BPF_EVENTS
-Date:   Mon, 30 Mar 2020 22:40:59 +0200
-Message-Id: <20200330204059.13024-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 30 Mar 2020 16:41:12 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:36862 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728481AbgC3UlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 16:41:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 1FB5041272;
+        Mon, 30 Mar 2020 20:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1585600867; x=1587415268; bh=OU3hBGEfOQcxytxHcUWUuI35b
+        IUOuu3HXbM3CIo0vkY=; b=QBfuYm3KLrYd59pO8C9CwBNFTPOk4X8UTiGOig9Wm
+        Z7B8plOFw6gX2yjVllCSjZieFXOvzDK7dy+MgAMKHBPJKszLMI7Ctqpm3rwOri63
+        DCSnh79H/0yeWSYnN/Abx0Y4omtl8GyavEyFxODtjeB8PARjXkdT2MUNnYKNTl1v
+        Q8=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id e8APibuRPKhO; Mon, 30 Mar 2020 23:41:07 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 77DC84126E;
+        Mon, 30 Mar 2020 23:41:07 +0300 (MSK)
+Received: from localhost.localdomain (10.199.0.226) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Mon, 30 Mar 2020 23:41:07 +0300
+Message-ID: <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
+Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Mar 2020 23:41:15 +0300
+In-Reply-To: <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
+References: <20200330152711.8769-1-i.mikhaylov@yadro.com>
+         <20200330152711.8769-3-i.mikhaylov@yadro.com>
+         <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.0.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On Mon, 2020-03-30 at 22:07 +0300, Andy Shevchenko wrote:
+> On Mon, Mar 30, 2020 at 6:27 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> > Proximity sensor driver based on light/vcnl4000.c code.
+> > For now supports only the single on-demand measurement.
+> > 
+> > The VCNL3020 is a fully integrated proximity sensor. Fully
+> > integrated means that the infrared emitter is included in the
+> > package. It has 16-bit resolution. It includes a signal
+> > processing IC and features standard I2C communication
+> > interface. It features an interrupt function.
+> 
+> Still my tag applies, but
+> I have few more comments below.
+> 
+> ...
+> 
+> > +#define VCNL_DRV_NAME          "vcnl3020"
+> > +#define VCNL_REGMAP_NAME       "vcnl3020_regmap"
+> 
+> I'm wondering why you need the second one.
 
-LSM and tracing programs share their helpers with bpf_tracing_func_proto
-which is only defined (in bpf_trace.c) when BPF_EVENTS is enabled.
+For regmap initialize as name in 
+static const struct regmap_config vcnl3020_regmap_config = {
+       .name           = VCNL_REGMAP_NAME,
 
-Instead of adding __weak symbol, make BPF_LSM depend on
-BPF_EVENTS so that both tracing and LSM programs can actually share
-helpers.
+I can get rid of it from struct with name definition.
 
-Signed-off-by: KP Singh <kpsingh@google.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Fixes: fc611f47f218 ("bpf: Introduce BPF_PROG_TYPE_LSM")
----
- init/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+> > +       rc = device_property_read_u32(data->dev, "vishay,led-current-
+> > milliamp",
+> > +                                     &led_current);
+> > +       if (rc == 0) {
+> > +               rc = regmap_write(data->regmap, VCNL_LED_CURRENT,
+> > led_current);
+> > +               if (rc)
+> > +                       dev_err(data->dev,
+> > +                               "Error (%d) setting LED current", rc);
+> > +       }
+> > +
+> > +       return rc;
+> 
+> Why not to use standard pattern, i.e.
+> 
+>   if (rc)
+>     return rc;
+>   ...
+>   rc = regmap_write(...);
+> 
+> ?
 
-diff --git a/init/Kconfig b/init/Kconfig
-index deae572d1927..7b7ea70e64ac 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1619,6 +1619,7 @@ config KALLSYMS_BASE_RELATIVE
- 
- config BPF_LSM
- 	bool "LSM Instrumentation with BPF"
-+	depends on BPF_EVENTS
- 	depends on BPF_SYSCALL
- 	depends on SECURITY
- 	depends on BPF_JIT
--- 
-2.20.1
+Optional parameter. There exists a lot of ways to do it:
+
+rc = device_property_read_u32(dev, "milliamp", &led_current);
+rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ? 0);
+or
+
+rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ?
+VCNL_LED_CURRENT_DEFAULT);
+or even maybe make a function like get_led_current:
+
+rc = regmap_write(regmap, VCNL_LED_CURRENT, get_led_curent(dev));
+where 
+static u32 get_led_current(dev) {
+	u32 led_current;
+	rc = device_property_read_u32(dev, "milliamp", &led_current);
+	return (!rc) : led_current ? VCNL_LED_CURRENT_DEFAULT;
+}
+Which one would be more preferable?
+
+> ...
+> 
+> > +       if (rc) {
+> > +               dev_err(data->dev,
+> > +                       "vcnl3020_measure() failed with error (%d)", rc);
+> 
+> Perhaps you keep same pattern for error messages as in previous function(s).
+
+Sure.
+
+> 
+> > +               goto err_unlock;
+> > +       }
+> > +       rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res, 2);
+> 
+> sizeof(res)
+
+Oops.
+
 
