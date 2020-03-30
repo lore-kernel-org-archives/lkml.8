@@ -2,148 +2,111 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E432FC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58EC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53862076A
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F6B2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iqTUzPx+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DntqLisv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgC3CGs (ORCPT
+        id S1728442AbgC3CQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 22:06:48 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36265 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbgC3CGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:06:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rG6W4swcz9sPR;
-        Mon, 30 Mar 2020 13:06:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585534005;
-        bh=0y0U+Mr8OwI1iN2DZ+X0btlBxibOGWhQY/KkqJ6L2GU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=iqTUzPx+Pj3Vvc04JgYyAFf6JTcSaVBbbS5K599XRLvuy7f/o6QksUkrv75QvRL6J
-         2Gq9OeApjUvHzFoYglF302jpWYfv+A1XBEIbWCy0EKf8j8UdEKdXqKhDw5XmtNXnjn
-         i+NEwZuQGnz1CR/ZK2H5ENnZKlkjo1h1Kf6WVDbQnTrJTm21fut2ggRuWUbJuHiM3F
-         q2eOjA86RvtxIZ40exX20Pqjw70K7sQXkfIAQwUMzqhyu7vVdncXM0ZlwndDGnpFay
-         cv3iu17baKj7dy2/h7YsPrx1eJAMVSzVjJddqzbswjXjKslYcDkHxMnLtj5wHH/LVT
-         5ie0iDrdhMxug==
-Date:   Mon, 30 Mar 2020 13:06:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KP Singh <kpsingh@google.com>
-Subject: linux-next: manual merge of the keys tree with the bpf-next tree
-Message-ID: <20200330130636.0846e394@canb.auug.org.au>
+        Sun, 29 Mar 2020 22:16:51 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34391 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbgC3CQu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 22:16:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 23so7875709pfj.1;
+        Sun, 29 Mar 2020 19:16:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=myS2Ak0YzAiZAYZxlOLXD6g0s5EoiK6XIgAdluTP7WM=;
+        b=DntqLisvfbXCnqjCecKzGWwXKYRS8QYf+7oVLcoDvACb7KlUTL9F8ovnpbx+CbzhKb
+         kJ0PwGqphN2dx/hgjjSKOxBaSPyxG5HfSlOMLuurJz/1ltmp/lqtYK/dp8gkVfdYsbbo
+         yDqKSn1c5zfZtUhej6XTu2i+uPKBxKKlJ8lDR+tZ6KErtYpHQyGcdDPtZF66JpkLwboS
+         BwhVf7hK2mLYw0RDjcZhcAy8qrsbHYbhvE6ZaooZso/Bzs54kokEACdIt+D1xOD3aBBR
+         FQbSlTQzHL2Nyee4SxaqEvVs8411/j7vW+Vd9keveGNo1g75ZrWajgjyy+2UCtjhnzMq
+         ks+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=myS2Ak0YzAiZAYZxlOLXD6g0s5EoiK6XIgAdluTP7WM=;
+        b=p7VUTxkyr1bavzN1Z1YT06KmLmU8gQEs9hYAMK4ckS90V9NOvH5EFpGj3RGt3H+29k
+         F7C4N8UGPJiZThU+61SzkqM+YeiU3iPqBCMimWPqXsfz78M0HVLE/kBoS9FSUnjQeSW9
+         1QeHXf6HihzBJM/ZenyOulQd4QJztd4G4UuRhDiGSFVkLpPEFTHW46Eg7fvOZPVObuxn
+         q36Zmv5jvMFxSdRDOCpggxmlwmPRd8YsDFAjDdteoTiQglUeDI3/C1R/sj0uZb/Ici18
+         E45sXFjeS2Ro8nkwLWnv+ih463s/EgVBfdpmRbCJqGE1I3VSoS8NJ78pmKO0P7BIb5oO
+         aM9Q==
+X-Gm-Message-State: ANhLgQ3rezJ9Q/iT6WFRadV54OuePq0kldQpdZ0y3K365yMVa5FumIoo
+        j/JNxc2u3d/x2PehOFCBgpc=
+X-Google-Smtp-Source: ADFU+vsgwoJcfvEmC5kefiQJ5tmaLvyErZ2hpuh3RtC59p6o1BVBvJIu3lVyPGC7QIh8kMz9LYq8gA==
+X-Received: by 2002:a63:a052:: with SMTP id u18mr11071296pgn.210.1585534609627;
+        Sun, 29 Mar 2020 19:16:49 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id u13sm3674296pgp.49.2020.03.29.19.16.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 19:16:48 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH] clk: sprd: fix to get a correct ibias of pll
+Date:   Mon, 30 Mar 2020 10:16:40 +0800
+Message-Id: <20200330021640.14133-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=kvtbqHtnR+XTN_0xhli37h";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=kvtbqHtnR+XTN_0xhli37h
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Hi all,
+The current driver is getting a wrong ibias index of pll clocks from
+number 1. This patch fix that issue, then getting ibias index from 0.
 
-Today's linux-next merge of the keys tree got a conflict in:
-
-  include/linux/lsm_hooks.h
-
-between commit:
-
-  98e828a0650f ("security: Refactor declaration of LSM hooks")
-
-from the bpf-next tree and commits:
-
-  e8fa137bb3cb ("security: Add hooks to rule on setting a watch")
-  858bc27762c1 ("security: Add a hook for the point of notification inserti=
-on")
-
-from the keys tree.
-
-I fixed it up (I used the former version of this file and added the
-following merge resolution patch) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 30 Mar 2020 12:55:31 +1100
-Subject: [PATCH] security: keys: fixup for "security: Refactor declaration =
-of
- LSM hooks"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
- include/linux/lsm_hook_defs.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/clk/sprd/pll.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 9cd4455528e5..4f8d63fd1327 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -252,6 +252,16 @@ LSM_HOOK(int, 0, inode_notifysecctx, struct inode *ino=
-de, void *ctx, u32 ctxlen)
- LSM_HOOK(int, 0, inode_setsecctx, struct dentry *dentry, void *ctx, u32 ct=
-xlen)
- LSM_HOOK(int, 0, inode_getsecctx, struct inode *inode, void **ctx,
- 	 u32 *ctxlen)
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+LSM_HOOK(int, 0, watch_key, struct key *key)
-+#endif
-+#ifdef CONFIG_DEVICE_NOTIFICATIONS
-+LSM_HOOK(int, 0, watch_devices, void)
-+#endif
-+#ifdef CONFIG_WATCH_QUEUE
-+LSM_HOOK(int, 0, post_notification, const struct cred *w_cred,
-+	 const struct cred *cred, struct watch_notification *n)
-+#endif
-=20
- #ifdef CONFIG_SECURITY_NETWORK
- LSM_HOOK(int, 0, unix_stream_connect, struct sock *sock, struct sock *othe=
-r,
---=20
-2.25.0
+diff --git a/drivers/clk/sprd/pll.c b/drivers/clk/sprd/pll.c
+index 640270f51aa5..15791484388f 100644
+--- a/drivers/clk/sprd/pll.c
++++ b/drivers/clk/sprd/pll.c
+@@ -87,11 +87,12 @@ static u32 pll_get_ibias(u64 rate, const u64 *table)
+ {
+ 	u32 i, num = table[0];
+ 
+-	for (i = 1; i < num + 1; i++)
+-		if (rate <= table[i])
++	/* table[0] indicates the number of items in this table */
++	for (i = 0; i < num; i++)
++		if (rate <= table[i + 1])
+ 			break;
+ 
+-	return (i == num + 1) ? num : i;
++	return i == num ? num - 1 : i;
+ }
+ 
+ static unsigned long _sprd_pll_recalc_rate(const struct sprd_pll *pll,
+-- 
+2.20.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/=kvtbqHtnR+XTN_0xhli37h
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6BVCwACgkQAVBC80lX
-0GxbRAf/SOe5GZaT6ReH7/jAinE4d7OsRxl89mO6U4JsHx/OoLjs6jeSSg3axjbD
-23biOI4B0FT6r0ABXGiQ3vK39bGmDCuvhB4ZrHat4sKeIy6i175JHEO5FtQvBX0D
-HNJvhaty5MeYqyXFioLecza6fcbEgEGg+Qio477a2y6wyIu1/UqVYCOeSxfQqgkW
-o97Wy1T+UVTJCnKKG7K+lqYKfpgOASjfokqw5RVCmaEUQKVRsdQ07qb8MEmFeZTf
-ksTk5pVb6DpNyoDghy5Sz+iAZPyvgxVMCl2Um9ZI6/2sY9qbwflF9lTzBUBlmzlr
-OlFjIlU7A4Vfk+sBjWNO8pZ3KNQMGA==
-=Uhwq
------END PGP SIGNATURE-----
-
---Sig_/=kvtbqHtnR+XTN_0xhli37h--
