@@ -2,102 +2,118 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A5FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA945C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C541206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E858206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Hh9Gj3cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgC3VaV convert rfc822-to-8bit (ORCPT
+        id S1729005AbgC3Vad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:30:21 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:52900 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgC3VaV (ORCPT
+        Mon, 30 Mar 2020 17:30:33 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:35211 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728047AbgC3Vad (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:30:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id D0E3C60D0872;
-        Mon, 30 Mar 2020 23:30:18 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id DLFK5jK_AhlB; Mon, 30 Mar 2020 23:30:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id E572C6091853;
-        Mon, 30 Mar 2020 23:30:15 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 7sb4cXn88cVf; Mon, 30 Mar 2020 23:30:15 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 634AE60D086D;
-        Mon, 30 Mar 2020 23:30:15 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 23:30:14 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <2093889665.60398.1585603814979.JavaMail.zimbra@nod.at>
-In-Reply-To: <20200319224435.GA25590@embeddedor.com>
-References: <20200319224435.GA25590@embeddedor.com>
-Subject: Re: [PATCH][next] mtd: ubi: ubi-media.h: Replace zero-length array
- with flexible-array member
+        Mon, 30 Mar 2020 17:30:33 -0400
+Received: by mail-qv1-f65.google.com with SMTP id q73so9809574qvq.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:30:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujlgDVeN5WyrhvReWMSTseHg6eFfL+O6R8lZN6GeKTM=;
+        b=Hh9Gj3cjpAEvef4tflsauVD4dbbVc+yk4Aml3cvvrfQro5VAcFEtrSB4KE8ManSdfD
+         THxmy22AdlPLQjCHWdsbQZVFUqS/IKWpxWKuX0ofapv2cddfTHHq56tMRWhfLtRgYTDb
+         n5Rix9EJBGmjk+QHAnixLL1bER0FH7qMYwtd0m3NI+bpxp01r73tAivtFSicTRhnFS8Z
+         AL4B4YZI5lAlDLXKl68w2hbZzRpIk5VZp2eualX7vJF6AL1voR3hUyC8xN1a7ANmD2RG
+         G1nQR/tpRBkm/5Xaveh6g8OmIi3pLr78b/CtQEyZ14nT83jWLfXfiwD1/yREzDognI48
+         2pfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujlgDVeN5WyrhvReWMSTseHg6eFfL+O6R8lZN6GeKTM=;
+        b=uYcFGZ10Oj2R2RhIrlre8vy9RqUqANPqYwtzpL3VcIodLjr58gjmCTi5PCLWXiC3oa
+         FEBUG/IuVHoZdePjlByjesYzmh130Qt39WXxdARJdqi6g8l91+3EV6Q+QIH3SUfd6JBe
+         3nWvxW4/vfRyK0UW9FVBGRpHkY8FlnPnXTDnYcGJOaG+4pPVqiOanuxzu+if9CMHISZP
+         B4sII/YXRU/+jzZVlUIlml3PP1eUanazypCt0a+GCipWrJDU1XmKDBmpT20mkuc2MAnF
+         ipo2CQKMLGxeKBU6aDNjLZF+vi16J0Y2KcL7+aqMfjpSUxILAw7JGHy1sTz6yU3VhKPS
+         m+Fw==
+X-Gm-Message-State: ANhLgQ3jfawLNnW0QpPP9fGrjcie/a7OFElcDHGiWx2+Ywh9bFU2EgT1
+        AQsd9tkmoRFpt+APx3neu5tSiA==
+X-Google-Smtp-Source: ADFU+vtUbDg0A+atghZynr7NWxbJSLnJ1NzuOveWDW+Bue0PEFUbXdkQR+ayO1N1b0P2hqN3LYPyNA==
+X-Received: by 2002:a05:6214:11ec:: with SMTP id e12mr14079090qvu.89.1585603831347;
+        Mon, 30 Mar 2020 14:30:31 -0700 (PDT)
+Received: from ovpn-66-6.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l42sm11916908qtf.51.2020.03.30.14.30.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Mar 2020 14:30:30 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     peterz@infradead.org, mingo@redhat.com
+Cc:     will@kernel.org, dbueso@suse.de, juri.lelli@redhat.com,
+        longman@redhat.com, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next v2] locking/percpu-rwsem: fix a task_struct refcount
+Date:   Mon, 30 Mar 2020 17:30:02 -0400
+Message-Id: <20200330213002.2374-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
-Thread-Topic: ubi-media.h: Replace zero-length array with flexible-array member
-Thread-Index: 0me70WajGRQMgkZ2Z4V30jvr1xIZqw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> An: "richard" <richard@nod.at>, "Miquel Raynal" <miquel.raynal@bootlin.com>, "Vignesh Raghavendra" <vigneshr@ti.com>
-> CC: "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "Gustavo A. R. Silva"
-> <gustavo@embeddedor.com>
-> Gesendet: Donnerstag, 19. März 2020 23:44:35
-> Betreff: [PATCH][next] mtd: ubi: ubi-media.h: Replace zero-length array with flexible-array member
+The commit 7f26482a872c ("locking/percpu-rwsem: Remove the embedded
+rwsem") introduced some task_struct memory leaks due to messing up with
+a task_struct refcount. At the beginning of
+percpu_rwsem_wake_function(), it calls get_task_struct(), but if the
+trylock failed, it will remain in the waitqueue. However, it will run
+percpu_rwsem_wake_function() again with get_task_struct() to increase
+the refcount but then only call put_task_struct() once the trylock
+succeeded.
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->        int stuff;
->        struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fix it by adjusting percpu_rwsem_wake_function() a bit to guard against
+when percpu_rwsem_wait() observing !private, terminating the wait and
+doing a quick exit() while percpu_rwsem_wake_function() then doing
+wake_up_process(p) as a use-after-free.
 
-Applied. Thanks!
+Fixes: 7f26482a872c ("locking/percpu-rwsem: Remove the embedded rwsem")
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ kernel/locking/percpu-rwsem.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-//richard
+diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+index a008a1ba21a7..8bbafe3e5203 100644
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -118,14 +118,15 @@ static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
+ 				      unsigned int mode, int wake_flags,
+ 				      void *key)
+ {
+-	struct task_struct *p = get_task_struct(wq_entry->private);
+ 	bool reader = wq_entry->flags & WQ_FLAG_CUSTOM;
+ 	struct percpu_rw_semaphore *sem = key;
++	struct task_struct *p;
+ 
+ 	/* concurrent against percpu_down_write(), can get stolen */
+ 	if (!__percpu_rwsem_trylock(sem, reader))
+ 		return 1;
+ 
++	p = get_task_struct(wq_entry->private);
+ 	list_del_init(&wq_entry->entry);
+ 	smp_store_release(&wq_entry->private, NULL);
+ 
+-- 
+2.21.0 (Apple Git-122.2)
+
