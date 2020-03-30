@@ -2,94 +2,86 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BC6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC40BC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4862073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="owwok9nn"
+	by mail.kernel.org (Postfix) with ESMTP id 81F5420716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgC3N2d (ORCPT
+        id S1727751AbgC3N3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:28:33 -0400
-Received: from mail-pj1-f47.google.com ([209.85.216.47]:35153 "EHLO
-        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgC3N2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:28:32 -0400
-Received: by mail-pj1-f47.google.com with SMTP id g9so7325655pjp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dBCKK13T41q3QG0TppGXO2lZGhQh6qelUIiSqxBjEqI=;
-        b=owwok9nnTm2h8HjCzP3xGyehqOa/D+rKX7q4nWprRdggtnJb5k4WbkW7j4YGgTAr+M
-         e+EpZs3JBoKipKK6VzoGzFYfOBzGqUVKrAHFaAkMPzoq5zKgZh4XKY/iSydLHtxGYVPQ
-         pkydDsz11PnPj0PAfpf1EJUESjnQbcOrM8+t9X0P3Tj+tHQ5eLx98f94ryTAs7zqv8Q4
-         lBQl/0pcMhjnmKlmqBVFWMfX3HGM0DVbLgRm+yRbgrOBA6n+45u4s4eGtd8gJzk27CyO
-         nVGveG0hva5lKioQ8b9ZoYzU6GFsUduRVHG070E1uGf4+2x+3d9Am3TU4hYJEtM9FB0W
-         S2NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dBCKK13T41q3QG0TppGXO2lZGhQh6qelUIiSqxBjEqI=;
-        b=A3iFfcxX/bKgX+m2+V0ykCJfQ7x4r4AfUzETVamxn3HwIS8ZRIggqEIPJmwrf3WfUH
-         OAMUq2wEb4RtjoVo+J1srfzaeOubwsnc0hANI1sTYG+qpj9XSD/+Db2Xo6J9ThdwF+Yk
-         GC9ryjVj/+ClHLn0YDkFBU8e+1yzb9X/l/4xZ4/jK6w0FwkiWeCtfQZRnhOv1sqa07qv
-         b+ewTLcAXqlL6yNgmx3dlDZFits8eYUMNRVaACVgXXbn9+cSvnxA9mn3GYMnJPOjNk4g
-         nuFBhKX+Q2DPnC5FwS99bJoLDFUYl4Qp9Ct23Un3RSxftX4HT5DEIMtjCpmQPiGuK3x9
-         qxnQ==
-X-Gm-Message-State: ANhLgQ00ok40uIDsPdQWMK/PlJAe4ub7EkoeA4SUuO86RBV6jzpVVR61
-        4rnL2y2YB1JyWhvaYaXnLrPoUPfVfKcpQBBTxiM=
-X-Google-Smtp-Source: ADFU+vuCxvBKRdQ2wcv7fCD7lauMynN9CQZU+vWb3ZPwxC5L7KH31wswhJV8W6PoJtrvgXXul1Gjk/xfZRgMPz96J60=
-X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr16021231pjn.8.1585574909737;
- Mon, 30 Mar 2020 06:28:29 -0700 (PDT)
+        Mon, 30 Mar 2020 09:29:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:53712 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbgC3N3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:29:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66730101E;
+        Mon, 30 Mar 2020 06:29:34 -0700 (PDT)
+Received: from [10.57.60.204] (unknown [10.57.60.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F53F3F71E;
+        Mon, 30 Mar 2020 06:29:32 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+ <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+ <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com> <20200330095707.GA10432@bogus>
+ <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
+ <CAHp75VdBm8ZYOMWmQEA8LD6uGcJ0sZ=M6n3MSYxmO6UkXbu+-A@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f2706518-def8-1566-149f-00fc1d8cc19f@arm.com>
+Date:   Mon, 30 Mar 2020 14:29:30 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200330085854.19774-1-geert@linux-m68k.org> <CAHp75Vc1gW2FnRpTNm6uu4gY3bSmccSkCFkAKqYraLincK29yA@mail.gmail.com>
- <CAMuHMdXDBtOo_deXsmX=zA9_va0O5j8XydxoigmS35+Tj7xDDA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXDBtOo_deXsmX=zA9_va0O5j8XydxoigmS35+Tj7xDDA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 30 Mar 2020 16:28:22 +0300
-Message-ID: <CAHp75VfsfBD7djyB=S8QtQPdKTkpU5gFzyRYr8FshavoWgT0CA@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.6
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHp75VdBm8ZYOMWmQEA8LD6uGcJ0sZ=M6n3MSYxmO6UkXbu+-A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 4:26 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Andy,
->
-> On Mon, Mar 30, 2020 at 3:08 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Mar 30, 2020 at 12:00 PM Geert Uytterhoeven
-> > <geert@linux-m68k.org> wrote:
-> > > Below is the list of build error/warning regressions/improvements in
-> > > v5.6[1] compared to v5.5[2].
-> >
-> > >   + /kisskb/src/include/linux/dev_printk.h: warning: format '%zu' expects argument of type 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]:  => 232:23
-> >
-> > This is interesting... I checked all dev_WARN_ONCE() and didn't find an issue.
->
-> arcv2/axs103_smp_defconfig
->
-> It's probably due to a broken configuration for the arc toolchain.
+On 2020-03-30 2:11 pm, Andy Shevchenko wrote:
+> On Mon, Mar 30, 2020 at 3:49 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>> On 2020-03-30 11:13 am, Sudeep Holla wrote:
+>>> On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
+> 
+> ...
+> 
+>> AFAICS the difference is down to whether deferred_probe_timeout has
+>> expired or not - I'm not familiar enough with this code to know
+>> *exactly* what the difference is supposed to represent, nor which change
+>> has actually pushed the Juno case from one state to the other (other
+>> than it almost certainly can't be $SUBJECT - if this series is to blame
+>> at all I'd assume it would be down to patch #1/3, but there's a bunch of
+>> other rework previously queued in -next that is probably also interacting)
+> 
+> JFYI: patch #1/3 wasn't applied.
 
-Alexey, do have any insight?
+OK, so if anyone's invested enough to want to investigate, it must be 
+something in John's earlier changes here:
 
--- 
-With Best Regards,
-Andy Shevchenko
+https://lore.kernel.org/lkml/20200225050828.56458-1-john.stultz@linaro.org/
+
+Thanks,
+Robin.
