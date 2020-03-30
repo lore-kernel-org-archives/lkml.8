@@ -2,95 +2,335 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEF0C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC0AC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D23702073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B48E20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PhwDNvOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgC3RiW (ORCPT
+        id S1729668AbgC3Rjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:38:22 -0400
-Received: from mx.sdf.org ([205.166.94.20]:52290 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgC3RiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:38:22 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02UHc2SK002031
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Mon, 30 Mar 2020 17:38:02 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02UHc1dq024983;
-        Mon, 30 Mar 2020 17:38:01 GMT
-Date:   Mon, 30 Mar 2020 17:38:01 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, lkml@sdf.org
-Subject: [PATCH v2] arm64: kexec_file: Avoid temp buffer for RNG seed
-Message-ID: <20200330173801.GA9199@SDF.ORG>
-References: <202003281643.02SGhMtr029198@sdf.org>
- <20200330133701.GA10633@willie-the-truck>
+        Mon, 30 Mar 2020 13:39:52 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44326 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbgC3Rjw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 13:39:52 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b72so8919517pfb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:39:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zuZsbdVDQCfR2Ns3FiP6U9GsK2CJ/bgMt0HZKKCU9XM=;
+        b=PhwDNvOZtoN+K2YwYy4Wtvi8APmim6kBORKKOxm5Y00S37slWl2++yrkZgYaxr85jx
+         EtuxWsIucN5ODVhcZuYyzo8+1Joc6NymcBJdIRYupA5Ucs6Q/DpqJaOpjQWU9tZrqJ8M
+         1hzdHvOuT9+p93sICbxFef8aP0Bi+5SaByFqU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zuZsbdVDQCfR2Ns3FiP6U9GsK2CJ/bgMt0HZKKCU9XM=;
+        b=SQ2m80R3mTZS/l5dGdMA3g7neC1mgvp6DYRW6fWC03Jm96eNBFRF2eBajeFLiQwvg6
+         J6sm6Gv7uHytgqNoVlu36qeQj6LdwDYw9Y0pfJrHc9gCHFFWMzTaNR5S+4uaaa0hi2jj
+         V5wMEQkE3tFWppzLdpzDHnqSkKDmi9X+4DWLfr76tg6L/v4Q0pC43NV5DQcE3/S2DULI
+         p0q86tkPLJWKTXOuLAmIR5Iyu+sS/gcKSUgjG4uj2pQAsDIyajnbCvjUerVA5UImlkJ5
+         NLWp+C9tB9e4nNf2HtmLHUx1bco6J84NJvv6W+8Ckqi//Gtw3g9hZ5kIWIT8cvmLNhll
+         J6gA==
+X-Gm-Message-State: ANhLgQ2PPcTkWyzKZgLXgMphWNWMnO9hDDwDaQSvhYYV9awYEDR4cf+B
+        yqX33GrZuD6L+iBZ4I9B33li5k89v6M=
+X-Google-Smtp-Source: ADFU+vvLgDpr0Kmtok+NiSOwmrtkpT0fKaHmBS4/cMN5Dgi4fWbQWcyjXLmCXjtOJuI4K6EIZjCQ1w==
+X-Received: by 2002:a62:18cf:: with SMTP id 198mr14270160pfy.277.1585589990028;
+        Mon, 30 Mar 2020 10:39:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s14sm10090709pgl.4.2020.03.30.10.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 10:39:48 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 10:39:47 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <202003301035.8688FCE5@keescook>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-2-vbabka@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330133701.GA10633@willie-the-truck>
+In-Reply-To: <20200330115535.3215-2-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After using get_random_bytes(), you want to wipe the buffer
-afterward so the seed remains secret.
+On Mon, Mar 30, 2020 at 01:55:33PM +0200, Vlastimil Babka wrote:
+> A recently proposed patch to add vm_swappiness command line parameter in
+> addition to existing sysctl [1] made me wonder why we don't have a general
+> support for passing sysctl parameters via command line. Googling found only
+> somebody else wondering the same [2], but I haven't found any prior discussion
+> with reasons why not to do this.
+> 
+> Settings the vm_swappiness issue aside (the underlying issue might be solved in
+> a different way), quick search of kernel-parameters.txt shows there are already
+> some that exist as both sysctl and kernel parameter - hung_task_panic,
+> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
+> would remove the need to add more of those one-offs and might be handy in
+> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
+> 
+> Hence, this patch adds a new parse_args() pass that looks for parameters
+> prefixed by 'sysctl.' and tries to interpret them as writes to the
+> corresponding sys/ files using an temporary in-kernel procfs mount. This
+> mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
+> registered sysctl tables. Errors due to e.g. invalid parameter name or value
+> are reported in the kernel log.
+> 
+> The processing is hooked right before the init process is loaded, as some
+> handlers might be more complicated than simple setters and might need some
+> subsystems to be initialized. At the moment the init process can be started and
+> eventually execute a process writing to /proc/sys/ then it should be also fine
+> to do that from the kernel.
+> 
+> Sysctls registered later on module load time are not set by this mechanism -
+> it's expected that in such scenarios, setting sysctl values from userspace is
+> practical enough.
+> 
+> [1] https://lore.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
+> [2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
+> [3] https://lore.kernel.org/r/87bloj2skm.fsf@x220.int.ebiederm.org/
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |   9 ++
+>  fs/proc/proc_sysctl.c                         | 100 ++++++++++++++++++
+>  include/linux/sysctl.h                        |   4 +
+>  init/main.c                                   |   2 +
+>  4 files changed, 115 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c07815d230bc..81ff626fc700 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4793,6 +4793,15 @@
+>  
+>  	switches=	[HW,M68k]
+>  
+> +	sysctl.*=	[KNL]
+> +			Set a sysctl parameter, right before loading the init
+> +			process, as if the value was written to the respective
+> +			/proc/sys/... file. Both '.' and '/' are recognized as
+> +			separators. Unrecognized parameters and invalid values
+> +			are reported in the kernel log. Sysctls registered
+> +			later by a loaded module cannot be set this way.
+> +			Example: sysctl.vm.swappiness=40
+> +
+>  	sysfs.deprecated=0|1 [KNL]
+>  			Enable/disable old style sysfs layout for old udev
+>  			on older distributions. When this option is enabled
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index c75bb4632ed1..653188c9c4c9 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/module.h>
+>  #include <linux/bpf-cgroup.h>
+> +#include <linux/mount.h>
+>  #include "internal.h"
+>  
+>  static const struct dentry_operations proc_sys_dentry_operations;
+> @@ -1725,3 +1726,102 @@ int __init proc_sys_init(void)
+>  
+>  	return sysctl_init();
+>  }
+> +
+> +/* Set sysctl value passed on kernel command line. */
+> +static int process_sysctl_arg(char *param, char *val,
+> +			       const char *unused, void *arg)
+> +{
+> +	char *path;
+> +	struct vfsmount *proc_mnt = *((struct vfsmount **)arg);
 
-In this case, we can eliminate the temporary buffer entirely.
-fdt_setprop_placeholder() returns a pointer to the property value
-buffer, allowing us to put the random data directly in there without
-using a temporary buffer at all.  Faster and less stack all in one.
+I would just make this:
 
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Acked-by: Will Deacon <will@kernel.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
----
-v2: Typos in commit message fixed.
+	struct vfsmount **proc_mnt = (struct vfsmount **)arg;
 
-Thank you, I'd be delighted if you'd apply it to the arm64 tree directly!  
-I can take it out of my patch series and off my plate.
 
-Now that I'm looking at it some more, I want to change
-fdt_setprop_placeholder to return an ERR_PTR.
-Must. Stop. Scope. Creep.
+> +	struct file_system_type *proc_fs_type;
+> +	struct file *file;
+> +	int len;
+> +	int err;
+> +	loff_t pos = 0;
+> +	ssize_t wret;
+> +
+> +	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+> +		return 0;
+> +
+> +	param += sizeof("sysctl") - 1;
+> +
+> +	if (param[0] != '/' && param[0] != '.')
+> +		return 0;
+> +
+> +	param++;
+> +
+> +	if (!proc_mnt) {
 
- arch/arm64/kernel/machine_kexec_file.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+	if (!*proc_mnt) {
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 7b08bf9499b6b..69e25bb96e3fb 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -106,12 +106,12 @@ static int setup_dtb(struct kimage *image,
- 
- 	/* add rng-seed */
- 	if (rng_is_initialized()) {
--		u8 rng_seed[RNG_SEED_SIZE];
--		get_random_bytes(rng_seed, RNG_SEED_SIZE);
--		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
--				RNG_SEED_SIZE);
-+		void *rng_seed;
-+		ret = fdt_setprop_placeholder(dtb, off, FDT_PROP_RNG_SEED,
-+				RNG_SEED_SIZE, &rng_seed);
- 		if (ret)
- 			goto out;
-+		get_random_bytes(rng_seed, RNG_SEED_SIZE);
- 	} else {
- 		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
- 				FDT_PROP_RNG_SEED);
+I would also add a comment here to explain that this is doing an
+on-demand mount so that it doesn't have to mount proc if there are not
+sysctl parameters.
+
+> +		proc_fs_type = get_fs_type("proc");
+> +		if (!proc_fs_type) {
+> +			pr_err("Failed to find procfs to set sysctl from command line");
+> +			return 0;
+> +		}
+> +		proc_mnt = kern_mount(proc_fs_type);
+
+		*proc_mnt = kern_mount(proc_fs_type);
+
+> +		put_filesystem(proc_fs_type);
+> +		if (IS_ERR(proc_mnt)) {
+
+		if (IS_ERR(*proc_mnt)) {
+
+> +			pr_err("Failed to mount procfs to set sysctl from command line");
+> +			return 0;
+> +		}
+> +		*((struct vfsmount **)arg) = proc_mnt;
+
+Then drop this line.
+
+> +	}
+> +
+> +	path = kasprintf(GFP_KERNEL, "sys/%s", param);
+> +	if (!path)
+> +		panic("%s: Failed to allocate path for %s\n", __func__, param);
+> +	strreplace(path, '.', '/');
+> +
+> +	file = file_open_root(proc_mnt->mnt_root, proc_mnt, path, O_WRONLY, 0);
+
+	file = file_open_root((*proc_mnt)->mnt_root, *proc_mnt, path, O_WRONLY, 0);
+
+> +	if (IS_ERR(file)) {
+> +		err = PTR_ERR(file);
+> +		if (err == -ENOENT)
+> +			pr_err("Failed to set sysctl parameter '%s=%s': parameter not found",
+> +				param, val);
+> +		else if (err == -EACCES)
+> +			pr_err("Failed to set sysctl parameter '%s=%s': permission denied (read-only?)",
+> +				param, val);
+> +		else
+> +			pr_err("Error %pe opening proc file to set sysctl parameter '%s=%s'",
+> +				file, param, val);
+> +		goto out;
+> +	}
+> +	len = strlen(val);
+> +	wret = kernel_write(file, val, len, &pos);
+> +	if (wret < 0) {
+> +		err = wret;
+> +		if (err == -EINVAL)
+> +			pr_err("Failed to set sysctl parameter '%s=%s': invalid value",
+> +				param, val);
+> +		else
+> +			pr_err("Error %pe writing to proc file to set sysctl parameter '%s=%s'",
+> +				ERR_PTR(err), param, val);
+> +	} else if (wret != len) {
+> +		pr_err("Wrote only %ld bytes of %d writing to proc file %s to set sysctl parameter '%s=%s'",
+> +			wret, len, path, param, val);
+> +	}
+> +
+> +	err = filp_close(file, NULL);
+> +	if (err)
+> +		pr_err("Error %pe closing proc file to set sysctl parameter '%s=%s'",
+> +			ERR_PTR(err), param, val);
+> +out:
+> +	kfree(path);
+> +	return 0;
+> +}
+> +
+> +void do_sysctl_args(void)
+> +{
+> +	char *command_line;
+> +	struct vfsmount *proc_mnt = NULL;
+> +
+> +	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+> +	if (!command_line)
+> +		panic("%s: Failed to allocate copy of command line\n", __func__);
+> +
+> +	parse_args("Setting sysctl args", command_line,
+> +		   NULL, 0, -1, -1, &proc_mnt, process_sysctl_arg);
+> +
+> +	if (proc_mnt)
+> +		kern_unmount(proc_mnt);
+> +
+> +	kfree(command_line);
+> +}
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index 02fa84493f23..5f3f2a00d75f 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -206,6 +206,7 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
+>  void unregister_sysctl_table(struct ctl_table_header * table);
+>  
+>  extern int sysctl_init(void);
+> +void do_sysctl_args(void);
+>  
+>  extern struct ctl_table sysctl_mount_point[];
+>  
+> @@ -236,6 +237,9 @@ static inline void setup_sysctl_set(struct ctl_table_set *p,
+>  {
+>  }
+>  
+> +void do_sysctl_args(void)
+
+As with the others in the no-op case:
+
+static inline void do_sysctl_args(void)
+
+> +{
+> +}
+>  #endif /* CONFIG_SYSCTL */
+>  
+>  int sysctl_max_threads(struct ctl_table *table, int write,
+> diff --git a/init/main.c b/init/main.c
+> index ee4947af823f..a91ea166a731 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1367,6 +1367,8 @@ static int __ref kernel_init(void *unused)
+>  
+>  	rcu_end_inkernel_boot();
+>  
+> +	do_sysctl_args();
+> +
+>  	if (ramdisk_execute_command) {
+>  		ret = run_init_process(ramdisk_execute_command);
+>  		if (!ret)
+> -- 
+> 2.25.1
+> 
+
+Otherwise, yes, looks good!
+
 -- 
-2.26.0
+Kees Cook
