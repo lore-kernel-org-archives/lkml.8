@@ -2,101 +2,91 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C966C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D193C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760E82082D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F32C20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgC3LH4 (ORCPT
+        id S1729675AbgC3LKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:07:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:50358 "EHLO foss.arm.com"
+        Mon, 30 Mar 2020 07:10:39 -0400
+Received: from mga14.intel.com ([192.55.52.115]:37395 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729254AbgC3LH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:07:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE84D31B;
-        Mon, 30 Mar 2020 04:07:55 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7A853F52E;
-        Mon, 30 Mar 2020 04:07:53 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 12:07:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     George Spelvin <lkml@sdf.org>
-Cc:     linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Ard Biesheuvel <ardb@kernel.org>,
-        James Morse <james.morse@arm.com>
-Subject: Re: [RFC PATCH v1 39/50] arm: kexec_file: Avoid temp buffer for RNG
- seed
-Message-ID: <20200330110751.GC1309@C02TD0UTHF1T.local>
-References: <202003281643.02SGhMtr029198@sdf.org>
+        id S1729254AbgC3LKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 07:10:39 -0400
+IronPort-SDR: AMfUC+Q5q7GHPpL4c1UWKU1GOwA6Tj81hPj0qPBr1ZZPLv44Jse2w++Rs+I2ZJ8RTmWrSYcKyO
+ VWA6Y4X4Gtug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 04:10:38 -0700
+IronPort-SDR: bppOdF40OdLoDwKSFJtP2VGF7LktLALGDFxSycraXvH9JdU6WwwdaBRjeVDMPnp3Lp+aeivARV
+ JglWs2pepCBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="359146234"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.213.6.130]) ([10.213.6.130])
+  by fmsmga001.fm.intel.com with ESMTP; 30 Mar 2020 04:10:35 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+References: <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+ <20200330102356.GA16588@light.dominikbrodowski.net>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <43c098c9-005e-b9f4-2132-ed6e4a65feee@intel.com>
+Date:   Mon, 30 Mar 2020 13:10:34 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003281643.02SGhMtr029198@sdf.org>
+In-Reply-To: <20200330102356.GA16588@light.dominikbrodowski.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi George,
-
-Nit: s/arm/arm64/ in the title
-
-On Tue, Dec 10, 2019 at 10:45:27AM -0500, George Spelvin wrote:
-> After using get_random_bytes(), you want to wipe the buffer
-> afterward so the seed remains secret.
+On 2020-03-30 12:23, Dominik Brodowski wrote:
 > 
-> In this case, we can eliminate the temporary buffer entirely.
-> fdt_setprop_placeholder returns a pointer to the property value
-> buffer, allowing us to put the random data directy in there without
-> using a temporary buffer at all.  Faster and less stack all in one.
+> Seems this patch didn't make it into v5.6 (and neither did the other ones
+> you sent relating to the "dummy" components). Can these patches therefore be
+> marked for stable, please?
 > 
-> Signed-off-by: George Spelvin <lkml@sdf.org>
-> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  arch/arm64/kernel/machine_kexec_file.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Thanks,
+> 	Dominik
 > 
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index 7b08bf9499b6b..69e25bb96e3fb 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -106,12 +106,12 @@ static int setup_dtb(struct kimage *image,
->  
->  	/* add rng-seed */
->  	if (rng_is_initialized()) {
-> -		u8 rng_seed[RNG_SEED_SIZE];
-> -		get_random_bytes(rng_seed, RNG_SEED_SIZE);
-> -		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
-> -				RNG_SEED_SIZE);
-> +		void *rng_seed;
-> +		ret = fdt_setprop_placeholder(dtb, off, FDT_PROP_RNG_SEED,
-> +				RNG_SEED_SIZE, &rng_seed);
->  		if (ret)
->  			goto out;
-> +		get_random_bytes(rng_seed, RNG_SEED_SIZE);
 
-This looks sane to me, so FWIW:
+While one of the series was accepted and merged, there is a delay caused 
+by Google/ SOF folks in merging the second one.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Idk why rt286 aka "broadwell" machine board patch has not been merged 
+yet. It's not like we have to merge all (rt5650 + rt5650 + rt286) 
+patches at once. Google guys can keep verifying Buddy or whatnot while 
+guys with Dell XPS can enjoy smooth audio experience.
 
-Mark.
+Sneak peak Dominik: there will be more suspend/ resume patches coming 
+soon ^)^ reducing power consumption in low-power state which honestly 
+you might not even notice, but hey why not :P
 
->  	} else {
->  		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
->  				FDT_PROP_RNG_SEED);
-> -- 
-> 2.26.0
-> 
+Czarek
