@@ -2,128 +2,132 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF2DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26E4C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F538206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:14:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Yj3EKfqE"
+	by mail.kernel.org (Postfix) with ESMTP id 8AE74206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgC3BOC (ORCPT
+        id S1728113AbgC3BY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:14:02 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:42851 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbgC3BOB (ORCPT
+        Sun, 29 Mar 2020 21:24:57 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:57282 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbgC3BY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:14:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585530841; x=1617066841;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=bHirlSaOnlkr4MhM+2h8bgaq8bwuzARgsALW27WJBYY=;
-  b=Yj3EKfqErbkt57Ba2ckDB/1hhVFoSMlUakmS14n2W1D12ue1JPnDXYE5
-   HwdcS0uMBEqLsFj3+QOrgh31HSzlZmzNPUnXFqdBzmGSzLm+zcbDFP9uQ
-   y5Gin9ShlZOibZ0lV9FWwU475Zq1/POhcQD46F4OQyXexy/rfKKPxIZiy
-   g=;
-IronPort-SDR: HH/i3QegBncWAjc3SiXzC54btnTyCH9p4vume3o2MpgQ77GLrEgBMdFA9IH7Zs0JSiTGP9NgxJ
- bXp2QZI3Lg1w==
-X-IronPort-AV: E=Sophos;i="5.72,322,1580774400"; 
-   d="scan'208";a="23646605"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 30 Mar 2020 01:13:48 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id 57282A269B;
-        Mon, 30 Mar 2020 01:13:47 +0000 (UTC)
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 30 Mar 2020 01:13:46 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 30 Mar 2020 01:13:46 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Mon, 30 Mar 2020 01:13:46 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Subject: Re: [RFC PATCH v2 0/4] arch/x86: Optionally flush L1D on context
- switch
-Thread-Topic: [RFC PATCH v2 0/4] arch/x86: Optionally flush L1D on context
- switch
-Thread-Index: AQHWAnSRV8t1YBQKFU+upP2/R0lyqahgXAAA
-Date:   Mon, 30 Mar 2020 01:13:46 +0000
-Message-ID: <87e4bd4e25c81d43abb47d0e2812c21a0478869b.camel@amazon.com>
-References: <20200325071101.29556-1-sblbir@amazon.com>
-In-Reply-To: <20200325071101.29556-1-sblbir@amazon.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.164]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5F38399E83167F4895EF51E1E8CFE0A9@amazon.com>
-Content-Transfer-Encoding: base64
+        Sun, 29 Mar 2020 21:24:57 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48rFBD6LBGz1qrFS;
+        Mon, 30 Mar 2020 03:24:52 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48rFBD42WBz1r0bl;
+        Mon, 30 Mar 2020 03:24:52 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id Fvub03wl5HIX; Mon, 30 Mar 2020 03:24:51 +0200 (CEST)
+X-Auth-Info: od+I4xl5ut2Q/YmRdmMDkY5JVWT6qwkF+EZ0I+fyrGA=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 30 Mar 2020 03:24:51 +0200 (CEST)
+Subject: Re: [03/12] bus: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+To:     Christophe Kerello <christophe.kerello@st.com>,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        tony@atomide.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <1584975532-8038-1-git-send-email-christophe.kerello@st.com>
+ <1584975532-8038-4-git-send-email-christophe.kerello@st.com>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <f6a2c766-8ae5-fab7-e2f6-db23f39b5d91@denx.de>
+Date:   Mon, 30 Mar 2020 03:24:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <1584975532-8038-4-git-send-email-christophe.kerello@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAzLTI1IGF0IDE4OjEwICsxMTAwLCBCYWxiaXIgU2luZ2ggd3JvdGU6DQo+
-IFRoaXMgcGF0Y2ggaXMgYSBjb250aW51YXRpb24gb2YgUkZDL1BvQyB0byBzdGFydCB0aGUgZGlz
-Y3Vzc2lvbiBvbg0KPiBvcHRpb25hbGx5DQo+IGZsdXNoaW5nIEwxRCBjYWNoZS4gIFRoZSBnb2Fs
-IGlzIHRvIGFsbG93IHRhc2tzIHRoYXQgYXJlIHBhcmFub2lkIGR1ZSB0byB0aGUNCj4gcmVjZW50
-IHNub29wIGFzc2lzdGVkIGRhdGEgc2FtcGxpbmcgdnVsbmVyYWJpbGl0ZXMsIHRvIGZsdXNoIHRo
-ZWlyIEwxRCBvbg0KPiBiZWluZw0KPiBzd2l0Y2hlZCBvdXQuICBUaGlzIHByb3RlY3RzIHRoZWly
-IGRhdGEgZnJvbSBiZWluZyBzbm9vcGVkIG9yIGxlYWtlZCB2aWENCj4gc2lkZSBjaGFubmVscyBh
-ZnRlciB0aGUgdGFzayBoYXMgY29udGV4dCBzd2l0Y2hlZCBvdXQuDQo+IA0KPiBUaGUgcG9pbnRz
-IG9mIGRpc2N1c3Npb24vcmV2aWV3IGFyZSAod2l0aCB1cGRhdGVzKToNCj4gDQo+IDEuIERpc2N1
-c3MgdGhlIHVzZSBjYXNlIGFuZCB0aGUgcmlnaHQgYXBwcm9hY2ggdG8gYWRkcmVzcyB0aGlzDQo+
-IEEuIEdlbmVyYWxseSB0aGVyZSBzZWVtcyB0byBiZSBjb25zZW5zdXMgdGhhdCB3ZSBuZWVkIHRo
-aXMNCj4gDQo+IDIuIERvZXMgYW4gYXJjaCBwcmN0bCBhbGxvd2luZyBmb3Igb3B0LWluIGZsdXNo
-aW5nIG1ha2Ugc2Vuc2UsIHdvdWxkIG90aGVyDQo+ICAgIGFyY2hlcyBjYXJlIGFib3V0IHNvbWV0
-aGluZyBzaW1pbGFyPw0KPiBBLiBXZSBkZWZpbml0ZWx5IGJ1aWxkIHRoaXMgZm9yIHg4NiwgaGF2
-ZSBub3QgaGVhcmQgZnJvbSBhbnkgb3RoZXIgYXJjaA0KPiAgICBtYWludGFpbmVycy4gVGhlcmUg
-d2FzIHN1Z2dlc3Rpb24gdG8gbWFrZSB0aGlzIGEgcHJjdGwgYW5kIGxldCBlYWNoDQo+ICAgIGFy
-Y2ggaW1wbGVtZW50IEwxRCBmbHVzaGluZyBpZiBuZWVkZWQsIHRoZXJlIGlzIG5vIGFyY2ggYWdu
-b3N0aWMNCj4gICAgc29mdHdhcmUgTDFEIGZsdXNoLg0KPiANCj4gMy4gVGhlcmUgaXMgYSBmYWxs
-YmFjayBzb2Z0d2FyZSBMMUQgbG9hZCwgc2ltaWxhciB0byB3aGF0IEwxVEYgZG9lcywgYnV0DQo+
-ICAgIHdlIGRvbid0IHByZWZldGNoIHRoZSBUTEIsIGlzIHRoYXQgc3VmZmljaWVudD8NCj4gQS4g
-VGhlcmUgd2FzIG5vIGNvbmNsdXNpb24sIEkgc3VzcGVjdCB3ZSBkb24ndCBuZWVkIHRoaXMNCj4g
-DQo+IDQuIFNob3VsZCB3ZSBjb25zaWRlciBjbGVhbmluZyB1cCB0aGUgTDFEIG9uIGFycml2YWwg
-b2YgdGFza3M/DQo+IEEuIEZvciBub3csIHdlIHRoaW5rIHRoaXMgY2FzZSBpcyBub3QgdGhlIHBy
-aW9yaXR5IGZvciB0aGlzIHBhdGNoc2V0Lg0KPiANCj4gSW4gc3VtbWFyeSwgdGhpcyBpcyBhbiBl
-YXJseSBQb0MgdG8gc3RhcnQgdGhlIGRpc2N1c3Npb24gb24gdGhlIG5lZWQgZm9yDQo+IGNvbmRp
-dGlvbmFsIEwxRCBmbHVzaGluZyBiYXNlZCBvbiB0aGUgc2VjdXJpdHkgcG9zdHVyZSBvZiB0aGUN
-Cj4gYXBwbGljYXRpb24gYW5kIHRoZSBzZW5zaXRpdml0eSBvZiB0aGUgZGF0YSBpdCBoYXMgYWNj
-ZXNzIHRvIG9yIG1pZ2h0DQo+IGhhdmUgYWNjZXNzIHRvLg0KPiANCj4gQ2hhbmdlbG9nIHYyOg0K
-PiAgLSBSZXVzZSBleGlzdGluZyBjb2RlIGZvciBhbGxvY2F0aW9uIGFuZCBmbHVzaA0KPiAgLSBT
-aW1wbGlmeSB0aGUgZ290byBsb2dpYyBpbiB0aGUgYWN0dWFsIGwxZF9mbHVzaCBmdW5jdGlvbg0K
-PiAgLSBPcHRpbWl6ZSB0aGUgY29kZSBwYXRoIHdpdGgganVtcCBsYWJlbHMvc3RhdGljIGZ1bmN0
-aW9ucw0KPiANCj4gQ2M6IGtlZXNjb29rQGNocm9taXVtLm9yZw0KPiANCj4gQmFsYmlyIFNpbmdo
-ICg0KToNCj4gICBhcmNoL3g4Ni9rdm06IFJlZmFjdG9yIGwxZCBmbHVzaCBsaWZlY3ljbGUgbWFu
-YWdlbWVudA0KPiAgIGFyY2gveDg2OiBSZWZhY3RvciB0bGJmbHVzaCBhbmQgbDFkIGZsdXNoDQo+
-ICAgYXJjaC94ODY6IE9wdGlvbmFsbHkgZmx1c2ggTDFEIG9uIGNvbnRleHQgc3dpdGNoDQo+ICAg
-YXJjaC94ODY6IEwxRCBmbHVzaCwgb3B0aW1pemUgdGhlIGNvbnRleHQgc3dpdGNoDQo+IA0KDQpQ
-aW5nLCBsb29raW5nIGZvciBjb21tZW50cyBhbmQgY3JpdGljaXNtIG9mIHRoZSBhcHByb2FjaC4g
-SSB1bmRlcnN0YW5kIHdpdGgNCnRoZSBtZXJnZSB3aW5kb3cgYXJvdW5kIHRoZSBjb3JuZXIgZXZl
-cnlvbmUgaXMgYnVzeS4gVGhlcmUgaXMgYSBidWcgaW4gdGhlIHYyDQpSRkMgc2VyaWVzLCBJIGFt
-IGhhcHB5IHRvIHBvc3QgYSB2ZXJzaW9uIHdpdGhvdXQgdGhlIFJGQyBmb3IgYnJvYWRlciB0ZXN0
-aW5nDQphbmQgZmVlZGJhY2suDQoNCkkgYW0gcXVpdGUga2VlbiB0byBoZWFyIGFib3V0IHRoZSBp
-bnRlcmZhY2UgYW5kIGFueSBjb25jZXJucyB3aXRoIHRoZQ0KYXJjaF9wcmN0bCgpIGludGVyZmFj
-ZS4NCg0KQmFsYmlyIFNpbmdoLg0K
+On 3/23/20 3:58 PM, Christophe Kerello wrote:
+> The driver adds the support for the STMicroelectronics FMC2 EBI controller
+> found on STM32MP SOCs.
+> 
+
+On DH STM32MP1 SoM in PDK2 carrier board,
+Tested-by: Marek Vasut <marex@denx.de>
+
+btw. it seems this sets BTRx DATLAT and CLKDIV to 0xf , it's "Don't
+care" in the datasheet for Muxed mode, but then it should probably be
+set to 0.
+
+The bindings I used are below:
+
+&fmc {
+        pinctrl-names = "default", "sleep";
+        pinctrl-0 = <&fmc_pins_b>;
+        pinctrl-1 = <&fmc_sleep_pins_b>;
+        status = "okay";
+        #address-cells = <1>;
+        #size-cells = <1>;
+        /delete-property/interrupts;
+        /delete-property/dmas;
+        /delete-property/dma-names;
+        reg = <0x58002000 0x1000>;
+        ranges;
+
+        ebi {
+                #address-cells = <2>;
+                #size-cells = <1>;
+                compatible = "st,stm32mp1-fmc2-ebi";
+                ranges = <0 0 0x60000000 0x4000000>,
+                         <1 0 0x64000000 0x4000000>,
+                         <2 0 0x68000000 0x4000000>,
+                         <3 0 0x6c000000 0x4000000>;
+
+                ksz8851: ks8851mll@0,0 {
+                        compatible = "micrel,ks8851-mll";
+                        reg = <1 0x0 0x2 1 0x2 0x20000>;
+                        interrupt-parent = <&gpioc>;
+                        interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+                        bank-width = <2>;
+
+                        /* Timing values are in nS */
+                        st,fmc2_ebi_cs_mux_enable;
+                        st,fmc2_ebi_cs_transaction_type = <4>;
+                        st,fmc2_ebi_cs_buswidth = <16>;
+                        st,fmc2_ebi_cs_address_setup = <6>;
+                        st,fmc2_ebi_cs_address_hold = <6>;
+                        st,fmc2_ebi_cs_data_setup = <127>;
+                        st,fmc2_ebi_cs_bus_turnaround = <9>;
+                        st,fmc2_ebi_cs_data_hold = <9>;
+                };
+
+                sram@3,0 {
+                        compatible = "mtd-ram";
+                        reg = <3 0x0 0x80000>;
+                        bank-width = <2>;
+
+                        /* Timing values are in nS */
+                        st,fmc2_ebi_cs_mux_enable;
+                        st,fmc2_ebi_cs_transaction_type = <4>;
+                        st,fmc2_ebi_cs_buswidth = <16>;
+                        st,fmc2_ebi_cs_address_setup = <6>;
+                        st,fmc2_ebi_cs_address_hold = <6>;
+                        st,fmc2_ebi_cs_data_setup = <127>;
+                        st,fmc2_ebi_cs_bus_turnaround = <9>;
+                        st,fmc2_ebi_cs_data_hold = <9>;
+                };
+        };
+};
