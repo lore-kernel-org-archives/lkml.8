@@ -2,183 +2,139 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED07DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A10C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC8E206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA7B206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SEsGSlAk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfHxTcq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgC3OhK (ORCPT
+        id S1728683AbgC3OhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:37:10 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36451 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbgC3OhJ (ORCPT
+        Mon, 30 Mar 2020 10:37:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35247 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbgC3OhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:37:09 -0400
-Received: by mail-il1-f196.google.com with SMTP id p13so15963912ilp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:37:08 -0700 (PDT)
+        Mon, 30 Mar 2020 10:37:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d5so21994280wrn.2;
+        Mon, 30 Mar 2020 07:37:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IxNXeVA0jabTfxB9gROOjT1JF+nYiIiBsZtSPXsvX+M=;
-        b=SEsGSlAkAq7kvJS1VYZJcqR4AJhsJuoPUhgMbkk3JafHzHF66EL0seoHaeWlH568uq
-         tDgaJ9vtCmFxUubE+xYdeRDUi4KTo+faDPsQod4ocxH/EoG0Xj7AE2NzSY+K43lWfcrL
-         6iL3uwdP3OnOIkBcZnfq5xSNFS42Vm2niEeVRe/SVNDx/1jX6Aa0yTmtmWUYhHurquPw
-         Jh/RQ8K+rNUUnuFwPhcHcSJc2cNcXDL8d325U44pr6emflT0qtirCS82i7XM8phDpt5v
-         mINUJZiGPyOxp63818+WfYSioBtWE+02kbP6O4WMNe0Aki0DyXJ3N9d+e6ShBmXD7oHG
-         Awhw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=idGSNlS5foegWcbeejyLCNUnDarAVKTDXcWKaPEeNjY=;
+        b=EfHxTcq91OwU4aGBf3mn/lXFRiymTz25QWi/lC+RlEazQjaizplkmUOMesFd5VwfNR
+         jcRVvu74XNAd/D9DgB9myBaC4LnhqX81TlUg1VQnw1zUGPh8OM97YnnM4SrFPGbx2YsM
+         wj0wzL3PrwqIc30cwNMT59QVxkLMQnty57ocUsXjzq04NZEI04oFvkr7DV9HSpOiqQ2b
+         MvvhzdBDwrv2O66jjiP35L2sNRSVwhSqg2p0TIpTL7kwsi8f1/C6SNitfvKAMCiztbuW
+         YA1VOM/2sMBAcUqQojBnF595rmTinbkNYUzpDWQB8+Cu0AFjkKotFRLEmYIDN435ivZj
+         t5BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IxNXeVA0jabTfxB9gROOjT1JF+nYiIiBsZtSPXsvX+M=;
-        b=Lq2D+ZQoyFgi0NFKD+RDfqByggqXBRBORG+uZvx120bz6csGN1Ha0po3ZEWDpzJB3S
-         kMmqruW4zgVEE7hBi1MjOXDwyr5UdRQ80e/H+wMVJFUk82tbN8k9+EDf4RaK7fj4lO4D
-         pl9HToUMqAYVFw0YPoOzIERDz5cyUQdNZkmWPkYYOFxUOzPS2z3tHm3WYHR2DyVrCvi2
-         BHoJ8WNddjiquFPwQGJowaPBFb2yvvqq7Z4WkBhlHdYEF0p8XtSzb1ezATlbFaqpu4Cv
-         FZy5WpSE/TK93ahUxfzNFUAs/3S7ysz0CFf/UETsDK/Nyl1Coohla9rPj+kVRa47bUki
-         V4Aw==
-X-Gm-Message-State: ANhLgQ05cTJfHRZkf1rd9qjmfJezzIVEvYIyHck2JwZ0zoVhJD6Ltp/M
-        kvzwNex8Aj8ncmhkGB3mwHqwtVl7BCN2/NI2WE+P07V0
-X-Google-Smtp-Source: ADFU+vtCRUcet9Ol6edmtrTgiJaQqxlFSOniI6lnjEMLFkkPk3juAcB8HwPik3oLpwdOg4O05KtVRU/chRQsAOCgdes=
-X-Received: by 2002:a92:bbd8:: with SMTP id x85mr11862710ilk.40.1585579027952;
- Mon, 30 Mar 2020 07:37:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=idGSNlS5foegWcbeejyLCNUnDarAVKTDXcWKaPEeNjY=;
+        b=O3Q0wJOFLiMWcusEglv8kigN+Zv39M67qEFkA0DX3ClyrmLhTJf2LroUoOTe3zi4Fh
+         wFbn02iB8HUvOxPJ9jSEgSvkde0ecSnFp9yk7V4pAFSe9hXMUe/b+JMWae8yL16LhKtq
+         hil7Eu+Ca522k0iCbzBThSFOjuABFTmYCJUasRrjiwfH71EG8IFDzgd+yp0y9BmYxDYf
+         Mz8kuZEdfo8lgXw12VSqWyI8rodt9cBkYWEegkaJfb9KKUQtLYT7HG1MDbSRo/MSsMcs
+         eS40k7AaCdYhKuuT/+mig9xKRTwMDPKl3zWn8QH5LOVhJ3cukSC94dDfw58PMJm1cAVC
+         6aXw==
+X-Gm-Message-State: ANhLgQ2Ufhc4NLeDVpF/6qm/F7V97rpJvKDmLAL3sDlujSWSmF1fWt9a
+        fkUQC6S2M31BAcvabt0mg9M=
+X-Google-Smtp-Source: ADFU+vuGy0osZv8T/LTlZUt4uQO6ueplH8KLCZHQM7oEygq3//5A2Tt8k66SXvZguiDmrQK5CqcuGg==
+X-Received: by 2002:a5d:6109:: with SMTP id v9mr15810962wrt.203.1585579038704;
+        Mon, 30 Mar 2020 07:37:18 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id p10sm18043238wre.15.2020.03.30.07.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 07:37:17 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 16:37:16 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, od@zcrc.me,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v4 3/4] pwm: jz4740: Obtain regmap from parent node
+Message-ID: <20200330143716.GI2431644@ulmo>
+References: <20200323142421.42817-1-paul@crapouillou.net>
+ <20200323142421.42817-3-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
- <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com> <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
-In-Reply-To: <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 30 Mar 2020 16:36:57 +0200
-Message-ID: <CAMRc=Mf5cYtWxAVeMQmxwyoi9oxtVSidBQsdRV9H2E52H1TqKQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5uO961YFyoDlzFnP"
+Content-Disposition: inline
+In-Reply-To: <20200323142421.42817-3-paul@crapouillou.net>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 26 mar 2020 o 21:50 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Fri, Mar 13, 2020 at 3:47 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> > czw., 12 mar 2020 o 11:35 Linus Walleij <linus.walleij@linaro.org> napi=
-sa=C5=82(a):
->
-> > In this case I was thinking about a situation where we pass a
-> > requested descriptor to some other framework (nvmem in this case)
-> > which internally doesn't know anything about who manages this resource
-> > externally. Now we can of course simply not do anything about it and
-> > expect the user (who passed us the descriptor) to handle the resources
-> > correctly. But what happens if the user releases the descriptor not on
-> > driver detach but somewhere else for whatever reason while nvmem
-> > doesn't know about it? It may try to use the descriptor which will now
-> > be invalid. Reference counting in this case would help IMHO.
->
-> I'm so confused because I keep believing it is reference counted
-> elsewhere.
->
-> struct gpio_desc *d always comes from the corresponding
-> struct gpio_device *descs array. This:
->
-> struct gpio_device {
->         int                     id;
->         struct device           dev;
-> (...)
->         struct gpio_desc        *descs;
-> (...)
->
-> This array is allocated in gpiochip_add_data_with_key() like this:
->
->         gdev->descs =3D kcalloc(chip->ngpio, sizeof(gdev->descs[0]), GFP_=
-KERNEL);
->
-> Then it gets free:d in gpiodevice_release():
->
-> static void gpiodevice_release(struct device *dev)
-> {
->         struct gpio_device *gdev =3D dev_get_drvdata(dev);
-> (...)
->         kfree(gdev->descs);
->         kfree(gdev);
-> }
->
-> This is the .release function for the gdev->dev, the device inside
-> struct gpio_device,
-> i.e. the same device that contains the descs in the first place. So it
-> is just living
-> and dying with the struct gpio_device.
->
-> struct gpio_device does *NOT* die in the devm_* destructor that gets call=
-ed
-> when someone has e.g. added a gpiochip using devm_gpiochip_add_data().
->
-> I think the above observation is crucial: the lifetime of struct gpio_chi=
-p and
-> struct gpio_device are decoupled. When the struct gpio_chip dies, that
-> just "numbs" all gpio descriptors but they stay around along with the
-> struct gpio_device that contain them until the last
-> user is gone.
->
-> The struct gpio_device reference counted with the call to get_device(&gde=
-v->dev)
-> in gpiod_request() which is on the path of gpiod_get_[index]().
->
-> If a consumer gets a gpio_desc using any gpiod_get* API this gets
-> increased and it gets decreased at every gpiod_put() or by the
-> managed resources.
->
-> So should you not rather exploit this fact and just add something
-> like:
->
-> void gpiod_reference(struct gpio_desc *desc)
-> {
->     struct gpio_device *gdev;
->
->     VALIDATE_DESC(desc);
->     gdev =3D desc->gdev;
->     get_device(&gdev->dev);
-> }
->
-> void gpiod_unreference(struct gpio_desc *desc)
-> {
->     struct gpio_device *gdev;
->
->     VALIDATE_DESC(desc);
->     gdev =3D desc->gdev;
->     put_device(&gdev->dev);
-> }
->
-> This should make sure the desc and the backing gpio_device
-> stays around until all references are gone.
->
-> NB: We also issue try_module_get() on the module that drives the
-> GPIO, which will make it impossible to unload that module while it
-> has active GPIOs. I think maybe the whole logic inside gpiod_request()
-> is needed to properly add an extra reference to a gpiod else someone
-> can (theoretically) pull out the module from below.
->
 
-Thanks a lot for the detailed explanation. I'll make some time
-(hopefully soon) to actually test this path and let you know if it
-works as expected.
+--5uO961YFyoDlzFnP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Bartosz Golaszewski
+On Mon, Mar 23, 2020 at 03:24:20PM +0100, Paul Cercueil wrote:
+[...]
+> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+[...]
+> @@ -196,12 +208,19 @@ static const struct pwm_ops jz4740_pwm_ops =3D {
+>  static int jz4740_pwm_probe(struct platform_device *pdev)
+>  {
+>  	struct jz4740_pwm_chip *jz4740;
+> +	struct device *dev =3D &pdev->dev;
+> =20
+> -	jz4740 =3D devm_kzalloc(&pdev->dev, sizeof(*jz4740), GFP_KERNEL);
+> +	jz4740 =3D devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
+>  	if (!jz4740)
+>  		return -ENOMEM;
+> =20
+> -	jz4740->chip.dev =3D &pdev->dev;
+> +	jz4740->map =3D device_node_to_regmap(dev->parent->of_node);
+> +	if (!jz4740->map) {
+
+This seems wrong. According to the code, device_node_to_regmap() returns
+an ERR_PTR()-encoded error code on failure, so I think this should be:
+
+	if (IS_ERR(jz4740->map)) {
+		...
+		return PTR_ERR(jz4740->map);
+	}
+
+No need to resend for that, I can take care of that when applying. Let
+me know if that doesn't work.
+
+Thierry
+
+--5uO961YFyoDlzFnP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6CBBkACgkQ3SOs138+
+s6HtCw/+ObsrCeW3Qpro0kEkUAgc55EE8fppGxsicDBZs+p64q4N3XCH0iduAZuc
+3yeXxtv5jLhz5x9/kwq+h61+UzAqrPbCOWBOBOTq5s2srhrr6WSi9zCYUR6AaTjv
+Ooq6wm0rNJzuIvfWp/+EoLl/MTuJOD/WauAT01rvygN9b7i+fgSORlsDkoKptiJ2
+C7KwuvhqGlHRcAoHtOfgLub6jca/kWwifSWQ1gBkc312IcKuW6ZLHfu7ijLf8+bc
+oH8C/FNuC++mjT13lLJoqc1yIB1y0h1asX2VYUgsQPQGT1ioKjNsgUFqdEKIq49S
+HVzvpIGMsQKiDyO9ka++tMItvLz/L8oMBCCYgHp0zNX8FiSqWqsK/RliMZSHiQFj
+WMyYMbJZPp1Bbxjy4lz8bQz2pQQMbC9dSKlU4PI/hG9JVo/GsM/m1Eu7iUKW7+KB
+P1yJKlG5PqOlPpumyb+vkNOysYbAV4hiSAQt440ga7+SkObdUK+sh6vv7zHMsa2T
+ULjANwIcBiyFR4C0jicNqehIqCql4u/GvNpY2plagzm8kIt7woyTHkWNF12utnJO
+rgAUY75J6QWWmXmzetmVMiqg2fVyzIyrJwhS8xt8SoJM/XWnSf4AuHAkpIBaXuGb
+eQ/hGqkwSHcs+KHgVoyvN9Yu5uIUS2Vtq46NthNGHFMphaxR0fc=
+=SgmS
+-----END PGP SIGNATURE-----
+
+--5uO961YFyoDlzFnP--
