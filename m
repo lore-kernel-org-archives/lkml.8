@@ -2,96 +2,94 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB035C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2280AC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B181120732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7zcy/Vf"
+	by mail.kernel.org (Postfix) with ESMTP id EC5932072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585585690;
+	bh=6RPaIUBO7fLLSXtfF+V8XGbHNXoxt/ndTSxvAR1MYKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZtVqlOkvy3jAllKBjzFX0C4Bb+dj7dw6MLmKAtjLB9ncA2trcyL9jPrEgn2Uc8Seu
+	 oiMz3EFtOoqOJm8zNnbi0uC520sDay5Od0qA7SKOytsck6v3NtgfaKJ0LS0r+YbPPC
+	 ut5/ylRnqBebxTjSPwiHnHXOFv1r2neZNS1b+enM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbgC3QYm (ORCPT
+        id S1728797AbgC3Q2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:24:42 -0400
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:39983 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgC3QYm (ORCPT
+        Mon, 30 Mar 2020 12:28:09 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34849 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgC3Q2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:24:42 -0400
-Received: by mail-oi1-f171.google.com with SMTP id y71so16169056oia.7;
-        Mon, 30 Mar 2020 09:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JjfCOLMKdycWFBOZ9b3A3LlpJoO/05vIv2yLye2wGmw=;
-        b=i7zcy/VfhxUrYKVVstzkkYihJHfjfDKUxxY8n2EJZLn2j94/dFSbCVyeGF/Lu30n3n
-         58/iDF+91gDA1zkUm7Buuc3wbCy7H2Bi93h3liasII9FLmoXIKnLiszp5Gkukm2XpPPS
-         z4AwtqIhGvEs8JaE6wnOl9jVCLOSvwAIThTlr+BEgyyWnG0gOSafGn6Hz59qndgQUFd6
-         fbYXihmxNPJSmceO/vV0kxxk6vvZ4UexSxU22Ki3xBipP861WuL7mUPnfTjSJL4hqI2C
-         3xF1DCb6x/Nxgi+3MqZYDRzG2PH5f2iEg16/SjjEKg06Xhpc3tE0mPP0Bt4qVjIJYbLf
-         h6cA==
+        Mon, 30 Mar 2020 12:28:08 -0400
+Received: by mail-io1-f67.google.com with SMTP id o3so12844301ioh.2;
+        Mon, 30 Mar 2020 09:28:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JjfCOLMKdycWFBOZ9b3A3LlpJoO/05vIv2yLye2wGmw=;
-        b=EFzcKFgtySAQzHM7F5y/4jNMNNBWgt6MPucjDeWTi1IrufZALID5h9zcyWn4kawHGh
-         ih9vPrhHsFJaxFb0mtNfPEiFD6llbCY9n0IyTmsdAjfu3PXFefnaah2A0ekH/EmIzZaW
-         DMionWgm+5sEGkqtKcbwqH/qob2Ob4qJmNYh7olbDJaDG3qRKUOHHPNDfqzihNWtE9Z7
-         GpcYVcUbaK/4NzPSThPAawJbIM9oqCr+ZliYEFtqDf8Ig2DcpUKkbmxvXIM0ss3DeE0W
-         Lv/ZgRjialkqGuGhOhhQTA9y340wNl895IWbNQ1LXdgZ/tE5gps8Sld+5qvn7DUl5Odi
-         MZPw==
-X-Gm-Message-State: ANhLgQ2tTm0PatqRLAH4RH0R11ciOC669jWu+eI8WAPs1EvH2IWGI0ne
-        HP9Rbd+JNisDJnsEm0e8ibWzr92ZNuYs69UTLKs=
-X-Google-Smtp-Source: ADFU+vszdO6Pl1GEL8mafiEkybs8ZJNTpNU4vWRJgCcsMtmIjwF+VEmFG0zf0C9Sw8R0YBqLMdP4kN8FOIKM+uyZeM8=
-X-Received: by 2002:aca:ac89:: with SMTP id v131mr88437oie.7.1585585481754;
- Mon, 30 Mar 2020 09:24:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g4xE6WgRPY/ofYo+AU3gHyBfgox1LqQ8FIlPCkJQGyk=;
+        b=r0+96FptN8CJH6y52dEDWtF2x7ozTX8GYAfp2guU5/nTMdUudznJcGBi/7gtFHyDil
+         dWpdib+DqQ7cJmMuRABgNaXNAO+IzRJ20xfl9dzBfqtGF/rbSG0qUDjXHDsWR7yPr7lu
+         N3zbEpcTMf/3d1+9e3MTvHzLCEBkDIb+1SFociNGPrVBWMdb5C0ivuJB9QD9JsecJ575
+         bbyxbwrimxAQhvlxxRwuPyMeI6Ts6NhWhQzQtj1irN2Gzb3mcfAU64R2Du0LgRcSkATD
+         rMJVgKsleN0Y+cUxCLDpJHvM/0mH30bPM2FXq/genQ6yGMc+6X6n/ATY0gviaAszj1Z9
+         pFxA==
+X-Gm-Message-State: ANhLgQ22giKhDQosQxGwHYk1a9Wxnsq6/AV1fQjjfOi088CI5VHTZdNW
+        ixkqkA2HxqJMHmSkNzdWRA==
+X-Google-Smtp-Source: ADFU+vtqY4AfJ9Mj+w3Ew+uvBRq1gXk3qUFKAIQJlsvqmcTWMhltCzJINAWQvEG/UaLUJ+dp7lTSjQ==
+X-Received: by 2002:a02:a85:: with SMTP id 127mr11347531jaw.51.1585585686698;
+        Mon, 30 Mar 2020 09:28:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id s66sm5031561ilc.9.2020.03.30.09.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 09:28:05 -0700 (PDT)
+Received: (nullmailer pid 28168 invoked by uid 1000);
+        Mon, 30 Mar 2020 16:28:04 -0000
+Date:   Mon, 30 Mar 2020 10:28:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        jianxin.pan@amlogic.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lnykww@gmail.com, yinxin_1989@aliyun.com
+Subject: Re: [PATCH v5 1/3] dt-bindings: mmc: Document the Amlogic Meson SDHC
+ MMC host controller
+Message-ID: <20200330162804.GA27288@bogus>
+References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
+ <20200328003249.1248978-2-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-References: <DB7PR08MB3801F9765B4D16612BA0974B9CCB0@DB7PR08MB3801.eurprd08.prod.outlook.com>
-In-Reply-To: <DB7PR08MB3801F9765B4D16612BA0974B9CCB0@DB7PR08MB3801.eurprd08.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 30 Mar 2020 17:24:14 +0100
-Message-ID: <CA+V-a8vYbUi3pypZ_TyjJ8VgFGQiXFMYP_iq-ZOvRv_B0xzLfg@mail.gmail.com>
-Subject: Re: drivers/media/platform/davinci/vpfe_capture.c:883:20: warning:
- Redundant assignment
-To:     David Binderman <dcb314@hotmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200328003249.1248978-2-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sat, Mar 28, 2020 at 01:32:47AM +0100, Martin Blumenstingl wrote:
+> This documents the devicetree bindings for the SDHC MMC host controller
+> found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
+> bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
+> HS200 mode (up to 100MHz clock). It embeds an internal clock controller
+> which outputs four clocks (mod_clk, sd_clk, tx_clk and rx_clk) and is
+> fed by four external input clocks (clkin[0-3]). "pclk" is the module
+> register clock, it has to be enabled to access the registers.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 83 +++++++++++++++++++
+>  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |  8 ++
+>  2 files changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+>  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
 
-On Mon, Mar 30, 2020 at 4:53 PM David Binderman <dcb314@hotmail.com> wrote:
->
-> Hello there,
->
-> linux-5.6/drivers/media/platform/davinci/vpfe_capture.c:883:20: warning: Redundant assignment of 'fmt->pixelformat' to itself. [selfAssignment]
->
-> Source code is
->
->        fmt->pixelformat = fmt->pixelformat;
->
->
-> Suggest code rework.
->
-Fix for this is already in upstream with commit-id
-5dbef6b3e09ffabf3b74d8d0fb230179d8fdc840
-("media: davinci: fix incorrect pix_fmt assignment")
-
-Cheers,
---Prabhakar
-
-> Regards
->
-> David Binderman
+Reviewed-by: Rob Herring <robh@kernel.org>
