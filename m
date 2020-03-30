@@ -2,187 +2,153 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D544C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9245C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B34205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFCE205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="KuUuGn1h"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cbD3U0SW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbgC3Pts (ORCPT
+        id S1729663AbgC3Puq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:49:48 -0400
-Received: from mail-eopbgr60055.outbound.protection.outlook.com ([40.107.6.55]:51342
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728868AbgC3Ptr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:49:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y8ENsIRw+eJ/dCh65+c9cyRSTYC9B9npDJvafAGVK6EfZ6xXKiXHZ4T17GTwJnK8siSgYsDPHkiTJKQCIQsxvTEuHJm/WneS88d/GUS9JXAvDCeyqRm4br1QJHJL0H/jyEQTytki7Vq051Js76caBawW8H0Efin4gXodNNvQ9AHHqbsme6nGGlrDctgDUzwRlmdlERhkDlNw0jhB24i0Z6/WwN99ui5OgPOz2j08NzQjOVxBPgCXq5jtnTrkWbjlqGoJdX3ej0rPkUu6S5eW+mz3HegbD7Cp0Yrcfo5G8kdGyhGb7SMmcFYaStpKuxmT8+nBGJ4QqbsArNFJnEWP4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6lQJfCCUxCUdw6Y9u4eDmaWsetRhXm8dp36vYW7y8u4=;
- b=MvCyvxdhxuZvFgI5Hl3pLWH3LtWWWjroPhhMh66pV4dAh5CVhp5cWixxxMtDBsU9DpTUE68BVUuFqMQxkcI06PaY1t9WSzTyasPDOEeEf+Sc8Ti8cIGVuF6dwyLlkeMT9z3PsXwXFDm+opTIL5czkqAxflP7F4rTI3oVi9QdTLMdWlwPjhuPMl5n8PFr7237FSfeUU749vYgoQASfWGn4IMFLNlB6KBLRglfMdiFXi5YG5eMegWslabAjXUgb5ftCIBedtyxgvHbatTG3M0GoVRegewm0rTVpOdlspZoUk+NsGjw20/e6mLbIoLRo5nSM8nMP/wvCQDci0GgXtVw6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
- dkim=pass header.d=itdev.co.uk; arc=none
+        Mon, 30 Mar 2020 11:50:46 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34503 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729319AbgC3Pup (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:50:45 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a23so6892783plm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 08:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6lQJfCCUxCUdw6Y9u4eDmaWsetRhXm8dp36vYW7y8u4=;
- b=KuUuGn1h5FLPXRyxZ07lfaOfANLiuP2VeHM1qoBPU2jkRg5oxThb9wYOif7Y+B3lGlOUQC+VT4p1DLq73BGURB3sDciLjroxB5xYXoa7NXKJ9fGvEQ33pCZPwp/uGq/Khg3Ha0RNJ4OtkxtCzCEd1yWq5fxE+dwIk3Oj4YWq3A4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
- DBBPR08MB4315.eurprd08.prod.outlook.com (20.179.43.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Mon, 30 Mar 2020 15:49:04 +0000
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659]) by DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659%4]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 15:49:04 +0000
-Date:   Mon, 30 Mar 2020 16:49:02 +0100
-From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dZsn4EW/SyaRsmueE+/vYE2vemazchjXW/dbHmCRlUs=;
+        b=cbD3U0SWemqC1mmtbV87ewilvyfjJ6wvBrx1Zv9z50jgAf9m1zNNdUG66wXMgyvK6w
+         ZZdtz3wzvXNip6aIDfmUPWqG85OQxDWzLAzKrN9IJ2NIzLYVNAO6ke9IydE4kwJIysFp
+         5v+XWRKX9MnKGNCQeTmnSp3izMpZzXfKXtPtc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dZsn4EW/SyaRsmueE+/vYE2vemazchjXW/dbHmCRlUs=;
+        b=qsUxydzWOjLRaAFTlDiA8VJjsFgUKQbbT3ibQXOOSuXlqruYMzae2kH3n91NOe5Z4H
+         j9ncN6b4CTz+L19dqmweni2hVMUkmkDPcH45dwt1ed9fb6DugQOCP8Ws/iprDe6B/GWn
+         waeT0QYs4bV39HwLLzoWyX7KrIeJSdw452EUsvAt+QL0XLpqqi3ULgysukJNfOGkElxh
+         wbDyNoaqLcJFZpWWqrHa6Gg7vQyXuBgcK2vqKjYYdHQxioZpAONjlU2ZODg6QTRsMz0x
+         VjgAlCQOjBAQKGxNABkSUdV/f5ytJS2afDEwwZ1aqewd/wadnvf3TUb9KywfpJENNNhE
+         BHkw==
+X-Gm-Message-State: ANhLgQ1aHH06SJ0fKZA0EdUH7eka+O4pcYYrb4sIAW4xRrxsrmzSzBge
+        g1EM2yze6IjSge5IFmtM9gtykA==
+X-Google-Smtp-Source: ADFU+vs3bQbui32mwgN4d69WBgcOI3D/G3nH3HTL6g28UawRkGYTx1Gv6AOqnTJmut2iCUcqWB559A==
+X-Received: by 2002:a17:90a:3249:: with SMTP id k67mr16585418pjb.167.1585583442859;
+        Mon, 30 Mar 2020 08:50:42 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id r7sm10438837pfg.38.2020.03.30.08.50.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 08:50:41 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 08:50:38 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vt6656: Use defines in preamble_type variables
-Message-ID: <20200330154902.GB125210@jiffies>
-References: <20200328140955.23615-1-oscar.carter@gmx.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200328140955.23615-1-oscar.carter@gmx.com>
-X-ClientProxiedBy: LO2P265CA0217.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:b::13) To DBBPR08MB4491.eurprd08.prod.outlook.com
- (2603:10a6:10:d2::16)
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200330155038.GC199755@google.com>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
+ <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
+ <20200329171756.GA199755@google.com>
+ <87h7y62r28.fsf@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jiffies (5.151.93.48) by LO2P265CA0217.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:b::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend Transport; Mon, 30 Mar 2020 15:49:04 +0000
-X-Originating-IP: [5.151.93.48]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 87ae8b8d-a5f3-43dd-58ee-08d7d4c1dfe2
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4315:
-X-Microsoft-Antispam-PRVS: <DBBPR08MB43153D31BFE1153E4F206767B3CB0@DBBPR08MB4315.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4491.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(136003)(346002)(396003)(39830400003)(366004)(26005)(4326008)(52116002)(6496006)(44832011)(1076003)(81166006)(66946007)(8676002)(81156014)(33716001)(66476007)(33656002)(55016002)(8936002)(9576002)(9686003)(86362001)(53546011)(6916009)(316002)(2906002)(186003)(16526019)(508600001)(956004)(66556008)(5660300002)(54906003)(518174003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: itdev.co.uk does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2HwrTbpzas5jRcURRIpidX5ZBXs5pqbUdd345z60f7phBQqypVbGV9nmBzvo3qKmAgYdLNdwKiB0fG0v1yHLnECZOmlLbs4/Z774hhlew2KP5Lxp0gCUIhmN+MxfOaILy+smsSkZHsfpSIiRQPu1OEel7ky2//zTOTstCntcUBaIXfGGzyTUNVxgbG60s7SNI9ZPogU7U8PHK77ksaZOzsEelFa3uhFhJ3CYzuVut904f+XEEazzyHV1+9ae2zx/1vwPqVL5hmnCiHv1hJRBLW0nujWFa/WdOoXl1UXhdk7pGq3Je50MIjFWSyjoXBxpJ9rTIIkGuyw4f0zibWbalEkz+63zUnZJ5yHqkB+rk4e2GGLwplB8yykLXDBm8qXZL/hakktQh/WbD2qir6JjC1iFTDEfRiuL+E5rJYO5A3bmuZvql++/y7YoZ0ngsrWxdmx/6In8o77BBKByGLMtgMct2bwOtiYYBtW9z/BMg5U6NaFRkRYFb6vYVV3kMt/X
-X-MS-Exchange-AntiSpam-MessageData: N6HbPFM7Nb8GTRJ+8PXaxa4R2Mo9ClQR0EelQW/mjB5gBvyIqsQ+IReBpzy5Qho825My+AMcFqTnJdQI877v8LtQylD9kndfAiVsjH2cVEDk9zqFB5xx8QJgNkbnQ9tlmOqQ78xLJGipdInfVO/+VQ==
-X-OriginatorOrg: itdev.co.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87ae8b8d-a5f3-43dd-58ee-08d7d4c1dfe2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 15:49:04.6883
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2d2930c4-2251-45b4-ad79-3582c5f41740
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e73i4N9uRFJaOrTAfuOaigAoovC1qOxkXu3KdPmle0gDn1qe2x5nCCH+q4Y0I/rmy6KkUCgpsdemzdt6sWIpBqtk2kA9NQrlHHewR1FxDtk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4315
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87h7y62r28.fsf@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/28/20 15:09:55, Oscar Carter wrote:
-> Use the PREAMBLE_SHORT and PREAMBLE_LONG defines present in the file
-> "baseband.h" to assign values to preamble_type variables. Also, use the
-> same defines to make comparisons against this variables.
+On Mon, Mar 30, 2020 at 11:19:11AM +0300, Felipe Balbi wrote:
 > 
-> In this way, avoid the use of numerical literals or boolean values and
-> make the code more clear.
+> Hi,
 > 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  drivers/staging/vt6656/baseband.c | 8 ++++----
->  drivers/staging/vt6656/main_usb.c | 6 +++---
->  2 files changed, 7 insertions(+), 7 deletions(-)
+> Matthias Kaehlcke <mka@chromium.org> writes:
+> >> Add interconnect support in dwc3-qcom driver to vote for bus
+> >> bandwidth.
+> >> 
+> >> This requires for two different paths - from USB master to
+> >> DDR slave. The other is from APPS master to USB slave.
+> >> 
+> >> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> >> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+> >> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> >> ---
+> >>  drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
+> >>  1 file changed, 126 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> >> index 1dfd024..7e85fe6 100644
+> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> >>
+> >> ...
+> >>
+> >> +/* To disable an interconnect, we just set its bandwidth to 0 */
+> >> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+> >> +	if (ret)
+> >> +		goto err_reenable_memory_path;
+> >> +
+> >> +	return 0;
+> >> +
+> >> +	/* Re-enable things in the event of an error */
+> >> +err_reenable_memory_path:
+> >> +	ret = dwc3_qcom_interconnect_enable(qcom);
+> >
+> > This overwrites the error that led to the execution of this code path.
+> > The function should return original error, not the result of the
+> > _interconnect_enable() call.
+> >
+> > I saw Felipe queued the patch for v5.8. I think the main options to fix this
+> > are:
+> >
+> > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
+> >   anyway once there is a v5.7-rc)
+> > - send the fix as a separate patch
+> > - Felipe amends the patch in his tree
+> >
+> > Felipe, what would work best for you?
 > 
-> diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
-> index a19a563d8bcc..9bbafa7fff61 100644
-> --- a/drivers/staging/vt6656/baseband.c
-> +++ b/drivers/staging/vt6656/baseband.c
-> @@ -142,7 +142,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 pkt_type,
->  	rate = (unsigned int)vnt_frame_time[tx_rate];
+> Let's go for a v6, which commits should I drop? I can't find anything
+> related to $subject in my queue:
 > 
->  	if (tx_rate <= 3) {
-> -		if (preamble_type == 1)
-> +		if (preamble_type == PREAMBLE_SHORT)
->  			preamble = 96;
->  		else
->  			preamble = 192;
-> @@ -198,7 +198,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
->  	case RATE_2M:
->  		count = bit_count / 2;
-> 
-> -		if (preamble_type == 1)
-> +		if (preamble_type == PREAMBLE_SHORT)
->  			phy->signal = 0x09;
->  		else
->  			phy->signal = 0x01;
-> @@ -207,7 +207,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
->  	case RATE_5M:
->  		count = DIV_ROUND_UP(bit_count * 10, 55);
-> 
-> -		if (preamble_type == 1)
-> +		if (preamble_type == PREAMBLE_SHORT)
->  			phy->signal = 0x0a;
->  		else
->  			phy->signal = 0x02;
-> @@ -224,7 +224,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
->  				ext_bit = true;
->  		}
-> 
-> -		if (preamble_type == 1)
-> +		if (preamble_type == PREAMBLE_SHORT)
->  			phy->signal = 0x0b;
->  		else
->  			phy->signal = 0x03;
-> diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
-> index 8e7269c87ea9..dd89f98cc18c 100644
-> --- a/drivers/staging/vt6656/main_usb.c
-> +++ b/drivers/staging/vt6656/main_usb.c
-> @@ -99,7 +99,7 @@ static void vnt_set_options(struct vnt_private *priv)
->  	priv->op_mode = NL80211_IFTYPE_UNSPECIFIED;
->  	priv->bb_type = BBP_TYPE_DEF;
->  	priv->packet_type = priv->bb_type;
-> -	priv->preamble_type = 0;
-> +	priv->preamble_type = PREAMBLE_LONG;
->  	priv->exist_sw_net_addr = false;
->  }
-> 
-> @@ -721,10 +721,10 @@ static void vnt_bss_info_changed(struct ieee80211_hw *hw,
->  	if (changed & BSS_CHANGED_ERP_PREAMBLE) {
->  		if (conf->use_short_preamble) {
->  			vnt_mac_enable_barker_preamble_mode(priv);
-> -			priv->preamble_type = true;
-> +			priv->preamble_type = PREAMBLE_SHORT;
->  		} else {
->  			vnt_mac_disable_barker_preamble_mode(priv);
-> -			priv->preamble_type = false;
-> +			priv->preamble_type = PREAMBLE_LONG;
->  		}
->  	}
-> 
-> --
-> 2.20.1
-> 
+> $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
+> 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
 
-Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-
-Thank,
-Quentin
+I thought I saw a "queued for v5.8" message from you, but can't find that back.
+I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
+series and thought it was for this one. Sorry for the confusion.
