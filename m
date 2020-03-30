@@ -6,97 +6,125 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2218BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCB3C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FC320733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900522073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgC3NYZ (ORCPT
+        id S1728657AbgC3NZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:24:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:53574 "EHLO foss.arm.com"
+        Mon, 30 Mar 2020 09:25:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:53604 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727745AbgC3NYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:24:24 -0400
+        id S1727728AbgC3NZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:25:12 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C089D30E;
-        Mon, 30 Mar 2020 06:24:23 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C30CF3F71E;
-        Mon, 30 Mar 2020 06:24:21 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 14:24:16 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        x86@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dwmw@amazon.com, benh@amazon.com,
-        Jan Kiszka <jan.kiszka@siemens.com>, alcioa@amazon.com,
-        aggh@amazon.com, aagch@amazon.com, dhr@amazon.com
-Subject: Re: [PATCH] swiotlb: Allow swiotlb to live at pre-defined address
-Message-ID: <20200330132416.GA20969@lakrids.cambridge.arm.com>
-References: <20200326162922.27085-1-graf@amazon.com>
- <20200326170516.GB6387@lst.de>
- <cef4f2f5-3530-82f8-c0f5-ee0c2701ce6a@amazon.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FBF8101E;
+        Mon, 30 Mar 2020 06:25:11 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.97])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E88A93F71E;
+        Mon, 30 Mar 2020 06:25:08 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 14:25:06 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        fntoth@gmail.com, Arnd Bergmann <arnd@arndb.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
+Message-ID: <20200330132506.GD20031@bogus>
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+ <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+ <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com>
+ <20200330095707.GA10432@bogus>
+ <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cef4f2f5-3530-82f8-c0f5-ee0c2701ce6a@amazon.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 06:11:31PM +0100, Alexander Graf wrote:
-> On 26.03.20 18:05, Christoph Hellwig wrote:
-> > 
-> > On Thu, Mar 26, 2020 at 05:29:22PM +0100, Alexander Graf wrote:
-> > > The swiotlb is a very convenient fallback mechanism for bounce buffering of
-> > > DMAable data. It is usually used for the compatibility case where devices
-> > > can only DMA to a "low region".
-> > > 
-> > > However, in some scenarios this "low region" may be bound even more
-> > > heavily. For example, there are embedded system where only an SRAM region
-> > > is shared between device and CPU. There are also heterogeneous computing
-> > > scenarios where only a subset of RAM is cache coherent between the
-> > > components of the system. There are partitioning hypervisors, where
-> > > a "control VM" that implements device emulation has limited view into a
-> > > partition's memory for DMA capabilities due to safety concerns.
-> > > 
-> > > This patch adds a command line driven mechanism to move all DMA memory into
-> > > a predefined shared memory region which may or may not be part of the
-> > > physical address layout of the Operating System.
-> > > 
-> > > Ideally, the typical path to set this configuration would be through Device
-> > > Tree or ACPI, but neither of the two mechanisms is standardized yet. Also,
-> > > in the x86 MicroVM use case, we have neither ACPI nor Device Tree, but
-> > > instead configure the system purely through kernel command line options.
-> > > 
-> > > I'm sure other people will find the functionality useful going forward
-> > > though and extend it to be triggered by DT/ACPI in the future.
-> > 
-> > I'm totally against hacking in a kernel parameter for this.  We'll need
-> > a proper documented DT or ACPI way.
-> 
-> I'm with you on that sentiment, but in the environment I'm currently looking
-> at, we have neither DT nor ACPI: The kernel gets purely configured via
-> kernel command line. For other unenumerable artifacts on the system, such as
-> virtio-mmio platform devices, that works well enough and also basically
-> "hacks a kernel parameter" to specify the system layout.
+On Mon, Mar 30, 2020 at 01:45:32PM +0100, Robin Murphy wrote:
+> On 2020-03-30 11:13 am, Sudeep Holla wrote:
+> > On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
+> > > On 2020-03-27 5:56 pm, Naresh Kamboju wrote:
+> > > > The kernel warning noticed on arm64 juno-r2 device running linux
+> > > > next-20200326 and next-20200327
+> > >
+> > > I suspect this is the correct expected behaviour manifesting. If you're
+> > > using the upstream juno-r2.dts, the power domain being waited for here is
+> > > provided by SCPI, however unless you're using an SCP firmware from at least
+> > > 3 years ago you won't actually have SCPI since they switched it to the newer
+> > > SCMI protocol, which is not yet supported upstream for Juno. See what
+> > > happened earlier in the log:
+> > >
+> > > [    2.741206] scpi_protocol scpi: incorrect or no SCP firmware found
+> > > [    2.747586] scpi_protocol: probe of scpi failed with error -110
+> > >
+> > > Thus this is the "waiting for a dependency which will never appear" case,
+> > > for which I assume the warning is intentional,
+> >
+> > Is that the case ?
+> >
+> > Previously we used to get the warning:
+> > "amba xx: ignoring dependency for device, assuming no driver"
+> >
+> > Now we have the kernel warning in addition to the above.
+>
+> AFAICS the difference is down to whether deferred_probe_timeout has expired
+> or not - I'm not familiar enough with this code to know *exactly* what the
+> difference is supposed to represent, nor which change has actually pushed
+> the Juno case from one state to the other
 
-On the arm64 front, you'd *have* to pass a DT to the kernel (as that's
-where we get the command line from), and we *only* discover memory
-from the DT or EFI memory map, so the arguments above aren't generally
-applicable. You can enumerate virtio-mmio devices from DT, also.
+Me either
 
-Device-specific constraints on memory should really be described in a
-per-device fashion in the FW tables so that the OS can decide how to
-handle them. Just becuase one device can only access memory in a
-specific 1MiB window doesn't mean all other should be forced to share
-the same constraint. I think that's what Christoph was alluding to.
+> (other than it almost certainly
+> can't be $SUBJECT - if this series is to blame at all I'd assume it would be
+> down to patch #1/3, but there's a bunch of other rework previously queued in
+> -next that is probably also interacting)
+>
 
-Thanks,
-Mark.
+I agree, I was assuming one of the patch in series but again I may be wrong.
+
+> > > since the system is essentially broken (i.e. the hardware/firmware doesn't
+> > > actually match what the DT describes).
+> > >
+> >
+> > Not sure if we can term it as "essentially broken". Definitely not 100%
+> > functional but not broken if the situation like on Juno where SCP firmware
+> > is fundamental for all OSPM but not essential for boot and other minimum
+> > set of functionality.
+>
+> It's "broken" in the sense that the underlying system is *not* the system
+> described in the DT. Yes, all the parts that still happen to line up will
+> mostly still function OK, but those that don't will fundamentally not work
+> as the kernel has been told to expect. I'm not sure what you prefer to call
+> "not working as the kernel expects", but I call it "broken" ;)
+>
+
+I agree with you in context of Juno and it's firmware story.
+
+But I also have another development use-case. Unless the DT becomes the
+integral part of firmware from start, we can end up having DT with full
+DT components(e.g. all SCMI users) while the firmware can add the
+features incremental way. I agree this is not common for most of the
+kernel developer but practical for few.
+
+--
+Regards,
+Sudeep
