@@ -2,96 +2,82 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B29C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC7CC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AF5206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C977F2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:24:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1yi/YHbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbgC3QYB (ORCPT
+        id S1730198AbgC3QYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:24:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56952 "EHLO mx2.suse.de"
+        Mon, 30 Mar 2020 12:24:18 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38950 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgC3QYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:24:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 46CBEAD63;
-        Mon, 30 Mar 2020 16:23:59 +0000 (UTC)
-Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters from
- kernel command line
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-2-vbabka@suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <c68b1ed4-51ef-ca65-7128-ff3c8b6b54ee@suse.cz>
-Date:   Mon, 30 Mar 2020 18:23:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727826AbgC3QYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:24:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ZG5MreuVFf6aVQx3nE2phyaNZ/JZrv5xnE/dU4sq/6I=; b=1yi/YHbDN3jiMT7YkDPIf3XjnQ
+        ZlHLj99p8NFKjJvb75I78Ez7SAJcERpQD09WszQ9JgrPstdJZeEvQcokPS46ZI+VmvssjT0USL5Zg
+        dTZsvq2RH3PyecyErXXLyrurM1nQGvzNmkRak8dbaAUOUYxtuKwidw0bSgC93LFdIKDo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jIxCw-00063s-G0; Mon, 30 Mar 2020 18:24:14 +0200
+Date:   Mon, 30 Mar 2020 18:24:14 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, davem@davemloft.net
+Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
+Message-ID: <20200330162414.GD23477@lunn.ch>
+References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
+ <20200330161740.GC23477@lunn.ch>
+ <20200330162130.GF25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200330115535.3215-2-vbabka@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330162130.GF25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 1:55 PM, Vlastimil Babka wrote:
-> A recently proposed patch to add vm_swappiness command line parameter in
-> addition to existing sysctl [1] made me wonder why we don't have a general
-> support for passing sysctl parameters via command line. Googling found only
-> somebody else wondering the same [2], but I haven't found any prior discussion
-> with reasons why not to do this.
+On Mon, Mar 30, 2020 at 05:21:30PM +0100, Russell King - ARM Linux admin wrote:
+> On Mon, Mar 30, 2020 at 06:17:40PM +0200, Andrew Lunn wrote:
+> > On Mon, Mar 30, 2020 at 07:01:36PM +0300, Codrin Ciubotariu wrote:
+> > > Some ethernet controllers, such as cadence's macb, have an embedded MDIO.
+> > > For this reason, the ethernet PHY nodes are not under an MDIO bus, but
+> > > directly under the ethernet node.
+> > 
+> > Hi Codrin
+> > 
+> > That is deprecated. It causes all sorts of problems putting PHY nodes
+> > in the MAC without a container.
+> > 
+> > Please fix macb to look for an mdio node, and place your fixed link
+> > inside it.
 > 
-> Settings the vm_swappiness issue aside (the underlying issue might be solved in
-> a different way), quick search of kernel-parameters.txt shows there are already
-> some that exist as both sysctl and kernel parameter - hung_task_panic,
-> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
-> would remove the need to add more of those one-offs and might be handy in
-> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
-> 
-> Hence, this patch adds a new parse_args() pass that looks for parameters
-> prefixed by 'sysctl.' and tries to interpret them as writes to the
-> corresponding sys/ files using an temporary in-kernel procfs mount. This
-> mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
-> registered sysctl tables. Errors due to e.g. invalid parameter name or value
-> are reported in the kernel log.
-> 
-> The processing is hooked right before the init process is loaded, as some
-> handlers might be more complicated than simple setters and might need some
-> subsystems to be initialized. At the moment the init process can be started and
-> eventually execute a process writing to /proc/sys/ then it should be also fine
-> to do that from the kernel.
-> 
-> Sysctls registered later on module load time are not set by this mechanism -
-> it's expected that in such scenarios, setting sysctl values from userspace is
-> practical enough.
-> 
-> [1] https://lore.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
-> [2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
-> [3] https://lore.kernel.org/r/87bloj2skm.fsf@x220.int.ebiederm.org/
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Seems wrong.
 
-Boo, all the error prints should terminate with \n
-Will wait for feedback before resend.
+Hi Russell
+
+Gerr. You are right.
+
+> fixed links have never needed to be under a mdio node - see
+> Documentation/devicetree/bindings/net/ethernet-controller.yaml
+
+macb does crazy stuff. I will take another look.
+
+     Andrew
