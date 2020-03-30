@@ -2,96 +2,160 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3154CC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4324DC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070FA206E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1619B206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:04:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R5aQu0gP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbgC3IC1 (ORCPT
+        id S1729585AbgC3IEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:02:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56676 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbgC3IC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:02:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 772A1AF2C;
-        Mon, 30 Mar 2020 08:02:24 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 10:02:23 +0200
-Message-ID: <s5hlfnib78w.wl-tiwai@suse.de>
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Thomas Hebb <tommyhebb@gmail.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Kailang Yang <kailang@realtek.com>,
+        Mon, 30 Mar 2020 04:04:08 -0400
+Received: from mail-qv1-f73.google.com ([209.85.219.73]:44611 "EHLO
+        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729474AbgC3IEH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:04:07 -0400
+Received: by mail-qv1-f73.google.com with SMTP id d2so13711076qve.11
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 01:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
+        bh=6uUpEI08oXikXCp5+9gsd81DMfh5aZ7xYc26aZNsMcE=;
+        b=R5aQu0gPcdYxwympNDA6UKdwMEnC2lGvXrGlXdylt5YSMQ4nAlR4gXuAS+7DzVEFW9
+         bncYZz2qzYyv60L9tsSIMS6mi7tymeJ2mjj2uFTPgT8gTz02xBhf4Ut/2l8JRwepapq6
+         v7MV4eHIuJsBec5DldbEcDJ/X2g+0uDLUfpyPOsLAWJG+7u5noEunaLudIgD88epxYKv
+         Jdolza7eiLG5kgnu5wfR62bw23CdRRHVOQAFXqOhIs2UJBqImVKGEcmPswTxOAVJmNqi
+         QkhU2j1WsrWkCb5+2hNw1Xx4esmiKqnMFvbnwL0CIsgEPe//N0hq9yOnyhTr3R1xVQrZ
+         tHGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:cc;
+        bh=6uUpEI08oXikXCp5+9gsd81DMfh5aZ7xYc26aZNsMcE=;
+        b=axxSj8WdoIeqELgFSwRFpI0p64tv/OgeZil7p4ZheR41SDPdvkm5duxSgthQddaDaA
+         yvAvPbySVFSjat3vbZclrBkg1yeljZ/nG4JHhR/BrDwAIomSuXtc14ZTRO9nIpemEmcV
+         rdQ88XsczsBS+65NKyVSza54uh0mw90vVfLNBmUi9Yk7YBPpAijWKtnNSrbPeRuQK4IV
+         hREx1y4DSBZwFwwZsHikwNlIJ9D2ynZCP6AxyLVZHnXPaYUYB5LiczSebN4X72Prck5s
+         XbQN28CNrhgIrMbat5Wpm2EzalZsaRiLUAqCK3TQvFK6Cuzaj7pZWhgKhxxoJsZD/c3M
+         W/ag==
+X-Gm-Message-State: ANhLgQ2Z06DbiW+Q0+OtsLn7S5G8PL9tNBXd9/jrCjllyyDfmYv2D3Gj
+        7zn58HsXJatlar6hSBpyGz7TCXN5NnTL
+X-Google-Smtp-Source: ADFU+vtYJzmxymIGka0/I/Su3giY+YfBRdfUHQGLXnJq4xIk/Xdj15dHeXATi7wBUj2ccVnQni5sms+J4AtS
+X-Received: by 2002:ac8:6890:: with SMTP id m16mr10623891qtq.5.1585555446842;
+ Mon, 30 Mar 2020 01:04:06 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 10:03:56 +0200
+In-Reply-To: <20200327100801.161671-1-courbet@google.com>
+Message-Id: <20200330080400.124803-1-courbet@google.com>
+Mime-Version: 1.0
+References: <20200327100801.161671-1-courbet@google.com>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v3] powerpc: Make setjmp/longjmp signature standard
+From:   Clement Courbet <courbet@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Clement Courbet <courbet@google.com>, stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hui Wang <hui.wang@canonical.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Sergey Bostandzhyan <jin@mediatomb.cc>,
-        Takashi Iwai <tiwai@suse.com>,
-        Tomas Espeleta <tomas.espeleta@gmail.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] Properly fix headphone noise on the XPS 13 and other ALC256 devices
-In-Reply-To: <cover.1585553414.git.tommyhebb@gmail.com>
-References: <cover.1585553414.git.tommyhebb@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
- (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
-Content-Type: text/plain; charset=US-ASCII
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 09:30:29 +0200,
-Thomas Hebb wrote:
-> 
-> 
-> The root cause of various pervasive audio problems on the XPS 13
-> 9350/9360, mostly relating to the headphone jack, turns out to be an
-> undocumented feature of the ALC256 and similar codecs that routes audio
-> along paths not exposed in the HDA node graph. The best we've had so far
-> to configure this feature is magic numbers provided by Realtek, none of
-> which have fully fixed all issues.
-> 
-> This series documents the "PC Beep Hidden Register", which controls the
-> feature and which I've reverse engineered using black box techniques,
-> and uses my findings to hopefully fix the headphone issues on my XPS 13
-> once and for all.
+Declaring setjmp()/longjmp() as taking longs makes the signature
+non-standard, and makes clang complain. In the past, this has been
+worked around by adding -ffreestanding to the compile flags.
 
-Thanks for the patches, all those look interesting and good to apply.
-But I'd like to get it reviewed by Kailang at first -- in case we
-might be playing with something untouchable.
+The implementation looks like it only ever propagates the value
+(in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
+with integer parameters.
 
-Kailang, could you review this quickly?
+This allows removing -ffreestanding from the compilation flags.
 
+Context:
+https://lore.kernel.org/patchwork/patch/1214060
+https://lore.kernel.org/patchwork/patch/1216174
 
-Takashi
+Signed-off-by: Clement Courbet <courbet@google.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
 
-> 
-> Thomas Hebb (3):
->   ALSA: doc: Document PC Beep Hidden Register on Realtek ALC256
->   ALSA: hda/realtek - Set principled PC Beep configuration for ALC256
->   ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise
->     fixups
-> 
->  Documentation/sound/hd-audio/index.rst        |   1 +
->  Documentation/sound/hd-audio/models.rst       |   2 -
->  .../sound/hd-audio/realtek-pc-beep.rst        | 129 ++++++++++++++++++
->  sound/pci/hda/patch_realtek.c                 |  49 ++-----
->  4 files changed, 139 insertions(+), 42 deletions(-)
->  create mode 100644 Documentation/sound/hd-audio/realtek-pc-beep.rst
-> 
-> -- 
-> 2.25.2
-> 
+---
+
+v2:
+Use and array type as suggested by Segher Boessenkool
+Add fix tags.
+
+v3:
+Properly place tags.
+---
+ arch/powerpc/include/asm/setjmp.h | 6 ++++--
+ arch/powerpc/kexec/Makefile       | 3 ---
+ arch/powerpc/xmon/Makefile        | 3 ---
+ 3 files changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/setjmp.h b/arch/powerpc/include/asm/setjmp.h
+index e9f81bb3f83b..f798e80e4106 100644
+--- a/arch/powerpc/include/asm/setjmp.h
++++ b/arch/powerpc/include/asm/setjmp.h
+@@ -7,7 +7,9 @@
+ 
+ #define JMP_BUF_LEN    23
+ 
+-extern long setjmp(long *) __attribute__((returns_twice));
+-extern void longjmp(long *, long) __attribute__((noreturn));
++typedef long jmp_buf[JMP_BUF_LEN];
++
++extern int setjmp(jmp_buf env) __attribute__((returns_twice));
++extern void longjmp(jmp_buf env, int val) __attribute__((noreturn));
+ 
+ #endif /* _ASM_POWERPC_SETJMP_H */
+diff --git a/arch/powerpc/kexec/Makefile b/arch/powerpc/kexec/Makefile
+index 378f6108a414..86380c69f5ce 100644
+--- a/arch/powerpc/kexec/Makefile
++++ b/arch/powerpc/kexec/Makefile
+@@ -3,9 +3,6 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-# Avoid clang warnings around longjmp/setjmp declarations
+-CFLAGS_crash.o += -ffreestanding
+-
+ obj-y				+= core.o crash.o core_$(BITS).o
+ 
+ obj-$(CONFIG_PPC32)		+= relocate_32.o
+diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
+index c3842dbeb1b7..6f9cccea54f3 100644
+--- a/arch/powerpc/xmon/Makefile
++++ b/arch/powerpc/xmon/Makefile
+@@ -1,9 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for xmon
+ 
+-# Avoid clang warnings around longjmp/setjmp declarations
+-subdir-ccflags-y := -ffreestanding
+-
+ GCOV_PROFILE := n
+ KCOV_INSTRUMENT := n
+ UBSAN_SANITIZE := n
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
+
