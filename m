@@ -2,117 +2,149 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B28C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16933C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C80D206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4DB206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3Kc8KDH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cz42H+A8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgC3Omi (ORCPT
+        id S1728397AbgC3OnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:42:38 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41847 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgC3Omh (ORCPT
+        Mon, 30 Mar 2020 10:43:20 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46118 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgC3OnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:42:37 -0400
-Received: by mail-lj1-f195.google.com with SMTP id n17so18360915lji.8;
-        Mon, 30 Mar 2020 07:42:35 -0700 (PDT)
+        Mon, 30 Mar 2020 10:43:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j17so21892996wru.13
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zZl8DGHxKfW9Vu36ePmFE8gP/ULjjF5tAO2pNWgNfJ8=;
-        b=h3Kc8KDHcLiXfTCe9KLFRZw8NC3uNi76b2bvj8c5PfQqsPu3mTsnwZHSVXXMF+M57R
-         aCZ1Yfa80MsCs0jly+WB/q5zh0bMdinYZ8efN7zr2VXsvNNhAdVLcGycLNRvwA+ITI5w
-         Iu9nWHpV4YhgBBcAofo+4dW7YzLWCNCnblGhYo/cMra3um6S+d8ic31+9ibO/v8RhCez
-         bGR6LAi0zzGWgXstRGtTSRCX3AgWBPN9iNVlYAritB1dFd93zUGps8o+Cb6ClXLEqZbw
-         P1CCbhLNL8U9f45/x88HVfqQILzHaE1WvOBUW38y6VgTjKEk3/yTNassbR7dW4XyiLxE
-         65RQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wDKK1rxJ/Ozhs2MJS25zEDVu2X8lPSvrnkUT9J5tmBI=;
+        b=cz42H+A8OSoPd3whOFLMSUywzwBy3ywnzV2zBfkD+ytvB9Mj+IAte7/ngWzBF1/24n
+         5i8xmKdIi6zhwjPWbWoGVkVnm21fqheDuTvTBitdBXakf3H4CiItd6f6F2iwyJLrxfS0
+         onXSXEA8PA/rQsscopkh6zm9OWz1MsTwOJmhs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zZl8DGHxKfW9Vu36ePmFE8gP/ULjjF5tAO2pNWgNfJ8=;
-        b=iaqL3mhNDyXQzfhwruWQuJt4vbIP/o7T0bSBGsS2pjus7alLo9uMsn3V277CcwjmdH
-         WKHjtsHqJHLeEbaO383LmJTTuoNwC5gu+uLHSO18WSlzCbfwiQBS04NsWTW0M/1nFigl
-         +7ZrEwVJuFq0cQXANJ8ket8C9cu0sAtNM555HFsx8daLtJl3o4z1EMiZQuTKgmKxu1nz
-         c6Rs0qlWfM5rXvVldA9W1ZAF5PHcwbjOJK4gAd5XhsSaMk2MUYUgwlT+eiBYTboVcqRL
-         lm95G2lV9xxAjD+5nKv86a8mzLjPY6vm0TUdiDTxuKma+AWg9kEOmcBhgggAwyJIo9RM
-         oCJQ==
-X-Gm-Message-State: AGi0PuYd7A8XT06xdEBQr32TxFrw8T16FuTaLk/VlKisghrIYQXXBE8U
-        3p3YPpBGOOYcqQ+dPQuHcoM=
-X-Google-Smtp-Source: APiQypJDLgeyGA4Jl3+7HtQKeMzM/OnpeTMviE/XQdDGRdcozdPKungXUDu36lYdIPZMiuEU7g5uTA==
-X-Received: by 2002:a2e:854e:: with SMTP id u14mr7198364ljj.95.1585579354883;
-        Mon, 30 Mar 2020 07:42:34 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id r141sm7832506lff.58.2020.03.30.07.42.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wDKK1rxJ/Ozhs2MJS25zEDVu2X8lPSvrnkUT9J5tmBI=;
+        b=YgjZif+DbQz/wGAMfceLvde3Cx/Rg8tx7HmYv112iTWq1cIkIm6jtYSWE0uWh9IIbJ
+         jWNvPPDErYkVN0QcLVIjtSdKwuAebb2CNafeZhYatzx6sseD5h1qgT7fWWmIIHjpIHDm
+         NK4Vn7tz/ZMWHq2H0f65PKp0ESfCLizZTeZF/2D3Si7wVtvqDwl/27LiCRRNqbqTO5DN
+         BjP4QCgx5n+OlnAd4kk6dO/Hh7ZL84UVAQwcjvevfiUGf9E8O5Z5R2mhdEIKsc6HFiVW
+         fgbLQ6qLYlt5TiMaZajpggRODPyX0sBKfFoXGTFTG59OVdwKIqZpgkzhBm+xerZGSzD2
+         rcug==
+X-Gm-Message-State: ANhLgQ3HsTCg8oly/OKbGjpFol6uIKPpCtBcxvXiZZ+0c0aLMUgYCpQJ
+        cnswFv6/KuK3etrlY0xLolE13q8WVVs=
+X-Google-Smtp-Source: ADFU+vtKWzncbD9ytoVigT1zTjamTQbtwMydoETXzoZ4vJoDGHCRa1CGDLhc9iDD3yyLZ/6AjOkBcw==
+X-Received: by 2002:adf:ef45:: with SMTP id c5mr14956268wrp.112.1585579397851;
+        Mon, 30 Mar 2020 07:43:17 -0700 (PDT)
+Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id i2sm22128947wrx.22.2020.03.30.07.43.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:42:34 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 30 Mar 2020 16:42:27 +0200
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        RCU <rcu@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 6/7] rcu/tiny: support reclaim for head-less object
-Message-ID: <20200330144227.GA16651@pc636>
-References: <20200323113621.12048-1-urezki@gmail.com>
- <20200323113621.12048-7-urezki@gmail.com>
- <20200330005637.GA138004@google.com>
+        Mon, 30 Mar 2020 07:43:17 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Jann Horn <jannh@google.com>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH bpf-next] bpf: btf: Fix arg verification in btf_ctx_access()
+Date:   Mon, 30 Mar 2020 16:42:46 +0200
+Message-Id: <20200330144246.338-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330005637.GA138004@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> Hmm, Ok. So on -tiny, if there's any allocation failure ever, we immediately
-> revert to call_rcu(). I guess we could also create a regular (non-array)
-> queue for objects with an rcu_head and queue it on that (since it does not
-> need allocation) in case of array allocation failure, however that may not be
-> worth it. So this LGTM. Thanks!
-> 
-> For entire series:
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> (I will submit a follow-up to fix the tagging, please let me submit Vlad's
-> entire series with some patches on top -- I also did a bit of wordsmithing in
-> the commit messages of this series).
->
-Thank you, Joel, for your review and help!
+From: KP Singh <kpsingh@google.com>
 
-> 
-> Loved the might_sleep() idea btw, I suppose if atomic context wants to do
-> kvfree_rcu(), then we could also have kfree_rcu() defer the kvfree_rcu() to
-> execute from a workqueue. Thoughts? We can then allow poor insomniacs from
-> calling this API :)
-> 
-Not sure if i understand you correctly. Could you please <snip> some code
-for illustration?
+The bounds checking for the arguments accessed in the BPF program breaks
+when the expected_attach_type is not BPF_TRACE_FEXIT, BPF_LSM_MAC or
+BPF_MODIFY_RETURN resulting in no check being done for the default case
+(the programs which do not receive the return value of the attached
+function in its arguments) when the index of the argument being accessed
+is equal to the number of arguments (nr_args).
 
-As far as i understand, it should be done then synchronously. We can defer  
-and queue some work to do it in worqueue context. But i am not sure how
-to proccess next coming request, i.e. busy waiting until we manage to push
-a new ptr. to free? But in that case it would not work if there is only
-one CPU available.
+This was a result of a misplaced "else if" block  introduced by the
+Commit 6ba43b761c41 ("bpf: Attachment verification for
+BPF_MODIFY_RETURN")
 
-Thanks!
+Signed-off-by: KP Singh <kpsingh@google.com>
+Fixes: 6ba43b761c41 ("bpf: Attachment verification for BPF_MODIFY_RETURN")
+Reported-by: Jann Horn <jannh@google.com>
+---
+ kernel/bpf/btf.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
---
-Vlad Rezki
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index de335cd386f0..3b6dcfb6ea49 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -3709,9 +3709,16 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
+ 		nr_args--;
+ 	}
+ 
++	if (arg > nr_args) {
++		bpf_log(log, "func '%s' doesn't have %d-th argument\n",
++			tname, arg + 1);
++		return false;
++	}
++
+ 	if (arg == nr_args) {
+-		if (prog->expected_attach_type == BPF_TRACE_FEXIT ||
+-		    prog->expected_attach_type == BPF_LSM_MAC) {
++		switch (prog->expected_attach_type) {
++		case BPF_LSM_MAC:
++		case BPF_TRACE_FEXIT:
+ 			/* When LSM programs are attached to void LSM hooks
+ 			 * they use FEXIT trampolines and when attached to
+ 			 * int LSM hooks, they use MODIFY_RETURN trampolines.
+@@ -3728,7 +3735,8 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
+ 			if (!t)
+ 				return true;
+ 			t = btf_type_by_id(btf, t->type);
+-		} else if (prog->expected_attach_type == BPF_MODIFY_RETURN) {
++			break;
++		case BPF_MODIFY_RETURN:
+ 			/* For now the BPF_MODIFY_RETURN can only be attached to
+ 			 * functions that return an int.
+ 			 */
+@@ -3742,17 +3750,19 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
+ 					btf_kind_str[BTF_INFO_KIND(t->info)]);
+ 				return false;
+ 			}
++			break;
++		default:
++			bpf_log(log, "func '%s' doesn't have %d-th argument\n",
++				tname, arg + 1);
++			return false;
+ 		}
+-	} else if (arg >= nr_args) {
+-		bpf_log(log, "func '%s' doesn't have %d-th argument\n",
+-			tname, arg + 1);
+-		return false;
+ 	} else {
+ 		if (!t)
+ 			/* Default prog with 5 args */
+ 			return true;
+ 		t = btf_type_by_id(btf, args[arg].type);
+ 	}
++
+ 	/* skip modifiers */
+ 	while (btf_type_is_modifier(t))
+ 		t = btf_type_by_id(btf, t->type);
+-- 
+2.20.1
+
