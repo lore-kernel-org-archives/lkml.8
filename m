@@ -2,105 +2,110 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250FAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7885C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D8E2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F182072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585582668;
+	bh=jc0QdZARY0i8SDailP2Ma6bv7d79DYIt3kfbBc6KMqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KTdgpmadBVtYOzGkaEZ5ICTLaujvV0KXUwtL2OZzunOsnxnEvtTNSKIVaIfww2tuR
+	 DZkxzfTkVYiR98BD2ZjBGU0kZmZBaWmdzROtsUyxoJMkt0Wa6FZFRLtsFNapo4on9F
+	 cKwWa/jaOMu3aAnED/4wjxF4FTOFShXNDxELdneI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgC3Phh (ORCPT
+        id S1729451AbgC3Phr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:37:37 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59646 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729059AbgC3Phh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:37:37 -0400
-IronPort-SDR: NOuWRtCXOrIUeQjaWe8HTJ7PTNyOBQhdNTbTwLAOPyTASfYCZuuLmkO+IwkOWgD+XepVgvkIkr
- PrqYtNIdnTlQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 08:37:21 -0700
-IronPort-SDR: rGfofEL0vyso2snjbsChk1/bvhIJvttkOoY8nj2MoiAnlDgt4nwnA7l4+c1eagK7/WENaaEzKM
- L9ExIccj2JDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="395160763"
-Received: from sgobriel-mobl.amr.corp.intel.com (HELO [10.212.145.94]) ([10.212.145.94])
-  by orsmga004.jf.intel.com with ESMTP; 30 Mar 2020 08:37:20 -0700
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-To:     Mark Brown <broonie@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com,
-        curtis@malainey.com, tiwai@suse.com,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com
-References: <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
- <20200330102356.GA16588@light.dominikbrodowski.net>
- <43c098c9-005e-b9f4-2132-ed6e4a65feee@intel.com>
- <20200330113929.GF4792@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <85dca962-58ad-6e00-c84b-10859ea127fe@linux.intel.com>
-Date:   Mon, 30 Mar 2020 10:37:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 30 Mar 2020 11:37:47 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36455 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729059AbgC3Phr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:37:47 -0400
+Received: by mail-il1-f193.google.com with SMTP id p13so16193635ilp.3;
+        Mon, 30 Mar 2020 08:37:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mkwxb5JvjMmyFZrDRCuhIwp5i7N+YTkvrCmiuVH1Fic=;
+        b=OG44WY7K6YPCEe3T/IcnhkGV25/psznkLeiKaEidX5Vovu22Y5cvf6RNM1IM9SsVZM
+         fSgmTfopqJqo6D/TGgfo2PbH5nwaZxiTMuuQdr6lF/JS9ODtCXJv/42wQmJKpZxVKrJh
+         pSxORQixh60vYEoqhc0Fie6m9ab2ItL5B5+UD+5XgNMlOyGSeuXxoOO3xRsiGYRqa8L/
+         EVcJS44pv+D5zPpn+MiHVU9pakXqMSRgDmgaaRhnuMoU3dajc9/wxR5h6J53+TX82a85
+         tZHJIzxROvWvjOkxheUkcr7yZDXFXEu0bD0Ul/qATaywHxdFOHNvzjVgmce+SlQrpZIm
+         SdOQ==
+X-Gm-Message-State: ANhLgQ1j96ZMrGxxdfJtlMmK7RZdJuU5hGF4hfh2Hrbujab6bnkt9oEU
+        oOzgknQErPnzcD9NGHOKsA==
+X-Google-Smtp-Source: ADFU+vt21JoipmYTiUdTolbv6zjigW1PlZnXRMPY/IpL+qcHi+xo9piY1XQqocbQl+43wrwQMa/9Ow==
+X-Received: by 2002:a92:8953:: with SMTP id n80mr11430471ild.5.1585582666374;
+        Mon, 30 Mar 2020 08:37:46 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id l17sm5041250ilf.28.2020.03.30.08.37.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 08:37:45 -0700 (PDT)
+Received: (nullmailer pid 18293 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:37:43 -0000
+Date:   Mon, 30 Mar 2020 09:37:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        jic23@kernel.org, linux-kernel@vger.kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v5 1/2] dt-bindings: iio: accel: Add bmi088 accelerometer
+ bindings
+Message-ID: <20200330153743.GA17787@bogus>
+References: <20200324080309.12171-1-mike.looijmans@topic.nl>
 MIME-Version: 1.0
-In-Reply-To: <20200330113929.GF4792@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324080309.12171-1-mike.looijmans@topic.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/30/20 6:39 AM, Mark Brown wrote:
-> On Mon, Mar 30, 2020 at 01:10:34PM +0200, Cezary Rojewski wrote:
->> On 2020-03-30 12:23, Dominik Brodowski wrote:
+On Tue, 24 Mar 2020 09:03:07 +0100, Mike Looijmans wrote:
+> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+> the accelerometer part.
 > 
->>> Seems this patch didn't make it into v5.6 (and neither did the other ones
->>> you sent relating to the "dummy" components). Can these patches therefore be
->>> marked for stable, please?
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+> v2: convert to yaml format
+> v3..v4: -
+> v5: submit together with driver code as patch series
+>  .../bindings/iio/accel/bosch,bmi088.yaml      | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
 > 
-> I sent my pull request already sorry - once it hits Linus' tree I'd send
-> a request to stable.
-> 
->> While one of the series was accepted and merged, there is a delay caused by
->> Google/ SOF folks in merging the second one.
-> 
->> Idk why rt286 aka "broadwell" machine board patch has not been merged yet.
->> It's not like we have to merge all (rt5650 + rt5650 + rt286) patches at
->> once. Google guys can keep verifying Buddy or whatnot while guys with Dell
->> XPS can enjoy smooth audio experience.
-> 
-> My scripting is set up to merge things sent to me as a patch series and
-> we didn't get positive review from Pierre on any of it with the review
-> on that one patch seeming to suggest it might also be waiting go go
-> through a test farm.  TBH I also wasn't expecting it to take quite so
-> long to get reviewed when it came in, it's been over 2 weeks now...
 
-There are multiple problems with Broadwell and device-specific issues on 
-suspend-resume - in which Cezary is involved. The tests are not 
-automated so depend on people availability.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-I tested this series last Friday and I didn't find any new problem on my 
-side, so we should probably merge this series.
+Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml:  while scanning a simple key
+  in "<unicode string>", line 32, column 3
+could not find expected ':'
+  in "<unicode string>", line 38, column 3
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/iio/accel/bosch,bmi088.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/iio/accel/bosch,bmi088.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml: ignoring, error parsing file
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Everyone should be aware though that suspend-resume is far from stable 
-on Broadwell, and if it works on Dell XPS 13 it doesn't work reliably on 
-Chrome devices.
+See https://patchwork.ozlabs.org/patch/1260498
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
