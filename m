@@ -2,118 +2,85 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DFAC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0964DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D34A206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jug3rhOD"
+	by mail.kernel.org (Postfix) with ESMTP id DB7F1206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgC3MRN (ORCPT
+        id S1729977AbgC3MTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:17:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51342 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729705AbgC3MRM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:17:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1TmVSV9PEicpV15saljgYzRTqRrIyUodG1iYOZDlCEw=; b=jug3rhODTJBTFOCabmEpKv3Ciy
-        OQM9n6+JLCgJaVH13pLjAddV5iCyN6VkzJewzO5/zEWXS0jthSH5yZe4C+fBjXhYKc8qcHxnPjBJ2
-        3k0FhnMmnjUl6Z8PZwD0cHVa8+QzePq02+E7Qr1bv4keJir+bSI1/esyOwt5AYFDjDetGBu2r2CHQ
-        8ZDHvI7evDFQxiGZK2RtBJ6wCGAZsIN5cGaqdjOtB85vmkkhbKSeK2gMBqRRNxfr1+aFDoj104nQq
-        QuwEtQdU3Cqt+u9I7HuSEBBq2KVdHmPuVh1ef2y2D7+8la/4B4ZcASgg37TwV3AIfzXRHcYGJfC6B
-        abEyRCXA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jItLd-0004XC-Ka; Mon, 30 Mar 2020 12:16:57 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EAFAE303C41;
-        Mon, 30 Mar 2020 14:16:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CDA5F29D04D6E; Mon, 30 Mar 2020 14:16:54 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 14:16:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     npiggin@gmail.com, will.deacon@arm.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, schwidefsky@de.ibm.com,
-        akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, arm@kernel.org, xiexiangyou@huawei.com
-Subject: Re: [RFC][Qusetion] the value of cleared_(ptes|pmds|puds|p4ds) in
- struct mmu_gather
-Message-ID: <20200330121654.GL20696@hirez.programming.kicks-ass.net>
-References: <fbb00ac0-9104-8d25-f225-7b3d1b17a01f@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fbb00ac0-9104-8d25-f225-7b3d1b17a01f@huawei.com>
+        Mon, 30 Mar 2020 08:19:25 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58472 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729705AbgC3MTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 08:19:25 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EE1722004B4;
+        Mon, 30 Mar 2020 14:19:23 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FEF82004AE;
+        Mon, 30 Mar 2020 14:19:19 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D58E140297;
+        Mon, 30 Mar 2020 20:19:13 +0800 (SGT)
+From:   Biwen Li <biwen.li@oss.nxp.com>
+To:     leoyang.li@nxp.com, linux@rempel-privat.de, kernel@pengutronix.de,
+        wsa@the-dreams.de
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [PATCH] i2c: imx: add shutdown interface
+Date:   Mon, 30 Mar 2020 20:15:46 +0800
+Message-Id: <20200330121546.23872-1-biwen.li@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 12:30:50PM +0800, Zhenyu Ye wrote:
-> Hi all,
-> 
-> commit a6d60245 "Track which levels of the page tables have been cleared"
-> added cleared_(ptes|pmds|puds|p4ds) in struct mmu_gather, and the values
-> of them are set in some places. For example:
-> 
-> In include/asm-generic/tlb.h, pte_free_tlb() set the tlb->cleared_pmds:
-> ---8<---
-> #ifndef pte_free_tlb
-> #define pte_free_tlb(tlb, ptep, address)			\
-> 	do {							\
-> 		__tlb_adjust_range(tlb, address, PAGE_SIZE);	\
-> 		tlb->freed_tables = 1;				\
-> 		tlb->cleared_pmds = 1;				\
-> 		__pte_free_tlb(tlb, ptep, address);		\
-> 	} while (0)
-> #endif
-> ---8<---
-> 
-> 
-> However, in arch/s390/include/asm/tlb.h, pte_free_tlb() set the tlb->cleared_ptes:
-> ---8<---
-> static inline void pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
->                                 unsigned long address)
-> {
-> 	__tlb_adjust_range(tlb, address, PAGE_SIZE);
-> 	tlb->mm->context.flush_mm = 1;
-> 	tlb->freed_tables = 1;
-> 	tlb->cleared_ptes = 1;
-> 	/*
-> 	 * page_table_free_rcu takes care of the allocation bit masks
-> 	 * of the 2K table fragments in the 4K page table page,
-> 	 * then calls tlb_remove_table.
-> 	 */
-> 	page_table_free_rcu(tlb, (unsigned long *) pte, address);
-> }
-> ---8<---
-> 
-> 
-> In my view, the cleared_(ptes|pmds|puds) and (pte|pmd|pud)_free_tlb
-> correspond one-to-one.  So we should set cleared_ptes in pte_free_tlb(),
-> then use it when needed.
+From: Biwen Li <biwen.li@nxp.com>
 
-So pte_free_tlb() clears a table of PTE entries, or a PMD level entity,
-also see free_pte_range(). So the generic code makes sense to me. The
-PTE level invalidations will have happened on tlb_remove_tlb_entry().
+Add shutdown interface
 
-> I'm very confused about this. Which is wrong? Or is there something
-> I understand wrong?
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ drivers/i2c/busses/i2c-imx.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I agree the s390 case is puzzling, Martin does s390 need a PTE level
-invalidate for removing a PTE table or was this a mistake?
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index 0ab5381aa012..07da42cb0be4 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -1281,6 +1281,16 @@ static int i2c_imx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void i2c_imx_shutdown(struct platform_device *pdev)
++{
++	struct imx_i2c_struct *i2c_imx = platform_get_drvdata(pdev);
++
++	imx_i2c_write_reg(0, i2c_imx, IMX_I2C_IADR);
++	imx_i2c_write_reg(i2c_imx->hwdata->i2cr_ien_opcode ^ I2CR_IEN,
++			i2c_imx, IMX_I2C_I2CR);
++	imx_i2c_write_reg(i2c_imx->hwdata->i2sr_clr_opcode, i2c_imx, IMX_I2C_I2SR);
++}
++
+ static int __maybe_unused i2c_imx_runtime_suspend(struct device *dev)
+ {
+ 	struct imx_i2c_struct *i2c_imx = dev_get_drvdata(dev);
+@@ -1310,6 +1320,7 @@ static const struct dev_pm_ops i2c_imx_pm_ops = {
+ static struct platform_driver i2c_imx_driver = {
+ 	.probe = i2c_imx_probe,
+ 	.remove = i2c_imx_remove,
++	.shutdown = i2c_imx_shutdown,
+ 	.driver = {
+ 		.name = DRIVER_NAME,
+ 		.pm = &i2c_imx_pm_ops,
+-- 
+2.17.1
+
