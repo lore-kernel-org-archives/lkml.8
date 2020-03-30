@@ -2,160 +2,165 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1F4C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86794C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF042082D
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dF49PPbE"
+	by mail.kernel.org (Postfix) with ESMTP id 5222C2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgC3Rn3 (ORCPT
+        id S1729962AbgC3Rnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:43:29 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40018 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgC3Rn2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:43:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t24so8998852pgj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JAZJzRt7fuqaSj+7HicEUO63r6qcWUEADIAna3qwLDs=;
-        b=dF49PPbEaBBAIakmxJGfH4zdz1EarD3UK9HHLVKkyMv3TfMpe6uEid/u1o00U8uISw
-         +jMjg1dnPsE/lkzCZBlV3+UsnmQv7/ya8oEP7SuUFOX6Mqkgfo9AR7gsx4Inp4EDmhT/
-         Qzhi67TS9ZFS/EziBdF1M/V1cW2IN5FCwMU8c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JAZJzRt7fuqaSj+7HicEUO63r6qcWUEADIAna3qwLDs=;
-        b=OTmVJH+gD5UDFPws+vnZOFcyb+Hza1ujbcyA2uzokXKKt8uV/fXHUUZib2Q0V9z5M1
-         2ToJ0IT1+fdQfgOkRlPbmJS1kfYCLTzSkPH20whfQ9Fn4f1ohnY8DaBZgTXhnzdoz6Yb
-         rOEy2J6OMimwSXdunfqax4uG+HfQP6YaMYYXWUMOMB+JbsyYZ86HKmAV3wYm9iNBr9n3
-         Use2Gz+jh9DlQZf4sOFDG2bfK9KuKPymWl4FgptItFX/X+sS9JCXRG1d5I6OtLwj1qhs
-         voNQTMELqIXvlWrCvFdHUIfxTSU9M2pNRC38RF87v8fEgBgJJFEuyGpZCKPkdS7T1TfC
-         ZxoA==
-X-Gm-Message-State: ANhLgQ3y3kg/LH3RecbS7BtNjV4T4hDBTGXK5CUJGW7jefEsx6NWSxYn
-        2LKOAssNc510d8Nr01hjmwl1BOC2WPA=
-X-Google-Smtp-Source: ADFU+vsi0e3UarNlqpbTS7I7SsjeqBAthl6X9Kptox1ndXG/A6U3/rU8cIh4ts0jiI17uPGOP22EBQ==
-X-Received: by 2002:a63:1862:: with SMTP id 34mr14099661pgy.191.1585590207804;
-        Mon, 30 Mar 2020 10:43:27 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k3sm10598303pfp.142.2020.03.30.10.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 10:43:27 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 10:43:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 3/3] kernel/hung_task convert hung_task_panic boot
- parameter to sysctl
-Message-ID: <202003301042.97F3B00@keescook>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-4-vbabka@suse.cz>
+        Mon, 30 Mar 2020 13:43:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18691 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729745AbgC3Rnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 13:43:35 -0400
+IronPort-SDR: /vq0J0kB7b4w7J9Jxix9fE3nrVZmFHftDKB1WocGG4SoFKptexS15X1y3/ej7xN6VAZCXET1My
+ bvANHvX9NTOA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 10:43:34 -0700
+IronPort-SDR: 4RZcY+r0+C3+5ioP6gK0NBEnrC5IjE59Rw9SeILHpeYhjUAn2p44DmF3VvkOnR8ulXPAQIiXbW
+ MmXEfDRUvnVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
+   d="scan'208";a="251962823"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by orsmga006.jf.intel.com with ESMTP; 30 Mar 2020 10:43:34 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.225]) by
+ ORSMSX108.amr.corp.intel.com ([169.254.2.172]) with mapi id 14.03.0439.000;
+ Mon, 30 Mar 2020 10:43:33 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lukas@wunner.de" <lukas@wunner.de>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "stuart.w.hayes@gmail.com" <stuart.w.hayes@gmail.com>
+Subject: Re: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Topic: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Index: AQHV3hK/y2Hxis+abEWPqwm+8JRaDqhfTz6AgALfXAA=
+Date:   Mon, 30 Mar 2020 17:43:33 +0000
+Message-ID: <97b916ad6ad03f39ccdf5b62fe7d7b9e10190708.camel@intel.com>
+References: <20200328215123.GA130140@google.com>
+In-Reply-To: <20200328215123.GA130140@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.5.137]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <99FD02322469594EB2CFB5DC21D65D70@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330115535.3215-4-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 01:55:35PM +0200, Vlastimil Babka wrote:
-> We can now handle sysctl parameters on kernel command line and have
-> infrastructure to convert legacy command line options that duplicate sysctl
-> to become a sysctl alias.
-> 
-> This patch converts the hung_task_panic parameter. Note that the sysctl handler
-> is more strict and allows only 0 and 1, while the legacy parameter allowed
-> any non-zero value. But there is little reason anyone would not be using 1.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-
-I'll let others double-check, but I think this change should be okay. If
-not, we can adjust the sysctl handler to accept an arbitrary int.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  2 +-
->  fs/proc/proc_sysctl.c                           |  1 +
->  kernel/hung_task.c                              | 10 ----------
->  3 files changed, 2 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 81ff626fc700..e0b8840404a1 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1457,7 +1457,7 @@
->  			[KNL] Should the hung task detector generate panics.
->  			Format: <integer>
->  
-> -			A nonzero value instructs the kernel to panic when a
-> +			A value of 1 instructs the kernel to panic when a
->  			hung task is detected. The default value is controlled
->  			by the CONFIG_BOOTPARAM_HUNG_TASK_PANIC build-time
->  			option. The value selected by this boot parameter can
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index 97eb0b552bf8..77b1b844b02b 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -1743,6 +1743,7 @@ struct sysctl_alias {
->   */
->  static const struct sysctl_alias sysctl_aliases[] = {
->  	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
-> +	{"hung_task_panic",		"kernel.hung_task_panic" },
->  	{ }
->  };
->  
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index 14a625c16cb3..b22b5eeab3cb 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -63,16 +63,6 @@ static struct task_struct *watchdog_task;
->  unsigned int __read_mostly sysctl_hung_task_panic =
->  				CONFIG_BOOTPARAM_HUNG_TASK_PANIC_VALUE;
->  
-> -static int __init hung_task_panic_setup(char *str)
-> -{
-> -	int rc = kstrtouint(str, 0, &sysctl_hung_task_panic);
-> -
-> -	if (rc)
-> -		return rc;
-> -	return 1;
-> -}
-> -__setup("hung_task_panic=", hung_task_panic_setup);
-> -
->  static int
->  hung_task_panic(struct notifier_block *this, unsigned long event, void *ptr)
->  {
-> -- 
-> 2.25.1
-> 
-
--- 
-Kees Cook
+SGkgQmpvcm4sDQoNCk9uIFNhdCwgMjAyMC0wMy0yOCBhdCAxNjo1MSAtMDUwMCwgQmpvcm4gSGVs
+Z2FhcyB3cm90ZToNCj4gWytjYyBTdHVhcnQsIEx1a2FzXQ0KPiANCj4gT24gRnJpLCBGZWIgMDcs
+IDIwMjAgYXQgMDQ6NTk6NThQTSAtMDcwMCwgSm9uIERlcnJpY2sgd3JvdGU6DQo+ID4gVGhpcyBz
+ZXQgYWRkcyBhbiBlbXVsYXRpb24gZHJpdmVyIGZvciBQQ0llIEhvdHBsdWcuIFRoZXJlIG1heSBi
+ZSBwbGF0Zm9ybXMgd2l0aA0KPiA+IHNwZWNpZmljIGNvbmZpZ3VyYXRpb25zIHRoYXQgY2FuIHN1
+cHBvcnQgaG90cGx1ZyBidXQgZG9uJ3QgcHJvdmlkZSB0aGUgbG9naWNhbA0KPiA+IHNsb3QgaG90
+cGx1ZyBoYXJkd2FyZS4gRm9yIGluc3RhbmNlLCB0aGUgcGxhdGZvcm0gbWF5IHVzZSBhbg0KPiA+
+IGVsZWN0cmljYWxseS10b2xlcmFudCBpbnRlcnBvc2VyIGJldHdlZW4gdGhlIHNsb3QgYW5kIHRo
+ZSBkZXZpY2UuDQo+ID4gDQo+ID4gVGhpcyBkcml2ZXIgdXRpbGl6ZXMgdGhlIHBjaS1icmlkZ2Ut
+ZW11bCBhcmNoaXRlY3R1cmUgdG8gbWFuYWdlIHJlZ2lzdGVyIHJlYWRzDQo+ID4gYW5kIHdyaXRl
+cy4gVGhlIHVuZGVybHlpbmcgZnVuY3Rpb25hbGl0eSBvZiB0aGUgaG90cGx1ZyBlbXVsYXRpb24g
+ZHJpdmVyIHVzZXMNCj4gPiB0aGUgRGF0YSBMaW5rIExheWVyIExpbmsgQWN0aXZlIFJlcG9ydGlu
+ZyBtZWNoYW5pc20gaW4gYSBwb2xsaW5nIGxvb3AsIGJ1dCBjYW4NCj4gPiB0b2xlcmF0ZSBvdGhl
+ciBldmVudCBzb3VyY2VzIHN1Y2ggYXMgQUVSIG9yIERQQy4NCj4gPiANCj4gPiBXaGVuIGVuYWJs
+ZWQgYW5kIGEgc2xvdCBpcyBtYW5hZ2VkIGJ5IHRoZSBkcml2ZXIsIGFsbCBwb3J0IHNlcnZpY2Vz
+IGFyZSBtYW5hZ2VkDQo+ID4gYnkgdGhlIGtlcm5lbC4gVGhpcyBpcyBkb25lIHRvIGVuc3VyZSB0
+aGF0IGZpcm13YXJlIGhvdHBsdWcgYW5kIGVycm9yDQo+ID4gYXJjaGl0ZWN0dXJlIGRvZXMgbm90
+IChjb3JyZWN0bHkpIGhhbHQvbWFjaGluZSBjaGVjayB0aGUgc3lzdGVtIHdoZW4gaG90cGx1ZyBp
+cw0KPiA+IHBlcmZvcm1lZCBvbiBhIG5vbi1ob3RwbHVnIHNsb3QuDQo+ID4gDQo+ID4gVGhlIGRy
+aXZlciBvZmZlcnMgdHdvIGFjdGl2ZSBtb2RlOiBBdXRvIGFuZCBGb3JjZS4NCj4gPiBhdXRvOiBU
+aGUgZHJpdmVyIHdpbGwgYmluZCB0byBub24taG90cGx1ZyBzbG90cw0KPiA+IGZvcmNlOiBUaGUg
+ZHJpdmVyIHdpbGwgYmluZCB0byBhbGwgc2xvdHMgYW5kIG92ZXJyaWRlcyB0aGUgc2xvdCdzIHNl
+cnZpY2VzDQo+ID4gDQo+ID4gVGhlcmUgYXJlIHRocmVlIGtlcm5lbCBwYXJhbXM6DQo+ID4gcGNp
+ZWhwLnBjaWVocF9lbXVsX21vZGU9e29mZiwgYXV0bywgZm9yY2V9DQo+ID4gcGNpZWhwLnBjaWVo
+cF9lbXVsX3RpbWU9PG1zZWNzIHBvbGxpbmcgdGltZT4gKGRlZiAxMDAwLCBtaW4gMTAwLCBtYXgg
+NjAwMDApDQo+ID4gcGNpZWhwLnBjaWVocF9lbXVsX3BvcnRzPTxQQ0kgW1NdQkRGL0lEIGZvcm1h
+dCBzdHJpbmc+DQo+ID4gDQo+ID4gVGhlIHBjaWVocF9lbXVsX3BvcnRzIGtlcm5lbCBwYXJhbWV0
+ZXIgdGFrZXMgYSBzZW1pLWNvbG9uIHRva2VuaXplZCBzdHJpbmcNCj4gPiByZXByZXNlbnRpbmcg
+UENJIFtTXUJERnMgYW5kIElEcy4gVGhlIHBjaWVocF9lbXVsX21vZGUgd2lsbCB0aGVuIGJlIGFw
+cGxpZWQgdG8NCj4gPiBvbmx5IHRob3NlIHNsb3RzLCBsZWF2aW5nIG90aGVyIHNsb3RzIHVubWFu
+YWdlZCBieSBwY2llaHBfZW11bC4NCj4gPiANCj4gPiBUaGUgc3RyaW5nIGZvbGxvd3MgdGhlIHBj
+aV9kZXZfc3RyX21hdGNoKCkgZm9ybWF0Og0KPiA+IA0KPiA+ICAgWzxkb21haW4+Ol08YnVzPjo8
+ZGV2aWNlPi48ZnVuYz5bLzxkZXZpY2U+LjxmdW5jPl0qDQo+ID4gICBwY2k6PHZlbmRvcj46PGRl
+dmljZT5bOjxzdWJ2ZW5kb3I+OjxzdWJkZXZpY2U+XQ0KPiA+IA0KPiA+IFdoZW4gdXNpbmcgdGhl
+IHBhdGggZm9ybWF0LCB0aGUgcGF0aCBmb3IgdGhlIGRldmljZSBjYW4gYmUgb2J0YWluZWQNCj4g
+PiB1c2luZyAnbHNwY2kgLXQnIGFuZCBmdXJ0aGVyIHNwZWNpZmllZCB1c2luZyB0aGUgdXBzdHJl
+YW0gYnJpZGdlIGFuZCB0aGUNCj4gPiBkb3duc3RyZWFtIHBvcnQncyBkZXZpY2UtZnVuY3Rpb24g
+dG8gYmUgbW9yZSByb2J1c3QgYWdhaW5zdCBidXMNCj4gPiByZW51bWJlcmluZy4NCj4gPiANCj4g
+PiBXaGVuIHVzaW5nIHRoZSB2ZW5kb3ItZGV2aWNlIGZvcm1hdCwgYSB2YWx1ZSBvZiAnMCcgaW4g
+YW55IGZpZWxkIGFjdHMgYXMNCj4gPiBhIHdpbGRjYXJkIGZvciB0aGF0IGZpZWxkLCBtYXRjaGlu
+ZyBhbGwgdmFsdWVzLg0KPiA+IA0KPiA+IFRoZSBkcml2ZXIgaXMgZW5hYmxlZCB3aXRoIENPTkZJ
+R19IT1RQTFVHX1BDSV9QQ0lFX0VNVUw9eS4NCj4gPiANCj4gPiBUaGUgZHJpdmVyIHNob3VsZCBi
+ZSBjb25zaWRlcmVkICd1c2UgYXQgb3duIHJpc2snIHVubGVzcyB0aGUgcGxhdGZvcm0vaGFyZHdh
+cmUNCj4gPiB2ZW5kb3IgcmVjb21tZW5kcyB0aGlzIG1vZGUuDQo+IA0KPiBUaGVyZSdzIGEgbG90
+IG9mIGdvb2Qgd29yayBpbiBoZXJlLCBhbmQgSSBkb24ndCBjbGFpbSB0byB1bmRlcnN0YW5kDQo+
+IHRoZSB1c2UgY2FzZSBhbmQgYWxsIHRoZSBiZW5lZml0cy4NCkkndmUgcmVjZWl2ZWQgbW9yZSBp
+bmZvIHRoYXQgdGhlIGN1c3RvbWVyIHVzZSBjYXNlIGlzIGFuIEFJQyB0aGF0DQpicmVha3Mgb3V0
+IDEtNCBNLjIgY2FyZHMgd2hpY2ggaGF2ZSBiZWVuIG1hZGUgaG90cGx1ZyB0b2xlcmFudC4NCg0K
+DQo+IA0KPiBCdXQgaXQgc2VlbXMgbGlrZSBxdWl0ZSBhIGxvdCBvZiBhZGRpdGlvbmFsIGNvZGUg
+YW5kIGNvbXBsZXhpdHkgaW4gYW4NCj4gYXJlYSB0aGF0J3MgYWxyZWFkeSBwcmV0dHkgc3VidGxl
+LCBzbyBJJ20gbm90IHlldCBjb252aW5jZWQgdGhhdCBpdCdzDQo+IGFsbCB3b3J0aHdoaWxlLg0K
+PiANCj4gSXQgc2VlbXMgbGlrZSB0aGlzIHdvdWxkIHJlbHkgb24gRGF0YSBMaW5rIExheWVyIExp
+bmsgQWN0aXZlDQo+IFJlcG9ydGluZy4gIElzIHRoYXQgc29tZXRoaW5nIHdlIGNvdWxkIGFkZCB0
+byBwY2llaHAgYXMgYSBnZW5lcmljDQo+IGZlYXR1cmUgd2l0aG91dCBtYWtpbmcgYSBzZXBhcmF0
+ZSBkcml2ZXIgZm9yIGl0PyAgSSBoYXZlbid0IGxvb2tlZCBhdA0KPiB0aGlzIGZvciBhIHdoaWxl
+LCBidXQgSSB3b3VsZCBhc3N1bWUgdGhhdCBpZiB3ZSBmaW5kIG91dCB0aGF0IGEgbGluaw0KPiB3
+ZW50IGRvd24sIHBjaWVocCBjb3VsZC9zaG91bGQgYmUgc21hcnQgZW5vdWdoIHRvIG5vdGljZSB0
+aGF0IGV2ZW4gaWYNCj4gaXQgZGlkbid0IGNvbWUgdmlhIHRoZSB1c3VhbCBwY2llaHAgU2xvdCBT
+dGF0dXMgcGF0aC4NCkkgaGFkIGEgcGxhbiB0byBkbyBWMiBieSBpbnRlcmNlcHRpbmcgYnVzX29w
+cyByYXRoZXIgdGhhbiBpbmRpcmVjdGluZw0Kc2xvdF9vcHMgaW4gcGNpZWhwLiBUaGF0IHNob3Vs
+ZCB0b3VjaCAvYSBsb3QvIGxlc3MgY29kZS4NCg0KVGhlIHByb2JsZW0gSSBzYXcgd2l0aCBhZGRp
+bmcgRExMTEEgYXMgYSBwcmltYXJ5IHNpZ25hbCBpbiBwY2llaHAgaXMNCnRoYXQgbW9zdCBvZiB0
+aGUgcGNpZWhwIGJvaWxlcnBsYXRlIHJlbGllcyBvbiB2YWxpZCBTbG90IHJlZ2lzdGVyDQpsb2dp
+Yy4gSSBkb24ndCBrbm93IGhvdyByZWxpYWJsZSBwY2llaHAgd2lsbCBiZSBpZiB0aGVyZSdzIG5v
+IGJhY2tpbmcNCnNsb3QgcmVnaXN0ZXIgbG9naWMsIGVtdWxhdGVkIG9yIHJlYWwuIENvbnNpZGVy
+IGhvdyBtYW55IHNsb3QNCmNhcGFiaWxpdHkgcmVhZHMgYXJlIGluIGhwYy4NCg0KSSBjb3VsZCBh
+ZGQgYSBub24tc2xvdCBmbGFnIGNoZWNrIHRvIGVhY2ggb2YgdGhvc2UgY2FsbGVycywgYnV0IGl0
+DQptaWdodCBiZSB3b3JzZSB0aGFuIHRoZSBlbXVsYXRpb24gYWx0ZXJuYXRpdmUuDQoNCldoYXQg
+ZG8geW91IHRoaW5rPw0KDQpUaGFua3MNCg0KPiANCj4gPiBKb24gRGVycmljayAoOSk6DQo+ID4g
+ICBQQ0k6IHBjaS1icmlkZ2UtZW11bDogVXBkYXRlIFBDSWUgcmVnaXN0ZXIgYmVoYXZpb3JzDQo+
+ID4gICBQQ0k6IHBjaS1icmlkZ2UtZW11bDogRWxpbWluYXRlIHJlc2VydmVkIG1lbWJlcg0KPiA+
+ICAgUENJOiBwY2ktYnJpZGdlLWVtdWw6IFByb3ZpZGUgYSBoZWxwZXIgdG8gc2V0IGJlaGF2aW9y
+DQo+ID4gICBQQ0k6IHBjaWVocDogSW5kaXJlY3Qgc2xvdCByZWdpc3RlciBvcGVyYXRpb25zDQo+
+ID4gICBQQ0k6IEFkZCBwY2llX3BvcnRfc2xvdF9lbXVsYXRlZCBzdHViDQo+ID4gICBQQ0k6IHBj
+aWVocDogRXhwb3NlIHRoZSBwb2xsIGxvb3AgdG8gb3RoZXIgZHJpdmVycw0KPiA+ICAgUENJOiBN
+b3ZlIHBjaV9kZXZfc3RyX21hdGNoIHRvIHNlYXJjaC5jDQo+ID4gICBQQ0k6IHBjaWVocDogQWRk
+IGhvdHBsdWcgc2xvdCBlbXVsYXRpb24gZHJpdmVyDQo+ID4gICBQQ0k6IHBjaWVocDogV2lyZSB1
+cCBwY2llX3BvcnRfZW11bGF0ZV9zbG90IGFuZCBwY2llaHBfZW11bA0KPiA+IA0KPiA+ICBkcml2
+ZXJzL3BjaS9ob3RwbHVnL01ha2VmaWxlICAgICAgfCAgIDQgKw0KPiA+ICBkcml2ZXJzL3BjaS9o
+b3RwbHVnL3BjaWVocC5oICAgICAgfCAgMjggKysrDQo+ID4gIGRyaXZlcnMvcGNpL2hvdHBsdWcv
+cGNpZWhwX2VtdWwuYyB8IDM3OCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ICBkcml2ZXJzL3BjaS9ob3RwbHVnL3BjaWVocF9ocGMuYyAgfCAxMzYgKysrKysrKysr
+Ky0tLS0NCj4gPiAgZHJpdmVycy9wY2kvcGNpLWFjcGkuYyAgICAgICAgICAgIHwgICAzICsNCj4g
+PiAgZHJpdmVycy9wY2kvcGNpLWJyaWRnZS1lbXVsLmMgICAgIHwgIDk1ICsrKysrLS0tLS0NCj4g
+PiAgZHJpdmVycy9wY2kvcGNpLWJyaWRnZS1lbXVsLmggICAgIHwgIDEwICsNCj4gPiAgZHJpdmVy
+cy9wY2kvcGNpLmMgICAgICAgICAgICAgICAgIHwgMTYzIC0tLS0tLS0tLS0tLS0tLS0NCj4gPiAg
+ZHJpdmVycy9wY2kvcGNpZS9LY29uZmlnICAgICAgICAgIHwgIDE0ICsrDQo+ID4gIGRyaXZlcnMv
+cGNpL3BjaWUvcG9ydGRydl9jb3JlLmMgICB8ICAxNCArLQ0KPiA+ICBkcml2ZXJzL3BjaS9wcm9i
+ZS5jICAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gPiAgZHJpdmVycy9wY2kvc2VhcmNoLmMgICAg
+ICAgICAgICAgIHwgMTYyICsrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9saW51eC9wY2ku
+aCAgICAgICAgICAgICAgIHwgICA4ICsNCj4gPiAgMTMgZmlsZXMgY2hhbmdlZCwgNzc1IGluc2Vy
+dGlvbnMoKyksIDI0MiBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvcGNpL2hvdHBsdWcvcGNpZWhwX2VtdWwuYw0KPiA+IA0KPiA+IC0tIA0KPiA+IDEuOC4zLjEN
+Cj4gPiANCg==
