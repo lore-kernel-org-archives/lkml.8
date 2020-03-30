@@ -2,168 +2,167 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D73C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06964C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BBE20774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9D6206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:20:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="O80uZaTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgC3JTk convert rfc822-to-8bit (ORCPT
+        id S1728620AbgC3JUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:19:40 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54628 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgC3JTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:19:40 -0400
-IronPort-SDR: EG+R3Df6GiOgyL0eBq2IdMQv/RmK5EjzWiyVyWcILgQDyKh5gHMihgFTpkymFRfgUx5KK8gEZJ
- KFnT8pBGckiw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 02:19:39 -0700
-IronPort-SDR: nenw0c/QYlIZ+ezEmcT5mgKIqnKGs22ulwDq4iiQrlDz09QVb1KJ4hVKUKGASuz06B4unSR/pN
- l+oGwnoJ9HDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,323,1580803200"; 
-   d="scan'208";a="294534776"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 02:19:38 -0700
-Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 02:19:38 -0700
-Received: from shsmsx152.ccr.corp.intel.com (10.239.6.52) by
- fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 02:19:38 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX152.ccr.corp.intel.com ([169.254.6.209]) with mapi id 14.03.0439.000;
- Mon, 30 Mar 2020 17:19:34 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Topic: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter for
- quota tuning
-Thread-Index: AQHWAEUbX2o9koiJmUSoQpAjbhigyahg28IA//9+x4CAAI0HsA==
-Date:   Mon, 30 Mar 2020 09:19:33 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF46F@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-3-git-send-email-yi.l.liu@intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF3C5@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A217C68@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A217C68@SHSMSX104.ccr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 30 Mar 2020 05:20:17 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23316 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727896AbgC3JUR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:20:17 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U9IYdM014314;
+        Mon, 30 Mar 2020 11:20:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=BDnCI6b6acG0T9BuR5lD6KHabVMwol0RzaAFhI2kJT4=;
+ b=O80uZaTrRU+TKNGXXOn3OuaqH7qhsSISN7rM7SxjiNx5UpqOOxsD2WxxsHg7k4VSTZmI
+ Gdc8/quoSj95b7b7LiDadZ+jAgcBfd3nIn/BHNEeDJqBQPae+I5qo1WZiLu5YbT3+Ahk
+ VddpuR3XxuWnG9pVc/aaJeJzTeUpwJPVfU+OBr5KoNkGgkW1rN4T0o0pkhTHBeVXLY+g
+ /5S8oJ38QulCzBiS7oGMOOQBYV/b6dfjV2YMeXQrGwsrc0hNUcf66VtMGS1PoOE0WaCX
+ 1InMK+Fw12Lsd95xFVgpRXzS7h9y4mBfukwQHwyCG5AhE4Aqc4bl3pFndDzOFfLuAfbq vw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 302y53jtcp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 11:20:01 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D394F10002A;
+        Mon, 30 Mar 2020 11:20:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BE52B2A6215;
+        Mon, 30 Mar 2020 11:20:00 +0200 (CEST)
+Received: from [10.211.11.146] (10.75.127.46) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 30 Mar
+ 2020 11:19:57 +0200
+Subject: Re: [03/12] bus: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+To:     Marek Vasut <marex@denx.de>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <tony@atomide.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1584975532-8038-1-git-send-email-christophe.kerello@st.com>
+ <1584975532-8038-4-git-send-email-christophe.kerello@st.com>
+ <f6a2c766-8ae5-fab7-e2f6-db23f39b5d91@denx.de>
+From:   Christophe Kerello <christophe.kerello@st.com>
+Message-ID: <93fce520-9269-123c-9523-173e75cdce2e@st.com>
+Date:   Mon, 30 Mar 2020 11:19:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <f6a2c766-8ae5-fab7-e2f6-db23f39b5d91@denx.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Monday, March 30, 2020 4:53 PM
-> 
-> > From: Tian, Kevin <kevin.tian@intel.com>
-> > Sent: Monday, March 30, 2020 4:41 PM
-> > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
-> > Subject: RE: [PATCH v1 2/8] vfio/type1: Add vfio_iommu_type1 parameter
-> for quota
-> > tuning
-> >
-> > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > Sent: Sunday, March 22, 2020 8:32 PM
-> > >
-> > > From: Liu Yi L <yi.l.liu@intel.com>
-> > >
-> > > This patch adds a module option to make the PASID quota tunable by
-> > > administrator.
-> > >
-> > > TODO: needs to think more on how to  make the tuning to be per-process.
-> > >
-> > > Previous discussions:
-> > > https://patchwork.kernel.org/patch/11209429/
-> > >
-> > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > ---
-> > >  drivers/vfio/vfio.c             | 8 +++++++-
-> > >  drivers/vfio/vfio_iommu_type1.c | 7 ++++++-
-> > >  include/linux/vfio.h            | 3 ++-
-> > >  3 files changed, 15 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> > > index d13b483..020a792 100644
-> > > --- a/drivers/vfio/vfio.c
-> > > +++ b/drivers/vfio/vfio.c
-> > > @@ -2217,13 +2217,19 @@ struct vfio_mm
-> *vfio_mm_get_from_task(struct
-> > > task_struct *task)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(vfio_mm_get_from_task);
-> > >
-> > > -int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int min, int max)
-> > > +int vfio_mm_pasid_alloc(struct vfio_mm *vmm, int quota, int min, int
-> max)
-> > >  {
-> > >  	ioasid_t pasid;
-> > >  	int ret = -ENOSPC;
-> > >
-> > >  	mutex_lock(&vmm->pasid_lock);
-> > >
-> > > +	/* update quota as it is tunable by admin */
-> > > +	if (vmm->pasid_quota != quota) {
-> > > +		vmm->pasid_quota = quota;
-> > > +		ioasid_adjust_set(vmm->ioasid_sid, quota);
-> > > +	}
-> > > +
-> >
-> > It's a bit weird to have quota adjusted in the alloc path, since the latter
-> might
-> > be initiated by non-privileged users. Why not doing the simple math in
-> vfio_
-> > create_mm to set the quota when the ioasid set is created? even in the
-> future
-> > you may allow per-process quota setting, that should come from separate
-> > privileged path instead of thru alloc..
-> 
-> The reason is the kernel parameter modification has no event which
-> can be used to adjust the quota. So I chose to adjust it in pasid_alloc
-> path. If it's not good, how about adding one more IOCTL to let user-
-> space trigger a quota adjustment event? Then even non-privileged
-> user could trigger quota adjustment, the quota is actually controlled
-> by privileged user. How about your opinion?
-> 
 
-why do you need an event to adjust? As I said, you can set the quota
-when the set is created in vfio_create_mm...
 
-Thanks
-Kevin
+On 3/30/20 3:24 AM, Marek Vasut wrote:
+> On 3/23/20 3:58 PM, Christophe Kerello wrote:
+>> The driver adds the support for the STMicroelectronics FMC2 EBI controller
+>> found on STM32MP SOCs.
+>>
+> 
+> On DH STM32MP1 SoM in PDK2 carrier board,
+> Tested-by: Marek Vasut <marex@denx.de>
+> 
+> btw. it seems this sets BTRx DATLAT and CLKDIV to 0xf , it's "Don't
+> care" in the datasheet for Muxed mode, but then it should probably be
+> set to 0.
+
+Hi Marek,
+
+Thanks for testing.
+
+These 2 bit fields (BTRx DATLAT and CLKDIV) are only needed for 
+synchronous transactions. Based on your bindings, the transaction type 
+is asynchronous.
+CLKDIV bit fields should not be set to 0x0, as this value is reserved 
+for this bit field. The driver keeps the reset value when it is not 
+needed to update a bit field.
+
+Regards,
+Christophe Kerello.
+
+> 
+> The bindings I used are below:
+> 
+> &fmc {
+>          pinctrl-names = "default", "sleep";
+>          pinctrl-0 = <&fmc_pins_b>;
+>          pinctrl-1 = <&fmc_sleep_pins_b>;
+>          status = "okay";
+>          #address-cells = <1>;
+>          #size-cells = <1>;
+>          /delete-property/interrupts;
+>          /delete-property/dmas;
+>          /delete-property/dma-names;
+>          reg = <0x58002000 0x1000>;
+>          ranges;
+> 
+>          ebi {
+>                  #address-cells = <2>;
+>                  #size-cells = <1>;
+>                  compatible = "st,stm32mp1-fmc2-ebi";
+>                  ranges = <0 0 0x60000000 0x4000000>,
+>                           <1 0 0x64000000 0x4000000>,
+>                           <2 0 0x68000000 0x4000000>,
+>                           <3 0 0x6c000000 0x4000000>;
+> 
+>                  ksz8851: ks8851mll@0,0 {
+>                          compatible = "micrel,ks8851-mll";
+>                          reg = <1 0x0 0x2 1 0x2 0x20000>;
+>                          interrupt-parent = <&gpioc>;
+>                          interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+>                          bank-width = <2>;
+> 
+>                          /* Timing values are in nS */
+>                          st,fmc2_ebi_cs_mux_enable;
+>                          st,fmc2_ebi_cs_transaction_type = <4>;
+>                          st,fmc2_ebi_cs_buswidth = <16>;
+>                          st,fmc2_ebi_cs_address_setup = <6>;
+>                          st,fmc2_ebi_cs_address_hold = <6>;
+>                          st,fmc2_ebi_cs_data_setup = <127>;
+>                          st,fmc2_ebi_cs_bus_turnaround = <9>;
+>                          st,fmc2_ebi_cs_data_hold = <9>;
+>                  };
+> 
+>                  sram@3,0 {
+>                          compatible = "mtd-ram";
+>                          reg = <3 0x0 0x80000>;
+>                          bank-width = <2>;
+> 
+>                          /* Timing values are in nS */
+>                          st,fmc2_ebi_cs_mux_enable;
+>                          st,fmc2_ebi_cs_transaction_type = <4>;
+>                          st,fmc2_ebi_cs_buswidth = <16>;
+>                          st,fmc2_ebi_cs_address_setup = <6>;
+>                          st,fmc2_ebi_cs_address_hold = <6>;
+>                          st,fmc2_ebi_cs_data_setup = <127>;
+>                          st,fmc2_ebi_cs_bus_turnaround = <9>;
+>                          st,fmc2_ebi_cs_data_hold = <9>;
+>                  };
+>          };
+> };
+> 
