@@ -2,322 +2,219 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD609C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38EAC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7740820732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9E4206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VS2iV4cS"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rDPyTh0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgC3QQz (ORCPT
+        id S1729995AbgC3QRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:16:55 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33777 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729444AbgC3QQy (ORCPT
+        Mon, 30 Mar 2020 12:17:20 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4053 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728165AbgC3QRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:16:54 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f20so18766311ljm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8tbwnUnjyQeKfrnt/3cYd+POS6VOgZrsvRznUNmU3R0=;
-        b=VS2iV4cSp+SKR8gYF8WdCTjgc1REcTIv0xfSbzu+5UHvvF2IT7+L1NuTk/oKk4rRWM
-         sRhgWLTrAtcY9uEkgoQ0/7bPe9dlb7570zLXVDErJsfjAI3TrSkBDDkXFCarQoBwKxq3
-         eNceV/UYSB+GnkkqHaesHG146KyX/0dAfGyocGyH46LfW0v3djGfw4xZqtLadqpEdGvL
-         RgyKnf9aOUIMBE8r1J9off7p9Co1ROc+tkKCMZslvc+yf1l5a6ISvGGV/Ue4UpocgDiT
-         +llYovhsCvKPS0R3ole3dXrRVOq15DyIO6K1lkJkeFiBISpLqmOr5UdaiFz5DGOd6YRK
-         Sy9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8tbwnUnjyQeKfrnt/3cYd+POS6VOgZrsvRznUNmU3R0=;
-        b=PwG6tyIdntkKeAmo1Cbn8dBQSbmWQPKW3/33vsmy+eb0i6Va8qGVdZl+Okuz3dZchD
-         P8DYB1Jnh3KYrQsZte7fAHCPbETYF9rJzuyHN8X4xSYxZAc5vckxgXQH+BRkUR0O3OZj
-         vv2Th90nGTENld6JrPWsMuqmMKabxAAph4alW5h/0B2WARRCohUhM2sUawVjc7SUjiWQ
-         hw18JgHnqCNCgieKapnEWdFRg8PU/x0toO2izb4hB0Vse2+2LOrNCwRDD+2XvuoAoQcf
-         zGC+hyjMBrhNmWPEvP26yT21lUpLbTnrZUvl4ZhuuP0MPjMF38yKXYJLfQDyzuhixzB4
-         TQfw==
-X-Gm-Message-State: AGi0PuZ8Wnvwca7u2cAWR1E51TzD7P4zBd3vLWzvl7nbvN2XJDSDNpyP
-        MfRiDpIIv0g77ICnzoQPoab20A==
-X-Google-Smtp-Source: APiQypKAgHIc3ZLeXg3tvSh2AVo4slbEqNG7d6VeaXdm6YxW4WS9NlFmNZ77SN4tjs4EWEZ4SDq7FQ==
-X-Received: by 2002:a2e:84c4:: with SMTP id q4mr4503719ljh.206.1585585011665;
-        Mon, 30 Mar 2020 09:16:51 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id o68sm9247722lff.81.2020.03.30.09.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 09:16:50 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC updates for v5.7
-Date:   Mon, 30 Mar 2020 18:16:49 +0200
-Message-Id: <20200330161649.15352-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 30 Mar 2020 12:17:20 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e821b5a0000>; Mon, 30 Mar 2020 09:16:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 30 Mar 2020 09:16:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 30 Mar 2020 09:16:39 -0700
+Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Mar
+ 2020 16:16:38 +0000
+Subject: Re: [RFC PATCH v5 0/9] Add Tegra driver for video capture
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <4bb6a3b8-3332-014b-e763-bce9076179dd@xs4all.nl>
+ <5ca1583a-889e-abd0-f823-eab93f09a365@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <28ab0071-2e04-d14b-9215-db421e71b6af@nvidia.com>
+Date:   Mon, 30 Mar 2020 09:16:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5ca1583a-889e-abd0-f823-eab93f09a365@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585584986; bh=BDyZjLsZvX08sNWD83Q2/gdH9KJJfTOHcfzKdDEXKXk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=rDPyTh0GtJW05IFO5iIH7jX+2ODsOj93OyBhcaFZx+w3/KiE7aTA0YABNVRxE/Xt0
+         FAhI5GAKg1hvZtculLzdFordQWyKCOqsvF4nTUpk7v0v2tsuIfwQYldWDQHw+5Gof4
+         grL50aKwTXXxNYs2fmFxx446P7OwLQjGi78iepmTFm5DzBCdDajQNrqIFGtYArra8w
+         s5c5rr6GrSsJApWMZ8mPKif8/ZHBsHfJLGa97ciz02PD2Ux0UOPzeIE150dnZbW6hY
+         GSMlq/GAUG7Ydv3MB0LsrlGoL3dNdSvVBCVJCi3fuETnQY4yvHosyDBC4bzKMKWfYs
+         c5lIAoLV+6uCw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-Here's the PR with the MMC updates for v5.7. Details about the highlights are as
-usual found in the signed tag.
+On 3/30/20 4:02 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On 3/30/20 12:04 PM, Hans Verkuil wrote:
+>> Hi Sowjanya,
+>>
+>> On 3/23/20 6:52 PM, Sowjanya Komatineni wrote:
+>>> This series adds Tegra210 VI and CSI driver for built-in test pattern
+>>> generator (TPG) capture.
+>>>
+>>> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
+>>> CSI port is one-to-one mapped to VI channel for video capture.
+>>>
+>>> This series has TPG support only where it creates hard media links
+>>> between CSI subdevice and VI video device without device graphs.
+>>>
+>>> v4l2-compliance results are available below the patch diff.
+>>>
+>>> [v5]:        Includes,
+>>>       - v4 feedback
+>>>       - fix for venc powergate mc reset order.
+>>>       - fix to have unbind and bind work during v4l2-ctl sleep and streaming.
+>> Unfortunately, I still crash on this.
+>>
+>> I do the following:
+>>
+>> Run: v4l2-ctl --stream-mmap
+>>
+>> Then, from another shell as root:
+>>
+>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>> echo -n tegra-video > unbind
+>>
+>> I get this crash:
+>>
+>> [  315.691971] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000b0
+>> [  315.700749] Mem abort info:
+>> [  315.703536]   ESR = 0x96000004
+>> [  315.706587]   EC = 0x25: DABT (current EL), IL = 32 bits
+>> [  315.711886]   SET = 0, FnV = 0
+>> [  315.714933]   EA = 0, S1PTW = 0
+>> [  315.718064] Data abort info:
+>> [  315.720936]   ISV = 0, ISS = 0x00000004
+>> [  315.724763]   CM = 0, WnR = 0
+>> [  315.727726] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000178ee8000
+>> [  315.734152] [00000000000000b0] pgd=0000000000000000
+>> [  315.739024] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+>> [  315.744584] Modules linked in: r8152 nouveau lp855x_bl tegra_drm ttm
+>> [  315.750942] CPU: 3 PID: 2206 Comm: bash Tainted: G        W         5.6.0-rc1-arm64 #118
+>> [  315.759017] Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+>> [  315.764927] pstate: 20000085 (nzCv daIf -PAN -UAO)
+>> [  315.769718] pc : _raw_write_lock_irqsave+0xb0/0x2b8
+>> [  315.774590] lr : ida_free+0x48/0x158
+>> [  315.778155] sp : ffff800011d8bba0
+>> [  315.781462] x29: ffff800011d8bba0 x28: ffff0000f4095400
+>> [  315.786766] x27: 0000000000000000 x26: 0000000000000000
+>> [  315.792070] x25: 0000000000000000 x24: 0000000000000000
+>> [  315.797372] x23: ffff0000f21ad400 x22: ffff0000f5c93000
+>> [  315.802674] x21: ffff0000f4095400 x20: ffff0000f86b5540
+>> [  315.807975] x19: 0000000000000000 x18: 0000000000000000
+>> [  315.813276] x17: 0000000000000001 x16: 0000000000000019
+>> [  315.818578] x15: 000000148ccdabe2 x14: 0000000000000136
+>> [  315.823879] x13: 0000000000000001 x12: 00000000000003f8
+>> [  315.829180] x11: 0000000000000000 x10: 0000000000000000
+>> [  315.834482] x9 : ffff0000ff899990 x8 : ffff0000ff899000
+>> [  315.839784] x7 : 0000000040000000 x6 : 0000000000210d00
+>> [  315.845085] x5 : 0000000000000001 x4 : 0000000000000000
+>> [  315.850386] x3 : 00000000000000b0 x2 : 0000000000000001
+>> [  315.855687] x1 : 0000000000000000 x0 : 0000000000000001
+>> [  315.860988] Call trace:
+>> [  315.863432]  _raw_write_lock_irqsave+0xb0/0x2b8
+>> [  315.867956]  ida_free+0x48/0x158
+>> [  315.871184]  __media_device_unregister_entity+0x28/0xf0
+>> [  315.876402]  media_device_unregister+0x6c/0x148
+>> [  315.880927]  host1x_video_remove+0x20/0x48
+>> [  315.885021]  host1x_device_remove+0x1c/0x30
+>> [  315.889198]  device_release_driver_internal+0xf4/0x1c0
+>> [  315.894325]  device_driver_detach+0x14/0x20
+>> [  315.898503]  unbind_store+0xd4/0xf8
+>> [  315.901986]  drv_attr_store+0x20/0x30
+>> [  315.905645]  sysfs_kf_write+0x40/0x50
+>> [  315.909301]  kernfs_fop_write+0xf8/0x210
+>> [  315.913219]  __vfs_write+0x18/0x40
+>> [  315.916616]  vfs_write+0xdc/0x1c8
+>> [  315.919926]  ksys_write+0x68/0xf0
+>> [  315.923235]  __arm64_sys_write+0x18/0x20
+>> [  315.927154]  el0_svc_common.constprop.0+0x68/0x160
+>> [  315.931936]  do_el0_svc+0x20/0x80
+>> [  315.935246]  el0_sync_handler+0x10c/0x180
+>> [  315.939246]  el0_sync+0x140/0x180
+>> [  315.942560] Code: 8803fc02 35ffffa3 17fffda6 f9800071 (885ffc60)
+>> [  315.948644] ---[ end trace e42b943f3c1af06c ]---
+>>
+>> The following diff fixes this:
+>>
+>> ------------------ cut here ------------------
+>> diff --git a/drivers/staging/media/tegra/tegra-vi.c b/drivers/staging/media/tegra/tegra-vi.c
+>> index 9714152aa6a7..53cf37af9602 100644
+>> --- a/drivers/staging/media/tegra/tegra-vi.c
+>> +++ b/drivers/staging/media/tegra/tegra-vi.c
+>> @@ -583,7 +583,7 @@ static int tegra_channel_init(struct tegra_vi_channel *chan)
+>>        /* initialize the video_device */
+>>        chan->video->fops = &tegra_channel_fops;
+>>        chan->video->v4l2_dev = &vid->v4l2_dev;
+>> -     chan->video->release = video_device_release_empty;
+>> +     chan->video->release = video_device_release;
+>>        chan->video->queue = &chan->queue;
+>>        snprintf(chan->video->name, sizeof(chan->video->name), "%s-%s-%u",
+>>                 dev_name(vi->dev), "output", chan->portno);
+>> @@ -647,6 +647,7 @@ static int tegra_channel_init(struct tegra_vi_channel *chan)
+>>        media_entity_cleanup(&chan->video->entity);
+>>   release_vdev:
+>>        video_device_release(chan->video);
+>> +     chan->video = NULL;
+>>        return ret;
+>>   }
+>>
+>> @@ -707,7 +708,6 @@ static void tegra_vi_channels_cleanup(struct tegra_vi *vi)
+>>                        mutex_lock(&chan->video_lock);
+>>                        vb2_queue_release(&chan->queue);
+>>                        mutex_unlock(&chan->video_lock);
+>> -                     video_device_release(chan->video);
+>>                }
+>>
+>>                if (chan->frame_start_sp)
+>> ------------------ cut here ------------------
+> Note: Sakari suggested to embed struct video_device into struct tegra_vi_channel.
+> In that case chan->video->release should remain video_device_release_empty and
+> all video_device_alloc()/release() calls would have to be dropped.
 
-Please pull this in!
+Thanks Hans. Tried several unbind/unbind not sure why it did not repro 
+during my testing.
 
-Kind regards
-Ulf Hansson
+video device is also part of tegra_vi_channel. So, v6 will remove 
+video_device_alloc and use video_device_release_empty like I had in v3.
 
+This should help fix crash during unbind.
 
-The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
-
-  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.7
-
-for you to fetch changes up to 92075d98abf0f42db1cb518150364f196d4ad217:
-
-  mmc: cavium-octeon: remove nonsense variable coercion (2020-03-27 13:26:25 +0100)
-
-----------------------------------------------------------------
-MMC core:
- - Add support for host software queue for (e)MMC/SD
- - Throttle polling rate for CMD6
- - Update CMD13 busy condition check for CMD6 commands
- - Improve busy detect polling for erase/trim/discard/HPI
- - Fixup support for HW busy detection for HPI commands
- - Re-work and improve support for eMMC sanitize commands
-
-MMC host:
- - mmci: Add support for sdmmc variant revision 2.0
- - mmci_sdmmc: Improve support for busyend detection
- - mmci_sdmmc: Fixup support for signal voltage switch
- - mmci_sdmmc: Add support for tuning with delay block
- - mtk-sd: Fix another SDIO irq issue
- - sdhci: Disable native card detect when GPIO based type exist
- - sdhci: Add option to defer request completion
- - sdhci_am654: Add support to set a tap value per speed mode
- - sdhci-esdhc-imx: Add support for i.MX8MM based variant
- - sdhci-esdhc-imx: Fixup support for standard tuning on i.MX8 usdhc
- - sdhci-esdhc-imx: Optimize for strobe/clock dll settings
- - sdhci-esdhc-imx: Fixup support for system and runtime suspend/resume
- - sdhci-iproc: Update regulator/bus-voltage management for bcm2711
- - sdhci-msm: Prevent clock gating with PWRSAVE_DLL on broken variants
- - sdhci-msm: Fix management of CQE during SDHCI reset
- - sdhci-of-arasan: Add support for auto tuning on ZynqMP based platforms
- - sdhci-omap: Add support for system suspend/resume
- - sdhci-sprd: Add support for HW busy detection
- - sdhci-sprd: Enable support host software queue
- - sdhci-tegra: Add support for HW busy detection
- - tmio/renesas_sdhi: Enforce retune after runtime suspend
- - renesas_sdhi: Use manual tap correction for HS400 on some variants
- - renesas_sdhi: Add support for manual correction of tap values for tunings
-
-----------------------------------------------------------------
-Adrian Hunter (1):
-      mmc: cqhci: Add cqhci_deactivate()
-
-Baolin Wang (7):
-      mmc: Add MMC host software queue support
-      mmc: core: Enable the MMC host software queue for the SD card
-      mmc: host: sdhci: Add request_done ops for struct sdhci_ops
-      mmc: host: sdhci: Add a variable to defer to complete requests if needed
-      mmc: host: sdhci-sprd: Add software queue support
-      mmc: host: hsq: Add missing MODULE_LICENSE() and MODULE_DESCRIPTION()
-      mmc: sdhci-sprd: Set the missing MMC_CAP_WAIT_WHILE_BUSY flag
-
-Cristian Birsan (1):
-      mmc: sdhci-of-at91: Display clock changes for debug purpose only
-
-Faiz Abbas (4):
-      dt-bindings: mmc: sdhci-am654: Update Output tap delay binding
-      mmc: sdhci_am654: Update OTAPDLY writes
-      mmc: sdhci_am654: Enable DLL only for some speed modes
-      mmc: sdhci-omap: Add Support for Suspend/Resume
-
-Geert Uytterhoeven (1):
-      mmc: renesas_sdhi: Use BITS_PER_LONG helper
-
-Gustavo A. R. Silva (1):
-      mmc: Replace zero-length array with flexible-array member
-
-Haibo Chen (13):
-      mmc: sdhci: do not enable card detect interrupt for gpio cd type
-      mmc: sdhci-esdhc-imx: no fail when no pinctrl available
-      mmc: sdhci-esdhci-imx: retune needed for Mega/Mix enabled SoCs
-      mmc: sdhci-esdhc-imx: restore the per_clk rate in PM_RUNTIME
-      doc: dt: fsl-imx-esdhc: add strobe-dll-delay-target binding
-      mmc: sdhci-esdhc-imx: add strobe-dll-delay-target support
-      mmc: sdhci-esdhc-imx: optimize the clock setting
-      mmc: sdhci-esdhc-imx: optimize the strobe dll setting
-      mmc: sdhci-esdhc-imx: add flag ESDHC_FLAG_BROKEN_AUTO_CMD23
-      mmc: sdhci-esdhc-imx: Add an new esdhc_soc_data for i.MX8MM
-      mmc: sdhci-esdhc-imx: clear pending interrupt and halt cqhci
-      mmc: sdhci-esdhc-imx: clear DMA_SEL when disable DMA mode
-      mmc: sdhci-esdhc-imx: restore pin state when resume back
-
-Johan Jonker (1):
-      dt-bindings: mmc: synopsys-dw-mshc: fix clock-freq-min-max in example
-
-Jérôme Pouiller (1):
-      mmc: core: Fix indentation
-
-Lubomir Rintel (1):
-      dt-bindings: mmc: Fix node name in an example
-
-Ludovic Barre (10):
-      mmc: mmci_sdmmc: Replace sg_dma_xxx macros
-      mmc: mmci_sdmmc: Rename sdmmc_priv struct to sdmmc_idma
-      mmc: mmci: Add a reference at mmc_host_ops in mmci struct
-      mmc: mmci: Add private pointer for variant
-      dt-bindings: mmc: mmci: add delay block base register for sdmmc
-      mmc: mmci_sdmmc: Add execute tuning with delay block
-      mmc: mmci: Add callbacks for to manage signal voltage switch
-      mmc: mmci_sdmmc: Implement signal voltage callbacks
-      mmc: mmci: Add support for sdmmc variant revision 2.0
-      mmc: mmci_sdmmc: Fix clear busyd0end irq flag
-
-Manish Narani (4):
-      firmware: xilinx: Add ZynqMP Tap Delay setup ioctl to the valid list
-      firmware: xilinx: Add DLL reset support
-      mmc: sdhci-of-arasan: Add support for DLL reset for ZynqMP platforms
-      mmc: sdhci-of-arasan: Remove quirk for broken base clock
-
-Masahiro Yamada (1):
-      mmc: sdhci: use FIELD_GET for preset value bit masks
-
-Nicolas Saenz Julienne (6):
-      mmc: sdhci: Introduce sdhci_set_power_and_bus_voltage()
-      mmc: sdhci: arasan: Use sdhci_set_power_and_voltage()
-      mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
-      mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
-      mmc: sdhci: am654: Use sdhci_set_power_and_voltage()
-      mmc: sdhci: iproc: Add custom set_power() callback for bcm2711
-
-Ritesh Harjani (1):
-      mmc: sdhci-msm: Don't enable PWRSAVE_DLL for certain sdhc hosts
-
-Sowjanya Komatineni (2):
-      sdhci: tegra: Implement Tegra specific set_timeout callback
-      sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
-
-Takashi Iwai (1):
-      mmc: vub300: Use scnprintf() for avoiding potential buffer overflow
-
-Takeshi Saito (2):
-      mmc: renesas_sdhi: Add manual correction
-      mmc: renesas_sdhi: only check CMD status for HS400 manual correction
-
-Tang Bin (1):
-      mmc: cavium-octeon: remove nonsense variable coercion
-
-Ulf Hansson (12):
-      mmc: core: Throttle polling rate for CMD6
-      mmc: core: Drop unused define
-      mmc: core: Extend mmc_switch_status() to rid of __mmc_switch_status()
-      mmc: core: Drop redundant in-parameter to __mmc_switch()
-      mmc: core: Split up mmc_poll_for_busy()
-      mmc: core: Enable re-use of mmc_blk_in_tran_state()
-      mmc: core: Update CMD13 busy check for CMD6 commands
-      mmc: core: Convert to mmc_poll_for_busy() for erase/trim/discard
-      mmc: core: Drop redundant out-parameter to mmc_send_hpi_cmd()
-      mmc: core: Convert to mmc_poll_for_busy() for HPI commands
-      mmc: core: Fixup support for HW busy detection for HPI commands
-      mmc: core: Re-work the code for eMMC sanitize
-
-Veerabhadrarao Badiganti (4):
-      dt-bindings: mmc: sdhci-msm: Add CQE reg map
-      mmc: mmc_test: Pass different sg lists for non-blocking requests
-      mmc: sdhci-msm: Deactivate CQE during SDHC reset
-      mmc: cqhci: Update cqhci memory ioresource name
-
-Wolfram Sang (10):
-      mmc: renesas_sdhi: remove double clear of automatic correction
-      mmc: renesas_sdhi: enforce manual correction for Gen3
-      mmc: renesas_sdhi: cleanup SCC defines
-      mmc: tmio: refactor tuning execution into SDHI driver
-      mmc: renesas_sdhi: complain loudly if driver needs update
-      mmc: tmio: give callback a generic name
-      mmc: tmio: enforce retune after runtime suspend
-      mmc: tmio: factor out TAP usage
-      mmc: tmio: remove superfluous callback wrappers
-      mmc: renesas_sdhi: simplify execute_tuning
-
-yong mao (1):
-      mmc: mediatek: fix SDIO irq issue
-
- .../devicetree/bindings/mmc/fsl-imx-esdhc.txt      |   5 +
- .../devicetree/bindings/mmc/mmc-controller.yaml    |   2 +-
- Documentation/devicetree/bindings/mmc/mmci.txt     |   2 +
- .../devicetree/bindings/mmc/sdhci-am654.txt        |  21 +-
- .../devicetree/bindings/mmc/sdhci-msm.txt          |   8 +-
- .../devicetree/bindings/mmc/synopsys-dw-mshc.yaml  |   2 +-
- drivers/firmware/xilinx/zynqmp.c                   |   2 +
- drivers/mmc/core/block.c                           | 125 ++++----
- drivers/mmc/core/core.c                            |  54 +---
- drivers/mmc/core/mmc.c                             |  56 ++--
- drivers/mmc/core/mmc_ops.c                         | 194 ++++++++----
- drivers/mmc/core/mmc_ops.h                         |  15 +-
- drivers/mmc/core/mmc_test.c                        |  52 ++-
- drivers/mmc/core/queue.c                           |  22 +-
- drivers/mmc/core/sd.c                              |  10 +
- drivers/mmc/core/sdio_irq.c                        |  15 +-
- drivers/mmc/host/Kconfig                           |  12 +
- drivers/mmc/host/Makefile                          |   1 +
- drivers/mmc/host/cavium-octeon.c                   |   4 +-
- drivers/mmc/host/cqhci.c                           |  16 +-
- drivers/mmc/host/cqhci.h                           |   6 +-
- drivers/mmc/host/mmc_hsq.c                         | 348 +++++++++++++++++++++
- drivers/mmc/host/mmc_hsq.h                         |  30 ++
- drivers/mmc/host/mmci.c                            |  43 ++-
- drivers/mmc/host/mmci.h                            |   8 +
- drivers/mmc/host/mmci_stm32_sdmmc.c                | 208 +++++++++++-
- drivers/mmc/host/mtk-sd.c                          |  41 +++
- drivers/mmc/host/renesas_sdhi.h                    |   6 +
- drivers/mmc/host/renesas_sdhi_core.c               | 183 ++++++++---
- drivers/mmc/host/sdhci-acpi.c                      |   2 +-
- drivers/mmc/host/sdhci-cadence.c                   |   2 +-
- drivers/mmc/host/sdhci-esdhc-imx.c                 | 167 ++++++++--
- drivers/mmc/host/sdhci-esdhc.h                     |   1 +
- drivers/mmc/host/sdhci-iproc.c                     |  17 +-
- drivers/mmc/host/sdhci-milbeaut.c                  |  13 +-
- drivers/mmc/host/sdhci-msm.c                       |  27 +-
- drivers/mmc/host/sdhci-of-arasan.c                 |  74 ++++-
- drivers/mmc/host/sdhci-of-at91.c                   |  22 +-
- drivers/mmc/host/sdhci-omap.c                      |  57 ++++
- drivers/mmc/host/sdhci-pci.h                       |   2 +-
- drivers/mmc/host/sdhci-pltfm.h                     |   2 +-
- drivers/mmc/host/sdhci-sprd.c                      |  30 +-
- drivers/mmc/host/sdhci-tegra.c                     |  35 ++-
- drivers/mmc/host/sdhci.c                           |  45 ++-
- drivers/mmc/host/sdhci.h                           |  18 +-
- drivers/mmc/host/sdhci_am654.c                     | 264 ++++++++++------
- drivers/mmc/host/tmio_mmc.h                        |  11 +-
- drivers/mmc/host/tmio_mmc_core.c                   |  77 +----
- drivers/mmc/host/vub300.c                          |   4 +-
- include/linux/firmware/xlnx-zynqmp.h               |   9 +-
- include/linux/mmc/core.h                           |   3 -
- include/linux/mmc/host.h                           |   7 +-
- include/linux/mmc/mmc.h                            |  10 +
- include/linux/mmc/sdio_func.h                      |   2 +-
- include/linux/platform_data/mmc-esdhc-imx.h        |   1 +
- include/uapi/linux/mmc/ioctl.h                     |   2 +-
- 56 files changed, 1825 insertions(+), 570 deletions(-)
- create mode 100644 drivers/mmc/host/mmc_hsq.c
- create mode 100644 drivers/mmc/host/mmc_hsq.h
+>
+> Regards,
+>
+>          Hans
