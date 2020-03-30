@@ -2,148 +2,179 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0998EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4A3C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5ECD2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20982072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhhkvcSu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2UiTkYa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgC3TDQ (ORCPT
+        id S1728156AbgC3TDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:03:16 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39436 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgC3TDP (ORCPT
+        Mon, 30 Mar 2020 15:03:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38308 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgC3TDk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:03:15 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x11so19308059otp.6;
-        Mon, 30 Mar 2020 12:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zeoBlPxZ+Ud3NYVMylVFKFU+gocBDIOivDsTMxLaWac=;
-        b=WhhkvcSuf7XMeV/nvNGHJZiA3X3e7FQvL/apW4ILZiCEPgxBHT0jzpMmxYqDJUNQ8L
-         qGBErGd7vZZ8KP9DbP5SsmKCZ9F9T3JGQ+MfEHexksRfWJukEnRb91irh4GiyfEFC/CZ
-         27qTgEVF2Jvz9qRVPHnrObZiNRghLU5kUgQsMqCd8QTiW6LrPa/l3jvDum/O20QU3oC5
-         fpFijKzMJgc32YP92Wpk7aBbavTuRBCqzZAQzh80Bo2bKODcDZ0p6byeqT9DLC6hr08x
-         CmCqim3Tx++bTR8/LfAbC+NbRtyPCcKU5sp6ych36vRsoA9tcTDiILl5x6SLKPY2faTU
-         2sfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zeoBlPxZ+Ud3NYVMylVFKFU+gocBDIOivDsTMxLaWac=;
-        b=P/DPIADG56O0t4DQKE5JUs8V+pf+cjlML023Op9o0IWFbxXL7/FFvy5a/m/4v4wiPX
-         TSOIYFgnZKsFxxBe3gV6L/+NdOLsAApoa4cx9rwy2NQjYZ37lrNDihx5SqQi6/8zlfde
-         UxGHhH8hXLTk2uJtMEjgF5LMZTUOIOFlNg7YzCAJKxFbz1E9mfSMmdD5aKBAfDbKHS+Z
-         vBvfiqyatj5smAcXIDwGeiaTzCUygrOwOcssoG6sBxgrOCjAiibqK50PxKtnjWHiQyB1
-         s319TDhnTH/3BFJMobvnyGvOPYpVdRg8xfAej4uNwjLjA3WDcHLs3XcXz7LJ0LLSqTOq
-         Zdmw==
-X-Gm-Message-State: ANhLgQ1AKXuyd+L6CcYiknp6Hsdnvs/Ad9XBLT59lzoI8IFrufFhwYii
-        qmys75uUigTmuk+WYf375Cc=
-X-Google-Smtp-Source: ADFU+vuLaeiHpJ9lD+hTDcZgvgbVqPHpfdzGXiu4vdVdFKcmJ6I4ukYdC/RhhbSe2SUDwG/alBeS+A==
-X-Received: by 2002:a05:6830:1e93:: with SMTP id n19mr10914726otr.153.1585594994572;
-        Mon, 30 Mar 2020 12:03:14 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id c12sm4690809otk.4.2020.03.30.12.03.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 12:03:14 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 12:03:12 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Patil <sspatil@google.com>
-Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
-Message-ID: <20200330190312.GA32257@ubuntu-m2-xlarge-x86>
-References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86>
- <20200317215515.226917-1-ndesaulniers@google.com>
- <20200327224246.GA12350@ubuntu-m2-xlarge-x86>
- <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
- <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
- <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com>
+        Mon, 30 Mar 2020 15:03:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=TQ9cYkWVRMY5HM+PVzYLu4H7z2n9HAf8wAGBPwbykN4=; b=n2UiTkYaKNMRkhxvNvOONgFBJX
+        tKGNJfEho4dR45vF9PtV8trcvHo+CGSa6Ux8eCcbOWCyelt2DIHyBm6bxCjWQl2xt8iFFWdVOnl5t
+        sFqyUn6q/JIrdOv/lI2VsJfjy2KLn18LgHylbdACnFpJmoI1ctBOnA5W6EyWt4kYh9CkQnDpihITV
+        1GqprvOK95H7ueJ4mcj0dVCAh+rEnyFJeN3EuSDFWyn+OgKl48o2AIS6KI0k/KOkVDReCOhCBqinY
+        k7K2oXZqA3kcMCDxvz0rwMndL+cNi3hHfVVEXzBrHXZUEY1BbLFftE8QsxcPxNHzXBKY0QpM5zYfP
+        eZQAz3BA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIzhD-00011g-HA; Mon, 30 Mar 2020 19:03:39 +0000
+Subject: Re: [PATCH 1/1] mnt: add support for non-rootfs initramfs
+To:     Ignat Korchagin <ignat@cloudflare.com>, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel-team@cloudflare.com
+References: <20200330131439.2405-1-ignat@cloudflare.com>
+ <20200330131439.2405-2-ignat@cloudflare.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f96ad8b8-0a26-448a-4a27-8712a82001c4@infradead.org>
+Date:   Mon, 30 Mar 2020 12:03:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200330131439.2405-2-ignat@cloudflare.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 11:58:19AM -0700, Nick Desaulniers wrote:
-> On Sat, Mar 28, 2020 at 6:57 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > I also had planned to provide a single switch to change
-> > all the tool defaults to LLVM.
-> >
-> > So, supporting 'LLVM' is fine, but I'd rather want this
-> > look symmetrical, and easy to understand.
-> >
-> > CPP        = $(CC) -E
-> > ifneq ($(LLVM),)
+On 3/30/20 6:14 AM, Ignat Korchagin wrote:
+> The main need for this is to support container runtimes on stateless Linux
+> system (pivot_root system call from initramfs).
 > 
-> Yes, a simple if statement is much simpler than the overly complex patch I had.
+> Normally, the task of initramfs is to mount and switch to a "real" root
+> filesystem. However, on stateless systems (booting over the network) it is just
+> convenient to have your "real" filesystem as initramfs from the start.
 > 
-> > CC         = $(LLVM_DIR)clang
+> This, however, breaks different container runtimes, because they usually use
+> pivot_root system call after creating their mount namespace. But pivot_root does
+> not work from initramfs, because initramfs runs form rootfs, which is the root
+> of the mount tree and can't be unmounted.
 > 
-> Do we need $LLVM_DIR? Shouldn't users just have that in their $PATH?
+> One workaround is to do:
 > 
-> Also, I think we need to support suffixed binaries, as debian
-> distributes these with version suffixes, as Nathan points out.  Or do
-> the debian packages install suffixed binaries AND path versioned
-> non-suffixed binaries?
-
-I think the idea here is that ultimately, the suffixed versions of clang
-that Debian has in /usr/bin are symlinks to binaries in
-/usr/lib/llvm-#/bin; as a result, a user could say
-LLVM_DIR=/usr/lib/llvm-#/bin/ and all of those tools would be picked up
-automatically. I am not really sure what is better.
-
-I'll try to have some other comments by later today/tonight.
-
-> > LD         = $(LLVM_DIR)ld.lld
-> > AR         = $(LLVM_DIR)llvm-ar
-> > NM         = $(LLVM_DIR)llvm-nm
-> > OBJCOPY    = $(LLVM_DIR)llvm-objcopy
-> > OBJDUMP    = $(LLVM_DIR)llvm-objdump
-> > READELF    = $(LLVM_DIR)llvm-readelf
-> > OBJSIZE    = $(LLVM_DIR)llvm-size
-> > STRIP      = $(LLVM_DIR)llvm-strip
-> > else
-> > CC         = $(CROSS_COMPILE)gcc
-> > LD         = $(CROSS_COMPILE)ld
-> > AR         = $(CROSS_COMPILE)ar
-> > NM         = $(CROSS_COMPILE)nm
-> > OBJCOPY    = $(CROSS_COMPILE)objcopy
-> > OBJDUMP    = $(CROSS_COMPILE)objdump
-> > READELF    = $(CROSS_COMPILE)readelf
-> > OBJSIZE    = $(CROSS_COMPILE)size
-> > STRIP      = $(CROSS_COMPILE)strip
-> > endif
-> >
-> >
-> >
-> > I attached two patches.
-> > Comments appreciated.
+>   mount --bind / /
 > 
-> I'm not sure the second one that recommends changing cc/c++ is the way
-> to go; I think it might harm hermeticity.
+> However, that defeats one of the purposes of using pivot_root in the cloned
+> containers: get rid of host root filesystem, should the code somehow escapes the
+> chroot.
+> 
+> There is a way to solve this problem from userspace, but it is much more
+> cumbersome:
+>   * either have to create a multilayered archive for initramfs, where the outer
+>     layer creates a tmpfs filesystem and unpacks the inner layer, switches root
+>     and does not forget to properly cleanup the old rootfs
+>   * or we need to use keepinitrd kernel cmdline option, unpack initramfs to
+>     rootfs, run a script to create our target tmpfs root, unpack the same
+>     initramfs there, switch root to it and again properly cleanup the old root,
+>     thus unpacking the same archive twice and also wasting memory, because
+>     the kernel stores compressed initramfs image indefinitely.
+> 
+> With this change we can ask the kernel (by specifying nonroot_initramfs kernel
+> cmdline option) to create a "leaf" tmpfs mount for us and switch root to it
+> before the initramfs handling code, so initramfs gets unpacked directly into
+> the "leaf" tmpfs with rootfs being empty and no need to clean up anything.
+> 
+> This also bring the behaviour in line with the older style initrd, where the
+> initrd is located on some leaf filesystem in the mount tree and rootfs remaining
+> empty.
+> 
+> Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+> ---
+>  fs/namespace.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
 
-Agreed. I do not modify my host system at all for this project, just
-relying on PATH modification. In theory, we can still override HOSTCC
-and HOSTCXX but that would defeat the purpose of that patch.
+Hi,
+Please document "nonroot_initramfs" in
+Documentation/admin-guide/kernel-parameters.txt.
 
-Cheers,
-Nathan
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 85b5f7bea82e..a1ec862e8146 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -3701,6 +3701,49 @@ static void __init init_mount_tree(void)
+>  	set_fs_root(current->fs, &root);
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_TMPFS)
+> +static int __initdata nonroot_initramfs;
+> +
+> +static int __init nonroot_initramfs_param(char *str)
+> +{
+> +	if (*str)
+> +		return 0;
+> +	nonroot_initramfs = 1;
+> +	return 1;
+> +}
+> +__setup("nonroot_initramfs", nonroot_initramfs_param);
+> +
+> +static void __init init_nonroot_initramfs(void)
+> +{
+> +	int err;
+> +
+> +	if (!nonroot_initramfs)
+> +		return;
+> +
+> +	err = ksys_mkdir("/root", 0700);
+> +	if (err < 0)
+> +		goto out;
+> +
+> +	err = do_mount("tmpfs", "/root", "tmpfs", 0, NULL);
+> +	if (err)
+> +		goto out;
+> +
+> +	err = ksys_chdir("/root");
+> +	if (err)
+> +		goto out;
+> +
+> +	err = do_mount(".", "/", NULL, MS_MOVE, NULL);
+> +	if (err)
+> +		goto out;
+> +
+> +	err = ksys_chroot(".");
+> +	if (!err)
+> +		return;
+> +out:
+> +	printk(KERN_WARNING "Failed to create a non-root filesystem for initramfs\n");
+> +}
+> +#endif /* IS_ENABLED(CONFIG_TMPFS) */
+> +
+>  void __init mnt_init(void)
+>  {
+>  	int err;
+> @@ -3734,6 +3777,10 @@ void __init mnt_init(void)
+>  	shmem_init();
+>  	init_rootfs();
+>  	init_mount_tree();
+> +
+> +#if IS_ENABLED(CONFIG_TMPFS)
+> +	init_nonroot_initramfs();
+> +#endif
+>  }
+>  
+>  void put_mnt_ns(struct mnt_namespace *ns)
+> 
+
+thanks.
+-- 
+~Randy
+
