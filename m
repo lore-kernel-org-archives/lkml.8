@@ -2,191 +2,364 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E34AC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2223C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 555812073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F58720748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 07:35:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yk3MljGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgC3Hec (ORCPT
+        id S1729528AbgC3HfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:34:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24354 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729367AbgC3Hec (ORCPT
+        Mon, 30 Mar 2020 03:35:02 -0400
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:50806 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729367AbgC3HfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 03:34:32 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U7XXMs108657
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 03:34:30 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3020qrjtra-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 03:34:30 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 30 Mar 2020 08:34:27 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 30 Mar 2020 08:34:23 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02U7XKhM46203184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Mar 2020 07:33:20 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82E984C05A;
-        Mon, 30 Mar 2020 07:34:23 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0242D4C050;
-        Mon, 30 Mar 2020 07:34:23 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.3.56])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Mar 2020 07:34:22 +0000 (GMT)
-Subject: Re: [PATCH 0/6] vhost: Reset batched descriptors on SET_VRING_BASE
- call
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200329113359.30960-1-eperezma@redhat.com>
- <bb95e827-f219-32fd-0046-41046eec058b@de.ibm.com>
- <CAJaqyWePfMcXhYEPxKYV22J3cYtO=DUXCj1Yf=7XH+khXHop9A@mail.gmail.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 30 Mar 2020 09:34:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CAJaqyWePfMcXhYEPxKYV22J3cYtO=DUXCj1Yf=7XH+khXHop9A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20033007-0028-0000-0000-000003EE85D0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20033007-0029-0000-0000-000024B40335
-Message-Id: <41dfa0e5-8013-db15-cbfe-aa4574cfb9a0@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003300067
+        Mon, 30 Mar 2020 03:35:02 -0400
+Received: by mail-pj1-f74.google.com with SMTP id e8so14088224pjd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 00:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=phDCFfqedeK2nIuOQYdahcZFuPfEjGWdo8PSqHFGRb0=;
+        b=Yk3MljGxsw2Dce27LqyBYu3zdDn9P/XLAdiMvH2Fx5nycKiePxzicoZyhGMkSfi+q0
+         fd9bPuZznGtrk9njmJ5/jts5NvuQxRwG9oyNXKJBGCkcgFk0Qtd59e0GGFa5Uw5FDLW0
+         HkUXW1LF+Fhg3Pwcl5vzI1eiR3X0jrXrIiD8fRLzOil8nAt1tnXXZXSmjhq5gQWlZ0A8
+         XuyGAWfWQZ8G+QtJe0Wo1VkVC/nNWr5q7hrarMCsUl5/JKmrXHn5GHcSEdztN5kgn64P
+         AhuQmQzmSAKtoT0p6CoHCXgQGNCa9lUqBgwuwe5t6XqBIv0rP/YUq6RHDjPOVOSlf2rZ
+         Rq+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=phDCFfqedeK2nIuOQYdahcZFuPfEjGWdo8PSqHFGRb0=;
+        b=mqWJcn3umytJUh5fGGJzhkDH3y2Doj+aU8WaINnefYAxFjYcRfmPekOaYbGUV8bZyw
+         AdmzYIv2gFsqZh1BOccmYgmD8hoeOHSqeHEwYGlMOPVU22vyo516H5o5xcd6KSblsCIb
+         3lpq7zqrG+5u5RWl6fFpPBShPUqoaWUzwrPO4L3xQzqiYHmgoDOaPIz2I4ahWgf4Aj00
+         kYa5YHebeodvNhIN59X9CLemYclhZN7gORzJAQBrFqtn0d/vaxaUAiP3slbI1Ipggw7k
+         6miPR+Qnaq1C8kmm+gIABLlcZxRJuVhBSvD018l2LqiI/YLFpqy4MYP0E/K3QcP1b3T/
+         qK6Q==
+X-Gm-Message-State: ANhLgQ0dFvrHSzisHA+f95Dwv/OsBH5YRqmk2gnrB63LAMcPHRDaK2RJ
+        bOZ8HiX4Vrnt+wtZ5cDcppXGZDiTn3H37xfWTw==
+X-Google-Smtp-Source: ADFU+vsFm2tW39LaJ0Q8SDu01jYb1uXH8SZ0d1iiWD3a9o3PBHnStZhq2O/4hMt5K5iW586qjrvnp15tHZLXNt03Ew==
+X-Received: by 2002:a17:90a:4497:: with SMTP id t23mr13864569pjg.102.1585553700153;
+ Mon, 30 Mar 2020 00:35:00 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 15:34:35 +0800
+Message-Id: <20200330153143.Bluez.v1.1.Id488d4a31aa751827c55c79ca20033013156ea0a@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [Bluez PATCH v1] bluetooth: set advertising intervals
+From:   Howard Chung <howardchung@google.com>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Joseph Hwang <josephsih@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joseph Hwang <josephsih@chromium.org>
 
+This patch supports specification of advertising intervals in
+bluetooth kernel subsystem.
 
-On 30.03.20 09:18, Eugenio Perez Martin wrote:
-> On Mon, Mar 30, 2020 at 9:14 AM Christian Borntraeger
-> <borntraeger@de.ibm.com> wrote:
->>
->>
->> On 29.03.20 13:33, Eugenio Pérez wrote:
->>> Vhost did not reset properly the batched descriptors on SET_VRING_BASE event. Because of that, is possible to return an invalid descriptor to the guest.
->>
->> I guess this could explain my problems that I have seen during reset?
->>
-> 
-> Yes, I think so. The series has a test that should reproduce more or
-> less what you are seeing. However, it would be useful to reproduce on
-> your system and to know what causes qemu to send the reset :).
+A new set_advertising_intervals mgmt handler is added to support
+the new mgmt opcode MGMT_OP_SET_ADVERTISING_INTERVALS. The
+min_interval and max_interval are simply recorded in hdev struct.
 
-I do see SET_VRING_BASE in the debug output
-[228101.438630] [2113] vhost:vhost_vring_ioctl:1668: VHOST_GET_VRING_BASE [vq=00000000618905fc][s.index=1][s.num=42424][vq->avail_idx=42424][vq->last_avail_idx=42424][vq->ndescs=0][vq->first_desc=0]
-[228101.438631] CPU: 54 PID: 2113 Comm: qemu-system-s39 Not tainted 5.5.0+ #344
-[228101.438632] Hardware name: IBM 3906 M04 704 (LPAR)
-[228101.438633] Call Trace:
-[228101.438634]  [<00000004fc71c132>] show_stack+0x8a/0xd0 
-[228101.438636]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8 
-[228101.438639]  [<000003ff80377600>] vhost_vring_ioctl+0x668/0x848 [vhost] 
-[228101.438640]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_net] 
-[228101.438642]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8 
-[228101.438643]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0 
-[228101.438645]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38 
-[228101.438646]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8 
-[228103.682732] [2122] vhost:vhost_vring_ioctl:1653: VHOST_SET_VRING_BASE [vq=000000009e1ac3e7][s.index=0][s.num=0][vq->avail_idx=27875][vq->last_avail_idx=27709][vq->ndescs=65][vq->first_desc=22]
-[228103.682735] CPU: 44 PID: 2122 Comm: CPU 0/KVM Not tainted 5.5.0+ #344
-[228103.682739] Hardware name: IBM 3906 M04 704 (LPAR)
-[228103.682741] Call Trace:
-[228103.682748]  [<00000004fc71c132>] show_stack+0x8a/0xd0 
-[228103.682752]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8 
-[228103.682761]  [<000003ff80377422>] vhost_vring_ioctl+0x48a/0x848 [vhost] 
-[228103.682764]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_net] 
-[228103.682767]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8 
-[228103.682769]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0 
-[228103.682771]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38 
-[228103.682773]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8 
-[228103.682794] [2122] vhost:vhost_vring_ioctl:1653: VHOST_SET_VRING_BASE [vq=00000000618905fc][s.index=1][s.num=0][vq->avail_idx=42424][vq->last_avail_idx=42424][vq->ndescs=0][vq->first_desc=0]
-[228103.682795] CPU: 44 PID: 2122 Comm: CPU 0/KVM Not tainted 5.5.0+ #344
-[228103.682797] Hardware name: IBM 3906 M04 704 (LPAR)
-[228103.682797] Call Trace:
-[228103.682799]  [<00000004fc71c132>] show_stack+0x8a/0xd0 
-[228103.682801]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8 
-[228103.682804]  [<000003ff80377422>] vhost_vring_ioctl+0x48a/0x848 [vhost] 
-[228103.682806]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_net] 
-[228103.682808]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8 
-[228103.682810]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0 
-[228103.682812]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38 
-[228103.682813]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8 
+The intervals together with other advertising parameters would be
+sent to the controller before advertising is enabled in the procedure
+of registering an advertisement.
 
+In cases that advertising has been enabled before
+set_advertising_intervals is invoked, it would re-enable advertising
+to make the intervals take effect. This is less preferable since
+bluetooth core specification states that the parameters should be set
+before advertising is enabled. However, the advertising re-enabling
+feature is kept since it might be useful in multi-advertisements.
 
-Isnt that triggered by resetting the virtio devices during system reboot?
+Signed-off-by: Joseph Hwang <josephsih@chromium.org>
+---
+
+ include/net/bluetooth/hci.h      |   1 +
+ include/net/bluetooth/hci_core.h |  11 +++
+ include/net/bluetooth/mgmt.h     |   8 ++
+ net/bluetooth/hci_core.c         |   4 +-
+ net/bluetooth/mgmt.c             | 147 +++++++++++++++++++++++++++++++
+ 5 files changed, 169 insertions(+), 2 deletions(-)
+
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 5f60e135aeb6..4877289b0f95 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -278,6 +278,7 @@ enum {
+ 	HCI_LE_ENABLED,
+ 	HCI_ADVERTISING,
+ 	HCI_ADVERTISING_CONNECTABLE,
++	HCI_ADVERTISING_INTERVALS,
+ 	HCI_CONNECTABLE,
+ 	HCI_DISCOVERABLE,
+ 	HCI_LIMITED_DISCOVERABLE,
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index d4e28773d378..a3a23e2daa64 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -220,6 +220,17 @@ struct adv_info {
+ #define HCI_MAX_ADV_INSTANCES		5
+ #define HCI_DEFAULT_ADV_DURATION	2
+ 
++/*
++ * Refer to BLUETOOTH SPECIFICATION Version 5.2 [Vol 4, Part E]
++ * Section 7.8.5 about
++ * - the default min/max intervals, and
++ * - the valid range of min/max intervals.
++ */
++#define HCI_DEFAULT_LE_ADV_MIN_INTERVAL	0x0800
++#define HCI_DEFAULT_LE_ADV_MAX_INTERVAL	0x0800
++#define HCI_VALID_LE_ADV_MIN_INTERVAL	0x0020
++#define HCI_VALID_LE_ADV_MAX_INTERVAL	0x4000
++
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
+ /* Min encryption key size to match with SMP */
+diff --git a/include/net/bluetooth/mgmt.h b/include/net/bluetooth/mgmt.h
+index f41cd87550dc..32a21f77260e 100644
+--- a/include/net/bluetooth/mgmt.h
++++ b/include/net/bluetooth/mgmt.h
+@@ -103,6 +103,7 @@ struct mgmt_rp_read_index_list {
+ #define MGMT_SETTING_STATIC_ADDRESS	0x00008000
+ #define MGMT_SETTING_PHY_CONFIGURATION	0x00010000
+ #define MGMT_SETTING_WIDEBAND_SPEECH	0x00020000
++#define MGMT_SETTING_ADVERTISING_INTERVALS	0x00040000
+ 
+ #define MGMT_OP_READ_INFO		0x0004
+ #define MGMT_READ_INFO_SIZE		0
+@@ -674,6 +675,13 @@ struct mgmt_cp_set_blocked_keys {
+ 
+ #define MGMT_OP_SET_WIDEBAND_SPEECH	0x0047
+ 
++#define MGMT_OP_SET_ADVERTISING_INTERVALS	0x0048
++struct mgmt_cp_set_advertising_intervals {
++	__le16	min_interval;
++	__le16	max_interval;
++} __packed;
++#define MGMT_SET_ADVERTISING_INTERVALS_SIZE	4
++
+ #define MGMT_EV_CMD_COMPLETE		0x0001
+ struct mgmt_ev_cmd_complete {
+ 	__le16	opcode;
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 2e7bc2da8371..34ed8a11991d 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3382,8 +3382,8 @@ struct hci_dev *hci_alloc_dev(void)
+ 	hdev->sniff_min_interval = 80;
+ 
+ 	hdev->le_adv_channel_map = 0x07;
+-	hdev->le_adv_min_interval = 0x0800;
+-	hdev->le_adv_max_interval = 0x0800;
++	hdev->le_adv_min_interval = HCI_DEFAULT_LE_ADV_MIN_INTERVAL;
++	hdev->le_adv_max_interval = HCI_DEFAULT_LE_ADV_MAX_INTERVAL;
+ 	hdev->le_scan_interval = 0x0060;
+ 	hdev->le_scan_window = 0x0030;
+ 	hdev->le_conn_min_interval = 0x0018;
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 6552003a170e..235fff7b14cc 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -108,6 +108,7 @@ static const u16 mgmt_commands[] = {
+ 	MGMT_OP_SET_APPEARANCE,
+ 	MGMT_OP_SET_BLOCKED_KEYS,
+ 	MGMT_OP_SET_WIDEBAND_SPEECH,
++	MGMT_OP_SET_ADVERTISING_INTERVALS,
+ };
+ 
+ static const u16 mgmt_events[] = {
+@@ -775,6 +776,7 @@ static u32 get_supported_settings(struct hci_dev *hdev)
+ 		settings |= MGMT_SETTING_SECURE_CONN;
+ 		settings |= MGMT_SETTING_PRIVACY;
+ 		settings |= MGMT_SETTING_STATIC_ADDRESS;
++		settings |= MGMT_SETTING_ADVERTISING_INTERVALS;
+ 	}
+ 
+ 	if (test_bit(HCI_QUIRK_EXTERNAL_CONFIG, &hdev->quirks) ||
+@@ -854,6 +856,9 @@ static u32 get_current_settings(struct hci_dev *hdev)
+ 	if (hci_dev_test_flag(hdev, HCI_WIDEBAND_SPEECH_ENABLED))
+ 		settings |= MGMT_SETTING_WIDEBAND_SPEECH;
+ 
++	if (hci_dev_test_flag(hdev, HCI_ADVERTISING_INTERVALS))
++		settings |= MGMT_SETTING_ADVERTISING_INTERVALS;
++
+ 	return settings;
+ }
+ 
+@@ -4768,6 +4773,147 @@ static int set_fast_connectable(struct sock *sk, struct hci_dev *hdev,
+ 	return err;
+ }
+ 
++static void set_advertising_intervals_complete(struct hci_dev *hdev,
++					       u8 status, u16 opcode)
++{
++	struct cmd_lookup match = { NULL, hdev };
++	struct hci_request req;
++	u8 instance;
++	struct adv_info *adv_instance;
++	int err;
++
++	hci_dev_lock(hdev);
++
++	if (status) {
++		u8 mgmt_err = mgmt_status(status);
++
++		mgmt_pending_foreach(MGMT_OP_SET_ADVERTISING_INTERVALS, hdev,
++				     cmd_status_rsp, &mgmt_err);
++		goto unlock;
++	}
++
++	if (hci_dev_test_flag(hdev, HCI_LE_ADV))
++		hci_dev_set_flag(hdev, HCI_ADVERTISING);
++	else
++		hci_dev_clear_flag(hdev, HCI_ADVERTISING);
++
++	mgmt_pending_foreach(MGMT_OP_SET_ADVERTISING_INTERVALS, hdev,
++			     settings_rsp, &match);
++
++	new_settings(hdev, match.sk);
++
++	if (match.sk)
++		sock_put(match.sk);
++
++	/* If "Set Advertising" was just disabled and instance advertising was
++	 * set up earlier, then re-enable multi-instance advertising.
++	 */
++	if (hci_dev_test_flag(hdev, HCI_ADVERTISING) ||
++	    list_empty(&hdev->adv_instances))
++		goto unlock;
++
++	instance = hdev->cur_adv_instance;
++	if (!instance) {
++		adv_instance = list_first_entry_or_null(&hdev->adv_instances,
++							struct adv_info, list);
++		if (!adv_instance)
++			goto unlock;
++
++		instance = adv_instance->instance;
++	}
++
++	hci_req_init(&req, hdev);
++
++	err = __hci_req_schedule_adv_instance(&req, instance, true);
++	if (!err)
++		err = hci_req_run(&req, enable_advertising_instance);
++	else
++		BT_ERR("Failed to re-configure advertising intervals");
++
++unlock:
++	hci_dev_unlock(hdev);
++}
++
++static int _reenable_advertising(struct sock *sk, struct hci_dev *hdev,
++				 void *data, u16 len)
++{
++	struct mgmt_pending_cmd *cmd;
++	struct hci_request req;
++	int err;
++
++	if (pending_find(MGMT_OP_SET_ADVERTISING_INTERVALS, hdev)) {
++		return mgmt_cmd_status(sk, hdev->id,
++				       MGMT_OP_SET_ADVERTISING_INTERVALS,
++				       MGMT_STATUS_BUSY);
++	}
++
++	cmd = mgmt_pending_add(sk, MGMT_OP_SET_ADVERTISING_INTERVALS, hdev,
++			       data, len);
++	if (!cmd)
++		return -ENOMEM;
++
++	hci_req_init(&req, hdev);
++	cancel_adv_timeout(hdev);
++
++	/* Switch to instance "0" for the Set Advertising setting.
++	 * We cannot use update_[adv|scan_rsp]_data() here as the
++	 * HCI_ADVERTISING flag is not yet set.
++	 */
++	hdev->cur_adv_instance = 0x00;
++	/* This function disables advertising before enabling it. */
++	__hci_req_enable_advertising(&req);
++
++	err = hci_req_run(&req, set_advertising_intervals_complete);
++	if (err < 0)
++		mgmt_pending_remove(cmd);
++
++	return err;
++}
++
++static int set_advertising_intervals(struct sock *sk, struct hci_dev *hdev,
++				     void *data, u16 len)
++{
++	struct mgmt_cp_set_advertising_intervals *cp = data;
++	int err;
++
++	BT_DBG("%s", hdev->name);
++
++	/* This method is intended for LE devices only.*/
++	if (!hci_dev_test_flag(hdev, HCI_LE_ENABLED))
++		return mgmt_cmd_status(sk, hdev->id,
++				       MGMT_OP_SET_ADVERTISING_INTERVALS,
++				       MGMT_STATUS_REJECTED);
++
++	/* Check the validity of the intervals. */
++	if (cp->min_interval < HCI_VALID_LE_ADV_MIN_INTERVAL ||
++	    cp->max_interval > HCI_VALID_LE_ADV_MAX_INTERVAL ||
++	    cp->min_interval > cp->max_interval) {
++		return mgmt_cmd_status(sk, hdev->id,
++				       MGMT_OP_SET_ADVERTISING_INTERVALS,
++				       MGMT_STATUS_INVALID_PARAMS);
++	}
++
++	hci_dev_lock(hdev);
++
++	hci_dev_set_flag(hdev, HCI_ADVERTISING_INTERVALS);
++	hdev->le_adv_min_interval = cp->min_interval;
++	hdev->le_adv_max_interval = cp->max_interval;
++
++	/* Re-enable advertising only when it is already on. */
++	if (hci_dev_test_flag(hdev, HCI_LE_ADV)) {
++		err = _reenable_advertising(sk, hdev, data, len);
++		goto unlock;
++	}
++
++	err = send_settings_rsp(sk, MGMT_OP_SET_ADVERTISING_INTERVALS, hdev);
++	new_settings(hdev, sk);
++
++unlock:
++	hci_dev_unlock(hdev);
++
++	return err;
++}
++
+ static void set_bredr_complete(struct hci_dev *hdev, u8 status, u16 opcode)
+ {
+ 	struct mgmt_pending_cmd *cmd;
+@@ -7099,6 +7245,7 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
+ 	{ set_blocked_keys,	   MGMT_OP_SET_BLOCKED_KEYS_SIZE,
+ 						HCI_MGMT_VAR_LEN },
+ 	{ set_wideband_speech,	   MGMT_SETTING_SIZE },
++	{ set_advertising_intervals, MGMT_SET_ADVERTISING_INTERVALS_SIZE },
+ };
+ 
+ void mgmt_index_added(struct hci_dev *hdev)
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
 
