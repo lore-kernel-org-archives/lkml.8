@@ -2,143 +2,118 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A70C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42827C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469A72072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsiQlVU+"
+	by mail.kernel.org (Postfix) with ESMTP id 230DA20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgC3TH5 (ORCPT
+        id S1728043AbgC3TIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:07:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46344 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgC3TH5 (ORCPT
+        Mon, 30 Mar 2020 15:08:06 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:46740 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC3TIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:07:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q3so9032573pff.13;
-        Mon, 30 Mar 2020 12:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bmnH3rera8wNeq52dRP7sYLJorb76j9t1Bss52B1zk0=;
-        b=CsiQlVU+bjcbRdarIqig2kKkx7cqpd37z4dUL2RENjJy7mMb3bG89IV5kXriYeu2Z6
-         z2NpmIQryXLDaswoiLnK9DOtnsVkk2pVOpAeeXJ78PegWPaFZdXjIhS6wYb+HC6kyW5g
-         pOvu/zqM6i/kPuDhjTMn5ucxPkbMhlpQx+yIyODYB7CCBSAfsPEWpqnWvb03BYmqbqJU
-         KWYUl3wo31GoIlI4N7X+AXH21bqePVzDmU7tKoOUBAlhtUL1KHibGRuJq91byiKz4X5v
-         Y/yYx9kw8BXWMJiW2obPjc6nAy9XsMA18xI6rTyf22ctRYLYwD/DcbrH+bJbavKcmi4H
-         TuvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bmnH3rera8wNeq52dRP7sYLJorb76j9t1Bss52B1zk0=;
-        b=c2TbBXGCh54C5t+ixFQmatZvF3BHuOXJkZ4Vv3Kpb82WWELZ2029D5EdCNPQMP/1EP
-         0JOddwWrqGDsNtOHHkQH3NZBli8f78nc9Ml5xofsBhE79PtBj8/fq3oobk0XvE8As1Js
-         gW+4M+ixU5t5a+1jnzxXVv840MR2y/tpIQVEmcrvJ4lV0iL9VYLMLCzXwGidvYNqDbRt
-         cdiTte1vJKYGTXxAATQGEThtyrNm+DwnZJW0x7dNR1yHN+gQMn5fpQv66A3fi7fZ3ZzN
-         IZwZ+dyWBBQybtrqXQVAkFtPo/osz5KK2om3ENaeYShOtNk6s1xbjAm0StVYnCoY74wY
-         bkew==
-X-Gm-Message-State: ANhLgQ3A98B/cPoAuUKlYnVnLNEPwgp5gpeYToXvRlvbont+cphooBgH
-        RQud6y+dgZgLJZlOP1sVmhK2aW6BW1OKBjlqn33LYKelA3k=
-X-Google-Smtp-Source: ADFU+vv2/Ok8QRFv88ZZ2f0YVmbslivXbBYtvIVBvtbsp2Z8sMjUFrqmY+CiQtz4GCTtDv7Ki2aFG00s/SveGo9LLpA=
-X-Received: by 2002:aa7:958f:: with SMTP id z15mr13828976pfj.130.1585595275509;
- Mon, 30 Mar 2020 12:07:55 -0700 (PDT)
+        Mon, 30 Mar 2020 15:08:05 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id BD7EB20039;
+        Mon, 30 Mar 2020 21:08:00 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 21:07:59 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Nicolas Pitre <nico@fluxnic.net>
+Cc:     gregkh@linuxfoundation.org, Chen Wandun <chenwandun@huawei.com>,
+        Adam Borowski <kilobyte@angband.pl>, jslaby@suse.com,
+        daniel.vetter@ffwll.ch, b.zolnierkie@samsung.com, lukas@wunner.de,
+        ghalat@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] vt: don't use kmalloc() for the unicode screen buffer
+Message-ID: <20200330190759.GE7594@ravnborg.org>
+References: <nycvar.YSQ.7.76.2003281745280.2671@knanqh.ubzr>
+ <nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr>
 MIME-Version: 1.0
-References: <20200330152711.8769-1-i.mikhaylov@yadro.com> <20200330152711.8769-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200330152711.8769-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 30 Mar 2020 22:07:43 +0300
-Message-ID: <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dg4UtMH5AAAA:8
+        a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=2V0kcv-1AK-FgQnCDtkA:9
+        a=CjuIK1q_8ugA:10 a=byNfn09xH3PuSfgbYLsR:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=pHzHmUro8NiASowvMSCR:22
+        a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 6:27 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
->
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+Hi Nicolas
 
-Still my tag applies, but
-I have few more comments below.
+On Sat, Mar 28, 2020 at 10:25:11PM -0400, Nicolas Pitre wrote:
+> Even if the actual screen size is bounded in vc_do_resize(), the unicode 
+> buffer is still a little more than twice the size of the glyph buffer
+> and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
+> from user space.
+> 
+> Since there is no point having a physically contiguous buffer here, 
+> let's avoid the above issue as well as reducing pressure on high order
+> allocations by using vmalloc() instead.
+> 
+> Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+> Cc: <stable@vger.kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 
+> - Added missing include, found by kbuild test robot.
+>   Strange that my own build doesn't complain.
 
-...
+When I did the drmP.h removal vmalloc was one of the header files
+that turned up missing in many cases - but only for some architectures.
+I learned to include alpha in the build.
+If it survived building for alpha then I had fixed the majority
+of the issues related to random inherited includes.
 
-> +#define VCNL_DRV_NAME          "vcnl3020"
-> +#define VCNL_REGMAP_NAME       "vcnl3020_regmap"
+The patch itself looks good.
 
-I'm wondering why you need the second one.
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-...
-
-> +       rc = device_property_read_u32(data->dev, "vishay,led-current-milliamp",
-> +                                     &led_current);
-
-> +       if (rc == 0) {
-> +               rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
-> +               if (rc)
-> +                       dev_err(data->dev,
-> +                               "Error (%d) setting LED current", rc);
-> +       }
-> +
-> +       return rc;
-
-Why not to use standard pattern, i.e.
-
-  if (rc)
-    return rc;
-  ...
-  rc = regmap_write(...);
-
-?
-
-...
-
-> +       if (rc) {
-> +               dev_err(data->dev,
-
-> +                       "vcnl3020_measure() failed with error (%d)", rc);
-
-Perhaps you keep same pattern for error messages as in previous function(s).
-
-> +               goto err_unlock;
-> +       }
-
-> +       rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res, 2);
-
-sizeof(res)
-
-> +       if (rc)
-> +               goto err_unlock;
-
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index 15d2769805..d9eb5661e9 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -81,6 +81,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/kd.h>
+>  #include <linux/slab.h>
+> +#include <linux/vmalloc.h>
+>  #include <linux/major.h>
+>  #include <linux/mm.h>
+>  #include <linux/console.h>
+> @@ -350,7 +351,7 @@ static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+>  	/* allocate everything in one go */
+>  	memsize = cols * rows * sizeof(char32_t);
+>  	memsize += rows * sizeof(char32_t *);
+> -	p = kmalloc(memsize, GFP_KERNEL);
+> +	p = vmalloc(memsize);
+>  	if (!p)
+>  		return NULL;
+>  
+> @@ -366,7 +367,7 @@ static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+>  
+>  static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
+>  {
+> -	kfree(vc->vc_uni_screen);
+> +	vfree(vc->vc_uni_screen);
+>  	vc->vc_uni_screen = new_uniscr;
+>  }
+>  
