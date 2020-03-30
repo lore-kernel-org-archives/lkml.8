@@ -2,113 +2,86 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FE1C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABDBC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA8C20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585582703;
-	bh=scYqD7gyNDRlV6tVox9iPQIKLfyMzT9udzbugpL/XnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xT1N1VQzwsJB+SHb4y0tIpygOd8ZZAoYVfmA4DPCMpD8TBwduhurkWTgAIrhH2Oa/
-	 8p4+JvAUqZ95xiPnLP5+vs7Va5Pi2PepAiX4Ftw1Qq+tefz2JfnMouttK60lKXY8Hq
-	 6yzCKDOl4G/P3OwtY1OLxczIDtqgrGhK2nZFqDug=
+	by mail.kernel.org (Postfix) with ESMTP id 3D1C22072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbgC3PiW (ORCPT
+        id S1729475AbgC3Pia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:38:22 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40338 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgC3PiW (ORCPT
+        Mon, 30 Mar 2020 11:38:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33828 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgC3Pi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:38:22 -0400
-Received: by mail-il1-f196.google.com with SMTP id j9so16256371ilr.7;
-        Mon, 30 Mar 2020 08:38:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EXjMGOdpbJrvmMf7CXHzMRGgy3e0VQX/+0etqeIYW0I=;
-        b=NPbkt9poFni0A6IYIINdF5/iAZ0ePAUo+11fz2WBbxooSVuKgd3HM1X5L0vrPTuasE
-         ftt/LIYPPZCy3XXeO/VlXQUVj3NHDEr1POGtCP8Ll75UM3s7uUtMecdU02Myjr2A24RJ
-         0Ytp/GAx2JCXAB/JHPgvB1BxOTcYkZnQCZHclnyz6ukR8fgeOXmjpaYKIhVzl4vVZGw9
-         QNQ+eI0PP+W441mkg/42F/zm2h+HzLjRGtyPU42hC3bGe716NnLobyghGaxeHEke2yrT
-         m+RoZFWzkBClvyRjbzAOF+zKyV7buIkSxkGp/wbca7B5THdcSjq/bG4Mxnpw3e6rJAWf
-         YDhQ==
-X-Gm-Message-State: ANhLgQ32zwh3qeRCyUumfYqJzS1j6TPJ/vRuaRaRl7B5laEIoq9OU38j
-        ePZOTRoSjyG/72Uh9+t7DeeNr/k=
-X-Google-Smtp-Source: ADFU+vs3+gql6fDj89qq2KjSl6YPLLP7Rggs4xlleR1CpIoDOZyi6hisfvhiRdP4SAUnEH4MpKBuLg==
-X-Received: by 2002:a92:cb49:: with SMTP id f9mr11644813ilq.193.1585582700524;
-        Mon, 30 Mar 2020 08:38:20 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h29sm4969835ili.19.2020.03.30.08.38.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:38:19 -0700 (PDT)
-Received: (nullmailer pid 19151 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:38:18 -0000
-Date:   Mon, 30 Mar 2020 09:38:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jishnu Prakash <jprakash@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>, linux-iio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 1/3] iio: adc: Convert the QCOM SPMI ADC bindings to
- .yaml format
-Message-ID: <20200330153818.GA18495@bogus>
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
- <1585064650-16235-2-git-send-email-jprakash@codeaurora.org>
+        Mon, 30 Mar 2020 11:38:29 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 05B37296770
+Subject: Re: [PATCH v3] platform: x86: Add ACPI driver for ChromeOS
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        vbendeb@chromium.org, andy@infradead.org,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20200330150617.1132570-1-enric.balletbo@collabora.com>
+ <20200330153430.GA750889@kroah.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <2ea54a95-213e-41cb-1bf8-bc72475d1f73@collabora.com>
+Date:   Mon, 30 Mar 2020 17:38:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585064650-16235-2-git-send-email-jprakash@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330153430.GA750889@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 21:14:08 +0530, Jishnu Prakash wrote:
-> Convert the adc bindings from .txt to .yaml format.
+Hi Greg,
+
+On 30/3/20 17:34, Greg Kroah-Hartman wrote:
+> On Mon, Mar 30, 2020 at 05:06:17PM +0200, Enric Balletbo i Serra wrote:
+>> This driver attaches to the ChromeOS ACPI device and then exports the values
+>> reported by the ACPI in a sysfs directory. These values are not exported
+>> via the standard ACPI tables, hence a specific driver is needed to do
+>> it. The ACPI values are presented in the string form (numbers as decimal
+>> values) or binary blobs, and can be accessed as the contents of the
+>> appropriate read only files in the standard ACPI devices sysfs directory tree.
 > 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-> ---
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 --------------------
->  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 178 +++++++++++++++++++++
->  2 files changed, 178 insertions(+), 173 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+> Any reason why you didn't send this to the ACPI maintainers and
+> developer mailing list?
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Right, one should never only trust on what get_maintainers returns you. My bad,
+I'll cc them. Thanks for pointing it.
 
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dts:20.11-26: Warning (reg_format): /example-0/vadc@3100:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: vadc@3100: 'adc-chan@0x39' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+Thanks,
+ Enric
 
-See https://patchwork.ozlabs.org/patch/1260800
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+> They would be the best ones to review this...
+> 
+> thanks,
+> 
+> greg k-h
+> 
