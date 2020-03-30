@@ -2,160 +2,129 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE36C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79010C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2AF20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD6720776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:18:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cibQWKrg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV2xFw16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgC3NSa (ORCPT
+        id S1730352AbgC3NSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:18:30 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:37994 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730290AbgC3NSa (ORCPT
+        Mon, 30 Mar 2020 09:18:54 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37711 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730209AbgC3NSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:18:30 -0400
-Received: by mail-qv1-f68.google.com with SMTP id p60so8845820qva.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:18:27 -0700 (PDT)
+        Mon, 30 Mar 2020 09:18:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so21644394wrm.4;
+        Mon, 30 Mar 2020 06:18:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=oyPhPDGxJ3faw+iF5XZmXUEt8GkiTJqHI3z+ZzyTC7w=;
-        b=cibQWKrgQA8fU2bFZGG3xQ73+wcPnvJ2uUr8S8YyBn37a8OOnOwOv7YoNnZ82+Gidz
-         A5gBaiI7f9ps0Sl6vzNn+QzfRlx3dqhtElSyM0ojAq+SEmMKb871HdNsCVx5U8hUx30v
-         7wElIznvbinZ8cOkKwREAL/W9z7HorqZG4gpmDXJ/sTuekv7uVYKrsyTiemNeTMbwQOa
-         vGEBVImrzweGpp+odvZy0IT40BiTZrvCKdIfImlFmTHNIl5Y043jUTp+gPGp9q/PwQMP
-         Vg/xq19DIc504X/s29eVm3MfuGEVB8+VPtCk0Y3F25pF+cUOYzxhbpchRB94b4/VMBS0
-         bv7A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r2hvwNsxGGoO0pzi/Em3O5cdPmuRnC0D6RSkiPvs25I=;
+        b=XV2xFw16MXBfAvDlm+SvR8+FdBkaovVlErtwaEroTgAuQGkcRWK4fKRDqNTh7Nrw/f
+         FarwhZwc4SS5z4hzGzLzlVuPL1poYylWGJAjeEXA+h/Ym0XRTR+xSYgix4fBj+guIuB3
+         P3voPWCjsaBjb3zTRfcUq2wwCBvQIqhIx9yYiyzfyp+cqnNgbE8vscpqOR2ogJ731HE8
+         D6jD7c3tIejLXkX0mqElZBruWaYwAjPu7MtMuq6cx/SGa+R3NC6w6+/Bbsfb18hvhlIs
+         1P0FY0CYuTOMfnX0/pkLOqPCt352T4b1bDI6BlQuLVhEBr2LzaPhYtfKpVq7DNp4zu+m
+         y05Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=oyPhPDGxJ3faw+iF5XZmXUEt8GkiTJqHI3z+ZzyTC7w=;
-        b=r6ymC8g6xztEUaRprjMUqgKhh4cAbrM16alJbcbUhoZECzLLWVT8m207pPs+ZGd7Eq
-         yxKCOkDTl3vZ89rIGXwqmI1x8M7jnQwrfZGiqesM/nKAFUzBdpT7Owib5XkIEhooUwXf
-         1uiBbuh2bSoXEZvJCmUlUGrt0dd8MIgC6Kl0NRlKGfsKWmreS8+lUz5/CswIWK+iPvmq
-         pzhWiSyxGTwSmk3scZMkwVuj3zppD/a90sjzuKyAEwyfwdoXqYqkf3NvDEvV2SUthep0
-         wP4QAWIfSNZ96y7yBBwJ3OwbfBy3aRX7Wk7ST52mEJONpr9E90QhBWcHKweLgaiPhSXV
-         JaSA==
-X-Gm-Message-State: ANhLgQ2R3BscNRk48SUkaf5MkXLcx5vTWXyrjdlFW15jj4Nld1tPcHkn
-        cbzOWm1v/6prY0y1G1QBqRAHlA==
-X-Google-Smtp-Source: ADFU+vsjuYMwBllljRdw+OvxWT17jOYBsCBc7K1NQROf60zyZBX/osdgWTFJKB4bJIua0QTI9Ihizw==
-X-Received: by 2002:a0c:f709:: with SMTP id w9mr11648009qvn.159.1585574307110;
-        Mon, 30 Mar 2020 06:18:27 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id z18sm11460552qtz.77.2020.03.30.06.18.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Mar 2020 06:18:26 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH -next] locking/percpu-rwsem: fix a task_struct refcount
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200330111852.GH20696@hirez.programming.kicks-ass.net>
-Date:   Mon, 30 Mar 2020 09:18:25 -0400
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        dbueso@suse.de, juri.lelli@redhat.com,
-        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <37BFF03B-470A-46B4-91AB-8A8A64FEF7B8@lca.pw>
-References: <20200327093754.GS20713@hirez.programming.kicks-ass.net>
- <BB30C711-B54C-4D61-8BEE-A55F410C4178@lca.pw>
- <20200330111852.GH20696@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r2hvwNsxGGoO0pzi/Em3O5cdPmuRnC0D6RSkiPvs25I=;
+        b=YfPiNDQ72v5WWxZHtwuKnbyBepyLOdt27rE1UG9wQu4OCOXmjCxfaG1phizxYKzuFv
+         EDV3nVZ9sVDP8tfUK4RlnzrUb+Z1ky32G6Kpi+DkCJQX2lC/N9arnMcutdjPa9BShp0S
+         i0Lhs2PaRpsl+UDw+VRtW66S8URNEuE8Ve2hekHt0O+2RobXrm+bPYMhv6fx2/GV2gay
+         0Sx4M7Cc0XGuD9J/WufDK5gFyusXYqlLAlbGDuqkashAE3RMWast4auAilPvHeKzzHLc
+         Q7r+0ldml5r6vaWvz6x5eDDH847+zoJevm1BG1aIJUUcDrgzcwvlfyITz+/ClobAfcQf
+         hKmQ==
+X-Gm-Message-State: ANhLgQ3xZOlhnhdhvBaqMkogEDJtxwSu3FIVnlTW6/1zkcxgASdwJTJ9
+        3pdDm9jTqS76dDyIX/4bPy0=
+X-Google-Smtp-Source: ADFU+vvsS34AfATt3QTrDIwC9rfKDsE8vKKkJvC6sLGLRYk0AVlaELjEw7OjUo46eOpZZuMaRCnXIw==
+X-Received: by 2002:adf:dd01:: with SMTP id a1mr16235993wrm.153.1585574330594;
+        Mon, 30 Mar 2020 06:18:50 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id t12sm24275864wrm.0.2020.03.30.06.18.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 06:18:48 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 15:18:47 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v3 6/6] clocksource: timer-ti-dm: Enable autoreload in
+ set_pwm
+Message-ID: <20200330131847.GE2431644@ulmo>
+References: <20200305082715.15861-1-lokeshvutla@ti.com>
+ <20200305082715.15861-7-lokeshvutla@ti.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
+Content-Disposition: inline
+In-Reply-To: <20200305082715.15861-7-lokeshvutla@ti.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--J4XPiPrVK1ev6Sgr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Mar 30, 2020, at 7:18 AM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
+On Thu, Mar 05, 2020 at 01:57:15PM +0530, Lokesh Vutla wrote:
+> dm timer ops set_load() api allows to configure the load value and to
+> set the auto reload feature. But auto reload feature is independent of
+> load value and should be part of configuring pwm. This way pwm can be
+> disabled by disabling auto reload feature using set_pwm() so that the
+> current pwm cycle will be completed. Else pwm disabling causes the
+> cycle to be stopped abruptly.
 >=20
-> On Fri, Mar 27, 2020 at 06:19:37AM -0400, Qian Cai wrote:
->>=20
->>=20
->>> On Mar 27, 2020, at 5:37 AM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
->>>=20
->>> If the trylock fails, someone else got the lock and we remain on the
->>> waitqueue. It seems like a very bad idea to put the task while it
->>> remains on the waitqueue, no?
->>=20
->> Interesting, I thought this was more straightforward to see,
->=20
-> It is indeed as straight forward as you explain; but when doing 10
-> things at once, and having just dug through some low-level arch =
-assembly
-> code for the previous email, even obvious things might sometimes need
-> a little explaining :/
->=20
-> So please, always try and err on the side of a little verbose when
-> writing Changelogs, esp. when concerning locking / concurrency, you
-> really can't be clear enough.
->=20
->> but I may
->> be wrong as always. At the beginning of percpu_rwsem_wake_function()
->> it calls get_task_struct(), but if the trylock failed, it will remain
->> in the waitqueue. However, it will run percpu_rwsem_wake_function()
->> again with get_task_struct() to increase the refcount. Can you
->> enlighten me where it will call put_task_struct() in waitqueue or
->> elsewhere to balance the refcount in this case?
->=20
-> See, had that explaination been part of the Changelog, my brain =
-would've
-> probably been able to kick itself in gear and actually spot the =
-problem.
->=20
-> Yes, you're right.
->=20
-> That said, I wonder if we can just move the get_task_struct() call =
-like
-> below; after all the race we're guarding against is =
-percpu_rwsem_wait()
-> observing !private, terminating the wait and doing a quick exit() =
-while
-> percpu_rwsem_wake_function() then does wake_up_process(p) as a
-> use-after-free.
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  drivers/clocksource/timer-ti-dm.c          | 16 +++++-----------
+>  drivers/pwm/pwm-omap-dmtimer.c             |  8 +++++---
+>  include/linux/platform_data/dmtimer-omap.h |  5 ++---
+>  3 files changed, 12 insertions(+), 17 deletions(-)
 
-Looks good to me. If no one has any objection, I=E2=80=99ll dust-out the =
-commit log
-and send out a v2 for it.=20
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
 
->=20
-> Hmm?
->=20
-> diff --git a/kernel/locking/percpu-rwsem.c =
-b/kernel/locking/percpu-rwsem.c
-> index a008a1ba21a7..8bbafe3e5203 100644
-> --- a/kernel/locking/percpu-rwsem.c
-> +++ b/kernel/locking/percpu-rwsem.c
-> @@ -118,14 +118,15 @@ static int percpu_rwsem_wake_function(struct =
-wait_queue_entry *wq_entry,
-> 				      unsigned int mode, int wake_flags,
-> 				      void *key)
-> {
-> -	struct task_struct *p =3D get_task_struct(wq_entry->private);
-> 	bool reader =3D wq_entry->flags & WQ_FLAG_CUSTOM;
-> 	struct percpu_rw_semaphore *sem =3D key;
-> +	struct task_struct *p;
->=20
-> 	/* concurrent against percpu_down_write(), can get stolen */
-> 	if (!__percpu_rwsem_trylock(sem, reader))
-> 		return 1;
->=20
-> +	p =3D get_task_struct(wq_entry->private);
-> 	list_del_init(&wq_entry->entry);
-> 	smp_store_release(&wq_entry->private, NULL);
->=20
+--J4XPiPrVK1ev6Sgr
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6B8bcACgkQ3SOs138+
+s6GHXRAAsrVQlvWFy21hBIzF6GkkySuSLfUoa99TThDUvtL3Kiy2x/ZGXSRnA4GD
+DpdJWpka1MkXPruK3aLfH9vAXNGX2HhtUjNY2tlQmw3JwrNTB4UnpSIYj7tJ0WWU
+CXOL6UPMoT6OSKGXrm2gYe/f0otVAKjJWDsT0CsJRgUeTpA0gZwX6BRTTtxbebRe
+urFAuAvQhBbpK8tEvPLRyiiO/utpYUPxBU/NpCgtyG6ZyKPg6WbWAgHGO5jRoGB9
+A/0GHJvCX50yz/3b3sVrZN5KCaOoR57tB1yTOaDsFCCnMLtipFZQ9xehGoDies32
+EHtb+8D3Lp283gWXkoU/RgfF2CNCArYxtdNprx6J7yQg7yKViYLHMNNNr69BN+aY
+yx9Y03lIx6LBHRok+zjB5wPxFA53DJzUhqztNOfZGEEM9PD3GfppgnjX1L+IjyiP
+vV34rKNS7VX05xUc9A4IinMlJrpGqWebxaC9ADLNUdGOGMUb/tVY8iii7E3joIq7
+EY9VA4GH58Z9ndjNv+ou3ySB+3fNyVpjBiVHcJPrTc4iElj5A07huaTnStwlvs1W
+TmeVKqgdjNGFuMUtjP6N74EsTgIGpWp0KWDfHGnHPOeCegWX2h/xFY3VqhMfyi9v
+cRr5NoAipz0LwaNtQPiROUMI4N1AjY+hm+4Xp7HRYrk+3EDPezY=
+=CayU
+-----END PGP SIGNATURE-----
+
+--J4XPiPrVK1ev6Sgr--
