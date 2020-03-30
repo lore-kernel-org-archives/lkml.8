@@ -2,107 +2,114 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E158C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12728C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED483206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D107920748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gcORxPnY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYVfcmTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgC3BAn (ORCPT
+        id S1727979AbgC3BDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:00:43 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:28959 "EHLO
+        Sun, 29 Mar 2020 21:03:17 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:36856 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727815AbgC3BAn (ORCPT
+        by vger.kernel.org with ESMTP id S1727815AbgC3BDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:00:43 -0400
+        Sun, 29 Mar 2020 21:03:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585530041;
+        s=mimecast20190719; t=1585530195;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/C+48h0ffEUHH3oF9o5G29hLSACeot3EfusEOYHKZmU=;
-        b=gcORxPnYW+UJPt26u/bgCJw2xyhRMQ42zWafuRBulDci225+eOnpwDHTq3WCMKreiGgn+y
-        TNF7zgkbwjab9ELKa0SV759GCMDMu3qlPULiCcX1KueTYJhlnFOFfw0v4a5F7t805y1nct
-        rC1LJa1K2sx8Sel5OqCdFhJk0XEm0C0=
+        bh=yUugoluBnwyJRYALZAP5gLOlTOYfV1KHNo4jHyfrVrU=;
+        b=QYVfcmTpTyqlI6/n4EpmU6sdGg1yElmszpwjnvQA4U1vuuAn9GqMXLHpi2PJ625zJRVyQb
+        kkP53PJ73X8fwPcVsq/AR/DRFBLdu8JuNB/x7gFDfWBqQEwq6Fd4pGM9CN6WzxoEeYGU1d
+        LRutuUjdVOid+3Hja8pSjTil7xSCXS4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-UK2ptt_yPRejILgn1C9Y9A-1; Sun, 29 Mar 2020 21:00:39 -0400
-X-MC-Unique: UK2ptt_yPRejILgn1C9Y9A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-236-b83Lbdv_Pw6HknSb_AfGbQ-1; Sun, 29 Mar 2020 21:03:12 -0400
+X-MC-Unique: b83Lbdv_Pw6HknSb_AfGbQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2E3C800D5B;
-        Mon, 30 Mar 2020 01:00:37 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-28.pek2.redhat.com [10.72.8.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3D8F97AF7;
-        Mon, 30 Mar 2020 01:00:29 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 09:00:24 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Martijn Coenen <maco@android.com>
-Cc:     axboe@kernel.dk, hch@lst.de, bvanassche@acm.org,
-        Chaitanya.Kulkarni@wdc.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH] loop: Add LOOP_SET_FD_WITH_OFFSET ioctl.
-Message-ID: <20200330010024.GA23640@ming.t460p>
-References: <20200329140459.18155-1-maco@android.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC1F5189DF74;
+        Mon, 30 Mar 2020 01:03:10 +0000 (UTC)
+Received: from elisabeth (unknown [10.40.208.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B388E60C63;
+        Mon, 30 Mar 2020 01:03:08 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 03:03:03 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Simran Singhal <singhalsimran0@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel <outreachy-kernel@googlegroups.com>
+Subject: Re: [Outreachy kernel] [PATCH] staging: rtl8723bs: Remove
+ unnecessary braces for single statements
+Message-ID: <20200330030303.024899f7@elisabeth>
+In-Reply-To: <20200325140245.GA11949@simran-Inspiron-5558>
+References: <20200325140245.GA11949@simran-Inspiron-5558>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329140459.18155-1-maco@android.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 04:04:59PM +0200, Martijn Coenen wrote:
-> Configuring a loop device for a filesystem that is located at an offset
-> currently requires calling LOOP_SET_FD and LOOP_SET_STATUS(64)
-> consecutively. This has some downsides.
-> 
-> The most important downside is that it can be slow. Here's setting
-> up ~70 regular loop devices on an x86 Android device:
-> 
-> vsoc_x86:/system/apex # time for i in `seq 30 100`;
-> do losetup -r /dev/block/loop$i com.android.adbd.apex; done
->     0m01.85s real     0m00.01s user     0m00.01s system
-> 
-> Here's configuring ~70 devices in the same way, but with an offset:
-> 
-> vsoc_x86:/system/apex # time for i in `seq 30 100`;
-> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
->     0m03.40s real     0m00.02s user     0m00.03s system
-> 
-> This is almost twice as slow; the main reason for this slowness is that
-> LOOP_SET_STATUS(64) calls blk_mq_freeze_queue() to freeze the associated
-> queue; this requires waiting for RCU synchronization, which I've
-> measured can take about 15-20ms on this device on average.
-> 
-> A more minor downside of having to do two ioctls is that on devices with
-> max_part > 0, the kernel will initiate a partition scan, which is
-> needless work if the image is at an offset.
-> 
-> This change introduces a new ioctl to combine setting the backing file
-> together with the offset, which avoids the above problems. Adding more
-> parameters could be a consideration, but offset appears to be the only
-> commonly used parameter that is required for accessing the device
-> safely.
+On Wed, 25 Mar 2020 19:32:45 +0530
+Simran Singhal <singhalsimran0@gmail.com> wrote:
 
-The new ioctl LOOP_SET_FD_WITH_OFFSET looks not generic enough, could
-you consider to add one ioctl LOOP_SET_FD_AND_STATUS to cover both
-SET_FD and SET_STATUS so that using two ioctl() to setup loop can become
-deprecated finally?
+> Clean up unnecessary braces around single statement blocks.
+> Issues reported by checkpatch.pl as:
+> WARNING: braces {} are not necessary for single statement blocks
+> 
+> Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/core/rtw_efuse.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_efuse.c b/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> index bdb6ff8aab7d..de7d15fdc936 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_efuse.c
+> @@ -43,9 +43,8 @@ Efuse_Read1ByteFromFakeContent(
+>  	u16 	Offset,
+>  	u8 *Value)
+>  {
+> -	if (Offset >= EFUSE_MAX_HW_SIZE) {
+> +	if (Offset >= EFUSE_MAX_HW_SIZE)
+>  		return false;
+> -	}
+>  	/* DbgPrint("Read fake content, offset = %d\n", Offset); */
 
+I find the resulting version a bit confusing:
 
-Thanks,
-Ming
+	if (Offset >= EFUSE_MAX_HW_SIZE)
+		return false;
+	/* DbgPrint("Read fake content, offset = %d\n", Offset); */
+	if (fakeEfuseBank == 0)
+		*Value = fakeEfuseContent[Offset];
+
+The check on "Offset" isn't separated in any way by the following
+logic. I would suggest that you replace the closing brace by a newline,
+also for the other cases you're fixing up here:
+
+	if (Offset >= EFUSE_MAX_HW_SIZE)
+		return false;
+
+	/* DbgPrint("Read fake content, offset = %d\n", Offset); */
+	...
+
+-- 
+Stefano
 
