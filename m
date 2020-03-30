@@ -2,157 +2,146 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE56C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F13C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E0720733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A23052073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d8hUdfNw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sQ2f+skF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgC3Gng (ORCPT
+        id S1729145AbgC3Gpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:43:36 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:44725 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbgC3Gnf (ORCPT
+        Mon, 30 Mar 2020 02:45:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46415 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728733AbgC3Gpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:43:35 -0400
-Received: by mail-pl1-f202.google.com with SMTP id c7so12179032plr.11
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 23:43:33 -0700 (PDT)
+        Mon, 30 Mar 2020 02:45:38 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j17so20068182wru.13
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 23:45:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
-        bh=xapqDhPFeX4c/sEZFBXwtVQVL9ia2nDPE/e7jpQzTQA=;
-        b=d8hUdfNwN+8iAFJdBnwUiTZeEYcdMVOCOWJfgJWR7/vu/vixLec11deCzX+uCdblaJ
-         vKTaEhiX0gbcQtU4EApIuDXMtuTCWFoDKk4CgV8V935/DxbKWIDs72JckC3qfblOJpgk
-         G9weGGi1TLjXnb+sCyklu/HBRr22EUaVJtVA40MdyL4HyOlURlp86JTaxm5hNpkh/Ucp
-         HprDqPmzfRmnX01nh+JznDUcsbJGNU+qhqlQlILFD+CnXbBVSFh4f8+tvKF4yDKkNhJV
-         AqXyZPKRB5yIndXdCOloQ2x0tlgm5EJ08HcBtcME/64wFkfUFajpMjx7jSKtQTt64fW9
-         P6tg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=V56YQ8YQXjkIauhgboyrxCMrbncDw2TqLEBJO6LLNNM=;
+        b=sQ2f+skFCCbEiOoww8kH9zZYLPWziNWtDYM/MzX1shre1CF6ETuE51sUbV60Mcbp3c
+         7ofQGCgIpUXTV10fB8GyD0slTikuSNdlePQ7vG9wO47RRcTnybZAdKTqKbhPzCIZpk8v
+         Hy6ije5XX9W48RP7H3ASmx4vFqgFf/gk/I4VS8cK396oDd/bs6+1e+/m+XdzXseQvP6g
+         hkxkwAApQvHdND1yQ4DgfVVkdUao2XNw+v5HTUR2TLdHbCGM+4Cnc3wfMniX+0A13ev+
+         CmNpK5tc1KR7tqVtcmTg0w7xWqBt2ETiw2Fgn8j2zb5UJh8aLCCVM5utDA2vJth35Hv5
+         5YKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:cc;
-        bh=xapqDhPFeX4c/sEZFBXwtVQVL9ia2nDPE/e7jpQzTQA=;
-        b=EJQ+ppoEYkFRZex8+UMI4AiehJ86M638OREx4U83rB4XrzBAaJnc9OmIK/ljkqKE3n
-         O4ttwdNsWfzDuyhLRSN6o1scT8TEvGh7/4hUvGMyEiCMes0HS/HfEJLEAqY073LGDUq1
-         3O0w6a8hZ5u1LL3AHG9WvH/9e7M2GKX26kdxuWyMdZi6HXavKstHxeYcmKTV0N9DTKj7
-         Jf2uSmvzkYwTpU7w7JG8UTfyJQcy05Tk4qjzHPIA+Zjpku9YNEwvI7O3cpA4jTQig6vR
-         tNd2Bt37pYCc21+aoYYG3Vs0y6k4j/xvNf2DUbUg4Cp+FQAkruuYsA7rfgjU+vil+oBu
-         FsIw==
-X-Gm-Message-State: ANhLgQ35Yng2EUWh5T4zbCFkWsbl9x0GD1ngnD3XqQNuRcEZXnFgr6NO
-        hOB5zjfqGxeLetNOzFMxjymHUnOyMYy3
-X-Google-Smtp-Source: ADFU+vt/FJekYfgoafMZ/9Mp0r3DKbDy5dLBs00R2iJNcH8rD82TihvKhdtepI0FKoL9nXRN2ERfhcyim+8b
-X-Received: by 2002:a17:90a:65c8:: with SMTP id i8mr14048414pjs.156.1585550612534;
- Sun, 29 Mar 2020 23:43:32 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 08:43:19 +0200
-In-Reply-To: <20200327100801.161671-1-courbet@google.com>
-Message-Id: <20200330064323.76162-1-courbet@google.com>
-Mime-Version: 1.0
-References: <20200327100801.161671-1-courbet@google.com>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH v2] powerpc: Make setjmp/longjmp signature standard
-From:   Clement Courbet <courbet@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Clement Courbet <courbet@google.com>, stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=V56YQ8YQXjkIauhgboyrxCMrbncDw2TqLEBJO6LLNNM=;
+        b=r/kR3sKK3ac/39QoPQFjtRHz3mm5+evU0V9ieSYa14zFjHz/WMI6T7cGjDxiiBYStr
+         AXAqICh1ScBEWzCXgEpF5s97+oOGWwLfyn5iaeegEHNCbozchwHtjqFTNKjhBJX8pm6k
+         5DSp8aroaSVKntWp1angmhLA0BSwMstqnjc57Iqs12nXyuMSv52COhVOor7LikPXCNJq
+         VU2ZnHdrcrOQ/ZgFwg+1dOdzGJ+yOAWZH44nxh5Db+BcR4udVTd677/9s6oOcZHoeknK
+         epyKDQrju99Nggv8i5CN6yN2fmcfibC8bH3WVVcSCcmoL5tZ5foNfi4Lo+7mu4wwBKk+
+         TqZw==
+X-Gm-Message-State: ANhLgQ1VMKaybJ12KTJoGRotimwZ2FLbokClrOsSygmf2PJhU2kdvnFB
+        luC9Q0YWP319XJvbS26eyDpGRg==
+X-Google-Smtp-Source: ADFU+vsGOjMWUR3XuueAXOf+kGUjz672AeJsnP+zNGCOJq+3zYTVOE2f/ajoKzhEq5O/LNUAMeRj0A==
+X-Received: by 2002:a5d:4f92:: with SMTP id d18mr12996829wru.400.1585550737261;
+        Sun, 29 Mar 2020 23:45:37 -0700 (PDT)
+Received: from dell ([95.149.164.95])
+        by smtp.gmail.com with ESMTPSA id c23sm21059704wrb.79.2020.03.29.23.45.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 23:45:36 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 07:46:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
+Message-ID: <20200330064630.GA30614@dell>
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-2-sravanhome@gmail.com>
+ <20200327080013.GG603801@dell>
+ <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Declaring setjmp()/longjmp() as taking longs makes the signature
-non-standard, and makes clang complain. In the past, this has been
-worked around by adding -ffreestanding to the compile flags.
+On Fri, 27 Mar 2020, saravanan sekar wrote:
+> On 27/03/20 9:00 am, Lee Jones wrote:
+> > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
+> > 
+> > > Add device tree binding information for mp2629 mfd driver.
+> > > 
+> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > ---
+> > >   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
+> > >   1 file changed, 60 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > new file mode 100644
+> > > index 000000000000..314309ea91ac
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> > > @@ -0,0 +1,60 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > Are these links supposed to work?
+> Not really, but as far my understanding needed for dt-bindings check
 
-The implementation looks like it only ever propagates the value
-(in longjmp) or sets it to 1 (in setjmp), and we only call longjmp
-with integer parameters.
+Rob, why are these here if they just result in 404s?
 
-This allows removing -ffreestanding from the compilation flags.
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > > +    #include <dt-bindings/input/linux-event-codes.h>
+> > > +    i2c {
+> > i2c@0x????????
+> 
+> Its a I2C controller node, I don't think address is needed. Mention like
+> this my previous other driver patches,
 
-Context:
-https://lore.kernel.org/patchwork/patch/1214060
-https://lore.kernel.org/patchwork/patch/1216174
+This doesn't sound right.
 
-Signed-off-by: Clement Courbet <courbet@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+How do you control/operate the controller?
 
----
+Surely you read/write from/to registers?
 
-v2:
-Use and array type as suggested by Segher Boessenkool
-Cc: stable@vger.kernel.org # v4.14+
-Fixes: c9029ef9c957 ("powerpc: Avoid clang warnings around setjmp and longjmp")
----
- arch/powerpc/include/asm/setjmp.h | 6 ++++--
- arch/powerpc/kexec/Makefile       | 3 ---
- arch/powerpc/xmon/Makefile        | 3 ---
- 3 files changed, 4 insertions(+), 8 deletions(-)
+> dt_binding_check is also passed
+> 
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        pmic@4b {
+> > > +            compatible = "mps,mp2629";
+> > > +            reg = <0x4b>;
+> > > +
+> > > +            interrupt-controller;
+> > > +            interrupt-parent = <&gpio2>;
+> > > +            #interrupt-cells = <2>;
+> > > +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> > > +        };
+> > > +    };
 
-diff --git a/arch/powerpc/include/asm/setjmp.h b/arch/powerpc/include/asm/setjmp.h
-index e9f81bb3f83b..f798e80e4106 100644
---- a/arch/powerpc/include/asm/setjmp.h
-+++ b/arch/powerpc/include/asm/setjmp.h
-@@ -7,7 +7,9 @@
- 
- #define JMP_BUF_LEN    23
- 
--extern long setjmp(long *) __attribute__((returns_twice));
--extern void longjmp(long *, long) __attribute__((noreturn));
-+typedef long jmp_buf[JMP_BUF_LEN];
-+
-+extern int setjmp(jmp_buf env) __attribute__((returns_twice));
-+extern void longjmp(jmp_buf env, int val) __attribute__((noreturn));
- 
- #endif /* _ASM_POWERPC_SETJMP_H */
-diff --git a/arch/powerpc/kexec/Makefile b/arch/powerpc/kexec/Makefile
-index 378f6108a414..86380c69f5ce 100644
---- a/arch/powerpc/kexec/Makefile
-+++ b/arch/powerpc/kexec/Makefile
-@@ -3,9 +3,6 @@
- # Makefile for the linux kernel.
- #
- 
--# Avoid clang warnings around longjmp/setjmp declarations
--CFLAGS_crash.o += -ffreestanding
--
- obj-y				+= core.o crash.o core_$(BITS).o
- 
- obj-$(CONFIG_PPC32)		+= relocate_32.o
-diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
-index c3842dbeb1b7..6f9cccea54f3 100644
---- a/arch/powerpc/xmon/Makefile
-+++ b/arch/powerpc/xmon/Makefile
-@@ -1,9 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for xmon
- 
--# Avoid clang warnings around longjmp/setjmp declarations
--subdir-ccflags-y := -ffreestanding
--
- GCOV_PROFILE := n
- KCOV_INSTRUMENT := n
- UBSAN_SANITIZE := n
 -- 
-2.26.0.rc2.310.g2932bb562d-goog
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
