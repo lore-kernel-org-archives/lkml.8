@@ -2,109 +2,178 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD6BC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F36C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D5920748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C50A2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgC3KYI (ORCPT
+        id S1729074AbgC3K0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:24:08 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:33906 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgC3KYH (ORCPT
+        Mon, 30 Mar 2020 06:26:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13070 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728722AbgC3K0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:24:07 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id E96BA200107;
-        Mon, 30 Mar 2020 10:24:05 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 7A4912048A; Mon, 30 Mar 2020 12:23:56 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 12:23:56 +0200
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200330102356.GA16588@light.dominikbrodowski.net>
-References: <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
+        Mon, 30 Mar 2020 06:26:37 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UA2uC7016165
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:26:35 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3022qfwvgf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:26:35 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 30 Mar 2020 11:26:20 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Mar 2020 11:26:13 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UAQOFg59113556
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 10:26:24 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D3E952050;
+        Mon, 30 Mar 2020 10:26:24 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.206.230])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id B189B5204F;
+        Mon, 30 Mar 2020 10:26:21 +0000 (GMT)
+Date:   Mon, 30 Mar 2020 13:26:19 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330092127.GB30942@linux.ibm.com>
+ <20200330095843.GF14243@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319165157.GA2254@light.dominikbrodowski.net>
+In-Reply-To: <20200330095843.GF14243@dhcp22.suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 20033010-0020-0000-0000-000003BE2E3C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033010-0021-0000-0000-00002216C92E
+Message-Id: <20200330102619.GC30942@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 mlxlogscore=735 mlxscore=0 phishscore=0 suspectscore=1
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003300096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 05:51:58PM +0100, Dominik Brodowski wrote:
-> On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
-> > On 2020-03-19 14:41, Mark Brown wrote:
-> > > On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
+On Mon, Mar 30, 2020 at 11:58:43AM +0200, Michal Hocko wrote:
+> On Mon 30-03-20 12:21:27, Mike Rapoport wrote:
+> > On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
+> > > On Sat 28-03-20 11:31:17, Hoan Tran wrote:
+> > > > In NUMA layout which nodes have memory ranges that span across other nodes,
+> > > > the mm driver can detect the memory node id incorrectly.
+> > > > 
+> > > > For example, with layout below
+> > > > Node 0 address: 0000 xxxx 0000 xxxx
+> > > > Node 1 address: xxxx 1111 xxxx 1111
+> > > > 
+> > > > Note:
+> > > >  - Memory from low to high
+> > > >  - 0/1: Node id
+> > > >  - x: Invalid memory of a node
+> > > > 
+> > > > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
+> > > > config, mm only checks the memory validity but not the node id.
+> > > > Because of that, Node 1 also detects the memory from node 0 as below
+> > > > when it scans from the start address to the end address of node 1.
+> > > > 
+> > > > Node 0 address: 0000 xxxx xxxx xxxx
+> > > > Node 1 address: xxxx 1111 1111 1111
+> > > > 
+> > > > This layout could occur on any architecture. Most of them enables
+> > > > this config by default with CONFIG_NUMA. This patch, by default, enables
+> > > > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
 > > > 
-> > > > Have some good news now, namely that a bisect is complete: That pointed to
-> > > > 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
-> > > > therefore I've added Kuninori Morimoto to this e-mail thread.
+> > > I am not opposed to this at all. It reduces the config space and that is
+> > > a good thing on its own. The history has shown that meory layout might
+> > > be really wild wrt NUMA. The config is only used for early_pfn_in_nid
+> > > which is clearly an overkill.
 > > > 
-> > > If that's an issue it feels more like a driver bug in that if the driver
-> > > asked for ignore_suspend then it should expect not to have the suspend
-> > > callback called.
-> > > 
+> > > Your description doesn't really explain why this is safe though. The
+> > > history of this config is somehow messy, though. Mike has tried
+> > > to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
+> > > NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
+> > > ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
+> > > reasoning what so ever. This doesn't make it really easy see whether
+> > > reasons for reintroduction are still there. Maybe there are some subtle
+> > > dependencies. I do not see any TBH but that might be burried deep in an
+> > > arch specific code.
 > > 
-> > Requested for tests with following diff applied:
-> > 
-> > diff --git a/sound/soc/intel/boards/broadwell.c
-> > b/sound/soc/intel/boards/broadwell.c
-> > index db7e1e87156d..6ed4c1b0a515 100644
-> > --- a/sound/soc/intel/boards/broadwell.c
-> > +++ b/sound/soc/intel/boards/broadwell.c
-> > @@ -212,7 +212,6 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
-> > {
-> >                 .init = broadwell_rt286_codec_init,
-> >                 .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-> >                         SND_SOC_DAIFMT_CBS_CFS,
-> > -               .ignore_suspend = 1,
-> >                 .ignore_pmdown_time = 1,
-> >                 .be_hw_params_fixup = broadwell_ssp0_fixup,
-> >                 .ops = &broadwell_rt286_ops,
+> > Well, back then early_pfn_in_nid() was arch-dependant, today everyone
+> > except ia64 rely on HAVE_MEMBLOCK_NODE_MAP.
 > 
-> That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
-> ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
-> on top of that. But you can assess better whether that patch needs care for
-> other reasons; for me, this one-liner you have suggested is perfect.
+> What would it take to make ia64 use HAVE_MEMBLOCK_NODE_MAP? I would
+> really love to see that thing go away. It is causing problems when
+> people try to use memblock api.
 
-Seems this patch didn't make it into v5.6 (and neither did the other ones
-you sent relating to the "dummy" components). Can these patches therefore be
-marked for stable, please?
+Sorry, my bad, ia64 does not have NODES_SPAN_OTHER_NODES, but it does have
+HAVE_MEMBLOCK_NODE_MAP.
 
-Thanks,
-	Dominik
+I remember I've tried killing HAVE_MEMBLOCK_NODE_MAP, but I've run into
+some problems and then I've got distracted. I too would like to have
+HAVE_MEMBLOCK_NODE_MAP go away, maybe I'll take another look at it.
+ 
+> > So, if the memblock node map
+> > is correct, that using CONFIG_NUMA instead of CONFIG_NODES_SPAN_OTHER_NODES
+> > would only mean that early_pfn_in_nid() will cost several cycles more on
+> > architectures that didn't select CONFIG_NODES_SPAN_OTHER_NODES (i.e. arm64
+> > and sh).
+> 
+> Do we have any idea on how much of an overhead that is? Because this is
+> per each pfn so it can accumulate a lot! 
+
+It's O(log(N)) where N is the amount of the memory banks (ie. memblock.memory.cnt)
+ 
+> > Agian, ia64 is an exception here.
+> 
+> Thanks for the clarification!
+> -- 
+> Michal Hocko
+> SUSE Labs
+
+-- 
+Sincerely yours,
+Mike.
+
