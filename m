@@ -2,139 +2,147 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A10C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3EAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA7B206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643CA206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:41:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfHxTcq9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xqLnGdoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgC3OhV (ORCPT
+        id S1728650AbgC3OlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:37:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35247 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgC3OhV (ORCPT
+        Mon, 30 Mar 2020 10:41:10 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:32863 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727820AbgC3OlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:37:21 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d5so21994280wrn.2;
-        Mon, 30 Mar 2020 07:37:19 -0700 (PDT)
+        Mon, 30 Mar 2020 10:41:10 -0400
+Received: by mail-qv1-f68.google.com with SMTP id p19so9022358qve.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:41:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=idGSNlS5foegWcbeejyLCNUnDarAVKTDXcWKaPEeNjY=;
-        b=EfHxTcq91OwU4aGBf3mn/lXFRiymTz25QWi/lC+RlEazQjaizplkmUOMesFd5VwfNR
-         jcRVvu74XNAd/D9DgB9myBaC4LnhqX81TlUg1VQnw1zUGPh8OM97YnnM4SrFPGbx2YsM
-         wj0wzL3PrwqIc30cwNMT59QVxkLMQnty57ocUsXjzq04NZEI04oFvkr7DV9HSpOiqQ2b
-         MvvhzdBDwrv2O66jjiP35L2sNRSVwhSqg2p0TIpTL7kwsi8f1/C6SNitfvKAMCiztbuW
-         YA1VOM/2sMBAcUqQojBnF595rmTinbkNYUzpDWQB8+Cu0AFjkKotFRLEmYIDN435ivZj
-         t5BA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rDcplkrNOR8fTQWpkrvvkQU2hQvD6/9jr9hYg71oITo=;
+        b=xqLnGdoHaTXp/62rSjJP1YmIXik/97SKipfrMDfHH9wmc/lpdcRAmuiljz5i/kuu3u
+         +xsoTKciWKFf3M0E8nuc3mQVdW7nQiIx2m4+Kx9aWQZNUJz8WoLvdD104COjmECOjZi2
+         DRCdByeHmIFviu13F/M/dGMh5XsY2WTkxNPlvHN7X42DIE1gXbQY6qDWY7yZ3rNNTIRG
+         tn+I27ueDtEKBd54V6MCSuJQmL/8FNHWFSjFlKOvpWq53TcdeeK2Jtl+voFb1C/Mk29j
+         x1xceu3u4jb9bhqbNw7ROPmLjHMF1CFTY5MZ8e8kXFCmbLtYEALZAv/G2Wh8Xd64w0Gp
+         WDng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=idGSNlS5foegWcbeejyLCNUnDarAVKTDXcWKaPEeNjY=;
-        b=O3Q0wJOFLiMWcusEglv8kigN+Zv39M67qEFkA0DX3ClyrmLhTJf2LroUoOTe3zi4Fh
-         wFbn02iB8HUvOxPJ9jSEgSvkde0ecSnFp9yk7V4pAFSe9hXMUe/b+JMWae8yL16LhKtq
-         hil7Eu+Ca522k0iCbzBThSFOjuABFTmYCJUasRrjiwfH71EG8IFDzgd+yp0y9BmYxDYf
-         Mz8kuZEdfo8lgXw12VSqWyI8rodt9cBkYWEegkaJfb9KKUQtLYT7HG1MDbSRo/MSsMcs
-         eS40k7AaCdYhKuuT/+mig9xKRTwMDPKl3zWn8QH5LOVhJ3cukSC94dDfw58PMJm1cAVC
-         6aXw==
-X-Gm-Message-State: ANhLgQ2Ufhc4NLeDVpF/6qm/F7V97rpJvKDmLAL3sDlujSWSmF1fWt9a
-        fkUQC6S2M31BAcvabt0mg9M=
-X-Google-Smtp-Source: ADFU+vuGy0osZv8T/LTlZUt4uQO6ueplH8KLCZHQM7oEygq3//5A2Tt8k66SXvZguiDmrQK5CqcuGg==
-X-Received: by 2002:a5d:6109:: with SMTP id v9mr15810962wrt.203.1585579038704;
-        Mon, 30 Mar 2020 07:37:18 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id p10sm18043238wre.15.2020.03.30.07.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:37:17 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 16:37:16 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, od@zcrc.me,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH v4 3/4] pwm: jz4740: Obtain regmap from parent node
-Message-ID: <20200330143716.GI2431644@ulmo>
-References: <20200323142421.42817-1-paul@crapouillou.net>
- <20200323142421.42817-3-paul@crapouillou.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rDcplkrNOR8fTQWpkrvvkQU2hQvD6/9jr9hYg71oITo=;
+        b=qMtorMNl7vHeDKSMSCwOs4Mjv3b+90KoCZf0cLZEqxO6eM0WtzqJVlbU4iufuD+hO9
+         KjNlRlqCiU374fDXraSsCTzAMnPKgk0YtkXfsvwJnSDvWv8joXskgQx+031HPavR9Wad
+         fhjc2Mwvr8D5pM/ucoF0yLD5L+5uo1GQVNSF+JHHbLWmebj94dNFmuP0beutDSNDj5mH
+         SQCN+xXnqCHF00wrtblVt9acHu0kNS5mWlvVExP11CKmApNSEFU0IaTK60ZqS0RytdZY
+         tnWQNxhzuvhqSoI2QQo081sEXijpq42HeW/ZqqToowhsck5gQTM9V0z6TOMUnNYv3N7U
+         wAjQ==
+X-Gm-Message-State: ANhLgQ1X3nP6Y3SeAZa5nAhIxfcAWK6sEPHN1vIZu4YMG6NAffMoCz1J
+        ZmOwi+3Enbz9baJ5c7pcpry2rJmmVJw=
+X-Google-Smtp-Source: ADFU+vu3RH0WRUmQbpyjKeSWfs7vBOo3n+yCX9ak4+Gl6Tjcz4DthxSw0tHEkMnHiAp4GrdHCJsJ+A==
+X-Received: by 2002:a05:6214:a8f:: with SMTP id ev15mr12216022qvb.81.1585579266839;
+        Mon, 30 Mar 2020 07:41:06 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id v1sm11280407qtc.30.2020.03.30.07.41.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 07:41:05 -0700 (PDT)
+Subject: Re: [Patch v5 2/6] soc: qcom: rpmhpd: Introduce function to retrieve
+ power domain performance state count
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200320014107.26087-1-thara.gopinath@linaro.org>
+ <20200320014107.26087-3-thara.gopinath@linaro.org>
+ <20200327221545.GF5063@builder>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <1714f51c-1566-2756-ff43-5ee9b427e89c@linaro.org>
+Date:   Mon, 30 Mar 2020 10:41:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5uO961YFyoDlzFnP"
-Content-Disposition: inline
-In-Reply-To: <20200323142421.42817-3-paul@crapouillou.net>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200327221545.GF5063@builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---5uO961YFyoDlzFnP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 23, 2020 at 03:24:20PM +0100, Paul Cercueil wrote:
-[...]
-> diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-[...]
-> @@ -196,12 +208,19 @@ static const struct pwm_ops jz4740_pwm_ops =3D {
->  static int jz4740_pwm_probe(struct platform_device *pdev)
->  {
->  	struct jz4740_pwm_chip *jz4740;
-> +	struct device *dev =3D &pdev->dev;
-> =20
-> -	jz4740 =3D devm_kzalloc(&pdev->dev, sizeof(*jz4740), GFP_KERNEL);
-> +	jz4740 =3D devm_kzalloc(dev, sizeof(*jz4740), GFP_KERNEL);
->  	if (!jz4740)
->  		return -ENOMEM;
-> =20
-> -	jz4740->chip.dev =3D &pdev->dev;
-> +	jz4740->map =3D device_node_to_regmap(dev->parent->of_node);
-> +	if (!jz4740->map) {
+On 3/27/20 6:15 PM, Bjorn Andersson wrote:
+> On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
+> 
+>> Populate .get_performace_state_count in genpd ops to retrieve the count of
+>> performance states supported by a rpmh power domain.
+>>
+>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>   drivers/soc/qcom/rpmhpd.c | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+>> index 4d264d0672c4..7142409a3b77 100644
+>> --- a/drivers/soc/qcom/rpmhpd.c
+>> +++ b/drivers/soc/qcom/rpmhpd.c
+>> @@ -341,6 +341,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
+>>   	return dev_pm_opp_get_level(opp);
+>>   }
+>>   
+>> +static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
+>> +{
+>> +	struct rpmhpd *pd = domain_to_rpmhpd(domain);
+>> +
+>> +	return pd->level_count;
+>> +}
+>> +
+>>   static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
+>>   {
+>>   	int i;
+>> @@ -429,6 +436,8 @@ static int rpmhpd_probe(struct platform_device *pdev)
+>>   		rpmhpds[i]->pd.power_on = rpmhpd_power_on;
+>>   		rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
+>>   		rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
+>> +		rpmhpds[i]->pd.get_performance_state_count =
+>> +					rpmhpd_performance_states_count;
+> 
+> I would prefer if you ignore the 80-char limit here and leave the line
+> unwrapped.
 
-This seems wrong. According to the code, device_node_to_regmap() returns
-an ERR_PTR()-encoded error code on failure, so I think this should be:
+Hi Bjorn,
 
-	if (IS_ERR(jz4740->map)) {
-		...
-		return PTR_ERR(jz4740->map);
-	}
+Thanks for the reviews. I will fix this  in the next version.
 
-No need to resend for that, I can take care of that when applying. Let
-me know if that doesn't work.
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Regards,
+> Bjorn
+> 
+>>   		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
+>>   
+>>   		data->domains[i] = &rpmhpds[i]->pd;
+>> -- 
+>> 2.20.1
+>>
 
-Thierry
-
---5uO961YFyoDlzFnP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6CBBkACgkQ3SOs138+
-s6HtCw/+ObsrCeW3Qpro0kEkUAgc55EE8fppGxsicDBZs+p64q4N3XCH0iduAZuc
-3yeXxtv5jLhz5x9/kwq+h61+UzAqrPbCOWBOBOTq5s2srhrr6WSi9zCYUR6AaTjv
-Ooq6wm0rNJzuIvfWp/+EoLl/MTuJOD/WauAT01rvygN9b7i+fgSORlsDkoKptiJ2
-C7KwuvhqGlHRcAoHtOfgLub6jca/kWwifSWQ1gBkc312IcKuW6ZLHfu7ijLf8+bc
-oH8C/FNuC++mjT13lLJoqc1yIB1y0h1asX2VYUgsQPQGT1ioKjNsgUFqdEKIq49S
-HVzvpIGMsQKiDyO9ka++tMItvLz/L8oMBCCYgHp0zNX8FiSqWqsK/RliMZSHiQFj
-WMyYMbJZPp1Bbxjy4lz8bQz2pQQMbC9dSKlU4PI/hG9JVo/GsM/m1Eu7iUKW7+KB
-P1yJKlG5PqOlPpumyb+vkNOysYbAV4hiSAQt440ga7+SkObdUK+sh6vv7zHMsa2T
-ULjANwIcBiyFR4C0jicNqehIqCql4u/GvNpY2plagzm8kIt7woyTHkWNF12utnJO
-rgAUY75J6QWWmXmzetmVMiqg2fVyzIyrJwhS8xt8SoJM/XWnSf4AuHAkpIBaXuGb
-eQ/hGqkwSHcs+KHgVoyvN9Yu5uIUS2Vtq46NthNGHFMphaxR0fc=
-=SgmS
------END PGP SIGNATURE-----
-
---5uO961YFyoDlzFnP--
+-- 
+Warm Regards
+Thara
