@@ -2,54 +2,80 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E36C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AEAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F732072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1832072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9/0Hme3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgC3OyC (ORCPT
+        id S1728808AbgC3OyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 30 Mar 2020 10:54:05 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:41987 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbgC3OyC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 30 Mar 2020 10:54:02 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48804 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728080AbgC3OyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:54:02 -0400
-IronPort-SDR: bVE95S9nAHI880y/LpLOMlmtoIklyC4wJHD1AIj49tGULlfaOccTyU54+PK5QS92KXY78Avsnz
- N+qx/7JF+Bfg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 07:54:01 -0700
-IronPort-SDR: 6AZb4YxdwxccLW4pzPd13dyt/rHXVVgzptn6Vdg54LA9vG/5fJTzc+V8sE6REJPm3QXDHa1ck3
- 3hn2SE3ALAzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="395146086"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 30 Mar 2020 07:54:01 -0700
-Received: from [10.252.136.240] (kliang2-mobl.ccr.corp.intel.com [10.252.136.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 0BAF25805A1;
+Received: by mail-qv1-f67.google.com with SMTP id ca9so9028006qvb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ku5iL1N6RANAABzr84iAJg9CN/CMxTxUbEuZrAn7SbU=;
+        b=L9/0Hme32NofXz992b6CsrXgGCn+cAPnw0YKmlXlaEVc2EdsrME7DA1dyG6E68jsb5
+         +lEdHtcSG+Jh7vGSwM5eL03dAWRakzA5SVmGtw1s2vdArPYrqPo9j0GoPl6NzQSn0anC
+         p4aaijoNZEDfjF9IzjVZRsWMrtm3Wi7rG/HP1SQ1OUc+hOa1qJouNTG9FTkRYpAKjZAD
+         jhfcB0SpfkiH+Ycu3+SACdv1LE7IqPq71vnEZTCTWrRZ1ugePDlBu4g5uFUam58Vel0g
+         pSywvkBrhQ2WvVjiobH6uT7Uyh8skIVlfpqAsGNhIiHl+BWEc20xyZzQrscHnvgbbkWb
+         yJCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ku5iL1N6RANAABzr84iAJg9CN/CMxTxUbEuZrAn7SbU=;
+        b=DbKUGjM4y9Hg9/5d12q90LQC/AdwL/tKWsq48EasfIxaMYSgA0UQEv42XgA7i8BxQi
+         GcqFK5SAVVY7Uyrn4RsM1oUTIyLIFIcEhA5mDxBB2O06FdV1E9Rg4oW5leutq+PJZv/m
+         XkqWlX1p2MVxs7/ZlhX2ID3X6JmZUNSmoSuCfwiaasUBKHyF4PaZ34RDL69LyWi7iVHu
+         K8jEpYjixwZcw6IjmxtHp5480i4toEWE70WZRVaHtWM/DRsDyciYxJKdlcpUqk1PI7Pe
+         APFhYeE7XXJ5C2mkc3sagKuzYuQkxzpWx3QEUUt7LQ8h8HQNO2pTQgXchPoZIbygVVRW
+         PjtQ==
+X-Gm-Message-State: ANhLgQ2hWMREhJrQ+/FP2fwP2fk4ZksV8aJiUoqL+JtlS8AFmhRUEkq+
+        ZPWhXDbOILtSSRNvfxY+DdVUKXeiUJg=
+X-Google-Smtp-Source: ADFU+vvnZVsf13I2tKyzEPZbzZSTUzrSmDWcuIiitXTu0rbnYah/+4rhMe7ysN6LuRmkXvkXtRCo3Q==
+X-Received: by 2002:a0c:e08d:: with SMTP id l13mr12253135qvk.216.1585580040023;
         Mon, 30 Mar 2020 07:54:00 -0700 (PDT)
-Subject: Re: [PATCH] perf/x86/intel: Add more available bits for
- OFFCORE_RESPONSE of Intel Tremont
-To:     peterz@infradead.org, mingo@redhat.com,
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id 73sm10651439qkf.82.2020.03.30.07.53.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 07:53:59 -0700 (PDT)
+Subject: Re: [Patch v5 4/6] soc: qcom: Extend RPMh power controller driver to
+ register warming devices.
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, eranian@google.com, stable@vger.kernel.org
-References: <20200308125507.18670-1-kan.liang@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <0a06d798-c90f-1824-50dc-acbeae6ee18a@linux.intel.com>
-Date:   Mon, 30 Mar 2020 10:53:59 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+References: <20200320014107.26087-1-thara.gopinath@linaro.org>
+ <20200320014107.26087-5-thara.gopinath@linaro.org>
+ <20200327225345.GH5063@builder>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <f20b4940-11ad-82b1-6ece-661a1b033df8@linaro.org>
+Date:   Mon, 30 Mar 2020 10:53:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200308125507.18670-1-kan.liang@linux.intel.com>
+In-Reply-To: <20200327225345.GH5063@builder>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -58,42 +84,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
 
-Could you please take a look and apply the patch?
 
-Thanks,
-Kan
+On 3/27/20 6:53 PM, Bjorn Andersson wrote:
+> On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
+> 
+>> RPMh power control hosts power domains that can be used as
+>> thermal warming devices. Register these power domains
+>> with the generic power domain warming device thermal framework.
+>>
+>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>
+>> v3->v4:
+>> 	- Introduce a boolean value is_warming_dev in rpmhpd structure to
+>> 	  indicate if a generic power domain can be used as a warming
+>> 	  device or not.With this change, device tree no longer has to
+>> 	  specify which power domain inside the rpmh power domain provider
+>> 	  is a warming device.
+>> 	- Move registering of warming devices into a late initcall to
+>> 	  ensure that warming devices are registered after thermal
+>> 	  framework is initialized.
+> 
+> This information is lost when we merge patches, as such I would like
+> such design decisions to be described in the commit message itself.
+> But...
+> 
+>>
+>>   drivers/soc/qcom/rpmhpd.c | 37 ++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 36 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+>> index 7142409a3b77..4e9c0bbb8826 100644
+>> --- a/drivers/soc/qcom/rpmhpd.c
+>> +++ b/drivers/soc/qcom/rpmhpd.c
+>> @@ -11,6 +11,7 @@
+>>   #include <linux/of_device.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_opp.h>
+>> +#include <linux/pd_warming.h>
+>>   #include <soc/qcom/cmd-db.h>
+>>   #include <soc/qcom/rpmh.h>
+>>   #include <dt-bindings/power/qcom-rpmpd.h>
+>> @@ -48,6 +49,7 @@ struct rpmhpd {
+>>   	bool		enabled;
+>>   	const char	*res_name;
+>>   	u32		addr;
+>> +	bool		is_warming_dev;
+>>   };
+>>   
+>>   struct rpmhpd_desc {
+>> @@ -55,6 +57,8 @@ struct rpmhpd_desc {
+>>   	size_t num_pds;
+>>   };
+>>   
+>> +const struct rpmhpd_desc *global_desc;
+>> +
+>>   static DEFINE_MUTEX(rpmhpd_lock);
+>>   
+>>   /* SDM845 RPMH powerdomains */
+>> @@ -89,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
+>>   	.pd = { .name = "mx", },
+>>   	.peer = &sdm845_mx_ao,
+>>   	.res_name = "mx.lvl",
+>> +	.is_warming_dev = true,
+>>   };
+>>   
+>>   static struct rpmhpd sdm845_mx_ao = {
+>> @@ -452,7 +457,14 @@ static int rpmhpd_probe(struct platform_device *pdev)
+>>   					       &rpmhpds[i]->pd);
+>>   	}
+>>   
+>> -	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+>> +	ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	global_desc = desc;
+>> +
+>> +	return 0;
+>>   }
+>>   
+>>   static struct platform_driver rpmhpd_driver = {
+>> @@ -469,3 +481,26 @@ static int __init rpmhpd_init(void)
+>>   	return platform_driver_register(&rpmhpd_driver);
+>>   }
+>>   core_initcall(rpmhpd_init);
+>> +
+>> +static int __init rpmhpd_init_warming_device(void)
+>> +{
+>> +	size_t num_pds;
+>> +	struct rpmhpd **rpmhpds;
+>> +	int i;
+>> +
+>> +	if (!global_desc)
+>> +		return -EINVAL;
+>> +
+>> +	rpmhpds = global_desc->rpmhpds;
+>> +	num_pds = global_desc->num_pds;
+>> +
+>> +	if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
+>> +		return 0;
+>> +
+>> +	for (i = 0; i < num_pds; i++)
+>> +		if (rpmhpds[i]->is_warming_dev)
+>> +			of_pd_warming_register(rpmhpds[i]->dev, i);
+>> +
+>> +	return 0;
+>> +}
+>> +late_initcall(rpmhpd_init_warming_device);
+> 
+> ...why can't this be done in rpmhpd_probe()?
+> 
+> In particular with the recent patches from John Stultz to allow rpmhpd
+> to be built as a module I don't think there's any guarantees that
+> rpmh_probe() will have succeeded before rpmhpd_init_warming_device()
+> executes.
 
-On 3/8/2020 8:55 AM, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+It is to take care of boot order.
+So this has to happen after the thermal framework is initialized. 
+Thermal framework is initialized with core_initcall. Can I move the 
+rpmhpd init as a postcore_initcall ? Then I can get rid of this separate 
+function and keep it as part of probe.
+
 > 
-> The mask in the extra_regs for Intel Tremont need to be extended to
-> allow more defined bits.
+> Regards,
+> Bjorn
 > 
-> "Outstanding Requests" (bit 63) is only available on MSR_OFFCORE_RSP0;
-> 
-> Fixes: 6daeb8737f8a ("perf/x86/intel: Add Tremont core PMU support")
-> Reported-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Cc: stable@vger.kernel.org
-> ---
->   arch/x86/events/intel/core.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 3be51aa06e67..ba08ad1f560b 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -1892,8 +1892,8 @@ static __initconst const u64 tnt_hw_cache_extra_regs
->   
->   static struct extra_reg intel_tnt_extra_regs[] __read_mostly = {
->   	/* must define OFFCORE_RSP_X first, see intel_fixup_er() */
-> -	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0xffffff9fffull, RSP_0),
-> -	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xffffff9fffull, RSP_1),
-> +	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x800ff0ffffff9fffull, RSP_0),
-> +	INTEL_UEVENT_EXTRA_REG(0x02b7, MSR_OFFCORE_RSP_1, 0xff0ffffff9fffull, RSP_1),
->   	EVENT_EXTRA_END
->   };
->   
-> 
+
+-- 
+Warm Regards
+Thara
