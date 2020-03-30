@@ -2,301 +2,126 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4328FC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7E7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047A920733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585608268;
-	bh=RbHbZWHrJuQ07iC1YjnoYoST1JEjqvhztvi7enX26j8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gQvsHMmbUpHBHSzavL7U8pNEr/dSzNmmtR88sYlxDbXuNthrYltq9A1o6zipcjraM
-	 NStd5a7zI2VUeRfhhyXlFZwdjKFGflu8N7yB6pRakvgC/nIiB4djnA75wOk7SWlpdI
-	 80JQLj9E2i8VgvVo53wag2kjAUynH/uEuhbXVbTU=
+	by mail.kernel.org (Postfix) with ESMTP id 5982320733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osQM7ADN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgC3Wo0 (ORCPT
+        id S1729510AbgC3WqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:44:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42307 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3Wo0 (ORCPT
+        Mon, 30 Mar 2020 18:46:00 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51653 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3WqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:44:26 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e1so7332698plt.9;
-        Mon, 30 Mar 2020 15:44:24 -0700 (PDT)
+        Mon, 30 Mar 2020 18:46:00 -0400
+Received: by mail-pj1-f67.google.com with SMTP id w9so249424pjh.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 15:45:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zZ9zHEhLIDqVsi6Cz+Zx6pbNZgHca94Pq7iQclalSOI=;
+        b=osQM7ADN7pHOs4QtANYPrQcf5eG7G8m92LOwSLs0JSthCMXUBFxP+wyvM8YP3JhC2a
+         AZo0H0//ibzz2m9AQg+xVCh9jUylgQDjX6Wk26XyQqv+NZZqxvC9FsIdJopqSWtyLJXH
+         EdY9NaywEKpupY8IPpKiSqCIKGctJOszxEQyUEv91a8U0zgpEGk0RRSwRO204XGE24oq
+         sJzsTX3rkQ/cwyDWwMj408dsTJPN5XZB3+iF2WOo5Et0EPS+pn00A4xfyqxVKi9STGtC
+         DpkwgsY0PmqW+qhArXAQoFLmyyYRROgs3ySzkZEz/JtqDFqpCg+v+Ozx1lj8N6OEiH7Y
+         +/iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zIVHIPyFepzfZUX75CBdVbhO8aGU7tSC+kd801sJlmc=;
-        b=TOXesQZ2ofBr16pUddABz//wl+hUPRvk2N8UHC3iLoHzt8SCm7RO+n0TQb+C30dWX4
-         YxNiKyxrtqOmLfPguX3PDb79kttE1ME60bIdcLXo/UFbJ2FQoKpCl4Rjp3NrLOq5JHXe
-         SQMMpI9Gp7E35EVEm01B2P5DMb4Iug+n2z84mfTJAud7HrsSFjnDIvaQwg3JHf6Tjq8N
-         SY/3tQni5EG0QDFkym3ec0Xsad/qCMU/0hYJFB6djStmfA1/bI8aRpaXZWeVVs4pH4dk
-         JQ4ReIpeuU5jHA2AnJDI6vRUENYwHETkUDnk0TfUoczNj65aGiz9t3qwv4t3IoFTfJO9
-         xJ0w==
-X-Gm-Message-State: AGi0PuZ73x3NhGK9Pfi7JCooBwW/RzENjJ5tstMLXht8m60bKhSucEDe
-        h/XVOwUC8xBFLSXos6oBXnQ=
-X-Google-Smtp-Source: APiQypJADzH/Ace/QXQfphPpu7Lz2Cb5WQMNav01Upd2YzrgxP5azW+0hWE3tJROjYtwwnnyMw643A==
-X-Received: by 2002:a17:90a:26e1:: with SMTP id m88mr424940pje.60.1585608264089;
-        Mon, 30 Mar 2020 15:44:24 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id h11sm11031312pfn.125.2020.03.30.15.44.22
+         :mime-version:content-disposition:in-reply-to;
+        bh=zZ9zHEhLIDqVsi6Cz+Zx6pbNZgHca94Pq7iQclalSOI=;
+        b=mgbrMAQprLTWfSAWWo+T+vqOCnksDIjKQRdVyLyXFZir9qJZiZjcQQiecpiiDYiIpj
+         Wp1EIksTFgqIynZlm273asda/RQxYSriWqf0QAxLTWn7DE50S8QlLb/FrDFU5A9TfnGh
+         c3eB+2auZ1P75v4PNy7qNh3McXznFz3l6PIvOSb8+Srn10G83Az2mM4k4K4ZDHLR6oRP
+         Tc4lUbJk0TKbCO+R6bVxs4K6jSTfCRPo53+l5wao13fmPHE3cWKc491rbA/S5DAeN7G8
+         g4SySRnE64A4LTYvsLRB44/Ose2JJy/bcXe5oz6eKcZeHVfvSZ41QVEywrWfntgl1w0R
+         kr6A==
+X-Gm-Message-State: AGi0PubcSkF3F595aFJKo3tIRTSXN1qm6rFy4YpsMD7rWfsAe+qMhq8o
+        UstdciYBUDIE8wf7sE3R8NUJ1A==
+X-Google-Smtp-Source: APiQypI9IITmeWnF9fYsCy5c4R1uLydX3rIPaJERYX8ztJ8AZxPpTpEOhziKi9doNs2qx4wKtbwsEg==
+X-Received: by 2002:a17:90a:5802:: with SMTP id h2mr358500pji.141.1585608357469;
+        Mon, 30 Mar 2020 15:45:57 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z17sm11041812pff.12.2020.03.30.15.45.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:44:22 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 197C7404B0; Mon, 30 Mar 2020 22:44:22 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 22:44:22 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <20200330224422.GX11244@42.do-not-panic.com>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-2-vbabka@suse.cz>
+        Mon, 30 Mar 2020 15:45:56 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 15:45:54 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        ohad@wizery.com, psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org
+Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
+Message-ID: <20200330224554.GD215915@minitux>
+References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org>
+ <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
+ <20200330221245.GA17782@xps15>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330115535.3215-2-vbabka@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330221245.GA17782@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry to be late to the apocalypse review party for this, feedback below.
-
-On Mon, Mar 30, 2020 at 01:55:33PM +0200, Vlastimil Babka wrote:
-> A recently proposed patch to add vm_swappiness command line parameter in
-> addition to existing sysctl [1] made me wonder why we don't have a general
-> support for passing sysctl parameters via command line. Googling found only
-> somebody else wondering the same [2], but I haven't found any prior discussion
-> with reasons why not to do this.
+On Mon 30 Mar 15:12 PDT 2020, Mathieu Poirier wrote:
+[..]
+> > +	struct rproc *rproc;
+> > +
+> > +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
+> > +	if (!rproc)
+> > +		return -EINVAL;
+> > +
+> > +	rproc_shutdown(rproc);
 > 
-> Settings the vm_swappiness issue aside (the underlying issue might be solved in
-> a different way), quick search of kernel-parameters.txt shows there are already
-> some that exist as both sysctl and kernel parameter - hung_task_panic,
-> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
-> would remove the need to add more of those one-offs and might be handy in
-> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
+> The scenario I see here is that a userspace program will call
+> open(/dev/rproc_xyz, SOME_OPTION) when it is launched.  The file stays open
+> until either the application shuts down, in which case it calls close() or it
+> crashes.  In that case the system will automatically close all file descriptors
+> that were open by the application, which will also call rproc_shutdown().
 > 
-> Hence, this patch adds a new parse_args() pass that looks for parameters
-> prefixed by 'sysctl.' and tries to interpret them as writes to the
-> corresponding sys/ files using an temporary in-kernel procfs mount. This
-> mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
-> registered sysctl tables.
-
-"even though we don't handle modular sysctls" might be safer to add.
-
-> Errors due to e.g. invalid parameter name or value
-> are reported in the kernel log.
+> To me the same functionality can be achieved with the current functionality
+> provided by sysfs.  
 > 
-> The processing is hooked right before the init process is loaded, as some
-> handlers might be more complicated than simple setters and might need some
-> subsystems to be initialized. At the moment the init process can be started and
-> eventually execute a process writing to /proc/sys/ then it should be also fine
-> to do that from the kernel.
-
-This is wonderful when we think about existing sysctls which have
-corresponding silly boot params that do the same thing. However, shoving
-a boot param capability down every possible built-in sysctl brings
-forward support considerations we should take serious, as this would
-add a new user interface and we'll have to support it.
-
-Simply put, not all sysctls should be born to be boot params. I suggest
-we white-list which ones we can process, so that only sysctls we *do*
-review and agree are good candidates get allowed to also be boot params.
-Calling a proc hanlder early might seem functional, but if the subsystem
-defers evaluation of a setting later, then any boot param set would be
-lifted anyway. I think each syscl would need to be reviewed for this to
-be supported in a way that doesn't create odd unexpected system settings
-which we later have to support forever.
-
-Should we not do this, we'll have to live with the consequences of
-supporting the full swoop of sysctls are boot params, whatever
-consequences those may be.
-
-> Sysctls registered later on module load time are not set by this mechanism -
-> it's expected that in such scenarios, setting sysctl values from userspace is
-> practical enough.
-
-I'm just not sure if its worth supporting these, for modules we have
-module params, but those with more creative userspace might have a
-better idea as to why we'd want to support this. I just can't see it
-yet.
-
-> [1] https://lore.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
-> [2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
-> [3] https://lore.kernel.org/r/87bloj2skm.fsf@x220.int.ebiederm.org/
+> When the application starts it needs to read
+> "/sys/class/remoteproc/remoteprocX/state".  If the state is "offline" then
+> "start" should be written to "/sys/.../state".  If the state is "running" the
+> application just crashed and got restarted.  In which case it needs to stop the
+> remote processor and start it again.
 > 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  .../admin-guide/kernel-parameters.txt         |   9 ++
->  fs/proc/proc_sysctl.c                         | 100 ++++++++++++++++++
->  include/linux/sysctl.h                        |   4 +
->  init/main.c                                   |   2 +
->  4 files changed, 115 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c07815d230bc..81ff626fc700 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4793,6 +4793,15 @@
->  
->  	switches=	[HW,M68k]
->  
-> +	sysctl.*=	[KNL]
-> +			Set a sysctl parameter, right before loading the init
-> +			process, as if the value was written to the respective
-> +			/proc/sys/... file. Both '.' and '/' are recognized as
-> +			separators. Unrecognized parameters and invalid values
-> +			are reported in the kernel log. Sysctls registered
-> +			later by a loaded module cannot be set this way.
-> +			Example: sysctl.vm.swappiness=40
-> +
->  	sysfs.deprecated=0|1 [KNL]
->  			Enable/disable old style sysfs layout for old udev
->  			on older distributions. When this option is enabled
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index c75bb4632ed1..653188c9c4c9 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -14,6 +14,7 @@
->  #include <linux/mm.h>
->  #include <linux/module.h>
->  #include <linux/bpf-cgroup.h>
-> +#include <linux/mount.h>
->  #include "internal.h"
->  
->  static const struct dentry_operations proc_sys_dentry_operations;
-> @@ -1725,3 +1726,102 @@ int __init proc_sys_init(void)
->  
->  	return sysctl_init();
->  }
-> +
-> +/* Set sysctl value passed on kernel command line. */
-> +static int process_sysctl_arg(char *param, char *val,
-> +			       const char *unused, void *arg)
-> +{
-> +	char *path;
-> +	struct vfsmount *proc_mnt = *((struct vfsmount **)arg);
-> +	struct file_system_type *proc_fs_type;
-> +	struct file *file;
-> +	int len;
-> +	int err;
-> +	loff_t pos = 0;
-> +	ssize_t wret;
-> +
-> +	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
-> +		return 0;
-> +
-> +	param += sizeof("sysctl") - 1;
-> +
-> +	if (param[0] != '/' && param[0] != '.')
-> +		return 0;
-> +
-> +	param++;
-> +
-> +	if (!proc_mnt) {
-> +		proc_fs_type = get_fs_type("proc");
-> +		if (!proc_fs_type) {
-> +			pr_err("Failed to find procfs to set sysctl from command line");
-> +			return 0;
-> +		}
-> +		proc_mnt = kern_mount(proc_fs_type);
-> +		put_filesystem(proc_fs_type);
-> +		if (IS_ERR(proc_mnt)) {
-> +			pr_err("Failed to mount procfs to set sysctl from command line");
-> +			return 0;
-> +		}
-> +		*((struct vfsmount **)arg) = proc_mnt;
-> +	}
-> +
-> +	path = kasprintf(GFP_KERNEL, "sys/%s", param);
-> +	if (!path)
-> +		panic("%s: Failed to allocate path for %s\n", __func__, param);
-> +	strreplace(path, '.', '/');
-> +
-> +	file = file_open_root(proc_mnt->mnt_root, proc_mnt, path, O_WRONLY, 0);
-> +	if (IS_ERR(file)) {
-> +		err = PTR_ERR(file);
-> +		if (err == -ENOENT)
-> +			pr_err("Failed to set sysctl parameter '%s=%s': parameter not found",
-> +				param, val);
-> +		else if (err == -EACCES)
-> +			pr_err("Failed to set sysctl parameter '%s=%s': permission denied (read-only?)",
-> +				param, val);
-> +		else
-> +			pr_err("Error %pe opening proc file to set sysctl parameter '%s=%s'",
-> +				file, param, val);
-> +		goto out;
-> +	}
-> +	len = strlen(val);
-> +	wret = kernel_write(file, val, len, &pos);
-> +	if (wret < 0) {
-> +		err = wret;
-> +		if (err == -EINVAL)
-> +			pr_err("Failed to set sysctl parameter '%s=%s': invalid value",
-> +				param, val);
-> +		else
-> +			pr_err("Error %pe writing to proc file to set sysctl parameter '%s=%s'",
-> +				ERR_PTR(err), param, val);
-> +	} else if (wret != len) {
-> +		pr_err("Wrote only %ld bytes of %d writing to proc file %s to set sysctl parameter '%s=%s'",
-> +			wret, len, path, param, val);
-> +	}
-> +
-> +	err = filp_close(file, NULL);
-> +	if (err)
-> +		pr_err("Error %pe closing proc file to set sysctl parameter '%s=%s'",
-> +			ERR_PTR(err), param, val);
-> +out:
-> +	kfree(path);
-> +	return 0;
-> +}
-> +
-> +void do_sysctl_args(void)
-> +{
-> +	char *command_line;
-> +	struct vfsmount *proc_mnt = NULL;
-> +
-> +	command_line = kstrdup(saved_command_line, GFP_KERNEL);
 
-can you use kstrndup() ? And then use kfree_const()? Yes, feel free to
-move __kstrncpy() to a generic kstrncpy().
+A case when this would be useful is the Qualcomm modem, which relies on
+disk access through a "remote file system service" [1].
 
-> +	if (!command_line)
-> +		panic("%s: Failed to allocate copy of command line\n", __func__);
-> +
-> +	parse_args("Setting sysctl args", command_line,
-> +		   NULL, 0, -1, -1, &proc_mnt, process_sysctl_arg);
-> +
-> +	if (proc_mnt)
-> +		kern_unmount(proc_mnt);
-> +
-> +	kfree(command_line);
-> +}
+Today we register the service (a few layers ontop of rpmsg/GLINK) then
+find the modem remoteproc and write "start" into the state sysfs file.
 
-Then, can we get this tested as part of lib/test_sysctl.c with its
-respective tools/testing/selftests/sysctl/sysctl.sh ?
+When we get a signal for termination we write "stop" into state to stop
+the remoteproc before exiting.
 
-  Luis
+There is however no way for us to indicate to the modem that rmtfs just
+died, e.g. a kill -9 on the process will result in the modem continue
+and the next IO request will fail which in most cases will be fatal.
+
+So instead having rmtfs holding /dev/rproc_foo open would upon its
+termination cause the modem to be stopped automatically, and as the
+system respawns rmtfs the modem would be started anew and the two sides
+would be synced up again.
+
+[1] https://github.com/andersson/rmtfs
+
+Regards,
+Bjorn
