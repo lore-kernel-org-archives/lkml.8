@@ -2,108 +2,376 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96703C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9DDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6923920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E6uHpJH/"
+	by mail.kernel.org (Postfix) with ESMTP id A99C1208FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgC3Tgr (ORCPT
+        id S1728640AbgC3Tg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:36:47 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:45787 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726781AbgC3Tgr (ORCPT
+        Mon, 30 Mar 2020 15:36:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35820 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbgC3Tg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:36:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585597006;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j/A7KXxUQSMUj1agom0tq36pAwrRh5ZAm9HVoggtNqE=;
-        b=E6uHpJH/eWnxg2npqiV9x5N4sUufBYKTWWPFJo/O1mEsEdToSEHuK3/zJwdz7SsCKJ5Hsu
-        OngTI2XZGU9Lh2pzZpTR9GaN5h47o/5MDKPQDa0zkQE3WNimm3M6UioFx9LZXTW0XZB7Oi
-        q17KYL+R33KtJUN2ikotd1KZV/pS0No=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-MY38m1yVN_2xK_dZKT6xpg-1; Mon, 30 Mar 2020 15:36:42 -0400
-X-MC-Unique: MY38m1yVN_2xK_dZKT6xpg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 30 Mar 2020 15:36:57 -0400
+Received: from [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d] (unknown [IPv6:2804:431:e7cc:11ff:4f80:3de:e2b2:5c1d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69122107ACC4;
-        Mon, 30 Mar 2020 19:36:37 +0000 (UTC)
-Received: from krava (unknown [10.40.192.75])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 580915D9E2;
-        Mon, 30 Mar 2020 19:36:24 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 21:36:20 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v7 3/6] perf/tools: Refactoring metricgroup__add_metric
- function
-Message-ID: <20200330193620.GE2490231@krava>
-References: <20200327102528.4267-1-kjain@linux.ibm.com>
- <20200327102528.4267-4-kjain@linux.ibm.com>
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 178E1293630;
+        Mon, 30 Mar 2020 20:36:50 +0100 (BST)
+Subject: Re: [PATCH v2 1/3] media: vimc: Support multiple media bus codes for
+ each pixelformat
+To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
+        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+References: <20200326214730.2449707-1-nfraprado@protonmail.com>
+ <20200326214730.2449707-2-nfraprado@protonmail.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <e41520f6-1d2e-9d36-3693-1e6d950ecf2f@collabora.com>
+Date:   Mon, 30 Mar 2020 16:36:45 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327102528.4267-4-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200326214730.2449707-2-nfraprado@protonmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:55:25PM +0530, Kajol Jain wrote:
-> This patch refactor metricgroup__add_metric function where
-> some part of it move to function metricgroup__add_metric_param.
-> No logic change.
+Hi Nícolas,
+
+thank you for the patch.
+
+The series looks good in general, just minor comments below.
+
+On 3/26/20 6:47 PM, Nícolas F. R. A. Prado wrote:
+> Change vimc_pix_map_list to allow multiple media bus codes to map to the
+> same pixelformat, making it possible to add media bus codes for which
+> there are no pixelformat.
 > 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
 > ---
->  tools/perf/util/metricgroup.c | 61 +++++++++++++++++++++--------------
->  1 file changed, 36 insertions(+), 25 deletions(-)
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 926449a7cdbf..b905eaa907a7 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -485,6 +485,40 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
->  	return false;
+> Changes in v2:
+> - Fix vimc_mbus_code_by_index not checking code array bounds
+> - Fix array formatting
+> - Rename variables
+> - Change code array size
+> - Add comment about vimc_mbus_code_by_index return value
+> 
+>  drivers/media/platform/vimc/vimc-common.c | 70 ++++++++++++++---------
+>  drivers/media/platform/vimc/vimc-common.h | 11 +++-
+>  drivers/media/platform/vimc/vimc-scaler.c | 10 +++-
+>  drivers/media/platform/vimc/vimc-sensor.c |  6 +-
+>  4 files changed, 65 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+> index c95c17c048f2..119846f3eaa5 100644
+> --- a/drivers/media/platform/vimc/vimc-common.c
+> +++ b/drivers/media/platform/vimc/vimc-common.c
+> @@ -19,19 +19,19 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* RGB formats */
+>  	{
+> -		.code = MEDIA_BUS_FMT_BGR888_1X24,
+> +		.code = { MEDIA_BUS_FMT_BGR888_1X24 },
+>  		.pixelformat = V4L2_PIX_FMT_BGR24,
+>  		.bpp = 3,
+>  		.bayer = false,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_RGB888_1X24,
+> +		.code = { MEDIA_BUS_FMT_RGB888_1X24 },
+>  		.pixelformat = V4L2_PIX_FMT_RGB24,
+>  		.bpp = 3,
+>  		.bayer = false,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
+> +		.code = { MEDIA_BUS_FMT_ARGB8888_1X32 },
+>  		.pixelformat = V4L2_PIX_FMT_ARGB32,
+>  		.bpp = 4,
+>  		.bayer = false,
+> @@ -39,49 +39,49 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* Bayer formats */
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SBGGR8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SGBRG8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SGRBG8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SRGGB8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
+> +		.code = { MEDIA_BUS_FMT_SBGGR10_1X10 },
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
+> +		.code = { MEDIA_BUS_FMT_SGBRG10_1X10 },
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
+> +		.code = { MEDIA_BUS_FMT_SGRBG10_1X10 },
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
+> +		.code = { MEDIA_BUS_FMT_SRGGB10_1X10 },
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
+>  		.bpp = 2,
+>  		.bayer = true,
+> @@ -89,25 +89,25 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* 10bit raw bayer a-law compressed to 8 bits */
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
+>  		.bpp = 1,
+>  		.bayer = true,
+> @@ -115,49 +115,49 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>  
+>  	/* 10bit raw bayer DPCM compressed to 8 bits */
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
+> +		.code = { MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8 },
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
+>  		.bpp = 1,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
+> +		.code = { MEDIA_BUS_FMT_SBGGR12_1X12 },
+>  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
+> +		.code = { MEDIA_BUS_FMT_SGBRG12_1X12 },
+>  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
+> +		.code = { MEDIA_BUS_FMT_SGRBG12_1X12 },
+>  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
+>  		.bpp = 2,
+>  		.bayer = true,
+>  	},
+>  	{
+> -		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
+> +		.code = { MEDIA_BUS_FMT_SRGGB12_1X12 },
+>  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
+>  		.bpp = 2,
+>  		.bayer = true,
+> @@ -182,13 +182,31 @@ const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i)
+>  	return &vimc_pix_map_list[i];
 >  }
 >  
-> +static int __metricgroup__add_metric(struct strbuf *events,
-> +			struct list_head *group_list, struct pmu_event *pe)
+> +const u32 vimc_mbus_code_by_index(unsigned int index)
 > +{
+> +	unsigned int i, j;
 > +
-> +	const char **ids;
-> +	int idnum;
-> +	struct egroup *eg;
-> +	int ret = -EINVAL;
+> +	for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+> +		for (j = 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
+> +			if (vimc_pix_map_list[i].code[j]) {
+
+Can this be false?
+
+> +				if (!index)
+> +					return vimc_pix_map_list[i].code[j];
+> +				index--;
+> +			}
+> +		}
+> +	}
+> +	return 0;
+> +}
 > +
-> +	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum) < 0)
-> +		return ret;
+>  const struct vimc_pix_map *vimc_pix_map_by_code(u32 code)
+>  {
+> -	unsigned int i;
+> +	unsigned int i, j;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(vimc_pix_map_list); i++) {
+> -		if (vimc_pix_map_list[i].code == code)
+> -			return &vimc_pix_map_list[i];
+> +		for (j = 0; j < ARRAY_SIZE(vimc_pix_map_list[i].code); j++) {
+> +			if (vimc_pix_map_list[i].code[j] == code)
+> +				return &vimc_pix_map_list[i];
+> +		}
+>  	}
+>  	return NULL;
+>  }
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index 616d5a6b0754..585441694c86 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -69,7 +69,7 @@ do {									\
+>   * V4L2_PIX_FMT_* fourcc pixelformat and its bytes per pixel (bpp)
+>   */
+>  struct vimc_pix_map {
+> -	unsigned int code;
+> +	unsigned int code[1];
+>  	unsigned int bpp;
+>  	u32 pixelformat;
+>  	bool bayer;
+> @@ -172,6 +172,15 @@ void vimc_sen_release(struct vimc_ent_device *ved);
+>   */
+>  const struct vimc_pix_map *vimc_pix_map_by_index(unsigned int i);
+>  
+> +/**
+> + * vimc_mbus_code_by_index - get mbus code by its index
+> + *
+> + * @index:		index of the mbus code in vimc_pix_map_list
+> + *
+> + * Returns 0 if no mbus code is found for the given index.
+> + */
+> +const u32 vimc_mbus_code_by_index(unsigned int index);
+> +
+>  /**
+>   * vimc_pix_map_by_code - get vimc_pix_map struct by media bus code
+>   *
+> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+> index 7521439747c5..6bac1fa65a6f 100644
+> --- a/drivers/media/platform/vimc/vimc-scaler.c
+> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+> @@ -110,13 +110,19 @@ static int vimc_sca_enum_mbus_code(struct v4l2_subdev *sd,
+>  				   struct v4l2_subdev_pad_config *cfg,
+>  				   struct v4l2_subdev_mbus_code_enum *code)
+>  {
+> -	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
+> +	const u32 mbus_code = vimc_mbus_code_by_index(code->index);
+> +	const struct vimc_pix_map *vpix;
+> +
+> +	if (!mbus_code)
+> +		return -EINVAL;
+> +
+> +	vpix = vimc_pix_map_by_code(mbus_code);
+>  
+>  	/* We don't support bayer format */
+>  	if (!vpix || vpix->bayer)
+>  		return -EINVAL;
+>  
+> -	code->code = vpix->code;
+> +	code->code = mbus_code;
 
-no need for ret variable, return -EINVAL directly
+no need to change this.
 
-jirka
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+> index 92daee58209e..b8bd430809c1 100644
+> --- a/drivers/media/platform/vimc/vimc-sensor.c
+> +++ b/drivers/media/platform/vimc/vimc-sensor.c
+> @@ -52,12 +52,12 @@ static int vimc_sen_enum_mbus_code(struct v4l2_subdev *sd,
+>  				   struct v4l2_subdev_pad_config *cfg,
+>  				   struct v4l2_subdev_mbus_code_enum *code)
+>  {
+> -	const struct vimc_pix_map *vpix = vimc_pix_map_by_index(code->index);
+> +	const u32 mbus_code = vimc_mbus_code_by_index(code->index);
+>  
+> -	if (!vpix)
+> +	if (!mbus_code)
+>  		return -EINVAL;
+>  
+> -	code->code = vpix->code;
+> +	code->code = mbus_code;
+>  
+>  	return 0;
+>  }
+> 
 
+With these changes
+
+Acked-by: Helen Koike <helen.koike@collabora.com>
+
+Regards,
+Helen
