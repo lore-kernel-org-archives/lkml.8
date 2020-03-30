@@ -2,137 +2,77 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA9EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB36C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A3E2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:04:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6M7GKC0"
+	by mail.kernel.org (Postfix) with ESMTP id E1B7A20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgC3OEa (ORCPT
+        id S1728024AbgC3OFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:04:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54499 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgC3OEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:04:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c81so20057273wmd.4;
-        Mon, 30 Mar 2020 07:04:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fl3BVLXonVpFeS4JDgqJNcZPAm6d1lEewyk/bRtn/ro=;
-        b=X6M7GKC0r6xJjIIPTJtZGZZwnL4HRFY9BfElz+7JA/YbNyIZV9yzVvrbK/AP9pebSY
-         K6ZmUXSZgpobxY6zNynlax144JyDDP7S4LYDiWLk4HWUUQNmNH21jYRQY6iB42UJylP7
-         uTVCt+Q6DDP+yztYjfbvQa1hZLUKdqXP+Lfm052Ca0vIXokx6eVxOKEY0PgH6eNRt9HY
-         D2unMEQuPeqcaVQrApL8NPRcGsipiVAeQm2fzekQ6limDGgz7hfr6fw+IjYduhaM/+tZ
-         OchlRWManrPej0p9PS6HGW2Duv3Ttq+c3l23vdyVfHxjJYuvKk/Ocmy1UPJuD1xEx9t2
-         4hvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fl3BVLXonVpFeS4JDgqJNcZPAm6d1lEewyk/bRtn/ro=;
-        b=gwBTSCy8+g2rqaPCEiZs/wGx48zOMUz+4oNQIgLgIaLAXo04hUVSJanSDPFE9mh6hW
-         TJBUahf1PaIBOlyqPpkLtoMV1m3/hZLyGh/XIadICJhr1BYnIlcQEFwxq0LmeO4/42PK
-         BB2MqRFYqvYeEdM/YrWBasaedSCKLR0yvbMlASpXUcFS8yLZsjOcc19E4hBkErdPVPJE
-         TCsK+iRyrVup2UbOQaXWTs6qe2QlLpdWd+wr8IKS7cddnv7uBk+BVPYmZ4Tf3yGaXLcw
-         jii/cW5iK6uqys3cKDngauN1UZuNSqYVytlwOuOCFuv8sPxybT50ABdd2OBW+I8WRyio
-         mt9Q==
-X-Gm-Message-State: ANhLgQ2TFB/mJnNOWjGTIz25yGxlKZTnK2tvPvaHtJvVsaOQnGAHA2Pp
-        gCNgre4f+Ne3NliuyQhrwzlEDzGh
-X-Google-Smtp-Source: ADFU+vufah8pOE4mseBF8yvDSwUNcaMkNyP7lIZ3hqnBHQ+jQNBn8gzECWnxILxmALfuYBIc9KzgQw==
-X-Received: by 2002:a1c:bcd4:: with SMTP id m203mr13223344wmf.35.1585577067399;
-        Mon, 30 Mar 2020 07:04:27 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id w66sm21519140wma.38.2020.03.30.07.04.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 07:04:25 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 16:04:23 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 0/5] pwm: omap-dmtimer: Allow for dynamic pwm period
- updates
-Message-ID: <20200330140423.GF2431644@ulmo>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <09dac13d-44b0-80c6-fdbb-54bfc6f48e36@ti.com>
+        Mon, 30 Mar 2020 10:05:47 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50000 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbgC3OFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:05:47 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C7801625750368B4B8CA;
+        Mon, 30 Mar 2020 22:05:34 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
+ 22:05:32 +0800
+Subject: Re: [PATCH net-next] xfrm: policy: Remove obsolete WARN while xfrm
+ policy inserting
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+References: <20200327123443.12408-1-yuehaibing@huawei.com>
+ <20200328112302.GA13121@gauss3.secunet.de>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <1d3596fb-c7e3-16c9-f48f-fe58e9a2569a@huawei.com>
+Date:   Mon, 30 Mar 2020 22:05:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
-Content-Disposition: inline
-In-Reply-To: <09dac13d-44b0-80c6-fdbb-54bfc6f48e36@ti.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200328112302.GA13121@gauss3.secunet.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/3/28 19:23, Steffen Klassert wrote:
+> On Fri, Mar 27, 2020 at 08:34:43PM +0800, YueHaibing wrote:
+>> Since commit 7cb8a93968e3 ("xfrm: Allow inserting policies with matching
+>> mark and different priorities"), we allow duplicate policies with
+>> different priority, this WARN is not needed any more.
+> 
+> Can you please describe a bit more detailed why this warning
+> can't trigger anymore?
 
---twz1s1Hj1O0rHoT0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No, this warning is triggered while detect a duplicate entry in the policy list
 
-On Mon, Mar 23, 2020 at 05:00:13PM +0530, Lokesh Vutla wrote:
-> Hi All,
->=20
-> On 12/03/20 9:52 AM, Lokesh Vutla wrote:
-> > This series fixes minor issues in config callback and allows for on the
-> > fly updates for pwm period and duty cycle. This is mainly intended to
-> > allow pwm omap dmtimer to be used for generating a 1PPS signal that can=
- be
-> > syncronized to PTP clock in CPTS module available in AM335x and AM57xx =
-SoCs.
-> >=20
-> > Series depends on the following series:
-> > - https://patchwork.kernel.org/patch/11379875/
-> > - https://patchwork.kernel.org/project/linux-omap/list/?series=3D251691
->=20
-> Gentle ping on this series :) The above dependencies are merged into time=
-r tree
-> and below is the immutable branch:
->=20
-> https://git.linaro.org/people/dlezcano/linux.git/log/?h=3Dtimers/drivers/=
-timer-ti-dm
+regardless of the priority. If we insert policy like this:
 
-I've pulled in the above branch into the PWM tree and applied your
-series on top.
+policy A (mark.v = 3475289, mark.m = 0, priority = 1)	//A is inserted
+policy B (mark.v = 0, mark.m = 0, priority = 0) 	//B is inserted
+policy C (mark.v = 3475289, mark.m = 0, priority = 0)	//C is inserted and B is deleted
+policy D (mark.v = 3475289, mark.m = 0, priority = 1)	
 
-Thanks,
-Thierry
+while finding delpol in xfrm_policy_insert_list,
+first round delpol is matched C, whose priority is less than D, so contiue the loop,
+then A is matched， WARN_ON is triggered.  It seems the WARN is useless.
 
---twz1s1Hj1O0rHoT0
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> Thanks!
+> 
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6B/GUACgkQ3SOs138+
-s6FvOA/9Gr3hcoCrG6rJzKPDh9OZhNjoRSw02ZKI8wgR62o5OYcs8bUR+7RuFMie
-4IPrbHIuN+3AlJnNW3692BLEWc63qXa6dKV9a/C+GkAZcRDwSmHid6qgtGgoYrVY
-zzDi5AI4FxWn5o8THICTf1tGZcNWYl6/yA1Pww8Cwzp9DNt4Fr/5+1seICFVRNFR
-D/U209f361OwuppU5Q0dOccSsYfNs1t6Ej3gXlk82qdKwpAyjR1h1rkwjUMFxAUs
-bUXMgOezWwlc5AT5zZlNAL38Xhm16zzBf5SdILIndj1znVvM8SFGwVJmBNFm6DjB
-mjiY3ySqQOzRVZJX4d+tMJi5uQx3LrqJQsXOKNRxO1d9azRJHGWBhap00jCsw/Nb
-WSAek8uE4vMcWMnk9EfqWSQvD+8aw0Xd/Z0eaegflK9BPivdIEafqVNTVJ5cf+BK
-Nbqj4Pr+uqVzPZQDfL/sKx5BdgyG3wPoCr1VZNpAeZrzNg1YnLeQgIlxTi5hE4Ay
-2Z/IudEMftbK1d/8JGhBtw1y6VZ4/yONbnWyQGNsxShdR0VUCKe+33VQxxYFTNy+
-mccl5NI51zODEuS8DBv3HH16KUri+RE7vFych0L7Ouwv8/kvdchjx6iBRWKey3Oa
-LG5De04F6662oEXnkaD+L9gNMW5ilDLUnW+pOpqrKkUuIcZ/aTE=
-=1Yxb
------END PGP SIGNATURE-----
-
---twz1s1Hj1O0rHoT0--
