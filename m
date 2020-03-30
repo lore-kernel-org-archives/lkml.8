@@ -2,104 +2,90 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A811C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA06C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23FEB20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF7420733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585602966;
-	bh=yYQpEqTlJC/6Uz9HelZxuRA+BqiQPCT+jSly2DQyKv4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Yg3i0AgK83UmFkjMJRfap18U3wlQliNctsO+cOJzVfl1TLRH/QT5SSnlsLnkyq/u9
-	 Tf6qgE84lA8UmG3SRXLpQaYaFRyDarFFfrcv1jY4a59iDPXf6Pt/H6ppLMbFhNj1J2
-	 0HMKRjnxF6E7lZnNxLQvD/ncn5E2iKW+ZYDtKY24=
+	s=default; t=1585603000;
+	bh=5z63V0bwzd+OIoEiT547HOrMMgHud4GHtKynPdsVW68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R76Fo3UsFOzBwmJ0ixNHMk/JgWSIX3aFRxFl7zT7CNHjU5+YAGV3gHC+nWdbs9Ls6
+	 FpgJgUVCd3J9LYvgbCnmt0CdVvYq/252AvwbOreH9Dz6JS1lod7+YeAfEZhY/PMxLe
+	 VPWxDmguzyO4HMaGGIiWXjySG86nPhDd0EZN07aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgC3VQF (ORCPT
+        id S1728985AbgC3VQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgC3VQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:16:04 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56A7E20733;
-        Mon, 30 Mar 2020 21:16:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585602964;
-        bh=yYQpEqTlJC/6Uz9HelZxuRA+BqiQPCT+jSly2DQyKv4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ua79KH5UDCgdqxwUx0v+TEn1ok2zYWzFF967w2Z3/t22zNnxcU/8fwrAujtyXqsTh
-         7oFgJWBYNpE7SO6KD/L6CO/0qHfC/8EKSBnnt374pb7OPens6HN9N5+LKfN5WrJbod
-         lmwPoDNmz9RdMrsT7aEwoeN0EF92MN2l6WpU9KoY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2C3AA35229BC; Mon, 30 Mar 2020 14:16:04 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 14:16:04 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, julia.lawall@lip6.fr,
-        boqun.feng@gmail.com, Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:READ-COPY UPDATE (RCU)" <rcu@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] rcu: Replace 1 by true
-Message-ID: <20200330211604.GA6655@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <0/4>
- <20200330012450.312155-1-jbi.octave@gmail.com>
- <20200330012450.312155-3-jbi.octave@gmail.com>
+        Mon, 30 Mar 2020 17:16:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44363 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728376AbgC3VQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 17:16:38 -0400
+Received: by mail-io1-f68.google.com with SMTP id r25so7605596ioc.11;
+        Mon, 30 Mar 2020 14:16:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tkKJxOuJOygZAD90Xqr7W823Gleu+iZSPyiLdvcI/vY=;
+        b=ZnMxueZrPM6UgZpBoYdasOyXr97MzBdDi/MIJEP6p0KzwF9LJGpL3m0Zt0zS7roOH6
+         luJi49dBsYp2Qn6NfRZ3QtdbZ3XxabuPiWUcTJ2KkgRdOhUEsliTvOu2b3Lf8zoM9pRZ
+         Nru8oPl2nI8wF7z8BAQKr3KwU/d20mG/m6d7W0hBi9C+k8GPg5ar3Pg//brrdUq+1gLF
+         U52mH7wmVRomLojHB6+mdbuIfM/vHee7JWVlm2n0ExmQBXho0sAIgKpXK5TRQPokXcC3
+         Ex+iCayaJmm1QyuFx0me5hbw1QWTqVXkPkJi390X4V3OUe5u4/mZvZfTNiudD88uwMD2
+         3frA==
+X-Gm-Message-State: ANhLgQ2gUFTTlUoWFwcXplS2SC+xydXb1dpa1ZN/pfB+dAnWjNPZquJM
+        fE0Smzxt3or3n4blZt4KGw==
+X-Google-Smtp-Source: ADFU+vt8NcKzJ1ZQ+zYRamd2iQqQrwipjvEDCqGiJNp01E3XeT/iw5c9GD4EIlYsyre+AvLvjpMojQ==
+X-Received: by 2002:a05:6602:2406:: with SMTP id s6mr12557183ioa.76.1585602997824;
+        Mon, 30 Mar 2020 14:16:37 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c28sm5270849ilf.26.2020.03.30.14.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 14:16:36 -0700 (PDT)
+Received: (nullmailer pid 3903 invoked by uid 1000);
+        Mon, 30 Mar 2020 21:16:35 -0000
+Date:   Mon, 30 Mar 2020 15:16:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Auchter <michael.auchter@ni.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Auchter <michael.auchter@ni.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: adc: ad7291: add binding
+Message-ID: <20200330211635.GA3708@bogus>
+References: <20200317135649.8876-1-michael.auchter@ni.com>
+ <20200317145113.12413-1-michael.auchter@ni.com>
+ <20200317145113.12413-2-michael.auchter@ni.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330012450.312155-3-jbi.octave@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200317145113.12413-2-michael.auchter@ni.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 02:24:48AM +0100, Jules Irenge wrote:
-> Coccinelle reports a warning at use_softirq declaration
+On Tue, 17 Mar 2020 09:51:13 -0500, Michael Auchter wrote:
+> Add device-tree binding for ADI AD7291 ADC.
 > 
-> WARNING: Assignment of 0/1 to bool variable
-> 
-> The root cause is
-> use_softirq a variable of bool type is initialised with the integer 1
-> Replacing 1 with value true solve the issue.
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
-
-Queued for review and testing, thank you!
-
-							Thanx, Paul
-
+> Signed-off-by: Michael Auchter <michael.auchter@ni.com>
 > ---
->  kernel/rcu/tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/iio/adc/adi,ad7291.yaml          | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
 > 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index d91c9156fab2..c2ffea31eae8 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -100,7 +100,7 @@ static struct rcu_state rcu_state = {
->  static bool dump_tree;
->  module_param(dump_tree, bool, 0444);
->  /* By default, use RCU_SOFTIRQ instead of rcuc kthreads. */
-> -static bool use_softirq = 1;
-> +static bool use_softirq = true;
->  module_param(use_softirq, bool, 0444);
->  /* Control rcu_node-tree auto-balancing at boot time. */
->  static bool rcu_fanout_exact;
-> -- 
-> 2.25.1
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
