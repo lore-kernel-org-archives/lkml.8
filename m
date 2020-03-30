@@ -2,132 +2,111 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29759C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9ACC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AA22072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:05:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WQE+QWOm"
+	by mail.kernel.org (Postfix) with ESMTP id 33B8F2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585591638;
+	bh=afbbOj/lT0feA7FWzTryyZkb7z7CK9nr2VpTCA3iYWM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HB9JMe0z9+WcMNT7G6Jh4DwtTZs7eQ8UcH3ZHF/L40263/ubpeseDrEei+leUGSLk
+	 zggiTOeTiOcr28qSC3+WHzuQ2TGYPxM8hap5YQDiD7n2UlLL/H0TVvV2D+rdlT0pJg
+	 q1JKg0Fma0/zmDNUOzFsRXnTB/r+9UfiMU4OJPY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgC3SFo (ORCPT
+        id S1725268AbgC3SHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:05:44 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39463 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727975AbgC3SFn (ORCPT
+        Mon, 30 Mar 2020 14:07:17 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36510 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgC3SHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:05:43 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so22840914wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:05:40 -0700 (PDT)
+        Mon, 30 Mar 2020 14:07:16 -0400
+Received: by mail-il1-f195.google.com with SMTP id p13so16732818ilp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:07:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eK8x7gAXMov1inBTyCa9T4MtcTyNUJQUaxWPoEq8WPM=;
-        b=WQE+QWOmy+rAqfpi/9XWYmLS7jKwH6IbEwVcxVE/K6tVdNy/4xbN85nlusDSzm757a
-         N8Esq9fl5Qh8a89xDGWWUQzzWddG3vupEw//z1mNposwwR3yEPcMIPJRq7YVVtoKQP+p
-         SKQfYVxP6q6j+vCw/suwHBGl91DNojYqK1BMQ=
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ppT7F7qNchzvH1R+rW214qqRYLN3C8FBeBsX6qASJ8=;
+        b=E7SHscRpJDreN5AQuBS8iLe+I2YBFQtfo9LtAMmQ4nJ1uroPl1RuQzX4PPH8ZhBars
+         SMBngiLizr+pyJpE7G9838ffAHtRTGXBDQkS6+ouG1Rxd1EdgQT6cylC8sJBhIORBpBi
+         XT/fO3QFGfclRkZ4WJFOEX7sPfuvE3hLzgm60=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eK8x7gAXMov1inBTyCa9T4MtcTyNUJQUaxWPoEq8WPM=;
-        b=TAiR+4rfROuFDFSH//HmJqarYSbbYy1eCMr9FTupFpeVxAycgC2qQdqPVp/hk4Etga
-         8G9/az7TOrDvt5KqGOAA+vg5Z1pBoKH5UxQZzMpS/Dm8KBbUXQQCr8y8qONPQZKEOE2j
-         tmf8WhrRbYYUzzI2FU+9WwqAGSarsaoEfRFC83snMV964BXmTqyXnAkc7Rvx1e78DJ1t
-         2GhHylm1QjqCZHZNTpSTSrhA/KkZ9EmiB5DGcas1Orea4YkuQBmDnWyeKP3K0XxlzHMq
-         dt1ST3ZPVKfPxzT23Z60FAAkxPQV3nyvTZfiCexBPv2OwR6hzzZHNQpuW6jN4JOakcCS
-         qOTA==
-X-Gm-Message-State: ANhLgQ0yWFKCeOjzjqqkj89CJwWdN5NLNolTNxhcsIjewKh3J4Yer3W/
-        YWpMgteYu+WPMY1iaKaIBtANmA==
-X-Google-Smtp-Source: ADFU+vsG5+POHNwCtn212r3+bWb5NCSQtxsMW+v/nEnnXabDTUyOReQMMj7YdyJUl9iPEcp/c2B64w==
-X-Received: by 2002:adf:e946:: with SMTP id m6mr16493103wrn.187.1585591540289;
-        Mon, 30 Mar 2020 11:05:40 -0700 (PDT)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id l4sm21826103wru.1.2020.03.30.11.05.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ppT7F7qNchzvH1R+rW214qqRYLN3C8FBeBsX6qASJ8=;
+        b=jMnIAYOvNCY5SE9bS55ejdR9BmYniB1Xbfekzbg7N5arWncklGInr9RgjzDduiHgCZ
+         RvoQodnxMjzZouQakZwdzMdHGDEaiv2yQsMcQuNa4XsKWjM0I4XmDDeE2Cv5lf1SEhdN
+         JTQDLLYw8XZhhEfJOMhbrtawBuvMAB7PEgJsXIO2bytPHl9giqVRQcPsqrGN3vCxgDKe
+         lv2SjI2Sl/lDmsGfCUu3rMai9So7mlepdU/89H83BEm+V+XTw/LNQlb1O1xJDJ3Oi3pg
+         YNTq1HPLIA5MqBuR6DMmXxWxvw/bybSSf33PTnvNB2deNRvZ4pDB7X+MkYeVgTfMW5RT
+         9N+Q==
+X-Gm-Message-State: ANhLgQ1rfDjBfTb2w6J42ubRlJNTW7lurm2RLcKp1uPIs1b+AZzUcrD2
+        8zOfk0+nOSXzizjH6nZ54vQq/Q==
+X-Google-Smtp-Source: ADFU+vsI3tfecxVgn4jxAb7dkMJJg/4u0XS6Gu2SnEAcEHrslsOrRTCgKhIeKNkS/z+S3BayN8PGnw==
+X-Received: by 2002:a92:af53:: with SMTP id n80mr12720393ili.42.1585591634260;
+        Mon, 30 Mar 2020 11:07:14 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id 8sm4375809ion.33.2020.03.30.11.07.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 11:05:39 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Mon, 30 Mar 2020 20:05:38 +0200
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: linux-next: Tree for Mar 30 (bpf)
-Message-ID: <20200330180538.GA180081@google.com>
-References: <20200330204307.669bbb4d@canb.auug.org.au>
- <86f7031a-57c6-5d50-2788-ae0e06a7c138@infradead.org>
- <d5b4bd95-7ef9-58cb-1955-900e6edb2467@iogearbox.net>
- <CACYkzJ72Uy9mnenO04OJaKH=Bk4ZENKJb9yw6i+EhJUa+ygngQ@mail.gmail.com>
+        Mon, 30 Mar 2020 11:07:13 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     masahiroy@kernel.org, michal.lkml@markovi.net
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH] Makefile: Update kselftest help information
+Date:   Mon, 30 Mar 2020 12:07:11 -0600
+Message-Id: <20200330180711.14393-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACYkzJ72Uy9mnenO04OJaKH=Bk4ZENKJb9yw6i+EhJUa+ygngQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-Mar 19:54, KP Singh wrote:
+Update kselftest help information.
 
-So, it looks like bpf_tracing_func_proto is only defined when
-CONFIG_BPF_EVENTS is set:
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ Makefile | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-        obj-$(CONFIG_BPF_EVENTS) += bpf_trace.o
+diff --git a/Makefile b/Makefile
+index e56bf7ef182d..5e5c770423c7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1470,12 +1470,15 @@ help:
+ 	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+ 	@echo  ''
+ 	@echo  'Kernel selftest:'
+-	@echo  '  kselftest       - Build and run kernel selftest (run as root)'
+-	@echo  '                    Build, install, and boot kernel before'
+-	@echo  '                    running kselftest on it'
+-	@echo  '  kselftest-clean - Remove all generated kselftest files'
+-	@echo  '  kselftest-merge - Merge all the config dependencies of kselftest to existing'
+-	@echo  '                    .config.'
++	@echo  '  kselftest         - Build and run kernel selftest'
++	@echo  '                      Build, install, and boot kernel before'
++	@echo  '                      running kselftest on it'
++	@echo  '                      Run as root for full coverage'
++	@echo  '  kselftest-all     - Build kernel selftest'
++	@echo  '  kselftest-install - Build and install kernel selftest'
++	@echo  '  kselftest-clean   - Remove all generated kselftest files'
++	@echo  '  kselftest-merge   - Merge all the config dependencies of'
++	@echo  '		      kselftest to existing .config.'
+ 	@echo  ''
+ 	@$(if $(dtstree), \
+ 		echo 'Devicetree:'; \
+-- 
+2.20.1
 
-We have a few options:
-
-* Add a __weak symbol for bpf_tracing_func_proto which we have done in
-  the past for similar issues. This however, does not make much sense,
-  as CONFIG_BPF_LSM cannot really do much without its helpers.
-* Make CONFIG_BPF_LSM depend on CONFIG_BPF_EVENTS, this should solve
-  it, but not for this particular Kconfig that was generated. Randy,
-  I am assuming if we add the dependency, this particular Kconfig
-  won't be generated.
-
-I am assuming this patch now needs to be sent for "bpf" and not
-"bpf-next" as the merge window has opened?
-
-- KP
-
-> Thanks for adding me Daniel, taking a look.
-> 
-> - KP
-> 
-> On Mon, Mar 30, 2020 at 7:25 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> >
-> > [Cc KP, ptal]
-> >
-> > On 3/30/20 7:15 PM, Randy Dunlap wrote:
-> > > On 3/30/20 2:43 AM, Stephen Rothwell wrote:
-> > >> Hi all,
-> > >>
-> > >> The merge window has opened, so please do not add any material for the
-> > >> next release into your linux-next included trees/branches until after
-> > >> the merge window closes.
-> > >>
-> > >> Changes since 20200327:
-> > >
-> > > (note: linux-next is based on linux 5.6-rc7)
-> > >
-> > >
-> > > on i386:
-> > >
-> > > ld: kernel/bpf/bpf_lsm.o:(.rodata+0x0): undefined reference to `bpf_tracing_func_proto'
-> > >
-> > >
-> > > Full randconfig file is attached.
-> > >
-> >
