@@ -2,186 +2,113 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F43C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D22C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E8920733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0703F2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgC3NKT (ORCPT
+        id S1730200AbgC3NLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:10:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:53246 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729862AbgC3NKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:10:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FF9A30E;
-        Mon, 30 Mar 2020 06:10:17 -0700 (PDT)
-Received: from [10.57.60.204] (unknown [10.57.60.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96CE83F71E;
-        Mon, 30 Mar 2020 06:10:15 -0700 (PDT)
-Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a
- scatterlist
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Shane Francis <bigbeeshane@gmail.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alex Deucher <alexander.deucher@amd.com>
-References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
- <20200327162126.29705-1-m.szyprowski@samsung.com>
- <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
- <8a09916d-5413-f9a8-bafa-2d8f0b8f892f@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <95fe655b-e68e-bea4-e8ea-3c4abc3021e7@arm.com>
-Date:   Mon, 30 Mar 2020 14:10:14 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 09:11:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60558 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730070AbgC3NLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:11:31 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 26A80442C2BD11412B18;
+        Mon, 30 Mar 2020 21:11:23 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 30 Mar 2020 21:11:12 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
+CC:     <nixiaoming@huawei.com>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wangle6@huawei.com>,
+        <zhangweimin12@huawei.com>, <yebin10@huawei.com>,
+        <houtao1@huawei.com>
+Subject: [PATCH v2] mtd:clear cache_state to avoid writing to bad blocks repeatedly
+Date:   Mon, 30 Mar 2020 21:11:09 +0800
+Message-ID: <1585573869-81863-1-git-send-email-nixiaoming@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-In-Reply-To: <8a09916d-5413-f9a8-bafa-2d8f0b8f892f@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-29 10:55 am, Marek Szyprowski wrote:
-> Hi Michael,
-> 
-> On 2020-03-27 19:31, Ruhl, Michael J wrote:
->>> -----Original Message-----
->>> From: Marek Szyprowski <m.szyprowski@samsung.com>
->>> Sent: Friday, March 27, 2020 12:21 PM
->>> To: dri-devel@lists.freedesktop.org; linux-samsung-soc@vger.kernel.org;
->>> linux-kernel@vger.kernel.org
->>> Cc: Marek Szyprowski <m.szyprowski@samsung.com>;
->>> stable@vger.kernel.org; Bartlomiej Zolnierkiewicz
->>> <b.zolnierkie@samsung.com>; Maarten Lankhorst
->>> <maarten.lankhorst@linux.intel.com>; Maxime Ripard
->>> <mripard@kernel.org>; Thomas Zimmermann <tzimmermann@suse.de>;
->>> David Airlie <airlied@linux.ie>; Daniel Vetter <daniel@ffwll.ch>; Alex Deucher
->>> <alexander.deucher@amd.com>; Shane Francis <bigbeeshane@gmail.com>;
->>> Ruhl, Michael J <michael.j.ruhl@intel.com>
->>> Subject: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a
->>> scatterlist
->>>
->>> Scatterlist elements contains both pages and DMA addresses, but one
->>> should not assume 1:1 relation between them. The sg->length is the size
->>> of the physical memory chunk described by the sg->page, while
->>> sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
->>> the sg_dma_address(sg).
->>>
->>> The proper way of extracting both: pages and DMA addresses of the whole
->>> buffer described by a scatterlist it to iterate independently over the
->>> sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
->>>
->>> Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
->>> ---
->>> drivers/gpu/drm/drm_prime.c | 37 +++++++++++++++++++++++++-----------
->>> -
->>> 1 file changed, 25 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
->>> index 1de2cde2277c..282774e469ac 100644
->>> --- a/drivers/gpu/drm/drm_prime.c
->>> +++ b/drivers/gpu/drm/drm_prime.c
->>> @@ -962,27 +962,40 @@ int drm_prime_sg_to_page_addr_arrays(struct
->>> sg_table *sgt, struct page **pages,
->>> 	unsigned count;
->>> 	struct scatterlist *sg;
->>> 	struct page *page;
->>> -	u32 len, index;
->>> +	u32 page_len, page_index;
->>> 	dma_addr_t addr;
->>> +	u32 dma_len, dma_index;
->>>
->>> -	index = 0;
->>> +	/*
->>> +	 * Scatterlist elements contains both pages and DMA addresses, but
->>> +	 * one shoud not assume 1:1 relation between them. The sg->length
->>> is
->>> +	 * the size of the physical memory chunk described by the sg->page,
->>> +	 * while sg_dma_len(sg) is the size of the DMA (IO virtual) chunk
->>> +	 * described by the sg_dma_address(sg).
->>> +	 */
->> Is there an example of what the scatterlist would look like in this case?
-> 
-> DMA framework or IOMMU is allowed to join consecutive chunks while
-> mapping if such operation is supported by the hw. Here is the example:
-> 
-> Lets assume that we have a scatterlist with 4 4KiB pages of the physical
-> addresses: 0x12000000, 0x13011000, 0x13012000, 0x11011000. The total
-> size of the buffer is 16KiB. After mapping this scatterlist to a device
-> behind an IOMMU it may end up as a contiguous buffer in the DMA (IOVA)
-> address space. at 0xf0010000. The scatterlist will look like this:
-> 
-> sg[0].page = 0x12000000
-> sg[0].len = 4096
-> sg[0].dma_addr = 0xf0010000
-> sg[0].dma_len = 16384
-> sg[1].page = 0x13011000
-> sg[1].len = 4096
-> sg[1].dma_addr = 0
-> sg[1].dma_len = 0
-> sg[2].page = 0x13012000
-> sg[2].len = 4096
-> sg[2].dma_addr = 0
-> sg[2].dma_len = 0
-> sg[3].page = 0x11011000
-> sg[3].len = 4096
-> sg[3].dma_addr = 0
-> sg[3].dma_len = 0
-> 
-> (I've intentionally wrote page as physical address to make it easier to
-> understand, in real SGs it is stored a struct page pointer).
-> 
->> Does each SG entry always have the page and dma info? or could you have
->> entries that have page information only, and entries that have dma info only?
-> When SG is not mapped yet it contains only the ->pages and ->len
-> entries. I'm not aware of the SGs with the DMA information only, but in
-> theory it might be possible to have such.
->> If the same entry has different size info (page_len = PAGE_SIZE,
->> dma_len = 4 * PAGE_SIZE?), are we guaranteed that the arrays (page and addrs) have
->> been sized correctly?
-> 
-> There are always no more DMA related entries than the phys pages. If
-> there is 1:1 mapping between physical memory and DMA (IOVA) space, then
-> each SG entry will have len == dma_len, and dma_addr will be describing
-> the same as page entry. DMA mapping framework is allowed only to join
-> entries while mapping to DMA (IOVA).
+The function call process is as follows:
+	mtd_blktrans_work()
+	  while (1)
+	    do_blktrans_request()
+	      mtdblock_writesect()
+	        do_cached_write()
+	          write_cached_data() /*if cache_state is STATE_DIRTY*/
+	            erase_write()
 
-Nit: even in a 1:1 mapping, merging would still be permitted (subject to 
-dma_parms constraints) during a bounce-buffer copy, or if the caller 
-simply generates a naive list like so:
+write_cached_data() returns failure without modifying cache_state
+and cache_offset. So when do_cached_write() is called again,
+write_cached_data() will be called again to perform erase_write()
+on the same cache_offset.
 
-sg[0].page = 0x12000000
-sg[0].len = 4096
-sg[1].page = 0x12001000
-sg[1].len = 4096
+But if this cache_offset points to a bad block, erase_write() will
+always return -EIO. Writing to this mtdblk is equivalent to losing
+the current data, and repeatedly writing to the bad block.
 
-dma_map_sg() =>
+Repeatedly writing a bad block has no real benefits,
+but brings some negative effects:
+1 Lost subsequent data
+2 Loss of flash device life
+3 erase_write() bad blocks are very time-consuming. For example:
+	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
+	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
 
-sg[0].dma_addr = 0x12000000
-sg[0].dma_len = 8192
-sg[1].dma_addr = 0
-sg[1].dma_len = 0
+Therefore, when erase_write() returns -EIO in write_cached_data(),
+clear cache_state to avoid writing to bad blocks repeatedly.
 
-I'm not sure that any non-IOMMU DMA API implementations actually take 
-advantage of this, but they are *allowed* to ;)
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/mtd/mtdblock.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Robin.
+diff --git a/drivers/mtd/mtdblock.c b/drivers/mtd/mtdblock.c
+index 078e0f6..32e52d8 100644
+--- a/drivers/mtd/mtdblock.c
++++ b/drivers/mtd/mtdblock.c
+@@ -89,8 +89,6 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
+ 
+ 	ret = erase_write (mtd, mtdblk->cache_offset,
+ 			   mtdblk->cache_size, mtdblk->cache_data);
+-	if (ret)
+-		return ret;
+ 
+ 	/*
+ 	 * Here we could arguably set the cache state to STATE_CLEAN.
+@@ -98,9 +96,14 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
+ 	 * be notified if this content is altered on the flash by other
+ 	 * means.  Let's declare it empty and leave buffering tasks to
+ 	 * the buffer cache instead.
++	 *
++	 * If this cache_offset points to a bad block, data cannot be
++	 * written to the device. Clear cache_state to avoid writing to
++	 * bad blocks repeatedly.
+ 	 */
+-	mtdblk->cache_state = STATE_EMPTY;
+-	return 0;
++	if (ret == 0 || ret == -EIO)
++		mtdblk->cache_state = STATE_EMPTY;
++	return ret;
+ }
+ 
+ 
+-- 
+1.8.5.6
+
