@@ -2,205 +2,183 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F75FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED07DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89FC206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC8E206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AI6hcMYg"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SEsGSlAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbgC3OhG (ORCPT
+        id S1728630AbgC3OhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:37:06 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:56242 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728356AbgC3OhF (ORCPT
+        Mon, 30 Mar 2020 10:37:10 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:36451 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728335AbgC3OhJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:37:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585579024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=WAGzNd6pNRWDDmsHc7dEMeNxmmm8wLcoVJWZfC6bcvk=;
-        b=AI6hcMYgyl5I6Kpj/+b5GblGg+Kid3Aq4IQ1NlqOPfe51euEAnVtTg6neYqoB5UMdNgF4P
-        qhKkcp98q9UmYdIjc0bgMXIBtVgGRxjdKh1LorqdkvDyalMkUGMRZLWxyZPuW0FGDKdWO/
-        1Ttu+0QgAfif2IsRtqd1qNjyFHfl6+I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-Ln0cO6TIMN-1PhuFx1EZIA-1; Mon, 30 Mar 2020 10:36:59 -0400
-X-MC-Unique: Ln0cO6TIMN-1PhuFx1EZIA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F03E1922020;
-        Mon, 30 Mar 2020 14:36:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-66.rdu2.redhat.com [10.10.112.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A40965C1D4;
-        Mon, 30 Mar 2020 14:36:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-References: <1445647.1585576702@warthog.procyon.org.uk>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, dray@redhat.com,
-        kzak@redhat.com, mszeredi@redhat.com, swhiteho@redhat.com,
-        jlayton@redhat.com, raven@themaw.net, andres@anarazel.de,
-        christian.brauner@ubuntu.com, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Mount and superblock notifications
+        Mon, 30 Mar 2020 10:37:09 -0400
+Received: by mail-il1-f196.google.com with SMTP id p13so15963912ilp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 07:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IxNXeVA0jabTfxB9gROOjT1JF+nYiIiBsZtSPXsvX+M=;
+        b=SEsGSlAkAq7kvJS1VYZJcqR4AJhsJuoPUhgMbkk3JafHzHF66EL0seoHaeWlH568uq
+         tDgaJ9vtCmFxUubE+xYdeRDUi4KTo+faDPsQod4ocxH/EoG0Xj7AE2NzSY+K43lWfcrL
+         6iL3uwdP3OnOIkBcZnfq5xSNFS42Vm2niEeVRe/SVNDx/1jX6Aa0yTmtmWUYhHurquPw
+         Jh/RQ8K+rNUUnuFwPhcHcSJc2cNcXDL8d325U44pr6emflT0qtirCS82i7XM8phDpt5v
+         mINUJZiGPyOxp63818+WfYSioBtWE+02kbP6O4WMNe0Aki0DyXJ3N9d+e6ShBmXD7oHG
+         Awhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IxNXeVA0jabTfxB9gROOjT1JF+nYiIiBsZtSPXsvX+M=;
+        b=Lq2D+ZQoyFgi0NFKD+RDfqByggqXBRBORG+uZvx120bz6csGN1Ha0po3ZEWDpzJB3S
+         kMmqruW4zgVEE7hBi1MjOXDwyr5UdRQ80e/H+wMVJFUk82tbN8k9+EDf4RaK7fj4lO4D
+         pl9HToUMqAYVFw0YPoOzIERDz5cyUQdNZkmWPkYYOFxUOzPS2z3tHm3WYHR2DyVrCvi2
+         BHoJ8WNddjiquFPwQGJowaPBFb2yvvqq7Z4WkBhlHdYEF0p8XtSzb1ezATlbFaqpu4Cv
+         FZy5WpSE/TK93ahUxfzNFUAs/3S7ysz0CFf/UETsDK/Nyl1Coohla9rPj+kVRa47bUki
+         V4Aw==
+X-Gm-Message-State: ANhLgQ05cTJfHRZkf1rd9qjmfJezzIVEvYIyHck2JwZ0zoVhJD6Ltp/M
+        kvzwNex8Aj8ncmhkGB3mwHqwtVl7BCN2/NI2WE+P07V0
+X-Google-Smtp-Source: ADFU+vtCRUcet9Ol6edmtrTgiJaQqxlFSOniI6lnjEMLFkkPk3juAcB8HwPik3oLpwdOg4O05KtVRU/chRQsAOCgdes=
+X-Received: by 2002:a92:bbd8:: with SMTP id x85mr11862710ilk.40.1585579027952;
+ Mon, 30 Mar 2020 07:37:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1449542.1585579014.1@warthog.procyon.org.uk>
+References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
+ <CACRpkdZSooH+mXbimgT-hnaC2gO1nTi+rY7UmUhVg9bk1j+Eow@mail.gmail.com>
+ <CAMRc=Mf2Mx+rB7du8D66WP=Js0wuK8x44aT9H2q6JhLJvrOcVQ@mail.gmail.com> <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
+In-Reply-To: <CACRpkdaPwfpfDJ2CjGCVFbMvXaSnCXaisvb2N-edeZO0Tbkssw@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 30 Mar 2020 16:36:57 +0200
+Message-ID: <CAMRc=Mf5cYtWxAVeMQmxwyoi9oxtVSidBQsdRV9H2E52H1TqKQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 30 Mar 2020 15:36:54 +0100
-Message-ID: <1449543.1585579014@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+czw., 26 mar 2020 o 21:50 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Fri, Mar 13, 2020 at 3:47 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
+:
+> > czw., 12 mar 2020 o 11:35 Linus Walleij <linus.walleij@linaro.org> napi=
+sa=C5=82(a):
+>
+> > In this case I was thinking about a situation where we pass a
+> > requested descriptor to some other framework (nvmem in this case)
+> > which internally doesn't know anything about who manages this resource
+> > externally. Now we can of course simply not do anything about it and
+> > expect the user (who passed us the descriptor) to handle the resources
+> > correctly. But what happens if the user releases the descriptor not on
+> > driver detach but somewhere else for whatever reason while nvmem
+> > doesn't know about it? It may try to use the descriptor which will now
+> > be invalid. Reference counting in this case would help IMHO.
+>
+> I'm so confused because I keep believing it is reference counted
+> elsewhere.
+>
+> struct gpio_desc *d always comes from the corresponding
+> struct gpio_device *descs array. This:
+>
+> struct gpio_device {
+>         int                     id;
+>         struct device           dev;
+> (...)
+>         struct gpio_desc        *descs;
+> (...)
+>
+> This array is allocated in gpiochip_add_data_with_key() like this:
+>
+>         gdev->descs =3D kcalloc(chip->ngpio, sizeof(gdev->descs[0]), GFP_=
+KERNEL);
+>
+> Then it gets free:d in gpiodevice_release():
+>
+> static void gpiodevice_release(struct device *dev)
+> {
+>         struct gpio_device *gdev =3D dev_get_drvdata(dev);
+> (...)
+>         kfree(gdev->descs);
+>         kfree(gdev);
+> }
+>
+> This is the .release function for the gdev->dev, the device inside
+> struct gpio_device,
+> i.e. the same device that contains the descs in the first place. So it
+> is just living
+> and dying with the struct gpio_device.
+>
+> struct gpio_device does *NOT* die in the devm_* destructor that gets call=
+ed
+> when someone has e.g. added a gpiochip using devm_gpiochip_add_data().
+>
+> I think the above observation is crucial: the lifetime of struct gpio_chi=
+p and
+> struct gpio_device are decoupled. When the struct gpio_chip dies, that
+> just "numbs" all gpio descriptors but they stay around along with the
+> struct gpio_device that contain them until the last
+> user is gone.
+>
+> The struct gpio_device reference counted with the call to get_device(&gde=
+v->dev)
+> in gpiod_request() which is on the path of gpiod_get_[index]().
+>
+> If a consumer gets a gpio_desc using any gpiod_get* API this gets
+> increased and it gets decreased at every gpiod_put() or by the
+> managed resources.
+>
+> So should you not rather exploit this fact and just add something
+> like:
+>
+> void gpiod_reference(struct gpio_desc *desc)
+> {
+>     struct gpio_device *gdev;
+>
+>     VALIDATE_DESC(desc);
+>     gdev =3D desc->gdev;
+>     get_device(&gdev->dev);
+> }
+>
+> void gpiod_unreference(struct gpio_desc *desc)
+> {
+>     struct gpio_device *gdev;
+>
+>     VALIDATE_DESC(desc);
+>     gdev =3D desc->gdev;
+>     put_device(&gdev->dev);
+> }
+>
+> This should make sure the desc and the backing gpio_device
+> stays around until all references are gone.
+>
+> NB: We also issue try_module_get() on the module that drives the
+> GPIO, which will make it impossible to unload that module while it
+> has active GPIOs. I think maybe the whole logic inside gpiod_request()
+> is needed to properly add an extra reference to a gpiod else someone
+> can (theoretically) pull out the module from below.
+>
 
-If you could consider pulling this - or would you prefer it to go through
-Al?  It adds a couple of VFS-related event sources for the general
-notification mechanism:
+Thanks a lot for the detailed explanation. I'll make some time
+(hopefully soon) to actually test this path and let you know if it
+works as expected.
 
- (1) Mount topology events, such as mounting, unmounting, mount expiry,
-     mount reconfiguration.
-
- (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
-     errors (not complete yet).
-
-
-WHY
-=3D=3D=3D
-
- (1) Mount notifications.
-
-     This one is wanted to avoid repeated trawling of /proc/mounts or
-     similar to work out changes to the mount object attributes and mount
-     topology.  I'm told that the proc file holding the namespace_sem is a
-     point of contention, especially as the process of generating the text
-     descriptions of the mounts/superblocks can be quite involved.
-
-     Whilst you can use poll() on /proc/mounts, it doesn't give you any
-     clues as to what changed.  The notification generated here directly
-     indicates the mounts involved in any particular event and gives an
-     idea of what the change was.
-
-     This is combined with a new fsinfo() system call that allows, amongst
-     other things, the ability to retrieve in one go an { id,
-     change_counter } tuple from all the children of a specified mount,
-     allowing buffer overruns to be dealt with quickly.
-
-     This can be used by systemd to improve efficiency:
-
-	https://lore.kernel.org/linux-fsdevel/20200227151421.3u74ijhqt6ekbiss@ws.=
-net.home/
-
-     And it's not just Red Hat that's potentially interested in this:
-
-	https://lore.kernel.org/linux-fsdevel/293c9bd3-f530-d75e-c353-ddeabac27cf=
-6@6wind.com/
-
-     Also, this can be used to improve management of containers by allowin=
-g
-     watches to be set in foreign mount namespaces, such as are in a
-     container.
-
- (2) Superblock notifications.
-
-     This one is provided to allow systemd or the desktop to more easily
-     detect events such as I/O errors and EDQUOT/ENOSPC.  This would be of
-     interest to Postgres:
-
-	https://lore.kernel.org/linux-fsdevel/20200211005626.7yqjf5rbs3vbwagd@ala=
-p3.anarazel.de/
-
-     But could also be used to indicate to systemd when a superblock has
-     had its configuration changed.
-
-Thanks,
-David
----
-The following changes since commit 694435dbde3d1da79aafaf4cd680802f9eb229b=
-7:
-
-  smack: Implement the watch_key and post_notification hooks (2020-03-19 1=
-7:31:09 +0000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/notifications-fs-20200330
-
-for you to fetch changes up to 8dbf1aa122da5bbb4ede0f363a8a18dfc723be33:
-
-  watch_queue: sample: Display superblock notifications (2020-03-19 17:31:=
-09 +0000)
-
-----------------------------------------------------------------
-Filesystem notifications
-
-----------------------------------------------------------------
-David Howells (6):
-      watch_queue: Add security hooks to rule on setting mount and sb watc=
-hes
-      watch_queue: Implement mount topology and attribute change notificat=
-ions
-      watch_queue: sample: Display mount tree change notifications
-      watch_queue: Introduce a non-repeating system-unique superblock ID
-      watch_queue: Add superblock notifications
-      watch_queue: sample: Display superblock notifications
-
- Documentation/watch_queue.rst               |  24 ++-
- arch/alpha/kernel/syscalls/syscall.tbl      |   2 +
- arch/arm/tools/syscall.tbl                  |   2 +
- arch/arm64/include/asm/unistd.h             |   2 +-
- arch/arm64/include/asm/unistd32.h           |   4 +
- arch/ia64/kernel/syscalls/syscall.tbl       |   2 +
- arch/m68k/kernel/syscalls/syscall.tbl       |   2 +
- arch/microblaze/kernel/syscalls/syscall.tbl |   2 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |   2 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |   2 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |   2 +
- arch/parisc/kernel/syscalls/syscall.tbl     |   2 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |   2 +
- arch/s390/kernel/syscalls/syscall.tbl       |   2 +
- arch/sh/kernel/syscalls/syscall.tbl         |   2 +
- arch/sparc/kernel/syscalls/syscall.tbl      |   2 +
- arch/x86/entry/syscalls/syscall_32.tbl      |   2 +
- arch/x86/entry/syscalls/syscall_64.tbl      |   2 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |   2 +
- fs/Kconfig                                  |  21 +++
- fs/Makefile                                 |   1 +
- fs/internal.h                               |   1 +
- fs/mount.h                                  |  21 +++
- fs/mount_notify.c                           | 228 +++++++++++++++++++++++=
-+++++
- fs/namespace.c                              |  22 +++
- fs/super.c                                  | 205 +++++++++++++++++++++++=
-++
- include/linux/dcache.h                      |   1 +
- include/linux/fs.h                          |  62 ++++++++
- include/linux/lsm_hooks.h                   |  24 +++
- include/linux/security.h                    |  16 ++
- include/linux/syscalls.h                    |   4 +
- include/uapi/asm-generic/unistd.h           |   6 +-
- include/uapi/linux/watch_queue.h            |  65 +++++++-
- kernel/sys_ni.c                             |   6 +
- samples/watch_queue/watch_test.c            |  81 +++++++++-
- security/security.c                         |  14 ++
- 36 files changed, 835 insertions(+), 5 deletions(-)
- create mode 100644 fs/mount_notify.c
-
+Best regards,
+Bartosz Golaszewski
