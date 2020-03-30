@@ -2,177 +2,136 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB3CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F25B3C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211A320716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:52:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xEquLsmL"
+	by mail.kernel.org (Postfix) with ESMTP id D2C3020716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:57:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgC3Mwk (ORCPT
+        id S1730174AbgC3M47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:52:40 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60776 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729862AbgC3Mwj (ORCPT
+        Mon, 30 Mar 2020 08:56:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59876 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729862AbgC3M47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:52:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=LGKaLeDpGs0O1PNOT8rcH83PcS6ZRiY7IdQWb6sdvVY=; b=xEquLsmLEOCjbRvfhJ94v0jXWt
-        mIQfxEzElIcDtyW1dnIL0LjLdXPg4TtroB4iRxZ4Q7Wh//65rd4tJbYEFr7B0a9Gq60Nk1zjlLm3i
-        8vdckgDfnCJGrQAXAkFB6oOX6cMR1d6k3vV2MJpJj64RWoVVCfA41vt7qitRzeX58NX472QxWCYi/
-        RZLarhwVdavVDTpvkshaN+QsJS/Vlmwheoq7AxrEhbj7s8F4kbGKNLtjKNs0P8oUQ1qvnN+WQKcZF
-        gPl+1H3BYgdT91q58SlwMkt6pV5DvR9/rbKBRwSrpsv/RX+28Gczz5u0Jhh6It6xqr3fHYGdZw0p5
-        5OdcxuzA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jIttu-0003x5-Oh; Mon, 30 Mar 2020 12:52:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 72F8330015A;
-        Mon, 30 Mar 2020 14:52:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 35C0B29D04D76; Mon, 30 Mar 2020 14:52:19 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 14:52:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        tip-bot2 for Giovanni Gherdovich <tip-bot2@linutronix.de>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Ingo Molnar <mingo@kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        x86 <x86@kernel.org>
-Subject: Re: [tip: sched/core] x86, sched: Add support for frequency
- invariance
-Message-ID: <20200330125219.GM20696@hirez.programming.kicks-ass.net>
-References: <20200122151617.531-2-ggherdovich@suse.cz>
- <158029757853.396.10568128383380430250.tip-bot2@tip-bot2>
- <158556634294.3228.4889951961483021094@build.alporthouse.com>
+        Mon, 30 Mar 2020 08:56:59 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 368072981B1
+Subject: Re: [PATCH v7 00/12] Cros EC sensor hub FIFO support
+To:     Gwendal Grignou <gwendal@chromium.org>, bleung@chromium.org,
+        Jonathan.Cameron@huawei.com
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200327223443.6006-1-gwendal@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <bd18a910-4f1b-661a-53a7-c69e7f3e9222@collabora.com>
+Date:   Mon, 30 Mar 2020 14:56:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158556634294.3228.4889951961483021094@build.alporthouse.com>
+In-Reply-To: <20200327223443.6006-1-gwendal@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 12:05:42PM +0100, Chris Wilson wrote:
-> Quoting tip-bot2 for Giovanni Gherdovich (2020-01-29 11:32:58)
-> > The following commit has been merged into the sched/core branch of tip:
-> > 
-> > Commit-ID:     1567c3e3467cddeb019a7b53ec632f834b6a9239
-> > Gitweb:        https://git.kernel.org/tip/1567c3e3467cddeb019a7b53ec632f834b6a9239
-> > Author:        Giovanni Gherdovich <ggherdovich@suse.cz>
-> > AuthorDate:    Wed, 22 Jan 2020 16:16:12 +01:00
-> > Committer:     Ingo Molnar <mingo@kernel.org>
-> > CommitterDate: Tue, 28 Jan 2020 21:36:59 +01:00
-> > 
-> > x86, sched: Add support for frequency invariance
-> > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> > index 69881b2..28696bc 100644
-> > --- a/arch/x86/kernel/smpboot.c
-> > +++ b/arch/x86/kernel/smpboot.c
-> > @@ -147,6 +147,8 @@ static inline void smpboot_restore_warm_reset_vector(void)
-> >         *((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
-> >  }
-> >  
-> > +static void init_freq_invariance(void);
-> > +
-> >  /*
-> >   * Report back to the Boot Processor during boot time or to the caller processor
-> >   * during CPU online.
-> > @@ -183,6 +185,8 @@ static void smp_callin(void)
-> >          */
-> >         set_cpu_sibling_map(raw_smp_processor_id());
-> >  
-> > +       init_freq_invariance();
-> > +
-> >         /*
-> >          * Get our bogomips.
-> >          * Update loops_per_jiffy in cpu_data. Previous call to
-> > @@ -1337,7 +1341,7 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
-> >         set_sched_topology(x86_topology);
-> >  
-> >         set_cpu_sibling_map(0);
-> > -
-> > +       init_freq_invariance();
-> >         smp_sanity_check();
-> >  
-> >         switch (apic_intr_mode) {
+Hi Gwendal,
+
+On 27/3/20 23:34, Gwendal Grignou wrote:
+> This patchset adds a sensorhub driver for spreading sensor
+> events coming from the Embedded controller sensor FIFO:
 > 
-> Since this has become visible via linux-next [20200326?], we have been
-> deluged by oops during cpu-hotplug.
+>        +---------------+ +--------------+ +----
+>        | cros_ec_accel | | cros_ec_gyro | | ...
+>        +---------------+ +--------------+ +----
+>            id:0       \        id:1 |       / id:..
+>                  +------------------------------+
+>                  |       cros-ec-sensorhub      |
+>                  +------------------------------+
+>                  |           cros_ec_dev        |
+>                  +------------------------------+
+>                  | cros_ec_i2c, cros_ec_lpc, .. |
+>                  +------------------------------+
+>                                  |
+>                                  EC
+> 
+> When new sensors events are present, the EC raises and interrupt,
+> sensorhub reads the FIFO and uses the 'id' field to spread the event to
+> the proper IIO sensors. This stack is similar to the HID sensor input
+> stack.
+> 
+> The patch set allows the host to receive MEMS sensor sample
+> asynchronously from ChromeOS Emebedded Controller (EC).
+> 
+> Given the EC and the host are not synchronized, the timestamp generated
+> by the EC drifts and the AP interrupt latency adds variable delay.
+> 
+> When events arrive, the driver stores the time of the interrupt and use
+> that information to convert the timestamp from the EC time domain to the
+> AP time domain. To prevent the errors from the interrupt time variation,
+> a median filter smooth the timestamp generation and prevents timestamps
+> to go in the past.
+> 
+> When a batch of sensor events arrives, the sensor hub ring code spreads
+> the timestamps.
+> 
+> The buffer interaface is presentid through the IIO ABI.
+> And extra parameter - flush - (presents on HID and ST sensor hub implementation)
+> force the EC to send accumulated events in its queue, without waiting
+> for buffer hwfifo_timeout to expire.
+> 
+> To access sensor data, we can use iio_readdev like:
+>  iio_readdev -T 10000 -s 4 -b 2 iio:device4
+> 
+> When FIFO is not supported by the EC, a trigger is present in the
+> directory. After registering a trigger, setting sampling_frequency,
+> the latest data collected by the sensor will be retrieved by the host
+> when the trigger expires.
+> 
+> When cros_ec_accel_legacy driver is used, no FIFO is supported and the
+> sampling frequency for the accelerometers is hard coded at 10Hz.
+> 
+> Gwendal Grignou (12):
+>   platform: chrome: sensorhub: Add the number of sensors in sensorhub
+>   platform: chrome: sensorhub: Add FIFO support
+>   platform: chrome: sensorhub: Add code to spread timestmap
+>   platform: chrome: sensorhub: Add median filter
+>   iio: cros_ec: Move function description to .c file
+>   iio: expose iio_device_set_clock
+>   iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
+>   iio: cros_ec: Remove pm function
+>   iio: cros_ec: Expose hwfifo_timeout
+>   iio: cros_ec: Report hwfifo_watermark_max
+>   iio: cros_ec: Use Hertz as unit for sampling frequency
+>   iio: cros_ec: flush as hwfifo attribute
+> 
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |    8 +-
+>  .../cros_ec_sensors/cros_ec_lid_angle.c       |    3 +-
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |   13 +-
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |  403 +++++--
+>  drivers/iio/industrialio-core.c               |    8 +-
+>  drivers/iio/light/cros_ec_light_prox.c        |   15 +-
+>  drivers/iio/pressure/cros_ec_baro.c           |   14 +-
+>  drivers/platform/chrome/Makefile              |    4 +-
+>  drivers/platform/chrome/cros_ec_sensorhub.c   |  111 +-
+>  .../platform/chrome/cros_ec_sensorhub_ring.c  | 1046 +++++++++++++++++
+>  .../linux/iio/common/cros_ec_sensors_core.h   |  104 +-
+>  include/linux/iio/iio.h                       |    2 +
+>  .../linux/platform_data/cros_ec_sensorhub.h   |  163 +++
+>  13 files changed, 1655 insertions(+), 239 deletions(-)
+>  create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+> 
 
-Ooh, you're doing CPU-0 hotplug, yuck!
+Queued patches from 0 to 11 to for-next. Patch 12 needs some rework.
 
-I think something like the below ought to work; let me go see if I can
-get that cpu-0 hotplug crud working on my machines.
+Thanks,
+Enric
 
----
-
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index fe3ab9632f3b..681f96f05619 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -147,7 +147,7 @@ static inline void smpboot_restore_warm_reset_vector(void)
- 	*((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
- }
- 
--static void init_freq_invariance(void);
-+static void init_freq_invariance(bool secondary);
- 
- /*
-  * Report back to the Boot Processor during boot time or to the caller processor
-@@ -185,7 +185,7 @@ static void smp_callin(void)
- 	 */
- 	set_cpu_sibling_map(raw_smp_processor_id());
- 
--	init_freq_invariance();
-+	init_freq_invariance(true);
- 
- 	/*
- 	 * Get our bogomips.
-@@ -1341,7 +1341,7 @@ void __init native_smp_prepare_cpus(unsigned int max_cpus)
- 	set_sched_topology(x86_topology);
- 
- 	set_cpu_sibling_map(0);
--	init_freq_invariance();
-+	init_freq_invariance(false);
- 	smp_sanity_check();
- 
- 	switch (apic_intr_mode) {
-@@ -2002,13 +2002,20 @@ static void init_counter_refs(void *arg)
- 	this_cpu_write(arch_prev_mperf, mperf);
- }
- 
--static void init_freq_invariance(void)
-+static void init_freq_invariance(bool secondary)
- {
- 	bool ret = false;
- 
--	if (smp_processor_id() != 0 || !boot_cpu_has(X86_FEATURE_APERFMPERF))
-+	if (!boot_cpu_has(X86_FEATURE_APERFMPERF))
- 		return;
- 
-+	if (secondary) {
-+		if (static_branch_likely(&arch_scale_freq_key)) {
-+			init_counter_refs(NULL);
-+		}
-+		return;
-+	}
-+
- 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
- 		ret = intel_set_max_freq_ratio();
- 
