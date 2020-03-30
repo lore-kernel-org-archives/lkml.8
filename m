@@ -2,131 +2,110 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED97EC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A915C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3C1F2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585583049;
-	bh=LvNjwC7RztwBb+yi8oI2Bwz5LXahk4iEX7nsDONhykY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tcMe3G1hiRXHF9DWORbD66OVzUsEmm4GJ9bsiCFR2k1q4Z2BsgKNr6ZXIa0two1yQ
-	 zwkqOofFdw7A6+E1bE968MCF7jFXbJHlZQG946uKmDh3XGKCGoRnwhrQEO6e3JEExH
-	 CfgHo+jlJD9JIRf18sbXNrnhyhTzq2XLTaCcur+A=
+	by mail.kernel.org (Postfix) with ESMTP id 480B7205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgC3PoJ (ORCPT
+        id S1729661AbgC3Poe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:44:09 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40202 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgC3PoI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:44:08 -0400
-Received: by mail-il1-f195.google.com with SMTP id j9so16278574ilr.7;
-        Mon, 30 Mar 2020 08:44:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6L0zwcu6TJpBy8ROIw82e95a8IhAis774QnwFUUDei4=;
-        b=LQrYUZZVixxLxkn9OUkCOuUoayju9+MeC+otgSACp/Vis/tbS9LzSDW9QpblqngMdN
-         rd3CMMOGNsZII8jauFAeD+ZfD0drRogCLcKt8PtdeHSwB4oFlJ78eRH4lNnAnjJeUCyz
-         zRSQqajD2J4yQfTP/vGqsolc9gT8A6Cvpfg7b5Ok+Hgq30ZtvANFBZUA8L54WAPYnukN
-         JTtlRmz5qbdOP6r7zfotwnRT8Dy4nayma6DCrwhFGFhInCU3Td+Op9EzLcq3e8eFBhyB
-         Jjn39LBlRabSs7uVbRH9d0ClOJMb385mzKL5BCC3XOvTZo9vfrU1ykt5b0VKUPq0cRDD
-         nllw==
-X-Gm-Message-State: ANhLgQ2y0dwvkumeguerueqhHG52HniJnBKvulUEoPmWWBUHlsm90Nnf
-        KtNcI3LYIEhvstJShjb0kg==
-X-Google-Smtp-Source: ADFU+vtLzoK7bLF3KNLPQffJzUbWf20WdfYgGwLo68WhEGLJBcEYEu+x/FRUoIOGhBcqWrVUOHXMcg==
-X-Received: by 2002:a92:8d0e:: with SMTP id s14mr11505607ild.117.1585583046446;
-        Mon, 30 Mar 2020 08:44:06 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id c88sm4970096ill.15.2020.03.30.08.44.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:44:05 -0700 (PDT)
-Received: (nullmailer pid 27458 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:44:04 -0000
-Date:   Mon, 30 Mar 2020 09:44:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, kernel@collabora.com,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH v5 5/5] dt-bindings: display: add i.MX6 MIPI DSI host
- controller doc
-Message-ID: <20200330154404.GA26389@bogus>
-References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
- <20200330113542.181752-6-adrian.ratiu@collabora.com>
+        Mon, 30 Mar 2020 11:44:34 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2618 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727973AbgC3Poe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:44:34 -0400
+Received: from lhreml712-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id E142A8F24654BDC4DE4B;
+        Mon, 30 Mar 2020 16:44:29 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml712-chm.china.huawei.com (10.201.108.63) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 30 Mar 2020 16:44:29 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
+ Mon, 30 Mar 2020 16:44:29 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Topic: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Index: AQHWAsR+4nldebv71E6VKNN8PAfzw6hcw70AgAQRUuCAABIOgIAAEy5wgAAhnICAACCLgA==
+Date:   Mon, 30 Mar 2020 15:44:29 +0000
+Message-ID: <613133075a174454a88312448b9b333c@huawei.com>
+References: <ShijuJose> <20200325164223.650-1-shiju.jose@huawei.com>
+ <20200325164223.650-2-shiju.jose@huawei.com> <20200327182214.GD8015@zn.tnic>
+ <b180618fb6cb477ea7185979c11c5868@huawei.com>
+ <20200330103353.GC16242@zn.tnic>
+ <ee79588ee82445dcb76f1fe6c1082fb8@huawei.com>
+ <20200330134249.GF16242@zn.tnic>
+In-Reply-To: <20200330134249.GF16242@zn.tnic>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.25.189]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330113542.181752-6-adrian.ratiu@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 14:35:42 +0300, Adrian Ratiu wrote:
-> This provides an example DT binding for the MIPI DSI host controller
-> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
-> Changes since v4:
->   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
->   and addressed received binding feedback (Rob)
-> 
-> Changes since v3:
->   - Added commit message (Neil)
->   - Converted to yaml format (Neil)
->   - Minor dt node + driver fixes (Rob)
->   - Added small panel example to the host controller binding
-> 
-> Changes since v2:
->   - Fixed commit tags (Emil)
-> ---
->  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 134 ++++++++++++++++++
->  1 file changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:34.21-31: Warning (reg_format): /example-0/dsi@21e0000/ports/port@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (avoid_default_addr_size): /example-0/dsi@21e0000/ports/port@1: Relying on default #address-cells value
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (avoid_default_addr_size): /example-0/dsi@21e0000/ports/port@1: Relying on default #size-cells value
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (graph_port): /example-0/dsi@21e0000/ports/port@1: graph node '#address-cells' is -1, must be 1
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (graph_port): /example-0/dsi@21e0000/ports/port@1: graph node '#size-cells' is -1, must be 0
-
-See https://patchwork.ozlabs.org/patch/1263893
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+SGkgQm9yaXMsDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJvcmlzbGF2
+IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj5TZW50OiAzMCBNYXJjaCAyMDIwIDE0OjQz
+DQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT4NCj5DYzogbGludXgtYWNw
+aUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJqd0Byand5c29ja2kubmV0OyBoZWxnYWFzQGtlcm5lbC5v
+cmc7DQo+bGVuYkBrZXJuZWwub3JnOyBqYW1lcy5tb3JzZUBhcm0uY29tOyB0b255Lmx1Y2tAaW50
+ZWwuY29tOw0KPmdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyB6aGFuZ2xpZ3VhbmdAbGludXgu
+YWxpYmFiYS5jb207DQo+dGdseEBsaW51dHJvbml4LmRlOyBMaW51eGFybSA8bGludXhhcm1AaHVh
+d2VpLmNvbT47IEpvbmF0aGFuIENhbWVyb24NCj48am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29t
+PjsgdGFueGlhb2ZlaSA8dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsNCj55YW5neWljb25nIDx5YW5n
+eWljb25nQGh1YXdlaS5jb20+DQo+U3ViamVjdDogUmU6IFtQQVRDSCB2NiAxLzJdIEFDUEkgLyBB
+UEVJOiBBZGQgc3VwcG9ydCB0byBub3RpZnkgdGhlIHZlbmRvcg0KPnNwZWNpZmljIEhXIGVycm9y
+cw0KPg0KPk9uIE1vbiwgTWFyIDMwLCAyMDIwIGF0IDExOjU1OjM1QU0gKzAwMDAsIFNoaWp1IEpv
+c2Ugd3JvdGU6DQo+PiBUaGUgaWRlYSB3YXMgdGhlIGVycm9yIGhhbmRsZWQgZmllbGQgd2lsbCBo
+ZWxwIHRoZSBkZWNvZGluZyBwYXJ0IG9mDQo+PiB0aGUgcmFzZGFlbW9uIHRvIGRvIHRoZSBhcHBy
+b3ByaWF0ZSBzdGVwcyBmb3IgbG9nZ2luZyB0aGUgdmVuZG9yIGVycm9yDQo+PiBpbmZvcm1hdGlv
+biBkZXBlbmRpbmcgb24gd2hldGhlciBhIGNvcnJlc3BvbmRpbmcga2VybmVsIGRyaXZlciBoYXMN
+Cj4+IGhhbmRsZWQgdGhlIGVycm9yIG9yIG5vdC4NCj4NCj5XaGF0J3MgdGhlIGRpZmZlcmVuY2Ug
+Zm9yIHJhc2RhZW1vbiB3aGV0aGVyIHRoZSBlcnJvciBoYXMgYmVlbiBoYW5kbGVkIG9yDQo+bm90
+Pw0KRm9sbG93aW5nIGFyZSBzb21lIG9mIHRoZSBleGFtcGxlcyBvZiB0aGUgdXNhZ2Ugb2YgZXJy
+b3IgaGFuZGxlZCBzdGF0dXMNCmluIHRoZSB2ZW5kb3Igc3BlY2lmaWMgY29kZSBvZiB0aGUgcmFz
+ZGFlbW9uLA0KMS4gcmFzZGFlbW9uIG5lZWQgbm90IHRvIHByaW50IHRoZSB2ZW5kb3IgZXJyb3Ig
+ZGF0YSByZXBvcnRlZCBieSB0aGUgZmlybXdhcmUgaWYgdGhlIA0KICAgIGtlcm5lbCBkcml2ZXIg
+YWxyZWFkeSBwcmludCB0aG9zZSBpbmZvcm1hdGlvbi4gSW4gdGhpcyBjYXNlIHJhc2RhZW1vbiB3
+aWxsIG9ubHkgbmVlZCB0byBzdG9yZQ0KICAgIHRoZSBkZWNvZGVkIHZlbmRvciBlcnJvciBkYXRh
+IHRvIHRoZSBTUUwgZGF0YWJhc2UuICANCjIuIElmIHRoZSB2ZW5kb3Iga2VybmVsIGRyaXZlciB3
+YW50IHRvIHJlcG9ydCBleHRyYSBlcnJvciBpbmZvcm1hdGlvbiB0aHJvdWdoDQogICAgdGhlIHZl
+bmRvciBzcGVjaWZpYyBkYXRhICh0aG91Z2ggcHJlc2VudGx5IHdlIGRvIG5vdCBoYXZlIGFueSBz
+dWNoIHVzZSBjYXNlKSBmb3IgdGhlIHJhc2RhbW9uIHRvIGxvZy4gDQogICAgSSB0aGluayB0aGUg
+ZXJyb3IgaGFuZGxlZCBzdGF0dXMgdXNlZnVsIHRvIGluZGljYXRlIHRoYXQgdGhlIGtlcm5lbCBk
+cml2ZXIgaGFzIGZpbGxlZCB0aGUgZXh0cmEgaW5mb3JtYXRpb24gYW5kDQogICAgcmFzZGFlbW9u
+IHRvIGRlY29kZSBhbmQgbG9nIHRoZW0gYWZ0ZXIgZXh0cmEgZGF0YSBzcGVjaWZpYyB2YWxpZGl0
+eSBjaGVjay4NCiAgICAgIA0KPg0KPi0tDQo+UmVnYXJkcy9HcnVzcywNCj4gICAgQm9yaXMuDQo+
+DQo+aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4L25vdGVzLWFib3V0LW5ldGlxdWV0dGUN
+Cg0KVGhhbmtzLA0KU2hpanUNCg==
