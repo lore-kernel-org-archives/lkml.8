@@ -2,149 +2,133 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144EAC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7010BC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FA120733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="DZk2Ecad"
+	by mail.kernel.org (Postfix) with ESMTP id 4645220733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgC3Tzs (ORCPT
+        id S1727954AbgC3T64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:55:48 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34787 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgC3Tzr (ORCPT
+        Mon, 30 Mar 2020 15:58:56 -0400
+Received: from smtprelay0150.hostedemail.com ([216.40.44.150]:49340 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727311AbgC3T64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:55:47 -0400
-Received: by mail-ed1-f67.google.com with SMTP id o1so4066228edv.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 12:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dh9JcSi6kj0UWIbirpsquHk1PO2ZTJ6f6wAxTa4W5Zs=;
-        b=DZk2EcadSRy+jmjLIyyvOwCfhNdDlY3wMU3gTOTK1MOXJ9bZhFpym+h6ycl+idnIWn
-         SsmZQJKtl9iTffn/DdsGsPysGCoyWM9UFc0uMIYHqOT2z5sBnbcDqL176yFWOcNWpk/v
-         SL53a/gXGohE1DQca/J8rKY+wKFfgrlpBcJTWgpRRmqX4D4/lPWy9aotUaYsxCYmYiYK
-         OtSNHNlZDTpDF0dFONn3fKYVj/3RoQP8vPxJqI1/s4VGJN+h5iwuRg6I0xGMy9Xnyver
-         +2Vt0W54SbaK/bs9jzOVTjHv/eCoKKiYgbHkxhUe93AIoeTE2uwNruCrN5QeGM0qgjOo
-         zdAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dh9JcSi6kj0UWIbirpsquHk1PO2ZTJ6f6wAxTa4W5Zs=;
-        b=tNrKHoVgtWHoh0TR5Loi3F8mpNrERSlw1BvqMtJb89f05fGPnvr3fTovxgkIBVMtZO
-         vo1Iah6sWLx461vK1H8eCZdkbBgPeDWzgYW+ZlPNikW04zEyNuH7N149Wxrtl1M9WUsY
-         LK0e5vSe/mG+G4erJiEnc1ZkKSdrgQLw/T8ktA1VHn4Yjq7/9XykH/87Bu6wfS7RdP8S
-         UpsIh9EPEhx/3//GCvTs1ioj/OnEcl7M6oL0+D01c2h2EytJTKFV4pUhp7R7LMQYKHe7
-         n7XlRujbOFSn35QUri67TLJ2jPIxn1w4nw/Q1txD/RCy9H1u2oB6fOr9xt8NbkTJpRU/
-         7P1g==
-X-Gm-Message-State: ANhLgQ1AxdJAauVqeo4vNufF+mSUaViAx6X+C3h2NKfRAzdCNehv7hFo
-        os8X0J2Fh0smPzJJ1ad3KCbRAkGV6uU3QXvvtOrB
-X-Google-Smtp-Source: ADFU+vul3dd78FpyQ/P1xT0CAzUKDA49PHsMIvhi1CMzemU48YH7Min2sbynkoDLmBburfXlTyDJdiTLpwO7v8ADPZw=
-X-Received: by 2002:a50:f152:: with SMTP id z18mr12867397edl.31.1585598145722;
- Mon, 30 Mar 2020 12:55:45 -0700 (PDT)
+        Mon, 30 Mar 2020 15:58:56 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E51E6100E8429;
+        Mon, 30 Mar 2020 19:58:54 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: fly44_309b3b9d6ae39
+X-Filterd-Recvd-Size: 3647
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 30 Mar 2020 19:58:53 +0000 (UTC)
+Message-ID: <2e19547dcec386b47923211896f43053b60ebc60.camel@perches.com>
+Subject: [RFC PATCH] mtd: lpddr: Fix bad logic in print_drs_error
+From:   Joe Perches <joe@perches.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Mon, 30 Mar 2020 12:56:59 -0700
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-References: <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
- <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
- <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca> <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
- <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca> <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
- <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca> <CAHC9VhQTsEMcYAF1CSHrrVn07DR450W9j6sFVfKAQZ0VpheOfw@mail.gmail.com>
- <20200330162156.mzh2tsnovngudlx2@madcap2.tricolour.ca> <CAHC9VhTRzZXJ6yUFL+xZWHNWZFTyiizBK12ntrcSwmgmySbkWw@mail.gmail.com>
- <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca>
-In-Reply-To: <20200330174937.xalrsiev7q3yxsx2@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 30 Mar 2020 15:55:36 -0400
-Message-ID: <CAHC9VhR_bKSHDn2WAUgkquu+COwZUanc0RV3GRjMDvpoJ5krjQ@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
-        ebiederm@xmission.com, simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 1:49 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-03-30 13:34, Paul Moore wrote:
-> > On Mon, Mar 30, 2020 at 12:22 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-03-30 10:26, Paul Moore wrote:
-> > > > On Mon, Mar 30, 2020 at 9:47 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > On 2020-03-28 23:11, Paul Moore wrote:
-> > > > > > On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > > On 2020-03-23 20:16, Paul Moore wrote:
-> > > > > > > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > > > > On 2020-03-18 18:06, Paul Moore wrote:
+Update logic for broken test.
+Use a more common logging style.
 
-...
+Miscellanea:
 
-> > > Well, every time a record gets generated, *any* record gets generated,
-> > > we'll need to check for which audit daemons this record is in scope and
-> > > generate a different one for each depending on the content and whether
-> > > or not the content is influenced by the scope.
-> >
-> > That's the problem right there - we don't want to have to generate a
-> > unique record for *each* auditd on *every* record.  That is a recipe
-> > for disaster.
->
-> I don't see how we can get around this.
->
-> We will already have that problem for PIDs in different PID namespaces.
+o Coalesce formats
 
-As I said below, let's not worry about this for all of the
-known/current audit records, lets just think about how we solve this
-for the ACID related information.
+Signed-off-by: Joe Perches <joe@perches.com>
+---
 
-One of the bigger problems with translating namespace info (e.g. PIDs)
-across ACIDs is that an ACID - by definition - has no understanding of
-namespaces (both the concept as well as any given instance).
+Found by inspection of include files using printk.
 
-> We already need to use a different serial number in each auditd/queue,
-> or else we serialize *all* audit events on the machine and either leak
-> information to the nested daemons that there are other events happenning
-> on the machine, or confuse the host daemon because it now thinks that we
-> are losing events due to serial numbers missing because some nested
-> daemon issued an event that was not relevant to the host daemon,
-> consuming a globally serial audit message sequence number.
+It appears the logic in this function is broken for the
+consecutive tests of
 
-This isn't really relevant to the ACID lists, but sure.
+	if (prog_status & 0x3)
+		...
+	else if (prog_status & 0x2)
+		...
+	else (prog_status & 0x1)
+		...
 
-> > Solving this for all of the known audit records is not something we
-> > need to worry about in depth at the moment (although giving it some
-> > casual thought is not a bad thing), but solving this for the audit
-> > container ID information *is* something we need to worry about right
-> > now.
->
-> If you think that a different nested contid value string per daemon is
-> not acceptable, then we are back to issuing a record that has only *one*
-> contid listed without any nesting information.  This brings us back to
-> the original problem of keeping *all* audit log history since the boot
-> of the machine to be able to track the nesting of any particular contid.
+Likely the first test should be
 
-I'm not ruling anything out, except for the "let's just completely
-regenerate every record for each auditd instance".
+	if ((prog_status & 0x3) == 0x3)
 
-> What am I missing?  What do you suggest?
+And this function is only used in drivers/mtd/lpddr/lpddr_cmds.c
+perhaps it should be moved there.
 
-I'm missing a solution in this thread, since you are the person
-driving this effort I'm asking you to get creative and present us with
-some solutions. :)
+ include/linux/mtd/pfow.h | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
+index 122f343..1c08e75 100644
+--- a/include/linux/mtd/pfow.h
++++ b/include/linux/mtd/pfow.h
+@@ -127,31 +127,28 @@ static inline void print_drs_error(unsigned dsr)
+ 	int prog_status = (dsr & DSR_RPS) >> 8;
+ 
+ 	if (!(dsr & DSR_AVAILABLE))
+-		printk(KERN_NOTICE"DSR.15: (0) Device not Available\n");
+-	if (prog_status & 0x03)
+-		printk(KERN_NOTICE"DSR.9,8: (11) Attempt to program invalid "
+-						"half with 41h command\n");
++		pr_notice("DSR.15: (0) Device not Available\n");
++
++	if ((prog_status & 0x03) == 0x03)
++		pr_notice("DSR.9,8: (11) Attempt to program invalid half with 41h command\n");
+ 	else if (prog_status & 0x02)
+-		printk(KERN_NOTICE"DSR.9,8: (10) Object Mode Program attempt "
+-					"in region with Control Mode data\n");
++		pr_notice("DSR.9,8: (10) Object Mode Program attempt in region with Control Mode data\n");
+ 	else if (prog_status &  0x01)
+-		printk(KERN_NOTICE"DSR.9,8: (01) Program attempt in region "
+-						"with Object Mode data\n");
++		pr_notice("DSR.9,8: (01) Program attempt in region with Object Mode data\n");
++
+ 	if (!(dsr & DSR_READY_STATUS))
+-		printk(KERN_NOTICE"DSR.7: (0) Device is Busy\n");
++		pr_notice("DSR.7: (0) Device is Busy\n");
+ 	if (dsr & DSR_ESS)
+-		printk(KERN_NOTICE"DSR.6: (1) Erase Suspended\n");
++		pr_notice("DSR.6: (1) Erase Suspended\n");
+ 	if (dsr & DSR_ERASE_STATUS)
+-		printk(KERN_NOTICE"DSR.5: (1) Erase/Blank check error\n");
++		pr_notice("DSR.5: (1) Erase/Blank check error\n");
+ 	if (dsr & DSR_PROGRAM_STATUS)
+-		printk(KERN_NOTICE"DSR.4: (1) Program Error\n");
++		pr_notice("DSR.4: (1) Program Error\n");
+ 	if (dsr & DSR_VPPS)
+-		printk(KERN_NOTICE"DSR.3: (1) Vpp low detect, operation "
+-					"aborted\n");
++		pr_notice("DSR.3: (1) Vpp low detect, operation aborted\n");
+ 	if (dsr & DSR_PSS)
+-		printk(KERN_NOTICE"DSR.2: (1) Program suspended\n");
++		pr_notice("DSR.2: (1) Program suspended\n");
+ 	if (dsr & DSR_DPS)
+-		printk(KERN_NOTICE"DSR.1: (1) Aborted Erase/Program attempt "
+-					"on locked block\n");
++		pr_notice("DSR.1: (1) Aborted Erase/Program attempt on locked block\n");
+ }
+ #endif /* __LINUX_MTD_PFOW_H */
 
 
--- 
-paul moore
-www.paul-moore.com
