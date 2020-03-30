@@ -2,134 +2,248 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481E3C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00408C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1941920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C495F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HC9RXGvF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iBPtY4oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgC3TaM (ORCPT
+        id S1728569AbgC3TaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:30:12 -0400
-Received: from mail-co1nam11on2135.outbound.protection.outlook.com ([40.107.220.135]:43542
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727406AbgC3TaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:30:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KoMtF6WQETF5Mrwbl4pygRiYT4WIr2pD7Noo2CabBFn+VB3OFDuYUWULdxeHInPZg2zj1h5X4NoMXt4ILcpLoXyJQaVAp8NBXZ7rzvYgJmtShI4uMReIO5/kCrl/OF6+MFYgPHjecG5BjrPhVVZQLhlGVSQ/IIrcCRNlU+ptpx+5J7wQ5XVO4xx96+kgWqOtRYFIDQqMlDcaXyc6wELd9I0+D2HwsJQOAYhVGupS1p70qEepMXuy34/iqO5GGp1T6S4tV46t9eEJvacewy2O8+iSDbIyiu0zwy9MAStgwP9qgfPeWn7iaRTKbew8JICSHGVkiP3ZY8PvMHc11/vNyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hriD5hIRfgoUmX0FQgIvB07fZBG3wOMnzE4mh+zutVc=;
- b=W0ytmkuYjgvTj7NRZsjlMepnAq/EYS/M8NnPK63N8LKUpttpt+mVFB+MhAEoWv0LwZITqgFKUpQeCPzfvBqjgXt9U32Kqx/7N66VvviIbUmJGuT8A6JT1id+5iCJfvQXdtuw1rdEbHCkusenNAdspckDKdefiMQP2r3BzkuFf+mVAvSTbVzYr2WXBCGbYmc3gSw3LGH4R2Xb9xXcn/BuJIw1ymzHl4gcaYmotZx5VcBb1/EgfMatcpzs5NvdXpnqhIBhNXnjRTCB/mPRpjSO+vAVVZfjBiQ2fOa2Psf1JaE/4dAtdVPLm7ch/fhQnp7a5ukk4dSA2Yowh/u2wLDfHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hriD5hIRfgoUmX0FQgIvB07fZBG3wOMnzE4mh+zutVc=;
- b=HC9RXGvFnlRy4C00Oi5smtCRqr/ejdDpjGvJLzxWzM4m/2h+SXkUKbAFMCcuhyD6fHtCZDJz6fBfmViddFYi4+VIIHt2MGfxX6HueILVJf0WIaavoWDWh91rvGghAsPS1x5oH3PeLuyHvr1mdjzFiQGArBgpheP9lguRUM0nU+0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (2603:10b6:4:a7::30)
- by DM5PR2101MB0904.namprd21.prod.outlook.com (2603:10b6:4:a7::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.4; Mon, 30 Mar
- 2020 19:30:04 +0000
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6490:7025:f39:3fa8]) by DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::6490:7025:f39:3fa8%4]) with mapi id 15.20.2900.002; Mon, 30 Mar 2020
- 19:30:04 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] hv_netvsc: Remove unnecessary round_up for recv_completion_cnt
-Date:   Mon, 30 Mar 2020 12:29:13 -0700
-Message-Id: <1585596553-22721-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR04CA0063.namprd04.prod.outlook.com
- (2603:10b6:300:6c::25) To DM5PR2101MB0901.namprd21.prod.outlook.com
- (2603:10b6:4:a7::30)
+        Mon, 30 Mar 2020 15:30:24 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50842 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727954AbgC3TaY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 15:30:24 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t128so103307wma.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 12:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9nFnsvCKEDa/dsrzABSlGZiV3kPYg9feDGQT4TvurVU=;
+        b=iBPtY4oepJEYkAvfRbbU7YRMUkFv1yqWuCpQX+pO9q8Omi5rOKQc/eVaGFAxJxFQfm
+         G/XsQyuRqsBi4xUZfsYl0K+KNbGv8FTuQS1ezJjT5wCHOfzcicUvf+FtSLPJv+HPYavJ
+         oLc+Iwef89iiAd822jVW2YM+RKZqSibiH2B594aB100wzEAcU7dwi7Z2aaMHIwYC9HlC
+         tQwEPLdFfNrlkZak7jRrGq5UMRvkDDiU2xwTL+iYlX+u7xQUbg0RwjfKqn8SCpE7ktnE
+         PXWYxhv4RX881mw9lG9i3OmMJMqpZTNlV8PIqJSXuFQy14AuRnJgGOAd5ISVlsQ06mnL
+         vNBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9nFnsvCKEDa/dsrzABSlGZiV3kPYg9feDGQT4TvurVU=;
+        b=fD32vTsq2MMOD6bhTLsd4gqFkAovHhV7L3DXFO7VZaZoX2uQaYUP407XSIFxwnerP/
+         1PaskeBEbnGh0EihSeFID4sO+EVBUuLvimGlghW0zMcZlw3XRQVv4PLpIabnofTxWHcO
+         wfT8y6UUjDW9jUone76fOq4Xyks8KHwMwNsnfygh14MCoh+9b7BMzz1cihwR0X4JxAct
+         FRXJj1LcIq3DW4jXwHA/+F4/cPK9O/c2Z2V5tdL5+lmawBuBE+cn5ekJqIiz1e/n7YNE
+         E6w94dWQ5nLrx5NaRksh/fQSkpvGmW8WQRKu+0jklf14PPuvyL+CQ6hlx3kYZ8nxijid
+         01xQ==
+X-Gm-Message-State: ANhLgQ1tfVr7bjce5hOAGILX8XqfL/HyLi0mrTmwJcsMqowgZYhmE7nl
+        gonDcLZSBdqe9DQZ5jhEHDrFNKDLn7bUbl8x1Gxpvg==
+X-Google-Smtp-Source: ADFU+vsp/RyP5+g1X+akjm3lY9xfjCPnWJSUBQHvVMhHBYSUUyMlFlOMzxwaJ1q/Tx7niyWdi91yGz1x7sGCyvLs9ms=
+X-Received: by 2002:a1c:62c5:: with SMTP id w188mr865008wmb.112.1585596621197;
+ Mon, 30 Mar 2020 12:30:21 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 2
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR04CA0063.namprd04.prod.outlook.com (2603:10b6:300:6c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 19:30:03 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b383bd38-5282-40d3-dc68-08d7d4e0befb
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB0904:|DM5PR2101MB0904:|DM5PR2101MB0904:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB0904069834C526C4AE98C13CACCB0@DM5PR2101MB0904.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR2101MB0901.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(396003)(376002)(39860400002)(366004)(346002)(6506007)(478600001)(26005)(2906002)(82960400001)(82950400001)(81156014)(6666004)(186003)(8676002)(36756003)(8936002)(16526019)(81166006)(5660300002)(956004)(2616005)(7846003)(10290500003)(66946007)(66476007)(66556008)(6512007)(4326008)(52116002)(316002)(6486002);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hggQ1z7tOwBC6NSfUmJtCvVR7iAAkyoad86pBkCOmUsNyXBOcl+ht/qNEcnt92AoMeCkPPRMUQZZaCB8tn0+dwJ4mBsZCTcmh9GI5cuB5q5xShp6JdiFykLh/R3GWUeoN3NakALHWgSP7L5+EYOKMXlZLm3w3f/+KqI8RmPgZdUEhxb1mH01sA5C4ErM3b6kcqDo5Vk+YVSSlpAJzaXZZFLmOy1ckz/29d+cfy8MMUav6xa6CU+jDSeXs7+Ut3iFmJniAeQbMOmBm+5oNXqnZuXTUvQAIuxum08cnbjkBoTMtYtVe8+jRgSQPs1qEVxdomYlBExFN0nCvy1qBYCXG0qV8AR8XRp3IKwudLQDy2hNEY9vLQAAtgtm9jJaUNNfwpIERfEVjJmx3VIY33xVZVEK+q9ECccn/TYF+57os65ataCeBiTIEEHhTTB/6NDQ
-X-MS-Exchange-AntiSpam-MessageData: wEWzR74PenT1I2ZLM8jqlovvDvWVipFO0lDfzNZk6eA9wpiq6ggpL4iHY/CFIDaS3uebiefab7C1GaLBnIbU7F/w9stXEY7lEkDiMrR6P7g62dbXzG9jnQsYwk9QbAiuYOG9xVqX3ZLOsm8n+odixQ==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b383bd38-5282-40d3-dc68-08d7d4e0befb
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 19:30:04.2521
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pt2kuZ7XE+iL9+D37FQID849UUWmy095mckzEmGAG3orNqTF4t0KzIZ5rhfrkyunuybtFXcALtupNWGwRDRs1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB0904
+References: <20200319164227.87419-1-trishalfonso@google.com>
+ <20200319164227.87419-2-trishalfonso@google.com> <alpine.LRH.2.21.2003241635230.30637@localhost>
+ <CAKFsvULUx3qi_kMGJx69ndzCgq=m2xf4XWrYRYBCViud0P7qqA@mail.gmail.com>
+ <alpine.LRH.2.21.2003251242200.9650@localhost> <CAKFsvU+1z-oAX81bNSVkuo_BwgxyykTwW9uJOLL6a1ZaBojJYw@mail.gmail.com>
+In-Reply-To: <CAKFsvU+1z-oAX81bNSVkuo_BwgxyykTwW9uJOLL6a1ZaBojJYw@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Mon, 30 Mar 2020 12:30:09 -0700
+Message-ID: <CAKFsvUKAThbewNmtA7S4wzXODADwG5XJgiDu9o2o5+xz5ux5fA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] Add KUnit Struct to Current Task
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vzalloc_node(), already rounds the total size to whole pages, and
-sizeof(u64) is smaller than sizeof(struct recv_comp_data). So
-round_up of recv_completion_cnt is not necessary, and may cause extra
-memory allocation.
+On Wed, Mar 25, 2020 at 12:00 PM Patricia Alfonso
+<trishalfonso@google.com> wrote:
+>
+> On Wed, Mar 25, 2020 at 5:42 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> >
+> >
+> > On Tue, 24 Mar 2020, Patricia Alfonso wrote:
+> >
+> > > On Tue, Mar 24, 2020 at 9:40 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > > >
+> > > >
+> > > > On Thu, 19 Mar 2020, Patricia Alfonso wrote:
+> > > >
+> > > > > In order to integrate debugging tools like KASAN into the KUnit
+> > > > > framework, add KUnit struct to the current task to keep track of the
+> > > > > current KUnit test.
+> > > > >
+> > > > > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > > > > ---
+> > > > >  include/linux/sched.h | 4 ++++
+> > > > >  1 file changed, 4 insertions(+)
+> > > > >
+> > > > > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > > > > index 04278493bf15..1fbfa0634776 100644
+> > > > > --- a/include/linux/sched.h
+> > > > > +++ b/include/linux/sched.h
+> > > > > @@ -1180,6 +1180,10 @@ struct task_struct {
+> > > > >       unsigned int                    kasan_depth;
+> > > > >  #endif
+> > > > >
+> > > > > +#if IS_BUILTIN(CONFIG_KUNIT)
+> > > >
+> > > > This patch set looks great! You might have noticed I
+> > > > refreshed the kunit resources stuff to incorporate
+> > > > feedback from Brendan, but I don't think any API changes
+> > > > were made that should have consequences for your code
+> > > > (I'm building with your patches on top to make sure).
+> > > > I'd suggest promoting from RFC to v3 on the next round
+> > > > unless anyone objects.
+> > > >
+> > > > As Dmitry suggested, the above could likely be changed to be
+> > > > "#ifdef CONFIG_KUNIT" as kunit can be built as a
+> > > > module also. More on this in patch 2..
+> > > >
+> > > I suppose this could be changed so that this can be used in possible
+> > > future scenarios, but for now, since built-in things can't rely on
+> > > modules, the KASAN integration relies on KUnit being built-in.
+> > >
+> >
+> > I think we can get around that. I've tried tweaking the resources
+> > patchset such that the functions you need in KASAN (which
+> > is builtin) are declared as "static inline" in include/kunit/test.h;
+> > doing this allows us to build kunit and test_kasan as a
+> > module while supporting the builtin functionality required to
+> > retrieve and use kunit resources within KASAN itself.
+> >
+> Okay, great!
+>
+> > The impact of this amounts to a few functions, but it would
+> > require a rebase of your changes. I'll send out a  v3 of the
+> > resources patches shortly; I just want to do some additional
+> > testing on them. I can also send you the modified versions of
+> > your patches that I used to test with.
+> >
+> That sounds good.
+>
+> > With these changes I can run the tests on baremetal
+> > x86_64 by modprobe'ing test_kasan. However I see a few failures:
+> >
+> > [   87.577012]  # kasan_memchr: EXPECTATION FAILED at lib/test_kasan.c:509
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.577104]  not ok 30 - kasan_memchr
+> > [   87.603823]  # kasan_memcmp: EXPECTATION FAILED at lib/test_kasan.c:523
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.603929]  not ok 31 - kasan_memcmp
+> > [   87.630644]  # kasan_strings: EXPECTATION FAILED at
+> > lib/test_kasan.c:544
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.630910]  # kasan_strings: EXPECTATION FAILED at
+> > lib/test_kasan.c:546
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.654037]  # kasan_strings: EXPECTATION FAILED at
+> > lib/test_kasan.c:548
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.677179]  # kasan_strings: EXPECTATION FAILED at
+> > lib/test_kasan.c:550
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.700242]  # kasan_strings: EXPECTATION FAILED at
+> > lib/test_kasan.c:552
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.723336]  # kasan_strings: EXPECTATION FAILED at
+> > lib/test_kasan.c:554
+> >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > but
+> >                 kasan_data->report_expected == 1
+> >                 kasan_data->report_found == 0
+> > [   87.746304]  not ok 32 - kasan_strings
+> >
+> > The above three tests consistently fail while everything
+> > else passes, and happen irrespective of whether kunit
+> > is built as a module or built-in.  Let me know if you
+> > need any more info to debug (I built the kernel with
+> > CONFIG_SLUB=y if that matters).
+> >
+> Unfortunately, I have not been able to replicate this issue and I
+> don't have a clue why these specific tests would fail with a different
+> configuration. I've tried running these tests on UML with KUnit
+> built-in with SLUB=y and SLAB=y, and I've done the same in x86_64. Let
+> me know if there's anything else that could help me debug this myself.
+>
+Alan sent me the .config and I was able to replicate the test failures
+found above. I traced the problem config to CONFIG_AMD_MEM_ENCRYPT=y.
+The interesting part is that I ran the original test module with this
+config enabled and the same tests failed there too. I wonder if this
+is an expected failure or something in the test that is causing this
+problem?
 
-To save memory, remove this unnecessary round_up for recv_completion_cnt.
-
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
----
- drivers/net/hyperv/netvsc.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 1b320bc..ca68aa1 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -388,10 +388,11 @@ static int netvsc_init_buf(struct hv_device *device,
- 	net_device->recv_section_size = resp->sections[0].sub_alloc_size;
- 	net_device->recv_section_cnt = resp->sections[0].num_sub_allocs;
- 
--	/* Setup receive completion ring */
--	net_device->recv_completion_cnt
--		= round_up(net_device->recv_section_cnt + 1,
--			   PAGE_SIZE / sizeof(u64));
-+	/* Setup receive completion ring.
-+	 * Add 1 to the recv_section_cnt because at least one entry in a
-+	 * ring buffer has to be empty.
-+	 */
-+	net_device->recv_completion_cnt = net_device->recv_section_cnt + 1;
- 	ret = netvsc_alloc_recv_comp_ring(net_device, 0);
- 	if (ret)
- 		goto cleanup;
--- 
-1.8.3.1
-
+>
+> > Thanks!
+> >
+> > Alan
+> >
+> >
+> > > > > +     struct kunit                    *kunit_test;
+> > > > > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
+> > > > > +
+> > > > >  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> > > > >       /* Index of current stored address in ret_stack: */
+> > > > >       int                             curr_ret_stack;
+> > > > > --
+> > > > > 2.25.1.696.g5e7596f4ac-goog
+> > > > >
+> > > > >
+> > >
+> > > --
+> > > Best,
+> > > Patricia
+> > >
+>
+>
+>
+> --
+> Best,
+> Patricia
