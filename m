@@ -2,104 +2,328 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1E6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E52C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7722072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4122072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="QYhulaBI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bw0A54BW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgC3QHr (ORCPT
+        id S1728738AbgC3QJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:07:47 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:57710 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbgC3QHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:07:47 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 750DEC72753;
-        Mon, 30 Mar 2020 18:07:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1585584465;
-        bh=q0R/eIdBiL04ZzaNH27/H9PSTVwoRPsiin/dQgKMXBI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QYhulaBINJV3XGmYtogjp34DSdxijcK/aLu0zp+G4renddGunWyY89jKOksGTJZWL
-         gE5/ejFEhNBXZuJmH2ZkNp7K+3nuOg9WCutaXNF1w0Zd1RM80UYeo2IVHjwtjg421F
-         Zit/gN3vCO1IE9Lb9eyCA8vxQB0dRWx2JBSSm9WI=
-Date:   Mon, 30 Mar 2020 18:07:44 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
-Subject: Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
-Message-ID: <20200330160744.GA777@workstation.tuxnet>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
- <20200330130757.GC2431644@ulmo>
- <20200330133450.GA1530@workstation.tuxnet>
- <20200330154036.GB2817345@ulmo>
+        Mon, 30 Mar 2020 12:09:06 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34081 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgC3QJG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:09:06 -0400
+Received: by mail-ed1-f67.google.com with SMTP id o1so3107296edv.1;
+        Mon, 30 Mar 2020 09:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LYA8MGbQRaDF//+MULXJ63oqL5dh/ssnMSFqgrb33VM=;
+        b=Bw0A54BW2bD8gL8RS2N7xDi7BnVkb+FieTzIupX0gvwhckxZ4ZsSagqOokQJj756k9
+         QkpTOYQ5IBo3N1D/yxYrTIFcejFQB2P3dvY21DnLJ9hp/PUGWIxU3RVz/PqzCmXhYPNF
+         SyKrZr+J4gyGsuIh4FQnWFcRIWIL9DuVPGcMAUEjO1Wobh/70bucomrQsNG3KX2pQFlW
+         URCDFN21DXUV/4UaskuULcR6PKDWCQeWkGQhKxEIB1PCNsO1ST2Sw5LQ0wtJ21sSpM+9
+         mL7Nme05WBieDQAadSS2v4EdRwDMI2ex9zBzEc2qt5ZGYQpO3pVhv5l107IvMUgGInYc
+         2hqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LYA8MGbQRaDF//+MULXJ63oqL5dh/ssnMSFqgrb33VM=;
+        b=Zf+bOb+cuDkDTi8b33E/oshKFj85Qk/ksVE4bItS7CJOaORD2H0M8NFqw78zd+i7Fs
+         pCMjBsQ5rIF8ld/pbbzztYLCTThZouCMGRidS5Lcd+xRCr2ztC3GRjaME3PNWE4qTE4X
+         zsrTCaPAQNFtyvmpCpqscpL5duJSFojwd7VMTzWZY56FT3Cxg7mrHGdxAyXjBdWOw0Qh
+         UwFaFCSDuAk57MjivIod4+gQR0krvFJFvQYHrdW15DxWzZhHwI1ckcyDeZSfmYKUz8CX
+         Y3B9mZ7vIPHm89ZrLhi60K/bp/bMoa92Lxj4ISea/2YMCRS0xo7PckZjdWxVTWNoNoKQ
+         Y9UQ==
+X-Gm-Message-State: ANhLgQ2NN4430fXZqAM2QWllKAq4IhayuiOpJO/N1RyMjjdBnpawt2q/
+        eg4ExBcSUlOdj+7ZZWBAJP5aamzpmN0H3h+ieZ4=
+X-Google-Smtp-Source: ADFU+vtu9TORd6ctLOxjvTdQqWnnvg71MRk7K3hbBAfc24ohHk/+yziigJcjYIHMidos9JNQxx9+KcgzaZbFhH2QQ9w=
+X-Received: by 2002:a50:fa88:: with SMTP id w8mr11452920edr.183.1585584541285;
+ Mon, 30 Mar 2020 09:09:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330154036.GB2817345@ulmo>
+References: <20200330113542.181752-1-adrian.ratiu@collabora.com> <20200330113542.181752-4-adrian.ratiu@collabora.com>
+In-Reply-To: <20200330113542.181752-4-adrian.ratiu@collabora.com>
+From:   adrian61 <pop.adrian61@gmail.com>
+Date:   Mon, 30 Mar 2020 19:08:49 +0300
+Message-ID: <CAP-HsdSXPBMG5vJwtpXBuZy9zp8HA+UvYPR5hyvdyjZfz-1dww@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] drm: bridge: synopsis: add dsi v1.01 support
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 05:40:36PM +0200, Thierry Reding wrote:
-> On Mon, Mar 30, 2020 at 03:34:50PM +0200, Clemens Gruber wrote:
-> > Hi,
-> > 
-> > On Mon, Mar 30, 2020 at 03:07:57PM +0200, Thierry Reding wrote:
-> > > On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer wrote:
-> > > > The interaction of the ALL_LED PWM channel with the other channels was
-> > > > not well-defined. As the ALL_LED feature does not seem very useful and
-> > > > it was making the code significantly more complex, simply remove it.
-> > > > 
-> > > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-pca9685.c | 115 ++++++--------------------------------
-> > > >  1 file changed, 17 insertions(+), 98 deletions(-)
-> > > 
-> > > Applied, thanks.
-> > > 
-> > > Thierry
-> > 
-> > I was not reading the mailing list in the last weeks, so I only saw the
-> > patch today.
-> > 
-> > We are using the ALL_LED channel in production to reduce the delay when
-> > all 16 PWM outputs need to be set to the same duty cycle.
-> > 
-> > I am not sure it is a good idea to remove this feature.
-> 
-> Can you specify what platform this is and where the code is that does
-> this. I can't really find any device tree users of this and I don't know
-> if there's a good way to find out what other users there are, but this
-> isn't the first time this driver has created confusion, so please help
-> collect some more information about it's use so we can avoid this in the
-> future.
+Hello Adrian,
 
-The platform is ARM, it's a custom board with an NXP i.MX6. The device
-tree is not upstreamed. As there are multiple companies involved
-in changes to this driver, I assume that it is in use, even though there
-are no in-tree users.
-Also: As you can set the ALL channel from userspace, it will be very
-difficult to find out how often the ALL feature is being used somewhere.
+Here i get a compile error:
 
-> 
-> I'll back out this particular patch since you're using it. Can you give
-> the other three patches a try to see if they work for you?
+On Mon, Mar 30, 2020 at 2:36 PM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+>
+> The Synopsis MIPI DSI v1.01 host controller is quite widely used
+> on platforms like i.mx6 and is not very different from the other
+> versions like the 1.31/1.30 used on rockchip/stm. The protocols
+> appear to be the same, only the register layout is different and
+> the newer versions have new features symbolized by new registers
+> so adding support for it is just a matter of defining the new
+> layout and adding a couple of dsi version checks.
+>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> New in v5.
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 125 +++++++++++++++++-
+>  1 file changed, 119 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> index 5b78ff925af0..fb9dbc4fd0f5 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> @@ -32,6 +32,7 @@
+>
+>  #define HWVER_131                      0x31333100      /* IP version 1.31 */
+>  #define HWVER_130                      0x31333000      /* IP version 1.30 */
+> +#define HWVER_101                      0x31303000      /* IP version 1.01 */
+>
+>  #define DSI_VERSION                    0x00
+>  #define VERSION                                GENMASK(31, 8)
+> @@ -100,6 +101,25 @@
+>  #define DSI_EDPI_CMD_SIZE              0x64
+>
+>  #define DSI_CMD_MODE_CFG               0x68
+> +
+> +#define DSI_DPI_CFG                    0x0c
+> +#define DSI_TMR_LINE_CFG               0x28
+> +#define DSI_VTIMING_CFG                        0x2c
+> +#define DSI_PHY_TMR_CFG_V101           0x30
+> +#define DSI_PHY_IF_CFG_V101            0x58
+> +#define DSI_PHY_IF_CTRL                        0x5c
+> +#define DSI_PHY_RSTZ_V101              0x54
+> +#define DSI_PHY_STATUS_V101            0x60
+> +#define DSI_PHY_TST_CTRL0_V101         0x64
+> +#define DSI_GEN_HDR_V101               0x34
+> +#define DSI_GEN_PLD_DATA_V101          0x38
+> +#define DSI_CMD_MODE_CFG_V101          0x24
+> +#define DSI_CMD_PKT_STATUS_V101                0x3c
+> +#define DSI_VID_PKT_CFG                        0x20
+> +#define DSI_VID_MODE_CFG_V101          0x1c
+> +#define DSI_TO_CNT_CFG_V101            0x40
+> +#define DSI_PCKHDL_CFG_V101            0x18
+> +
+>  #define MAX_RD_PKT_SIZE_LP             BIT(24)
+>  #define DCS_LW_TX_LP                   BIT(19)
+>  #define DCS_SR_0P_TX_LP                        BIT(18)
+> @@ -127,6 +147,33 @@
+>                                          GEN_SW_1P_TX_LP | \
+>                                          GEN_SW_0P_TX_LP)
+>
+> +#define EN_TEAR_FX_V101                        BIT(14)
+> +#define DCS_LW_TX_LP_V101              BIT(12)
+> +#define GEN_LW_TX_LP_V101              BIT(11)
+> +#define MAX_RD_PKT_SIZE_LP_V101                BIT(10)
+> +#define DCS_SW_2P_TX_LP_V101           BIT(9)
+> +#define DCS_SW_1P_TX_LP_V101           BIT(8)
+> +#define DCS_SW_0P_TX_LP_V101           BIT(7)
+> +#define GEN_SR_2P_TX_LP_V101           BIT(6)
+> +#define GEN_SR_1P_TX_LP_V101           BIT(5)
+> +#define GEN_SR_0P_TX_LP_V101           BIT(4)
+> +#define GEN_SW_2P_TX_LP_V101           BIT(3)
+> +#define GEN_SW_1P_TX_LP_V101           BIT(2)
+> +#define GEN_SW_0P_TX_LP_V101           BIT(1)
+> +
+> +#define CMD_MODE_ALL_LP_V101           (DCS_LW_TX_LP_V101 | \
+> +                                        GEN_LW_TX_LP_V101 | \
+> +                                        MAX_RD_PKT_SIZE_LP_V101 | \
+> +                                        DCS_SW_2P_TX_LP_V101 | \
+> +                                        DCS_SW_1P_TX_LP_V101 | \
+> +                                        DCS_SW_0P_TX_LP_V101 | \
+> +                                        GEN_SR_2P_TX_LP_V101 | \
+> +                                        GEN_SR_1P_TX_LP_V101 | \
+> +                                        GEN_SR_0P_TX_LP_V101 | \
+> +                                        GEN_SW_2P_TX_LP_V101 | \
+> +                                        GEN_SW_1P_TX_LP_V101 | \
+> +                                        GEN_SW_0P_TX_LP_V101)
+> +
+>  #define DSI_GEN_HDR                    0x6c
+>  #define DSI_GEN_PLD_DATA               0x70
+>
+> @@ -165,6 +212,11 @@
+>  #define DSI_INT_MSK0                   0xc4
+>  #define DSI_INT_MSK1                   0xc8
+>
+> +#define DSI_ERROR_ST0_V101             0x44
+> +#define DSI_ERROR_ST1_V101             0x48
+> +#define DSI_ERROR_MSK0_V101            0x4c
+> +#define DSI_ERROR_MSK1_V101            0x50
+> +
+>  #define DSI_PHY_TMR_RD_CFG             0xf4
+>
+>  #define PHY_STATUS_TIMEOUT_US          10000
+> @@ -359,6 +411,49 @@ static const struct dw_mipi_dsi_variant dw_mipi_dsi_v130_v131_layout = {
+>         .cfg_gen_payload =              REG_FIELD(DSI_GEN_PLD_DATA, 0, 31),
+>  };
+>
+> +static const struct dw_mipi_dsi_variant dw_mipi_dsi_v101_layout = {
+> +       .cfg_dpi_vid =                  REG_FIELD(DSI_DPI_CFG, 0, 1),
+> +       .cfg_dpi_color_coding =         REG_FIELD(DSI_DPI_CFG, 2, 4),
+> +       .cfg_dpi_18loosely_en =         REG_FIELD(DSI_DPI_CFG, 10, 10),
+> +       .cfg_dpi_vsync_active_low =     REG_FIELD(DSI_DPI_CFG, 6, 6),
+> +       .cfg_dpi_hsync_active_low =     REG_FIELD(DSI_DPI_CFG, 7, 7),
+> +       .cfg_cmd_mode_en =              REG_FIELD(DSI_CMD_MODE_CFG_V101, 0, 0),
+> +       .cfg_cmd_mode_all_lp_en =       REG_FIELD(DSI_CMD_MODE_CFG_V101, 1, 12),
+> +       .cfg_cmd_mode_ack_rqst_en =     REG_FIELD(DSI_CMD_MODE_CFG_V101, 13, 13),
+> +       .cfg_cmd_pkt_status =           REG_FIELD(DSI_CMD_PKT_STATUS_V101, 0, 14),
+> +       .cfg_vid_mode_en =              REG_FIELD(DSI_VID_MODE_CFG_V101, 0, 0),
+> +       .cfg_vid_mode_type =            REG_FIELD(DSI_VID_MODE_CFG_V101, 1, 2),
+> +       .cfg_vid_mode_low_power =       REG_FIELD(DSI_VID_MODE_CFG_V101, 3, 8),
+> +       .cfg_vid_pkt_size =             REG_FIELD(DSI_VID_PKT_CFG, 0, 10),
+> +       .cfg_vid_hsa_time =             REG_FIELD(DSI_TMR_LINE_CFG, 0, 8),
+> +       .cfg_vid_hbp_time =             REG_FIELD(DSI_TMR_LINE_CFG, 9, 17),
+> +       .cfg_vid_hline_time =           REG_FIELD(DSI_TMR_LINE_CFG, 18, 31),
+> +       .cfg_vid_vsa_time =             REG_FIELD(DSI_VTIMING_CFG, 0, 3),
+> +       .cfg_vid_vbp_time =             REG_FIELD(DSI_VTIMING_CFG, 4, 9),
+> +       .cfg_vid_vfp_time =             REG_FIELD(DSI_VTIMING_CFG, 10, 15),
+> +       .cfg_vid_vactive_time =         REG_FIELD(DSI_VTIMING_CFG, 16, 26),
+> +       .cfg_phy_txrequestclkhs =       REG_FIELD(DSI_PHY_IF_CTRL, 0, 0),
+> +       .cfg_phy_bta_time =             REG_FIELD(DSI_PHY_TMR_CFG_V101, 0, 11),
+> +       .cfg_phy_lp2hs_time =           REG_FIELD(DSI_PHY_TMR_CFG_V101, 12, 19),
+> +       .cfg_phy_hs2lp_time =           REG_FIELD(DSI_PHY_TMR_CFG_V101, 20, 27),
+> +       .cfg_phy_testclr =              REG_FIELD(DSI_PHY_TST_CTRL0_V101, 0, 0),
+> +       .cfg_phy_unshutdownz =          REG_FIELD(DSI_PHY_RSTZ_V101, 0, 0),
+> +       .cfg_phy_unrstz =               REG_FIELD(DSI_PHY_RSTZ_V101, 1, 1),
+> +       .cfg_phy_enableclk =            REG_FIELD(DSI_PHY_RSTZ_V101, 2, 2),
+> +       .cfg_phy_nlanes =               REG_FIELD(DSI_PHY_IF_CFG_V101, 0, 1),
+> +       .cfg_phy_stop_wait_time =       REG_FIELD(DSI_PHY_IF_CFG_V101, 2, 9),
+> +       .cfg_phy_status =               REG_FIELD(DSI_PHY_STATUS_V101, 0, 0),
+> +       .cfg_pckhdl_cfg =               REG_FIELD(DSI_PCKHDL_CFG_V101, 0, 4),
+> +       .cfg_hstx_timeout_counter =     REG_FIELD(DSI_TO_CNT_CFG_V101, 0, 15),
+> +       .cfg_lprx_timeout_counter =     REG_FIELD(DSI_TO_CNT_CFG_V101, 16, 31),
+> +       .cfg_int_stat0 =                REG_FIELD(DSI_ERROR_ST0_V101, 0, 20),
+> +       .cfg_int_stat1 =                REG_FIELD(DSI_ERROR_ST1_V101, 0, 17),
+> +       .cfg_int_mask0 =                REG_FIELD(DSI_ERROR_MSK0_V101, 0, 20),
+> +       .cfg_int_mask1 =                REG_FIELD(DSI_ERROR_MSK1_V101, 0, 17),
+> +       .cfg_gen_hdr =                  REG_FIELD(DSI_GEN_HDR_V101, 0, 31),
+> +       .cfg_gen_payload =              REG_FIELD(DSI_GEN_PLD_DATA_V101, 0, 31),
+> +};
+> +
+>  /*
+>   * Check if either a link to a master or slave is present
+>   */
+> @@ -466,6 +561,9 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
+>         case HWVER_131:
+>                 cmd_mode_lp = CMD_MODE_ALL_LP;
+>                 break;
+> +       case HWVER_101:
+> +               cmd_mode_lp = CMD_MODE_ALL_LP_V101;
+> +               break;
+>         }
+>
+>         if (msg->flags & MIPI_DSI_MSG_REQ_ACK)
+> @@ -644,7 +742,7 @@ static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
+>                                    VID_MODE_TYPE_NON_BURST_SYNC_EVENTS);
+>
+>  #ifdef CONFIG_DEBUG_FS
+> -       if (dsi->vpg) {
+> +       if (dsi->hw_version > HWVER_101 && dsi->vpg) {
+>                 regmap_field_write(dsi->regs, dsi->field_vid_mode_vpg_en, 1);
+>                 regmap_field_write(dsi->regs, dsi->field_vid_mode_vpg_horiz,
+>                                    dsi->vpg_horizontal ? 1 : 0);
 
-Thanks! I saw your other mail. Patch 1 looks good to me. I will look at
-the new version of patches 3 and 4 and test them when they appear on the
-list.
+"regmap_field_write" passed 3 arguments, but takes just 2.
 
-Clemens
+
+> @@ -662,9 +760,15 @@ static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
+>
+>                 dw_mipi_dsi_video_mode_config(dsi);
+>
+> +               if (dsi->hw_version == HWVER_101)
+> +                       regmap_field_write(dsi->field_vid_mode_en, 1);
+> +
+>                 regmap_field_write(dsi->field_phy_txrequestclkhs, 1);
+>         } else {
+>                 regmap_field_write(dsi->field_cmd_mode_en, 1);
+> +
+> +               if (dsi->hw_version == HWVER_101)
+> +                       regmap_field_write(dsi->field_vid_mode_en, 0);
+>         }
+>
+>         regmap_write(dsi->regs, DSI_PWR_UP, POWERUP);
+> @@ -857,9 +961,13 @@ static void dw_mipi_dsi_dphy_timing_config(struct dw_mipi_dsi *dsi)
+>         regmap_field_write(dsi->field_phy_lp2hs_time, timing.data_lp2hs);
+>         regmap_field_write(dsi->field_phy_hs2lp_time, timing.data_hs2lp);
+>
+> -       regmap_field_write(dsi->field_phy_max_rd_time, 10000);
+> -       regmap_field_write(dsi->field_phy_clkhs2lp_time, timing.clk_hs2lp);
+> -       regmap_field_write(dsi->field_phy_clklp2hs_time, timing.clk_lp2hs);
+> +       if (dsi->hw_version > HWVER_101) {
+> +               regmap_field_write(dsi->field_phy_max_rd_time, 10000);
+> +               regmap_field_write(dsi->field_phy_clkhs2lp_time,
+> +                                  timing.clk_hs2lp);
+> +               regmap_field_write(dsi->field_phy_clklp2hs_time,
+> +                                  timing.clk_lp2hs);
+> +       }
+>  }
+>
+>  static void dw_mipi_dsi_dphy_interface_config(struct dw_mipi_dsi *dsi)
+> @@ -880,7 +988,8 @@ static void dw_mipi_dsi_dphy_init(struct dw_mipi_dsi *dsi)
+>         regmap_field_write(dsi->field_phy_unrstz, 0);
+>         regmap_field_write(dsi->field_phy_unshutdownz, 0);
+>
+> -       regmap_field_write(dsi->field_phy_forcepll, 0);
+> +       if (dsi->hw_version > HWVER_101)
+> +               regmap_field_write(dsi->field_phy_forcepll, 0);
+>
+>         regmap_field_write(dsi->field_phy_testclr, 0);
+>         regmap_field_write(dsi->field_phy_testclr, 1);
+> @@ -896,7 +1005,8 @@ static void dw_mipi_dsi_dphy_enable(struct dw_mipi_dsi *dsi)
+>         regmap_field_write(dsi->field_phy_unrstz, 1);
+>         regmap_field_write(dsi->field_phy_unshutdownz, 1);
+>
+> -       regmap_field_write(dsi->field_phy_forcepll, 1);
+> +       if (dsi->hw_version > HWVER_101)
+> +               regmap_field_write(dsi->field_phy_forcepll, 1);
+>
+>         ret = regmap_field_read_poll_timeout(dsi->field_phy_status,
+>                                              val, val & PHY_LOCK,
+> @@ -1131,6 +1241,9 @@ static int dw_mipi_dsi_regmap_fields_init(struct dw_mipi_dsi *dsi)
+>         case HWVER_131:
+>                 variant = &dw_mipi_dsi_v130_v131_layout;
+>                 break;
+> +       case HWVER_101:
+> +               variant = &dw_mipi_dsi_v101_layout;
+> +               break;
+>         default:
+>                 DRM_ERROR("Unrecognized DSI host controller HW revision\n");
+>                 return -ENODEV;
+> --
+> 2.26.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+Regards,
+Adrian
