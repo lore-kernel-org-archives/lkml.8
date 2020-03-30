@@ -2,153 +2,112 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87317C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8997C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5429B2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5F92072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EfJ05alJ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="VEdj1nnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgC3QsV (ORCPT
+        id S1729387AbgC3QtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:48:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38870 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgC3QsU (ORCPT
+        Mon, 30 Mar 2020 12:49:15 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:46340 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgC3QtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:48:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x7so8925472pgh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:48:20 -0700 (PDT)
+        Mon, 30 Mar 2020 12:49:15 -0400
+Received: by mail-qv1-f67.google.com with SMTP id bu9so3271515qvb.13
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:49:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xILmCXBrlxgCXlypA1VxqpUiVu1uQ5MP80zGKCZ/XFo=;
-        b=EfJ05alJ+PSOBVvnx/SndsN/62Lik+lUYdgqoSbZm1dfE4FuIESt6rxZHaxGXjH/U9
-         +d4l7cVHmOjuD4J1o3mjDNAKHB3ToTh41KtnFF37XPu06WUI/Iw83xS3w5cJeXenY3rX
-         uS/72YpxbbrJB/T9eo4LEZm4ebLSiI47xcAogZpS8iufGqlLGddOUHPq9l5Cs09jWxQW
-         S4g8U4KV5y0IdNUvJGwaAbWKRJSI34pQFZAVT7EVrdzNEIrphgEGVmcuLw+mgdje+B20
-         V37vak2nUZbO8RraT8fSZtYeItV70ljo0es3rOjE085Mu4d6l2aYmA58ScNmr5odYjbP
-         foxw==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=a71i7JdkAqliwtmEviweeJJ9ZM+t+PVsWqn8Bh5mLGQ=;
+        b=VEdj1nnnmrtVSY3gvhdlHyPYfcYpOkoM11AlgfxCZqb4l1zjWjEQuyjNlUilrGPjAV
+         RnVNaZn4e/c7gOw72UJrCpT/qsyTozKTTeG0KgM5odqyR6UwbOz6+oBagsYSu99kr7PM
+         e/JLTetCGJFG0H756UPQ4yFeaKLB8jehZrfXeMPmlEMeukE40w8JqNUQDGNQvNZeifW/
+         PaAImIU31dzFzm1dMppfFYXqgNXyDZ6pU3ujlqDqxFs302Ee7GRLFSXUM4zMzmZAG8LS
+         6ght+tJ8DxDDZmepUdwP2BE4EqxceTztvIvpWflnNyTe2p05bzcAESRfsA6Rw2zHc5Kd
+         1sOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xILmCXBrlxgCXlypA1VxqpUiVu1uQ5MP80zGKCZ/XFo=;
-        b=m3BEI9Lo4uQgi7SBEWADG2bSNziebNjWb6V5b+ospYqdGKMC+0UmL7tkeWu1gABrQb
-         nJUuE5MapUlG8/5Ale9YrAHqA1OG+1C66PkRHMsJ27zviUWjhleO1/9L4QH0tgyESXmH
-         TpC8s3sdwoWsKJuwm3r+I/xREvk7tX3dOry958W1x8Jdo9360o8LUmO5q0WX+DCwXfNF
-         l4lim7YOcOGbh5XQ5zLKwHzCl6S0rXQTqs8fbfhbf3uUF++l8h7irAgqnkDSZRPvsZy5
-         3Jhnv9lB9kPuh0al6BAg9CgPf6QGGyP8mI1jmzFrXetbICsufP/cXz9aclt/QW6hm8VA
-         b1qg==
-X-Gm-Message-State: ANhLgQ2Ph+EaHCKrIHfYu+Z6QXczTQkvCZVePTLLwza5ySGiWIg4xDua
-        q8lpo0R/BA+ZIPFxyHjLk+dG+3Zdppw8wKZSBvbjGQ==
-X-Google-Smtp-Source: ADFU+vuE0dYbf2hIpTmjKgH9JUJJ9vpNHTYnzEQlhr0Cr+zru6/CN2o72hgQNvyT3rdvuGOmqLgGUd7pqrvfUv+fSow=
-X-Received: by 2002:a63:4e22:: with SMTP id c34mr13917544pgb.263.1585586898655;
- Mon, 30 Mar 2020 09:48:18 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a71i7JdkAqliwtmEviweeJJ9ZM+t+PVsWqn8Bh5mLGQ=;
+        b=lpGliqH3K/wyDEYAVpEXQ1os+CiH4f85XKnWLuxcFg24ncHBizC/dG4Q3nb74rBbD1
+         Dd0E1N8grMOWva3Y+uaqwM4zQhXjjUkmJBOWlMK2nDsyt/2Ge6IX2eqw9ls3Vj9s/F6W
+         FUCEmbd43O81T7Kntq6D78O34LMpFupji6S1hfxmw7/ZkwRo7M1rK/nSAHLPNi2BE7Z/
+         PQKn5CvudnoeGTJ3TUBylVB/izjZmenk3DS/kKAK+0+6NU8k3000RynQR1bjo9aWMrsq
+         i+L9ypZhkGP9aEdPhP/yLjLXC6e1x9rE0KZVfRTVZKQXQxpWIOaVPYysgs7k/MGlTljU
+         UWLw==
+X-Gm-Message-State: ANhLgQ3yYJQOG7cTytcesnEs7re6A/D4nFuvTIip8MOzdouv2izzIOGA
+        oa1gMzI/lKUkrKgrqDVTug0Tqg==
+X-Google-Smtp-Source: ADFU+vvPHjxytK86MxCeJ6R7R3lGmqQNNS4izpxzKyF+vrKQzVB9NqaoPpArMoQ8BTa7Bn1qpTr+AA==
+X-Received: by 2002:a0c:9104:: with SMTP id q4mr12856377qvq.61.1585586954002;
+        Mon, 30 Mar 2020 09:49:14 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id n142sm10803480qkn.11.2020.03.30.09.49.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 09:49:13 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jIxb6-0002W9-JI; Mon, 30 Mar 2020 13:49:12 -0300
+Date:   Mon, 30 Mar 2020 13:49:12 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     George Spelvin <lkml@SDF.ORG>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH v1 01/50] IB/qib: Delete struct qib_ivdev.qp_rnd
+Message-ID: <20200330164912.GK20941@ziepe.ca>
+References: <202003281643.02SGh6eG002694@sdf.org>
+ <20200329141710.GE20941@ziepe.ca>
+ <20200329160825.GA4675@SDF.ORG>
+ <20200330132808.GB20969@lakrids.cambridge.arm.com>
+ <20200330164333.GB2459@SDF.ORG>
 MIME-Version: 1.0
-References: <a651d5eaf312c771c9d2e0160ddd905550bbd4e3.1585507235.git.stefan@agner.ch>
-In-Reply-To: <a651d5eaf312c771c9d2e0160ddd905550bbd4e3.1585507235.git.stefan@agner.ch>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 30 Mar 2020 09:48:07 -0700
-Message-ID: <CAKwvOdkJLROtbMSf1pOV2XMV7LB0TTnLx-43WMt34wiT2VEMew@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: warn if pre-UAL assembler syntax is used
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Jian Cai <jiancai@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330164333.GB2459@SDF.ORG>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 11:43 AM Stefan Agner <stefan@agner.ch> wrote:
->
-> Remove the -mno-warn-deprecated assembler flag to make sure the GNU
-> assembler warns in case non-unified syntax is used.
->
-> This also prevents a warning when building with Clang and enabling its
-> integrated assembler:
-> clang-10: error: unsupported argument '-mno-warn-deprecated' to option 'Wa,'
->
-> GCC before 5.1 emits pre-UAL assembler. This can lead to warnings if
-> inline assembler explicitly switches to unified syntax by using the
-> ".syntax unified" directive (e.g. arch/arm/include/asm/unified.h).
-> Hence keep the flag for GCC versions before 5.1.
->
-> This is a second attempt of commit e8c24bbda7d5 ("ARM: 8846/1: warn if
-> divided syntax assembler is used") which has subsequently been reverted
-> with commit b752bb405a13 ("Revert "ARM: 8846/1: warn if divided syntax
-> assembler is used"").
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+On Mon, Mar 30, 2020 at 04:43:33PM +0000, George Spelvin wrote:
+> On Mon, Mar 30, 2020 at 02:28:08PM +0100, Mark Rutland wrote:
+> > Also, if you do send a series, *please* add a cover-letter explaining
+> > what the overall purpose of the series is, and have all patches chained
+> > in-reply-to that rather than patch 1. Otherwise reviewers have to
+> > reverse-engineer the intent of the author.
+> > 
+> > You can generate the cover letter with:
+> > 
+> > $ git format-patch --cover $FROM..$TO
+> > 
+> > ... and IIRC git send-email does the right thing by default if you hand
+> > it all of the patches at once.
+> 
+> Er, I *did* send a cover letter.  Cc:ed to the union of everyone
+> Cc:ed on any of the individual patches.  It's appended.  (I left in
+> the full Cc: list so you can see you're on it.)
+> 
+> My problem is I don't have git on my e-mail machine, so I fed them to 
+> sendmail manually, and that does some strange things.
 
-Thanks for the added context.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+The problem is that none of the patches had a in-reply-to header to
+the cover letter so it is very difficult to find it.
 
-> ---
-> Changes in v2:
-> - Reference revert commit b752bb405a13 ("Revert "ARM: 8846/1: warn if
->   divided syntax assembler is used"")
-> - Reword commit message
->
->  arch/arm/Makefile | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 1fc32b611f8a..b37bb985a3c2 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -119,21 +119,25 @@ ifeq ($(CONFIG_CC_IS_CLANG),y)
->  CFLAGS_ABI     += -meabi gnu
->  endif
->
-> -# Accept old syntax despite ".syntax unified"
-> -AFLAGS_NOWARN  :=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
-> -
->  ifeq ($(CONFIG_THUMB2_KERNEL),y)
-> -CFLAGS_ISA     :=-mthumb -Wa,-mimplicit-it=always $(AFLAGS_NOWARN)
-> +CFLAGS_ISA     :=-mthumb -Wa,-mimplicit-it=always
->  AFLAGS_ISA     :=$(CFLAGS_ISA) -Wa$(comma)-mthumb
->  # Work around buggy relocation from gas if requested:
->  ifeq ($(CONFIG_THUMB2_AVOID_R_ARM_THM_JUMP11),y)
->  KBUILD_CFLAGS_MODULE   +=-fno-optimize-sibling-calls
->  endif
->  else
-> -CFLAGS_ISA     :=$(call cc-option,-marm,) $(AFLAGS_NOWARN)
-> +CFLAGS_ISA     :=$(call cc-option,-marm,)
->  AFLAGS_ISA     :=$(CFLAGS_ISA)
->  endif
->
-> +ifeq ($(CONFIG_CC_IS_GCC),y)
-> +ifeq ($(call cc-ifversion, -lt, 0501, y), y)
-> +# GCC <5.1 emits pre-UAL code and causes assembler warnings, suppress them
-> +CFLAGS_ISA     +=$(call as-option,-Wa$(comma)-mno-warn-deprecated,-Wa$(comma)-W)
-> +endif
-> +endif
-> +
->  # Need -Uarm for gcc < 3.x
->  KBUILD_CFLAGS  +=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
->  KBUILD_AFLAGS  +=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
-> --
-> 2.25.1
->
+Things work best if you can use git send-email :) I've never tried it,
+bu I wonder if you can tell git that the sendmail is 'ssh foo-server
+/usr/bin/sendmail' ?
 
-
--- 
-Thanks,
-~Nick Desaulniers
+Jason
