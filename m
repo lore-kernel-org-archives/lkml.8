@@ -2,181 +2,150 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88107C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05040C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDF92072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FB62072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:45:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="kmKwomQK"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="wlXWQ6ph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgC3Qpc (ORCPT
+        id S1729827AbgC3Qpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:45:32 -0400
-Received: from mail-dm6nam11on2068.outbound.protection.outlook.com ([40.107.223.68]:6057
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727148AbgC3Qpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:45:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MqRS6Tt7KwyP5K+STstxwJLodNmph9aiEO5+10UwvL4w4Yle84gGeSsCASSzx3Iv61HbbqP6zZEuL34ridnS9vURFUzIIOQBRcq9CJDJY0lmrla6iD07IT9pErvYof/CQua/dUieaQ98s917G7Iik3W1WpD/SvYdj4OVU89J+vrwxE7PfvS1p0wZjXJpbbpCR4YS8/YAVnMSxPZWPLNa57kqadrN5Z0yEeThZ7eCVApPd1xPuA+6L8Az/AFe2iSa5CG2klQqChMKz1KgqCWdjZU4BSLz3Ek2il/+1MszYbJP/Ooat3gcIDKcBp1jNB0xP05GwU7tYWFbzI4nOWI/Qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pebW3a3a7FPq1wYv/UbdudCuSofgEzJpSv+WDdLzXLg=;
- b=gPj/QJzLgKc+iOzr7VHboXii6Hm0WrBXRNXfk8y7ee1Bpu8L8b/ZMMsQyGZRcREkT5FzpecT7hZN+8zol6Mf8mIAFE49sVsW2fmjKSKPKFWGZK5qRgXTX/hoI3NSpeaZ7qTqMsAxR9fVxFw/95XRbGcULmrNBbceDwRlDMpK8+wtoYrrC9MvjTsvLslURNiiCXlUlupBU5nZKBlE2JzNjIVX6kfhO+gTbcJmRiEwx6aIBJxOxf3JONhI1Fo7Lbn7FkUadjc8Etp+DkCqb1prIyN+QtAoFf8yhzokhIAKaAeGWXSrHsI6ZqEaqz97lKWxjgNT4U1s5bS3CWOuyKCCKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 30 Mar 2020 12:45:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53504 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729372AbgC3Qpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:45:47 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b12so20692604wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 09:45:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pebW3a3a7FPq1wYv/UbdudCuSofgEzJpSv+WDdLzXLg=;
- b=kmKwomQKKCihVvOya5mgzmFM4RNyxqv/gxGDXmMjZNUoyFCIYrkB1HhqJl+KsGEWTMdpFAByCGoE7jPs3OaRTUNOgbZA/D6xDp8i511qXvehM1y/B5XoFrAkaTDBvplhn4NNAfOZzMEbcHqGFqdHBKK7KK23YW43YZv/wIr4OY4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ashish.Kalra@amd.com; 
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB2501.namprd12.prod.outlook.com (2603:10b6:4:b4::34) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Mon, 30 Mar 2020 16:45:28 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 16:45:28 +0000
-Date:   Mon, 30 Mar 2020 16:45:25 +0000
-From:   Ashish Kalra <ashish.kalra@amd.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com,
-        srutherford@google.com, luto@kernel.org
-Subject: Re: [PATCH v6 14/14] KVM: x86: Add kexec support for SEV Live
- Migration.
-Message-ID: <20200330164525.GB21601@ashkalra_ubuntu_server>
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <0caf809845d2fdb1a1ec17955826df9777f502fb.1585548051.git.ashish.kalra@amd.com>
- <95d6d6e3-21d5-17c3-a0a5-dc0bac6d87ca@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95d6d6e3-21d5-17c3-a0a5-dc0bac6d87ca@amd.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: DM6PR02CA0053.namprd02.prod.outlook.com
- (2603:10b6:5:177::30) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mVWLIOr3nu4VRkeATbgbJ5KeY5vKIQwBYj+MAP3b5JU=;
+        b=wlXWQ6ph9cl7WGo45IOnoAIi3e/MSO9oLEoRA1ui6cYxiDHYf3FsXYm9gEZbPt6PzN
+         YJ2XdwUIJiJf/rcVUy2rtZ9s9ehdlTf2/Y/Nte8aPxixNX4erKQLqbKHbLZrDUXSfFpe
+         ceHYovcbz6AcVFNxox7oRVx/1iokPAQ4+k2uSEq3hq3IcEMnbTwHizwipjWU+Tf6omh+
+         06ARQQqKCt8KkfGSuXCSokuC3w187wFjsld78q392U4Uj2HewFETdSuVawUQYigPj1qf
+         PAd3edOz0rg8d8o3w62Gui1Xom/pIRAvJf2XZTXvxtHrrP41BQrEYDt5mOdytNz80yYa
+         5fIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mVWLIOr3nu4VRkeATbgbJ5KeY5vKIQwBYj+MAP3b5JU=;
+        b=GJPllpLZKHBUuIV0gS1JHiBsdW8UJx/kiVTZFzU0GNpOXQluhdTGcpMo8J0hWSt7JL
+         +Ndc1XFjcE/OelNxAxzuyxWrD5nCtSJ/l3/fI6UJykx6yTJCiS21vny3jjNY1A69DiUt
+         6VPaaK0Q5F5G6rW9BYCGgovAR4lyhTpDAv+PfavqmZQW/PBwWAGf5Z7EBG9CmRqalWXV
+         VXlPCYbiSqkXNXqoOC2j7kerhwqOv9P3MixqGNTvodrm9RAeXsftJP4W/ytu+0IO84k6
+         EajOdSjfBmLAekVVU0G2PUwLaOh3xeZutgFrvMfw8FM9a54fGop9pHBbuVg+IQ8y11ih
+         79wQ==
+X-Gm-Message-State: ANhLgQ3oD4DUSDUYYA57/YgX2KbC9wvHRkN9Gy7P+r2poakEHceqo2kc
+        WbZjylhOq8QoNDwcztrEiqc3zw==
+X-Google-Smtp-Source: ADFU+vuVTlTSvqv6rHsE7jknCgVQJpj+jErMpQqAWXfcsze5yFyK8CxqxzsEo3dbRwx9EYW1+2X0Yw==
+X-Received: by 2002:a7b:c343:: with SMTP id l3mr214394wmj.38.1585586745976;
+        Mon, 30 Mar 2020 09:45:45 -0700 (PDT)
+Received: from localhost.localdomain (dh207-96-177.xnet.hr. [88.207.96.177])
+        by smtp.googlemail.com with ESMTPSA id h2sm146711wmb.16.2020.03.30.09.45.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 09:45:45 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH v5 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
+Date:   Mon, 30 Mar 2020 18:43:29 +0200
+Message-Id: <20200330164328.2944505-2-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200330164328.2944505-1-robert.marko@sartura.hr>
+References: <20200330164328.2944505-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server (165.204.77.1) by DM6PR02CA0053.namprd02.prod.outlook.com (2603:10b6:5:177::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 16:45:27 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d41deda0-9aa5-4648-674b-08d7d4c9c0a3
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2501:|DM5PR12MB2501:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB2501F94C15E4739AAB0E1CE88ECB0@DM5PR12MB2501.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(376002)(366004)(346002)(39860400002)(6636002)(7416002)(33716001)(478600001)(81166006)(81156014)(26005)(8676002)(86362001)(16526019)(8936002)(186003)(1076003)(44832011)(956004)(6496006)(53546011)(2906002)(316002)(66946007)(55016002)(66476007)(9686003)(66556008)(4326008)(5660300002)(52116002)(6862004)(33656002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3bW7PWyS3rbJ489KqXdZyMrNiSg1VS7YuZiCugtjhAobdVPx1S5+MpOTmeyBzcjT9YehVOsM1LGYsUo1oyORbN7LDwjMc7/z0+HywTEEjvGXI6W+b6juWZP7pMY5LcFqPczcWs0UQaKzR9jMHtN6+rabezSUqyf/yhmroUuSRi+bvjWFmfVAzseMds9eB2V+1BI92Ze4/qRfcP6pQBrk5BZ4lZHC8ns38FcDlv1QD9habjNPmDlOe0c60CFlcv883j0qLxgeCjAQNCnc7kfbX+TBNoEpcsBijqZpr7iRJWOvCJFuO6yOY+EiuHKGvZVctsiEFqbRIE0RylhbMeuLU4aIU76KTmhmidj2/eftDsJhT2+e7dLCIV3/yLAtuX1TfC5DDvYktkkWQVi5Ny65jZHIUTyUwDV+1UH+HfrQ6krjKHPAtnSDmT6Mc0EuqFBg
-X-MS-Exchange-AntiSpam-MessageData: TVK4CiZgWbSf10Df//7wzcqz6auZcc9tjtRulZPHwkYP+yVUSxDnAWsT4am6jNrGFSFghYp+wxbe0KPhIdBsXFA/IVHxJDnq0faRGxwPJWVYgwnBKArmkaB5m0CocCZWfDV+1JDPbaCet/NgueZMGA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d41deda0-9aa5-4648-674b-08d7d4c9c0a3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 16:45:28.4872
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jdGDlgV7wXBuclpQ77Cctdy5hDC+dIC0C1yT+NTHXbJ+sWWBirtivAamBaV8ysnTO1E8X4089VjEB1fqgAiN/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2501
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Brijesh,
+This patch adds the binding documentation for the HS/SS USB PHY found
+inside Qualcom Dakota SoCs.
 
-On Mon, Mar 30, 2020 at 11:00:14AM -0500, Brijesh Singh wrote:
-> 
-> On 3/30/20 1:23 AM, Ashish Kalra wrote:
-> > From: Ashish Kalra <ashish.kalra@amd.com>
-> >
-> > Reset the host's page encryption bitmap related to kernel
-> > specific page encryption status settings before we load a
-> > new kernel by kexec. We cannot reset the complete
-> > page encryption bitmap here as we need to retain the
-> > UEFI/OVMF firmware specific settings.
-> >
-> > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> > ---
-> >  arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> >
-> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > index 8fcee0b45231..ba6cce3c84af 100644
-> > --- a/arch/x86/kernel/kvm.c
-> > +++ b/arch/x86/kernel/kvm.c
-> > @@ -34,6 +34,7 @@
-> >  #include <asm/hypervisor.h>
-> >  #include <asm/tlb.h>
-> >  #include <asm/cpuidle_haltpoll.h>
-> > +#include <asm/e820/api.h>
-> >  
-> >  static int kvmapf = 1;
-> >  
-> > @@ -357,6 +358,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
-> >  	 */
-> >  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> >  		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
-> > +	/*
-> > +	 * Reset the host's page encryption bitmap related to kernel
-> > +	 * specific page encryption status settings before we load a
-> > +	 * new kernel by kexec. NOTE: We cannot reset the complete
-> > +	 * page encryption bitmap here as we need to retain the
-> > +	 * UEFI/OVMF firmware specific settings.
-> > +	 */
-> > +	if (kvm_para_has_feature(KVM_FEATURE_SEV_LIVE_MIGRATION) &&
-> > +		(smp_processor_id() == 0)) {
-> 
-> 
-> In patch 13/14, the KVM_FEATURE_SEV_LIVE_MIGRATION is set
-> unconditionally and because of that now the below code will be executed
-> on non-SEV guest. IMO, this feature must be cleared for non-SEV guest to
-> avoid making unnecessary hypercall's.
-> 
->
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+Changes from v4 to v5:
+* Replace tabs with whitespaces
+* Add maintainer property
 
-I will additionally add a sev_active() check here to ensure that we don't make the unnecassary hypercalls on non-SEV guests.
+ .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
 
-> > +		unsigned long nr_pages;
-> > +		int i;
-> > +
-> > +		for (i = 0; i < e820_table->nr_entries; i++) {
-> > +			struct e820_entry *entry = &e820_table->entries[i];
-> > +			unsigned long start_pfn, end_pfn;
-> > +
-> > +			if (entry->type != E820_TYPE_RAM)
-> > +				continue;
-> > +
-> > +			start_pfn = entry->addr >> PAGE_SHIFT;
-> > +			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-> > +			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
-> > +
-> > +			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-> > +				entry->addr, nr_pages, 1);
-> > +		}
-> > +	}
-> >  	kvm_pv_disable_apf();
-> >  	kvm_disable_steal_time();
-> >  }
+diff --git a/Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml b/Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+new file mode 100644
+index 000000000000..4a6b5aa83925
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom-usb-ipq4019-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcom IPQ40xx Dakota HS/SS USB PHY
++
++maintainers:
++  - Robert Marko <robert.marko@sartura.hr>
++
++properties:
++  compatible:
++    enum:
++      - qcom,usb-ss-ipq4019-phy
++      - qcom,usb-hs-ipq4019-phy
++
++  reg:
++    maxItems: 1
++
++  resets:
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: por_rst
++      - const: srif_rst
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - resets
++  - reset-names
++  - "#phy-cells"
++
++examples:
++  - |
++    hsphy@a8000 {
++     compatible = "qcom,usb-hs-ipq4019-phy";
++     phy-cells = <0>;
++     reg = <0xa8000 0x40>;
++     resets = <&gcc USB2_HSPHY_POR_ARES>,
++       <&gcc USB2_HSPHY_S_ARES>;
++     reset-names = "por_rst", "srif_rst";
++    };
+-- 
+2.26.0
 
-Thanks,
-Ashish
