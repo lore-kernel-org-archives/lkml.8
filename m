@@ -2,169 +2,274 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4344C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CE3C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B14F20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ijkjwL5F"
+	by mail.kernel.org (Postfix) with ESMTP id C881620716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgC3JP7 (ORCPT
+        id S1728472AbgC3JR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:15:59 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:35136 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727903AbgC3JP7 (ORCPT
+        Mon, 30 Mar 2020 05:17:26 -0400
+Received: from m9a0014g.houston.softwaregrp.com ([15.124.64.90]:59956 "EHLO
+        m9a0014g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727696AbgC3JR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:15:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585559757;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zemqa+eFWbSRqKFbVoTd6828wtJbQvKtR1Vj/t4nfws=;
-        b=ijkjwL5FqXjDfXTK6tSFRz/dMNqOl08HOKnAvrEWech/P8+rbowSpc9X5Y++NKQ24UNB0H
-        UHbqdTyh7sFzcQGMXdOP7ltvff1g45ILPVpg/fLNMhAgkeJHpNiur7C5E3GvT2IOIVvu1X
-        MOmyTpbgMbB09RzV3mQn4YJT7agPVFk=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-213-SG8S0r-VN1ONc6mbmzLAKg-1; Mon, 30 Mar 2020 05:15:55 -0400
-X-MC-Unique: SG8S0r-VN1ONc6mbmzLAKg-1
-Received: by mail-qt1-f198.google.com with SMTP id b3so10002907qte.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 02:15:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zemqa+eFWbSRqKFbVoTd6828wtJbQvKtR1Vj/t4nfws=;
-        b=ZO55XHyYa9+OEujxhO7aT6N3a3r2cy7RqgKC3/JByv26dM2PC1KFnD2Fh9comztIsc
-         bnohczMSB7XHrhkG5/GxszDiR/yslyBzPjSkRPT+pU+YHHEjR2lHhGu66BClWQlQStj3
-         6FfqccoUur+yWtdy0iUjGp0CzcAYndAEZKJ1BvnxmvTZX5jzdHXDDGu4yFsP/00W9ONs
-         pYJfmKMrIixvNIpJcEl7d3QZb2lBqNVp2FOd1rh6Hj1QXuqGXeb3z/X1Zd+/y1CpSttA
-         xBlyDUDF1xKUdWD/WF+dwas61SZNDqJTsXRf1mYqHMsdIn6A43cOBeGg3uvDhimLgqjK
-         oDwA==
-X-Gm-Message-State: ANhLgQ3FMsjk6zWjj+mYazSWLgTS+NVNwzYSXMRCyHXrzsBjsgADEAQU
-        lo0dUq3ZSM0U0oqI2PcsrLOVABB9v85Vgx4HjvZ2h8MVztYTZRlcQTm+EHHLHx6pnm3rQKVpwqL
-        EdFgYsMP3HjIm3QSwZ30dztz9y0pOI+XKOyJojO1n
-X-Received: by 2002:ae9:eb12:: with SMTP id b18mr4617819qkg.168.1585559755410;
-        Mon, 30 Mar 2020 02:15:55 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtmZS/6wgLxWT3ZU/CS/qVPDcBOgRfiDiQ203JJ58Kdixi7MMbXpUC+A+8C7IiEGVQnJsaMv5FmAfbHLS/iB3g=
-X-Received: by 2002:ae9:eb12:: with SMTP id b18mr4617794qkg.168.1585559754968;
- Mon, 30 Mar 2020 02:15:54 -0700 (PDT)
+        Mon, 30 Mar 2020 05:17:26 -0400
+Received: FROM m9a0014g.houston.softwaregrp.com (15.121.0.190) BY m9a0014g.houston.softwaregrp.com WITH ESMTP;
+ Mon, 30 Mar 2020 09:16:01 +0000
+Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
+ M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 30 Mar 2020 09:11:40 +0000
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (15.124.72.14) by
+ M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Mon, 30 Mar 2020 09:11:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z64NwLckWoqzsgGFf+5KuzcXrLhm44ignyXvXy8H3kYQ2T1skxgYhUWBj5cKiWMhzuTWueaDKR5mfcJWSxAUZmm9qQZxVntj2beSu3KKvZFMjMgP3wFDn0Nvk2lgJxEene30yPhrk4clGO0BkMPU2o9t9feR+5YW1cATH4CYHqaq6HmkfgfrwS7wRwEzF7Er7RLUzN2GxDETkFeUlRhTd/zJFFoLkr4m8pPzYkFvrHmEYxg+zMPR/qo99Evb9VlVOxxJZ3AfXWZM8ATmFp0Xv8i3MUNPElnRTZdUhq/rG2z7t2HmeHjJSdhL2CdwatEoZAXfL52r0iTlcJFT9nB+Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Uy03OB+3cYv7xLechxW8dqEigLCkE+lI4R5cBhyrK5M=;
+ b=NxxQx/78cMzYqXnzhYLLJyFBgxBkHDR646TqT8OD3klbWe/ZtHP9RjU5nsp5hJ+ZfEvZk1nVJHEV54lnbSf3xgJFOf8UfFn0gX6IfsYTxN8PugIMWB7T+Cdv+XRpvE3taCH0GCsBtmy3nwWnNp+oGvfO83KqltvflvR6WvMTJq5VgnlrwDw3XzURX2mHsZDS2JunvNYXLfR1heV/3Feukus0EvxGwI037uTSTLLJpnsnOniBDghoLrK5pvvwNgIKCG5fAFprp49wboJfQ2/adolFXE1uV0gfhrCt1M132s4g0kDagbDmj9P5zNdF2V2OPNa9hRmKd1sLRTGyOmHZ4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: spf=none (sender IP is ) smtp.mailfrom=clin@suse.com; 
+Received: from SN1PR18MB2126.namprd18.prod.outlook.com (2603:10b6:802:29::29)
+ by SN1PR18MB2112.namprd18.prod.outlook.com (2603:10b6:802:28::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Mon, 30 Mar
+ 2020 09:11:38 +0000
+Received: from SN1PR18MB2126.namprd18.prod.outlook.com
+ ([fe80::1b1:6ada:da24:d1e9]) by SN1PR18MB2126.namprd18.prod.outlook.com
+ ([fe80::1b1:6ada:da24:d1e9%5]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 09:11:38 +0000
+Date:   Mon, 30 Mar 2020 17:11:19 +0800
+From:   Chester Lin <clin@suse.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <rjw@rjwysocki.net>, <lenb@kernel.org>, <robert.moore@intel.com>,
+        <erik.kaneda@intel.com>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devel@acpica.org>,
+        <jlee@suse.com>, <mhocko@suse.com>, <clin@suse.com>
+Subject: Re: [RFC PATCH 1/3] ACPI: scan: add userland notification while
+ handling eject events
+Message-ID: <20200330091119.GA18816@linux-8mug>
+References: <20200327112247.17691-1-clin@suse.com>
+ <20200327112247.17691-2-clin@suse.com>
+ <20200327113842.GA1736848@kroah.com>
+ <20200330085020.GA26252@linux-8mug>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200330085020.GA26252@linux-8mug>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: LO2P265CA0429.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a0::33) To SN1PR18MB2126.namprd18.prod.outlook.com
+ (2603:10b6:802:29::29)
 MIME-Version: 1.0
-References: <20200329113359.30960-1-eperezma@redhat.com> <bb95e827-f219-32fd-0046-41046eec058b@de.ibm.com>
- <CAJaqyWePfMcXhYEPxKYV22J3cYtO=DUXCj1Yf=7XH+khXHop9A@mail.gmail.com> <41dfa0e5-8013-db15-cbfe-aa4574cfb9a0@de.ibm.com>
-In-Reply-To: <41dfa0e5-8013-db15-cbfe-aa4574cfb9a0@de.ibm.com>
-From:   Eugenio Perez Martin <eperezma@redhat.com>
-Date:   Mon, 30 Mar 2020 11:15:18 +0200
-Message-ID: <CAJaqyWfq3TGiQ9GSqdFVAZyydg29BoKiJFGKep+h3BoV5POLHQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] vhost: Reset batched descriptors on SET_VRING_BASE call
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linux-8mug (118.166.62.204) by LO2P265CA0429.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a0::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 09:11:31 +0000
+X-Originating-IP: [118.166.62.204]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d2a1397a-b65c-4041-d760-08d7d48a595e
+X-MS-TrafficTypeDiagnostic: SN1PR18MB2112:
+X-LD-Processed: 856b813c-16e5-49a5-85ec-6f081e13b527,ExtFwd
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR18MB211241710E17D5FCF0BE3510ADCB0@SN1PR18MB2112.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0358535363
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR18MB2126.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(2906002)(66476007)(8676002)(66556008)(15650500001)(66946007)(52116002)(81156014)(6496006)(8936002)(5660300002)(33656002)(9686003)(55016002)(55236004)(6916009)(107886003)(16526019)(86362001)(186003)(26005)(4326008)(33716001)(1076003)(316002)(81166006)(956004)(478600001)(6666004);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8fbu9IuK8GQIZCrl0X1zrfVcbhbZvlAUM+eFs3qEc2quynj67bOTo3juCT4491779eexUDaH2u2NxFbElzgZsjdC3y89fWHgkataBS41b+8ro/BEq2lghBERIK6w3azyu8Zkrqeakgebut+SW8t6Bze54+Kt/WEV/u+gxJyl9eB8KC18cezFRbNw6HY+NBcE/IAzrUBpPTk0Ud7nfDh83iWAn1cuaY06Z6rWBNSf/nDk5N0F8l0bFECjVCW1qeIDUnn5NR3H5KJhh/kOSHngF00NaUyg3NDyKIUT4uqRwWfzs2vzQMqjnAaBZFbHkTjoCJ7sqNHR+vF84M8anujm08CFhG7uO4eX0AsY19elCdWRwApwM1EVwqWOJBu3CNzGaAzpNQ46+BqgGU61ffsHTMRC0M0VvlQluQ6EASJ28UQcXqRXFusdd9FPEfRy1ktA
+X-MS-Exchange-AntiSpam-MessageData: Nzu2ycPvN7lkDUSUMPHhd+EHJl6b5688+pa/oIzo5fTL4s1lyq1eKyED87TpfUc33q89ZhmRkbKElPp9IrJArLBu1Qt70tKEj6/MijIH8n/gOvluFuFl18my2WkunadcX4ORsCcoLEm4DKfpfwLBKg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2a1397a-b65c-4041-d760-08d7d48a595e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 09:11:38.0239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yqfJVO4euxh7PYcraisf0uC+b8MSo0lnWDzSqtVnO41bDWZGgrOfOO0DtYSLrFdn
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR18MB2112
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 9:34 AM Christian Borntraeger
-<borntraeger@de.ibm.com> wrote:
->
->
->
-> On 30.03.20 09:18, Eugenio Perez Martin wrote:
-> > On Mon, Mar 30, 2020 at 9:14 AM Christian Borntraeger
-> > <borntraeger@de.ibm.com> wrote:
-> >>
-> >>
-> >> On 29.03.20 13:33, Eugenio P=C3=A9rez wrote:
-> >>> Vhost did not reset properly the batched descriptors on SET_VRING_BAS=
-E event. Because of that, is possible to return an invalid descriptor to th=
-e guest.
-> >>
-> >> I guess this could explain my problems that I have seen during reset?
-> >>
-> >
-> > Yes, I think so. The series has a test that should reproduce more or
-> > less what you are seeing. However, it would be useful to reproduce on
-> > your system and to know what causes qemu to send the reset :).
->
-> I do see SET_VRING_BASE in the debug output
-> [228101.438630] [2113] vhost:vhost_vring_ioctl:1668: VHOST_GET_VRING_BASE=
- [vq=3D00000000618905fc][s.index=3D1][s.num=3D42424][vq->avail_idx=3D42424]=
-[vq->last_avail_idx=3D42424][vq->ndescs=3D0][vq->first_desc=3D0]
-> [228101.438631] CPU: 54 PID: 2113 Comm: qemu-system-s39 Not tainted 5.5.0=
-+ #344
-> [228101.438632] Hardware name: IBM 3906 M04 704 (LPAR)
-> [228101.438633] Call Trace:
-> [228101.438634]  [<00000004fc71c132>] show_stack+0x8a/0xd0
-> [228101.438636]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8
-> [228101.438639]  [<000003ff80377600>] vhost_vring_ioctl+0x668/0x848 [vhos=
-t]
-> [228101.438640]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_=
-net]
-> [228101.438642]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8
-> [228101.438643]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0
-> [228101.438645]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38
-> [228101.438646]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8
-> [228103.682732] [2122] vhost:vhost_vring_ioctl:1653: VHOST_SET_VRING_BASE=
- [vq=3D000000009e1ac3e7][s.index=3D0][s.num=3D0][vq->avail_idx=3D27875][vq-=
->last_avail_idx=3D27709][vq->ndescs=3D65][vq->first_desc=3D22]
-> [228103.682735] CPU: 44 PID: 2122 Comm: CPU 0/KVM Not tainted 5.5.0+ #344
-> [228103.682739] Hardware name: IBM 3906 M04 704 (LPAR)
-> [228103.682741] Call Trace:
-> [228103.682748]  [<00000004fc71c132>] show_stack+0x8a/0xd0
-> [228103.682752]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8
-> [228103.682761]  [<000003ff80377422>] vhost_vring_ioctl+0x48a/0x848 [vhos=
-t]
-> [228103.682764]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_=
-net]
-> [228103.682767]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8
-> [228103.682769]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0
-> [228103.682771]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38
-> [228103.682773]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8
-> [228103.682794] [2122] vhost:vhost_vring_ioctl:1653: VHOST_SET_VRING_BASE=
- [vq=3D00000000618905fc][s.index=3D1][s.num=3D0][vq->avail_idx=3D42424][vq-=
->last_avail_idx=3D42424][vq->ndescs=3D0][vq->first_desc=3D0]
-> [228103.682795] CPU: 44 PID: 2122 Comm: CPU 0/KVM Not tainted 5.5.0+ #344
-> [228103.682797] Hardware name: IBM 3906 M04 704 (LPAR)
-> [228103.682797] Call Trace:
-> [228103.682799]  [<00000004fc71c132>] show_stack+0x8a/0xd0
-> [228103.682801]  [<00000004fd10e72a>] dump_stack+0x8a/0xb8
-> [228103.682804]  [<000003ff80377422>] vhost_vring_ioctl+0x48a/0x848 [vhos=
-t]
-> [228103.682806]  [<000003ff80395fd4>] vhost_net_ioctl+0x4f4/0x570 [vhost_=
-net]
-> [228103.682808]  [<00000004fc9ccdd8>] do_vfs_ioctl+0x430/0x6f8
-> [228103.682810]  [<00000004fc9cd124>] ksys_ioctl+0x84/0xb0
-> [228103.682812]  [<00000004fc9cd1ba>] __s390x_sys_ioctl+0x2a/0x38
-> [228103.682813]  [<00000004fd12ff72>] system_call+0x2a6/0x2c8
->
->
-> Isnt that triggered by resetting the virtio devices during system reboot?
->
+On Mon, Mar 30, 2020 at 04:50:20PM +0800, Chester Lin wrote:
+> Hi Greg,
+> 
+> On Fri, Mar 27, 2020 at 12:38:42PM +0100, Greg KH wrote:
+> > On Fri, Mar 27, 2020 at 07:22:45PM +0800, Chester Lin wrote:
+> > > Add a request_offline attribute in order to tell the kernel if it's
+> > > required to send notifications to userland first while handling an eject
+> > > event. Userland will have to put the target device offline when this
+> > > attribute is set.
+> > > 
+> > > Signed-off-by: Chester Lin <clin@suse.com>
+> > > ---
+> > >  Documentation/ABI/testing/sysfs-bus-acpi | 16 ++++++++++
+> > >  drivers/acpi/device_sysfs.c              | 40 +++++++++++++++++++++++-
+> > >  drivers/acpi/scan.c                      | 39 +++++++++++++++++++----
+> > >  include/acpi/acpi_bus.h                  |  1 +
+> > >  4 files changed, 89 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/Documentation/ABI/testing/sysfs-bus-acpi b/Documentation/ABI/testing/sysfs-bus-acpi
+> > > index e7898cfe5fb1..b9c467704889 100644
+> > > --- a/Documentation/ABI/testing/sysfs-bus-acpi
+> > > +++ b/Documentation/ABI/testing/sysfs-bus-acpi
+> > > @@ -93,3 +93,19 @@ Description:
+> > >  		hardware, if the _HRV control method is present.  It is mostly
+> > >  		useful for non-PCI devices because lspci can list the hardware
+> > >  		version for PCI devices.
+> > > +
+> > > +What:		/sys/bus/acpi/devices/.../request_offline
+> > > +Date:		Mar, 2020
+> > > +Contact:	Chester Lin <clin@suse.com>
+> > > +Description:
+> > > +		(RW) Allows the userland to receive offline requests when
+> > > +		devices are planning to be ejected.
+> > > +
+> > > +		If bit [0] is clear, the kernel will automatically try putting
+> > > +		the target offline before the target can be ejected.
+> > > +
+> > > +		If bit [0] is set, a uevent will be sent to userland as an
+> > > +		offline request and userland is responsible for handling offline
+> > > +		operations before the target can be ejected. This approach
+> > > +		provides flexibility while some applications could need more
+> > > +		time to release resources.
+> > 
+> > Don't use "bit", use 1/0/y/n/Y/N as the kernel will parse all of that
+> > for you with the kstrtobool() which was created just for this type of
+> > sysfs file.
+> > 
+> 
+> I'm sorry for this mistake. Based on my code they should be ASCII char '1' and
+> '0' but not bitwise ops. I will fix this description.
+> 
+> > > diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+> > > index 96869f1538b9..453bd1b9edf5 100644
+> > > --- a/drivers/acpi/device_sysfs.c
+> > > +++ b/drivers/acpi/device_sysfs.c
+> > > @@ -506,6 +506,37 @@ static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+> > >  }
+> > >  static DEVICE_ATTR_RO(status);
+> > >  
+> > > +static ssize_t request_offline_show(struct device *dev,
+> > > +		struct device_attribute *attr, char *buf)
+> > > +{
+> > > +	struct acpi_device *acpi_dev = to_acpi_device(dev);
+> > > +
+> > > +	return sprintf(buf, "%u\n", acpi_dev->request_offline?1:0);
+> > > +}
+> > > +
+> > > +static ssize_t request_offline_store(struct device *dev,
+> > > +		struct device_attribute *attr, const char *buf, size_t count)
+> > > +{
+> > > +	struct acpi_device *acpi_dev = to_acpi_device(dev);
+> > > +
+> > > +	if (!count)
+> > > +		return -EINVAL;
+> > > +
+> > > +	switch (buf[0]) {
+> > > +	case '0':
+> > > +		acpi_dev->request_offline = false;
+> > > +		break;
+> > > +	case '1':
+> > > +		acpi_dev->request_offline = true;
+> > > +		break;
+> > > +	default:
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	return count;
+> > > +}
+> > > +static DEVICE_ATTR_RW(request_offline);
+> > > +
+> > >  /**
+> > >   * acpi_device_setup_files - Create sysfs attributes of an ACPI device.
+> > >   * @dev: ACPI device object.
+> > > @@ -580,6 +611,11 @@ int acpi_device_setup_files(struct acpi_device *dev)
+> > >  		result = device_create_file(&dev->dev, &dev_attr_eject);
+> > >  		if (result)
+> > >  			return result;
+> > > +
+> > > +		result = device_create_file(&dev->dev,
+> > > +					    &dev_attr_request_offline);
+> > > +		if (result)
+> > > +			return result;
+> > >  	}
+> > >  
+> > >  	if (dev->flags.power_manageable) {
+> > > @@ -623,8 +659,10 @@ void acpi_device_remove_files(struct acpi_device *dev)
+> > >  	/*
+> > >  	 * If device has _EJ0, remove 'eject' file.
+> > >  	 */
+> > > -	if (acpi_has_method(dev->handle, "_EJ0"))
+> > > +	if (acpi_has_method(dev->handle, "_EJ0")) {
+> > >  		device_remove_file(&dev->dev, &dev_attr_eject);
+> > > +		device_remove_file(&dev->dev, &dev_attr_request_offline);
+> > 
+> > You all really should be using an attribute group and the is_visible()
+> > callback to handle all of this for you automatically.
+> > 
+> > But that's a separate issue than this specific patch.
+> > 
+> 
+> That sounds good to me. I will refine this part by declaring an attribute_group
+> with a is_visible() callback.
+> 
+> > > +	}
+> > >  
+> > >  	if (acpi_has_method(dev->handle, "_SUN"))
+> > >  		device_remove_file(&dev->dev, &dev_attr_sun);
+> > > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> > > index 6d3448895382..1cb39c5360cf 100644
+> > > --- a/drivers/acpi/scan.c
+> > > +++ b/drivers/acpi/scan.c
+> > > @@ -145,6 +145,7 @@ static acpi_status acpi_bus_offline(acpi_handle handle, u32 lvl, void *data,
+> > >  	struct acpi_device_physical_node *pn;
+> > >  	bool second_pass = (bool)data;
+> > >  	acpi_status status = AE_OK;
+> > > +	char *envp[] = { "EVENT=offline", NULL };
+> > >  
+> > >  	if (acpi_bus_get_device(handle, &device))
+> > >  		return AE_OK;
+> > > @@ -166,7 +167,18 @@ static acpi_status acpi_bus_offline(acpi_handle handle, u32 lvl, void *data,
+> > >  		} else {
+> > >  			pn->put_online = false;
+> > >  		}
+> > > -		ret = device_offline(pn->dev);
+> > > +
+> > > +		/* Don't offline directly but need to notify userland first */
+> > > +		if (device->request_offline) {
+> > > +			if (pn->dev->offline)
+> > > +				ret = 0;
+> > > +			else
+> > > +				ret = kobject_uevent_env(&pn->dev->kobj,
+> > > +							KOBJ_CHANGE, envp);
+> > 
+> > So this is a userspace visable change with regards to kobject events?
+> > 
+> > Are you sure that is ok?
+> > 
+> 
+> Since udev can see kobject events when devices are added, I haven't seen any
+> risk if we make offline events visible too. Besides, normally online/eject
+> attributes can only be written by root in userspace.
+> 
+Correct my explanation here: So far udev can see several device events already,
+such as add, online, offline and remove. So I think it should not be risky if
+we send additional change events to userspace as notification.
 
-Yes. I don't know exactly why qemu is sending them, but vhost should
-be able to "protect/continue" the same way it used to be before
-batching patches.
-
-Did you lose connectivity or experienced rebooting with this patches applie=
-d?
-
-Thanks!
-
+> Thanks,
+> Chester Lin
