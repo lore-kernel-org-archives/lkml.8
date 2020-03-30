@@ -2,118 +2,115 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1171BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB53C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E675A2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D512820776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BhfkRIhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgC3OGG (ORCPT
+        id S1728380AbgC3OGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:06:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:54512 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgC3OGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:06:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19C131042;
-        Mon, 30 Mar 2020 07:06:06 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D71083F71E;
-        Mon, 30 Mar 2020 07:06:04 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 15:05:54 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V5 0/2] firmware: arm_scmi: add smc/hvc transports support
-Message-ID: <20200330140544.GA22712@bogus>
-References: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
- <AM0PR04MB4481F673F90C735F272C171F88F50@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20200327163253.GA32313@bogus>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327163253.GA32313@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 30 Mar 2020 10:06:32 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:27534 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726981AbgC3OGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:06:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585577190;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=6gQMdKyxolj/mpbgItMNlKheqVPkOjcF0N0K4kdp9rc=;
+        b=BhfkRIhSLCVLH/LRFzw1PpBeZ2GBf9s9L8KxJKbmSX8hiy9E3HiGn5ZYA3QY5Oi3+9gUGA
+        8XPR+c3OIwL87u0ski6K0YEdhbIwZlrNNveHOQyh2ss07Lyc+M0WhXyVfUl1nzCFpzYEeX
+        TwJYVl42IF7hocu2mEOXi1OgNsKNz6w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-sLoEzOxENUez8D-VYyvFDg-1; Mon, 30 Mar 2020 10:06:28 -0400
+X-MC-Unique: sLoEzOxENUez8D-VYyvFDg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B968FDB61;
+        Mon, 30 Mar 2020 14:06:26 +0000 (UTC)
+Received: from llong.com (ovpn-116-140.rdu2.redhat.com [10.10.116.140])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DA9648;
+        Mon, 30 Mar 2020 14:06:22 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-doc@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>,
+        Sonny Rao <sonnyrao@google.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] docs: cgroup-v1: Document the cpuset_v2_mode mount option
+Date:   Mon, 30 Mar 2020 10:06:15 -0400
+Message-Id: <20200330140615.25549-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 04:32:53PM +0000, Sudeep Holla wrote:
-> On Fri, Mar 20, 2020 at 08:27:47AM +0000, Peng Fan wrote:
-> > Hi Sudeep,
-> >
-> > > Subject: [PATCH V5 0/2] firmware: arm_scmi: add smc/hvc transports support
-> >
-> > Are you fine with this patchset? Or You expect multi channel support?
-> >
-> 
-> I applied these patches[1]. I also looked at multi channel support and
-> I think it should be simple. I have made changes and will post soon.
-> I would like you to review and if possible test. I don't want to break
-> the existing single channel, so please do test in your setup for single
-> channel itself.
-> 
+The cpuset in cgroup v1 accepts a special "cpuset_v2_mode" mount
+option that make cpuset.cpus and cpuset.mems behave more like those in
+cgroup v2.  Document it to make other people more aware of this feature
+that can be useful in some circumstances.
 
-This caused build break when !CONFIG_HAVE_ARM_SMCCC, I have added the
-below fixup. Posting the same for sake of tracking.
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ Documentation/admin-guide/cgroup-v1/cpusets.rst | 11 +++++++++++
+ kernel/cgroup/cpuset.c                          |  8 ++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
-Regards,
-Sudeep
-
---
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 6b1b0d6c6d0e..11b238f81923 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -2,6 +2,8 @@
- obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o scmi-transport.o
- scmi-bus-y = bus.o
- scmi-driver-y = driver.o
--scmi-transport-y = mailbox.o shmem.o smc.o
-+scmi-transport-y = shmem.o
-+scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
-+scmi-transport-$(CONFIG_HAVE_ARM_SMCCC) += smc.o
- scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
- obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 94fc2b2df940..34bfadca14cc 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -210,7 +210,9 @@ struct scmi_desc {
- };
-
- extern const struct scmi_desc scmi_mailbox_desc;
-+#ifdef CONFIG_HAVE_ARM_SMCCC
- extern const struct scmi_desc scmi_smc_desc;
-+#endif
-
- void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
- void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index e76a3fab1074..6ef61e52eef7 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -827,7 +827,9 @@ ATTRIBUTE_GROUPS(versions);
- /* Each compatible listed below must have descriptor associated with it */
- static const struct of_device_id scmi_of_match[] = {
- 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
-+#ifdef CONFIG_HAVE_ARM_SMCCC
- 	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc},
-+#endif
- 	{ /* Sentinel */ },
- };
+diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentation/admin-guide/cgroup-v1/cpusets.rst
+index 86a6ae995d54..7ade3abd342a 100644
+--- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
++++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
+@@ -223,6 +223,17 @@ cpu_online_mask using a CPU hotplug notifier, and the mems file
+ automatically tracks the value of node_states[N_MEMORY]--i.e.,
+ nodes with memory--using the cpuset_track_online_nodes() hook.
+ 
++The cpuset.effective_cpus and cpuset.effective_mems files are
++normally read-only copies of cpuset.cpus and cpuset.mems files
++respectively.  If the cpuset cgroup filesystem is mounted with the
++special "cpuset_v2_mode" option, the behavior of these files will become
++similar to the corresponding files in cpuset v2.  In other words, hotplug
++events will not change cpuset.cpus and cpuset.mems.  Those events will
++only affect cpuset.effective_cpus and cpuset.effective_mems which show
++the actual cpus and memory nodes that are currently used by this cpuset.
++See Documentation/admin-guide/cgroup-v2.rst for more information about
++cpuset v2 behavior.
++
+ 
+ 1.4 What are exclusive cpusets ?
+ --------------------------------
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 58f5073acff7..729d3a5c772e 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -358,8 +358,12 @@ static DECLARE_WORK(cpuset_hotplug_work, cpuset_hotplug_workfn);
+ static DECLARE_WAIT_QUEUE_HEAD(cpuset_attach_wq);
+ 
+ /*
+- * Cgroup v2 behavior is used when on default hierarchy or the
+- * cgroup_v2_mode flag is set.
++ * Cgroup v2 behavior is used on the "cpus" and "mems" control files when
++ * on default hierarchy or when the cpuset_v2_mode flag is set by mounting
++ * the v1 cpuset cgroup filesystem with the "cpuset_v2_mode" mount option.
++ * With v2 behavior, "cpus" and "mems" are always what the users have
++ * requested and won't be changed by hotplug events. Only the effective
++ * cpus or mems will be affected.
+  */
+ static inline bool is_in_v2_mode(void)
+ {
+-- 
+2.18.1
 
