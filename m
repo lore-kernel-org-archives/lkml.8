@@ -2,81 +2,102 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75637C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14130C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464A820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF25420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:58:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc6515VS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgC3J4u (ORCPT
+        id S1728743AbgC3J6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:56:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60342 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbgC3J4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:56:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 16A64AE0F;
-        Mon, 30 Mar 2020 09:56:48 +0000 (UTC)
-Subject: Re: [PATCH v3 2/2] mm: mmap: add trace point of vm_unmapped_area
-To:     Matthew Wilcox <willy@infradead.org>,
-        Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     walken@google.com, bp@suse.de, akpm@linux-foundation.org,
-        srostedt@vmware.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jaewon31.kim@gmail.com,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20200320055823.27089-1-jaewon31.kim@samsung.com>
- <CGME20200320055839epcas1p189100549687530619d8a19919e8b5de0@epcas1p1.samsung.com>
- <20200320055823.27089-3-jaewon31.kim@samsung.com>
- <20200329161410.GW22483@bombadil.infradead.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <1ccdcd2e-2a56-af61-5b37-26ad64da0e7d@suse.cz>
-Date:   Mon, 30 Mar 2020 11:56:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 05:58:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50639 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728259AbgC3J6K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:58:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t128so843249wma.0;
+        Mon, 30 Mar 2020 02:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UmkAXtrx7EGpWTd8vebBYq4HKMNN076r/XfqEl521lA=;
+        b=Gc6515VSoCC5JCdth9r+SM8Wl+KnX+zMV0+siJdziitITNOHAconkPeFMlok5lK2lr
+         8FNbXa6e1sa0WxiPXpv2oKLRKjx0phV3UXGk95o2kLJTf9ykjYIZKOM19+HHwLIFBiXa
+         YuD74354xO/Fmk7T8avXA8qOVYR9yBsrMcbDCiki15b/Gs/oH4a1d2WcdZZmEdVybmiJ
+         mOk8c9RRIXvFq9ZeFivDl0SKuZiynDB0EQR7NyDYIIUOTZ3Rbrotwnkv0qY2krz9vLsO
+         6c/kBl7MygqyEp4AFnH4phKb4GEVeKLIVTe4OKYWJj2UhfvjpDGbhUk0uCqneziMREcS
+         A/dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UmkAXtrx7EGpWTd8vebBYq4HKMNN076r/XfqEl521lA=;
+        b=Z6cw5qphrP9PRwYMzl/OW359VwiSBtAKIJ8r9zI9Jyw+PmwtLFtz6xNzn+g54ruWZ2
+         HBni+rJtpvO1n2o5H+Ag7FN169G96qFwUCgUzpp9jT3kIMuntzblqY9iIpwXz6Tae/kq
+         AXV95li847jComV9TTQDW3INdmC9cWbQlLg1cb08lWE5v2UH5RPa9A967PtKk7eSiTL4
+         CpcBSiInex261tTLo7/9SkQcLYW3gpZFR+Fi32w1i8R3VYXunBUc6V8dexL/omQxA6IE
+         fJfD8+CKx0dr7TVnIMYry6k4FRwjPpu312f3pMQmoqarQ0Sp2Dj233YOQB+sVgMZ40H+
+         tnXg==
+X-Gm-Message-State: ANhLgQ3ebnGeFb4+JiSZR9KKex2EqB+k4JW0c788BmRHU0D9JuKKnRg4
+        By1gs9bZ+vmbdI90eQyDsivc7u2J
+X-Google-Smtp-Source: ADFU+vthKUDkNCHJDmtynltoCVzv6w2lWTamWTrxxRNgECEON86HVyepF0hJMBLhnRNzT4qhY8NZqA==
+X-Received: by 2002:a05:600c:a:: with SMTP id g10mr12548454wmc.153.1585562287317;
+        Mon, 30 Mar 2020 02:58:07 -0700 (PDT)
+Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
+        by smtp.gmail.com with ESMTPSA id a7sm4239665wmm.34.2020.03.30.02.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 02:58:06 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] pinctrl: Define of_pinctrl_get() dummy for !PINCTRL
+Date:   Mon, 30 Mar 2020 11:58:01 +0200
+Message-Id: <20200330095801.2421589-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200329161410.GW22483@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/29/20 6:14 PM, Matthew Wilcox wrote:
-> On Fri, Mar 20, 2020 at 02:58:23PM +0900, Jaewon Kim wrote:
->> +	TP_printk("addr=%lx err=%ld total_vm=0x%lx flags=0x%lx len=0x%lx lo=0x%lx hi=0x%lx mask=0x%lx ofs=0x%lx\n",
->> +		IS_ERR_VALUE(__entry->addr) ? 0 : __entry->addr,
->> +		IS_ERR_VALUE(__entry->addr) ? __entry->addr : 0,
-> 
-> I didn't see the IS_ERR_VALUE problem that Vlastimil mentioned get resolved?
+From: Thierry Reding <treding@nvidia.com>
 
-Steven is fixing it in trace-cmd:
-https://lore.kernel.org/r/20200324200956.821799393@goodmis.org
+Currently, the of_pinctrl_get() dummy is only defined for !OF, which can
+still cause build failures on configurations with OF enabled but PINCTRL
+disabled. Make sure to define the dummy if either OF or PINCTRL are not
+enabled.
 
-> I might suggest ...
-> 
-> +++ b/include/linux/err.h
-> @@ -19,7 +19,8 @@
->  
->  #ifndef __ASSEMBLY__
->  
-> -#define IS_ERR_VALUE(x) unlikely((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
-> +#define __IS_ERR_VALUE(x) ((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
-> +#define IS_ERR_VALUE(x) unlikely(__IS_ERR_VALUE(x))
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ include/linux/pinctrl/pinctrl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So this shouldn't be needed, as we are adding a new tracepoint, not "breaking"
-an existing one?
-
->  static inline void * __must_check ERR_PTR(long error)
->  {
-> 
-> and then you can use __IS_ERR_VALUE() which removes the unlikely() problem.
-> 
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index 7ce23450a1cb..2aef59df93d7 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -186,7 +186,7 @@ extern int pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+ 				const char *pin_group, const unsigned **pins,
+ 				unsigned *num_pins);
+ 
+-#ifdef CONFIG_OF
++#if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PINCTRL)
+ extern struct pinctrl_dev *of_pinctrl_get(struct device_node *np);
+ #else
+ static inline
+-- 
+2.24.1
 
