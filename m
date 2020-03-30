@@ -2,160 +2,148 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DFBC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E021AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56CC20771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30F8206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VSQD+f4H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="stkTU0Xa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgC3N6e (ORCPT
+        id S1728682AbgC3N7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:58:34 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:44161 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725268AbgC3N6e (ORCPT
+        Mon, 30 Mar 2020 09:59:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38654 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728504AbgC3N7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:58:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585576711;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=J/xbcR+U5sZqN3KnB8Gi4wExsJ+uq2zk4m3be9exSUA=;
-        b=VSQD+f4H4yhhYdl/eoFY5FfeObkcPiyHxJroDRPTPxWwpEWItq9gOFILzPgdyqZLE2MoVZ
-        ByKBWlIoau7t/4wmDW6wk0gQH3fEkzxR3feTCjBZiNgHJmWaEHd7WvFakVpGyiyflfPSH5
-        /BqWaqF9BknUXFAT8W/xzdvsBVvyW40=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-twlqjcaNOvCWPrwhwVyXtQ-1; Mon, 30 Mar 2020 09:58:27 -0400
-X-MC-Unique: twlqjcaNOvCWPrwhwVyXtQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE8E2149CA;
-        Mon, 30 Mar 2020 13:58:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-66.rdu2.redhat.com [10.10.112.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E104E5DA66;
-        Mon, 30 Mar 2020 13:58:22 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, dray@redhat.com,
-        kzak@redhat.com, mszeredi@redhat.com, swhiteho@redhat.com,
-        jlayton@redhat.com, raven@themaw.net, andres@anarazel.de,
-        christian.brauner@ubuntu.com, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Upcoming: Notifications, FS notifications and fsinfo()
+        Mon, 30 Mar 2020 09:59:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=iKhZXgftDGmAxrAyzuUZ0II6kxBjrrnhDkeJI23ZPuk=; b=stkTU0XaBsPQ9gLT7F1OSv2r8T
+        MwO0gEyYbNpZAldaghGnbpyLa7yWgs5GToM7+yFda4Nm5jczSvC1dLaCWJ9hyX5HGBJ7BSbhWBffa
+        2UIFyJh4tZfRvUnqcIz8IAHdE9Cu9oIueK1va8cLUF93rW9GfeCdxfRQuwgNL/FQHa+yKLl+GmQyA
+        0j+WyTHLHUomuxzkGgtwuHTFlyTvJQ+CENI/7nE5TUgrIKDZIO8nv98sbo+vT9KF3H2Zjz8hytsN5
+        XlI8vBqpHIToFb+IB9gvKOewYpOwg8uXg3d/l/KWmNCY5Y7p0ouXzsXxKHQU4ncV02vWT9kFnV30h
+        hZDk5WtQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIuvn-0005Lc-JC; Mon, 30 Mar 2020 13:58:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43936300F28;
+        Mon, 30 Mar 2020 15:58:19 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0A4CD2038CEED; Mon, 30 Mar 2020 15:58:19 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 15:58:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, rcu@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: rcu_barrier() no longer allowed within mmap_sem?
+Message-ID: <20200330135818.GO20696@hirez.programming.kicks-ass.net>
+References: <CAKMK7uGQ49JGetk3-VmHxXR0HVEoQgVxSZvX9Z0b5so8y+13cA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 30 Mar 2020 14:58:22 +0100
-Message-ID: <1445647.1585576702@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGQ49JGetk3-VmHxXR0HVEoQgVxSZvX9Z0b5so8y+13cA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 30, 2020 at 03:00:35PM +0200, Daniel Vetter wrote:
+> Hi all, for all = rcu, cpuhotplug and perf maintainers
+> 
+> We've hit an interesting new lockdep splat in our drm/i915 CI:
+> 
+> https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_17096/shard-tglb7/igt@kms_frontbuffer_tracking@fbcpsr-rgb101010-draw-mmap-gtt.html#dmesg-warnings861
+> 
+> Summarizing away the driver parts we have
+> 
+> < gpu locks which are held within mm->mmap_sem in various gpu fault handlers >
+> 
+> -> #4 (&mm->mmap_sem#2){++++}:
+> <4> [604.892615] __might_fault+0x63/0x90
+> <4> [604.892617] _copy_to_user+0x1e/0x80
+> <4> [604.892619] perf_read+0x200/0x2b0
+> <4> [604.892621] vfs_read+0x96/0x160
+> <4> [604.892622] ksys_read+0x9f/0xe0
+> <4> [604.892623] do_syscall_64+0x4f/0x220
+> <4> [604.892624] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> <4> [604.892625]
+> -> #3 (&cpuctx_mutex){+.+.}:
+> <4> [604.892626] __mutex_lock+0x9a/0x9c0
+> <4> [604.892627] perf_event_init_cpu+0xa4/0x140
+> <4> [604.892629] perf_event_init+0x19d/0x1cd
+> <4> [604.892630] start_kernel+0x362/0x4e4
+> <4> [604.892631] secondary_startup_64+0xa4/0xb0
+> <4> [604.892631]
+> -> #2 (pmus_lock){+.+.}:
+> <4> [604.892633] __mutex_lock+0x9a/0x9c0
+> <4> [604.892633] perf_event_init_cpu+0x6b/0x140
+> <4> [604.892635] cpuhp_invoke_callback+0x9b/0x9d0
+> <4> [604.892636] _cpu_up+0xa2/0x140
+> <4> [604.892637] do_cpu_up+0x61/0xa0
+> <4> [604.892639] smp_init+0x57/0x96
+> <4> [604.892639] kernel_init_freeable+0x87/0x1dc
+> <4> [604.892640] kernel_init+0x5/0x100
+> <4> [604.892642] ret_from_fork+0x24/0x50
+> <4> [604.892642]
+> -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+> <4> [604.892643] cpus_read_lock+0x34/0xd0
+> <4> [604.892644] rcu_barrier+0xaa/0x190
+> <4> [604.892645] kernel_init+0x21/0x100
+> <4> [604.892647] ret_from_fork+0x24/0x50
+> <4> [604.892647]
+> -> #0 (rcu_state.barrier_mutex){+.+.}:
 
-Hi Linus,
 
-I have three sets of patches I'd like to push your way, if you (and Al) are
-willing to consider them.
+> The last backtrace boils down to i915 driver code which holds the same
+> locks we are holding within mm->mmap_sem, and then ends up calling
+> rcu_barrier(). From what I can see i915 is just the messenger here,
+> any driver with this pattern of a lock held within mmap_sem which also
+> has a path of calling rcu_barrier while holding that lock should be
+> hitting this splat.
+> 
+> Two questions:
+> - This suggests that calling rcu_barrier() isn't ok anymore while
+> holding mmap_sem, or anything that has a dependency upon mmap_sem. I
+> guess that's not the idea, please confirm.
+> - Assuming this depedency is indeed not intended, where should the
+> loop be broken? It goes through perf, cpuhotplug and rcu subsystems,
+> and I don't have a clue about any of those.
 
- (1) General notification queue plus key/keyring notifications.
+I wonder what is new here; the 1-4 chain there has been true for a long
+time, see also the comment at perf_event_ctx_lock_nested().
 
-     This adds the core of the notification queue built on pipes, and adds
-     the ability to watch for changes to keys.
+That said; it _might_ be possible to break 3->4, that is, all the
+copy_{to,from}_user() usage in perf can be lifted out from under the
+various locks by re-arranging code, but I have a nagging feeling there
+was more to it than that. Of course, while I did document the locking
+rules, I seem to have forgotten to comment on exactly why these rules
+are as they are.. oh well.
 
- (2) Mount and superblock notifications.
-
-     This builds on (1) to provide notifications of mount topology changes
-     and implements a framework for superblock events (configuration
-     changes, I/O errors, quota/space overruns and network status changes).
-
- (3) Filesystem information retrieval.
-
-     This provides an extensible way to retrieve informational attributes
-     about mount objects and filesystems.  This includes providing
-     information intended to make recovering from a notification queue
-     overrun much easier.
-
-We need (1) for Gnome to efficiently watch for changes in kerberos
-keyrings.  Debarshi Ray has patches ready to go for gnome-online-accounts
-so that it can make use of the facility.
-
-Sets (2) and (3) can make libmount more efficient.  Karel Zak is working on
-making use of this to avoid reading /proc/mountinfo.
-
-We need something to make systemd's watching of the mount topology more
-efficient, and (2) and (3) can help with this by making it faster to narrow
-down what changed.  I think Karel has this in his sights, but hasn't yet
-managed to work on it.
-
-Set (2) should be able to make it easier to watch for mount options inside
-a container, and set (3) should make it easier to examine the mounts inside
-another mount namespace inside a container in a way that can't be done with
-/proc/mounts.  This is requested by Christian Brauner.
-
-Jeff Layton has a tentative addition to (3) to expose error state to
-userspace, and Andres Freund would like this for Postgres.
-
-Set (3) further allows the information returned by such as statx() and
-ioctl(FS_IOC_GETFLAGS) to be qualified by indicating which bits are/aren't
-supported.
-
-Further, for (3), I also allow filesystem-specific overrides/extensions to
-fsinfo() and have a use for it to AFS to expose information about server
-preference for a particular volume (something that is necessary for
-implementing the toolset).  I've provided example code that does similar
-for NFS and some that exposes superblock info from Ext4.  At Vault, Steve
-expressed an interest in this for CIFS and Ted Ts'o expressed a possible
-interest for Ext4.
-
-Notes:
-
- (*) These patches will conflict with apparently upcoming refactoring of
-     the security core, but the fixup doesn't look too bad:
-
-	https://lore.kernel.org/linux-next/20200330130636.0846e394@canb.auug.org.a=
-u/T/#u
-
- (*) Mikl=C3=B3s Szeredi would much prefer to implement fsinfo() as a magic
-     filesystem mounted on /proc/self/fsinfo/ whereby your open fds appear
-     as directories under there, each with a set of attribute files
-     corresponding to the attributes that fsinfo() would otherwise provide.
-     To examine something by filename, you'd have to open it O_PATH and
-     then read the individual attribute files in the corresponding per-fd
-     directory.  A readfile() system call has been mooted to elide the
-     {open,read,close} sequence to make it more efficient.
-
- (*) James Bottomley would like to deprecate fsopen(), fspick(), fsconfig()
-     and fsmount() in favour of a more generic configfs with dedicated
-     open, set-config and action syscalls, with an additional get-config
-     syscall that would be used instead of fsinfo() - though, as I
-     understand it, you'd have to create a config (fspick-equivalent)
-     before you could use get-config.
-
- (*) I don't think Al has particularly looked at fsinfo() or the fs
-     notifications patches yet.
-
- (*) I'm not sure what *your* opinion of fsinfo() is yet.  If you don't
-     dislike it too, um, fragrantly, would you be willing to entertain part
-     of it for now and prefer the rest to stew a bit longer?  I can drop
-     some of the pieces.
-
-Anyway, I'm going to formulate a pull request for each of them.
-
-Thanks,
-David
 
