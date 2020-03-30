@@ -2,361 +2,231 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD64C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0FBC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B3120732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419182073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:30:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="UJoU5Dhe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="us2gR1fE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgC3P1S (ORCPT
+        id S1729174AbgC3PaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:27:18 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:52362 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725978AbgC3P1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:27:14 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id BD5E44120D;
-        Mon, 30 Mar 2020 15:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1585582029; x=1587396430; bh=M/8qsZnMHXxo4UdhLfM41rwneTR/LPM1/U0
-        UtIeEuaI=; b=UJoU5DheAhY4RNBQH2EJGLg/Mo1Zpu+hNWmU3RJaSSmYN1TFBvA
-        DNxS9qjAw/ppLox1zLjY4E88JtBSmtxcikZs3BXnjB+y/FMI5bGRHsVsthR+DBpX
-        4KxhEHSgD9Ziwuw58mgxGdHiKlatrDm7K1kHwQ4qLM2y2XHtND0E2gQ4=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hDotr3OvxaBN; Mon, 30 Mar 2020 18:27:09 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id DF3C241272;
-        Mon, 30 Mar 2020 18:27:09 +0300 (MSK)
-Received: from localhost.yadro.com (10.199.0.226) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 30
- Mar 2020 18:27:09 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020 proximity sensor
-Date:   Mon, 30 Mar 2020 18:27:11 +0300
-Message-ID: <20200330152711.8769-3-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200330152711.8769-1-i.mikhaylov@yadro.com>
-References: <20200330152711.8769-1-i.mikhaylov@yadro.com>
+        Mon, 30 Mar 2020 11:30:04 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33977 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729140AbgC3PaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:30:03 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p10so18314915ljn.1;
+        Mon, 30 Mar 2020 08:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Cq26ZWZgsMRlQvotSIdZaVx4Pdp3fvhPVBSTmjGmY1o=;
+        b=us2gR1fEwH/wJobb6qxke9Tm73Hq2On8K7uBBO3dc1zpx8Hhbe+SD8JGHqg0dc8Ih+
+         fC24nCRxwiv///kX9y4AtLjrQgsyDs5/nDLucuSrZjRZCpteU1H6vvKIqORoDLupu8Ma
+         QDIhviKZBDiCp4i1plnA1P+9hDBVPkG32nYpDHIcJsrG4EsrMH47FQSKYKCepGl16nFL
+         8zLqh15VyjwcoQGZZXr6InB/fvFE7Abr20gF3Psn6qvyzjWlqR8ht9nQwhQCTEGIuuqm
+         A7shdtqWeQ7YrI8+WTWgRDkdy+JIK1MPH097vckCWJQuV51LwFXe3Ir3WDAIivjkxRmE
+         4NMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Cq26ZWZgsMRlQvotSIdZaVx4Pdp3fvhPVBSTmjGmY1o=;
+        b=A9Ygw1URvu9GT/mjYe8yu/N659Ko8Ehss+QR3+8z6/Bp5PM0/tyc4SOwZf4R2WPkjO
+         yk7nLrJ1OvGFf9jW6CmTipUiVAQFIwmo3kDd6vk7O8hNqoyK17nZ9Lz+HJHxHa1N3I5j
+         YWw36k1RbIG4vL2KlSUqMyzxPsV97TA4JcxWz3+JeK66rFuR7IyWNR/D4K0CZdg9ycO6
+         e2lfMwFSpxMW0G0nsnQ7QcbyfbpaAcOTyfveHl+NFRANNsT8IZUYxlV5CYhizVa25H9/
+         HRQdsZJjCoIMJUx8/quKUsLwxu8Y54/lveNf7emFIysop4WIgTblrGoJjowfmmB/tFOe
+         xhow==
+X-Gm-Message-State: AGi0PuaLiUTu5e+VYz85bNOEikqNkRQD1DR7nGyoPsn1hAeJSX1o3bHz
+        98XDGRd7WtZqKJEPicswVG4=
+X-Google-Smtp-Source: APiQypJbSW4LONyeiim8HyIOCs0IlQRLUHPsXnht8+KfKoRCETSGy8qf60cDhOSsnuAv9xHJNUH3YQ==
+X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr7532189ljo.152.1585582200798;
+        Mon, 30 Mar 2020 08:30:00 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id v19sm9117066lfg.9.2020.03.30.08.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 08:30:00 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 30 Mar 2020 17:29:51 +0200
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>, linux-mm@kvack.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 10/18] rcu/tree: Maintain separate array for vmalloc ptrs
+Message-ID: <20200330152951.GA2553@pc636>
+References: <20200330023248.164994-11-joel@joelfernandes.org>
+ <202003301715.9gMSa9Ca%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.0.226]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003301715.9gMSa9Ca%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Proximity sensor driver based on light/vcnl4000.c code.
-For now supports only the single on-demand measurement.
+Hello, Joel.
 
-The VCNL3020 is a fully integrated proximity sensor. Fully
-integrated means that the infrared emitter is included in the
-package. It has 16-bit resolution. It includes a signal
-processing IC and features standard I2C communication
-interface. It features an interrupt function.
+Sent out the patch fixing build error.
 
-Datasheet: http://www.vishay.com/docs/84150/vcnl3020.pdf
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- drivers/iio/proximity/Kconfig    |  11 ++
- drivers/iio/proximity/Makefile   |   1 +
- drivers/iio/proximity/vcnl3020.c | 226 +++++++++++++++++++++++++++++++
- 3 files changed, 238 insertions(+)
- create mode 100644 drivers/iio/proximity/vcnl3020.c
+--
+Vlad Rezki
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index d53601447da4..b8d2b17e60ac 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -112,6 +112,17 @@ config SRF08
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf08.
- 
-+config VCNL3020
-+	tristate "VCNL3020 proximity sensor"
-+	select REGMAP_I2C
-+	depends on I2C
-+	help
-+	  Say Y here if you want to build a driver for the Vishay VCNL3020
-+	  proximity sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called vcnl3020.
-+
- config VL53L0X_I2C
- 	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
- 	depends on I2C
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 0bb5f9de13d6..8245978ced30 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -12,5 +12,6 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
- obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-+obj-$(CONFIG_VCNL3020)		+= vcnl3020.o
- obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
- 
-diff --git a/drivers/iio/proximity/vcnl3020.c b/drivers/iio/proximity/vcnl3020.c
-new file mode 100644
-index 000000000000..d4b0684c39fe
---- /dev/null
-+++ b/drivers/iio/proximity/vcnl3020.c
-@@ -0,0 +1,226 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Support for Vishay VCNL3020 proximity sensor on i2c bus.
-+ * Based on Vishay VCNL4000 driver code.
-+ *
-+ * TODO: interrupts.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+#define VCNL_DRV_NAME		"vcnl3020"
-+#define VCNL_REGMAP_NAME	"vcnl3020_regmap"
-+#define VCNL3020_PROD_ID	0x21
-+
-+#define VCNL_COMMAND		0x80 /* Command register */
-+#define VCNL_PROD_REV		0x81 /* Product ID and Revision ID */
-+#define VCNL_PROXIMITY_RATE	0x82 /* Rate of Proximity Measurement */
-+#define VCNL_LED_CURRENT	0x83 /* IR LED current for proximity mode */
-+#define VCNL_PS_RESULT_HI	0x87 /* Proximity result register, MSB */
-+#define VCNL_PS_RESULT_LO	0x88 /* Proximity result register, LSB */
-+#define VCNL_PS_ICR		0x89 /* Interrupt Control Register  */
-+
-+#define VCNL_PS_LO_THR_HI	0x8a /* High byte of low threshold value */
-+#define VCNL_PS_LO_THR_LO	0x8b /* Low byte of low threshold value */
-+#define VCNL_PS_HI_THR_HI	0x8c /* High byte of high threshold value */
-+#define VCNL_PS_HI_THR_LO	0x8d /* Low byte of high threshold value */
-+#define VCNL_ISR		0x8e /* Interrupt Status Register */
-+#define VCNL_PS_MOD_ADJ		0x8f /* Proximity Modulator Timing Adjustment */
-+
-+/* Bit masks for COMMAND register */
-+#define VCNL_PS_RDY		BIT(5) /* proximity data ready? */
-+#define VCNL_PS_OD		BIT(3) /* start on-demand proximity
-+					* measurement
-+					*/
-+
-+#define VCNL_ON_DEMAND_TIMEOUT_US	100000
-+#define VCNL_POLL_US			20000
-+
-+/**
-+ * struct vcnl3020_data - vcnl3020 specific data.
-+ * @regmap:	device register map.
-+ * @dev:	vcnl3020 device.
-+ * @rev:	revision id.
-+ * @lock:	lock for protecting access to device hardware registers.
-+ */
-+struct vcnl3020_data {
-+	struct regmap *regmap;
-+	struct device *dev;
-+	u8 rev;
-+	struct mutex lock;
-+};
-+
-+static int vcnl3020_init(struct vcnl3020_data *data)
-+{
-+	int rc;
-+	unsigned int reg;
-+	u32 led_current;
-+
-+	rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
-+	if (rc) {
-+		dev_err(data->dev,
-+			"Error (%d) reading product revision", rc);
-+		return rc;
-+	}
-+
-+	if (reg != VCNL3020_PROD_ID) {
-+		dev_err(data->dev,
-+			"Product id (%x) did not match vcnl3020 (%x)", reg,
-+			VCNL3020_PROD_ID);
-+		return -ENODEV;
-+	}
-+
-+	data->rev = reg;
-+	mutex_init(&data->lock);
-+
-+	rc = device_property_read_u32(data->dev, "vishay,led-current-milliamp",
-+				      &led_current);
-+	if (rc == 0) {
-+		rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
-+		if (rc)
-+			dev_err(data->dev,
-+				"Error (%d) setting LED current", rc);
-+	}
-+
-+	return rc;
-+};
-+
-+static int vcnl3020_measure_proximity(struct vcnl3020_data *data, int *val)
-+{
-+	int rc;
-+	unsigned int reg;
-+	__be16 res;
-+
-+	mutex_lock(&data->lock);
-+
-+	rc = regmap_write(data->regmap, VCNL_COMMAND, VCNL_PS_OD);
-+	if (rc)
-+		goto err_unlock;
-+
-+	/* wait for data to become ready */
-+	rc = regmap_read_poll_timeout(data->regmap, VCNL_COMMAND, reg,
-+				      reg & VCNL_PS_RDY, VCNL_POLL_US,
-+				      VCNL_ON_DEMAND_TIMEOUT_US);
-+	if (rc) {
-+		dev_err(data->dev,
-+			"vcnl3020_measure() failed with error (%d)", rc);
-+		goto err_unlock;
-+	}
-+
-+	/* high & low result bytes read */
-+	rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res, 2);
-+	if (rc)
-+		goto err_unlock;
-+
-+	*val = be16_to_cpu(res);
-+
-+err_unlock:
-+	mutex_unlock(&data->lock);
-+
-+	return rc;
-+}
-+
-+static const struct iio_chan_spec vcnl3020_channels[] = {
-+	{
-+		.type = IIO_PROXIMITY,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+	},
-+};
-+
-+static int vcnl3020_read_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, int *val,
-+			     int *val2, long mask)
-+{
-+	int rc;
-+	struct vcnl3020_data *data = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		switch (chan->type) {
-+		case IIO_PROXIMITY:
-+			rc = vcnl3020_measure_proximity(data, val);
-+			if (rc)
-+				return rc;
-+			return IIO_VAL_INT;
-+		default:
-+			return -EINVAL;
-+		}
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info vcnl3020_info = {
-+	.read_raw = vcnl3020_read_raw,
-+};
-+
-+static const struct regmap_config vcnl3020_regmap_config = {
-+	.name		= VCNL_REGMAP_NAME,
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.max_register	= VCNL_PS_MOD_ADJ,
-+};
-+
-+static int vcnl3020_probe(struct i2c_client *client)
-+{
-+	struct vcnl3020_data *data;
-+	struct iio_dev *indio_dev;
-+	struct regmap *regmap;
-+	int rc;
-+
-+	regmap = devm_regmap_init_i2c(client, &vcnl3020_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "regmap_init failed!");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	i2c_set_clientdata(client, indio_dev);
-+	data->regmap = regmap;
-+	data->dev = &client->dev;
-+
-+	rc = vcnl3020_init(data);
-+	if (rc)
-+		return rc;
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->info = &vcnl3020_info;
-+	indio_dev->channels = vcnl3020_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vcnl3020_channels);
-+	indio_dev->name = VCNL_DRV_NAME;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, indio_dev);
-+}
-+
-+static const struct of_device_id vcnl3020_of_match[] = {
-+	{
-+		.compatible = "vishay,vcnl3020",
-+	},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, vcnl3020_of_match);
-+
-+static struct i2c_driver vcnl3020_driver = {
-+	.driver = {
-+		.name   = VCNL_DRV_NAME,
-+		.of_match_table = vcnl3020_of_match,
-+	},
-+	.probe_new  = vcnl3020_probe,
-+};
-+module_i2c_driver(vcnl3020_driver);
-+
-+MODULE_AUTHOR("Ivan Mikhaylov <i.mikhaylov@yadro.com>");
-+MODULE_DESCRIPTION("Vishay VCNL3020 proximity sensor driver");
-+MODULE_LICENSE("GPL");
--- 
-2.21.1
+> Hi "Joel,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on rcu/dev]
+> [also build test ERROR on rcu/rcu/next next-20200327]
+> [cannot apply to linus/master linux/master v5.6]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/kfree_rcu-improvements-for-rcu-dev/20200330-113719
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+> config: mips-randconfig-a001-20200330 (attached as .config)
+> compiler: mips64el-linux-gcc (GCC) 5.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=5.5.0 make.cross ARCH=mips 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    kernel/rcu/tree.c: In function 'kfree_rcu_work':
+> >> kernel/rcu/tree.c:2946:4: error: implicit declaration of function 'vfree' [-Werror=implicit-function-declaration]
+>        vfree(bvhead->records[i]);
+>        ^
+>    cc1: some warnings being treated as errors
+> 
+> vim +/vfree +2946 kernel/rcu/tree.c
+> 
+>   2884	
+>   2885	/*
+>   2886	 * This function is invoked in workqueue context after a grace period.
+>   2887	 * It frees all the objects queued on ->bhead_free or ->head_free.
+>   2888	 */
+>   2889	static void kfree_rcu_work(struct work_struct *work)
+>   2890	{
+>   2891		unsigned long flags;
+>   2892		struct kvfree_rcu_bulk_data *bkhead, *bknext;
+>   2893		struct kvfree_rcu_bulk_data *bvhead, *bvnext;
+>   2894		struct rcu_head *head, *next;
+>   2895		struct kfree_rcu_cpu *krcp;
+>   2896		struct kfree_rcu_cpu_work *krwp;
+>   2897		int i;
+>   2898	
+>   2899		krwp = container_of(to_rcu_work(work),
+>   2900					struct kfree_rcu_cpu_work, rcu_work);
+>   2901	
+>   2902		krcp = krwp->krcp;
+>   2903		spin_lock_irqsave(&krcp->lock, flags);
+>   2904		/* Channel 1. */
+>   2905		bkhead = krwp->bkvhead_free[0];
+>   2906		krwp->bkvhead_free[0] = NULL;
+>   2907	
+>   2908		/* Channel 2. */
+>   2909		bvhead = krwp->bkvhead_free[1];
+>   2910		krwp->bkvhead_free[1] = NULL;
+>   2911	
+>   2912		/* Channel 3. */
+>   2913		head = krwp->head_free;
+>   2914		krwp->head_free = NULL;
+>   2915		spin_unlock_irqrestore(&krcp->lock, flags);
+>   2916	
+>   2917		/* kmalloc()/kfree() channel. */
+>   2918		for (; bkhead; bkhead = bknext) {
+>   2919			bknext = bkhead->next;
+>   2920	
+>   2921			debug_rcu_bhead_unqueue(bkhead);
+>   2922	
+>   2923			rcu_lock_acquire(&rcu_callback_map);
+>   2924			trace_rcu_invoke_kfree_bulk_callback(rcu_state.name,
+>   2925				bkhead->nr_records, bkhead->records);
+>   2926	
+>   2927			kfree_bulk(bkhead->nr_records, bkhead->records);
+>   2928			rcu_lock_release(&rcu_callback_map);
+>   2929	
+>   2930			if (cmpxchg(&krcp->bkvcache[0], NULL, bkhead))
+>   2931				free_page((unsigned long) bkhead);
+>   2932	
+>   2933			cond_resched_tasks_rcu_qs();
+>   2934		}
+>   2935	
+>   2936		/* vmalloc()/vfree() channel. */
+>   2937		for (; bvhead; bvhead = bvnext) {
+>   2938			bvnext = bvhead->next;
+>   2939	
+>   2940			debug_rcu_bhead_unqueue(bvhead);
+>   2941	
+>   2942			rcu_lock_acquire(&rcu_callback_map);
+>   2943			for (i = 0; i < bvhead->nr_records; i++) {
+>   2944				trace_rcu_invoke_kvfree_callback(rcu_state.name,
+>   2945					(struct rcu_head *) bvhead->records[i], 0);
+> > 2946				vfree(bvhead->records[i]);
+>   2947			}
+>   2948			rcu_lock_release(&rcu_callback_map);
+>   2949	
+>   2950			if (cmpxchg(&krcp->bkvcache[1], NULL, bvhead))
+>   2951				free_page((unsigned long) bvhead);
+>   2952	
+>   2953			cond_resched_tasks_rcu_qs();
+>   2954		}
+>   2955	
+>   2956		/*
+>   2957		 * This path covers emergency case only due to high
+>   2958		 * memory pressure also means low memory condition,
+>   2959		 * when we could not allocate a bulk array.
+>   2960		 *
+>   2961		 * Under that condition an object is queued to the
+>   2962		 * list instead.
+>   2963		 */
+>   2964		for (; head; head = next) {
+>   2965			unsigned long offset = (unsigned long)head->func;
+>   2966			void *ptr = (void *)head - offset;
+>   2967	
+>   2968			next = head->next;
+>   2969			debug_rcu_head_unqueue((struct rcu_head *)ptr);
+>   2970			rcu_lock_acquire(&rcu_callback_map);
+>   2971			trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
+>   2972	
+>   2973			if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset)))
+>   2974				kvfree(ptr);
+>   2975	
+>   2976			rcu_lock_release(&rcu_callback_map);
+>   2977			cond_resched_tasks_rcu_qs();
+>   2978		}
+>   2979	}
+>   2980	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
 
