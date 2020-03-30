@@ -2,269 +2,254 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B482FC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F69FC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7670C20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585589526;
-	bh=ThELxLN1qj4z7D3XU077NgpZ1K+G5sqvD4yPUywogVE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=XfwruEqKmUBBiYU15/sVAXYZZ6irRf2qEavPtLkqPEWW9aVuEPwqYXtn82dkgnoT4
-	 jUC1f9X1s8u7+4wphXAB3iT3/+dl+oW7cVeZCQbBcd3AT63dbSOED3hgMllXLdjKrr
-	 p25StCXawIyaLsl03QgxJh6bQOUcSpSAQCVr2SR4=
+	by mail.kernel.org (Postfix) with ESMTP id 2FF2C2073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlju+egK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgC3RcF (ORCPT
+        id S1729377AbgC3RdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:32:05 -0400
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:40625 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbgC3RcE (ORCPT
+        Mon, 30 Mar 2020 13:33:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42766 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727717AbgC3RdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:32:04 -0400
-Received: by mail-wr1-f45.google.com with SMTP id u10so22701693wro.7
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:32:02 -0700 (PDT)
+        Mon, 30 Mar 2020 13:33:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so22689030wrx.9;
+        Mon, 30 Mar 2020 10:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2513EE8HLBj07QnBJ1ZZfViitBD+ZN+G6CqB/vrjtOw=;
-        b=JrrghBd7zToWXYmqy9zOJu8RQI1N+yYYeqFw5MDhUHbHeyjA1dQD/b1qDBoSyvsIRR
-         8vZ9c7cXQz8VWMFDdmfRIFwE/cpXHdXDVGO0/kgexGpBsU3p58e0WFgzfgWKH4rpqOSO
-         jo23bXErNlkFnCfWHhqJUstlEEqCU07Ht2DKsTZK8fXzetWTQyERfrKRljM2QIoYdCTi
-         Z9BWwHmxohlkeaNWK3vz4dg383ca8MINREdrreuEviVjAOosM5480Fc/k8sfQU7Jefd5
-         uh8ZXJ4hcdzdL/3vuEBfgGi7hion+enOi/HPIcPH1iyCDRqhbCc7WDGcuSHTBOcuH2By
-         d0fQ==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WL4uSfgqnRqNiEwa4Jbu09mlOBbq2UlsDWTsUnT3Ij8=;
+        b=hlju+egK8JkjHnLTzKQOudBFrhlVAKZebr/I5Wopx8BOr7YhguyEo/raqIgEUaw95/
+         nF8lzwMtqauHIZoUEEvNRXM8FmFv0YrTpnchkhPgkpBVD1ELVDvHaxUJAO7dlOs5AwZC
+         FMXwGuEm5rE4zcnr9AFnBsSPFthKIHBUgAbiTbELWkfTfu0YoGLdp2tFiBEhfZEpaSfP
+         dTbmdwtAVNyV+Bv8I8M8pY+pUFb6IRdaw70XL9ZwEGlr8dBcpTgjpeVm/Hjl7wxpuZWS
+         VfsarTN5I1jVhtX35bJS4+xSjwGc6tf2aOc1UH0y783Rmet1aXZuZ4on0nr6DRjyEkDQ
+         Jnvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=2513EE8HLBj07QnBJ1ZZfViitBD+ZN+G6CqB/vrjtOw=;
-        b=A64yKNEQD/PPliK7la/YD/GNFhZtg7v/mYknTbkeH9rkqHSAXCD1CmNkN9Q5Je9DQC
-         mVMf4XOnbzFebmK5hqUmuMw+LoVHoku7IArTq5P8xriFJIWHp+gdgyEuin0BDoZdERnX
-         aO47QemMB4IRPMQVyaYxQ5XE6URoNfOJlJmDqCvGV9S+WjGE/BJbWXgzPFit7ppl2jT8
-         AnXZQfowijT/YIUt62odTikOc7dvR6h3Hcd3UnGJauKM3aJDXt/f21EYI/8bp+dRgxBk
-         aJ7odyptreoXumW7erPIaETRauX2K6djRfTwmZpvsJo6riDyDj+nBTf6bYW45PBzafCP
-         kiAw==
-X-Gm-Message-State: ANhLgQ2aC0BdqfcCPvQjL/u1o5z1O1NpYt0IE2+Oimy+Rca64w4RlwvW
-        OXgVPIQ7LEV1YEU9khXRVjo=
-X-Google-Smtp-Source: ADFU+vuScWEWpRYxolPGkz1A9L/L5yBuJVG9gk9XGupr4bIjZoiH8bhnbxUDxMPZ9iicEsTCDZTBvw==
-X-Received: by 2002:a05:6000:1251:: with SMTP id j17mr16087559wrx.228.1585589521687;
-        Mon, 30 Mar 2020 10:32:01 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id o67sm348910wmo.5.2020.03.30.10.32.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 10:32:01 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 19:31:59 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [GIT PULL] scheduler changes for v5.7
-Message-ID: <20200330173159.GA128106@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=WL4uSfgqnRqNiEwa4Jbu09mlOBbq2UlsDWTsUnT3Ij8=;
+        b=hMdUbyiHw0loCzeJqI6o4EZDSdG4TdPUqYsGPy+C5m0hQPbzjrFvD0g9wdNfPXn+SU
+         IEl6WFdJiriAvfhEJkqtEd/EBII9+HsA+qlyuW2vmPGXxOrvcEWafHr6Laz3IfIETYRX
+         QaP/lE8f7ZrokIiuPYMcr4Hmhezw02qeveB9Xaim2+vVAoeGmvUYkQymUU6eMEkwXi9g
+         ItH4GhJZpc0tbw9YjMgJ6e6JCazMx8gVoTaInxUOVaHsUPa+XDz3S31AfvXsLaUg/QlJ
+         F4UTJ6qXpznOfoxdcBAVHvNTsKK0gu0WzcQPewefUrWiE/xee7NOCOVU3T0d97O4ISbY
+         IXLA==
+X-Gm-Message-State: ANhLgQ0y/w/x6JN339E4ec1zYQb7GbHtEfM0bXLdQr257GARVFIP7B7h
+        KkQUtagOb9Bd3cN2xrwnYR0=
+X-Google-Smtp-Source: ADFU+vvEf+Uobddq8H6dPQE69QZ1nDX3PY9qv5NQJk6c5B1YmdX7jJH7sCeBYa33Lm3iTnBR9eYVnA==
+X-Received: by 2002:adf:e403:: with SMTP id g3mr15218812wrm.333.1585589590287;
+        Mon, 30 Mar 2020 10:33:10 -0700 (PDT)
+Received: from [10.230.3.19] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id r5sm308704wmr.15.2020.03.30.10.33.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 10:33:09 -0700 (PDT)
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+ <20200329150854.GA31812@lunn.ch>
+ <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
+Date:   Mon, 30 Mar 2020 10:33:03 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
-
-Please pull the latest sched-core-for-linus git tree from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-for-linus
-
-   # HEAD: 313f16e2e35abb833eab5bdebc6ae30699adca18 Merge branch 'sched/rt' into sched/core, to pick up completed topic tree
-
-The main changes in this cycle are:
-
- - Various NUMA scheduling updates: harmonize the load-balancer and NUMA 
-   placement logic to not work against each other. The intended result is 
-   better locality, better utilization and fewer migrations.
-
- - Introduce Thermal Pressure tracking and optimizations, to improve task 
-   placement on thermally overloaded systems.
-
- - Implement frequency invariant scheduler accounting on (some) x86 CPUs. 
-   This is done by observing and sampling the 'recent' CPU frequency 
-   average at ~tick boundaries. The CPU provides this data via the 
-   APERF/MPERF MSRs. This hopefully makes our capacity estimates more 
-   precise and keeps tasks on the same CPU better even if it might seem 
-   overloaded at a lower momentary frequency. (As usual, turbo mode is a 
-   complication that we resolve by observing the maximum frequency and 
-   renormalizing to it.)
-
- - Add asymmetric CPU capacity wakeup scan to improve capacity 
-   utilization on asymmetric topologies. (big.LITTLE systems)
-
- - PSI fixes and optimizations.
-
- - RT scheduling capacity awareness fixes & improvements.
-
- - Optimize the CONFIG_RT_GROUP_SCHED constraints code.
-
- - Misc fixes, cleanups and optimizations - see the changelog for details.
-
- Thanks,
-
-	Ingo
-
------------------->
-Chris Wilson (1):
-      sched/vtime: Prevent unstable evaluation of WARN(vtime->state)
-
-Giovanni Gherdovich (6):
-      x86, sched: Add support for frequency invariance
-      x86, sched: Add support for frequency invariance on SKYLAKE_X
-      x86, sched: Add support for frequency invariance on XEON_PHI_KNL/KNM
-      x86, sched: Add support for frequency invariance on ATOM_GOLDMONT*
-      x86, sched: Add support for frequency invariance on ATOM
-      x86/intel_pstate: Handle runtime turbo disablement/enablement in frequency invariance
-
-Ingo Molnar (1):
-      thermal/cpu-cooling, sched/core: Move the arch_set_thermal_pressure() API to generic scheduler code
-
-Jann Horn (1):
-      threads: Update PID limit comment according to futex UAPI change
-
-Johannes Weiner (3):
-      psi: Fix cpu.pressure for cpu.max and competing cgroups
-      psi: Optimize switching tasks inside shared cgroups
-      MAINTAINERS: Add maintenance information for psi
-
-Konstantin Khlebnikov (1):
-      sched/rt: Optimize checking group RT scheduler constraints
-
-Liang Chen (1):
-      kthread: Do not preempt current task if it is going to call schedule()
-
-Mel Gorman (8):
-      sched/numa: Trace when no candidate CPU was found on the preferred node
-      sched/numa: Distinguish between the different task_numa_migrate() failure cases
-      sched/numa: Use similar logic to the load balancer for moving between domains with spare capacity
-      sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks
-      sched/numa: Find an alternative idle CPU if the CPU is part of an active NUMA balance
-      sched/numa: Bias swapping tasks based on their preferred node
-      sched/numa: Stop an exhastive search if a reasonable swap candidate or idle CPU is found
-      sched/numa: Acquire RCU lock for checking idle cores during NUMA balancing
-
-Michael Wang (1):
-      sched: Avoid scale real weight down to zero
-
-Morten Rasmussen (3):
-      sched/fair: Add asymmetric CPU capacity wakeup scan
-      sched/topology: Remove SD_BALANCE_WAKE on asymmetric capacity systems
-      sched/fair: Remove wake_cap()
-
-Paul Turner (1):
-      sched/core: Distribute tasks within affinity masks
-
-Qais Yousef (6):
-      sched/rt: cpupri_find: Implement fallback mechanism for !fit case
-      sched/rt: Re-instate old behavior in select_task_rq_rt()
-      sched/rt: Optimize cpupri_find() on non-heterogenous systems
-      sched/rt: Allow pulling unfitting task
-      sched/rt: Remove unnecessary push for unfit tasks
-      sched/rt: cpupri_find: Trigger a full search as fallback
-
-Scott Wood (1):
-      sched/core: Remove duplicate assignment in sched_tick_remote()
-
-Srikar Dronamraju (1):
-      sched/fair: Optimize select_idle_core()
-
-Tao Zhou (1):
-      sched/fair: Fix condition of avg_load calculation
-
-Thara Gopinath (9):
-      sched/pelt: Add support to track thermal pressure
-      sched/topology: Add callback to read per CPU thermal pressure
-      drivers/base/arch_topology: Add infrastructure to store and update instantaneous thermal pressure
-      arm64/topology: Populate arch_scale_thermal_pressure() for arm64 platforms
-      arm/topology: Populate arch_scale_thermal_pressure() for ARM platforms
-      sched/fair: Enable periodic update of average thermal pressure
-      sched/fair: Update cpu_capacity to reflect thermal pressure
-      thermal/cpu-cooling: Update thermal pressure in case of a maximum frequency capping
-      sched/fair: Enable tuning of decay period
-
-Thomas Gleixner (2):
-      sched/rt: Provide migrate_disable/enable() inlines
-      sched: Provide cant_migrate()
-
-Valentin Schneider (4):
-      sched/core: Remove for_each_lower_domain()
-      sched/fair: Fix kernel build warning in test_idle_cores() for !SMT NUMA
-      sched/topology: Don't enable EAS on SMT systems
-      arm64: defconfig: enable CONFIG_SCHED_SMT
-
-Vincent Guittot (9):
-      sched/fair: Reorder enqueue/dequeue_task_fair path
-      sched/numa: Replace runnable_load_avg by load_avg
-      sched/pelt: Remove unused runnable load average
-      sched/pelt: Add a new runnable average signal
-      sched/fair: Take into account runnable_avg to classify group
-      sched/fair: Fix runnable_avg for throttled cfs
-      sched/fair: Fix reordering of enqueue/dequeue_task_fair()
-      sched/fair: Fix enqueue_task_fair warning
-      sched/fair: Improve spreading of utilization
-
-Yafang Shao (1):
-      psi: Move PF_MEMSTALL out of task->flags
-
-Yu Chen (1):
-      sched/deadline: Make two functions static
 
 
- Documentation/admin-guide/kernel-parameters.txt |  16 +
- Documentation/robust-futex-ABI.txt              |  14 +-
- MAINTAINERS                                     |   6 +
- arch/arm/include/asm/topology.h                 |   3 +
- arch/arm64/configs/defconfig                    |   1 +
- arch/arm64/include/asm/topology.h               |   3 +
- arch/x86/include/asm/topology.h                 |  25 +
- arch/x86/kernel/smpboot.c                       | 290 ++++++++-
- drivers/cpufreq/intel_pstate.c                  |   1 +
- drivers/thermal/cpufreq_cooling.c               |  19 +-
- include/linux/arch_topology.h                   |  10 +
- include/linux/cpumask.h                         |   7 +
- include/linux/kernel.h                          |   7 +
- include/linux/preempt.h                         |  30 +
- include/linux/psi.h                             |   2 +
- include/linux/psi_types.h                       |  10 +-
- include/linux/sched.h                           |  37 +-
- include/linux/sched/topology.h                  |   8 +
- include/linux/threads.h                         |   2 +-
- include/trace/events/sched.h                    |  53 +-
- init/Kconfig                                    |   4 +
- kernel/kthread.c                                |  17 +-
- kernel/sched/core.c                             |  27 +-
- kernel/sched/cpupri.c                           | 158 +++--
- kernel/sched/cpupri.h                           |   6 +-
- kernel/sched/cputime.c                          |  41 +-
- kernel/sched/deadline.c                         |   6 +-
- kernel/sched/debug.c                            |  17 +-
- kernel/sched/fair.c                             | 791 ++++++++++++++++--------
- kernel/sched/pelt.c                             |  90 ++-
- kernel/sched/pelt.h                             |  31 +
- kernel/sched/psi.c                              | 111 +++-
- kernel/sched/rt.c                               |  66 +-
- kernel/sched/sched.h                            |  69 ++-
- kernel/sched/stats.h                            |  31 +-
- kernel/sched/topology.c                         |  27 +-
- lib/cpumask.c                                   |  29 +
- 37 files changed, 1552 insertions(+), 513 deletions(-)
+On 3/29/2020 10:26 PM, Oleksij Rempel wrote:
+> Hi Andrew,
+> 
+> On Sun, Mar 29, 2020 at 05:08:54PM +0200, Andrew Lunn wrote:
+>> On Sun, Mar 29, 2020 at 01:04:57PM +0200, Oleksij Rempel wrote:
+>>
+>> Hi Oleksij
+>>
+>>> +config DEPRECATED_PHY_FIXUPS
+>>> +	bool "Enable deprecated PHY fixups"
+>>> +	default y
+>>> +	---help---
+>>> +	  In the early days it was common practice to configure PHYs by adding a
+>>> +	  phy_register_fixup*() in the machine code. This practice turned out to
+>>> +	  be potentially dangerous, because:
+>>> +	  - it affects all PHYs in the system
+>>> +	  - these register changes are usually not preserved during PHY reset
+>>> +	    or suspend/resume cycle.
+>>> +	  - it complicates debugging, since these configuration changes were not
+>>> +	    done by the actual PHY driver.
+>>> +	  This option allows to disable all fixups which are identified as
+>>> +	  potentially harmful and give the developers a chance to implement the
+>>> +	  proper configuration via the device tree (e.g.: phy-mode) and/or the
+>>> +	  related PHY drivers.
+>>
+>> This appears to be an IMX only problem. Everybody else seems to of got
+>> this right. There is no need to bother everybody with this new
+>> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
+>> the name.
+> 
+> Actually, all fixups seems to do wring thing:
+> arch/arm/mach-davinci/board-dm644x-evm.c:915:		phy_register_fixup_for_uid(LXT971_PHY_ID, LXT971_PHY_MASK,
+> 
+> Increased MII drive strength. Should be probably enabled by the PHY
+> driver.
+> 
+> arch/arm/mach-imx/mach-imx6q.c:167:		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
+> arch/arm/mach-imx/mach-imx6q.c:169:		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+> arch/arm/mach-imx/mach-imx6q.c:171:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+> arch/arm/mach-imx/mach-imx6q.c:173:		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
+> arch/arm/mach-imx/mach-imx6sx.c:40:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+> arch/arm/mach-imx/mach-imx6ul.c:47:		phy_register_fixup_for_uid(PHY_ID_KSZ8081, MICREL_PHY_ID_MASK,
+> arch/arm/mach-imx/mach-imx7d.c:54:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffff,
+> arch/arm/mach-imx/mach-imx7d.c:56:		phy_register_fixup_for_uid(PHY_ID_BCM54220, 0xffffffff,
+> arch/arm/mach-mxs/mach-mxs.c:262:		phy_register_fixup_for_uid(PHY_ID_KSZ8051, MICREL_PHY_ID_MASK,
+> 
+> Fix in some random manner PHY specific errata, enable clock output and
+> configure the clock skew.
+> 
+> arch/arm/mach-orion5x/dns323-setup.c:645:		phy_register_fixup_for_uid(MARVELL_PHY_ID_88E1118,
+> 
+> Enable LED. Should be done in DT if supported.
+> 
+> arch/powerpc/platforms/85xx/mpc85xx_mds.c:305:		phy_register_fixup_for_id(phy_id, mpc8568_fixup_125_clock);
+> arch/powerpc/platforms/85xx/mpc85xx_mds.c:306:		phy_register_fixup_for_id(phy_id, mpc8568_mds_phy_fixups);
+> arch/powerpc/platforms/85xx/mpc85xx_mds.c:311:		phy_register_fixup_for_id(phy_id, mpc8568_mds_phy_fixups);
+> 
+> Fix in some random manner PHY specific errata, enable clock output and
+> configure the clock skew.
+> 
+> drivers/net/ethernet/dnet.c:818:	err = phy_register_fixup_for_uid(0x01410cc0, 0xfffffff0,
+> 
+> Enable LED. Should be done in DT if supported.
+> 
+> drivers/net/usb/lan78xx.c:2071:		ret = phy_register_fixup_for_uid(PHY_KSZ9031RNX, 0xfffffff0,
+> drivers/net/usb/lan78xx.c:2078:		ret = phy_register_fixup_for_uid(PHY_LAN8835, 0xfffffff0,
+> 
+> enable clock output and configure the clock skew.
+> 
+> As we can see, all of used fixups seem to be wrong. For example micrel
+> PHY errata should be fixed in one place for all devices. Not only for
+> some iMX6 SoC. I used this option for iMX, because i can test it.
+
+"wrong" is a bit general without really trying to understand the history
+of where this came from. Historically, those platforms were not DT
+enabled for a while (except PPC) and there was no way to pass platform
+specific to the PHY driver so the only way to key off specific
+board/platform desired behavior was to register a PHY fixup.
+
+There are also various configuration which are really policies (as in
+policy vs. mechanism separation) for the board such as configuring LEDs
+in a certain way etc. Very quickly you start putting more of that policy
+into DT which is just frowned upon, unless there is a good abstraction
+model whereby an Ethernet Device Tree node can also be a LED provider.
+
+> 
+>> There is no need to bother everybody with this new
+>> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
+>> the name.
+> 
+> A lot of work is needed to fix all of them. I just do not have enough
+> time to do it.
+> 
+>> Having said that, i'm not sure this is the best solution. You cannot
+>> build one kernel which runs on all machines.  Did you consider some
+>> sort of DT property to disable these fixup? What other ideas did you
+>> have before deciding on this solution?
+> 
+> As soon as all PHY driver support all needed bits used in this fixups,
+> we can use drivers on top of fixups. Since changes made by fixups will
+> be overwritten by PHY drivers any way. The Kconfig option is needed only for
+> developers who has enough resource to investigate this issues and
+> mainline needed changes.
+
+We all know this is not going to happen, if people cared so much about
+fixing such a problem, it would have been solved by now. If you do care
+about IMX though, then please work on removing the fixups, but do not
+introduce yet another config that you are guaranteed is going to be
+turned on by default, thus creating another test matrix with no real value.
+-- 
+Florian
