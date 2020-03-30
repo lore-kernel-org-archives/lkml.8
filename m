@@ -2,110 +2,89 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118ADC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46972C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D527720757
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O6mWpXNn"
+	by mail.kernel.org (Postfix) with ESMTP id 1474920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585602444;
+	bh=q4pS4J1mp6ArtSGG3BzXUsFV2VbMyXy+vMyIqTSpWc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ov552HL9GTXGQFTLFI6P7Xe4d9M5jdAKp4qs67kHKqFKKvvgluFwUq0pig7XPAu+p
+	 b0mQaUNO8vSRjZqyjqs3Snmd6sOVLm1XWWi6c4ibTUyEGoO6EXoFOeWApEXt4tXdDQ
+	 4wjSjZkUESOwUMSrFoTkBoSH2WpYDXPWNleCZC1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgC3VGu (ORCPT
+        id S1728953AbgC3VHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:06:50 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:45333 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728370AbgC3VGu (ORCPT
+        Mon, 30 Mar 2020 17:07:23 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34615 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728317AbgC3VHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:06:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585602410;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O5orfkpIWxG4X0fim40qmaOHzOaHEPG36AFc1Y+7h+M=;
-        b=O6mWpXNnwpSfjsw+G7L4E8era2vUJYSlFo5Y+LKQGkjzrh6++mtgrhUsfx/zzbz2yCk9BO
-        4wxPsR6zp+lBdKulFZcg12eTHaG22LVDmI2eFa6YvMwyh8Fw/i2kSv7y3MhOZ3liDLTQZX
-        N0gaXPQ0FQMecRel0ZALJa3fnnkr73M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-H3ehbNgZPFCmGVZexGte0w-1; Mon, 30 Mar 2020 17:06:48 -0400
-X-MC-Unique: H3ehbNgZPFCmGVZexGte0w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 275CA18A6EC0;
-        Mon, 30 Mar 2020 21:06:46 +0000 (UTC)
-Received: from elisabeth (unknown [10.36.110.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A26CA48;
-        Mon, 30 Mar 2020 21:06:42 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 23:06:34 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Colin Ian King <colin.king@canonical.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH v5] staging: vt6656: add error code
- handling to unused variable
-Message-ID: <20200330230634.3b905158@elisabeth>
-In-Reply-To: <20200330184517.33074-1-jbwyatt4@gmail.com>
-References: <20200330184517.33074-1-jbwyatt4@gmail.com>
-Organization: Red Hat
+        Mon, 30 Mar 2020 17:07:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id h131so19418782iof.1;
+        Mon, 30 Mar 2020 14:07:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FFhY4ASs+nrRWDCzVunQPKUFb3bIelB89N683NPJ1pU=;
+        b=Tz0npkqoJ3l19zsgjAygMj16gg0mlTZfIZj9RFy3cCcqqlxPu28TxHY3i0rz5e2B+n
+         RCKVW9Cj3p/GEYCt4vN1LVGEjQFdYdwSv/ZDUDVchAu6EcNoMT2fRGer6BBWjmON4is/
+         kkhmer8gjbcDSJLpvCbwtR2PcYdNWzRNB6/MUZuY+BqNbfT8PhejxjFCNxrJBc6d0joj
+         pQrGH8XtSMkVdT8eepcKHP2UEdkKTYfkN+7sLAKsGr/fH//YS59IQzMpLe7ka9O56TSB
+         rdn2lgA+TEl+WUomlMKaHcdFAnY4pM5iXXGI7OVEPBnCBXvh3bTCWFLK9CeiAVF51MCx
+         InGg==
+X-Gm-Message-State: ANhLgQ0tlMD2k9oxLVDpOrRbIiCR1eSo0vP9JDNSIgedtxUrQ74ojp1b
+        o1IwoupgdUnfYeIoholnDA==
+X-Google-Smtp-Source: ADFU+vshZsl865DqEmGdlPGknft1UjTIfXlyoQCnH02llIqKLKK6OFoUUz9udQJ30GQ1Qgh95RHf0A==
+X-Received: by 2002:a5e:8c13:: with SMTP id n19mr12291670ioj.116.1585602442111;
+        Mon, 30 Mar 2020 14:07:22 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id z20sm4426438iod.25.2020.03.30.14.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 14:07:21 -0700 (PDT)
+Received: (nullmailer pid 10443 invoked by uid 1000);
+        Mon, 30 Mar 2020 21:07:19 -0000
+Date:   Mon, 30 Mar 2020 15:07:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 06/12] docs: dt: fix a broken reference to input.yaml
+Message-ID: <20200330210719.GA9972@bogus>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org>
+ <5a10b58afa9ec03acaaddbd7668899da674dae15.1584450500.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a10b58afa9ec03acaaddbd7668899da674dae15.1584450500.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 11:45:17 -0700
-"John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
-
-> Add error code handling to unused 'ret' variable that was never used.
-> Return an error code from functions called within vnt_radio_power_on.
+On Tue, 17 Mar 2020 14:10:45 +0100, Mauro Carvalho Chehab wrote:
+> The old file was converted to yaml, but its reference was
+> still pointing to the old one.
 > 
-> Issue reported by coccinelle (coccicheck).
-> 
-> Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> Suggested-by: Stefano Brivio <sbrivio@redhat.com>
-> Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+> Fixes: 7cef1079e3ad ("dt-bindings: input: Add common input binding in json-schema")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
-> v5: Remove Suggested-by: Julia Lawall above seperator line.
->     Remove break; statement in switch block.
->     break; removal checked by both gcc compile and checkpatch.
->
-> [...]
->
-> @@ -734,14 +738,15 @@ int vnt_radio_power_on(struct vnt_private *priv)
->  	case RF_VT3226:
->  	case RF_VT3226D0:
->  	case RF_VT3342A0:
-> -		vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
-> -				    (SOFTPWRCTL_SWPE2 | SOFTPWRCTL_SWPE3));
-> +		ret = vnt_mac_reg_bits_on(priv, MAC_REG_SOFTPWRCTL,
-> +					  (SOFTPWRCTL_SWPE2 | 
-> +					  SOFTPWRCTL_SWPE3));
->  		break;
->  	}
-> +	if (ret)
-> +		return ret;
+>  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Did you send the wrong version perhaps?
+Applied, thanks.
 
--- 
-Stefano
-
+Rob
