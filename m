@@ -2,87 +2,116 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CD1C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7459C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EAF20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:46:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C8BpVAmC"
+	by mail.kernel.org (Postfix) with ESMTP id C53C520757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgC3Iql (ORCPT
+        id S1729688AbgC3Irm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:46:41 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:43439 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729422AbgC3Iql (ORCPT
+        Mon, 30 Mar 2020 04:47:42 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:59160
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729538AbgC3Irm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:46:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585558000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=235mzFXtWzoySYpbaveQKvChOB41dl+JsRSFM2voh5E=;
-        b=C8BpVAmCxofa5rgQMUVZXIiu62OmEznNfs2kqIvnI1iVqvNYoUHugaRqIX5brbLHAWGGEL
-        O+IqpKq8xCSUJVuqP439lTMwhBaqjqEAOLnmniySalPGJwd4g2jvG3iFM8tRHzjuJMgqx7
-        PNyHBr8XTZIdyiN5+hWAY+Z5VgCbmTI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-cHSXZ7S3N-e1sPsYe_XPvw-1; Mon, 30 Mar 2020 04:46:38 -0400
-X-MC-Unique: cHSXZ7S3N-e1sPsYe_XPvw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1C2F13F9;
-        Mon, 30 Mar 2020 08:46:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.36])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0B921953DF;
-        Mon, 30 Mar 2020 08:46:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 30 Mar 2020 10:46:36 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 10:46:33 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     ebiederm@xmission.com, christian.brauner@ubuntu.com, tj@kernel.org,
-        akpm@linux-foundation.org, guro@fb.com, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, Mingfangsen <mingfangsen@huawei.com>,
-        linfeilong <linfeilong@huawei.com>
-Subject: Re: [PATCH] signal: use kill_proc_info instead of kill_pid_info in
- kill_something_info
-Message-ID: <20200330084632.GA13298@redhat.com>
-References: <80236965-f0b5-c888-95ff-855bdec75bb3@huawei.com>
+        Mon, 30 Mar 2020 04:47:42 -0400
+X-IronPort-AV: E=Sophos;i="5.72,323,1580770800"; 
+   d="scan'208";a="344238156"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 10:47:39 +0200
+Date:   Mon, 30 Mar 2020 10:47:38 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Michel Lespinasse <walken@google.com>,
+        Coccinelle <cocci@systeme.lip6.fr>, linux-mm@kvack.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Hugh Dickins <hughd@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ying Han <yinghan@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [Cocci] [v3 05/10] mmap locking API: Improving the Coccinelle
+ software
+In-Reply-To: <2c74e465-249d-eeb8-86fe-462b93bfe743@web.de>
+Message-ID: <alpine.DEB.2.21.2003301046530.2432@hadrien>
+References: <20200327225102.25061-1-walken@google.com> <20200327225102.25061-6-walken@google.com> <bc2980d7-b823-2fff-d29c-57dcbc9aaf27@web.de> <CANN689H=tjNi=g6M776qo8inr+OfAu8mtL5xsJpu4F=dB6R9zA@mail.gmail.com> <3c222f3c-c8e2-660a-a348-5f3583e7e036@web.de>
+ <CANN689HyS0dYWZw3AeWGBvN6_2G4hRDzjMJQ_adHMh0ZkiACYg@mail.gmail.com> <2c74e465-249d-eeb8-86fe-462b93bfe743@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80236965-f0b5-c888-95ff-855bdec75bb3@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/mixed; boundary="8323329-454865659-1585558059=:2432"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/30, Zhiqiang Liu wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-454865659-1585558059=:2432
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+
+
+On Mon, 30 Mar 2020, Markus Elfring wrote:
+
+> >> How will corresponding software development resources evolve?
+> >
+> > I don't think I understand the question, or, actually, are you asking
+> > me or the coccinelle developers ?
 >
-> @@ -1552,12 +1552,8 @@ static int kill_something_info(int sig, struct kernel_siginfo *info, pid_t pid)
->  {
->  	int ret;
-> 
-> -	if (pid > 0) {
-> -		rcu_read_lock();
-> -		ret = kill_pid_info(sig, info, find_vpid(pid));
-> -		rcu_read_unlock();
-> -		return ret;
-> -	}
-> +	if (pid > 0)
-> +		return kill_proc_info(sig, info, pid);
-> 
+> I hope that more development challenges will be picked up.
+>
+> The code from a mentioned source file can be reduced to the following
+> test file.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kvm/mmu/paging_tmpl.h?id=7111951b8d4973bda27ff663f2cf18b663d15b48#n122
+>
+> // deleted part
+> static inline int FNAME(is_present_gpte)(unsigned long pte)
+> {
+> #if PTTYPE != PTTYPE_EPT
+> 	return pte & PT_PRESENT_MASK;
+> #else
+> 	return pte & 7;
+> #endif
+> }
+> // deleted part
+>
+>
+> Application of the software “Coccinelle 1.0.8-00029-ga549b9f0” (OCaml 4.10.0)
+>
+> elfring@Sonne:~/Projekte/Coccinelle/Probe> spatch --parse-c paging_tmpl-excerpt1.h
+> …
+> (ONCE) CPP-MACRO: found known macro = FNAME
+> …
+> parse error
+>  = File "paging_tmpl-excerpt1.h", line 2, column 41, charpos = 57
+>   around = 'unsigned',
+> …
+> BAD:!!!!! static inline int FNAME(is_present_gpte)(unsigned long pte)
+> …
+> NB total files = 1; perfect = 0; pbs = 1; timeout = 0; =========> 0%
+> nb good = 1,  nb passed = 1 =========> 10.00% passed
+> nb good = 1,  nb bad = 8 =========> 20.00% good or passed
+>
+>
+> How would you like to improve the affected software areas?
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+This can be addressed by adding a macro definition to standard.h.
 
+But once the change is done, I don't see any reason to bother with this.
+
+julia
+--8323329-454865659-1585558059=:2432--
