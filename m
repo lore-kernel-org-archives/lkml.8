@@ -2,69 +2,178 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEA8C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F923C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2018920786
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1069320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585602050;
+	bh=MsOf2rjfkn6D5z9cwPg2yI0tluOCVboTQo6CzMW3S+M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0vBaNY3h8AfVqdrDldw+Uq2QRrniIjKqVOdrHRe+/8kgeHEzgh+nnOEqNsXO8756f
+	 u40hozeljGq0mULKKIznKyhOQ5gXTYIldQCuzgz0kTE8+xnu6FemSFHNgX+rumVkAX
+	 GzqeZenl//Ql1qccxNTrAHGFpC882cjZrAJEVuDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgC3VAR (ORCPT
+        id S1728784AbgC3VAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:00:17 -0400
-Received: from www62.your-server.de ([213.133.104.62]:41432 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728317AbgC3VAQ (ORCPT
+        Mon, 30 Mar 2020 17:00:49 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:38405 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728317AbgC3VAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:00:16 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jJ1W2-00008c-T2; Mon, 30 Mar 2020 23:00:14 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jJ1W2-000MLg-LA; Mon, 30 Mar 2020 23:00:14 +0200
-Subject: Re: [PATCH bpf-next] bpf: lsm: Make BPF_LSM depend on BPF_EVENTS
-To:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>
-References: <20200330204059.13024-1-kpsingh@chromium.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <a51da62a-03da-fae5-f6eb-9aacdd7861b2@iogearbox.net>
-Date:   Mon, 30 Mar 2020 23:00:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 30 Mar 2020 17:00:48 -0400
+Received: by mail-il1-f194.google.com with SMTP id n13so9987666ilm.5;
+        Mon, 30 Mar 2020 14:00:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=s3VoV0iGSHssFfSmkEpV8NmrUdnQxQrDZOaiOqnYY+E=;
+        b=mep/XfHByB+Y6jW1Z+xjtRdYI1CD4BG/DNyf8WLGagFWfEM1ocxqrApfNBfy12Rb2G
+         lQFD6C7SngTOmEK8YnrO8wQiVJMni9UJDjqQHFaQItVU7jKJT7meSF3+uSDTAzNE+5f+
+         drnY+8Uy+561ejK8/+VPY85eTE9+bbxQ/xxv6h7X6NKHl7sdCTC3Oe39PSKLsc/LtDa3
+         BFkGiQhf6k4dnOH6gwqxEDWScMNTZjZZC9oOTP22p5Z1slzb7hY1TsGNxLnSw2GE4EBZ
+         TBGZUMLnGzzAfrcAqxFv2Dy84yTT7a8dK753bwroPi12Soc9L3vemeYg+RWfBEn1Ejvn
+         kh8Q==
+X-Gm-Message-State: ANhLgQ0/ivnhkKbsqjA/1N1XZB+j/l75CD2Ur559RJJtHxouRiQNi3i7
+        V8MVuvqaqemA3K2loob5GQ==
+X-Google-Smtp-Source: ADFU+vud/zP759a532s/gH7ulc5KJRaFL2fNP6x7E9IgKnJT/rwzUJQ9IGoEJ2O+coYrgUJGQjGZ+w==
+X-Received: by 2002:a92:8fcd:: with SMTP id r74mr13968641ilk.39.1585602047313;
+        Mon, 30 Mar 2020 14:00:47 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id z15sm5262450ilf.0.2020.03.30.14.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 14:00:46 -0700 (PDT)
+Received: (nullmailer pid 510 invoked by uid 1000);
+        Mon, 30 Mar 2020 21:00:44 -0000
+Date:   Mon, 30 Mar 2020 15:00:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
+Message-ID: <20200330210044.GA16928@bogus>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
+ <20200317174344.GB1464607@ulmo>
+ <20200317213056.futfiwn4qgr2njye@pengutronix.de>
+ <20200318230539.GB2874972@ulmo>
+ <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
+ <20200319170455.GC3354541@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <20200330204059.13024-1-kpsingh@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25767/Mon Mar 30 15:08:30 2020)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200319170455.GC3354541@ulmo>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 10:40 PM, KP Singh wrote:
-> From: KP Singh <kpsingh@google.com>
+On Thu, Mar 19, 2020 at 06:04:55PM +0100, Thierry Reding wrote:
+> On Thu, Mar 19, 2020 at 08:05:10AM +0100, Uwe Kleine-König wrote:
+> > On Thu, Mar 19, 2020 at 12:05:39AM +0100, Thierry Reding wrote:
+> > > On Tue, Mar 17, 2020 at 10:30:56PM +0100, Uwe Kleine-König wrote:
+> > > > Hello Thierry,
+> > > > 
+> > > > On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
+> > > > > On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
+> > > > > > Add the description of PWM_POLARITY_NORMAL flag.
+> > > > > > 
+> > > > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > > > > > ---
+> > > > > > 
+> > > > > >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
+> > > > > >  1 file changed, 1 insertion(+)
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > > > index 084886bd721e..440c6b9a6a4e 100644
+> > > > > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > > > @@ -46,6 +46,7 @@ period in nanoseconds.
+> > > > > >  Optionally, the pwm-specifier can encode a number of flags (defined in
+> > > > > >  <dt-bindings/pwm/pwm.h>) in a third cell:
+> > > > > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > > > > > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
+> > > > > 
+> > > > > This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT ABI.
+> > > > 
+> > > > "is not part of the DT ABI" is hardly a good reason. If it's sensible to
+> > > > be used, it is sensible to define it.
+> > > 
+> > > That's exactly it. It's not sensible at all to use it.
+> > 
+> > If you think the argument is "It is not sensible to be used." then please
+> > say so and don't add "PWM_POLARITY_NORMAL is not part of the DT ABI."
+> > which seems to be irrelevant now.
 > 
-> LSM and tracing programs share their helpers with bpf_tracing_func_proto
-> which is only defined (in bpf_trace.c) when BPF_EVENTS is enabled.
+> I did say that, didn't I? I said that it doesn't make sense because it
+> isn't part of the ABI. And since this is the document that defines the
+> DT ABI, why should we add something that isn't part of the ABI?
 > 
-> Instead of adding __weak symbol, make BPF_LSM depend on
-> BPF_EVENTS so that both tracing and LSM programs can actually share
-> helpers.
+> Now, if you want to make this part of the ABI, then that should be done
+> as part of this patch so that the patch is actually consistent.
 > 
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: fc611f47f218 ("bpf: Introduce BPF_PROG_TYPE_LSM")
+> > > If you define it here it means people are allowed to do stuff like
+> > > this:
+> > > 
+> > > 	pwms = <&pwm 1234 PWM_POLARITY_INVERTED | PWM_POLARITY_NORMAL>;
+> > > 
+> > > which doesn't make sense.
+> > 
+> > I would hope that a human reader would catch this.
+> 
+> Maybe. At the same time we're now moving towards automatic checking of
+> device trees against a binding. These tools will only ever see the
+> binary representation, so won't be able to spot this nonsense. The whole
+> purpose of having these tools is so that we don't have to do the tedious
+> work of manually inspecting all device tree files. It's also not
+> guaranteed that we'll even be seeing all of the device tree files ever
+> written against these bindings.
+> 
+> > 
+> > > What's more, it impossible for the code to even notice that you're
+> > > being silly because | PWM_POLARITY_NORMAL is just | 0 and that's just
+> > > a nop.
+> > 
+> > I think this argument is a bad one. Whenever you introduce a
+> > function or symbol you can use it in a wrong way. With this argument you
+> > can also say GPIO_ACTIVE_LOW doesn't make sense because
+> > 
+> > 	pwms = <&pwm 1234 GPIO_ACTIVE_LOW>;
+> > 
+> > is silly.
+> 
+> Yes, it's also obviously silly to try and eat a hammer. I was assuming
+> people have at least /some/ sense and try not to use GPIO related flags
+> with PWM specifiers. And because I think that people aren't totally
+> stupid, I think they'll be capable of understanding that by default a
+> PWM will be "normal" and only if they want to deviate from "normal" do
+> they need to do something special, like specify PWM_POLARITY_INVERTED.
+> 
+> I'm growing tired of this discussion, to be honest. So if you really
+> absolutely must have PWM_POLARITY_NORMAL so that you can read DT files
+> without having to think, then fine, I'll take a patch that adds that.
+> But please let's not confuse the definitions for DT with the polarity
+> enum in the API.
 
-Applied, thanks!
+I agree with Thierry here. I'd give my reasons, but I've got 200 other 
+patches to review.
+
+Rob
