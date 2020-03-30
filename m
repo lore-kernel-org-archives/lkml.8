@@ -2,130 +2,130 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC2AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1747C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672CC20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786722072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PsHW7I1f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W3HX9eH/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgC3S6d (ORCPT
+        id S1727866AbgC3TCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:58:33 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40178 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgC3S6d (ORCPT
+        Mon, 30 Mar 2020 15:02:17 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:39503 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726518AbgC3TCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:58:33 -0400
-Received: by mail-pl1-f196.google.com with SMTP id h11so7092487plk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oaymTvWhl+uolecE6yhTgiJXYyga2SjGtw1lmCMSDqs=;
-        b=PsHW7I1fS2tGpAp9WvwvJEIEB1UhTC/5ffZ+EV5rw9+EDE7tWWEdgrRp6Zkf4SjVEp
-         cwkaxDt9VbxLbNrtTCDAhBtyhD2Hd7kMQQl43Bm5Tdtw1LhZ9hJfHMP6t+JJvItmlmR0
-         u8RpCpiEqOS4oEXW6TJJwjsszDbl9ZCCf+g0khHWGpbpEvPGMUti1mNuC9GtgMR7826j
-         5DHf+zOjK/EeHeemjI/6utfmQwuuxAhaslZa8Hdd+DhjiiwyqBHnr74+La/82/FPPZOc
-         Gdy6e4cyYRmLAxOJFWJ6fE+lhclAJLgLw1S8OZ/jjoiG8/1Vz/58WuDfW+rkaVbwPWeV
-         Ya2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oaymTvWhl+uolecE6yhTgiJXYyga2SjGtw1lmCMSDqs=;
-        b=Pj4RkvGoHD76kenb7N9xvm5/M8abNtJJejb87ZZiDHV7lrG+0fhXwGm7r3TNVfHkep
-         3/GJJzuZC1Iqm8zwlI964rYiEF8h1WuZx1gt3CQi+QGZlxnayxVgp5pIORXIJIpZK7Lp
-         pCqrKLUcnSiwAxCnw7/VSRsg8KcueqdjxU40VWa/UbdqkZCTG8JRUXHBmnaPV9VFIyaN
-         ZRmoooWxGiDkIpiV85+8a1JmqvQgG0/f518WQWMa44bjGaia9dyETFByDVIza0LjK9Oz
-         AZGV/ZQIT1G+yU34VVRjGumFJ8tPcPHbSvRDcATwro8sWdjDsEoUAPZwvI0YWLHKhmMA
-         KGgA==
-X-Gm-Message-State: AGi0PuZkz3bjVITzh9ge+UIMUF77R5P8ylrCkvn45FMHRLnHFWA/F4F/
-        iEPf0YfJJ9muE8AISxoK1D4mRU3DDZ3MBMYNOf2FNg==
-X-Google-Smtp-Source: APiQypJX8XRZqI6Y72HOVBrO9Kad5wcjOxF9c16uT5iosishYmErkreBO76B6Vuj88tyApqJwzl6pKfebpS72m697O8=
-X-Received: by 2002:a17:90b:8d2:: with SMTP id ds18mr531303pjb.186.1585594711248;
- Mon, 30 Mar 2020 11:58:31 -0700 (PDT)
+        Mon, 30 Mar 2020 15:02:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585594936;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=l6zp2QJVJpIP8WXOxtm6IGtb5ZWgTJYBDO5pfh4qyN0=;
+        b=W3HX9eH/JHEIbhe2/KeOQeaXv3BmWS8CLpS1yiGHrAkG6wg6uvEvb8DYhVVK7Wn7HNQebk
+        OmRCP94QYaJ6TuibnLryOaSBd5LtzE4ySJJr56SefSCXj2+RXHUd6t5CZfR5L1A0LVbXpm
+        Cgr2gv0MA/uxn/0mprkSZp3q2zoEBWQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-385-8Z87KwO5OgqT86voizP4jQ-1; Mon, 30 Mar 2020 15:02:11 -0400
+X-MC-Unique: 8Z87KwO5OgqT86voizP4jQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4615F107ACCA;
+        Mon, 30 Mar 2020 19:02:10 +0000 (UTC)
+Received: from treble (ovpn-112-172.rdu2.redhat.com [10.10.112.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 991925C1C5;
+        Mon, 30 Mar 2020 19:02:08 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 14:02:05 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
+Message-ID: <20200330190205.k5ssixd5hpshpjjq@treble>
+References: <20200325174525.772641599@infradead.org>
+ <20200325174605.369570202@infradead.org>
+ <20200326113049.GD20696@hirez.programming.kicks-ass.net>
+ <20200326135620.tlmof5fa7p5wct62@treble>
+ <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+ <20200326195718.GD2452@worktop.programming.kicks-ass.net>
+ <20200327010001.i3kebxb4um422ycb@treble>
+ <20200330170200.GU20713@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86> <20200317215515.226917-1-ndesaulniers@google.com>
- <20200327224246.GA12350@ubuntu-m2-xlarge-x86> <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
- <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
-In-Reply-To: <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 30 Mar 2020 11:58:19 -0700
-Message-ID: <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com>
-Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Patil <sspatil@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200330170200.GU20713@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 6:57 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> I also had planned to provide a single switch to change
-> all the tool defaults to LLVM.
->
-> So, supporting 'LLVM' is fine, but I'd rather want this
-> look symmetrical, and easy to understand.
->
-> CPP        = $(CC) -E
-> ifneq ($(LLVM),)
+On Mon, Mar 30, 2020 at 07:02:00PM +0200, Peter Zijlstra wrote:
+> Subject: objtool: Implement RET_TAIL hint
+> 
+> This replaces the SAVE/RESTORE hints with a RET_TAIL hint that applies to:
+> 
+>  - regular RETURN and sibling calls (which are also function exists)
+>    it allows the stack-frame to be off by one word, ie. it allows a
+>    return-tail-call.
+> 
+>  - EXCEPTION_RETURN (a new INSN_type that splits IRET out of
+>    CONTEXT_SWITCH) and here it denotes a return to self by having it
+>    consume arch_exception_frame_size bytes off the stack and continuing.
+> 
+> Apply this hint to ftrace_64.S and sync_core(), the two existing users
+> of the SAVE/RESTORE hints.
+> 
+> For ftrace_64.S we split the return path and make sure the
+> ftrace_epilogue call is seen as a sibling/tail-call turning it into it's
+> own function.
+> 
+> By splitting the return path every instruction has a unique stack setup
+> and ORC can generate correct unwinds (XXX check if/how the ftrace
+> trampolines map into the ORC). Then employ the RET_TAIL hint to the
+> tail-call exit that has the direct-call (orig_eax) return-tail-call on.
+> 
+> For sync_core() annotate the IRET with RET_TAIL to mark it as a
+> control-flow NOP that consumes the exception frame.
 
-Yes, a simple if statement is much simpler than the overly complex patch I had.
+I do like the idea to get rid of SAVE/RESTORE altogether.  And it's nice
+to make that ftrace code unwinder-deterministic.
 
-> CC         = $(LLVM_DIR)clang
+However sync_core() and ftrace_regs_caller() are very different from
+each other and I find the RET_TAIL hint usage to be extremely confusing.
 
-Do we need $LLVM_DIR? Shouldn't users just have that in their $PATH?
+For example, IRETQ isn't even a tail cail.
 
-Also, I think we need to support suffixed binaries, as debian
-distributes these with version suffixes, as Nathan points out.  Or do
-the debian packages install suffixed binaries AND path versioned
-non-suffixed binaries?
+And the need for the hint to come *before* the insn which changes the
+state is different from the other hints.
 
-> LD         = $(LLVM_DIR)ld.lld
-> AR         = $(LLVM_DIR)llvm-ar
-> NM         = $(LLVM_DIR)llvm-nm
-> OBJCOPY    = $(LLVM_DIR)llvm-objcopy
-> OBJDUMP    = $(LLVM_DIR)llvm-objdump
-> READELF    = $(LLVM_DIR)llvm-readelf
-> OBJSIZE    = $(LLVM_DIR)llvm-size
-> STRIP      = $(LLVM_DIR)llvm-strip
-> else
-> CC         = $(CROSS_COMPILE)gcc
-> LD         = $(CROSS_COMPILE)ld
-> AR         = $(CROSS_COMPILE)ar
-> NM         = $(CROSS_COMPILE)nm
-> OBJCOPY    = $(CROSS_COMPILE)objcopy
-> OBJDUMP    = $(CROSS_COMPILE)objdump
-> READELF    = $(CROSS_COMPILE)readelf
-> OBJSIZE    = $(CROSS_COMPILE)size
-> STRIP      = $(CROSS_COMPILE)strip
-> endif
->
->
->
-> I attached two patches.
-> Comments appreciated.
+And now objtool has to know the arch exception stack size because of a
+single code site.
 
-I'm not sure the second one that recommends changing cc/c++ is the way
-to go; I think it might harm hermeticity.
+And for a proper tail call, the stack should be empty.  I don't
+understand the +8 thing in has_modified_stack_frame().  It seems
+hard-coded for the weird ftrace case, rather than for tail calls in
+general (which should already work as designed).
 
-> If you are so addicted to LLVM
+How about a more general hint like UNWIND_HINT_ADJUST?
 
-Lol, maybe?
+For sync_core(), after the IRETQ:
+
+  UNWIND_HINT_ADJUST sp_add=40
+
+And ftrace_regs_caller_ret could have:
+
+  UNWIND_HINT_ADJUST sp_add=8
+  
 -- 
-Thanks,
-~Nick Desaulniers
+Josh
+
