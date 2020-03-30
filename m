@@ -2,473 +2,424 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143C6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9BAC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4C862073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F2920781
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hzOtb8qa"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="dPwurX8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgC3Qld (ORCPT
+        id S1728578AbgC3QmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:41:33 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:39258 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbgC3Qlc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:41:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585586491; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=SET+wvNgxuRLvLMyFVqrdey9GNdOJ5MZE69IVGtvv3E=; b=hzOtb8qaFXHr03TJnW9q5HBos7jDooLbJckspZOq1lZ1BwUPHBMUsbV850BsdqMt+DKsy7s/
- 3UbDV1/G9J3VztIqkGbqmvKYmV9F3HpejiCHN16ABL4k9UgHpTPxvtaIfWO5ChXCsVYhY4uz
- jYwbDgxX9gQJXHuUhIBOm1t5hKo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e822139.7fed6b9d00a0-smtp-out-n04;
- Mon, 30 Mar 2020 16:41:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A046DC433BA; Mon, 30 Mar 2020 16:41:28 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94640C433F2;
-        Mon, 30 Mar 2020 16:41:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94640C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
-        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [RFC v3] irqchip: qcom: pdc: Introduce irq_set_wake call
-Date:   Mon, 30 Mar 2020 22:11:00 +0530
-Message-Id: <1585586460-3272-2-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585586460-3272-1-git-send-email-mkshah@codeaurora.org>
-References: <1585586460-3272-1-git-send-email-mkshah@codeaurora.org>
+        Mon, 30 Mar 2020 12:42:25 -0400
+Received: from mail-dm6nam12on2096.outbound.protection.outlook.com ([40.107.243.96]:52160
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726312AbgC3QmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:42:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PJJojiQxNItS/1dEvmEsWt8XGYyC2AO8a1u5Y1M+J82fVUq3cpHB6MM+M1wNRqyaKvoYNTqp6uISRghNy+0x+Ak2JvofINmzQWHau+/cTeGTzqHIYmYDOX6uRP1CUMTw9wOjuclQnJG4TUbFumoX0B+5Qw0o9rC7lEcjz1+kp9xEzUNK3fJh/ULk5c5zL3h9oeGIFLTZWWyxkgNy6NN+HCthmHN3qQBeam6SZ2aMiUyfjQVdGCxo6VZ7DNaDid0vHROOpcAO197ADTmQfrF3PcaO7ToSyZrOokRicDDfDlKt2p6URA7Gc6DtN0Ga2/+UHIhCCoI1uKNzYi0OVCiGkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rWj0bF8ipE890O/jbsnFih2fcivS7DjKVdY20dBIjSg=;
+ b=ToLltZNOFy77bI3EQrznZF1JE73OBjRFRXcwSS7Oj2a7V3Kh+IZkItd7QHy8540nvvWZqQz9Nk8arjAjUXxcZxiIq88EgQKGeN7RYCF1ncNDhvZL1UPH7STG7TBkkoY4g3OYsADifQb70lga+E68hQqa8yFeQZy4HtmePKeX3PStJSGaH1cel6IqEPiIRSP4GQZ//ZQCZG6NmbgDLa0Z/2peQ6WkpySz/7bZML+Q2v94HIln4Br2lv4+pWlL1JiZgwZnGPGl06d+t7H0REcYxhkMUOtZPBOskFXh4YTNkbMOeo+1kPzmZEPSBkJfsFXUzA1blAE4CqtZgILrnW1uEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rWj0bF8ipE890O/jbsnFih2fcivS7DjKVdY20dBIjSg=;
+ b=dPwurX8t8XlDg8GiynwJlhJc+GS/H5EDm4dJyV4zbvfkslwriwghll483V18dIIZ3+FW43aVW64NV6ogFbmmQSUiJBY6sJCD1aLoKkQDQCQpoz1jqAwOIoCnEJVk/7iW9JbtrhmluBCmrikyxSQGutF1N/tdqWQsp/syXrO7JEk=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1068.namprd21.prod.outlook.com (2603:10b6:302:a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2; Mon, 30 Mar
+ 2020 16:42:19 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.014; Mon, 30 Mar 2020
+ 16:42:19 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [RFC PATCH 11/11] scsi: storvsc: Re-init stor_chns when a channel
+ interrupt is re-assigned
+Thread-Topic: [RFC PATCH 11/11] scsi: storvsc: Re-init stor_chns when a
+ channel interrupt is re-assigned
+Thread-Index: AQHWAvitlhvZNTexf0e3+nkuOWs8g6hhVRzg
+Date:   Mon, 30 Mar 2020 16:42:19 +0000
+Message-ID: <MW2PR2101MB105208138683A6DE0564745AD7CB0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200325225505.23998-1-parri.andrea@gmail.com>
+ <20200325225505.23998-12-parri.andrea@gmail.com>
+In-Reply-To: <20200325225505.23998-12-parri.andrea@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-30T16:42:17.7398508Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c1f5250c-1a4d-4e21-932e-531b00446085;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bbd64437-7a73-403c-a973-08d7d4c9505c
+x-ms-traffictypediagnostic: MW2PR2101MB1068:|MW2PR2101MB1068:|MW2PR2101MB1068:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB1068EB0F0F1D34DA56500108D7CB0@MW2PR2101MB1068.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0358535363
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(498600001)(30864003)(10290500003)(66946007)(33656002)(82950400001)(8990500004)(82960400001)(71200400001)(186003)(55016002)(76116006)(86362001)(26005)(8676002)(54906003)(8936002)(2906002)(66556008)(64756008)(4326008)(52536014)(110136005)(6506007)(66446008)(81166006)(7696005)(81156014)(5660300002)(9686003)(66476007);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mKoY6dHdS+sYf0x+WwHde+aYDlMnP2w4tTrDZoTO3zGj/Z29EJ0Y3CpLnA8rZZSLOywDaPArNq/8seAzXMCV3P6EBkzCp/Q06p8Io/8Pvhk+N/1TP/sGy2z8fbKMJq5w6IfWBXczPPuuzposDdLxZ+JtRZ4z1r/1J41otn+to5WPniy3bG+ETtfbWEot36zdcvSvzNELhVOjGDy2EvBe7eKH5OHq663dFgCYEfNKx1BgSwYURTHsvuukdMdhRnwWPueXqUEWSqcIyp+WDw7UUcN5CQ+A7+VUMFPHjooBVhkgzSW1qCuaqEfjv1+CImA5JOLVZliMLxcVBbz4bYWgI8Xn+rDdWSvzR94T6lg+KhSKTXvikWjfugrvdf7PjZbib/fJqrhBZW/sjimSVQr7s5+cGHOBQlBK4R9IiA+3bnM+G5M0P1c5ydLZymYeOCdx
+x-ms-exchange-antispam-messagedata: Xv3bPCGh8McHNIRZ++jEQjjNbYmc08la88NWayIqNBv9TL1W/AiQLOtxlbzEU94m9O7/eDacPaDmmTDuInAXIvH0HQQlredWc1nr/55v9+mQvK0QpAqfNQM+jv9Whx54D+UI6UdqpJrMH13Gk3m9Hw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbd64437-7a73-403c-a973-08d7d4c9505c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 16:42:19.7329
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UHtmAb0s59bYRQoF3LLIJXNF/QFKON/49AK19wyVyrRiE20PYxxQP6Fkk+6BnkBe11+fCJLW8kvPB5H9g2u90xgfYfllaYkuS4IymSR/yZk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add changes to differentiate enabled and wakeup capable interrupts in SW
-to support drivers which disable the wakeup capable interrupt in SW during
-suspend while irqchip HW expects it to leave enabled in HW during suspend.
+From: Andrea Parri (Microsoft) <parri.andrea@gmail.com>  Sent: Wednesday, M=
+arch 25, 2020 3:55 PM
+>=20
+> For each storvsc_device, storvsc keeps track of the channel target CPUs
+> associated to the device (alloced_cpus) and it uses this information to
+> fill a "cache" (stor_chns) mapping CPU->channel according to a certain
+> heuristic.  Update the alloced_cpus mask and the stor_chns array when a
+> channel of the storvsc device is re-assigned to a different CPU.
+>=20
+> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: <linux-scsi@vger.kernel.org>
+> ---
+>  drivers/hv/vmbus_drv.c     |  4 ++
+>  drivers/scsi/storvsc_drv.c | 95 ++++++++++++++++++++++++++++++++++----
+>  include/linux/hyperv.h     |  3 ++
+>  3 files changed, 94 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 84d2f22c569aa..7199fee2b5869 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1721,6 +1721,10 @@ static ssize_t target_cpu_store(struct vmbus_chann=
+el *channel,
+>  	 * in on a CPU that is different from the channel target_cpu value.
+>  	 */
+>=20
+> +	if (channel->change_target_cpu_callback)
+> +		(*channel->change_target_cpu_callback)(channel,
+> +				channel->target_cpu, target_cpu);
+> +
+>  	channel->target_cpu =3D target_cpu;
+>  	channel->target_vp =3D hv_cpu_number_to_vp_number(target_cpu);
+>  	channel->numa_node =3D cpu_to_node(target_cpu);
 
-Change the way interrupts get enabled at HW in wakeup capable PDC irq chip
-during suspend. Introduce .irq_set_wake call which lets interrupts marked
-as wakeup capable. Such interrupts in PDC domain and PDC gpio domain are
-checked from PDC's CPU PM notification to enable them in HW at PDC and its
-parent GIC if its marked as wakeup capable but are disabled in SW.
+I think there's an ordering problem here.  The change_target_cpu_callback
+will allow storvsc to flush the cache that it is keeping, but there's a win=
+dow
+after the storvsc callback releases the spin lock and before this function
+changes channel->target_cpu to the new value.  In that window, the cache
+could get refilled based on the old value of channel->target_cpu, which is
+exactly what we don't want.  Generally with caches, you have to set the new
+value first, then flush the cache, and I think that works in this case.  Th=
+e
+callback function doesn't depend on the value of channel->target_cpu,
+and any cache filling that might happen after channel->target_cpu is set
+to the new value but before the callback function runs is OK.   But please
+double-check my thinking. :-)
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/irqchip/qcom-pdc.c | 271 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 256 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 6ae9e1f..c43715b 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -1,9 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
-  */
- 
- #include <linux/err.h>
-+#include <linux/cpu_pm.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -17,6 +18,7 @@
- #include <linux/soc/qcom/irq.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
-+#include <linux/suspend.h>
- #include <linux/types.h>
- 
- #define PDC_MAX_IRQS		168
-@@ -36,6 +38,23 @@ struct pdc_pin_region {
- 	u32 cnt;
- };
- 
-+struct pdc_pm_data {
-+	struct cpumask cpus_in_pc;
-+	spinlock_t pm_lock;
-+	bool suspend_start;
-+	bool from_pdc_suspend;
-+	struct notifier_block pdc_pm_nfb;
-+	struct notifier_block pdc_cpu_pm_nfb;
-+
-+	DECLARE_BITMAP(pdc_domain_enabled_irqs, PDC_MAX_IRQS);
-+	DECLARE_BITMAP(pdc_domain_wake_irqs, PDC_MAX_IRQS);
-+	DECLARE_BITMAP(pdc_gpio_domain_enabled_irqs, PDC_MAX_GPIO_IRQS);
-+	DECLARE_BITMAP(pdc_gpio_domain_wake_irqs, PDC_MAX_GPIO_IRQS);
-+
-+	struct irq_domain *pdc_domain;
-+	struct irq_domain *pdc_gpio_domain;
-+};
-+
- static DEFINE_RAW_SPINLOCK(pdc_lock);
- static void __iomem *pdc_base;
- static struct pdc_pin_region *pdc_region;
-@@ -89,18 +108,38 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
- 
- static void qcom_pdc_gic_disable(struct irq_data *d)
- {
-+	struct pdc_pm_data *p;
-+
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
- 		return;
- 
-+	p = irq_data_get_irq_chip_data(d);
-+	if (!p->from_pdc_suspend) {
-+		if (irq_domain_qcom_handle_wakeup(d->domain))
-+			clear_bit(d->hwirq, p->pdc_gpio_domain_enabled_irqs);
-+		else
-+			clear_bit(d->hwirq, p->pdc_domain_enabled_irqs);
-+	}
-+
- 	pdc_enable_intr(d, false);
- 	irq_chip_disable_parent(d);
- }
- 
- static void qcom_pdc_gic_enable(struct irq_data *d)
- {
-+	struct pdc_pm_data *p;
-+
- 	if (d->hwirq == GPIO_NO_WAKE_IRQ)
- 		return;
- 
-+	p = irq_data_get_irq_chip_data(d);
-+	if (!p->from_pdc_suspend) {
-+		if (irq_domain_qcom_handle_wakeup(d->domain))
-+			set_bit(d->hwirq, p->pdc_gpio_domain_enabled_irqs);
-+		else
-+			set_bit(d->hwirq, p->pdc_domain_enabled_irqs);
-+	}
-+
- 	pdc_enable_intr(d, true);
- 	irq_chip_enable_parent(d);
- }
-@@ -145,6 +184,39 @@ enum pdc_irq_config_bits {
- };
- 
- /**
-+ * qcom_pdc_gic_set_wake: Mark IRQ as wakeup capable
-+ *
-+ * @d: the interrupt data
-+ * @on: enable or disable wakeup capability
-+ *
-+ * Mark IRQ as wake up capable at either pdc_domain or pdc_gpio_domain.
-+ * This will be used when entering to suspend where if any wakeup capable
-+ * IRQ is already disabled in SW, such IRQ needs to be re-enabled at HW.
-+ */
-+static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	struct pdc_pm_data *p;
-+
-+	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-+		return 0;
-+
-+	p = irq_data_get_irq_chip_data(d);
-+	if (on) {
-+		if (irq_domain_qcom_handle_wakeup(d->domain))
-+			set_bit(d->hwirq, p->pdc_gpio_domain_wake_irqs);
-+		else
-+			set_bit(d->hwirq, p->pdc_domain_wake_irqs);
-+	} else {
-+		if (irq_domain_qcom_handle_wakeup(d->domain))
-+			clear_bit(d->hwirq, p->pdc_gpio_domain_wake_irqs);
-+		else
-+			clear_bit(d->hwirq, p->pdc_domain_wake_irqs);
-+	}
-+
-+	return irq_chip_set_wake_parent(d, on);
-+}
-+
-+/**
-  * qcom_pdc_gic_set_type: Configure PDC for the interrupt
-  *
-  * @d: the interrupt data
-@@ -202,14 +274,162 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
- 	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_wake		= qcom_pdc_gic_set_wake,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
--				  IRQCHIP_SET_TYPE_MASKED |
--				  IRQCHIP_SKIP_SET_WAKE,
-+				  IRQCHIP_SET_TYPE_MASKED,
- 	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- };
- 
-+static struct irq_data *pdc_find_irq_data(struct irq_domain *domain,
-+					  int wake_irq)
-+{
-+	int irq = irq_find_mapping(domain, wake_irq);
-+	struct irq_desc *desc = irq_to_desc(irq);
-+
-+	return &desc->irq_data;
-+}
-+
-+/**
-+ * pdc_suspend: Enable IRQs marked for wakeup
-+ *
-+ * @p: pdc_pm_data
-+ *
-+ * The SW expects that an IRQ that's disabled with disable_irq() can still
-+ * wake the system from sleep states such as "suspend to RAM", if it has
-+ * been marked for wakeup.
-+ *
-+ * While the SW may choose to differ status for "wake" and "enabled" interrupts,
-+ * its not the case with HW. There is no dedicated config in HW to differ "wake"
-+ * and "enabled". Same is case for PDC's parent irq_chip (ARM GIC) which has
-+ * only GICD_ISENABLER to indicate "enabled" or "disabled" status.
-+ *
-+ * So, the HW ONLY understands either "enabled" or "disabled".
-+ * The final status in HW should be an "OR" of "enable" and "wake" status.
-+ * i.e. PDC (and GIC) irq enable in HW = irq enable | irq wake in SW
-+ */
-+static void pdc_suspend(struct pdc_pm_data *p)
-+{
-+	int wake_irq;
-+	bool enabled;
-+	struct irq_data *d;
-+
-+	p->from_pdc_suspend = true;
-+	for_each_set_bit(wake_irq, p->pdc_domain_wake_irqs, PDC_MAX_IRQS) {
-+		enabled = test_bit(wake_irq, p->pdc_domain_enabled_irqs);
-+		if (!enabled) {
-+			d = pdc_find_irq_data(p->pdc_domain, wake_irq);
-+
-+			pdc_enable_intr(d, true);
-+			irq_chip_enable_parent(d);
-+		}
-+	}
-+
-+	for_each_set_bit(wake_irq, p->pdc_gpio_domain_wake_irqs,
-+			 PDC_MAX_GPIO_IRQS) {
-+		enabled = test_bit(wake_irq, p->pdc_gpio_domain_enabled_irqs);
-+		if (!enabled) {
-+			d = pdc_find_irq_data(p->pdc_gpio_domain, wake_irq);
-+
-+			irq_chip_enable_parent(d);
-+		}
-+	}
-+}
-+
-+static void pdc_resume(struct pdc_pm_data *p)
-+{
-+	int wake_irq;
-+	bool enabled, pending;
-+	struct irq_data *d;
-+
-+	for_each_set_bit(wake_irq, p->pdc_domain_wake_irqs, PDC_MAX_IRQS) {
-+		enabled = test_bit(wake_irq, p->pdc_domain_enabled_irqs);
-+		if (!enabled) {
-+			d = pdc_find_irq_data(p->pdc_domain, wake_irq);
-+
-+			pdc_enable_intr(d, false);
-+			irq_chip_disable_parent(d);
-+		}
-+	}
-+
-+	for_each_set_bit(wake_irq, p->pdc_gpio_domain_wake_irqs,
-+			 PDC_MAX_GPIO_IRQS) {
-+		enabled = test_bit(wake_irq, p->pdc_gpio_domain_enabled_irqs);
-+		if (!enabled) {
-+			d = pdc_find_irq_data(p->pdc_gpio_domain, wake_irq);
-+
-+			/*
-+			 * When the drivers invoke enablie_irq() on a GPIO IRQ,
-+			 * the pending interrupt gets cleared at GIC before
-+			 * enabling it from msm_gpio_irq_enable(). So CPU will
-+			 * never see pending IRQ after resume if we disable them
-+			 * here.
-+			 *
-+			 * If wakeup is due to GPIO interrupt do not disable it.
-+			 * By not disabling, The IRQ will be delivered to CPU
-+			 * and when driver invokes enable_irq(), The softirq
-+			 * tasklet does resend_irqs() to call irq handler.
-+			 */
-+			irq_chip_get_parent_state(d, IRQCHIP_STATE_PENDING,
-+						  &pending);
-+			if (pending) {
-+				pending = false;
-+				continue;
-+			}
-+
-+			irq_chip_disable_parent(d);
-+		}
-+	}
-+	p->from_pdc_suspend = false;
-+}
-+
-+static int pdc_cpu_pm_callback(struct notifier_block *nfb,
-+			       unsigned long action, void *v)
-+{
-+	struct pdc_pm_data *p = container_of(nfb, struct pdc_pm_data,
-+					     pdc_cpu_pm_nfb);
-+	unsigned long flags;
-+
-+	if (!p->suspend_start)
-+		return NOTIFY_OK;
-+
-+	spin_lock_irqsave(&p->pm_lock, flags);
-+	switch (action) {
-+	case CPU_PM_ENTER:
-+		cpumask_set_cpu(raw_smp_processor_id(), &p->cpus_in_pc);
-+		if (cpumask_equal(&p->cpus_in_pc, cpu_online_mask))
-+			pdc_suspend(p);
-+		break;
-+	case CPU_PM_ENTER_FAILED:
-+	case CPU_PM_EXIT:
-+		if (cpumask_equal(&p->cpus_in_pc, cpu_online_mask))
-+			pdc_resume(p);
-+		cpumask_clear_cpu(raw_smp_processor_id(), &p->cpus_in_pc);
-+		break;
-+	}
-+	spin_unlock_irqrestore(&p->pm_lock, flags);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int pdc_pm_callback(struct notifier_block *nfb,
-+			   unsigned long event, void *unused)
-+{
-+	struct pdc_pm_data *p = container_of(nfb, struct pdc_pm_data,
-+					     pdc_pm_nfb);
-+	switch (event) {
-+	case PM_SUSPEND_PREPARE:
-+		p->suspend_start = true;
-+		break;
-+	case PM_POST_SUSPEND:
-+		p->suspend_start = false;
-+		break;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
- static irq_hw_number_t get_parent_hwirq(int pin)
- {
- 	int i;
-@@ -254,7 +474,8 @@ static int qcom_pdc_alloc(struct irq_domain *domain, unsigned int virq,
- 		return ret;
- 
- 	ret  = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
--					     &qcom_pdc_gic_chip, NULL);
-+					     &qcom_pdc_gic_chip,
-+					     domain->host_data);
- 	if (ret)
- 		return ret;
- 
-@@ -298,7 +519,8 @@ static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
- 		return ret;
- 
- 	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
--					    &qcom_pdc_gic_chip, NULL);
-+					    &qcom_pdc_gic_chip,
-+					    domain->host_data);
- 	if (ret)
- 		return ret;
- 
-@@ -376,7 +598,8 @@ static int pdc_setup_pin_mapping(struct device_node *np)
- 
- static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- {
--	struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
-+	struct pdc_pm_data *p;
-+	struct irq_domain *parent_domain;
- 	int ret;
- 
- 	pdc_base = of_iomap(node, 0);
-@@ -385,6 +608,10 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- 		return -ENXIO;
- 	}
- 
-+	p = kzalloc(sizeof(struct pdc_pm_data), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
- 	parent_domain = irq_find_host(parent);
- 	if (!parent_domain) {
- 		pr_err("%pOF: unable to find PDC's parent domain\n", node);
-@@ -398,33 +625,47 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- 		goto fail;
- 	}
- 
--	pdc_domain = irq_domain_create_hierarchy(parent_domain, 0, PDC_MAX_IRQS,
--						 of_fwnode_handle(node),
--						 &qcom_pdc_ops, NULL);
--	if (!pdc_domain) {
-+	p->pdc_domain = irq_domain_create_hierarchy(parent_domain, 0,
-+						    PDC_MAX_IRQS,
-+						    of_fwnode_handle(node),
-+						    &qcom_pdc_ops, p);
-+	if (!p->pdc_domain) {
- 		pr_err("%pOF: GIC domain add failed\n", node);
- 		ret = -ENOMEM;
- 		goto fail;
- 	}
- 
--	pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain,
-+	p->pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain,
- 					IRQ_DOMAIN_FLAG_QCOM_PDC_WAKEUP,
- 					PDC_MAX_GPIO_IRQS,
- 					of_fwnode_handle(node),
--					&qcom_pdc_gpio_ops, NULL);
--	if (!pdc_gpio_domain) {
-+					&qcom_pdc_gpio_ops, p);
-+	if (!p->pdc_gpio_domain) {
- 		pr_err("%pOF: PDC domain add failed for GPIO domain\n", node);
- 		ret = -ENOMEM;
- 		goto remove;
- 	}
- 
--	irq_domain_update_bus_token(pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
-+	irq_domain_update_bus_token(p->pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
-+
-+	/* Register for PM-transition events */
-+	p->pdc_pm_nfb.notifier_call = pdc_pm_callback;
-+	ret = register_pm_notifier(&p->pdc_pm_nfb);
-+	if (ret)
-+		goto remove;
-+
-+	spin_lock_init(&p->pm_lock);
-+
-+	/* Register for CPU PM notifications */
-+	p->pdc_cpu_pm_nfb.notifier_call = pdc_cpu_pm_callback;
-+	cpu_pm_register_notifier(&p->pdc_cpu_pm_nfb);
- 
- 	return 0;
- 
- remove:
--	irq_domain_remove(pdc_domain);
-+	irq_domain_remove(p->pdc_domain);
- fail:
-+	kfree(p);
- 	kfree(pdc_region);
- 	iounmap(pdc_base);
- 	return ret;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index fb41636519ee8..a680592b9d32a 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -621,6 +621,63 @@ static inline struct storvsc_device *get_in_stor_dev=
+ice(
+>=20
+>  }
+>=20
+> +void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 old, u=
+32 new)
+> +{
+> +	struct storvsc_device *stor_device;
+> +	struct vmbus_channel *cur_chn;
+> +	bool old_is_alloced =3D false;
+> +	struct hv_device *device;
+> +	unsigned long flags;
+> +	int cpu;
+> +
+> +	device =3D channel->primary_channel ?
+> +			channel->primary_channel->device_obj
+> +				: channel->device_obj;
+> +	stor_device =3D get_out_stor_device(device);
+> +	if (!stor_device)
+> +		return;
+> +
+> +	/* See storvsc_do_io() -> get_og_chn(). */
+> +	spin_lock_irqsave(&device->channel->lock, flags);
+> +
+> +	/*
+> +	 * Determines if the storvsc device has other channels assigned to
+> +	 * the "old" CPU to update the alloced_cpus mask and the stor_chns
+> +	 * array.
+> +	 */
+> +	if (device->channel !=3D channel && device->channel->target_cpu =3D=3D =
+old) {
+> +		cur_chn =3D device->channel;
+> +		old_is_alloced =3D true;
+> +		goto old_is_alloced;
+> +	}
+> +	list_for_each_entry(cur_chn, &device->channel->sc_list, sc_list) {
+> +		if (cur_chn =3D=3D channel)
+> +			continue;
+> +		if (cur_chn->target_cpu =3D=3D old) {
+> +			old_is_alloced =3D true;
+> +			goto old_is_alloced;
+> +		}
+> +	}
+> +
+> +old_is_alloced:
+> +	if (old_is_alloced)
+> +		WRITE_ONCE(stor_device->stor_chns[old], cur_chn);
+> +	else
+> +		cpumask_clear_cpu(old, &stor_device->alloced_cpus);
+
+I think target_cpu_store() can get called in parallel on multiple CPUs for =
+different
+channels on the same storvsc device, but multiple changes to a single chann=
+el are
+serialized by higher levels of sysfs.  So this function could run after mul=
+tiple
+channels have been changed, in which case there's not just a single "old" v=
+alue,
+and the above algorithm might not work, especially if channel->target_cpu i=
+s
+updated before calling this function per my earlier comment.   I can see a
+couple of possible ways to deal with this.  One is to put the update of
+channel->target_cpu in this function, within the spin lock boundaries so
+that the cache flush and target_cpu update are atomic.  Another idea is to
+process multiple changes in this function, by building a temp copy of
+alloced_cpus by walking the channel list, use XOR to create a cpumask
+with changes, and then process all the changes in a loop instead of
+just handling a single change as with the current code at the old_is_alloce=
+d
+label.  But I haven't completely thought through this idea.
+
+> +
+> +	/* "Flush" the stor_chns array. */
+> +	for_each_possible_cpu(cpu) {
+> +		if (stor_device->stor_chns[cpu] && !cpumask_test_cpu(
+> +					cpu, &stor_device->alloced_cpus))
+> +			WRITE_ONCE(stor_device->stor_chns[cpu], NULL);
+> +	}
+> +
+> +	WRITE_ONCE(stor_device->stor_chns[new], channel);
+> +	cpumask_set_cpu(new, &stor_device->alloced_cpus);
+> +
+> +	spin_unlock_irqrestore(&device->channel->lock, flags);
+> +}
+> +
+>  static void handle_sc_creation(struct vmbus_channel *new_sc)
+>  {
+>  	struct hv_device *device =3D new_sc->primary_channel->device_obj;
+> @@ -648,6 +705,8 @@ static void handle_sc_creation(struct vmbus_channel *=
+new_sc)
+>  		return;
+>  	}
+>=20
+> +	new_sc->change_target_cpu_callback =3D storvsc_change_target_cpu;
+> +
+>  	/* Add the sub-channel to the array of available channels. */
+>  	stor_device->stor_chns[new_sc->target_cpu] =3D new_sc;
+>  	cpumask_set_cpu(new_sc->target_cpu, &stor_device->alloced_cpus);
+> @@ -876,6 +935,8 @@ static int storvsc_channel_init(struct hv_device *dev=
+ice, bool is_fc)
+>  	if (stor_device->stor_chns =3D=3D NULL)
+>  		return -ENOMEM;
+>=20
+> +	device->channel->change_target_cpu_callback =3D storvsc_change_target_c=
+pu;
+> +
+>  	stor_device->stor_chns[device->channel->target_cpu] =3D device->channel=
+;
+>  	cpumask_set_cpu(device->channel->target_cpu,
+>  			&stor_device->alloced_cpus);
+> @@ -1248,8 +1309,10 @@ static struct vmbus_channel *get_og_chn(struct sto=
+rvsc_device
+> *stor_device,
+>  	const struct cpumask *node_mask;
+>  	int num_channels, tgt_cpu;
+>=20
+> -	if (stor_device->num_sc =3D=3D 0)
+> +	if (stor_device->num_sc =3D=3D 0) {
+> +		stor_device->stor_chns[q_num] =3D stor_device->device->channel;
+>  		return stor_device->device->channel;
+> +	}
+>=20
+>  	/*
+>  	 * Our channel array is sparsley populated and we
+> @@ -1258,7 +1321,6 @@ static struct vmbus_channel *get_og_chn(struct stor=
+vsc_device
+> *stor_device,
+>  	 * The strategy is simple:
+>  	 * I. Ensure NUMA locality
+>  	 * II. Distribute evenly (best effort)
+> -	 * III. Mapping is persistent.
+>  	 */
+>=20
+>  	node_mask =3D cpumask_of_node(cpu_to_node(q_num));
+> @@ -1268,8 +1330,10 @@ static struct vmbus_channel *get_og_chn(struct sto=
+rvsc_device
+> *stor_device,
+>  		if (cpumask_test_cpu(tgt_cpu, node_mask))
+>  			num_channels++;
+>  	}
+> -	if (num_channels =3D=3D 0)
+> +	if (num_channels =3D=3D 0) {
+> +		stor_device->stor_chns[q_num] =3D stor_device->device->channel;
+
+Is the above added line just fixing a bug in the existing code?  I'm not se=
+eing how
+it would derive from the other changes in this patch.
+
+>  		return stor_device->device->channel;
+> +	}
+>=20
+>  	hash_qnum =3D q_num;
+>  	while (hash_qnum >=3D num_channels)
+> @@ -1295,6 +1359,7 @@ static int storvsc_do_io(struct hv_device *device,
+>  	struct storvsc_device *stor_device;
+>  	struct vstor_packet *vstor_packet;
+>  	struct vmbus_channel *outgoing_channel, *channel;
+> +	unsigned long flags;
+>  	int ret =3D 0;
+>  	const struct cpumask *node_mask;
+>  	int tgt_cpu;
+> @@ -1308,10 +1373,11 @@ static int storvsc_do_io(struct hv_device *device=
+,
+>=20
+>  	request->device  =3D device;
+>  	/*
+> -	 * Select an an appropriate channel to send the request out.
+> +	 * Select an appropriate channel to send the request out.
+>  	 */
+> -	if (stor_device->stor_chns[q_num] !=3D NULL) {
+> -		outgoing_channel =3D stor_device->stor_chns[q_num];
+> +	/* See storvsc_change_target_cpu(). */
+> +	outgoing_channel =3D READ_ONCE(stor_device->stor_chns[q_num]);
+> +	if (outgoing_channel !=3D NULL) {
+>  		if (outgoing_channel->target_cpu =3D=3D q_num) {
+>  			/*
+>  			 * Ideally, we want to pick a different channel if
+> @@ -1324,7 +1390,10 @@ static int storvsc_do_io(struct hv_device *device,
+>  					continue;
+>  				if (tgt_cpu =3D=3D q_num)
+>  					continue;
+> -				channel =3D stor_device->stor_chns[tgt_cpu];
+> +				channel =3D READ_ONCE(
+> +					stor_device->stor_chns[tgt_cpu]);
+> +				if (channel =3D=3D NULL)
+> +					continue;
+
+The channel =3D=3D NULL case is new because a cache flush could be happenin=
+g
+in parallel on another CPU.  I'm wondering about the tradeoffs of
+continuing in the loop (as you have coded in this patch) vs. a "goto" back =
+to
+the top level "if" statement.   With the "continue" you might finish the
+loop without finding any matches, and fall through to the next approach.
+But it's only a single I/O operation, and if it comes up with a less than
+optimal channel choice, it's no big deal.  So I guess it's really a wash.
+
+>  				if (hv_get_avail_to_write_percent(
+>  							&channel->outbound)
+>  						> ring_avail_percent_lowater) {
+> @@ -1350,7 +1419,10 @@ static int storvsc_do_io(struct hv_device *device,
+>  			for_each_cpu(tgt_cpu, &stor_device->alloced_cpus) {
+>  				if (cpumask_test_cpu(tgt_cpu, node_mask))
+>  					continue;
+> -				channel =3D stor_device->stor_chns[tgt_cpu];
+> +				channel =3D READ_ONCE(
+> +					stor_device->stor_chns[tgt_cpu]);
+> +				if (channel =3D=3D NULL)
+> +					continue;
+
+Same comment here.
+
+>  				if (hv_get_avail_to_write_percent(
+>  							&channel->outbound)
+>  						> ring_avail_percent_lowater) {
+> @@ -1360,7 +1432,14 @@ static int storvsc_do_io(struct hv_device *device,
+>  			}
+>  		}
+>  	} else {
+> +		spin_lock_irqsave(&device->channel->lock, flags);
+> +		outgoing_channel =3D stor_device->stor_chns[q_num];
+> +		if (outgoing_channel !=3D NULL) {
+> +			spin_unlock_irqrestore(&device->channel->lock, flags);
+> +			goto found_channel;
+> +		}
+>  		outgoing_channel =3D get_og_chn(stor_device, q_num);
+> +		spin_unlock_irqrestore(&device->channel->lock, flags);
+>  	}
+>=20
+>  found_channel:
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index edfcd42319ef3..9018b89614b78 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -773,6 +773,9 @@ struct vmbus_channel {
+>  	void (*onchannel_callback)(void *context);
+>  	void *channel_callback_context;
+>=20
+> +	void (*change_target_cpu_callback)(struct vmbus_channel *channel,
+> +			u32 old, u32 new);
+> +
+>  	/*
+>  	 * Synchronize channel scheduling and channel removal; see the inline
+>  	 * comments in vmbus_chan_sched() and vmbus_reset_channel_cb().
+> --
+> 2.24.0
+
