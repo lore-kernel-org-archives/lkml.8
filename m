@@ -2,83 +2,125 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98090C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ECDC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738A5205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72724206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:15:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fPoTDl7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgC3SOm convert rfc822-to-8bit (ORCPT
+        id S1727975AbgC3SPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:14:42 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22606 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726017AbgC3SOm (ORCPT
+        Mon, 30 Mar 2020 14:15:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54044 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgC3SPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:14:42 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-228-Uzzyp6fHP5iCb0krCcGUIQ-1; Mon, 30 Mar 2020 19:14:38 +0100
-X-MC-Unique: Uzzyp6fHP5iCb0krCcGUIQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 30 Mar 2020 19:14:38 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 30 Mar 2020 19:14:38 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: ftrace not showing the process names for all processes on syscall
- events
-Thread-Topic: ftrace not showing the process names for all processes on
- syscall events
-Thread-Index: AdYGnj+cWqFtVCqqTmCXgoqvHM5xrf///P+A///qkvCAAEdbAP//7aKg
-Date:   Mon, 30 Mar 2020 18:14:37 +0000
-Message-ID: <ffd8aa59d88146fbb5a4cb02ea9b7440@AcuMS.aculab.com>
-References: <3cdef49951734e83a14959628233d4f0@AcuMS.aculab.com>
-        <20200330110855.437fe854@gandalf.local.home>
-        <7dec110c2dc14792ba744419a4eb907e@AcuMS.aculab.com>
- <20200330140736.4b5f1667@gandalf.local.home>
-In-Reply-To: <20200330140736.4b5f1667@gandalf.local.home>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 30 Mar 2020 14:15:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=dvRAfacYVv+Eg59W06vLytYBlTZBs40NGpdohyB+NkQ=; b=fPoTDl7EdNYPZpuNoPdIeJMcPs
+        yV1QBNGt+wL39bdrB0aKvr+/q34qR3g+GOlPPkw7EUCijLY5agDcVNihR2RZIYvO4/menEVoHdl4R
+        ZQWdVPq/JCjKDx/zhmKuZbLjxZAF6xOIk0bFltJlu1X4YOPEn9hEfvwFGS+EqTEcqcDAFpdN/cpOS
+        eBhpvEqWogUgyPVsZZlLDef3UKwUjtJ1Vx8BeUwSK+WzGMdGbFLEjUDTC39w+JMYY2GNWNvjHaVV0
+        LWUXjPfry4xwYng/6WTxjWhF/ZF46QDy3+DCtrGo1oaCzSAeUTWm7WvZF0ai4ESgwCbl1RG3mtgI5
+        fOyRYRfg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIyws-0001iQ-9l; Mon, 30 Mar 2020 18:15:46 +0000
+Subject: Re: linux-next: Tree for Mar 30 (bpf)
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20200330204307.669bbb4d@canb.auug.org.au>
+ <86f7031a-57c6-5d50-2788-ae0e06a7c138@infradead.org>
+ <d5b4bd95-7ef9-58cb-1955-900e6edb2467@iogearbox.net>
+ <CACYkzJ72Uy9mnenO04OJaKH=Bk4ZENKJb9yw6i+EhJUa+ygngQ@mail.gmail.com>
+ <20200330180538.GA180081@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <08026861-d198-add1-feb8-c43f2e006cb6@infradead.org>
+Date:   Mon, 30 Mar 2020 11:15:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200330180538.GA180081@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt
-> Sent: 30 March 2020 19:08
-> On Mon, 30 Mar 2020 15:34:08 +0000
-> David Laight <David.Laight@ACULAB.COM> wrote:
+On 3/30/20 11:05 AM, KP Singh wrote:
+> On 30-Mar 19:54, KP Singh wrote:
 > 
-> > Oh, does the 'function_graph' code ignore tail calls?
+> So, it looks like bpf_tracing_func_proto is only defined when
+> CONFIG_BPF_EVENTS is set:
 > 
-> Yes and no ;-)  It works by dumb luck. As it was a year after function
-> graph tracing was live (some time in 2010 I believe) that someone brought
-> up tail calls, and I had to take a look at how it never crashed, and was
-> surprised that it "just worked". Here's a summary:
+>         obj-$(CONFIG_BPF_EVENTS) += bpf_trace.o
+> 
+> We have a few options:
+> 
+> * Add a __weak symbol for bpf_tracing_func_proto which we have done in
+>   the past for similar issues. This however, does not make much sense,
+>   as CONFIG_BPF_LSM cannot really do much without its helpers.
+> * Make CONFIG_BPF_LSM depend on CONFIG_BPF_EVENTS, this should solve
+>   it, but not for this particular Kconfig that was generated. Randy,
+>   I am assuming if we add the dependency, this particular Kconfig
+>   won't be generated.
 
-'Dumb luck' seems to be failing me :-)
-I'll look more closely tomorrow.
+Hi KP,
+That sounds reasonable.
 
-	David
+Thanks.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+> 
+> I am assuming this patch now needs to be sent for "bpf" and not
+> "bpf-next" as the merge window has opened?
+> 
+> - KP
+> 
+>> Thanks for adding me Daniel, taking a look.
+>>
+>> - KP
+>>
+>> On Mon, Mar 30, 2020 at 7:25 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>>>
+>>> [Cc KP, ptal]
+>>>
+>>> On 3/30/20 7:15 PM, Randy Dunlap wrote:
+>>>> On 3/30/20 2:43 AM, Stephen Rothwell wrote:
+>>>>> Hi all,
+>>>>>
+>>>>> The merge window has opened, so please do not add any material for the
+>>>>> next release into your linux-next included trees/branches until after
+>>>>> the merge window closes.
+>>>>>
+>>>>> Changes since 20200327:
+>>>>
+>>>> (note: linux-next is based on linux 5.6-rc7)
+>>>>
+>>>>
+>>>> on i386:
+>>>>
+>>>> ld: kernel/bpf/bpf_lsm.o:(.rodata+0x0): undefined reference to `bpf_tracing_func_proto'
+>>>>
+>>>>
+>>>> Full randconfig file is attached.
+
+
+-- 
+~Randy
 
