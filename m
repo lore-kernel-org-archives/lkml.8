@@ -2,176 +2,175 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E5CC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD66AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969E820757
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4A9206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ceGPcLAu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NQLgoREV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbgC3IRb (ORCPT
+        id S1729644AbgC3IS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:17:31 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:33786 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729614AbgC3IRb (ORCPT
+        Mon, 30 Mar 2020 04:18:28 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:49277 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729605AbgC3IS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:17:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585556249;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=HWhsW58w0xu9vw0AmztI9/TjQhaNX/7jXTiRqwwodAM=;
-        b=ceGPcLAuom/uNTXrNdh2fKVTYi8VHoSwRFzzLeXr9COdALrRXHIU206wWezCoHr7BBVdIy
-        nSWetTUaIEqpxxciLMRCvKxcCb+4DQJPXNbHUMnxpSniv9B3iCtW8U2uiKMdpx54U4ZHD3
-        vWerALkY2HbL/SUppZ2mneMJ+QMIw90=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-zvBM7skfOdith1yvqBUEvQ-1; Mon, 30 Mar 2020 04:17:25 -0400
-X-MC-Unique: zvBM7skfOdith1yvqBUEvQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C97B918C43C6;
-        Mon, 30 Mar 2020 08:17:20 +0000 (UTC)
-Received: from [10.36.113.227] (ovpn-113-227.ams2.redhat.com [10.36.113.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF4615E009;
-        Mon, 30 Mar 2020 08:16:59 +0000 (UTC)
-Subject: Re: [PATCH v2 00/10] virtio-mem: paravirtualized memory
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200311171422.10484-1-david@redhat.com>
- <20200329084128-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <055ec03c-06e5-ef06-691d-7a19d8b2792a@redhat.com>
-Date:   Mon, 30 Mar 2020 10:16:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 04:18:27 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200330081825euoutp02d4d68f118dafef06ffb6a6a8378e9da9~BBw8PhWUM1473914739euoutp027
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 08:18:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200330081825euoutp02d4d68f118dafef06ffb6a6a8378e9da9~BBw8PhWUM1473914739euoutp027
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585556305;
+        bh=R4zKoePkE2jPIN9aq9DgHKaT2r9GlP1DFSynnnPQ5ME=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=NQLgoREVHeJ/WRu/QSmjIvPjhj+PHIY0kBrIa1p/OsSk32Ucho2rEKNC2jzqEJZiu
+         E99MU1vTeA3Z69iVuzz57N4TVwz2G/Sq6P4mTeV3xW2BT/Gcsq6funCRBNJrF6ePpx
+         rIG4KPlD1HI/xGZ8McmNedeS/qXQqd9DsKiNQ7Cs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200330081824eucas1p24db5a4b1a0e203b1eef2c353c93a2191~BBw768dP_0046300463eucas1p2z;
+        Mon, 30 Mar 2020 08:18:24 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 59.DE.60698.05BA18E5; Mon, 30
+        Mar 2020 09:18:24 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200330081824eucas1p296ab0a861f799cf33aed0226869ac6fd~BBw7gAEJx0850008500eucas1p2-;
+        Mon, 30 Mar 2020 08:18:24 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200330081824eusmtrp2e3bb561c7cfe7310445d73d502d0d31f~BBw7faMjc3035830358eusmtrp23;
+        Mon, 30 Mar 2020 08:18:24 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-3d-5e81ab504239
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 77.62.08375.05BA18E5; Mon, 30
+        Mar 2020 09:18:24 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200330081823eusmtip18b39490b9c1a16667bebde8cd28cdae7~BBw6-6o8S1990419904eusmtip14;
+        Mon, 30 Mar 2020 08:18:23 +0000 (GMT)
+Subject: Re: [v4,1/3] drm/prime: use dma length macro when mapping sg
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     airlied@linux.ie, linux-kernel@vger.kernel.org,
+        amd-gfx-request@lists.freedesktop.org, alexander.deucher@amd.com
+Message-ID: <bba81019-d585-d950-ecd0-c0bf36a2f58d@samsung.com>
+Date:   Mon, 30 Mar 2020 10:18:21 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200329084128-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <cd773011-969b-28df-7488-9fddae420d81@samsung.com>
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7djP87oBqxvjDFafUbXoPXeSyWLand2s
+        Fuv+3WSxaNzZx2Tx9j6Qe+XrezaLy7vmsDmwe7Re+svmsXPWXXaP7d8esHrc7z7O5PF5k1wA
+        axSXTUpqTmZZapG+XQJXxt+PR1gLJghWLHvQztTA2MTXxcjJISFgInHu2FW2LkYuDiGBFYwS
+        6z8tY4JwvjBKPLu7ih3C+cwo8X/FYSaYlm3vm6FaljNKrD0yiRnCec8oceb8OjaQKmEBV4md
+        Ta2MIDabgKFE19susA4RgU5Gib71m1lAEswCZRKXns8BSnBw8ArYSTTsDgQJswioSvy6dAWs
+        V1QgRuLi4X5WEJtXQFDi5MwnYK2cAvYS6+b3QI2Rl2jeOpsZwhaXuPVkPtgPEgLr2CV+b+yH
+        OttF4u/V81C2sMSr41vYIWwZif87YRqaGSUenlvLDuH0MEpcbprBCFFlLXHn3C+wS5kFNCXW
+        79KHCDtKPLtykhkkLCHAJ3HjrSDEEXwSk7ZNhwrzSnS0CUFUq0nMOr4Obu3BC5eYJzAqzULy
+        2iwk78xC8s4shL0LGFlWMYqnlhbnpqcWG+ellusVJ+YWl+al6yXn525iBKah0/+Of93BuO9P
+        0iFGAQ5GJR7eGVsb4oRYE8uKK3MPMUpwMCuJ8LL5A4V4UxIrq1KL8uOLSnNSiw8xSnOwKInz
+        Gi96GSskkJ5YkpqdmlqQWgSTZeLglGpg1Iu4ZM14TLbYUUdL0q3Gr36ajlpwBldU8ZctMZ/T
+        Txz8sfn350qd2emaHxLTrUx6N+77UCzLldLs0Kr2fhev/oe5u5oXCjy64p3RfH568q2suT5L
+        73CueV4lkJqzdMFRN787b77NqU70nRh9JaTl3yIVnZdrooUaflYnbc19uLchxHJVylMOJZbi
+        jERDLeai4kQAWIaCrT8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHIsWRmVeSWpSXmKPExsVy+t/xu7oBqxvjDNZe57PoPXeSyWLand2s
+        Fuv+3WSxaNzZx2Tx9j6Qe+XrezaLy7vmsDmwe7Re+svmsXPWXXaP7d8esHrc7z7O5PF5k1wA
+        a5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJext+P
+        R1gLJghWLHvQztTA2MTXxcjJISFgIrHtfTNbFyMXh5DAUkaJDYeXskMkZCROTmtghbCFJf5c
+        64Iqesso8fX+KhaQhLCAq8TOplZGEJtNwFCi6y1EkYhAJ6PEnp8XmUASzAJlErsuNDNCdK9k
+        kmg8ug2oioODV8BOomF3IEgNi4CqxK9LV8AGiQrESPzc0wW2gFdAUOLkzCdgNqeAvcS6+T0s
+        EDPNJOZtfsgMYctLNG+dDWWLS9x6Mp9pAqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucWG
+        esWJucWleel6yfm5mxiBcbft2M/NOxgvbQw+xCjAwajEwztja0OcEGtiWXFl7iFGCQ5mJRFe
+        Nn+gEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucDU0JeSbyhqaG5haWhubG5sZmFkjhvh8DB
+        GCGB9MSS1OzU1ILUIpg+Jg5OqQbG6m+SsS0XpdYVT2U9IuuTvOnjtylSeR9a8vwXb3IMW2Jo
+        URp6Ne/edUMtuUV3Xbm0r39vcp71PJ/j6ZZppc/f2KSv/mR3Z9fJwFhXD4tGqbKtxjOOTbP5
+        +pe5bvX+hTsS9mSeKA9WXRtjqc5w7Kez6Yylhsm3Ntxy6nX+etbFNySi/G7+UZd+JZbijERD
+        Leai4kQAmghP7tECAAA=
+X-CMS-MailID: 20200330081824eucas1p296ab0a861f799cf33aed0226869ac6fd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200327075458eucas1p2f1011560c5d2d2a754d2394f56367ebb
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200327075458eucas1p2f1011560c5d2d2a754d2394f56367ebb
+References: <20200325090741.21957-2-bigbeeshane@gmail.com>
+        <CGME20200327075458eucas1p2f1011560c5d2d2a754d2394f56367ebb@eucas1p2.samsung.com>
+        <4aef60ff-d9e4-d3d0-1a28-8c2dc3b94271@samsung.com>
+        <82df6735-1cf0-e31f-29cc-f7d07bdaf346@amd.com>
+        <cd773011-969b-28df-7488-9fddae420d81@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.03.20 14:42, Michael S. Tsirkin wrote:
-> On Wed, Mar 11, 2020 at 06:14:12PM +0100, David Hildenbrand wrote:
->> This series is based on latest linux-next. The patches are located at:
->>     https://github.com/davidhildenbrand/linux.git virtio-mem-v2
+Hi
+
+On 2020-03-27 10:10, Marek Szyprowski wrote:
+> Hi Christian,
+>
+> On 2020-03-27 09:11, Christian König wrote:
+>> Am 27.03.20 um 08:54 schrieb Marek Szyprowski:
+>>> On 2020-03-25 10:07, Shane Francis wrote:
+>>>> As dma_map_sg can reorganize scatter-gather lists in a
+>>>> way that can cause some later segments to be empty we should
+>>>> always use the sg_dma_len macro to fetch the actual length.
+>>>>
+>>>> This could now be 0 and not need to be mapped to a page or
+>>>> address array
+>>>>
+>>>> Signed-off-by: Shane Francis <bigbeeshane@gmail.com>
+>>>> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>>> This patch landed in linux-next 20200326 and it causes a kernel 
+>>> panic on
+>>> various Exynos SoC based boards.
+>>>> ---
+>>>>    drivers/gpu/drm/drm_prime.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+>>>> index 86d9b0e45c8c..1de2cde2277c 100644
+>>>> --- a/drivers/gpu/drm/drm_prime.c
+>>>> +++ b/drivers/gpu/drm/drm_prime.c
+>>>> @@ -967,7 +967,7 @@ int drm_prime_sg_to_page_addr_arrays(struct 
+>>>> sg_table *sgt, struct page **pages,
+>>>>           index = 0;
+>>>>        for_each_sg(sgt->sgl, sg, sgt->nents, count) {
+>>>> -        len = sg->length;
+>>>> +        len = sg_dma_len(sg);
+>>>>            page = sg_page(sg);
+>>>>            addr = sg_dma_address(sg);
+>>> Sorry, but this code is wrong :(
 >>
->> I now have acks for all !virtio-mem changes. I'll be happy to get review
->> feedback, testing reports, etc. for the virtio-mem changes. If there are
->> no further comments, I guess this is good to go as a v1 soon.
-> 
-> I'd like to queue it for merge after the release. If you feel it's ready
-> please ping me after the release to help make sure it didn't get
-> dropped.  I see there were some reports about people having trouble
-> using this, pls keep working on this meanwhile.
-> 
+>> Well it is at least better than before because it makes most drivers 
+>> work correctly again.
+>
+> Well, I'm not sure that a half-broken fix should be considered as a 
+> fix ;)
+>
+> Anyway, I just got the comment from Shane, that my patch is fixing the 
+> issues with amdgpu and radeon, while still working fine for exynos, so 
+> it is indeed a proper fix.
 
-Yes, will ping you. The cloud-hypervisor implementation has already been
-merged. I'll be posting the initial QEMU version once the next release
-is close.
+Today I've noticed that this patch went to final v5.6 without even a day 
+of testing in linux-next, so v5.6 is broken on Exynos and probably a few 
+other ARM archs, which rely on the drm_prime_sg_to_page_addr_arrays 
+function.
 
-Thanks!
-
-> Thanks!
-
-
+Best regards
 -- 
-Thanks,
-
-David / dhildenb
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
