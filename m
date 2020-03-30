@@ -2,117 +2,133 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8930C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C333C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915A8205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F48C20771
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ca92LU24"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SwpXIY2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgC3WQg (ORCPT
+        id S1729444AbgC3WQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:16:36 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37665 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbgC3WQg (ORCPT
+        Mon, 30 Mar 2020 18:16:58 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40360 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728857AbgC3WQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:16:36 -0400
-Received: by mail-oi1-f196.google.com with SMTP id u20so12437964oic.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 15:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rHTfazG0JcHchUkZkwqmfv3skWoFel0RHtJDeLWFMUQ=;
-        b=Ca92LU24QgTe15iUum7o+GWCCxrpDi/NBlydV3Y7UaeHp3UkpEJ0w3PsnajA8/jp1R
-         xa4eS5TvtcurrFF8L9WuPHdSCuUhFfYlAomFz951J9FAMhgAfJkK33UVCRcVBw2m52Wd
-         ZK+i/Q8HIqIYIVo9n2fKbgbduGG394emhSQyh6rPbdXWu9dxOcpPGwj3Ql7/+b7FvLDw
-         wrgqKKtyJBby4Qq2AHh2zf6iDd6ex8sq8izmSMRGf0W8M+Gtr6xKUbo00XLWOS8R5dsx
-         RTEvjWV+Vxu/htwiMLb+gkKPSMgSTF+GuUwxTfPNyiSsp4kLGyPP9oFgjobop6Cffs86
-         4GAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rHTfazG0JcHchUkZkwqmfv3skWoFel0RHtJDeLWFMUQ=;
-        b=XbrRukad1c5P5FBpdvXsM688hNcyH/RPZN5wyhocB6zMdqTfEjs6yH+YhUuuPRC/Ip
-         PAmWyAAHweFEEFeCsPcmKnGTvzFaTGxyUY5JrBKNdKhLIQsBLteG/C1RM7qCc1a4EmBf
-         lZVWGYhuWyJaupfjzPDUSF6yHr9n5btKWMIH0BpGoEJweDx/k/manUbahZOU7jInhsEu
-         WrsooQbJLiItnGmGrrPH3vDqWATbDrfBX5JhIscoR9p6vbVfY0baHFbRP7B7Fv+DQS7Z
-         fGQyvhTpzP9DXP4SM5hK/++wZcB9JTA7Y/J5Li27Z4Pf+Eo3QHfmYiKiEHD7RVzvL4kB
-         nMFg==
-X-Gm-Message-State: ANhLgQ2Mhg0dJjlUMmd93MP/uZzRWXF6gsAJcSiZuKBjvVPva5pCCWEi
-        j0pkM7qIZvXWKgNxzPla1nY=
-X-Google-Smtp-Source: ADFU+vtRqzG9oYmCmjI3rVBaaXZZBnhy9DdhlKuP9NiWmIWqtTC/fMZaYpnYKJ/MHG2Na6JPD8ApJg==
-X-Received: by 2002:aca:646:: with SMTP id 67mr202286oig.4.1585606593916;
-        Mon, 30 Mar 2020 15:16:33 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id c18sm4680750ooa.8.2020.03.30.15.16.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:16:32 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc:     Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm/amd/display: Fix 64-bit division error on 32-bit platforms in mod_freesync_build_vrr_params
-Date:   Mon, 30 Mar 2020 15:16:14 -0700
-Message-Id: <20200330221614.7661-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 30 Mar 2020 18:16:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585606617;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kFxQ6sa3As6Jtugci2z3HRdxNU4LPCC1zzYUuabLxUU=;
+        b=SwpXIY2KsCtxK80s4Xiouq9O6YVlCYPI2SU1UyAhe+frHyJfECOq9NZcIK8GonWmh9CMG5
+        VTKeKuNJwiTgAjtljg1NT1ahx8xESp56FBdawcDqAonrWBE3/XG6MRFsbfL9NdsrFEfmCm
+        nNTuGrB8HPFIfwa7I4ZYiKO2iO49IsI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-445-L_lh2rRnM8uuiqNlMRll3Q-1; Mon, 30 Mar 2020 18:16:51 -0400
+X-MC-Unique: L_lh2rRnM8uuiqNlMRll3Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AEB1A18A5500;
+        Mon, 30 Mar 2020 22:16:49 +0000 (UTC)
+Received: from elisabeth (unknown [10.36.110.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 180CF5C1BB;
+        Mon, 30 Mar 2020 22:16:43 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 00:16:37 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Cc:     Julia Lawall <julia.lawall@inria.fr>,
+        Soumyajit Deb <debsoumyajit100@gmail.com>,
+        outreachy-kernel@googlegroups.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Outreachy kernel] [PATCH] staging: fbtft: Replace udelay with
+ preferred usleep_range
+Message-ID: <20200331001637.6bf108ed@elisabeth>
+In-Reply-To: <53befe00af657428b591200b31b5349a4a462eb1.camel@gmail.com>
+References: <20200329092204.770405-1-jbwyatt4@gmail.com>
+        <alpine.DEB.2.21.2003291127230.2990@hadrien>
+        <2fccf96c3754e6319797a10856e438e023f734a7.camel@gmail.com>
+        <alpine.DEB.2.21.2003291144460.2990@hadrien>
+        <CAMS7mKBEhqFat8fWi=QiFwfLV9+skwi1hE-swg=XxU48zk=_tQ@mail.gmail.com>
+        <alpine.DEB.2.21.2003291235590.2990@hadrien>
+        <20200330194043.56c79bb8@elisabeth>
+        <53befe00af657428b591200b31b5349a4a462eb1.camel@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building arm32 allyesconfig,
+On Mon, 30 Mar 2020 15:03:55 -0700
+"John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
 
-ld.lld: error: undefined symbol: __aeabi_uldivmod
->>> referenced by freesync.c
->>>               gpu/drm/amd/display/modules/freesync/freesync.o:(mod_freesync_build_vrr_params) in archive drivers/built-in.a
->>> did you mean: __aeabi_uidivmod
->>> defined in: arch/arm/lib/lib.a(lib1funcs.o)
+> On Mon, 2020-03-30 at 19:40 +0200, Stefano Brivio wrote:
+> > On Sun, 29 Mar 2020 12:37:18 +0200 (CEST)
+> > Julia Lawall <julia.lawall@inria.fr> wrote:
+> >  =20
+> > > On Sun, 29 Mar 2020, Soumyajit Deb wrote:
+> > >  =20
+> > > > I had the same doubt the other day about the replacement of
+> > > > udelay() with
+> > > > usleep_range(). The corresponding range for the single argument
+> > > > value of
+> > > > udelay() is quite confusing as I couldn't decide the range. But
+> > > > as much as I
+> > > > noticed checkpatch.pl gives warning for replacing udelay() with
+> > > > usleep_range() by checking the argument value of udelay(). In the
+> > > > documentation, it is written udelay() should be used for a sleep
+> > > > time of at
+> > > > most 10 microseconds but between 10 microseconds and 20
+> > > > milliseconds,
+> > > > usleep_range() should be used.=20
+> > > > I think the range is code specific and will depend on what range
+> > > > is
+> > > > acceptable and doesn't break the code.
+> > > >  Please correct me if I am wrong.   =20
+> > >=20
+> > > The range depends on the associated hardware. =20
+> >=20
+> > John, by the way, here you could have checked the datasheet of this
+> > LCD
+> > controller. It's a pair of those:
+> > 	https://www.sparkfun.com/datasheets/LCD/ks0108b.pdf
+>=20
+> No I have not. This datasheet is a little over my head honestly.
+>=20
+> What would you recommend to get familiar with datasheets like this?
 
-Use div_u64 in the two locations that do 64-bit divisior, which both
-have a u64 dividend and u32 divisor.
+Well, you don't necessarily have to, there are many subsystems in the
+kernel which are almost completely abstracted away from hardware.
 
-Fixes: 349a370781de ("drm/amd/display: LFC not working on 2.0x range monitors")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- drivers/gpu/drm/amd/display/modules/freesync/freesync.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+If you're interested, look around yourself for something simple chip,
+or get something that you can easily plug on a "maker board", Raspberry
+Pi, something like that. Perhaps via I=C2=B2C or SPI.
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index 8911f01671aa..c33454a9e0b4 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -761,10 +761,10 @@ void mod_freesync_build_vrr_params(struct mod_freesync *mod_freesync,
- 
- 	// If a monitor reports exactly max refresh of 2x of min, enforce it on nominal
- 	rounded_nominal_in_uhz =
--			((nominal_field_rate_in_uhz + 50000) / 100000) * 100000;
-+			div_u64(nominal_field_rate_in_uhz + 50000, 100000) * 100000;
- 	if (in_config->max_refresh_in_uhz == (2 * in_config->min_refresh_in_uhz) &&
- 		in_config->max_refresh_in_uhz == rounded_nominal_in_uhz)
--		min_refresh_in_uhz = nominal_field_rate_in_uhz / 2;
-+		min_refresh_in_uhz = div_u64(nominal_field_rate_in_uhz, 2);
- 
- 	if (!vrr_settings_require_update(core_freesync,
- 			in_config, (unsigned int)min_refresh_in_uhz, (unsigned int)max_refresh_in_uhz,
--- 
-2.26.0
+Some types of sensors (temperature, pressure) have very simple
+datasheets. If you are allergic to hardware, try:
+	$ ls -Ssl drivers/iio/*
+
+pick the smallest sensor driver in the category that is the most likely
+to spark your interest, and go through it, checking it against the
+datasheet, at some point it will make sense.
+
+--=20
+Stefano
 
