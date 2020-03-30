@@ -2,129 +2,112 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE86C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83FBC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DBCA206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C646C20757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgC3NvU (ORCPT
+        id S1728541AbgC3Nvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:51:20 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:45607 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgC3NvT (ORCPT
+        Mon, 30 Mar 2020 09:51:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60556 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728209AbgC3Nvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:51:19 -0400
-Received: by mail-io1-f72.google.com with SMTP id h76so16129197iof.12
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:51:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=YLVvaNavGqJEhh5fkSr20jBs4zDVUyraFKS4RYYWOFg=;
-        b=IEhBYlls6/CA1i45M8EOgjfdwNqJj+mAGUh0ZBqyV6EF1Q5eC74fD0HxbR1QmjQAkS
-         eK46cv3S3WaZSjiwttUL2iEVb/3q93EwPSxuzu/fn4cqHpyB00DLu9tpjFKKBSEAaMiR
-         k1T3FDxnITNq26iVzVUcaf1Eo4LVG26LoeXWVtFksJ/vaURGZdBE2Qx/uXN1GSyuiFGS
-         6eL1TTEUCE2T8YJJ5y0uBcWeHxxfwY9prHyRaMCRDVURpKQdhJn2pNzNIjK2VxdReGqR
-         YfIcw+ZGyZQApU3CAuqhNSqVNMQg+NpdLKtiQWjdbNNuYkQQWvCefGOHHiMv8qxhv/K0
-         knHQ==
-X-Gm-Message-State: ANhLgQ3GccDMCITHDwUzS7oqDEvuNy+ndgInbXR8rLcEetNbg+MqEN1z
-        S7GntHJxyaCWMjh2rM28/uAi2WVk8fUweiU7Ks4wmKYT/c1z
-X-Google-Smtp-Source: ADFU+vsvxrmg4/EclKDmQeQf7Px0e7WNMnWZw5YOLVczE+DTyccrmmhsFybMffejJ0apRQDnvqMQVt+gHn8fKmDptiqTTYNCnRja
-MIME-Version: 1.0
-X-Received: by 2002:a6b:b4c1:: with SMTP id d184mr10497100iof.85.1585576278701;
- Mon, 30 Mar 2020 06:51:18 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 06:51:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000db448f05a212beea@google.com>
-Subject: kernel panic: smack: Failed to initialize cipso DOI.
-From:   syzbot <syzbot+89731ccb6fec15ce1c22@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        casey@schaufler-ca.com, davem@davemloft.net,
-        intel-wired-lan@lists.osuosl.org, jeffrey.t.kirsher@intel.com,
-        jkc@redhat.com, jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, serge@hallyn.com, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
+        Mon, 30 Mar 2020 09:51:35 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 36C842965EC
+Message-ID: <4a9d2d6e5cecbe296c14119d27a8793a7dbed7b2.camel@collabora.com>
+Subject: Re: [PATCH v5 4/5] drm: imx: Add i.MX 6 MIPI DSI host platform
+ driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Fabio Estevam <festevam@gmail.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip@lists.infradead.org,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Martyn Welch <martyn.welch@collabora.com>
+Date:   Mon, 30 Mar 2020 10:51:23 -0300
+In-Reply-To: <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
+References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
+         <20200330113542.181752-5-adrian.ratiu@collabora.com>
+         <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hello Fabio, Adrian:
 
-syzbot found the following crash on:
+On Mon, 2020-03-30 at 08:49 -0300, Fabio Estevam wrote:
+> Hi Adrian,
+> 
+> On Mon, Mar 30, 2020 at 8:34 AM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
+> > This adds support for the Synopsis DesignWare MIPI DSI v1.01 host
+> > controller which is embedded in i.MX 6 SoCs.
+> > 
+> > Based on following patches, but updated/extended to work with existing
+> > support found in the kernel:
+> > 
+> > - drm: imx: Support Synopsys DesignWare MIPI DSI host controller
+> >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+> > 
+> > - ARM: dtsi: imx6qdl: Add support for MIPI DSI host controller
+> >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
+> 
+> This one looks like a devicetree patch, but this patch does not touch
+> devicetree.
+> 
+> > +       ret = clk_prepare_enable(dsi->pllref_clk);
+> > +       if (ret) {
+> > +               dev_err(dev, "%s: Failed to enable pllref_clk\n", __func__);
+> > +               return ret;
+> > +       }
+> > +
+> > +       dsi->mux_sel = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr");
+> > +       if (IS_ERR(dsi->mux_sel)) {
+> > +               ret = PTR_ERR(dsi->mux_sel);
+> > +               dev_err(dev, "%s: Failed to get GPR regmap: %d\n",
+> > +                       __func__, ret);
+> > +               return ret;
+> 
+> You should disable the dsi->pllref_clk clock prior to returning the error.
+> 
 
-HEAD commit:    1b649e0b Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14957099e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4ac76c43beddbd9
-dashboard link: https://syzkaller.appspot.com/bug?extid=89731ccb6fec15ce1c22
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1202c375e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1390bb03e00000
+Another approach could be moving the clock on and off to
+to component_ops.{bind,unbind} (as rockhip driver does).
 
-The bug was bisected to:
+What exactly is the PLL clock needed for? Would it make sense
+to move it some of the PHY power on/off? (Maybe not, but it's worthing
+checking).
 
-commit a9d2d53a788a9c5bc8a7d1b4ea7857b68e221357
-Author: Ken Cox <jkc@redhat.com>
-Date:   Tue Nov 15 19:00:37 2016 +0000
+Also, it seems the other IP blocks have this PLL clock, so maybe
+it could be moved to the dw_mipi_dsi core? This could be something
+for a follow-up, to avoid creeping this series.
 
-    ixgbe: test for trust in macvlan adjustments for VF
+Thanks,
+Ezequiel
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13cb06f3e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=102b06f3e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17cb06f3e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+89731ccb6fec15ce1c22@syzkaller.appspotmail.com
-Fixes: a9d2d53a788a ("ixgbe: test for trust in macvlan adjustments for VF")
-
-RSP: 002b:00007ffebd499a38 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007ffebd499a40 RCX: 00000000004404e9
-RDX: 0000000000000014 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000000000001 R09: 00007ffebd490031
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401dd0
-R13: 0000000000401e60 R14: 0000000000000000 R15: 0000000000000000
-Kernel panic - not syncing: smack:  Failed to initialize cipso DOI.
-CPU: 1 PID: 7197 Comm: syz-executor480 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- smk_cipso_doi+0x4d8/0x4e0 security/smack/smackfs.c:698
- smk_write_doi+0x123/0x190 security/smack/smackfs.c:1595
- __vfs_write+0xa7/0x710 fs/read_write.c:494
- vfs_write+0x271/0x570 fs/read_write.c:558
- ksys_write+0x115/0x220 fs/read_write.c:611
- do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4404e9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffebd499a38 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007ffebd499a40 RCX: 00000000004404e9
-RDX: 0000000000000014 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000000000001 R09: 00007ffebd490031
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401dd0
-R13: 0000000000401e60 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
