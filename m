@@ -2,124 +2,172 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1C0C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81874C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9EF20748
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:16:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0432072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585596232;
+	bh=6OlA2qF0ge60Y9qd4QRLz8Wg6xFIOo/oolkIEsWt7nQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d/n23C8X8dVYmyb6qz7G9wFb+WzA2cHnxcoRJoKdCrmaJob7bFcOBAXyyAZ8MZisD
+	 jiAGZCYiVN4MX6R/VsAXKHU1r0qaBLm0rOA559azt6Ytkz80UCekrZLleWMTfmBjgv
+	 Es/uSr9BqWfEJ/hTXDr1vi4h6wU4L3oARFxfspTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgC3TQ6 (ORCPT
+        id S1728663AbgC3TXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:16:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36915 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgC3TQ6 (ORCPT
+        Mon, 30 Mar 2020 15:23:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43691 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC3TXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:16:58 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jIzu3-0005Tx-LK; Mon, 30 Mar 2020 21:16:55 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jIzu2-00066n-JR; Mon, 30 Mar 2020 21:16:54 +0200
-Date:   Mon, 30 Mar 2020 21:16:54 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200330191654.waoocllctanh5nk5@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
+        Mon, 30 Mar 2020 15:23:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id x9so12633343iom.10;
+        Mon, 30 Mar 2020 12:23:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MXO0cFSUgdRH+a4P/o/GAi4s4MndCf1pU3SuIpqOxH8=;
+        b=b2WK8r2tG8huW8HYFFvjSGY0TfaCN7piJfb0Q6GCQr2a3D7F1WfwdHRz/eIsnRs86h
+         y09f5qGv5o3X3V6sdlUdZ85G+LVyGsiVn2O6zaTDfR/dxWWFN4wS+IuLsuOghqSAS16q
+         JY7WtgUBEVR8UhHPFnmpe7aEd6AyuRYuLGOUvZ9KWwCR+B+w0+GcrzPTDVzJ0vZ7bfwA
+         0zSPfP/DNT2X+3VGFWso8z6aZa8wQ1yXJGxVB5OnNSQ08HeZK0RYyz7qEo/PQ+onL9kk
+         plhszG505Bx2v9I6pFuUbqrnfCNukCl4Wy1rrPlN8SP0l3zdmzRFjFpFcET95+k7sKyF
+         8tmA==
+X-Gm-Message-State: ANhLgQ2L0jfR/zywO3xGCDo+Jo+oRoFsqB9+tnHPwhAgy5Z4YXYYXiGC
+        /fynJzRe+bOxB9EsTf78WQ==
+X-Google-Smtp-Source: ADFU+vul8Oe41tCjMTU3VB/Pazto4kKTIj+AVWhsXgGw9jz3HDJI0g0/B3oHxwfVXEbonu12CN0a1g==
+X-Received: by 2002:a6b:b989:: with SMTP id j131mr12170677iof.6.1585596229713;
+        Mon, 30 Mar 2020 12:23:49 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id p189sm4307507iof.17.2020.03.30.12.23.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 12:23:49 -0700 (PDT)
+Received: (nullmailer pid 22585 invoked by uid 1000);
+        Mon, 30 Mar 2020 19:23:47 -0000
+Date:   Mon, 30 Mar 2020 13:23:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     rentao.bupt@gmail.com
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
+ ID/string properties
+Message-ID: <20200330192347.GA6388@bogus>
+References: <20200315191632.12536-1-rentao.bupt@gmail.com>
+ <20200315191632.12536-7-rentao.bupt@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200330141436.GG2431644@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200315191632.12536-7-rentao.bupt@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thierry,
-
-On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
-> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
-> > On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> > > Only the Timer control register(TCLR) cannot be updated when the timer
-> > > is running. Registers like Counter register(TCRR), loader register(TLDR),
-> > > match register(TMAR) can be updated when the counter is running. Since
-> > > TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> > > timer for period/duty_cycle update.
-> > 
-> > I'm not sure what is sensible here. Stopping the PWM for a short period
-> > is bad, but maybe emitting a wrong period isn't better. You can however
-> > optimise it if only one of period or duty_cycle changes.
-> > 
-> > @Thierry, what is your position here? I tend to say a short stop is
-> > preferable.
+On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
 > 
-> It's not clear to me from the above description how exactly the device
-> behaves, but I suspect that it may latch the values in those registers
-> and only update the actual signal output once a period has finished. I
-> know of a couple of other devices that do that, so it wouldn't be
-> surprising.
+> Update device tree binding document for aspeed vhub's device IDs and
+> string properties.
 > 
-> Even if that was not the case, I think this is just the kind of thing
-> that we have to live with. Sometimes it just isn't possible to have all
-> supported devices adhere strictly to an API. So I think the best we can
-> do is have an API that loosely defines what's supposed to happen and
-> make a best effort to implement those semantics. If a device deviates
-> slightly from those expectations, we can always cross fingers and hope
-> that things still work. And it looks like they are.
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> ---
+>  No change in v2:
+>    - the patch is added into the series since v2.
 > 
-> So I think if Lokesh and Tony agree that this is the right thing to do
-> and have verified that things still work after this, that's about as
-> good as it's going to get.
+>  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> index 06399ba0d9e4..5b2e8d867219 100644
+> --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> @@ -52,6 +52,59 @@ properties:
+>          minimum: 1
+>          maximum: 21
+>  
+> +  vhub-vendor-id:
+> +    description: vhub Vendor ID
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - maximum: 65535
+> +
+> +  vhub-product-id:
+> +    description: vhub Product ID
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - maximum: 65535
 
-I'd say this isn't for the platform people to decide. My position here
-is that the PWM drivers should behave as uniform as possible to minimize
-surprises for consumers. And so it's a "PWM decision" that is to be made
-here, not an "omap decision".
+There's already standard 'vendor-id' and 'device-id' properties. Use 
+those.
 
-> I know this is perhaps cheating a little, or turning a blind eye, but I
-> don't know what the alternative would be. Do we want to tell people that
-> a given PWM controller can't be used if it doesn't work according to our
-> expectations? That's hard to argue if that controller works just fine
-> for all known use-cases.
+> +
+> +  vhub-device-revision:
 
-I'd like have some official policy here which of the alternatives is the
-preferred cheat.
+Specific to USB, not vhub.
 
-The situation here is that period and duty_cycle cannot be updated
-atomically. So the two options are:
+> +    description: vhub Device Revision in binary-coded decimal
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - maximum: 65535
+> +
+> +  vhub-strings:
+> +    type: object
+> +
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    patternProperties:
+> +      '^string@[0-9a-f]+$':
+> +        type: object
+> +        description: string descriptors of the specific language
+> +
+> +        properties:
+> +          reg:
+> +            maxItems: 1
+> +            description: 16-bit Language Identifier defined by USB-IF
+> +
+> +          manufacturer:
+> +            description: vhub manufacturer
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/string
+> +
+> +          product:
+> +            description: vhub product name
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/string
+> +
+> +          serial-number:
+> +            description: vhub device serial number
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/string
 
- - stop shortly
- - update with hardware running and maybe emit a broken period
+For all of this, it's USB specific, not vhub specific. I'm not sure this 
+is the right approach. It might be better to just define properties 
+which are just raw USB descriptors rather than inventing some DT format 
+that then has to be converted into USB descriptors.
 
-I tend to say "stop shortly" is the better alternative.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Rob
