@@ -2,96 +2,90 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEB7C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D0EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E1E20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD01520781
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:27:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EEG+NCB9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbgC3O0v (ORCPT
+        id S1728855AbgC3O1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:26:51 -0400
-Received: from mga17.intel.com ([192.55.52.151]:5350 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728096AbgC3O0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:26:49 -0400
-IronPort-SDR: pIwhlMxOFcOkJiIjBqvs8iBEsT+b28YAH9fOJVqJts3uOo/MyESZ4+xErYIm/8wFY12oFK1q9g
- RiCN20+wuIQQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 07:26:48 -0700
-IronPort-SDR: JUIupGuoPUqfVrfkZhq8vYZWzlbWTiZaIArhKr1LpSB5A3ivl6KThUNC17TPkaXGHFPtr3BTKL
- iLxxQpfrarJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="421941906"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 30 Mar 2020 07:26:48 -0700
-Date:   Mon, 30 Mar 2020 07:26:48 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>, luto@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v7 1/2] x86/split_lock: Rework the initialization flow of
- split lock detection
-Message-ID: <20200330142648.GA24988@linux.intel.com>
-References: <20200325030924.132881-1-xiaoyao.li@intel.com>
- <20200325030924.132881-2-xiaoyao.li@intel.com>
- <20200328163201.GI8104@linux.intel.com>
- <9db4acdc-add6-f63c-fb5c-654cb429b578@intel.com>
+        Mon, 30 Mar 2020 10:27:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57714 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgC3O1I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:27:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=G9G7LXUIUcwm5Tey2Anco7zNrOhYjJba/HCYfMtgmfc=; b=EEG+NCB9bf6g+bxztsQWuzwanK
+        xx5hayOTfnSr5WqzSxaQyPxs5W6FIzqAaRqjU2qY1MX0nxl0uITm3idHvPctjkq5bjdF0EAUSg3y+
+        aUHdvE6Jvx3kN06bElUl0+Epxb9EMVeWDg2+lcBo+r6BbkFJbOra3KwuOgocEhCvTT9FTO6WoT2r7
+        UzPEDpRgL/Ky1MqpLl/IaIacTzisCgr7XDGU7XtFho1uKIWB1Sn5a2pyLvXmC2DIo5K6pOKh7YsUt
+        +F74TXPhii9BUVEaJLFudRo0MGXUfVCdUns3dtK0epemyBVjW+WXn9t9f+5yQVpIgz462gQ3DcoxS
+        sZ3k16Tg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jIvNc-0003i0-5J; Mon, 30 Mar 2020 14:27:08 +0000
+Date:   Mon, 30 Mar 2020 07:27:08 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
+ than XA_ZERO_ENTRY
+Message-ID: <20200330142708.GC22483@bombadil.infradead.org>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-7-richard.weiyang@gmail.com>
+ <20200330125006.GZ22483@bombadil.infradead.org>
+ <20200330134519.ykdtqwqxjazqy3jm@master>
+ <20200330134903.GB22483@bombadil.infradead.org>
+ <20200330141350.ey77odenrbvixotb@master>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9db4acdc-add6-f63c-fb5c-654cb429b578@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200330141350.ey77odenrbvixotb@master>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 09:26:25PM +0800, Xiaoyao Li wrote:
-> On 3/29/2020 12:32 AM, Sean Christopherson wrote:
-> >On Wed, Mar 25, 2020 at 11:09:23AM +0800, Xiaoyao Li wrote:
-> >>  static void split_lock_init(void)
-> >>  {
-> >>-	if (sld_state == sld_off)
-> >>-		return;
-> >>-
-> >>-	if (__sld_msr_set(true))
-> >>-		return;
-> >>-
-> >>-	/*
-> >>-	 * If this is anything other than the boot-cpu, you've done
-> >>-	 * funny things and you get to keep whatever pieces.
-> >>-	 */
-> >>-	pr_warn("MSR fail -- disabled\n");
-> >>-	sld_state = sld_off;
-> >>+	split_lock_verify_msr(sld_state != sld_off);
+On Mon, Mar 30, 2020 at 02:13:50PM +0000, Wei Yang wrote:
+> On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
+> >On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
+> >> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
+> >> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
+> >> >> As the comment mentioned, we reserved several ranges of internal node
+> >> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
+> >> >> XA_ZERO_ENTRY is a normal node.
+> >> >> 
+> >> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
+> >> >
+> >> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
+> >> >is not guaranteed to be the largest reserved entry.
+> >> 
+> >> Then why we choose 4096?
 > >
-> >I think it'd be worth a WARN_ON() if this fails with sld_state != off.  If
-> >the WRMSR fails, then presumably SLD is off when it's expected to be on.
-> >The implied WARN on the unsafe WRMSR in sld_update_msr() won't fire unless
-> >a task generates an #AC on a non-buggy core and then gets migrated to the
-> >buggy core.  Even if the WARNs are redundant, if something is wrong it'd be
-> >a lot easier for a user to triage/debug if there is a WARN in boot as
-> >opposed to a runtime WARN that requires a misbehaving application and
-> >scheduler behavior.
-> >
+> >Because 4096 is the smallest page size supported by Linux, so we're
+> >guaranteed that anything less than 4096 is not a valid pointer.
 > 
-> IIUC, you're recommending something like below?
+> I found this in xarray.rst:
 > 
->         WARN_ON(!split_lock_verify_msr(sld_state != sld_off) &&
-> 		sld_state != sld_off);
+>   Normal pointers may be stored in the XArray directly.  They must be 4-byte
+>   aligned, which is true for any pointer returned from kmalloc() and
+>   alloc_page().  It isn't true for arbitrary user-space pointers,
+>   nor for function pointers.  You can store pointers to statically allocated
+>   objects, as long as those objects have an alignment of at least 4.
+> 
+> So the document here is not correct?
 
-Ya.
+Why do you say that?
+
+(it is slightly out of date; the XArray actually supports storing unaligned
+pointers now, but that's not relevant to this discussion)
