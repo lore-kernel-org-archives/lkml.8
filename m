@@ -2,118 +2,82 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CB5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CA5C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A8920733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C8C20757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ontBQyAS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6ZRYgVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgC3NIC (ORCPT
+        id S1730291AbgC3NIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:08:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36768 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730257AbgC3NIB (ORCPT
+        Mon, 30 Mar 2020 09:08:13 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:34649 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730107AbgC3NIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:08:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g62so21857969wme.1;
-        Mon, 30 Mar 2020 06:08:00 -0700 (PDT)
+        Mon, 30 Mar 2020 09:08:12 -0400
+Received: by mail-pg1-f181.google.com with SMTP id l14so1495444pgb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:08:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tBVIMuSfc5egYj/SCDO/JgH8pd8vZxVRpuXlFf6en/8=;
-        b=ontBQyASopwG7x/PUTQLgqBAQOIfmuMj8B52BVs11uNh3EkCSDZJx4VmZ9cZUiMNBm
-         VSRMnSFNI2IicviwU+POBdCxaVaxIiC/ER28E+N9u6LUZEozlyhZ4Etl8xBAEuELClcQ
-         Cc40qWYjTFk1jfy/COfVOvQ+LVVGz5sYSJ4ssYRQVm5s8R83IybknrPfK8YZjOJpFpCF
-         hrYSeZsokAtDqwHpmhL132ydhbSPGm/VodbO/DsrQdcl7Ygd7TCzrBgBoSFdjFMjY+dL
-         USSaiEC8AEEBSL3pAPwUIeGZ4zAxNCIz4wSBV213G8ve7K7Us5cOqbJ+nJVf/MGg/5Xo
-         TqvA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BxGupKjTBTxMmjXS/p5RBLd4+B0kWJifNxbTQMscomU=;
+        b=L6ZRYgVp2RdL9R1roU7nJyxp+033aCT3WVeBHckwbpQLI6Nn5rovdCl9n8pkoZhBAw
+         bjbxMx7NoBr7VqDEUdfFIjXlIwEiEZVOV6+szADfE8UgIcmj7KXYdYcT9B1HfNUnSLt6
+         MH0D+membhpQdwJvjPC4FPkuHvLKYPdumYeCBsOO30JDbkgaJt5wSasJp2zRW8y7hf6n
+         4cdleCOBhrvTAWTNeurBjbDBXveRS5XKmMo84RxAih5qY1EHeitr3orQPbziKDqAtV12
+         rglz0ZMYR3hNOTjBRoUlbQZK20Rk8fcUtaSGTlUPDFPJs1T9Ob2v5TOnp5/dszXmpS8f
+         tMUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tBVIMuSfc5egYj/SCDO/JgH8pd8vZxVRpuXlFf6en/8=;
-        b=KJ1mmLW5Bm6xj7HqoFpJ5xgkWEVmNs5tx00c3UNyYqA7LiKP00amvPKRsM0f/fV8l9
-         S1p4hfOMi8h8gPUTI16JOGAExx5qMC1Gn3udgNauuQi1bkBRAGD+qJVCtKhjirI1JXN6
-         QXQ11N7xs/dmVTbyJBnBk1oFfmgG3WOY4Qklxi0bFhN18seeXvY9XphqBCekMT6jhIXw
-         EAjWJMKeP8bubXWBHuY8Nm5KpYEFGi9Q0L+ezH8vzqUZoWRFJ4JdivnE5CjDhunpEzZo
-         cW+yrtQhKXZzxGV0qReyn5zyOEOG2ffNqJpoHrfQxiXqwpge/nmVzVEA3QkMmbOpjf/N
-         DSqg==
-X-Gm-Message-State: ANhLgQ31jm7M093cVIq8slilIfFWzTiGeHVNZSum79eJFLFZRyhdvY4e
-        Gq0D0PLYb/RHvP7gJ34LqxA=
-X-Google-Smtp-Source: ADFU+vstSw0jiT4tefUg6KLBPalfjeXvsusSvREs/w6j0P0fk1Kk/nIcZiwu5jaWBxQQmBKaWpOv8g==
-X-Received: by 2002:a1c:2b43:: with SMTP id r64mr13321885wmr.77.1585573679649;
-        Mon, 30 Mar 2020 06:07:59 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id f14sm21111618wmb.3.2020.03.30.06.07.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 06:07:58 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 15:07:57 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
-Message-ID: <20200330130757.GC2431644@ulmo>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BxGupKjTBTxMmjXS/p5RBLd4+B0kWJifNxbTQMscomU=;
+        b=nIg3TLPW/0ORZN9SfxItf6xTBRz0VoYbE5VdijBALbF7Om+f+Cs2w28rsOLP0W7eCD
+         P5C+Z76hwfH0+hiiDxgv1Qs1nXDOOnrGQ3E8RjXui6Vs2jVd6dWM0bL+3Og4geisd9lc
+         GDvjTu/Nw3CV25kMHO8jmU+cGk9amv7GMqsEWMqglRh72JlNwgezXTrMe9CP6AZj5mSO
+         X2XmG5hTh4ZUPjlX5p5d0PJXB9ZHhHE2adajcGazpV6BM4LJKdiy3BWLtbOKDVSO2fgr
+         tY4k5fAO6WwCmcVjjSmoONBX93ITC63ehuy6/KdW6SDEqCvbUMIFlnwaHuzBAUS8dnnR
+         7HpA==
+X-Gm-Message-State: ANhLgQ0CBAA06R9UMzEte0wwr5YBPYb+fel9gwGu7WawEupFz74NDZho
+        RZgdcyDCocGiMNSdvm75HN8qdv+wqzihyYXelDIZbt96INM=
+X-Google-Smtp-Source: ADFU+vuT6ZjyMkzZ8ai+s1Q9qdjum+R65lEduCLivXt6mEkBsuBcKgKRr9iM4gLTOoHo4iPYoSHOv80X6GEGbTg3ZiQ=
+X-Received: by 2002:aa7:9097:: with SMTP id i23mr12585263pfa.170.1585573690267;
+ Mon, 30 Mar 2020 06:08:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
-Content-Disposition: inline
-In-Reply-To: <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20200330085854.19774-1-geert@linux-m68k.org>
+In-Reply-To: <20200330085854.19774-1-geert@linux-m68k.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 30 Mar 2020 16:08:03 +0300
+Message-ID: <CAHp75Vc1gW2FnRpTNm6uu4gY3bSmccSkCFkAKqYraLincK29yA@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.6
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 30, 2020 at 12:00 PM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Below is the list of build error/warning regressions/improvements in
+> v5.6[1] compared to v5.5[2].
 
---7qSK/uQB79J36Y4o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer wrote:
-> The interaction of the ALL_LED PWM channel with the other channels was
-> not well-defined. As the ALL_LED feature does not seem very useful and
-> it was making the code significantly more complex, simply remove it.
->=20
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  drivers/pwm/pwm-pca9685.c | 115 ++++++--------------------------------
->  1 file changed, 17 insertions(+), 98 deletions(-)
+>   + /kisskb/src/include/linux/dev_printk.h: warning: format '%zu' expects argument of type 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]:  => 232:23
 
-Applied, thanks.
+This is interesting... I checked all dev_WARN_ONCE() and didn't find an issue.
 
-Thierry
-
---7qSK/uQB79J36Y4o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6B7y0ACgkQ3SOs138+
-s6GRNQ/9FrIF8ORfn41vZHxjUSMe//QEu+IgYILRVQ6heWO41DJjaplwzIO8cnNa
-oxBZOFZw7bXmFE3v38PdrvDGnFP6CwSwRp4FeWLUs1Xk6tvQ36br66uUD+k+iX7/
-w0WR4OtcaBPAdGYFyWLq4ecyHwYuw9lM5OUYFVebg5XyvoIIrlXIrjQflE17yLsc
-xtlLKKYTBESB0SHR/6Iva0xyRHgwy8SGNuMf7Ps3dBZO97iUqCdjEq6NdA5jlLoh
-F6roXyxtkO4TWuBE+lflngPByDpzZOBkaL2LFEQzC14gonCbbVq21PZRKtgwUoFi
-zAy3gITJDMQT44ICaKrFJ1U4rdbz1ELf/ep33gz63uBPd0hDd1zMrkeYftrFqpaY
-2nZN/Vt+dxfy9GZNBdPHK7r0aoc0h4KWE7d5jNbBklkhl4CK3gG1PLcVaAFtD3ym
-VBRi291N+XukN9EY68Ot/1zt2AI+4tJTFxNWxrcWTNcnGcG3vPZxOhfjGSKbLQLg
-VahPbbaJUQiFXVsd6huqGDh43daN6HnAuJgd739pndVz0nliHUv+4RJgMG2IZYUy
-wVK/l2BQFrX4pAq4rjG+RXwXOlo8Ya0/0HF59dKIXkA8fkBbBKGGoPrwgsiIeqVi
-0skMjPmbJ+bayCoouWcBiV0Mvl44GJpVhIBtdB6h81seRP+dxrM=
-=Cw/t
------END PGP SIGNATURE-----
-
---7qSK/uQB79J36Y4o--
+-- 
+With Best Regards,
+Andy Shevchenko
