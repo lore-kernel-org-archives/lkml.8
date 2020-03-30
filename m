@@ -2,209 +2,207 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002E8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C9BC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE22A20732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B762078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LMf3UoN9"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="clLUatEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgC3GTx (ORCPT
+        id S1729007AbgC3GUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:19:53 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:59819 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728065AbgC3GTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:19:53 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rMkX6Ry5z9sPR;
-        Mon, 30 Mar 2020 17:19:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585549189;
-        bh=youvVChtR9IL3Dpx017uE23BYcG0U/z5LGCLd2eI52s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LMf3UoN99ABLYDuItnflVr/cL9E4En/U4r4xdkE/+8Klt6u7EolXpnJgxu3zo7cKb
-         ul67Ucg1xGm+SWV9Bfp+6e8qsR+5DhL7dwijqN1j5sb9yTDT0gi2XoEoNuV+jXsRCr
-         u1TfzbvQV515vAy8fVXNW0ABjOdWArgThh2d0fiR7CuglT4pj0D+O9OsfGckZ1mU+Z
-         N1HR5o/JwfZT94snY9eAjv2yRrqAXjSqSA4u8zDbLF9YOgRweDAYk6QqjNAHDpLJn8
-         zQyhVgijH52s3y8VPYWb6dymk6ljhNkEIKqAgkP7vknJ2QdJj/j7EwqVFgNF1tQTo/
-         e884+0OesP/1g==
-Date:   Mon, 30 Mar 2020 17:19:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ajay Kishore <akisho@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: linux-next: build failure after merge of the pinctrl tree
-Message-ID: <20200330171946.4e48fbd9@canb.auug.org.au>
+        Mon, 30 Mar 2020 02:20:17 -0400
+Received: from mail-bn8nam12on2071.outbound.protection.outlook.com ([40.107.237.71]:6183
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728489AbgC3GUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 02:20:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eRTf8V+kVRrsXE3XbS1WQTBA4RKU7Bz8OeYd4XQ2te9rngYJ/TQSYgvV5gjYkliwajaOYJsy/ox2/j5jFGjfdsab5vm3k9pTaSeTcGiI+v7CiVFUrjymcGGGqCx80p1JDLtVXnSDRtIemJHb4KR07opvOG930UJcyLbZTwYo0zWpHxJSHMz6Nrys32XUH6FEfWP1POJDLMy+vwqdkQcN6dzY9MwV04cI5zp554GWGbNRSFVpiguKVUS0OXedy8Zw59ztJr13jaNiNpkt1ezKz2sAIr81pEi/LnsgxYRM/jNR7ERPUFYuh4G6Lkd9NBFzpi5oQkIs8RA9vGi7Ms6tvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6WnGl5zuqJkS3t1nm5ALpUQkzWFUxidgCJa/hj9Lbg4=;
+ b=YSr3rg9siM5dc78SoMkv4ogR+/U5WGBjGXaDMK85J6otItTOwPx6iOeYxcqeDk6mEhGjXsdkIXDy3cld6MYiFTcObL14UsneN1XRabaWMG0xyQCkHjZ4XsXeb1NB3WxK/dxkMpvzw4O1KRYh5mD/9L0tA2Rsnc2+j1bI/4tjj9rLkHvV80QumxYr/QCCZokZ6BV4xxPzYG3z1ZlAfwMKSaGpo+wLPWthYhudUgVjpMgfW5rdGTZUzQEopV+7VkQZmeuPpJlwHVuDeN/DLeKhgVhVm41dw4I1Z0La/Ab+QYHHqctUIsgo+YSDEMVUS25fWalRtdduTkfsi1ubsO/UQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6WnGl5zuqJkS3t1nm5ALpUQkzWFUxidgCJa/hj9Lbg4=;
+ b=clLUatEhnMuJ6L8TRvx8JjN7wgcOMr5EcsmnlDxF8xnU0Z1+XqWEO0Q+HQyso4kEBS0XB3w3oMus90nRkUK4edobyAt8ltAbr+0jRdD96Ig3k21dCsuVvsDWR67wIJOJThbQWqrflGbaUmVM/ijNKejIwXikI9VSSYf6TmBxPGk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB1692.namprd12.prod.outlook.com (2603:10b6:4:5::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.18; Mon, 30 Mar 2020 06:19:37 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 06:19:37 +0000
+From:   Ashish Kalra <Ashish.Kalra@amd.com>
+To:     pbonzini@redhat.com
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com,
+        x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rientjes@google.com, srutherford@google.com, luto@kernel.org,
+        brijesh.singh@amd.com
+Subject: [PATCH v6 00/14] Add AMD SEV guest live migration support
+Date:   Mon, 30 Mar 2020 06:19:27 +0000
+Message-Id: <cover.1585548051.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0028.namprd05.prod.outlook.com
+ (2603:10b6:803:40::41) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SKML/+XaAwEn+W+i4JdedJ8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN4PR0501CA0028.namprd05.prod.outlook.com (2603:10b6:803:40::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.11 via Frontend Transport; Mon, 30 Mar 2020 06:19:35 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b9429555-3c66-4b82-89a5-08d7d4725235
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1692:|DM5PR12MB1692:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1692483A75A829F4DDD00C708ECB0@DM5PR12MB1692.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0358535363
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(366004)(136003)(346002)(16526019)(186003)(26005)(5660300002)(6666004)(8936002)(6486002)(4326008)(2906002)(36756003)(7416002)(316002)(66946007)(966005)(66476007)(86362001)(66556008)(8676002)(7696005)(81156014)(6916009)(2616005)(956004)(81166006)(52116002)(478600001)(136400200001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: i4m0oHPA0SUSflTRKYj8WFJViKa/O1EnlPrtczTWOwP9tamgBAD1fipmkhI2VrfdQMPYDdX7U26zhbbjcwH5Nk2ev+xp+I6yoayHzDSACC58drwkop8lhnpLTcz7krWc8rfsyC/iSC20cr3I0/Ux92kHFkryGL1Tizz7FxqUTtlrw4EM+x5cZg2oxiO5GcTwXqAoKuL36bseMtZAQ8kDcsyNciRikR3wMpPRS9bO9BGtizDYMcVxQ5UX6hfVIynZsjM/AhT8RrXiRIYWAYtEtjFc6k57S7k26duUyPoUgOF1xxQDUDizXEB5dte88UjqMVfPQBrE9yZMzcEZ6mzuhOZXgx9mSzBzjV+EDJOz7Dxj/hk5wLUJvbAQ7xCkHqLEQS1CvLpfmVSKgzKHTjEMhhvGqfh0+XWKHKjUUKpv109Mq4NEwhG0/+cV6EIkULuahEVXgwdcskkQD4dfCJM/wUy9r1HVchvNXzI8KeA1vKkDzxhGEGUG0+ovQvdTlBYPakMUM7nzBqaPptQRZoxIlw6uU09zSkN0rcZ/b/NrLcvzvJxvLNRpsn5z53w1ppAgCt7NgnC/eIg5AAVLRS1HWA==
+X-MS-Exchange-AntiSpam-MessageData: Amdk+kp+0RjBCwHiyaHoQ6/Uxv9lpu1vEl29OgJVBW08NKlLazYwZdb94sguHQIeuj3tRPkBLeYsblIrdoMNh+pmFKYh4HRymRSugZMGSNhoCu7TIePRLGQIR1itaOiTxbOkNhe+2jkO5uqR0gVUnQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9429555-3c66-4b82-89a5-08d7d4725235
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 06:19:36.8584
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qh6+zaXxk59HyIarYXKzP+6UlXJTgXvABmd4tVHi7WlFOtJHEOF7BSd6o7Xrirjwr5+Uv9IAdqhejV1iCEKFJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1692
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SKML/+XaAwEn+W+i4JdedJ8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-Hi all,
+The series add support for AMD SEV guest live migration commands. To protect the
+confidentiality of an SEV protected guest memory while in transit we need to
+use the SEV commands defined in SEV API spec [1].
 
-After merging the pinctrl tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+SEV guest VMs have the concept of private and shared memory. Private memory
+is encrypted with the guest-specific key, while shared memory may be encrypted
+with hypervisor key. The commands provided by the SEV FW are meant to be used
+for the private memory only. The patch series introduces a new hypercall.
+The guest OS can use this hypercall to notify the page encryption status.
+If the page is encrypted with guest specific-key then we use SEV command during
+the migration. If page is not encrypted then fallback to default.
 
-drivers/pinctrl/qcom/pinctrl-msm.c:909:4: error: expected identifier or '('=
- before 'else'
-  909 |  } else {
-      |    ^~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:921:2: warning: data definition has no t=
-ype or storage class
-  921 |  val =3D msm_readl_intr_cfg(pctrl, g);
-      |  ^~~
-drivers/pinctrl/qcom/pinctrl-msm.c:921:2: error: type defaults to 'int' in =
-declaration of 'val' [-Werror=3Dimplicit-int]
-drivers/pinctrl/qcom/pinctrl-msm.c:921:27: error: 'pctrl' undeclared here (=
-not in a function); did you mean 'pinctrl'?
-  921 |  val =3D msm_readl_intr_cfg(pctrl, g);
-      |                           ^~~~~
-      |                           pinctrl
-drivers/pinctrl/qcom/pinctrl-msm.c:921:34: error: 'g' undeclared here (not =
-in a function)
-  921 |  val =3D msm_readl_intr_cfg(pctrl, g);
-      |                                  ^
-drivers/pinctrl/qcom/pinctrl-msm.c:922:6: error: expected '=3D', ',', ';', =
-'asm' or '__attribute__' before '|=3D' token
-  922 |  val |=3D BIT(g->intr_raw_status_bit);
-      |      ^~
-drivers/pinctrl/qcom/pinctrl-msm.c:923:2: error: expected identifier or '('=
- before 'if'
-  923 |  if (g->intr_detection_width =3D=3D 2) {
-      |  ^~
-drivers/pinctrl/qcom/pinctrl-msm.c:945:4: error: expected identifier or '('=
- before 'else'
-  945 |  } else if (g->intr_detection_width =3D=3D 1) {
-      |    ^~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:966:4: error: expected identifier or '('=
- before 'else'
-  966 |  } else {
-      |    ^~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:969:2: warning: data definition has no t=
-ype or storage class
-  969 |  msm_writel_intr_cfg(val, pctrl, g);
-      |  ^~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:969:2: error: type defaults to 'int' in =
-declaration of 'msm_writel_intr_cfg' [-Werror=3Dimplicit-int]
-drivers/pinctrl/qcom/pinctrl-msm.c:969:2: warning: parameter names (without=
- types) in function declaration
-drivers/pinctrl/qcom/pinctrl-msm.c:969:2: error: conflicting types for 'msm=
-_writel_intr_cfg'
-drivers/pinctrl/qcom/pinctrl-msm.c:84:13: note: previous definition of 'msm=
-_writel_intr_cfg' was here
-   84 | static void msm_writel_##name(u32 val, struct msm_pinctrl *pctrl, \
-      |             ^~~~~~~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:92:1: note: in expansion of macro 'MSM_A=
-CCESSOR'
-   92 | MSM_ACCESSOR(intr_cfg)
-      | ^~~~~~~~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:971:2: error: expected identifier or '('=
- before 'if'
-  971 |  if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
-      |  ^~
-In file included from include/linux/vmalloc.h:5,
-                 from include/asm-generic/io.h:887,
-                 from arch/arm/include/asm/io.h:438,
-                 from include/linux/io.h:13,
-                 from drivers/pinctrl/qcom/pinctrl-msm.c:9:
-include/linux/spinlock.h:287:2: error: expected identifier or '(' before 'd=
-o'
-  287 |  do {       \
-      |  ^~
-drivers/pinctrl/qcom/pinctrl-msm.c:974:2: note: in expansion of macro 'raw_=
-spin_unlock_irqrestore'
-  974 |  raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/spinlock.h:290:4: error: expected identifier or '(' before 'w=
-hile'
-  290 |  } while (0)
-      |    ^~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:974:2: note: in expansion of macro 'raw_=
-spin_unlock_irqrestore'
-  974 |  raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-      |  ^~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:976:2: error: expected identifier or '('=
- before 'if'
-  976 |  if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
-      |  ^~
-drivers/pinctrl/qcom/pinctrl-msm.c:978:2: error: expected identifier or '('=
- before 'else'
-  978 |  else if (type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
-      |  ^~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:981:2: error: expected identifier or '('=
- before 'return'
-  981 |  return 0;
-      |  ^~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:982:1: error: expected identifier or '('=
- before '}' token
-  982 | }
-      | ^
-drivers/pinctrl/qcom/pinctrl-msm.c: In function 'msm_gpio_irq_set_type':
-drivers/pinctrl/qcom/pinctrl-msm.c:909:2: warning: control reaches end of n=
-on-void function [-Wreturn-type]
-  909 |  } else {
-      |  ^
-At top level:
-drivers/pinctrl/qcom/pinctrl-msm.c:84:13: warning: 'msm_writel_intr_target'=
- defined but not used [-Wunused-function]
-   84 | static void msm_writel_##name(u32 val, struct msm_pinctrl *pctrl, \
-      |             ^~~~~~~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:94:1: note: in expansion of macro 'MSM_A=
-CCESSOR'
-   94 | MSM_ACCESSOR(intr_target)
-      | ^~~~~~~~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:79:12: warning: 'msm_readl_intr_target' =
-defined but not used [-Wunused-function]
-   79 | static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
-      |            ^~~~~~~~~~
-drivers/pinctrl/qcom/pinctrl-msm.c:94:1: note: in expansion of macro 'MSM_A=
-CCESSOR'
-   94 | MSM_ACCESSOR(intr_target)
-      | ^~~~~~~~~~~~
+The patch adds new ioctls KVM_{SET,GET}_PAGE_ENC_BITMAP. The ioctl can be used
+by the qemu to get the page encrypted bitmap. Qemu can consult this bitmap
+during the migration to know whether the page is encrypted.
 
-Caused by commit
+[1] https://developer.amd.com/wp-content/resources/55766.PDF
 
-  13bec8d49bdf ("pinctrl: qcom: use scm_call to route GPIO irq to Apps")
+Changes since v5:
+- Fix build errors as
+  Reported-by: kbuild test robot <lkp@intel.com>
 
-I have reverted that commit for today.
+Changes since v4:
+- Host support has been added to extend KVM capabilities/feature bits to 
+  include a new KVM_FEATURE_SEV_LIVE_MIGRATION, which the guest can
+  query for host-side support for SEV live migration and a new custom MSR
+  MSR_KVM_SEV_LIVE_MIG_EN is added for guest to enable the SEV live
+  migration feature.
+- Ensure that _bss_decrypted section is marked as decrypted in the
+  page encryption bitmap.
+- Fixing KVM_GET_PAGE_ENC_BITMAP ioctl to return the correct bitmap
+  as per the number of pages being requested by the user. Ensure that
+  we only copy bmap->num_pages bytes in the userspace buffer, if
+  bmap->num_pages is not byte aligned we read the trailing bits
+  from the userspace and copy those bits as is. This fixes guest
+  page(s) corruption issues observed after migration completion.
+- Add kexec support for SEV Live Migration to reset the host's
+  page encryption bitmap related to kernel specific page encryption
+  status settings before we load a new kernel by kexec. We cannot
+  reset the complete page encryption bitmap here as we need to
+  retain the UEFI/OVMF firmware specific settings.
 
---=20
-Cheers,
-Stephen Rothwell
+Changes since v3:
+- Rebasing to mainline and testing.
+- Adding a new KVM_PAGE_ENC_BITMAP_RESET ioctl, which resets the 
+  page encryption bitmap on a guest reboot event.
+- Adding a more reliable sanity check for GPA range being passed to
+  the hypercall to ensure that guest MMIO ranges are also marked
+  in the page encryption bitmap.
 
---Sig_/SKML/+XaAwEn+W+i4JdedJ8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Changes since v2:
+ - reset the page encryption bitmap on vcpu reboot
 
------BEGIN PGP SIGNATURE-----
+Changes since v1:
+ - Add support to share the page encryption between the source and target
+   machine.
+ - Fix review feedbacks from Tom Lendacky.
+ - Add check to limit the session blob length.
+ - Update KVM_GET_PAGE_ENC_BITMAP icotl to use the base_gfn instead of
+   the memory slot when querying the bitmap.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Bj4IACgkQAVBC80lX
-0Gx10Af8DE4exCuBT57lUHkd6GgIHeWGKoOZnmjkmSZTgpwMdntdkpKex+b6VuG5
-e0zk5VTmtobmDRU8C84zLMoFeGjldDczJleXnWCJTdrT/5+8NqlgXTJaSgH1r0jH
-rwmZKXOsS1Mvjsch7XgeDfGIpxe5hieJf8h/PPPL5RMqZXHEOFjVkEFSpgWMD8z1
-Sifz5lNi5VMZZZVSdMIB2A88/JfHBHKvJk776TpwRtXFgcvVaYdiykfP/asb4tul
-zdogrSA6Xxf9M8oKWbZKoIjyKY6UYhYORezM2QxGbqniXjkHQCGEbtXUw2/6svmD
-sdG+wtbTmhZK2SdYZ4hpI0MNSXcs8w==
-=F85x
------END PGP SIGNATURE-----
+Ashish Kalra (3):
+  KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET ioctl
+  KVM: x86: Introduce new KVM_FEATURE_SEV_LIVE_MIGRATION feature &
+    Custom MSR.
+  KVM: x86: Add kexec support for SEV Live Migration.
 
---Sig_/SKML/+XaAwEn+W+i4JdedJ8--
+Brijesh Singh (11):
+  KVM: SVM: Add KVM_SEV SEND_START command
+  KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+  KVM: SVM: Add KVM_SEV_SEND_FINISH command
+  KVM: SVM: Add support for KVM_SEV_RECEIVE_START command
+  KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
+  KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+  KVM: x86: Add AMD SEV specific Hypercall3
+  KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
+  KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+  mm: x86: Invoke hypercall when page encryption status is changed
+  KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
+
+ .../virt/kvm/amd-memory-encryption.rst        | 120 +++
+ Documentation/virt/kvm/api.rst                |  62 ++
+ Documentation/virt/kvm/cpuid.rst              |   4 +
+ Documentation/virt/kvm/hypercalls.rst         |  15 +
+ Documentation/virt/kvm/msr.rst                |  10 +
+ arch/x86/include/asm/kvm_host.h               |  10 +
+ arch/x86/include/asm/kvm_para.h               |  12 +
+ arch/x86/include/asm/paravirt.h               |  10 +
+ arch/x86/include/asm/paravirt_types.h         |   2 +
+ arch/x86/include/uapi/asm/kvm_para.h          |   5 +
+ arch/x86/kernel/kvm.c                         |  32 +
+ arch/x86/kernel/paravirt.c                    |   1 +
+ arch/x86/kvm/cpuid.c                          |   3 +-
+ arch/x86/kvm/svm.c                            | 699 +++++++++++++++++-
+ arch/x86/kvm/vmx/vmx.c                        |   1 +
+ arch/x86/kvm/x86.c                            |  43 ++
+ arch/x86/mm/mem_encrypt.c                     |  69 +-
+ arch/x86/mm/pat/set_memory.c                  |   7 +
+ include/linux/psp-sev.h                       |   8 +-
+ include/uapi/linux/kvm.h                      |  53 ++
+ include/uapi/linux/kvm_para.h                 |   1 +
+ 21 files changed, 1157 insertions(+), 10 deletions(-)
+
+-- 
+2.17.1
+
