@@ -2,146 +2,220 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F13C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F18C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23052073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCD6A20774
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sQ2f+skF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lQKOepWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbgC3Gpj (ORCPT
+        id S1729287AbgC3Gpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:45:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46415 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728733AbgC3Gpi (ORCPT
+        Mon, 30 Mar 2020 02:45:52 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:15972 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728964AbgC3Gpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:45:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j17so20068182wru.13
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 23:45:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=V56YQ8YQXjkIauhgboyrxCMrbncDw2TqLEBJO6LLNNM=;
-        b=sQ2f+skFCCbEiOoww8kH9zZYLPWziNWtDYM/MzX1shre1CF6ETuE51sUbV60Mcbp3c
-         7ofQGCgIpUXTV10fB8GyD0slTikuSNdlePQ7vG9wO47RRcTnybZAdKTqKbhPzCIZpk8v
-         Hy6ije5XX9W48RP7H3ASmx4vFqgFf/gk/I4VS8cK396oDd/bs6+1e+/m+XdzXseQvP6g
-         hkxkwAApQvHdND1yQ4DgfVVkdUao2XNw+v5HTUR2TLdHbCGM+4Cnc3wfMniX+0A13ev+
-         CmNpK5tc1KR7tqVtcmTg0w7xWqBt2ETiw2Fgn8j2zb5UJh8aLCCVM5utDA2vJth35Hv5
-         5YKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=V56YQ8YQXjkIauhgboyrxCMrbncDw2TqLEBJO6LLNNM=;
-        b=r/kR3sKK3ac/39QoPQFjtRHz3mm5+evU0V9ieSYa14zFjHz/WMI6T7cGjDxiiBYStr
-         AXAqICh1ScBEWzCXgEpF5s97+oOGWwLfyn5iaeegEHNCbozchwHtjqFTNKjhBJX8pm6k
-         5DSp8aroaSVKntWp1angmhLA0BSwMstqnjc57Iqs12nXyuMSv52COhVOor7LikPXCNJq
-         VU2ZnHdrcrOQ/ZgFwg+1dOdzGJ+yOAWZH44nxh5Db+BcR4udVTd677/9s6oOcZHoeknK
-         epyKDQrju99Nggv8i5CN6yN2fmcfibC8bH3WVVcSCcmoL5tZ5foNfi4Lo+7mu4wwBKk+
-         TqZw==
-X-Gm-Message-State: ANhLgQ1VMKaybJ12KTJoGRotimwZ2FLbokClrOsSygmf2PJhU2kdvnFB
-        luC9Q0YWP319XJvbS26eyDpGRg==
-X-Google-Smtp-Source: ADFU+vsGOjMWUR3XuueAXOf+kGUjz672AeJsnP+zNGCOJq+3zYTVOE2f/ajoKzhEq5O/LNUAMeRj0A==
-X-Received: by 2002:a5d:4f92:: with SMTP id d18mr12996829wru.400.1585550737261;
-        Sun, 29 Mar 2020 23:45:37 -0700 (PDT)
-Received: from dell ([95.149.164.95])
-        by smtp.gmail.com with ESMTPSA id c23sm21059704wrb.79.2020.03.29.23.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 23:45:36 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 07:46:30 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
-Message-ID: <20200330064630.GA30614@dell>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-2-sravanhome@gmail.com>
- <20200327080013.GG603801@dell>
- <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
+        Mon, 30 Mar 2020 02:45:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585550750; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=URzNECvAI1Ghk10GnUEl6Jn6n1Bg3PLrHrv0MX+tgvo=; b=lQKOepWZsDurrUnlESXCozudINfoAqk9g4yltyZl4NsxOFXVvWKttYofn5XFDWld5LAv5Fz1
+ aatfsF5N0Q6xdhEu7DtxFIN7FsUz6oRPAZRejUXC8Gf8XZTa9fMC0K3xtMxDebdksHqLvvNR
+ YdeYPQorcydvwFm4GKuqg0cPSs0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e819597.7f8c311e5df8-smtp-out-n05;
+ Mon, 30 Mar 2020 06:45:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D57AEC4478C; Mon, 30 Mar 2020 06:45:42 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 573B4C433D2;
+        Mon, 30 Mar 2020 06:45:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 573B4C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] f2fs: fix long latency due to discard during umount
+Date:   Mon, 30 Mar 2020 12:15:30 +0530
+Message-Id: <1585550730-1858-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020, saravanan sekar wrote:
-> On 27/03/20 9:00 am, Lee Jones wrote:
-> > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
-> > 
-> > > Add device tree binding information for mp2629 mfd driver.
-> > > 
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > ---
-> > >   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
-> > >   1 file changed, 60 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > new file mode 100644
-> > > index 000000000000..314309ea91ac
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > @@ -0,0 +1,60 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > Are these links supposed to work?
-> Not really, but as far my understanding needed for dt-bindings check
+F2FS already has a default timeout of 5 secs for discards that
+can be issued during umount, but it can take more than the 5 sec
+timeout if the underlying UFS device queue is already full and there
+are no more available free tags to be used. In that case, submit_bio()
+will wait for the already queued discard requests to complete to get
+a free tag, which can potentially take way more than 5 sec.
 
-Rob, why are these here if they just result in 404s?
+Fix this by submitting the discard requests with REQ_NOWAIT
+flags during umount. This will return -EAGAIN for UFS queue/tag full
+scenario without waiting in the context of submit_bio(). The FS can
+then handle these requests by retrying again within the stipulated
+discard timeout period to avoid long latencies.
 
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > +    #include <dt-bindings/input/linux-event-codes.h>
-> > > +    i2c {
-> > i2c@0x????????
-> 
-> Its a I2C controller node, I don't think address is needed. Mention like
-> this my previous other driver patches,
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+v3:
+-Handle the regression reported by Chao with v2.
+-simplify the logic to split the dc with multiple bios incase any bio returns
+ EAGAIN and retry those new dc within 5 sec timeout.
 
-This doesn't sound right.
+ fs/f2fs/segment.c | 65 +++++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 51 insertions(+), 14 deletions(-)
 
-How do you control/operate the controller?
-
-Surely you read/write from/to registers?
-
-> dt_binding_check is also passed
-> 
-> > > +        #address-cells = <1>;
-> > > +        #size-cells = <0>;
-> > > +
-> > > +        pmic@4b {
-> > > +            compatible = "mps,mp2629";
-> > > +            reg = <0x4b>;
-> > > +
-> > > +            interrupt-controller;
-> > > +            interrupt-parent = <&gpio2>;
-> > > +            #interrupt-cells = <2>;
-> > > +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> > > +        };
-> > > +    };
-
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index fb3e531..55d18c7 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
+ 	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
+ 	unsigned long flags;
+ 
+-	dc->error = blk_status_to_errno(bio->bi_status);
+-
+ 	spin_lock_irqsave(&dc->lock, flags);
++	if (!dc->error)
++		dc->error = blk_status_to_errno(bio->bi_status);
++
+ 	dc->bio_ref--;
+-	if (!dc->bio_ref && dc->state == D_SUBMIT) {
+-		dc->state = D_DONE;
+-		complete_all(&dc->wait);
++	if (!dc->bio_ref) {
++		if (dc->error || dc->state == D_SUBMIT) {
++			dc->state = D_DONE;
++			complete_all(&dc->wait);
++		}
+ 	}
+ 	spin_unlock_irqrestore(&dc->lock, flags);
+ 	bio_put(bio);
+@@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+ 	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+ 					&(dcc->fstrim_list) : &(dcc->wait_list);
+-	int flag = dpolicy->sync ? REQ_SYNC : 0;
++	int flag;
+ 	block_t lstart, start, len, total_len;
+ 	int err = 0;
+ 
++	flag = dpolicy->sync ? REQ_SYNC : 0;
++	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
++
+ 	if (dc->state != D_PREP)
+ 		return 0;
+ 
+@@ -1192,10 +1198,6 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 		dc->bio_ref++;
+ 		spin_unlock_irqrestore(&dc->lock, flags);
+ 
+-		atomic_inc(&dcc->queued_discard);
+-		dc->queued++;
+-		list_move_tail(&dc->list, wait_list);
+-
+ 		/* sanity check on discard range */
+ 		__check_sit_bitmap(sbi, lstart, lstart + len);
+ 
+@@ -1203,6 +1205,29 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 		bio->bi_end_io = f2fs_submit_discard_endio;
+ 		bio->bi_opf |= flag;
+ 		submit_bio(bio);
++		if (flag & REQ_NOWAIT) {
++			if (dc->error == -EAGAIN) {
++				spin_lock_irqsave(&dc->lock, flags);
++				dc->len -= len;
++				if (!dc->len) {
++					dc->len = total_len;
++					dc->state = D_PREP;
++					reinit_completion(&dc->wait);
++				} else {
++					dcc->undiscard_blks -= total_len;
++					if (dc->state == D_PARTIAL)
++						dc->state = D_SUBMIT;
++				}
++				err = dc->error;
++				dc->error = 0;
++				spin_unlock_irqrestore(&dc->lock, flags);
++				break;
++			}
++		}
++
++		atomic_inc(&dcc->queued_discard);
++		dc->queued++;
++		list_move_tail(&dc->list, wait_list);
+ 
+ 		atomic_inc(&dcc->issued_discard);
+ 
+@@ -1214,8 +1239,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 		len = total_len;
+ 	}
+ 
+-	if (!err && len)
+-		__update_discard_tree_range(sbi, bdev, lstart, start, len);
++	if ((!err || err == -EAGAIN) && total_len && dc->start != start)
++		__update_discard_tree_range(sbi, bdev, lstart, start,
++					total_len);
+ 	return err;
+ }
+ 
+@@ -1470,12 +1496,15 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 	struct list_head *pend_list;
+ 	struct discard_cmd *dc, *tmp;
+ 	struct blk_plug plug;
+-	int i, issued = 0;
++	int i, err, issued = 0;
+ 	bool io_interrupted = false;
++	bool retry;
+ 
+ 	if (dpolicy->timeout != 0)
+ 		f2fs_update_time(sbi, dpolicy->timeout);
+ 
++retry:
++	retry = false;
+ 	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+ 		if (dpolicy->timeout != 0 &&
+ 				f2fs_time_over(sbi, dpolicy->timeout))
+@@ -1509,7 +1538,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 				break;
+ 			}
+ 
+-			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
++			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
++			if (err == -EAGAIN) {
++				congestion_wait(BLK_RW_ASYNC,
++						DEFAULT_IO_TIMEOUT);
++				retry = true;
++			}
+ 
+ 			if (issued >= dpolicy->max_requests)
+ 				break;
+@@ -1522,6 +1556,9 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 			break;
+ 	}
+ 
++	if (retry)
++		goto retry;
++
+ 	if (!issued && io_interrupted)
+ 		issued = -1;
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
