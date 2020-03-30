@@ -2,97 +2,75 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1102AC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF214C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCA620774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFAB620784
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:29:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgC3V11 (ORCPT
+        id S1728979AbgC3V3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:27:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:18888 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728445AbgC3V10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:27:26 -0400
-IronPort-SDR: V0YSsL5djVB7xZlKyIPpFtUfVtQpac6mAwkhLAQBRYbw1vbPBjJvWJ1LbhABoBwf6Rl0Ysl7a0
- o9X+ZdrsBYyQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 14:27:25 -0700
-IronPort-SDR: 3AFUXjdN3GnH/q48TZs35y75IUCUF26zAr50v/8Gf3sz7siCSwYJZoW2ZURgxuESMYSv4LdRGn
- dwYqw10z0u1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
-   d="scan'208";a="359300860"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Mar 2020 14:27:25 -0700
-Subject: [PATCH 6/6] dmaengine: idxd: add ABI documentation for shared wq
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-Date:   Mon, 30 Mar 2020 14:27:25 -0700
-Message-ID: <158560364513.6059.18351565119856670498.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
-References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        Mon, 30 Mar 2020 17:29:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59801 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728715AbgC3V3F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 17:29:05 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJ1xv-0006Am-UG; Mon, 30 Mar 2020 23:29:04 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 56365101175; Mon, 30 Mar 2020 23:29:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
+        "devi R.K" <devi.feb27@gmail.com>
+Cc:     mtk.manpages@gmail.com, linux-man@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com
+Subject: Re: [PATCH] timerfd_create.2: Included return value 0
+In-Reply-To: <d79b3520-77ac-199e-6576-ab9f235ac297@gmail.com>
+References: <CAJymdbxJNag1W0vR9Ysm7_y91HwLAu4QaSMKZbed4emT1DYvww@mail.gmail.com> <55aa30be-5894-ae52-ffd4-5f2a82aa5ad5@gmail.com> <CAJymdbwfm7EypQfXRqWZHbfj2SKk7PCP7SMccz6bmJWSauDqPQ@mail.gmail.com> <CAJymdby8pDASq5Xv7DeTJ5cq1NXPe1jUWwApxZ5o-huaEXUrjw@mail.gmail.com> <3cbd0919-c82a-cb21-c10f-0498433ba5d1@gmail.com> <87a73ywzbv.fsf@nanos.tec.linutronix.de> <d79b3520-77ac-199e-6576-ab9f235ac297@gmail.com>
+Date:   Mon, 30 Mar 2020 23:29:02 +0200
+Message-ID: <87wo71v8f5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the sysfs attribute bits in ABI/stable for shared wq support.
+Micheal,
 
-Signed-off-by: Jing Lin <jing.lin@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+> On 3/30/20 12:50 AM, Thomas Gleixner wrote:
+>> That's the reason why I rejected the attempt to mitigate that particular
+>> 0 tick issue in timerfd as it would just scratch a particular itch but
+>> still not provide any guarantee. So having the '0' return documented is
+>> the right way to go.
+>
+> Thanks for the incredibly detailed follow-up Thomas (which all 
+> landed in my commit message). I've applied a patch almost exactly
+> the same as the text I showed above (and it's pushed to Git).
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-index f4be46cc6cb6..c1adddde23c2 100644
---- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -71,6 +71,13 @@ Contact:        dmaengine@vger.kernel.org
- Description:    The operation capability bit mask specify the operation types
- 		supported by the this device.
- 
-+What:		sys/bus/dsa/devices/dsa<m>/pasid_enabled
-+Date:		Jan 30, 2020
-+KernelVersion:	5.7.0
-+Contact:	dmaengine@vger.kernel.org
-+Description:	To indicate if PASID (process address space identifier) is
-+		enabled or not for this device.
-+
- What:           sys/bus/dsa/devices/dsa<m>/state
- Date:           Oct 25, 2019
- KernelVersion:  5.6.0
-@@ -110,6 +117,13 @@ Description:    The maximum number of bandwidth tokens that may be in use at
- 		one time by operations that access low bandwidth memory in the
- 		device.
- 
-+What:		sys/bus/dsa/devices/wq<m>.<n>/block_on_fault
-+Date:		Jan 30, 2020
-+KernelVersion:	5.7.0
-+Contact:	dmaengine@vger.kernel.org
-+Description:	To indicate block on fault is allowed or not for the work queue
-+		to support on demand paging.
-+
- What:           sys/bus/dsa/devices/wq<m>.<n>/group_id
- Date:           Oct 25, 2019
- KernelVersion:  5.6.0
+  "timerfd_create.2: Negetive..."
 
+That first word after the colon looks weird :)
+
+>> All of 2020 is a bust, I expect. Perhaps we see us at a conference
+> in 2021 ;-).
+
+Let's see how that evolves and in the worst case we can meet for a beer
+once we gained antibodies one way or the other. For now let's stay safe
+and all I can offer is a virtual 'Prosit' :)
+
+Thanks,
+
+        tglx
