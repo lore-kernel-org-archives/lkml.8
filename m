@@ -2,108 +2,113 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6FBC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD92C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5B4206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:09:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKf24TUL"
+	by mail.kernel.org (Postfix) with ESMTP id 1144B206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585606185;
+	bh=q2phzh9yFsQx50dV3hbRu31sKC6mnvd0GciRPxzIXns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cCX0TrdDhVLaRtdqwklUBTdnclGV37vJq7s1qcygvDDS8Iu/gGgENQYk4wwORz9W6
+	 9CQ31UxdYoQ66q7mMe4Ewtg+Smr4Jpy4kFsEg9PtkXb8uriRGS2qgCfpAnREwGLdNG
+	 ymT+6bcV6qFvrSFkrwaTpzWYp4sqSJxHxuu6igPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbgC3WJL (ORCPT
+        id S1730978AbgC3WJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:09:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55312 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729142AbgC3WJL (ORCPT
+        Mon, 30 Mar 2020 18:09:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40945 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbgC3WJn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:09:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r16so466864wmg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 15:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ik/3e0uSzSzcYKdS0/OeT2EBEqYErrSILcGFWXs+2RM=;
-        b=UKf24TULpgTKJkpnnCkZEN2gEFN63tvYWD6w41Q4gya0Vq0f09iToO7bl/oB1ZNu1I
-         +0yED3dPm+FJXmb22sY74RrD/wLrvk+TzOh++9pEq937ku5LKzlLKLbIC1/cLmRF9JGh
-         LGS1Q7OfD8Ne+svufwH86ipe5b3qGXcIjpyKxe+GsXMLC/l9e5NpHtvCVj2HEwh1AjEo
-         JAG0gCIGwsXq0TB69oyMticmrZiArh9E+JW7jV3U38k6sZSiwUyQi6xL6HuUspFxjE1o
-         wB+Tl/94HobSZdFyXYLMNZLq5Tr+4Z+GIfvh8MhzsAx7n8rQ6loCcmHgebUg1ZoBGPCo
-         PUJg==
+        Mon, 30 Mar 2020 18:09:43 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t24so9342617pgj.7;
+        Mon, 30 Mar 2020 15:09:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ik/3e0uSzSzcYKdS0/OeT2EBEqYErrSILcGFWXs+2RM=;
-        b=fxWZUZ2ugIyJsXaNLeZUnbOdhlhQ8y0FXG/trpYALo5hSHFNcP9D5iDRzNJVKLLQJc
-         eh33cp4iFPejeiqBLlSmbMTnOOmPviD3bizAFAaCLu5vxOjA++468Cp8qt0JPFgvO/xn
-         YLvSuLULA3/OK18z4MO4EjAnrlIHc11yLCNpWQk81ZYLOv4Uz3w/0F71VTx3P9RAWkaE
-         mKJm63B3Iw/a5eqT+gML9ndJMyCIAYIAi+ZVQIeoxaemHrfdVTjjYDLWT1sz7baqE5AY
-         xTAU6r8sdnRbTelY/QHzCw3eBIHUInTQRYXBkKe80CXclwm2VmwhjjFm65C722zr/RgG
-         KHKg==
-X-Gm-Message-State: ANhLgQ2liy7Hh3GPjHOmyP1i39BH0t3pxaJ5k3GvB+rXoi7gwCkhoZye
-        sTQzXfW/a+F9Q7tc3AZavGo=
-X-Google-Smtp-Source: ADFU+vuuC/kM6I+Yns0EcU4d71N+MU8c4b3Y0qKLRXiZ5TPZCVcveYtXDSjtrUkUuS2HMFVUkbqj4w==
-X-Received: by 2002:a7b:c308:: with SMTP id k8mr251708wmj.40.1585606149273;
-        Mon, 30 Mar 2020 15:09:09 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id i8sm25093845wrb.41.2020.03.30.15.09.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 15:09:08 -0700 (PDT)
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
-        david@redhat.com, jhubbard@nvidia.com, bhe@redhat.com,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [Patch v4] mm/page_alloc.c: use NODE_MASK_NONE in build_zonelists()
-Date:   Mon, 30 Mar 2020 22:08:40 +0000
-Message-Id: <20200330220840.21228-1-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j7FmspK21WqfyDNNhuaL3ZlTlaa7O+RnMjIkIEqFuiw=;
+        b=su818cT3WfQlUr0ieQYTl5TpuDrJ7aGCv8uzHlTBm5DZjQy/laMDyPgqzuKvEpMBz8
+         +ZsQdxJpoCIabRbCtmxtoilJ9VJ0sqHWoQXsLzlV34eSMZaOkGUtMt3as4L+eIUME5up
+         mNBgl4UaB7v0pyVBN8Qxii7+AaVwlFNt0+BHjM8H4txepliJxi7X0Dxrx95zjVDRxYSc
+         aMfo43HCQ6tdMKsi+lChfsXfwqKxicPe/2K4tYaNmyTTpLdrhSy+x7oBnVkIBxWTxGmA
+         QejmHSWUpsH0FSjXxpaZblB/20fIpLqHpXz/4JnxGAtwZXLv0VYz7B/1TxpaSO5UfMrb
+         XeEg==
+X-Gm-Message-State: ANhLgQ0fdMgRtzQ1Fc2qcoDjKN01AJA8EUncnaHZpnt4Rj5lud2b8Key
+        UA1U5lxEyRn3DQLTunCua8c=
+X-Google-Smtp-Source: ADFU+vvPzerl8j1+L7xAnyd4gLFIsKX6lP6TPO/c76Xt2g0Nx6dQq/wpEsf4qIQGjiT4CSIoeAaL8g==
+X-Received: by 2002:a62:1745:: with SMTP id 66mr15223339pfx.291.1585606181235;
+        Mon, 30 Mar 2020 15:09:41 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id b133sm9608378pfb.180.2020.03.30.15.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 15:09:40 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 61A9F404B0; Mon, 30 Mar 2020 22:09:39 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 22:09:39 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200330220939.GW11244@42.do-not-panic.com>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <874kuc5b5z.fsf@x220.int.ebiederm.org>
+ <20200326065829.GC27965@dhcp22.suse.cz>
+ <87bloj2skm.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bloj2skm.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Slightly simplify the code by initializing user_mask with NODE_MASK_NONE,
-instead of later calling nodes_clear(). This saves a line of code.
+On Thu, Mar 26, 2020 at 07:45:13AM -0500, Eric W. Biederman wrote:
+> > On Wed 25-03-20 17:20:40, Eric W. Biederman wrote:
+> plus I want to get very far away from the incorrect idea that you
+> can have sysctls without compiling in proc support.  That is not how
+> the code works, that is not how the code is tested.
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Agreed.
 
----
-v4: adjust subject/description as suggested by John Hubbard
-v3: adjust the commit log a little
-v2: use NODE_MASK_NONE as suggested by David Hildenbrand
----
- mm/page_alloc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> It is also worth pointing out that:
+> 
+> 	proc_mnt = kern_mount(proc_fs_type);
+>         for_each_sysctl_cmdline() {
+>         	...
+> 		file = file_open_root(proc_mnt->mnt_root, proc_mnt, sysctl_path, O_WRONLY, 0);
+> 		kernel_write(file, value, value_len);
+>         }
+>         kern_umount(proc_mnt);
+> 
+> Is not an unreasonable implementation.
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ef790dfad6aa..dfcf2682ed40 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5587,14 +5587,13 @@ static void build_zonelists(pg_data_t *pgdat)
- {
- 	static int node_order[MAX_NUMNODES];
- 	int node, load, nr_nodes = 0;
--	nodemask_t used_mask;
-+	nodemask_t used_mask = NODE_MASK_NONE;
- 	int local_node, prev_node;
- 
- 	/* NUMA-aware ordering of nodes */
- 	local_node = pgdat->node_id;
- 	load = nr_online_nodes;
- 	prev_node = local_node;
--	nodes_clear(used_mask);
- 
- 	memset(node_order, 0, sizeof(node_order));
- 	while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
--- 
-2.23.0
+This:
 
+> There are problems with a persistent mount of proc in that it forces
+> userspace not to use any proc mount options.  But a temporary mount of
+> proc to deal with command line options is not at all unreasonable.
+> Plus it looks like we can have kern_write do all of the kernel/user
+> buffer silliness.
+
+Is a bit of tribal knowledge worth documenting for the approach taken
+forward. Vlastimil can you add a little comment mentioning some of this
+logic?
+
+  Luis
