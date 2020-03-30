@@ -2,100 +2,99 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F2CC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F16C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A2820732
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062E520732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585563221;
+	bh=wgotIvt/OHLn0qUe32qgfQco3wwFOA3iTeQ2Qthu4PQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qdnBZw4QMTuLp2g6HBFVNrRvtp8DNKHL/cHH1Wv/xnqT1rtmHO8EgoByK94qw4ccT
+	 v3OnQ2oRRbSF5u+6A+aDj1iiaqTh5Rznx7IHn3yUabiqcWK28/+H/GBLBWtfctEnz8
+	 t619cIcxGrUmFG5fYCySyOq2iiPcfKg38Nbd0gLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgC3KNe (ORCPT
+        id S1728976AbgC3KNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:13:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:49108 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbgC3KNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:13:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AAAC31B;
-        Mon, 30 Mar 2020 03:13:32 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.97])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA8EF3F52E;
-        Mon, 30 Mar 2020 03:13:28 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 11:13:21 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Basil Eljuse <Basil.Eljuse@arm.com>,
-        lkft-triage@lists.linaro.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        fntoth@gmail.com, Arnd Bergmann <arnd@arndb.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: Re: [PATCH v2 3/3] driver core: Replace open-coded
- list_last_entry()
-Message-ID: <20200330095707.GA10432@bogus>
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
- <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
- <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
- <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com>
+        Mon, 30 Mar 2020 06:13:40 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54631 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728257AbgC3KNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 06:13:36 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c81so19295330wmd.4;
+        Mon, 30 Mar 2020 03:13:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=etNRfQXSTquo6SrTToC0ZDG3tsM3oRH7bak2nuOj9kc=;
+        b=XoELc/LLXnZ8xFCflQqxeKvMu7ldJfcZYDKsztN1rvaAGMaM6IhRzHZ7wUWHHGNYN6
+         nYoPqtwrtDl49yWz0zth/4YNKAJtiGoJxo6aortb/vqfIlBIci7l5AduGnAI7ue+kjJ7
+         8FwptMBAXbPxIEIPIJC8HrRpJmxbvEYqfbHX+NbnWtWdP76vll6q8qdC4Yk6by9LcY2r
+         o9YcwrGuajB7ic/wKAZI7PSVbPKzglwfaZKOnqKSM5Jc0aKPwGGew55SHhTsekNswUpN
+         s2kZceJSE716YrDUHZFY9s/xBd0FSUUMDW4KyY5c163O8wu0OvSZbXjuMsJdBrXqzm8X
+         M5Gg==
+X-Gm-Message-State: ANhLgQ3HGf0ORLkUkKGwK3oOWEfL2zlE/zPliPsKLOB4U744M6/yuP3K
+        HizZXNYq0aRLGeUsSHojmyk=
+X-Google-Smtp-Source: ADFU+vt2FVxAIyS5YUdgBwUhS6YMoWQIE/YsEKA0AOhmRG0GEtKmB0X0UOqqN4OC7wZ/vUSbYtCHiQ==
+X-Received: by 2002:a1c:9e16:: with SMTP id h22mr4682635wme.27.1585563214463;
+        Mon, 30 Mar 2020 03:13:34 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id o67sm21140400wmo.5.2020.03.30.03.13.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 03:13:33 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 11:13:31 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     ltykernel@gmail.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH V3 0/6] x86/Hyper-V: Panic code path fixes
+Message-ID: <20200330101331.v4yahaqszgbo27km@debian>
+References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
-> On 2020-03-27 5:56 pm, Naresh Kamboju wrote:
-> > The kernel warning noticed on arm64 juno-r2 device running linux
-> > next-20200326 and next-20200327
->
-> I suspect this is the correct expected behaviour manifesting. If you're
-> using the upstream juno-r2.dts, the power domain being waited for here is
-> provided by SCPI, however unless you're using an SCP firmware from at least
-> 3 years ago you won't actually have SCPI since they switched it to the newer
-> SCMI protocol, which is not yet supported upstream for Juno. See what
-> happened earlier in the log:
->
-> [    2.741206] scpi_protocol scpi: incorrect or no SCP firmware found
-> [    2.747586] scpi_protocol: probe of scpi failed with error -110
->
-> Thus this is the "waiting for a dependency which will never appear" case,
-> for which I assume the warning is intentional,
+On Tue, Mar 24, 2020 at 12:57:14AM -0700, ltykernel@gmail.com wrote:
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> 
+> This patchset fixes some issues in the Hyper-V panic code path.
+> Patch 1 resolves issue that panic system still responses network
+> packets.
+> Patch 2-3,5-6 resolves crash enlightenment issues.
+> Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+> VM in order to report crash data or kmsg to host before running
+> kdump kernel.
+> 
+> Tianyu Lan (6):
+>   x86/Hyper-V: Unload vmbus channel in hv panic callback
+>   x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+>   x86/Hyper-V: Trigger crash enlightenment only once during  system
+>     crash.
+>   x86/Hyper-V: Report crash register data or ksmg before  running crash
+>     kernel
+>   x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
+>     is not set
+>   x86/Hyper-V: Report crash data in die() when panic_on_oops is set
+> 
 
-Is that the case ?
+Queued to hyperv-next. Thanks.
 
-Previously we used to get the warning:
-"amba xx: ignoring dependency for device, assuming no driver"
-
-Now we have the kernel warning in addition to the above.
-
-> since the system is essentially broken (i.e. the hardware/firmware doesn't
-> actually match what the DT describes).
->
-
-Not sure if we can term it as "essentially broken". Definitely not 100%
-functional but not broken if the situation like on Juno where SCP firmware
-is fundamental for all OSPM but not essential for boot and other minimum
-set of functionality.
-
-Either way I am not against the warning, just wanted to get certain things
-clarified myself.
-
---
-Regards,
-Sudeep
+Wei.
