@@ -2,152 +2,85 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4313AC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB3DC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 102A720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IkzJhIHR"
+	by mail.kernel.org (Postfix) with ESMTP id E3C47206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgC3MYX (ORCPT
+        id S1730016AbgC3MZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:24:23 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40558 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729966AbgC3MYX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:24:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585571061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/ygALAJVOjqUJKfasvnnjImKIeALHsYUPdnk+AuUynM=;
-        b=IkzJhIHRIyM6gElBVfZ8Tj5lSWRZsj1W6NdsiOxVKl1GQq6esEarejIORyEFGdWd7XDrQZ
-        REeH52zPRJMpaTiw2FMiKHJVWCC+l4u4lV/VBFfIiQnxbVUBAXbEOVaX6jSGODk3zXUKiD
-        yfoG+pDPHbLzSPQ/H6/87hpz+K6gfO8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295--IW9Of8MMzerEcPZ0O7SpQ-1; Mon, 30 Mar 2020 08:24:20 -0400
-X-MC-Unique: -IW9Of8MMzerEcPZ0O7SpQ-1
-Received: by mail-wr1-f69.google.com with SMTP id d1so11158344wru.15
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 05:24:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=/ygALAJVOjqUJKfasvnnjImKIeALHsYUPdnk+AuUynM=;
-        b=XQ+JKMVRHFCIdDD4hpC93c7Krv7wcj+e4IURA6fJLrE71xt5A5QMSZe3SlW79UW1Ox
-         /AX5//9sDL9bHA38CXKb+mn5odPcwXhpwlEGUoOtkRy+XRqEehlnr54mkJs2xHP6pLsb
-         6muqk/T+ghH8AuKKn8lT/35qrB8OynRKe1t3tNdtvmK0WSHkIHkzDcaG153oQe2GIf6a
-         7CkssjPLUIKFhpqAWe6oL2gexwH6HWCtGKhk0gyrYN00iuXk8BKyjAPwqJizMMoyNkN3
-         eRR5IZqceTWOlz4Pcsx+dbNg+tm9W3MBng86ZSezLuZ8pqzwjg5jOSTxdDRsFut8LDb5
-         voiw==
-X-Gm-Message-State: ANhLgQ2fVnQZbaM/8o+itFTvxKLm4UPae3iYRHczo8sUw7GgzkGKijJU
-        BuE0HDY7itltMo8/sDbOccNHYk7ntaIlQXJmPEB7+B8jEZp5dLpXpqDD/oM2UvOZz70Ii7DXCTa
-        hNG/qj0dg8EfvuEd4WvpgOmRV
-X-Received: by 2002:adf:ec02:: with SMTP id x2mr14564034wrn.365.1585571058691;
-        Mon, 30 Mar 2020 05:24:18 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs4+0mKL6LvY3oLktG34cbkfsvaDlgrbw2AYD/ENCNEbfbZ1AiL6eM0zhcnkf9XQGgVEbaibw==
-X-Received: by 2002:adf:ec02:: with SMTP id x2mr14564012wrn.365.1585571058374;
-        Mon, 30 Mar 2020 05:24:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 9sm20168122wmm.6.2020.03.30.05.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 05:24:17 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 02/11] Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific CPU
-In-Reply-To: <MW2PR2101MB1052A2E44557B29C191F557DD7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-3-parri.andrea@gmail.com> <871rpf5hhm.fsf@vitty.brq.redhat.com> <20200326154710.GA13711@andrea> <87sghv3u4a.fsf@vitty.brq.redhat.com> <20200328170833.GA10153@andrea> <MW2PR2101MB1052A2E44557B29C191F557DD7CA0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Date:   Mon, 30 Mar 2020 14:24:16 +0200
-Message-ID: <87o8se2fpr.fsf@vitty.brq.redhat.com>
+        Mon, 30 Mar 2020 08:25:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:52292 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729957AbgC3MZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 08:25:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B12F30E;
+        Mon, 30 Mar 2020 05:25:24 -0700 (PDT)
+Received: from [10.163.1.70] (unknown [10.163.1.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA27D3F68F;
+        Mon, 30 Mar 2020 05:25:21 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [RFC] mm/page_alloc: Enumerate bad page reasons
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org
+References: <1585551097-27283-1-git-send-email-anshuman.khandual@arm.com>
+ <20200330084300.GC14243@dhcp22.suse.cz>
+Message-ID: <689b594f-c18a-4131-8049-ac917345099b@arm.com>
+Date:   Mon, 30 Mar 2020 17:55:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200330084300.GC14243@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
 
-> From: Andrea Parri <parri.andrea@gmail.com> Sent: Saturday, March 28, 2020 10:09 AM
->> 
->> > In case we believe that OFFER -> RESCINF sequence is always ordered
->> > by the host AND we don't care about other offers in the queue the
->> > suggested locking is OK: we're guaranteed to process RESCIND after we
->> > finished processing OFFER for the same channel. However, waiting for
->> > 'offer_in_progress == 0' looks fishy so I'd suggest we at least add a
->> > comment explaining that the wait is only needed to serialize us with
->> > possible OFFER for the same channel - and nothing else. I'd personally
->> > still slightly prefer the algorythm I suggested as it guarantees we take
->> > channel_mutex with offer_in_progress == 0 -- even if there are no issues
->> > we can think of today (not strongly though).
->> 
->> Does it?  offer_in_progress is incremented without channel_mutex...
->> 
 
-No, it does not, you're right, by itself the change is insufficient.
+On 03/30/2020 02:13 PM, Michal Hocko wrote:
+> On Mon 30-03-20 12:21:37, Anshuman Khandual wrote:
+>> Enumerate all existing bad page reasons which can be used in bad_page() for
+>> reporting via __dump_page(). Unfortunately __dump_page() cannot be changed.
+>> __dump_page() is called from dump_page() that accepts a raw string and is
+>> also an exported symbol that is currently being used from various generic
+>> memory functions and other drivers. This reduces code duplication while
+>> reporting bad pages.
+> 
+> I dunno. It sounds like over engineering something that is an internal
+> stuff. Besides that I consider string reasons kinda obvious and I am
+> pretty sure I would have to check them for each numeric alias when want
+> to read the code. Yeah, yeah, nothing really hard but still...
 
->> IAC, I have no objections to apply the changes you suggested.  To avoid
->> misunderstandings: vmbus_bus_suspend() presents a similar usage...  Are
->> you suggesting that I apply similar changes there?
->> 
->> Alternatively:  FWIW, the comment in vmbus_onoffer_rescind() does refer
->> to "The offer msg and the corresponding rescind msg...".  I am all ears
->> if you have any concrete suggestions to improve these comments.
->> 
->
-> Given that waiting for 'offer_in_progress == 0' is the current code, I think
-> there's an argument to made for not changing it if the change isn't strictly
-> necessary.  This patch set introduces enough change that *is* necessary. :-)
->
+Right these are very much self explanatory. Would moving these aliases into
+mm/page_alloc.c itself, make it any better for quicker access ?
 
-Sure. I was thinking a bit more about this and it seems that over years
-we've made the synchronization of channels code too complex (every time
-for a good reason but still). Now (before this series) we have at least:
+> 
+> So I am not really sure this is all worth the code churn. Besides
 
-vmbus_connection.channel_mutex
-vmbus_connection.offer_in_progress
-channel.probe_done
-channel.rescind
-Workqueues (vmbus_connection.work_queue,
- queue_work_on(vmbus_connection.connect_cpu),...)
-channel.lock spinlock (the least of the problems)
+I understand but is not just repeating the same strings in similar functions
+bit suboptimal as well.
 
-Maybe there's room for improvement? Out of top of my head I'd suggest a
-state machine for each channel (e.g something like
-OFFERED->OPENING->OPEN->RESCIND_REQ->RESCINDED->CLOSED) + refcounting
-(subchannels, open/rescind/... requests in progress, ...) + non-blocking
-request handling like "Can we handle this rescind offer now? No,
-refcount is too big. OK, rescheduling the work". Maybe not the best
-design ever and I'd gladly support any other which improves the
-readability of the code and makes all state changes and synchronization
-between them more obvious.
+> that I stongly suspect you wanted ...
+> 
+>> -static void bad_page(struct page *page, const char *reason,
+>> +static void bad_page(struct page *page, int reason,
+>>  		unsigned long bad_flags)
+> 
+> ... enum page_bad_reason reason here, right? What is the point of declaring
+> an enum when you are not using it?
 
-Note, VMBus channel handling driven my messages (unlike events for ring
-buffer) is not performance critical, we just need to ensure completeness
-(all requests are handled correctly) with forward progress guarantees
-(no deadlocks).
-
-I understand the absence of 'hot' issues in the current code is what can
-make the virtue of redesign questionable and sorry for hijacking the
-series which doesn't seem to make things worse :-)
-
--- 
-Vitaly
-
+Sure, will replace here and other local reason variables which are 'int'.
