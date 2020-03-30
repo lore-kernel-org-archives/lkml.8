@@ -2,530 +2,245 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C354DC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E0AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAF62072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E28206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:28:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vXAqeDkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgC3S0O (ORCPT
+        id S1727368AbgC3S2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:26:14 -0400
-Received: from mail-db8eur05olkn2010.outbound.protection.outlook.com ([40.92.89.10]:30830
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Mon, 30 Mar 2020 14:28:55 -0400
+Received: from mail-bn8nam12on2065.outbound.protection.outlook.com ([40.107.237.65]:6079
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726017AbgC3S0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:26:14 -0400
+        id S1726017AbgC3S2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:28:55 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nOmbhjkX9ceq/9MoYXBv1Po6wTI5OVOxnvsCvbLdll2RLGw5ISOuV9h2oMqzApcNCsD6o6bHoIh1uV0qYkClzEKNPd33gjBRS8ZN2T70JqNejDURD/e92FwiPtRhq7QcZgfcJC+g5Et0XDeJ0lrRl172fvP+kR3YIgflxol3iEgUjkdmYq/K7naME2DL9GhsPgoSaxd0WnAyy54UfeZ1kDIbw7Cdrx4lsxGSUt63m3lkgSpU70BuM6LqtGB3p2WCq6E1oTIB5nhlzrEDFFgjm2JtTQbwHwWKJ8zIQAOVYWZ1G2x7fvCkBxAY0F45I9YyZKIA7pCZkGUirREPQuxdSQ==
+ b=QJzUPj2RjqYUNMT8uGwGlq2vUu8TU5+X1VZiDOhqF/1PJrJ1J3JoPryTRmYuT74wtmIqvEr/TffKsbym30/WBcVyPy1SgqpSbpCUm0zN4KRP3Ohxh6lYnplqQKXrbrfR0GAbWAyAMsGU4gYDZV9wuEUD9zM/Jfgo3ilLYPtmFV1PAH47/nH6S8tUlxnh9j67iYE9yaqT2y0AajDaE80oGfS5qpl7FSfEhigPKh/ME9bCvf+QHfEJfKM5polXHp50UiOxjPjyoYP1BacC5VPAvmBQ9Jp0xj0pcJlU/ykeaY79CfAarJS2CS97o4ZAS5DhoXtRdmkpfi5r68dRr5fTbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d8U2Be8pswTMF/0bb5onJ6IK6fDOILJZWQi8vqyAJos=;
- b=bdFbi5fqhH/lSCn+e+krjSJWDO9xctQRxMlBNDypNsV1h/VKlVrDNvCcxOkj91Ywz5YgyRX7bc59i6ndmDzYXw9RxhJVdh9FuwAqwzjVGQabF8Vxs7yfuM3O0ykSTkKng3y0u4KcbAcn7rO5eWNlxFH+FpW8/IBj79fvSJC2074xg/a4RRcA1HUB+sn4EZQ3zKYL1PIWbaQNEQzDNbk/Md/qPEpBGAlwyzwVvvrJ6BhwyTcCuD3EyC+D1xV6NgPlG4y+ehaltQfZCyjkZoDrWeIkqZj9hmFwOpJrq37Dj7Vbv5kg4VdtJHOTqS9oFVaKBK7nB2gD5Jgxu3peIbgJzg==
+ bh=7EYMuNwiPeT2FZlq0oW7bH6/P9EtVfDm+m588vILSBM=;
+ b=Yap44JvZ61NjV/out4BBqjAyzUR3nphKer2cuR4DT3oOeNJQ+PB2qsa3Zr0jwuAwd29QLKQpITuyRFJZ5fydRUNoeFfiF9BqvhVZn4Mi7WlwFXJHzskSIXFWl9VIu41q482k4RK32alt2GUueAB9RzKQoxJl58qGFgcMJYBeqoxzpI/6WpqHPtuo+GvSWu/D+3ItlvDVs1BW04lmAn5P6UOGGd+pvTRJIED//f/8W8GNVFO3CFn35NBq2mFcsKAjxyqvgT6BppCO9CJh4uLeP9eABV/XU7NituoX60WJrMeoeMKXeN1ftMFzlrzSmGOy6MYRbdhbLSIuuJf61TXl8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from DB8EUR05FT067.eop-eur05.prod.protection.outlook.com
- (2a01:111:e400:fc0f::48) by
- DB8EUR05HT007.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc0f::410)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.17; Mon, 30 Mar
- 2020 18:26:09 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.233.238.55) by
- DB8EUR05FT067.mail.protection.outlook.com (10.233.238.176) with Microsoft
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7EYMuNwiPeT2FZlq0oW7bH6/P9EtVfDm+m588vILSBM=;
+ b=vXAqeDkPIOnn4Xnqn8HFiLoc6pH3CHgy4mJuVuaR/jLwhzFUJDx6oaQ/R+IjtaR6a7n17OMqPri14bk0bm4EqU2tiIaNgTXAAKYTqZ0aTGUq4SR50xgtbdKecjr+8155A6TP6gcuogG9dzmfkYDeu+xw5SUl/ENUoTwLBt97HXU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
+ DM5PR12MB2582.namprd12.prod.outlook.com (2603:10b6:4:b5::37) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Mon, 30 Mar 2020 18:26:09 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:4C88A4F429534C6CE96C2E909720EB49127FE5E73DC90950B0F5159915673A2E;UpperCasedChecksum:C8DD347AA88A5044EFEC87257EEC0F378B78247AEE23CC279700BA028CBF8FCC;SizeAsReceived:9761;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 18:26:09 +0000
-Subject: [PATCH v7 15/16] exec: Fix dead-lock in de_thread with ptrace_attach
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        "jannh@google.com" <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "avagin@gmail.com" <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "duyuyang@gmail.com" <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "christian@kellner.me" <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <077b63b7-6f5e-aa8e-bf96-a586b481cc46@hotmail.de>
- <b6537ae6-31b1-5c50-f32b-8b8332ace882@hotmail.de>
- <87a7448q7t.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51700B30078BDCB6C6A4E0CAE4CA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB5170480FE4462D0DFF04B14BE4CA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Message-ID: <AM6PR03MB51700577CF9EF4972FDE568AE4CB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Mon, 30 Mar 2020 20:26:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <AM6PR03MB5170480FE4462D0DFF04B14BE4CA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR10CA0045.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:150::25) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <cf7a0879-0e1f-42bb-8646-8280825cef22@hotmail.de>
+ 15.20.2856.18; Mon, 30 Mar 2020 18:28:52 +0000
+Received: from DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
+ ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 18:28:51 +0000
+Date:   Mon, 30 Mar 2020 18:28:45 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Venu Busireddy <venu.busireddy@oracle.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+Subject: Re: [PATCH v6 00/14] Add AMD SEV guest live migration support
+Message-ID: <20200330182845.GA21740@ashkalra_ubuntu_server>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <20200330172446.GA584882@vbusired-dt>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330172446.GA584882@vbusired-dt>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SN1PR12CA0088.namprd12.prod.outlook.com
+ (2603:10b6:802:21::23) To DM5PR12MB1386.namprd12.prod.outlook.com
+ (2603:10b6:3:77::9)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by AM0PR10CA0045.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:150::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 18:26:06 +0000
-X-Microsoft-Original-Message-ID: <cf7a0879-0e1f-42bb-8646-8280825cef22@hotmail.de>
-X-TMN:  [y9ufXCBt4sr7XGb+WUkBtwVDEusu7VC3]
+Received: from ashkalra_ubuntu_server (165.204.77.1) by SN1PR12CA0088.namprd12.prod.outlook.com (2603:10b6:802:21::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 18:28:50 +0000
+X-Originating-IP: [165.204.77.1]
 X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 20199f2c-b72f-4876-2c8a-08d7d4d7d122
-X-MS-TrafficTypeDiagnostic: DB8EUR05HT007:
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3fb89fb6-9a23-4d1e-76aa-08d7d4d8322d
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2582:|DM5PR12MB2582:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB2582ED756B8FE38BD02D23D18ECB0@DM5PR12MB2582.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Forefront-PRVS: 0358535363
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(346002)(396003)(376002)(186003)(4326008)(16526019)(86362001)(81166006)(44832011)(8936002)(956004)(6666004)(81156014)(5660300002)(6496006)(1076003)(53546011)(52116002)(33656002)(66556008)(33716001)(45080400002)(26005)(8676002)(66476007)(478600001)(55016002)(66946007)(9686003)(2906002)(7416002)(316002)(6916009)(966005);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uS7rbgjfuVIVdgnKcd2uan596kkpevqhgupHOUEPthl4XWcOvoWBIc6SdcmbpYdAJbQPCsoQ5+l3lIr7OB/7BfCWnKYhfOzw3imFzQb+dPie8sahw5jmloYRcbWreWW0L5FK9btRZPbfrQXJje9NO2asSFw1vjjziJAkqbqBXAAkinKRKPfYe5NRa7dALK1O
-X-MS-Exchange-AntiSpam-MessageData: 8GX4ZTJd49+7/svEgexSIVDmYXbhqnZQSGHJp6bHrA7oF+H9yJ0alQujonVxE77OutkC/Hd8PtV5fvObHNrewNy+KIsi/BazBn1kf6pyE0gpZ2H8M4XzyHIlj4Ykh4elrfX/rG4MjrZf3hiGAdq2Og==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20199f2c-b72f-4876-2c8a-08d7d4d7d122
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 18:26:09.3636
+X-Microsoft-Antispam-Message-Info: WwtdXedJ9fIiek9ilqtHEjMmBw7kfMviK6YSzVC9VGHjhAZpeJl4YePJKBzbJ46z80+TXEkSNfT3seO937W6GW32LbfGSOLU5jBwwV+z1WuRbB06SGYp0Q9S7rhRoAfaXdATsd4L8KeHBpmaOOt/8o1pCvm4GRwHPZVdUPYOYTyYmhspges/et5B5D8D44U728tdWtK4KgLURCshhRhRHmcAypg3txjEBBQw7oFdX2RDFpqa7GDXv1fpu/MguVdJEU29JmeXkOIDECL3qpg4DgUXMU0kpqOsgSJ2CsCcIcxhwRK6eC9Pl0GeC/BF+1LWDUcGH0P0NUzenalctNm14nzW2eFJ8U/bZN+rVr5cxrSoygxz++58SUNqArZj+46R0r7Q7zByDQipQYUpSSiqCJfjsvm4DwvcuGM3GUeU5mSkMsd+sFmpX1M+em7KkucM9Ux7tIrdyEOEKe/tRSzdrnXUiOwqU0aG3VMYgcMQFr/YjEcvzkqLYV3hopkAsc2snw9kMSwnPGVGwGZqiJJUbg==
+X-MS-Exchange-AntiSpam-MessageData: ERLzSLGSonEfbNu3tC8CV/B3CajssN6NiEWEkmxHdrhRis5DeKmdqk+gr4LnHdWWcbkfguL+FVeoaxI4tvIz5AKEgvwgR00GhdsZVjM1cWSifSLtuHuLJtjltIXOmzDLBjfYHiAjyiFSuEMssJRykA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3fb89fb6-9a23-4d1e-76aa-08d7d4d8322d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 18:28:51.8308
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8EUR05HT007
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QFqOQieoN+4uOfrt6j43LtjiPay4nyf1njWnbNv8FIQMrFQD5Ku82Y1IIvfecqR8jc0+oCCO2twufqi+p9qGww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2582
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This removes the last users of cred_guard_mutex
-and replaces it with a new mutex exec_guard_mutex,
-and a boolean unsafe_execve_in_progress.
+This is applied on top of Linux 5.6, as per commit below :
 
-This addresses the case when at least one of the
-sibling threads is traced, and therefore the trace
-process may dead-lock in ptrace_attach, but de_thread
-will need to wait for the tracer to continue execution.
+commit 7111951b8d4973bda27ff663f2cf18b663d15b48 (tag: v5.6, origin/master, origin/HEAD)
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Mar 29 15:25:41 2020 -0700
 
-The solution is to detect this situation and make
-ptrace_attach and similar functions return -EAGAIN,
-but only in a situation where a dead-lock is imminent.
+    Linux 5.6
 
-This means this is an API change, but only when the
-process is traced while execve happens in a
-multi-threaded application.
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-See tools/testing/selftests/ptrace/vmaccess.c
-for a test case that gets fixed by this change.
+Thanks,
+Ashish
 
-Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
----
- fs/exec.c                    | 44 +++++++++++++++++++++++++++++++++++---------
- fs/proc/base.c               | 20 ++++++++++++++++++--
- include/linux/sched/signal.h | 14 +++++++++-----
- init/init_task.c             |  2 +-
- kernel/cred.c                |  2 +-
- kernel/fork.c                |  2 +-
- kernel/ptrace.c              | 42 +++++++++++++++++++++++++++++++++++++++---
- kernel/seccomp.c             | 25 +++++++++++++++++++------
- 8 files changed, 123 insertions(+), 28 deletions(-)
-
-v7: Added "big fat" warning comments, made the change in
-proc_pid_attr_write a bit more readable.
-
-diff --git a/fs/exec.c b/fs/exec.c
-index 0e46ec5..2056562 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1078,14 +1078,26 @@ static int de_thread(struct task_struct *tsk)
- 	struct signal_struct *sig = tsk->signal;
- 	struct sighand_struct *oldsighand = tsk->sighand;
- 	spinlock_t *lock = &oldsighand->siglock;
-+	struct task_struct *t = tsk;
- 
- 	if (thread_group_empty(tsk))
- 		goto no_thread_group;
- 
-+	spin_lock_irq(lock);
-+	while_each_thread(tsk, t) {
-+		if (unlikely(t->ptrace))
-+			sig->unsafe_execve_in_progress = true;
-+	}
-+
-+	if (unlikely(sig->unsafe_execve_in_progress)) {
-+		spin_unlock_irq(lock);
-+		mutex_unlock(&sig->exec_guard_mutex);
-+		spin_lock_irq(lock);
-+	}
-+
- 	/*
- 	 * Kill all other threads in the thread group.
- 	 */
--	spin_lock_irq(lock);
- 	if (signal_group_exit(sig)) {
- 		/*
- 		 * Another group action in progress, just
-@@ -1429,22 +1441,30 @@ void finalize_exec(struct linux_binprm *bprm)
- EXPORT_SYMBOL(finalize_exec);
- 
- /*
-- * Prepare credentials and lock ->cred_guard_mutex.
-+ * Prepare credentials and lock ->exec_guard_mutex.
-  * install_exec_creds() commits the new creds and drops the lock.
-  * Or, if exec fails before, free_bprm() should release ->cred and
-  * and unlock.
-  */
- static int prepare_bprm_creds(struct linux_binprm *bprm)
- {
--	if (mutex_lock_interruptible(&current->signal->cred_guard_mutex))
-+	int ret;
-+
-+	if (mutex_lock_interruptible(&current->signal->exec_guard_mutex))
- 		return -ERESTARTNOINTR;
- 
-+	ret = -EAGAIN;
-+	if (unlikely(current->signal->unsafe_execve_in_progress))
-+		goto out;
-+
- 	bprm->cred = prepare_exec_creds();
- 	if (likely(bprm->cred))
- 		return 0;
- 
--	mutex_unlock(&current->signal->cred_guard_mutex);
--	return -ENOMEM;
-+	ret = -ENOMEM;
-+out:
-+	mutex_unlock(&current->signal->exec_guard_mutex);
-+	return ret;
- }
- 
- static void free_bprm(struct linux_binprm *bprm)
-@@ -1453,7 +1473,10 @@ static void free_bprm(struct linux_binprm *bprm)
- 	if (bprm->cred) {
- 		if (bprm->called_exec_mmap)
- 			mutex_unlock(&current->signal->exec_update_mutex);
--		mutex_unlock(&current->signal->cred_guard_mutex);
-+		if (unlikely(current->signal->unsafe_execve_in_progress))
-+			mutex_lock(&current->signal->exec_guard_mutex);
-+		current->signal->unsafe_execve_in_progress = false;
-+		mutex_unlock(&current->signal->exec_guard_mutex);
- 		abort_creds(bprm->cred);
- 	}
- 	if (bprm->file) {
-@@ -1497,19 +1520,22 @@ void install_exec_creds(struct linux_binprm *bprm)
- 	if (get_dumpable(current->mm) != SUID_DUMP_USER)
- 		perf_event_exit_task(current);
- 	/*
--	 * cred_guard_mutex must be held at least to this point to prevent
-+	 * exec_guard_mutex must be held at least to this point to prevent
- 	 * ptrace_attach() from altering our determination of the task's
- 	 * credentials; any time after this it may be unlocked.
- 	 */
- 	security_bprm_committed_creds(bprm);
- 	mutex_unlock(&current->signal->exec_update_mutex);
--	mutex_unlock(&current->signal->cred_guard_mutex);
-+	if (unlikely(current->signal->unsafe_execve_in_progress))
-+		mutex_lock(&current->signal->exec_guard_mutex);
-+	current->signal->unsafe_execve_in_progress = false;
-+	mutex_unlock(&current->signal->exec_guard_mutex);
- }
- EXPORT_SYMBOL(install_exec_creds);
- 
- /*
-  * determine how safe it is to execute the proposed program
-- * - the caller must hold ->cred_guard_mutex to protect against
-+ * - the caller must hold ->exec_guard_mutex to protect against
-  *   PTRACE_ATTACH or seccomp thread-sync
-  */
- static void check_unsafe_exec(struct linux_binprm *bprm)
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 6b13fc4..eaca36e 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -2680,14 +2680,30 @@ static ssize_t proc_pid_attr_write(struct file * file, const char __user * buf,
- 	}
- 
- 	/* Guard against adverse ptrace interaction */
--	rv = mutex_lock_interruptible(&current->signal->cred_guard_mutex);
-+	rv = mutex_lock_interruptible(&current->signal->exec_guard_mutex);
- 	if (rv < 0)
- 		goto out_free;
- 
-+	/*
-+	 * BIG FAT WARNING - Fragile code ahead.
-+	 * Please do not insert any code between these two
-+	 * if statements.  It may happen that execve has to
-+	 * release the exec_guard_mutex in order to prevent
-+	 * deadlocks.  In that case unsafe_execve_in_progress
-+	 * will be set.  If that happens you cannot assume that
-+	 * the usual guarantees implied by exec_guard_mutex
-+	 * are valid.  Just return -EAGAIN in that case and
-+	 * unlock the mutex immediately.
-+	 */
-+	rv = -EAGAIN;
-+	if (unlikely(current->signal->unsafe_execve_in_progress))
-+		goto out_unlock;
-+
- 	rv = security_setprocattr(PROC_I(inode)->op.lsm,
- 				  file->f_path.dentry->d_name.name, page,
- 				  count);
--	mutex_unlock(&current->signal->cred_guard_mutex);
-+out_unlock:
-+	mutex_unlock(&current->signal->exec_guard_mutex);
- out_free:
- 	kfree(page);
- out:
-diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-index a29df79..e83cef2 100644
---- a/include/linux/sched/signal.h
-+++ b/include/linux/sched/signal.h
-@@ -212,6 +212,13 @@ struct signal_struct {
- #endif
- 
- 	/*
-+	 * Set while execve is executing but is *not* holding
-+	 * exec_guard_mutex to avoid possible dead-locks.
-+	 * Only valid when exec_guard_mutex is held.
-+	 */
-+	bool unsafe_execve_in_progress;
-+
-+	/*
- 	 * Thread is the potential origin of an oom condition; kill first on
- 	 * oom
- 	 */
-@@ -222,11 +229,8 @@ struct signal_struct {
- 	struct mm_struct *oom_mm;	/* recorded mm when the thread group got
- 					 * killed by the oom killer */
- 
--	struct mutex cred_guard_mutex;	/* guard against foreign influences on
--					 * credential calculations
--					 * (notably. ptrace)
--					 * Deprecated do not use in new code.
--					 * Use exec_update_mutex instead.
-+	struct mutex exec_guard_mutex;	/* Held while execve runs, except when
-+					 * a sibling thread is being traced.
- 					 */
- 	struct mutex exec_update_mutex;	/* Held while task_struct is being
- 					 * updated during exec, and may have
-diff --git a/init/init_task.c b/init/init_task.c
-index bd403ed..6f96327 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -25,7 +25,7 @@
- 	},
- 	.multiprocess	= HLIST_HEAD_INIT,
- 	.rlim		= INIT_RLIMITS,
--	.cred_guard_mutex = __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
-+	.exec_guard_mutex = __MUTEX_INITIALIZER(init_signals.exec_guard_mutex),
- 	.exec_update_mutex = __MUTEX_INITIALIZER(init_signals.exec_update_mutex),
- #ifdef CONFIG_POSIX_TIMERS
- 	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
-diff --git a/kernel/cred.c b/kernel/cred.c
-index 71a7926..341ca59 100644
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -295,7 +295,7 @@ struct cred *prepare_creds(void)
- 
- /*
-  * Prepare credentials for current to perform an execve()
-- * - The caller must hold ->cred_guard_mutex
-+ * - The caller must hold ->exec_guard_mutex
-  */
- struct cred *prepare_exec_creds(void)
- {
-diff --git a/kernel/fork.c b/kernel/fork.c
-index e23ccac..98012f7 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1593,7 +1593,7 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
- 	sig->oom_score_adj = current->signal->oom_score_adj;
- 	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
- 
--	mutex_init(&sig->cred_guard_mutex);
-+	mutex_init(&sig->exec_guard_mutex);
- 	mutex_init(&sig->exec_update_mutex);
- 
- 	return 0;
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index 43d6179..19bf69f 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -392,9 +392,24 @@ static int ptrace_attach(struct task_struct *task, long request,
- 	 * under ptrace.
- 	 */
- 	retval = -ERESTARTNOINTR;
--	if (mutex_lock_interruptible(&task->signal->cred_guard_mutex))
-+	if (mutex_lock_interruptible(&task->signal->exec_guard_mutex))
- 		goto out;
- 
-+	/*
-+	 * BIG FAT WARNING - Fragile code ahead.
-+	 * Please do not insert any code between these two
-+	 * if statements.  It may happen that execve has to
-+	 * release the exec_guard_mutex in order to prevent
-+	 * deadlocks.  In that case unsafe_execve_in_progress
-+	 * will be set.  If that happens you cannot assume that
-+	 * the usual guarantees implied by exec_guard_mutex
-+	 * are valid.  Just return -EAGAIN in that case and
-+	 * unlock the mutex immediately.
-+	 */
-+	retval = -EAGAIN;
-+	if (unlikely(task->signal->unsafe_execve_in_progress))
-+		goto unlock_creds;
-+
- 	task_lock(task);
- 	retval = __ptrace_may_access(task, PTRACE_MODE_ATTACH_REALCREDS);
- 	task_unlock(task);
-@@ -447,7 +462,7 @@ static int ptrace_attach(struct task_struct *task, long request,
- unlock_tasklist:
- 	write_unlock_irq(&tasklist_lock);
- unlock_creds:
--	mutex_unlock(&task->signal->cred_guard_mutex);
-+	mutex_unlock(&task->signal->exec_guard_mutex);
- out:
- 	if (!retval) {
- 		/*
-@@ -472,10 +487,29 @@ static int ptrace_attach(struct task_struct *task, long request,
-  */
- static int ptrace_traceme(void)
- {
--	int ret = -EPERM;
-+	int ret;
-+
-+	if (mutex_lock_interruptible(&current->signal->exec_guard_mutex))
-+		return -ERESTARTNOINTR;
-+
-+	/*
-+	 * BIG FAT WARNING - Fragile code ahead.
-+	 * Please do not insert any code between these two
-+	 * if statements.  It may happen that execve has to
-+	 * release the exec_guard_mutex in order to prevent
-+	 * deadlocks.  In that case unsafe_execve_in_progress
-+	 * will be set.  If that happens you cannot assume that
-+	 * the usual guarantees implied by exec_guard_mutex
-+	 * are valid.  Just return -EAGAIN in that case and
-+	 * unlock the mutex immediately.
-+	 */
-+	ret = -EAGAIN;
-+	if (unlikely(current->signal->unsafe_execve_in_progress))
-+		goto unlock_creds;
- 
- 	write_lock_irq(&tasklist_lock);
- 	/* Are we already being traced? */
-+	ret = -EPERM;
- 	if (!current->ptrace) {
- 		ret = security_ptrace_traceme(current->parent);
- 		/*
-@@ -490,6 +524,8 @@ static int ptrace_traceme(void)
- 	}
- 	write_unlock_irq(&tasklist_lock);
- 
-+unlock_creds:
-+	mutex_unlock(&current->signal->exec_guard_mutex);
- 	return ret;
- }
- 
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index b6ea3dc..7ebb194 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -329,7 +329,7 @@ static int is_ancestor(struct seccomp_filter *parent,
- /**
-  * seccomp_can_sync_threads: checks if all threads can be synchronized
-  *
-- * Expects sighand and cred_guard_mutex locks to be held.
-+ * Expects sighand and exec_guard_mutex locks to be held.
-  *
-  * Returns 0 on success, -ve on error, or the pid of a thread which was
-  * either not in the correct seccomp mode or did not have an ancestral
-@@ -339,9 +339,22 @@ static inline pid_t seccomp_can_sync_threads(void)
- {
- 	struct task_struct *thread, *caller;
- 
--	BUG_ON(!mutex_is_locked(&current->signal->cred_guard_mutex));
-+	BUG_ON(!mutex_is_locked(&current->signal->exec_guard_mutex));
- 	assert_spin_locked(&current->sighand->siglock);
- 
-+	/*
-+	 * BIG FAT WARNING - Fragile code ahead.
-+	 * It may happen that execve has to release the
-+	 * exec_guard_mutex in order to prevent deadlocks.
-+	 * In that case unsafe_execve_in_progress will be set.
-+	 * If that happens you cannot assume that the usual
-+	 * guarantees implied by exec_guard_mutex are valid.
-+	 * Just return -EAGAIN in that case and unlock the mutex
-+	 * immediately.
-+	 */
-+	if (unlikely(current->signal->unsafe_execve_in_progress))
-+		return -EAGAIN;
-+
- 	/* Validate all threads being eligible for synchronization. */
- 	caller = current;
- 	for_each_thread(caller, thread) {
-@@ -371,7 +384,7 @@ static inline pid_t seccomp_can_sync_threads(void)
- /**
-  * seccomp_sync_threads: sets all threads to use current's filter
-  *
-- * Expects sighand and cred_guard_mutex locks to be held, and for
-+ * Expects sighand and exec_guard_mutex locks to be held, and for
-  * seccomp_can_sync_threads() to have returned success already
-  * without dropping the locks.
-  *
-@@ -380,7 +393,7 @@ static inline void seccomp_sync_threads(unsigned long flags)
- {
- 	struct task_struct *thread, *caller;
- 
--	BUG_ON(!mutex_is_locked(&current->signal->cred_guard_mutex));
-+	BUG_ON(!mutex_is_locked(&current->signal->exec_guard_mutex));
- 	assert_spin_locked(&current->sighand->siglock);
- 
- 	/* Synchronize all threads. */
-@@ -1319,7 +1332,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
- 	 * while another thread is in the middle of calling exec.
- 	 */
- 	if (flags & SECCOMP_FILTER_FLAG_TSYNC &&
--	    mutex_lock_killable(&current->signal->cred_guard_mutex))
-+	    mutex_lock_killable(&current->signal->exec_guard_mutex))
- 		goto out_put_fd;
- 
- 	spin_lock_irq(&current->sighand->siglock);
-@@ -1337,7 +1350,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
- out:
- 	spin_unlock_irq(&current->sighand->siglock);
- 	if (flags & SECCOMP_FILTER_FLAG_TSYNC)
--		mutex_unlock(&current->signal->cred_guard_mutex);
-+		mutex_unlock(&current->signal->exec_guard_mutex);
- out_put_fd:
- 	if (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) {
- 		if (ret) {
--- 
-1.9.1
+On Mon, Mar 30, 2020 at 12:24:46PM -0500, Venu Busireddy wrote:
+> On 2020-03-30 06:19:27 +0000, Ashish Kalra wrote:
+> > From: Ashish Kalra <ashish.kalra@amd.com>
+> > 
+> > The series add support for AMD SEV guest live migration commands. To protect the
+> > confidentiality of an SEV protected guest memory while in transit we need to
+> > use the SEV commands defined in SEV API spec [1].
+> > 
+> > SEV guest VMs have the concept of private and shared memory. Private memory
+> > is encrypted with the guest-specific key, while shared memory may be encrypted
+> > with hypervisor key. The commands provided by the SEV FW are meant to be used
+> > for the private memory only. The patch series introduces a new hypercall.
+> > The guest OS can use this hypercall to notify the page encryption status.
+> > If the page is encrypted with guest specific-key then we use SEV command during
+> > the migration. If page is not encrypted then fallback to default.
+> > 
+> > The patch adds new ioctls KVM_{SET,GET}_PAGE_ENC_BITMAP. The ioctl can be used
+> > by the qemu to get the page encrypted bitmap. Qemu can consult this bitmap
+> > during the migration to know whether the page is encrypted.
+> > 
+> > [1] https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdeveloper.amd.com%2Fwp-content%2Fresources%2F55766.PDF&amp;data=02%7C01%7CAshish.Kalra%40amd.com%7Cb87828d7e1eb41fe401c08d7d4cf4937%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637211859771455979&amp;sdata=yN1OrvcuNb%2F8JAaLwlf2pIJtEvBRFOSvTKPYWz9ASUY%3D&amp;reserved=0
+> > 
+> > Changes since v5:
+> > - Fix build errors as
+> >   Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> Which upstream tag should I use to apply this patch set? I tried the
+> top of Linus's tree, and I get the following error when I apply this
+> patch set.
+> 
+> $ git am PATCH-v6-01-14-KVM-SVM-Add-KVM_SEV-SEND_START-command.mbox
+> Applying: KVM: SVM: Add KVM_SEV SEND_START command
+> Applying: KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+> Applying: KVM: SVM: Add KVM_SEV_SEND_FINISH command
+> Applying: KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+> error: patch failed: Documentation/virt/kvm/amd-memory-encryption.rst:375
+> error: Documentation/virt/kvm/amd-memory-encryption.rst: patch does not apply
+> error: patch failed: arch/x86/kvm/svm.c:7632
+> error: arch/x86/kvm/svm.c: patch does not apply
+> Patch failed at 0004 KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+> 
+> Thanks,
+> 
+> Venu
+> 
+> > 
+> > Changes since v4:
+> > - Host support has been added to extend KVM capabilities/feature bits to 
+> >   include a new KVM_FEATURE_SEV_LIVE_MIGRATION, which the guest can
+> >   query for host-side support for SEV live migration and a new custom MSR
+> >   MSR_KVM_SEV_LIVE_MIG_EN is added for guest to enable the SEV live
+> >   migration feature.
+> > - Ensure that _bss_decrypted section is marked as decrypted in the
+> >   page encryption bitmap.
+> > - Fixing KVM_GET_PAGE_ENC_BITMAP ioctl to return the correct bitmap
+> >   as per the number of pages being requested by the user. Ensure that
+> >   we only copy bmap->num_pages bytes in the userspace buffer, if
+> >   bmap->num_pages is not byte aligned we read the trailing bits
+> >   from the userspace and copy those bits as is. This fixes guest
+> >   page(s) corruption issues observed after migration completion.
+> > - Add kexec support for SEV Live Migration to reset the host's
+> >   page encryption bitmap related to kernel specific page encryption
+> >   status settings before we load a new kernel by kexec. We cannot
+> >   reset the complete page encryption bitmap here as we need to
+> >   retain the UEFI/OVMF firmware specific settings.
+> > 
+> > Changes since v3:
+> > - Rebasing to mainline and testing.
+> > - Adding a new KVM_PAGE_ENC_BITMAP_RESET ioctl, which resets the 
+> >   page encryption bitmap on a guest reboot event.
+> > - Adding a more reliable sanity check for GPA range being passed to
+> >   the hypercall to ensure that guest MMIO ranges are also marked
+> >   in the page encryption bitmap.
+> > 
+> > Changes since v2:
+> >  - reset the page encryption bitmap on vcpu reboot
+> > 
+> > Changes since v1:
+> >  - Add support to share the page encryption between the source and target
+> >    machine.
+> >  - Fix review feedbacks from Tom Lendacky.
+> >  - Add check to limit the session blob length.
+> >  - Update KVM_GET_PAGE_ENC_BITMAP icotl to use the base_gfn instead of
+> >    the memory slot when querying the bitmap.
+> > 
+> > Ashish Kalra (3):
+> >   KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET ioctl
+> >   KVM: x86: Introduce new KVM_FEATURE_SEV_LIVE_MIGRATION feature &
+> >     Custom MSR.
+> >   KVM: x86: Add kexec support for SEV Live Migration.
+> > 
+> > Brijesh Singh (11):
+> >   KVM: SVM: Add KVM_SEV SEND_START command
+> >   KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+> >   KVM: SVM: Add KVM_SEV_SEND_FINISH command
+> >   KVM: SVM: Add support for KVM_SEV_RECEIVE_START command
+> >   KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
+> >   KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+> >   KVM: x86: Add AMD SEV specific Hypercall3
+> >   KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
+> >   KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+> >   mm: x86: Invoke hypercall when page encryption status is changed
+> >   KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
+> > 
+> >  .../virt/kvm/amd-memory-encryption.rst        | 120 +++
+> >  Documentation/virt/kvm/api.rst                |  62 ++
+> >  Documentation/virt/kvm/cpuid.rst              |   4 +
+> >  Documentation/virt/kvm/hypercalls.rst         |  15 +
+> >  Documentation/virt/kvm/msr.rst                |  10 +
+> >  arch/x86/include/asm/kvm_host.h               |  10 +
+> >  arch/x86/include/asm/kvm_para.h               |  12 +
+> >  arch/x86/include/asm/paravirt.h               |  10 +
+> >  arch/x86/include/asm/paravirt_types.h         |   2 +
+> >  arch/x86/include/uapi/asm/kvm_para.h          |   5 +
+> >  arch/x86/kernel/kvm.c                         |  32 +
+> >  arch/x86/kernel/paravirt.c                    |   1 +
+> >  arch/x86/kvm/cpuid.c                          |   3 +-
+> >  arch/x86/kvm/svm.c                            | 699 +++++++++++++++++-
+> >  arch/x86/kvm/vmx/vmx.c                        |   1 +
+> >  arch/x86/kvm/x86.c                            |  43 ++
+> >  arch/x86/mm/mem_encrypt.c                     |  69 +-
+> >  arch/x86/mm/pat/set_memory.c                  |   7 +
+> >  include/linux/psp-sev.h                       |   8 +-
+> >  include/uapi/linux/kvm.h                      |  53 ++
+> >  include/uapi/linux/kvm_para.h                 |   1 +
+> >  21 files changed, 1157 insertions(+), 10 deletions(-)
+> > 
+> > -- 
+> > 2.17.1
+> > 
