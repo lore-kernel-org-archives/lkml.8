@@ -2,118 +2,108 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DBDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9F1C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C6620784
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B79A20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585609675;
-	bh=4AVexlNiYtLyPvD8KLzOZUsgxdPsZ/3OqrKRBK5t78U=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=WnFrktabcUY0ve1uBMG0khZWiACo79TrCRkp/0b0WHZOzCSoE1ntKdTEMkDbIfRCR
-	 snYNMx3e+C/jC8jSfNHe4sgqK7HTesYU2mYsO3ROfku6wINofRQ9hnl7RsMWyh/A6p
-	 /e41p3Vi+di94RtsIkH9hFOOtYU2sLEBmK/Ew3B8=
+	s=default; t=1585609839;
+	bh=ROdBNHhnJVXCziLb01Nl9Ab43spOVxD41Kiwd8Dl5lk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u060zqxqQzaojvcck4IZVfcsuE9ncrAWTGiqjeTssEzakcWYTk2F115mEdtvOVmkJ
+	 xFqgNsuilaLA7MshpSa15q1Njv2SsjMOYtlcDy4CXrdJWnrhS1QPROdBK4u/Que0af
+	 6leFLRtjAsEBN1lEhbgbYs5j8cYhCg/oEUc8n7mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgC3XHy (ORCPT
+        id S1729362AbgC3XKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729024AbgC3XHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:07:52 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6516420771;
-        Mon, 30 Mar 2020 23:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585609672;
-        bh=4AVexlNiYtLyPvD8KLzOZUsgxdPsZ/3OqrKRBK5t78U=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=eaMgIeH63FPjbwbmlPJ1EDvOTFm3tqCkT0ss3Y+WINaDPNQ/I4KjnasBeJbiDOt2L
-         5MGtBK1edC6BncMz8rT8XPOqspWxPMHbLCCJF+s2hhVMeB1/VazpACz3WjycFJQy2X
-         c2AXDCapRXA5Sjy7/HLSbURBVhd4l+B3/Wh9AUd8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3F4403523140; Mon, 30 Mar 2020 16:07:52 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 16:07:52 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maddie Stone <maddiestone@google.com>,
-        Marco Elver <elver@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 02/21] list: Remove hlist_nulls_unhashed_lockless()
-Message-ID: <20200330230752.GY19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200324153643.15527-1-will@kernel.org>
- <20200324153643.15527-3-will@kernel.org>
+        Mon, 30 Mar 2020 19:10:38 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39452 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3XKi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 19:10:38 -0400
+Received: by mail-il1-f194.google.com with SMTP id r5so17612122ilq.6;
+        Mon, 30 Mar 2020 16:10:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wMjPI/yKnzx8ZMDThBLvU02BMUS49h8m8pE+Plt4TKQ=;
+        b=n+RqRSub53/uR57yrWT1VP0iQvGH13Qn7uvTO7HZt4npKBL0wOSKwLbEjp4jcKUDQi
+         TTwZxSRqRZbscWGeUZG1q7af/4lH5XAg/UGXTASql4ipPXjr3uoFeN5IsQSn8iCyNysa
+         noeDVi2D6K1q0ThqCuwV5zBrnYzd+lx3sYGrTJZ+dPqlNtY2HEzm1Mhq8jgTmqZ/02+a
+         XBHjQolntBOIEudPA/Aatq6uq2ckBuen4+SqhG+rd9tioTFma1T4diFvA3dmlT67Ktnz
+         hiEIJ9x8Vy8UhK0tv/xSrtG7N7Ck/kSxzjcQ25h4apckBB+AW7TVwjvcRU/W1djWmQY8
+         eg/g==
+X-Gm-Message-State: ANhLgQ1Z0sG8tt16ox8Qg74ltE5tnw15HKF9u+VfWAIuKJiVGa6p2lDy
+        pV6Pfqgy0vnnvWxSTk89OQ==
+X-Google-Smtp-Source: ADFU+vvNWYK99dPlPx1tH5tSkAkRlbi7ycuFHhKOo8RHSuWD6/khgAo9a9iHkP/WdAVAeNcl7HZ98w==
+X-Received: by 2002:a92:8fdd:: with SMTP id r90mr13516679ilk.29.1585609837170;
+        Mon, 30 Mar 2020 16:10:37 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id k1sm4532088iob.48.2020.03.30.16.10.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 16:10:36 -0700 (PDT)
+Received: (nullmailer pid 2557 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:10:35 -0000
+Date:   Mon, 30 Mar 2020 17:10:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH 2/4] clk: qcom: mmcc-msm8996: Properly describe GPU_GX
+ gdsc
+Message-ID: <20200330231035.GA326@bogus>
+References: <20200319053902.3415984-1-bjorn.andersson@linaro.org>
+ <20200319053902.3415984-3-bjorn.andersson@linaro.org>
+ <158474710844.125146.15515925711513283888@swboyd.mtv.corp.google.com>
+ <20200321051612.GA5063@builder>
+ <158481619279.125146.6917548675896981321@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324153643.15527-3-will@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <158481619279.125146.6917548675896981321@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 03:36:24PM +0000, Will Deacon wrote:
-> Commit 02b99b38f3d9 ("rcu: Add a hlist_nulls_unhashed_lockless() function")
-> introduced the (as yet unused) hlist_nulls_unhashed_lockless() function
-> to avoid KCSAN reports when an RCU reader checks the 'hashed' status
-> of an 'hlist_nulls' concurrently undergoing modification.
+On Sat, Mar 21, 2020 at 11:43:12AM -0700, Stephen Boyd wrote:
+> Quoting Bjorn Andersson (2020-03-20 22:16:12)
+> > On Fri 20 Mar 16:31 PDT 2020, Stephen Boyd wrote:
+> > 
+> > > Quoting Bjorn Andersson (2020-03-18 22:39:00)
+> > > > diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+> > > > index 85518494ce43..65d9aa790581 100644
+> > > > --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+> > > > +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+> > > > @@ -67,6 +67,10 @@ properties:
+> > > >      description:
+> > > >         Protected clock specifier list as per common clock binding
+> > > >  
+> > > > +  vdd_gfx-supply:
+> > > 
+> > > Why not vdd-gfx-supply? What's with the underscore?
+> > > 
+> > 
+> > The pad is named "VDD_GFX" in the datasheet and the schematics. I see
+> > that we've started y/_/-/ in some of the newly added bindings, would you
+> > prefer I follow this?
 > 
-> Remove the unused function and add a READ_ONCE() to hlist_nulls_unhashed(),
-> just like we do already for hlist_nulls_empty().
-> 
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Will Deacon <will@kernel.org>
+> If the datasheet has this then I guess it's fine. I'll wait for Rob to
+> ack.
 
-Well, I guess that the added docbook comment might be seen as worthwhile.
+vddgfx or vdd-gfx.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+Rob
 
-> ---
->  include/linux/list_nulls.h | 14 --------------
->  1 file changed, 14 deletions(-)
-> 
-> diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
-> index fa6e8471bd22..3a9ff01e9a11 100644
-> --- a/include/linux/list_nulls.h
-> +++ b/include/linux/list_nulls.h
-> @@ -65,20 +65,6 @@ static inline unsigned long get_nulls_value(const struct hlist_nulls_node *ptr)
->   * but hlist_nulls_del() does not.
->   */
->  static inline int hlist_nulls_unhashed(const struct hlist_nulls_node *h)
-> -{
-> -	return !h->pprev;
-> -}
-> -
-> -/**
-> - * hlist_nulls_unhashed_lockless - Has node been removed and reinitialized?
-> - * @h: Node to be checked
-> - *
-> - * Not that not all removal functions will leave a node in unhashed state.
-> - * For example, hlist_del_init_rcu() leaves the node in unhashed state,
-> - * but hlist_nulls_del() does not.  Unlike hlist_nulls_unhashed(), this
-> - * function may be used locklessly.
-> - */
-> -static inline int hlist_nulls_unhashed_lockless(const struct hlist_nulls_node *h)
->  {
->  	return !READ_ONCE(h->pprev);
->  }
-> -- 
-> 2.20.1
-> 
