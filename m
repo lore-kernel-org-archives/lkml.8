@@ -2,176 +2,91 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D52DC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C4EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D890720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585593753;
-	bh=ky8oqS2D9aucEdrvPjghrup/o5e1FPaMSb4LcB9kc/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eh17lchyh/+/LKQoGg42asNj1MVt3DLtO6cMRVnP3wfm7VzMN1jFib1viOFKKnXxL
-	 SCIJIQx3rp0qMIirvxO8G0VwVlHqVpxfZRyShd3y/mltDlXHU3XyHXOGEA16eIady/
-	 qvH9e397CD5eugg6i9OjciBvuFiraA672bxvd/mU=
+	by mail.kernel.org (Postfix) with ESMTP id 76BA820714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ApAQwIT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgC3Smc (ORCPT
+        id S1728071AbgC3Sm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgC3Smc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:42:32 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3871B20774;
-        Mon, 30 Mar 2020 18:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585593751;
-        bh=ky8oqS2D9aucEdrvPjghrup/o5e1FPaMSb4LcB9kc/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ihm1Aj7OHwbH5KzDf6gFBAhyj+dgMF1mi0F6DzS/JWav3xpLMgocwbpU1Fhtbn3N2
-         QNOeaf4wr3qdAm5VGxWxyS67ocsPjtijSy12sqUu/aJ63t4U+enDA1k/gElbm824ul
-         E1UE4Xb+TUtTRTLPYa27WeP6GXGREf3wpa54Ei5c=
-Date:   Mon, 30 Mar 2020 11:42:30 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH] f2fs: use round_up()/DIV_ROUND_UP()
-Message-ID: <20200330184230.GB34947@google.com>
-References: <20200330100349.56127-1-yuchao0@huawei.com>
+        Mon, 30 Mar 2020 14:42:57 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45811 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgC3Sm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:42:56 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c145so20175056qke.12
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IFbBMIVJPIzkKV7mLCPNQSK9HoGd/6gdj7ekh+MNpn4=;
+        b=ApAQwIT/cpynZQktM+pxIXfok9CoZCSWeCDaFrd/5DNA4ES4emngJj2NrgZRiJ4sWI
+         SndJFXnk0wfs4/EBwfsbu25zQnzR98OoXQ9/L63beke3AkYo7R1nJwPmM4KogBPfjCsT
+         QYZgDT7950UjIqCK6EttdT+Jc8lL2jxMZa6WY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IFbBMIVJPIzkKV7mLCPNQSK9HoGd/6gdj7ekh+MNpn4=;
+        b=oi/bO41JSgUuL88sGNxCQ/0KJzQXQ1VhWldO0FihE18yoP4J0rDtCh4XND3S5EOROJ
+         PPIEh9P06sfpmyrzeffMJncCl0z/w+o+Fv338LBii0cNv7MW0CcaE1Jq10d2sbYGL/+s
+         cc3SjL3TLixhwjVxZ8CSqdEg2QSo7MV2sdvzWP+OPI2JixIrXf1Qz+xe04xMliUE5HFe
+         GgFpFfQ/seV18n2U8e3GQJZORcQAcuUR2nn2P7NnwnoQ9dJhoybKGDhV7UKg+R+pSiRP
+         WBhLY6ipTI4sLMkyYaI1lJRfD9mjBCnCBJP5yEs8G9XBhvXIf2DaM/8nfyQB2Psx2hJL
+         sWGg==
+X-Gm-Message-State: ANhLgQ0LmJKQO8M4oFOZiUMq7FD7gUgjNOwMMYi0aAsv5vkvYjurHK5p
+        6qIV2BbA9mi707ErKaeJiWcPMw==
+X-Google-Smtp-Source: ADFU+vs3yNg+YEZEzcjKhOjuZqCRGDXN3aJ+yItda1p7MbfP6hOac0dtsEhPA3FI+8Mj9Xlz53K8Bw==
+X-Received: by 2002:a05:620a:22b:: with SMTP id u11mr1404588qkm.225.1585593775508;
+        Mon, 30 Mar 2020 11:42:55 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q75sm10983661qke.12.2020.03.30.11.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 11:42:55 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 14:42:54 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH 07/18] rcu/tree: Simplify debug_objects handling
+Message-ID: <20200330184254.GA107809@google.com>
+References: <20200330023248.164994-8-joel@joelfernandes.org>
+ <202003301454.yjTqyud3%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330100349.56127-1-yuchao0@huawei.com>
+In-Reply-To: <202003301454.yjTqyud3%lkp@intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/30, Chao Yu wrote:
-> .i_cluster_size should be power of 2, so we can use round_up() instead
-> of roundup() to enhance the calculation.
+On Mon, Mar 30, 2020 at 03:00:18PM +0800, kbuild test robot wrote:
+> Hi "Joel,
 > 
-> In addition, use DIV_ROUND_UP to clean up codes.
+> Thank you for the patch! Yet something to improve:
 > 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/data.c | 16 ++++++----------
->  fs/f2fs/file.c | 17 +++++------------
->  2 files changed, 11 insertions(+), 22 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 0a829a89f596..8257d5e7aa3b 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -1969,8 +1969,6 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->  					bool is_readahead)
->  {
->  	struct bio *bio = *bio_ret;
-> -	const unsigned blkbits = inode->i_blkbits;
-> -	const unsigned blocksize = 1 << blkbits;
->  	sector_t block_in_file;
->  	sector_t last_block;
->  	sector_t last_block_in_file;
-> @@ -1979,8 +1977,8 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->  
->  	block_in_file = (sector_t)page_index(page);
->  	last_block = block_in_file + nr_pages;
-> -	last_block_in_file = (f2fs_readpage_limit(inode) + blocksize - 1) >>
-> -							blkbits;
-> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
-> +								PAGE_SIZE);
+> [auto build test ERROR on rcu/dev]
+> [also build test ERROR on rcu/rcu/next next-20200327]
+> [cannot apply to linus/master linux/master v5.6]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-What if PAGE_SIZE is bigger than 4KB?
+Should have run allmodconfig, this is a slightly older patch and did not see
+a problem earlier in prior testing.
 
->  	if (last_block > last_block_in_file)
->  		last_block = last_block_in_file;
->  
-> @@ -2062,7 +2060,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->  	 */
->  	f2fs_wait_on_block_writeback(inode, block_nr);
->  
-> -	if (bio_add_page(bio, page, blocksize, 0) < blocksize)
-> +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
->  		goto submit_and_realloc;
->  
->  	inc_page_count(F2FS_I_SB(inode), F2FS_RD_DATA);
-> @@ -2091,16 +2089,14 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
->  	struct bio *bio = *bio_ret;
->  	unsigned int start_idx = cc->cluster_idx << cc->log_cluster_size;
->  	sector_t last_block_in_file;
-> -	const unsigned blkbits = inode->i_blkbits;
-> -	const unsigned blocksize = 1 << blkbits;
->  	struct decompress_io_ctx *dic = NULL;
->  	int i;
->  	int ret = 0;
->  
->  	f2fs_bug_on(sbi, f2fs_cluster_is_empty(cc));
->  
-> -	last_block_in_file = (f2fs_readpage_limit(inode) +
-> -					blocksize - 1) >> blkbits;
-> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
-> +								PAGE_SIZE);
->  
->  	/* get rid of pages beyond EOF */
->  	for (i = 0; i < cc->cluster_size; i++) {
-> @@ -2197,7 +2193,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
->  
->  		f2fs_wait_on_block_writeback(inode, blkaddr);
->  
-> -		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
-> +		if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
->  			goto submit_and_realloc;
->  
->  		inc_page_count(sbi, F2FS_RD_DATA);
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index c2d38a1c4972..0f8be076620c 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -736,16 +736,9 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
->  	 * for compressed file, only support cluster size
->  	 * aligned truncation.
->  	 */
-> -	if (f2fs_compressed_file(inode)) {
-> -		size_t cluster_shift = PAGE_SHIFT +
-> -					F2FS_I(inode)->i_log_cluster_size;
-> -		size_t cluster_mask = (1 << cluster_shift) - 1;
-> -
-> -		free_from = from >> cluster_shift;
-> -		if (from & cluster_mask)
-> -			free_from++;
-> -		free_from <<= cluster_shift;
-> -	}
-> +	if (f2fs_compressed_file(inode))
-> +		free_from = round_up(from,
-> +				F2FS_I(inode)->i_cluster_size << PAGE_SHIFT);
->  #endif
->  
->  	err = f2fs_do_truncate_blocks(inode, free_from, lock);
-> @@ -3537,7 +3530,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->  
->  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
-> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
-> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
->  
->  		ret = release_compress_blocks(&dn, count);
->  
-> @@ -3689,7 +3682,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->  
->  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
-> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
-> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
->  
->  		ret = reserve_compress_blocks(&dn, count);
->  
-> -- 
-> 2.18.0.rc1
+Will make the trivial fix now and update my tree, thanks!
+
+ - Joel
+
