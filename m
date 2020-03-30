@@ -2,114 +2,201 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80548C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DB7C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A062073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B1F20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="CXEoalC6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tdAiEuI+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728884AbgC3GON (ORCPT
+        id S1728886AbgC3GTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:14:13 -0400
-Received: from mail-vi1eur05on2130.outbound.protection.outlook.com ([40.107.21.130]:12129
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728492AbgC3GOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:14:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RmHUvcOOldGAkM0+dI6lWB7q1PnImnN+PbcE4DoNVGryMy78densvloQEVdCrkwEah0a9P2nE3SH39sfbMOvvPJJnXxcI6mH+jO6MUM89coCIYTWp+B4E1NM1Au3GwOT1GyZfeX4MO7+DTL9FpKWTWJkQs4YBQX4R0sMdyWYpSXUozzAIxUQkHXle359gtj+SuQ0SLCwx5ruujZwej51pqq6ALBIfl7LLvLj9hi7//Xogx8jwN/SoqOVNWfyJD2+USJmjSU/AifZz1S+CwxLiwa3923D2bRRftPwonfAgg1UqoR6EWUm4jZ6hwCKnpAO1BvhYuYAS453F0L28P1FTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q9oj02QM0Uyzx+9UcmSWoVlLT8hO6Dq7zQj0P/+e70g=;
- b=fJohYhegXgC7djI13SUyjVrsQBAhQkpWOwk41g/prQP9tKW4NY8rv4fVK+bP/8IV2+8ZPFhU0+13i9jC8fD4Ih5fJkEzcgnhBSDzLMPOxGIQQpFqrrH820rdUV5VJ7zVPZZOgL7i4wPHYCiSfaztMJPrjxqjVQ8PhC5ySVM/b92lawULpqOkW1Tu1tYP0orfpveArqzrP3wf5fZtR4RHSXGsw2g/9mQApXkAHiSSel9Goh86Q8G9IhutS+/YX5AJFg3caPcSVs05tRcpKkmVU/8BxAVTsPZwnLXrkkYMMJMhDC/tN6w5IB5h1drBJesRCTXJ1YK3HcMBYsD7I8L1Xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
+        Mon, 30 Mar 2020 02:19:46 -0400
+Received: from mail-pl1-f176.google.com ([209.85.214.176]:36800 "EHLO
+        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgC3GTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 02:19:46 -0400
+Received: by mail-pl1-f176.google.com with SMTP id g2so6332011plo.3;
+        Sun, 29 Mar 2020 23:19:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q9oj02QM0Uyzx+9UcmSWoVlLT8hO6Dq7zQj0P/+e70g=;
- b=CXEoalC6FxBfhoAd+pNYG+tSCEIEIcfA8Fz9Jc0N8h6B0OFpfa+oP97PhbBeR2LU9rjs1Nl4Rs2Mt17/wmtMsBNynd/FQ5F/AeT6MGeWXYZdLy95wACFGMdQWo8KlfSJ/9T4WtwcDJkap1jvzNoUX463y+xBpyq3hyIRvVYKSjU=
-Received: from AM0PR02MB5523.eurprd02.prod.outlook.com (10.255.29.216) by
- AM0PR02MB4964.eurprd02.prod.outlook.com (20.178.22.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Mon, 30 Mar 2020 06:14:07 +0000
-Received: from AM0PR02MB5523.eurprd02.prod.outlook.com
- ([fe80::4448:48ca:9345:37b5]) by AM0PR02MB5523.eurprd02.prod.outlook.com
- ([fe80::4448:48ca:9345:37b5%3]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 06:14:07 +0000
-From:   Omer Shpigelman <oshpigelman@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fjRqXXkCjy3Sn+NxAY1O/fq6KYCmQZP/2AMVqQxR1AA=;
+        b=tdAiEuI+wHfqWGmBDNwDjpN05bqeintYxxmYsQA9SEx3AmIWHpyky4qKbCkHMLbrNe
+         hvNrbHJA0NcyF9prbZ5Sk+ZKaEoKGbwOS59m7QpMaRGqzx0A9sThPwBOjJ2ZG6viK09y
+         9hGfKCoIXSj3Lvy+pMnZ88DCLu9FrHJRgto+2pcfSmXVj6odhd9CmzK+6dn702dVu+CY
+         RsO1kNYayzweRN/7yd4Kspo4cquI8FOdUNG17kHyHPToJ+sqfWVGEOB+OrTgdbVTBBXp
+         zMpCw8+ei0FqDxjb3Y7ja7VuhnxVFYbJdU1XktShfcZul9NFeukIF2sjSE4jTfwPfE5q
+         OPgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fjRqXXkCjy3Sn+NxAY1O/fq6KYCmQZP/2AMVqQxR1AA=;
+        b=JWxVDVSxoJSDRC9GSmmj0xHVSRLrUuIp612zStU7JZ+EorDubeefuK8Isdc2c1uoS4
+         yLj7ap5iFpCB3yiMR31OJGHZ9X7ZuG4j75/QHAoFgDI6QYhzTvuVwt14Ix/dCmO/BiQ5
+         OscweltEMXd6fq8OKC7DFWMjJR+RSMEftnRvn+BVULJgPXTgfz9j5fEVSg4fkpUio94K
+         CPIaMpKMBY9kSTOSnOxgyRsC/yBRXsccN/RU+VCJl4NTK6I1VUfbgGCyzMqLbDJPF6DY
+         UsKahvbAcG7X7tlTaSirfM35XAuXBDPSoM47ZnMubtAiIdF+oOUH88bnjlAp0VfLk6Sp
+         w2qQ==
+X-Gm-Message-State: ANhLgQ3h19/H3J0k575LoRr85EwqPdRWz6bFQxSlOO2pihQ4V8ZrWyhh
+        Ri/838ppN6mjd4LIk9qG5ho=
+X-Google-Smtp-Source: ADFU+vvcYd3ByIwzHX77XdBk0vWIf5xDPe0TToK0WRh7npJw3i8DIDjotO8SANROjlArwSgP3sjKLA==
+X-Received: by 2002:a17:902:d712:: with SMTP id w18mr11576534ply.238.1585549184131;
+        Sun, 29 Mar 2020 23:19:44 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s9sm353489pjr.5.2020.03.29.23.19.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 23:19:43 -0700 (PDT)
+Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiBbdjIsMS8xXSBod21vbjogKG5jdDc5?=
+ =?UTF-8?Q?04=29_Add_watchdog_function?=
+To:     =?UTF-8?B?eXVlY2hhby56aGFvKOi1tei2iui2hSk=?= 
+        <yuechao.zhao@advantech.com.cn>
+Cc:     "345351830@qq.com" <345351830@qq.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomer Tayar <ttayar@habana.ai>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH 6/6] habanalabs: increase timeout during reset
-Thread-Topic: [PATCH 6/6] habanalabs: increase timeout during reset
-Thread-Index: AQHWBN5EpMmx+cbS3UONVVMnseQbTahgqi5w
-Date:   Mon, 30 Mar 2020 06:14:07 +0000
-Message-ID: <AM0PR02MB5523AC0E528B32AD791AC9A9B8CB0@AM0PR02MB5523.eurprd02.prod.outlook.com>
-References: <20200328085238.3428-1-oded.gabbay@gmail.com>
- <20200328085238.3428-6-oded.gabbay@gmail.com>
-In-Reply-To: <20200328085238.3428-6-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oshpigelman@habana.ai; 
-x-originating-ip: [141.226.15.151]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 45e76ede-066a-44ee-5e71-08d7d4718e1f
-x-ms-traffictypediagnostic: AM0PR02MB4964:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR02MB49649D583718F6C7CB169DCCB8CB0@AM0PR02MB4964.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0358535363
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR02MB5523.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(136003)(346002)(376002)(366004)(39840400004)(52536014)(5660300002)(76116006)(66946007)(66446008)(64756008)(66556008)(66476007)(2906002)(26005)(33656002)(316002)(8936002)(110136005)(55016002)(186003)(6636002)(71200400001)(81156014)(81166006)(8676002)(478600001)(6506007)(4326008)(53546011)(4744005)(7696005)(9686003)(86362001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: habana.ai does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2UhN/XewtWhMMifpuz3N/xSMHcN6YSsPtMRlreOBnmG7y7G/ub8C5CYL1IVKnjo7OOUCavv0fY8froveLDj4C79DDx18kUmtpurcnUiiF/UQsLl+LV+OYbiJcdlD7gASGU74D7oZ76hKPHaoJ94PARVacRfY+gompfnWAWQgSqvruyjp6fzVLRItZnMVUKnaAfuGw48enQCJHI3nlczgK5oKk+8DFlc0u+7fs4X/woCTAkuXNM5dwxzrId4fLStMnq6bFqzDJwSgdCev+P/TBHDpB1aaeCVGHornxdLTJmh0kM0bMr6WbJzQldwWLQ9DCkC88XfsbZVHHgtCwz0fEXCogjgG+glN/cTa5u8m4NrtjZG5aQh4LH4TRGBlBxsruR2SecD0Lr5USrPZw9AJXU4jA4mTwio61TIbWVGw36OtwZZ/9ymz24NqWT1GBlvI
-x-ms-exchange-antispam-messagedata: LI+Fq0sI95msmuYRnNzRGPUlSnBBqecRqRhXnsVSx9m6ApHqmb01CZdn/QvuhTqPtCSe5gSafymRj3Wrwnezf2Rx1PHEjj5AjOXEFnH3ljEY8aM94t8H/TRdUyy2+qVwhnPZL2Ql7QRmwZdMn5efgw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "Amy.Shih" <Amy.Shih@advantech.com.tw>,
+        "Oakley.Ding" <Oakley.Ding@advantech.com.tw>,
+        =?UTF-8?B?SmlhLlN1aSjotL7nnaIp?= <Jia.Sui@advantech.com.cn>,
+        =?UTF-8?B?c2hlbmdrdWkubGVuZyjlhrfog5zprYEp?= 
+        <shengkui.leng@advantech.com.cn>,
+        =?UTF-8?B?UmFpbmJvdy5aaGFuZyjlvLXnjokp?= 
+        <Rainbow.Zhang@advantech.com.cn>
+References: <20200325082237.7002-1-yuechao.zhao@advantech.com.cn>
+ <20200325224733.GA27706@roeck-us.net>
+ <37833c60d7df45109897dcf35fb1b102@ACNMB2.ACN.ADVANTECH.CORP>
+ <c8dd611e-3ff4-a041-6800-8396dd517e7b@roeck-us.net>
+ <ded25cd289e24701a3f9008ee4a78158@ACNMB2.ACN.ADVANTECH.CORP>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <a26f1fbb-a730-e31b-acdc-4975c2053bd7@roeck-us.net>
+Date:   Sun, 29 Mar 2020 23:19:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45e76ede-066a-44ee-5e71-08d7d4718e1f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 06:14:07.6348
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t4oUiNp1zogPZ3B4sFFbVXAp2HpUSqwfXA1SywPgua1lThBR41fC0s39BQtRs5yJfINBhnX1iwF/MgBe2cXZog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB4964
+In-Reply-To: <ded25cd289e24701a3f9008ee4a78158@ACNMB2.ACN.ADVANTECH.CORP>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCBNYXIgMjgsIDIwMjAgYXQgMTE6NTMgQU0sIE9kZWQgR2FiYmF5IDxvZGVkLmdhYmJh
-eUBnbWFpbC5jb20+IHdyb3RlOg0KPiBXaGVuIGRvaW5nIHRyYWluaW5nLCB0aGUgREwgZnJhbWV3
-b3JrIChlLmcuIHRlbnNvcmZsb3cpIHBlcmZvcm1zIGh1bmRyZWRzIG9mDQo+IHRob3VzYW5kcyBv
-ZiBtZW1vcnkgYWxsb2NhdGlvbnMgYW5kIG1hcHBpbmdzLiBJbiBjYXNlIHRoZSBkcml2ZXIgbmVl
-ZHMgdG8NCj4gcGVyZm9ybSBoYXJkLXJlc2V0IGR1cmluZyB0cmFpbmluZywgdGhlIGRyaXZlciBr
-aWxscyB0aGUgYXBwbGljYXRpb24gYW5kIHVubWFwcyBhbGwNCj4gdGhvc2UgbWVtb3J5IGFsbG9j
-YXRpb25zLiBVbmZvcnR1bmF0ZWx5LCBiZWNhdXNlIG9mIHRoYXQgbGFyZ2UgYW1vdW50IG9mDQo+
-IG1hcHBpbmdzLCB0aGUgZHJpdmVyIGlzbid0IGFibGUgdG8gZG8gdGhhdCBpbiB0aGUgY3VycmVu
-dCB0aW1lb3V0ICg1IHNlY29uZHMpLg0KPiBUaGVyZWZvcmUsIGluY3JlYXNlIHRoZSB0aW1lb3V0
-IHNpZ25pZmljYW50bHkgdG8gMzAgc2Vjb25kcyB0byBhdm9pZCBzaXR1YXRpb24NCj4gd2hlcmUg
-dGhlIGRyaXZlciByZXNldHMgdGhlIGRldmljZSB3aXRoIGFjdGl2ZSBtYXBwaW5ncywgd2hpY2gg
-c29tZXRpbWUgY2FuDQo+IGNhdXNlIGEga2VybmVsIGJ1Zy4NCj4NCj4gQlRXLCBpdCBkb2Vzbid0
-IG1lYW4gd2Ugd2lsbCBzcGVuZCBhbGwgdGhlIDMwIHNlY29uZHMgYmVjYXVzZSB0aGUgcmVzZXQg
-dGhyZWFkDQo+IGNoZWNrcyBldmVyeSBvbmUgc2Vjb25kIGlmIHRoZSB1bm1hcCBvcGVyYXRpb24g
-aXMgZG9uZS4NCj4NCj4gU2lnbmVkLW9mZi1ieTogT2RlZCBHYWJiYXkgPG9kZWQuZ2FiYmF5QGdt
-YWlsLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IE9tZXIgU2hwaWdlbG1hbiA8b3NocGlnZWxtYW5AaGFi
-YW5hLmFpPg0KDQoNCg==
+On 3/29/20 10:42 PM, yuechao.zhao(赵越超) wrote:
+> Hi Guenter
+> 
+> Thank you very much.
+> I misunderstood your suggestion. (Please make it 60 * 255 (or use a respective define) to clarify where the number comes from)
+> So, I will modify it.
+> Also, I will define a module parameter which specifies the timeout in minutes instead of seconds.
+> 
+The module parameter already specifies the timeout in minutes.
+
+Guenter
+
+> Thanks
+> Yuechao
+> 
+> -----邮件原件-----
+> 发件人: Guenter Roeck [mailto:groeck7@gmail.com] 代表 Guenter Roeck
+> 发送时间: 2020年3月28日 4:54
+> 收件人: yuechao.zhao(赵越超)
+> 抄送: 345351830@qq.com; Jean Delvare; linux-hwmon@vger.kernel.org; linux-kernel@vger.kernel.org; Amy.Shih; Oakley.Ding; Jia.Sui(贾睢); shengkui.leng(冷胜魁); Rainbow.Zhang(張玉)
+> 主题: Re: 答复: [v2,1/1] hwmon: (nct7904) Add watchdog function
+> 
+> On 3/26/20 7:39 PM, yuechao.zhao(赵越超) wrote:
+>> Hi Guenter
+>> Thank you very much for the suggestion
+>>
+>> But, I wish to consult you on a few questions.
+>> The NCT7904 is very special in watchdog function. Its minimum unit is minutes.
+>> So, what unit do we use for setting the timeout in user space. Minutes or seconds?
+>> Does the kernel document specify it?
+>>
+> Documentation/watchdog/watchdog-api.rst very clearly specifies that the timeout is set in seconds.
+> 
+>> Also, about this suggestion:
+>> 	> +	data->wdt.timeout = timeout * 60; /* in seconds */
+>> 	> +	data->wdt.min_timeout = 1;
+>> 	> +	data->wdt.max_timeout = 15300;
+>> 	Please make it 60 * 255 (or use a respective define) to clarify where the number comes from.
+>>
+>> The reason for not use 60 * 255(or use a respective define ) is that 
+>> we will set the default timeout with "timeout" parameter when "insmod nct7904.ko".
+> 
+> This is not an argument for
+> 	data->wdt.max_timeout = 15300;
+> instead of
+> 	data->wdt.max_timeout = 60 * 255;
+> or
+> 
+> #define MAX_TIMEOUT	(60 * 255)
+> ...
+> 	data->wdt.max_timeout = MAX_TIMEOUT;
+> 
+>> The relevant code as follows:
+>> 	> +static int timeout = WATCHDOG_TIMEOUT; module_param(timeout, int, 0); 
+>> 	> +MODULE_PARM_DESC(timeout, "Watchdog timeout in minutes. 1 <= timeout <= 255, default="
+>> 	> +			__MODULE_STRING(WATCHODOG_TIMEOUT) ".");
+>>
+> 
+> I accepted that you want to have a module parameter which specifies the timeout in minutes instead of seconds (as would be customary).
+> However, I completely fail to understand what that has to do with using an unexplained constant of "15300" when setting the maximum timeout variable instead of "60 * 255" or, as I had suggested, a define.
+> 
+> Thanks,
+> Guenter
+> 
+
