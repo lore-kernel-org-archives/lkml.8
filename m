@@ -2,447 +2,194 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BAEC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B536C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CBCC206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 140EC205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="GxBWlOjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgC3Pvo (ORCPT
+        id S1729641AbgC3PyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:51:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17168 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728798AbgC3Pvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:51:43 -0400
-IronPort-SDR: 39IrxwBDXKd4xVgg5e4goJ+tmOPWkUfuiSc0jx6cvCYVSb7TqLA+0H5hEIj4rnXQJzLvGRs9fx
- Zu7tUH/IZl7g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 08:51:42 -0700
-IronPort-SDR: UVQlzVYmDmYaJXaXKKmWePMvxHpkBTmir33xTUQDuCRFX5F0PFiGpd+p2aGsF2SpHz561ML+UD
- o5dB8ieono9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="241656689"
-Received: from glass.png.intel.com ([172.30.181.92])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Mar 2020 08:51:39 -0700
-From:   Wong Vee Khee <vee.khee.wong@intel.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Wei Feng <weifeng.voon@intel.com>,
-        Wong Vee Khee <vee.khee.wong@intel.com>
-Subject: [PATCH net-next 1/1] net: stmmac: Add support for VLAN Rx filtering
-Date:   Mon, 30 Mar 2020 23:53:57 +0800
-Message-Id: <20200330155357.732-1-vee.khee.wong@intel.com>
-X-Mailer: git-send-email 2.17.0
+        Mon, 30 Mar 2020 11:54:25 -0400
+Received: from mail-eopbgr150041.outbound.protection.outlook.com ([40.107.15.41]:8430
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726497AbgC3PyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:54:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BsOaNFCzaWTKDGb2ivc9wIDZoNody5mieQ5Qu2UUJiSTpk74DhwlcFVL7mjfU1wz1v2yhdSK4pDgu6zeVI6Xghf8gdVRWeglXI/3dIGnJ67mN+PZxVkkp8Fm8R4+Yw7MMGjtRN3SJsXencM6MP/C2gWWfdHxanKCRcRS85m+TxTeVSupy2ozEucZnhaNBTg97AMK6dZnvVZZPIvHhuOaN9iBier98EuKAsOr+OHr30KH6iqQXBBhYhxfVdG56PCveSUHQ7WWC4CtsQgbhWThEWrKfBc2oD2wOVSbOLdkrhcnPjkym2n9IQOfmE6+WaOAFcbqDxM37czhQpkfvOsU2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vvWUjTVeO3djzzcn5x41qdWCQzxAPgnrPjdXWv4+Ldc=;
+ b=a6R+OHZwLg7ZfqXhejn0h4vpVg2YhlD9j7FmF9PwROqIBxYYPJh3B0U4J5xd1I3RIKIZ4xuHbrBdM1UHgEfnRjpMQ3kRXSiT/6ELQp1cILCkBEYpql7jqKEgQM1QolGyRej6Uc90HskEwc7wUErnbxe1JhUwxEseSQOGF+67W7Cs92lE95QqhxLs3gcyEb5mq+I4uR+2MY1NsxajCtw6mfemvRYB/3XxlNHnEtK1dHsud4ew/aF1/iQy+Hd+Uqmv4Oo8QFzZZZDz0jU6zyGiHxypvFA8HHgnGLFUPxOK5dGR3um6LHkbm9BFvAMS/wY2E8L2vmoJM3/eDGf5YlKpwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
+ dkim=pass header.d=itdev.co.uk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vvWUjTVeO3djzzcn5x41qdWCQzxAPgnrPjdXWv4+Ldc=;
+ b=GxBWlOjC2o9Kvjlu0tfCBsUKdsEnFknikY/CMMheXOh2JEoNaXKjNOgGw3x/W+xXYg+U2KEeOiTuXi+wfVsHKg6yPZcasTRy+16RTgzmLKkimjrhkRaFC1cJIQNgi8DW3nNR+Jy8pkdzX59ZjZDC0+xSolIxwWrt46ESMaksjFA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
+ DBBPR08MB4315.eurprd08.prod.outlook.com (20.179.43.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Mon, 30 Mar 2020 15:54:21 +0000
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::cce9:f055:f034:3659]) by DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::cce9:f055:f034:3659%4]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 15:54:21 +0000
+Date:   Mon, 30 Mar 2020 16:54:19 +0100
+From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: vt6656: Use defines in preamble_type variables
+Message-ID: <20200330155419.GA133370@jiffies>
+References: <20200328140955.23615-1-oscar.carter@gmx.com>
+ <20200330154902.GB125210@jiffies>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330154902.GB125210@jiffies>
+X-ClientProxiedBy: LO2P265CA0432.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a0::36) To DBBPR08MB4491.eurprd08.prod.outlook.com
+ (2603:10a6:10:d2::16)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jiffies (5.151.93.48) by LO2P265CA0432.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a0::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend Transport; Mon, 30 Mar 2020 15:54:20 +0000
+X-Originating-IP: [5.151.93.48]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5531c284-d347-4327-a478-08d7d4c29c8f
+X-MS-TrafficTypeDiagnostic: DBBPR08MB4315:
+X-Microsoft-Antispam-PRVS: <DBBPR08MB43153FE4C22C24D3E0952263B3CB0@DBBPR08MB4315.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0358535363
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4491.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(136003)(346002)(396003)(39830400003)(366004)(26005)(4326008)(52116002)(6496006)(44832011)(1076003)(81166006)(66946007)(8676002)(81156014)(33716001)(66476007)(33656002)(55016002)(8936002)(9576002)(9686003)(86362001)(53546011)(6916009)(316002)(2906002)(186003)(16526019)(508600001)(956004)(66556008)(5660300002)(54906003)(518174003);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: itdev.co.uk does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: x4ACSTS6YRaGGOot0kjCPwrU0XRdzATR6K5oEJa2uHqQQoesXZtsN6B/ZORdrqK5qjtuSvkxb5eSepUAYQu0BCN2l6Lnh/4r4Es5/bDsIriFQB2fublYJQ7TmNzV2Mk3Aoom0jwnV6HDPSHHQav1r9o9PQNGRJFHa9FIANuMmO3750C8pDq/7lcj93kNEryoayLg8cqFIoBQWXGgnkLVUTtdiv+I0sgDDHCvHUBXDwW4A+dyC9pqkAnlv8ZzfwOaInm8h+4xoAzc5sdeOOl2GFctW1Fg06RM+9f6axRV5IlXxlRMRqtzGEDHTTQstUI0Ucm4FnNQwBJbMcbdXw35gJhsgSEHXPMypt2HrIp8aFDgFXCytl3/N25iKv+SWXrcK03YJWaAxKH92EV9RTovVWHUkv3lW9y/RPpH2XsiTUqgHzRNYpIkJNK8+8A1h/4BlH3VVbXS0zC0tnQuo5z3Va4ByJf3UTYmyCJWPbpb+dqGeF80vSRdSNhi/l7KtiHe
+X-MS-Exchange-AntiSpam-MessageData: Ce4lad+lauqHVJV2QAWn6m10iBInbkwKAiBN6QXhoqe5PpR4ECEjT8w6Vj4Wi6S9y8FXvg+p3HhotPryPlYBN/lnJautXRf39JzVoDkuh4JJh8qOnf/oml1ytaElOyr2ysTv3+XEBvcZ4cC5VgIdyg==
+X-OriginatorOrg: itdev.co.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5531c284-d347-4327-a478-08d7d4c29c8f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 15:54:21.2437
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2d2930c4-2251-45b4-ad79-3582c5f41740
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ssB5AcV8JZYLi0Krqo/GJA6XFv50+zBJb9WQh1d/xEJcU1pnwYkiEQPapha9LJn0A/8tzjLVTWtksBTJmQLycCq+dC8Kun7yIshY5fhSTdg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4315
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for VLAN ID-based filtering by the MAC controller for MAC
-drivers that support it. Only the 12-bit VID field is used.
+On 03/30/20 16:49:04, Quentin Deslandes wrote:
+> On 03/28/20 15:09:55, Oscar Carter wrote:
+> > Use the PREAMBLE_SHORT and PREAMBLE_LONG defines present in the file
+> > "baseband.h" to assign values to preamble_type variables. Also, use the
+> > same defines to make comparisons against this variables.
+> > 
+> > In this way, avoid the use of numerical literals or boolean values and
+> > make the code more clear.
+> > 
+> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > ---
+> >  drivers/staging/vt6656/baseband.c | 8 ++++----
+> >  drivers/staging/vt6656/main_usb.c | 6 +++---
+> >  2 files changed, 7 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
+> > index a19a563d8bcc..9bbafa7fff61 100644
+> > --- a/drivers/staging/vt6656/baseband.c
+> > +++ b/drivers/staging/vt6656/baseband.c
+> > @@ -142,7 +142,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 pkt_type,
+> >  	rate = (unsigned int)vnt_frame_time[tx_rate];
+> > 
+> >  	if (tx_rate <= 3) {
+> > -		if (preamble_type == 1)
+> > +		if (preamble_type == PREAMBLE_SHORT)
+> >  			preamble = 96;
+> >  		else
+> >  			preamble = 192;
+> > @@ -198,7 +198,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
+> >  	case RATE_2M:
+> >  		count = bit_count / 2;
+> > 
+> > -		if (preamble_type == 1)
+> > +		if (preamble_type == PREAMBLE_SHORT)
+> >  			phy->signal = 0x09;
+> >  		else
+> >  			phy->signal = 0x01;
+> > @@ -207,7 +207,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
+> >  	case RATE_5M:
+> >  		count = DIV_ROUND_UP(bit_count * 10, 55);
+> > 
+> > -		if (preamble_type == 1)
+> > +		if (preamble_type == PREAMBLE_SHORT)
+> >  			phy->signal = 0x0a;
+> >  		else
+> >  			phy->signal = 0x02;
+> > @@ -224,7 +224,7 @@ void vnt_get_phy_field(struct vnt_private *priv, u32 frame_length,
+> >  				ext_bit = true;
+> >  		}
+> > 
+> > -		if (preamble_type == 1)
+> > +		if (preamble_type == PREAMBLE_SHORT)
+> >  			phy->signal = 0x0b;
+> >  		else
+> >  			phy->signal = 0x03;
+> > diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/main_usb.c
+> > index 8e7269c87ea9..dd89f98cc18c 100644
+> > --- a/drivers/staging/vt6656/main_usb.c
+> > +++ b/drivers/staging/vt6656/main_usb.c
+> > @@ -99,7 +99,7 @@ static void vnt_set_options(struct vnt_private *priv)
+> >  	priv->op_mode = NL80211_IFTYPE_UNSPECIFIED;
+> >  	priv->bb_type = BBP_TYPE_DEF;
+> >  	priv->packet_type = priv->bb_type;
+> > -	priv->preamble_type = 0;
+> > +	priv->preamble_type = PREAMBLE_LONG;
+> >  	priv->exist_sw_net_addr = false;
+> >  }
+> > 
+> > @@ -721,10 +721,10 @@ static void vnt_bss_info_changed(struct ieee80211_hw *hw,
+> >  	if (changed & BSS_CHANGED_ERP_PREAMBLE) {
+> >  		if (conf->use_short_preamble) {
+> >  			vnt_mac_enable_barker_preamble_mode(priv);
+> > -			priv->preamble_type = true;
+> > +			priv->preamble_type = PREAMBLE_SHORT;
+> >  		} else {
+> >  			vnt_mac_disable_barker_preamble_mode(priv);
+> > -			priv->preamble_type = false;
+> > +			priv->preamble_type = PREAMBLE_LONG;
+> >  		}
+> >  	}
+> > 
+> > --
+> > 2.20.1
+> > 
+> 
+> Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> 
+> Thank,
+> Quentin
 
-Signed-off-by: Chuah Kim Tatt <kim.tatt.chuah@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Wong Vee Khee <vee.khee.wong@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h  |   2 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h  |  25 +++
- .../net/ethernet/stmicro/stmmac/dwmac4_core.c | 195 ++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/hwif.h    |  14 ++
- .../net/ethernet/stmicro/stmmac/stmmac_main.c |   9 +
- 5 files changed, 245 insertions(+)
+Disregard this review, a v2 has been sent.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 386663208c23..6208a68a331d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -471,6 +471,8 @@ struct mac_device_info {
- 	unsigned int pmt;
- 	unsigned int ps;
- 	unsigned int xlgmac;
-+	unsigned int num_vlan;
-+	u32 vlan_filter[32];
- };
- 
- struct stmmac_rx_routing {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index af50af27550b..28cac28253b8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -18,6 +18,7 @@
- #define GMAC_PACKET_FILTER		0x00000008
- #define GMAC_HASH_TAB(x)		(0x10 + (x) * 4)
- #define GMAC_VLAN_TAG			0x00000050
-+#define GMAC_VLAN_TAG_DATA		0x00000054
- #define GMAC_VLAN_HASH_TABLE		0x00000058
- #define GMAC_RX_FLOW_CTRL		0x00000090
- #define GMAC_VLAN_INCL			0x00000060
-@@ -90,6 +91,29 @@
- #define GMAC_VLAN_VLC			GENMASK(17, 16)
- #define GMAC_VLAN_VLC_SHIFT		16
- 
-+/* MAC VLAN Tag */
-+#define GMAC_VLAN_TAG_VID		GENMASK(15, 0)
-+#define GMAC_VLAN_TAG_ETV		BIT(16)
-+
-+/* MAC VLAN Tag Control */
-+#define GMAC_VLAN_TAG_CTRL_OB		BIT(0)
-+#define GMAC_VLAN_TAG_CTRL_CT		BIT(1)
-+#define GMAC_VLAN_TAG_CTRL_OFS_MASK	GENMASK(6, 2)
-+#define GMAC_VLAN_TAG_CTRL_OFS_SHIFT	2
-+#define GMAC_VLAN_TAG_CTRL_EVLS_MASK	GENMASK(22, 21)
-+#define GMAC_VLAN_TAG_CTRL_EVLS_SHIFT	21
-+#define GMAC_VLAN_TAG_CTRL_EVLRXS	BIT(24)
-+
-+#define GMAC_VLAN_TAG_STRIP_NONE	(0x0 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-+#define GMAC_VLAN_TAG_STRIP_PASS	(0x1 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-+#define GMAC_VLAN_TAG_STRIP_FAIL	(0x2 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-+#define GMAC_VLAN_TAG_STRIP_ALL		(0x3 << GMAC_VLAN_TAG_CTRL_EVLS_SHIFT)
-+
-+/* MAC VLAN Tag Data/Filter */
-+#define GMAC_VLAN_TAG_DATA_VID		GENMASK(15, 0)
-+#define GMAC_VLAN_TAG_DATA_VEN		BIT(16)
-+#define GMAC_VLAN_TAG_DATA_ETV		BIT(17)
-+
- /* MAC RX Queue Enable */
- #define GMAC_RX_QUEUE_CLEAR(queue)	~(GENMASK(1, 0) << ((queue) * 2))
- #define GMAC_RX_AV_QUEUE_ENABLE(queue)	BIT((queue) * 2)
-@@ -248,6 +272,7 @@ enum power_event {
- #define GMAC_HW_FEAT_FRPBS		GENMASK(12, 11)
- #define GMAC_HW_FEAT_FRPSEL		BIT(10)
- #define GMAC_HW_FEAT_DVLAN		BIT(5)
-+#define GMAC_HW_FEAT_NRVF		GENMASK(2, 0)
- 
- /* MAC HW ADDR regs */
- #define GMAC_HI_DCS			GENMASK(18, 16)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index dc09d2131e40..39692d15d80c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -394,6 +394,156 @@ static void dwmac4_set_eee_timer(struct mac_device_info *hw, int ls, int tw)
- 	writel(value, ioaddr + GMAC4_LPI_TIMER_CTRL);
- }
- 
-+static void dwmac4_write_single_vlan(struct net_device *dev, u16 vid)
-+{
-+	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
-+	u32 val;
-+
-+	val = readl(ioaddr + GMAC_VLAN_TAG);
-+	val &= ~GMAC_VLAN_TAG_VID;
-+	val |= GMAC_VLAN_TAG_ETV | vid;
-+
-+	writel(val, ioaddr + GMAC_VLAN_TAG);
-+}
-+
-+static int dwmac4_write_vlan_filter(struct net_device *dev,
-+				    struct mac_device_info *hw,
-+				    u8 index, u32 data)
-+{
-+	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
-+	int i, timeout = 10;
-+	u32 val;
-+
-+	if (index >= hw->num_vlan)
-+		return -EINVAL;
-+
-+	writel(data, ioaddr + GMAC_VLAN_TAG_DATA);
-+
-+	val = readl(ioaddr + GMAC_VLAN_TAG);
-+	val &= ~(GMAC_VLAN_TAG_CTRL_OFS_MASK |
-+		GMAC_VLAN_TAG_CTRL_CT |
-+		GMAC_VLAN_TAG_CTRL_OB);
-+	val |= (index << GMAC_VLAN_TAG_CTRL_OFS_SHIFT) | GMAC_VLAN_TAG_CTRL_OB;
-+
-+	writel(val, ioaddr + GMAC_VLAN_TAG);
-+
-+	for (i = 0; i < timeout; i++) {
-+		val = readl(ioaddr + GMAC_VLAN_TAG);
-+		if (!(val & GMAC_VLAN_TAG_CTRL_OB))
-+			return 0;
-+		udelay(1);
-+	}
-+
-+	netdev_err(dev, "Timeout accessing MAC_VLAN_Tag_Filter\n");
-+
-+	return -EBUSY;
-+}
-+
-+static int dwmac4_add_hw_vlan_rx_fltr(struct net_device *dev,
-+				      struct mac_device_info *hw,
-+				      __be16 proto, u16 vid)
-+{
-+	int index = -1;
-+	u32 val = 0;
-+	int i, ret;
-+
-+	if (vid > 4095)
-+		return -EINVAL;
-+
-+	/* Single Rx VLAN Filter */
-+	if (hw->num_vlan == 1) {
-+		/* For single VLAN filter, VID 0 means VLAN promiscuous */
-+		if (vid == 0) {
-+			netdev_warn(dev, "Adding VLAN ID 0 is not supported\n");
-+			return -EPERM;
-+		}
-+
-+		if (hw->vlan_filter[0] & GMAC_VLAN_TAG_VID) {
-+			netdev_err(dev, "Only single VLAN ID supported\n");
-+			return -EPERM;
-+		}
-+
-+		hw->vlan_filter[0] = vid;
-+		dwmac4_write_single_vlan(dev, vid);
-+
-+		return 0;
-+	}
-+
-+	/* Extended Rx VLAN Filter Enable */
-+	val |= GMAC_VLAN_TAG_DATA_ETV | GMAC_VLAN_TAG_DATA_VEN | vid;
-+
-+	for (i = 0; i < hw->num_vlan; i++) {
-+		if (hw->vlan_filter[i] == val)
-+			return 0;
-+		else if (!(hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VEN))
-+			index = i;
-+	}
-+
-+	if (index == -1) {
-+		netdev_err(dev, "MAC_VLAN_Tag_Filter full (size: %0u)\n",
-+			   hw->num_vlan);
-+		return -EPERM;
-+	}
-+
-+	ret = dwmac4_write_vlan_filter(dev, hw, index, val);
-+
-+	if (!ret)
-+		hw->vlan_filter[index] = val;
-+
-+	return ret;
-+}
-+
-+static int dwmac4_del_hw_vlan_rx_fltr(struct net_device *dev,
-+				      struct mac_device_info *hw,
-+				      __be16 proto, u16 vid)
-+{
-+	int i, ret = 0;
-+
-+	/* Single Rx VLAN Filter */
-+	if (hw->num_vlan == 1) {
-+		if ((hw->vlan_filter[0] & GMAC_VLAN_TAG_VID) == vid) {
-+			hw->vlan_filter[0] = 0;
-+			dwmac4_write_single_vlan(dev, 0);
-+		}
-+		return 0;
-+	}
-+
-+	/* Extended Rx VLAN Filter Enable */
-+	for (i = 0; i < hw->num_vlan; i++) {
-+		if ((hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VID) == vid) {
-+			ret = dwmac4_write_vlan_filter(dev, hw, i, 0);
-+
-+			if (!ret)
-+				hw->vlan_filter[i] = 0;
-+			else
-+				return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static void dwmac4_restore_hw_vlan_rx_fltr(struct net_device *dev,
-+					   struct mac_device_info *hw)
-+{
-+	u32 val;
-+	int i;
-+
-+	/* Single Rx VLAN Filter */
-+	if (hw->num_vlan == 1) {
-+		dwmac4_write_single_vlan(dev, hw->vlan_filter[0]);
-+		return;
-+	}
-+
-+	/* Extended Rx VLAN Filter Enable */
-+	for (i = 0; i < hw->num_vlan; i++) {
-+		if (hw->vlan_filter[i] & GMAC_VLAN_TAG_DATA_VEN) {
-+			val = hw->vlan_filter[i];
-+			dwmac4_write_vlan_filter(dev, hw, i, val);
-+		}
-+	}
-+}
-+
- static void dwmac4_set_filter(struct mac_device_info *hw,
- 			      struct net_device *dev)
- {
-@@ -469,6 +619,10 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 		}
- 	}
- 
-+	/* VLAN filtering */
-+	if (dev->features & NETIF_F_HW_VLAN_CTAG_FILTER)
-+		value |= GMAC_PACKET_FILTER_VTFE;
-+
- 	writel(value, ioaddr + GMAC_PACKET_FILTER);
- }
- 
-@@ -947,6 +1101,9 @@ const struct stmmac_ops dwmac4_ops = {
- 	.set_arp_offload = dwmac4_set_arp_offload,
- 	.config_l3_filter = dwmac4_config_l3_filter,
- 	.config_l4_filter = dwmac4_config_l4_filter,
-+	.add_hw_vlan_rx_fltr = dwmac4_add_hw_vlan_rx_fltr,
-+	.del_hw_vlan_rx_fltr = dwmac4_del_hw_vlan_rx_fltr,
-+	.restore_hw_vlan_rx_fltr = dwmac4_restore_hw_vlan_rx_fltr,
- };
- 
- const struct stmmac_ops dwmac410_ops = {
-@@ -987,6 +1144,9 @@ const struct stmmac_ops dwmac410_ops = {
- 	.config_l4_filter = dwmac4_config_l4_filter,
- 	.est_configure = dwmac5_est_configure,
- 	.fpe_configure = dwmac5_fpe_configure,
-+	.add_hw_vlan_rx_fltr = dwmac4_add_hw_vlan_rx_fltr,
-+	.del_hw_vlan_rx_fltr = dwmac4_del_hw_vlan_rx_fltr,
-+	.restore_hw_vlan_rx_fltr = dwmac4_restore_hw_vlan_rx_fltr,
- };
- 
- const struct stmmac_ops dwmac510_ops = {
-@@ -1032,8 +1192,42 @@ const struct stmmac_ops dwmac510_ops = {
- 	.config_l4_filter = dwmac4_config_l4_filter,
- 	.est_configure = dwmac5_est_configure,
- 	.fpe_configure = dwmac5_fpe_configure,
-+	.add_hw_vlan_rx_fltr = dwmac4_add_hw_vlan_rx_fltr,
-+	.del_hw_vlan_rx_fltr = dwmac4_del_hw_vlan_rx_fltr,
-+	.restore_hw_vlan_rx_fltr = dwmac4_restore_hw_vlan_rx_fltr,
- };
- 
-+static u32 dwmac4_get_num_vlan(void __iomem *ioaddr)
-+{
-+	u32 val, num_vlan;
-+
-+	val = readl(ioaddr + GMAC_HW_FEATURE3);
-+	switch (val & GMAC_HW_FEAT_NRVF) {
-+	case 0:
-+		num_vlan = 1;
-+		break;
-+	case 1:
-+		num_vlan = 4;
-+		break;
-+	case 2:
-+		num_vlan = 8;
-+		break;
-+	case 3:
-+		num_vlan = 16;
-+		break;
-+	case 4:
-+		num_vlan = 24;
-+		break;
-+	case 5:
-+		num_vlan = 32;
-+		break;
-+	default:
-+		num_vlan = 1;
-+	}
-+
-+	return num_vlan;
-+}
-+
- int dwmac4_setup(struct stmmac_priv *priv)
- {
- 	struct mac_device_info *mac = priv->hw;
-@@ -1062,6 +1256,7 @@ int dwmac4_setup(struct stmmac_priv *priv)
- 	mac->mii.reg_mask = GENMASK(20, 16);
- 	mac->mii.clk_csr_shift = 8;
- 	mac->mii.clk_csr_mask = GENMASK(11, 8);
-+	mac->num_vlan = dwmac4_get_num_vlan(priv->ioaddr);
- 
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index fc350149ba34..ffe2d63389b8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -369,6 +369,14 @@ struct stmmac_ops {
- 	void (*update_vlan_hash)(struct mac_device_info *hw, u32 hash,
- 				 __le16 perfect_match, bool is_double);
- 	void (*enable_vlan)(struct mac_device_info *hw, u32 type);
-+	int (*add_hw_vlan_rx_fltr)(struct net_device *dev,
-+				   struct mac_device_info *hw,
-+				   __be16 proto, u16 vid);
-+	int (*del_hw_vlan_rx_fltr)(struct net_device *dev,
-+				   struct mac_device_info *hw,
-+				   __be16 proto, u16 vid);
-+	void (*restore_hw_vlan_rx_fltr)(struct net_device *dev,
-+					struct mac_device_info *hw);
- 	/* TX Timestamp */
- 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
- 	/* Source Address Insertion / Replacement */
-@@ -461,6 +469,12 @@ struct stmmac_ops {
- 	stmmac_do_void_callback(__priv, mac, update_vlan_hash, __args)
- #define stmmac_enable_vlan(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, mac, enable_vlan, __args)
-+#define stmmac_add_hw_vlan_rx_fltr(__priv, __args...) \
-+	stmmac_do_callback(__priv, mac, add_hw_vlan_rx_fltr, __args)
-+#define stmmac_del_hw_vlan_rx_fltr(__priv, __args...) \
-+	stmmac_do_callback(__priv, mac, del_hw_vlan_rx_fltr, __args)
-+#define stmmac_restore_hw_vlan_rx_fltr(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, restore_hw_vlan_rx_fltr, __args)
- #define stmmac_get_mac_tx_timestamp(__priv, __args...) \
- 	stmmac_do_callback(__priv, mac, get_mac_tx_timestamp, __args)
- #define stmmac_sarc_configure(__priv, __args...) \
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 0e8c80f23557..2fb671e61ee8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4566,6 +4566,8 @@ static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid
- 		return ret;
- 	}
- 
-+	ret = stmmac_add_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
-+
- 	return ret;
- }
- 
-@@ -4573,11 +4575,16 @@ static int stmmac_vlan_rx_kill_vid(struct net_device *ndev, __be16 proto, u16 vi
- {
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	bool is_double = false;
-+	int ret;
- 
- 	if (be16_to_cpu(proto) == ETH_P_8021AD)
- 		is_double = true;
- 
- 	clear_bit(vid, priv->active_vlans);
-+	ret = stmmac_del_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
-+	if (ret)
-+		return ret;
-+
- 	return stmmac_vlan_update(priv, is_double);
- }
- 
-@@ -5168,6 +5175,8 @@ int stmmac_resume(struct device *dev)
- 	stmmac_init_coalesce(priv);
- 	stmmac_set_rx_mode(ndev);
- 
-+	stmmac_restore_hw_vlan_rx_fltr(priv, ndev, priv->hw);
-+
- 	stmmac_enable_all_queues(priv);
- 
- 	stmmac_start_all_queues(priv);
--- 
-2.17.0
-
+Thanks,
+Quentin
