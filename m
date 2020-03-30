@@ -2,174 +2,165 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABFBC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D968FC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11AA2206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="sP6sbF/n"
+	by mail.kernel.org (Postfix) with ESMTP id ABF2D2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 16:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585584106;
+	bh=Xc7O8iV7oH1vYdIsM8wmcoSm/BKP36yg0ZNx3YhB9lU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xff76i8RW+USUeMK8w/7cudzNUXt9V5moOjHC3207nSg7nQgN9zldTFsaaWR5KUTe
+	 iMZxvizNa2ryJQEyE/jrHEh+HBzWlTF0JFeeuVBu0tT6yT+uIO9gUehcn7XwhVB7Am
+	 lpJM/MjChIP+nH/dpZqenHwJOjlImJWJ9AXhbrTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgC3P6r (ORCPT
+        id S1729833AbgC3QBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:58:47 -0400
-Received: from mail-co1nam11on2087.outbound.protection.outlook.com ([40.107.220.87]:46088
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726497AbgC3P6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:58:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XaDN8a8c9dwQtf8C9+Ni3kwn9LvObOmSaZ18dnuDSWVwLRVXccQa6i16BCi7urNno7ymnjqQK2109WlTiqspgKxNgVUa5ASwealurC4oAHaNg4w3CgJuKYBH7Spwb2jlStcatNTz11yuf4zTd1NwbzTmyLSQp/Y1VBqtcmlHEgfU0rvRpFerYUjjIdQbJIPgUp7T0VZBLy3ThmHA88dKdYtEAyP7ViwMl8CVfD1VtSzkPOIGqWVwLTu3d1h9WHdG9TGqP9E+DGTaPeIHnOANh6z8Bxspkkx+sD6vRbazWzFPcqVLuHO2OeZFU8fpgD3xMTVOxmKu9wAq5+u9NgPMUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2AQ6sG5Z6R9bUGNf32OXilfz65NnmNmFO6yIPgxDR64=;
- b=OpP1zerXHz6jWKSHw1eQ+kuDCZkLgar+kaeSe+dngN+bI9ZQ9qx1tBX/iz154r/GRClZ19sM31hgvuOSjQZFRLpLvaF9exVEWi8IZpwzWm3NzkgL19oF5VtYaKZmhVWnNYpNnIx2mqqFikmkyy1dxZN6VAVKyD/qu8tbnbEMCsZcIrf7dibWTBctNBGm1Lio0kxtUBmgIY9ehcnuH5l4+TrLnYitFBAvbKzx58tsgDrdiPxMIJBN/3BQcgbzlqjinJ3aoFbRjcWLHZ2wb7XCTs8b3xCzkGV/jtI1Qle8ly655oXw8s1XArOOh3zJa8prGtZP7xPEb4EULF2MU+5DPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2AQ6sG5Z6R9bUGNf32OXilfz65NnmNmFO6yIPgxDR64=;
- b=sP6sbF/nlUpe5hGWITxIqlOLu51JAmzfPuwNmEJ+CZk9qB4jwNW+6n6MYSW8w6FTZO0OofUvvcUHVPsNUg2wHVKtCRXGRLAKpI2QsdtPK3oOxTpcmKgsM3/DOR7FK6h4e9A3COdxwjuk5n9xqEzC2yNONvvpNk0ZzJV9bHH/SPg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-Received: from SA0PR12MB4400.namprd12.prod.outlook.com (2603:10b6:806:95::13)
- by SA0PR12MB4525.namprd12.prod.outlook.com (2603:10b6:806:92::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Mon, 30 Mar
- 2020 15:58:32 +0000
-Received: from SA0PR12MB4400.namprd12.prod.outlook.com
- ([fe80::60d9:da58:71b4:35f3]) by SA0PR12MB4400.namprd12.prod.outlook.com
- ([fe80::60d9:da58:71b4:35f3%7]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 15:58:32 +0000
-Cc:     brijesh.singh@amd.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
-        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rientjes@google.com,
-        srutherford@google.com, luto@kernel.org
-Subject: Re: [PATCH v6 14/14] KVM: x86: Add kexec support for SEV Live
- Migration.
-To:     Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com
-References: <cover.1585548051.git.ashish.kalra@amd.com>
- <0caf809845d2fdb1a1ec17955826df9777f502fb.1585548051.git.ashish.kalra@amd.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <95d6d6e3-21d5-17c3-a0a5-dc0bac6d87ca@amd.com>
-Date:   Mon, 30 Mar 2020 11:00:14 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
-In-Reply-To: <0caf809845d2fdb1a1ec17955826df9777f502fb.1585548051.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: SN4PR0701CA0042.namprd07.prod.outlook.com
- (2603:10b6:803:2d::16) To SA0PR12MB4400.namprd12.prod.outlook.com
- (2603:10b6:806:95::13)
+        Mon, 30 Mar 2020 12:01:45 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:38631 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729573AbgC3QBp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:01:45 -0400
+Received: by mail-il1-f193.google.com with SMTP id n13so8976310ilm.5;
+        Mon, 30 Mar 2020 09:01:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ktt/Ga61qSWOmRmSZ17FaWn00l58rTu6NHlMsu22H60=;
+        b=SL/pteOzgd23ELhY5Tq0U1+NcyQXpwCnvfn3j5iX34qqa4ffj9GXzgVArRyli8ljTy
+         vDjycy1imRIIlv/awls9F0XF4dCKSpUD/HK3spvT64+37Leu/TvLFmKEHpnmu30/e826
+         Tp5cEDYzcEjDOui0UqjfEx14dC6uhnKXAL1vp0tIpjAthZQ7ZOJWb5LTz5BV8ewJa8es
+         XhuL7SlwcuHxZ6THbqw1F8vwh1rWzDqOKeRmUJnE+GWV5m6s3oILBOGaZfbTXpoC5nFc
+         EKpiIvDqcgQiRztgWM44I+EnJLazIdPcowkpCLdE9BM9BrziVSiBP9W4ZP4wwSGzZ5sv
+         XnfQ==
+X-Gm-Message-State: ANhLgQ0y87DW3HcwezWUDteW85qt69+0qfaxptvIY6YhpiNVdgiTytxf
+        5UNyjs46TGoRMGDt4O/lKQ==
+X-Google-Smtp-Source: ADFU+vuHJfjdltL5wlWlRwIkMluIpN1VyD7AySpoFLGDLUOGl3dNS864QY56ABH3/8lhbGCyhvlP3w==
+X-Received: by 2002:a92:3b56:: with SMTP id i83mr11919046ila.75.1585584104462;
+        Mon, 30 Mar 2020 09:01:44 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id i6sm5015642ila.20.2020.03.30.09.01.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 09:01:43 -0700 (PDT)
+Received: (nullmailer pid 24386 invoked by uid 1000);
+        Mon, 30 Mar 2020 16:01:42 -0000
+Date:   Mon, 30 Mar 2020 10:01:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate
+ inbound/outbound specific bindings
+Message-ID: <20200330160142.GA6259@bogus>
+References: <20200327104727.4708-1-kishon@ti.com>
+ <20200327104727.4708-2-kishon@ti.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Brijeshs-MacBook-Pro.local (70.112.153.56) by SN4PR0701CA0042.namprd07.prod.outlook.com (2603:10b6:803:2d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend Transport; Mon, 30 Mar 2020 15:58:31 +0000
-X-Originating-IP: [70.112.153.56]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 354852f2-21e0-4d3d-1c3f-08d7d4c33220
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4525:|SA0PR12MB4525:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4525E7D418855DBB55DBEAFBE5CB0@SA0PR12MB4525.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
-X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4400.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(36756003)(6506007)(6512007)(6486002)(31696002)(81166006)(8676002)(478600001)(31686004)(2906002)(86362001)(81156014)(316002)(7416002)(6666004)(5660300002)(52116002)(53546011)(66946007)(8936002)(44832011)(16526019)(186003)(26005)(4326008)(66556008)(2616005)(956004)(66476007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mgJxNrHSVyTAj7q1FnfKf27XRWvilUGXWkA5jgOMg8RXYIKdoX/Kl72pihrhjMhhzyrv0x4X7cNwLxZ109iQKX2QDiM99ycfLENGu1BPBUZMrcNNf0V71hfs5ea1HhmIgtteWrNHC9Rway1lkrh87fy/2Jd3wPYkTi9d75+iM6dqxrl8tPamBOwQBrfMMYVko8elhPQUh1AEVAv2mjHPkpfrAHajyk0nxpdjbdN7oKgfdAOH2N1LZqDCVJbj8BzPZ5nROYisdsrmtXkH8liMRuVsjI4jtGf7vensHJJYHs9uwsFwIDXkuoMhUc17uw479+NuMOh7MYYOzwLTcUoD7MZU/wR3trie1kSiHbba+UkPB5P4fZpfyWbUpLedHmIr1QZnwBsYMB1pgtmowGxtCbV0nDtwKYeBqltuTee3EH0Me8159ZZ83y5s2qn0Xf6k
-X-MS-Exchange-AntiSpam-MessageData: fqkL9itcBq42SMCJk5QgM3nTrtdbmHZpRTi/JMyE0OW+ZwBixTxZLk54rQXR/4ACRvEhXxNJbE8F5m3wjuX4BZswg2bzfapLPsEVcYXBolKAqPR8dVY6NIk/dJnsDk1l2/19q9JzVZz0Tiz3xs01CA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 354852f2-21e0-4d3d-1c3f-08d7d4c33220
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 15:58:32.2334
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1bop3KTD6kbqLqcyo1gVpw2N7YUNOM6Hhkd4dMNwW6IzUb1kTwop23rfP+Vvmv0W8CvORNUBupJWJbHrGJAHBw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4525
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327104727.4708-2-kishon@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/30/20 1:23 AM, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
->
-> Reset the host's page encryption bitmap related to kernel
-> specific page encryption status settings before we load a
-> new kernel by kexec. We cannot reset the complete
-> page encryption bitmap here as we need to retain the
-> UEFI/OVMF firmware specific settings.
->
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+On Fri, Mar 27, 2020 at 04:17:25PM +0530, Kishon Vijay Abraham I wrote:
+> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
+> host mode as both these could be derived from "ranges" and "dma-ranges"
+> property. "cdns,max-outbound-regions" property would still be required
+> for EP mode.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 8fcee0b45231..ba6cce3c84af 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -34,6 +34,7 @@
->  #include <asm/hypervisor.h>
->  #include <asm/tlb.h>
->  #include <asm/cpuidle_haltpoll.h>
-> +#include <asm/e820/api.h>
+>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+>  5 files changed, 37 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> index 2996f8d4777c..50ce5d79d2c7 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> @@ -10,7 +10,7 @@ maintainers:
+>    - Tom Joseph <tjoseph@cadence.com>
 >  
->  static int kvmapf = 1;
+>  allOf:
+> -  - $ref: "cdns-pcie.yaml#"
+> +  - $ref: "cdns-pcie-ep.yaml#"
+>    - $ref: "pci-ep.yaml#"
 >  
-> @@ -357,6 +358,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
->  	 */
->  	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
->  		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
-> +	/*
-> +	 * Reset the host's page encryption bitmap related to kernel
-> +	 * specific page encryption status settings before we load a
-> +	 * new kernel by kexec. NOTE: We cannot reset the complete
-> +	 * page encryption bitmap here as we need to retain the
-> +	 * UEFI/OVMF firmware specific settings.
-> +	 */
-> +	if (kvm_para_has_feature(KVM_FEATURE_SEV_LIVE_MIGRATION) &&
-> +		(smp_processor_id() == 0)) {
-
-
-In patch 13/14, the KVM_FEATURE_SEV_LIVE_MIGRATION is set
-unconditionally and because of that now the below code will be executed
-on non-SEV guest. IMO, this feature must be cleared for non-SEV guest to
-avoid making unnecessary hypercall's.
-
-
-> +		unsigned long nr_pages;
-> +		int i;
+>  properties:
+> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> index cabbe46ff578..84a8f095d031 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> @@ -45,8 +45,6 @@ examples:
+>              #size-cells = <2>;
+>              bus-range = <0x0 0xff>;
+>              linux,pci-domain = <0>;
+> -            cdns,max-outbound-regions = <16>;
+> -            cdns,no-bar-match-nbits = <32>;
+>              vendor-id = <0x17cd>;
+>              device-id = <0x0200>;
+>  
+> @@ -57,6 +55,7 @@ examples:
+>  
+>              ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+>                       <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
+> +            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
+>  
+>              #interrupt-cells = <0x1>;
+>  
+> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> new file mode 100644
+> index 000000000000..6150a7a7bdbf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> @@ -0,0 +1,25 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +		for (i = 0; i < e820_table->nr_entries; i++) {
-> +			struct e820_entry *entry = &e820_table->entries[i];
-> +			unsigned long start_pfn, end_pfn;
+> +title: Cadence PCIe Device
 > +
-> +			if (entry->type != E820_TYPE_RAM)
-> +				continue;
+> +maintainers:
+> +  - Tom Joseph <tjoseph@cadence.com>
 > +
-> +			start_pfn = entry->addr >> PAGE_SHIFT;
-> +			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-> +			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
+> +allOf:
+> +  - $ref: "cdns-pcie.yaml#"
 > +
-> +			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-> +				entry->addr, nr_pages, 1);
-> +		}
-> +	}
->  	kvm_pv_disable_apf();
->  	kvm_disable_steal_time();
->  }
+> +properties:
+> +  cdns,max-outbound-regions:
+> +    description: maximum number of outbound regions
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 32
+> +    default: 32
+
+I have a feeling that as the PCI endpoint binding evolves this won't be 
+necessary. I can see a common need to define the number of BARs for an 
+endpoint and then this will again just be error checking.
+
+What's the result if you write to a non-existent region in register 
+CDNS_PCIE_AT_OB_REGION_PCI_ADDR0/1? If the register is non-existent and 
+doesn't abort, you could detect this instead.
+
+Rob
