@@ -2,52 +2,52 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B483C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0197C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321CB20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98942076A
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WjYdmOhY"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0wlmazFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgC3Bfb (ORCPT
+        id S1728576AbgC3Bfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:35:31 -0400
-Received: from mail-eopbgr750057.outbound.protection.outlook.com ([40.107.75.57]:6492
+        Sun, 29 Mar 2020 21:35:50 -0400
+Received: from mail-eopbgr750052.outbound.protection.outlook.com ([40.107.75.52]:4518
         "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728333AbgC3Bfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:35:30 -0400
+        id S1727954AbgC3Bft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 29 Mar 2020 21:35:49 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ffaQ+cSfgZAJ45uVBCqcIbklMrdV+5Dwj1n7OUV2JNobuVoNNVtojib+2ahk3nTHzO9zGvlYcnjsohuC5Uu8LgXwYusArnQvwQYXMWmzkmMFhLQpMPjr0YbI9jZjZJwBCF26c1z/o6ehxhFZ0M3wQ7d7fkBP3TeDgnn6QfRRTD/UpHSEciMLBkCYqs79m68LXfCC9AuY1pg7PdiDGIW1uKA0rIq8df+L21KqOW7Mi199Lq8I7V8GdBk8gpZlM4iR9QbsQfsKkA1U0kmQ3Sj5EnW8N2sms/rmIDT1EfvwXs9X85bfo0S+8dS1Z+avpXvG1SqD+4JW36k+20YId90/jw==
+ b=bDuVqgxLnhkz9LttfW0aUA+TK5G23egxFxX+BbSayUYgu9/NE+JrAZb2/7qN3biEez3blwH366effWhuCUhEA9w0ePFlatO4F+uvE8xLv6eOzaxS/vz4cBTwMgFv9Iw/Jfu+911Ih52OWQZ099UnyQNYM3fpbIO+MbKq0sYxzW0wt6Z42hDmcnxTihr9m++NDDb8rwJm4c+om/1tc5N9QmqQXwQ/mE2vZ8Pfw9xrzc8o1uaBoMR6dkdF4MnEuWymydbsMNJTs032/T0Pd39Qde39o88VL29u/sJM2E9eGx2zSaTnH/6eJnbM7ORSm3eYBWsWE2oU77Ei4VIoeozCpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rjNjizM2G0T7+C7VEkNBPnrtlTTrAO5qxWvmKQ4fvJQ=;
- b=ionaYu/+VVyvRVXxMISiBsSTlo646H8d+/VpIP/GrS4Kxh4fY3PCM3rxwzt9gU+uJFRlmAEidj5nvkV/qJL+1m5qBN177pQiJvhR5+AxlPHPeDjXcNg8lmkFwFJ/KH2qRCmCmw+pkzTZAY+XJ3m1SGjYxQJFwSg0ccgYz/R/tGDpJYtPuYR2Y3eWdZ5oACpOXMChVs0cCQgAWjFRx0izZbTc4Hr02SEQUIMq9CgtEJmSTn4qdKtVv7OJcoxnl0Vi1A+inbrKVraxRd47fGZBXNLKhRigd2oENRsyaHUWui5EiBDdFVoLy8hM6b1pAjIa1NnTE4Kq0WrtpXXG73q0Xg==
+ bh=zJuY1bwe+LrxCM2EkNzzPXVKo8EfquN0WAI8ekNFYCs=;
+ b=Jj45yfedUA9BejDK1Oczd+v33ad/C2VdU2uSrZiqFCoVlor6/7abwFpU5otmsfPEJy2GoW8uyV9mkjogGaIZ8gdq3Jv7NyPWkoBwjgKaTU5IM2Z80I92DxQZg03nl4Xy9ejBLkMI/Xk14b+1fRkpX+VBf74UmJIAeBjjyKINwk3R72HomCi/fNOybYarlVkk9c/XfI5bs+zxPYPAAcXwaEURZH58UqedYHuCRhqsQkZUOsXDduQAozEf8yRtU6pCrs2q7rLmqT5cmOJeMEEbuJ7+5TwsO7nltewRmqYrUJZghgVeiOPfP5dnyYk+41UJN+geHJg2RN0qQ6gpWfdWjA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rjNjizM2G0T7+C7VEkNBPnrtlTTrAO5qxWvmKQ4fvJQ=;
- b=WjYdmOhY5YmBHJVkAU/01hJctZLapRTDcSx2cPixgeZDEld9A5O/zWWQEzy4UFA/NW5NAQEyxIQEEILvYWxlenHOtWheoAvrz5iLr4jgATtX+aC1sc6UQnFOe4dgXwlHL8RhWamjwektFeg/0oXnPTr7IfF+nTCc5tm06WmTLqg=
+ bh=zJuY1bwe+LrxCM2EkNzzPXVKo8EfquN0WAI8ekNFYCs=;
+ b=0wlmazFxhZOqLQSBDc0xuRm9EM9j36bYWBkoCF7aNByW32z+gWEXE1IcVeyKOvVjYajUq9AOT94gcG0lf7F+KruOyiouh7lD995QKGz9t0hxM1gYwB2uMoUMncfT2XBSfcwFCM93afDoTM4k4ZSzon2rvvoWwuM61AJCVMCYbUk=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Ashish.Kalra@amd.com; 
 Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
  DM5PR12MB1387.namprd12.prod.outlook.com (2603:10b6:3:6c::16) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Mon, 30 Mar 2020 01:35:24 +0000
+ 15.20.2856.20; Mon, 30 Mar 2020 01:33:10 +0000
 Received: from DM5PR12MB1386.namprd12.prod.outlook.com
  ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
  ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 01:35:24 +0000
+ 01:33:10 +0000
 From:   Ashish Kalra <Ashish.Kalra@amd.com>
 To:     pbonzini@redhat.com
 Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
@@ -55,227 +55,150 @@ Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
         x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         rientjes@google.com, srutherford@google.com, luto@kernel.org,
         brijesh.singh@amd.com
-Subject: [PATCH v5 05/14] KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
-Date:   Mon, 30 Mar 2020 01:35:15 +0000
-Message-Id: <871a1e89a4dff59f50d9c264c6d9a4cfd0eab50f.1585531159.git.ashish.kalra@amd.com>
+Subject: [PATCH v5 00/14] Add AMD SEV guest live migration support
+Date:   Mon, 30 Mar 2020 01:32:57 +0000
+Message-Id: <cover.1585531159.git.ashish.kalra@amd.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1585531159.git.ashish.kalra@amd.com>
-References: <cover.1585531159.git.ashish.kalra@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN1PR12CA0065.namprd12.prod.outlook.com
- (2603:10b6:802:20::36) To DM5PR12MB1386.namprd12.prod.outlook.com
+X-ClientProxiedBy: DM5PR2001CA0010.namprd20.prod.outlook.com
+ (2603:10b6:4:16::20) To DM5PR12MB1386.namprd12.prod.outlook.com
  (2603:10b6:3:77::9)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by SN1PR12CA0065.namprd12.prod.outlook.com (2603:10b6:802:20::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend Transport; Mon, 30 Mar 2020 01:35:23 +0000
+Received: from ashkalra_ubuntu_server.amd.com (165.204.77.1) by DM5PR2001CA0010.namprd20.prod.outlook.com (2603:10b6:4:16::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Mon, 30 Mar 2020 01:33:09 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [165.204.77.1]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 89512194-7c45-4c93-a713-08d7d44a9e64
+X-MS-Office365-Filtering-Correlation-Id: d9af49f2-5158-4eab-e9ba-08d7d44a4e16
 X-MS-TrafficTypeDiagnostic: DM5PR12MB1387:|DM5PR12MB1387:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB13870556DB78B8D2ACE439368ECB0@DM5PR12MB1387.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1387F6097C91803B4C65A2D58ECB0@DM5PR12MB1387.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 0358535363
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(186003)(66574012)(66556008)(6666004)(66476007)(86362001)(6916009)(66946007)(316002)(4326008)(7696005)(52116002)(5660300002)(6486002)(16526019)(26005)(36756003)(478600001)(7416002)(81166006)(81156014)(8936002)(2616005)(8676002)(2906002)(956004)(136400200001);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1386.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(186003)(66556008)(6666004)(66476007)(86362001)(6916009)(66946007)(316002)(4326008)(7696005)(52116002)(5660300002)(6486002)(16526019)(26005)(36756003)(966005)(478600001)(7416002)(81166006)(81156014)(8936002)(2616005)(8676002)(2906002)(956004)(136400200001);DIR:OUT;SFP:1101;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uhVIrBe0zcxJEPOBgZhnBdVaCTSGsUMM5VydSB7uNSokat/J7JUUi1pb87sXurG5DXSpaGF2aFkzvkVByDbm50gjznk2IfqZoupjp7lsgsMFtiZp3oD4+wa1iCHqI4f+x6lh4SbVge3uygMDv0RMHQCG0zaOwwF9HMiPv6SYzkM3UCrIm6aTpkR5LdSYcPVk36xlmpv/y+252vwODZ5j+OgmurhNws75CvpuX8KJFzdDltAmqctU1Wn/i9VoIZ94kjWQzPsfqpe5ytOb2UDcBP7CUK3L9vS+B5aMlU5Sln5EPjPxcjDSvfC/oM4FxoTED6hQvk3jGgoBFdif0stzE6MCE4Y0NJrtY6WFmwDodwkerNoXo2yAClrOR+8GzKk10dd12Zq6Y2wOOhByiV448RONWpW7eSNz+8cXSOLdP+yDYotXnL3V/XBqfS6QiVC11ph5yn/AiG6zjqUFdTpV6l6y3jeam1jYv1UDyMR63kZ3THGDtCVQKbeNglrv5q52
-X-MS-Exchange-AntiSpam-MessageData: SKM8OLeA+BLZL/x7sebTEjb0z1nUjD0l7oeSNnMljLcW7nnp6ouITm6jGlq/2qM+oHQd/74SZv6wOEJfV9KMVWd698YOBCDcUtYHkShHo7QWDzBb0FUuwDaXIKAIWWHasFmMeXwklIEpSDuAnEhrkA==
+X-Microsoft-Antispam-Message-Info: wiuSB24KUMUK9A357aX7Woi6F9W/VGonSTyQOmURFjncZK/V21xEAeJSkadTEI3h7tZhTBmzXYp9Nizd4zMjZ74RrmHefyE73v9ME+SXqJte3IRKleu6z6WAZ8ZPL47GOE8FTgyed/gCclBPF68z73NQZzstcM8ubApCuF5TTiwJGV5GCeKFUXFLZLqe7dIsHmFXiQfL0nAEpjcFxa76cnjqdeXTaP9ShwpXc9RX0D50Fs2v5e2EyZR952N6xOjczMpec2LHDqOFwvr6Hj8XOzg0z3taHQPyRCph0hW9oluZT2ujJnF6xj7ExIAadCN0vKOw0T+3yU3EEBUS/Xqfd4SV2FHMEZpHkGDoHhDXHEH/c0lMFnOl8U4yuh/QIQH5DAyzD96+OngFr6tQkXFqIrfsREFjDw8Qijpne5sAw12d31cqRdvTSi88jFWGkECK4ULGOFvFFnGJI4n7fAOfp3uqOaunL3GvSIo1YLpJmhAnwap/h4RDc36Z46IcqTkD67VW3d6RaVM17sdWCON62MLFlrScIT6dShRfgoJed+/3xLsosRZiRIPWddnIxJfdiKk4ZGlaZ/ps+zE2t85eZg==
+X-MS-Exchange-AntiSpam-MessageData: UKjZ40Zwb9o2+mPWYxApRaZtH2uqSKYzFwnRy4G6guEvPIabwqgjELGwVBkrzazEzl4PNWQfvjAyOMqi2R/UBALlih07kKNk8jNd9LzxbCWIP0FJ7fckz3QgsZlCeC4TsrzCPA2BC6ZpE6CDpwQLWQ==
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 89512194-7c45-4c93-a713-08d7d44a9e64
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 01:35:24.7978
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9af49f2-5158-4eab-e9ba-08d7d44a4e16
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2020 01:33:10.1286
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T/nOYS+nxDlnBgnVz5x30EYtqSc5CVYmIh1WRljwQVO1SatD4T3n3Gss/RN3KDlvUOxT52OBvNI9dp5ljhDMLQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: BD6uYHcS/kcLWLOxhaGS/z7BQi+vd7+ZT8EamO3g7zEnCteiBkWf9JxE/JfKJwgZr+ojPgXQdRNlXTGtKXvXqA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1387
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brijesh Singh <Brijesh.Singh@amd.com>
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-The command is used for copying the incoming buffer into the
-SEV guest memory space.
+The series add support for AMD SEV guest live migration commands. To protect the
+confidentiality of an SEV protected guest memory while in transit we need to
+use the SEV commands defined in SEV API spec [1].
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: x86@kernel.org
-Cc: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- .../virt/kvm/amd-memory-encryption.rst        | 24 ++++++
- arch/x86/kvm/svm.c                            | 79 +++++++++++++++++++
- include/uapi/linux/kvm.h                      |  9 +++
- 3 files changed, 112 insertions(+)
+SEV guest VMs have the concept of private and shared memory. Private memory
+is encrypted with the guest-specific key, while shared memory may be encrypted
+with hypervisor key. The commands provided by the SEV FW are meant to be used
+for the private memory only. The patch series introduces a new hypercall.
+The guest OS can use this hypercall to notify the page encryption status.
+If the page is encrypted with guest specific-key then we use SEV command during
+the migration. If page is not encrypted then fallback to default.
 
-diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documentation/virt/kvm/amd-memory-encryption.rst
-index ef1f1f3a5b40..554aa33a99cc 100644
---- a/Documentation/virt/kvm/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/amd-memory-encryption.rst
-@@ -351,6 +351,30 @@ On success, the 'handle' field contains a new handle and on error, a negative va
- 
- For more details, see SEV spec Section 6.12.
- 
-+14. KVM_SEV_RECEIVE_UPDATE_DATA
-+----------------------------
-+
-+The KVM_SEV_RECEIVE_UPDATE_DATA command can be used by the hypervisor to copy
-+the incoming buffers into the guest memory region with encryption context
-+created during the KVM_SEV_RECEIVE_START.
-+
-+Parameters (in): struct kvm_sev_receive_update_data
-+
-+Returns: 0 on success, -negative on error
-+
-+::
-+
-+        struct kvm_sev_launch_receive_update_data {
-+                __u64 hdr_uaddr;        /* userspace address containing the packet header */
-+                __u32 hdr_len;
-+
-+                __u64 guest_uaddr;      /* the destination guest memory region */
-+                __u32 guest_len;
-+
-+                __u64 trans_uaddr;      /* the incoming buffer memory region  */
-+                __u32 trans_len;
-+        };
-+
- References
- ==========
- 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 038b47685733..5fc5355536d7 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7497,6 +7497,82 @@ static int sev_receive_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	return ret;
- }
- 
-+static int sev_receive_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
-+{
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+	struct kvm_sev_receive_update_data params;
-+	struct sev_data_receive_update_data *data;
-+	void *hdr = NULL, *trans = NULL;
-+	struct page **guest_page;
-+	unsigned long n;
-+	int ret, offset;
-+
-+	if (!sev_guest(kvm))
-+		return -EINVAL;
-+
-+	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-+			sizeof(struct kvm_sev_receive_update_data)))
-+		return -EFAULT;
-+
-+	if (!params.hdr_uaddr || !params.hdr_len ||
-+	    !params.guest_uaddr || !params.guest_len ||
-+	    !params.trans_uaddr || !params.trans_len)
-+		return -EINVAL;
-+
-+	/* Check if we are crossing the page boundary */
-+	offset = params.guest_uaddr & (PAGE_SIZE - 1);
-+	if ((params.guest_len + offset > PAGE_SIZE))
-+		return -EINVAL;
-+
-+	hdr = psp_copy_user_blob(params.hdr_uaddr, params.hdr_len);
-+	if (IS_ERR(hdr))
-+		return PTR_ERR(hdr);
-+
-+	trans = psp_copy_user_blob(params.trans_uaddr, params.trans_len);
-+	if (IS_ERR(trans)) {
-+		ret = PTR_ERR(trans);
-+		goto e_free_hdr;
-+	}
-+
-+	ret = -ENOMEM;
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		goto e_free_trans;
-+
-+	data->hdr_address = __psp_pa(hdr);
-+	data->hdr_len = params.hdr_len;
-+	data->trans_address = __psp_pa(trans);
-+	data->trans_len = params.trans_len;
-+
-+	/* Pin guest memory */
-+	ret = -EFAULT;
-+	guest_page = sev_pin_memory(kvm, params.guest_uaddr & PAGE_MASK,
-+				    PAGE_SIZE, &n, 0);
-+	if (!guest_page)
-+		goto e_free;
-+
-+	/* The RECEIVE_UPDATE_DATA command requires C-bit to be always set. */
-+	data->guest_address = (page_to_pfn(guest_page[0]) << PAGE_SHIFT) +
-+				offset;
-+	data->guest_address |= sev_me_mask;
-+	data->guest_len = params.guest_len;
-+	data->handle = sev->handle;
-+
-+	ret = sev_issue_cmd(kvm, SEV_CMD_RECEIVE_UPDATE_DATA, data,
-+				&argp->error);
-+
-+	sev_unpin_memory(kvm, guest_page, n);
-+
-+e_free:
-+	kfree(data);
-+e_free_trans:
-+	kfree(trans);
-+e_free_hdr:
-+	kfree(hdr);
-+
-+	return ret;
-+}
-+
- static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- {
- 	struct kvm_sev_cmd sev_cmd;
-@@ -7553,6 +7629,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- 	case KVM_SEV_RECEIVE_START:
- 		r = sev_receive_start(kvm, &sev_cmd);
- 		break;
-+	case KVM_SEV_RECEIVE_UPDATE_DATA:
-+		r = sev_receive_update_data(kvm, &sev_cmd);
-+		break;
- 	default:
- 		r = -EINVAL;
- 		goto out;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 74764b9db5fa..4e80c57a3182 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1588,6 +1588,15 @@ struct kvm_sev_receive_start {
- 	__u32 session_len;
- };
- 
-+struct kvm_sev_receive_update_data {
-+	__u64 hdr_uaddr;
-+	__u32 hdr_len;
-+	__u64 guest_uaddr;
-+	__u32 guest_len;
-+	__u64 trans_uaddr;
-+	__u32 trans_len;
-+};
-+
- #define KVM_DEV_ASSIGN_ENABLE_IOMMU	(1 << 0)
- #define KVM_DEV_ASSIGN_PCI_2_3		(1 << 1)
- #define KVM_DEV_ASSIGN_MASK_INTX	(1 << 2)
+The patch adds new ioctls KVM_{SET,GET}_PAGE_ENC_BITMAP. The ioctl can be used
+by the qemu to get the page encrypted bitmap. Qemu can consult this bitmap
+during the migration to know whether the page is encrypted.
+
+[1] https://developer.amd.com/wp-content/resources/55766.PDF
+
+Changes since v4:
+- Host support has been added to extend KVM capabilities/feature bits to 
+  include a new KVM_FEATURE_SEV_LIVE_MIGRATION, which the guest can
+  query for host-side support for SEV live migration and a new custom MSR
+  MSR_KVM_SEV_LIVE_MIG_EN is added for guest to enable the SEV live
+  migration feature.
+- Ensure that _bss_decrypted section is marked as decrypted in the
+  page encryption bitmap.
+- Fixing KVM_GET_PAGE_ENC_BITMAP ioctl to return the correct bitmap
+  as per the number of pages being requested by the user. Ensure that
+  we only copy bmap->num_pages bytes in the userspace buffer, if
+  bmap->num_pages is not byte aligned we read the trailing bits
+  from the userspace and copy those bits as is. This fixes guest
+  page(s) corruption issues observed after migration completion.
+- Add kexec support for SEV Live Migration to reset the host's
+  page encryption bitmap related to kernel specific page encryption
+  status settings before we load a new kernel by kexec. We cannot
+  reset the complete page encryption bitmap here as we need to
+  retain the UEFI/OVMF firmware specific settings.
+
+Changes since v3:
+- Rebasing to mainline and testing.
+- Adding a new KVM_PAGE_ENC_BITMAP_RESET ioctl, which resets the 
+  page encryption bitmap on a guest reboot event.
+- Adding a more reliable sanity check for GPA range being passed to
+  the hypercall to ensure that guest MMIO ranges are also marked
+  in the page encryption bitmap.
+
+Changes since v2:
+ - reset the page encryption bitmap on vcpu reboot
+
+Changes since v1:
+ - Add support to share the page encryption between the source and target
+   machine.
+ - Fix review feedbacks from Tom Lendacky.
+ - Add check to limit the session blob length.
+ - Update KVM_GET_PAGE_ENC_BITMAP icotl to use the base_gfn instead of
+   the memory slot when querying the bitmap.
+
+Ashish Kalra (3):
+  KVM: x86: Introduce KVM_PAGE_ENC_BITMAP_RESET ioctl
+  KVM: x86: Introduce new KVM_FEATURE_SEV_LIVE_MIGRATION feature &
+    Custom MSR.
+  KVM: x86: Add kexec support for SEV Live Migration.
+
+Brijesh Singh (11):
+  KVM: SVM: Add KVM_SEV SEND_START command
+  KVM: SVM: Add KVM_SEND_UPDATE_DATA command
+  KVM: SVM: Add KVM_SEV_SEND_FINISH command
+  KVM: SVM: Add support for KVM_SEV_RECEIVE_START command
+  KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
+  KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+  KVM: x86: Add AMD SEV specific Hypercall3
+  KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
+  KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
+  mm: x86: Invoke hypercall when page encryption status is changed
+  KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
+
+ .../virt/kvm/amd-memory-encryption.rst        | 120 +++
+ Documentation/virt/kvm/api.rst                |  62 ++
+ Documentation/virt/kvm/cpuid.rst              |   4 +
+ Documentation/virt/kvm/hypercalls.rst         |  15 +
+ Documentation/virt/kvm/msr.rst                |  10 +
+ arch/x86/include/asm/kvm_host.h               |  10 +
+ arch/x86/include/asm/kvm_para.h               |  12 +
+ arch/x86/include/asm/paravirt.h               |   6 +
+ arch/x86/include/asm/paravirt_types.h         |   2 +
+ arch/x86/include/uapi/asm/kvm_para.h          |   5 +
+ arch/x86/kernel/kvm.c                         |  32 +
+ arch/x86/kernel/paravirt.c                    |   1 +
+ arch/x86/kvm/cpuid.c                          |   3 +-
+ arch/x86/kvm/svm.c                            | 698 +++++++++++++++++-
+ arch/x86/kvm/vmx/vmx.c                        |   1 +
+ arch/x86/kvm/x86.c                            |  43 ++
+ arch/x86/mm/mem_encrypt.c                     |  69 +-
+ arch/x86/mm/pat/set_memory.c                  |   7 +
+ include/linux/psp-sev.h                       |   8 +-
+ include/uapi/linux/kvm.h                      |  53 ++
+ include/uapi/linux/kvm_para.h                 |   1 +
+ 21 files changed, 1152 insertions(+), 10 deletions(-)
+
 -- 
 2.17.1
 
