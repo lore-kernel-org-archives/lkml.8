@@ -2,108 +2,96 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CB3C2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12279C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DE42073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="haARCOzI"
+	by mail.kernel.org (Postfix) with ESMTP id E13CB20748
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbgC3Iln (ORCPT
+        id S1729746AbgC3Il4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:41:43 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58018 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729398AbgC3Ilm (ORCPT
+        Mon, 30 Mar 2020 04:41:56 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:51258 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729398AbgC3Il4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:41:42 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U8cY2H004211;
-        Mon, 30 Mar 2020 10:41:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=TK4u1WfehPW/zTgGPri0+DBcitevXxC+wyU2msRkqLE=;
- b=haARCOzIV6JQ+tAcVZlz8BpMryuDuyD+MIM5yzWhK2sLg+LcWgwX7//pi06HrOv8dlSm
- ahtx50aKnPSU6kt8bwLwo2hDIxlOdB7UUqlhW2sV77fT+630hZqWJn1gQzR7NZOb5sqW
- qAQkhg1KPCp98qTBvAvXFbrH/oQcv5yPCyg0EY5fWTFs9+zRgTST2L00uBGoNqbzY+EF
- xJQNmMHfEozvdYGbbjBn6VJQv/qurMx7VzBHtLmnTLUgnHNKT8XDVXDWNW5z4PTOStCe
- AsfiydvTXfTPAwbRuandEuapAd9oA3o+4qL6/aeELUk30KA+60dq7YrOFmcrLH73aZca AQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301xbm8cu2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 10:41:36 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 807C4100039;
-        Mon, 30 Mar 2020 10:41:31 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 734772A4D71;
-        Mon, 30 Mar 2020 10:41:31 +0200 (CEST)
-Received: from [10.131.224.211] (10.75.127.47) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Mar
- 2020 10:41:29 +0200
-Subject: Re: [PATCH] i2c: i2c-stm32f7: improve nack debug message
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>
-CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1584642115-15378-1-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <ea95b420-4368-8f91-15d3-db5f18086f22@st.com>
-Date:   Mon, 30 Mar 2020 10:41:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 30 Mar 2020 04:41:56 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jIpzM-005Qx3-IU; Mon, 30 Mar 2020 10:41:44 +0200
+Message-ID: <a51643dbff58e16cc91f33273dbc95dded57d3e6.camel@sipsolutions.net>
+Subject: Re: [PATCH] UML: add support for KASAN under x86_64
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        anton.ivanov@cambridgegreys.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>, linux-um@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Date:   Mon, 30 Mar 2020 10:41:43 +0200
+In-Reply-To: <CACT4Y+YhwJK+F7Y7NaNpAwwWR-yZMfNevNp_gcBoZ+uMJRgsSA@mail.gmail.com> (sfid-20200330_103904_296794_2F7C15A1)
+References: <20200226004608.8128-1-trishalfonso@google.com>
+         <CAKFsvULd7w21T_nEn8QiofQGMovFBmi94dq2W_-DOjxf5oD-=w@mail.gmail.com>
+         <4b8c1696f658b4c6c393956734d580593b55c4c0.camel@sipsolutions.net>
+         <674ad16d7de34db7b562a08b971bdde179158902.camel@sipsolutions.net>
+         <CACT4Y+bdxmRmr57JO_k0whhnT2BqcSA=Jwa5M6=9wdyOryv6Ug@mail.gmail.com>
+         <ded22d68e623d2663c96a0e1c81d660b9da747bc.camel@sipsolutions.net>
+         <CACT4Y+YzM5bwvJ=yryrz1_y=uh=NX+2PNu4pLFaqQ2BMS39Fdg@mail.gmail.com>
+         <2cee72779294550a3ad143146283745b5cccb5fc.camel@sipsolutions.net>
+         <CACT4Y+YhwJK+F7Y7NaNpAwwWR-yZMfNevNp_gcBoZ+uMJRgsSA@mail.gmail.com>
+         (sfid-20200330_103904_296794_2F7C15A1)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <1584642115-15378-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello guys !
+On Mon, 2020-03-30 at 10:38 +0200, Dmitry Vyukov wrote:
+> On Mon, Mar 30, 2020 at 9:44 AM Johannes Berg <johannes@sipsolutions.net> wrote:
+> > On Fri, 2020-03-20 at 16:18 +0100, Dmitry Vyukov wrote:
+> > > > Wait ... Now you say 0x7fbfffc000, but that is almost fine? I think you
+> > > > confused the values - because I see, on userspace, the following:
+> > > 
+> > > Oh, sorry, I copy-pasted wrong number. I meant 0x7fff8000.
+> > 
+> > Right, ok.
+> > 
+> > > Then I would expect 0x1000 0000 0000 to work, but you say it doesn't...
+> > 
+> > So it just occurred to me - as I was mentioning this whole thing to
+> > Richard - that there's probably somewhere some check about whether some
+> > space is userspace or not.
+> > 
+> > I'm beginning to think that we shouldn't just map this outside of the
+> > kernel memory system, but properly treat it as part of the memory that's
+> > inside. And also use KASAN_VMALLOC.
+> > 
+> > We can probably still have it at 0x7fff8000, just need to make sure we
+> > actually map it? I tried with vm_area_add_early() but it didn't really
+> > work once you have vmalloc() stuff...
+> 
+> But we do mmap it, no? See kasan_init() -> kasan_map_memory() -> mmap.
 
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Of course. But I meant inside the UML PTE system. We end up *unmapping*
+it when loading modules, because it overlaps vmalloc space, and then we
+vfree() something again, and unmap it ... because of the overlap.
 
-Thanks
+And if it's *not* in the vmalloc area, then the kernel doesn't consider
+it valid, and we seem to often just fault when trying to determine
+whether it's valid kernel memory or not ... Though I'm not really sure I
+understand the failure part of this case well yet.
 
-On 3/19/20 7:21 PM, Alain Volmat wrote:
-> From: Fabrice Gasnier <fabrice.gasnier@st.com>
-> 
-> Add information on slave addr in the nack debug message.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  drivers/i2c/busses/i2c-stm32f7.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 378956ac6d1d..78d40a4cc282 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -1431,7 +1431,8 @@ static irqreturn_t stm32f7_i2c_isr_event(int irq, void *data)
->  
->  	/* NACK received */
->  	if (status & STM32F7_I2C_ISR_NACKF) {
-> -		dev_dbg(i2c_dev->dev, "<%s>: Receive NACK\n", __func__);
-> +		dev_dbg(i2c_dev->dev, "<%s>: Receive NACK (addr %x)\n",
-> +			__func__, f7_msg->addr);
->  		writel_relaxed(STM32F7_I2C_ICR_NACKCF, base + STM32F7_I2C_ICR);
->  		f7_msg->result = -ENXIO;
->  	}
-> 
+johannes
+
