@@ -3,60 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B5FC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 535F1C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D6420936
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A0920A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgC3RyG (ORCPT
+        id S1730356AbgC3RyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:54:06 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40310 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgC3RyF (ORCPT
+        Mon, 30 Mar 2020 13:54:09 -0400
+Received: from smtprelay0250.hostedemail.com ([216.40.44.250]:47660 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726403AbgC3RyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:54:05 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 58DC215C3E1E5;
-        Mon, 30 Mar 2020 10:54:04 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 10:54:03 -0700 (PDT)
-Message-Id: <20200330.105403.320116364701708266.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     netanel@amazon.com, akiyano@amazon.com, gtzalik@amazon.com,
-        saeedb@amazon.com, zorik@amazon.com, sameehj@amazon.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH net-next] net: ena: Make some functions static
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200328030620.22328-1-yuehaibing@huawei.com>
-References: <20200328030620.22328-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 30 Mar 2020 13:54:07 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id A38C018034F5F;
+        Mon, 30 Mar 2020 17:54:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: snail18_7ae2b0153554f
+X-Filterd-Recvd-Size: 1863
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 30 Mar 2020 17:54:04 +0000 (UTC)
+Message-ID: <bfc2cff78325ad2845ef0c7ec2d7ba719fd4f1a1.camel@perches.com>
+Subject: Re: [PATCH][next] net: ethernet: ti: fix spelling mistake "rundom"
+ -> "random"
+From:   Joe Perches <joe@perches.com>
+To:     Colin King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 30 Mar 2020 10:52:09 -0700
+In-Reply-To: <20200330101639.161268-1-colin.king@canonical.com>
+References: <20200330101639.161268-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 30 Mar 2020 10:54:04 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Sat, 28 Mar 2020 11:06:20 +0800
-
-> Fix sparse warnings:
+On Mon, 2020-03-30 at 11:16 +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> drivers/net/ethernet/amazon/ena/ena_netdev.c:460:6: warning: symbol 'ena_xdp_exchange_program_rx_in_range' was not declared. Should it be static?
-> drivers/net/ethernet/amazon/ena/ena_netdev.c:481:6: warning: symbol 'ena_xdp_exchange_program' was not declared. Should it be static?
-> drivers/net/ethernet/amazon/ena/ena_netdev.c:1555:5: warning: symbol 'ena_xdp_handle_buff' was not declared. Should it be static?
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> There is a spelling mistake in a dev_err error message. Fix it.
+[]
+> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+[]
+> @@ -1627,7 +1627,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
+>  							   port->slave.mac_addr) ||
+>  			   !is_valid_ether_addr(port->slave.mac_addr)) {
+>  			random_ether_addr(port->slave.mac_addr);
+> -			dev_err(dev, "Use rundom MAC address\n");
+> +			dev_err(dev, "Use random MAC address\n");
 
-Applied.
+This continues without returning an error value.
+Is this actually an error?
+
+It might be useful to describe the slave and
+random ethernet address too.
+
+Perhaps:
+
+			dev_notice(dev, "%pOF slave[%d] using random MAC address %pM\n",
+				   port_np, port_id, port->slave.mac_addr);
+
+or maybe dev_info
+
+
