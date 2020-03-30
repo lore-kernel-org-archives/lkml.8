@@ -2,193 +2,148 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E431C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA80BC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E49D206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585604152;
-	bh=aiIETxsRU9cWHGPKABH0F6Ne4u49MEXFd7rXnrdkb7o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=KaAcyU0MmCOgJNSIufjO6E5OHdEQEsVj/lWGntOdsAwXrnbxE/FtmUJqNfPkaUfql
-	 p3AR3Wa+FTLqYtSx2sKthCL0ibDMLffDmCu1f6wb6kiSwARiJ2iXR/mCkfqhAY0/yR
-	 lwLUlYxUEtPtgpzLus9ZpnwWiz8raVEXgMN7PeZY=
+	by mail.kernel.org (Postfix) with ESMTP id 8FC90206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="llEGJ9lB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgC3Vfv (ORCPT
+        id S1729217AbgC3Viv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:35:51 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:32842 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbgC3Vfv (ORCPT
+        Mon, 30 Mar 2020 17:38:51 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34032 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3Viv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:35:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f20so19820652ljm.0;
-        Mon, 30 Mar 2020 14:35:47 -0700 (PDT)
+        Mon, 30 Mar 2020 17:38:51 -0400
+Received: by mail-lf1-f68.google.com with SMTP id e7so15549019lfq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=WSt+AV7Um/5j64JardkiDA0adpMNTurHI5wI61uphv0=;
-        b=HIvQu3phGCWVkZ9DCay3XYK3Kfyn2+4cKzw8ERzWrog/cBnDNuZxBVUxKyh2yIw0Uq
-         6b0JMiAOWxwVtl76ZbYi6ZLUCEtFkVfR2EHPUSs/6MKx9GNz3ao52n4CPLVWb7Rax/V1
-         oZjrjmIBWLpuJlNhX6dctbGqG2nSKx0gjeEFAzXWOU+liFtk2Vo6WKJVVEb6zoAD0O73
-         t8CVriQLM6iIMTDt7rRY6GJkLK6EBXTVlpp5Al6+zrkQJNQyrsvc18aPf4k/zYtoXaUJ
-         DG/VTLjSCJgWGTCBrz+G7VgFRTK9/ANArqe4dZV/VXnOyTU3p0x8tWQlQYbTAd1Md/Gz
-         vdkQ==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uCxy/V6956TjkzZDFahzb5xk0CquL6PGhHn2gPT6QRU=;
+        b=llEGJ9lBbSNAzPFWre1EMYa5L5y95ZPiRM0CaJhpzY6pX8wzLDB8bhMqdpMFR+8m/4
+         NM5ejm1kBNM0OX9A1Xo95aK++V0vfXbXmKYGssRUgf94CAlE5gTTUFTnYb1QQZdIBKFW
+         tIcV0euZZY/IKJP7TTpAWjTEVyEbrUwcI5Se93AIBDL84kPi4eS1NuU9wXt0SWd2/leI
+         J6/+QOB4NNPPEahfr0WGk26hRSz+BZrzej7OxlDTcmA8qNDZi7QK1AukPwD5XH5i8ttA
+         4ea/nccyJLGQIQelaTWrP+8BVYOcd3QTiX2Ujdd2c5G9r4Iw6nyyJOryYHQrGkjVSpJG
+         LGAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=WSt+AV7Um/5j64JardkiDA0adpMNTurHI5wI61uphv0=;
-        b=uPFL5iOREZEWlCbRPOyVwTUaDmXd+ipMAzKLNraOewayVf/DJooHcQQTtlul5cqmYv
-         3cd7Wee/kI01uSYbNVk5ViVwnUq0H4ivgFApzC5AiigjSNyVrlNsg8lu41zE7BNK0Z9P
-         zNl0n9VDnIW1qqBA1oWtsaTL05qFjsUT6YeRG8Hh3gxqiA5L7aj9XSkP5OahcwS8fzDi
-         jRb1M5eDMseuN3uV/sVt2T3bY0q/UGK8UV1BUUjDtqbz+HTcdGl//9R/LF9EPXPQB07l
-         ilM9iHY55XW3hv0VtFn7o9K4ECmsjWVK+aos/RXKA/qUiYPjKXzUiXNGWb8Lpj5zv7Fa
-         7u2w==
-X-Gm-Message-State: AGi0PuaZrhRJKlDd3hck1FWraww8StosDfCiB04E5sFDg8xwRcULjrFE
-        CX4TIYGngogM+6GRZXYm3VM=
-X-Google-Smtp-Source: APiQypK4zOFj7xjPNhBxV8d6hcKJ84vdq3BXLMd1kyZXNCG2zm7Q6Cm8uv46OaF0KLIsL7sjDV2RCw==
-X-Received: by 2002:a2e:9252:: with SMTP id v18mr5750072ljg.114.1585604146990;
-        Mon, 30 Mar 2020 14:35:46 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id p7sm7388655ljg.5.2020.03.30.14.35.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 14:35:46 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <20200330155038.GC199755@google.com>
-References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org> <1585302203-11008-3-git-send-email-sanm@codeaurora.org> <20200329171756.GA199755@google.com> <87h7y62r28.fsf@kernel.org> <20200330155038.GC199755@google.com>
-Date:   Tue, 31 Mar 2020 00:35:41 +0300
-Message-ID: <87zhbx1q6q.fsf@kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uCxy/V6956TjkzZDFahzb5xk0CquL6PGhHn2gPT6QRU=;
+        b=QgKlIKnTUgODHuM7tgSq3FN3Qx3p6lDwNgn8weXeRYO681knMeFa9Mw4zf5+i2mnCC
+         hFIfIzMp/bjLLqTaD4kBirME6it9tZk9GBqr9yp0KjP0DkEfJ8JyQgSunLGcDuAWYq/H
+         cRQM0MM8mKIbN8v0oPTTOueWRBJ2F7qS2jhvwoifqbstFB0I1yk5pEA/jF54GTZiz2zL
+         gZJXJqXXz1YTSFMoRZJ+3v4YYXN3/22HbEmsfg4QPB6MNJ/NOcyswCDxjvd/2gQ7JAeG
+         2r//LI1unyhqvmWI2fNaAT6p4qnc5cxoeeJA2ayYF+LE1Yb+sojHvUnCBF9aLAhyhHSO
+         OyvQ==
+X-Gm-Message-State: AGi0PuYge2q1ubQ+0wyGWm4iL1dBGSj4ZFF0H7iT2npSRRVGrbONm62Z
+        ArcwFYyFEPPXVyW8Krrx+2a2hg==
+X-Google-Smtp-Source: APiQypJChlBcMBAVZeVK7plWc78eRD6sZth/Ah1ckPyI5Hxgoy6OXUxyimasJLtFUCtdIQ+kVJQQNQ==
+X-Received: by 2002:a19:4a50:: with SMTP id x77mr9258764lfa.159.1585604328816;
+        Mon, 30 Mar 2020 14:38:48 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id d6sm9644083lfn.72.2020.03.30.14.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 14:38:48 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 6E055101DCA; Tue, 31 Mar 2020 00:38:48 +0300 (+03)
+Date:   Tue, 31 Mar 2020 00:38:48 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH 3/7] khugepaged: Drain LRU add pagevec to get rid of
+ extra pins
+Message-ID: <20200330213848.xmi3egioh7ygvfsz@box>
+References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
+ <20200327170601.18563-4-kirill.shutemov@linux.intel.com>
+ <CAHbLzkoe-07mxAuA18QUi=H21_Ts0JcbP2SUT=02ZTPhaQB6ug@mail.gmail.com>
+ <20200328121829.kzmcmcshbwynjmqc@box>
+ <CAHbLzkr8YQAG0GbdJn9=Ey7B2M11dxnGCc2nfN-G1fmFiv+BOw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkr8YQAG0GbdJn9=Ey7B2M11dxnGCc2nfN-G1fmFiv+BOw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 30, 2020 at 11:30:14AM -0700, Yang Shi wrote:
+> On Sat, Mar 28, 2020 at 5:18 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> >
+> > On Fri, Mar 27, 2020 at 11:10:40AM -0700, Yang Shi wrote:
+> > > On Fri, Mar 27, 2020 at 10:06 AM Kirill A. Shutemov
+> > > <kirill@shutemov.name> wrote:
+> > > >
+> > > > __collapse_huge_page_isolate() may fail due to extra pin in the LRU add
+> > > > pagevec. It's petty common for swapin case: we swap in pages just to
+> > > > fail due to the extra pin.
+> > > >
+> > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > > > ---
+> > > >  mm/khugepaged.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > > > index 14d7afc90786..39e0994abeb8 100644
+> > > > --- a/mm/khugepaged.c
+> > > > +++ b/mm/khugepaged.c
+> > > > @@ -585,11 +585,19 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+> > > >                  * The page must only be referenced by the scanned process
+> > > >                  * and page swap cache.
+> > > >                  */
+> > > > +               if (page_count(page) != 1 + PageSwapCache(page)) {
+> > > > +                       /*
+> > > > +                        * Drain pagevec and retry just in case we can get rid
+> > > > +                        * of the extra pin, like in swapin case.
+> > > > +                        */
+> > > > +                       lru_add_drain();
+> > >
+> > > This is definitely correct.
+> > >
+> > > I'm wondering if we need one more lru_add_drain() before PageLRU check
+> > > in khugepaged_scan_pmd() or not? The page might be in lru cache then
+> > > get skipped. This would improve the success rate.
+> >
+> > Could you elaborate on the scenario, I don't follow.
+> 
+> I mean the below change:
+> 
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -1195,6 +1195,9 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>                         goto out_unmap;
+>                 }
+>                 khugepaged_node_load[node]++;
+> +               if (!PageLRU(page))
+> +                       /* Flush the page out of lru cache */
+> +                       lru_add_drain();
+>                 if (!PageLRU(page)) {
+>                         result = SCAN_PAGE_LRU;
+>                         goto out_unmap;
+> 
+> If the page is not on LRU we even can't reach collapse_huge_page(), right?
 
+Yeah, I've archived the same by doing lru_add_drain_all() once per
+khugepaged_do_scan(). It is more effective than lru_add_drain() inside
+khugepaged_scan_pmd() and should have too much overhead.
 
-Hi,
+The lru_add_drain() from this patch moved into swapin routine and called
+only on success.
 
-Matthias Kaehlcke <mka@chromium.org> writes:
->> Matthias Kaehlcke <mka@chromium.org> writes:
->> >> Add interconnect support in dwc3-qcom driver to vote for bus
->> >> bandwidth.
->> >>=20
->> >> This requires for two different paths - from USB master to
->> >> DDR slave. The other is from APPS master to USB slave.
->> >>=20
->> >> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->> >> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
->> >> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> >> ---
->> >>  drivers/usb/dwc3/dwc3-qcom.c | 128 +++++++++++++++++++++++++++++++++=
-+++++++++-
->> >>  1 file changed, 126 insertions(+), 2 deletions(-)
->> >>=20
->> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qco=
-m.c
->> >> index 1dfd024..7e85fe6 100644
->> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
->> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->> >>
->> >> ...
->> >>
->> >> +/* To disable an interconnect, we just set its bandwidth to 0 */
->> >> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
->> >> +{
->> >> +	int ret;
->> >> +
->> >> +	ret =3D icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
->> >> +	if (ret)
->> >> +		return ret;
->> >> +
->> >> +	ret =3D icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
->> >> +	if (ret)
->> >> +		goto err_reenable_memory_path;
->> >> +
->> >> +	return 0;
->> >> +
->> >> +	/* Re-enable things in the event of an error */
->> >> +err_reenable_memory_path:
->> >> +	ret =3D dwc3_qcom_interconnect_enable(qcom);
->> >
->> > This overwrites the error that led to the execution of this code path.
->> > The function should return original error, not the result of the
->> > _interconnect_enable() call.
->> >
->> > I saw Felipe queued the patch for v5.8. I think the main options to fi=
-x this
->> > are:
->> >
->> > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will b=
-e rebased
->> >   anyway once there is a v5.7-rc)
->> > - send the fix as a separate patch
->> > - Felipe amends the patch in his tree
->> >
->> > Felipe, what would work best for you?
->>=20
->> Let's go for a v6, which commits should I drop? I can't find anything
->> related to $subject in my queue:
->>=20
->> $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dw=
-c3-qcom.c
->> 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/o=
-f_clk.h>
->
-> I thought I saw a "queued for v5.8" message from you, but can't find that=
- back.
-> I guess I saw the "queued" message for the "Add USB DWC3 support for SC71=
-80"
-> series and thought it was for this one. Sorry for the confusion.
-
-no worries :-)
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6CZi0ACgkQzL64meEa
-mQY+7g/+KJ/u05ouSFK7ldMY2YfeD/JN7oamyhJSMtVd+EDFXyzVBYcSRD4m+P2c
-l0L8DLKvPTfQ609Gc0B4RBra2tg1H7m2vGdKPbGIDxWXQoMyIXFYp7E7b8+UjJ87
-MNSwuzqyvC8ZFOd0ILPecBxUjFzdzEPhbHr2W6jdyfT5kIl4wcAxchcTGnus8ujb
-KlwUWUjyuGyX5r7axrdjXe55MS2aouKtYQLojXtwhVyegGS0xlJtVF5+so2l89v9
-GAgDe9Srw9eNfg/pmNHjK+PwRjkKLFnGiT/m4jPCb5roRWmX8P83JnA3rp+DCjpF
-+plyrINP+MjoWH+rl1eifOSmTktORDFzyHEdfx2O38XYxHMjD1ap6OhOEc2WveY9
-f0G/eRN7DctjpxFwp6IBDywhUgSo5YH/L3q2ojaG0AfBgxD42hCdTU7OWFepvhab
-DFldPJwBjqbVupLSMEzOmgvM9wnBuqzXERzcEncl19f7Sh1vx6NFqY+5/iABFJKQ
-0hhWlQ+DRrGWKxam9ft0ddEtco+Nla2IOVr2vk63DysSKkGEbQeU8a4BxJ9kY/Jo
-hZCMdci6ePlYa63VCrZ+u1F6+DSRQ9lvPxjnUmy4T7InCL1dOezT6WttAgB1DO1T
-oX1o6+tY1DlUOemO6Mlg0ueBWg59hZYTeg2NSVbal5VoMzO9BSk=
-=lyM0
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+ Kirill A. Shutemov
