@@ -2,118 +2,130 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4237FC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2DEC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163CC2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57112073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IxRzBpM+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jdiwFJp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgC3RlR (ORCPT
+        id S1730001AbgC3Rl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:41:17 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52556 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729745AbgC3RlP (ORCPT
+        Mon, 30 Mar 2020 13:41:26 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:55916 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729654AbgC3Rl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:41:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585590074;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YGHvH2P6nK7TQrcIUAsAOYU1x8zpv/Ba4jDsyhsFhTg=;
-        b=IxRzBpM+kz+5TXsorpzFspxithz1QaEdi3t6knzmYqK3tuNdcJjT+lykcJS0kPB9uCEY/X
-        rGRjBrJnrjSuYwcPRCYKGNO2hCqiwE4wjmGPwhagBuwIpmnzk9HmTo95v05JnIxpo/Jg2P
-        9jKRUSUpjwC81n7YbZbNf7PzdafPCnY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109-vixzt7PyMZC7dnLS7w5LvQ-1; Mon, 30 Mar 2020 13:41:03 -0400
-X-MC-Unique: vixzt7PyMZC7dnLS7w5LvQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2189B1B2C980;
-        Mon, 30 Mar 2020 17:41:00 +0000 (UTC)
-Received: from elisabeth (unknown [10.36.110.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E96E7CDBFF;
-        Mon, 30 Mar 2020 17:40:54 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 19:40:43 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     John Wyatt <jbwyatt4@gmail.com>
-Cc:     Julia Lawall <julia.lawall@inria.fr>,
-        Soumyajit Deb <debsoumyajit100@gmail.com>,
-        outreachy-kernel@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [Outreachy kernel] [PATCH] staging: fbtft: Replace udelay with
- preferred usleep_range
-Message-ID: <20200330194043.56c79bb8@elisabeth>
-In-Reply-To: <alpine.DEB.2.21.2003291235590.2990@hadrien>
-References: <20200329092204.770405-1-jbwyatt4@gmail.com>
-        <alpine.DEB.2.21.2003291127230.2990@hadrien>
-        <2fccf96c3754e6319797a10856e438e023f734a7.camel@gmail.com>
-        <alpine.DEB.2.21.2003291144460.2990@hadrien>
-        <CAMS7mKBEhqFat8fWi=QiFwfLV9+skwi1hE-swg=XxU48zk=_tQ@mail.gmail.com>
-        <alpine.DEB.2.21.2003291235590.2990@hadrien>
-Organization: Red Hat
+        Mon, 30 Mar 2020 13:41:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MPknVRVqf3cjXzMTU1R+fhO3GbG3Mj56RWcr6uAPo/4=; b=jdiwFJp8wSM94WHqaxAAUF/oZ
+        qWAMC2vbKFTHvrZmSdq85MME8kz7V/8dpy/aDPNxTvz5HXiQgIpvk41xnvXCTmZCN3PcFhYGM8vU/
+        IqTDSEEiXvfioQpJCyV204YvHXjAc0uA0VjtJdtKhmSm0mTQnEgqBUXH0ojw60BQjTEvt3l/3eAK/
+        YbCb2kDlbTrBqlDtjAMq55yHXAQq6XhRTRXQ0etN5pomK50D+Jo7QYuOdnA69TP3dLIrcu5rix3zS
+        LGMvSTnW5pBJKqNrtGKpJ1p74gP22Vwf4fwhGwT/942zSuiSQf+31ZsfzmVck+3Vs9eKD50f5edew
+        9T/GlLzIw==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39286)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jIyPW-0003Uo-Cv; Mon, 30 Mar 2020 18:41:18 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jIyPS-0007JO-C8; Mon, 30 Mar 2020 18:41:14 +0100
+Date:   Mon, 30 Mar 2020 18:41:14 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+Message-ID: <20200330174114.GG25745@shell.armlinux.org.uk>
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+ <20200329150854.GA31812@lunn.ch>
+ <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+ <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Mar 2020 12:37:18 +0200 (CEST)
-Julia Lawall <julia.lawall@inria.fr> wrote:
+On Mon, Mar 30, 2020 at 10:33:03AM -0700, Florian Fainelli wrote:
+> 
+> 
+> On 3/29/2020 10:26 PM, Oleksij Rempel wrote:
+> > Hi Andrew,
+> > 
+> > On Sun, Mar 29, 2020 at 05:08:54PM +0200, Andrew Lunn wrote:
+> >> On Sun, Mar 29, 2020 at 01:04:57PM +0200, Oleksij Rempel wrote:
+> >>
+> >> Hi Oleksij
+> >>
+> >>> +config DEPRECATED_PHY_FIXUPS
+> >>> +	bool "Enable deprecated PHY fixups"
+> >>> +	default y
+> >>> +	---help---
+> >>> +	  In the early days it was common practice to configure PHYs by adding a
+> >>> +	  phy_register_fixup*() in the machine code. This practice turned out to
+> >>> +	  be potentially dangerous, because:
+> >>> +	  - it affects all PHYs in the system
+> >>> +	  - these register changes are usually not preserved during PHY reset
+> >>> +	    or suspend/resume cycle.
+> >>> +	  - it complicates debugging, since these configuration changes were not
+> >>> +	    done by the actual PHY driver.
+> >>> +	  This option allows to disable all fixups which are identified as
+> >>> +	  potentially harmful and give the developers a chance to implement the
+> >>> +	  proper configuration via the device tree (e.g.: phy-mode) and/or the
+> >>> +	  related PHY drivers.
+> >>
+> >> This appears to be an IMX only problem. Everybody else seems to of got
+> >> this right. There is no need to bother everybody with this new
+> >> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
+> >> the name.
+> > 
+> > Actually, all fixups seems to do wring thing:
+> > arch/arm/mach-davinci/board-dm644x-evm.c:915:		phy_register_fixup_for_uid(LXT971_PHY_ID, LXT971_PHY_MASK,
+> > 
+> > Increased MII drive strength. Should be probably enabled by the PHY
+> > driver.
+> > 
+> > arch/arm/mach-imx/mach-imx6q.c:167:		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
+> > arch/arm/mach-imx/mach-imx6q.c:169:		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+> > arch/arm/mach-imx/mach-imx6q.c:171:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+> > arch/arm/mach-imx/mach-imx6q.c:173:		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
 
-> On Sun, 29 Mar 2020, Soumyajit Deb wrote:
->=20
-> > I had the same doubt the other day about the replacement of udelay() wi=
-th
-> > usleep_range(). The corresponding range for the single argument value of
-> > udelay() is quite confusing as I couldn't decide the range.=C2=A0But as=
- much as I
-> > noticed checkpatch.pl gives warning for replacing udelay() with
-> > usleep_range() by checking the argument value of udelay(). In the
-> > documentation, it is written udelay() should be used for a sleep time o=
-f at
-> > most 10 microseconds but between 10 microseconds and 20 milliseconds,
-> > usleep_range() should be used.=C2=A0
-> > I think the range is code specific and will depend on what range is
-> > acceptable and doesn't break the code.
-> > =C2=A0Please correct me if I am wrong. =20
->=20
-> The range depends on the associated hardware.
+As far as I'm concerned, the AR8035 fixup is there with good reason.
+It's not just "random" but is required to make the AR8035 usable with
+the iMX6 SoCs.  Not because of a board level thing, but because it's
+required for the AR8035 to be usable with an iMX6 SoC.
 
-John, by the way, here you could have checked the datasheet of this LCD
-controller. It's a pair of those:
-	https://www.sparkfun.com/datasheets/LCD/ks0108b.pdf
+So, having it registered by the iMX6 SoC code is entirely logical and
+correct.
 
-reset time is 1=C2=B5s minimum, which is the only actual constraint here.
-The rise time should then be handled by power supply and reflected
-with some appropriate usage of the regulator framework.
+That's likely true of the AR8031 situation as well.
 
-That 120ms delay, however, must be there for a reason, that is, most
-likely to develop this quickly without exposing a proper model of the
-power supplies to the driver.
+I can't speak for any of the others.
 
-So... in this case, with the datasheet alone, you won't go very far,
-you would need the actual module (probably connected to a Raspberry Pi
-to catch a typical usage). Still, it's usually worth a check. In any
-case, most likely, as Andy suggested, this function can eventually be
-dropped.
-
---=20
-Stefano
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
