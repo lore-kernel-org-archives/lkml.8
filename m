@@ -2,141 +2,105 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F2DC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250FAC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACDA208E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="01eIbogv"
+	by mail.kernel.org (Postfix) with ESMTP id 00D8E2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 15:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbgC3Pha (ORCPT
+        id S1729403AbgC3Phh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:37:30 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37771 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729059AbgC3Ph3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:37:29 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t11so2144887lfe.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 08:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7n3YZ9nrtrOOLXOcT8nncmyYyXz4uqz98on2S5Nc7P8=;
-        b=01eIbogv2JLufuwCILlbzumO6l4tm31Ysgk7fk42vDAxQ8S2Jzsv8Wmv4QoNc7JGoW
-         ouw5WNKmvQfSWsT0guoBS+abSnxPIUBaZq+93d3O8EtcYlHlgllZAJbG54iZ/nD5jBFn
-         OIoiFNWZu5IjFAx5DgOVhaacynAAMj+OfbkrpP/mTBee7Fz1zQVz2hquYPqLxN6BYiFw
-         kD5CEjp7KqELCqjwfe87awk3DYkzx8qV8BaYb3Z9bNrKGkVdDWSacv6Rj7ZVgaRQGRSP
-         7DwLX8kVEeiHuYvpEBIeBYkQPyLojrINApEH61LvdBgEHDiZhRApfDDwkvEg7ohY3dws
-         thEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=7n3YZ9nrtrOOLXOcT8nncmyYyXz4uqz98on2S5Nc7P8=;
-        b=YEcs3DuqzY/bJswNNGzG1Y4VeRAXdTXx6io7wPHot2M3JxobFeTnmiZ3mRP4HTSP6k
-         a5Qe/HMN74ErB5fDHFecIpb0LJx8pZZfVhx8Y750FeoBFKCb96k/BVVSnLqR1E5wVrFx
-         72GnQ0Z+S42DBOjaQ9o5LHH46QeyvGpLAPU3vm758r3HVexjV7LE8xwtNBScudOVjGAL
-         muyr2CzYDpgsf1eXelsA0flSA6tdTPzjy1JQ+tn54qmDdds+PF6SHS4E8QeWiGOteCVU
-         8q3VSUbuPZoWbDincMmL5ndcGKc1S6klQAPxktAQEqpxSVIPEPnQiij7hOZ2mgGCZuXm
-         pxHw==
-X-Gm-Message-State: AGi0Pub8WJI9ajyAdjw8HTUreP90wWyuJ6ilHqfKusJVO2I6xUUiCKGj
-        DkeKtUzhVpsn0Dck+ytfTfymOXckIy/lfg==
-X-Google-Smtp-Source: APiQypLCq5vVr1YrIW3e4xrFpb9STHZkBueQeFK1AR43Hf0SWSWV1m1Evg2KTFYl5nebk26zdn6zwQ==
-X-Received: by 2002:ac2:48b3:: with SMTP id u19mr8289783lfg.84.1585582645078;
-        Mon, 30 Mar 2020 08:37:25 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:654:d00e:d4e2:9dcc:b9fb:a661])
-        by smtp.gmail.com with ESMTPSA id i2sm7910219lfg.23.2020.03.30.08.37.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Mar 2020 08:37:23 -0700 (PDT)
-Subject: Re: [PATCH 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
- <20200330114239.1112759-5-jiaxun.yang@flygoat.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
-Date:   Mon, 30 Mar 2020 18:37:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 30 Mar 2020 11:37:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59646 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729059AbgC3Phh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:37:37 -0400
+IronPort-SDR: NOuWRtCXOrIUeQjaWe8HTJ7PTNyOBQhdNTbTwLAOPyTASfYCZuuLmkO+IwkOWgD+XepVgvkIkr
+ PrqYtNIdnTlQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 08:37:21 -0700
+IronPort-SDR: rGfofEL0vyso2snjbsChk1/bvhIJvttkOoY8nj2MoiAnlDgt4nwnA7l4+c1eagK7/WENaaEzKM
+ L9ExIccj2JDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="395160763"
+Received: from sgobriel-mobl.amr.corp.intel.com (HELO [10.212.145.94]) ([10.212.145.94])
+  by orsmga004.jf.intel.com with ESMTP; 30 Mar 2020 08:37:20 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Mark Brown <broonie@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com,
+        curtis@malainey.com, tiwai@suse.com,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com
+References: <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+ <20200330102356.GA16588@light.dominikbrodowski.net>
+ <43c098c9-005e-b9f4-2132-ed6e4a65feee@intel.com>
+ <20200330113929.GF4792@sirena.org.uk>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <85dca962-58ad-6e00-c84b-10859ea127fe@linux.intel.com>
+Date:   Mon, 30 Mar 2020 10:37:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200330114239.1112759-5-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+In-Reply-To: <20200330113929.GF4792@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
 
-On 03/30/2020 02:42 PM, Jiaxun Yang wrote:
 
-> Add PCI Host controller node for Loongson64 with RS780E PCH dts.
-> Note that PCI interrupts are probed via legacy way, as different
-> machine have different interrupt arrangement, we can't cover all
-> of them in dt.
+On 3/30/20 6:39 AM, Mark Brown wrote:
+> On Mon, Mar 30, 2020 at 01:10:34PM +0200, Cezary Rojewski wrote:
+>> On 2020-03-30 12:23, Dominik Brodowski wrote:
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
+>>> Seems this patch didn't make it into v5.6 (and neither did the other ones
+>>> you sent relating to the "dummy" components). Can these patches therefore be
+>>> marked for stable, please?
 > 
-> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> index 45c54d555fa4..f09599a4b9d7 100644
-> --- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> +++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> @@ -5,10 +5,25 @@ bus@10000000 {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> -		ranges = <0 0x10000000 0 0x10000000 0 0x10000000
-> +		ranges = <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
-> +				0 0x10000000 0 0x10000000 0 0x10000000
->  				0 0x40000000 0 0x40000000 0 0x40000000
->  				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space */>;
->  
-> +		pci@1a000000 {
-> +			compatible = "loongson,rs780e-pci";
-> +			device_type = "pci";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			#interrupt-cells = <0x1>;
-
-   No need for 0x.
-
-> +
-> +			reg = <0 0x1a000000 0 0x02000000>;
-> +
-> +			ranges = <0x01000000 0x0 0x00004000 0x0 0x00004000  0x0 0x00004000>,
-> +				<0x02000000 0x0 0x40000000 0x0 0x40000000  0x0 0x40000000>;
-
-   No need for 0x before 0 here either. And why double spaces?
-
-> +
-> +		};
-> +
->  		isa {
->  			compatible = "isa";
->  			#address-cells = <2>;
+> I sent my pull request already sorry - once it hits Linus' tree I'd send
+> a request to stable.
 > 
+>> While one of the series was accepted and merged, there is a delay caused by
+>> Google/ SOF folks in merging the second one.
+> 
+>> Idk why rt286 aka "broadwell" machine board patch has not been merged yet.
+>> It's not like we have to merge all (rt5650 + rt5650 + rt286) patches at
+>> once. Google guys can keep verifying Buddy or whatnot while guys with Dell
+>> XPS can enjoy smooth audio experience.
+> 
+> My scripting is set up to merge things sent to me as a patch series and
+> we didn't get positive review from Pierre on any of it with the review
+> on that one patch seeming to suggest it might also be waiting go go
+> through a test farm.  TBH I also wasn't expecting it to take quite so
+> long to get reviewed when it came in, it's been over 2 weeks now...
 
-MBR, Sergei
+There are multiple problems with Broadwell and device-specific issues on 
+suspend-resume - in which Cezary is involved. The tests are not 
+automated so depend on people availability.
+
+I tested this series last Friday and I didn't find any new problem on my 
+side, so we should probably merge this series.
+
+Everyone should be aware though that suspend-resume is far from stable 
+on Broadwell, and if it works on Dell XPS 13 it doesn't work reliably on 
+Chrome devices.
