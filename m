@@ -2,228 +2,312 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3819FC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F436C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B0420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119B02072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SSFg7jtA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KrZMDkR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgC3Jht (ORCPT
+        id S1728531AbgC3Jjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:37:49 -0400
-Received: from mail-co1nam11on2080.outbound.protection.outlook.com ([40.107.220.80]:18734
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727714AbgC3Jhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:37:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Tucrpqa7j6sIM2i7mzQHGJbYEBNugYxoPbW+7qiyIKKAIIFPWfISiqrVNAkMHofX8BXt6QN/NAtKCRgNzPOqAsOvYkmu3Pc/3zsR14UkNE2Sh+5I1OzWqVy2dIyaduXsq2Yfw1rVYfUuaOFz0dkMwMwuJzhKgtwbEZEM1b6PFSJFLutG2iRFPj5xPpTwbd0piWrtu592pS/GBUzG1X56v3YonUOYrfZ5vU013Z2vOw+6N0LrtRWeRjVAKzNADWBoTPYtb1PZaewvzQN+zdPu/QSyXuMAECsUZrKoHXdUGmyhxhTUKufo8WqZlRu2FCGoB2jvZxzRUnVtK5i80cNYHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rEh+/9VG1M4fv3WVs0zaCmiNeBDywC5hVysuQWuuJhY=;
- b=nFu/nowHQoFRCZUU2YfoFsZFWf6KJzCilFXXTyxXCzlbNh2SsybkVySIz/+1pqM7VonXQjU5kZF+wiMn6b8NT4nE2uHAHEDUD1HL+c9Ijh3s7fh7OAg6SQyA3bFZIuJNkeoFXApQdcjo42Sc8GdhgVjHAPnBMOkGSBRFozoCh4LOWHskw3zE7EafhJz6syDWiQVacx0J4htNJoF6BSkeEW8GrJsL0fvxUdXDOQcItK8mMf1OFC7f6j/4G3FSCh7b5fkJRIv+HVAquP5cNjDxIo59BTY61GskOmJzQcFCFOPDesdAwUHIcIECyOYG5ye3aZN2nYdIa0Rgf8u4kbqx5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rEh+/9VG1M4fv3WVs0zaCmiNeBDywC5hVysuQWuuJhY=;
- b=SSFg7jtAgJ2Pr85Q6E/tWoPOsRSMuEYxyOO9ZMScNInBuMcJsNXPOUj/DowrMYjXXoGuU9PivjS7AWLNNWRG0wcCeiNUokD5eg9nExl7Dx6bPnMy1OXfS1HJZJ+3Hy6Z/Le+yhjzmUsJRCzN4cyKbFLwgZD/ScrIAsWxwq4gy6Y=
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com (2603:10b6:a03:a1::18)
- by BYAPR02MB5045.namprd02.prod.outlook.com (2603:10b6:a03:6f::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Mon, 30 Mar
- 2020 09:37:42 +0000
-Received: from BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::45a0:6b24:a9ce:1a63]) by BYAPR02MB5559.namprd02.prod.outlook.com
- ([fe80::45a0:6b24:a9ce:1a63%4]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 09:37:42 +0000
-From:   Bharat Kumar Gogada <bharatku@xilinx.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "maz@kernel.org" <maz@kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>
-Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Topic: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Thread-Index: AQHV14gyqXPkldKNt0SLTelX37u03Kgr8Z6AgAAlV5CABIIlAIAaXfLggBZHSCA=
-Date:   Mon, 30 Mar 2020 09:37:42 +0000
-Message-ID: <BYAPR02MB5559D6EBD0393D820276B883A5CB0@BYAPR02MB5559.namprd02.prod.outlook.com>
-References: <1580400771-12382-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <1580400771-12382-3-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20200225114013.GB6913@e121166-lin.cambridge.arm.com>
- <MN2PR02MB63365B50058B35AA37341BC9A5ED0@MN2PR02MB6336.namprd02.prod.outlook.com>
- <20200228104442.GA2874@e121166-lin.cambridge.arm.com>
- <MN2PR02MB633672DD246A5351DA2D0CEAA5F90@MN2PR02MB6336.namprd02.prod.outlook.com>
-In-Reply-To: <MN2PR02MB633672DD246A5351DA2D0CEAA5F90@MN2PR02MB6336.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=bharatku@xilinx.com; 
-x-originating-ip: [149.199.50.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: adeb3adf-fa9c-4cba-f946-08d7d48dfecb
-x-ms-traffictypediagnostic: BYAPR02MB5045:|BYAPR02MB5045:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB504569029EEA0ED169074773A5CB0@BYAPR02MB5045.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0358535363
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5559.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(366004)(110136005)(76116006)(8936002)(6506007)(54906003)(66476007)(66946007)(66446008)(316002)(7696005)(64756008)(66556008)(4326008)(478600001)(86362001)(81166006)(8676002)(5660300002)(2906002)(9686003)(186003)(107886003)(33656002)(55016002)(52536014)(26005)(71200400001)(81156014);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BVqCzvDqxqs+CVt/10vifvDwysaNhmpqXl/zmWog58jwdx7PVTQS8h6Uz8jbaqb/Lr2lnuCq/9xRJGGnpARFXQsWDvIfG/jjJHq7DeOAoGvWZ+bPgtKU1iBjNilX/xhrNwLXADFXRqfWW7mk3qn94bijVpK3++8wBNptr3QithDb0J20HlJL8YSo+y2eYEjccSQSWcnCQ7khvyu9qd/2Wj1E/oMVlZe0iSmfChnZqRxvWbtNfD3o6JyMXIg/Q6j/mKk/pT0qPicIGjVK/CRaABYxehXT6viJ06GFa8HcAeJdyp9ePPB1IDpV/udr3BYN8RcETdFEu/nlyK+sHgVj8lIqhhxAPe++6iANcymNfssU3Wv4w7aEy6hEHeIzsMUAbyT4mIO50+vw3Nan4mG+afif8B4egnOyqdibbLxyhlG47b0DOGSF8tCFRHn3yTpU
-x-ms-exchange-antispam-messagedata: LxrTKiL+Sy/Abfx/ZIAfzOJjIi9p2xWFZdcrRSFLucrCqEptUm1czZOQ4ri1jY46j0hei0VavF1SjCWHUGygsZhNd6MdTWgYK1hq9rN19OlwvhYSPjOKocuwrR8yQjS1s2aX1sqPe98ixtaVmdrbhg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Mar 2020 05:39:35 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19894 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726127AbgC3Jje (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 05:39:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585561173; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ySEr7QCfkmYmy4fMOJGgd528pP/JLZ/CgTkWxZCcrDY=; b=KrZMDkR7ZLMjG4k54AIjp/V6eFyLqAV/JzNdd01PRIeKrJtisNtrYGVFuquJVqmVUDF5BN7l
+ ujHOBMzQDuRXidEQ/cuXByEnLcFh/eEkx7WYBtXUHyRf6pRfdzE4PnLVIp9LLATSr8WFj4sk
+ T/9bZOBJu6HcMn/ZYMPjxv3GZoQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e81be51.7f14b56a1500-smtp-out-n04;
+ Mon, 30 Mar 2020 09:39:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9CCF1C44788; Mon, 30 Mar 2020 09:39:28 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.183.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 825BDC433F2;
+        Mon, 30 Mar 2020 09:39:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 825BDC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [RFC v2] irqchip: qcom: pdc: Introduce irq_set_wake call
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
+        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1584019379-12085-1-git-send-email-mkshah@codeaurora.org>
+ <1584019379-12085-2-git-send-email-mkshah@codeaurora.org>
+ <158441069917.88485.95270915247150166@swboyd.mtv.corp.google.com>
+ <bc2f75bc-1223-68b5-3c64-8ea17ee677cf@codeaurora.org>
+ <158456608487.152100.9336929115021414535@swboyd.mtv.corp.google.com>
+ <b5124e41-df99-c5d0-28d8-f0157db77ce1@codeaurora.org>
+ <158465481295.152100.8582940107266934812@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <5bf58459-32d8-9448-1c38-ff0098084641@codeaurora.org>
+Date:   Mon, 30 Mar 2020 15:09:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: adeb3adf-fa9c-4cba-f946-08d7d48dfecb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 09:37:42.4700
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ytrt4Xu+VG3vkSoXbx5VZQ5YZsPOIwzS0LiEfJIepCfgfiU9SfBFJue+Pl9ohLVJ90zOq4KyUMVKUyp8s3ZhZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5045
+In-Reply-To: <158465481295.152100.8582940107266934812@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: RE: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port dri=
-ver
->=20
-> > Subject: Re: [PATCH v5 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port
-> > driver
-> >
-> > [+MarcZ, FHI]
-> >
-> > On Tue, Feb 25, 2020 at 02:39:56PM +0000, Bharat Kumar Gogada wrote:
-> >
-> > [...]
-> >
-> > > > > +/* ECAM definitions */
-> > > > > +#define ECAM_BUS_NUM_SHIFT		20
-> > > > > +#define ECAM_DEV_NUM_SHIFT		12
-> > > >
-> > > > You don't need these ECAM_* defines, you can use pci_generic_ecam_o=
-ps.
-> > > Does this need separate ranges region for ECAM space ?
-> > > We have ECAM and controller space in same region.
-> >
-> > You can create an ECAM window with pci_ecam_create where *cfgres
-> > represent the ECAM area, I don't get what you mean by "same region".
-> >
-> > Do you mean "contiguous" ? Or something else ?
-> >
-> > > > > +
-> > > > > +/**
-> > > > > + * struct xilinx_cpm_pcie_port - PCIe port information
-> > > > > + * @reg_base: Bridge Register Base
-> > > > > + * @cpm_base: CPM System Level Control and Status
-> > > > > +Register(SLCR) Base
-> > > > > + * @irq: Interrupt number
-> > > > > + * @root_busno: Root Bus number
-> > > > > + * @dev: Device pointer
-> > > > > + * @leg_domain: Legacy IRQ domain pointer
-> > > > > + * @irq_misc: Legacy and error interrupt number  */ struct
-> > > > > +xilinx_cpm_pcie_port {
-> > > > > +	void __iomem *reg_base;
-> > > > > +	void __iomem *cpm_base;
-> > > > > +	u32 irq;
-> > > > > +	u8 root_busno;
-> > > > > +	struct device *dev;
-> > > > > +	struct irq_domain *leg_domain;
-> > > > > +	int irq_misc;
-> > > > > +};
-> > > > > +
-> > > > > +static inline u32 pcie_read(struct xilinx_cpm_pcie_port *port,
-> > > > > +u32
-> > > > > +reg) {
-> > > > > +	return readl(port->reg_base + reg); }
-> > > > > +
-> > > > > +static inline void pcie_write(struct xilinx_cpm_pcie_port *port,
-> > > > > +			      u32 val, u32 reg)
-> > > > > +{
-> > > > > +	writel(val, port->reg_base + reg); }
-> > > > > +
-> > > > > +static inline bool cpm_pcie_link_up(struct xilinx_cpm_pcie_port
-> > > > > +*port) {
-> > > > > +	return (pcie_read(port, XILINX_CPM_PCIE_REG_PSCR) &
-> > > > > +		XILINX_CPM_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
-> > > >
-> > > > 	u32 val =3D pcie_read(port, XILINX_CPM_PCIE_REG_PSCR);
-> > > >
-> > > > 	return val & XILINX_CPM_PCIE_REG_PSCR_LNKUP;
-> > > >
-> > > > And this function call is not that informative anyway - it is used
-> > > > just to print a log whose usefulness is questionable.
-> > > We need this logging information customers are using this info in
-> > > case of link down failure.
-> >
-> > Out of curiosity, to do what ?
-> >
-> > [...]
-> >
-> > > > > +/**
-> > > > > + * xilinx_cpm_pcie_intx_map - Set the handler for the INTx and
-> > > > > +mark IRQ as valid
-> > > > > + * @domain: IRQ domain
-> > > > > + * @irq: Virtual IRQ number
-> > > > > + * @hwirq: HW interrupt number
-> > > > > + *
-> > > > > + * Return: Always returns 0.
-> > > > > + */
-> > > > > +static int xilinx_cpm_pcie_intx_map(struct irq_domain *domain,
-> > > > > +				    unsigned int irq, irq_hw_number_t
-> hwirq) {
-> > > > > +	irq_set_chip_and_handler(irq, &dummy_irq_chip,
-> > > > > +handle_simple_irq);
-> > > >
-> > > > INTX are level IRQs, the flow handler must be handle_level_irq.
-> > > Accepted will change.
-> > > >
-> > > > > +	irq_set_chip_data(irq, domain->host_data);
-> > > > > +	irq_set_status_flags(irq, IRQ_LEVEL);
-> > > >
-> > > > The way INTX are handled in this patch is wrong. You must set-up a
-> > > > chained IRQ with the appropriate flow handler, current code uses
-> > > > an IRQ action and that's an IRQ layer violation and it goes
-> > > > without saying that it
-> > is almost certainly broken.
-> > > In our controller we use same irq line for controller errors and
-> > > legacy errors.  we have two cases here where error interrupts are
-> > > self-consumed by controller, and legacy interrupts are flow handled.
-> > > Its not INTX handling alone for this IRQ line .  So chained IRQ can
-> > > be used for self consumed interrupts too ?
-> >
-> > No. In this specific case both solutions are not satisfying, we need
-> > to give it some thought, I will talk to Marc (CC'ed) to find the best
-> > option here going forward.
-> >
-> Hi Marc,
->=20
-> Can you please provide yours inputs for this case.
->=20
-Hi Marc,
+Hi,
 
-Can you please provide required inputs on this.
+On 3/20/2020 3:23 AM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-03-19 02:56:31)
+>> On 3/19/2020 2:44 AM, Stephen Boyd wrote:
+>>> Quoting Maulik Shah (2020-03-16 23:47:21)
+>>>> On 3/17/2020 7:34 AM, Stephen Boyd wrote:
+>>>>> What happens if irq is "disabled" in software, because this is the first
+>>>>> function called on the irq, and we aren't in suspend yet. Then we get
+>>>>> the irq. Won't we be interrupting the CPU because we've enabled in PDC
+>>>>> and GIC hardware? Why doesn't this function update the wake bit and then
+>>>>> leave the force on irq logic to suspend entry? Will we miss an interrupt
+>>>>> while entering suspend because of that?
+>>>> As PDC (and GIC) have a role during "active" time as well, interrupt should be
+>>>> enabled in PDC and GIC HW.
+>>> Sure. When the irq is enabled we want to enable at the GIC, but if it
+>>> isn't enabled and we're not in suspend I would think we don't want the
+>>> irq enabled at the GIC. But this code is doing that. Why?
+>> Since we want to wake up in idle path LPM as well, when IRQ is marked as wake up capable and even though its disabled.
+> No. IRQs that are disabled but have wake enabled on them should not wake
+> up the CPU from deep idle states (which is what I assume you mean by
+> idle path LPM (Low Power Mode)). Only if the irq is enabled should it
+> wake the CPU from deep idle states, and in this case irq wake state has
+> nothing to do with that working or not.
+Okay i will address this in V3.
+>>>   I'd think we
+>>> would want to make enable in the PDC driver enable the parent and then
+>>> make the set_wake path just update some bitmap tracking wakeup enabled
+>>> irqs.
+>>>
+>>> Then when we enter suspend we will enable any pdc interrupts only in the
+>>> PDC so that we can wakeup from suspend if that interrupt comes in. When
+>>> we wakeup we'll resend the edge interrupts to the GIC on the resume path
+>>> and level interrupts will "just work" because they'll stay asserted
+>>> throughout resume.
+>>>
+>>> The bigger problem would look to be suspend entry, but in that case we
+>>> leave any interrupts enabled at the GIC on the path to suspend (see
+>>> suspend_device_irq() and how it bails out early if it's marked for
+>>> wakeup)
+>> No it doesn't happen this way in suspend_device_irq(), not for this disabled IRQ.
+>>
+>> Agree, it's a bigger problem to set IRQ enabled at GIC HW which is already disabled in HW and SW but marked for wake up.
+>> However suspend_device_irq() is of little or no-use here (for that particular IRQ). Let me step by step give details.
+>>
+>> This will benefit everyone to understand this problem. Correct me if something below in not happening as I listed.
+>>
+>> Step-1
+>>
+>> Driver invokes enable_irq_wake() to mark their IRQ wake up capable.
+>>
+>> Step-2
+>>
+>> After enable_irq_wake(), drivers invokes disable_irq().
+>> Let's break it down how this disable_irq() will traverse (in current code, without this RFC PATCH)
+>>
+>> Step-2.1
+>>
+>> In kernel/irq/manage.c
+>> disable_irq() => __disable_irq_nosync() => __disable_irq() => irq_disable()
+>>
+>> Step-2.2
+>>
+>> This will jump to kernel/irq/chip.c
+>> irq_disable() => __irq_disable()  => which then calls chip's .irq_disable via desc->irq_data.chip->irq_disable(&desc->irq_data);
+>> Note that this is a GPIO IRQ, gpiolib set's this .irq_disable for every gpio chip during registration
+>>
+>> (see below in drivers/gpio/gpiolib.c)
+>> irqchip->irq_disable = gpiochip_irq_disable;
+>>
+>> So it doesn't take lazy path to disable at HW, its always unlazy (at-least for gpio IRQs)
+> That looks like a bug. It appears that gpiolib is only hooking the irq
+> disable path here so that it can keep track of what irqs are not in use
+> by gpiolib and allow them to be used for GPIO purposes when the irqs are
+> disabled. See commit 461c1a7d4733 ("gpiolib: override
+> irq_enable/disable"). That code in gpiolib should probably see if lazy
+> mode has been disabled on the irq and do similar things to what genirq
+> does and then let genirq mask the gpios if they trigger during the time
+> when the irq is disabled. Regardless of this design though, I don't
+> understand why this matters.
+yes i already did see the commit 461c1a7d4733. The change went in few 
+years back now in gpiolib.
 
-Regards,
-Bharat
+I wanted to point out that since gpiolib doesn't take lazy approch, the 
+interrupt will
+
+get disabled in HW the moment driver invokes disable_irq() from driver's 
+suspend ops.
+
+So during suspend someone need to re-enable in HW if its been marked for 
+wakeup
+
+This should happen probably at very late stage in suspend after all 
+drivers are done.
+
+
+>
+>> Step-2.3
+>>
+>> Call Jumps to gpiochip_irq_disable()
+>> This then invokes irq_chip's  .irq_disable via chip->irq.irq_disable(d)
+>> which finally arrives at msmgpio irq_chip's msm_gpio_irq_disable() call from here.
+>> it finds that IRQ controller is in hierarchy, so it invokes irq_chip_disable_parent().
+>>
+>> Step-2.4
+>>
+>> This invokes PDC irq_chip's qcom_pdc_gic_disable()
+>> At this point,
+>> This will go ahead and "disabled in PDC HW"
+>> This also invokes irq_chip_disable_parent() since PDC is also in hierarchy with GIC.
+>>
+>> Step-2.5
+>>
+>> This invokes GIC's gic_mask_irq() since GIC doesn't have .irq_disable implemented, it instead invokes mask.
+>> This will go ahead and "disables at GIC HW".
+>>
+>> Final status at the end of step 2:
+>> (a)    IRQ is marked as wake up capable in SW
+>> (b)    IRQ is disabled in both SW and HW at GIC and PDC
+>>
+>> Step-3
+>> Device enters "suspend to RAM" which invokes suspend_device_irq()
+>> Pasting the interested part here...
+>>
+>>         if (irqd_is_wakeup_set(&desc->irq_data)) {
+>>                  irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+>>                  ...
+>>                  return true;
+>>          }
+>>          ..
+>>          __disable_irq(desc);
+>>
+>> Note that it bails out with above if condition here for IRQs that are marked wake up capable, as you have already pointed out.
+>>
+>> For the rest of IRQs it goes ahead and disables them at HW via invoking __disable_irq() (be it a GIC HW or PDC HW)
+>> so when device is in suspend only wake up capable IRQs are finally left enabled in HW.
+> __disable_irq() considers lazy setting or not and leaves the irq
+> unmasked if the irq is lazy disabled. But we have the
+> IRQCHIP_MASK_ON_SUSPEND flag set in the gpio irq controller and that
+> properly masks the irq through the hierarchy if necessary. Again, this
+> is fine and all but I don't see how it matters.
+>
+>> Now, If any driver that has only done step-1, then it make sense that it will bail out here and leave IRQ enabled in HW (to be precise in its
+>> original state at HW, without disabling it)
+>>
+>> But some drivers did step-1 and step-2 both.
+>>
+>> Yes even for this case, it will still bail out here, since its marked as wake up capable but it defeats the purpose of bail out
+>> (bail out is to NOT go ahead and disable at HW), but by doing step-2 driver already disabled the IRQ at HW well before
+>> suspend_device_irq() is invoked.
+>>
+>> In other words, IRQ status stays same as what was at the end of step-2 (disabled in HW)
+>>
+>> So this whole function is of no use (for that particular IRQ part). Here driver is disabling IRQ on their own via step-2 and then asks
+>> "hey remember I marked it as wake up capable in step-1, so IRQ should
+>> resume system from suspend when it occurs" completely ignoring
+>> the fact that its already disabled at HW in step-2.
+>>
+>> IMO, drivers should not even do step-2 here.  They should just mark irq as wake up capable and then let suspend framework decide whether
+>> to keep it enabled or disabled in HW when entering to suspend (Read may only do step-1, then everything works fine with current code)
+>>
+>> Hope that above details makes it clear on why I way asking earlier to
+>> remove unnecessary disable_irq() call from driver, I don't understand its usage
+>> (at least till now its not clear to me). May be there are some reasons like seeing spurious IRQ when entering to suspend so driver may want to disable it in HW.
+>>
+>> But then responsibility is falling on either suspend framework to re-enable such wake up capable interrupts in HW.
+>> This may be done by again invoking enable_irq() before bailing out for
+>> wakeup capable IRQ in suspend_device_irq(). I don't know if this is acceptable.
+>>
+>> Someone from To/Cc may clarify if above can be done. Note that it may create problem for other drivers which does only step-1, by calling enable_irq()
+>> during suspend, it will update desc->depth, so this agin need to be undo when resuming.
+>>
+>> Otherwise, it is currently falling onto the individual irq_chip's to avoid disabling in HW in the first place.
+>>
+>> this RFC patch tries to do same and address this problem in PDC irq_chip when control reaches at Step 2.4, to NOT disable at HW when the IRQ
+>> is already marked wake up capable, it bails out at Step 2.4 in PDC irq_chip so that interrupt is left enabled in HW at both PDC and GIC HW level.
+> I don't see any need to change genirq by changing how
+> suspend_device_irq() is written, but I'm not the maintainer of this code.
+
+See above reply, the someone mentioned above can be suspend_device_irq().
+
+Since i don't see this as a problem for PDC irqchip alone but for every 
+irqchip in kernel using GPIO
+
+interrupts. Although i did not check how other platforms might be 
+working, but i guess probably they don't
+
+really disable at HW with disable_irq() or may not even have 
+.irq_disable implemented in gpio irq_chip drivers.
+
+>>> so we should be able to have some suspend entry hook in pdc that
+>>> enables the irq in the PDC if it's in the wakeup bitmap. Then on the
+>>> path to suspend the GIC can lose power at any point after we enable the
+>>> wakeup path in PDC and then the system should resume and get the
+>>> interrupt through the resend mechanism.
+>> I thought of this to introduce suspend hook in PDC which decides to keep wake up marked irq enabled at PDC.
+>> But then someone need to keep it enabled at GIC as well.
+>>
+>> PDC does not directly forward IRQ to CPU. PDC brings SoC out of low power mode where GIC does
+>> not have power cut, it replays the interrupt at GIC in HW and that leads to forwarding interrupt
+>> to CPU and resume from low power mode.
+>> So PDC and GIC HW status should need to be in sync.
+>>
+> It sounds like PDC just passes along the level or edge and relies on the
+> parent irq chip (GIC in this case) to have the irq unmasked so it can be
+> seen at the CPU. If the irq is masked at the GIC does it still wakeup
+> the CPU if it's unmasked at the PDC?
+No. if IRQ is maksed at GIC it doesn't wakeup even though at PDC its 
+unmasked.
+>
+> Does the PDC have any other registers that can latch an edge type irq
+> across suspend so we can read it on resume? If that exists then we can
+> have software resend irqs at resume time. I think this was asked before
+> and the answer was it doesn't exist.
+Correct it doesn't exist.
+>
+> If there isn't any sort of latching, then why can't we unmask the irq in
+> the GIC hardware by calling irq_chip_enable_parent() from the suspend
+> hook in PDC? That should guarantee that the irq is unmasked at the GIC
+> when we're suspending and the GIC is about to lose power. And presumably
+> the GIC state is restored by hardware on resume so that the PDC can
+> forward the edge to the GIC which can interrupt the CPU because the
+> interrupt was left unmasked. The idea is to capture wake and enable
+> state in a bitmap, unmask at the PDC and GIC during system suspend if
+> it's marked for wakeup regardless of enable state, and then mask in the
+> PDC and GIC during resume if the irq is disabled in software. Does that
+> fail somehow?
+
+Okay i will implement suspend/resume hook in PDC and use bitmap to
+
+unmask at PDC and GIC during suspend. Addressed in V3.
+
+Thanks,
+
+Maulik
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
