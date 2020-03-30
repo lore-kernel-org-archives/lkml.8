@@ -2,168 +2,158 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B02C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D6C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9892073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBBC206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SWfgLXwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgC3NqN convert rfc822-to-8bit (ORCPT
+        id S1728608AbgC3NrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:46:13 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43753 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728065AbgC3NqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:46:13 -0400
-IronPort-SDR: NSlZJLyDft1JvgpDj5EfvA4sTcRyFL7dUMjd00CgTPNrKxIJB7QW4bHAJX+pwME93GyNiLPKli
- tAVV/EKY43eQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 06:46:11 -0700
-IronPort-SDR: c1V9JLhuvFlsnYYTIOb0W1i6yN2yoUTXzsVk+OcUNlMJBYhWG4stV7fnTWJ3U4CvNyCLXacXW7
- a/E6qORb0d6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="241619267"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Mar 2020 06:46:11 -0700
-Received: from fmsmsx115.amr.corp.intel.com (10.18.116.19) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 06:46:11 -0700
-Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.38]) by
- fmsmsx115.amr.corp.intel.com ([169.254.4.81]) with mapi id 14.03.0439.000;
- Mon, 30 Mar 2020 06:46:11 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Shane Francis <bigbeeshane@gmail.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: RE: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
- a scatterlist
-Thread-Topic: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
- a scatterlist
-Thread-Index: AQHWBFQRvRx+hOOiski5ycfWmHv7TahcuvpggAMSJICAAVxq4A==
-Date:   Mon, 30 Mar 2020 13:46:10 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663FFFC0C0E@fmsmsx107.amr.corp.intel.com>
-References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
- <20200327162126.29705-1-m.szyprowski@samsung.com>
- <14063C7AD467DE4B82DEDB5C278E8663FFFBFCE1@fmsmsx107.amr.corp.intel.com>
- <8a09916d-5413-f9a8-bafa-2d8f0b8f892f@samsung.com>
-In-Reply-To: <8a09916d-5413-f9a8-bafa-2d8f0b8f892f@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.108]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 30 Mar 2020 09:47:25 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46150 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727954AbgC3NrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:47:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585576043;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dImfdh6qloDisJk14phvZqq2nUxyv6nnECA2VHRpvis=;
+        b=SWfgLXwFOqv8OLW/OvHQlgI21R/C8FaCyFyJUCZe76z/fyq8w6dRyKAQegVOaPGyOa2Ng0
+        LDTuDs//dcdX+MDbEvcXlxsivWuVGDTXSw3cOT8RRb0v5nG6m3m0ZcNRKXfH4Vtc1BTPw5
+        IszYM2xIgZb4aqeN7/vCkjERd5KicPE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-72-k61dtWGEN9uaZndgcWZEEg-1; Mon, 30 Mar 2020 09:47:21 -0400
+X-MC-Unique: k61dtWGEN9uaZndgcWZEEg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A88BB86A06E;
+        Mon, 30 Mar 2020 13:47:19 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6512097B1B;
+        Mon, 30 Mar 2020 13:47:08 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 09:47:05 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
+        ebiederm@xmission.com, simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+Message-ID: <20200330134705.jlrkoiqpgjh3rvoh@madcap2.tricolour.ca>
+References: <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca>
+ <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
+ <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca>
+ <CAHC9VhRYvGAru3aOMwWKCCWDktS+2pGr+=vV4SjHW_0yewD98A@mail.gmail.com>
+ <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
+ <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+ <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
+ <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
+ <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca>
+ <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTQUnVhoN3JXTAQ7ti+nNLfGNVXhT6D-GYJRSpJHCwDRg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Marek Szyprowski
->Sent: Sunday, March 29, 2020 5:56 AM
->To: Ruhl, Michael J <michael.j.ruhl@intel.com>; dri-
->devel@lists.freedesktop.org; linux-samsung-soc@vger.kernel.org; linux-
->kernel@vger.kernel.org
->Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>; David Airlie
-><airlied@linux.ie>; Shane Francis <bigbeeshane@gmail.com>;
->stable@vger.kernel.org; Thomas Zimmermann <tzimmermann@suse.de>;
->Alex Deucher <alexander.deucher@amd.com>
->Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from
->a scatterlist
->
->Hi Michael,
->
+On 2020-03-28 23:11, Paul Moore wrote:
+> On Tue, Mar 24, 2020 at 5:02 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2020-03-23 20:16, Paul Moore wrote:
+> > > On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > On 2020-03-18 18:06, Paul Moore wrote:
+> > >
+> > > ...
+> > >
+> > > > > I hope we can do better than string manipulations in the kernel.  I'd
+> > > > > much rather defer generating the ACID list (if possible), than
+> > > > > generating a list only to keep copying and editing it as the record is
+> > > > > sent.
+> > > >
+> > > > At the moment we are stuck with a string-only format.
+> > >
+> > > Yes, we are.  That is another topic, and another set of changes I've
+> > > been deferring so as to not disrupt the audit container ID work.
+> > >
+> > > I was thinking of what we do inside the kernel between when the record
+> > > triggering event happens and when we actually emit the record to
+> > > userspace.  Perhaps we collect the ACID information while the event is
+> > > occurring, but we defer generating the record until later when we have
+> > > a better understanding of what should be included in the ACID list.
+> > > It is somewhat similar (but obviously different) to what we do for
+> > > PATH records (we collect the pathname info when the path is being
+> > > resolved).
+> >
+> > Ok, now I understand your concern.
+> >
+> > In the case of NETFILTER_PKT records, the CONTAINER_ID record is the
+> > only other possible record and they are generated at the same time with
+> > a local context.
+> >
+> > In the case of any event involving a syscall, that CONTAINER_ID record
+> > is generated at the time of the rest of the event record generation at
+> > syscall exit.
+> >
+> > The others are only generated when needed, such as the sig2 reply.
+> >
+> > We generally just store the contobj pointer until we actually generate
+> > the CONTAINER_ID (or CONTAINER_OP) record.
+> 
+> Perhaps I'm remembering your latest spin of these patches incorrectly,
+> but there is still a big gap between when the record is generated and
+> when it is sent up to the audit daemon.  Most importantly in that gap
+> is the whole big queue/multicast/unicast mess.
 
-<snip>
+So you suggest generating that record on the fly once it reaches the end
+of the audit_queue just before being sent?  That sounds...  disruptive.
+Each audit daemon is going to have its own queues, so by the time it
+ends up in a particular queue, we'll already know its scope and would
+have the right list of contids to print in that record.
 
->> Is there an example of what the scatterlist would look like in this case?
->
->DMA framework or IOMMU is allowed to join consecutive chunks while
->mapping if such operation is supported by the hw. Here is the example:
->
->Lets assume that we have a scatterlist with 4 4KiB pages of the physical
->addresses: 0x12000000, 0x13011000, 0x13012000, 0x11011000. The total
->size of the buffer is 16KiB. After mapping this scatterlist to a device
->behind an IOMMU it may end up as a contiguous buffer in the DMA (IOVA)
->address space. at 0xf0010000. The scatterlist will look like this:
->
->sg[0].page = 0x12000000
->sg[0].len = 4096
->sg[0].dma_addr = 0xf0010000
->sg[0].dma_len = 16384
->sg[1].page = 0x13011000
->sg[1].len = 4096
->sg[1].dma_addr = 0
->sg[1].dma_len = 0
->sg[2].page = 0x13012000
->sg[2].len = 4096
->sg[2].dma_addr = 0
->sg[2].dma_len = 0
->sg[3].page = 0x11011000
->sg[3].len = 4096
->sg[3].dma_addr = 0
->sg[3].dma_len = 0
->
->(I've intentionally wrote page as physical address to make it easier to
->understand, in real SGs it is stored a struct page pointer).
->
->> Does each SG entry always have the page and dma info? or could you have
->> entries that have page information only, and entries that have dma info
->only?
->When SG is not mapped yet it contains only the ->pages and ->len
->entries. I'm not aware of the SGs with the DMA information only, but in
->theory it might be possible to have such.
->> If the same entry has different size info (page_len = PAGE_SIZE,
->> dma_len = 4 * PAGE_SIZE?), are we guaranteed that the arrays (page and
->addrs) have
->> been sized correctly?
->
->There are always no more DMA related entries than the phys pages. If
->there is 1:1 mapping between physical memory and DMA (IOVA) space, then
->each SG entry will have len == dma_len, and dma_addr will be describing
->the same as page entry. DMA mapping framework is allowed only to join
->entries while mapping to DMA (IOVA).
->
->> Just trying to get my head wrapped around this.
->
->Sure, I hope my explanation helps a bit.
+I don't see the point in deferring the generation of the contid list
+beyond the point of submitting that record to the relevant audit_queue.
 
-That is a great example!  Thank you very much for the explanation.
+> You don't need to show me code, but I would like to see some sort of
+> plan for dealing with multiple nested audit daemons.  Basically I just
+> want to make sure we aren't painting ourselves into a corner with this
+> approach; and if for some horrible reason we are, I at least want us
+> to be aware of what we are getting ourselves into.
 
-I was somehow seeing it as the dma side getting split and extended (rather
-than consolidated) into more possible entries.  This clarifies the issue for me.
+It wouldn't be significantly different from what we have, but as would
+have to happen for *all* records generated to a particular auditd/queue
+it would have to take the scope of that auditd into account, getting
+references to PIDs right for that PID namespace, along with other
+similar scope views including contid list range.
 
-Thanks!
+> paul moore
 
-Mike
+- RGB
 
->Best regards
->--
->Marek Szyprowski, PhD
->Samsung R&D Institute Poland
->
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
