@@ -2,119 +2,115 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D53C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51B9C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8BB20716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaEjSifc"
+	by mail.kernel.org (Postfix) with ESMTP id A708320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgC3Kn0 (ORCPT
+        id S1729303AbgC3Knm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:43:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34957 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729095AbgC3Kn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:43:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id k5so6261009pga.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 03:43:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=SxBpIzPkzU1vl9bySozt1wIiREaZHHXTdsxoYdI/9lw=;
-        b=MaEjSifcGOscOl65yWma3+FPGAc2iNPedC49K5dP/XwTurfuNlCQiAfd51ihTo1hAb
-         XX9geaEKzGQ3eLNKozHnAnSJP/HeANPraOhjvkR5tAwjydirwsLYtXZRTwBOUzm7DsT3
-         74WJZ1TVAUgFzu7Dc3jKTDnYePoSEz7aXjs01BTJ3FXevO+Af/7q3Ky8tCNWYy79gGuS
-         56Mzn0URuBLP4qSADpLf7lKzQHRRYdZac3oOinG/pGedktj5JnR6c1NkN+0YHanc371B
-         FI9wtRUec8WYdJvxTuo5r1izIWAqlOOBQa2BIiXxgafPj7+G5xgMBgZIzALPXpe0b7F/
-         m8ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SxBpIzPkzU1vl9bySozt1wIiREaZHHXTdsxoYdI/9lw=;
-        b=Mn7J5mjW4kKhV+Zmg806vA5w/8XIlwUHzT5AKddNf56ErBrtHA6oxjPf31dbRBZEZb
-         AAmuntyHYnBE3kyzv1RwBMgw/ewjrXF2yXnhCkVfJ+QZ0XS2nubLBR81IAtjskMl1TEH
-         0cePaGnXQVkGunHCdlfo5/CqBpJJeqzlnKFWOkcc9KffOmfni5+hBDI0nIprZX1lwQid
-         JmE7QR7ksSC0rY06VdOKpDU8pG3blkR/wyhXWtKdDYru7eLlCuVrGyWzys3lRBi3fYus
-         ONDiWDtbTza8s6KnKSJNjDdMCyE1rAnhn4X8e8LbrhFmUNtE9E54P9bCmuRNAfqMepp1
-         tKnw==
-X-Gm-Message-State: ANhLgQ2RqnF1w1lRHvWpAvm3aE0SXW//hJWkEL0wYkSM4P3gaQmYPRNJ
-        qVGAlkd65oY2nI/2pCD5Uuk=
-X-Google-Smtp-Source: ADFU+vsQ5VhuCnrZLzEJWMc1wnXdeMXTz/Sq3sHHTUK0IP1MylEryoQw9FFPsJZUK33R4fOXNlYbQQ==
-X-Received: by 2002:a63:8c51:: with SMTP id q17mr12502479pgn.320.1585565005316;
-        Mon, 30 Mar 2020 03:43:25 -0700 (PDT)
-Received: from payal-desktop ([157.33.199.31])
-        by smtp.gmail.com with ESMTPSA id d71sm10012346pfd.46.2020.03.30.03.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 03:43:24 -0700 (PDT)
-From:   Payal Kshirsagar <payalskshirsagar1234@gmail.com>
-To:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
-Cc:     Payal Kshirsagar <payalskshirsagar1234@gmail.com>
-Subject: [PATCH] ipc: add blank lines after declarations
-Date:   Mon, 30 Mar 2020 16:13:06 +0530
-Message-Id: <20200330104306.6672-1-payalskshirsagar1234@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 30 Mar 2020 06:43:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26454 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728912AbgC3Knm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 06:43:42 -0400
+IronPort-SDR: 9vD//3wRp0uiwiAWTFBn2VEfbc04iqkKNRVwgobCD24G/KasMYrH4tHI5ZZjIqPs6cELvTcNtD
+ lcd3MON3X/hw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 03:43:41 -0700
+IronPort-SDR: wwUk+Jwnmz7vf91weyeKOqaGAh9J/oT3rFSilVdm0crTq+p/bvI0oy+69NMMUJGR3TGHDRKVQt
+ zBxK7pVfY7Sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="294549884"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 03:43:38 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jIrtM-00EAdz-DH; Mon, 30 Mar 2020 13:43:40 +0300
+Date:   Mon, 30 Mar 2020 13:43:40 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        fntoth@gmail.com, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: Re: [PATCH v2 3/3] driver core: Replace open-coded
+ list_last_entry()
+Message-ID: <20200330104340.GO1922688@smile.fi.intel.com>
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+ <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+ <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com>
+ <20200330095707.GA10432@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330095707.GA10432@bogus>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch.pl warning by adding blank lines.
+On Mon, Mar 30, 2020 at 11:13:21AM +0100, Sudeep Holla wrote:
+> On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
+> > On 2020-03-27 5:56 pm, Naresh Kamboju wrote:
+> > > The kernel warning noticed on arm64 juno-r2 device running linux
+> > > next-20200326 and next-20200327
+> >
+> > I suspect this is the correct expected behaviour manifesting. If you're
+> > using the upstream juno-r2.dts, the power domain being waited for here is
+> > provided by SCPI, however unless you're using an SCP firmware from at least
+> > 3 years ago you won't actually have SCPI since they switched it to the newer
+> > SCMI protocol, which is not yet supported upstream for Juno. See what
+> > happened earlier in the log:
+> >
+> > [    2.741206] scpi_protocol scpi: incorrect or no SCP firmware found
+> > [    2.747586] scpi_protocol: probe of scpi failed with error -110
+> >
+> > Thus this is the "waiting for a dependency which will never appear" case,
+> > for which I assume the warning is intentional,
+> 
+> Is that the case ?
+> 
+> Previously we used to get the warning:
+> "amba xx: ignoring dependency for device, assuming no driver"
+> 
+> Now we have the kernel warning in addition to the above.
+> 
+> > since the system is essentially broken (i.e. the hardware/firmware doesn't
+> > actually match what the DT describes).
+> >
+> 
+> Not sure if we can term it as "essentially broken". Definitely not 100%
+> functional but not broken if the situation like on Juno where SCP firmware
+> is fundamental for all OSPM but not essential for boot and other minimum
+> set of functionality.
+> 
+> Either way I am not against the warning, just wanted to get certain things
+> clarified myself.
 
-Signed-off-by: Payal Kshirsagar <payalskshirsagar1234@gmail.com>
----
- ipc/compat.c     | 2 ++
- ipc/ipc_sysctl.c | 2 ++
- 2 files changed, 4 insertions(+)
+How this warning related to the patch in the subject? Does revert of the patch
+gives you no warning? (I will be very surprised).
 
-diff --git a/ipc/compat.c b/ipc/compat.c
-index 5ab8225923af..6c03927a4d71 100644
---- a/ipc/compat.c
-+++ b/ipc/compat.c
-@@ -39,6 +39,7 @@ int get_compat_ipc64_perm(struct ipc64_perm *to,
- 			  struct compat_ipc64_perm __user *from)
- {
- 	struct compat_ipc64_perm v;
-+
- 	if (copy_from_user(&v, from, sizeof(v)))
- 		return -EFAULT;
- 	to->uid = v.uid;
-@@ -51,6 +52,7 @@ int get_compat_ipc_perm(struct ipc64_perm *to,
- 			struct compat_ipc_perm __user *from)
- {
- 	struct compat_ipc_perm v;
-+
- 	if (copy_from_user(&v, from, sizeof(v)))
- 		return -EFAULT;
- 	to->uid = v.uid;
-diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
-index affd66537e87..ea115dfd3774 100644
---- a/ipc/ipc_sysctl.c
-+++ b/ipc/ipc_sysctl.c
-@@ -18,6 +18,7 @@ static void *get_ipc(struct ctl_table *table)
- {
- 	char *which = table->data;
- 	struct ipc_namespace *ipc_ns = current->nsproxy->ipc_ns;
-+
- 	which = (which - (char *)&init_ipc_ns) + (char *)ipc_ns;
- 	return which;
- }
-@@ -62,6 +63,7 @@ static int proc_ipc_doulongvec_minmax(struct ctl_table *table, int write,
- 	void __user *buffer, size_t *lenp, loff_t *ppos)
- {
- 	struct ctl_table ipc_table;
-+
- 	memcpy(&ipc_table, table, sizeof(ipc_table));
- 	ipc_table.data = get_ipc(table);
- 
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
