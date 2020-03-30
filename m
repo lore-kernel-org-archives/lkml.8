@@ -2,171 +2,83 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C36C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D24C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2B0206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:04:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Uh4bVVfa"
+	by mail.kernel.org (Postfix) with ESMTP id 2E565206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgC3REp (ORCPT
+        id S1730264AbgC3RFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:04:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39231 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728716AbgC3REp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:04:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id e9so10900466wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qqStv1Lo1qg4gRg7lDrcQqRCTc9QZc+NG4mrfiQbFjE=;
-        b=Uh4bVVfaNPgqBDf14A/tNlnFlIMgcAjfpCWcb+Uzrx//iiYZNWzYxkVZtoxnnBGNE7
-         JUng1z3YWhf3Ee4gCS+2rK3YV4eaABGB5nQVH/R8tVtdVZInAAMkT1GD+hjo00JOuZqN
-         FvOAi1z1lfK4wW+rdBnYnyco/ZYm94ggobg0Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qqStv1Lo1qg4gRg7lDrcQqRCTc9QZc+NG4mrfiQbFjE=;
-        b=pYilXCgcLj9dfbR5RnqCic0Uqjl7N6pdF8LsJuNcJ5DlfAqVhfCa2hAnSnS0cBrxxi
-         lHPn4d/uEDkj/QJfKRL+S2UqeVtFU8si74Fk8gSFEZ7L7LGqVuTdrwCPT+cWPk5UBbZv
-         cK+cd8xgmUsBM8gnpX97msLaRJ0hSn1jMIs8GtNKdER5g2jyX6dmyQOr7HTJ9GeRkVo3
-         jWdjhjEtVs59AmGeSnewrCRq27NUkICym2/clQjTInENemyZcm9ZjizzF6/8jPt2lPy1
-         v0Mr/hiJlP1fcBkXmNt/N4udrCp54ALMArVWHzwOX6QbCKSGKlkR9o8lcWvy4f1dFCK7
-         JDJQ==
-X-Gm-Message-State: ANhLgQ0krXt70HtMUZ529jS9J9u6HHI6AktTDHBky41be81JnCK3dXDG
-        klCtIDQXG6HL/R7SxPZIPDvt6ISBthX0Kin7
-X-Google-Smtp-Source: ADFU+vvo+5kRarlX8ncgn7tFCSQDq8v2Ad0Bb+4DKkjHRYgiSGCpdbHJ7aZZkfTIo2aaSImThdshhg==
-X-Received: by 2002:a05:600c:2202:: with SMTP id z2mr263068wml.64.1585587881418;
-        Mon, 30 Mar 2020 10:04:41 -0700 (PDT)
-Received: from [10.230.26.36] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id t126sm192175wmb.27.2020.03.30.10.04.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 10:04:40 -0700 (PDT)
-Subject: Re: [PATCH 1/3] PCI: iproc: fix out of bound array access
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bharat Gooty <bharat.gooty@broadcom.com>
-References: <20200326204807.GA87784@google.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <0fec2db0-fb56-615d-eed4-d702d1bc37fb@broadcom.com>
-Date:   Mon, 30 Mar 2020 10:04:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200326204807.GA87784@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 30 Mar 2020 13:05:16 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10809 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728716AbgC3RFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 13:05:16 -0400
+IronPort-SDR: fLNpP5044+TaCMRTELqnln2q1e8m6oHow9XIRjpBZyifY5ra2ojMTd3gfJu7HZlWv8kMjSzEU1
+ H9BXvty4Urvw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 10:05:16 -0700
+IronPort-SDR: 5/TDhULDr9K4f4azVxRH5osuvGcI9/UOgfezISiV8M41fTzacCl2FrMeWIJyBFfaWGRw0j9mNC
+ ghf7hoytlbfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
+   d="scan'208";a="294667145"
+Received: from unknown (HELO climb.png.intel.com) ([10.221.118.165])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 10:05:13 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [net-next,v2, 0/3] Add additional EHL PCI info and PCI ID
+Date:   Tue, 31 Mar 2020 01:05:09 +0800
+Message-Id: <20200330170512.22240-1-weifeng.voon@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Jose Miguel Abreu for the feedback. Summary of v2 patches:
 
+1/3: As suggested to keep the stmmac_pci.c file simple. So created a new
+     file dwmac-intel.c and moved all the Intel specific PCI device out
+     of stmmac_pci.c.
 
-On 3/26/2020 1:48 PM, Bjorn Helgaas wrote:
-> On Thu, Mar 26, 2020 at 01:27:36PM -0700, Ray Jui wrote:
->> On 3/26/2020 12:48 PM, Bjorn Helgaas wrote:
->>> ...
->>> It's outside the scope of this patch, but I'm not really a fan of the
->>> pcie->reg_offsets[] scheme this driver uses to deal with these
->>> differences.  There usually seems to be *something* that keeps the
->>> driver from referencing registers that don't exist, but it doesn't
->>> seem like the mechanism is very consistent or robust:
->>>
->>>   - IPROC_PCIE_LINK_STATUS is implemented by PAXB but not PAXC.
->>>     iproc_pcie_check_link() avoids using it if "ep_is_internal", which
->>>     is set for PAXC and PAXC_V2.  Not an obvious connection.
->>>
->>>   - IPROC_PCIE_CLK_CTRL is implemented for PAXB and PAXC_V1, but not
->>>     PAXC_V2.  iproc_pcie_perst_ctrl() avoids using it ep_is_internal",
->>>     so it *doesn't* use it for PAXC_V1, which does implement it.
->>>     Maybe a bug, maybe intentional; I can't tell.
->>>
->>>   - IPROC_PCIE_INTX_EN is only implemented by PAXB (not PAXC), but
->>>     AFAICT, we always call iproc_pcie_enable() and rely on
->>>     iproc_pcie_write_reg() silently drop the write to it on PAXC.
->>>
->>>   - IPROC_PCIE_OARR0 is implemented by PAXB and PAXB_V2 and used by
->>>     iproc_pcie_map_ranges(), which is called if "need_ob_cfg", which
->>>     is set if there's a "brcm,pcie-ob" DT property.  No clear
->>>     connection to PAXB.
->>>
->>> I think it would be more readable if we used a single variant
->>> identifier consistently, e.g., the "pcie->type" already used in
->>> iproc_pcie_msi_steer(), or maybe a set of variant-specific function
->>> pointers as pcie-qcom.c does.
->>
->> It is not possible to use a single variant identifier consistently,
->> i.e., 'pcie->type'. Many of these features are controller revision
->> specific, and certain revisions of the controllers may all have a
->> certain feature, while other revisions of the controllers do not. In
->> addition, there are overlap in features across different controllers.
->>
->> IMO, it makes sense to have feature specific flags or booleans, and have
->> those features enabled or disabled based on 'pcie->type', which is what
->> the current driver does, but like you pointed out, what the driver
->> failed is to do this consistently.
-> 
-> There are several drivers that have the same problem of dealing with
-> different revisions of hardware.  It would be nice to do it in a
-> consistent style, whatever that is.
-> 
+2/3: Added Intel(R) Programmable Services Engine (Intel(R) PSE) MAC PCI ID
+     and PCI info
 
-Sure, agree with you that it should be handled in a consistent way
-within this driver, and the current driver is not handling this
-consistently.
+3/3: Added EHL 2.5Gbps PCI ID and info
 
->> The IPROC_PCIE_INTX_EN example you pointed out is a good example. I
->> agree with you that we shouldn't rely on iproc_pcie_write_reg to
->> silently drop the operation for PAXC. We should add code to make it
->> explictly obvious that legacy interrupt is not supported in all PAXC
->> controllers.
->>
->> pcie->pcie->reg_offsets[] scheme was not intended to be used to silently
->> drop register access that are activated based on features. It's a
->> mistake that should be fixed if some code in the driver is done that
->> way, as you pointed out.
-> 
-> That's actually why I dug into this a bit -- the
-> iproc_pcie_reg_is_invalid() case is really a design-time error, so it
-> seemed like there should be a WARN() there instead of silently
-> returning 0 or ignoring a write.
-> 
+Changes from v1:
+-Added a patch to move all Intel specific PCI device from stmmac_pci.c to
+ a new file named dwmac-intel.c.
+-Combine v1 patch 1/3 and 2/3 into single patch.
 
-I think 'iproc_pcie_reg_is_invalid' is a fall back protection. We should
-aim to prevent this from happening in the first place using whatever
-means we determined appropriate, and do that consistently. In addition,
-I also agree with you that there should be a WARN instead of silently
-returning zero (for reads) and dropping the writes.
+Voon Weifeng (3):
+  net: stmmac: create dwmac-intel.c to contain all Intel platform
+  net: stmmac: add EHL PSE0 & PSE1 1Gbps PCI info and PCI ID
+  net: stmmac: add EHL 2.5Gbps PCI info and PCI ID
 
-We'll be looking into improving this as you suggested when we have a
-chance. In the mean time, I think both of us agree this is out of the
-scope of the issue that this patch is trying to fix, which is actually a
-pretty critical issue that can cause potential corruption of memory and
-the fix should be picked up ASAP (and for older LTS kernels too).
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   9 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 592 ++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_pci.c  | 313 ---------
+ 4 files changed, 602 insertions(+), 313 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
 
-Thanks,
+-- 
+2.17.1
 
-Ray
-
-> Bjorn
-> 
