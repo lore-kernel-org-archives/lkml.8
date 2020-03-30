@@ -2,127 +2,96 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032C6C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FABDC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDD5206CC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62626206CC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 09:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="skx0J5EJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvwA3qjn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgC3JIS (ORCPT
+        id S1729879AbgC3JIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:08:18 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39565 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729827AbgC3JIS (ORCPT
+        Mon, 30 Mar 2020 05:08:35 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40486 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729684AbgC3JIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:08:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p10so20612723wrt.6;
-        Mon, 30 Mar 2020 02:08:16 -0700 (PDT)
+        Mon, 30 Mar 2020 05:08:35 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t24so8368151pgj.7;
+        Mon, 30 Mar 2020 02:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bTYehEJibc5NpezL2miOM2UdvHHV5lxW3CvlvcvUFZc=;
-        b=skx0J5EJ+LeY2Xp5xogjkpxx/vhzk/uPCt6wTntQ2gWmUK4+NB8zoW0hukUsmSF0nD
-         zKLCtfJ8KVjrhX+J6OiYI2KvdVdUwn1+BSjCHJisv8Zc/UuYqdTnBwYfCowXEU4fuA5o
-         fQWlC0x43Lw2vGrcZjohE4mR/0bTy1D7K2FtD5Ji2ckVuqB/748Uq8wl2YGVxW66k2uM
-         UWVcapTluCjqSkBJGxoHefhA8vtEWcnnqQxBk6NnXYalpp4bL5/46MXB7xGAEG+BZyx8
-         zSJdNdeVzaFPEkrcTpyRCB1f4U3VcLIkfsqn5M7A83+nIJBFduH4VuX98dYjy0Tabvf+
-         /bJQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wMX02ejGG73Qrwzg7wLP5FGjGf2UMP3ZHrJU73GoEFg=;
+        b=OvwA3qjnZ8JpaCHc48i9hHVqMpv4k76cePP7uKYsYWADygIH00TsQBdnUC6FHStmoH
+         FJrzeN7FfzwS12G80vou7QlnTA8It7zIEmciEE7LdYj3reJrufh0N5O/DbDRM1ytDBzn
+         5ux+kT0MVui9dYTweceDvlTkBJX74mHDj3es/vqEwCUH9xnkGZNyKOzz8ZLP780C68O9
+         AXIK/z6YpYDACXEeFz+gvEvO3PoXMhldJPFrF8T0rSS7ugbqS3Ko1oWnaLh9LOw/2JCq
+         dKMr4pc9z740BTbb3RB7f3+1Z37Ol9yjQ7xeE9x+qu1Ry3q+3Xlyb9kl9t8XZJlp5BMM
+         W8+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bTYehEJibc5NpezL2miOM2UdvHHV5lxW3CvlvcvUFZc=;
-        b=DaYNojXtZ2KKItaj0Sz+p9TRebhDp8ZfZsn8LoDKyRM2Yl6soKLuAOU/RlKG+anQRJ
-         HADikK8ASOuKozsdBuxUenFrsMS1IW+Y2HASqg3kmpM2VhidophTzKzsVhrGHB0ECo6d
-         DcXY3YiAAUDm3Gjklj9EpUmdtyCUqhRizr3PBzWX5ItjKWNqYzwAuTzXKiH/lCyrlr7H
-         IWt8HXXTJzLvbIB+qMNd+arRI/QsDWOadRh0TKYpGZQqae+UP1Nk48d1kz5TbpzDCaqv
-         Iks+PRlaR2eu0pD8jTHnhBvRb9WrNSTz8lB6G5m4Cj/ftFQICWBTbmysQYjzsdjSX/+B
-         WvvA==
-X-Gm-Message-State: ANhLgQ0NepTn2fjlDZQZjPulT6Hs0G1NHJHRikP7EwKwRtfxdqDsz9bv
-        Y5kTT2CB3/mjPtx84N3nRgzlLFnB
-X-Google-Smtp-Source: ADFU+vs8+HuLZBtQ3iKO2QQDWy8WQ1tzX+o4NRgABRPSTDnj27IhTo6J75JWGFZDWwYDHYbxmJVT4w==
-X-Received: by 2002:a5d:4284:: with SMTP id k4mr13569324wrq.310.1585559295971;
-        Mon, 30 Mar 2020 02:08:15 -0700 (PDT)
-Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
-        by smtp.gmail.com with ESMTPSA id z1sm9323400wrp.90.2020.03.30.02.08.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 02:08:15 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
- syscall
-To:     Aleksa Sarai <cyphar@cyphar.com>, Al Viro <viro@zeniv.linux.org.uk>
-References: <20200202151907.23587-1-cyphar@cyphar.com>
- <20200202151907.23587-3-cyphar@cyphar.com>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <4dcea613-60b8-a8af-9688-be93858ab652@gmail.com>
-Date:   Mon, 30 Mar 2020 11:08:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wMX02ejGG73Qrwzg7wLP5FGjGf2UMP3ZHrJU73GoEFg=;
+        b=Nk2xsQVsMqIJ7U32MGKZuhFDoe2PQrsPofwwJgNS6Ng6dZDsK9FV6WbIM4vgY7AV8Y
+         RIV7WJkDuT1mUENbfQVUXAvCjZ68NGcsFMN+aRXFZo9Id5owkon1aHpQpcYKx4bdzxSK
+         j7OLKIGRkAf+EH2wdXVurw6sBxaahnT1JK6S+iKZHH02j+j/V3IS779fzP3KiruuG9xh
+         2kH2ayj/O1nQSJcF2qEfnu8yxdzWWcqaA182VjfVSAQiAMsaT0pwj2mQlGgNTkugIQRK
+         mx7UeZrpw9pK83QdliCbgrchzAWXCxhNiZuBbu+zEV9K7IM5oVyKzsnhEylNwt+qTCXQ
+         WmCg==
+X-Gm-Message-State: ANhLgQ1tqjRSjN/tOj/sq8BwfJtaxnW60mwHlJaVlHtKBUCKETZAgFqB
+        pk4+m4RHNjA+7FFvjaSoNmub6y+EEXm4QoEL/K8=
+X-Google-Smtp-Source: ADFU+vsaY5JxUFEh14uKO4Mm5p07AHhGBlvU0+GaYjp39oDTmuhfZScp8S+ks6F23CtWfQ9GH/aWgoZFn7GC8x9DM08=
+X-Received: by 2002:aa7:9097:: with SMTP id i23mr11778522pfa.170.1585559314296;
+ Mon, 30 Mar 2020 02:08:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200202151907.23587-3-cyphar@cyphar.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433@epcas1p1.samsung.com>
+ <20200330052528.10503-1-jh80.chung@samsung.com>
+In-Reply-To: <20200330052528.10503-1-jh80.chung@samsung.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 30 Mar 2020 12:08:27 +0300
+Message-ID: <CAHp75Vey9VUSAT6j6NTSXqNUK1vwSqY=aSx3-WPoXgxCK33SDg@mail.gmail.com>
+Subject: Re: [PATCH] brcmfmac: fix wrong location to get firmware feature
+To:     Jaehoon Chung <jh80.chung@samsung.com>
+Cc:     "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        brcm80211-dev-list@cypress.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Aleksa,
+On Mon, Mar 30, 2020 at 8:26 AM Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>
+> sup_wpa feature is getting after setting feature_disable flag.
+> If firmware is supported sup_wpa feature,  it's always enabled
+> regardless of feature_disable flag.
+>
 
-On 2/2/20 4:19 PM, Aleksa Sarai wrote:
-> Rather than trying to merge the new syscall documentation into open.2
-> (which would probably result in the man-page being incomprehensible),
-> instead the new syscall gets its own dedicated page with links between
-> open(2) and openat2(2) to avoid duplicating information such as the list
-> of O_* flags or common errors.
-> 
-> In addition to describing all of the key flags, information about the
-> extensibility design is provided so that users can better understand why
-> they need to pass sizeof(struct open_how) and how their programs will
-> work across kernels. After some discussions with David Laight, I also
-> included explicit instructions to zero the structure to avoid issues
-> when recompiling with new headers.>
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-I'm just editing this page, and have a question on one piece.
-
-> +Unlike
-> +.BR openat (2),
-> +it is an error to provide
-> +.BR openat2 ()
-> +with a
-> +.I mode
-> +which contains bits other than
-> +.IR 0777 ,
-
-This piece appears not to be true, both from my reading of the
-source code, and from testing (i.e., I wrote a a small program that
-successfully called openat2() and created a file that had the
-set-UID, set-GID, and sticky bits set).
-
-Is this a bug in the implementation or a bug in the manual page text?
-
-Thanks,
-
-Michael
-
+No blank line in between. (Dunno if you need to resend, just wait what
+maintainer says)
 
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+With Best Regards,
+Andy Shevchenko
