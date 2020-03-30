@@ -2,145 +2,95 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934D2C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F62C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6409020757
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585575349;
-	bh=mpEf7NQVYYvCdUG6heXAB6Ng6mW+GJ24w6fwdkL20GU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=w1gJdDpxDh9mlNSbbWfRBbnjWnciWdfuth531R2kZRS2vSxe+5X1JVnet5QfW/KYA
-	 +SXx8RdalVSunKN00Us+JMoKHySjEAAsA7iBzZY0z9W5D4EhTWm+6A93ah1iP0ZMx0
-	 i6llXa7hjZc/C24NorPGfWk3OWB1eFRqj8TkCl60=
+	by mail.kernel.org (Postfix) with ESMTP id A93A720757
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgC3Nfs (ORCPT
+        id S1728018AbgC3Ngg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:35:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727612AbgC3Nfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:35:48 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63EDC20757;
-        Mon, 30 Mar 2020 13:35:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585575347;
-        bh=mpEf7NQVYYvCdUG6heXAB6Ng6mW+GJ24w6fwdkL20GU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bjjMLzKCuXkABe8htMvwdDaKYBYq/YwHYEzf81lxMyl1OwfoszaeMmodLD7w925HE
-         LPiu/Kfu+/BCT1sT2VCsk+l5DgeVzGNhcrqfqSnS65K4j4/JBrm7h0XAkgZ2HX/3Nx
-         kPPAss31wk+vBgTwCAS5Ev+PmnkPJt7JVMkuTwxA=
-Date:   Mon, 30 Mar 2020 14:35:41 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
-        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "Costina, Adrian" <Adrian.Costina@analog.com>
-Subject: Re: [PATCH v13 8/8] dt-bindings: iio: adc: add bindings doc for
- AD9467 ADC
-Message-ID: <20200330143541.189ba0ad@archlinux>
-In-Reply-To: <20200329111915.0a3211bb@archlinux>
-References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
-        <20200324134636.64643-9-alexandru.ardelean@analog.com>
-        <20200326185616.GA2673@bogus>
-        <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
-        <20200329111915.0a3211bb@archlinux>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 30 Mar 2020 09:36:36 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52526 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726497AbgC3Ngg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:36:36 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4EA718E6AE31056C26F6;
+        Mon, 30 Mar 2020 21:36:19 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
+ 21:36:10 +0800
+Subject: Re: [PATCH -next] crypto: hisilicon - Fix build error
+To:     YueHaibing <yuehaibing@huawei.com>, <herbert@gondor.apana.org.au>,
+        <davem@davemloft.net>, <Jonathan.Cameron@huawei.com>,
+        <xuzaibo@huawei.com>, <shiju.jose@huawei.com>,
+        <ebiggers@google.com>, <yaohongbo@huawei.com>,
+        <maowenan@huawei.com>, <arnd@arndb.de>
+References: <20200330083643.28824-1-yuehaibing@huawei.com>
+CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5E81F5CA.9040808@hisilicon.com>
+Date:   Mon, 30 Mar 2020 21:36:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200330083643.28824-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 29 Mar 2020 11:19:15 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
-
-> On Thu, 26 Mar 2020 19:45:39 +0000
-> "Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+On 2020/3/30 16:36, YueHaibing wrote:
+> When UACCE is m, CRYPTO_DEV_HISI_QM cannot be built-in.
+> But CRYPTO_DEV_HISI_QM is selected by CRYPTO_DEV_HISI_SEC2
+> and CRYPTO_DEV_HISI_HPRE unconditionally, which may leads this:
 > 
-> > On Thu, 2020-03-26 at 12:56 -0600, Rob Herring wrote:  
-> > > On Tue, 24 Mar 2020 15:46:36 +0200, Alexandru Ardelean wrote:    
-> > > > This change adds the binding doc for the AD9467 ADC.
-> > > > 
-> > > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > > ---
-> > > >  .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
-> > > >  1 file changed, 65 insertions(+)
-> > > >  create mode 100644
-> > > > Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
-> > > >     
-> > > 
-> > > Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> > > there's no need to repost patches *only* to add the tags. The upstream
-> > > maintainer will do that for acks received on the version they apply.
-> > > 
-> > > If a tag was not added on purpose, please state why and what changed.    
-> > 
-> > My bad. Apologies for that.
-> > No idea how I missed adding this. Especially since I already know that I should
-> > add it.
-> > 
-> > I guess I got mixed up with too many branches and not paying attention.  
-> Fixed the missing tag from Rob and whole series applied to the togreg branch of
-> iio.git.  Pushed out as testing for the autobuilders to poke at it.
+> drivers/crypto/hisilicon/qm.o: In function 'qm_alloc_uacce':
+> drivers/crypto/hisilicon/qm.c:1579: undefined reference to 'uacce_alloc'
 > 
-> Exposing the dma buffer stuff to the autobuilders is great. So far the only
-> issue was that patch I took yesterday where we need to rethink things.
-> However, that's just my sanity check local build so I'm sure we broke
-> some obscure architecture :)
-
-0-day found some issues in the series..  Note I think this is the list that
-hasn't been human sanity checked yet so can be 'interesting'.
-
-drivers/iio/adc/ad9467.c:288:13: warning: Checking if unsigned expression 'r_clk' is less than zero. [unsignedLessThanZero]
-r_clk = clock_round_rate that can indeed return a negative (long)
-I've dropped the unsigned given we check for negative so this should be safe.
-
-drivers/iio/adc/ad9467.c:381:7: warning: Variable 'ret' is assigned a value that is never used. [unreadVariable]
-Missing error check. I've added it. Please sanity check in the testing branch.
-
-
-drivers/iio/adc/adi-axi-adc.c:158:18: warning: The scope of the variable 'ctrl' can be reduced. [variableScope]
-This one is silly.  Sure you could reduce the scope, but there is little risk in not doing so given all the
-function contains is one loop.
-
-drivers/iio/adc/adi-axi-adc.c:354:32: warning: Redundant assignment of 'conv' to itself. [selfAssignment]
-This one is real. Fixed up. conv = conv = st->...
-
-drivers/iio/adc/adi-axi-adc.c:355:9: warning: The scope of the variable 'ret' can be reduced. [variableScope]
-Again, somewhat silly. 
-
-So I've ignored 2 of them.  We 'could' fix these but until I get the feeling
-the kernel coding style has actually changed to specify this rather than it
-being a matter of taste I'm not particularly inclined to do so.
-
-Thanks,
-
-Jonathan
-
+> Add Kconfig dependency to enforce usable configurations.
 > 
-> Thanks,
+> Fixes: 47c16b449921 ("crypto: hisilicon - qm depends on UACCE")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Forgot to do the same thing like ZIP. Thanks for fixing this :)
+so Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+
+Best,
+Zhou
+
+> ---
+>  drivers/crypto/hisilicon/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Jonathan
-> 
+> diff --git a/drivers/crypto/hisilicon/Kconfig b/drivers/crypto/hisilicon/Kconfig
+> index 095850d01dcc..f09c6cf7823e 100644
+> --- a/drivers/crypto/hisilicon/Kconfig
+> +++ b/drivers/crypto/hisilicon/Kconfig
+> @@ -27,6 +27,7 @@ config CRYPTO_DEV_HISI_SEC2
+>  	select CRYPTO_SHA256
+>  	select CRYPTO_SHA512
+>  	depends on PCI && PCI_MSI
+> +	depends on UACCE || UACCE=n
+>  	depends on ARM64 || (COMPILE_TEST && 64BIT)
+>  	help
+>  	  Support for HiSilicon SEC Engine of version 2 in crypto subsystem.
+> @@ -58,6 +59,7 @@ config CRYPTO_DEV_HISI_ZIP
+>  config CRYPTO_DEV_HISI_HPRE
+>  	tristate "Support for HISI HPRE accelerator"
+>  	depends on PCI && PCI_MSI
+> +	depends on UACCE || UACCE=n
+>  	depends on ARM64 || (COMPILE_TEST && 64BIT)
+>  	select CRYPTO_DEV_HISI_QM
+>  	select CRYPTO_DH
 > 
 
