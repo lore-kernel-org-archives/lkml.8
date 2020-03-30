@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FACC2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BA6C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00FC20735
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A6220842
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 02:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="IoSt4QrC"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="w1Utm7e6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbgC3Cdy (ORCPT
+        id S1729251AbgC3Cdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 29 Mar 2020 22:33:54 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42024 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729238AbgC3Cdv (ORCPT
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34214 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729225AbgC3Cdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 22:33:51 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t9so13906679qto.9
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 19:33:48 -0700 (PDT)
+        Sun, 29 Mar 2020 22:33:50 -0400
+Received: by mail-qk1-f194.google.com with SMTP id i6so17556414qke.1
+        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 19:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bOOZauNhsuF3feRi6dtskt8y9Qi7+H8gEQhQhgkWxqI=;
-        b=IoSt4QrCLedpBvOuvuIWu3Cl4FfWPyXvbqqnuq/GaQ1HcU9khIkVEaqme/mPZxUhwv
-         kD/yTyqYJNzHz7rPyQEXhmXtMbm69VHMETJQyAIAvXcj8l0UuBlX+/nqST46f4yYXTrf
-         k0xWlyQk9oM+n+F+7at54OwU18Uv8Wr8uj0Vo=
+        bh=bIwgeh9rHwo41HBlXUss+pfAH9DbFE6iCebsly3ZN4c=;
+        b=w1Utm7e6d4/535TdQtPiMXksX4j1qcmln0qSp2Ce5ITm627q5dnSU8lnhyBq3uY9oE
+         0PhDmMsluIYgdTjcV+PSd7sVQ/WGe+IhJGHMYogCDZYqSvqJL1tsZLjyg/tB9D7Y4aYN
+         zqy3An60oNrntByo8BqUBrC2oSWocnndGjLG8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bOOZauNhsuF3feRi6dtskt8y9Qi7+H8gEQhQhgkWxqI=;
-        b=sYfY6xHibC+ORvmOWQf106XE64Wziexblrdty1OX7zGwxWHfAHlPbLiS4urFydG2x1
-         2NCiNCIc4+JOiYluvCqKOvyROGiVqL3VJ6pEuE15TVBQbU6RlBzO8nIH6UziPmmlh+5i
-         PXmX8NyrVrAth/NiTHjzor3NmadkeIy1Y7nCl+6lwcBxAeGTrIW0i6iezx+XPR+NZ9zG
-         feIJFNgeK7pXt6GdtwmLEpX61meeUOfC0KKcIZJh8x/APQgZ455jX0RUM56rdubKXswu
-         vofewdUjKWvRHb3n/SYE8EZPRgKYYKFx+A8sanwPoVvTfABzU1NGSfeEFHhaCDW3seOE
-         YKmA==
-X-Gm-Message-State: ANhLgQ38pdCGF9biIymCuGoSpZ8fA7o0knHfpUqcl5o19bU+bVAKjhgn
-        p6ZqDr3fCVskHHIftl2LCUQBL6wGWj4=
-X-Google-Smtp-Source: ADFU+vvpUM4thXk+u3mpgUqeS17+XJRaBpxyDXS4TQ5h4ZRtyfMYG8HpGORF6osOZmFTIBNIXOApRA==
-X-Received: by 2002:ac8:2c73:: with SMTP id e48mr9339461qta.96.1585535627462;
-        Sun, 29 Mar 2020 19:33:47 -0700 (PDT)
+        bh=bIwgeh9rHwo41HBlXUss+pfAH9DbFE6iCebsly3ZN4c=;
+        b=rk4qa2sZLcHQyUkQMnxqtZ13mHYsAmkVNzjxPCeuvdYgfo1TgGI5m4Uhais/wwGMRr
+         CNBRNLtK4jr5R1PnNmerLlOK0AzdpgLIWXMJlvzrJ0rCqSYlEGEliVkcizqL70s7HK/p
+         4+IWgcxcux+hBAjiEuKVJmer8VXD5/ScrEQJ3aBsQXsu0Nuogk0aIIdfzAWCzdL+eNqW
+         QSvdcTm/nLE29j3I8N7nA8kV1fAILecr1UEphEIWI8DBK0humUH2ASyqcxio9mrs0/iz
+         tcHT5qSIHUd7RwBzqgphncI/6N0IjE9gPPMOqJYwMpJSW2YPYhNf41L3jzyolWk722lh
+         Hr0w==
+X-Gm-Message-State: ANhLgQ20qqOkkQk+FyhLA8ew2msPV38bSJxPqgEW6MiJB9EJov0UXbIt
+        Heh9e4WfuRBdi1jLN7hpHX7S+hPYLsU=
+X-Google-Smtp-Source: ADFU+vurXBFAw9FRqEBRvtnmRBiIAJYMQMQAx1nAenRxy7DRsubkevgiGpgtf0ZMZlIvcVQv3d7mpA==
+X-Received: by 2002:a37:a68e:: with SMTP id p136mr9993192qke.7.1585535629357;
+        Sun, 29 Mar 2020 19:33:49 -0700 (PDT)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id q15sm10030625qtj.83.2020.03.29.19.33.46
+        by smtp.gmail.com with ESMTPSA id q15sm10030625qtj.83.2020.03.29.19.33.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 19:33:47 -0700 (PDT)
+        Sun, 29 Mar 2020 19:33:48 -0700 (PDT)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -65,9 +65,9 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Subject: [PATCH 16/18] rcu/tree: Remove extra next variable in kfree worker function
-Date:   Sun, 29 Mar 2020 22:32:46 -0400
-Message-Id: <20200330023248.164994-17-joel@joelfernandes.org>
+Subject: [PATCH 18/18] rcu/tree: Make kvfree_rcu() tolerate any alignment
+Date:   Sun, 29 Mar 2020 22:32:48 -0400
+Message-Id: <20200330023248.164994-19-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 In-Reply-To: <20200330023248.164994-1-joel@joelfernandes.org>
 References: <20200330023248.164994-1-joel@joelfernandes.org>
@@ -78,49 +78,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No change in code, small refactor.
+Handle cases where the the object being kvfree_rcu()'d is not aligned by
+2-byte boundaries.
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/rcu/tree.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ kernel/rcu/tree.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 204292378101b..56c9e102a901d 100644
+index 311d216c7faa7..d6536374d12a9 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -2889,8 +2889,7 @@ debug_rcu_bhead_unqueue(struct kvfree_rcu_bulk_data *bhead)
- static void kfree_rcu_work(struct work_struct *work)
- {
- 	unsigned long flags;
--	struct kvfree_rcu_bulk_data *bkhead, *bknext;
--	struct kvfree_rcu_bulk_data *bvhead, *bvnext;
-+	struct kvfree_rcu_bulk_data *bkhead, *bvhead, *bnext;
- 	struct rcu_head *head, *next;
- 	struct kfree_rcu_cpu *krcp;
- 	struct kfree_rcu_cpu_work *krwp;
-@@ -2915,8 +2914,8 @@ static void kfree_rcu_work(struct work_struct *work)
- 	spin_unlock_irqrestore(&krcp->lock, flags);
+@@ -2827,6 +2827,9 @@ struct kvfree_rcu_bulk_data {
+ #define KVFREE_BULK_MAX_ENTR \
+ 	((PAGE_SIZE - sizeof(struct kvfree_rcu_bulk_data)) / sizeof(void *))
  
- 	/* kmalloc()/kfree() channel. */
--	for (; bkhead; bkhead = bknext) {
--		bknext = bkhead->next;
-+	for (; bkhead; bkhead = bnext) {
-+		bnext = bkhead->next;
++/* Encoding the offset of a fake rcu_head to indicate the head is a wrapper. */
++#define RCU_HEADLESS_KFREE BIT(31)
++
+ /**
+  * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
+  * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
+@@ -2970,9 +2973,9 @@ static void kfree_rcu_work(struct work_struct *work)
+ 		next = head->next;
  
- 		debug_rcu_bhead_unqueue(bkhead);
+ 		/* We tag the headless object, if so adjust offset. */
+-		headless = (((unsigned long) head - offset) & BIT(0));
++		headless = !!(offset & RCU_HEADLESS_KFREE);
+ 		if (headless)
+-			offset -= 1;
++			offset &= ~(RCU_HEADLESS_KFREE);
  
-@@ -2934,8 +2933,8 @@ static void kfree_rcu_work(struct work_struct *work)
- 	}
+ 		ptr = (void *) head - offset;
+ 		debug_rcu_head_unqueue((struct rcu_head *)ptr);
+@@ -3221,7 +3224,7 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 			 * to the original allocated memory, that has to be freed as
+ 			 * well as dynamically attached wrapper/head.
+ 			 */
+-			func = (rcu_callback_t) (sizeof(unsigned long *) + 1);
++			func = (rcu_callback_t)(sizeof(unsigned long *) | RCU_HEADLESS_KFREE);
+ 		}
  
- 	/* vmalloc()/vfree() channel. */
--	for (; bvhead; bvhead = bvnext) {
--		bvnext = bvhead->next;
-+	for (; bvhead; bvhead = bnext) {
-+		bnext = bvhead->next;
- 
- 		debug_rcu_bhead_unqueue(bvhead);
- 
+ 		head->func = func;
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
 
