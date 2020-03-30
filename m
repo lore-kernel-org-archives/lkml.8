@@ -2,248 +2,199 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611A3C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D638FC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B6E20757
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B74D320716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 11:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgC3LMz (ORCPT
+        id S1729655AbgC3LRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:12:55 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:42996 "EHLO raptor.unsafe.ru"
+        Mon, 30 Mar 2020 07:17:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:59342 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbgC3LMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:12:54 -0400
-Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 7F525208C1;
-        Mon, 30 Mar 2020 11:12:48 +0000 (UTC)
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: [PATCH v11 8/9] proc: use human-readable values for hidehid
-Date:   Mon, 30 Mar 2020 13:12:35 +0200
-Message-Id: <20200330111235.154182-1-gladkov.alexey@gmail.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200327172331.418878-9-gladkov.alexey@gmail.com>
-References: <20200327172331.418878-9-gladkov.alexey@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Mon, 30 Mar 2020 11:12:50 +0000 (UTC)
+        id S1729267AbgC3LRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 07:17:08 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3E0FA1A04A7;
+        Mon, 30 Mar 2020 13:17:06 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 218081A04A1;
+        Mon, 30 Mar 2020 13:17:01 +0200 (CEST)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 44C43402AA;
+        Mon, 30 Mar 2020 19:16:55 +0800 (SGT)
+From:   Kuldeep Singh <kuldeep.singh@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>,
+        Ashish Kumar <Ashish.kumar@nxp.com>
+Subject: [PATCH] arm64: dts: ls1012a: Add QSPI node properties
+Date:   Mon, 30 Mar 2020 16:46:30 +0530
+Message-Id: <1585566991-24049-1-git-send-email-kuldeep.singh@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hidepid parameter values are becoming more and more and it becomes
-difficult to remember what each new magic number means.
+Add support for QSPI on NXP layerscape LS1012A-RDB, LS1012A-QDS,
+LS1012A-FRDM and LS1012A-FRWY boards.
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+LS1012A-RDB has 2 Spansion "s25fs512s" flashes of size 64M each and only
+one can be accessed at a time.
+LS1012A-QDS/FRDM has 1 spansion "s25fs512s" flash of size 64M.
+LS1012A-FRWY has one winbond "w25q16dw" flash of size 2M.
+
+Use generic compatibles as "jedec,spi-nor" for automatic detection of
+flash. Configure RX and TX buswidth values as 2 as only two I/O lines are
+available for data transfer.
+
+Add ls1012a(si) node alongwith flash nodes.
+
+Signed-off-by: Ashish Kumar <Ashish.kumar@nxp.com>
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
 ---
- Documentation/filesystems/proc.txt | 52 +++++++++++++++---------------
- fs/proc/inode.c                    | 15 ++++++++-
- fs/proc/root.c                     | 36 +++++++++++++++++++--
- 3 files changed, 73 insertions(+), 30 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts | 15 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts | 15 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts  | 15 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts  | 15 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi     | 13 +++++++++++++
+ 5 files changed, 73 insertions(+)
 
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index bd0e0ab85048..af47672cb2cb 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -2025,28 +2025,28 @@ The following mount options are supported:
- 	gid=		Set the group authorized to learn processes information.
- 	subset=		Show only the specified subset of procfs.
- 
--hidepid=0 means classic mode - everybody may access all /proc/<pid>/ directories
--(default).
--
--hidepid=1 means users may not access any /proc/<pid>/ directories but their
--own.  Sensitive files like cmdline, sched*, status are now protected against
--other users.  This makes it impossible to learn whether any user runs
--specific program (given the program doesn't reveal itself by its behaviour).
--As an additional bonus, as /proc/<pid>/cmdline is unaccessible for other users,
--poorly written programs passing sensitive information via program arguments are
--now protected against local eavesdroppers.
--
--hidepid=2 means hidepid=1 plus all /proc/<pid>/ will be fully invisible to other
--users.  It doesn't mean that it hides a fact whether a process with a specific
--pid value exists (it can be learned by other means, e.g. by "kill -0 $PID"),
--but it hides process' uid and gid, which may be learned by stat()'ing
--/proc/<pid>/ otherwise.  It greatly complicates an intruder's task of gathering
--information about running processes, whether some daemon runs with elevated
--privileges, whether other user runs some sensitive program, whether other users
--run any program at all, etc.
--
--hidepid=4 means that procfs should only contain /proc/<pid>/ directories
--that the caller can ptrace.
-+hidepid=off or hidepid=0 means classic mode - everybody may access all
-+/proc/<pid>/ directories (default).
-+
-+hidepid=noaccess or hidepid=1 means users may not access any /proc/<pid>/
-+directories but their own.  Sensitive files like cmdline, sched*, status are now
-+protected against other users.  This makes it impossible to learn whether any
-+user runs specific program (given the program doesn't reveal itself by its
-+behaviour).  As an additional bonus, as /proc/<pid>/cmdline is unaccessible for
-+other users, poorly written programs passing sensitive information via program
-+arguments are now protected against local eavesdroppers.
-+
-+hidepid=invisible or hidepid=2 means hidepid=noaccess plus all /proc/<pid>/ will
-+be fully invisible to other users.  It doesn't mean that it hides a fact whether
-+a process with a specific pid value exists (it can be learned by other means,
-+e.g. by "kill -0 $PID"), but it hides process' uid and gid, which may be learned
-+by stat()'ing /proc/<pid>/ otherwise.  It greatly complicates an intruder's task
-+of gathering information about running processes, whether some daemon runs with
-+elevated privileges, whether other user runs some sensitive program, whether
-+other users run any program at all, etc.
-+
-+hidepid=ptraceable or hidepid=4 means that procfs should only contain
-+/proc/<pid>/ directories that the caller can ptrace.
- 
- gid= defines a group authorized to learn processes information otherwise
- prohibited by hidepid=.  If you use some daemon like identd which needs to learn
-@@ -2093,8 +2093,8 @@ creates a new procfs instance. Mount options affect own procfs instance.
- It means that it became possible to have several procfs instances
- displaying tasks with different filtering options in one pid namespace.
- 
--# mount -o hidepid=2 -t proc proc /proc
--# mount -o hidepid=1 -t proc proc /tmp/proc
-+# mount -o hidepid=invisible -t proc proc /proc
-+# mount -o hidepid=noaccess -t proc proc /tmp/proc
- # grep ^proc /proc/mounts
--proc /proc proc rw,relatime,hidepid=2 0 0
--proc /tmp/proc proc rw,relatime,hidepid=1 0 0
-+proc /proc proc rw,relatime,hidepid=invisible 0 0
-+proc /tmp/proc proc rw,relatime,hidepid=noaccess 0 0
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index e6577ce6027b..d38a9e592352 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -24,6 +24,7 @@
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/mount.h>
-+#include <linux/bug.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -165,6 +166,18 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
- 		deactivate_super(old_sb);
- }
- 
-+static inline const char *hidepid2str(int v)
-+{
-+	switch (v) {
-+		case HIDEPID_OFF: return "off";
-+		case HIDEPID_NO_ACCESS: return "noaccess";
-+		case HIDEPID_INVISIBLE: return "invisible";
-+		case HIDEPID_NOT_PTRACEABLE: return "ptraceable";
-+	}
-+	WARN_ONCE(1, "bad hide_pid value: %d\n", v);
-+	return "unknown";
-+}
-+
- static int proc_show_options(struct seq_file *seq, struct dentry *root)
- {
- 	struct proc_fs_info *fs_info = proc_sb_info(root->d_sb);
-@@ -172,7 +185,7 @@ static int proc_show_options(struct seq_file *seq, struct dentry *root)
- 	if (!gid_eq(fs_info->pid_gid, GLOBAL_ROOT_GID))
- 		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, fs_info->pid_gid));
- 	if (fs_info->hide_pid != HIDEPID_OFF)
--		seq_printf(seq, ",hidepid=%u", fs_info->hide_pid);
-+		seq_printf(seq, ",hidepid=%s", hidepid2str(fs_info->hide_pid));
- 	if (fs_info->pidonly != PROC_PIDONLY_OFF)
- 		seq_printf(seq, ",subset=pid");
- 
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index dbcd96f07c7a..ba782d6e6197 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -45,7 +45,7 @@ enum proc_param {
- 
- static const struct fs_parameter_spec proc_fs_parameters[] = {
- 	fsparam_u32("gid",	Opt_gid),
--	fsparam_u32("hidepid",	Opt_hidepid),
-+	fsparam_string("hidepid",	Opt_hidepid),
- 	fsparam_string("subset",	Opt_subset),
- 	{}
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+index f90c040..6770266 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frdm.dts
+@@ -74,6 +74,21 @@
+ 	};
  };
-@@ -58,6 +58,35 @@ static inline int valid_hidepid(unsigned int value)
- 		value == HIDEPID_NOT_PTRACEABLE);
- }
  
-+static int proc_parse_hidepid_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct proc_fs_context *ctx = fc->fs_private;
-+	struct fs_parameter_spec hidepid_u32_spec = fsparam_u32("hidepid", Opt_hidepid);
-+	struct fs_parse_result result;
-+	int base = (unsigned long)hidepid_u32_spec.data;
++&qspi {
++	status = "okay";
 +
-+	if (param->type != fs_value_is_string)
-+		return invalf(fc, "proc: unexpected type of hidepid value\n");
++	s25fs512s0: flash@0 {
++		compatible = "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <50000000>;
++		m25p,fast-read;
++		reg = <0>;
++		spi-rx-bus-width = <2>;
++		spi-tx-bus-width = <2>;
++	};
++};
 +
-+	if (!kstrtouint(param->string, base, &result.uint_32)) {
-+		ctx->hidepid = result.uint_32;
-+		return 0;
-+	}
+ &sai2 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+index 8749634..6290e2f 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-frwy.dts
+@@ -23,3 +23,18 @@
+ &i2c0 {
+ 	status = "okay";
+ };
 +
-+	if (!strcmp(param->string, "off"))
-+		ctx->hidepid = HIDEPID_OFF;
-+	else if (!strcmp(param->string, "noaccess"))
-+		ctx->hidepid = HIDEPID_NO_ACCESS;
-+	else if (!strcmp(param->string, "invisible"))
-+		ctx->hidepid = HIDEPID_INVISIBLE;
-+	else if (!strcmp(param->string, "ptraceable"))
-+		ctx->hidepid = HIDEPID_NOT_PTRACEABLE;
-+	else
-+		return invalf(fc, "proc: unknown value of hidepid - %s\n", param->string);
++&qspi {
++	status = "okay";
 +
-+	return 0;
-+}
-+
- static int proc_parse_subset_param(struct fs_context *fc, char *value)
- {
- 	struct proc_fs_context *ctx = fc->fs_private;
-@@ -97,9 +126,10 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		break;
++	w25q16dw0: flash@0 {
++		compatible = "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		m25p,fast-read;
++		spi-max-frequency = <50000000>;
++		reg = <0>;
++		spi-rx-bus-width = <2>;
++		spi-tx-bus-width = <2>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+index 2fb1cb1..449475a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-qds.dts
+@@ -128,6 +128,21 @@
+ 	};
+ };
  
- 	case Opt_hidepid:
--		if (!valid_hidepid(result.uint_32))
-+		if (proc_parse_hidepid_param(fc, param))
-+			return -EINVAL;
-+		if (!valid_hidepid(ctx->hidepid))
- 			return invalf(fc, "proc: unknown value of hidepid.\n");
--		ctx->hidepid = result.uint_32;
- 		break;
++&qspi {
++	status = "okay";
++
++	s25fs512s0: flash@0 {
++		compatible = "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <50000000>;
++		m25p,fast-read;
++		reg = <0>;
++		spi-rx-bus-width = <2>;
++		spi-tx-bus-width = <2>;
++	};
++};
++
+ &sai2 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+index 5edb1e1..d45c176 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-rdb.dts
+@@ -35,6 +35,21 @@
+ 	status = "okay";
+ };
  
- 	case Opt_subset:
++&qspi {
++	status = "okay";
++
++	s25fs512s0: flash@0 {
++		compatible = "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <50000000>;
++		m25p,fast-read;
++		reg = <0>;
++		spi-rx-bus-width = <2>;
++		spi-tx-bus-width = <2>;
++	};
++};
++
+ &sata {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index 3379193..006e544 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -137,6 +137,19 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		qspi: spi@1550000 {
++			compatible = "fsl,ls1021a-qspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x1550000 0x0 0x10000>,
++				<0x0 0x40000000 0x0 0x10000000>;
++			reg-names = "QuadSPI", "QuadSPI-memory";
++			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "qspi_en", "qspi";
++			clocks = <&clockgen 4 0>, <&clockgen 4 0>;
++			status = "disabled";
++		};
++
+ 		esdhc0: esdhc@1560000 {
+ 			compatible = "fsl,ls1012a-esdhc", "fsl,esdhc";
+ 			reg = <0x0 0x1560000 0x0 0x10000>;
 -- 
-2.25.2
+2.7.4
 
