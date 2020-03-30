@@ -2,57 +2,58 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4167AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F31C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE8F2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A8D20776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IoKCdJlI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c588ptYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgC3Rki (ORCPT
+        id S1729850AbgC3RlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:40:38 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38785 "EHLO
+        Mon, 30 Mar 2020 13:41:16 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33348 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgC3Rki (ORCPT
+        with ESMTP id S1727905AbgC3RlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:40:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x7so9000558pgh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:40:35 -0700 (PDT)
+        Mon, 30 Mar 2020 13:41:14 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d17so9012934pgo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 10:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=EIazmoWr1nLxxc8KNs37fnm42F/lDdp4/gYm3JHLHek=;
-        b=IoKCdJlIr8dKSUui+FFl2O8BLgUnbJF6UcpsVTBUCUIxnVlSObs8uqbpJtVfo85MHD
-         NSMiSHyRzun2Qw2uFSqKhacVvS9T1di6LetUQD1cCrF9rPt/SGxOjvQEku1cIwKpUsK4
-         Nyhahu2qk/o5MwyQBOY1XNgL+3twDOfx4D+Ls=
+        bh=9A9BFDWaBKeFJEhXv569Hcf1cU3lWJT2qzpJ99N8MCk=;
+        b=c588ptYqwCmsWEonO588jIjpypgAAMTUL58QUCwA/bBLmIORgJNEOXJxHmUoCvXzNS
+         qdwHBXTKTzAdmAMY7lWdJG4D14txV1wst9CUI7g7DNIHQb4vdQiWZpRkHcyxl4Wx8ifz
+         fwzua6wxK/EOmnxeRkV1nUTb+4EQjsgGp6C9U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=EIazmoWr1nLxxc8KNs37fnm42F/lDdp4/gYm3JHLHek=;
-        b=lswpIs17xPJDLmg2RcDf7mW0H08nPgMpIEj4nEhAPSIlrPL5tcGADBPEJYLSIAYw4g
-         4AIH2+iyszt6n0tq35w+1Wi+J5L2/5+f9VBJn00uRSB1ndpkju56oDk7X6OzfDPkizVA
-         0swu9T5W55RGNb11qBmOIbRWdWkVSCJc6mMiAhCNDXlZcrmmzgZMSjk0KDVfhDE3PPNt
-         RbZVf8Wtqu/HcrbQlzb5KA3HBtK+pCY9OB6b213+e/NnXmzdQGo/57DqM5/5JBi9yhBt
-         SrsW9U5NHXk5g6zIC03818w0cxtE2CD0jzscVH4s/4JaePQr73zROrKmT3xJ3OE2XFdh
-         evDQ==
-X-Gm-Message-State: ANhLgQ07Oxyu/EYnXVQuZqfvhunGlZ00Cml2LPN8juFYzSbNolYVCHEP
-        FBycct26V5g3EYyJZ5DC1J0W8Q==
-X-Google-Smtp-Source: ADFU+vsp6F+mnbmu4oeH1BZE4z851b8UTWueJ6LJmiWqqkcFzAPvDpoG8s71ddjkdVNmXYn/ukbhqw==
-X-Received: by 2002:a63:cf:: with SMTP id 198mr14239682pga.447.1585590035454;
-        Mon, 30 Mar 2020 10:40:35 -0700 (PDT)
+        bh=9A9BFDWaBKeFJEhXv569Hcf1cU3lWJT2qzpJ99N8MCk=;
+        b=SeAs/tLGZVokPnDgrFC0F/pzVESsyHBj730X2++lS98R2UYpUHSShLD5sxXZ+xwk2e
+         iMggcqEGfWG69+2vSph2RXDdAxD1Iwh4m2AuwNgJHW3aKe1BdvU5QAUqvAYNO+PBlE+7
+         EcYTNalSb99uluf7AzjE0hSPS6sYRrhgk4tp3rmaGGnzzj80ZPzApZgCm5u7GjQ/6o1i
+         Uq7+MmRj6ifRjaU98IKMttQMbP4R7MM/W2+HaX5GMOoMr36aG/5dTlFq6RatgTDuDdaH
+         s7dR3R5oxJA6IidNt87FWFlt/3JaLv8ePiatvioiS2IXJLJFIdiWC3QhwrOo45C6TXTi
+         hSkQ==
+X-Gm-Message-State: ANhLgQ3B+F4UCEbwd3aT0Ef15wg5SeGgi8kF4IpRQkhlCk/tHTfTx02p
+        kBmbtfD8qLpYsar593cOPeTVag==
+X-Google-Smtp-Source: ADFU+vuP1FGs+E8bbM6cuPnbi2RGCCdWSTAmb5Pnlf37InzDZNSuZ3SNT/PxgA7MaMnVZYPI0R1hRQ==
+X-Received: by 2002:a63:6d02:: with SMTP id i2mr13505140pgc.267.1585590073404;
+        Mon, 30 Mar 2020 10:41:13 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i2sm10410628pfr.203.2020.03.30.10.40.34
+        by smtp.gmail.com with ESMTPSA id x75sm10741891pfc.161.2020.03.30.10.41.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 10:40:34 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 10:40:33 -0700
+        Mon, 30 Mar 2020 10:41:12 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 10:41:11 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Vlastimil Babka <vbabka@suse.cz>
 Cc:     Luis Chamberlain <mcgrof@kernel.org>,
@@ -68,26 +69,131 @@ Cc:     Luis Chamberlain <mcgrof@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <202003301040.E3099A957@keescook>
+Subject: Re: [PATCH 2/3] kernel/sysctl: support handling command line aliases
+Message-ID: <202003301041.86E6C7EB@keescook>
 References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-2-vbabka@suse.cz>
- <c68b1ed4-51ef-ca65-7128-ff3c8b6b54ee@suse.cz>
+ <20200330115535.3215-3-vbabka@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c68b1ed4-51ef-ca65-7128-ff3c8b6b54ee@suse.cz>
+In-Reply-To: <20200330115535.3215-3-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 06:23:57PM +0200, Vlastimil Babka wrote:
-> Boo, all the error prints should terminate with \n
-> Will wait for feedback before resend.
+On Mon, Mar 30, 2020 at 01:55:34PM +0200, Vlastimil Babka wrote:
+> We can now handle sysctl parameters on kernel command line, but historically
+> some parameters introduced their own command line equivalent, which we don't
+> want to remove for compatibility reasons. We can however convert them to the
+> generic infrastructure with a table translating the legacy command line
+> parameters to their sysctl names, and removing the one-off param handlers.
+> 
+> This patch adds the support and makes the first conversion to demonstrate it,
+> on the (deprecated) numa_zonelist_order parameter.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-eek, yes, good catch. :)
+Acked-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  fs/proc/proc_sysctl.c | 48 ++++++++++++++++++++++++++++++++++++-------
+>  mm/page_alloc.c       |  9 --------
+>  2 files changed, 41 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index 653188c9c4c9..97eb0b552bf8 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -1727,6 +1727,37 @@ int __init proc_sys_init(void)
+>  	return sysctl_init();
+>  }
+>  
+> +struct sysctl_alias {
+> +	const char *kernel_param;
+> +	const char *sysctl_param;
+> +};
+> +
+> +/*
+> + * Historically some settings had both sysctl and a command line parameter.
+> + * With the generic sysctl. parameter support, we can handle them at a single
+> + * place and only keep the historical name for compatibility. This is not meant
+> + * to add brand new aliases. When adding existing aliases, consider whether
+> + * the possibly different moment of changing the value (e.g. from early_param
+> + * to the moment do_sysctl_args() is called) is an issue for the specific
+> + * parameter.
+> + */
+> +static const struct sysctl_alias sysctl_aliases[] = {
+> +	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+> +	{ }
+> +};
+> +
+> +static const char *sysctl_find_alias(char *param)
+> +{
+> +	const struct sysctl_alias *alias;
+> +
+> +	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
+> +		if (strcmp(alias->kernel_param, param) == 0)
+> +			return alias->sysctl_param;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  /* Set sysctl value passed on kernel command line. */
+>  static int process_sysctl_arg(char *param, char *val,
+>  			       const char *unused, void *arg)
+> @@ -1740,15 +1771,18 @@ static int process_sysctl_arg(char *param, char *val,
+>  	loff_t pos = 0;
+>  	ssize_t wret;
+>  
+> -	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+> -		return 0;
+> -
+> -	param += sizeof("sysctl") - 1;
+> +	if (strncmp(param, "sysctl", sizeof("sysctl") - 1) == 0) {
+> +		param += sizeof("sysctl") - 1;
+>  
+> -	if (param[0] != '/' && param[0] != '.')
+> -		return 0;
+> +		if (param[0] != '/' && param[0] != '.')
+> +			return 0;
+>  
+> -	param++;
+> +		param++;
+> +	} else {
+> +		param = (char *) sysctl_find_alias(param);
+> +		if (!param)
+> +			return 0;
+> +	}
+>  
+>  	if (!proc_mnt) {
+>  		proc_fs_type = get_fs_type("proc");
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..de7a134b1b8a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5460,15 +5460,6 @@ static int __parse_numa_zonelist_order(char *s)
+>  	return 0;
+>  }
+>  
+> -static __init int setup_numa_zonelist_order(char *s)
+> -{
+> -	if (!s)
+> -		return 0;
+> -
+> -	return __parse_numa_zonelist_order(s);
+> -}
+> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
+> -
+>  char numa_zonelist_order[] = "Node";
+>  
+>  /*
+> -- 
+> 2.25.1
+> 
 
 -- 
 Kees Cook
