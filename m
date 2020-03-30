@@ -2,142 +2,133 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ABFC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118BFC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EBB205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8BF620658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 22:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wDH6xhpb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XelqlNCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbgC3WTj (ORCPT
+        id S1729730AbgC3WUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:19:39 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33122 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728857AbgC3WTh (ORCPT
+        Mon, 30 Mar 2020 18:20:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37143 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728857AbgC3WUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 18:19:37 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g18so7334789plq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 15:19:35 -0700 (PDT)
+        Mon, 30 Mar 2020 18:20:16 -0400
+Received: by mail-wm1-f65.google.com with SMTP id j19so547717wmi.2;
+        Mon, 30 Mar 2020 15:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RR4O6KKUAPvY5CCBrBQ4OejRKZAXWAw54/I6iGcqce0=;
-        b=wDH6xhpb0mRK2FvzaT+HqT1+uN5CpoqLit+mjyzbE8kedGfyppG/P9EZuELFWLtjXn
-         NpK2SHAAE7dRaRQ23pR9X9dtsH/l1NsbuSTF6xqb09CSBd7vaRmND3xSX0Ao5IowCLU0
-         sMRsmA56U8kz1Jg+ISKkMvXF+NapmFB76umwlezvfZl7LFlEGE1TiNuM2XZ6ZqSWgIHY
-         Vc3g0ptYlrtbomqLQIcCM4a0kR593wDO+qV0NWVXUIlwOzeb8YF6SYf5WkJ97KgBuy5E
-         sLEYjrovZia/52LlBL44id4sbqb66UYYU7YT1GaYh6ZeRAJcYXjbFHM/X8G6/yTT9Pu3
-         yAFw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zxTDf8+MnFHubZYH4xBNOl2XtpGfjXLmP1euby1NHHI=;
+        b=XelqlNCBNrqAvwAR/h7n/I+jsAusk4uQ3gc4RmSAdCSE1MeAtafoM+J0UO6ALvWAzx
+         JU4wtAVr8yQQ6VFVag0SgNR75GoxuKhUbtgMadsd/pC+AubNJOf3fbqp1evcbKIJJv24
+         9VwvrazqeLn/qiHPpBPWvCUSfpp4J32kXw02xYPTNhWgct4wyzosiBarbdp5iootZX5g
+         jm0SblnIqO1zrrfJp0mRsWqA+Fm3DcZcZsZmx1JX7ehD8Z5/sDiMJu7ajNIdHAoOKKBP
+         rL0rrv6BQ4jc1tBY1PgFjc7NECsMVVOqFxUwkdR/12KKiKgE7pOwtb7hyThatEzQZfF1
+         k0+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RR4O6KKUAPvY5CCBrBQ4OejRKZAXWAw54/I6iGcqce0=;
-        b=hauRlkWlPFv9JAysvvInvGZI+5KMj8470+7+otJjzcKc8dJOg+Nt6gwDDhpAWqQWsm
-         8q1QGrcTPn4klnwMRJtsQYXsubFO+1fap9n82aET/hCAaFWVsD6cGWuc+SPJM+gQbNcM
-         zBlz5e5W5tFTnP/doIR5o0CFMuy6h0kg/WZsmWVUOKzxs7Wd9A3qVZz3441cgCXVfY2w
-         BDpr8Y1uXCKsZW+8irXgmISqGqHLEXiVnfrEsVjK4P5LFOhudUIHhE/V7S7nXVtPg5Y6
-         zSkaadlYr/D/31KQaSa4QeL/dwcB+eLELJc9Ej6gw+Qr/OhGBESTD4W81mb9N6hJ9hs9
-         WWMA==
-X-Gm-Message-State: AGi0PubAwttDOnD5z91A3GC7M56wU9jC0kEFhb5VtMrEwRGwP86Ef12X
-        uIg91lZ+ZdTLkk2OV9Phl7ohGA==
-X-Google-Smtp-Source: APiQypKzEYPIoceeNAaANMlUD3ZnvtRmqoGF3UKWvgNefYWug80nmrKS5YtHjcdxJWDBH6vn6JYwKQ==
-X-Received: by 2002:a17:902:507:: with SMTP id 7mr1180699plf.42.1585606775041;
-        Mon, 30 Mar 2020 15:19:35 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l6sm10684421pff.173.2020.03.30.15.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:19:34 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 15:19:32 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Chris Lew <clew@codeaurora.org>, gregkh@linuxfoundation.org,
-        davem@davemloft.net, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v3 6/7] net: qrtr: Add MHI transport layer
-Message-ID: <20200330221932.GB215915@minitux>
-References: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
- <20200324061050.14845-7-manivannan.sadhasivam@linaro.org>
- <20200324203952.GC119913@minitux>
- <20200325103758.GA7216@Mani-XPS-13-9360>
- <89f3c60c-70fb-23d3-d50f-98d1982b84b9@codeaurora.org>
- <20200330094913.GA2642@Mani-XPS-13-9360>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zxTDf8+MnFHubZYH4xBNOl2XtpGfjXLmP1euby1NHHI=;
+        b=hJ5WDCvJz2o3N9av/M2COargggFLCIxk6Z1kBvEGW1WQhIuiIw2geQHU2ymCbltQdP
+         POyR9BJN2TK755Ly/ovfd7a5+ritqwI8RbfsmnGAS4vVN5n5aPb5l2urz9hbiXQsYQM8
+         XhUDbrwNthtcxmQGfjIo7oFfoYxQqZ6IkMldpZj6844D4FAq9P2DVQsCtIlH1S/V4z4G
+         JSHVoB63AiD25ctsQh2p7TL4YjEqmTleylYxqwlVpfKPs/l4abG1pRkDcKwQHnTsqq5L
+         i3hhCLz2kchzzw8oTKejYHy+px5gHgR7R/TGmGV+oX1mE1wUlsBjn6opUtydO1sE/jFt
+         QGIw==
+X-Gm-Message-State: ANhLgQ0QjpsiCxZGCqnxbrddzh8tkwUbAehM4F3Igky6U8gl81VR/kLF
+        jNEYmespjv6LpMZXemSV4gM=
+X-Google-Smtp-Source: ADFU+vvQIj+MUR+EYO8VdoIOGwvNsipNI0VJFCtEu0BqPBf0GZUmNJ8l9EP7fyP1NI8U+TEOwovI5Q==
+X-Received: by 2002:a7b:c24a:: with SMTP id b10mr227358wmj.61.1585606814046;
+        Mon, 30 Mar 2020 15:20:14 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a10sm15432401wrm.87.2020.03.30.15.20.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 15:20:13 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 22:20:13 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
+ than XA_ZERO_ENTRY
+Message-ID: <20200330222013.34nkqen2agujhd6j@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-7-richard.weiyang@gmail.com>
+ <20200330125006.GZ22483@bombadil.infradead.org>
+ <20200330134519.ykdtqwqxjazqy3jm@master>
+ <20200330134903.GB22483@bombadil.infradead.org>
+ <20200330141350.ey77odenrbvixotb@master>
+ <20200330142708.GC22483@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330094913.GA2642@Mani-XPS-13-9360>
+In-Reply-To: <20200330142708.GC22483@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 30 Mar 02:49 PDT 2020, Manivannan Sadhasivam wrote:
+On Mon, Mar 30, 2020 at 07:27:08AM -0700, Matthew Wilcox wrote:
+>On Mon, Mar 30, 2020 at 02:13:50PM +0000, Wei Yang wrote:
+>> On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
+>> >On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
+>> >> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
+>> >> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
+>> >> >> As the comment mentioned, we reserved several ranges of internal node
+>> >> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
+>> >> >> XA_ZERO_ENTRY is a normal node.
+>> >> >> 
+>> >> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
+>> >> >
+>> >> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
+>> >> >is not guaranteed to be the largest reserved entry.
+>> >> 
+>> >> Then why we choose 4096?
+>> >
+>> >Because 4096 is the smallest page size supported by Linux, so we're
+>> >guaranteed that anything less than 4096 is not a valid pointer.
+>> 
 
-> Hi Chris,
-> 
-> On Thu, Mar 26, 2020 at 03:54:42PM -0700, Chris Lew wrote:
-> > 
-> > 
-> > On 3/25/2020 3:37 AM, Manivannan Sadhasivam wrote:
-> > > Hi Bjorn,
-> > > 
-> > > + Chris Lew
-> > > 
-> > > On Tue, Mar 24, 2020 at 01:39:52PM -0700, Bjorn Andersson wrote:
-> > > > On Mon 23 Mar 23:10 PDT 2020, Manivannan Sadhasivam wrote:
-[..]
-> > > > > +	spin_lock_irqsave(&qdev->ul_lock, flags);
-> > > > > +	list_for_each_entry(pkt, &qdev->ul_pkts, node)
-> > > > > +		complete_all(&pkt->done);
-> > > 
-> > > Chris, shouldn't we require list_del(&pkt->node) here?
-> > > 
-> > 
-> > No this isn't a full cleanup, with the "early notifier" we just unblocked
-> > any threads waiting for the ul_callback. Those threads will wake, check
-> > in_reset, return an error back to the caller. Any list cleanup will be done
-> > in the ul_callbacks that the mhi bus will do for each queued packet right
-> > before device remove.
-> > 
-> > Again to simplify the code, we can probable remove the in_reset handling
-> > since it's not required with the current feature set.
-> > 
-> 
-> So since we are not getting status_cb for fatal errors, I think we should just
-> remove status_cb, in_reset and timeout code.
-> 
+So you want to say, the 4096 makes sure XArray will not store an address in
+first page? If this is the case, I have two suggestions:
 
-Looks reasonable.
+  * use PAGE_SIZE would be more verbose?
+  * a node is an internal entry, do we need to compare with xa_mk_internal()
+    instead?
 
-[..]
-> > I thought having the client get an error on timeout and resend the packet
-> > would be better than silently dropping it. In practice, we've really only
-> > seen the timeout or ul_callback errors on unrecoverable errors so I think
-> > the timeout handling can definitely be redone.
-> > 
-> 
-> You mean we can just remove the timeout handling part and return after
-> kref_put()?
-> 
+And also suggest to add a comment on this, otherwise it seems a little magic.
 
-If all messages are "generated" by qcom_mhi_qrtr_send() and "released"
-in qcom_mhi_qrtr_ul_callback() I don't think you need the refcounting at
-all.
+>> I found this in xarray.rst:
+>> 
+>>   Normal pointers may be stored in the XArray directly.  They must be 4-byte
+>>   aligned, which is true for any pointer returned from kmalloc() and
+>>   alloc_page().  It isn't true for arbitrary user-space pointers,
+>>   nor for function pointers.  You can store pointers to statically allocated
+>>   objects, as long as those objects have an alignment of at least 4.
+>> 
+>> So the document here is not correct?
+>
+>Why do you say that?
+>
+>(it is slightly out of date; the XArray actually supports storing unaligned
+>pointers now, but that's not relevant to this discussion)
 
+Ok, maybe this document need to update.
 
-Presumably though, it would have been nice to not have to carry a
-separate list of packets (and hope that it's in sync with the mhi core)
-and instead have the ul callback somehow allow us to derive the skb to
-be freed.
-
-Regards,
-Bjorn
+-- 
+Wei Yang
+Help you, Help me
