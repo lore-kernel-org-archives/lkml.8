@@ -2,93 +2,132 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A0EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84824C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D758720716
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FC320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:16:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXtyIy2W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgC3MJn (ORCPT
+        id S1730121AbgC3MQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:09:43 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:51715 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729627AbgC3MJm (ORCPT
+        Mon, 30 Mar 2020 08:16:49 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51086 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729848AbgC3MQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:09:42 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Tu2RGTX_1585570174;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Tu2RGTX_1585570174)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 30 Mar 2020 20:09:34 +0800
-Subject: Re: [RFC PATCH v1 29/50] fs/ocfs2/journal: Use prandom_u32() and not
- /dev/random for timeout
-To:     George Spelvin <lkml@sdf.org>, linux-kernel@vger.kernel.org
-Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        ocfs2-devel@oss.oracle.com
-References: <202003281643.02SGhIOY022599@sdf.org>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <016c2bdc-68eb-245f-2292-d00d0d8e45a5@linux.alibaba.com>
-Date:   Mon, 30 Mar 2020 20:09:33 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Mon, 30 Mar 2020 08:16:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585570606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=MYQJfg4bEedYd4dU8QQfrS68QqFoT2gft/lQom/VKLY=;
+        b=TXtyIy2WxCpZpO1hE2HZdie/HEW1/5SM3lEOz/RoeGdj00dRsSAWUWUTE2RJHQ/nSuP/KP
+        o1+6O8u5HatUjPpANe6wcUthKF1sV6fhdBM6P6JVYus7eCKKU7Y+gE7GIZBweQ+LlaDMsT
+        s2HzWq95Vn1CVSKZm6qGES8nTitsvI0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-TLrIXIIFMxS2aU19Htzoog-1; Mon, 30 Mar 2020 08:16:44 -0400
+X-MC-Unique: TLrIXIIFMxS2aU19Htzoog-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97F21801E74;
+        Mon, 30 Mar 2020 12:16:43 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-66.rdu2.redhat.com [10.10.112.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B092596F88;
+        Mon, 30 Mar 2020 12:16:39 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+cc:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        longman@redhat.com, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] keys: Fix key->sem vs mmap_sem issue when reading key
 MIME-Version: 1.0
-In-Reply-To: <202003281643.02SGhIOY022599@sdf.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1437196.1585570598.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 30 Mar 2020 13:16:38 +0100
+Message-ID: <1437197.1585570598@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the late reply since I might miss this mail.
+Hi Linus,
 
-On 2019/3/21 11:07, George Spelvin wrote:
-> get_random_bytes() is expensive crypto-quality random numbers.
-> If we're just doing random backoff, prandom_u32() is plenty.
-> 
-> (Not to mention fetching 8 bytes of seed material only to
-> reduce it modulo 5000 is a huge waste.)
-> 
-> Also, convert timeouts to jiffies at compile time; convert
-> milliseconds to jiffies before picking a random number in the
-> range to take advantage of compile-time constant folding.
-> 
-> Signed-off-by: George Spelvin <lkml@sdf.org>
-> Cc: Mark Fasheh <mark@fasheh.com>
-> Cc: Joel Becker <jlbec@evilplan.org>
-> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Cc: ocfs2-devel@oss.oracle.com
-> ---
->  fs/ocfs2/journal.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-> index 68ba354cf3610..939a12e57fa8b 100644
-> --- a/fs/ocfs2/journal.c
-> +++ b/fs/ocfs2/journal.c
-> @@ -1884,11 +1884,8 @@ int ocfs2_mark_dead_nodes(struct ocfs2_super *osb)
->   */
->  static inline unsigned long ocfs2_orphan_scan_timeout(void)
->  {
-> -	unsigned long time;
-> -
-> -	get_random_bytes(&time, sizeof(time));
-> -	time = ORPHAN_SCAN_SCHEDULE_TIMEOUT + (time % 5000);
-> -	return msecs_to_jiffies(time);
-> +	return msecs_to_jiffies(ORPHAN_SCAN_SCHEDULE_TIMEOUT) +
-> +		prandom_u32_max(5 * HZ);
+Here's a couple of patches that fix a circular dependency between holding
+key->sem and mm->mmap_sem when reading data from a key.  One potential
+issue is that a filesystem looking to use a key inside, say, ->readpages()
+could deadlock if the key being read is the key that's required and the
+buffer the key is being read into is on a page that needs to be fetched.
 
-Seems better include the prandom_u32_max() into msecs_to_jiffies()?
+The case actually detected is a bit more involved - with a filesystem
+calling request_key() and locking the target keyring for write - which
+could be being read.
+
+[Note: kbuild spotted a compiler(?) warning that I've not seen before,
+ complaining "The scope of the variable 'oldxdr' can be reduced.
+ [variableScope]".  It's unhappy that a variable that's declared at the to=
+p
+ of the function hasn't been moved into an interior for-loop.  Is this
+ something we're now requiring?  Anyway, I'd prefer to fix that with a
+ follow up patch through the net tree rather than go for a 9th iteration o=
+n
+ these patches.]
 
 Thanks,
-Joseph
->  }
->  
->  /*
-> 
+David
+---
+The following changes since commit 1b649e0bcae71c118c1333e02249a7510ba7f70=
+a:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2020-03-=
+25 13:58:05 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/keys-fixes-20200329
+
+for you to fetch changes up to 4f0882491a148059a52480e753b7f07fc550e188:
+
+  KEYS: Avoid false positive ENOMEM error on key read (2020-03-29 12:40:41=
+ +0100)
+
+----------------------------------------------------------------
+Keyrings fixes
+
+----------------------------------------------------------------
+Waiman Long (2):
+      KEYS: Don't write out to userspace while holding key semaphore
+      KEYS: Avoid false positive ENOMEM error on key read
+
+ include/keys/big_key-type.h               |   2 +-
+ include/keys/user-type.h                  |   3 +-
+ include/linux/key-type.h                  |   2 +-
+ net/dns_resolver/dns_key.c                |   2 +-
+ net/rxrpc/key.c                           |  27 +++-----
+ security/keys/big_key.c                   |  11 ++--
+ security/keys/encrypted-keys/encrypted.c  |   7 +-
+ security/keys/internal.h                  |  12 ++++
+ security/keys/keyctl.c                    | 103 +++++++++++++++++++++++++=
+-----
+ security/keys/keyring.c                   |   6 +-
+ security/keys/request_key_auth.c          |   7 +-
+ security/keys/trusted-keys/trusted_tpm1.c |  14 +---
+ security/keys/user_defined.c              |   5 +-
+ 13 files changed, 126 insertions(+), 75 deletions(-)
+
