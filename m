@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C8DC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9498EC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5F3206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B609206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2TtU3gF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxBzBB8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgC3BKp (ORCPT
+        id S1728221AbgC3BJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:10:45 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46479 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728314AbgC3BJs (ORCPT
+        Sun, 29 Mar 2020 21:09:43 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33675 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728096AbgC3BJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 29 Mar 2020 21:09:48 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r7so8639857ljg.13;
-        Sun, 29 Mar 2020 18:09:47 -0700 (PDT)
+        Sun, 29 Mar 2020 21:09:40 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x200so5558818lff.0;
+        Sun, 29 Mar 2020 18:09:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+VLbWu+D8TgeK5zW6p2aWDCiEGqay0lhDYDpwRkM9VE=;
-        b=D2TtU3gFnd7SSpdWpvNErIhPswcBEddIihrL2PEMVX6DCkji+3tn3nJL6QNxuE3KZN
-         UZC9HMLgcLYXNLTm3UegAWd9sAeHegVZqHLmlPY+5ZPlkwS71voF3id9b9J+a50OKf+Q
-         XXSdvUhVK9IhPcupPAhiZ9vhcloAIko4KcmhbmkrRcPTAComnntoROdZ44vMZMaBMDMf
-         IQOBmk+4lydUBb9jlxReAbmwPOSs8MxNWXWC244fKEfoSI9PgAmA7kd1K3AzJ5b2Fzzm
-         /swgNGmKcvNrk0ZPanGgIuXHn1V4r3rPhE94y9E9QFRN23Ie3za31f1BV+3T38YSFDDp
-         pG2Q==
+        bh=pGhshIQ08W/fF40FAntS+cxcTBW0fRcj4eZ28EWAmTE=;
+        b=XxBzBB8C/ouLvpvhWv1tCGRnvopFMnR02tvWDdHXE34VMJoFRNre/opbCtXicTKrzV
+         qZyMxdHtx9nh3QfyBBDUF5WO0UAdCOtboU2OXh8FvVLeOHYffG/yVfjb33pkfyFATTP2
+         GScNvvzwf9E9GE8Mw5OT7LAkm/VwTyoLDmyKs3QR0jsH4X6PbVSK0cEP60Lzy3HC/ADd
+         948zayzTPaM/FaB4TU8EkObczi75mj8ZAMirY/qlyv5PwPXL3w0JVCf0Zqqb7IF8tcxz
+         zixt0HJclbyM7lNFFQx3qn8AsoyuOE5n3mg8k1IeFQCBuMZ6AlihowbLymymM5a4YsGt
+         kUWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+VLbWu+D8TgeK5zW6p2aWDCiEGqay0lhDYDpwRkM9VE=;
-        b=sKYV1oyHSBPiSBbsZc9IKdaEMYxguj0rncjnuy6yNptripU3alXl1QhAEkEPFbPb3B
-         i5t7vmMvwTUn5yXDnnVUK7MikhON0Om02vthjMlgc488u+DAJBIlP+1e6Nn7vc1v1paa
-         6kgZszm/J2R8QxXUsMmu8EhKrqhGMXiX+HpmSdHCrI0Xv/LAilbNRslYO04zGdRw4yTA
-         47wGcxpBsKinH1gX9seeyQKYiaWhXEOUn9xCKl8KQb7gfH1M1vPDBmPSgtVhWOwCy1IL
-         Jq+0nvfrl30w+r0MxpZ4lMq/Y/8QxaNchBTIuiBlgx87COj3vye+jxL0hYHtH6a+hkzV
-         4vog==
-X-Gm-Message-State: AGi0PuZHju9PTJEhqctJbAASEd666rkfJwNhE7eyxbTVvU/96ouVopmH
-        J0SyKlBUmOAu876E9niwWiw=
-X-Google-Smtp-Source: APiQypInSDlCTRxykyd6QuIBzENcusxjIbug9n1nvvcfJFF3WBOKRBtFehjeBqpyZgJeyv2fKg8MNg==
-X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr5545140ljp.241.1585530586755;
-        Sun, 29 Mar 2020 18:09:46 -0700 (PDT)
+        bh=pGhshIQ08W/fF40FAntS+cxcTBW0fRcj4eZ28EWAmTE=;
+        b=cloU/Nzc4nXGMZr+2LVPRNEnIrUSCt1ccrsZ2zHMEC/nq3WnfDk1sjiw8lKiOF6mIE
+         XE+b+sI3lovSZwN1k0J/3eq33pKfV2j6RsdD3sLjjG0cJ3RRM9qjHe0pMuOa0GNpCyBg
+         r7+OoXw8hBuSn4TJu/U8OOqrjJ0YCUF3jK1hQFEXkJtnjm1eE0OSqTJ7wocoovuPQJ5m
+         uPzQt5PPXkl8QA5WXjK3trEogtdJ1uShfrqTxAW9c4fU7LysdZ1JVT1/e6ednFOzC6Lm
+         CEsSrp9j3buH+lJGWWanJyxhSltqyHhuatrd7voJHUxIAnnEkc20RNy2WqrJawReqHsr
+         YeNA==
+X-Gm-Message-State: AGi0PuZXwdSt5pPmDhBTUw+HxFzurmh603KLyi9ltBbdZVKAotSl9/4w
+        v8KO8cKOZCEn5ad1jcHgaZ4=
+X-Google-Smtp-Source: APiQypLyzsbk89h1xbagVghUO7mdmiHIeONm1fV88bNjfaxU8lIGGhlh4l/LkO7c6iKxzJDhMtB4yA==
+X-Received: by 2002:a19:4a50:: with SMTP id x77mr6474950lfa.159.1585530577323;
+        Sun, 29 Mar 2020 18:09:37 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.45
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 18:09:46 -0700 (PDT)
+        Sun, 29 Mar 2020 18:09:36 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -66,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 12/22] memory: tegra20-emc: Use devm_platform_ioremap_resource
-Date:   Mon, 30 Mar 2020 04:08:54 +0300
-Message-Id: <20200330010904.27643-13-digetx@gmail.com>
+Subject: [PATCH v2 03/22] dt-bindings: memory: tegra30: mc: Document new interconnect property
+Date:   Mon, 30 Mar 2020 04:08:45 +0300
+Message-Id: <20200330010904.27643-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200330010904.27643-1-digetx@gmail.com>
 References: <20200330010904.27643-1-digetx@gmail.com>
@@ -79,35 +79,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Utilize that relatively new helper which makes code a bit cleaner.
+Memory controller is interconnected with memory clients and with the
+external memory controller. Document new interconnect property which
+turns memory controller into interconnect provider.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra20-emc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ .../bindings/memory-controllers/nvidia,tegra30-mc.yaml       | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
-index 60b048ae9982..ef3abc18a3f4 100644
---- a/drivers/memory/tegra/tegra20-emc.c
-+++ b/drivers/memory/tegra/tegra20-emc.c
-@@ -654,7 +654,6 @@ static int tegra_emc_probe(struct platform_device *pdev)
- {
- 	struct device_node *np;
- 	struct tegra_emc *emc;
--	struct resource *res;
- 	int irq, err;
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+index 4b9196c83291..083676676d0d 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.yaml
+@@ -57,6 +57,9 @@ properties:
+   "#iommu-cells":
+     const: 1
  
- 	/* driver has nothing to do in a case of memory timing absence */
-@@ -689,8 +688,7 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
++  "#interconnect-cells":
++    const: 1
++
+ patternProperties:
+   "^emc-timings-[0-9]+$":
+     type: object
+@@ -121,6 +124,7 @@ required:
+   - clock-names
+   - "#reset-cells"
+   - "#iommu-cells"
++  - "#interconnect-cells"
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	emc->regs = devm_ioremap_resource(&pdev->dev, res);
-+	emc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(emc->regs))
- 		return PTR_ERR(emc->regs);
+ additionalProperties: false
  
+@@ -136,6 +140,7 @@ examples:
+ 
+         #iommu-cells = <1>;
+         #reset-cells = <1>;
++        #interconnect-cells = <1>;
+ 
+         emc-timings-1 {
+             nvidia,ram-code = <1>;
 -- 
 2.25.1
 
