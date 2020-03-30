@@ -2,139 +2,102 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF17C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE405C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C4D20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:03:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="qaE9ka01"
+	by mail.kernel.org (Postfix) with ESMTP id C2F7F20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 23:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585609479;
+	bh=9WjqI5SPSCBz6gV5rpNapNZis++dQJUdYYl0VRE9YME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OS+Pte0o82fPlYHAXyQsiB0KSap56Be6os70wZGhba4qvt+ITxqGzQGosKUrQmif+
+	 69nD9rsxN919S+veoHJS/5HPCiebKnqWMt3ANv80vTQxes+8dC06BHprzHDTpdpMRm
+	 2KZFIfS0wrNLVQfOY7OivxfFS+8sGao6v5efky28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgC3XDC (ORCPT
+        id S1729370AbgC3XEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:03:02 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39564 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3XDC (ORCPT
+        Mon, 30 Mar 2020 19:04:38 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:32897 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3XEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 19:03:02 -0400
-Received: by mail-qk1-f194.google.com with SMTP id b62so21115620qkf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 16:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kfP3d4P8jwaZXBD9eOyojCY2clb925eYfLTaD8OeKhA=;
-        b=qaE9ka01+XIZt+e6Bvi86miiEoTYjIAZNc6SBrJHsRF8RCkg86ZaVTJROEIRnMjbX+
-         epd/phtbktcNMRoCxb7vZX6Uhk31J7yqFb6MwNNJRzsjAuhxOSqF6Fj3w73J+otw36rm
-         OhfKblcf3wgx2qK3ZGstg761wknK0bbodDx8aXiYsF8Y7xVUDYoNGoLpSASWg2c3X9mj
-         KX42UsxIDrw+v1w7GyYu7f2qjDQzhIvNPOGxC8wcDG8kDGo68q8ffi9Hox+EvyO+YLjG
-         T5SYPpcbPf9Vtdh9g+Jm56bfxJbkws3MmYsj5E4XViubrU10Xh4eHltlNPRyRB+/Virv
-         C4SQ==
+        Mon, 30 Mar 2020 19:04:38 -0400
+Received: by mail-il1-f196.google.com with SMTP id k29so17578808ilg.0;
+        Mon, 30 Mar 2020 16:04:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kfP3d4P8jwaZXBD9eOyojCY2clb925eYfLTaD8OeKhA=;
-        b=aQhEaR9H44CuMtavfPaTAMFIMffYP8aFLVvv/nyc5R1LLMXxk6GSd0MNZBdseXmmTA
-         lbPCho7ZQhmzcfI/e5u+JzuZLe4lSPa5ht6MyHSWrsOy3baUdtvEkGxPTXpAj/WlwZIv
-         af+J1lAHuVssUvva5IXKeDB5EPKL/Ajxg+Ss3cpOMlokwZh6OqbQL/2sBanC2xUoQlPh
-         mkEgQ6cHlHJl9MNNJSiOIAgETpNp/OW/MiPGXlkwFYmSwIpVKEhRcadgkJDGInEUXzwE
-         GNJBwzYxpioKejU0ezvwAReSVeRRdRV7olOZsyoKJy/CmqDPxpJ/ibZfqo9C7Ab+lSiG
-         +Pew==
-X-Gm-Message-State: ANhLgQ2fhGGbOkcBw25Ng7V110HtepewUytefgJXG1lgxFJD+Z2PuRzC
-        54isAV/WgWGD4j7JTTsaq8XdBg==
-X-Google-Smtp-Source: ADFU+vuRo0Z9og1N04QkJ35KoQ07MEFGwx1jCIe2vGcNdl80NJ4ucpQC+2OppHx5h2cN8yRDQj+PoA==
-X-Received: by 2002:a05:620a:539:: with SMTP id h25mr2309572qkh.395.1585609380619;
-        Mon, 30 Mar 2020 16:03:00 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id i20sm931146qkl.135.2020.03.30.16.02.58
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zyVmX6PvPs45KAHBuPxiyr6Y4x+zS3R0igRu3UBZU14=;
+        b=Vq/2X2vcWkL7YgWnJrof5YXzB6UotgTIhBvKbLo6YojyyBAtrDUHzZYFHwbaKPegPK
+         mxRHNKWrVHAAfagOSzL6WUjRhFAdOw9jqbPlY1dsrwR6HGg4O3sNfpwvp+vtZC3UEImL
+         uS7x1iXDKS6cqb6C33/vtgBlWknHdeWc3hvVU1S9ljvvY/lluJzJ2KYIr4T90qdL193j
+         wXA44xZrgLd4B3AC7WhyJUVbnhG4Myy7eRA5E5s1XzwLvVbkd5amyw3bkwNPIJ2hR4nA
+         rhdUmYi3IpcCQdmdKsNjAnn39tNY43MYYB49tb/nC4hDxXRGvi0Vs9NRrsTjha/KxNJw
+         S4hw==
+X-Gm-Message-State: ANhLgQ0UCHKtGCIedERhGIImCVhVBuEMsW+JnVqYwCC58cIDqqg90yp5
+        B1mjbFYTjpEmrXQ0ztPj/w==
+X-Google-Smtp-Source: ADFU+vt65MXOBj8bh2BCCIAwztEIyDbufvyh7YknLu1e/QYsgpbMBwAXkTjyrfh5SoRzal+OImdt/g==
+X-Received: by 2002:a92:5c5c:: with SMTP id q89mr13643135ilb.195.1585609477611;
+        Mon, 30 Mar 2020 16:04:37 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id y71sm5347666ilk.23.2020.03.30.16.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:03:00 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com
-Cc:     brendanhiggins@google.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] kunit: Fix kunit.py run --build_dir='<foo>' fails on "unclean" trees
-Date:   Mon, 30 Mar 2020 20:02:56 -0300
-Message-Id: <20200330230256.28323-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.21.1
+        Mon, 30 Mar 2020 16:04:36 -0700 (PDT)
+Received: (nullmailer pid 26041 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:04:34 -0000
+Date:   Mon, 30 Mar 2020 17:04:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: usb: dwc3: add optional extcon
+ description
+Message-ID: <20200330230434.GA21343@bogus>
+References: <20200318083508.20781-1-martin.kepplinger@puri.sm>
+ <20200318083508.20781-2-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318083508.20781-2-martin.kepplinger@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix this bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
+On Wed, Mar 18, 2020 at 09:35:08AM +0100, Martin Kepplinger wrote:
+> the dwc3 drd module already hooks up an extcon device if described in DT.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 9946ff9ba735..9aa0cefbf5f6 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -31,6 +31,8 @@ Exception for clocks:
+>      "xlnx,zynqmp-dwc3"
+>  
+>  Optional properties:
+> + - extcon: phandle for the extcon device dwc3 DRD uses to detect
+> +   connect/disconnect events.
 
-For some reason, the environment variable ARCH is used instead of ARCH
-passed as an argument, this patch uses a copy of the env, but using
-ARCH=um and CROSS_COMPILER='' to avoid this problem.
+This is deprecated in favor of usb-connector binding. I guess fine to 
+document it, but needs a big fat deprecated, do not use message.
 
-This patch doesn't change the user's environment variables, avoiding
-side effects.
-
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
----
- tools/testing/kunit/kunit_kernel.py | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index d99ae75ef72f..0cb1f81ac8f2 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -15,6 +15,7 @@ import kunit_config
- 
- KCONFIG_PATH = '.config'
- kunitconfig_path = '.kunitconfig'
-+env = dict(os.environ.copy(), ARCH='um', CROSS_COMPILE='')
- 
- class ConfigError(Exception):
- 	"""Represents an error trying to configure the Linux kernel."""
-@@ -36,22 +37,22 @@ class LinuxSourceTreeOperations(object):
- 			raise ConfigError(e.output)
- 
- 	def make_olddefconfig(self, build_dir):
--		command = ['make', 'ARCH=um', 'olddefconfig']
-+		command = ['make', 'olddefconfig']
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
--			subprocess.check_output(command)
-+			subprocess.check_output(command, env=env)
- 		except OSError as e:
- 			raise ConfigError('Could not call make command: ' + e)
- 		except subprocess.CalledProcessError as e:
- 			raise ConfigError(e.output)
- 
- 	def make(self, jobs, build_dir):
--		command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
-+		command = ['make', '--jobs=' + str(jobs)]
- 		if build_dir:
- 			command += ['O=' + build_dir]
- 		try:
--			subprocess.check_output(command)
-+			subprocess.check_output(command, env=env)
- 		except OSError as e:
- 			raise BuildError('Could not call execute make: ' + e)
- 		except subprocess.CalledProcessError as e:
-@@ -66,7 +67,8 @@ class LinuxSourceTreeOperations(object):
- 			[linux_bin] + params,
- 			stdin=subprocess.PIPE,
- 			stdout=subprocess.PIPE,
--			stderr=subprocess.PIPE)
-+			stderr=subprocess.PIPE,
-+			env=env)
- 		process.wait(timeout=timeout)
- 		return process
- 
--- 
-2.21.1
-
+>   - usb-phy : array of phandle for the PHY device.  The first element
+>     in the array is expected to be a handle to the USB2/HS PHY and
+>     the second element is expected to be a handle to the USB3/SS PHY
+> -- 
+> 2.20.1
+> 
