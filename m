@@ -2,115 +2,92 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C25C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0487C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2364206F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7D6206F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgC3RF1 (ORCPT
+        id S1730202AbgC3RHE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:05:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:10809 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730268AbgC3RFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:05:25 -0400
-IronPort-SDR: bJrNy6Qh5lK3fUyAXzW9Ik2OE4bwCiAtwgRutojwLFltrbBpymf3cNSxmMa+5xCp142vABh2aN
- ZUjyeddv1n3w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 10:05:25 -0700
-IronPort-SDR: KML/ZVXpYdd0mp/sFUfG2OKlEDEegtiHVV2ziozQKms9EB1QVlXKPek04CFc7p/XZZfeRLhb/Y
- rjiakd21Epsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
-   d="scan'208";a="294667253"
-Received: from unknown (HELO climb.png.intel.com) ([10.221.118.165])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 10:05:22 -0700
-From:   Voon Weifeng <weifeng.voon@intel.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>
-Subject: [net-next,v2, 3/3] net: stmmac: add EHL 2.5Gbps PCI info and PCI ID
-Date:   Tue, 31 Mar 2020 01:05:12 +0800
-Message-Id: <20200330170512.22240-4-weifeng.voon@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200330170512.22240-1-weifeng.voon@intel.com>
-References: <20200330170512.22240-1-weifeng.voon@intel.com>
+        Mon, 30 Mar 2020 13:07:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728739AbgC3RHE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 13:07:04 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UH3CDc113154
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:07:03 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3022qg9u1j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 13:07:03 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Mon, 30 Mar 2020 18:06:52 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Mar 2020 18:06:49 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UH6vND62390434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 17:06:57 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B1B9AAE053;
+        Mon, 30 Mar 2020 17:06:57 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55450AE045;
+        Mon, 30 Mar 2020 17:06:57 +0000 (GMT)
+Received: from localhost (unknown [9.85.126.25])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Mar 2020 17:06:57 +0000 (GMT)
+Date:   Mon, 30 Mar 2020 22:36:54 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH 06/12] powerpc/32s: Make local symbols non visible in
+ hash_low.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <dff05b59a161434a546010507000816750073f28.1585474724.git.christophe.leroy@c-s.fr>
+        <a19105b21c08020c2af9bf4a37daff8642066ef1.1585474724.git.christophe.leroy@c-s.fr>
+In-Reply-To: <a19105b21c08020c2af9bf4a37daff8642066ef1.1585474724.git.christophe.leroy@c-s.fr>
+MIME-Version: 1.0
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20033017-0008-0000-0000-000003674014
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033017-0009-0000-0000-00004A88C152
+Message-Id: <1585587984.mmaeo0dvju.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-30_07:2020-03-30,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 mlxlogscore=818 mlxscore=0 phishscore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003300153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add EHL SGMII 2.5Gbps PCI info and PCI ID
+Christophe Leroy wrote:
+> In hash_low.S, a lot of named local symbols are used instead of
+> numbers to ease code lisibility. However, they don't need to be
+		       ^^^^^^^^^^
+Nit..                  visibility
 
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 24 ++++++++++++-------
- 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index 12927571cee4..5419d4e478c0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -537,30 +537,38 @@ static int __maybe_unused intel_eth_pci_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(intel_eth_pm_ops, intel_eth_pci_suspend,
- 			 intel_eth_pci_resume);
- 
--#define PCI_DEVICE_ID_INTEL_QUARK_ID		0x0937
--#define PCI_DEVICE_ID_INTEL_EHL_RGMII1G_ID	0x4b30
--#define PCI_DEVICE_ID_INTEL_EHL_SGMII1G_ID	0x4b31
-+#define PCI_DEVICE_ID_INTEL_QUARK_ID			0x0937
-+#define PCI_DEVICE_ID_INTEL_EHL_RGMII1G_ID		0x4b30
-+#define PCI_DEVICE_ID_INTEL_EHL_SGMII1G_ID		0x4b31
-+#define PCI_DEVICE_ID_INTEL_EHL_SGMII2G5_ID		0x4b32
- /* Intel(R) Programmable Services Engine (Intel(R) PSE) consist of 2 MAC
-  * which are named PSE0 and PSE1
-  */
--#define PCI_DEVICE_ID_INTEL_EHL_PSE0_RGMII1G_ID	0x4ba0
--#define PCI_DEVICE_ID_INTEL_EHL_PSE0_SGMII1G_ID	0x4ba1
--#define PCI_DEVICE_ID_INTEL_EHL_PSE1_RGMII1G_ID	0x4bb0
--#define PCI_DEVICE_ID_INTEL_EHL_PSE1_SGMII1G_ID	0x4bb1
--#define PCI_DEVICE_ID_INTEL_TGL_SGMII1G_ID	0xa0ac
-+#define PCI_DEVICE_ID_INTEL_EHL_PSE0_RGMII1G_ID		0x4ba0
-+#define PCI_DEVICE_ID_INTEL_EHL_PSE0_SGMII1G_ID		0x4ba1
-+#define PCI_DEVICE_ID_INTEL_EHL_PSE0_SGMII2G5_ID	0x4ba2
-+#define PCI_DEVICE_ID_INTEL_EHL_PSE1_RGMII1G_ID		0x4bb0
-+#define PCI_DEVICE_ID_INTEL_EHL_PSE1_SGMII1G_ID		0x4bb1
-+#define PCI_DEVICE_ID_INTEL_EHL_PSE1_SGMII2G5_ID	0x4bb2
-+#define PCI_DEVICE_ID_INTEL_TGL_SGMII1G_ID		0xa0ac
- 
- static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, QUARK_ID, &quark_pci_info) },
- 	{ PCI_DEVICE_DATA(INTEL, EHL_RGMII1G_ID, &ehl_rgmii1g_pci_info) },
- 	{ PCI_DEVICE_DATA(INTEL, EHL_SGMII1G_ID, &ehl_sgmii1g_pci_info) },
-+	{ PCI_DEVICE_DATA(INTEL, EHL_SGMII2G5_ID, &ehl_sgmii1g_pci_info) },
- 	{ PCI_DEVICE_DATA(INTEL, EHL_PSE0_RGMII1G_ID,
- 			  &ehl_pse0_rgmii1g_pci_info) },
- 	{ PCI_DEVICE_DATA(INTEL, EHL_PSE0_SGMII1G_ID,
- 			  &ehl_pse0_sgmii1g_pci_info) },
-+	{ PCI_DEVICE_DATA(INTEL, EHL_PSE0_SGMII2G5_ID,
-+			  &ehl_pse0_sgmii1g_pci_info) },
- 	{ PCI_DEVICE_DATA(INTEL, EHL_PSE1_RGMII1G_ID,
- 			  &ehl_pse1_rgmii1g_pci_info) },
- 	{ PCI_DEVICE_DATA(INTEL, EHL_PSE1_SGMII1G_ID,
- 			  &ehl_pse1_sgmii1g_pci_info) },
-+	{ PCI_DEVICE_DATA(INTEL, EHL_PSE1_SGMII2G5_ID,
-+			  &ehl_pse1_sgmii1g_pci_info) },
- 	{ PCI_DEVICE_DATA(INTEL, TGL_SGMII1G_ID, &tgl_sgmii1g_pci_info) },
- 	{}
- };
--- 
-2.17.1
+- Naveen
 
