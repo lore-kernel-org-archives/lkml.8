@@ -2,112 +2,57 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075EDC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AF2C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71B520776
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1503920776
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgC3RVx (ORCPT
+        id S1729099AbgC3RWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:21:53 -0400
-Received: from mga03.intel.com ([134.134.136.65]:28187 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbgC3RVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:21:53 -0400
-IronPort-SDR: E1zoANh8CBtGJ+mJCCAjyWN5TgkGvSeqEQwAMRpOjLqtiPMIfkDO9kBGwN4AYktROE+3oBp2oe
- HhLas9ozOTfg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 10:21:52 -0700
-IronPort-SDR: lAFY4IqQ7clIr0678b617mSpps15tXYGkqSz/NkLtmZDop9HvFVrD1osx8tlC0W3XDcx1NMDf3
- ywclHsKHjI8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
-   d="scan'208";a="421996405"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 30 Mar 2020 10:21:52 -0700
-Date:   Mon, 30 Mar 2020 10:21:52 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Kang, Luwei" <luwei.kang@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-Subject: Re: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
-Message-ID: <20200330172152.GE24988@linux.intel.com>
-References: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
- <20200318154826.GC24357@linux.intel.com>
- <82D7661F83C1A047AF7DC287873BF1E1738A9724@SHSMSX104.ccr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E1738A9724@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 30 Mar 2020 13:22:00 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:39852 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728907AbgC3RV7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 13:21:59 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id DD57715C02518;
+        Mon, 30 Mar 2020 10:21:58 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 10:21:58 -0700 (PDT)
+Message-Id: <20200330.102158.1919004361246721356.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     grygorii.strashko@ti.com, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net: ethernet: ti: fix spelling mistake "rundom"
+ -> "random"
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200330101639.161268-1-colin.king@canonical.com>
+References: <20200330101639.161268-1-colin.king@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 30 Mar 2020 10:21:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:20:01AM -0700, Kang, Luwei wrote:
-> > On Wed, Mar 18, 2020 at 11:48:18AM +0800, Luwei Kang wrote:
-> > > If the logical processor is operating with Intel PT enabled (
-> > > IA32_RTIT_CTL.TraceEn = 1) at the time of VM entry, the “load
-> > > IA32_RTIT_CTL” VM-entry control must be 0(SDM 26.2.1.1).
-> > >
-> > > The first disabled the host Intel PT(Clear TraceEn) will make all the
-> > > buffered packets are flushed out of the processor and it may cause an
-> > > Intel PT PMI. The host Intel PT will be re-enabled in the host Intel
-> > > PT PMI handler.
-> > >
-> > > handle_pmi_common()
-> > >     -> intel_pt_interrupt()
-> > >             -> pt_config_start()
-> > 
-> > IIUC, this is only possible when PT "plays nice" with VMX, correct?
-> > Otherwise pt->vmx_on will be true and pt_config_start() would skip the
-> > WRMSR.
-> > 
-> > And IPT PMI must be delivered via NMI (though maybe they're always
-> > delivered via NMI?).
-> > 
-> > In any case, redoing WRMSR doesn't seem safe, and it certainly isn't
-> > performant, e.g. what prevents the second WRMSR from triggering a second
-> > IPT PMI?
-> > 
-> > pt_guest_enter() is called after the switch to the vCPU has already been
-> > recorded, can't this be handled in the IPT code, e.g. something like this?
-> > 
-> > diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c index
-> > 1db7a51d9792..e38ddae9f0d1 100644
-> > --- a/arch/x86/events/intel/pt.c
-> > +++ b/arch/x86/events/intel/pt.c
-> > @@ -405,7 +405,7 @@ static void pt_config_start(struct perf_event *event)
-> >         ctl |= RTIT_CTL_TRACEEN;
-> >         if (READ_ONCE(pt->vmx_on))
-> >                 perf_aux_output_flag(&pt->handle, PERF_AUX_FLAG_PARTIAL);
-> > -       else
-> > +       else (!(current->flags & PF_VCPU))
-> >                 wrmsrl(MSR_IA32_RTIT_CTL, ctl);
-> 
-> Intel PT can work in SYSTEM and HOST_GUEST mode by setting the kvm-intel.ko
-> parameter "pt_mode".  In SYSTEM mode, the host and guest PT trace will be
-> saved in the host buffer. The KVM do nothing during VM-entry/exit in SYSTEM
-> mode and Intel PT PMI may happened on any place. The PT trace may be disabled
-> when running in KVM(PT only needs to be disabled before VM-entry in
-> HOST_GUEST mode).
+From: Colin King <colin.king@canonical.com>
+Date: Mon, 30 Mar 2020 11:16:39 +0100
 
-Ah, right.  What about enhancing intel_pt_handle_vmx() and 'struct pt' to
-replace vmx_on with a field that incorporates the KVM mode?  From an
-outsider's perspective, that'd be an improvment irrespective of this bug
-fix as 'vmx_on' is misleading, e.g. it can be %false when the CPU is post-
-VMXON, and really means "post-VMXON and Intel PT can't trace it".
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a dev_err error message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Applied, thank you.
