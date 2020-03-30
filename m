@@ -2,79 +2,79 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D07CC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C5AC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A3F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7F920658
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 04:55:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZqCycDwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgC3EwZ (ORCPT
+        id S1728353AbgC3EzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 00:52:25 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33118 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgC3EwZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 00:52:25 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3867415C54872;
-        Sun, 29 Mar 2020 21:52:24 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 21:52:23 -0700 (PDT)
-Message-Id: <20200329.215223.1631308723332593306.davem@davemloft.net>
-To:     cai@lca.pw
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        eric.dumazet@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200325220100.7863-1-cai@lca.pw>
-References: <20200325220100.7863-1-cai@lca.pw>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 29 Mar 2020 21:52:24 -0700 (PDT)
+        Mon, 30 Mar 2020 00:55:13 -0400
+Received: from m12-13.163.com ([220.181.12.13]:60198 "EHLO m12-13.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726085AbgC3EzM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 00:55:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=yQHVo
+        TC1AlKhOx5/dm2DqUi8M09WhVzXclK6/Qj4wyM=; b=ZqCycDwBSA7r4vtPmArIl
+        P0AkvWcmVg8InEf2Atih/Wd/aWfs5e9yFKgq6gW0baDQr3LjiDv7ErK6fSpgwHTI
+        AL+4XvFAwa0+Xsc4twM1aK5N9g8ebIuXmjVDbZzIlMe0aDNgFw5vPkle4Ik4yUif
+        gcEMLl1tjd/1cCfglBym5I=
+Received: from localhost.localdomain (unknown [125.82.11.174])
+        by smtp9 (Coremail) with SMTP id DcCowAAHDQ2ae4FeVfa8Bg--.11805S4;
+        Mon, 30 Mar 2020 12:54:52 +0800 (CST)
+From:   Hu Haowen <xianfengting221@163.com>
+To:     chris@zankel.net, jcmvbkbc@gmail.com
+Cc:     linux-xtensa@linux-xtensa.org, linux-kernel@vger.kernel.org,
+        Hu Haowen <xianfengting221@163.com>
+Subject: [PATCH] arch/xtensa: correct an ungrammatical word
+Date:   Mon, 30 Mar 2020 12:54:36 +0800
+Message-Id: <20200330045436.12645-1-xianfengting221@163.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: DcCowAAHDQ2ae4FeVfa8Bg--.11805S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Gw4fGFW3KF4xArW7KrW8Xrb_yoWxZwb_Ar
+        nrJ3W8u3Wrta9Fgrn8Ww4rXr4Yqws5WF1ruw4vy3Wavw1aqw13Gan7Jr4qv3yfua1xur10
+        9FW8Zry5XF92kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjjQDUUUUUU==
+X-Originating-IP: [125.82.11.174]
+X-CM-SenderInfo: h0ld0wxhqj3xtqjsjii6rwjhhfrp/1tbiMhX2AFWBoES6WgAAsB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
-Date: Wed, 25 Mar 2020 18:01:00 -0400
+The word "Dont" is not grammatical. Maybe it means "Don't".
 
-> fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-> tb_hlist) without rcu_read_lock() will trigger a warning,
-> 
->  net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
-> 
->  other info that might help us debug this:
-> 
->  rcu_scheduler_active = 2, debug_locks = 1
->  1 lock held by proc01/115277:
->   #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-> 
->  Call Trace:
->   dump_stack+0xf4/0x164 (unreliable)
->   lockdep_rcu_suspicious+0x140/0x164
->   fib_triestat_seq_show+0x750/0x880
->   seq_read+0x1a0/0x670
->   proc_reg_read+0x10c/0x1b0
->   __vfs_read+0x3c/0x70
->   vfs_read+0xac/0x170
->   ksys_read+0x7c/0x140
->   system_call+0x5c/0x68
-> 
-> Fix it by adding a pair of rcu_read_lock/unlock() and use
-> cond_resched_rcu() to avoid the situation where walking of a large
-> number of items  may prevent scheduling for a long time.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Hu Haowen <xianfengting221@163.com>
+---
+ arch/xtensa/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied and queued up for -stable, thanks.
+diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+index de229424b659..3a9f1e80394a 100644
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -122,7 +122,7 @@ config XTENSA_VARIANT_CUSTOM_NAME
+ 	help
+ 	  Provide the name of a custom Xtensa processor variant.
+ 	  This CORENAME selects arch/xtensa/variant/CORENAME.
+-	  Dont forget you have to select MMU if you have one.
++	  Don't forget you have to select MMU if you have one.
+ 
+ config XTENSA_VARIANT_NAME
+ 	string
+-- 
+2.20.1
+
+
