@@ -2,144 +2,136 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80014C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C447C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507E220771
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hzcHEx2f"
+	by mail.kernel.org (Postfix) with ESMTP id 07C8620733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 21:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgC3VVf (ORCPT
+        id S1728825AbgC3VWv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:21:35 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37203 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbgC3VVe (ORCPT
+        Mon, 30 Mar 2020 17:22:51 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37833 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728407AbgC3VWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:21:34 -0400
-Received: by mail-pj1-f65.google.com with SMTP id o12so155799pjs.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c58CgR5RaTTT0ridfaLClS+3w3fI3dWJ48HBtxaq8qI=;
-        b=hzcHEx2fTjfAO8sI4uwW0GUfGzunMmmPcJ9OaqQShmJeqn5hZlhFd5JQjKAuwZoGHD
-         WTVuTpHivpHmswpd+DjenJFn3y3mK9bXkhvkt5LsvubmfwthLYpe4zdhEpHeqghoPBb+
-         x8/z4KybvAhHqOKn3b2PiKV/aggTVvKa9NN9asUfYOSLPZNGicusHUCw6vTgN/MsbxkT
-         trYqwolaLaaHJnNzuVjqry2TsnhJh0zu0oV3KPEu24uhvhXsQLWrMEy2y8U7pglbiZ06
-         L/q7C3htkHNrbyxhglZE5FTlpVQDVo75b1gIPFB2aYCsCwSVrho6mXU0kwAbBeOspI28
-         KHbA==
+        Mon, 30 Mar 2020 17:22:50 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g23so19791690otq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 14:22:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c58CgR5RaTTT0ridfaLClS+3w3fI3dWJ48HBtxaq8qI=;
-        b=Py6dbpIqEEORiOePPOBIpN9Xo7dGg+uT2lpNOH6f8t7N5mWO2vaNwwqYij5Z2fyP5A
-         80YPj07BjB+Cddxd9zl4/aqbz/ki6yxkDZykvKU6XFu2dHGlvhQfRfW0+RVtmKHKjHbx
-         uWJXaQlu/DgxHISmckIPFu40Wme3Dmb9f6xAkNkWKdzJpSdt9iPieqZEC6Xzk2a2M+4r
-         xJ7Y30EVyf10dnADrwd+R4/1cyQrjbhVJTtaIFRtHMeAoPJ54IDVG3EGcsViplljsChN
-         h+nfRJT1IYMhI9VqpiIVF+vh+0k39nHb3PtE1XKmL40/HjqobYkUu0u5Y+2gMSKzdlz2
-         Bc6Q==
-X-Gm-Message-State: AGi0PuZuhM5VcOPOGU3j+5Ik8bKp6nR/Agpd86EL8zHQ0lqWDkiXevf3
-        Kcr+zNDS/nyEHar09wKwfZexKEl7M92ylPQNxlCgjw==
-X-Google-Smtp-Source: APiQypJD6KuAJxXwkf6/KglgRyyZBT1TGicfXCvZiL0QhGQMKV7TwftlWfceSnG2f72pzU8juFS5AtwqfVObT5Y4F7Q=
-X-Received: by 2002:a17:902:76c6:: with SMTP id j6mr5049067plt.223.1585603293019;
- Mon, 30 Mar 2020 14:21:33 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Vyl+JushNUhxQR9kB/ILsOGZBSYFhnFHl07ojWx3Yr0=;
+        b=efW108/gNjOWQIoe8/cRLDJjOa1jGyXH7uomSmhBbrLNsRWb5tHYYBOKeUYg1LnlyL
+         dRAhFHVXcfLrmcz2H7u/9HyAnhkQ87RCKSC+UyPP60lMf9hDSFo9LdJegnwc4mmCQgPI
+         LQj24Czd+bg9HLipgQiFCOLC4k6zF4c6gPLQLipfrbZA1ECN4e/FaipMuPYTj1Q1DFg5
+         r6X7LsRjDy0EconQ6xDJLholTN020wEIXClHq+KELZT+iHRGXzsZqnBCqL1azNs6HEBX
+         0iD2URcVF/o6K5wU5Vk5JdQn8vwNq269UmShk+n6cA0uDLbzohWYCpANc3ikkP/xp+uM
+         ivnw==
+X-Gm-Message-State: ANhLgQ1PD2evoRJvVlHiFAPuq++3+5gAiA9f5qbc2ne33+sjI0xkJKb2
+        ehAl/O9IFKlly00vlbClG8nUOrDdhV20t9TGzCM=
+X-Google-Smtp-Source: ADFU+vuatsYFQyzw7KGCdnpaDr1LX96t9W2MKuazQT8eQzMhRM3meDvFmKUJz35yCx0cVZmZIt0zxUQD3IpYwuMtlZQ=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr10645908otk.145.1585603368284;
+ Mon, 30 Mar 2020 14:22:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <202003310500.8jcJ6fgm%lkp@intel.com>
-In-Reply-To: <202003310500.8jcJ6fgm%lkp@intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 30 Mar 2020 14:21:20 -0700
-Message-ID: <CAKwvOdnwaoPSB_pavQimvNEuFdt9wF4xSHBbLtjzQUC=urJAxw@mail.gmail.com>
-Subject: Re: ld.lld: error: drivers/staging/rtl8192e/rtllib_wx.o:(.rodata.str1.1):
- offset is outside the section
-To:     Rob Herring <robh@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Dirk Mueller <dmueller@suse.com>
-Cc:     kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        Philip Li <philip.li@intel.com>
+References: <20200330085854.19774-1-geert@linux-m68k.org> <CAHp75Vc1gW2FnRpTNm6uu4gY3bSmccSkCFkAKqYraLincK29yA@mail.gmail.com>
+ <CAMuHMdXDBtOo_deXsmX=zA9_va0O5j8XydxoigmS35+Tj7xDDA@mail.gmail.com>
+ <CAHp75VfsfBD7djyB=S8QtQPdKTkpU5gFzyRYr8FshavoWgT0CA@mail.gmail.com>
+ <CY4PR1201MB01204FB968A6661FB8B295ACA1CB0@CY4PR1201MB0120.namprd12.prod.outlook.com>
+ <c8447243-98c6-d545-9766-e6b3f33f4d13@synopsys.com>
+In-Reply-To: <c8447243-98c6-d545-9766-e6b3f33f4d13@synopsys.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 30 Mar 2020 23:22:36 +0200
+Message-ID: <CAMuHMdWJ22zUkvMXBPBLoNhUkf0bnFBxa_WZAhiUWzA3r4eDkA@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.6
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Michael Ellerman <mpe@ellerman.id.au>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apologies, we're in the process of getting LLD turned on.  These
-warnings look new to me, so I'll file an issue to follow up on.  It's
-unrelated to the yyloc change.
-https://github.com/ClangBuiltLinux/linux/issues/959
+Hi Vineet,
 
-On Mon, Mar 30, 2020 at 2:17 PM kbuild test robot <lkp@intel.com> wrote:
+On Mon, Mar 30, 2020 at 11:18 PM Vineet Gupta
+<Vineet.Gupta1@synopsys.com> wrote:
+> On 3/30/20 1:40 PM, Alexey Brodkin wrote:
+> >> -----Original Message-----
+> >> From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >> Sent: Monday, March 30, 2020 4:28 PM
+> >> To: Geert Uytterhoeven <geert@linux-m68k.org>; Alexey Brodkin <abrodkin@synopsys.com>
+> >> Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+> >> Subject: Re: Build regressions/improvements in v5.6
+> >>
+> >> On Mon, Mar 30, 2020 at 4:26 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >>>
+> >>> Hi Andy,
+> >>>
+> >>> On Mon, Mar 30, 2020 at 3:08 PM Andy Shevchenko
+> >>> <andy.shevchenko@gmail.com> wrote:
+> >>>> On Mon, Mar 30, 2020 at 12:00 PM Geert Uytterhoeven
+> >>>> <geert@linux-m68k.org> wrote:
+> >>>>> Below is the list of build error/warning regressions/improvements in
+> >>>>> v5.6[1] compared to v5.5[2].
+> >>>>
+> >>>>>   + /kisskb/src/include/linux/dev_printk.h: warning: format '%zu' expects argument of type
+> >> 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]:  => 232:23
+> >>>>
+> >>>> This is interesting... I checked all dev_WARN_ONCE() and didn't find an issue.
+> >>>
+> >>> arcv2/axs103_smp_defconfig
+> >>>
+> >>> It's probably due to a broken configuration for the arc toolchain.
+> >>
+> >> Alexey, do have any insight?
+> >
+> > I think I do have some but first I'd like to get it reproduced myself.
+> > I just built v5.6 with help of both GCC 8.3.1- & 9.3.1-based toolchains
+> > and didn't see a single warning. So I guess I was doing something wrong.
+> >
+> > FWIW
+> >
+> > 1. My GCC 8.3.1 toolchain was exactly this:
+> > https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2019.09-release/arc_gnu_2019.09_prebuilt_uclibc_le_archs_linux_install.tar.gz
+> >
+> > 2. Linux kernel is vanilla v5.6.0
+> >
+> > 3. Configured and built as simple as:
+> >    make axs103_smp_defconfig && make
 >
-> Hi Dirk,
+> It seems the build service is using a arc toolchain built in 2016 :-)
 >
-> First bad commit (maybe != root cause):
+> # < /opt/cross/kisskb/br-arcle-hs38-full-2016.08-613-ge98b4dd/bin/arc-linux-gcc
 >
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   7111951b8d4973bda27ff663f2cf18b663d15b48
-> commit: e33a814e772cdc36436c8c188d8c42d019fda639 scripts/dtc: Remove redundant YYLOC global declaration
-> date:   3 days ago
-> config: arm-allyesconfig (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project b4695351cb4ce1c4450a029a0c226dc8bb5f5d55)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout e33a814e772cdc36436c8c188d8c42d019fda639
->         # save the attached .config to linux build tree
->         COMPILER=clang make.cross ARCH=arm
+> Call it Murphy's law, same year a little later I'd fixed the same issue in gcc [1]
 >
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+> [1] http://lists.infradead.org/pipermail/linux-snps-arc/2016-October/001661.html
 >
-> All errors (new ones prefixed by >>):
->
-> >> ld.lld: error: drivers/staging/rtl8192e/rtllib_wx.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8192e/rtllib_softmac.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8192e/rtllib_tx.o:(.rodata.str1.1): offset is outside the section
-> --
-> >> ld.lld: error: drivers/staging/rtl8192u/ieee80211/dot11d.o:(.rodata.str1.1): offset is outside the section
-> --
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_debug.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_sta_mgt.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_security.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_wlan_util.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_ieee80211.o:(.rodata.cst4): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_odm.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_recv.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/hal/hal_com.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_ioctl_set.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8723bs/core/rtw_xmit.o:(.rodata.str1.1): offset is outside the section
->    ld.lld
-> --
-> >> ld.lld: error: drivers/misc/mic/vop/vop_vringh.o:(.rodata.str1.1): offset is outside the section
-> --
->    ld.lld: error: drivers/staging/rtl8188eu/core/rtw_efuse.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/rtl8188eu/os_dep/xmit_linux.o:(.rodata.str1.1): offset is outside the section
-> --
-> >> ld.lld: error: drivers/staging/kpc2000/kpc_dma/fileops.o:(.rodata.str1.1): offset is outside the section
->    ld.lld: error: drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.o:(.rodata.str1.1): offset is outside the section
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/202003310500.8jcJ6fgm%25lkp%40intel.com.
+> @Guenter could you please consider updating the ARC tools. FWIW you can build
+> stuff off upstream gcc/binutils using build system of your choice.
 
+This is not Günter's toolchain, but Michael's.
 
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Thanks,
-~Nick Desaulniers
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
