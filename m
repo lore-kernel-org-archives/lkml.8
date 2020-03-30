@@ -2,78 +2,124 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5685EC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E45C2D0EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDB02072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAFA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKSiivlF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgC3Sju (ORCPT
+        id S1727696AbgC3Sl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgC3Sjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 14:39:49 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4433920714;
-        Mon, 30 Mar 2020 18:39:49 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 14:39:47 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: ftrace not showing the process names for all processes on
- syscall events
-Message-ID: <20200330143947.33515a16@gandalf.local.home>
-In-Reply-To: <ffd8aa59d88146fbb5a4cb02ea9b7440@AcuMS.aculab.com>
-References: <3cdef49951734e83a14959628233d4f0@AcuMS.aculab.com>
-        <20200330110855.437fe854@gandalf.local.home>
-        <7dec110c2dc14792ba744419a4eb907e@AcuMS.aculab.com>
-        <20200330140736.4b5f1667@gandalf.local.home>
-        <ffd8aa59d88146fbb5a4cb02ea9b7440@AcuMS.aculab.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 30 Mar 2020 14:41:59 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43804 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgC3Sl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:41:59 -0400
+Received: by mail-ed1-f65.google.com with SMTP id bd14so21977471edb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 11:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=82V2uiPsUi/5h2Z1obVyGYc68C87qoYt95tk3QJZeQc=;
+        b=FKSiivlFGGLxFugSuEF2WX8g4AFNohF4Go4nX5riJP4GbsCOoKGmNMm4OlgdyqzU7s
+         qglZ7MRKIuIAF+SVGzkGuXJhfPzZfc0am3r0uedhhkA08rS09+ltmyVSZuZQtYOWz0BE
+         mIBlIXE8f9y06jv1ClIkCFe/r/xKMJ4z5XrdDzLVsHgDciPhu8UxFJxoB8NqMAvOQ5a6
+         tBEzBdy+qM9TSdk7xhqhvz4ZJKTpc60TU2qyHR9CSAyqm+xgApdtzbT56CLg8Jg9Um8K
+         YzUdgA4PhKnGaBbKTzl7raIJOo1Um6eGQskJ/er4RacA8ZPJdJePOEmlAN86CQrv9B3S
+         APtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=82V2uiPsUi/5h2Z1obVyGYc68C87qoYt95tk3QJZeQc=;
+        b=iJN4k2uUbvmVWIGEJk6482sGWhmhGA9oEsTd1PmSCiyTeqELc+e8fZyoXQzccD0GEz
+         SQ8rSdCzfklu0LhrUWXQP5h5eeL+zlB6/166B10CvzihyKspEs1RN4LkHdtrQ0kD/ELr
+         xNGjmgRDqV9Ap4c6BKuTgUCqZUFVSvrlfa/PP740sVcG2Z4nP0sK4CSWDSNS751VOoc1
+         8X+wWX6UICtjEpFaTChEaLEE6HD0nKaUqk0DbZq7S167roF7/ARQgYtb4DtXxR2fhieM
+         6qzJ428yDone9LN8GLkABxIgc/rjvhESDu2iUTCcuwAawhpAzTQaLTzG975zeb/wZ2Nv
+         /kRw==
+X-Gm-Message-State: ANhLgQ1zB3cZ8Q9jDattz7Entidg8v3J2zz+750LXQXeNu58L7MvD5Cg
+        fhv+MK6wp/o5VaI/Dzl1wi+dG202/7ygr1lw3n8=
+X-Google-Smtp-Source: ADFU+vucxesQpx/pSt0ehsZzFwIuKyh+AB6mHBuwVgiT12sXj9/fSUvh1uUCw9ngYmsMM5saUV6HaYenqm4OhrNYV7E=
+X-Received: by 2002:aa7:d384:: with SMTP id x4mr6375157edq.256.1585593717445;
+ Mon, 30 Mar 2020 11:41:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
+ <20200327170601.18563-6-kirill.shutemov@linux.intel.com> <D5721ED6-774B-4CD3-8533-4BF9BDB2401E@nvidia.com>
+ <20200328003920.xvkt3hp65uccsq7b@box> <B8EBF52B-BC6A-4778-81AA-DDEFC9BF6157@nvidia.com>
+ <20200328123336.givyrh5hsscg5cpx@box>
+In-Reply-To: <20200328123336.givyrh5hsscg5cpx@box>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 30 Mar 2020 11:41:44 -0700
+Message-ID: <CAHbLzkr0X=P-xcAV7XsnfBgKz_jk-7dzYn0MMPxrN1jp4dMoqQ@mail.gmail.com>
+Subject: Re: [PATCH 5/7] khugepaged: Allow to collapse PTE-mapped compound pages
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 18:14:37 +0000
-David Laight <David.Laight@ACULAB.COM> wrote:
+On Sat, Mar 28, 2020 at 5:33 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> On Fri, Mar 27, 2020 at 09:17:00PM -0400, Zi Yan wrote:
+> > > The compound page may be locked here if the function called for the first
+> > > time for the page and not locked after that (becouse we've unlocked it we
+> > > saw it the first time). The same with LRU.
+> > >
+> >
+> > For the first time, the compound page is locked and not on LRU, so this VM_BUG_ON passes.
+> > For the second time and so on, the compound page is unlocked and on the LRU,
+> > so this VM_BUG_ON still passes.
+> >
+> > For base page, VM_BUG_ON passes.
+> >
+> > Other unexpected situation (a compound page is locked and on LRU) triggers the VM_BU_ON,
+> > but your VM_BUG_ON will not detect this situation, right?
+>
+> Right. I will rework this code. I've just realized it is racy: after
+> unlock and putback on LRU the page can be locked by somebody else and this
+> code can unlock it which completely borken.
 
-> From: Steven Rostedt
-> > Sent: 30 March 2020 19:08
-> > On Mon, 30 Mar 2020 15:34:08 +0000
-> > David Laight <David.Laight@ACULAB.COM> wrote:
-> >   
-> > > Oh, does the 'function_graph' code ignore tail calls?  
-> > 
-> > Yes and no ;-)  It works by dumb luck. As it was a year after function
-> > graph tracing was live (some time in 2010 I believe) that someone brought
-> > up tail calls, and I had to take a look at how it never crashed, and was
-> > surprised that it "just worked". Here's a summary:  
-> 
-> 'Dumb luck' seems to be failing me :-)
-> I'll look more closely tomorrow.
+I'm wondering if we shall skip putting the page back to LRU. Since the
+page is about to be freed soon, so as I mentioned in the other patch
+it sounds not very productive to put it back to LRU again.
 
-The tl;td; version is that the function graph tracer relies on a shadow
-stack that it uses to save the original return address, as it replaces the
-original return address with the address of the fgraph return trampoline.
-
-Although a tail call causes the real stack to only contain one return
-address, the shadow stack will contain a return address for every function,
-even if it was a tail call. As that stack gets updated by the entry of the
-function not the return side. The difference is, a tail call would cause
-the shadow stack to just contain a call to the start of the fgraph return
-trampoline, and not an address into the rest of the kernel.
-
--- Steve
-
+>
+> I'll pass down compound_pagelist to release_pte_pages() and handle the
+> situation there.
+>
+> > >>>     if (likely(writable)) {
+> > >>>             if (likely(referenced)) {
+> > >>
+> > >> Do we need a list here? There should be at most one compound page we will see here, right?
+> > >
+> > > Um? It's outside the pte loop. We get here once per PMD range.
+> > >
+> > > 'page' argument to trace_mm_collapse_huge_page_isolate() is misleading:
+> > > it's just the last page handled in the loop.
+> > >
+> >
+> > Throughout the pte loop, we should only see at most one compound page, right?
+>
+> No. mremap(2) opens a possibility for HPAGE_PMD_NR compound pages for
+> single PMD range.
+>
+>
+> --
+>  Kirill A. Shutemov
+>
