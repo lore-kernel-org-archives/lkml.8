@@ -2,270 +2,104 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BF5C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95005C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889B42073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C072206DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:17:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="OB4YBY85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgC3KQu (ORCPT
+        id S1729000AbgC3KR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:16:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12147 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728257AbgC3KQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:16:46 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0B6A386AA6E7D272DAC8;
-        Mon, 30 Mar 2020 18:16:44 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 30 Mar
- 2020 18:16:40 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix long latency due to discard during
- umount
-From:   Chao Yu <yuchao0@huawei.com>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
- <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
- <20200326133700.GR20234@codeaurora.org>
- <2b0d8d4c-a981-4edc-d8ca-fe199a63ea79@huawei.com>
- <20200327030542.GS20234@codeaurora.org>
- <20200330065335.GT20234@codeaurora.org>
- <9adc5c7e-7936-bac7-58b1-50631f8ac5eb@huawei.com>
-Message-ID: <5ec3b2e1-162c-e62d-1834-100c8ae39ff7@huawei.com>
-Date:   Mon, 30 Mar 2020 18:16:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 30 Mar 2020 06:17:58 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40407 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728746AbgC3KR5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 06:17:57 -0400
+Received: by mail-il1-f193.google.com with SMTP id j9so15229814ilr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 03:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=upalIYLMXEqgwroFLz8o7p1PD72FjazAP3WakghPkvM=;
+        b=OB4YBY85n9imsGg6EVlp5X/dL5sesnMAd72Zo5+hI1ARiBUrhnAzxB/iJsUa8pYWZt
+         uywkv307dGztvTZSdxthv7uCWf5rfs2oJ+vTEBgwL+gyV+AudjJkW59Zke2qHHtcuGUW
+         xE71y94apvMy8hrexN1N2yhqBRsULLRvozIfYHz+1sIOQk68iZjzngdqzAmPvuQwmTHG
+         ygMNdF+jcxrmm+zClKcjrdoT4GmCFSl+TJMk9Xg5EEEn0nplMGUlVVMGtibcdEhNIQzy
+         fU8a56p2Q5VYcmgcwrWcDDH2Ny7XCSSOM8WVTR4volSYtDUVHg8/gDDt8jdmAGcADyHc
+         2GZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=upalIYLMXEqgwroFLz8o7p1PD72FjazAP3WakghPkvM=;
+        b=bG08zlTlfrFaCp8wPXm3G43ZhZr+GRJhbDcz0KwFtMU42ZvcXt+G0x+tZ7yRdkkKQk
+         wocuUNOH0367qKsZcyoqtPYbHdzsnXDz0VzQEVqvMPg9R/kv7Nq4KNLXKs4P37wZ+UJG
+         j7k5DX9QyEq5+uxV6rpmiF45ciT4z5HX0m0enCYAsdYD6Iskx1Vf53PJHryN4gVObqxt
+         r3NixUKwQFoo/3xVrU/YLUpAmAYPYz1YjHsZV+LM8kUbJgnrxJWwb8wKqyM+WzH8kepa
+         4tGxTXHxUR4CjHL+3OcSKkY7kjgjlUO6qnJDeRROZQevj2XkdkV42sflprOIb80BjiQu
+         kDGQ==
+X-Gm-Message-State: ANhLgQ1/qBfSULeLIiUZPv8YY/DEIu+yG2A0kclKTU2bZr8vQdEBU9yO
+        JOiu8QRVhc0RGu9yXRegOa5Alw65zfLidlDv3hqA
+X-Google-Smtp-Source: ADFU+vtM5O5MKf06RLTuQxKEjmU+bK0fCa5rUBlA50W1+2VdL5TlEICp27mWm8Phqc2kq+4f78AN0ULdS3rHbG9Lask=
+X-Received: by 2002:a92:9f13:: with SMTP id u19mr10500655ili.111.1585563476283;
+ Mon, 30 Mar 2020 03:17:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9adc5c7e-7936-bac7-58b1-50631f8ac5eb@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <20200320121657.1165-1-jinpu.wang@cloud.ionos.com>
+ <20200320121657.1165-26-jinpu.wang@cloud.ionos.com> <619d2dda-3c4e-a909-ab78-1201057b542c@acm.org>
+In-Reply-To: <619d2dda-3c4e-a909-ab78-1201057b542c@acm.org>
+From:   Danil Kipnis <danil.kipnis@cloud.ionos.com>
+Date:   Mon, 30 Mar 2020 12:17:45 +0200
+Message-ID: <CAHg0HuyBtKRca=8k_O9ZvPREMry4L7pcmKsm=GUCq_w8Gtjd-g@mail.gmail.com>
+Subject: Re: [PATCH v11 25/26] block/rnbd: a bit of documentation
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jack Wang <jinpu.wang@cloud.ionos.com>,
+        linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/30 16:38, Chao Yu wrote:
-> Hi Sahitya,
-> 
-> Bad news, :( I guess we didn't catch the root cause, as after applying v3,
-> I still can reproduce this issue:
-> 
-> generic/003 10s ...  30s
+On Sat, Mar 28, 2020 at 8:40 PM Bart Van Assche <bvanassche@acm.org> wrote:
+>
+> On 2020-03-20 05:16, Jack Wang wrote:
+> > +RNBD (RDMA Network Block Device) is a pair of kernel modules
+> > +(client and server) that allow for remote access of a block device on
+> > +the server over RTRS protocol using the RDMA (InfiniBand, RoCE, iWarp)
+>                                                                    ^^^^^
+> Isn't this protocol usually spelled as iWARP? See also
+> https://en.wikipedia.org/wiki/IWARP.
 
-I use zram as backend device of fstest,
+Right.
 
-Call Trace:
- dump_stack+0x66/0x8b
- f2fs_submit_discard_endio+0x88/0xa0 [f2fs]
- generic_make_request_checks+0x70/0x5f0
- generic_make_request+0x3e/0x2e0
- submit_bio+0x72/0x140
- __submit_discard_cmd.isra.50+0x4a8/0x710 [f2fs]
- __issue_discard_cmd+0x171/0x3a0 [f2fs]
+> > +dev_search_path option can also contain %SESSNAME% in order to provide
+> > +different deviec namespaces for different sessions.  See "device_path"
+>              ^^^^^^
+>              device?
+Will fix the typo.
 
-Does this mean zram uses single queue, so we may always fail to submit 'nowait'
-IO due to below condition:
-
-	/*
-	 * Non-mq queues do not honor REQ_NOWAIT, so complete a bio
-	 * with BLK_STS_AGAIN status in order to catch -EAGAIN and
-	 * to give a chance to the caller to repeat request gracefully.
-	 */
-	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q)) {
-		status = BLK_STS_AGAIN;
-		goto end_io;
-	}
+> > +option for details.
 
 
+> Otherwise this patch looks fine to me. Hence:
+>
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 
-> 
-> Thanks,
-> 
-> On 2020/3/30 14:53, Sahitya Tummala wrote:
->> Hi Chao,
->>
->> On Fri, Mar 27, 2020 at 08:35:42AM +0530, Sahitya Tummala wrote:
->>> On Fri, Mar 27, 2020 at 09:51:43AM +0800, Chao Yu wrote:
->>>>
->>>> With this patch, most of xfstest cases cost 5 * n second longer than before.
->>>>
->>>> E.g. generic/003, during umount(), we looped into retrying one bio
->>>> submission.
->>>>
->>>> [61279.829724] F2FS-fs (zram1): Found nat_bits in checkpoint
->>>> [61279.885337] F2FS-fs (zram1): Mounted with checkpoint version = 5cf3cb8e
->>>> [61281.912832] submit discard bio start [23555,1]
->>>> [61281.912835] f2fs_submit_discard_endio [23555,1] err:-11
->>>> [61281.912836] submit discard bio end [23555,1]
->>>> [61281.912836] move dc to retry list [23555,1]
->>>>
->>>> ...
->>>>
->>>> [61286.881212] submit discard bio start [23555,1]
->>>> [61286.881217] f2fs_submit_discard_endio [23555,1] err:-11
->>>> [61286.881223] submit discard bio end [23555,1]
->>>> [61286.881224] move dc to retry list [23555,1]
->>>> [61286.905198] submit discard bio start [23555,1]
->>>> [61286.905203] f2fs_submit_discard_endio [23555,1] err:-11
->>>> [61286.905205] submit discard bio end [23555,1]
->>>> [61286.905206] move dc to retry list [23555,1]
->>>> [61286.929157] F2FS-fs (zram1): Issue discard(23555, 23555, 1) failed, ret: -11
->>>>
->>>> Could you take a look at this issue?
->>>
->>> Let me check and get back on this.
->>
->> I found the issue. The dc with multiple bios is getting requeued again and
->> again in case if one of its bio gets -EAGAIN error. Even the successfully
->> completed bios are getting requeued again resulting into long latency.
->> I have fixed it by splitting the dc in such case so that we can requeue only
->> the leftover bios into a new dc and retry that later within the 5 sec timeout.
->>
->> Please help to review v3 posted and if it looks good, I would like to request
->> you to test the earlier regression scenario with it to check the result again?
->>
->> thanks,
->>
->>>
->>> Thanks,
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>> Thanks,
->>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>> +				break;
->>>>>>> +			}
->>>>>>> +		}
->>>>>>>  
->>>>>>>  		atomic_inc(&dcc->issued_discard);
->>>>>>>  
->>>>>>> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
->>>>>>>  	return issued;
->>>>>>>  }
->>>>>>>  
->>>>>>> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
->>>>> s> > +		struct discard_policy *dpolicy)
->>>>>>> +{
->>>>>>> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
->>>>>>> +	struct discard_cmd *dc, *tmp;
->>>>>>> +	bool retry = false;
->>>>>>> +	unsigned long flags;
->>>>>>> +
->>>>>>> +	if (dpolicy->type != DPOLICY_UMOUNT)
->>>>>>> +		f2fs_bug_on(sbi, 1);
->>>>>>> +
->>>>>>> +	mutex_lock(&dcc->cmd_lock);
->>>>>>> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
->>>>>>> +		if (dpolicy->timeout != 0 &&
->>>>>>> +			f2fs_time_over(sbi, dpolicy->timeout)) {
->>>>>>> +			retry = false;
->>>>>>> +			break;
->>>>>>> +		}
->>>>>>> +
->>>>>>> +		spin_lock_irqsave(&dc->lock, flags);
->>>>>>> +		if (!dc->bio_ref) {
->>>>>>> +			dc->state = D_PREP;
->>>>>>> +			dc->error = 0;
->>>>>>> +			reinit_completion(&dc->wait);
->>>>>>> +			__relocate_discard_cmd(dcc, dc);
->>>>>>> +			retry = true;
->>>>>>> +		}
->>>>>>> +		spin_unlock_irqrestore(&dc->lock, flags);
->>>>>>> +	}
->>>>>>> +	mutex_unlock(&dcc->cmd_lock);
->>>>>>> +
->>>>>>> +	return retry;
->>>>>>> +}
->>>>>>> +
->>>>>>>  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>  					struct discard_policy *dpolicy)
->>>>>>>  {
->>>>>>> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>  	struct list_head *pend_list;
->>>>>>>  	struct discard_cmd *dc, *tmp;
->>>>>>>  	struct blk_plug plug;
->>>>>>> -	int i, issued = 0;
->>>>>>> +	int i, err, issued = 0;
->>>>>>>  	bool io_interrupted = false;
->>>>>>>  
->>>>>>>  	if (dpolicy->timeout != 0)
->>>>>>>  		f2fs_update_time(sbi, dpolicy->timeout);
->>>>>>>  
->>>>>>> +retry:
->>>>>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
->>>>>>>  		if (dpolicy->timeout != 0 &&
->>>>>>>  				f2fs_time_over(sbi, dpolicy->timeout))
->>>>>>> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>  				break;
->>>>>>>  			}
->>>>>>>  
->>>>>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
->>>>>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
->>>>>>> +			if (err == -EAGAIN)
->>>>>>> +				congestion_wait(BLK_RW_ASYNC,
->>>>>>> +						DEFAULT_IO_TIMEOUT);
->>>>>>>  
->>>>>>>  			if (issued >= dpolicy->max_requests)
->>>>>>>  				break;
->>>>>>> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>  			break;
->>>>>>>  	}
->>>>>>>  
->>>>>>> +	if (!list_empty(&dcc->retry_list) &&
->>>>>>> +		__should_discard_retry(sbi, dpolicy))
->>>>>>> +		goto retry;
->>>>>>> +
->>>>>>>  	if (!issued && io_interrupted)
->>>>>>>  		issued = -1;
->>>>>>>  
->>>>>>> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
->>>>>>>  		goto next;
->>>>>>>  	}
->>>>>>>  
->>>>>>> +	if (dpolicy->type == DPOLICY_UMOUNT &&
->>>>>>> +		!list_empty(&dcc->retry_list)) {
->>>>>>> +		wait_list = &dcc->retry_list;
->>>>>>> +		goto next;
->>>>>>> +	}
->>>>>>> +
->>>>>>>  	return trimmed;
->>>>>>>  }
->>>>>>>  
->>>>>>> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
->>>>>>>  	for (i = 0; i < MAX_PLIST_NUM; i++)
->>>>>>>  		INIT_LIST_HEAD(&dcc->pend_list[i]);
->>>>>>>  	INIT_LIST_HEAD(&dcc->wait_list);
->>>>>>> +	INIT_LIST_HEAD(&dcc->retry_list);
->>>>>>>  	INIT_LIST_HEAD(&dcc->fstrim_list);
->>>>>>>  	mutex_init(&dcc->cmd_lock);
->>>>>>>  	atomic_set(&dcc->issued_discard, 0);
->>>>>>>
->>>>>
->>>
->>> -- 
->>> --
->>> Sent by a consultant of the Qualcomm Innovation Center, Inc.
->>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
->>
-> 
-> 
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
+Thank you.
