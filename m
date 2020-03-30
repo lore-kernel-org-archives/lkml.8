@@ -2,163 +2,128 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43408C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ED2C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A9E2073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3BC20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 13:03:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lg9bvgvr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCHcJ/WZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbgC3NAs (ORCPT
+        id S1730188AbgC3NDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:00:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35594 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729995AbgC3NAr (ORCPT
+        Mon, 30 Mar 2020 09:03:07 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46001 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729862AbgC3NDG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:00:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v2so13312486oto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:00:47 -0700 (PDT)
+        Mon, 30 Mar 2020 09:03:06 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c145so18683317qke.12
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 06:03:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=fla8h5dw+7kESbxPfIOGPXN0TH0KgZ2TkZfruGM5x9o=;
-        b=lg9bvgvrsr0fQ+6RWmswj1Ye2O+9fMYB4JLMCTLhaiT6/OxszDwqgfMiMC1jVWxEkO
-         tTp6yhmw2iUfjKosQmnJ44qYjHc0TVJz/31+6/HqOYVe+0C/CADWA2Wm1RxFciJo48Zy
-         HDmHRIgT1OdpEs7r+pHoyENZjFcg3mQ+9PJig=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=28eUJEVmjol1gq045R37NXNmypYesyWBFbPNOwffG2I=;
+        b=kCHcJ/WZw0DSr54Jg/A5YojwP7ynT9gUFKQBadXJFo5Ba0Z8we2IoMj1LWuVcG20uq
+         xxaUNM4BbM4v6swBTg86nsYjlhM8nsCsaEi0+f/5sojnts0sNI6e2MmNm0cyXVxiXLaV
+         RYpxiF94RqVtHenxEgYT3j5C08VrOqhoY34p260Wtfeqb1eWJZI9vv3H8hEfeb0gew1y
+         hYajZpo5R/h5TX/K8yB92fjbJxhUxfxqkzXBJ8ytwjsyZLWCcEinNbaYMeBwfjzAUWO2
+         c7Ua5J2YGeW9Z7WJX0yQMJeFJAEpsUPvZ2KJtERpqM6qe12crKX4HbKpjMDmITwBDJj/
+         Qwmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=fla8h5dw+7kESbxPfIOGPXN0TH0KgZ2TkZfruGM5x9o=;
-        b=dhkSfyg5moY7yrnBehQ3MEsM5IPgBJoFcSUhzYHUBAKj5SGEeHktMY1fDxqTk5kbfS
-         8eQMcXwhHXI6+GMWHR/VocdtrLlTAzMSOkxHbe2+LRNRTKDEdQDXDNYWnaXgOxqdFu4s
-         gM4jT1MwlJ8vuhIfGSt8q/rdwtwt3SkBXha0n7xOqrSWP8qrwzroOHps4Orvy3RjAN4A
-         yMChb2AQOBVQSdgSE+MgKH+JWOrvXFutJLwWATAWrEToDMYxjOhYm6gTz8ecGQ/YO2I9
-         tCCiuxsN09e2bbIKWCKhu/1g0kjfFiPGSACcRDaU65gCCgx9nUx8ibxIA4GmmENf0m1S
-         Fwyw==
-X-Gm-Message-State: ANhLgQ2pDo40Aqw3kvgqF2C9CuvMSjmyQXf3+QgeR3rXWOwa62B/Y1HB
-        s2yILo5FUqiO+ZJ0h7ZAs4k4w+DQH6GrpAp8Z0+ZwA==
-X-Google-Smtp-Source: ADFU+vt5DBwGAI9mfWkYTIU+buXY6ODllVl/y1pNfdCTo2/8qAS1bHnAc8vYv+NAxTpPE7GJFTMrj4Eq0QnR0Jyv8os=
-X-Received: by 2002:a9d:6e8f:: with SMTP id a15mr4716842otr.188.1585573246524;
- Mon, 30 Mar 2020 06:00:46 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=28eUJEVmjol1gq045R37NXNmypYesyWBFbPNOwffG2I=;
+        b=JHvF+HHdmrEQeJp8GT9q7VCYr/IMLxqVCDZ43IzIBBJRXLSvmy0L7b8gA6H4fBmC7t
+         +5x/9KgdlQ4eF+hg0hl64eKnN7g7U/ZcOy1yh0wcE/xg5EU7M5Aje+UIqEemA7ghXMvk
+         TDky4RvMAnPDEWKbVIgz8JTPHwcYp5SMVkdsS+nIsPZ/9n0tgPi1QjD9zWgk35ydRmxi
+         VRWXa9Fx6Tfab7F1ULmwwTAnPm4AOjCxHFbANwGWr7aAXdHB6I0hkT49KAqiPSuyX4x+
+         wYIrTUgnAr3nZUbGN56cse9X+KZU1BNauPdnA6zyYYhfKEilFNUG/yZ4lr63rmn8A28I
+         zFIw==
+X-Gm-Message-State: ANhLgQ25vME8zhMnHNLI2KrmZwjhT+zJR8Fh6LTgMcltEKW9NzxoAihb
+        7nklaHvzpHAD7ideVMJJ1yQ=
+X-Google-Smtp-Source: ADFU+vsqz0LtOrA17BcTV/9W6MqK84JDL7uShWPLbv6LjhkukvOSG/7w5KmI8j0wKK2J0ZSbm6W4OQ==
+X-Received: by 2002:a37:a1c9:: with SMTP id k192mr10655738qke.385.1585573385358;
+        Mon, 30 Mar 2020 06:03:05 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id c40sm11599115qtk.18.2020.03.30.06.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 06:03:04 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8D858409A3; Mon, 30 Mar 2020 10:03:01 -0300 (-03)
+Date:   Mon, 30 Mar 2020 10:03:01 -0300
+To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/1] perf build-test: Honour JOBS to override detection of
+Message-ID: <20200330130301.GA31702@kernel.org>
 MIME-Version: 1.0
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Mon, 30 Mar 2020 15:00:35 +0200
-Message-ID: <CAKMK7uGQ49JGetk3-VmHxXR0HVEoQgVxSZvX9Z0b5so8y+13cA@mail.gmail.com>
-Subject: rcu_barrier() no longer allowed within mmap_sem?
-To:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     rcu@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all, for all = rcu, cpuhotplug and perf maintainers
+Jiri,
 
-We've hit an interesting new lockdep splat in our drm/i915 CI:
+	Ack?
 
-https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_17096/shard-tglb7/igt@kms_frontbuffer_tracking@fbcpsr-rgb101010-draw-mmap-gtt.html#dmesg-warnings861
+----
 
-Summarizing away the driver parts we have
+When one does:
 
-< gpu locks which are held within mm->mmap_sem in various gpu fault handlers >
+  $ make -C tools/perf build-test
 
--> #4 (&mm->mmap_sem#2){++++}:
-<4> [604.892615] __might_fault+0x63/0x90
-<4> [604.892617] _copy_to_user+0x1e/0x80
-<4> [604.892619] perf_read+0x200/0x2b0
-<4> [604.892621] vfs_read+0x96/0x160
-<4> [604.892622] ksys_read+0x9f/0xe0
-<4> [604.892623] do_syscall_64+0x4f/0x220
-<4> [604.892624] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-<4> [604.892625]
--> #3 (&cpuctx_mutex){+.+.}:
-<4> [604.892626] __mutex_lock+0x9a/0x9c0
-<4> [604.892627] perf_event_init_cpu+0xa4/0x140
-<4> [604.892629] perf_event_init+0x19d/0x1cd
-<4> [604.892630] start_kernel+0x362/0x4e4
-<4> [604.892631] secondary_startup_64+0xa4/0xb0
-<4> [604.892631]
--> #2 (pmus_lock){+.+.}:
-<4> [604.892633] __mutex_lock+0x9a/0x9c0
-<4> [604.892633] perf_event_init_cpu+0x6b/0x140
-<4> [604.892635] cpuhp_invoke_callback+0x9b/0x9d0
-<4> [604.892636] _cpu_up+0xa2/0x140
-<4> [604.892637] do_cpu_up+0x61/0xa0
-<4> [604.892639] smp_init+0x57/0x96
-<4> [604.892639] kernel_init_freeable+0x87/0x1dc
-<4> [604.892640] kernel_init+0x5/0x100
-<4> [604.892642] ret_from_fork+0x24/0x50
-<4> [604.892642]
--> #1 (cpu_hotplug_lock.rw_sem){++++}:
-<4> [604.892643] cpus_read_lock+0x34/0xd0
-<4> [604.892644] rcu_barrier+0xaa/0x190
-<4> [604.892645] kernel_init+0x21/0x100
-<4> [604.892647] ret_from_fork+0x24/0x50
-<4> [604.892647]
--> #0 (rcu_state.barrier_mutex){+.+.}:
-<4> [604.892649] __lock_acquire+0x1328/0x15d0
-<4> [604.892650] lock_acquire+0xa7/0x1c0
-<4> [604.892651] __mutex_lock+0x9a/0x9c0
-<4> [604.892652] rcu_barrier+0x23/0x190
-<4> [604.892680] i915_gem_object_unbind+0x29d/0x3f0 [i915]
-<4> [604.892707] i915_gem_object_pin_to_display_plane+0x141/0x270 [i915]
-<4> [604.892737] intel_pin_and_fence_fb_obj+0xec/0x1f0 [i915]
-<4> [604.892767] intel_plane_pin_fb+0x3f/0xd0 [i915]
-<4> [604.892797] intel_prepare_plane_fb+0x13b/0x5c0 [i915]
-<4> [604.892798] drm_atomic_helper_prepare_planes+0x85/0x110
-<4> [604.892827] intel_atomic_commit+0xda/0x390 [i915]
-<4> [604.892828] drm_atomic_helper_set_config+0x57/0xa0
-<4> [604.892830] drm_mode_setcrtc+0x1c4/0x720
-<4> [604.892830] drm_ioctl_kernel+0xb0/0xf0
-<4> [604.892831] drm_ioctl+0x2e1/0x390
-<4> [604.892833] ksys_ioctl+0x7b/0x90
-<4> [604.892835] __x64_sys_ioctl+0x11/0x20
-<4> [604.892835] do_syscall_64+0x4f/0x220
-<4> [604.892836] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+The makefile in tools/perf/tests/ will, just like the main one, detect
+how many cores are in the system and use it with -j.
 
-The last backtrace boils down to i915 driver code which holds the same
-locks we are holding within mm->mmap_sem, and then ends up calling
-rcu_barrier(). From what I can see i915 is just the messenger here,
-any driver with this pattern of a lock held within mmap_sem which also
-has a path of calling rcu_barrier while holding that lock should be
-hitting this splat.
+Sometimes we may need to override that, for instance, when using
+icecream or distcc to use multiple machines in the build process, then
+we need to, as with the main makefile, use:
 
-Two questions:
-- This suggests that calling rcu_barrier() isn't ok anymore while
-holding mmap_sem, or anything that has a dependency upon mmap_sem. I
-guess that's not the idea, please confirm.
-- Assuming this depedency is indeed not intended, where should the
-loop be broken? It goes through perf, cpuhotplug and rcu subsystems,
-and I don't have a clue about any of those.
+  $ make JOBS=N -C tools/perf build-test
 
-Thanks a lot.
+Fix the tests makefile to honour that.
 
-Cheers, Daniel
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/make | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index c850d1664c56..5d0c3a9c47a1 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -28,9 +28,13 @@ endif
+ 
+ PARALLEL_OPT=
+ ifeq ($(SET_PARALLEL),1)
+-  cores := $(shell (getconf _NPROCESSORS_ONLN || egrep -c '^processor|^CPU[0-9]' /proc/cpuinfo) 2>/dev/null)
+-  ifeq ($(cores),0)
+-    cores := 1
++  ifeq ($(JOBS),)
++    cores := $(shell (getconf _NPROCESSORS_ONLN || egrep -c '^processor|^CPU[0-9]' /proc/cpuinfo) 2>/dev/null)
++    ifeq ($(cores),0)
++      cores := 1
++    endif
++  else
++    cores=$(JOBS)
+   endif
+   PARALLEL_OPT="-j$(cores)"
+ endif
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.25.1
+
