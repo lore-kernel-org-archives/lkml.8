@@ -2,265 +2,132 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35930C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B932220774
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585557914;
-	bh=+I6T3lKebKlX2cTFGRjwVS8EGurhIiT4o2amlLeZ4B0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GFftxZa0KWsJ4NL2KA+JfjGIsrg9UFFr01y3UMDFGZLCrmEUmBIlfD84pYrh38cDA
-	 VzJgsHgzEh9fY8fGTvFghouA0ugPdt2BhB2EJRD2ZK8ALa1cyszIcGNM25nO3f0B3k
-	 OPcaLFIcfgK92RgS2pdPd/Qp5Bx4cFl7kw8g4/xY=
+	by mail.kernel.org (Postfix) with ESMTP id 08ECE20732
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 08:45:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxeHw8xo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729758AbgC3IpN (ORCPT
+        id S1729762AbgC3Ipn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:45:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbgC3IpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:45:13 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 30 Mar 2020 04:45:43 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:29992 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728759AbgC3Ipm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:45:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585557941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=wBgLzPkpOUfCIOKNbdaLTiqV8vpwnq9LumPKAlh+bzA=;
+        b=BxeHw8xopgqin+L1AqYdJoa+5ipnPHsJlTzVcR7Zdg0veYzJqbYWVYHhlBl5cGDOD4bk/4
+        Yt7GXRIJrnHSLfd4b6LpFHdHFs6jUdoSXX7ZABgBfGAWlMPlNl73XFpVBgk4ex5swvjlDx
+        elIpPTXYMf65K3OlzZI+DrL6c4wPcLQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-dEyyOTZqO1apV9t-JDpe8A-1; Mon, 30 Mar 2020 04:45:39 -0400
+X-MC-Unique: dEyyOTZqO1apV9t-JDpe8A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15F0720732;
-        Mon, 30 Mar 2020 08:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585557912;
-        bh=+I6T3lKebKlX2cTFGRjwVS8EGurhIiT4o2amlLeZ4B0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fElZIDksmQXKSOPctuLzKkQuwmqlCP/XOfr7E+TjStWgci7GlstY++lNxO4hhHG7X
-         6NBM5oC7gFhsIsFW2UVPTXF8p1UlbhFYn1xzDmTLz26Nt8rC8g9434WNtO1l/bqBZu
-         mYfDL1zKFzogRqJRWx70aJGdz6xtqKl8e+86Eqtw=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jIq2g-00GokY-A6; Mon, 30 Mar 2020 09:45:10 +0100
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1D2ADB6F;
+        Mon, 30 Mar 2020 08:45:37 +0000 (UTC)
+Received: from [10.36.113.227] (ovpn-113-227.ams2.redhat.com [10.36.113.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C420953DF;
+        Mon, 30 Mar 2020 08:45:36 +0000 (UTC)
+Subject: Re: [RFC] mm/page_alloc: Enumerate bad page reasons
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org
+References: <1585551097-27283-1-git-send-email-anshuman.khandual@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <d482aa0a-db1a-a4df-e2c5-1598e0fb28ad@redhat.com>
+Date:   Mon, 30 Mar 2020 10:45:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <1585551097-27283-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 30 Mar 2020 09:45:10 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stefan Asserhall <stefan.asserhall@xilinx.com>,
-        x86 <x86@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [tip: irq/core] irqchip/xilinx: Enable generic irq multi handler
-In-Reply-To: <083ad708-ea4d-ed53-598e-84d911ca4177@xilinx.com>
-References: <20200317125600.15913-4-mubin.usman.sayyed@xilinx.com>
- <158551357076.28353.1716269552245308352.tip-bot2@tip-bot2>
- <083ad708-ea4d-ed53-598e-84d911ca4177@xilinx.com>
-Message-ID: <085188fea81d5ddc88b488124596a4a3@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: michal.simek@xilinx.com, linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, tglx@linutronix.de, stefan.asserhall@xilinx.com, x86@kernel.org, sfr@canb.auug.org.au
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-30 09:32, Michal Simek wrote:
-> Hi Thomas and Marc,
-> 
-> On 29. 03. 20 22:26, tip-bot2 for Michal Simek wrote:
->> The following commit has been merged into the irq/core branch of tip:
->> 
->> Commit-ID:     a0789993bf8266e62fea6b4613945ba081c71e7d
->> Gitweb:        
->> https://git.kernel.org/tip/a0789993bf8266e62fea6b4613945ba081c71e7d
->> Author:        Michal Simek <michal.simek@xilinx.com>
->> AuthorDate:    Tue, 17 Mar 2020 18:25:59 +05:30
->> Committer:     Marc Zyngier <maz@kernel.org>
->> CommitterDate: Sun, 22 Mar 2020 11:52:53
->> 
->> irqchip/xilinx: Enable generic irq multi handler
->> 
->> Register default arch handler via driver instead of directly pointing 
->> to
->> xilinx intc controller. This patch makes architecture code more 
->> generic.
->> 
->> Driver calls generic domain specific irq handler which does the most 
->> of
->> things self. Also get rid of concurrent_irq counting which hasn't been
->> exported anywhere.
->> Based on this loop was also optimized by using do/while loop instead 
->> of
->> goto loop.
->> 
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> Reviewed-by: Stefan Asserhall <stefan.asserhall@xilinx.com>
->> Link: 
->> https://lore.kernel.org/r/20200317125600.15913-4-mubin.usman.sayyed@xilinx.com
->> ---
->>  arch/microblaze/Kconfig           |  2 ++-
->>  arch/microblaze/include/asm/irq.h |  3 +---
->>  arch/microblaze/kernel/irq.c      | 21 +-------------------
->>  drivers/irqchip/irq-xilinx-intc.c | 34 +++++++++++++++++-------------
->>  4 files changed, 23 insertions(+), 37 deletions(-)
->> 
->> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
->> index 6a331bd..242f58e 100644
->> --- a/arch/microblaze/Kconfig
->> +++ b/arch/microblaze/Kconfig
->> @@ -47,6 +47,8 @@ config MICROBLAZE
->>  	select CPU_NO_EFFICIENT_FFS
->>  	select MMU_GATHER_NO_RANGE if MMU
->>  	select SPARSE_IRQ
->> +	select GENERIC_IRQ_MULTI_HANDLER
->> +	select HANDLE_DOMAIN_IRQ
->> 
->>  # Endianness selection
->>  choice
->> diff --git a/arch/microblaze/include/asm/irq.h 
->> b/arch/microblaze/include/asm/irq.h
->> index eac2fb4..5166f08 100644
->> --- a/arch/microblaze/include/asm/irq.h
->> +++ b/arch/microblaze/include/asm/irq.h
->> @@ -14,7 +14,4 @@
->>  struct pt_regs;
->>  extern void do_IRQ(struct pt_regs *regs);
->> 
->> -/* should be defined in each interrupt controller driver */
->> -extern unsigned int xintc_get_irq(void);
->> -
->>  #endif /* _ASM_MICROBLAZE_IRQ_H */
->> diff --git a/arch/microblaze/kernel/irq.c 
->> b/arch/microblaze/kernel/irq.c
->> index 903dad8..0b37dde 100644
->> --- a/arch/microblaze/kernel/irq.c
->> +++ b/arch/microblaze/kernel/irq.c
->> @@ -20,29 +20,10 @@
->>  #include <linux/irqchip.h>
->>  #include <linux/of_irq.h>
->> 
->> -static u32 concurrent_irq;
->> -
->>  void __irq_entry do_IRQ(struct pt_regs *regs)
->>  {
->> -	unsigned int irq;
->> -	struct pt_regs *old_regs = set_irq_regs(regs);
->>  	trace_hardirqs_off();
->> -
->> -	irq_enter();
->> -	irq = xintc_get_irq();
->> -next_irq:
->> -	BUG_ON(!irq);
->> -	generic_handle_irq(irq);
->> -
->> -	irq = xintc_get_irq();
->> -	if (irq != -1U) {
->> -		pr_debug("next irq: %d\n", irq);
->> -		++concurrent_irq;
->> -		goto next_irq;
->> -	}
->> -
->> -	irq_exit();
->> -	set_irq_regs(old_regs);
->> +	handle_arch_irq(regs);
->>  	trace_hardirqs_on();
->>  }
->> 
->> diff --git a/drivers/irqchip/irq-xilinx-intc.c 
->> b/drivers/irqchip/irq-xilinx-intc.c
->> index 1d3d273..ea74181 100644
->> --- a/drivers/irqchip/irq-xilinx-intc.c
->> +++ b/drivers/irqchip/irq-xilinx-intc.c
->> @@ -124,20 +124,6 @@ static unsigned int xintc_get_irq_local(struct 
->> xintc_irq_chip *irqc)
->>  	return irq;
->>  }
->> 
->> -unsigned int xintc_get_irq(void)
->> -{
->> -	unsigned int irq = -1;
->> -	u32 hwirq;
->> -
->> -	hwirq = xintc_read(primary_intc, IVR);
->> -	if (hwirq != -1U)
->> -		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
->> -
->> -	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
->> -
->> -	return irq;
->> -}
->> -
->>  static int xintc_map(struct irq_domain *d, unsigned int irq, 
->> irq_hw_number_t hw)
->>  {
->>  	struct xintc_irq_chip *irqc = d->host_data;
->> @@ -177,6 +163,25 @@ static void xil_intc_irq_handler(struct irq_desc 
->> *desc)
->>  	chained_irq_exit(chip, desc);
->>  }
->> 
->> +static void xil_intc_handle_irq(struct pt_regs *regs)
->> +{
->> +	u32 hwirq;
->> +	struct xintc_irq_chip *irqc = primary_intc;
->> +
->> +	do {
->> +		hwirq = xintc_read(irqc, IVR);
->> +		if (likely(hwirq != -1U)) {
->> +			int ret;
->> +
->> +			ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
->> +			WARN_ONCE(ret, "Unhandled HWIRQ %d\n", hwirq);
->> +			continue;
->> +		}
->> +
->> +		break;
->> +	} while (1);
->> +}
->> +
->>  static int __init xilinx_intc_of_init(struct device_node *intc,
->>  					     struct device_node *parent)
->>  {
->> @@ -246,6 +251,7 @@ static int __init xilinx_intc_of_init(struct 
->> device_node *intc,
->>  	} else {
->>  		primary_intc = irqc;
->>  		irq_set_default_host(primary_intc->root_domain);
->> +		set_handle_irq(xil_intc_handle_irq);
->>  	}
->> 
->>  	return 0;
->> 
-> 
-> Stephen reported compilation issue when this patch is applied because 
-> of
-> removal of xintc_get_irq() which is also used by ancient ppc405/ppc440
-> xilinx platforms. I have reported this twice to Marc already last week.
+On 30.03.20 08:51, Anshuman Khandual wrote:
+> Enumerate all existing bad page reasons which can be used in bad_page() for
+> reporting via __dump_page(). Unfortunately __dump_page() cannot be changed.
+> __dump_page() is called from dump_page() that accepts a raw string and is
+> also an exported symbol that is currently being used from various generic
+> memory functions and other drivers. This reduces code duplication while
+> reporting bad pages.
 
-Did you? I can't possibly find these emails.
+Yeah sounds nice, but "56 insertions(+), 20 deletions(-)" does not sound
+so nice ... and the "code duplication" is actually "repeating strings".
 
-> On Friday I have also send v1 of removal of that platforms (need to 
-> send v2)
-> https://lore.kernel.org/alsa-devel/cover.1585311091.git.michal.simek@xilinx.com/
+... I don't think we want/need this.
 
-You want to remove exising platforms two days before the start of the 
-merge window?
-I don't think this is acceptable with such short notice.
-
-> That's why please really consider next steps and let us know.
-
-I think the only option is to revert (at least partially) the Xilinx 
-series.
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Thanks,
+
+David / dhildenb
+
