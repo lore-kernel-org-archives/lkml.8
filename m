@@ -2,296 +2,119 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4E8C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D53C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304A52072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8BB20716
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 10:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaEjSifc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgC3Kmh convert rfc822-to-8bit (ORCPT
+        id S1729266AbgC3Kn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:42:37 -0400
-Received: from zimbra2.kalray.eu ([92.103.151.219]:58930 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729161AbgC3Kmf (ORCPT
+        Mon, 30 Mar 2020 06:43:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34957 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbgC3Kn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:42:35 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id DF24E27E031E;
-        Mon, 30 Mar 2020 12:42:33 +0200 (CEST)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id emZMPI3v_1tB; Mon, 30 Mar 2020 12:42:33 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 5148127E071F;
-        Mon, 30 Mar 2020 12:42:33 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id drJWvjV_7T23; Mon, 30 Mar 2020 12:42:33 +0200 (CEST)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 3A2C527E031E;
-        Mon, 30 Mar 2020 12:42:33 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 12:42:32 +0200 (CEST)
-From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        psodagud <psodagud@codeaurora.org>, tsoni <tsoni@codeaurora.org>,
-        sidgup <sidgup@codeaurora.org>
-Message-ID: <463931027.12801248.1585564952633.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <679f34c02ed9842dd71af2033d610f9a@codeaurora.org>
-References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org> <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org> <1233159221.12306373.1585244277714.JavaMail.zimbra@kalray.eu> <679f34c02ed9842dd71af2033d610f9a@codeaurora.org>
-Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC80 (Linux)/8.8.15_GA_3895)
-Thread-Topic: remoteproc: Add userspace char device driver
-Thread-Index: BiJjxMq784DOYQUsXrreGxutreFRWg==
+        Mon, 30 Mar 2020 06:43:26 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k5so6261009pga.2
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 03:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=SxBpIzPkzU1vl9bySozt1wIiREaZHHXTdsxoYdI/9lw=;
+        b=MaEjSifcGOscOl65yWma3+FPGAc2iNPedC49K5dP/XwTurfuNlCQiAfd51ihTo1hAb
+         XX9geaEKzGQ3eLNKozHnAnSJP/HeANPraOhjvkR5tAwjydirwsLYtXZRTwBOUzm7DsT3
+         74WJZ1TVAUgFzu7Dc3jKTDnYePoSEz7aXjs01BTJ3FXevO+Af/7q3Ky8tCNWYy79gGuS
+         56Mzn0URuBLP4qSADpLf7lKzQHRRYdZac3oOinG/pGedktj5JnR6c1NkN+0YHanc371B
+         FI9wtRUec8WYdJvxTuo5r1izIWAqlOOBQa2BIiXxgafPj7+G5xgMBgZIzALPXpe0b7F/
+         m8ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SxBpIzPkzU1vl9bySozt1wIiREaZHHXTdsxoYdI/9lw=;
+        b=Mn7J5mjW4kKhV+Zmg806vA5w/8XIlwUHzT5AKddNf56ErBrtHA6oxjPf31dbRBZEZb
+         AAmuntyHYnBE3kyzv1RwBMgw/ewjrXF2yXnhCkVfJ+QZ0XS2nubLBR81IAtjskMl1TEH
+         0cePaGnXQVkGunHCdlfo5/CqBpJJeqzlnKFWOkcc9KffOmfni5+hBDI0nIprZX1lwQid
+         JmE7QR7ksSC0rY06VdOKpDU8pG3blkR/wyhXWtKdDYru7eLlCuVrGyWzys3lRBi3fYus
+         ONDiWDtbTza8s6KnKSJNjDdMCyE1rAnhn4X8e8LbrhFmUNtE9E54P9bCmuRNAfqMepp1
+         tKnw==
+X-Gm-Message-State: ANhLgQ2RqnF1w1lRHvWpAvm3aE0SXW//hJWkEL0wYkSM4P3gaQmYPRNJ
+        qVGAlkd65oY2nI/2pCD5Uuk=
+X-Google-Smtp-Source: ADFU+vsQ5VhuCnrZLzEJWMc1wnXdeMXTz/Sq3sHHTUK0IP1MylEryoQw9FFPsJZUK33R4fOXNlYbQQ==
+X-Received: by 2002:a63:8c51:: with SMTP id q17mr12502479pgn.320.1585565005316;
+        Mon, 30 Mar 2020 03:43:25 -0700 (PDT)
+Received: from payal-desktop ([157.33.199.31])
+        by smtp.gmail.com with ESMTPSA id d71sm10012346pfd.46.2020.03.30.03.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 03:43:24 -0700 (PDT)
+From:   Payal Kshirsagar <payalskshirsagar1234@gmail.com>
+To:     linux-kernel@vger.kernel.org, outreachy-kernel@googlegroups.com
+Cc:     Payal Kshirsagar <payalskshirsagar1234@gmail.com>
+Subject: [PATCH] ipc: add blank lines after declarations
+Date:   Mon, 30 Mar 2020 16:13:06 +0530
+Message-Id: <20200330104306.6672-1-payalskshirsagar1234@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rishabh,
+Fix checkpatch.pl warning by adding blank lines.
 
------ On 28 Mar, 2020, at 01:09, Rishabh Bhatnagar rishabhb@codeaurora.org wrote:
+Signed-off-by: Payal Kshirsagar <payalskshirsagar1234@gmail.com>
+---
+ ipc/compat.c     | 2 ++
+ ipc/ipc_sysctl.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-> On 2020-03-26 10:37, Clément Leger wrote:
->> Hi Rishabh,
->> 
->> While being interesting to have a such a userspace interface, I have
->> some remarks.
->> 
->> ----- On 26 Mar, 2020, at 17:50, Rishabh Bhatnagar
->> rishabhb@codeaurora.org wrote:
->> 
->>> Add the driver for creating the character device interface for
->>> userspace applications. The character device interface can be used
->>> in order to boot up and shutdown the remote processor.
->>> This might be helpful for remote processors that are booted by
->>> userspace applications and need to shutdown when the application
->>> crahes/shutsdown.
->>> 
->>> Change-Id: If23c8986272bb7c943eb76665f127ff706f12394
->>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->>> ---
->>> drivers/remoteproc/Makefile               |  1 +
->>> drivers/remoteproc/remoteproc_internal.h  |  6 +++
->>> drivers/remoteproc/remoteproc_userspace.c | 90
->>> +++++++++++++++++++++++++++++++
->>> include/linux/remoteproc.h                |  2 +
->>> 4 files changed, 99 insertions(+)
->>> create mode 100644 drivers/remoteproc/remoteproc_userspace.c
->>> 
->>> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->>> index e30a1b1..facb3fa 100644
->>> --- a/drivers/remoteproc/Makefile
->>> +++ b/drivers/remoteproc/Makefile
->>> @@ -7,6 +7,7 @@ obj-$(CONFIG_REMOTEPROC)		+= remoteproc.o
->>> remoteproc-y				:= remoteproc_core.o
->>> remoteproc-y				+= remoteproc_debugfs.o
->>> remoteproc-y				+= remoteproc_sysfs.o
->>> +remoteproc-y				+= remoteproc_userspace.o
->>> remoteproc-y				+= remoteproc_virtio.o
->>> remoteproc-y				+= remoteproc_elf_loader.o
->>> obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->>> diff --git a/drivers/remoteproc/remoteproc_internal.h
->>> b/drivers/remoteproc/remoteproc_internal.h
->>> index 493ef92..97513ba 100644
->>> --- a/drivers/remoteproc/remoteproc_internal.h
->>> +++ b/drivers/remoteproc/remoteproc_internal.h
->>> @@ -47,6 +47,9 @@ struct dentry *rproc_create_trace_file(const char
->>> *name,
->>> struct rproc *rproc,
->>> int rproc_init_sysfs(void);
->>> void rproc_exit_sysfs(void);
->>> 
->>> +void rproc_init_cdev(void);
->>> +void rproc_exit_cdev(void);
->>> +
->>> void rproc_free_vring(struct rproc_vring *rvring);
->>> int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->>> 
->>> @@ -63,6 +66,9 @@ struct resource_table
->>> *rproc_elf_find_loaded_rsc_table(struct
->>> rproc *rproc,
->>> struct rproc_mem_entry *
->>> rproc_find_carveout_by_name(struct rproc *rproc, const char *name,
->>> ...);
->>> 
->>> +/* from remoteproc_userspace.c */
->>> +int rproc_char_device_add(struct rproc *rproc);
->>> +
->>> static inline
->>> int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware
->>> *fw)
->>> {
->>> diff --git a/drivers/remoteproc/remoteproc_userspace.c
->>> b/drivers/remoteproc/remoteproc_userspace.c
->>> new file mode 100644
->>> index 0000000..2ef7679
->>> --- /dev/null
->>> +++ b/drivers/remoteproc/remoteproc_userspace.c
->>> @@ -0,0 +1,90 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +/*
->>> + * Character device interface driver for Remoteproc framework.
->>> + *
->>> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->>> + */
->>> +
->>> +#include <linux/module.h>
->>> +#include <linux/fs.h>
->>> +#include <linux/cdev.h>
->>> +#include <linux/mutex.h>
->>> +#include <linux/remoteproc.h>
->>> +
->>> +#include "remoteproc_internal.h"
->>> +
->>> +#define NUM_RPROC_DEVICES	64
->>> +static dev_t rproc_cdev;
->>> +static DEFINE_IDA(cdev_minor_ida);
->>> +
->>> +static int rproc_open(struct inode *inode, struct file *file)
->>> +{
->>> +	struct rproc *rproc;
->>> +
->>> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->>> +	if (!rproc)
->>> +		return -EINVAL;
->>> +
->>> +	return rproc_boot(rproc);
->>> +}
->> 
->> What happens if multiple user open this chardev ? Apparently,
->> rproc_boot returns 0 if already powered_up, so the next user won't know
->> what is the state of the rproc.
->> Exclusive access could probably be a good idea.
-> Since it is synchronized inside rproc_boot multiple users simultaneously
-> calling open shouldn't be a problem. If it is one after the other then
-> second caller will get result as 0 and assume that rproc booted
-> successfully.
+diff --git a/ipc/compat.c b/ipc/compat.c
+index 5ab8225923af..6c03927a4d71 100644
+--- a/ipc/compat.c
++++ b/ipc/compat.c
+@@ -39,6 +39,7 @@ int get_compat_ipc64_perm(struct ipc64_perm *to,
+ 			  struct compat_ipc64_perm __user *from)
+ {
+ 	struct compat_ipc64_perm v;
++
+ 	if (copy_from_user(&v, from, sizeof(v)))
+ 		return -EFAULT;
+ 	to->uid = v.uid;
+@@ -51,6 +52,7 @@ int get_compat_ipc_perm(struct ipc64_perm *to,
+ 			struct compat_ipc_perm __user *from)
+ {
+ 	struct compat_ipc_perm v;
++
+ 	if (copy_from_user(&v, from, sizeof(v)))
+ 		return -EFAULT;
+ 	to->uid = v.uid;
+diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
+index affd66537e87..ea115dfd3774 100644
+--- a/ipc/ipc_sysctl.c
++++ b/ipc/ipc_sysctl.c
+@@ -18,6 +18,7 @@ static void *get_ipc(struct ctl_table *table)
+ {
+ 	char *which = table->data;
+ 	struct ipc_namespace *ipc_ns = current->nsproxy->ipc_ns;
++
+ 	which = (which - (char *)&init_ipc_ns) + (char *)ipc_ns;
+ 	return which;
+ }
+@@ -62,6 +63,7 @@ static int proc_ipc_doulongvec_minmax(struct ctl_table *table, int write,
+ 	void __user *buffer, size_t *lenp, loff_t *ppos)
+ {
+ 	struct ctl_table ipc_table;
++
+ 	memcpy(&ipc_table, table, sizeof(ipc_table));
+ 	ipc_table.data = get_ipc(table);
+ 
+-- 
+2.17.1
 
-It will be the same for close, it will assume the rproc has been stopped ?
-But in fact it will still be running until the refcount is 0.
-
-> That is the expected flow right?
-
-I would expect only one caller to be successful, others should probably
-receive a EBUSY errno IMHO.
-
->> 
->>> +
->>> +static int rproc_release(struct inode *inode, struct file *file)
->>> +{
->>> +	struct rproc *rproc;
->>> +
->>> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->>> +	if (!rproc)
->>> +		return -EINVAL;
->>> +
->>> +	rproc_shutdown(rproc);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static const struct file_operations rproc_fops = {
->>> +	.open = rproc_open,
->>> +	.release = rproc_release,
->>> +};
->>> +
->>> +int rproc_char_device_add(struct rproc *rproc)
->>> +{
->>> +	int ret, minor;
->>> +	dev_t cdevt;
->>> +
->>> +	minor = ida_simple_get(&cdev_minor_ida, 0, NUM_RPROC_DEVICES,
->>> +			GFP_KERNEL);
->>> +	if (minor < 0) {
->>> +	pr_err("%s: No more minor numbers left! rc:%d\n", __func__,
->>> +							minor);
->>> +		return -ENODEV;
->>> +	}
->> 
->> How can you make the link between the chardev and the device instance ?
-> I do this rproc->dev.devt = cdevt. Let me know of there is a better way
-> to do this?
-
-If this is sufficient to create a link in the sysfs, then it's ok but I'm
-no expert here.
-
-Clément
-
->> In our case, we have several remoteproc instances and thus we will end
->> up having multiple chardev.
->> 
->> Regards,
->> 
->> Clément
->> 
-> rproc_char_device_add will be called for each remoteproc that is
-> added. So we will have one char dev per remoteproc.
->>> +
->>> +	cdev_init(&rproc->char_dev, &rproc_fops);
->>> +	rproc->char_dev.owner = THIS_MODULE;
->>> +
->>> +	cdevt = MKDEV(MAJOR(rproc_cdev), minor);
->>> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
->>> +	if (ret < 0)
->>> +		ida_simple_remove(&cdev_minor_ida, minor);
->>> +
->>> +	rproc->dev.devt = cdevt;
->>> +
->>> +	return ret;
->>> +}
->>> +
->>> +void __init rproc_init_cdev(void)
->>> +{
->>> +	int ret;
->>> +
->>> +	ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES,
->>> "rproc");
->>> +	if (ret < 0) {
->>> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
->>> +		return;
->>> +	}
->>> +}
->>> +
->>> +void __exit rproc_exit_cdev(void)
->>> +{
->>> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_cdev), 0),
->>> +				NUM_RPROC_DEVICES);
->>> +}
->>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->>> index 16ad666..c4ca796 100644
->>> --- a/include/linux/remoteproc.h
->>> +++ b/include/linux/remoteproc.h
->>> @@ -37,6 +37,7 @@
->>> 
->>> #include <linux/types.h>
->>> #include <linux/mutex.h>
->>> +#include <linux/cdev.h>
->>> #include <linux/virtio.h>
->>> #include <linux/completion.h>
->>> #include <linux/idr.h>
->>> @@ -514,6 +515,7 @@ struct rproc {
->>> 	bool auto_boot;
->>> 	struct list_head dump_segments;
->>> 	int nb_vdev;
->>> +	struct cdev char_dev;
->>> };
->>> 
->>> /**
->>> --
->>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>> Forum,
-> >> a Linux Foundation Collaborative Project
