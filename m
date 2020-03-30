@@ -2,133 +2,137 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7010BC2D0EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543CCC2D0ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4645220733
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 19:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F56F2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 20:02:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fF3lDVd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgC3T64 (ORCPT
+        id S1728539AbgC3UC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:58:56 -0400
-Received: from smtprelay0150.hostedemail.com ([216.40.44.150]:49340 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727311AbgC3T64 (ORCPT
+        Mon, 30 Mar 2020 16:02:57 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39754 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727745AbgC3UC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:58:56 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E51E6100E8429;
-        Mon, 30 Mar 2020 19:58:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fly44_309b3b9d6ae39
-X-Filterd-Recvd-Size: 3647
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 30 Mar 2020 19:58:53 +0000 (UTC)
-Message-ID: <2e19547dcec386b47923211896f43053b60ebc60.camel@perches.com>
-Subject: [RFC PATCH] mtd: lpddr: Fix bad logic in print_drs_error
-From:   Joe Perches <joe@perches.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     linux-mtd@lists.infradead.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 30 Mar 2020 12:56:59 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 30 Mar 2020 16:02:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p10so23231920wrt.6;
+        Mon, 30 Mar 2020 13:02:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lUoPyqpOq6RP3wBIxyXoInQVTdgsWS5bkgCqjwXu9nU=;
+        b=fF3lDVd0+nOdf+SmI3pdq4CKWRPLEbKg+Iddc3FCIGFItLiFnhUd9ww8ytaaQzoVWm
+         isPZdjckh/nSC1WxgrhgigRTHzwEOPtTRnjBlYsbAEQTTi+NEA31IxAKVM32weUbryu7
+         Fsl/jare2y6apJbP5hmgKtocnok1+DZCqU0qb5dT/jo/FlsvvXBiY9pRyTx3HE4LCiBv
+         SupTvFWu7Jn5rcGOLaaUgrIaspQXX2WK3mAmQ9HHiQwHZVZ3Yx3gkDzfaZ7AXhWxLbm4
+         q7gWsytDf8liDhZ+vCwAgw7ioTuol++Gj+8BOWBSLTm36A32ULVHpPm2J9BUSVlLRVvv
+         o7mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lUoPyqpOq6RP3wBIxyXoInQVTdgsWS5bkgCqjwXu9nU=;
+        b=jlF9TbFUUlew41f0yQ+mVRXEot8zFj4r4UjqJmwiolF3KwXrRWWIf9Gt7WK0rWyKpP
+         l3S8Z9+KIOP9hG+COWoLP4Exdnovo/vjGgvh/LQCEzSRBJ6HifLqjRzre3tHNnX8bkWJ
+         QUBJfw7qpSXOhDPmubAEf+1/ncUZ5/V1nxL1X5Coe6D0jWjcu2OfY1yYHB9j2mcbGzg8
+         rGzV8Kd8e2MZfXO93E0p4rFbGPU1Nm3q87QnyoY7DE3T5dzbnDxyt4VGkep88S+1iDAN
+         r9TuUmL6AKVLAl/JaOAkqYbJC7oiZFmIZnEXc0ThPqtBiYpwthjutaKqoDyCWZcNBUo8
+         ueqQ==
+X-Gm-Message-State: ANhLgQ3oJgKGm2MeqSgh8Bp90ah/IrcHo7jeF+F0loIJnrvGsQL064lM
+        VMsMU0m5Dio42cUp72VOaYmRi6Qj3bgKzXuAhWg=
+X-Google-Smtp-Source: ADFU+vtQlK+r3Yrpq43PZR2UUtb2/43lw4wmabJo+l6BQcrfH3L3MQhoDPa7agHgdNMp3nuYxd0qACHoAz+25H8MyNg=
+X-Received: by 2002:adf:ecc3:: with SMTP id s3mr16006565wro.32.1585598573917;
+ Mon, 30 Mar 2020 13:02:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <20200324122023.9649-3-andriy.shevchenko@linux.intel.com> <CAJZ5v0gg=V8uDd4afJ3MULsgKYvWajKJioANk4jj7xEhBzrRrQ@mail.gmail.com>
+ <CA+G9fYvFnXqSnoQSJ-DkQvAFv87iWmhH6dT1N79qrq=Aeuv4rw@mail.gmail.com>
+ <028b636f-6e0f-c36a-aa4e-6a16d936fc6a@arm.com> <20200330095707.GA10432@bogus>
+ <0a374eaa-92b3-0201-f357-4181542c98b6@arm.com> <CAHp75VdBm8ZYOMWmQEA8LD6uGcJ0sZ=M6n3MSYxmO6UkXbu+-A@mail.gmail.com>
+ <f2706518-def8-1566-149f-00fc1d8cc19f@arm.com>
+In-Reply-To: <f2706518-def8-1566-149f-00fc1d8cc19f@arm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 30 Mar 2020 13:02:43 -0700
+Message-ID: <CANcMJZBEiXaw5=VW1tjShkULa0YdcKxAgudaBKhrgyRFe7HacQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] driver core: Replace open-coded list_last_entry()
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update logic for broken test.
-Use a more common logging style.
+On Mon, Mar 30, 2020 at 6:30 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-03-30 2:11 pm, Andy Shevchenko wrote:
+> > On Mon, Mar 30, 2020 at 3:49 PM Robin Murphy <robin.murphy@arm.com> wrote:
+> >> On 2020-03-30 11:13 am, Sudeep Holla wrote:
+> >>> On Fri, Mar 27, 2020 at 07:40:25PM +0000, Robin Murphy wrote:
+> >
+> > ...
+> >
+> >> AFAICS the difference is down to whether deferred_probe_timeout has
+> >> expired or not - I'm not familiar enough with this code to know
+> >> *exactly* what the difference is supposed to represent, nor which change
+> >> has actually pushed the Juno case from one state to the other (other
+> >> than it almost certainly can't be $SUBJECT - if this series is to blame
+> >> at all I'd assume it would be down to patch #1/3, but there's a bunch of
+> >> other rework previously queued in -next that is probably also interacting)
+> >
+> > JFYI: patch #1/3 wasn't applied.
+>
+> OK, so if anyone's invested enough to want to investigate, it must be
+> something in John's earlier changes here:
+>
+> https://lore.kernel.org/lkml/20200225050828.56458-1-john.stultz@linaro.org/
 
-Miscellanea:
+Hey all,
+  Sorry, I just got a heads up about this thread.
 
-o Coalesce formats
+So yea, it looks like the change is due likely to the first patch in
+my series. Previously, after initcall_done, (since
+deferred_probe_timeout was -1 unless manually specified) if the driver
+wasn't already loaded we'd print "ignoring dependency for device,
+assuming no driver" and return ENODEV.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
+Now, if modules are enabled (as without modules enabled, I believe
+you'd see the same behavior as previous), we wait 30 seconds  (for
+userspace to load any posssible modules that meet that dependency) and
+then the driver_deferred_probe_timeout fires and we print "deferred
+probe timeout, ignoring dependency".
 
-Found by inspection of include files using printk.
+It seems the issue here is the first message was printed with
+dev_warn() and the second with dev_WARN() which provides the scary
+backtrace.
 
-It appears the logic in this function is broken for the
-consecutive tests of
+I think functionally as mentioned above, there's no real behavioral
+change here. But please correct me if that's wrong.
 
-	if (prog_status & 0x3)
-		...
-	else if (prog_status & 0x2)
-		...
-	else (prog_status & 0x1)
-		...
+Since we are more likely to see the second message now, maybe we
+should make both print via dev_warn()?
 
-Likely the first test should be
+I'll spin up a patch.
 
-	if ((prog_status & 0x3) == 0x3)
-
-And this function is only used in drivers/mtd/lpddr/lpddr_cmds.c
-perhaps it should be moved there.
-
- include/linux/mtd/pfow.h | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/mtd/pfow.h b/include/linux/mtd/pfow.h
-index 122f343..1c08e75 100644
---- a/include/linux/mtd/pfow.h
-+++ b/include/linux/mtd/pfow.h
-@@ -127,31 +127,28 @@ static inline void print_drs_error(unsigned dsr)
- 	int prog_status = (dsr & DSR_RPS) >> 8;
- 
- 	if (!(dsr & DSR_AVAILABLE))
--		printk(KERN_NOTICE"DSR.15: (0) Device not Available\n");
--	if (prog_status & 0x03)
--		printk(KERN_NOTICE"DSR.9,8: (11) Attempt to program invalid "
--						"half with 41h command\n");
-+		pr_notice("DSR.15: (0) Device not Available\n");
-+
-+	if ((prog_status & 0x03) == 0x03)
-+		pr_notice("DSR.9,8: (11) Attempt to program invalid half with 41h command\n");
- 	else if (prog_status & 0x02)
--		printk(KERN_NOTICE"DSR.9,8: (10) Object Mode Program attempt "
--					"in region with Control Mode data\n");
-+		pr_notice("DSR.9,8: (10) Object Mode Program attempt in region with Control Mode data\n");
- 	else if (prog_status &  0x01)
--		printk(KERN_NOTICE"DSR.9,8: (01) Program attempt in region "
--						"with Object Mode data\n");
-+		pr_notice("DSR.9,8: (01) Program attempt in region with Object Mode data\n");
-+
- 	if (!(dsr & DSR_READY_STATUS))
--		printk(KERN_NOTICE"DSR.7: (0) Device is Busy\n");
-+		pr_notice("DSR.7: (0) Device is Busy\n");
- 	if (dsr & DSR_ESS)
--		printk(KERN_NOTICE"DSR.6: (1) Erase Suspended\n");
-+		pr_notice("DSR.6: (1) Erase Suspended\n");
- 	if (dsr & DSR_ERASE_STATUS)
--		printk(KERN_NOTICE"DSR.5: (1) Erase/Blank check error\n");
-+		pr_notice("DSR.5: (1) Erase/Blank check error\n");
- 	if (dsr & DSR_PROGRAM_STATUS)
--		printk(KERN_NOTICE"DSR.4: (1) Program Error\n");
-+		pr_notice("DSR.4: (1) Program Error\n");
- 	if (dsr & DSR_VPPS)
--		printk(KERN_NOTICE"DSR.3: (1) Vpp low detect, operation "
--					"aborted\n");
-+		pr_notice("DSR.3: (1) Vpp low detect, operation aborted\n");
- 	if (dsr & DSR_PSS)
--		printk(KERN_NOTICE"DSR.2: (1) Program suspended\n");
-+		pr_notice("DSR.2: (1) Program suspended\n");
- 	if (dsr & DSR_DPS)
--		printk(KERN_NOTICE"DSR.1: (1) Aborted Erase/Program attempt "
--					"on locked block\n");
-+		pr_notice("DSR.1: (1) Aborted Erase/Program attempt on locked block\n");
- }
- #endif /* __LINUX_MTD_PFOW_H */
-
-
+thanks
+-john
