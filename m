@@ -2,70 +2,91 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11839C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C04C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AE420675
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95532206E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 12:37:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGI56L5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbgC3MgH (ORCPT
+        id S1730225AbgC3MhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 08:36:07 -0400
-Received: from smtp.domeneshop.no ([194.63.252.55]:44687 "EHLO
-        smtp.domeneshop.no" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730189AbgC3MgG (ORCPT
+        Mon, 30 Mar 2020 08:37:12 -0400
+Received: from mail-wm1-f53.google.com ([209.85.128.53]:54278 "EHLO
+        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730113AbgC3MhM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 08:36:06 -0400
-Received: from [2a02:fe0:c700:2:781f:1a82:338:d2b7] (port=58235)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <Sami_Lands_Medias@samilands.eu>)
-        id 1jIte8-0008DW-FC
-        for linux-kernel@vger.kernel.org; Mon, 30 Mar 2020 14:36:04 +0200
-Subject: Re: Was: fair pay sys - one last tweak - Science = Islam
-From:   Sami Lands Medias <Sami_Lands_Medias@samilands.eu>
-To:     linux-kernel@vger.kernel.org
-References: <a8f4d941-01b1-905c-fd44-3f4953dc6e50@samilands.eu>
-Message-ID: <7959f11b-e5b4-ffcc-80c3-c33316f7c31e@samilands.eu>
-Date:   Mon, 30 Mar 2020 14:36:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <a8f4d941-01b1-905c-fd44-3f4953dc6e50@samilands.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 30 Mar 2020 08:37:12 -0400
+Received: by mail-wm1-f53.google.com with SMTP id c81so19748755wmd.4;
+        Mon, 30 Mar 2020 05:37:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/7higiBp8m8zEWus6g7LwOrycKN3KCg2+w1BuqcejLM=;
+        b=RGI56L5YiZA4CQQFn1Qym7Jhzs4NviUr7qD9Z2wFzQvFV+d0yl9lSv5M1ek3x+PGU/
+         oKflYlGfeLuv4qvBLVysI1IF1Kko7avAEL7RsQOto4VAUnytlVy8EAfspqUVEIPk0Na1
+         /+ZxFP5ORNwP1FTrtCv98mB23qQQyUvg4Y7zfwPfyg4dE0JpacIZOF+E+L9WTJ7GaSSt
+         pDN+ne6lf3oTmh+n/pTj1no/RFwEhkCXxSOj4fIhs/KB7e43AafgfxZpMPSvsk/6OlUm
+         NdFM1c4U0COF0RLTSUkPCMoPTUXSDqWtxHZaFFAUp2fZ37NN57wy0qc6Q8VDlLXUm6uD
+         50hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/7higiBp8m8zEWus6g7LwOrycKN3KCg2+w1BuqcejLM=;
+        b=go+1o7RTyaEoZdNaUhQRYxAHMlHC3QEQsEEzCUWRdgnxThcZBxnVw5JBKdb5X4eZxi
+         SUEmtvcM2urCw9PYRdnhDSQ82/nwFI5bh1I4sw6odufdRtqJKPSQmxdJTbuHO4MD/SDe
+         4ZZ9MAZ2l4PJjAgyskQQnPbMId0eUD69x5v3P02iy5TDr/N8nAhuXWtR0kgrio95dAMe
+         F3C6fIBMqtD6mmCW83RYWGOEOOZ2t6RNW6SDfOCVi7fF9UR05cg1DXyyJkjFRBctz7Sa
+         AtIVSEwRSJiqCTPYesgtB2Qyakgo0eV3ysVJ79yxjtl0KtY54cxaVOmKqt/+JKcYuxhI
+         6Q9A==
+X-Gm-Message-State: ANhLgQ0psUjvsN5Li22RTfkFX5x+WwQRMaZxxUXKNf0PHnNdrtsZh1UO
+        EpPiedlvnN1bIKI3cfZ0fAw=
+X-Google-Smtp-Source: ADFU+vuNF1yH3slMRPssR7hBdoYw6J2VdCQ6D+ACSFa5Qw4S1cGd17eKLSF8L5XGdFYvus6EM02iPA==
+X-Received: by 2002:a7b:c39a:: with SMTP id s26mr1929612wmj.167.1585571829783;
+        Mon, 30 Mar 2020 05:37:09 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id z1sm10091858wrp.90.2020.03.30.05.37.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 05:37:09 -0700 (PDT)
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     willy@infradead.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH 0/9] XArray: several cleanups
+Date:   Mon, 30 Mar 2020 12:36:34 +0000
+Message-Id: <20200330123643.17120-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Trivial cleanup for XArray.
 
-I had this one last brilliant idea. One last tweak on the concept, as we 
-know symbols become influental in computer system design.
+No functional change.
 
-I/T L X, which also would support Science tangenting Islam. No more 
-hadith/hijabi sects claiming "Islam", it can be refuted by scientific 
-understanding of the universe.
+Wei Yang (9):
+  XArray: fix comment on Zero/Retry entry
+  XArray: simplify the calculation of shift
+  XArray: handle a NULL head by itself
+  XArray: don't expect to have more nr_values than count
+  XArray: entry in last level is not expected to be a node
+  XArray: internal node is a xa_node when it is bigger than
+    XA_ZERO_ENTRY
+  XArray: the NULL xa_node condition is handled in xas_top
+  XArray: take xas_error() handling for clearer logic
+  XArray: adjust xa_offset till it gets the correct node
 
-Nonsense interpretation and claims of sweaty hijab by force, we support 
-thyrian lobotomy for.
+ include/linux/xarray.h |  6 +++---
+ lib/xarray.c           | 31 ++++++++++++-------------------
+ 2 files changed, 15 insertions(+), 22 deletions(-)
 
-Really renovating our own religious view, that once was similar 
-monotheism aswell.
+-- 
+2.23.0
 
-And supporting One Dwea without company, the fundamental monotheistic 
-principles, very understandable in the indian situation.
-
-I think then I have mananged to shift some money from pop-culture to 
-science aswell!
-
-So truly, support I/T L X, it is what the time is screaming for.
-
-Serene Greetings,
-Ywe Cærlyn
-I/T L X
-https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
