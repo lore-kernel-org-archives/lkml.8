@@ -2,424 +2,515 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F2AC43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F79EC43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67923206DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2CC2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 14:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hooEDvFm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uPH6/pB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgC3On1 (ORCPT
+        id S1727848AbgC3Opz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:43:27 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:24526 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728471AbgC3On1 (ORCPT
+        Mon, 30 Mar 2020 10:45:55 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:39305 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726518AbgC3Opz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:43:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585579405;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=NdgMqytT/5K4fWVCzOyE8JxSDEeceY1fzG9HXeCbrkk=;
-        b=hooEDvFm5LciiR3YW0MERM50+QXjDSJXREFODC6bEPjcN6bLdvsqubdh/SS18ulpgamSse
-        WIt+6zTR4/Mt5MC1kra7K8Y8D9cgcs3Df+k5GysEOy7Ywr2YKgjGF+njfKCsiYgdGvNnIo
-        pNMCShobKO3MTfgmag8vAbsCR+fT6XA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-YVz-3ff2PpyuvdN5ojGHlw-1; Mon, 30 Mar 2020 10:43:24 -0400
-X-MC-Unique: YVz-3ff2PpyuvdN5ojGHlw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 30 Mar 2020 10:45:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585579554; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=DndG4fEC7ONuOnbVgDPUzhh2TjL1g+kbAoAdln7s4VQ=;
+ b=uPH6/pB4AO3mpLHH2c6YIf0sjFLEKcitO/4Z2FDCMre4Q71t+N8ZmmaLGuNwRoMC3mxAJesQ
+ v6m2n3jpOLPtPphqjM3EKal3GdAZoBx+BVJI6g9/2Q1Xc0V0/khNG0ldsHEtDf5d4usJDBD8
+ 5ug4YOOBqFcc7Ng6pjQ5k4XPHo8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e82060a.7fa61087eca8-smtp-out-n03;
+ Mon, 30 Mar 2020 14:45:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B06E5C44788; Mon, 30 Mar 2020 14:45:29 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C349F1005513;
-        Mon, 30 Mar 2020 14:43:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-66.rdu2.redhat.com [10.10.112.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EDC7CFEA;
-        Mon, 30 Mar 2020 14:43:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-References: <1445647.1585576702@warthog.procyon.org.uk>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, dray@redhat.com,
-        kzak@redhat.com, mszeredi@redhat.com, swhiteho@redhat.com,
-        jlayton@redhat.com, raven@themaw.net, andres@anarazel.de,
-        christian.brauner@ubuntu.com, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] fsinfo: Filesystem information query
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BAD32C433F2;
+        Mon, 30 Mar 2020 14:45:27 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1450011.1585579399.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 30 Mar 2020 15:43:19 +0100
-Message-ID: <1450012.1585579399@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 30 Mar 2020 20:15:27 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH V4 2/4] backlight: qcom-wled: Add callback functions
+In-Reply-To: <20200325153036.zyor2srbkdhmr2zj@holly.lan>
+References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
+ <1584985618-25689-3-git-send-email-kgunda@codeaurora.org>
+ <20200325153036.zyor2srbkdhmr2zj@holly.lan>
+Message-ID: <0fc7c05e411267ac921adce070dcfd80@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-If you could consider pulling this - or would you prefer it to go through
-Al?  It adds a system call, fsinfo(), that allows information about the
-VFS, mount topology, superblock and files to be retrieved.
-
-This based on top of the mount and superblock notifications patchset and
-allows event counters implemented in the latter to be retrieved to allow
-overruns to be efficiently managed.
-
-I've excluded the Ext4 and NFS sample code from this pull request that I'v=
-e
-previously included in my posted patchsets.
-
-
-=3D=3D=3D=3D=3D=3D=3D
-THE WHY
-=3D=3D=3D=3D=3D=3D=3D
-
-Why do we want this?
-
-Using /proc/mounts (or similar) has problems:
-
- (1) Reading from it holds a global lock (namespace_sem) that prevents
-     mounting and unmounting.  Lots of data is encoded and mangled into
-     text whilst the lock is held, including superblock option strings and
-     mount point paths.  This causes performance problems when there are a
-     lot of mount objects in a system.
-
- (2) Even though namespace_sem is held during a read, reading the whole
-     file isn't necessarily atomic with respect to mount-type operations.
-     If a read isn't satisfied in one go, then it may return to userspace
-     briefly and then continue reading some way into the file.  But change=
-s
-     can occur in the interval that may then go unseen.
-
- (3) Determining what has changed means parsing and comparing consecutive
-     outputs of /proc/mounts.
-
- (4) Querying a specific mount or superblock means searching through
-     /proc/mounts and searching by path or mount ID - but we might have an
-     fd we want to query.
-
- (5) Mount topology is not explicit.  One must derive it manually by
-     comparing entries.
-
- (6) Whilst you can poll() it for events, it only tells you that something
-     changed in the namespace, not what or whether you can even see the
-     change.
-
-To fix the notification issues, the preceding notifications patchset added
-mount watch notifications whereby you can watch for notifications in a
-specific mount subtree.  The notification messages include the ID(s) of th=
-e
-affected mounts.
-
-To support notifications, however, we need to be able to handle overruns i=
-n
-the notification queue.  I added a number of event counters to struct
-super_block and struct mount to allow you to pin down the changes, but
-there needs to be a way to retrieve them.  Exposing them through /proc
-would require adding yet another /proc/mounts-type file.  We could add
-per-mount directories full of attributes in sysfs, but that has issues als=
-o
-(see below).
-
-Adding an extensible system call interface for retrieving filesystem
-information also allows other things to be exposed:
-
- (1) Jeff Layton's error handling changes need a way to allow error event
-     information to be retrieved.
-
- (2) Bits in masks returned by things like statx() and FS_IOC_GETFLAGS are
-     actually 3-state { Set, Unset, Not supported }.  It could be useful t=
-o
-     provide a way to expose information like this[*].
-
- (3) Limits of the numerical metadata values in a filesystem[*].
-
- (4) Filesystem capability information[*].  Filesystems don't all have the
-     same capabilities, and even different instances may have different
-     capabilities, particularly with network filesystems where the set of
-     may be server-dependent.  Capabilities might even vary at file
-     granularity - though possibly such information should be conveyed
-     through statx() instead.
-
- (5) ID mapping/shifting tables in use for a superblock.
-
- (6) Filesystem-specific information.  I need something for AFS so that I
-     can do pioctl()-emulation, thereby allowing me to implement certain o=
-f
-     the AFS command line utilities that query state of a particular file.
-     This could also have application for other filesystems, such as NFS,
-     CIFS and ext4.
-
- [*] In a lot of cases these are probably fixed and can be memcpy'd from
-     static data.
-
-There's a further consideration: I want to make it possible to have
-fsconfig(fd, FSCONFIG_CMD_CREATE) be intercepted by a container manager
-such that the manager can supervise a mount attempted inside the container=
-.
-The manager would be given an fd pointing to the fs_context struct and
-would then need some way to query it (fsinfo()) and modify it (fsconfig())=
-.
-This could also be used to arbitrate user-requested mounts when containers
-are not in play.
-
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-DESIGN DECISIONS
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
- (1) Information is partitioned into sets of attributes.
-
- (2) Attribute IDs are integers as they're fast to compare.
-
- (3) Attribute values are typed (struct, list of structs, string, opaque
-     blob).  They type is fixed for a particular attribute.
-
- (4) For structure types, the length is also a version.  New fields can be
-     tacked onto the end.
-
- (5) When copying a versioned struct to userspace, the core handles a
-     version mismatch by truncating or zero-padding the data as necessary.
-     None of this is seen by the filesystem.
-
- (6) The core handles all the buffering and buffer resizing.
-
- (7) The filesystem never gets any access to the userspace parameter buffe=
-r
-     or result buffer.
-
- (8) "Meta" attributes can describe other attributes.
-
-
-=3D=3D=3D=3D=3D=3D=3D=3D
-OVERVIEW
-=3D=3D=3D=3D=3D=3D=3D=3D
-
-fsinfo() is a system call that allows information about the filesystem at =
-a
-particular path point to be queried as a set of attributes.
-
-Attribute values are of four basic types:
-
- (1) Structure with version-dependent length (the length is the version).
-
- (2) Variable-length string.
-
- (3) List of structures (all the same length).
-
- (4) Opaque blob.
-
-Attributes can have multiple values either as a sequence of values or a
-sequence-of-sequences of values and all the values of a particular
-attribute must be of the same type.  Values can be up to INT_MAX size,
-subject to memory availability.
-
-Note that the values of an attribute *are* allowed to vary between dentrie=
-s
-within a single superblock, depending on the specific dentry that you're
-looking at, but the values still have to be of the type for that attribute=
-.
-
-I've tried to make the interface as light as possible, so integer attribut=
-e
-ID rather than string and the core does all the buffer allocation and
-expansion and all the extensibility support work rather than leaving that
-to the filesystems.  This means that userspace pointers are not exposed to
-the filesystem.
-
-
-fsinfo() allows a variety of information to be retrieved about a filesyste=
-m
-and the mount topology:
-
- (1) General superblock attributes:
-
-     - Filesystem identifiers (UUID, volume label, device numbers, ...)
-     - The limits on a filesystem's capabilities
-     - Information on supported statx fields and attributes and IOC flags.
-     - A variety single-bit flags indicating supported capabilities.
-     - Timestamp resolution and range.
-     - The amount of space/free space in a filesystem (as statfs()).
-     - Superblock notification counter.
-
- (2) Filesystem-specific superblock attributes:
-
-     - Superblock-level timestamps.
-     - Cell name, workgroup or other netfs grouping concept.
-     - Server names and addresses.
-
- (3) VFS information:
-
-     - Mount topology information.
-     - Mount attributes.
-     - Mount notification counter.
-     - Mount point path.
-
- (4) Information about what the fsinfo() syscall itself supports, includin=
-g
-     the type and struct size of attributes.
-
-The system is extensible:
-
- (1) New attributes can be added.  There is no requirement that a
-     filesystem implement every attribute.  A helper function is provided
-     to scan a list of attributes and a filesystem can have multiple such
-     lists.
-
- (2) Version length-dependent structure attributes can be made larger and
-     have additional information tacked on the end, provided it keeps the
-     layout of the existing fields.  If an older process asks for a shorte=
-r
-     structure, it will only be given the bits it asks for.  If a newer
-     process asks for a longer structure on an older kernel, the extra
-     space will be set to 0.  In all cases, the size of the data actually
-     available is returned.
-
-     In essence, the size of a structure is that structure's version: a
-     smaller size is an earlier version and a later version includes
-     everything that the earlier version did.
-
- (3) New single-bit capability flags can be added.  This is a structure-ty=
-ped
-     attribute and, as such, (2) applies.  Any bits you wanted but the ker=
-nel
-     doesn't support are automatically set to 0.
-
-fsinfo() may be called like the following, for example:
-
-	struct fsinfo_params params =3D {
-		.at_flags	=3D AT_SYMLINK_NOFOLLOW,
-		.flags		=3D FSINFO_FLAGS_QUERY_PATH,
-		.request	=3D FSINFO_ATTR_AFS_SERVER_ADDRESSES,
-		.Nth		=3D 2,
-	};
-	struct fsinfo_server_address address;
-	len =3D fsinfo(AT_FDCWD, "/afs/grand.central.org/doc", &params,
-		     &address, sizeof(address));
-
-The above example would query an AFS filesystem to retrieve the address
-list for the 3rd server, and:
-
-	struct fsinfo_params params =3D {
-		.at_flags	=3D AT_SYMLINK_NOFOLLOW,
-		.flags		=3D FSINFO_FLAGS_QUERY_PATH,
-		.request	=3D FSINFO_ATTR_NFS_SERVER_NAME;
-	};
-	char server_name[256];
-	len =3D fsinfo(AT_FDCWD, "/home/dhowells/", &params,
-		     &server_name, sizeof(server_name));
-
-would retrieve the name of the NFS server as a string.
-
-In future, I want to make fsinfo() capable of querying a context created b=
-y
-fsopen() or fspick(), e.g.:
-
-	fd =3D fsopen("ext4", 0);
-	struct fsinfo_params params =3D {
-		.flags		=3D FSINFO_FLAGS_QUERY_FSCONTEXT,
-		.request	=3D FSINFO_ATTR_CONFIGURATION;
-	};
-	char buffer[65536];
-	fsinfo(fd, NULL, &params, &buffer, sizeof(buffer));
-
-even if that context doesn't currently have a superblock attached.
-
-Thanks,
-David
----
-The following changes since commit 8dbf1aa122da5bbb4ede0f363a8a18dfc723be3=
-3:
-
-  watch_queue: sample: Display superblock notifications (2020-03-19 17:31:=
-09 +0000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/fsinfo-20200330
-
-for you to fetch changes up to 80f0ef902951fd3e7446767e7d37d543d936b72f:
-
-  fsinfo: Add support for AFS (2020-03-19 17:31:34 +0000)
-
-----------------------------------------------------------------
-Filesystem information
-
-----------------------------------------------------------------
-David Howells (11):
-      fsinfo: Add fsinfo() syscall to query filesystem information
-      fsinfo: Provide a bitmap of supported features
-      fsinfo: Allow retrieval of superblock devname, options and stats
-      fsinfo: Allow fsinfo() to look up a mount object by ID
-      fsinfo: Add a uniquifier ID to struct mount
-      fsinfo: Allow mount information to be queried
-      fsinfo: Allow mount topology and propagation info to be retrieved
-      fsinfo: Provide notification overrun handling support
-      fsinfo: sample: Mount listing program
-      fsinfo: Add API documentation
-      fsinfo: Add support for AFS
-
- Documentation/filesystems/fsinfo.rst        | 574 +++++++++++++++++++
- arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
- arch/arm/tools/syscall.tbl                  |   1 +
- arch/arm64/include/asm/unistd.h             |   2 +-
- arch/arm64/include/asm/unistd32.h           |   2 +
- arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
- arch/s390/kernel/syscalls/syscall.tbl       |   1 +
- arch/sh/kernel/syscalls/syscall.tbl         |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
- fs/Kconfig                                  |   7 +
- fs/Makefile                                 |   1 +
- fs/afs/internal.h                           |   1 +
- fs/afs/super.c                              | 218 +++++++-
- fs/d_path.c                                 |   2 +-
- fs/fsinfo.c                                 | 725 +++++++++++++++++++++++=
-+
- fs/internal.h                               |  14 +
- fs/mount.h                                  |   3 +
- fs/mount_notify.c                           |   2 +
- fs/namespace.c                              | 389 ++++++++++++-
- include/linux/fs.h                          |   4 +
- include/linux/fsinfo.h                      | 111 ++++
- include/linux/syscalls.h                    |   4 +
- include/uapi/asm-generic/unistd.h           |   4 +-
- include/uapi/linux/fsinfo.h                 | 326 +++++++++++
- include/uapi/linux/mount.h                  |  10 +-
- kernel/sys_ni.c                             |   1 +
- samples/vfs/Makefile                        |   7 +
- samples/vfs/test-fsinfo.c                   | 818 +++++++++++++++++++++++=
-+++++
- samples/vfs/test-mntinfo.c                  | 279 ++++++++++
- 39 files changed, 3511 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/filesystems/fsinfo.rst
- create mode 100644 fs/fsinfo.c
- create mode 100644 include/linux/fsinfo.h
- create mode 100644 include/uapi/linux/fsinfo.h
- create mode 100644 samples/vfs/test-fsinfo.c
- create mode 100644 samples/vfs/test-mntinfo.c
-
+On 2020-03-25 21:00, Daniel Thompson wrote:
+> On Mon, Mar 23, 2020 at 11:16:56PM +0530, Kiran Gunda wrote:
+>> Add wled_cabc_config, wled_sync_toggle, wled_ovp_fault_status
+>> and wled_ovp_delay callback functions to prepare the driver for
+>> adding WLED5 support.
+>> 
+>> wled_cabc_config() ===> Used to configure the cabc register.
+>>                          It is applicable for wled4 and wled5.
+>> 
+>> wled_sync_toggle() ===> used to toggle the Sync register bit for the
+>>                         brightness update to take place.
+>>                         It is applicable for WLED3, WLED4 and WLED5.
+>> 
+>> wled_ovp_fault_status() ===> Used to determine if the OVP fault is 
+>> triggered.
+>>                              It is applicable for WLED4 and WLED5.
+>> 
+>> wled_ovp_delay() ===> Provides the time to wait before checking the 
+>> OVP status
+>>                         after wled module enable.
+>>                         It is applicable for WLED4 and WLED5.
+> 
+> These look like comments to me. Move them out of the patch header and
+> make them into real comments!
+> 
+Sure. Will do it in next post.
+> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> 
+> This patch does not compile. Please fix this.
+> 
+> 
+Sorry for that. Some how it didn't show up in my compilation.
+Will fix it in next post.
+>> ---
+>>  drivers/video/backlight/qcom-wled.c | 188 
+>> ++++++++++++++++++++++--------------
+>>  1 file changed, 118 insertions(+), 70 deletions(-)
+>> 
+>> diff --git a/drivers/video/backlight/qcom-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+>> index 3d276b3..a3daf9e 100644
+>> --- a/drivers/video/backlight/qcom-wled.c
+>> +++ b/drivers/video/backlight/qcom-wled.c
+>> @@ -147,6 +147,7 @@ struct wled {
+>>  	u32 max_brightness;
+>>  	u32 short_count;
+>>  	u32 auto_detect_count;
+>> +	u32 version;
+> 
+> Why does some of the changes here use function pointers and other parts
+> use if/else networks (wled->version == X) ?
+> 
+There is one place (in auto_string_detection) where we have to add the
+if (version == 4) because the per string modulator_enable is present 
+only
+for WLED4 and there is no equivalent functionality available for WLED5.
+
+There is another place, that i can convert it to the function pointer 
+(auto_detection_required).
+
+> Overall I almost wonder if the reduced clarify that comes from function
+> pointers is actually adding much value?
+> 
+I believe adding the function pointer makes it cleaner and the same 
+approach is used for
+WLED4/WLED3 also.
+
+> 
+>>  	bool disabled_by_short;
+>>  	bool has_short_detect;
+>>  	int short_irq;
+>> @@ -155,6 +156,10 @@ struct wled {
+>>  	struct wled_config cfg;
+>>  	struct delayed_work ovp_work;
+>>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
+>> +	int (*wled_cabc_config)(struct wled *wled, bool enable);
+>> +	int (*wled_sync_toggle)(struct wled *wled);
+>> +	int (*wled_ovp_fault_status)(struct wled *wled, bool *fault_set);
+>> +	int (*wled_ovp_delay)(struct wled *wled);
+>>  };
+>> 
+>>  static int wled3_set_brightness(struct wled *wled, u16 brightness)
+>> @@ -237,7 +242,7 @@ static int wled_module_enable(struct wled *wled, 
+>> int val)
+>>  	return 0;
+>>  }
+>> 
+>> -static int wled_sync_toggle(struct wled *wled)
+>> +static int wled3_sync_toggle(struct wled *wled)
+>>  {
+>>  	int rc;
+>>  	unsigned int mask = GENMASK(wled->max_string_count - 1, 0);
+>> @@ -255,6 +260,46 @@ static int wled_sync_toggle(struct wled *wled)
+>>  	return rc;
+>>  }
+>> 
+>> +static int wled4_ovp_fault_status(struct wled *wled, bool *fault_set)
+>> +{
+>> +	int rc;
+>> +	u32 int_rt_sts, fault_sts;
+>> +
+>> +	*fault_set = false;
+>> +	rc = regmap_read(wled->regmap,
+>> +			wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
+>> +			&int_rt_sts);
+>> +	if (rc < 0) {
+>> +		dev_err(wled->dev, "Failed to read INT_RT_STS rc=%d\n", rc);
+>> +		return rc;
+>> +	}
+>> +
+>> +	rc = regmap_read(wled->regmap,
+>> +			wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
+>> +			&fault_sts);
+>> +	if (rc < 0) {
+>> +		dev_err(wled->dev, "Failed to read FAULT_STATUS rc=%d\n", rc);
+>> +		return rc;
+>> +	}
+>> +
+>> +	if (int_rt_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
+>> +		*fault_set = true;
+>> +
+>> +	if (fault_sts & WLED3_CTRL_REG_OVP_FAULT_BIT)
+>> +		*fault_set = true;
+>> +
+>> +	if (*fault_set)
+>> +		dev_dbg(wled->dev, "WLED OVP fault detected, int_rt_sts=0x%x 
+>> fault_sts=0x%x\n",
+>> +			int_rt_sts, fault_sts);
+>> +
+>> +	return rc;
+>> +}
+>> +
+>> +static int wled4_ovp_delay(struct wled *wled)
+>> +{
+>> +	return WLED_SOFT_START_DLY_US;
+>> +}
+>> +
+>>  static int wled_update_status(struct backlight_device *bl)
+>>  {
+>>  	struct wled *wled = bl_get_data(bl);
+>> @@ -275,7 +320,7 @@ static int wled_update_status(struct 
+>> backlight_device *bl)
+>>  			goto unlock_mutex;
+>>  		}
+>> 
+>> -		rc = wled_sync_toggle(wled);
+>> +		rc = wled->wled_sync_toggle(wled);
+>>  		if (rc < 0) {
+>>  			dev_err(wled->dev, "wled sync failed rc:%d\n", rc);
+>>  			goto unlock_mutex;
+>> @@ -298,6 +343,25 @@ static int wled_update_status(struct 
+>> backlight_device *bl)
+>>  	return rc;
+>>  }
+>> 
+>> +static int wled4_cabc_config(struct wled *wled, bool enable)
+>> +{
+>> +	int i, j, rc;
+>> +	u8 val;
+>> +
+>> +	for (i = 0; i < wled->cfg.num_strings; i++) {
+>> +		j = wled->cfg.enabled_strings[i];
+>> +
+>> +		val = enable ? WLED4_SINK_REG_STR_CABC_MASK : 0;
+>> +		rc = regmap_update_bits(wled->regmap, wled->sink_addr +
+>> +					WLED4_SINK_REG_STR_CABC(j),
+>> +					WLED4_SINK_REG_STR_CABC_MASK, val);
+>> +		if (rc < 0)
+>> +			return rc;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  #define WLED_SHORT_DLY_MS			20
+>>  #define WLED_SHORT_CNT_MAX			5
+>>  #define WLED_SHORT_RESET_CNT_DLY_US		USEC_PER_SEC
+>> @@ -345,9 +409,10 @@ static irqreturn_t wled_short_irq_handler(int 
+>> irq, void *_wled)
+>> 
+>>  static void wled_auto_string_detection(struct wled *wled)
+>>  {
+>> -	int rc = 0, i;
+>> -	u32 sink_config = 0, int_sts;
+>> +	int rc = 0, i, delay_time_us;
+>> +	u32 sink_config = 0;
+>>  	u8 sink_test = 0, sink_valid = 0, val;
+>> +	bool fault_set;
+>> 
+>>  	/* Read configured sink configuration */
+>>  	rc = regmap_read(wled->regmap, wled->sink_addr +
+>> @@ -376,14 +441,9 @@ static void wled_auto_string_detection(struct 
+>> wled *wled)
+>>  	}
+>> 
+>>  	if (wled->cfg.cabc) {
+>> -		for (i = 0; i < wled->cfg.num_strings; i++) {
+>> -			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
+>> -						WLED4_SINK_REG_STR_CABC(i),
+>> -						WLED4_SINK_REG_STR_CABC_MASK,
+>> -						0);
+>> -			if (rc < 0)
+>> -				goto failed_detect;
+>> -		}
+>> +		rc = wled->wled_cabc_config(wled, 0);
+> 
+> Be consistent with the argument (elsewhere it is true/false).
+> 
+Will address in the next post.
+> 
+>> +		if (rc < 0)
+>> +			goto failed_detect;
+>>  	}
+>> 
+>>  	/* Disable all sinks */
+>> @@ -427,18 +487,17 @@ static void wled_auto_string_detection(struct 
+>> wled *wled)
+>>  			goto failed_detect;
+>>  		}
+>> 
+>> -		usleep_range(WLED_SOFT_START_DLY_US,
+>> -			     WLED_SOFT_START_DLY_US + 1000);
+>> +		delay_time_us = wled->wled_ovp_delay(wled);
+>> +		usleep_range(delay_time_us, delay_time_us + 1000);
+>> 
+>> -		rc = regmap_read(wled->regmap, wled->ctrl_addr +
+>> -				 WLED3_CTRL_REG_INT_RT_STS, &int_sts);
+>> +		rc = wled->wled_ovp_fault_status(wled, &fault_set);
+>>  		if (rc < 0) {
+>> -			dev_err(wled->dev, "Error in reading WLED3_CTRL_INT_RT_STS 
+>> rc=%d\n",
+>> +			dev_err(wled->dev, "Error in getting OVP fault_sts, rc=%d\n",
+>>  				rc);
+>>  			goto failed_detect;
+>>  		}
+>> 
+> 
+> 
+>> -		if (int_sts & WLED3_CTRL_REG_OVP_FAULT_STATUS)
+>> +		if (fault_set)
+>>  			dev_dbg(wled->dev, "WLED OVP fault detected with SINK %d\n",
+>>  				i + 1);
+>>  		else
+>> @@ -478,30 +537,30 @@ static void wled_auto_string_detection(struct 
+>> wled *wled)
+>>  	}
+>> 
+>>  	/* Enable valid sinks */
+>> -	for (i = 0; i < wled->cfg.num_strings; i++) {
+>> -		if (wled->cfg.cabc) {
+>> -			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
+>> -						WLED4_SINK_REG_STR_CABC(i),
+>> -						WLED4_SINK_REG_STR_CABC_MASK,
+>> -						WLED4_SINK_REG_STR_CABC_MASK);
+>> -			if (rc < 0)
+>> +	if (wled->version == 4) {
+>> +		for (i = 0; i < wled->cfg.num_strings; i++) {
+>> +			if (sink_config &
+>> +			    BIT(WLED4_SINK_REG_CURR_SINK_SHFT + i))
+>> +				val = WLED4_SINK_REG_STR_MOD_MASK;
+>> +			else
+>> +				/* Disable modulator_en for unused sink */
+>> +				val = 0x0;
+>> +
+>> +			rc = regmap_write(wled->regmap, wled->sink_addr +
+>> +					  WLED4_SINK_REG_STR_MOD_EN(i), val);
+>> +			if (rc < 0) {
+>> +				dev_err(wled->dev, "Failed to configure MODULATOR_EN rc=%d\n",
+>> +					rc);
+>>  				goto failed_detect;
+>> -		}
+>> -
+>> -		if (sink_config & BIT(WLED4_SINK_REG_CURR_SINK_SHFT + i))
+>> -			val = WLED4_SINK_REG_STR_MOD_MASK;
+>> -		else
+>> -			val = 0x0; /* Disable modulator_en for unused sink */
+>> -
+>> -		rc = regmap_write(wled->regmap, wled->sink_addr +
+>> -				  WLED4_SINK_REG_STR_MOD_EN(i), val);
+>> -		if (rc < 0) {
+>> -			dev_err(wled->dev, "Failed to configure MODULATOR_EN rc=%d\n",
+>> -				rc);
+>> -			goto failed_detect;
+>> +			}
+>>  		}
+>>  	}
+>> 
+>> +	/* Enable CABC if it needs to be enabled */
+> 
+> If it needs to be enabled?
+> 
+Ok. Actually Enable CABC should be enough. I will remove the latter part
+in the next post.
+> 
+>> +	rc = wled->wled_cabc_config(wled, true);
+>> +	if (rc < 0)
+>> +		goto failed_detect;
+>> +
+>>  	/* Restore the feedback setting */
+>>  	rc = regmap_write(wled->regmap,
+>>  			  wled->ctrl_addr + WLED3_CTRL_REG_FEEDBACK_CONTROL, 0);
+>> @@ -570,29 +629,19 @@ static bool wled_auto_detection_required(struct 
+>> wled *wled)
+>>  static int wled_auto_detection_at_init(struct wled *wled)
+>>  {
+>>  	int rc;
+>> -	u32 fault_status, rt_status;
+>> +	bool fault_set;
+>> 
+>>  	if (!wled->cfg.auto_detection_enabled)
+>>  		return 0;
+>> 
+>> -	rc = regmap_read(wled->regmap,
+>> -			 wled->ctrl_addr + WLED3_CTRL_REG_INT_RT_STS,
+>> -			 &rt_status);
+>> +	rc = wled->wled_ovp_fault_status(wled, &fault_set);
+>>  	if (rc < 0) {
+>> -		dev_err(wled->dev, "Failed to read RT status rc=%d\n", rc);
+>> -		return rc;
+>> -	}
+>> -
+>> -	rc = regmap_read(wled->regmap,
+>> -			 wled->ctrl_addr + WLED3_CTRL_REG_FAULT_STATUS,
+>> -			 &fault_status);
+>> -	if (rc < 0) {
+>> -		dev_err(wled->dev, "Failed to read fault status rc=%d\n", rc);
+>> +		dev_err(wled->dev, "Error in getting OVP fault_sts, rc=%d\n",
+>> +			rc);
+>>  		return rc;
+>>  	}
+>> 
+>> -	if ((rt_status & WLED3_CTRL_REG_OVP_FAULT_STATUS) ||
+>> -	    (fault_status & WLED3_CTRL_REG_OVP_FAULT_BIT)) {
+>> +	if (fault_set) {
+>>  		mutex_lock(&wled->lock);
+>>  		wled_auto_string_detection(wled);
+>>  		mutex_unlock(&wled->lock);
+>> @@ -811,17 +860,12 @@ static int wled4_setup(struct wled *wled)
+>>  					wled->cfg.string_i_limit);
+>>  		if (rc < 0)
+>>  			return rc;
+>> -
+>> -		addr = wled->sink_addr +
+>> -				WLED4_SINK_REG_STR_CABC(j);
+>> -		rc = regmap_update_bits(wled->regmap, addr,
+>> -					WLED4_SINK_REG_STR_CABC_MASK,
+>> -					wled->cfg.cabc ?
+>> -					WLED4_SINK_REG_STR_CABC_MASK : 0);
+>> -		if (rc < 0)
+>> -			return rc;
+>>  	}
+>> 
+>> +	rc = wled4_cabc_config(wled, wled->cfg.en_cabc);
+>> +	if (rc < 0)
+>> +		return rc;
+>> +
+>>  	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
+>>  				WLED3_CTRL_REG_MOD_EN,
+>>  				WLED3_CTRL_REG_MOD_EN_MASK,
+>> @@ -835,7 +879,7 @@ static int wled4_setup(struct wled *wled)
+>>  	if (rc < 0)
+>>  		return rc;
+>> 
+>> -	rc = wled_sync_toggle(wled);
+>> +	rc = wled->wled_sync_toggle(wled);
+>>  	if (rc < 0) {
+>>  		dev_err(wled->dev, "Failed to toggle sync reg rc:%d\n", rc);
+>>  		return rc;
+>> @@ -951,7 +995,7 @@ static u32 wled_values(const struct wled_var_cfg 
+>> *cfg, u32 idx)
+>>  	return idx;
+>>  }
+>> 
+>> -static int wled_configure(struct wled *wled, int version)
+>> +static int wled_configure(struct wled *wled)
+>>  {
+>>  	struct wled_config *cfg = &wled->cfg;
+>>  	struct device *dev = wled->dev;
+>> @@ -1035,12 +1079,13 @@ static int wled_configure(struct wled *wled, 
+>> int version)
+>>  	if (rc)
+>>  		wled->name = devm_kasprintf(dev, GFP_KERNEL, "%pOFn", 
+>> dev->of_node);
+>> 
+>> -	switch (version) {
+>> +	switch (wled->version) {
+>>  	case 3:
+>>  		u32_opts = wled3_opts;
+>>  		size = ARRAY_SIZE(wled3_opts);
+>>  		*cfg = wled3_config_defaults;
+>>  		wled->wled_set_brightness = wled3_set_brightness;
+>> +		wled->wled_sync_toggle = wled3_sync_toggle;
+>>  		wled->max_string_count = 3;
+>>  		wled->sink_addr = wled->ctrl_addr;
+>>  		break;
+>> @@ -1050,6 +1095,10 @@ static int wled_configure(struct wled *wled, 
+>> int version)
+>>  		size = ARRAY_SIZE(wled4_opts);
+>>  		*cfg = wled4_config_defaults;
+>>  		wled->wled_set_brightness = wled4_set_brightness;
+>> +		wled->wled_sync_toggle = wled3_sync_toggle;
+>> +		wled->wled_cabc_config = wled4_cabc_config;
+>> +		wled->wled_ovp_fault_status = wled4_ovp_fault_status;
+>> +		wled->wled_ovp_delay = wled4_ovp_delay;
+>>  		wled->max_string_count = 4;
+>> 
+>>  		prop_addr = of_get_address(dev->of_node, 1, NULL, NULL);
+>> @@ -1186,7 +1235,6 @@ static int wled_probe(struct platform_device 
+>> *pdev)
+>>  	struct backlight_device *bl;
+>>  	struct wled *wled;
+>>  	struct regmap *regmap;
+>> -	int version;
+>>  	u32 val;
+>>  	int rc;
+>> 
+>> @@ -1203,18 +1251,18 @@ static int wled_probe(struct platform_device 
+>> *pdev)
+>>  	wled->regmap = regmap;
+>>  	wled->dev = &pdev->dev;
+>> 
+>> -	version = (uintptr_t)of_device_get_match_data(&pdev->dev);
+>> -	if (!version) {
+>> +	wled->version = (uintptr_t)of_device_get_match_data(&pdev->dev);
+>> +	if (!wled->version) {
+>>  		dev_err(&pdev->dev, "Unknown device version\n");
+>>  		return -ENODEV;
+>>  	}
+>> 
+>>  	mutex_init(&wled->lock);
+>> -	rc = wled_configure(wled, version);
+>> +	rc = wled_configure(wled);
+>>  	if (rc)
+>>  		return rc;
+>> 
+>> -	switch (version) {
+>> +	switch (wled->version) {
+>>  	case 3:
+>>  		wled->cfg.auto_detection_enabled = false;
+>>  		rc = wled3_setup(wled);
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>>  a Linux Foundation Collaborative Project
