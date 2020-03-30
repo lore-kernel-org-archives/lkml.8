@@ -2,106 +2,77 @@ Return-Path: <SRS0=Mt+e=5P=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D756C43331
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962E7C43331
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00C622073B
-	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686942073B
+	for <linux-kernel@archiver.kernel.org>; Mon, 30 Mar 2020 06:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gUG9Stea"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eh1sDu08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgC3Gqy (ORCPT
+        id S1729308AbgC3Grq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:46:54 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46265 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728964AbgC3Gqy (ORCPT
+        Mon, 30 Mar 2020 02:47:46 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:48456 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728964AbgC3Grp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 02:46:54 -0400
-Received: by mail-qv1-f67.google.com with SMTP id bu9so2366046qvb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 29 Mar 2020 23:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pjkGBS29HYPxn30VYTsUkJMT7TXHK1iqq/toMS/LCIk=;
-        b=gUG9Steaxaz7lU3gtehZO7iOgd8Bw2Tux6OQMnNPWftJ2ioh20QyAIapRiiXt2aeX4
-         YBUKUNE9GuENqpQY9hO0Wq1PCKyRNIfnUvJcnxahiqEZWlObk0QKmudvjN0B1CPP3/U3
-         347Z6U0VEDVD+37Af6nAl5Y5EPNw+WR/6Q6CG1ZB8X9n+nD01eHZ5na76GmYeVo3POfB
-         M52DyJS9FHtu6wCQb1rzqgSDobPmEKN7MnCogMjkcXc4SMBFFSVfh9RyXkea85+Pm4Gw
-         ezBmMMk5bOsobgo3N5zTwFYP7qVqNAoujE2F9JREJu2ldVApODcurFjoe26arYdRIiQS
-         JZzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pjkGBS29HYPxn30VYTsUkJMT7TXHK1iqq/toMS/LCIk=;
-        b=MUNGAdhIisGDG4ZFldJ0GY8tJwhXGoABMlTMP0iA2nBWQYKOX5avD/rsSjVEecwkqO
-         00H4agucmYcWyDhU5YelRy/GfbBFlezWUDkBuebDhTW81eEAZEJBCSw9hsERIKAk27a4
-         DZEWMz6cmMX0K2N9SSjlv3cWEOtzuO1b024cdqRFT9TABrKNe39ke4e1aCEU9Z1lfx02
-         YN7R4Iu0rZfc9yy+W5M7NLWBqKVyv3B0vU4CcqujvdwB/d8HhbaQGhd2EJugJpwTj4Qm
-         wRnGEqkYtdeJSWFl0chG6JztWOL1jvVvhaw2VflkaxcYjNfXFuD3QbEh7zbIUSwK2Npy
-         LTow==
-X-Gm-Message-State: ANhLgQ1DReWaQ4Y24rMLGe7AntF2CSxpMCkWrQxWNjePv88wHLMsmutC
-        +YFnpjupbeTcpPJIK8dBq7J0tjnGiaGbH1fe159hitKfklk=
-X-Google-Smtp-Source: ADFU+vt9w+mfH2CS/l+Phj7i62glgWN1fk31DMpqMowVvXp42+ER/aG2dDe1mwJCsOMC/1MdhtE03Pyadevk92EqTbo=
-X-Received: by 2002:a0c:a8e2:: with SMTP id h34mr10050333qvc.22.1585550812907;
- Sun, 29 Mar 2020 23:46:52 -0700 (PDT)
+        Mon, 30 Mar 2020 02:47:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585550865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8efMudaMe4SXKlisr5XoKCgiji5DGX+MNsa2rB9kjG8=;
+        b=eh1sDu08ajbQDobrXtOjcFATtYLb82UKNAf/sdn6oAmwwI4GiQr6BjBZlKM19FX7kWhi3q
+        zBs8OmMkCesV1Su8nX6/oe45RqQJkVgAZqDPnaht14oCWdmEnwagJXafElW8R1RzqqIeRa
+        tKcm5Obz9PsY6ALOhA8raB9bjZD4x20=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-rQLyBsIWN9We9sa-h3OYhw-1; Mon, 30 Mar 2020 02:47:43 -0400
+X-MC-Unique: rQLyBsIWN9We9sa-h3OYhw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 034F7107ACC9;
+        Mon, 30 Mar 2020 06:47:42 +0000 (UTC)
+Received: from elisabeth (unknown [10.40.208.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D2F165DA76;
+        Mon, 30 Mar 2020 06:47:39 +0000 (UTC)
+Date:   Mon, 30 Mar 2020 08:47:34 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Simran Singhal <singhalsimran0@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com
+Subject: Re: [Outreachy kernel] [PATCH] staging: rtl8723bs: rtw_efuse:
+ Compress lines for immediate return
+Message-ID: <20200330084734.479420cd@elisabeth>
+In-Reply-To: <20200325205418.GA29149@simran-Inspiron-5558>
+References: <20200325205418.GA29149@simran-Inspiron-5558>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <00000000000089f61b05a20242f3@google.com>
-In-Reply-To: <00000000000089f61b05a20242f3@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 30 Mar 2020 08:46:41 +0200
-Message-ID: <CACT4Y+a9Jdd_ovUnB7fS+jkZUJYjpbNK1qwakYwy7k4WfNwg+g@mail.gmail.com>
-Subject: Re: upstream build error (9)
-To:     syzbot <syzbot+cfc21ef9f8637dfa50f9@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz invalid
+On Thu, 26 Mar 2020 02:24:18 +0530
+Simran Singhal <singhalsimran0@gmail.com> wrote:
 
-nested virt again kills host on qemu instances...
+> Compress two lines into a single line if immediate return statement is found.
 
-On Sun, Mar 29, 2020 at 8:11 PM syzbot
-<syzbot+cfc21ef9f8637dfa50f9@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    76ccd234 Merge branch 'perf-urgent-for-linus' of git://git..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=27bbeba43f06f835
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cfc21ef9f8637dfa50f9
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: i386
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+cfc21ef9f8637dfa50f9@syzkaller.appspotmail.com
->
-> timedout ["make" "oldconfig" "CC=/syzkaller/gcc/bin/gcc" "-j96"]
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000089f61b05a20242f3%40google.com.
+Same as your patches for issues reported by checkpatch, I think you
+should post these ones as a patchset.
+
+-- 
+Stefano
+
