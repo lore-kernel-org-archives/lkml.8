@@ -2,294 +2,174 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E573BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF2EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D0D20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466FE20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZdqLlKR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="nao7FYCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731357AbgCaWXP (ORCPT
+        id S1731405AbgCaWYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:23:15 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34055 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaWXO (ORCPT
+        Tue, 31 Mar 2020 18:24:02 -0400
+Received: from gateway20.websitewelcome.com ([192.185.67.41]:19345 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727955AbgCaWYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:23:14 -0400
-Received: by mail-il1-f196.google.com with SMTP id t11so21120283ils.1
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ARULjoQtf8jPl9YqlhaD51ipsNLJ+vghKOqa6OLsOPo=;
-        b=dZdqLlKRkU86VDF62uJLHfuCDf8eo3GdRNsrTZtoJdBJvUnUbOllORbKn2dfSviOuj
-         jupV1jPyS46zuDcazR+NUSdOd6NADudFuOP5a2UquWQDxV6kfKoLeaEq6OlheM/uCFg3
-         8AwuJ5CIbgiesR2IRpA0jyBZq7qlnQqTDeGu3PqlmDAqyfaT8OpGBUJD6veQBRDj9HyR
-         Wi5uUZlsXbywQ5uRRRgKHnQsWQYcgqrEDAPtG8sXfZXshEfNZd6lqchfyGKE/flscyig
-         lyyU9RhCdw6Q7MSRNRqVhXkFlAOmW6T9r7OIPKll4Tw9MPOg7dD9ZEXehPOFdnZYZ8yo
-         qrfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ARULjoQtf8jPl9YqlhaD51ipsNLJ+vghKOqa6OLsOPo=;
-        b=GkqKrPIsTbHmXPnmlryjvCp0PzDtiaPfA/IEbkxm2RXElk1qxtgCd8ulf01kyep9Zc
-         Sbp0jd8RnIZlvT9GStl7ZaoVsNoVrOSinUhgniIYs/+tk2jOB69C2+JGXYFaW7Jm2qeX
-         teuxCt0KhTH9oVuqlRMjEDPUsIv3dKtXCLXZPW+45SIWitDtrudK7zw8aWmfx+K79G32
-         sh9wWWrbuu3zntNh3d7Kj7IS60NZ0RUjVUdqFcR7dkC4aYAI9GsXgoxHHOrOFYeIijft
-         7TbyNIe8cjvsZSUthev2GeNdP5P33MyiQgKRYg4QhPy+slLTsaOc7KaZ9X1zhb2TdWvx
-         wFHw==
-X-Gm-Message-State: ANhLgQ10/FeSwF7UbejuKRO0cSDHAxGtp+iIWImwFCuoLCuwRCrbyHBH
-        vH5t+81adhQdk2PtdmevZyGFwpbT94cR7qscmQ==
-X-Google-Smtp-Source: ADFU+vsj50NA2QZq5d3aXCb/oZdLL7Edfcfds9DzJKtEvNWgm5PlBDoa4mvyHeRO8QNk5V7Xfm1xJRMyK3B5/3X+FNc=
-X-Received: by 2002:a92:86d1:: with SMTP id l78mr18569494ilh.172.1585693392005;
- Tue, 31 Mar 2020 15:23:12 -0700 (PDT)
+        Tue, 31 Mar 2020 18:24:01 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id B6E1D400CCD6F
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 16:07:53 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id JPIdjsZSM8vkBJPIdjhU8D; Tue, 31 Mar 2020 17:23:59 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QtrrjhC/IDSa1E6R82Hfs8cdkKOlbKVqZ468UCH5J40=; b=nao7FYCtg+9MThAGNOZdSCpa6x
+        06cmaMhyliHKLdyZ+vRXwT27hFbS2isP7mI2jd6OJRldnRaZq8fEmicmIIgYB430lAs9p97Qf2nY3
+        cxDv79p52v2zNv+8Ei58dm1LsicC47DV9QLgYO8SeQNrnHv1lCOqBAqMMGwpEpi/skkIUWT/VSGlx
+        FDoM4/G6vfAAUqp7X3b8XvD+glUrMpGEfWZKDcbZL8tvKU4c1/fnB0TYZgAVbBB3RUmgQW/ii1+6n
+        WMD+k1T/2yp3o4nuPlNN9u07yGHPBJtx01kEDSQn6K064g1P4h5M60ohXXJipRQmuFKTCIl9KKvq9
+        ECJh5Nrw==;
+Received: from [189.218.116.241] (port=36910 helo=[192.168.0.21])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jJPId-002UdD-9g; Tue, 31 Mar 2020 17:23:59 -0500
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+References: <20200331002040.GA11302@embeddedor>
+ <20200331220405.2zopmakvcgytfze5@treble>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] objtool: check: Fix NULL pointer dereference
+Message-ID: <883f3016-5156-8b84-b6aa-4f10a3bdb4eb@embeddedor.com>
+Date:   Tue, 31 Mar 2020 17:27:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200325101431.12341-1-andrew.cooper3@citrix.com> <20200331175810.30204-1-andrew.cooper3@citrix.com>
-In-Reply-To: <20200331175810.30204-1-andrew.cooper3@citrix.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Tue, 31 Mar 2020 18:23:00 -0400
-Message-ID: <CAMzpN2i6Nf0VDZ82mXyFixN879FC4eZfqe-LzWGkvygcz1gH_Q@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/smpboot: Remove 486-isms from the modern AP boot path
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Josh Boyer <jwboyer@redhat.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        jailhouse-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200331220405.2zopmakvcgytfze5@treble>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jJPId-002UdD-9g
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.21]) [189.218.116.241]:36910
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 1:59 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->
-> Linux has an implementation of the Universal Start-up Algorithm (MP spec,
-> Appendix B.4, Application Processor Startup), which includes unconditionally
-> writing to the Bios Data Area and CMOS registers.
->
-> The warm reset vector is only necessary in the non-integrated Local APIC case.
-> UV and Jailhouse already have an opt-out for this behaviour, but blindly using
-> the BDA and CMOS on a UEFI or other reduced hardware system isn't clever.
->
-> We could make this conditional on the integrated-ness of the Local APIC, but
-> 486-era SMP isn't supported.  Drop the logic completely, tidying up the includ
-> list and header files as appropriate.
->
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Ingo Molnar <mingo@redhat.com>
-> CC: Borislav Petkov <bp@alien8.de>
-> CC: "H. Peter Anvin" <hpa@zytor.com>
-> CC: x86@kernel.org
-> CC: Jan Kiszka <jan.kiszka@siemens.com>
-> CC: James Morris <jmorris@namei.org>
-> CC: David Howells <dhowells@redhat.com>
-> CC: Andrew Cooper <andrew.cooper3@citrix.com>
-> CC: Matthew Garrett <mjg59@google.com>
-> CC: Josh Boyer <jwboyer@redhat.com>
-> CC: Steve Wahl <steve.wahl@hpe.com>
-> CC: Mike Travis <mike.travis@hpe.com>
-> CC: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> CC: Giovanni Gherdovich <ggherdovich@suse.cz>
-> CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> CC: Len Brown <len.brown@intel.com>
-> CC: Kees Cook <keescook@chromium.org>
-> CC: Martin Molnar <martin.molnar.programming@gmail.com>
-> CC: Pingfan Liu <kernelfans@gmail.com>
-> CC: linux-kernel@vger.kernel.org
-> CC: jailhouse-dev@googlegroups.com
-> Suggested-by: "H. Peter Anvin" <hpa@zytor.com>
-> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
-> ---
-> v2:
->  * Drop logic entirely, rather than retaining support in 32bit builds.
-> ---
->  arch/x86/include/asm/apic.h        |  6 -----
->  arch/x86/include/asm/x86_init.h    |  1 -
->  arch/x86/kernel/apic/x2apic_uv_x.c |  1 -
->  arch/x86/kernel/jailhouse.c        |  1 -
->  arch/x86/kernel/platform-quirks.c  |  1 -
->  arch/x86/kernel/smpboot.c          | 50 --------------------------------------
->  6 files changed, 60 deletions(-)
->
-> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> index 19e94af9cc5d..5c33f9374b28 100644
-> --- a/arch/x86/include/asm/apic.h
-> +++ b/arch/x86/include/asm/apic.h
-> @@ -472,12 +472,6 @@ static inline unsigned default_get_apic_id(unsigned long x)
->                 return (x >> 24) & 0x0F;
->  }
->
-> -/*
-> - * Warm reset vector position:
-> - */
-> -#define TRAMPOLINE_PHYS_LOW            0x467
-> -#define TRAMPOLINE_PHYS_HIGH           0x469
-> -
->  extern void generic_bigsmp_probe(void);
->
->  #ifdef CONFIG_X86_LOCAL_APIC
-> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-> index 96d9cd208610..006a5d7fd7eb 100644
-> --- a/arch/x86/include/asm/x86_init.h
-> +++ b/arch/x86/include/asm/x86_init.h
-> @@ -229,7 +229,6 @@ enum x86_legacy_i8042_state {
->  struct x86_legacy_features {
->         enum x86_legacy_i8042_state i8042;
->         int rtc;
-> -       int warm_reset;
->         int no_vga;
->         int reserve_bios_regions;
->         struct x86_legacy_devices devices;
-> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-> index ad53b2abc859..5afcfd193592 100644
-> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
-> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-> @@ -343,7 +343,6 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
->         } else if (!strcmp(oem_table_id, "UVH")) {
->                 /* Only UV1 systems: */
->                 uv_system_type = UV_NON_UNIQUE_APIC;
-> -               x86_platform.legacy.warm_reset = 0;
->                 __this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
->                 uv_set_apicid_hibit();
->                 uv_apic = 1;
-> diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-> index 6eb8b50ea07e..d628fe92d6af 100644
-> --- a/arch/x86/kernel/jailhouse.c
-> +++ b/arch/x86/kernel/jailhouse.c
-> @@ -210,7 +210,6 @@ static void __init jailhouse_init_platform(void)
->         x86_platform.calibrate_tsc      = jailhouse_get_tsc;
->         x86_platform.get_wallclock      = jailhouse_get_wallclock;
->         x86_platform.legacy.rtc         = 0;
-> -       x86_platform.legacy.warm_reset  = 0;
->         x86_platform.legacy.i8042       = X86_LEGACY_I8042_PLATFORM_ABSENT;
->
->         legacy_pic                      = &null_legacy_pic;
-> diff --git a/arch/x86/kernel/platform-quirks.c b/arch/x86/kernel/platform-quirks.c
-> index b348a672f71d..d922c5e0c678 100644
-> --- a/arch/x86/kernel/platform-quirks.c
-> +++ b/arch/x86/kernel/platform-quirks.c
-> @@ -9,7 +9,6 @@ void __init x86_early_init_platform_quirks(void)
->  {
->         x86_platform.legacy.i8042 = X86_LEGACY_I8042_EXPECTED_PRESENT;
->         x86_platform.legacy.rtc = 1;
-> -       x86_platform.legacy.warm_reset = 1;
->         x86_platform.legacy.reserve_bios_regions = 0;
->         x86_platform.legacy.devices.pnpbios = 1;
->
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index fe3ab9632f3b..a9f5b511d0b4 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -72,7 +72,6 @@
->  #include <asm/fpu/internal.h>
->  #include <asm/setup.h>
->  #include <asm/uv/uv.h>
-> -#include <linux/mc146818rtc.h>
->  #include <asm/i8259.h>
->  #include <asm/misc.h>
->  #include <asm/qspinlock.h>
-> @@ -119,34 +118,6 @@ int arch_update_cpu_topology(void)
->         return retval;
->  }
->
-> -static inline void smpboot_setup_warm_reset_vector(unsigned long start_eip)
-> -{
-> -       unsigned long flags;
-> -
-> -       spin_lock_irqsave(&rtc_lock, flags);
-> -       CMOS_WRITE(0xa, 0xf);
-> -       spin_unlock_irqrestore(&rtc_lock, flags);
-> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_HIGH)) =
-> -                                                       start_eip >> 4;
-> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) =
-> -                                                       start_eip & 0xf;
-> -}
-> -
-> -static inline void smpboot_restore_warm_reset_vector(void)
-> -{
-> -       unsigned long flags;
-> -
-> -       /*
-> -        * Paranoid:  Set warm reset code and vector here back
-> -        * to default values.
-> -        */
-> -       spin_lock_irqsave(&rtc_lock, flags);
-> -       CMOS_WRITE(0, 0xf);
-> -       spin_unlock_irqrestore(&rtc_lock, flags);
-> -
-> -       *((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
-> -}
-> -
->  static void init_freq_invariance(void);
->
->  /*
-> @@ -1049,20 +1020,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
->          * the targeted processor.
->          */
->
-> -       if (x86_platform.legacy.warm_reset) {
-> -
-> -               pr_debug("Setting warm reset code and vector.\n");
-> -
-> -               smpboot_setup_warm_reset_vector(start_ip);
-> -               /*
-> -                * Be paranoid about clearing APIC errors.
-> -               */
-> -               if (APIC_INTEGRATED(boot_cpu_apic_version)) {
-> -                       apic_write(APIC_ESR, 0);
-> -                       apic_read(APIC_ESR);
-> -               }
-> -       }
-> -
->         /*
->          * AP might wait on cpu_callout_mask in cpu_init() with
->          * cpu_initialized_mask set if previous attempt to online
-> @@ -1118,13 +1075,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
->                 }
->         }
->
-> -       if (x86_platform.legacy.warm_reset) {
-> -               /*
-> -                * Cleanup possible dangling ends...
-> -                */
-> -               smpboot_restore_warm_reset_vector();
-> -       }
-> -
->         return boot_error;
->  }
 
-You removed x86_platform.legacy.warm_reset in the original patch, but
-that is missing in V2.
 
+On 3/31/20 17:04, Josh Poimboeuf wrote:
+> On Mon, Mar 30, 2020 at 07:20:40PM -0500, Gustavo A. R. Silva wrote:
+>> In case func is null, there is a null pointer dereference at 2029:
+>>
+>> 2029                 WARN("%s uses BP as a scratch register",
+>> 2030                      func->name);
+>>
+>> Fix this by null-checking func.
+>>
+>> Addresses-Coverity-ID: 1492002 ("Dereference after null check")
+>> Fixes: c705cecc8431 ("objtool: Track original function across branches")
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  tools/objtool/check.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+>> index e3bb76358148..182cc48fa892 100644
+>> --- a/tools/objtool/check.c
+>> +++ b/tools/objtool/check.c
+>> @@ -2025,7 +2025,7 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
+>>  		return 1;
+>>  	}
+>>  
+>> -	if (state->bp_scratch) {
+>> +	if (func && state->bp_scratch) {
+>>  		WARN("%s uses BP as a scratch register",
+>>  		     func->name);
+>>  		return 1;
+> 
+> We should still do the warning even if there's no func.  I'll make a
+> slightly different patch which unconditionally uses WARN_FUNC().
+> 
+
+Awesome. :)
+
+> I'll give you Reported-by credit and keep the coverity tag.  Thanks!
+> 
+
+Great.
+
+Thanks
 --
-Brian Gerst
+Gustavo
