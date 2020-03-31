@@ -2,97 +2,119 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A70C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B42C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67FB20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D3A20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgCaAyi (ORCPT
+        id S1729455AbgCaA5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:54:38 -0400
-Received: from icp-osb-irony-out4.external.iinet.net.au ([203.59.1.220]:54880
-        "EHLO icp-osb-irony-out4.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729358AbgCaAyh (ORCPT
+        Mon, 30 Mar 2020 20:57:00 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:48100 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729019AbgCaA5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:54:37 -0400
-X-SMTP-MATCH: 0
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2DKBAA4lIJe/+im0XZgBh4BCxyBcAu?=
- =?us-ascii?q?CKYFAIRIqhBqPTgEBAQMGgRKKIIUUhRWFKRSBZwoBAQEBAQEBAQEbGQECBAE?=
- =?us-ascii?q?BhEQCgjIkNgcOAhABAQEFAQEBAQEFAwFthQpYhXEGIwRSEBgNAhgOAgJHEAY?=
- =?us-ascii?q?ThX4krXh/MxoCiimBDiqMMRp5gQeBRAOBNoFmhDQKgyKCXgSNc4MDhw9FgQC?=
- =?us-ascii?q?XG4JGlxUdj0IDjCctpnGFfwQugVhNLgqDJ1AYnH83MIEGAQGNJl8BAQ?=
-X-IPAS-Result: =?us-ascii?q?A2DKBAA4lIJe/+im0XZgBh4BCxyBcAuCKYFAIRIqhBqPT?=
- =?us-ascii?q?gEBAQMGgRKKIIUUhRWFKRSBZwoBAQEBAQEBAQEbGQECBAEBhEQCgjIkNgcOA?=
- =?us-ascii?q?hABAQEFAQEBAQEFAwFthQpYhXEGIwRSEBgNAhgOAgJHEAYThX4krXh/MxoCi?=
- =?us-ascii?q?imBDiqMMRp5gQeBRAOBNoFmhDQKgyKCXgSNc4MDhw9FgQCXG4JGlxUdj0IDj?=
- =?us-ascii?q?CctpnGFfwQugVhNLgqDJ1AYnH83MIEGAQGNJl8BAQ?=
-X-IronPort-AV: E=Sophos;i="5.72,326,1580745600"; 
-   d="scan'208";a="238809243"
-Received: from unknown (HELO mickey.themaw.net) ([118.209.166.232])
-  by icp-osb-irony-out4.iinet.net.au with ESMTP; 31 Mar 2020 08:54:31 +0800
-Subject: [PATCH v2 4/4] autofs: add comment about autofs_mountpoint_changed()
-From:   Ian Kent <raven@themaw.net>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     autofs mailing list <autofs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 31 Mar 2020 08:54:31 +0800
-Message-ID: <158561607160.23197.3228166849408166685.stgit@mickey.themaw.net>
-In-Reply-To: <158561511964.23197.716188410829525903.stgit@mickey.themaw.net>
-References: <158561511964.23197.716188410829525903.stgit@mickey.themaw.net>
-User-Agent: StGit/unknown-version
+        Mon, 30 Mar 2020 20:57:00 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tu66d.0_1585616216;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Tu66d.0_1585616216)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 31 Mar 2020 08:56:57 +0800
+Subject: Re: [RFC PATCH v1 29/50] fs/ocfs2/journal: Use prandom_u32() and not
+ /dev/random for timeout
+To:     George Spelvin <lkml@SDF.ORG>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>, ocfs2-devel@oss.oracle.com
+References: <202003281643.02SGhIOY022599@sdf.org>
+ <016c2bdc-68eb-245f-2292-d00d0d8e45a5@linux.alibaba.com>
+ <20200330163412.GA2459@SDF.ORG>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <5b3a28ea-8d3f-2726-2daa-55c7af4a5d00@linux.alibaba.com>
+Date:   Tue, 31 Mar 2020 08:56:56 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200330163412.GA2459@SDF.ORG>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function autofs_mountpoint_changed() is unusual, add a comment
-about two cases for which it is used.
 
-Signed-off-by: Ian Kent <raven@themaw.net>
----
- fs/autofs/root.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/fs/autofs/root.c b/fs/autofs/root.c
-index b3f748e4df08..5efb7fa1ce2b 100644
---- a/fs/autofs/root.c
-+++ b/fs/autofs/root.c
-@@ -280,9 +280,24 @@ static struct dentry *autofs_mountpoint_changed(struct path *path)
- 	struct dentry *dentry = path->dentry;
- 	struct autofs_sb_info *sbi = autofs_sbi(dentry->d_sb);
- 
--	/*
--	 * If this is an indirect mount the dentry could have gone away
--	 * as a result of an expire and a new one created.
-+	/* If this is an indirect mount the dentry could have gone away
-+	 * and a new one created.
-+	 *
-+	 * This is unusual and I can't remember the case for which it
-+	 * was originally added now. But an example of how this can
-+	 * happen is an autofs indirect mount that has the "browse"
-+	 * option set and also has the "symlink" option in the autofs
-+	 * map entry. In this case the daemon will remove the browse
-+	 * directory and create a symlink as the mount (pointing to a
-+	 * local path) leaving the struct path stale.
-+	 *
-+	 * Another not so obvious case is when a mount in an autofs
-+	 * indirect mount that uses the "nobrowse" option is being
-+	 * expired and the mount has been umounted but the mount point
-+	 * directory remains when a stat family system call is made.
-+	 * In this case the mount point is removed (by the daemon) and
-+	 * a new mount triggered leading to a stale dentry in the struct
-+	 * path of the waiting process.
- 	 */
- 	if (autofs_type_indirect(sbi->type) && d_unhashed(dentry)) {
- 		struct dentry *parent = dentry->d_parent;
+On 2020/3/31 00:34, George Spelvin wrote:
+> On Mon, Mar 30, 2020 at 08:09:33PM +0800, Joseph Qi wrote:
+>> Sorry for the late reply since I might miss this mail.
+> 
+> You're hardly late; I expect replies to dribble in for a week.
+> 
+>> On 2019/3/21 11:07, George Spelvin wrote:
+>>> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+>>> index 68ba354cf3610..939a12e57fa8b 100644
+>>> --- a/fs/ocfs2/journal.c
+>>> +++ b/fs/ocfs2/journal.c
+>>> @@ -1884,11 +1884,8 @@ int ocfs2_mark_dead_nodes(struct ocfs2_super *osb)
+>>>   */
+>>>  static inline unsigned long ocfs2_orphan_scan_timeout(void)
+>>>  {
+>>> -	unsigned long time;
+>>> -
+>>> -	get_random_bytes(&time, sizeof(time));
+>>> -	time = ORPHAN_SCAN_SCHEDULE_TIMEOUT + (time % 5000);
+>>> -	return msecs_to_jiffies(time);
+>>> +	return msecs_to_jiffies(ORPHAN_SCAN_SCHEDULE_TIMEOUT) +
+>>> +		prandom_u32_max(5 * HZ);
+>>
+>> Seems better include the prandom_u32_max() into msecs_to_jiffies()?
+> 
+> What I'm trying to take advantage of here is constant propagation.
+> 
+> msecs_to_jiffies is zero cost (it's evaluated entirely at compile 
+> time) if its argument is a compile-time constant.  It's a function call
+> and a few instructions if its argument is variable.
+> 
+> msecs_to_jiffies(ORPHAN_SCAN_SCHEDULE_TIMEOUT + prandom_u32_max(5000))
+> would be forced to use the expensive version.
+> 
+> The compiler does't know, but *I* know, that msecs_to_jiffies() is a 
+> linear function, and prandom_u32_max() is a sort-of linear function.
+> 
+> (It's a linear function for a given PRNG starting state, so each 
+> individual call is linear, but multiple calls mess things up.)
+> 
+> Modulo a bit of rounding, we have:
+> 
+> msecs_to_jiffies(a + b) = msecs_to_jiffies(a) + msecs_to_jiffies(b)
+> msecs_to_jiffies(a) * b = msecs_to_jiffies(a * b)
+> prandom_u32_max(a) * b = prandom_u32_max(a * b)
+> prandom_u32_max(msecs_to_jiffies(a)) = msecs_to_jiffies(prandom_u32_max(a))
+> 
+> By doing the addition in jiffies rather than milliseconds, we get the 
+> cheap code.  It's not a huge big deal, but it's definitely smaller and 
+> faster.
+> 
+> Admittedly, I happen to be using HZ = 300, which requires a multiply to 
+> convert, and makes the resultant random numbers slightly non-uniform.  
+> The default HZ = 250 makes it just a divide by 4, which is pretty simple.
+> 
+> (When HZ = 300, you get 1..3 ms -> 1 jiffy, 4..6 ms -> 2 jiffies, and
+> 7..10 ms -> 3 jiffies.  Multiples of 3 are 33% more likely to be chosen.)
+> 
+> It just seems silly and wasteful to pick a random number between 0 and 
+> 4999 (plus 30000), only to convert it to a random number between 0 and 
+> 1249 (plus 7500).
+> 
+> And if HZ = 2000 ever happens, the timeout won't be artificially limited
+> to integer milliseconds.
+> 
 
+Thanks for the detail explanation.
+Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
