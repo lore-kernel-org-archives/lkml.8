@@ -2,142 +2,125 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8295C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C36C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7735020578
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07E2208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rMZVZmFD"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="w9G5xdSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbgCaNQP (ORCPT
+        id S1730877AbgCaNQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:16:15 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60348 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730543AbgCaNQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:16:15 -0400
-Received: from zn.tnic (p200300EC2F0C0900E4DD424C85240D45.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:900:e4dd:424c:8524:d45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63FBE1EC0CE4;
-        Tue, 31 Mar 2020 15:16:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585660572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=1Scx1x8rSpYx1k4WbB+KFUIoBzS4PNnsA/vPnSnULrY=;
-        b=rMZVZmFDBZFwnZKWPfk/C5wN5xF0oa+6qsyU2v7Dg+Z/ezln4w+3mgXLhZz8x+1/kh9GEH
-        p0c3K9Q8kHzZmGeHrCrfkleWSza5tuw2sJeCNgc6yRcmH/zYgg1rhTQ3BSnY/XS0PT61Ou
-        ywsgbtIHRLfkY4RshaZXzuIeiU3wKBM=
-Date:   Tue, 31 Mar 2020 15:16:06 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 11/70] x86/boot/compressed/64: Disable red-zone usage
-Message-ID: <20200331131606.GC29131@zn.tnic>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-12-joro@8bytes.org>
+        Tue, 31 Mar 2020 09:16:39 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:41905 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730703AbgCaNQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:16:38 -0400
+Received: by mail-qv1-f67.google.com with SMTP id t4so6603588qvz.8
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 06:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lWOY1a83oyzd8Wyzxobl7iyPgPSxUcv8H4rfgpi9Go0=;
+        b=w9G5xdSJi2pwxLkw+UUYa9uD0cxKepK7FyN8BvxBNr7Qf28I7LNKazNm+grZ85uOZ3
+         YUp0H2DrxVoI8h+nOVinbooeJqV2zQ511twVls7fYGH+dwXNRxXxr3T3VCoRZ5/DGzhD
+         eyZwCzRDkNzu/rI9nxQFLCQ6LvJiGX5snuiD0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lWOY1a83oyzd8Wyzxobl7iyPgPSxUcv8H4rfgpi9Go0=;
+        b=d5wz7cHo3YljJpLZRhAUOdVOBeeYY2dH8r5SK1Ook2b0t6TmBLlVrQ+7MTbkt9gh60
+         vYqS1fWH/Lmt5xrNlyKWg/IXLgGSj3XnggZUrjo8I3MC/2jtNhCuzEu3CZS8KNlIv7LP
+         GE3dcX52IxukTUSugsdCT96o5XTwTWcSPg4M1o4p9a6JOxADTDT9JhW66h+p7k+L8kw8
+         F2a1CaHkMphUeM6QkmBLoyhmIgPABzNvQy/GPyqR/GbPuMc5QYVbM5gi0CKvA+0Nrhad
+         +8xKYcO07hi/2rweSnuVw711jiTRUsLWUopMG78d5aJq9UR6dtx+9bQmHWzCEZeyAb20
+         kQMw==
+X-Gm-Message-State: ANhLgQ3aimPOcQ3c285tFngWg7/6iiO6fpCguYTbbFg7YM6o9xQZbezg
+        4AVvm55oOPFwgwZLLMOcU68lUlQWXok=
+X-Google-Smtp-Source: ADFU+vtXVj0qnZ925oHCMNMkIOnLjNT9wF24VWwCVSa51Qddhb1QgyuPqNP67rntZT+wlEmt8BzhpQ==
+X-Received: by 2002:a0c:f7d0:: with SMTP id f16mr16609830qvo.206.1585660597163;
+        Tue, 31 Mar 2020 06:16:37 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id l16sm13731476qtc.73.2020.03.31.06.16.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 06:16:36 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-mm@kvack.org, rcu@vger.kernel.org, willy@infradead.org,
+        peterz@infradead.org, neilb@suse.com, vbabka@suse.cz,
+        mgorman@suse.de, Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free memory pattern
+Date:   Tue, 31 Mar 2020 09:16:28 -0400
+Message-Id: <20200331131628.153118-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200319091407.1481-12-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:13:08AM +0100, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The x86-64 ABI defines a red-zone on the stack:
-> 
->   The 128-byte area beyond the location pointed to by %rsp is
->   considered to be reserved and shall not be modified by signal or
->   interrupt handlers. 10 Therefore, functions may use this area for
-			^^
+In kfree_rcu() headless implementation (where the caller need not pass
+an rcu_head, but rather directly pass a pointer to an object), we have
+a fall-back where we allocate a rcu_head wrapper for the caller (not the
+common case). This brings the pattern of needing to allocate some memory
+to free some memory.  Currently we use GFP_ATOMIC flag to try harder for
+this allocation, however the GFP_MEMALLOC flag is more tailored to this
+pattern. We need to try harder not only during atomic context, but also
+during non-atomic context anyway. So use the GFP_MEMALLOC flag instead.
 
-That 10 is the footnote number from the pdf. :)
+Also remove the __GFP_NOWARN flag simply because although we do have a
+synchronize_rcu() fallback for absolutely worst case, we still would
+like to not enter that path and atleast trigger a warning to the user.
 
->   temporary data that is not needed across function calls. In
->   particular, leaf functions may use this area for their entire stack
->   frame, rather than adjusting the stack pointer in the prologue and
->   epilogue. This area is known as the red zone.
-> 
-> This is not compatible with exception handling, so disable it for the
+Cc: linux-mm@kvack.org
+Cc: rcu@vger.kernel.org
+Cc: willy@infradead.org
+Cc: peterz@infradead.org
+Cc: neilb@suse.com
+Cc: vbabka@suse.cz
+Cc: mgorman@suse.de
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
 
-I could use some blurb as to what the problem is, for future reference.
+This patch is based on the (not yet upstream) code in:
+git://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git (branch rcu/kfree)
 
-> pre-decompression boot code.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/boot/Makefile            | 2 +-
->  arch/x86/boot/compressed/Makefile | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-> index 012b82fc8617..8f55e4ce1ccc 100644
-> --- a/arch/x86/boot/Makefile
-> +++ b/arch/x86/boot/Makefile
-> @@ -65,7 +65,7 @@ clean-files += cpustr.h
->  
->  # ---------------------------------------------------------------------------
->  
-> -KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
-> +KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -mno-red-zone
->  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
->  KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  GCOV_PROFILE := n
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 26050ae0b27e..e186cc0b628d 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -30,7 +30,7 @@ KBUILD_CFLAGS := -m$(BITS) -O2
->  KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
->  KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
->  cflags-$(CONFIG_X86_32) := -march=i386
-> -cflags-$(CONFIG_X86_64) := -mcmodel=small
-> +cflags-$(CONFIG_X86_64) := -mcmodel=small -mno-red-zone
->  KBUILD_CFLAGS += $(cflags-y)
->  KBUILD_CFLAGS += -mno-mmx -mno-sse
->  KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
-> @@ -87,7 +87,7 @@ endif
->  
->  vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
->  
-> -$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar -mno-red-zone
-> +$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar
->  
->  vmlinux-objs-$(CONFIG_EFI_STUB) += $(obj)/eboot.o \
->  	$(objtree)/drivers/firmware/efi/libstub/lib.a
+It is a follow-up to the posted series:
+https://lore.kernel.org/lkml/20200330023248.164994-1-joel@joelfernandes.org/
 
-That last chunk is not needed anymore after
 
-c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into libstub")
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-AFAICT.
-
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 4be763355c9fb..965deefffdd58 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
+ 
+ 	if (!ptr)
+ 		ptr = kmalloc(sizeof(unsigned long *) +
+-				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
++				sizeof(struct rcu_head), GFP_MEMALLOC);
+ 
+ 	if (!ptr)
+ 		return NULL;
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+2.26.0.rc2.310.g2932bb562d-goog
