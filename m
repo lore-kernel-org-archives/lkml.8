@@ -2,156 +2,108 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0059BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB79DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFC620848
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585666131;
-	bh=e/7jTSv5Ln/7N2erMxSAhTPfQO0mGgov7i4pB0Kxz8M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=THAlOMKDqe60Rhlr2t28p/xxT8o+n8la6brzjetkQX5InS+aIeQqhMuBNE9Z5IWPV
-	 rJx1d5UsHxjO5FTqUFN08PWc7Z3hLPSiUSKEYLmcSt0Fz9sXNlEq7s6RFNba83XoL1
-	 CD3L9zqQDitHgkCy69MvKeXJ+LvzCELBuB+CHBJs=
+	by mail.kernel.org (Postfix) with ESMTP id 907B52078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbgCaOsu (ORCPT
+        id S1730682AbgCaOuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57552 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 10:50:01 -0400
+Received: from mx.sdf.org ([205.166.94.20]:53379 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbgCaOst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:48:49 -0400
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98470214DB;
-        Tue, 31 Mar 2020 14:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585666128;
-        bh=e/7jTSv5Ln/7N2erMxSAhTPfQO0mGgov7i4pB0Kxz8M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EbrJxT9+qQ4vbmfQodNUZ75MqmrVy3/2NQDxPg4GsBywCzjeqIw2fq6lj3s7435X2
-         NIM+7Ydop9wv5/4CkHGw9c7dOJtPBA/zSDJDrPe+DungVFsSYeZaSpNvpWfCUq24L2
-         R+q388+xL8Vgv6ukYJr671hgBiLOn4kma+Cvp9Ro=
-Received: by mail-qv1-f41.google.com with SMTP id p60so10971550qva.5;
-        Tue, 31 Mar 2020 07:48:48 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1vMtCY640U90YBDNmS9RLEHsh5XJbMHUiAIrRTnM79TJ+N1F3y
-        F6fi44rWk2ybm3rFmqdCCAJmx/+EFr9IetQppQ==
-X-Google-Smtp-Source: ADFU+vsm7QnLg9VC47OO+I8GiU3/k2tefVEY+Sy39Kwt/VBNT1kmLS6ih/sV4b6JI7vayYbVNykmFae5IwQbSwKy9fk=
-X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr16286378qvw.79.1585666127545;
- Tue, 31 Mar 2020 07:48:47 -0700 (PDT)
+        id S1726595AbgCaOuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 10:50:01 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02VEnFEj010261
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Tue, 31 Mar 2020 14:49:16 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02VEnFfb002103;
+        Tue, 31 Mar 2020 14:49:15 GMT
+Date:   Tue, 31 Mar 2020 14:49:15 +0000
+From:   George Spelvin <lkml@SDF.ORG>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, lkml@sdf.org
+Subject: Re: [RFC PATCH v1 44/50] arm64: ptr auth: Use get_random_u64 instead
+ of _bytes
+Message-ID: <20200331144915.GA4303@SDF.ORG>
+References: <202003281643.02SGhOi3016886@sdf.org>
+ <20200330105745.GA1309@C02TD0UTHF1T.local>
+ <20200330193237.GC9199@SDF.ORG>
+ <20200331101412.GA1490@C02TD0UTHF1T.local>
 MIME-Version: 1.0
-References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-2-robh@kernel.org>
- <20200327202159.GA12749@ravnborg.org>
-In-Reply-To: <20200327202159.GA12749@ravnborg.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 31 Mar 2020 08:48:36 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+zFGvJ+3CmKw3OzgEWi-p4Uz9+nmnS5ax0J9ewoz5qZg@mail.gmail.com>
-Message-ID: <CAL_Jsq+zFGvJ+3CmKw3OzgEWi-p4Uz9+nmnS5ax0J9ewoz5qZg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: iio/accel: Drop duplicate adi, adxl345/6
- from trivial-devices.yaml
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331101412.GA1490@C02TD0UTHF1T.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 2:22 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> On Wed, Mar 25, 2020 at 04:05:38PM -0600, Rob Herring wrote:
-> > The 'adi,adxl345' definition is a duplicate as there's a full binding in:
-> > Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> >
-> > The trivial-devices binding doesn't capture that 'adi,adxl346' has a
-> > fallback compatible 'adi,adxl345', so let's add it to adi,adxl345.yaml.
-> >
-> > Cc: Michael Hennerich <michael.hennerich@analog.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> > Cc: linux-iio@vger.kernel.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/iio/accel/adi,adxl345.yaml     | 10 +++++++---
-> >  Documentation/devicetree/bindings/trivial-devices.yaml |  4 ----
-> >  2 files changed, 7 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > index c602b6fe1c0c..d124eba1ce54 100644
-> > --- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > @@ -17,9 +17,13 @@ description: |
-> >
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -      - adi,adxl345
-> > -      - adi,adxl375
-> > +    oneOf:
-> > +      - items:
-> > +          - const: adi,adxl346
-> > +          - const: adi,adxl345
-> > +      - enum:
-> > +          - adi,adxl345
-> > +          - adi,adxl375
->
-> I assume it is my schema understanding that is poor.
-> But I cannot parse the above.
->
-> The mix of items, enum and const confuses me.
+On Tue, Mar 31, 2020 at 11:14:12AM +0100, Mark Rutland wrote:
+> On Mon, Mar 30, 2020 at 07:32:37PM +0000, George Spelvin wrote:
+>> On Mon, Mar 30, 2020 at 11:57:45AM +0100, Mark Rutland wrote:
+>>> As I am unaware, how does the cost of get_random_bytes() compare to the
+>>> cost of get_random_u64()?
+>> 
+>> It's approximately 8 times the cost.  [Of *one* get_random_u64()
+>> call; 4x the cost of the two needed to generate a 128-bit key.]
+>> 
+>> Because get_random_bytes() implements anti-backtracking, it's a minimum 
+>> of one global lock and one ChaCha20 operation per call.  Even though 
+>> chacha_block_generic() returns 64 bytes, for anti-backtracking we use 
+>> 32 of them to generate a new key and discard the remainder.
+>> 
+>> get_random_u64() uses the exact same generator, but amortizes the cost by 
+>> storing the output in a per-CPU buffer which it only has to refill every 
+>> 64 bytes generated.  7/8 of the time, it's just a fetch from a per-CPU 
+>> data structure.
+> 
+> I see; thanks for this explanation. It would be helpful to mention the
+> backtracking distinction explicitly in the commit message, since it
+> currently only alludes to it in the first sentence.
 
-compatible can be one of 3 possibilities:
-"adi,adxl346", "adi,adxl345"
-"adi,adxl345"
-"adi,adxl375"
+Easily done, but I need to find a centralized place to say it, or
+I'd be repeating myself a *lot* in the series.
 
-For a single entry, 'items' can be omitted.
+That said, thanks for prompting me to quantify the cost ratio.
+I knew it, but never actually wrote it down.
 
-> I guess that if I am confused then others may end in the same situation.
-> Can we improve readability here or amybe add a comment?
+> It's worth noting that the key values *can* be exposed to userspace when
+> CONFIG_CHECKPOINT_RESTORE is selected. On such kernels, a user could
+> regenerate and read the keys an arbitrary number of times on a CPU of
+> their choice. From my limited understanding I presume backtracking may
+> be a concern there?
 
-example-schema.yaml explains this to some extent. I'd rather improve that.
+No.  Backtracking is an issue if the keys must remain secret *after*
+they are wiped from kernel memory.  This applies to session
+*encryption* keys (assuming the plaintext should remain secret
+after the session is over), and to any long-lived keys which are
+stored encrypted or otherwise inaccessible (e.g. in dedicated
+hardware).  The latter includes most asymmetric private keys.
 
-Rob
+Since the pointer authentication keys are authentication keys,
+and valueless to an attacker once the kernel is done using them,
+there is no need for backtracking protetion.
+
+Basically, do you need to wipe the key (with memzero_explicit) when
+you are done with it?  If that is important, you also want to
+know that the key cannot be reconstructed from the CRNG state.
+
+>> Yes, I went overboard, and your proposed change below is perfectly
+>> fine with me.
+> 
+> Great. That's what I'd prefer due to clarity of the code, and I'm not
+> too concerned by the figures below given it only adds 12 bytes to the
+> contemporary text size.
+
+A modified patch will follow.  Thanks for your patience.
