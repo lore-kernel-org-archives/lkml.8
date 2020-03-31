@@ -2,166 +2,154 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199B2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5A6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CAD20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96832071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JSLXv2Gs"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RCsqIan5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731087AbgCaNem (ORCPT
+        id S1731100AbgCaNeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:34:42 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42844 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730811AbgCaNel (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:34:41 -0400
-Received: by mail-qt1-f195.google.com with SMTP id t9so18231870qto.9
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 06:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FC6FIie4dB6bMk3AEouOio/5I8/SxWgVUF3EHcYeGKk=;
-        b=JSLXv2GsMl24k0EipG86fel3qIxrznqKCbWUISfyREeUxRtG8dcuHyRcIQfgiVh/XR
-         vw4t5DfPeQ1L3LW0EcUykGzi2Wp4bu68RjhmLvhMsR41TFlDi9t8kesfnUu5CTKNNwJP
-         vFBhTS5afyuY6Cv6HP9u4KaXcUkzT/Rghk88lc6+MQylxn8drFFzL1mX4eStYOBq1XX5
-         qO2WvCiTKHxZXgjS9eunHwCnNdqJ+5vHrBiV3ZlP5XwAuX21T/7LSKVw4ntABTWhh/SI
-         Z4bYjRTOHuQIsXD4GSWmQiDFoqQzTHeGFU8stiDQe9YK27oclNz/1sx/5VPgUHEhes+T
-         ctEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FC6FIie4dB6bMk3AEouOio/5I8/SxWgVUF3EHcYeGKk=;
-        b=cWzugsYimGCeJwmp9uK1QD68FYBH7kAC+cdbeBWTAglYs+np/qE79ZYcS6hZshYrUp
-         Vi53APRzZMQqYd7GbBzjColfn3OndSYN8IcrFGZvP2B3opkCorGIYiCkKeuw5hasS9rR
-         40IVIdTBHab1YtU3vCJa6PikLMmf9cDrIdd87lGNW/1JZOFfcbOrlbg2sJPoQ8K/SXJV
-         MAcju9Lv1kLQBKHf4jaClNZB083bBW8f0k5GaNymOigPKCWSFGS0N6s9LESXR4l+H2BD
-         s7vmbroevMrDBUGrcmSbSHoPX84hKyHDfybRjHzGYwl3R/SxUUoozuWvuNiVJsmbF1wd
-         QKBw==
-X-Gm-Message-State: ANhLgQ3WmaJbq5YZckxlBn7P2aC0sZ7f6S+TCAiWiv4DE/AMpQY5Ffwr
-        4ISuLYLQNDf3dSRHGXklV0mQx3kATMYkVzwMXeVcdA==
-X-Google-Smtp-Source: ADFU+vtUeEOZn0rGavrGQ77YK5I181F1/PrUa9BYa0b8C78Gwj1gAK2n5Cl9kEZmCorTDalXgX+CB9VDENu7bBoYtus=
-X-Received: by 2002:ac8:719a:: with SMTP id w26mr4993271qto.257.1585661678287;
- Tue, 31 Mar 2020 06:34:38 -0700 (PDT)
+        Tue, 31 Mar 2020 09:34:46 -0400
+Received: from mail-vi1eur05on2041.outbound.protection.outlook.com ([40.107.21.41]:6502
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731085AbgCaNeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:34:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ex9SXIDjfYjWVHHqUmEXe3SZbghmn7h4jpsd3WR1StSU6dDUXZXZ5Pak3YG1f5mDYt4ztrGZuRI44UATmA+YDEYi0yUVFcYHe1KP6DzgScIS3UGLgp0wjR4HSnQyVf6sXsm3NPPgCmNM6RsW2KSfZTvTYX2gtv1LptmKnGZ+tKCXdSbQswawRw3RzDLLkPCBYLmU7w9WsFJ/hqNEXJ6kMXKSRC4NuVS3lKDrKfiq8kFJ9YjZGPohChswwAvJjXQe48bYP4Bpc37pnKbYCXdjnHqzAHFxg4jiTiL1CrsH/TMrtujb2wZh8sjzMqyJYcjE0k0wI4gGzE57rv31Y/30ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yD7B2H06Szm00r020+lb0A/YC73HjDQjw0pW0D8jGZU=;
+ b=Wc7tMPgXU/oP14uwzYoF7RDH5e0Iu4jaHgV2D7MZnhDf4/u9VKpabRT10gvm2xeaZqAH05RF/cj9REIInBJGFHw0rECKKZDCKLZuhRpaeNVFT6NgpNdsuqF76PMshLBKvePCMCLHt99bfg90Mf6weNMSkeuBSWbnO1q9OL5ZrsJruwqfl/oU55SOpjBYVvgudQ+CqwJHlAkcM07YOHc/zdjUXmzanXhT+OXx9iobeYloeOXMOwq7ZxtzJ0xQK+wJtPwdh9yutiBK717eR05jxtGCHbeGGe6DAhJ0G3jhEQC0BCVujpKf0oOO1Xd76AvQEXOXMOlIpphJZ35kk324ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yD7B2H06Szm00r020+lb0A/YC73HjDQjw0pW0D8jGZU=;
+ b=RCsqIan5IAOSng57+ExHChtp2BQI2vzojmvnT27iA+exiHpyUw84rTZj9TrHy3Y05eRTsnNfhDYCfN5dK60Xc/Be+XLzKrJYqoFWIYuJ7Qib/LUmWGEwQR5QUDINNFlDU5Y5kDH0u6kpYfEgS5CKsWlGJy0ozjSDjKXdkBkCfVE=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Tue, 31 Mar 2020 13:34:42 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
+ 13:34:42 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH V7 0/4] mailbox/firmware: imx: support SCU channel type
+Thread-Topic: [PATCH V7 0/4] mailbox/firmware: imx: support SCU channel type
+Thread-Index: AQHV/cQDu85ufqDAx06lOMhNtamjbahaF9Qw
+Date:   Tue, 31 Mar 2020 13:34:41 +0000
+Message-ID: <AM0PR04MB44812577EF272CA1D457A1F788C80@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1584604193-2945-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1584604193-2945-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [180.107.26.236]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 39770401-7a45-4acb-bcc3-08d7d57844a1
+x-ms-traffictypediagnostic: AM0PR04MB4481:|AM0PR04MB4481:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB44814CFA2266BCB32121EC3C88C80@AM0PR04MB4481.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 0359162B6D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(366004)(396003)(33656002)(9686003)(86362001)(55016002)(66446008)(66556008)(7696005)(76116006)(4326008)(66946007)(316002)(66476007)(64756008)(6506007)(966005)(478600001)(52536014)(8676002)(54906003)(5660300002)(186003)(44832011)(6636002)(81156014)(81166006)(8936002)(26005)(15650500001)(110136005)(71200400001)(2906002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J8AgW0++3BMcOmkRUeGp6G51KiZwn3sMtJZpNeTZAINRuKI+9HNO+tTU9xVupf6LrblJZIAmIKNthycgDWPjBo1x1tmvBhxFXA/26z5bSjkbzaEDoU0a/qBJijp5KcNKOsCmZKMfu5ADpmMoCQk61/SPIhkjyDmSeyDTJZa1LcoVpKfzUsCmi25zu4dNTYqnBWLUjRQCXM9xTNvi6v+oBeI+ya8TS5+42nBCLNnoNjipfcZfPzDsp9A2SMr3C/6Hpb7epVv0bifug/FBB1Vx3sne1xSvueFrfFSPMUJ9nPmlAGG8eDXqn8nHds5BcGaqRjN8x52iFBOhaWKUSSB+cPiBiCycRPloAT0Kakut7X41kly2ocILSBPWk5UYl+GT/g8hV9R1zKrQ2rspcmgP8zuhE75lCpam96tp1ZKE4Z5C86+bVhHGLaul/TMI7FyuQkjhZWM9jB3tnMTWj2DCPHEGSBpGOAXaLYNlDdBdBcZTPEOeaG6O5EY4z1jhQxUlfQOwnVZPVZ+wLpkCV1pKiA==
+x-ms-exchange-antispam-messagedata: PN4i72DwulORkmzulB8AUVdQhoN4L2p4pE2doxuiFDlpPI7sKPN+b+J5LhQ6BUgsdhdu1XcnKzNjrqca+itLR/1jP6ULL3+z2HbeVtchLE3kd+HoiaEsINZ06lBQVuiISDnaSEys7BI48BlpqV20xw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <00000000000016bac605a2268a08@google.com>
-In-Reply-To: <00000000000016bac605a2268a08@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 31 Mar 2020 15:34:26 +0200
-Message-ID: <CACT4Y+Zk60ETzYdpSepkR+YqNvzkbEhjdDUy+bY7r=XWxoVYaA@mail.gmail.com>
-Subject: Re: WARNING in percpu_ref_switch_to_atomic_rcu
-To:     syzbot <syzbot+0076781e1606f479425e@syzkaller.appspotmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>, io-uring@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39770401-7a45-4acb-bcc3-08d7d57844a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 13:34:41.9307
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5O/h3SlPHCTvRVJmch8M5WJ828dm9mRLsCnfe34UMaUfZ9MmwFyj7RrxNvqJ7oCndGzL7msBZK6upQc0lCdrjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4481
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 3:28 PM syzbot
-<syzbot+0076781e1606f479425e@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    770fbb32 Add linux-next specific files for 20200228
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1414f7ade00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=576314276bce4ad5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0076781e1606f479425e
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0076781e1606f479425e@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> percpu ref (io_file_data_ref_zero) <= 0 (0) after switching to atomic
-
-Looking at this io_file_data_ref_zero, this seems to be io_uring
-related. +io_uring maintainers
-
-> WARNING: CPU: 0 PID: 0 at lib/percpu-refcount.c:160 percpu_ref_switch_to_atomic_rcu+0x436/0x540 lib/percpu-refcount.c:160
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc3-next-20200228-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  <IRQ>
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  panic+0x2e3/0x75c kernel/panic.c:221
->  __warn.cold+0x2f/0x35 kernel/panic.c:582
->  report_bug+0x27b/0x2f0 lib/bug.c:195
->  fixup_bug arch/x86/kernel/traps.c:175 [inline]
->  fixup_bug arch/x86/kernel/traps.c:170 [inline]
->  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
->  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
->  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> RIP: 0010:percpu_ref_switch_to_atomic_rcu+0x436/0x540 lib/percpu-refcount.c:160
-> Code: 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 f7 00 00 00 49 8b 75 e8 4c 89 e2 48 c7 c7 e0 d1 71 88 e8 02 36 b5 fd <0f> 0b e9 2b fd ff ff e8 7e 6a e3 fd be 08 00 00 00 48 89 ef e8 51
-> RSP: 0018:ffffc90000007df0 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000100 RSI: ffffffff815c4e91 RDI: fffff52000000fb0
-> RBP: ffff88808c4b2810 R08: ffffffff8987a480 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-> R13: ffff88808c4b2838 R14: 0000000000000002 R15: 0000000000000007
->  rcu_do_batch kernel/rcu/tree.c:2218 [inline]
->  rcu_core+0x59f/0x1370 kernel/rcu/tree.c:2445
->  __do_softirq+0x26c/0x99d kernel/softirq.c:292
->  invoke_softirq kernel/softirq.c:373 [inline]
->  irq_exit+0x192/0x1d0 kernel/softirq.c:413
->  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
->  smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
->  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->  </IRQ>
-> RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
-> Code: cc cc cc cc cc cc cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d e4 35 65 00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d d4 35 65 00 fb f4 <c3> cc 41 56 41 55 41 54 55 53 e8 f3 25 9d f9 e8 8e f7 cf fb 0f 1f
-> RSP: 0018:ffffffff89807d98 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-> RAX: 1ffffffff132790a RBX: ffffffff8987a480 RCX: 0000000000000000
-> RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffffffff8987ad1c
-> RBP: dffffc0000000000 R08: ffffffff8987a480 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: fffffbfff130f490
-> R13: 0000000000000000 R14: ffffffff8a862140 R15: 0000000000000000
->  arch_safe_halt arch/x86/include/asm/paravirt.h:144 [inline]
->  default_idle+0x49/0x350 arch/x86/kernel/process.c:698
->  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
->  do_idle+0x393/0x690 kernel/sched/idle.c:269
->  cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:361
->  start_kernel+0x867/0x8a1 init/main.c:1001
->  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000016bac605a2268a08%40google.com.
+SGkgSmFzc2ksDQoNCj4gU3ViamVjdDogW1BBVENIIFY3IDAvNF0gbWFpbGJveC9maXJtd2FyZTog
+aW14OiBzdXBwb3J0IFNDVSBjaGFubmVsIHR5cGUNCg0KQXJlIHlvdSBvayB3aXRoIHRoZSBtYWls
+Ym94IHBhcnQ/DQoNClRoYW5rcywNClBlbmcuDQoNCj4gDQo+IEZyb206IFBlbmcgRmFuIDxwZW5n
+LmZhbkBueHAuY29tPg0KPiANCj4gVjc6DQo+ICBQZXIgTGVvbmFyZCdzIGNvbW1lbnRzLCBhZGRl
+ZCBjaGVjayBmb3IgVEUvUkUgIFBhc3NlZCB0ZXN0IGZyb20NCj4gTGVvbmFyZCdzIGh0dHBzOi8v
+Z2l0aHViLmNvbS9jZGxlb25hcmQvaW14LXNjdS10ZXN0DQo+IA0KPiBWNjoNCj4gIEFkZCBPbGVr
+c2lqJ3MgUi1iIHRhZw0KPiAgUGF0Y2ggMy80LCBwZXINCj4gaHR0cHM6Ly93d3cua2VybmVsLm9y
+Zy9kb2MvRG9jdW1lbnRhdGlvbi9wcmludGstZm9ybWF0cy50eHQNCj4gIHNob3VsZCB1c2UgJXp1
+IGZvciBwcmludGsgc2l6ZW9mDQo+IA0KPiBWNToNCj4gIE1vdmUgaW14X211X2RjZmcgYmVsb3cg
+aW14X211X3ByaXYNCj4gIEFkZCBpbml0IGhvb2tzIHRvIGlteF9tdV9kY2ZnDQo+ICBkcm9wIF9f
+cGFja2VkIF9fYWxpZ25lZA0KPiAgQWRkIG1vcmUgZGVidWcgbXNnDQo+ICBjb2RlIHN0eWxlIGNs
+ZWFudXANCj4gDQo+IFY0Og0KPiAgRHJvcCBJTVhfTVVfVFlQRV9bR0VORVJJQywgU0NVXQ0KPiAg
+UGFjayBNVSBjaGFucyBpbml0IHRvIHNlcGFyYXRlIGZ1bmN0aW9uICBBZGQgc2VwYXJhdGUgZnVu
+Y3Rpb24gZm9yIFNDVQ0KPiBjaGFucyBpbml0IGFuZCB4bGF0ZSAgQWRkIHNhbnRpdHkgY2hlY2sg
+dG8gbXNnIGhkci5zaXplICBMaW1pdCBTQ1UgTVUgY2hhbnMNCj4gdG8gNiwgVFgwL1JYMC9SWERC
+WzAtM10NCj4gDQo+IFYzOg0KPiAgUmViYXNlIHRvIFNoYXduJ3MgZm9yLW5leHQNCj4gIEluY2x1
+ZGUgZnNsLGlteDgtbXUtc2N1IGNvbXBhdGlibGUNCj4gIFBlciBPbGVrc2lqJ3MgY29tbWVudHMs
+IGludHJvZHVjZSBnZW5lcmljIHR4L3J4IGFuZCBhZGRlZCBzY3UgbXUgdHlwZQ0KPiBDaGVjayBm
+c2wsaW14OC1tdS1zY3UgaW4gZmlybXdhcmUgZHJpdmVyIGZvciBmYXN0X2lwYw0KPiANCj4gVjI6
+DQo+ICBEcm9wIHBhdGNoIDEvMyB3aGljaCBhZGRlZCBmc2wsc2N1IHByb3BlcnR5ICBGb3JjZSB0
+byB1c2Ugc2N1IGNoYW5uZWwgdHlwZQ0KPiB3aGVuIG1hY2hpbmUgaGFzIG5vZGUgY29tcGF0aWJs
+ZSAiZnNsLGlteC1zY3UiDQo+ICBGb3JjZSBpbXgtc2N1IHRvIHVzZSBmYXN0X2lwYw0KPiANCj4g
+IEkgbm90IGZvdW5kIGEgZ2VuZXJpYyBtZXRob2QgdG8gbWFrZSBTQ0ZXIG1lc3NhZ2UgZ2VuZXJp
+YyBlbm91Z2gsIFNDRlcNCj4gbWVzc2FnZSBpcyBub3QgZml4ZWQgbGVuZ3RoIGluY2x1ZGluZyBU
+WCBhbmQgUlguIEFuZCBpdCB1c2UgVFIwL1JSMA0KPiBpbnRlcnJ1cHQuDQo+IA0KPiBWMToNCj4g
+U29ycnkgdG8gYmluZCB0aGUgbWFpbGJveC9maXJtd2FyZSBwYXRjaCB0b2dldGhlci4gVGhpcyBp
+cyBtYWtlIGl0IHRvDQo+IHVuZGVyc3RhbmQgd2hhdCBjaGFuZ2VkIHRvIHN1cHBvcnQgdXNpbmcg
+MSBUWCBhbmQgMSBSWCBjaGFubmVsIGZvciBTQ0ZXDQo+IG1lc3NhZ2UuDQo+IA0KPiBQZXIgaS5N
+WDhRWFAgUmVmZXJlbmNlIG1hbm51YWwsIHRoZXJlIGFyZSBzZXZlcmFsIG1lc3NhZ2UgdXNpbmcg
+ZXhhbXBsZXMuDQo+IE9uZSBvZiB0aGVtIGlzOg0KPiBQYXNzaW5nIHNob3J0IG1lc3NhZ2VzOiBU
+cmFuc21pdCByZWdpc3RlcihzKSBjYW4gYmUgdXNlZCB0byBwYXNzIHNob3J0DQo+IG1lc3NhZ2Vz
+IGZyb20gb25lIHRvIGZvdXIgd29yZHMgaW4gbGVuZ3RoLiBGb3IgZXhhbXBsZSwgd2hlbiBhIGZv
+dXItd29yZA0KPiBtZXNzYWdlIGlzIGRlc2lyZWQsIG9ubHkgb25lIG9mIHRoZSByZWdpc3RlcnMg
+bmVlZHMgdG8gaGF2ZSBpdHMgY29ycmVzcG9uZGluZw0KPiBpbnRlcnJ1cHQgZW5hYmxlIGJpdCBz
+ZXQgYXQgdGhlIHJlY2VpdmVyIHNpZGUuDQo+IA0KPiBUaGlzIHBhdGNoc2V0IGlzIHRvIHVzaW5n
+IHRoaXMgZm9yIFNDRlcgbWVzc2FnZSB0byByZXBsYWNlIGZvdXIgVFggYW5kIGZvdXIgUlgNCj4g
+bWV0aG9kLg0KPiANCj4gUGVuZyBGYW4gKDQpOg0KPiAgIGR0LWJpbmRpbmdzOiBtYWlsYm94OiBp
+bXgtbXU6IGFkZCBTQ1UgTVUgc3VwcG9ydA0KPiAgIG1haWxib3g6IGlteDogcmVzdHJ1Y3R1cmUg
+Y29kZSB0byBtYWtlIGVhc3kgZm9yIG5ldyBNVQ0KPiAgIG1haWxib3g6IGlteDogYWRkIFNDVSBN
+VSBzdXBwb3J0DQo+ICAgZmlybXdhcmU6IGlteC1zY3U6IFN1cHBvcnQgb25lIFRYIGFuZCBvbmUg
+UlgNCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2ZzbCxtdS50eHQgICAg
+ICAgICB8ICAgMiArDQo+ICBkcml2ZXJzL2Zpcm13YXJlL2lteC9pbXgtc2N1LmMgICAgICAgICAg
+ICAgICAgICAgICB8ICA1NCArKystDQo+ICBkcml2ZXJzL21haWxib3gvaW14LW1haWxib3guYyAg
+ICAgICAgICAgICAgICAgICAgICB8IDI4OA0KPiArKysrKysrKysrKysrKysrKy0tLS0NCj4gIDMg
+ZmlsZXMgY2hhbmdlZCwgMjgxIGluc2VydGlvbnMoKyksIDYzIGRlbGV0aW9ucygtKQ0KPiANCj4g
+DQo+IGJhc2UtY29tbWl0OiBlNTA2ZGJhNjlhNWU5YWFmZjIwZmQ3M2ExMDg2MzlmODRlMmMzOWQ5
+DQo+IC0tDQo+IDIuMTYuNA0KDQo=
