@@ -2,136 +2,150 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03E1C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2886C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996A92080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585686430;
-	bh=KBJwO6H6Y0CusLpsPnIlkDyiEbM5ompx0TxNHV6EnzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JRmIBWaRweQXXSW3ucB34u0zcO1BEfZHD06lcHBBaG1jt1/gaaKGMqUJp2aFAMmBD
-	 T1zOWP+3eRLAqLol0INoH9fQp2pBoI6uSJEchEjE7FkQ6V4Zc0MSUCo7eTnTcoRkOi
-	 Pje3qS1s/8sXBRmMMBcGwvOGgop24dPqrWQ4Mv9M=
+	by mail.kernel.org (Postfix) with ESMTP id 8CA5C20772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCEM7chc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgCaU1J (ORCPT
+        id S1730533AbgCaUaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbgCaU1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:27:09 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A44020757;
-        Tue, 31 Mar 2020 20:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585686428;
-        bh=KBJwO6H6Y0CusLpsPnIlkDyiEbM5ompx0TxNHV6EnzM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O/twBmAHYyNn1uDHoUVUd38Q6xNXNUbnyriuOKsOYdno07+7Wr65zcI/9Lstpd8KL
-         EcYuKqK+nnNt6EbAE0kaWadIXzTqN1HlHCKawd/ldOPlouz0ne5ZREr4Unn3dqsExI
-         iL2sQFXTDdDWOn6Ao21a0DgybA48ITA4UcofHjZI=
-Date:   Tue, 31 Mar 2020 13:27:06 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+6a6bca8169ffda8ce77b@syzkaller.appspotmail.com>
-Cc:     bp@alien8.de, davem@davemloft.net, elver@google.com,
-        herbert@gondor.apana.org.au, hpa@zytor.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Subject: Re: KCSAN: data-race in glue_cbc_decrypt_req_128bit /
- glue_cbc_decrypt_req_128bit
-Message-ID: <20200331202706.GA127606@gmail.com>
-References: <0000000000009d5cef05a22baa95@google.com>
+        Tue, 31 Mar 2020 16:30:04 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32802 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbgCaUaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 16:30:04 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f20so23469483ljm.0;
+        Tue, 31 Mar 2020 13:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LMMU+s7iMJHk7FqiEPYs8vBGLtrPTwaKOmVYBPS58SI=;
+        b=oCEM7chcd+lHmzehO9870OYGvbHYP+SrlPe8vT9W5h1K/gAO4EB62vGpsYuQvmqsgp
+         y1zHuyXDQc5RL+hpq2GIJAOFI1psotTuSMjwuEe9eQGaMWOVmr1VgqSEDwShH9zLkHns
+         eKe+xUMFNPEgw2bewiNRQSo7aJqlpO9Z8qTwAZasK8fHgvTPHEmlqsudvpDo01ugR5w5
+         ZpN0lDtxTuVSOPz+WunHvxhd2f3DTi47KJSuTSYkHG8ya68xsU75QojO5rfvZgh+BBik
+         AFKdOX9kF6pjG0Xot8xdOr0oBsQaNLKV/s9cLJ70qwbS80L3S1eFoA8QgEa2UsCEoe6y
+         ez3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LMMU+s7iMJHk7FqiEPYs8vBGLtrPTwaKOmVYBPS58SI=;
+        b=hn/QfH1FVeAA6toSJ/U+iJ9k7WV77FWw56hXt5wvnQNEfp8j2V0Uh++jLJuaYSnwU2
+         QxvleV6TlZeklYNfoKERGCAKUcjS6ETYHm75dcOdEai01iXkUkL86kzfZPM8fZFI2tMb
+         nP6McjEmQ0ZX+YRtFFP86U/c82qTzlyUQHafvVEODgF9YzzE8reUGbN3Zo6VD7Xz/1l4
+         IcYLZSr1MlzxlzkQDXgWk2begjZH/nMc4JE1aKn0fCNOgQBpDwVtyknBIk29mrRSkIs5
+         YU4w+kEIzDbfTHzgYtgvE2TbzjZjVpJ+Xlmbt3dLEWxkAPzd/AvFTygyo84FWI9fTnnl
+         JC4A==
+X-Gm-Message-State: AGi0Pua0uaHFpv0UIhOAlEW0Msi0mMpLRngh1UhJHFeWYLDknJtCB6b1
+        p+vp79Pad6gzKee7SKjUOdCWBb5As5NtvnfkKsM=
+X-Google-Smtp-Source: APiQypJndi6nOWadfiPbOYHTode1edEee9bR6lQDxX095dN6jrdJVnUQM8J+A0BuXGOJI40dvo2K8Uy1Df/LML7D+lc=
+X-Received: by 2002:a05:651c:1aa:: with SMTP id c10mr11590837ljn.53.1585686601679;
+ Tue, 31 Mar 2020 13:30:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000009d5cef05a22baa95@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191120220559.18914-1-c-robey@ti.com> <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
+ <20191212170452.GV35479@atomide.com> <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
+ <20200331184647.GF37466@atomide.com>
+In-Reply-To: <20200331184647.GF37466@atomide.com>
+From:   Drew Fustini <pdp7pdp7@gmail.com>
+Date:   Tue, 31 Mar 2020 22:30:30 +0200
+Message-ID: <CAEf4M_BxY0JgWXRRp48gFgWWcN2uJd7q4kXOCmOBziGpWYCvoA@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Caleb Robey <c-robey@ti.com>, linux-omap@vger.kernel.org,
+        Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Drew Fustini <drew@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:35:13PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    b12d66a6 mm, kcsan: Instrument SLAB free with ASSERT_EXCLU..
-> git tree:       https://github.com/google/ktsan.git kcsan
-> console output: https://syzkaller.appspot.com/x/log.txt?x=111f0865e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=10bc0131c4924ba9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6a6bca8169ffda8ce77b
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6a6bca8169ffda8ce77b@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KCSAN: data-race in glue_cbc_decrypt_req_128bit / glue_cbc_decrypt_req_128bit
-> 
-> write to 0xffff88809966e128 of 8 bytes by task 24119 on cpu 0:
->  u128_xor include/crypto/b128ops.h:67 [inline]
->  glue_cbc_decrypt_req_128bit+0x396/0x460 arch/x86/crypto/glue_helper.c:144
->  cbc_decrypt+0x26/0x40 arch/x86/crypto/serpent_avx2_glue.c:152
->  crypto_skcipher_decrypt+0x65/0x90 crypto/skcipher.c:652
->  _skcipher_recvmsg crypto/algif_skcipher.c:142 [inline]
->  skcipher_recvmsg+0x7fa/0x8c0 crypto/algif_skcipher.c:161
->  skcipher_recvmsg_nokey+0x5e/0x80 crypto/algif_skcipher.c:279
->  sock_recvmsg_nosec net/socket.c:886 [inline]
->  sock_recvmsg net/socket.c:904 [inline]
->  sock_recvmsg+0x92/0xb0 net/socket.c:900
->  ____sys_recvmsg+0x167/0x3a0 net/socket.c:2566
->  ___sys_recvmsg+0xb2/0x100 net/socket.c:2608
->  __sys_recvmsg+0x9d/0x160 net/socket.c:2642
->  __do_sys_recvmsg net/socket.c:2652 [inline]
->  __se_sys_recvmsg net/socket.c:2649 [inline]
->  __x64_sys_recvmsg+0x51/0x70 net/socket.c:2649
->  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> read to 0xffff88809966e128 of 8 bytes by task 24118 on cpu 1:
->  u128_xor include/crypto/b128ops.h:67 [inline]
->  glue_cbc_decrypt_req_128bit+0x37c/0x460 arch/x86/crypto/glue_helper.c:144
->  cbc_decrypt+0x26/0x40 arch/x86/crypto/serpent_avx2_glue.c:152
->  crypto_skcipher_decrypt+0x65/0x90 crypto/skcipher.c:652
->  _skcipher_recvmsg crypto/algif_skcipher.c:142 [inline]
->  skcipher_recvmsg+0x7fa/0x8c0 crypto/algif_skcipher.c:161
->  skcipher_recvmsg_nokey+0x5e/0x80 crypto/algif_skcipher.c:279
->  sock_recvmsg_nosec net/socket.c:886 [inline]
->  sock_recvmsg net/socket.c:904 [inline]
->  sock_recvmsg+0x92/0xb0 net/socket.c:900
->  ____sys_recvmsg+0x167/0x3a0 net/socket.c:2566
->  ___sys_recvmsg+0xb2/0x100 net/socket.c:2608
->  __sys_recvmsg+0x9d/0x160 net/socket.c:2642
->  __do_sys_recvmsg net/socket.c:2652 [inline]
->  __se_sys_recvmsg net/socket.c:2649 [inline]
->  __x64_sys_recvmsg+0x51/0x70 net/socket.c:2649
->  do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Reported by Kernel Concurrency Sanitizer on:
-> CPU: 1 PID: 24118 Comm: syz-executor.1 Not tainted 5.6.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> ==================================================================
-> 
+On Tue, Mar 31, 2020 at 8:46 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Drew Fustini <pdp7pdp7@gmail.com> [200331 18:39]:
+> > On Thu, Dec 12, 2019 at 6:06 PM Tony Lindgren <tony@atomide.com> wrote:
+> > > > On 21/11/2019 00:05, Caleb Robey wrote:
+> > > > > From: Jason Kridner <jdk@ti.com>
+> > > > >
+> > > > > BeagleBoard.org BeagleBone AI is an open source hardware single
+> > > > > board computer based on the Texas Instruments AM5729 SoC featuring
+> > > > > dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> > > > > signal processor (DSP), quad-core embedded vision engine (EVE),
+> > > > > Arm Cortex-M4 processors, dual programmable realtime unit
+> > > > > industrial control subsystems and more. The board features 1GB
+> > > > > DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> > > > > 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> > > > > headers.
+> > > > >
+> > > > > For more information, refer to:
+> > > > > https://beaglebone.ai
+> > > > >
+> > > > > This patch introduces the BeagleBone AI device tree.
+> > > > >
+> > > > > Note that the device use the "ti,tpd12s016" component which is
+> > > > > software compatible with "ti,tpd12s015". Thus we only use the
+> > > > > latter driver.
+> > > >
+> > > > Ah. thanks. I see my comments resolved here.
+> > > > no more comments to net part from my side.
+> > >
+> > > Just FYI, Jason had one pending comment on the earlier version
+> > > about the compatible property to use.
+> > >
+> > > So I'm assuming there will be a new version posted, tagging
+> > > this one as read.
+> >
+> > It came to my attention today when talking with Jason Kridner and
+> > Robert Nelson that we did not get the BeagleBone AI device tree
+> > upstream yet.
+> >
+> > I am having trouble identifying what the pending comment was from the
+> > original patch series.
+> >
+> > Was it related to this compatible string?
+> >
+> > > +       compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
+>
+> Yes I think Jason had some comment on the compatible string
+> to use.
 
-I think this is a problem for almost all the crypto code.  Due to AF_ALG, both
-the source and destination buffers can be userspace pages that were gotten with
-get_user_pages().  Such pages can be concurrently modified, not just by the
-kernel but also by userspace.
+Ah, I see it now [1]:
 
-I'm not sure what can be done about this.
+> Probably need to change "beagleboard.org," to "beagle," as of today.
+> With the new yaml stuff for defining device tree entries, having the
+> period (.) in the vendor identifier can be a bit confusing. I altered
+> my submission to avoid this.
 
-- Eric
+so I think this should work:
+
+compatible = "beagleboard-org,am5729-beagleboneai", "ti,am5728",
+
+We'll get it resubmitted.
+
+Thanks,
+Drew
+
+[1] https://lore.kernel.org/linux-devicetree/CA+T6QPm-DNG_QoAMWw_zUDUkZCfhbBTgygnoPAykf3mgK7opaA@mail.gmail.com/
