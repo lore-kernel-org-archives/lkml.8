@@ -2,131 +2,172 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4728AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E26C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1420820787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D0020787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="NZ9oN/5A"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="h3Vg+Wm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbgCaI35 (ORCPT
+        id S1730140AbgCaIcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:29:57 -0400
-Received: from mail-db8eur05on2085.outbound.protection.outlook.com ([40.107.20.85]:34113
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726397AbgCaI35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:29:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nPH8i2DQcO7/LbbxOvIVniHLyslPicyo1WGsBzFUoqemG/XC6JPnA6LqMX0yVCSyAgGgGLlbMoDFRJqknecirhPrEZD/uE4Yuheo3EazaJtlS9hkTw9r4dLRTxY+H9k0uawLr0xPVhFm1Y87aTPxNAFdEIXZRusv+kiORawY8nHkRQdrddaVNBYbLPxKjn0pmyMfkx+hjiZ34iQKavVgjeVWt71lAf22HESs7z7m8QuBcMKtDdxQGjLHj/RwMYdvZqKMl8IMuKQFfEjicHyiZ4qJuAow7R8M9xKCUAK5fNxC82Tt8vb6RdsSPnQbw87FNNI7gZXwLmpJsL33hWyI7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wav6kjNyTVj2opNC+yWLCLaK2+qyaHXK9/TSzlwy2hg=;
- b=gSjnOfWfGsISNpidC7F/Z0N4jbxjmzV8fu3Zc/zIyR9nonvTFLwIvCNoHiRrboIgKQZzPInPcxYBOmb9TZY5xamxaIokFXH+pRwGHGSZCv1lRpd2Zom3TTM/ugEHVXQViUA0gVB5dMFIkxUri4kVjPYgNbTB73cNu46WiozbW97AtedKyYc60wutl5mw6FvtF8/+VhhDRZ3XC4dvOZJ4yuCTCQYAb71yTqDN9YQBZ0Q+Vj/lQMoZUaEn6MM019wYKFtkNNcmgIUJHwnR64mu/k5ArGYPSB6CxvDe6UvDvCQiAQ5wSVEQu1UfatvFlXdB0S2VA4kRxp2pzphOxrLrFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
- dkim=pass header.d=itdev.co.uk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wav6kjNyTVj2opNC+yWLCLaK2+qyaHXK9/TSzlwy2hg=;
- b=NZ9oN/5ASjNAWDl9u0l7QZAhyt5P6V+ktbPume6gMHw6Jk3EhlOAk/RuHcHlRZbl1mJWtJrIv5VMiRzBqomtFyZqOFfcxtQIvhgDWt6yxuP6oie4OfKHRUFzQkYjlcXJZCGOou1jvs8SRCEztHjcyKT5Wsd0+/y5YUwRrE6n118=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
- DBBPR08MB4474.eurprd08.prod.outlook.com (20.179.40.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Tue, 31 Mar 2020 08:29:54 +0000
-Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659]) by DBBPR08MB4491.eurprd08.prod.outlook.com
- ([fe80::cce9:f055:f034:3659%4]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
- 08:29:54 +0000
-Date:   Tue, 31 Mar 2020 09:29:52 +0100
-From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     "John B. Wyatt IV" <jbwyatt4@gmail.com>,
-        outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8] staging: vt6656: add error code handling to unused
- variable
-Message-ID: <20200331082952.GA13403@jiffies>
-References: <20200330233900.36938-1-jbwyatt4@gmail.com>
- <20200331020103.13008f53@elisabeth>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331020103.13008f53@elisabeth>
-X-ClientProxiedBy: CWLP265CA0336.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:401:57::36) To DBBPR08MB4491.eurprd08.prod.outlook.com
- (2603:10a6:10:d2::16)
+        Tue, 31 Mar 2020 04:32:23 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:12222 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726397AbgCaIcW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:32:22 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02V8RAVq026922;
+        Tue, 31 Mar 2020 10:32:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=UvUiuQXXX/lmwa34ZnG6SSANaGi47hg/fFk3TsJH6HU=;
+ b=h3Vg+Wm4fycqUNzJ9Qant4f7R4hHkwNV0rG2XlarDQ5sjPuhEgtO7tWDl6AxX/rkgZv4
+ n/KLFjQmaEU2Yaop5QCZosTMfm987uQ+C/Adhf0pVUl6Zpk7ae9RknvhN8ayK1wBlKih
+ mte9Ys/D4VZpUmD/a6BnZE/3C63uJOeT78GqHsRkOjy0pZ84JYBZOhRXePjwTxxG5qmW
+ PAimFJnUMDrQ02IfIcW/iawhq9dD+f11S6b8uib/KLLTWvwbcXWiaRmRHYrzoZJwtCT2
+ t1363+OVeVk6eZo2mjWnxoMN0GMgKYwl/tQo3iIZ6P0nwTpSqaDfRFTh6H65+K/u5KJS Vg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 301vkdp6r9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 10:32:05 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8375F100034;
+        Tue, 31 Mar 2020 10:32:01 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 73F0621E677;
+        Tue, 31 Mar 2020 10:32:01 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 10:32:00
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <fabrice.gasnier@st.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v5 1/6] dt-bindings: mfd: Document STM32 low power timer bindings
+Date:   Tue, 31 Mar 2020 10:31:41 +0200
+Message-ID: <20200331083146.10462-2-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200331083146.10462-1-benjamin.gaignard@st.com>
+References: <20200331083146.10462-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from jiffies (5.151.93.48) by CWLP265CA0336.GBRP265.PROD.OUTLOOK.COM (2603:10a6:401:57::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Tue, 31 Mar 2020 08:29:53 +0000
-X-Originating-IP: [5.151.93.48]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 97a1b709-e73c-42eb-c306-08d7d54db049
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4474:
-X-Microsoft-Antispam-PRVS: <DBBPR08MB4474B9C00C66C945F22212A9B3C80@DBBPR08MB4474.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-Forefront-PRVS: 0359162B6D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4491.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(346002)(366004)(136003)(376002)(39830400003)(396003)(186003)(5660300002)(8676002)(1076003)(9686003)(9576002)(81166006)(4744005)(52116002)(86362001)(66946007)(66476007)(54906003)(956004)(2906002)(316002)(44832011)(33656002)(55016002)(8936002)(6496006)(81156014)(53546011)(508600001)(16526019)(26005)(4326008)(66556008)(6916009)(7416002)(33716001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: itdev.co.uk does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AWmZCS+NKiYOGroA7jUSb6s87vgIZ0aaItk44lifMsaGBozUD8TGsxZBRRd4kItGStvbnezJEiJBh5vt+5O4VCRCCYDIZ4/Mo97xjWcnu4fOMHiWpOpeTEqpXvHlinEkgS6UGOHjz+7FxBWOcTAh4t2+EQAHzLLaqpHiMAGpS6UTCR2vcQRYU3DEzEqeu8vS49HbAl/TV8LtP/K45OHYJ7uHK4BDYEbp1pGXNpxrE9mpSiykKUoftS2J+HHe5D/k3MmgZbY9ja/sxI66SxvSo5f1Yd+eD2Y0CRpsgjQ1SGfBeyiPYVLtfIUxtN7u7PxXniCZ8M/1d9nhc4J9fGpey6dcBNl20ff3Sd8w1aBewGBW1IEIC7YSqfvtpxf7ivqlVV4u/gG+VgAi2XYn5Sp/xx9fUwTzR/B3G1uLQSuq69+y2kPjEmw1ySX5cI+iBd+p
-X-MS-Exchange-AntiSpam-MessageData: CGs9CA/GOqp59O0P6elyGOth+qaejZCNF3Gcpmg+l/vc/PYDIUeWoYniV84SmlBKUSqBO8GUJKtuajjHJ7n5YmGgXZbky2ry9ZzhMJ0wztr+Uuwa4+dK/4j+BoC0dddn18DIu0oe6S8OkQPxSxzmKw==
-X-OriginatorOrg: itdev.co.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97a1b709-e73c-42eb-c306-08d7d54db049
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2020 08:29:54.4086
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2d2930c4-2251-45b4-ad79-3582c5f41740
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +cAhSLodrWa3NCov7Y/DuGHMWu2h8FIDXyjFQh8V4a96Zjle2Zrgjr900bqu8NTxgWTOC7MVeFp/EElijxjTod13AGZVKclS6O90VsJ1aoo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4474
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_03:2020-03-30,2020-03-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/31/20 02:01:03, Stefano Brivio wrote:
-> On Mon, 30 Mar 2020 16:39:00 -0700
-> "John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
-> 
-> > Add error code handling to unused 'ret' variable that was never used.
-> > Return an error code from functions called within vnt_radio_power_on.
-> > 
-> > Issue reported by coccinelle (coccicheck).
-> > 
-> > Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> > Suggested-by: Stefano Brivio <sbrivio@redhat.com>
-> > Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
->   ^ This should be dropped unless Quentin agrees to this version as well
-> 
-> > Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
-> 
-> Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-> 
-> -- 
-> Stefano
-> 
+Add a subnode to STM low power timer bindings to support timer driver
 
-Just reviewed it so John doesn't need to send a v9. Everything seems
-good, I'm happy and checkpatch is too.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+version 5:
+- the previous has been acked-by Rob but since I have docummented
+  interrupts and interrupt-names properties I haven't applied it here.
 
-Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+version 4:
+- change compatible and subnode names
+- document wakeup-source property
 
-Thanks,
-Quentin
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+index 1a4cc5f3fb33..2809c4a186c4 100644
+--- a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
++++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+@@ -33,12 +33,28 @@ properties:
+     items:
+       - const: mux
+ 
++  interrupts:
++    items:
++      - description: timer event interrupt
++      - description: wake up interrupt
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    items:
++      - const: event
++      - const: wakeup
++    minItems: 1
++    maxItems: 2
++
+   "#address-cells":
+     const: 1
+ 
+   "#size-cells":
+     const: 0
+ 
++  wakeup-source: true
++
+   pwm:
+     type: object
+ 
+@@ -81,6 +97,16 @@ patternProperties:
+     required:
+       - compatible
+ 
++  timer:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-timer
++
++    required:
++      - compatible
++
+ required:
+   - "#address-cells"
+   - "#size-cells"
+@@ -94,11 +120,15 @@ additionalProperties: false
+ examples:
+   - |
+     #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
+     timer@40002400 {
+       compatible = "st,stm32-lptimer";
+       reg = <0x40002400 0x400>;
+       clocks = <&timer_clk>;
+       clock-names = "mux";
++      interrupt-names = "event", "wakeup";
++      interrupts-extended = <&intc GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
++                            <&exti 47 IRQ_TYPE_LEVEL_HIGH>;
+       #address-cells = <1>;
+       #size-cells = <0>;
+ 
+@@ -115,6 +145,10 @@ examples:
+       counter {
+         compatible = "st,stm32-lptimer-counter";
+       };
++
++      timer {
++        compatible = "st,stm32-lptimer-timer";
++      };
+     };
+ 
+ ...
+-- 
+2.15.0
+
