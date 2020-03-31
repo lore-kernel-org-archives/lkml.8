@@ -2,108 +2,128 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41923C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008A8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC0120CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlatPw3k"
+	by mail.kernel.org (Postfix) with ESMTP id D1B0120BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgCaR1D (ORCPT
+        id S1726269AbgCaR2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:27:03 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34306 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgCaR1C (ORCPT
+        Tue, 31 Mar 2020 13:28:19 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:45476 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCaR2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:27:02 -0400
-Received: by mail-ed1-f66.google.com with SMTP id o1so7869232edv.1;
-        Tue, 31 Mar 2020 10:27:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=mcrAQUUjnBmTfyv+ejaR6lSeHh26TbNTkCdqRT85gWA=;
-        b=YlatPw3kMTZwYOzqxtb8S39edjOKJUTha51WoQFYTrWT2PcTiobKlbWzEfHJlvYy+a
-         9GOelMXYppY/JnKF1cN1iDf6J+FZUMhR768t1nn6gjZo1v9sgd9h8nCMJIxt8PJV9It+
-         kTTMuWUcPGLQJpryr5ULgdzywzXas3lCBjOO6J6TttPwZsXZ5y1Lw7zjMUig/LDq0Dz8
-         egwlf/F1mW7mHmi+fTmxvv00+9CvhH//IYkfzVkROwkUCt0JAhFm0O+n9Tnv6iusuFB8
-         N0toXzSmnJDRdhuRwpN0M+1oLnsYVgOj00xNdA//GzFqvVj6cbr+vphNKuazKqqfWLSB
-         Rg1Q==
+        Tue, 31 Mar 2020 13:28:19 -0400
+Received: by mail-il1-f200.google.com with SMTP id p15so20695128ils.12
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 10:28:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mcrAQUUjnBmTfyv+ejaR6lSeHh26TbNTkCdqRT85gWA=;
-        b=qFE2eRjlLESUwOiHpK2yQm1cmqht2FqzhkrQgvhttlu7KfB0aYfRkLYuE73THPUea+
-         n6LE52Du/AxK1qGgzZmk8ySUV+kmefmEGv9AakgkwWBeijokfIj+RiP3Axf/AJIzl3S8
-         xl/kuO198Wh+eWcKryKOXfe+4bxEVJInNCoAGxK4fbDaCMckwzKpmD2rgELn6Yf26cuh
-         hePYj0MZ0xlTiqW+jheUFfJHzTMRLqeMmWfU9oqKBAWlCTbav/0+hS2a5p2xh8AtV9iu
-         4r1yj6V6o3kW60ifWHDNj6kcIAwRWP+d+9peFKxxUzhG2R0haAazmxKVQNsZvCKJUdIE
-         xgKw==
-X-Gm-Message-State: ANhLgQ3qoEG3Qhoe//mDHlsq6R0/tqMq5JoV6qyez+YpgqpKDgA1D5cg
-        uI4NG0OG2l0gtvCd8CjeG4chQuu6
-X-Google-Smtp-Source: APiQypL7Rfa6dCTvHvhnrKLsJSWybE0ElcF/fHPTVnCGjVuFvFtf2WL13/3pMwTMBF64EQQv0IWoOQ==
-X-Received: by 2002:a05:651c:22e:: with SMTP id z14mr10406742ljn.64.1585675282154;
-        Tue, 31 Mar 2020 10:21:22 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id l7sm3452845lfg.79.2020.03.31.10.21.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 10:21:21 -0700 (PDT)
-Subject: Re: [PATCH 5/9] power: supply: smb347-charger: Implement device-tree
- support
-To:     Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        David Heidelberg <david@ixit.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Myungjoo Ham <myungjoo.ham@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        mika.westerberg@linux.intel.com, ramakrishna.pallala@intel.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200329161552.215075-1-david@ixit.cz>
- <CGME20200329163055epcas1p2cb50a5892440ecff127f87cb4306571e@epcas1p2.samsung.com>
- <20200329162128.218584-6-david@ixit.cz>
- <2dc4e25c-4b3a-1675-1f9e-0437a3526835@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <44ab265e-4a67-bc26-d931-ca7d155171a2@gmail.com>
-Date:   Tue, 31 Mar 2020 20:20:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=NRXlmApaOOZXeq6VgcdfEnqkVkzCThuB9Mtk0kx2C2I=;
+        b=KXV/gaWZdeMXx0GXiwLI+ULQNswkjnokUaMEBu6yeY3TgXO6BFZJMchwfNsGv3IHQz
+         LV28IGhif9xcdok/W7onEouupB1BBCqpOtAAn1udHp06YyHQYqFTn6zhnvEyK0vf5ZHk
+         ODoJvswCbBb6sgBiqEqTKLN1mfFWuBtyGGMrH5A/bbeDa01L1u35ddpVt1bZeaz48ux+
+         oYNjCcX7sbviZxGzYGnJFMyJylTOV7FhS9LVLUoUeW/YEXwKxhE4JYdWovHrzZEmuAG5
+         sGY2Qt21iA4MQOzyS+5fjkPGVCu/d5HhIbjpayzK6WySpbM0ivtNzUfCQ9LA0t0PXXfy
+         oJbg==
+X-Gm-Message-State: ANhLgQ2/n4O9/nVHsIPWhfcoQYj9X/Y2vOnIDGbRXbIAelvXAuKJ91SA
+        LQ9SmFe5bVlkgmScRI9uhjGKRXKk+H2Mn7QNUAZzIeRiALwP
+X-Google-Smtp-Source: ADFU+vvJK+3E18Ce1sryNeMKXYVP79W8YG1UJ0bT+g3/2KAL5u7Xe4IKcntKQWwSo7d9TEzAK9B+GJ8I92mgI3ytYqk0acyDEmyS
 MIME-Version: 1.0
-In-Reply-To: <2dc4e25c-4b3a-1675-1f9e-0437a3526835@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:811:: with SMTP id u17mr14585545ilm.93.1585675272031;
+ Tue, 31 Mar 2020 10:21:12 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 10:21:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000519c8405a229cbc2@google.com>
+Subject: WARNING in inc_nlink
+From:   syzbot <syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jonghwa,
+Hello,
 
-31.03.2020 03:25, Jonghwa Lee пишет:
-> On 20. 3. 30. 오전 1:21, David Heidelberg wrote:
->> This patch makes smb347 charger driver to support dt binding. All legacy
->> platform data now can be parsed from dt.
->> Because of that smb347 is i2c client driver, IRQ number can be passed
->> automatically through client's irq variable if it is defined in dt.
->> No more to use requesting gpio to irq manually in dt-way.
-> Thanks for keeping original commit description and revealing where it 
-> comes from.
-> 
-> Anyway, in the above description, the last three lines doesn't match to 
-> the commit since
-> 
-> the original patch is now split. Please remove them or you can rewrite 
-> description as your own.
+syzbot found the following crash on:
 
-That's a good suggestion, thank you very much.
+HEAD commit:    e595dd94 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16b2bc15e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
+dashboard link: https://syzkaller.appspot.com/bug?extid=a9ac3de1b5de5fb10efc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13d33183e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1076297be00000
+
+Bisection is inconclusive: the bug happens on the oldest tested release.
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=147487a3e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=167487a3e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=127487a3e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com
+
+MINIX-fs: mounting unchecked file system, running fsck is recommended
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 7042 at fs/inode.c:360 inc_nlink+0x144/0x160 fs/inode.c:360
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 7042 Comm: syz-executor911 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:inc_nlink+0x144/0x160 fs/inode.c:360
+Code: ff 4c 89 e7 e8 ed 99 ee ff e9 42 ff ff ff 4c 89 e7 e8 70 99 ee ff e9 fc fe ff ff 4c 89 e7 e8 63 99 ee ff eb d4 e8 5c d0 b1 ff <0f> 0b e9 6e ff ff ff e8 60 99 ee ff e9 44 ff ff ff e8 56 99 ee ff
+RSP: 0018:ffffc90000ef7d88 EFLAGS: 00010293
+RAX: ffff88808721c300 RBX: ffff888085dab990 RCX: ffffffff81c05430
+RDX: 0000000000000000 RSI: ffffffff81c054c4 RDI: 0000000000000007
+RBP: 0000000000000000 R08: ffff88808721c300 R09: ffffed1043789757
+R10: ffffed1043789756 R11: ffff88821bc4bab3 R12: ffff888085dab9d8
+R13: ffff888089848b80 R14: ffff888089848bd8 R15: 0000000000000000
+ inode_inc_link_count include/linux/fs.h:2199 [inline]
+ minix_mkdir+0x71/0x1b0 fs/minix/namei.c:117
+ vfs_mkdir+0x419/0x670 fs/namei.c:3889
+ do_mkdirat+0x21e/0x280 fs/namei.c:3912
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x444a69
+Code: 0d d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db d7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc41646e48 EFLAGS: 00000246 ORIG_RAX: 0000000000000102
+RAX: ffffffffffffffda RBX: 00007ffc41646e50 RCX: 0000000000444a69
+RDX: 00000000000001ff RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000400e50 R09: 0000000000400e50
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004026d0
+R13: 0000000000402760 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
