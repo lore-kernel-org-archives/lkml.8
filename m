@@ -2,175 +2,112 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D989FC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D5C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5A421655
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzMxVGwB"
+	by mail.kernel.org (Postfix) with ESMTP id 2C74820658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585685176;
+	bh=cLJ+9DpZOu0InCSh5VV1rZHd2XO/Z2RB0U+b7l/G3EE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=An4uRS2eW0JpyGnOvLhvaXcHwLYUetsuEiAP9HxTP2J47PSecU6/18QGfUowDeG2e
+	 GurjwUL7Ojha/fqjUOwV5C/bhdgEx1pgkQcubA74+Z6lGwZyTHM2KBpyjdMMblM6M7
+	 4Kt5r/lQVzlOnDGW6D38ABgUHCIUs6G4fdgdm9y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbgCaUEX (ORCPT
+        id S1730003AbgCaUGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:04:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36619 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727708AbgCaUEW (ORCPT
+        Tue, 31 Mar 2020 16:06:15 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40131 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgCaUGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:04:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so27624185wrs.3;
-        Tue, 31 Mar 2020 13:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=UHdtpmNlEgWbecKIVlq+Ov+Rk+ScycQMzISoFavuEvQ=;
-        b=IzMxVGwBBhIiTVO1CMZDD1n2kizDmKME5oawb+ZWELISu0sky9Simloc6nR2q0U3iF
-         K4KoAP4/anysHUpqwPS244Sc4KdqaElaWJ2hb/RB9vcN2wmCi2e+JWCekUxRW6VnY5uR
-         CT6ZWGnbpc03LQqAt3IQerRAJv3cOasxtX5ctMfTqkVFU6G9F+8ysDRka4p5NgX2Ecia
-         qHMf++wDU3r7ib5RdlxfdaO5i+AVmAkvBWfGMp0v6RBioUDbxeOjPzs0ThZ9etMc8kZ3
-         mearePTOKXEd7sdy+XtEWJZD4YE2BddKMX3e+Ck2OyDwbEORNnbwLtY/IRj1+0iMeS2q
-         MwPw==
+        Tue, 31 Mar 2020 16:06:14 -0400
+Received: by mail-io1-f65.google.com with SMTP id k9so23180263iov.7;
+        Tue, 31 Mar 2020 13:06:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UHdtpmNlEgWbecKIVlq+Ov+Rk+ScycQMzISoFavuEvQ=;
-        b=uZvB366YZHwY3NJi8a/jxBT/dTISwifRq52M5V3hRyv90FmmC1pxYBmxj15GVIAE+z
-         2x5LlvQ2l9M3JPq5jBOzo+x2mMWcqb6NYhh6jX+J6IKAHrKALOh/65u4YEVP2TGpOSZi
-         pT7P1ZVxmcfHt83qN4XbPQSHkUpfZvtERM1GZ42VPqev3UczRl5DLf/T9Gh5OTUlq4XM
-         bEIcYJobuGF0lhI5dNjoRqJSNsrgsTokQq3JzHbli7+ClYzzCsvAPYEcduyzjA3qSOEn
-         ca4H1tRBnvFYAckcJN3x+S59C7aDqU2sKTVfvGbYQJYXdJUf2Rz1gIjKuVehuvresnCe
-         mRgg==
-X-Gm-Message-State: ANhLgQ0pTR9NsOA0dOSxkGfnahbs357f4kz/quPymzQ/9dt6Oope88DF
-        Fg/UpHYQ2HttFHvQLTEC8kQ=
-X-Google-Smtp-Source: ADFU+vsoqPUeoceCBc0tJmFLtT6fk3aBXnPYxuCk3EqhlxfkRaqgChkdeyRBzCSYfsTb56ApoJt+Xg==
-X-Received: by 2002:adf:ef51:: with SMTP id c17mr21893111wrp.130.1585685059219;
-        Tue, 31 Mar 2020 13:04:19 -0700 (PDT)
-Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
-        by smtp.gmail.com with ESMTPSA id a64sm5182188wmh.39.2020.03.31.13.04.17
+        bh=wcJV+sTCvoXRorMTo3bla0YIvIY9cRD9ViFSeOd4nhY=;
+        b=IBuyMOPx6WPfsVnrNpd6GbkrI6eXp6ahtCn0nVytcL0vYvafj9LpssY69tZ4y/Llu4
+         Kb4PR67S3T5zZ4xcBvX+AB8aLrVwEqDFNEB/Vva1Rt+guEpIsoE5+2EYe7dT6HxclOOh
+         jyXt743kd33Az8F4wdn14X6GgBIg9VqxJwzZLkGWJ/IOanApkH0Wfoi+7gf4+K55GWwN
+         n6INkEbP3xal54GoNZIhtvxRkK69l7htmQrtQfY7i5GVmBfbR+hPY1gPuCQQL/fIwGkp
+         6j2pc9hwnCppEXAb4cNdHVEYgK7/kb7SoDb9izGXcPPJG7tFK1L39uG+NDolBRu1UuEI
+         LFaQ==
+X-Gm-Message-State: ANhLgQ2no+aglnPEJwhOHbJfPB6D/iPNlnQyX1dA+ueRR6eVtlkUblV1
+        lRzXQ65dqpdhiF3dCCE95g==
+X-Google-Smtp-Source: ADFU+vuiVI5b8z8thkcndKw6U1+iSGDIMWVZ0mMnFrO0LB3iYtaFNhiK7560NgAcRwmO5JbsytVojg==
+X-Received: by 2002:a6b:d20f:: with SMTP id q15mr10379413iob.179.1585685173591;
+        Tue, 31 Mar 2020 13:06:13 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id s25sm6221528ilb.37.2020.03.31.13.06.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:04:17 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 22:04:17 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/7] clocksource: Add Tegra186 timers support
-Message-ID: <20200331200417.GB2950334@ulmo>
-References: <20200320133452.3705040-1-thierry.reding@gmail.com>
- <20200320133452.3705040-3-thierry.reding@gmail.com>
- <df532fef-1533-9da7-d676-f4671746fde3@gmail.com>
- <20200320150406.GA3706404@ulmo>
- <5a559950-0497-b24f-6484-c2513375fe62@gmail.com>
+        Tue, 31 Mar 2020 13:06:12 -0700 (PDT)
+Received: (nullmailer pid 13332 invoked by uid 1000);
+        Tue, 31 Mar 2020 20:06:11 -0000
+Date:   Tue, 31 Mar 2020 14:06:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
+        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: adc: Add support for PMIC7 ADC
+Message-ID: <20200331200611.GA10950@bogus>
+References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
+ <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5a559950-0497-b24f-6484-c2513375fe62@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 24, 2020 at 09:14:10PM +0530, Jishnu Prakash wrote:
+> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
+> major change from PMIC5 is that all SW communication to ADC goes through
+> PMK8350, which communicates with other PMICs through PBS when the ADC
+> on PMK8350 works in master mode. The SID register is used to identify the
+> PMICs with which the PBS needs to communicate. Add support for the same.
+> 
+> In addition, add definitions for ADC channels and virtual channel
+> definitions per PMIC, to be used by ADC clients for PMIC7.
+> 
+> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> ---
+>  drivers/iio/adc/qcom-spmi-adc5.c                 | 239 ++++++++++++++++++++-
+>  drivers/iio/adc/qcom-vadc-common.c               | 260 +++++++++++++++++++++++
+>  drivers/iio/adc/qcom-vadc-common.h               |  14 ++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h  |  67 ++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h |  88 ++++++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h |  46 ++++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h |  28 +++
+>  include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h |  28 +++
+>  include/dt-bindings/iio/qcom,spmi-vadc.h         |  78 ++++++-
 
---IiVenqGWf+H9Y6IX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+DT headers go in the binding patch(es).
 
-On Fri, Mar 20, 2020 at 06:23:35PM +0300, Dmitry Osipenko wrote:
-> 20.03.2020 18:04, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Fri, Mar 20, 2020 at 05:39:01PM +0300, Dmitry Osipenko wrote:
-> >> 20.03.2020 16:34, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> From: Thierry Reding <treding@nvidia.com>
-> >>>
-> >>> Currently this only supports a single watchdog, which uses a timer in
-> >>> the background for countdown. Eventually the timers could be used for
-> >>> various time-keeping tasks, but by default the architected timer will
-> >>> already provide that functionality.
-> >>>
-> >>> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> >>> ---
-> >>>  drivers/clocksource/Kconfig          |   8 +
-> >>>  drivers/clocksource/Makefile         |   1 +
-> >>>  drivers/clocksource/timer-tegra186.c | 377 +++++++++++++++++++++++++=
-++
-> >>>  3 files changed, 386 insertions(+)
-> >>>  create mode 100644 drivers/clocksource/timer-tegra186.c
-> >> Hello Thierry,
-> >>
-> >> Shouldn't this driver reside in drivers/watchdog/? Like it's done in a
-> >> case of the T30+ driver.
-> >=20
-> > The hardware block that this binds to is primarily a time-keeping block
-> > that just so happens to also implement a watchdog. Moving this to
-> > drivers/watchdog would put us into an odd situation if we ever added
-> > code to also implement the time-keeping bits for this hardware.
-> >=20
-> > I also think that the way this is done on Tegra30 was a bad choice. The
-> > problem is that we now have two drivers (tegra_wdt.c and tegra-timer.c)
-> > that both access the same region of memory. This seems to be relatively
-> > safe to do on those chips because there's no overlap between the timer
-> > and the watchdog interfaces, but on Tegra186 and later the watchdog is
-> > actually using one of the timers, so we'd have to be extra careful how
-> > to coordinate between the two. It seems much easier to do that by having
-> > everything in the same driver and have that register multiple devices in
-> > the system.
->=20
-> Sounds like a watchdog on Tegra20, where one of the timer is shared with
-> a watchdog function and there are no other free timers. Well, yes, it's
-> not nice.
->=20
-> But, will you really ever need an additional clocksource on T186?
-
-Actually there are a couple of interesting clocksources that this IP
-block exposes. It contains both a microsecond clock that might come in
-useful because it is used as a reference by some other blocks that work
-with microsecond counters (some hardware sequencers have this). Another
-one is the OSC, which is the system's main oscillator that most clocks
-are derived from.
-
-Perhaps the most useful source from a software point of view is the TSC.
-It's a timestamp counter that can also be used as a reference for HW
-timestamping of certain system events, which is something that we want
-to upstream eventually. Having the TSC exposed as a clocksource can be
-interesting because it allows us to correlate these hardware timestamps
-with code path execution.
-
-I've implemented the three clocksources above for v2, which makes this a
-bit more of an actual clocksource driver that additionally provides a
-watchdog.
-
-Thierry
-
---IiVenqGWf+H9Y6IX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DokAACgkQ3SOs138+
-s6FMIxAAoCYsWe+IY3ytIC/02QyzX5KnRb+IX1AY0MHh2kyj81Hob63jYaQ0HrtP
-ymISbPdFdAX4y3eLAQlMnwJVHXuunQYFR2DbRcPwPKGPyZV+pqZvq4w48SZOZj1f
-VermH6f4blRHRU1ZCFFJ+TK9DT68/pDwJIZ0jyraH+/25Agks8cvdvsARi68CASv
-V5PYYFO26EgxEXRUJXJYUtRgBTvvOFyaFjb9VitzI0kyO9F9CFKUkAcH6rdaWxXX
-3xabjHFoQ3Rzt2O3ySW8vdGgPU0Aermhi37yW3Wk8hsHWoLyReewyjPOe5vXt1cA
-l488PX9IqRxWuX2IGu/8JQJZKBdy2P3N0Y/PubdYa3fHYtGmnKtLbTL1cxVgJOg7
-SVJaJF0HPvBznlagVc3SOo6qSla7VBEmjocUiS661edkcMOuh9HzlzQNYiRNfsep
-eITV/txmuwv4uaCq0BIDPtmUlMFbskSSPXOhM1k+Qac/36Ut8WzCPVwmdcgnDv/1
-V2KdWemZx87cDNl6f2ZiVSZMxaQDPj3qef/Gx6xCvoFri1SkJ57TUBVXSqCgdONw
-rbIHVc5Vwper63O4N+vDngUVhaTsoxhBnxmvzp06K8EG5QcB6SE1Qih3L5YFzyRo
-V4LJgEpG/mweeOUe2HH0QvPZZR59508vU+xklRXRvicTDGk7Q40=
-=mTk7
------END PGP SIGNATURE-----
-
---IiVenqGWf+H9Y6IX--
+>  9 files changed, 843 insertions(+), 5 deletions(-)
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
+>  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
