@@ -7,361 +7,486 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B21AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C258C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF30206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2DB206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wGf8jEmu"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="k2TzTzmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgCaHuN (ORCPT
+        id S1730193AbgCaHt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:50:13 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:32033 "EHLO pegase1.c-s.fr"
+        Tue, 31 Mar 2020 03:49:56 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62915 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730207AbgCaHt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:49:58 -0400
+        id S1730179AbgCaHty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:49:54 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48s1h31vL2z9v2Xg;
-        Tue, 31 Mar 2020 09:49:55 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48s1gz5fTfz9v2XY;
+        Tue, 31 Mar 2020 09:49:51 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=wGf8jEmu; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=k2TzTzmF; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Q2SqsZ6ZArZ4; Tue, 31 Mar 2020 09:49:55 +0200 (CEST)
+        with ESMTP id dHhMILW6jwDz; Tue, 31 Mar 2020 09:49:51 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48s1h30vyxz9v2Xf;
-        Tue, 31 Mar 2020 09:49:55 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48s1gz41WCz9v2Xc;
+        Tue, 31 Mar 2020 09:49:51 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585640995; bh=a+rydWCh9pn98MSeGCVoXQz+TAyLPsryyIR1ae0aULI=;
+        t=1585640991; bh=oU0pgiPG72yM8FSSHufTJtn5p+Dlh/L+JHqkHJOK1og=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=wGf8jEmupPJ1GGQ7l40sLV3Exkgf2r9ElgrtC4xWXbPeu41BqVBaxUxOFeaL/5EJx
-         qtcVL0p6cWAmVp7sz1bqtcIBmS7ZGuhEQ3GW9U9HXoAyNGEcevqzNnP9Ax2qcWw6Zv
-         zaDo5rSUIj6hrapWtDXmaRxElSn2FmscP20s3Q3k=
+        b=k2TzTzmF7cdXSjJkMI2UK8Ga9UhgldHey4S85/uUPpNtCddjCA+E1FsKxkzkzHLtV
+         QYS2oxvfBMfYAfFkW9PUmlGpN/saRYo4zjBv8OjdYFp7XKlAJ949PSbh690cxFpwUQ
+         OMj6UX0us0dOZ/BLjCnx4pmOXZeWtwxGLf7TjttE=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AC0F28B787;
-        Tue, 31 Mar 2020 09:49:54 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 90CBE8B774;
+        Tue, 31 Mar 2020 09:49:52 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id udomdWT-KXZm; Tue, 31 Mar 2020 09:49:54 +0200 (CEST)
+        with ESMTP id 9lbQfU_rW7Py; Tue, 31 Mar 2020 09:49:52 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 10A3F8B774;
-        Tue, 31 Mar 2020 09:49:54 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2B22C8B752;
+        Tue, 31 Mar 2020 09:49:52 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id DF92165676; Tue, 31 Mar 2020 07:49:53 +0000 (UTC)
-Message-Id: <f0f2b70d197fab0c4df279830a193f571c802c7c.1585640942.git.christophe.leroy@c-s.fr>
+        id D165B65676; Tue, 31 Mar 2020 07:49:51 +0000 (UTC)
+Message-Id: <07f8b765281a9e432ad11932567703d1e1ee1caf.1585640942.git.christophe.leroy@c-s.fr>
 In-Reply-To: <698e9a42a06eb856eef4501c3c0a182c034a5d8c.1585640941.git.christophe.leroy@c-s.fr>
 References: <698e9a42a06eb856eef4501c3c0a182c034a5d8c.1585640941.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 08/11] powerpc/4xx: Remove CONFIG_4xx
+Subject: [PATCH v2 06/11] powerpc: Remove IBM405 Erratum #77
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, michal.simek@xilinx.com,
         arnd@arndb.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 31 Mar 2020 07:49:53 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 07:49:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_4xx was corresponding to CONFIG_40x | CONFIG_44x.
+This erratum is dedicated to IBM405 which was part of 40x platforms.
 
-As CONFIG_40x is gone, CONFIG_4xx and CONFIG_44x are now equivalent.
-And CONFIG_BOOKE is also set when CONFIG_44x is set.
-
-Replace (CONFIG_4xx | CONFIG_BOOKE) by CONFIG_BOOKE
-Replace other CONFIG_4xx by CONFIG_44x
-Remove CONFIG_4xx.
+Now that 40x platforms are gone, this erratum can be removed.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/Kconfig                   |  2 +-
- arch/powerpc/Makefile                  |  2 +-
- arch/powerpc/include/asm/ppc_asm.h     |  2 +-
- arch/powerpc/kernel/asm-offsets.c      |  2 +-
- arch/powerpc/kernel/entry_32.S         | 16 ++++++++--------
- arch/powerpc/kernel/misc_32.S          |  4 ++--
- arch/powerpc/kernel/process.c          |  2 +-
- arch/powerpc/mm/fault.c                |  2 +-
- arch/powerpc/mm/ptdump/Makefile        |  2 +-
- arch/powerpc/platforms/Kconfig.cputype |  7 +------
- arch/powerpc/platforms/Makefile        |  3 +--
- arch/powerpc/sysdev/Kconfig            |  6 +++---
- arch/powerpc/xmon/xmon.c               |  2 +-
- 13 files changed, 23 insertions(+), 29 deletions(-)
+ arch/powerpc/include/asm/asm-405.h           | 19 -------------------
+ arch/powerpc/include/asm/atomic.h            | 11 -----------
+ arch/powerpc/include/asm/bitops.h            |  4 ----
+ arch/powerpc/include/asm/cmpxchg.h           | 11 -----------
+ arch/powerpc/include/asm/futex.h             |  3 ---
+ arch/powerpc/include/asm/nohash/32/pgtable.h |  3 ---
+ arch/powerpc/include/asm/spinlock.h          |  4 ----
+ arch/powerpc/kernel/entry_32.S               | 11 -----------
+ 8 files changed, 66 deletions(-)
+ delete mode 100644 arch/powerpc/include/asm/asm-405.h
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index d84844e07d6e..5a83a7559afd 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -407,7 +407,7 @@ config HUGETLB_PAGE_SIZE_VARIABLE
+diff --git a/arch/powerpc/include/asm/asm-405.h b/arch/powerpc/include/asm/asm-405.h
+deleted file mode 100644
+index 7270d3ae7c8e..000000000000
+--- a/arch/powerpc/include/asm/asm-405.h
++++ /dev/null
+@@ -1,19 +0,0 @@
+-#ifndef _ASM_POWERPC_ASM_405_H
+-#define _ASM_POWERPC_ASM_405_H
+-
+-#include <asm/asm-const.h>
+-
+-#ifdef __KERNEL__
+-#ifdef CONFIG_IBM405_ERR77
+-/* Erratum #77 on the 405 means we need a sync or dcbt before every
+- * stwcx.  The old ATOMIC_SYNC_FIX covered some but not all of this.
+- */
+-#define PPC405_ERR77(ra,rb)	stringify_in_c(dcbt	ra, rb;)
+-#define	PPC405_ERR77_SYNC	stringify_in_c(sync;)
+-#else
+-#define PPC405_ERR77(ra,rb)
+-#define PPC405_ERR77_SYNC
+-#endif
+-#endif
+-
+-#endif /* _ASM_POWERPC_ASM_405_H */
+diff --git a/arch/powerpc/include/asm/atomic.h b/arch/powerpc/include/asm/atomic.h
+index 31c231ea56b7..498785ffc25f 100644
+--- a/arch/powerpc/include/asm/atomic.h
++++ b/arch/powerpc/include/asm/atomic.h
+@@ -10,7 +10,6 @@
+ #include <linux/types.h>
+ #include <asm/cmpxchg.h>
+ #include <asm/barrier.h>
+-#include <asm/asm-405.h>
  
- config MATH_EMULATION
- 	bool "Math emulation"
--	depends on 4xx || PPC_8xx || PPC_MPC832x || BOOKE
-+	depends on PPC_8xx || PPC_MPC832x || BOOKE
- 	help
- 	  Some PowerPC chips designed for embedded applications do not have
- 	  a floating-point unit and therefore do not implement the
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index 76e13d1c3fec..6d85a066b145 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -248,7 +248,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-dwarf2-cfi-asm)
- # often slow when they are implemented at all
- KBUILD_CFLAGS		+= $(call cc-option,-mno-string)
+ #define ATOMIC_INIT(i)		{ (i) }
  
--cpu-as-$(CONFIG_4xx)		+= -Wa,-m405
-+cpu-as-$(CONFIG_44x)		+= -Wa,-m405
- cpu-as-$(CONFIG_ALTIVEC)	+= $(call as-option,-Wa$(comma)-maltivec)
- cpu-as-$(CONFIG_E200)		+= -Wa,-me200
- cpu-as-$(CONFIG_E500)		+= -Wa,-me500
-diff --git a/arch/powerpc/include/asm/ppc_asm.h b/arch/powerpc/include/asm/ppc_asm.h
-index 4a4345bec441..e97a5ecc15e9 100644
---- a/arch/powerpc/include/asm/ppc_asm.h
-+++ b/arch/powerpc/include/asm/ppc_asm.h
-@@ -434,7 +434,7 @@ END_FTR_SECTION_NESTED(CPU_FTR_CELL_TB_BUG, CPU_FTR_CELL_TB_BUG, 96)
-  * and they must be used.
-  */
+@@ -47,7 +46,6 @@ static __inline__ void atomic_##op(int a, atomic_t *v)			\
+ 	__asm__ __volatile__(						\
+ "1:	lwarx	%0,0,%3		# atomic_" #op "\n"			\
+ 	#asm_op " %0,%2,%0\n"						\
+-	PPC405_ERR77(0,%3)						\
+ "	stwcx.	%0,0,%3 \n"						\
+ "	bne-	1b\n"							\
+ 	: "=&r" (t), "+m" (v->counter)					\
+@@ -63,7 +61,6 @@ static inline int atomic_##op##_return_relaxed(int a, atomic_t *v)	\
+ 	__asm__ __volatile__(						\
+ "1:	lwarx	%0,0,%3		# atomic_" #op "_return_relaxed\n"	\
+ 	#asm_op " %0,%2,%0\n"						\
+-	PPC405_ERR77(0, %3)						\
+ "	stwcx.	%0,0,%3\n"						\
+ "	bne-	1b\n"							\
+ 	: "=&r" (t), "+m" (v->counter)					\
+@@ -81,7 +78,6 @@ static inline int atomic_fetch_##op##_relaxed(int a, atomic_t *v)	\
+ 	__asm__ __volatile__(						\
+ "1:	lwarx	%0,0,%4		# atomic_fetch_" #op "_relaxed\n"	\
+ 	#asm_op " %1,%3,%0\n"						\
+-	PPC405_ERR77(0, %4)						\
+ "	stwcx.	%1,0,%4\n"						\
+ "	bne-	1b\n"							\
+ 	: "=&r" (res), "=&r" (t), "+m" (v->counter)			\
+@@ -130,7 +126,6 @@ static __inline__ void atomic_inc(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_inc\n\
+ 	addic	%0,%0,1\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%0,0,%2 \n\
+ 	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -146,7 +141,6 @@ static __inline__ int atomic_inc_return_relaxed(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_inc_return_relaxed\n"
+ "	addic	%0,%0,1\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%0,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -163,7 +157,6 @@ static __inline__ void atomic_dec(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_dec\n\
+ 	addic	%0,%0,-1\n"
+-	PPC405_ERR77(0,%2)\
+ "	stwcx.	%0,0,%2\n\
+ 	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -179,7 +172,6 @@ static __inline__ int atomic_dec_return_relaxed(atomic_t *v)
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2		# atomic_dec_return_relaxed\n"
+ "	addic	%0,%0,-1\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%0,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (t), "+m" (v->counter)
+@@ -220,7 +212,6 @@ static __inline__ int atomic_fetch_add_unless(atomic_t *v, int a, int u)
+ 	cmpw	0,%0,%3 \n\
+ 	beq	2f \n\
+ 	add	%0,%2,%0 \n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%0,0,%1 \n\
+ 	bne-	1b \n"
+ 	PPC_ATOMIC_EXIT_BARRIER
+@@ -251,7 +242,6 @@ static __inline__ int atomic_inc_not_zero(atomic_t *v)
+ 	cmpwi	0,%0,0\n\
+ 	beq-	2f\n\
+ 	addic	%1,%0,1\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%1,0,%2\n\
+ 	bne-	1b\n"
+ 	PPC_ATOMIC_EXIT_BARRIER
+@@ -280,7 +270,6 @@ static __inline__ int atomic_dec_if_positive(atomic_t *v)
+ 	cmpwi	%0,1\n\
+ 	addi	%0,%0,-1\n\
+ 	blt-	2f\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.	%0,0,%1\n\
+ 	bne-	1b"
+ 	PPC_ATOMIC_EXIT_BARRIER
+diff --git a/arch/powerpc/include/asm/bitops.h b/arch/powerpc/include/asm/bitops.h
+index 28dcf8222943..4a4d3afd5340 100644
+--- a/arch/powerpc/include/asm/bitops.h
++++ b/arch/powerpc/include/asm/bitops.h
+@@ -41,7 +41,6 @@
+ #include <linux/compiler.h>
+ #include <asm/asm-compat.h>
+ #include <asm/synch.h>
+-#include <asm/asm-405.h>
  
--#if !defined(CONFIG_4xx) && !defined(CONFIG_PPC_8xx)
-+#if !defined(CONFIG_44x) && !defined(CONFIG_PPC_8xx)
- #define tlbia					\
- 	li	r4,1024;			\
- 	mtctr	r4;				\
-diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
-index 9f92ba40ba8b..63c3b69a590b 100644
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -152,7 +152,7 @@ int main(void)
- 	OFFSET(THREAD_USED_SPE, thread_struct, used_spe);
- #endif /* CONFIG_SPE */
- #endif /* CONFIG_PPC64 */
--#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
-+#ifdef CONFIG_BOOKE
- 	OFFSET(THREAD_DBCR0, thread_struct, debug.dbcr0);
+ /* PPC bit number conversion */
+ #define PPC_BITLSHIFT(be)	(BITS_PER_LONG - 1 - (be))
+@@ -73,7 +72,6 @@ static inline void fn(unsigned long mask,	\
+ 	prefix					\
+ "1:"	PPC_LLARX(%0,0,%3,0) "\n"		\
+ 	stringify_in_c(op) "%0,%0,%2\n"		\
+-	PPC405_ERR77(0,%3)			\
+ 	PPC_STLCX "%0,0,%3\n"			\
+ 	"bne- 1b\n"				\
+ 	: "=&r" (old), "+m" (*p)		\
+@@ -119,7 +117,6 @@ static inline unsigned long fn(			\
+ 	prefix						\
+ "1:"	PPC_LLARX(%0,0,%3,eh) "\n"			\
+ 	stringify_in_c(op) "%1,%0,%2\n"			\
+-	PPC405_ERR77(0,%3)				\
+ 	PPC_STLCX "%1,0,%3\n"				\
+ 	"bne- 1b\n"					\
+ 	postfix						\
+@@ -175,7 +172,6 @@ clear_bit_unlock_return_word(int nr, volatile unsigned long *addr)
+ 	PPC_RELEASE_BARRIER
+ "1:"	PPC_LLARX(%0,0,%3,0) "\n"
+ 	"andc %1,%0,%2\n"
+-	PPC405_ERR77(0,%3)
+ 	PPC_STLCX "%1,0,%3\n"
+ 	"bne- 1b\n"
+ 	: "=&r" (old), "=&r" (t)
+diff --git a/arch/powerpc/include/asm/cmpxchg.h b/arch/powerpc/include/asm/cmpxchg.h
+index 27183871eb3b..cf091c4c22e5 100644
+--- a/arch/powerpc/include/asm/cmpxchg.h
++++ b/arch/powerpc/include/asm/cmpxchg.h
+@@ -6,7 +6,6 @@
+ #include <linux/compiler.h>
+ #include <asm/synch.h>
+ #include <linux/bug.h>
+-#include <asm/asm-405.h>
+ 
+ #ifdef __BIG_ENDIAN
+ #define BITOFF_CAL(size, off)	((sizeof(u32) - size - off) * BITS_PER_BYTE)
+@@ -29,7 +28,6 @@ static inline u32 __xchg_##type##sfx(volatile void *p, u32 val)	\
+ "1:	lwarx   %0,0,%3\n"					\
+ "	andc	%1,%0,%5\n"					\
+ "	or	%1,%1,%4\n"					\
+-	PPC405_ERR77(0,%3)					\
+ "	stwcx.	%1,0,%3\n"					\
+ "	bne-	1b\n"						\
+ 	: "=&r" (prev), "=&r" (tmp), "+m" (*(u32*)p)		\
+@@ -60,7 +58,6 @@ u32 __cmpxchg_##type##sfx(volatile void *p, u32 old, u32 new)	\
+ "	bne-	2f\n"						\
+ "	andc	%1,%0,%6\n"					\
+ "	or	%1,%1,%5\n"					\
+-	PPC405_ERR77(0,%3)					\
+ "	stwcx.  %1,0,%3\n"					\
+ "	bne-    1b\n"						\
+ 	br2							\
+@@ -92,7 +89,6 @@ __xchg_u32_local(volatile void *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2 \n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%3,0,%2 \n\
+ 	bne-	1b"
+ 	: "=&r" (prev), "+m" (*(volatile unsigned int *)p)
+@@ -109,7 +105,6 @@ __xchg_u32_relaxed(u32 *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	lwarx	%0,0,%2\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%3,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (prev), "+m" (*p)
+@@ -127,7 +122,6 @@ __xchg_u64_local(volatile void *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	ldarx	%0,0,%2 \n"
+-	PPC405_ERR77(0,%2)
+ "	stdcx.	%3,0,%2 \n\
+ 	bne-	1b"
+ 	: "=&r" (prev), "+m" (*(volatile unsigned long *)p)
+@@ -144,7 +138,6 @@ __xchg_u64_relaxed(u64 *p, unsigned long val)
+ 
+ 	__asm__ __volatile__(
+ "1:	ldarx	%0,0,%2\n"
+-	PPC405_ERR77(0, %2)
+ "	stdcx.	%3,0,%2\n"
+ "	bne-	1b"
+ 	: "=&r" (prev), "+m" (*p)
+@@ -229,7 +222,6 @@ __cmpxchg_u32(volatile unsigned int *p, unsigned long old, unsigned long new)
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32\n\
+ 	cmpw	0,%0,%3\n\
+ 	bne-	2f\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%4,0,%2\n\
+ 	bne-	1b"
+ 	PPC_ATOMIC_EXIT_BARRIER
+@@ -252,7 +244,6 @@ __cmpxchg_u32_local(volatile unsigned int *p, unsigned long old,
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32\n\
+ 	cmpw	0,%0,%3\n\
+ 	bne-	2f\n"
+-	PPC405_ERR77(0,%2)
+ "	stwcx.	%4,0,%2\n\
+ 	bne-	1b"
+ 	"\n\
+@@ -273,7 +264,6 @@ __cmpxchg_u32_relaxed(u32 *p, unsigned long old, unsigned long new)
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32_relaxed\n"
+ "	cmpw	0,%0,%3\n"
+ "	bne-	2f\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%4,0,%2\n"
+ "	bne-	1b\n"
+ "2:"
+@@ -301,7 +291,6 @@ __cmpxchg_u32_acquire(u32 *p, unsigned long old, unsigned long new)
+ "1:	lwarx	%0,0,%2		# __cmpxchg_u32_acquire\n"
+ "	cmpw	0,%0,%3\n"
+ "	bne-	2f\n"
+-	PPC405_ERR77(0, %2)
+ "	stwcx.	%4,0,%2\n"
+ "	bne-	1b\n"
+ 	PPC_ACQUIRE_BARRIER
+diff --git a/arch/powerpc/include/asm/futex.h b/arch/powerpc/include/asm/futex.h
+index bc7d9d06a6d9..7232942197d2 100644
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -8,14 +8,12 @@
+ #include <linux/uaccess.h>
+ #include <asm/errno.h>
+ #include <asm/synch.h>
+-#include <asm/asm-405.h>
+ 
+ #define __futex_atomic_op(insn, ret, oldval, uaddr, oparg) \
+   __asm__ __volatile ( \
+ 	PPC_ATOMIC_ENTRY_BARRIER \
+ "1:	lwarx	%0,0,%2\n" \
+ 	insn \
+-	PPC405_ERR77(0, %2) \
+ "2:	stwcx.	%1,0,%2\n" \
+ 	"bne-	1b\n" \
+ 	PPC_ATOMIC_EXIT_BARRIER \
+@@ -83,7 +81,6 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ "1:     lwarx   %1,0,%3         # futex_atomic_cmpxchg_inatomic\n\
+         cmpw    0,%1,%4\n\
+         bne-    3f\n"
+-        PPC405_ERR77(0,%3)
+ "2:     stwcx.  %5,0,%3\n\
+         bne-    1b\n"
+         PPC_ATOMIC_EXIT_BARRIER
+diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
+index 97baca06edbb..719bf09db1a6 100644
+--- a/arch/powerpc/include/asm/nohash/32/pgtable.h
++++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
+@@ -9,7 +9,6 @@
+ #include <linux/sched.h>
+ #include <linux/threads.h>
+ #include <asm/mmu.h>			/* For sub-arch specific PPC_PIN_SIZE */
+-#include <asm/asm-405.h>
+ 
+ #ifdef CONFIG_44x
+ extern int icache_44x_need_flush;
+@@ -232,7 +231,6 @@ static inline unsigned long pte_update(pte_t *p,
+ 1:	lwarx	%0,0,%3\n\
+ 	andc	%1,%0,%4\n\
+ 	or	%1,%1,%5\n"
+-	PPC405_ERR77(0,%3)
+ "	stwcx.	%1,0,%3\n\
+ 	bne-	1b"
+ 	: "=&r" (old), "=&r" (tmp), "=m" (*p)
+@@ -269,7 +267,6 @@ static inline unsigned long long pte_update(pte_t *p,
+ 	lwzx	%0,0,%3\n\
+ 	andc	%1,%L0,%5\n\
+ 	or	%1,%1,%6\n"
+-	PPC405_ERR77(0,%3)
+ "	stwcx.	%1,0,%4\n\
+ 	bne-	1b"
+ 	: "=&r" (old), "=&r" (tmp), "=m" (*p)
+diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
+index 860228e917dc..2d620896cdae 100644
+--- a/arch/powerpc/include/asm/spinlock.h
++++ b/arch/powerpc/include/asm/spinlock.h
+@@ -23,7 +23,6 @@
  #endif
- #ifdef CONFIG_KVM_BOOK3S_32_HANDLER
+ #include <asm/synch.h>
+ #include <asm/ppc-opcode.h>
+-#include <asm/asm-405.h>
+ 
+ #ifdef CONFIG_PPC64
+ /* use 0x800000yy when locked, where yy == CPU number */
+@@ -210,7 +209,6 @@ static inline long __arch_read_trylock(arch_rwlock_t *rw)
+ 	__DO_SIGN_EXTEND
+ "	addic.		%0,%0,1\n\
+ 	ble-		2f\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.		%0,0,%1\n\
+ 	bne-		1b\n"
+ 	PPC_ACQUIRE_BARRIER
+@@ -234,7 +232,6 @@ static inline long __arch_write_trylock(arch_rwlock_t *rw)
+ "1:	" PPC_LWARX(%0,0,%2,1) "\n\
+ 	cmpwi		0,%0,0\n\
+ 	bne-		2f\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.		%1,0,%2\n\
+ 	bne-		1b\n"
+ 	PPC_ACQUIRE_BARRIER
+@@ -292,7 +289,6 @@ static inline void arch_read_unlock(arch_rwlock_t *rw)
+ 	PPC_RELEASE_BARRIER
+ "1:	lwarx		%0,0,%1\n\
+ 	addic		%0,%0,-1\n"
+-	PPC405_ERR77(0,%1)
+ "	stwcx.		%0,0,%1\n\
+ 	bne-		1b"
+ 	: "=&r"(tmp)
 diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 1fa899aa0399..cae0bdc013e5 100644
+index 9b193d565a03..1fa899aa0399 100644
 --- a/arch/powerpc/kernel/entry_32.S
 +++ b/arch/powerpc/kernel/entry_32.S
-@@ -401,7 +401,7 @@ syscall_exit_cont:
- 	lwz	r3,GPR3(r1)
+@@ -28,7 +28,6 @@
+ #include <asm/unistd.h>
+ #include <asm/ptrace.h>
+ #include <asm/export.h>
+-#include <asm/asm-405.h>
+ #include <asm/feature-fixups.h>
+ #include <asm/barrier.h>
+ #include <asm/kup.h>
+@@ -520,9 +519,6 @@ syscall_exit_work:
+ 	addi	r12,r2,TI_FLAGS
+ 3:	lwarx	r8,0,r12
+ 	andc	r8,r8,r11
+-#ifdef CONFIG_IBM405_ERR77
+-	dcbt	0,r12
+-#endif
+ 	stwcx.	r8,0,r12
+ 	bne-	3b
+ 	
+@@ -897,9 +893,6 @@ resume_kernel:
+ 	addi	r5,r2,TI_FLAGS
+ 0:	lwarx	r8,0,r5
+ 	andc	r8,r8,r11
+-#ifdef CONFIG_IBM405_ERR77
+-	dcbt	0,r5
+-#endif
+ 	stwcx.	r8,0,r5
+ 	bne-	0b
  1:
- #endif /* CONFIG_TRACE_IRQFLAGS */
--#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
-+#ifdef CONFIG_BOOKE
- 	/* If the process has its own DBCR0 value, load it up.  The internal
- 	   debug mode bit tells us that dbcr0 should be loaded. */
- 	lwz	r0,THREAD+THREAD_DBCR0(r2)
-@@ -554,7 +554,7 @@ syscall_exit_work:
- ret_from_kernel_syscall:
- 	mfspr	r9, SPRN_SRR0
- 	mfspr	r10, SPRN_SRR1
--#if !defined(CONFIG_4xx) && !defined(CONFIG_BOOKE)
-+#ifndef CONFIG_BOOKE
- 	LOAD_REG_IMMEDIATE(r11, MSR_KERNEL & ~(MSR_IR|MSR_DR))
- 	mtmsr	r11
- #endif
-@@ -749,7 +749,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_SPE)
+@@ -976,7 +969,6 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_TYPE_47x)
+ 	mtspr	SPRN_XER,r10
+ 	mtctr	r11
  
- 	.globl	fast_exception_return
- fast_exception_return:
--#if !(defined(CONFIG_4xx) || defined(CONFIG_BOOKE))
-+#ifndef CONFIG_BOOKE
- 	andi.	r10,r9,MSR_RI		/* check for recoverable interrupt */
- 	beq	1f			/* if not, we've got problems */
- #endif
-@@ -775,7 +775,7 @@ fast_exception_return:
- 	SYNC
- 	RFI
- 
--#if !(defined(CONFIG_4xx) || defined(CONFIG_BOOKE))
-+#ifndef CONFIG_BOOKE
- /* check if the exception happened in a restartable section */
- 1:	lis	r3,exc_exit_restart_end@ha
- 	addi	r3,r3,exc_exit_restart_end@l
-@@ -847,7 +847,7 @@ user_exc_return:		/* r10 contains MSR_KERNEL here */
- 	bne	do_work
- 
- restore_user:
--#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
-+#ifdef CONFIG_BOOKE
- 	/* Check whether this process has its own DBCR0 value.  The internal
- 	   debug mode bit tells us that dbcr0 should be loaded. */
- 	lwz	r0,THREAD+THREAD_DBCR0(r2)
-@@ -974,7 +974,7 @@ BEGIN_FTR_SECTION
+-	PPC405_ERR77(0,r1)
+ BEGIN_FTR_SECTION
+ 	lwarx	r11,0,r1
  END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
- 	stwcx.	r0,0,r1			/* to clear the reservation */
+@@ -1045,7 +1037,6 @@ exc_exit_start:
+ 	lwz	r1,GPR1(r1)
+ 	.globl exc_exit_restart_end
+ exc_exit_restart_end:
+-	PPC405_ERR77_SYNC
+ 	rfi
+ 	b	.			/* prevent prefetch past rfi */
  
--#if !(defined(CONFIG_4xx) || defined(CONFIG_BOOKE))
-+#ifndef CONFIG_BOOKE
- 	andi.	r10,r9,MSR_RI		/* check if this exception occurred */
- 	beql	nonrecoverable		/* at a bad place (MSR:RI = 0) */
+@@ -1076,7 +1067,6 @@ exc_exit_restart_end:
+ 	lwz	r11,_CTR(r1);						\
+ 	mtspr	SPRN_XER,r10;						\
+ 	mtctr	r11;							\
+-	PPC405_ERR77(0,r1);						\
+ 	stwcx.	r0,0,r1;		/* to clear the reservation */	\
+ 	lwz	r11,_LINK(r1);						\
+ 	mtlr	r11;							\
+@@ -1095,7 +1085,6 @@ exc_exit_restart_end:
+ 	lwz	r10,GPR10(r1);						\
+ 	lwz	r11,GPR11(r1);						\
+ 	lwz	r1,GPR1(r1);						\
+-	PPC405_ERR77_SYNC;						\
+ 	exc_lvl_rfi;							\
+ 	b	.;		/* prevent prefetch past exc_lvl_rfi */
  
-@@ -1010,7 +1010,7 @@ exc_exit_restart_end:
- 	SYNC
- 	RFI
- 
--#else /* !(CONFIG_4xx || CONFIG_BOOKE) */
-+#else /* !CONFIG_BOOKE */
- 	/*
- 	 * This is a bit different on 4xx/Book-E because it doesn't have
- 	 * the RI bit in the MSR.
-@@ -1187,7 +1187,7 @@ load_dbcr0:
- global_dbcr0:
- 	.space	8*NR_CPUS
- 	.previous
--#endif /* !(CONFIG_4xx || CONFIG_BOOKE) */
-+#endif /* !CONFIG_BOOKE */
- 
- do_work:			/* r10 contains MSR_KERNEL here */
- 	andi.	r0,r9,_TIF_NEED_RESCHED
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index db5ab092b36b..e9bdf6c36c18 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -234,7 +234,7 @@ _GLOBAL(_nmask_and_or_msr)
-  */
- #ifndef CONFIG_PPC_8xx
- _GLOBAL(flush_instruction_cache)
--#if defined(CONFIG_4xx)
-+#ifdef CONFIG_44x
- 	lis	r3, KERNELBASE@h
- 	iccci	0,r3
- #elif defined(CONFIG_FSL_BOOKE)
-@@ -256,7 +256,7 @@ _GLOBAL(flush_instruction_cache)
- 	mfspr	r3,SPRN_HID0
- 	ori	r3,r3,HID0_ICFI
- 	mtspr	SPRN_HID0,r3
--#endif /* CONFIG_4xx */
-+#endif /* CONFIG_44x */
- 	isync
- 	blr
- EXPORT_SYMBOL(flush_instruction_cache)
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 110db94cdf3c..30ecc827624b 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1408,7 +1408,7 @@ void show_regs(struct pt_regs * regs)
- 	if ((TRAP(regs) != 0xc00) && cpu_has_feature(CPU_FTR_CFAR))
- 		pr_cont("CFAR: "REG" ", regs->orig_gpr3);
- 	if (trap == 0x200 || trap == 0x300 || trap == 0x600)
--#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
-+#ifdef CONFIG_BOOKE
- 		pr_cont("DEAR: "REG" ESR: "REG" ", regs->dar, regs->dsisr);
- #else
- 		pr_cont("DAR: "REG" DSISR: %08lx ", regs->dar, regs->dsisr);
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 8db0507619e2..28e765de6933 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -402,7 +402,7 @@ static void sanity_check_fault(bool is_write, bool is_user,
-  * Define the correct "is_write" bit in error_code based
-  * on the processor family
-  */
--#if (defined(CONFIG_4xx) || defined(CONFIG_BOOKE))
-+#ifdef CONFIG_BOOKE
- #define page_fault_is_write(__err)	((__err) & ESR_DST)
- #define page_fault_is_bad(__err)	(0)
- #else
-diff --git a/arch/powerpc/mm/ptdump/Makefile b/arch/powerpc/mm/ptdump/Makefile
-index 712762be3cb1..3cf759e639a1 100644
---- a/arch/powerpc/mm/ptdump/Makefile
-+++ b/arch/powerpc/mm/ptdump/Makefile
-@@ -2,7 +2,7 @@
- 
- obj-y	+= ptdump.o
- 
--obj-$(CONFIG_4xx)		+= shared.o
-+obj-$(CONFIG_44x)		+= shared.o
- obj-$(CONFIG_PPC_8xx)		+= 8xx.o
- obj-$(CONFIG_PPC_BOOK3E_MMU)	+= shared.o
- obj-$(CONFIG_PPC_BOOK3S_32)	+= shared.o bats.o segment_regs.o
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 1055175cd026..08b0d12a0a9d 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -240,11 +240,6 @@ config FSL_EMB_PERF_EVENT_E500
- 	depends on FSL_EMB_PERF_EVENT && E500
- 	default y
- 
--config 4xx
--	bool
--	depends on 44x
--	default y
--
- config BOOKE
- 	bool
- 	depends on E200 || E500 || 44x || PPC_BOOK3E
-@@ -464,7 +459,7 @@ config NR_CPUS
- 
- config NOT_COHERENT_CACHE
- 	bool
--	depends on 4xx || PPC_8xx || E200 || PPC_MPC512x || \
-+	depends on 44x || PPC_8xx || E200 || PPC_MPC512x || \
- 		GAMECUBE_COMMON || AMIGAONE
- 	select ARCH_HAS_DMA_PREP_COHERENT
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-diff --git a/arch/powerpc/platforms/Makefile b/arch/powerpc/platforms/Makefile
-index cae14326bc49..f67b7fabac4e 100644
---- a/arch/powerpc/platforms/Makefile
-+++ b/arch/powerpc/platforms/Makefile
-@@ -4,8 +4,7 @@ obj-$(CONFIG_FSL_ULI1575)	+= fsl_uli1575.o
- 
- obj-$(CONFIG_PPC_PMAC)		+= powermac/
- obj-$(CONFIG_PPC_CHRP)		+= chrp/
--obj-$(CONFIG_4xx)		+= 4xx/
--obj-$(CONFIG_44x)		+= 44x/
-+obj-$(CONFIG_44x)		+= 4xx/ 44x/
- obj-$(CONFIG_PPC_MPC512x)	+= 512x/
- obj-$(CONFIG_PPC_MPC52xx)	+= 52xx/
- obj-$(CONFIG_PPC_8xx)		+= 8xx/
-diff --git a/arch/powerpc/sysdev/Kconfig b/arch/powerpc/sysdev/Kconfig
-index 9ebcc1337560..7b3a0fc3eadf 100644
---- a/arch/powerpc/sysdev/Kconfig
-+++ b/arch/powerpc/sysdev/Kconfig
-@@ -5,17 +5,17 @@
- 
- config PPC4xx_PCI_EXPRESS
- 	bool
--	depends on PCI && 4xx
-+	depends on PCI && 44x
- 
- config PPC4xx_HSTA_MSI
- 	bool
- 	depends on PCI_MSI
--	depends on PCI && 4xx
-+	depends on PCI && 44x
- 
- config PPC4xx_MSI
- 	bool
- 	depends on PCI_MSI
--	depends on PCI && 4xx
-+	depends on PCI && 44x
- 
- config PPC_MSI_BITMAP
- 	bool
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index ea303b7e4e29..ef1f11e3f816 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -477,7 +477,7 @@ static inline void release_output_lock(void) {}
- 
- static inline int unrecoverable_excp(struct pt_regs *regs)
- {
--#if defined(CONFIG_4xx) || defined(CONFIG_PPC_BOOK3E)
-+#if defined(CONFIG_44x) || defined(CONFIG_PPC_BOOK3E)
- 	/* We have no MSR_RI bit on 4xx or Book3e, so we simply return false */
- 	return 0;
- #else
 -- 
 2.25.0
 
