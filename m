@@ -2,98 +2,233 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4369BC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1CDC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188E320748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585640922;
-	bh=4txxjcpYmzYcU3xSAw4zD8jSTJCG5zsImxZNvCiueKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vaVhP8+sE+hx71rP5rbNIB3MYT4NkRFj89yhflPMDoebgQxsXHux84n5z3oRqa3RM
-	 kedHK8IOag9KVieyU/FMCEumPkQTw/JXSJlFM3hM28/vD+t0Hqb4lWvu038wxpqGs5
-	 aPg1tZkfXai+VqYTbwHFlHmfbDFxffOlSvLPEJS4=
+	by mail.kernel.org (Postfix) with ESMTP id 31BD1206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:49:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="li86dJqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbgCaHsl (ORCPT
+        id S1730137AbgCaHtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:48:41 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34705 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730065AbgCaHsk (ORCPT
+        Tue, 31 Mar 2020 03:49:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38903 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgCaHtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:48:40 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 65so24651101wrl.1;
-        Tue, 31 Mar 2020 00:48:40 -0700 (PDT)
+        Tue, 31 Mar 2020 03:49:01 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z12so17537342qtq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8aHUg6XrjD62/TPddIO5S5ykgm6UeR5UcXZG3bY/H0w=;
+        b=li86dJqjeG9n90WYwn7ky2P31WwNHeF9D4pUIJgAgGbFj3kDzSIvHQimE/pMDgXZce
+         vu7qjYdCgwV4QdxTJKkmRKEQWVeX65dsDnL+DLNB5AilJcqNEbVICBi6OmeRYZ3TGbMV
+         G8N1pG0g2ZOVlr0pRglmoWAVdDf4XiHVWvbbnb5TcsgjTJK4ONdUote3oGgv+5jzGQ4J
+         H3K+qGpdtHl/xiDBg+sj29OsAAqv1vZAlZn7LKd5tM1vSWTGKbIwSwHhHf6Oz1q58R0a
+         Ib47JAM/2wdBMWZ4bHxzHkHKgyCNHdIO4CQgimW5/24eKXOsx3VaeUNkqpL60BE8KBpF
+         cOpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sDDR7wkznk3Ln/XEBAe1hdquHTqCjRL2OUXoeHhs1/I=;
-        b=Z77vJpOfp8yhqPr3LNrlEZ9xKS88nkKs0ooW6hoj05vg2n5TBZrhoIJc6MR9Qz6oFH
-         P/rHVEPKV283YxVZUuFHuP5A3RI7AE7BuZMoHuGEsuDxxsMlb+1YTRZku1x2n66hNtK8
-         GbSaii1CDz4NLElt2y20/ymcp4tCuT9lTh9FXPqoerF9aBEk2D4Qvt84FdtaFxJ1smc+
-         GQdzeKQcE1pAwFiPu/qfRRQpyjBmG12jgmIV7g1FeZbuaKecBuybnlfli8rXpJE4uUoI
-         GZCwhrxyfNMgSh8kHQLJlRkLShUHKuNZQnh6/aQmgnq/ER3uT88UQqNPL9hMwjfL4qwG
-         3ycw==
-X-Gm-Message-State: ANhLgQ3E/2s5bN11iMI0GGDJ83oCOg+8mJxX5pBOTgPPFXPxTujyi45K
-        Jb5NEvrOA7r846EVzJzkJAA=
-X-Google-Smtp-Source: ADFU+vv3EXliVsMAUSV9EjxsWTfTwAunV64IBIwQFULkiEChbiWPpqyxtb84adDetxoemQODGsJkDA==
-X-Received: by 2002:adf:e90b:: with SMTP id f11mr6877457wrm.65.1585640919502;
-        Tue, 31 Mar 2020 00:48:39 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id t81sm2728726wmb.15.2020.03.31.00.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 00:48:37 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:48:36 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <20200331074836.GB30449@dhcp22.suse.cz>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-2-vbabka@suse.cz>
- <20200330224422.GX11244@42.do-not-panic.com>
- <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8aHUg6XrjD62/TPddIO5S5ykgm6UeR5UcXZG3bY/H0w=;
+        b=QKdykTsvIXHApj+Yyf5L97bCzMeXEGAd8mHUMcxoL2WklpgDAKPNTudoa7aFsRKQBU
+         B3Xrvet1goR3S/pidmNMcz4MNTXF6V6SZIAlgNVkTHTDk//1p8SSG1dwFysjMQRO6qDm
+         mNY5agHKpSXPT0BE7NHgDd9zRUfmx/4mmDoUpTFyiOOl0nVZ3rXJXOtqRdQ90msaUHTO
+         LZjKzrFDfurpXN6QzPvDLLoH/FYkKWgOy+S9xGlf8BnMw7as6+cEu86TI87L56QAPQGH
+         PW7c2Mgk2RKueb7lIIqN1RGuUW94hDQ2iReu7pN1MhIsx6+akIAxsY1dpHYo1l8qTrrz
+         srUQ==
+X-Gm-Message-State: ANhLgQ3LyI53+m5/DCjLn63IWVG5Mg3zDJDsez8aA4x+7hfBF9JwzuiZ
+        Ofaj+sV/2yXPfJMGjxb7SNls7y4bDQl3fPX9peWfgg==
+X-Google-Smtp-Source: ADFU+vtQi9do/1GFJ72j0eald41j/f1ony18kgI4gPpqjGFUQ2Uz6CgQ6xQW/0FY4/C5KSLVfoh3upT335s6y+2p8WM=
+X-Received: by 2002:aed:2591:: with SMTP id x17mr3856732qtc.380.1585640940271;
+ Tue, 31 Mar 2020 00:49:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
+References: <20200319164227.87419-1-trishalfonso@google.com>
+ <20200319164227.87419-2-trishalfonso@google.com> <alpine.LRH.2.21.2003241635230.30637@localhost>
+ <CAKFsvULUx3qi_kMGJx69ndzCgq=m2xf4XWrYRYBCViud0P7qqA@mail.gmail.com>
+ <alpine.LRH.2.21.2003251242200.9650@localhost> <CAKFsvU+1z-oAX81bNSVkuo_BwgxyykTwW9uJOLL6a1ZaBojJYw@mail.gmail.com>
+ <CAKFsvUKAThbewNmtA7S4wzXODADwG5XJgiDu9o2o5+xz5ux5fA@mail.gmail.com>
+In-Reply-To: <CAKFsvUKAThbewNmtA7S4wzXODADwG5XJgiDu9o2o5+xz5ux5fA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 31 Mar 2020 09:48:48 +0200
+Message-ID: <CACT4Y+YtpOUHBrdd5n2ajueMreh4Bz8uvR9NXU50=mNQD9-OEw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] Add KUnit Struct to Current Task
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 31-03-20 09:42:46, Vlastimil Babka wrote:
-[...]
-> > Should we not do this, we'll have to live with the consequences of
-> > supporting the full swoop of sysctls are boot params, whatever
-> > consequences those may be.
-> 
-> Of course when the first user tries to set some particular sysctl as boot param
-> and finds and reports it doesn't work as intended, then it can be fixed or
-> blacklisted and it can't break anyone else?
+On Mon, Mar 30, 2020 at 9:30 PM Patricia Alfonso
+<trishalfonso@google.com> wrote:
+>
+> On Wed, Mar 25, 2020 at 12:00 PM Patricia Alfonso
+> <trishalfonso@google.com> wrote:
+> >
+> > On Wed, Mar 25, 2020 at 5:42 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > >
+> > >
+> > > On Tue, 24 Mar 2020, Patricia Alfonso wrote:
+> > >
+> > > > On Tue, Mar 24, 2020 at 9:40 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+> > > > >
+> > > > >
+> > > > > On Thu, 19 Mar 2020, Patricia Alfonso wrote:
+> > > > >
+> > > > > > In order to integrate debugging tools like KASAN into the KUnit
+> > > > > > framework, add KUnit struct to the current task to keep track of the
+> > > > > > current KUnit test.
+> > > > > >
+> > > > > > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > > > > > ---
+> > > > > >  include/linux/sched.h | 4 ++++
+> > > > > >  1 file changed, 4 insertions(+)
+> > > > > >
+> > > > > > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > > > > > index 04278493bf15..1fbfa0634776 100644
+> > > > > > --- a/include/linux/sched.h
+> > > > > > +++ b/include/linux/sched.h
+> > > > > > @@ -1180,6 +1180,10 @@ struct task_struct {
+> > > > > >       unsigned int                    kasan_depth;
+> > > > > >  #endif
+> > > > > >
+> > > > > > +#if IS_BUILTIN(CONFIG_KUNIT)
+> > > > >
+> > > > > This patch set looks great! You might have noticed I
+> > > > > refreshed the kunit resources stuff to incorporate
+> > > > > feedback from Brendan, but I don't think any API changes
+> > > > > were made that should have consequences for your code
+> > > > > (I'm building with your patches on top to make sure).
+> > > > > I'd suggest promoting from RFC to v3 on the next round
+> > > > > unless anyone objects.
+> > > > >
+> > > > > As Dmitry suggested, the above could likely be changed to be
+> > > > > "#ifdef CONFIG_KUNIT" as kunit can be built as a
+> > > > > module also. More on this in patch 2..
+> > > > >
+> > > > I suppose this could be changed so that this can be used in possible
+> > > > future scenarios, but for now, since built-in things can't rely on
+> > > > modules, the KASAN integration relies on KUnit being built-in.
+> > > >
+> > >
+> > > I think we can get around that. I've tried tweaking the resources
+> > > patchset such that the functions you need in KASAN (which
+> > > is builtin) are declared as "static inline" in include/kunit/test.h;
+> > > doing this allows us to build kunit and test_kasan as a
+> > > module while supporting the builtin functionality required to
+> > > retrieve and use kunit resources within KASAN itself.
+> > >
+> > Okay, great!
+> >
+> > > The impact of this amounts to a few functions, but it would
+> > > require a rebase of your changes. I'll send out a  v3 of the
+> > > resources patches shortly; I just want to do some additional
+> > > testing on them. I can also send you the modified versions of
+> > > your patches that I used to test with.
+> > >
+> > That sounds good.
+> >
+> > > With these changes I can run the tests on baremetal
+> > > x86_64 by modprobe'ing test_kasan. However I see a few failures:
+> > >
+> > > [   87.577012]  # kasan_memchr: EXPECTATION FAILED at lib/test_kasan.c:509
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.577104]  not ok 30 - kasan_memchr
+> > > [   87.603823]  # kasan_memcmp: EXPECTATION FAILED at lib/test_kasan.c:523
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.603929]  not ok 31 - kasan_memcmp
+> > > [   87.630644]  # kasan_strings: EXPECTATION FAILED at
+> > > lib/test_kasan.c:544
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.630910]  # kasan_strings: EXPECTATION FAILED at
+> > > lib/test_kasan.c:546
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.654037]  # kasan_strings: EXPECTATION FAILED at
+> > > lib/test_kasan.c:548
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.677179]  # kasan_strings: EXPECTATION FAILED at
+> > > lib/test_kasan.c:550
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.700242]  # kasan_strings: EXPECTATION FAILED at
+> > > lib/test_kasan.c:552
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.723336]  # kasan_strings: EXPECTATION FAILED at
+> > > lib/test_kasan.c:554
+> > >         Expected kasan_data->report_expected == kasan_data->report_found,
+> > > but
+> > >                 kasan_data->report_expected == 1
+> > >                 kasan_data->report_found == 0
+> > > [   87.746304]  not ok 32 - kasan_strings
+> > >
+> > > The above three tests consistently fail while everything
+> > > else passes, and happen irrespective of whether kunit
+> > > is built as a module or built-in.  Let me know if you
+> > > need any more info to debug (I built the kernel with
+> > > CONFIG_SLUB=y if that matters).
+> > >
+> > Unfortunately, I have not been able to replicate this issue and I
+> > don't have a clue why these specific tests would fail with a different
+> > configuration. I've tried running these tests on UML with KUnit
+> > built-in with SLUB=y and SLAB=y, and I've done the same in x86_64. Let
+> > me know if there's anything else that could help me debug this myself.
+> >
+> Alan sent me the .config and I was able to replicate the test failures
+> found above. I traced the problem config to CONFIG_AMD_MEM_ENCRYPT=y.
+> The interesting part is that I ran the original test module with this
+> config enabled and the same tests failed there too. I wonder if this
+> is an expected failure or something in the test that is causing this
+> problem?
 
-Absolutely agreed. I would be really careful to not overengineer this
-whole thing.
+This is:
+https://bugzilla.kernel.org/show_bug.cgi?id=206337
 
--- 
-Michal Hocko
-SUSE Labs
+I think we should add:
+
+// See https://bugzilla.kernel.org/show_bug.cgi?id=206337
+if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
+    return;
