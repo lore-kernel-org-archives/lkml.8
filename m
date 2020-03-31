@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E94C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CF4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFC920CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9BE20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOq/MgcB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ln+YYohf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgCaRCd (ORCPT
+        id S1731329AbgCaRCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:02:33 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43202 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731224AbgCaRCa (ORCPT
+        Tue, 31 Mar 2020 13:02:34 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42479 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731285AbgCaRCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:02:30 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a6so22752276otb.10;
-        Tue, 31 Mar 2020 10:02:30 -0700 (PDT)
+        Tue, 31 Mar 2020 13:02:32 -0400
+Received: by mail-oi1-f196.google.com with SMTP id e4so19527014oig.9;
+        Tue, 31 Mar 2020 10:02:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=j9UnDZyQ2YKPggbhoniPAeDPe2uWjAaBSRBm1Rfex5E=;
-        b=iOq/MgcBbSipwpL2n98Yk5g1vneSS5GA3tyBB69AbUUL5cNdEcOnw2MeATbdsbXuPa
-         q51MWnepSfz4AUMlY558zD6fcHf/6wVH/QlYdH/68WRgQCEc9lS1is6B2QZD5Mh6vr3i
-         hes/yYhQ8QzoKYlEsOa6tG7ZLh18RpmgwgYS5UUwM4erDxteM1dktc1Bx8ynD030JWVX
-         vKePHvx7M7ZOhOBmHOA74xux6fdXR+5/xAI/6wVckRj4fEVNihE3dwP1nR4Xo6pjr3x1
-         N6zbgzjaKWMXiZL/ovbynVMSYl0Zu8Vz39FNjPEXCvLsOKNA9s4YB671aHX9QfC7obaD
-         O0Sw==
+        bh=id2xxsG8HdP6q9xFW9MmRd4xH5edJmLoce+xqnoklSM=;
+        b=Ln+YYohfvUI1Rn402zQNq4/Tunb2vzjCDx+ZlXhWlcgB5/MRsOteTXXqu7nzjV3ZMD
+         dahwlWLYYvBKq/iimi9bHTdtAZz4/oLR5as/Vwr5Eg//UtFX9YqjrV9GHYFf14vayBzT
+         6HJkJSUwk3jJd6d8xJngZY+GfyHg1Ag86rh20SbbdIXHmghgOslK9IhGLUJMF+N7bNXD
+         JhthmUweI5X6NYY/Yn99lTC0Si4s9xAxTBfbS1dYRJV/SoZS+lfwM+qzaE7KZmcZPHY+
+         0wZJKPbW94ZFztcU6lnPiZOwqM1PBGBqNqAnE20+EKhknku1EhcGTN2T6/A8WvdO0fNP
+         XhQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=j9UnDZyQ2YKPggbhoniPAeDPe2uWjAaBSRBm1Rfex5E=;
-        b=gfjdg/8Kz+pZnlHv7g4rQ3FHdaP2fjYE4CD69kwSZhQLyoPeyQX6GIGwExK6AXzKDp
-         lu29BDlm7gRC8KF8eRIxw6LvsdE6V+Ubylp0zeLAkSpw09i8UEkZvkydx/+AyEySefHv
-         ZgiXpBwflhODZc6YM6Thdwas+9utLQutch/BKHAJbeXZ8QkjXB5JKNsvTuSPzfzAMSWQ
-         h1OSYe1f5/+RCqe+oiR3Iq/bvSlCwoAYQ00Ex0YL5VEAT8SYGxuxfRDD4d5fekA1R1ZE
-         JkYJBAdK8uM4vUED/KVm2UubigKaDRhY8mcgNlcPYdNs2GhV39u7RAtC4YHBEQhvX4N5
-         OCkA==
-X-Gm-Message-State: ANhLgQ15/7+8iFqp9xrr/0OmyWPjF/dafRmvOZL/Kz0mkEmlU7amDeq5
-        KY6NCmDaceV8pCQIQJV6wJE=
-X-Google-Smtp-Source: ADFU+vtFnS3zr2wAMvjQYxIlrGQnqds5Xcyfx/Z5iGHNM3Jx81a88ZVOB6nYOjKjkMwMfb92CZrk7A==
-X-Received: by 2002:a05:6830:1d90:: with SMTP id y16mr14257426oti.157.1585674149603;
-        Tue, 31 Mar 2020 10:02:29 -0700 (PDT)
+        bh=id2xxsG8HdP6q9xFW9MmRd4xH5edJmLoce+xqnoklSM=;
+        b=Q4rdjl3/rvARdLqpnEl+YA6atz0+xkgIT+5I//mEI0Rt5q60inwFzeEVDehhfxQ0NX
+         5fq+0G3XPeP18Y04ODvZis/+PvsLu4ZBhGuVaG7o6+YmyA85pstZ2RUIl5jSqZF2CDms
+         kT3LkUalSYiLbcT44McIP1UzdPK8bJZjek2hHYKWQx4EXQcVvnRsnxS8+vysQWW0UMsz
+         JJ7qhPqdDtY8syn6xsUfNuxpjD8yTpPlHLSyJZtAUzrKJd0YvlB7kHXJUjlNuu/DkRKI
+         A6nAZulNhgLzwyCtBptKXhRipYgucROaCXQSzE7at3GDZaKKVlQfJShtoVnC4fMK/bFS
+         KsdQ==
+X-Gm-Message-State: ANhLgQ1r1t50j4Zi3qhHUZt7bbGZi59BGLl/ZtL/f1c8SalotHBWlVuH
+        EUh9UroGC0ltXAfBRRLELVY=
+X-Google-Smtp-Source: ADFU+vth7hHXB71hCpzRlXiX79+rJwCE6+IaxSB5vsQPun29d1yYVBmdSpcpsXuLB5QjvEAMh0qPMQ==
+X-Received: by 2002:aca:d78a:: with SMTP id o132mr2837176oig.60.1585674150925;
+        Tue, 31 Mar 2020 10:02:30 -0700 (PDT)
 Received: from desertvoice.lan ([2601:3c7:8303:2a10::21c])
-        by smtp.gmail.com with ESMTPSA id h7sm2952605otk.3.2020.03.31.10.02.28
+        by smtp.gmail.com with ESMTPSA id h7sm2952605otk.3.2020.03.31.10.02.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:02:29 -0700 (PDT)
+        Tue, 31 Mar 2020 10:02:30 -0700 (PDT)
 From:   George Hilliard <thirtythreeforty@gmail.com>
 To:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Cc:     Icenowy Zheng <icenowy@aosc.io>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        George Hilliard <thirtythreeforty@gmail.com>
-Subject: [PATCH v2 2/5] phy: sun4i-usb: add support for the USB PHY on suniv SoC
-Date:   Tue, 31 Mar 2020 12:02:16 -0500
-Message-Id: <20200331170219.267732-3-thirtythreeforty@gmail.com>
+Cc:     George Hilliard <thirtythreeforty@gmail.com>,
+        Icenowy Zheng <icenowy@aosc.io>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/5] musb: sunxi: add support for the suniv MUSB controller
+Date:   Tue, 31 Mar 2020 12:02:17 -0500
+Message-Id: <20200331170219.267732-4-thirtythreeforty@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331170219.267732-1-thirtythreeforty@gmail.com>
 References: <20200331170219.267732-1-thirtythreeforty@gmail.com>
@@ -76,56 +76,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+The suniv SoC has a MUSB controller like the one in A33, but with a SRAM
+region to be claimed.
 
-The suniv SoC has one USB OTG port connected to a MUSB controller.
-
-Add support for its USB PHY.
+Add support for it.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-George Hilliard: changed style to match existing code.
+George Hilliard: debugged, match existing style
 Signed-off-by: George Hilliard <thirtythreeforty@gmail.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 ---
 v1..v2: reordered sun{50,iv} to match `sort` order.
 
- drivers/phy/allwinner/phy-sun4i-usb.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/usb/musb/sunxi.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 856927382248..5c10b55f2aad 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -107,6 +107,7 @@ enum sun4i_usb_phy_type {
- 	sun8i_v3s_phy,
- 	sun50i_a64_phy,
- 	sun50i_h6_phy,
-+	suniv_f1c100s_phy,
- };
+diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
+index f3f76f2ac63f..9b353b97fb06 100644
+--- a/drivers/usb/musb/sunxi.c
++++ b/drivers/usb/musb/sunxi.c
+@@ -714,14 +714,17 @@ static int sunxi_musb_probe(struct platform_device *pdev)
+ 	INIT_WORK(&glue->work, sunxi_musb_work);
+ 	glue->host_nb.notifier_call = sunxi_musb_host_notifier;
  
- struct sun4i_usb_phy_cfg {
-@@ -972,6 +973,14 @@ static const struct sun4i_usb_phy_cfg sun50i_h6_cfg = {
- 	.missing_phys = BIT(1) | BIT(2),
- };
+-	if (of_device_is_compatible(np, "allwinner,sun4i-a10-musb"))
++	if (of_device_is_compatible(np, "allwinner,sun4i-a10-musb") ||
++	    of_device_is_compatible(np, "allwinner,suniv-f1c100s-musb")) {
+ 		set_bit(SUNXI_MUSB_FL_HAS_SRAM, &glue->flags);
++	}
  
-+static const struct sun4i_usb_phy_cfg suniv_f1c100s_cfg = {
-+	.num_phys = 1,
-+	.type = suniv_f1c100s_phy,
-+	.disc_thresh = 3,
-+	.phyctl_offset = REG_PHYCTL_A10,
-+	.dedicated_clocks = true,
-+};
-+
- static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun4i-a10-usb-phy", .data = &sun4i_a10_cfg },
- 	{ .compatible = "allwinner,sun5i-a13-usb-phy", .data = &sun5i_a13_cfg },
-@@ -986,6 +995,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun50i-a64-usb-phy",
- 	  .data = &sun50i_a64_cfg},
- 	{ .compatible = "allwinner,sun50i-h6-usb-phy", .data = &sun50i_h6_cfg },
-+	{ .compatible = "allwinner,suniv-f1c100s-usb-phy", .data = &suniv_f1c100s_cfg },
- 	{ },
+ 	if (of_device_is_compatible(np, "allwinner,sun6i-a31-musb"))
+ 		set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
+ 
+ 	if (of_device_is_compatible(np, "allwinner,sun8i-a33-musb") ||
+-	    of_device_is_compatible(np, "allwinner,sun8i-h3-musb")) {
++	    of_device_is_compatible(np, "allwinner,sun8i-h3-musb") ||
++	    of_device_is_compatible(np, "allwinner,suniv-f1c100s-musb")) {
+ 		set_bit(SUNXI_MUSB_FL_HAS_RESET, &glue->flags);
+ 		set_bit(SUNXI_MUSB_FL_NO_CONFIGDATA, &glue->flags);
+ 	}
+@@ -818,6 +821,7 @@ static const struct of_device_id sunxi_musb_match[] = {
+ 	{ .compatible = "allwinner,sun6i-a31-musb", },
+ 	{ .compatible = "allwinner,sun8i-a33-musb", },
+ 	{ .compatible = "allwinner,sun8i-h3-musb", },
++	{ .compatible = "allwinner,suniv-f1c100s-musb", },
+ 	{}
  };
- MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
+ MODULE_DEVICE_TABLE(of, sunxi_musb_match);
 -- 
 2.26.0
 
