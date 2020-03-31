@@ -6,56 +6,51 @@ X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4C6C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AABC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A0C20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A719B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585660293;
-	bh=h8dQvdWDnXNj+3sbtyq/jpBGmi1cyj9KIHH1gwtXnss=;
-	h=Date:From:To:To:To:To:To:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-	 References:List-ID:From;
-	b=DCGg3+kalqkBZIsIWemTNZav1LPWKEp+RIty7IF1jfXojZzZWL2N3XE8+WpaVj2KK
-	 fJU5pDtALJsrO82pbtxvGwCP4PHu+D/Y2h1tuLRxrHZA41a7V9XkmC3eCNmg6nzDCy
-	 FLe2L3in7xbbwVFucU6wpN4UQ9qLx0v2mq78TyLA=
+	s=default; t=1585660295;
+	bh=uvJBXe/1fKLbNAJZnngR2H1ble9LkRNQIerQekqdres=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=p12V9SnY+ZV4G1s/wnFa5qYE/LZQlR4gidRM/sqOBO6riKTdCctKpw3RG9xKwbgt7
+	 OmWjmideRUgs3vvwi5campeJHJKfc+YNqozqfdBTyypG+nm8seM41uwzKcfjJApphm
+	 8zHEn3n8UYOP5X8nR4ohI5FZMPbJ5R7hXHglaqLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbgCaNLb (ORCPT
+        id S1730987AbgCaNLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 09:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730946AbgCaNL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:11:29 -0400
+        id S1730974AbgCaNLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:11:32 -0400
 Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE69F2137B;
-        Tue, 31 Mar 2020 13:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A2BE21924;
+        Tue, 31 Mar 2020 13:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585660289;
-        bh=h8dQvdWDnXNj+3sbtyq/jpBGmi1cyj9KIHH1gwtXnss=;
-        h=Date:From:To:To:To:To:To:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-         References:From;
-        b=EJm6mnZuMze49ZjPb7R1ryUJGjATEkfm72UJ2ej3wXznSQrro46fiXWJBKNPt8iFT
-         qwDqGcyUU+biDOH7E9ncS08Kz1j7TR6yukFbmPEzgD4vLC8hTchTGv92ZMIZhvv4nr
-         V005pouVxckcxy66ApejYC+IckSPsWyPjoHjGFcs=
-Date:   Tue, 31 Mar 2020 13:11:28 +0000
+        s=default; t=1585660291;
+        bh=uvJBXe/1fKLbNAJZnngR2H1ble9LkRNQIerQekqdres=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=Efu5PD2A/fHEQkGebgGpQkhqXpVs2Doj2VEKECAFDnm9/6k0C+AIn3YMnfZg5C8t4
+         cjs5FlNfJxU+86lND5K8kLa46ZgPQ2zAdobvj7cYvP2xu8sfPOOKTCL43KKvB/3KMb
+         0DMZSO1S7Np4X+Qxhsx1ppqJ10nMLn5lFZHMWYvQ=
+Date:   Tue, 31 Mar 2020 13:11:30 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
-To:     Ashok Raj <ashok.raj@intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
+To:     Thomas Hebb <tommyhebb@gmail.com>
+To:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Cc:     Kailang Yang <kailang@realtek.com>
 Cc:     stable@vger.kernel.org
-Cc:     Ashok Raj <ashok.raj@intel.com>
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH] pci: Fixes MaxPayloadSize (MPS) programming for RCiEP devices.
-In-Reply-To: <1585343775-4019-1-git-send-email-ashok.raj@intel.com>
-References: <1585343775-4019-1-git-send-email-ashok.raj@intel.com>
-Message-Id: <20200331131128.DE69F2137B@mail.kernel.org>
+Subject: Re: [PATCH 3/3] ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise fixups
+In-Reply-To: <028b0c410238090546cf80ef6075b3b9139986a7.1585553414.git.tommyhebb@gmail.com>
+References: <028b0c410238090546cf80ef6075b3b9139986a7.1585553414.git.tommyhebb@gmail.com>
+Message-Id: <20200331131131.2A2BE21924@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,17 +61,41 @@ Hi
 [This is an automated email]
 
 This commit has been processed because it contains a "Fixes:" tag
-fixing commit: 9dae3a97297f ("PCI: Move MPS configuration check to pci_configure_device()").
+fixing commit: 8c69729b4439 ("ALSA: hda - Fix headphone noise after Dell XPS 13 resume back from S3").
 
 The bot has tested the following trees: v5.5.13, v5.4.28, v4.19.113, v4.14.174, v4.9.217, v4.4.217.
 
 v5.5.13: Build OK!
 v5.4.28: Build OK!
 v4.19.113: Build OK!
-v4.14.174: Build OK!
-v4.9.217: Build OK!
-v4.4.217: Build failed! Errors:
-    drivers/pci/probe.c:1357:4: error: implicit declaration of function ‘pci_warn’; did you mean ‘pr_warn’? [-Werror=implicit-function-declaration]
+v4.14.174: Failed to apply! Possible dependencies:
+    1099f48457d0 ("ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360")
+    28d1d6d2f314 ("ALSA: hda - Add model string for Intel reference board quirk")
+    a26d96c7802e ("ALSA: hda/realtek - Comprehensive model list for ALC259 & co")
+    c0ca5eced222 ("ALSA: hda/realtek - Reduce click noise on Dell Precision 5820 headphone")
+    c1350bff69d1 ("ALSA: hda - Clean up ALC299 init code")
+    da911b1f5e98 ("ALSA: hda/realtek - update ALC225 depop optimize")
+
+v4.9.217: Failed to apply! Possible dependencies:
+    8551914a5e19 ("ALSA: doc: ReSTize alsa-driver-api document")
+    9000d69925ac ("ALSA: doc: ReSTize HD-Audio document")
+    a26d96c7802e ("ALSA: hda/realtek - Comprehensive model list for ALC259 & co")
+    a4caad753f0c ("ALSA: doc: ReSTize HD-Audio-Models document")
+    a79e7df97592 ("ALSA: hda - Update the list of quirk models")
+
+v4.4.217: Failed to apply! Possible dependencies:
+    34d505193bd1 ("cfg80211: basic support for PBSS network type")
+    35eb8f7b1a37 ("cfg80211: Improve Connect/Associate command documentation")
+    38de03d2a289 ("nl80211: add feature for BSS selection support")
+    819bf593767c ("docs-rst: sphinxify 802.11 documentation")
+    8551914a5e19 ("ALSA: doc: ReSTize alsa-driver-api document")
+    9000d69925ac ("ALSA: doc: ReSTize HD-Audio document")
+    a26d96c7802e ("ALSA: hda/realtek - Comprehensive model list for ALC259 & co")
+    a4caad753f0c ("ALSA: doc: ReSTize HD-Audio-Models document")
+    ba6fbacf9c07 ("cfg80211: Add option to specify previous BSSID for Connect command")
+    bf1ecd210541 ("cfg80211: Allow cfg80211_connect_result() errors to be distinguished")
+    e705498945ad ("cfg80211: Add option to report the bss entry in connect result")
+    fa44b7ec9bc4 ("ALSA: hda - Update documentation")
 
 
 NOTE: The patch will not be queued to stable trees until it is upstream.
