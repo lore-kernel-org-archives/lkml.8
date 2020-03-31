@@ -2,124 +2,173 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAC6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1D520784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0A3206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gF+9aAxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730872AbgCaNvt convert rfc822-to-8bit (ORCPT
+        id S1730964AbgCaNvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:51:49 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:38934 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730358AbgCaNvs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:51:48 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-124-raG5mItQN4SiIRUf6s5KeA-1; Tue, 31 Mar 2020 14:51:44 +0100
-X-MC-Unique: raG5mItQN4SiIRUf6s5KeA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:51:44 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 31 Mar 2020 14:51:44 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: [RFC PATCH 00/12] Changes to code that reads iovec from userspace
-Thread-Topic: [RFC PATCH 00/12] Changes to code that reads iovec from
- userspace
-Thread-Index: AdYHYETxpoUzI3CTQc6sOiLf8VKhPg==
-Date:   Tue, 31 Mar 2020 13:51:44 +0000
-Message-ID: <a2c781bbd5c44fd19483076fd0296943@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
+        Tue, 31 Mar 2020 09:51:54 -0400
+Received: from mail-bn8nam11on2129.outbound.protection.outlook.com ([40.107.236.129]:44129
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729891AbgCaNvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:51:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nwE7SJAWhISvICrk+lsc3FfZX0q5YdvEeOMN4aEwg+AO1SnOPtvOUORQVM9LrEy0JvvWHa1lvkk2KjUSRF70iSCNPccPZP1zmr/ym9uqnWrPllYbtXj7e3Uya7k2LaCUNSal/aVBEUKucqlqiR3xuiBKAePw23RV3q7Pwf/kOmQESblFYzfVmNXMMud+4IkmgJevbOEjrYYMRFAlaW1KI4ikDt+Lmul3hy1B3TCeyHNk+QomfcDE0W74rRpSazqVgZWKk/MT1RK4Tn80ORtQLvY+YEDsN5O+4EFuBILI2/5n7A6RR3OGwr971M/J3Hf8IPxtF7UMe+I15K2pBjmkAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dru9s17HeKkHO1NJnCn6MPok3oczXncD2zC4QG+10MA=;
+ b=HHEDXfqSUIErHM5HtfeKwIfVgbkMzv9ml28pCpDlusD4kbtGDI2KWInMzRRyFGjw0t1WoGT+HWeqTbNQgFpyWgnjh3ohrdmLklaKHgR3QWSW0qcGqDFbpFmnqeptylEwETL7Z+bun68zU82pyyzTQcrBhOQc20c9T6Y5FYxz1BOucXnWvjvTZDUMTUH0Wgzr7LHQVxGK5BxCx3nupMMmbeeBW/6iJhwO58Gdldw4tDMvsn0FzcmIAsu0xC43a5sAtnavm1onoEO/SFy73bg2nObverJgnQ/68l2u+4FFSu8CFWTeX+GBH6tLlbpvrNAhWigK7UxiCHnvoLPmAc7DhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dru9s17HeKkHO1NJnCn6MPok3oczXncD2zC4QG+10MA=;
+ b=gF+9aAxLFMO8UI0Dm+ZHxK3St0EjqALWFlR34R5q0AlB68eNx5PropA5m2g+cY6/D3pHIH4iQqhRRwdeOgoqqe4ckl+qVr6w9Fuqt80JKR9SNhV8pNVTXljKilSHsYWmQZz01htcSr6Ht0wX/ub5vmEXJwOnVcwsQv457oOZgKY=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0905.namprd21.prod.outlook.com (2603:10b6:302:10::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2; Tue, 31 Mar
+ 2020 13:51:48 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Tue, 31 Mar 2020
+ 13:51:48 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
+ panic_on_oops is set
+Thread-Topic: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
+ panic_on_oops is set
+Thread-Index: AQHWBy9soracth5BGEahOQja8RE2hKhitilQ
+Date:   Tue, 31 Mar 2020 13:51:48 +0000
+Message-ID: <MW2PR2101MB1052A8FEF85F381B3EAF7D36D7C80@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
+ <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-31T13:51:46.4804770Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=01a21428-261e-4e0f-b3ad-8718b5ae1ef5;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 76dca920-ca08-47f7-a16a-08d7d57aa864
+x-ms-traffictypediagnostic: MW2PR2101MB0905:|MW2PR2101MB0905:|MW2PR2101MB0905:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB0905AB4AD1FCC939A7066470D7C80@MW2PR2101MB0905.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0359162B6D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(8676002)(5660300002)(8936002)(4326008)(71200400001)(6636002)(81156014)(52536014)(81166006)(86362001)(10290500003)(498600001)(110136005)(54906003)(6506007)(66476007)(66446008)(82950400001)(186003)(66946007)(82960400001)(55016002)(26005)(66556008)(9686003)(64756008)(2906002)(33656002)(7696005)(76116006)(8990500004);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6+mU0VAFMMujIrjfYCA3NuNH+tmHXYq41PEqUN0Pk7MW/b7VJNwwR0due7jOAoZDjLWJBKYLhdsRdDyRHBZCFwe22GuSplAK+SdcGvjSQcZqBUBcjwe32nvpKMT6l4UjlzL7EyoEr9QYb1oPkn4LYqCoU1dnSocZGZOdpV29Sw6E4b9oiGGEEMH6/q1Wp/DaRQk3xHXNZxyZvV3++CFjGeEwpIvhLAd1bg3ycGbMfJWwhvIdgeutgc9xiHiEkFQfDZHNn06bxwBQh8PfZGByoMcO7i6uHP6n6zZElQcXRa624ySZ0YYWdw631T8PJ7CjJBf/occ2EnRPfBHJ3HrvVB1Uy00WJ+Xvd8tj+ovHyOIfRWQULH0xX4/r3Mn+QVbTBYuQZALraMGohYVyaPVl9YOKzwJr4AeTLpW2RoGdtCa2st4AEpHF5fipedA5TtPZ
+x-ms-exchange-antispam-messagedata: g8PU2ZbBqPZCtsBaa2w/f+yUTgzfc1s6hW2pXprQ+GnD+3tS4RI7neDwDzTqPR8+/3GsJ42EJCJzomvhfWZKDId0rQnwSwSd3mD5xatzdDXL7KaSlFc6yFvRrAvUTuFbBJMec2s+F+NgFrTFuEBZhg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76dca920-ca08-47f7-a16a-08d7d57aa864
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 13:51:48.2089
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leI51m3RT1ad7eIsCEpLDx74oqE9ybHhTCtYj7AO7vOBpU/ZMoeVogOi+iz+gRDKgDnbqSjNLlYmUmRtKewncfQxj0PV6YUZh9FjDsZxIrY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0905
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is RFC because we seem to be in a merge window.
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 31, 2020 1=
+2:39 AM
+>=20
+> When oops happens with panic_on_oops unset, the oops
+> thread is killed by die() and system continues to run.
+> In such case, guest should not report crash register
+> data to host since system still runs. Fix it.
+>=20
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+> Change since v3:
+> 	Fix compile error
+> ---
+>  drivers/hv/vmbus_drv.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 172ceae69abb..4bc02aea2098 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/kdebug.h>
+>  #include <linux/efi.h>
+>  #include <linux/random.h>
+> +#include <linux/kernel.h>
 
-The canonical code to read iov[] is currently:
-	struct iovec iovstack[UIO_FASTIOV];
-	struct iovec *iov;
-	...
-	iov = iovstack;
-	rc = import_iovec(..., UIO_FASTIOV, &iov, &iter);
-	if (rc < 0)
-		return rc;
-	...
-	kfree(iov);
+Unfortunately, adding the #include doesn't solve the problem.  The error oc=
+curs when
+CONFIG_HYPERV=3Dm, because panic_on_oops is not exported.  I haven't though=
+t it
+through, but hopefully there's a solution where panic_on_oops can be tested=
+ in
+hyperv_report_panic() or some other Hyper-V specific function that's never =
+in a
+module, so that we don't need to export panic_on_oops.
 
-Note that the 'iov' parameter is used for two different things.
-On input it is an iov[] can can be used.
-On output it is an iov[] array that must be freed.
+Michael
 
-If 'iovstack' is passed, the count is actually always UIO_FASTIOV (8)
-although in some places the array definition is in a different file
-(never mind function) from the constant used.
-
-import_iovec() itself is just a wrapper to rw_copy_check_uvector().
-So everything is passed through to a second function.
-Several items are 'passed by reference' - adding to the code paths.
-
-On success import_iovec() returned the transfer count.
-Only one caller looks at it, the count is also in iter.count.
-
-The new canonical code is:
-	struct iov_cache cache;
-	struct iovec *iov;
-	...
-	iov = iovec_import(..., &cache, &iter);
-	if (IS_ERR(iov))
-		return PTR_ERR(iov);
-	...
-	kfree(iov);
-
-Since 'struct iov_cache' is a fixed size there is no need to pass in
-a length (correct or not!). It can still be NULL (used by the scsi code).
-
-iovec_import() contains the code that used to be in rw_copy_check_uvector()
-and then sets up the iov_iter.
-
-rw_copy_check_uvector() is no more.
-The only other caller was in mm/process_vm_access.c when reading the
-iov[] for the target process addresses when copying from a differ process.
-This can extract the iov[] from an extra 'struct iov_iter'.
-
-In passing I noticed an access_ok() call on each fragment.
-I hope this is just there to bail out early!
-It is also skipped in process_vm_rw(). I did a quick look but couldn't
-see an obvious equivalent check.
-
-Patches 1 and 2 tidy up existing code.
-Patches 3 and 4 add the new interface.
-Patches 5 through 10 change all the callers.
-Patch 11 removes a 'hack' that allowed fs/io_uring be updated before the socket code.
-Patch 12 removes the old interface.
-
-I suspect the changes need to trickle through a merge window.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+>  #include <linux/syscore_ops.h>
+>  #include <clocksource/hyperv_timer.h>
+>  #include "hyperv_vmbus.h"
+> @@ -91,7 +92,7 @@ static int hyperv_die_event(struct notifier_block *nb, =
+unsigned long
+> val,
+>  	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+>  	 * the notification here.
+>  	 */
+> -	if (hyperv_report_reg())
+> +	if (hyperv_report_reg() && panic_on_oops)
+>  		hyperv_report_panic(regs, val);
+>  	return NOTIFY_DONE;
+>  }
+> --
+> 2.14.5
 
