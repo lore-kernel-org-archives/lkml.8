@@ -2,121 +2,99 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F68C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277A0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B80C92072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037EB2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbgCaH1c (ORCPT
+        id S1729983AbgCaH24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:27:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48644 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgCaH1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:27:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 748BCAEA3;
-        Tue, 31 Mar 2020 07:27:28 +0000 (UTC)
-Subject: Re: [PATCH 3/3] kernel/hung_task convert hung_task_panic boot
- parameter to sysctl
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-4-vbabka@suse.cz> <202003301042.97F3B00@keescook>
- <13ae67d8-4b31-db20-7ba4-1602906a291e@nvidia.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <37b42835-6c4a-674b-9731-ecc9d0ff1703@suse.cz>
-Date:   Tue, 31 Mar 2020 09:27:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 03:28:56 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:48338 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgCaH2z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:28:55 -0400
+X-Greylist: delayed 387 seconds by postgrey-1.27 at vger.kernel.org; Tue, 31 Mar 2020 03:28:55 EDT
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by gardel.0pointer.net (Postfix) with ESMTP id B5053E814E3;
+        Tue, 31 Mar 2020 09:22:25 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id D3507160704; Tue, 31 Mar 2020 09:22:24 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 09:22:24 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, dray@redhat.com, kzak@redhat.com,
+        mszeredi@redhat.com, swhiteho@redhat.com, jlayton@redhat.com,
+        raven@themaw.net, andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cyphar@cyphar.com
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200331072224.GA27062@gardel-login>
+References: <1445647.1585576702@warthog.procyon.org.uk>
+ <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <13ae67d8-4b31-db20-7ba4-1602906a291e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 2:34 AM, John Hubbard wrote:
-> On 3/30/20 10:43 AM, Kees Cook wrote:
-> ...
->>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->>> index 81ff626fc700..e0b8840404a1 100644
->>> --- a/Documentation/admin-guide/kernel-parameters.txt
->>> +++ b/Documentation/admin-guide/kernel-parameters.txt
->>> @@ -1457,7 +1457,7 @@
->>>   			[KNL] Should the hung task detector generate panics.
->>>   			Format: <integer>
->>>   
->>> -			A nonzero value instructs the kernel to panic when a
->>> +			A value of 1 instructs the kernel to panic when a
->>>   			hung task is detected. The default value is controlled
->>>   			by the CONFIG_BOOTPARAM_HUNG_TASK_PANIC build-time
->>>   			option. The value selected by this boot parameter can
->>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
->>> index 97eb0b552bf8..77b1b844b02b 100644
->>> --- a/fs/proc/proc_sysctl.c
->>> +++ b/fs/proc/proc_sysctl.c
->>> @@ -1743,6 +1743,7 @@ struct sysctl_alias {
->>>    */
->>>   static const struct sysctl_alias sysctl_aliases[] = {
->>>   	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
-> 
-> 
-> Hi Vlastimil,
-> 
-> Maybe best to delete the above line? Because:
-> 
->      a) it was added as an example, and now that you have a real use case in this patch,
->         the example is no longer required, and
-> 
->      b) numa_zonelist_order is deprecated, as a boot param. Adding support to it in this
->         brand-new mechanism seems to be going a bit in the opposite direction of deprecation.
+On Mo, 30.03.20 23:17, Christian Brauner (christian.brauner@ubuntu.com) wrote:
 
-Well, this aliases table is not the brand new mechanism, it's just for handling
-sysctls that also have a legacy boot param. numa_zonelist_order is such legacy
-boot param, so we can handle it here instead of its special handler. If we
-decide to remove it later, we can do that, but there is no user-visible effect
-on its deprecation by this series.
+> Fwiw, putting down my kernel hat and speaking as someone who maintains
+> two container runtimes and various other low-level bits and pieces in
+> userspace who'd make heavy use of this stuff I would prefer the fd-based
+> fsinfo() approach especially in the light of across namespace
+> operations, querying all properties of a mount atomically all-at-once,
+> and safe delegation through fds. Another heavy user of this would be
+> systemd (Cced Lennart who I've discussed this with) which would prefer
+> the fd-based approach as well. I think pulling this into a filesystem
+> and making userspace parse around in a filesystem tree to query mount
+> information is the wrong approach and will get messy pretty quickly
+> especially in the face of mount and user namespace interactions and
+> various other pitfalls. fsinfo() fits quite nicely with the all-fd-based
+> approach of the whole mount api. So yes, definitely preferred from my
+> end.
 
-> And, I don't think you really want all the sysctls to be enabled as boot params, right? Your
+Christian is right. I think it's very important to have an API that
+allows to query the state of fs attributes in a consistent state,
+i.e. so that the attributes userspace is interested in can be queried
+in a single call, so they all describe the very same point in
+time. Distributing attributes onto multiple individual files just
+sucks, because it's then guaranteed that you never can read them in a
+way they actually fit together, some attributes you read will be
+older, others newer. It's a big design flaw of sysfs (which is
+structured like this) if you ask me.
 
-The point of Patch 1 is very much so that all sysctls can be set using a boot
-param in the form of sysctl.foo.bar=baz
+I don't really care if the kernel API for this is binary or
+textual. Slight preference for binary, but I don't care too much.
 
-> comment right above sysctl_aliases[] (shown in patch 2) sort of indicates that only some items
-> are meant to be both sysctl's and boot params. And that makes sense.
+I think it would be wise to bind such APIs to fds, simply because it
+always works. Doing path based stuff sucks, because you always need to
+mount stuff and have a path tree set up, which is less ideal in a
+world where namespacing is common, and namespaces are a shared concept
+(at least with your other threads, if not with other processes). As a
+maintainer of an init system I really dislike APIs that I can only use
+after a mount structure has been set up, too often we want to do stuff
+before that. Moreover, philosophically I find it questionnable to use
+path based APIs to interface with the path object hierarchy itself. it
+feels "too recursive". Just keep this separate: build stuff on top of
+the fs that fits on top of the fs, but don't build fs APIs on top of
+fs APIs that stem from the same layer.
 
-Patches 2+3 are only about handling the legacy boot params that have a sysctl
-counterpart.
+Summary: atomic APIs rock, fd-based APIs rock. APIs built on
+individual files one can only read individually suck. APIs of the path
+layer exposed in the path layer suck.
 
-> In fact, the sysctl_aliases[] is (or could be) effectively the whitelist that Luis Chamberlain
-> was requesting in another thread. A whitelist makes good sense, for the reasons Luis listed.
-> As such, keeping it limited to items that we want, seems like the way to go, IMHO.
+Hope this makes some sense?
 
-See my reply there once I send it :)
-
-> thanks,
-> 
-
+Lennart
