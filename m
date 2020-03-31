@@ -2,62 +2,56 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81192C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03E3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58615208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6886320772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645845;
-	bh=Z8CeZZwmgXapYZDYq5qlyCvFTkEB2fcRKd/gMZYTj+Q=;
+	s=default; t=1585645849;
+	bh=y6fd+56DXRtMsWE2TPIWeRAL7GDXxJs9T+p42v5SGuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2KkYWoOjEUbTvpY9MG7sJ5AIjQc3RXftjHGx2inP8+ODGObXszAOYzvth4L/N26gH
-	 qQs2IpBAe8pZs3vciZN7VIlpga2iDBwTACPAuV5K+svMFlTWOuWXogJm6Xg5T6pbaC
-	 wkUjv/ILB9Y45mhi5bBob0JhkBTr4j8JOg/k28WE=
+	b=2L/gUyl3/H2YaKU43+jzL9ZRkgz5jb1fmHRHcpdS7VO1tdbA2csThMQpXp/bgO6So
+	 rPwrBhO+4aigT0j2iqsyOBxo4L7uK53/UigEHITb7L8wmJRjPgr4Wzo4+MP90DHlpg
+	 gEphWm15TDqzxHG7j+/iK0mlFbIgIP0URhyPAVFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731615AbgCaJKj (ORCPT
+        id S1731601AbgCaJKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:10:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731319AbgCaJKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:10:36 -0400
+        id S1731624AbgCaJKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:10:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1611420772;
-        Tue, 31 Mar 2020 09:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A51920675;
+        Tue, 31 Mar 2020 09:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645835;
-        bh=Z8CeZZwmgXapYZDYq5qlyCvFTkEB2fcRKd/gMZYTj+Q=;
+        s=default; t=1585645842;
+        bh=y6fd+56DXRtMsWE2TPIWeRAL7GDXxJs9T+p42v5SGuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHm1EO8kAAnsOP5DpPpGi665Y9FY16NO3O0hX33bCqdGN/q3Nc2CTJdoqGh5A6aIK
-         xZVMHdTvWK4DyHzmHn/pTLVWAwjSTxIhsTZZXmc0A9CeHi1ewSoYdpGS0kVacv8Hka
-         ApMi49zC16aAimgZO+uitVyXHyB3PmUBRnlHzXG8=
+        b=olLECaVnp2YiC4llm85QpPMygcKD/gS2A/3/r0XR4iwlJwtitanXCswquU4ofNiy5
+         d6zLIoa8iVWpgQ/RSHvrfohgf+8HLiTuMKz13KWTdf7GukmWJBXB6E3G71/ljC6YG4
+         mstZcHptUvBmqtX4HZl1q/WllvoFelNm2XsTzHNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 001/155] mmc: core: Allow host controllers to require R1B for CMD6
-Date:   Tue, 31 Mar 2020 10:57:21 +0200
-Message-Id: <20200331085418.398117916@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 011/155] ipv4: fix a RCU-list lock in inet_dump_fib()
+Date:   Tue, 31 Mar 2020 10:57:31 +0200
+Message-Id: <20200331085419.642979289@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,65 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 1292e3efb149ee21d8d33d725eeed4e6b1ade963 ]
+[ Upstream commit dddeb30bfc43926620f954266fd12c65a7206f07 ]
 
-It has turned out that some host controllers can't use R1B for CMD6 and
-other commands that have R1B associated with them. Therefore invent a new
-host cap, MMC_CAP_NEED_RSP_BUSY to let them specify this.
+There is a place,
 
-In __mmc_switch(), let's check the flag and use it to prevent R1B responses
-from being converted into R1. Note that, this also means that the host are
-on its own, when it comes to manage the busy timeout.
+inet_dump_fib()
+  fib_table_dump
+    fn_trie_dump_leaf()
+      hlist_for_each_entry_rcu()
 
-Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Tested-by: Faiz Abbas <faiz_abbas@ti.com>
-Tested-By: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+without rcu_read_lock() will trigger a warning,
+
+ WARNING: suspicious RCU usage
+ -----------------------------
+ net/ipv4/fib_trie.c:2216 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by ip/1923:
+  #0: ffffffff8ce76e40 (rtnl_mutex){+.+.}, at: netlink_dump+0xd6/0x840
+
+ Call Trace:
+  dump_stack+0xa1/0xea
+  lockdep_rcu_suspicious+0x103/0x10d
+  fn_trie_dump_leaf+0x581/0x590
+  fib_table_dump+0x15f/0x220
+  inet_dump_fib+0x4ad/0x5d0
+  netlink_dump+0x350/0x840
+  __netlink_dump_start+0x315/0x3e0
+  rtnetlink_rcv_msg+0x4d1/0x720
+  netlink_rcv_skb+0xf0/0x220
+  rtnetlink_rcv+0x15/0x20
+  netlink_unicast+0x306/0x460
+  netlink_sendmsg+0x44b/0x770
+  __sys_sendto+0x259/0x270
+  __x64_sys_sendto+0x80/0xa0
+  do_syscall_64+0x69/0xf4
+  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fixes: 18a8021a7be3 ("net/ipv4: Plumb support for filtering route dumps")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mmc/core/mmc_ops.c | 8 +++++---
- include/linux/mmc/host.h   | 1 +
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ net/ipv4/fib_frontend.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-index 09113b9ad6790..18a7afb2a5b23 100644
---- a/drivers/mmc/core/mmc_ops.c
-+++ b/drivers/mmc/core/mmc_ops.c
-@@ -538,10 +538,12 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
- 	 * If the cmd timeout and the max_busy_timeout of the host are both
- 	 * specified, let's validate them. A failure means we need to prevent
- 	 * the host from doing hw busy detection, which is done by converting
--	 * to a R1 response instead of a R1B.
-+	 * to a R1 response instead of a R1B. Note, some hosts requires R1B,
-+	 * which also means they are on their own when it comes to deal with the
-+	 * busy timeout.
- 	 */
--	if (timeout_ms && host->max_busy_timeout &&
--		(timeout_ms > host->max_busy_timeout))
-+	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && timeout_ms &&
-+	    host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
- 		use_r1b_resp = false;
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -1007,7 +1007,9 @@ static int inet_dump_fib(struct sk_buff
+ 			return -ENOENT;
+ 		}
  
- 	cmd.opcode = MMC_SWITCH;
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index ba703384bea0c..4c5eb3aa8e723 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -333,6 +333,7 @@ struct mmc_host {
- 				 MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR104 | \
- 				 MMC_CAP_UHS_DDR50)
- #define MMC_CAP_SYNC_RUNTIME_PM	(1 << 21)	/* Synced runtime PM suspends. */
-+#define MMC_CAP_NEED_RSP_BUSY	(1 << 22)	/* Commands with R1B can't use R1. */
- #define MMC_CAP_DRIVER_TYPE_A	(1 << 23)	/* Host supports Driver Type A */
- #define MMC_CAP_DRIVER_TYPE_C	(1 << 24)	/* Host supports Driver Type C */
- #define MMC_CAP_DRIVER_TYPE_D	(1 << 25)	/* Host supports Driver Type D */
--- 
-2.20.1
-
++		rcu_read_lock();
+ 		err = fib_table_dump(tb, skb, cb, &filter);
++		rcu_read_unlock();
+ 		return skb->len ? : err;
+ 	}
+ 
 
 
