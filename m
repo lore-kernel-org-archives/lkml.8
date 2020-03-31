@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C24C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF77C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C28E21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68BC208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646615;
-	bh=xTx3IFmtgVOpPk5qCDwPxc5sdjDZyhiGdgIG54GnXQE=;
+	s=default; t=1585646617;
+	bh=KDJYuc/fHq09pIXnc7q8gMDtImtWCkQEsuOHDBfYu1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WjLoLv7X/7NPJH/PcuN0a6yuTmusUebvrQuTzQEs7hwnHz2oMUA71UwsdxCQGHdLH
-	 yQkqzZoIHzWjDOEp2Hd2lZaEWfRrGL+PLDuosrssvBvYHYc+L4lgPFs9iz7s9VJ3fF
-	 UlBZ1ZVZCf4k4H4fkq9YrhZR6GdH1vx+cKT5KS4k=
+	b=SsiYS2ZiTHPoD5KH51Ryt9ACE4f/QQGchaMmvWHA/Pqp/6EfJFCR57GwC66cZeFl1
+	 uSGLNUdBfvGPVxiciHNX5MNfp2yMA+tGl142y3lLWPWRSN7UYvy6F0XbeQ1c+QzXid
+	 E1EUJufOFOSA7VuKitkRZILwIooVpfqQO0sE42I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbgCaJXe (ORCPT
+        id S1730417AbgCaJCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbgCaJCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:02:21 -0400
+        id S1730409AbgCaJCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:02:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDD16212CC;
-        Tue, 31 Mar 2020 09:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945E120848;
+        Tue, 31 Mar 2020 09:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645340;
-        bh=xTx3IFmtgVOpPk5qCDwPxc5sdjDZyhiGdgIG54GnXQE=;
+        s=default; t=1585645325;
+        bh=KDJYuc/fHq09pIXnc7q8gMDtImtWCkQEsuOHDBfYu1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XHR4PJxCYIWkqgvda6jorlb9ThLlvYMpwpmejwdoZKw3ZRB76Po2S6fCzVIZTGVFM
-         3O6R0KCtHt8n5xwb5GMMMriewqAgZlWZPk4cZMyAEh/QwhyU2Ieh0Rv4CuGu82pnHs
-         EM7qj9ZvWMEigJteSDMmjgU+3FFki3FoHClFvIc0=
+        b=tPn/xYn3p5+qf2cwYAc1/BwFT0dpADt84pDjGO5D9au4yadlTxnu+wBwnSPG6BazO
+         9eXDpfm6yW/RWI4VfksUiT9oHqaEjh0wBxzQGz9yb+bNDENj+3ryfhU5ZE52rM11ne
+         8Y1wpt/jl0YDfm7+j7lM7uMvJLblv6UrbLkyGWBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Rosen <jrosen@cisco.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Andrew Smith <andrew.smith@digi.com>,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 023/170] net/packet: tpacket_rcv: avoid a producer race condition
-Date:   Tue, 31 Mar 2020 10:57:17 +0200
-Message-Id: <20200331085426.534958971@linuxfoundation.org>
+Subject: [PATCH 5.5 019/170] net: dsa: mt7530: Change the LINK bit to reflect the link status
+Date:   Tue, 31 Mar 2020 10:57:13 +0200
+Message-Id: <20200331085426.104742373@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,157 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: "René van Dorst" <opensource@vdorst.com>
 
-[ Upstream commit 61fad6816fc10fb8793a925d5c1256d1c3db0cd2 ]
+[ Upstream commit 22259471b51925353bd7b16f864c79fdd76e425e ]
 
-PACKET_RX_RING can cause multiple writers to access the same slot if a
-fast writer wraps the ring while a slow writer is still copying. This
-is particularly likely with few, large, slots (e.g., GSO packets).
+Andrew reported:
 
-Synchronize kernel thread ownership of rx ring slots with a bitmap.
+After a number of network port link up/down changes, sometimes the switch
+port gets stuck in a state where it thinks it is still transmitting packets
+but the cpu port is not actually transmitting anymore. In this state you
+will see a message on the console
+"mtk_soc_eth 1e100000.ethernet eth0: transmit timed out" and the Tx counter
+in ifconfig will be incrementing on virtual port, but not incrementing on
+cpu port.
 
-Writers acquire a slot race-free by testing tp_status TP_STATUS_KERNEL
-while holding the sk receive queue lock. They release this lock before
-copying and set tp_status to TP_STATUS_USER to release to userspace
-when done. During copying, another writer may take the lock, also see
-TP_STATUS_KERNEL, and start writing to the same slot.
+The issue is that MAC TX/RX status has no impact on the link status or
+queue manager of the switch. So the queue manager just queues up packets
+of a disabled port and sends out pause frames when the queue is full.
 
-Introduce a new rx_owner_map bitmap with a bit per slot. To acquire a
-slot, test and set with the lock held. To release race-free, update
-tp_status and owner bit as a transaction, so take the lock again.
+Change the LINK bit to reflect the link status.
 
-This is the one of a variety of discussed options (see Link below):
-
-* instead of a shadow ring, embed the data in the slot itself, such as
-in tp_padding. But any test for this field may match a value left by
-userspace, causing deadlock.
-
-* avoid the lock on release. This leaves a small race if releasing the
-shadow slot before setting TP_STATUS_USER. The below reproducer showed
-that this race is not academic. If releasing the slot after tp_status,
-the race is more subtle. See the first link for details.
-
-* add a new tp_status TP_KERNEL_OWNED to avoid the transactional store
-of two fields. But, legacy applications may interpret all non-zero
-tp_status as owned by the user. As libpcap does. So this is possible
-only opt-in by newer processes. It can be added as an optional mode.
-
-* embed the struct at the tail of pg_vec to avoid extra allocation.
-The implementation proved no less complex than a separate field.
-
-The additional locking cost on release adds contention, no different
-than scaling on multicore or multiqueue h/w. In practice, below
-reproducer nor small packet tcpdump showed a noticeable change in
-perf report in cycles spent in spinlock. Where contention is
-problematic, packet sockets support mitigation through PACKET_FANOUT.
-And we can consider adding opt-in state TP_KERNEL_OWNED.
-
-Easy to reproduce by running multiple netperf or similar TCP_STREAM
-flows concurrently with `tcpdump -B 129 -n greater 60000`.
-
-Based on an earlier patchset by Jon Rosen. See links below.
-
-I believe this issue goes back to the introduction of tpacket_rcv,
-which predates git history.
-
-Link: https://www.mail-archive.com/netdev@vger.kernel.org/msg237222.html
-Suggested-by: Jon Rosen <jrosen@cisco.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Jon Rosen <jrosen@cisco.com>
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Reported-by: Andrew Smith <andrew.smith@digi.com>
+Signed-off-by: RenÃ© van Dorst <opensource@vdorst.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |   21 +++++++++++++++++++++
- net/packet/internal.h  |    5 ++++-
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/net/dsa/mt7530.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2172,6 +2172,7 @@ static int tpacket_rcv(struct sk_buff *s
- 	struct timespec ts;
- 	__u32 ts_status;
- 	bool is_drop_n_account = false;
-+	unsigned int slot_id = 0;
- 	bool do_vnet = false;
- 
- 	/* struct tpacket{2,3}_hdr is aligned to a multiple of TPACKET_ALIGNMENT.
-@@ -2274,6 +2275,13 @@ static int tpacket_rcv(struct sk_buff *s
- 	if (!h.raw)
- 		goto drop_n_account;
- 
-+	if (po->tp_version <= TPACKET_V2) {
-+		slot_id = po->rx_ring.head;
-+		if (test_bit(slot_id, po->rx_ring.rx_owner_map))
-+			goto drop_n_account;
-+		__set_bit(slot_id, po->rx_ring.rx_owner_map);
-+	}
-+
- 	if (do_vnet &&
- 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
- 				    sizeof(struct virtio_net_hdr),
-@@ -2379,7 +2387,10 @@ static int tpacket_rcv(struct sk_buff *s
- #endif
- 
- 	if (po->tp_version <= TPACKET_V2) {
-+		spin_lock(&sk->sk_receive_queue.lock);
- 		__packet_set_status(po, h.raw, status);
-+		__clear_bit(slot_id, po->rx_ring.rx_owner_map);
-+		spin_unlock(&sk->sk_receive_queue.lock);
- 		sk->sk_data_ready(sk);
- 	} else {
- 		prb_clear_blk_fill_status(&po->rx_ring);
-@@ -4276,6 +4287,7 @@ static int packet_set_ring(struct sock *
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -566,7 +566,7 @@ mt7530_mib_reset(struct dsa_switch *ds)
+ static void
+ mt7530_port_set_status(struct mt7530_priv *priv, int port, int enable)
  {
- 	struct pgv *pg_vec = NULL;
- 	struct packet_sock *po = pkt_sk(sk);
-+	unsigned long *rx_owner_map = NULL;
- 	int was_running, order = 0;
- 	struct packet_ring_buffer *rb;
- 	struct sk_buff_head *rb_queue;
-@@ -4361,6 +4373,12 @@ static int packet_set_ring(struct sock *
- 			}
- 			break;
- 		default:
-+			if (!tx_ring) {
-+				rx_owner_map = bitmap_alloc(req->tp_frame_nr,
-+					GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO);
-+				if (!rx_owner_map)
-+					goto out_free_pg_vec;
-+			}
- 			break;
- 		}
- 	}
-@@ -4390,6 +4408,8 @@ static int packet_set_ring(struct sock *
- 		err = 0;
- 		spin_lock_bh(&rb_queue->lock);
- 		swap(rb->pg_vec, pg_vec);
-+		if (po->tp_version <= TPACKET_V2)
-+			swap(rb->rx_owner_map, rx_owner_map);
- 		rb->frame_max = (req->tp_frame_nr - 1);
- 		rb->head = 0;
- 		rb->frame_size = req->tp_frame_size;
-@@ -4421,6 +4441,7 @@ static int packet_set_ring(struct sock *
- 	}
+-	u32 mask = PMCR_TX_EN | PMCR_RX_EN;
++	u32 mask = PMCR_TX_EN | PMCR_RX_EN | PMCR_FORCE_LNK;
  
- out_free_pg_vec:
-+	bitmap_free(rx_owner_map);
- 	if (pg_vec)
- 		free_pg_vec(pg_vec, order, req->tp_block_nr);
- out:
---- a/net/packet/internal.h
-+++ b/net/packet/internal.h
-@@ -70,7 +70,10 @@ struct packet_ring_buffer {
+ 	if (enable)
+ 		mt7530_set(priv, MT7530_PMCR_P(port), mask);
+@@ -1443,7 +1443,7 @@ static void mt7530_phylink_mac_config(st
+ 	mcr_new &= ~(PMCR_FORCE_SPEED_1000 | PMCR_FORCE_SPEED_100 |
+ 		     PMCR_FORCE_FDX | PMCR_TX_FC_EN | PMCR_RX_FC_EN);
+ 	mcr_new |= PMCR_IFG_XMIT(1) | PMCR_MAC_MODE | PMCR_BACKOFF_EN |
+-		   PMCR_BACKPR_EN | PMCR_FORCE_MODE | PMCR_FORCE_LNK;
++		   PMCR_BACKPR_EN | PMCR_FORCE_MODE;
  
- 	unsigned int __percpu	*pending_refcnt;
- 
--	struct tpacket_kbdq_core	prb_bdqc;
-+	union {
-+		unsigned long			*rx_owner_map;
-+		struct tpacket_kbdq_core	prb_bdqc;
-+	};
- };
- 
- extern struct mutex fanout_mutex;
+ 	/* Are we connected to external phy */
+ 	if (port == 5 && dsa_is_user_port(ds, 5))
 
 
