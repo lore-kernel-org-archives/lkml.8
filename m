@@ -2,173 +2,493 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAC6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43266C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0A3206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gF+9aAxL"
+	by mail.kernel.org (Postfix) with ESMTP id 0FF1C20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbgCaNvy (ORCPT
+        id S1731003AbgCaNv5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:51:54 -0400
-Received: from mail-bn8nam11on2129.outbound.protection.outlook.com ([40.107.236.129]:44129
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729891AbgCaNvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:51:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nwE7SJAWhISvICrk+lsc3FfZX0q5YdvEeOMN4aEwg+AO1SnOPtvOUORQVM9LrEy0JvvWHa1lvkk2KjUSRF70iSCNPccPZP1zmr/ym9uqnWrPllYbtXj7e3Uya7k2LaCUNSal/aVBEUKucqlqiR3xuiBKAePw23RV3q7Pwf/kOmQESblFYzfVmNXMMud+4IkmgJevbOEjrYYMRFAlaW1KI4ikDt+Lmul3hy1B3TCeyHNk+QomfcDE0W74rRpSazqVgZWKk/MT1RK4Tn80ORtQLvY+YEDsN5O+4EFuBILI2/5n7A6RR3OGwr971M/J3Hf8IPxtF7UMe+I15K2pBjmkAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dru9s17HeKkHO1NJnCn6MPok3oczXncD2zC4QG+10MA=;
- b=HHEDXfqSUIErHM5HtfeKwIfVgbkMzv9ml28pCpDlusD4kbtGDI2KWInMzRRyFGjw0t1WoGT+HWeqTbNQgFpyWgnjh3ohrdmLklaKHgR3QWSW0qcGqDFbpFmnqeptylEwETL7Z+bun68zU82pyyzTQcrBhOQc20c9T6Y5FYxz1BOucXnWvjvTZDUMTUH0Wgzr7LHQVxGK5BxCx3nupMMmbeeBW/6iJhwO58Gdldw4tDMvsn0FzcmIAsu0xC43a5sAtnavm1onoEO/SFy73bg2nObverJgnQ/68l2u+4FFSu8CFWTeX+GBH6tLlbpvrNAhWigK7UxiCHnvoLPmAc7DhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dru9s17HeKkHO1NJnCn6MPok3oczXncD2zC4QG+10MA=;
- b=gF+9aAxLFMO8UI0Dm+ZHxK3St0EjqALWFlR34R5q0AlB68eNx5PropA5m2g+cY6/D3pHIH4iQqhRRwdeOgoqqe4ckl+qVr6w9Fuqt80JKR9SNhV8pNVTXljKilSHsYWmQZz01htcSr6Ht0wX/ub5vmEXJwOnVcwsQv457oOZgKY=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0905.namprd21.prod.outlook.com (2603:10b6:302:10::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2; Tue, 31 Mar
- 2020 13:51:48 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2900.002; Tue, 31 Mar 2020
- 13:51:48 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
- panic_on_oops is set
-Thread-Topic: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
- panic_on_oops is set
-Thread-Index: AQHWBy9soracth5BGEahOQja8RE2hKhitilQ
-Date:   Tue, 31 Mar 2020 13:51:48 +0000
-Message-ID: <MW2PR2101MB1052A8FEF85F381B3EAF7D36D7C80@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
- <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
+        Tue, 31 Mar 2020 09:51:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:21130 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730932AbgCaNv4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:51:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mtapsc-3-9pj3e-AOPTeJpB1kh0EHVw-1; Tue, 31 Mar 2020 14:51:51 +0100
+X-MC-Unique: 9pj3e-AOPTeJpB1kh0EHVw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:51:51 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 31 Mar 2020 14:51:51 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH 03/12] fs: Move rw_copy_check_uvector() into
+ lib/iov_iter.c and make static.
+Thread-Topic: [RFC PATCH 03/12] fs: Move rw_copy_check_uvector() into
+ lib/iov_iter.c and make static.
+Thread-Index: AdYHYXyfFOA8C1+qTDGwDlT1PXM6rA==
+Date:   Tue, 31 Mar 2020 13:51:51 +0000
+Message-ID: <7cf3e62a13c943f99d8915024925a15f@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-31T13:51:46.4804770Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=01a21428-261e-4e0f-b3ad-8718b5ae1ef5;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 76dca920-ca08-47f7-a16a-08d7d57aa864
-x-ms-traffictypediagnostic: MW2PR2101MB0905:|MW2PR2101MB0905:|MW2PR2101MB0905:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB0905AB4AD1FCC939A7066470D7C80@MW2PR2101MB0905.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0359162B6D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(8676002)(5660300002)(8936002)(4326008)(71200400001)(6636002)(81156014)(52536014)(81166006)(86362001)(10290500003)(498600001)(110136005)(54906003)(6506007)(66476007)(66446008)(82950400001)(186003)(66946007)(82960400001)(55016002)(26005)(66556008)(9686003)(64756008)(2906002)(33656002)(7696005)(76116006)(8990500004);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6+mU0VAFMMujIrjfYCA3NuNH+tmHXYq41PEqUN0Pk7MW/b7VJNwwR0due7jOAoZDjLWJBKYLhdsRdDyRHBZCFwe22GuSplAK+SdcGvjSQcZqBUBcjwe32nvpKMT6l4UjlzL7EyoEr9QYb1oPkn4LYqCoU1dnSocZGZOdpV29Sw6E4b9oiGGEEMH6/q1Wp/DaRQk3xHXNZxyZvV3++CFjGeEwpIvhLAd1bg3ycGbMfJWwhvIdgeutgc9xiHiEkFQfDZHNn06bxwBQh8PfZGByoMcO7i6uHP6n6zZElQcXRa624ySZ0YYWdw631T8PJ7CjJBf/occ2EnRPfBHJ3HrvVB1Uy00WJ+Xvd8tj+ovHyOIfRWQULH0xX4/r3Mn+QVbTBYuQZALraMGohYVyaPVl9YOKzwJr4AeTLpW2RoGdtCa2st4AEpHF5fipedA5TtPZ
-x-ms-exchange-antispam-messagedata: g8PU2ZbBqPZCtsBaa2w/f+yUTgzfc1s6hW2pXprQ+GnD+3tS4RI7neDwDzTqPR8+/3GsJ42EJCJzomvhfWZKDId0rQnwSwSd3mD5xatzdDXL7KaSlFc6yFvRrAvUTuFbBJMec2s+F+NgFrTFuEBZhg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76dca920-ca08-47f7-a16a-08d7d57aa864
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 13:51:48.2089
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leI51m3RT1ad7eIsCEpLDx74oqE9ybHhTCtYj7AO7vOBpU/ZMoeVogOi+iz+gRDKgDnbqSjNLlYmUmRtKewncfQxj0PV6YUZh9FjDsZxIrY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0905
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 31, 2020 1=
-2:39 AM
->=20
-> When oops happens with panic_on_oops unset, the oops
-> thread is killed by die() and system continues to run.
-> In such case, guest should not report crash register
-> data to host since system still runs. Fix it.
->=20
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
-> Change since v3:
-> 	Fix compile error
-> ---
->  drivers/hv/vmbus_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 172ceae69abb..4bc02aea2098 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -31,6 +31,7 @@
->  #include <linux/kdebug.h>
->  #include <linux/efi.h>
->  #include <linux/random.h>
-> +#include <linux/kernel.h>
+This lets the compiler inline it into import_iovec() generating
+much better code.
 
-Unfortunately, adding the #include doesn't solve the problem.  The error oc=
-curs when
-CONFIG_HYPERV=3Dm, because panic_on_oops is not exported.  I haven't though=
-t it
-through, but hopefully there's a solution where panic_on_oops can be tested=
- in
-hyperv_report_panic() or some other Hyper-V specific function that's never =
-in a
-module, so that we don't need to export panic_on_oops.
+Signed-off-by: David Laight <david.laight@aculab.com>
+---
+ fs/read_write.c        | 179 -------------------------------------------------
+ include/linux/compat.h |   6 --
+ include/linux/fs.h     |   5 --
+ lib/iov_iter.c         | 178 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 178 insertions(+), 190 deletions(-)
 
-Michael
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 59d819c..a6f914c 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -732,185 +732,6 @@ static ssize_t do_loop_readv_writev(struct file *filp, struct iov_iter *iter,
+ 	return ret;
+ }
+ 
+-/**
+- * rw_copy_check_uvector() - Copy an array of &struct iovec from userspace
+- *     into the kernel and check that it is valid.
+- *
+- * @type: One of %CHECK_IOVEC_ONLY, %READ, or %WRITE.
+- * @uvector: Pointer to the userspace array.
+- * @nr_segs: Number of elements in userspace array.
+- * @fast_segs: Number of elements in @fast_pointer.
+- * @fast_pointer: Pointer to (usually small on-stack) kernel array.
+- * @ret_pointer: (output parameter) Pointer to a variable that will point to
+- *     either @fast_pointer, a newly allocated kernel array, or NULL,
+- *     depending on which array was used.
+- *
+- * This function copies an array of &struct iovec of @nr_segs from
+- * userspace into the kernel and checks that each element is valid (e.g.
+- * it does not point to a kernel address or cause overflow by being too
+- * large, etc.).
+- *
+- * As an optimization, the caller may provide a pointer to a small
+- * on-stack array in @fast_pointer, typically %UIO_FASTIOV elements long
+- * (the size of this array, or 0 if unused, should be given in @fast_segs).
+- *
+- * @ret_pointer will always point to the array that was used, so the
+- * caller must take care not to call kfree() on it e.g. in case the
+- * @fast_pointer array was used and it was allocated on the stack.
+- *
+- * Return: The total number of bytes covered by the iovec array on success
+- *   or a negative error code on error.
+- */
+-ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+-			      unsigned long nr_segs, unsigned long fast_segs,
+-			      struct iovec *fast_pointer,
+-			      struct iovec **ret_pointer)
+-{
+-	unsigned long seg;
+-	ssize_t ret;
+-	struct iovec *iov = fast_pointer;
+-
+-	/*
+-	 * SuS says "The readv() function *may* fail if the iovcnt argument
+-	 * was less than or equal to 0, or greater than {IOV_MAX}.  Linux has
+-	 * traditionally returned zero for zero segments, so...
+-	 */
+-	if (nr_segs == 0) {
+-		ret = 0;
+-		goto out;
+-	}
+-
+-	/*
+-	 * First get the "struct iovec" from user memory and
+-	 * verify all the pointers
+-	 */
+-	if (nr_segs > UIO_MAXIOV) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-	if (nr_segs > fast_segs) {
+-		iov = kmalloc_array(nr_segs, sizeof(struct iovec), GFP_KERNEL);
+-		if (iov == NULL) {
+-			ret = -ENOMEM;
+-			goto out;
+-		}
+-	}
+-	if (copy_from_user(iov, uvector, nr_segs*sizeof(*uvector))) {
+-		ret = -EFAULT;
+-		goto out;
+-	}
+-
+-	/*
+-	 * According to the Single Unix Specification we should return EINVAL
+-	 * if an element length is < 0 when cast to ssize_t or if the
+-	 * total length would overflow the ssize_t return value of the
+-	 * system call.
+-	 *
+-	 * Linux caps all read/write calls to MAX_RW_COUNT, and avoids the
+-	 * overflow case.
+-	 */
+-	ret = 0;
+-	for (seg = 0; seg < nr_segs; seg++) {
+-		void __user *buf = iov[seg].iov_base;
+-		ssize_t len = (ssize_t)iov[seg].iov_len;
+-
+-		/* see if we we're about to use an invalid len or if
+-		 * it's about to overflow ssize_t */
+-		if (len < 0) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
+-		if (type >= 0
+-		    && unlikely(!access_ok(buf, len))) {
+-			ret = -EFAULT;
+-			goto out;
+-		}
+-		if (len > MAX_RW_COUNT - ret) {
+-			len = MAX_RW_COUNT - ret;
+-			iov[seg].iov_len = len;
+-		}
+-		ret += len;
+-	}
+-out:
+-	*ret_pointer = iov;
+-	return ret;
+-}
+-
+-#ifdef CONFIG_COMPAT
+-ssize_t compat_rw_copy_check_uvector(int type,
+-		const struct compat_iovec __user *uvector, unsigned long nr_segs,
+-		unsigned long fast_segs, struct iovec *fast_pointer,
+-		struct iovec **ret_pointer)
+-{
+-	compat_ssize_t tot_len;
+-	struct iovec *iov = *ret_pointer = fast_pointer;
+-	ssize_t ret = 0;
+-	int seg;
+-
+-	/*
+-	 * SuS says "The readv() function *may* fail if the iovcnt argument
+-	 * was less than or equal to 0, or greater than {IOV_MAX}.  Linux has
+-	 * traditionally returned zero for zero segments, so...
+-	 */
+-	if (nr_segs == 0)
+-		goto out;
+-
+-	ret = -EINVAL;
+-	if (nr_segs > UIO_MAXIOV)
+-		goto out;
+-	if (nr_segs > fast_segs) {
+-		ret = -ENOMEM;
+-		iov = kmalloc_array(nr_segs, sizeof(struct iovec), GFP_KERNEL);
+-		if (iov == NULL)
+-			goto out;
+-	}
+-	*ret_pointer = iov;
+-
+-	ret = -EFAULT;
+-	if (!access_ok(uvector, nr_segs*sizeof(*uvector)))
+-		goto out;
+-
+-	/*
+-	 * Single unix specification:
+-	 * We should -EINVAL if an element length is not >= 0 and fitting an
+-	 * ssize_t.
+-	 *
+-	 * In Linux, the total length is limited to MAX_RW_COUNT, there is
+-	 * no overflow possibility.
+-	 */
+-	tot_len = 0;
+-	ret = -EINVAL;
+-	for (seg = 0; seg < nr_segs; seg++) {
+-		compat_uptr_t buf;
+-		compat_ssize_t len;
+-
+-		if (__get_user(len, &uvector->iov_len) ||
+-		   __get_user(buf, &uvector->iov_base)) {
+-			ret = -EFAULT;
+-			goto out;
+-		}
+-		if (len < 0)	/* size_t not fitting in compat_ssize_t .. */
+-			goto out;
+-		if (type >= 0 &&
+-		    !access_ok(compat_ptr(buf), len)) {
+-			ret = -EFAULT;
+-			goto out;
+-		}
+-		if (len > MAX_RW_COUNT - tot_len)
+-			len = MAX_RW_COUNT - tot_len;
+-		tot_len += len;
+-		iov->iov_base = compat_ptr(buf);
+-		iov->iov_len = (compat_size_t) len;
+-		uvector++;
+-		iov++;
+-	}
+-	ret = tot_len;
+-
+-out:
+-	return ret;
+-}
+-#endif
+-
+ static ssize_t do_iter_read(struct file *file, struct iov_iter *iter,
+ 		loff_t *pos, rwf_t flags)
+ {
+diff --git a/include/linux/compat.h b/include/linux/compat.h
+index df2475b..c161507 100644
+--- a/include/linux/compat.h
++++ b/include/linux/compat.h
+@@ -444,12 +444,6 @@ extern long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+ 
+ struct epoll_event;	/* fortunately, this one is fixed-layout */
+ 
+-extern ssize_t compat_rw_copy_check_uvector(int type,
+-		const struct compat_iovec __user *uvector,
+-		unsigned long nr_segs,
+-		unsigned long fast_segs, struct iovec *fast_pointer,
+-		struct iovec **ret_pointer);
+-
+ extern void __user *compat_alloc_user_space(unsigned long len);
+ 
+ int compat_restore_altstack(const compat_stack_t __user *uss);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index abedbff..c7335a1 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1907,11 +1907,6 @@ static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
+ 	return file->f_op->mmap(file, vma);
+ }
+ 
+-ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
+-			      unsigned long nr_segs, unsigned long fast_segs,
+-			      struct iovec *fast_pointer,
+-			      struct iovec **ret_pointer);
+-
+ extern ssize_t __vfs_read(struct file *, char __user *, size_t, loff_t *);
+ extern ssize_t vfs_read(struct file *, char __user *, size_t, loff_t *);
+ extern ssize_t vfs_write(struct file *, const char __user *, size_t, loff_t *);
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 51595bf..d8bc770 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1648,6 +1648,111 @@ const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags)
+ }
+ EXPORT_SYMBOL(dup_iter);
+ 
++
++/**
++ * rw_copy_check_uvector() - Copy an array of &struct iovec from userspace
++ *     into the kernel and check that it is valid.
++ *
++ * @type: One of %CHECK_IOVEC_ONLY, %READ, or %WRITE.
++ * @uvector: Pointer to the userspace array.
++ * @nr_segs: Number of elements in userspace array.
++ * @fast_segs: Number of elements in @fast_pointer.
++ * @fast_pointer: Pointer to (usually small on-stack) kernel array.
++ * @ret_pointer: (output parameter) Pointer to a variable that will point to
++ *     either @fast_pointer, a newly allocated kernel array, or NULL,
++ *     depending on which array was used.
++ *
++ * This function copies an array of &struct iovec of @nr_segs from
++ * userspace into the kernel and checks that each element is valid (e.g.
++ * it does not point to a kernel address or cause overflow by being too
++ * large, etc.).
++ *
++ * As an optimization, the caller may provide a pointer to a small
++ * on-stack array in @fast_pointer, typically %UIO_FASTIOV elements long
++ * (the size of this array, or 0 if unused, should be given in @fast_segs).
++ *
++ * @ret_pointer will always point to the array that was used, so the
++ * caller must take care not to call kfree() on it e.g. in case the
++ * @fast_pointer array was used and it was allocated on the stack.
++ *
++ * Return: The total number of bytes covered by the iovec array on success
++ *   or a negative error code on error.
++ */
++static ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
++			      unsigned long nr_segs, unsigned long fast_segs,
++			      struct iovec *fast_pointer,
++			      struct iovec **ret_pointer)
++{
++	unsigned long seg;
++	ssize_t ret;
++	struct iovec *iov = fast_pointer;
++
++	/*
++	 * SuS says "The readv() function *may* fail if the iovcnt argument
++	 * was less than or equal to 0, or greater than {IOV_MAX}.  Linux has
++	 * traditionally returned zero for zero segments, so...
++	 */
++	if (nr_segs == 0) {
++		ret = 0;
++		goto out;
++	}
++
++	/*
++	 * First get the "struct iovec" from user memory and
++	 * verify all the pointers
++	 */
++	if (nr_segs > UIO_MAXIOV) {
++		ret = -EINVAL;
++		goto out;
++	}
++	if (nr_segs > fast_segs) {
++		iov = kmalloc_array(nr_segs, sizeof(struct iovec), GFP_KERNEL);
++		if (iov == NULL) {
++			ret = -ENOMEM;
++			goto out;
++		}
++	}
++	if (copy_from_user(iov, uvector, nr_segs*sizeof(*uvector))) {
++		ret = -EFAULT;
++		goto out;
++	}
++
++	/*
++	 * According to the Single Unix Specification we should return EINVAL
++	 * if an element length is < 0 when cast to ssize_t or if the
++	 * total length would overflow the ssize_t return value of the
++	 * system call.
++	 *
++	 * Linux caps all read/write calls to MAX_RW_COUNT, and avoids the
++	 * overflow case.
++	 */
++	ret = 0;
++	for (seg = 0; seg < nr_segs; seg++) {
++		void __user *buf = iov[seg].iov_base;
++		ssize_t len = (ssize_t)iov[seg].iov_len;
++
++		/* see if we we're about to use an invalid len or if
++		 * it's about to overflow ssize_t */
++		if (len < 0) {
++			ret = -EINVAL;
++			goto out;
++		}
++		if (type >= 0
++		    && unlikely(!access_ok(buf, len))) {
++			ret = -EFAULT;
++			goto out;
++		}
++		if (len > MAX_RW_COUNT - ret) {
++			len = MAX_RW_COUNT - ret;
++			iov[seg].iov_len = len;
++		}
++		ret += len;
++	}
++out:
++	*ret_pointer = iov;
++	return ret;
++}
++
+ /**
+  * import_iovec() - Copy an array of &struct iovec from userspace
+  *     into the kernel, check that it is valid, and initialize a new
+@@ -1693,6 +1798,79 @@ ssize_t import_iovec(int type, const struct iovec __user * uvector,
+ #ifdef CONFIG_COMPAT
+ #include <linux/compat.h>
+ 
++static ssize_t compat_rw_copy_check_uvector(int type,
++		const struct compat_iovec __user *uvector, unsigned long nr_segs,
++		unsigned long fast_segs, struct iovec *fast_pointer,
++		struct iovec **ret_pointer)
++{
++	compat_ssize_t tot_len;
++	struct iovec *iov = *ret_pointer = fast_pointer;
++	ssize_t ret = 0;
++	int seg;
++
++	/*
++	 * SuS says "The readv() function *may* fail if the iovcnt argument
++	 * was less than or equal to 0, or greater than {IOV_MAX}.  Linux has
++	 * traditionally returned zero for zero segments, so...
++	 */
++	if (nr_segs == 0)
++		goto out;
++
++	ret = -EINVAL;
++	if (nr_segs > UIO_MAXIOV)
++		goto out;
++	if (nr_segs > fast_segs) {
++		ret = -ENOMEM;
++		iov = kmalloc_array(nr_segs, sizeof(struct iovec), GFP_KERNEL);
++		if (iov == NULL)
++			goto out;
++	}
++	*ret_pointer = iov;
++
++	ret = -EFAULT;
++	if (!access_ok(uvector, nr_segs*sizeof(*uvector)))
++		goto out;
++
++	/*
++	 * Single unix specification:
++	 * We should -EINVAL if an element length is not >= 0 and fitting an
++	 * ssize_t.
++	 *
++	 * In Linux, the total length is limited to MAX_RW_COUNT, there is
++	 * no overflow possibility.
++	 */
++	tot_len = 0;
++	ret = -EINVAL;
++	for (seg = 0; seg < nr_segs; seg++) {
++		compat_uptr_t buf;
++		compat_ssize_t len;
++
++		if (__get_user(len, &uvector->iov_len) ||
++		   __get_user(buf, &uvector->iov_base)) {
++			ret = -EFAULT;
++			goto out;
++		}
++		if (len < 0)	/* size_t not fitting in compat_ssize_t .. */
++			goto out;
++		if (type >= 0 &&
++		    !access_ok(compat_ptr(buf), len)) {
++			ret = -EFAULT;
++			goto out;
++		}
++		if (len > MAX_RW_COUNT - tot_len)
++			len = MAX_RW_COUNT - tot_len;
++		tot_len += len;
++		iov->iov_base = compat_ptr(buf);
++		iov->iov_len = (compat_size_t) len;
++		uvector++;
++		iov++;
++	}
++	ret = tot_len;
++
++out:
++	return ret;
++}
++
+ ssize_t compat_import_iovec(int type,
+ 		const struct compat_iovec __user * uvector,
+ 		unsigned nr_segs, unsigned fast_segs,
+-- 
+1.8.1.2
 
->  #include <linux/syscore_ops.h>
->  #include <clocksource/hyperv_timer.h>
->  #include "hyperv_vmbus.h"
-> @@ -91,7 +92,7 @@ static int hyperv_die_event(struct notifier_block *nb, =
-unsigned long
-> val,
->  	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
->  	 * the notification here.
->  	 */
-> -	if (hyperv_report_reg())
-> +	if (hyperv_report_reg() && panic_on_oops)
->  		hyperv_report_panic(regs, val);
->  	return NOTIFY_DONE;
->  }
-> --
-> 2.14.5
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
