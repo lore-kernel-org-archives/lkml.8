@@ -4,41 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460A1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E6DC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22BFA20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B500520784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbgCaNwj convert rfc822-to-8bit (ORCPT
+        id S1731148AbgCaNwe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:52:39 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55768 "EHLO
+        Tue, 31 Mar 2020 09:52:34 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47400 "EHLO
         eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731119AbgCaNwg (ORCPT
+        by vger.kernel.org with ESMTP id S1731119AbgCaNwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:52:36 -0400
+        Tue, 31 Mar 2020 09:52:32 -0400
 Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-137-Pg8SJePXOGqrq2w1q_kw9A-1; Tue, 31 Mar 2020 14:52:32 +0100
-X-MC-Unique: Pg8SJePXOGqrq2w1q_kw9A-1
+ uk-mta-143-aaKZBYIcPiSJ7fCHXFRLoQ-2; Tue, 31 Mar 2020 14:52:28 +0100
+X-MC-Unique: aaKZBYIcPiSJ7fCHXFRLoQ-2
 Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
  AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:52:32 +0100
+ Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:52:25 +0100
 Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
  AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 31 Mar 2020 14:52:32 +0100
+ Tue, 31 Mar 2020 14:52:25 +0100
 From:   David Laight <David.Laight@ACULAB.COM>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 01/12] mm:process_vm_access Call import_iovec() instead of
- rw_copy_check_uvector()
-Thread-Topic: [RFC PATCH 01/12] mm:process_vm_access Call import_iovec()
- instead of rw_copy_check_uvector()
-Thread-Index: AdYHYRHRKyZYcrMpTcG/7dmy3RJd8w==
-Date:   Tue, 31 Mar 2020 13:52:31 +0000
-Message-ID: <31be238f1c7542ad8e70ecd45d0e9763@AcuMS.aculab.com>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: [RFC PATCH 10/12] net/socket: Use iovec_import() instead of
+ import_iovec().
+Thread-Topic: [RFC PATCH 10/12] net/socket: Use iovec_import() instead of
+ import_iovec().
+Thread-Index: AdYHY26Pn/zazxI4TBqBFviolCOniA==
+Date:   Tue, 31 Mar 2020 13:52:25 +0000
+Message-ID: <b433aca086ad4a7ba36f7559e3ccc458@AcuMS.aculab.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -55,98 +56,283 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the only direct call of rw_copy_check_uvector().
-Removing it lets rw_copy_check_uvector() be inlined into
-import_iovec() and the horrig calling conventions fixed.
 
 Signed-off-by: David Laight <david.laight@aculab.com>
 ---
- mm/process_vm_access.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ include/linux/socket.h | 14 +++++-----
+ include/net/compat.h   |  4 +--
+ net/compat.c           | 21 +++++++-------
+ net/socket.c           | 74 ++++++++++++++++++++++----------------------------
+ 4 files changed, 51 insertions(+), 62 deletions(-)
 
-diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-index de41e83..2829e26 100644
---- a/mm/process_vm_access.c
-+++ b/mm/process_vm_access.c
-@@ -264,7 +264,7 @@ static ssize_t process_vm_rw(pid_t pid,
- 	struct iovec iovstack_r[UIO_FASTIOV];
- 	struct iovec *iov_l = iovstack_l;
- 	struct iovec *iov_r = iovstack_r;
--	struct iov_iter iter;
-+	struct iov_iter iter_l, iter_r;
- 	ssize_t rc;
- 	int dir = vm_write ? WRITE : READ;
+diff --git a/include/linux/socket.h b/include/linux/socket.h
+index 15f3412..458bcf4 100644
+--- a/include/linux/socket.h
++++ b/include/linux/socket.h
+@@ -384,13 +384,13 @@ extern long __sys_recvmsg_sock(struct socket *sock, struct msghdr *msg,
+ 			       struct user_msghdr __user *umsg,
+ 			       struct sockaddr __user *uaddr,
+ 			       unsigned int flags);
+-extern int sendmsg_copy_msghdr(struct msghdr *msg,
+-			       struct user_msghdr __user *umsg, unsigned flags,
+-			       struct iovec **iov);
+-extern int recvmsg_copy_msghdr(struct msghdr *msg,
+-			       struct user_msghdr __user *umsg, unsigned flags,
+-			       struct sockaddr __user **uaddr,
+-			       struct iovec **iov);
++struct iovec *sendmsg_copy_msghdr(struct msghdr *msg,
++				  struct user_msghdr __user *umsg, unsigned flags,
++				  struct iovec_cache *cache);
++struct iovec *recvmsg_copy_msghdr(struct msghdr *msg,
++				  struct user_msghdr __user *umsg, unsigned flags,
++				  struct sockaddr __user **uaddr,
++				  struct iovec_cache *cache);
  
-@@ -272,23 +272,24 @@ static ssize_t process_vm_rw(pid_t pid,
- 		return -EINVAL;
+ /* helpers which do the actual work for syscalls */
+ extern int __sys_recvfrom(int fd, void __user *ubuf, size_t size,
+diff --git a/include/net/compat.h b/include/net/compat.h
+index f277653..00094fb 100644
+--- a/include/net/compat.h
++++ b/include/net/compat.h
+@@ -38,8 +38,8 @@ struct compat_cmsghdr {
+ #define compat_mmsghdr	mmsghdr
+ #endif /* defined(CONFIG_COMPAT) */
  
- 	/* Check iovecs */
--	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter);
-+	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter_l);
- 	if (rc < 0)
- 		return rc;
--	if (!iov_iter_count(&iter))
-+	if (!iov_iter_count(&iter_l))
- 		goto free_iovecs;
+-int get_compat_msghdr(struct msghdr *, struct compat_msghdr __user *,
+-		      struct sockaddr __user **, struct iovec **);
++struct iovec *get_compat_msghdr(struct msghdr *, struct compat_msghdr __user *,
++				struct sockaddr __user **, struct iovec_cache *);
+ struct sock_fprog __user *get_compat_bpf_fprog(char __user *optval);
+ int put_cmsg_compat(struct msghdr*, int, int, int, void *);
  
--	rc = rw_copy_check_uvector(CHECK_IOVEC_ONLY, rvec, riovcnt, UIO_FASTIOV,
--				   iovstack_r, &iov_r);
-+	rc = import_iovec(CHECK_IOVEC_ONLY, rvec, riovcnt, UIO_FASTIOV, &iov_r, &iter_r);
- 	if (rc <= 0)
- 		goto free_iovecs;
+diff --git a/net/compat.c b/net/compat.c
+index 47d99c7..96bf01f 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -33,16 +33,16 @@
+ #include <linux/uaccess.h>
+ #include <net/compat.h>
  
--	rc = process_vm_rw_core(pid, &iter, iov_r, riovcnt, flags, vm_write);
-+	rc = process_vm_rw_core(pid, &iter_l, iter_r.iov, iter_r.nr_segs,
-+				flags, vm_write);
+-int get_compat_msghdr(struct msghdr *kmsg,
+-		      struct compat_msghdr __user *umsg,
+-		      struct sockaddr __user **save_addr,
+-		      struct iovec **iov)
++struct iovec *get_compat_msghdr(struct msghdr *kmsg,
++				struct compat_msghdr __user *umsg,
++				struct sockaddr __user **save_addr,
++				struct iovec_cache *cache)
+ {
+ 	struct compat_msghdr msg;
+ 	ssize_t err;
  
- free_iovecs:
- 	if (iov_r != iovstack_r)
- 		kfree(iov_r);
--	kfree(iov_l);
-+	if (iov_l != iovstack_l)
-+		kfree(iov_l);
+ 	if (copy_from_user(&msg, umsg, sizeof(*umsg)))
+-		return -EFAULT;
++		return ERR_PTR(-EFAULT);
  
- 	return rc;
+ 	kmsg->msg_flags = msg.msg_flags;
+ 	kmsg->msg_namelen = msg.msg_namelen;
+@@ -51,7 +51,7 @@ int get_compat_msghdr(struct msghdr *kmsg,
+ 		kmsg->msg_namelen = 0;
+ 
+ 	if (kmsg->msg_namelen < 0)
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (kmsg->msg_namelen > sizeof(struct sockaddr_storage))
+ 		kmsg->msg_namelen = sizeof(struct sockaddr_storage);
+@@ -68,7 +68,7 @@ int get_compat_msghdr(struct msghdr *kmsg,
+ 						  kmsg->msg_namelen,
+ 						  kmsg->msg_name);
+ 			if (err < 0)
+-				return err;
++				return ERR_PTR(err);
+ 		}
+ 	} else {
+ 		kmsg->msg_name = NULL;
+@@ -76,14 +76,13 @@ int get_compat_msghdr(struct msghdr *kmsg,
+ 	}
+ 
+ 	if (msg.msg_iovlen > UIO_MAXIOV)
+-		return -EMSGSIZE;
++		return ERR_PTR(-EMSGSIZE);
+ 
+ 	kmsg->msg_iocb = NULL;
+ 
+-	err = compat_import_iovec(save_addr ? READ : WRITE,
++	return compat_iovec_import(save_addr ? READ : WRITE,
+ 				   compat_ptr(msg.msg_iov), msg.msg_iovlen,
+-				   UIO_FASTIOV, iov, &kmsg->msg_iter);
+-	return err < 0 ? err : 0;
++				   cache, &kmsg->msg_iter);
  }
-@@ -322,30 +323,30 @@ static ssize_t process_vm_rw(pid_t pid,
- 	struct iovec iovstack_r[UIO_FASTIOV];
- 	struct iovec *iov_l = iovstack_l;
- 	struct iovec *iov_r = iovstack_r;
--	struct iov_iter iter;
-+	struct iov_iter iter_l, iter_r;
- 	ssize_t rc = -EFAULT;
- 	int dir = vm_write ? WRITE : READ;
  
- 	if (flags != 0)
- 		return -EINVAL;
+ /* Bleech... */
+diff --git a/net/socket.c b/net/socket.c
+index 2eecf15..7431cf4 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2228,16 +2228,16 @@ struct used_address {
+ 	unsigned int name_len;
+ };
  
--	rc = compat_import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter);
-+	rc = compat_import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter_l);
- 	if (rc < 0)
- 		return rc;
--	if (!iov_iter_count(&iter))
-+	if (!iov_iter_count(&iter_l))
- 		goto free_iovecs;
--	rc = compat_rw_copy_check_uvector(CHECK_IOVEC_ONLY, rvec, riovcnt,
--					  UIO_FASTIOV, iovstack_r,
--					  &iov_r);
-+	rc = compat_import_iovec(0, rvec, riovcnt, UIO_FASTIOV, &iov_r, &iter_r);
- 	if (rc <= 0)
- 		goto free_iovecs;
+-static int copy_msghdr_from_user(struct msghdr *kmsg,
+-				 struct user_msghdr __user *umsg,
+-				 struct sockaddr __user **save_addr,
+-				 struct iovec **iov)
++static struct iovec *copy_msghdr_from_user(struct msghdr *kmsg,
++					   struct user_msghdr __user *umsg,
++					   struct sockaddr __user **save_addr,
++					   struct iovec_cache *cache)
+ {
+ 	struct user_msghdr msg;
+ 	ssize_t err;
  
--	rc = process_vm_rw_core(pid, &iter, iov_r, riovcnt, flags, vm_write);
-+	rc = process_vm_rw_core(pid, &iter_l, iter_r.iov, iter_r.nr_segs,
-+				flags, vm_write);
+ 	if (copy_from_user(&msg, umsg, sizeof(*umsg)))
+-		return -EFAULT;
++		return ERR_PTR(-EFAULT);
  
- free_iovecs:
- 	if (iov_r != iovstack_r)
- 		kfree(iov_r);
--	kfree(iov_l);
-+	if (iov_l != iovstack_l)
-+		kfree(iov_l);
- 	return rc;
+ 	kmsg->msg_control = (void __force *)msg.msg_control;
+ 	kmsg->msg_controllen = msg.msg_controllen;
+@@ -2248,7 +2248,7 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
+ 		kmsg->msg_namelen = 0;
+ 
+ 	if (kmsg->msg_namelen < 0)
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
+ 
+ 	if (kmsg->msg_namelen > sizeof(struct sockaddr_storage))
+ 		kmsg->msg_namelen = sizeof(struct sockaddr_storage);
+@@ -2262,7 +2262,7 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
+ 						  kmsg->msg_namelen,
+ 						  kmsg->msg_name);
+ 			if (err < 0)
+-				return err;
++				return ERR_PTR(err);
+ 		}
+ 	} else {
+ 		kmsg->msg_name = NULL;
+@@ -2270,14 +2270,13 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
+ 	}
+ 
+ 	if (msg.msg_iovlen > UIO_MAXIOV)
+-		return -EMSGSIZE;
++		return ERR_PTR(-EMSGSIZE);
+ 
+ 	kmsg->msg_iocb = NULL;
+ 
+-	err = import_iovec(save_addr ? READ : WRITE,
++	return iovec_import(save_addr ? READ : WRITE,
+ 			    msg.msg_iov, msg.msg_iovlen,
+-			    UIO_FASTIOV, iov, &kmsg->msg_iter);
+-	return err < 0 ? err : 0;
++			    cache, &kmsg->msg_iter);
  }
  
+ static int ____sys_sendmsg(struct socket *sock, struct msghdr *msg_sys,
+@@ -2361,24 +2360,18 @@ static int ____sys_sendmsg(struct socket *sock, struct msghdr *msg_sys,
+ 	return err;
+ }
+ 
+-int sendmsg_copy_msghdr(struct msghdr *msg,
+-			struct user_msghdr __user *umsg, unsigned flags,
+-			struct iovec **iov)
++struct iovec *sendmsg_copy_msghdr(struct msghdr *msg,
++				  struct user_msghdr __user *umsg,
++				  unsigned flags, struct iovec_cache *cache)
+ {
+-	int err;
+-
+ 	if (flags & MSG_CMSG_COMPAT) {
+ 		struct compat_msghdr __user *msg_compat;
+ 
+ 		msg_compat = (struct compat_msghdr __user *) umsg;
+-		err = get_compat_msghdr(msg, msg_compat, NULL, iov);
++		return get_compat_msghdr(msg, msg_compat, NULL, cache);
+ 	} else {
+-		err = copy_msghdr_from_user(msg, umsg, NULL, iov);
++		return copy_msghdr_from_user(msg, umsg, NULL, cache);
+ 	}
+-	if (err < 0)
+-		return err;
+-
+-	return 0;
+ }
+ 
+ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
+@@ -2386,15 +2379,16 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 			 struct used_address *used_address,
+ 			 unsigned int allowed_msghdr_flags)
+ {
++	struct iovec_cache cache;
++	struct iovec *iov;
+ 	struct sockaddr_storage address;
+-	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
+ 	ssize_t err;
+ 
+ 	msg_sys->msg_name = &address;
+ 
+-	err = sendmsg_copy_msghdr(msg_sys, msg, flags, &iov);
+-	if (err < 0)
+-		return err;
++	iov = sendmsg_copy_msghdr(msg_sys, msg, flags, &cache);
++	if (IS_ERR(iov))
++		return PTR_ERR(iov);
+ 
+ 	err = ____sys_sendmsg(sock, msg_sys, flags, used_address,
+ 				allowed_msghdr_flags);
+@@ -2518,25 +2512,20 @@ int __sys_sendmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
+ 	return __sys_sendmmsg(fd, mmsg, vlen, flags, true);
+ }
+ 
+-int recvmsg_copy_msghdr(struct msghdr *msg,
+-			struct user_msghdr __user *umsg, unsigned flags,
+-			struct sockaddr __user **uaddr,
+-			struct iovec **iov)
++struct iovec *recvmsg_copy_msghdr(struct msghdr *msg,
++				  struct user_msghdr __user *umsg,
++				  unsigned flags,
++				  struct sockaddr __user **uaddr,
++				  struct iovec_cache *cache)
+ {
+-	ssize_t err;
+-
+ 	if (MSG_CMSG_COMPAT & flags) {
+ 		struct compat_msghdr __user *msg_compat;
+ 
+ 		msg_compat = (struct compat_msghdr __user *) umsg;
+-		err = get_compat_msghdr(msg, msg_compat, uaddr, iov);
++		return get_compat_msghdr(msg, msg_compat, uaddr, cache);
+ 	} else {
+-		err = copy_msghdr_from_user(msg, umsg, uaddr, iov);
++		return copy_msghdr_from_user(msg, umsg, uaddr, cache);
+ 	}
+-	if (err < 0)
+-		return err;
+-
+-	return 0;
+ }
+ 
+ static int ____sys_recvmsg(struct socket *sock, struct msghdr *msg_sys,
+@@ -2598,14 +2587,15 @@ static int ____sys_recvmsg(struct socket *sock, struct msghdr *msg_sys,
+ static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
+ 			 struct msghdr *msg_sys, unsigned int flags, int nosec)
+ {
+-	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
++	struct iovec_cache cache;
++	struct iovec *iov;
+ 	/* user mode address pointers */
+ 	struct sockaddr __user *uaddr;
+ 	ssize_t err;
+ 
+-	err = recvmsg_copy_msghdr(msg_sys, msg, flags, &uaddr, &iov);
+-	if (err < 0)
+-		return err;
++	iov = recvmsg_copy_msghdr(msg_sys, msg, flags, &uaddr, &cache);
++	if (IS_ERR(iov))
++		return PTR_ERR(iov);
+ 
+ 	err = ____sys_recvmsg(sock, msg_sys, msg, uaddr, flags, nosec);
+ 	kfree(iov);
 -- 
 1.8.1.2
 
