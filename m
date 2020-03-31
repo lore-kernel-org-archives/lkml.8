@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E6EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD88C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB4120B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382F020787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645435;
-	bh=Po14qPslBUSQW5+rJhoPZzDlO390mhUWITIQyhjIjAk=;
+	s=default; t=1585645440;
+	bh=a1HpEXRZ/5jojKy5rJX68A60mq6WMRfNlUiyOa9yo+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMejl2+jczSU0wb1P0Z7PE8RpvvgA8+TWNuLecYjbOAzXq2lCK+5C/JvUgtJECuyb
-	 JYbuXlZXRn0W5v7qE5qJxvfl5gKdND/e7CxPd8FFr+ZPjcP+jJIipnCqm27zJH8v1d
-	 +danoP8cln6L+ICFRYxMLxdxNCJJhs3gzQoX6Bvk=
+	b=1xoaB/MpNYPI8Lc1ZlZf1MPRlSGu1up7reibEwWtw44GAm8T5CTkQoObcyZE2nq6u
+	 4z9sA+fQOjdV06GuuQYYsBTbDUoCqkXmVWLbF/9GcimUCptOiP8SMVEt+CfkGyFlxm
+	 Fpd/LWIsdN4FuaKVClweHLEJQgFNh2TdZgu2wJHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgCaJDy (ORCPT
+        id S1730893AbgCaJD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:03:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43616 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730391AbgCaJDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:03:49 -0400
+        id S1730391AbgCaJDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 154ED20787;
-        Tue, 31 Mar 2020 09:03:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA69E20848;
+        Tue, 31 Mar 2020 09:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645428;
-        bh=Po14qPslBUSQW5+rJhoPZzDlO390mhUWITIQyhjIjAk=;
+        s=default; t=1585645434;
+        bh=a1HpEXRZ/5jojKy5rJX68A60mq6WMRfNlUiyOa9yo+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pTRqATZOojkYY3PG+fHC+7h4+3W4RXfgZqLHw8U461x8Dx/TOGcj0DBlVDdJqqTL9
-         XjQApSXedqINkSZy+5GAMykOHBNpryA5Q0bUFJwF8qqC8xhDYVTzGJB/u/Q+9L34Yp
-         Be1mnPE4+moaBHk1Csi8NiRz1uBhH+Rfsyio52sY=
+        b=gKEzAhIwLi3reu3Ky5H7XSHRNSSpelb87Wn4txoYxgEQk2fhmkZmrQkJq/IgLyYO6
+         kjhYpQv3+WhjbTOVP2p0x8uZss5VTJKv0vuoyaurHkJdaD3CVimMrneisIi8twGjBY
+         1+GRsr/PyQTOw6QNQcnEcvFYO/RvmHrF8m1ILToU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Noam Dagan <ndagan@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
+        stable@vger.kernel.org,
+        syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com,
+        Petr Machata <petrm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 050/170] net: ena: fix continuous keep-alive resets
-Date:   Tue, 31 Mar 2020 10:57:44 +0200
-Message-Id: <20200331085429.726319603@linuxfoundation.org>
+Subject: [PATCH 5.5 052/170] net: ip_gre: Accept IFLA_INFO_DATA-less configuration
+Date:   Tue, 31 Mar 2020 10:57:46 +0200
+Message-Id: <20200331085429.946718195@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,41 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit dfdde1345bc124816f0fd42fa91b8748051e758e ]
+[ Upstream commit 32ca98feab8c9076c89c0697c5a85e46fece809d ]
 
-last_keep_alive_jiffies is updated in probe and when a keep-alive
-event is received.  In case the driver times-out on a keep-alive event,
-it has high chances of continuously timing-out on keep-alive events.
-This is because when the driver recovers from the keep-alive-timeout reset
-the value of last_keep_alive_jiffies is very old, and if a keep-alive
-event is not received before the next timer expires, the value of
-last_keep_alive_jiffies will cause another keep-alive-timeout reset
-and so forth in a loop.
+The fix referenced below causes a crash when an ERSPAN tunnel is created
+without passing IFLA_INFO_DATA. Fix by validating passed-in data in the
+same way as ipgre does.
 
-Solution:
-Update last_keep_alive_jiffies whenever the device is restored after
-reset.
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Noam Dagan <ndagan@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Fixes: e1f8f78ffe98 ("net: ip_gre: Separate ERSPAN newlink / changelink callbacks")
+Reported-by: syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com
+Signed-off-by: Petr Machata <petrm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/ip_gre.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2832,6 +2832,7 @@ static int ena_restore_device(struct ena
- 		netif_carrier_on(adapter->netdev);
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -1168,6 +1168,8 @@ static int erspan_netlink_parms(struct n
+ 	err = ipgre_netlink_parms(dev, data, tb, parms, fwmark);
+ 	if (err)
+ 		return err;
++	if (!data)
++		return 0;
  
- 	mod_timer(&adapter->timer_service, round_jiffies(jiffies + HZ));
-+	adapter->last_keep_alive_jiffies = jiffies;
- 	dev_err(&pdev->dev,
- 		"Device reset completed successfully, Driver info: %s\n",
- 		version);
+ 	if (data[IFLA_GRE_ERSPAN_VER]) {
+ 		t->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
 
 
