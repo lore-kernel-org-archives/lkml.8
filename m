@@ -2,137 +2,187 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEB1C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD18AC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94012080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B8C2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:40:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzsxBwf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbgCaVgP convert rfc822-to-8bit (ORCPT
+        id S1731145AbgCaVkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:36:15 -0400
-Received: from m4a0072g.houston.softwaregrp.com ([15.124.2.130]:40984 "EHLO
-        m4a0072g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727955AbgCaVgP (ORCPT
+        Tue, 31 Mar 2020 17:40:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38599 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaVkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:36:15 -0400
-Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.147) BY m4a0072g.houston.softwaregrp.com WITH ESMTP;
- Tue, 31 Mar 2020 21:34:49 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 31 Mar 2020 21:35:46 +0000
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (15.124.8.11) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Tue, 31 Mar 2020 21:35:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FbGYimx+xQToUTa7pnmihmUwqE0LITNiAHgxFIpMYxQv5QG8s0DA1icTr34BAOJQvfmI2U2lXqUsk18HTL3h2yJQxOgNv2wFYx9HiMmoT2dZTMeO3SzCycpPB/cal7e1qijUEb4c6WOcih0IiMh2qyg0F+sfkuC5vI1Cl4xn/c1PhEAB08Bah8RKhRbi4C8v50kakOuVNfUm+ip6ts7br3pAkEMG+xIzBIWNUgDzqtPsBWIqUWbv2cL+r7rMQeXFVhuC68unj1AntMiL8g4+XLv1bgLxDGtBigzlCPt8kml8hRwz7BVmnzVdXbPgg46rV23eRZ6Fol99+qLQ0ldqrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dSyWjt7HXdQD/97cQ02RRbKMvmj2bpqjey4Kdq2Rd6w=;
- b=DkXwRL3BI/5E2TfmG1yvmA89UYQbSIJrFWbHBCXapUW3AcNFdCOawHeeEha6jAlRfBuNeYRrAWaQ3MbUDuFuyE2Q2l8GJ7gkT9NgdKZrP4ZLMl6YJoajygRuGUYT9hITcQgqeJiKhXWypOkX95PTFZ9McW8zHLlIfpuTTzJn/3gHToPJeyQ0iuKb+2PT60pK0VQk4TrRLbe+R6uCME1z+wbfGGLhfKnAJCV+SoeFvy8IqojZ0UNwhW2xub7ajyc0/9BaZ1CFA6ZMmLVFG3EREdjIIh5SBpyeybLgZknyC0dwOodck53u/O822tPsnsBOTeQGorWafprAZADToeHr6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=DMueller@suse.com; 
-Received: from DM6PR18MB2458.namprd18.prod.outlook.com (2603:10b6:5:188::18)
- by DM6PR18MB3353.namprd18.prod.outlook.com (2603:10b6:5:1c2::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Tue, 31 Mar
- 2020 21:35:44 +0000
-Received: from DM6PR18MB2458.namprd18.prod.outlook.com
- ([fe80::f874:3829:ad75:5777]) by DM6PR18MB2458.namprd18.prod.outlook.com
- ([fe80::f874:3829:ad75:5777%3]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
- 21:35:44 +0000
-Content-Type: text/plain; charset="us-ascii"
-Subject: Re: [PATCH 5.5 102/170] scripts/dtc: Remove redundant YYLOC global
- declaration
-From:   =?utf-8?Q?Dirk_M=C3=BCller?= <dmueller@suse.com>
-In-Reply-To: <20200331120917.GA1617997@kroah.com>
-Date:   Tue, 31 Mar 2020 23:35:38 +0200
-CC:     Nathan Chancellor <natechancellor@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-ID: <8020A90C-7DEE-40DF-86F6-4446DE144BAA@suse.com>
-References: <20200331085423.990189598@linuxfoundation.org>
- <20200331085435.053942582@linuxfoundation.org>
- <20200331095323.GA32667@ubuntu-m2-xlarge-x86>
- <20200331100238.GA1204199@kroah.com>
- <5B6493BE-F9FE-41A4-A88A-5E4DF5BCE098@suse.com>
- <20200331120917.GA1617997@kroah.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-ClientProxiedBy: LO2P265CA0044.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:61::32) To DM6PR18MB2458.namprd18.prod.outlook.com
- (2603:10b6:5:188::18)
+        Tue, 31 Mar 2020 17:40:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c7so2008983wrx.5
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 14:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ky/1n1np4qIlShwrBAH1ymqTQEq+G2GKa8d4EMnc3Nk=;
+        b=QzsxBwf0RBD2KHV+c1sUngkyU1Wfq6tZ3US5ybGgmBWwaZzGuBY4/XHS3jC+7of27k
+         Vk/xcWhNpkgUw7Vv3BeK+EX1dP7h3Ma+k+cHHbOEcxKe815g8ZSleOD2lyDDe0267WlD
+         C/ZcVncUhfNvwC1794Lvwbrid72iHH02v2xSG3nKtn5qOiL6EnJm5sav3g+ViVD3hUa1
+         iDbR638bqPbOOGTOFf/jdTN7rx7ddBmAc3NIg3Nd69PRufIdi4c2pmYhEgXcIBV7LIV3
+         McWZW8ZXSlRkBdyvyuRHzt3Ogj+YUt6P0lADvteo2T5u2XeH15y/ynbSwtp2/ycuZJqA
+         Ogog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ky/1n1np4qIlShwrBAH1ymqTQEq+G2GKa8d4EMnc3Nk=;
+        b=M3jU8KW1rMVuhYwEU/7WyENxwImq9qq/tQH33dNobF8rrE+Buz0nkn0k/TT0hFY09f
+         6VoPoGm120GgCM6QqzWghCjsVvkFVJqlkiZdsryGEUZDsbVX2iLl3pbSNuBxIc70VgL2
+         HlkRSW+R/5VFwyrQ2EDhIJ91QsZj9uTIYvzHYGdfQajT8c+rgZ8e01Dkah03zmrPKqxw
+         UrTUcDww9kw3Y7YG64Gjx29lSrUvz1uEb6rleUPoT0PubdCKx4TnLaJ5JxEZhK7KzclK
+         fgferXep4oyDtTyXHcbmzVT8Vn0y55dHFJF2NzbLLr0WA9WEXvD4r22Fkj2t/k8IqR+w
+         823g==
+X-Gm-Message-State: ANhLgQ264lFvQlgPg3sU/H06pWdjPYsN8iSgn/Vam2M34mBVdVYGz+Cu
+        d3njZFzoEk1+yRlPSWLDwm+nTUnL
+X-Google-Smtp-Source: ADFU+vvrnjxtq6u7MX4X161OB9PrZlEz52rMXkmBzUPLpVLAZOCWKHxFvIs31ap7cUFpgQvn75/NMg==
+X-Received: by 2002:adf:bc04:: with SMTP id s4mr22177890wrg.244.1585690850193;
+        Tue, 31 Mar 2020 14:40:50 -0700 (PDT)
+Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
+        by smtp.gmail.com with ESMTPSA id y11sm5190580wmi.13.2020.03.31.14.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 14:40:49 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] clocksource: Add debugfs support
+Date:   Tue, 31 Mar 2020 23:40:45 +0200
+Message-Id: <20200331214045.2957710-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.22.222.25] (95.118.34.218) by LO2P265CA0044.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:61::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Tue, 31 Mar 2020 21:35:42 +0000
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Originating-IP: [95.118.34.218]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d0805b31-550c-41dd-7c17-08d7d5bb77da
-X-MS-TrafficTypeDiagnostic: DM6PR18MB3353:
-X-Microsoft-Antispam-PRVS: <DM6PR18MB3353455EFDE1F615F8409BADABC80@DM6PR18MB3353.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0359162B6D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR18MB2458.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(136003)(396003)(4326008)(5660300002)(33656002)(6666004)(66476007)(2906002)(66946007)(8676002)(66556008)(8936002)(956004)(186003)(81156014)(86362001)(2616005)(6486002)(316002)(16526019)(16576012)(81166006)(54906003)(6916009)(26005)(52116002)(36756003)(478600001);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HfFRnq6ABDNPMJD8VPmxyNT/96AbC7B/ivG3kCAFmhfEQ3pM+G9j/pwUEY0RdTAwH7gpAe3nTV8IzMLR+UC+scWiO/PMhPTjvlY5pkS1JXFd1pdfYmMQlLrPIlaW7s+4joC5aA2c+5jxyBBXxTYJ0u0lrNWgLCmEOsTw0g24uzD6CoxxwYSI8Dq3y0wJp5X7BSYLQQ4riYjaJ9g0IR0lu+Z0aJq7+0SFCr69IedfB0x8loVMokEtJfxNUEhoM0jh3PEenOKJiyuTuNO0yhZ8+RyVJ7R4LFMNXf3tsxsMP8Z37nKdF3WVaRjNXjKyBsm88Gd6rlMBhVPzQL6ONhA+MlWJAdRrj83IBwqLrITgXFRKyVIdTwY8rZk6qCTvwJpUpOJpYPJu2R0JBJNWxJGsP2Sw02QMPA934nhJNqayxaBvu9zSPcoGXM/xUWSUlarB
-X-MS-Exchange-AntiSpam-MessageData: XiQVmfUU/ZvYnzAilkx1vRxnmpKopLbVYHz440FLIFnlWuYLD1ISMrDfpPTBws2/SvCzrO9dyM2R3LRNKHRr4u7R3YUvVWLqeKkjfaXUZu/N2D31gvESI0PwJVmtn1jHIuE3IYX8IaRA8IWFp0KNjQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0805b31-550c-41dd-7c17-08d7d5bb77da
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2020 21:35:44.4461
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X1P4pSZyeVnMdBu7kuuL7eC0rqaO9oW9FhX02YsFm7NCOSXJU2TJ3hh3ix086Kq1L1IsFI5D/qFMM+cRRQ7K4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB3353
-X-OriginatorOrg: suse.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+From: Thierry Reding <treding@nvidia.com>
 
->> However I think the sed above on the *patch* means that the patch will *only* modify the generated sources, not the input sources. I think
->> it would be better to patch both *input* and *generated* sources, or backport the generate-at-runtime patch as well (which might be
->> even further outside the stable policy). 
-> 
-> What do you mean by "input sources" here?
+Add a top-level "clocksource" directory to debugfs. For each clocksource
+registered with the system, a subdirectory will be added with attributes
+that can be queried to obtain information about the clocksource.
 
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ include/linux/clocksource.h |  3 ++
+ kernel/time/clocksource.c   | 60 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
-scripts/dtc/update-dtc-source.sh in older kernel generates a _shipped variant of the files from the .l/.y files:
-
-
-$ ls -1 scripts/dtc/dtc-lexer.l*
-scripts/dtc/dtc-lexer.l
-scripts/dtc/dtc-lexer.lex.c_shipped
-
-in newer kernels these _shipped files are generated at build time from dtc-lexer.l, which my patch is updating. I suggested
-to modify the patches for older release to *both* patch dtc-lexer.l as well as update the *generated* files that are tracked
-in git as dtc-lexer.lex.c_shipped rather than just in/place modifying the generated file (which would then at some later point
-in time get lost as other changes regenerate the _shipped file then, reintroducing the bug). 
-
-
-> If I drop it for now, I'll have to add it back when gcc10 is pushed out
-> to my build systems and laptops :(
-
-Let me know if I can help with a backportable patch. 
-
-Greetings,
-Dirk
+diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
+index 86d143db6523..89424da76244 100644
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -118,6 +118,9 @@ struct clocksource {
+ 	u64			wd_last;
+ #endif
+ 	struct module		*owner;
++#ifdef CONFIG_DEBUG_FS
++	struct dentry *debugfs;
++#endif
+ };
+ 
+ /*
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 7cb09c4cf21c..51266f53df83 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -911,6 +911,63 @@ void __clocksource_update_freq_scale(struct clocksource *cs, u32 scale, u32 freq
+ }
+ EXPORT_SYMBOL_GPL(__clocksource_update_freq_scale);
+ 
++#ifdef CONFIG_DEBUG_FS
++#include <linux/debugfs.h>
++
++static struct dentry *debugfs_root;
++
++static int clocksource_debugfs_counter_show(struct seq_file *s, void *data)
++{
++	struct clocksource *cs = s->private;
++
++	seq_printf(s, "%llu\n", cs->read(cs));
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(clocksource_debugfs_counter);
++
++static void clocksource_debugfs_add(struct clocksource *cs)
++{
++	if (!debugfs_root)
++		return;
++
++	cs->debugfs = debugfs_create_dir(cs->name, debugfs_root);
++
++	debugfs_create_file("counter", 0444, cs->debugfs, cs,
++			    &clocksource_debugfs_counter_fops);
++}
++
++static void clocksource_debugfs_remove(struct clocksource *cs)
++{
++	debugfs_remove_recursive(cs->debugfs);
++}
++
++static int __init init_clocksource_debugfs(void)
++{
++	struct clocksource *cs;
++
++	debugfs_root = debugfs_create_dir("clocksource", NULL);
++
++	mutex_lock(&clocksource_mutex);
++
++	list_for_each_entry(cs, &clocksource_list, list)
++		clocksource_debugfs_add(cs);
++
++	mutex_unlock(&clocksource_mutex);
++
++	return 0;
++}
++late_initcall(init_clocksource_debugfs);
++#else
++static inline void clocksource_debugfs_add(struct clocksource *cs)
++{
++}
++
++static inline void clocksource_debugfs_remove(struct clocksource *cs)
++{
++}
++#endif
++
+ /**
+  * __clocksource_register_scale - Used to install new clocksources
+  * @cs:		clocksource to be registered
+@@ -951,6 +1008,7 @@ int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
+ 	clocksource_select();
+ 	clocksource_select_watchdog(false);
+ 	__clocksource_suspend_select(cs);
++	clocksource_debugfs_add(cs);
+ 	mutex_unlock(&clocksource_mutex);
+ 	return 0;
+ }
+@@ -991,6 +1049,8 @@ static int clocksource_unbind(struct clocksource *cs)
+ {
+ 	unsigned long flags;
+ 
++	clocksource_debugfs_remove(cs);
++
+ 	if (clocksource_is_watchdog(cs)) {
+ 		/* Select and try to install a replacement watchdog. */
+ 		clocksource_select_watchdog(true);
+-- 
+2.24.1
 
