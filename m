@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DF3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAFFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5B620787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DE620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645934;
-	bh=WEq957zAfjyZHs7RPLZbxFpac6ucSHDGcB02beUwI1Q=;
+	s=default; t=1585645937;
+	bh=Nbdn0VnjUKHM3PD1djuyTMlXEK3OXqVI5YgI5qyri6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sTer0md/F6nzOF3WO8ZxYuBIolLAZhi/k906TzKWX051qbj/Y1cT61wYvYkc6qKbX
-	 YCjF3phiwEGJQQKfh9CX3G5txsblVEV6zE8qODtLvzzswO0mh+yunpScfKAyOXH5L/
-	 6n8ZBbd9KBN561VO0FJ12aTBmk8I2WmjaixDkFq4=
+	b=R4d3Mbkqy4fS0GCAR0j8OOwjWEx9CSYYtQH0Ur8AR08yR9s4v89lOYP1Ft64CHHlx
+	 QQ45pMmFpoFzcSBxf0TRDYzyCdnoOU1EUiQVy3W37zbeoN0Loi7a0NcfIfSv4mmt++
+	 HGO/GWLgoZsImrHD3C+zuiFQFllUSNtOunWej4FI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbgCaJMN (ORCPT
+        id S1731776AbgCaJMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58192 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731532AbgCaJMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:12:10 -0400
+        id S1731743AbgCaJMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:12:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFEF320772;
-        Tue, 31 Mar 2020 09:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EEAA20675;
+        Tue, 31 Mar 2020 09:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645930;
-        bh=WEq957zAfjyZHs7RPLZbxFpac6ucSHDGcB02beUwI1Q=;
+        s=default; t=1585645932;
+        bh=Nbdn0VnjUKHM3PD1djuyTMlXEK3OXqVI5YgI5qyri6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=We9akCHw6bBN5mrCwKppS28p1+4cqIEmDTqgeeYWOx27KIXK+XqY+OocWxXUxItlW
-         zcntXz/6c4n4y7dz8Cjwngop/Bl56vn1GlClPC5WZFzdLzeTF6+AdODO8AKLmvcU8J
-         kxScNZET6qzNgouJOS2kilwE9QZ8b34ip/L88Z2Q=
+        b=YGyBbJGuFGYIbmjkcAK43gAThoDCKc9ze994JCljfIIaheSLrs0W9br9OAdAOiI5D
+         y3iUwg554nAVOn50hzcJCwBsyP6kqpFTP6TCjNoG6hQuv4WMHMVJIPsia1kgBrFYLi
+         FashgeSbptZYcEsEi28CgsdhysEcnxvmY43JzaR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Martin Zaharinov <micron10@gmail.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 036/155] tcp: ensure skb->dev is NULL before leaving TCP stack
-Date:   Tue, 31 Mar 2020 10:57:56 +0200
-Message-Id: <20200331085422.435199048@linuxfoundation.org>
+Subject: [PATCH 5.4 037/155] tcp: repair: fix TCP_QUEUE_SEQ implementation
+Date:   Tue, 31 Mar 2020 10:57:57 +0200
+Message-Id: <20200331085422.558902141@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -64,53 +62,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit b738a185beaab8728943acdb3e67371b8a88185e ]
+[ Upstream commit 6cd6cbf593bfa3ae6fc3ed34ac21da4d35045425 ]
 
-skb->rbnode is sharing three skb fields : next, prev, dev
+When application uses TCP_QUEUE_SEQ socket option to
+change tp->rcv_next, we must also update tp->copied_seq.
 
-When a packet is sent, TCP keeps the original skb (master)
-in a rtx queue, which was converted to rbtree a while back.
+Otherwise, stuff relying on tcp_inq() being precise can
+eventually be confused.
 
-__tcp_transmit_skb() is responsible to clone the master skb,
-and add the TCP header to the clone before sending it
-to network layer.
+For example, tcp_zerocopy_receive() might crash because
+it does not expect tcp_recv_skb() to return NULL.
 
-skb_clone() already clears skb->next and skb->prev, but copies
-the master oskb->dev into the clone.
+We could add tests in various places to fix the issue,
+or simply make sure tcp_inq() wont return a random value,
+and leave fast path as it is.
 
-We need to clear skb->dev, otherwise lower layers could interpret
-the value as a pointer to a netdev.
+Note that this fixes ioctl(fd, SIOCINQ, &val) at the same
+time.
 
-This old bug surfaced recently when commit 28f8bfd1ac94
-("netfilter: Support iif matches in POSTROUTING") was merged.
-
-Before this netfilter commit, skb->dev value was ignored and
-changed before reaching dev_queue_xmit()
-
-Fixes: 75c119afe14f ("tcp: implement rb-tree based retransmit queue")
-Fixes: 28f8bfd1ac94 ("netfilter: Support iif matches in POSTROUTING")
+Fixes: ee9952831cfd ("tcp: Initial repair mode")
+Fixes: 05255b823a61 ("tcp: add TCP_ZEROCOPY_RECEIVE support for zerocopy receive")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Martin Zaharinov <micron10@gmail.com>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_output.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv4/tcp.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1048,6 +1048,10 @@ static int __tcp_transmit_skb(struct soc
- 
- 		if (unlikely(!skb))
- 			return -ENOBUFS;
-+		/* retransmit skbs might have a non zero value in skb->dev
-+		 * because skb->dev is aliased with skb->rbnode.rb_left
-+		 */
-+		skb->dev = NULL;
- 	}
- 
- 	inet = inet_sk(sk);
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2943,8 +2943,10 @@ static int do_tcp_setsockopt(struct sock
+ 			err = -EPERM;
+ 		else if (tp->repair_queue == TCP_SEND_QUEUE)
+ 			WRITE_ONCE(tp->write_seq, val);
+-		else if (tp->repair_queue == TCP_RECV_QUEUE)
++		else if (tp->repair_queue == TCP_RECV_QUEUE) {
+ 			WRITE_ONCE(tp->rcv_nxt, val);
++			WRITE_ONCE(tp->copied_seq, val);
++		}
+ 		else
+ 			err = -EINVAL;
+ 		break;
 
 
