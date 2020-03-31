@@ -2,161 +2,99 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED47C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6E8C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C012206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED65206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FXZX8Ueh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EY5aB2IZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbgCaQL7 (ORCPT
+        id S1731171AbgCaQM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:11:59 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43367 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaQL7 (ORCPT
+        Tue, 31 Mar 2020 12:12:28 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41908 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730149AbgCaQM1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:11:59 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g20so1069792pgk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:11:58 -0700 (PDT)
+        Tue, 31 Mar 2020 12:12:27 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n17so22603600lji.8;
+        Tue, 31 Mar 2020 09:12:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
-        b=FXZX8UehOEz9Kni4GELnb/5/v6Qj6xwLNsOHkCFRAvqmZJFoMimJsYJGlR8qWuT3JP
-         /jiEuMvyz9s8viO8XrGdI9iGKa+z0LkGhzTuGioisjEORu/Jtd6YUUxEyaeT+fkbg+AI
-         hklRTmvh3uljXeEwgl9dNw7H3nNlcCzTsAfVo=
+        bh=3kJ5mm1YOrHmUQGCcnHVGzEU+zZ+MYIie0xvbmsLdR0=;
+        b=EY5aB2IZm5Vpo9RHwThnoY0oR6GY+XljzuA5498+JAIHFQRfhJbg5cRDPuto21J3LF
+         Wr02golnyTUCEEmXtYJ0c1JAup4OqmCErYQ3BZXUc3gkmEdKbO2MqqkL2A4whX1OjSIv
+         rCqCbcHMkvBZ4hWVJkwy47HuSol36XtdDMYQBV+PDFQRtAvLHoVr/aqH1EH2JbCY9ZxX
+         JAvRuuIAfP8Vzd+9WMlEgO5EtwNLJ7E7Mb14o14ldatIIJIlrwnVlUQhHMSH41aXtnPI
+         EpmKilYbHeAHoUd3PJs5n8v8RMSIeGnpb8MWHaBDqtyFIZRa/oAqv+vC/odykHajiOou
+         73JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
-        b=oBSSqfH5QGyiITVusXXhwQWLWJYpk77cy/Je4UA182W6+C0iRrlmN+hAn+8FTnpACt
-         XFTcpZxM848xW1agz69e4Gv7XxplVy9YesPZcNS4VU1ucLFX45ugc9f8MZ7aG4Zj6hH6
-         7A4aHrFPwYpFvITDIfli77jCup4+beFdIBnSoIboulGzfgsaxiLVk9ugcwJHC7j3UwY8
-         K9YhBwqLGMZme0ZPR2uj5mUe4GDsZZ6yUqptO0MLuQkFLbKttpx4cSgl/SPdIix8PHB8
-         F1qD8TblzVU8EiXWrXcnEA9n7doxWT0SMDmvVzDsmV1Pfix96ET9Iev3pumY3xxXQpZo
-         +w2w==
-X-Gm-Message-State: ANhLgQ2ire6FVaideUqg1yJ8zd+N6VXQgy1Jd63ONlY6tbj3PZC+++jc
-        ShIBJBjGF3Mxcw5sndntwu2ClA==
-X-Google-Smtp-Source: ADFU+vtfSPh8HumDN4cjkDTaweYzwxq2FI8K3EiPnKxEhov9TRTsTgaPcIbaDj4F/2NhI4oOVc9T0Q==
-X-Received: by 2002:a62:7c15:: with SMTP id x21mr19812360pfc.132.1585671117785;
-        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id z7sm12830932pfz.24.2020.03.31.09.11.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:11:55 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Cc:     Felipe Balbi <balbi@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200331161155.GD199755@google.com>
-References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
- <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
- <20200329171756.GA199755@google.com>
- <87h7y62r28.fsf@kernel.org>
- <20200330155038.GC199755@google.com>
- <87zhbx1q6q.fsf@kernel.org>
- <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
+        bh=3kJ5mm1YOrHmUQGCcnHVGzEU+zZ+MYIie0xvbmsLdR0=;
+        b=YUJfniK/WngbYgxXuZknlv/UuSNHmn3geqQCMOTJXxWRhFQrOhoRIy3dffOWv3/TTF
+         NUBB+1skh6yLnYfgnFEi/9MATF+Mg4iyHy/IWR4/Z5+3bbUf1PfJ74ast9irlqwCqnF5
+         Begj9J85lrGcwWLVq8kLIcSaCdIgro9x1IaS3daZ86OJWjCyf9GMfrDHesPC8IVYyYm9
+         M7AHRboQZmerQvh2rJYtOWn0yct2JRUL1HL3C5sD3JZU07uiKt/OyctXwJcuZMc0NwY8
+         z0VkKh/XW0j6tCSldXyTcv1IAvuNEKT2YLd5xO3S/N6cL4O3OnbWcV34KzhEfFtKAHSK
+         jSqQ==
+X-Gm-Message-State: AGi0Pua10gAJuKlc3g03b4LRNO0uVAx6dA6K7PtcVWb8ML33xsqSD93I
+        mnLauY4ab8o3z9mmj6/+u6pt06Dj36k=
+X-Google-Smtp-Source: APiQypLqQdmr1GaacubVbtq0EUXJknLP9Tdtt/Flex7ktt0z0TmEV9YaZnHo/L3/sJ4CixEb2npaxw==
+X-Received: by 2002:a2e:89d2:: with SMTP id c18mr9341456ljk.29.1585671144929;
+        Tue, 31 Mar 2020 09:12:24 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id h20sm2634010lji.103.2020.03.31.09.12.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 09:12:22 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 31 Mar 2020 18:12:15 +0200
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200331161215.GA27676@pc636>
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331145806.GB236678@google.com>
+ <20200331153450.GM30449@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200331153450.GM30449@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:45:19AM +0530, Sandeep Maheswaram (Temp) wrote:
-> Hi,
 > 
-> On 3/31/2020 3:05 AM, Felipe Balbi wrote:
-> > Hi,
-> > 
-> > Matthias Kaehlcke <mka@chromium.org> writes:
-> > > > Matthias Kaehlcke <mka@chromium.org> writes:
-> > > > > > Add interconnect support in dwc3-qcom driver to vote for bus
-> > > > > > bandwidth.
-> > > > > > 
-> > > > > > This requires for two different paths - from USB master to
-> > > > > > DDR slave. The other is from APPS master to USB slave.
-> > > > > > 
-> > > > > > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> > > > > > Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-> > > > > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > > ---
-> > > > > >   drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
-> > > > > >   1 file changed, 126 insertions(+), 2 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > index 1dfd024..7e85fe6 100644
-> > > > > > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > 
-> > > > > > ...
-> > > > > > 
-> > > > > > +/* To disable an interconnect, we just set its bandwidth to 0 */
-> > > > > > +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
-> > > > > > +{
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
-> > > > > > +	if (ret)
-> > > > > > +		return ret;
-> > > > > > +
-> > > > > > +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
-> > > > > > +	if (ret)
-> > > > > > +		goto err_reenable_memory_path;
-> > > > > > +
-> > > > > > +	return 0;
-> > > > > > +
-> > > > > > +	/* Re-enable things in the event of an error */
-> > > > > > +err_reenable_memory_path:
-> > > > > > +	ret = dwc3_qcom_interconnect_enable(qcom);
-> > > > > This overwrites the error that led to the execution of this code path.
-> > > > > The function should return original error, not the result of the
-> > > > > _interconnect_enable() call.
-> > > > > 
-> > > > > I saw Felipe queued the patch for v5.8. I think the main options to fix this
-> > > > > are:
-> > > > > 
-> > > > > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
-> > > > >    anyway once there is a v5.7-rc)
-> > > > > - send the fix as a separate patch
-> > > > > - Felipe amends the patch in his tree
-> > > > > 
-> > > > > Felipe, what would work best for you?
-> > > > Let's go for a v6, which commits should I drop? I can't find anything
-> > > > related to $subject in my queue:
-> > > > 
-> > > > $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
-> > > > 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-> > > I thought I saw a "queued for v5.8" message from you, but can't find that back.
-> > > I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
-> > > series and thought it was for this one. Sorry for the confusion.
-> > no worries :-)
-> > 
-> Should I remove the ret from below line and send a new version?
-> +	ret = dwc3_qcom_interconnect_enable(qcom);
+> __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
+> memory reserves regarless of the sleeping status.
+> 
+Michal, just one question here regarding proposed flags. Can we also
+tight it with __GFP_RETRY_MAYFAIL flag? Means it also can repeat a few
+times in order to increase the chance of being success.
 
-Yes, please!
+Thanks!
+
+--
+Vlad Rezki
