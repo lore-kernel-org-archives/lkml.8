@@ -2,114 +2,133 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5374EC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60578C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A76D20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D6D206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="iZHJ0fOl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dia3hfRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbgCaQ4L (ORCPT
+        id S1731256AbgCaQ4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:56:11 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:35534 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730099AbgCaQ4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:56:10 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 855544126D;
-        Tue, 31 Mar 2020 16:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1585673767; x=1587488168; bh=gqp2ICgJ2oa8nDsJt1Xk3VAdh
-        K30cb8p4Nje35DG6LY=; b=iZHJ0fOlc7CKEAkrgHYsLLGzVeKsdbEYmt5eye6B0
-        lGrV3ycOT8HS/AfyRxc/kfJwPgmQDRf2tcztqzMiOEqAcnA2IMZFFcZRJrKEZhPV
-        edgs/qasWWSCg9TBeAQIgjec2MkT6IfEihQ432TNl8l/ZQXW+hP0iV2gQ10hvXfr
-        jA=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id o0lESavaoZVW; Tue, 31 Mar 2020 19:56:07 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 3513C41259;
-        Tue, 31 Mar 2020 19:56:07 +0300 (MSK)
-Received: from localhost.localdomain (10.199.0.226) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Tue, 31 Mar 2020 19:56:07 +0300
-Message-ID: <86186f02c630a05cf7254a38e0f15d726e2f440b.camel@yadro.com>
-Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Tue, 31 Mar 2020 12:56:24 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43999 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731224AbgCaQ4X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:56:23 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g20so1126002pgk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AoYRd9Pq6YoKCArfaky/GwN/okmu7M4Melv1gMLsus0=;
+        b=Dia3hfRrpxaRBxvHdYd3kMBU9QW0vqQmdSuDx/tIahRVeQTZWE1qSImujnys9OAPzf
+         ihL/Ae2uVTeIm7IRV4nnp3pPWpBiL7cxYKs2CPUGddpc3yogJ6Rik6vHHDjyPYtjRX5q
+         Py3e9yi5uOJCFjqDCc48fMSRehdhvj0dXwqdw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AoYRd9Pq6YoKCArfaky/GwN/okmu7M4Melv1gMLsus0=;
+        b=CmI/joO71BT8V93IxN/0CAls9zTouYm8Hm13tSNV77jG4DYtb0xCeGDq7i1aGZXHyx
+         nreazzY1mEOiONUu9O4B3VzVLh//44FvcLG88Bk5+NBBRmFeDbA0bhh/4XMaPKyHeobk
+         xFZoxHAR/pSshG2gmJj2B4MZo4I69Ul9Z1qPxvXLe9OzVzCGJiH6ViKR3knduu2nG9wZ
+         eUhF6I6/49IAhO2x9ECioV6B/MigLLS4zg1mtbp6XrDS6fYVxBlTUBmWdLWy5SlhY72h
+         O0dg3j93f1bg8EShSpWCaTThmF/IiB87GF/Q/VVNX1f81kD0sSQgjZPTfWOYjig4UAb2
+         1m0w==
+X-Gm-Message-State: ANhLgQ35qfq1sShzV5+lLgPlLZS68Tf9d3tCdsRJ66clHYMsxQyWMQ18
+        U+OSWx9qd3839vdMRUpTg0ORvg==
+X-Google-Smtp-Source: ADFU+vu2yJB9PydRxx64pKqd+7UiF/mWFNoEoubw30zUx4+AkYrfUieVzTWz0wrsdhsJ/MmJMU3XnQ==
+X-Received: by 2002:a63:484:: with SMTP id 126mr19669475pge.161.1585673781872;
+        Tue, 31 Mar 2020 09:56:21 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id p22sm12147731pgn.73.2020.03.31.09.56.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 09:56:21 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:56:20 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 31 Mar 2020 19:56:18 +0300
-In-Reply-To: <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com>
-References: <20200330152711.8769-1-i.mikhaylov@yadro.com>
-         <20200330152711.8769-3-i.mikhaylov@yadro.com>
-         <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
-         <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
-         <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: sc7180: Swap order of gpucc and sdhc_2
+Message-ID: <20200331165620.GF199755@google.com>
+References: <20200331092832.1.Ic361058ca22d7439164ffea11421740462e14272@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.0.226]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200331092832.1.Ic361058ca22d7439164ffea11421740462e14272@changeid>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-31 at 14:00 +0300, Andy Shevchenko wrote:
-> > > Why not to use standard pattern, i.e.
-> > > 
-> > >   if (rc)
-> > >     return rc;
-> > >   ...
-> > >   rc = regmap_write(...);
-> > > 
-> > > ?
-> > 
-> > Optional parameter. There exists a lot of ways to do it:
+On Tue, Mar 31, 2020 at 09:29:00AM -0700, Douglas Anderson wrote:
+> Devices are supposed to be sorted by unit address.  These two got
+> swapped when they landed.  Fix.
 > 
-> I'm simple reading the code. And I believe the above I suggested is
-> cleaner equivalent.
-> Is it?
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 > 
-> > rc = device_property_read_u32(dev, "milliamp", &led_current);
-> > rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ? 0);
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
 > 
-> This seems not equal to above.
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 998f101ad623..4bdadfd9efb9 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1294,6 +1294,20 @@ pinconf-sd-cd {
+>  			};
+>  		};
+>  
+> +		gpucc: clock-controller@5090000 {
+> +			compatible = "qcom,sc7180-gpucc";
+> +			reg = <0 0x05090000 0 0x9000>;
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
+> +				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
+> +			clock-names = "bi_tcxo",
+> +				      "gcc_gpu_gpll0_clk_src",
+> +				      "gcc_gpu_gpll0_div_clk_src";
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			#power-domain-cells = <1>;
+> +		};
+> +
+>  		sdhc_2: sdhci@8804000 {
+>  			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+>  			reg = <0 0x08804000 0 0x1000>;
+> @@ -1312,20 +1326,6 @@ sdhc_2: sdhci@8804000 {
+>  			status = "disabled";
+>  		};
+>  
+> -		gpucc: clock-controller@5090000 {
+> -			compatible = "qcom,sc7180-gpucc";
+> -			reg = <0 0x05090000 0 0x9000>;
+> -			clocks = <&rpmhcc RPMH_CXO_CLK>,
+> -				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
+> -				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
+> -			clock-names = "bi_tcxo",
+> -				      "gcc_gpu_gpll0_clk_src",
+> -				      "gcc_gpu_gpll0_div_clk_src";
+> -			#clock-cells = <1>;
+> -			#reset-cells = <1>;
+> -			#power-domain-cells = <1>;
+> -		};
+> -
+>  		qspi: spi@88dc000 {
+>  			compatible = "qcom,qspi-v1";
+>  			reg = <0 0x088dc000 0 0x600>;
 
-Yes, it is not equal. Error will be returned in case of non existent parameter
-in vcnl3020_init but parameter is optional. rc shouldn't be checked or should
-return 0 with your suggestion.
-
-rc = device_property_read_u32(...);
-if (rc)
-	return 0;
-rc = regmap_write(...);
-if (rc)
-	dev_err(...);
-return rc;
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
