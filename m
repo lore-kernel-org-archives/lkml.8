@@ -4,127 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2DEC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB87AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FCD20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE8520786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730895AbgCaN7l (ORCPT
+        id S1730998AbgCaOAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:59:41 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:52797 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730442AbgCaN7k (ORCPT
+        Tue, 31 Mar 2020 10:00:15 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:48939 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730442AbgCaOAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:59:40 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 31 Mar 2020 19:28:53 +0530
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 31 Mar 2020 19:28:30 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id BC89B47A1; Tue, 31 Mar 2020 19:28:29 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-Date:   Tue, 31 Mar 2020 19:28:27 +0530
-Message-Id: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 31 Mar 2020 10:00:15 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=zhangliguang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TuABiZr_1585663188;
+Received: from localhost(mailfrom:zhangliguang@linux.alibaba.com fp:SMTPD_---0TuABiZr_1585663188)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 31 Mar 2020 21:59:57 +0800
+From:   luanshi <zhangliguang@linux.alibaba.com>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iommu/arm-smmu-v3: move error checking into common path
+Date:   Tue, 31 Mar 2020 21:59:48 +0800
+Message-Id: <1585663188-114303-1-git-send-email-zhangliguang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"The PM core always increments the runtime usage counter
-before calling the ->suspend() callback and decrements it
-after calling the ->resume() callback"
+Move error checking into common path to be consistent with
+drivers/iommu/arm-smmu.c.
 
-DPU and DSI are managed as runtime devices. When
-suspend is triggered, PM core adds a refcount on all the
-devices and calls device suspend, since usage count is
-already incremented, runtime suspend was not getting called
-and it kept the clocks on which resulted in target not
-entering into XO shutdown.
-
-Add changes to force suspend on runtime devices during pm sleep.
-
-Changes in v1:
- - Remove unnecessary checks in the function
-    _dpu_kms_disable_dpu (Rob Clark).
-
-Changes in v2:
- - Avoid using suspend_late to reset the usagecount
-   as suspend_late might not be called during suspend
-   call failures (Doug).
-
-Changes in v3:
- - Use force suspend instead of managing device usage_count
-   via runtime put and get API's to trigger callbacks (Doug).
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 2 ++
- drivers/gpu/drm/msm/dsi/dsi.c           | 2 ++
- drivers/gpu/drm/msm/msm_drv.c           | 4 ++++
- 3 files changed, 8 insertions(+)
+ drivers/iommu/arm-smmu-v3.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ce19f1d..b886d9d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
- 
- static const struct dev_pm_ops dpu_pm_ops = {
- 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static const struct of_device_id dpu_dt_match[] = {
-diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-index 55ea4bc2..62704885 100644
---- a/drivers/gpu/drm/msm/dsi/dsi.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi.c
-@@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
- 
- static const struct dev_pm_ops dsi_pm_ops = {
- 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static struct platform_driver dsi_driver = {
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 7d985f8..2b8c99c 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1051,6 +1051,8 @@ static int msm_pm_suspend(struct device *dev)
- 		return ret;
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index aa3ac2a..970f1c9 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -3889,13 +3889,13 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
  	}
+ 	smmu->dev = dev;
  
-+	pm_runtime_force_suspend(dev);
+-	if (dev->of_node) {
++	if (dev->of_node)
+ 		ret = arm_smmu_device_dt_probe(pdev, smmu);
+-	} else {
++	else
+ 		ret = arm_smmu_device_acpi_probe(pdev, smmu);
+-		if (ret == -ENODEV)
+-			return ret;
+-	}
 +
- 	return 0;
- }
++	if (ret)
++		return ret;
  
-@@ -1063,6 +1065,8 @@ static int msm_pm_resume(struct device *dev)
- 	if (WARN_ON(!priv->pm_state))
- 		return -ENOENT;
- 
-+	pm_runtime_force_resume(dev);
-+
- 	ret = drm_atomic_helper_resume(ddev, priv->pm_state);
- 	if (!ret)
- 		priv->pm_state = NULL;
+ 	/* Set bypass mode according to firmware probing result */
+ 	bypass = !!ret;
 -- 
-1.9.1
+1.8.3.1
 
