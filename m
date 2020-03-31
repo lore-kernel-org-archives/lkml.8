@@ -2,155 +2,133 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B38C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5074C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22FE920784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:23:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXpjS+P0"
+	by mail.kernel.org (Postfix) with ESMTP id 812E9212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585682686;
+	bh=ctX9sQznsCh8RQn7qnlzihvfcPEAtES3giIe/Y1WAu4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YPVUxsrS/slVX9l6nZNpX3uk+GRSuKVUUuGOwbMOa9lBIoVmP9cAXgXDJGAVusxXL
+	 XFXNUjkiAmY596wFrZ3w60JmFO3xRyZl+BVSs4aI0ki7rEEyx6bG5qdG3nwNfeyi6B
+	 /f+grWrRAMDqcO6SIouVyKCJQB9+UC9LIOOudzA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgCaTXL (ORCPT
+        id S1728558AbgCaTYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:23:11 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25534 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727795AbgCaTXL (ORCPT
+        Tue, 31 Mar 2020 15:24:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40531 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727575AbgCaTYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:23:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585682590;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/e6nQfwC87/bpSm3h+1zpH7ZWFpAx96l++8B4RdaGPs=;
-        b=cXpjS+P0pO6xcd8532sVJ5VBzaOKbeoTYw0c0OKzaLHRFq/z7n/Bin5PcL/bV7K4E8+ah2
-        z3CrJ05y7AvM2fu++yvVSjvVIpcCBAYoThiMCP+kAf7gOYp+QNic9gWQe4l7oLqOvcIQ1a
-        Zi9DKJ6h8esx7SUJ7Sg+9iOMSRNyfPU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-qyIRSlNoNgKUrcismjl2ow-1; Tue, 31 Mar 2020 15:22:58 -0400
-X-MC-Unique: qyIRSlNoNgKUrcismjl2ow-1
-Received: by mail-wm1-f69.google.com with SMTP id s22so1074628wmh.8
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:22:57 -0700 (PDT)
+        Tue, 31 Mar 2020 15:24:45 -0400
+Received: by mail-io1-f66.google.com with SMTP id k9so23045189iov.7;
+        Tue, 31 Mar 2020 12:24:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/e6nQfwC87/bpSm3h+1zpH7ZWFpAx96l++8B4RdaGPs=;
-        b=omzQxJUmEzFZYxq+LGyoT74e/EltWdmX0iaqus9EKsh9Q7887RGEeRk/ULj/UeyyG/
-         KB0mDXFUxynjfsVWgP2eS4CBfUyV/HTE723bl156sdigxf3ObslHjOT61PPBzs1qqkiP
-         wuCEJV1FR3DtJbQ3j8/EjB9bCiEtQGaZYqFxw5wb+LE0G/hVvTuSFFm/u6yqpX15fvLg
-         bU+QmYRTUzImG22ZXxiWETq+zefFSJEHW1OVKngTaOh/Fem/BkgS1Ur3xsmC3zF6r+ad
-         3PYopdE1NEYb6FAPcarLv2BrS0XBBVaRDLpIit6j0MwJ2tP0Y4JS+rvkJj2vGqonMBKW
-         JBtQ==
-X-Gm-Message-State: AGi0PuYE4I3aXtKME5TP888HCLxHA2UPRcA8P2F7z2bE+31U7rWCmlfn
-        Enjkucxf4AMiWvmJizEU2KPsHm2bkvTLA+tNesHjkd1DMG/bqnLI7jJt3F4e80YmhHk9U5pEgPt
-        e51Iunn/p6nks4ZMN2BrDbTG4
-X-Received: by 2002:a1c:8108:: with SMTP id c8mr410453wmd.50.1585682577015;
-        Tue, 31 Mar 2020 12:22:57 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL6Aptv5lg4jzAxGBVMyYmTlEWQ5XMw3Zc2nN0PSD/j3eiBvj2Rc762TemaQntDs3cCx4+NfA==
-X-Received: by 2002:a1c:8108:: with SMTP id c8mr410435wmd.50.1585682576785;
-        Tue, 31 Mar 2020 12:22:56 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id v7sm25508548wrs.96.2020.03.31.12.22.54
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X77i90u4PCyWY02QSuEiirQj2VUMtCdRQ2cq3iyBOh8=;
+        b=LqW1xxh8RSelvIejExMle3J6DDYPpbfV886AhUI2N/zZ4w+x1aTb1/n/FrpEg/1kP2
+         Pr2CVj4EZBRlJUlZ3bt/rALmLJfioMITvwM0HC9EXKsNlcOxHPU+SkfwAvkYrUtadZqj
+         4idhPtecO9w1vXSBraaeESEpkn6iDeDiurOUuvikqUv9en4lGZAYQqTuHUs5oBBQRnfi
+         ouzQPz1B7YBzrvHxRhnBw2I5Q65Izqh6GX51s2Oc382NYLDa6dX9aMARHF6v2/C+wXtn
+         rselP4sNh/4LVf/NEM4eRjn23qmYzEEMWOXRXWdWpOy+w/pqCPLvsU6Uu8ygcUs6UD5Z
+         mZtQ==
+X-Gm-Message-State: ANhLgQ3XoRbFrEj3RouJ715P2Rb+n/HSoId5YsB7CSjB/Y74itamjN4I
+        /2kj0Gzvmkel7dVB1fRbFQ==
+X-Google-Smtp-Source: ADFU+vsSqcC7Ag+/ySb4VioprxxbvnAwFTpsEFlHwD+rQibUQP8A0ZLaFD2aNYVxNYiqgE+AehpjAA==
+X-Received: by 2002:a6b:c916:: with SMTP id z22mr17113646iof.138.1585682684488;
+        Tue, 31 Mar 2020 12:24:44 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id y1sm5196263ioq.47.2020.03.31.12.24.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 12:22:56 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 15:22:53 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: mmotm 2020-03-30-18-46 uploaded (VDPA + vhost)
-Message-ID: <20200331152106-mutt-send-email-mst@kernel.org>
-References: <20200331014748.ajL0G62jF%akpm@linux-foundation.org>
- <969cacf1-d420-223d-7cc7-5b1b2405ec2a@infradead.org>
- <20200331143437-mutt-send-email-mst@kernel.org>
- <9c03fee8-af1a-2035-b903-611a631094b0@infradead.org>
+        Tue, 31 Mar 2020 12:24:43 -0700 (PDT)
+Received: (nullmailer pid 20084 invoked by uid 1000);
+        Tue, 31 Mar 2020 19:24:41 -0000
+Date:   Tue, 31 Mar 2020 13:24:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] dt-bindings: gpio: Convert snps,dw-apb-gpio to DT
+ schema
+Message-ID: <20200331192441.GA32248@bogus>
+References: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+ <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
+ <20200323195401.30338-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9c03fee8-af1a-2035-b903-611a631094b0@infradead.org>
+In-Reply-To: <20200323195401.30338-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:42:47AM -0700, Randy Dunlap wrote:
-> On 3/31/20 11:37 AM, Michael S. Tsirkin wrote:
-> > On Tue, Mar 31, 2020 at 11:27:54AM -0700, Randy Dunlap wrote:
-> >> On 3/30/20 6:47 PM, akpm@linux-foundation.org wrote:
-> >>> The mm-of-the-moment snapshot 2020-03-30-18-46 has been uploaded to
-> >>>
-> >>>    http://www.ozlabs.org/~akpm/mmotm/
-> >>>
-> >>> mmotm-readme.txt says
-> >>>
-> >>> README for mm-of-the-moment:
-> >>>
-> >>> http://www.ozlabs.org/~akpm/mmotm/
-> >>>
-> >>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> >>> more than once a week.
-> >>>
-> >>> You will need quilt to apply these patches to the latest Linus release (5.x
-> >>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> >>> http://ozlabs.org/~akpm/mmotm/series
-> >>>
-> >>> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> >>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> >>> followed by the base kernel version against which this patch series is to
-> >>> be applied.
-> >>>
-> >>> This tree is partially included in linux-next.  To see which patches are
-> >>> included in linux-next, consult the `series' file.  Only the patches
-> >>> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-> >>> linux-next.
-> >>>
-> >>>
-> >>> A full copy of the full kernel tree with the linux-next and mmotm patches
-> >>> already applied is available through git within an hour of the mmotm
-> >>> release.  Individual mmotm releases are tagged.  The master branch always
-> >>> points to the latest release, so it's constantly rebasing.
-> >>>
-> >>> 	https://github.com/hnaz/linux-mm
-> >>
-> >> on i386:
-> >>
-> >> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_init':
-> >> vdpa.c:(.init.text+0x52): undefined reference to `__vdpa_register_driver'
-> >> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_exit':
-> >> vdpa.c:(.exit.text+0x14): undefined reference to `vdpa_unregister_driver'
-> >>
-> >>
-> >>
-> >> drivers/virtio/vdpa/ is not being built. (confusing!)
-> >>
-> >> CONFIG_VIRTIO=m
-> >> # CONFIG_VIRTIO_MENU is not set
-> >> CONFIG_VDPA=y
-> > 
-> > Hmm. OK. Can't figure it out. CONFIG_VDPA is set why isn't
-> > drivers/virtio/vdpa/ built?
-> > we have:
-> > 
+On Mon, Mar 23, 2020 at 10:53:56PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Ack.  Hopefully Yamada-san can tell us what is happening here.
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with DT schema. This commit replaces Synopsys DW GPIO
+> legacy bare text binding with YAML file. As before the binding file
+> states that the corresponding dts node is supposed to be compatible
+> with generic DW I2C controller indicated by the "snps,dw-apb-gpio"
+> compatible string and to provide a mandatory registers memory range.
+> It may also have an optional clock and reset phandle references.
+> 
+> There must be specified at least one subnode with
+> "snps,dw-apb-gpio-port" compatible string indicating the GPIO port,
+> which would actually export the GPIO controller functionality. Such
+> nodes should have traditional GPIO controller properties together
+> with optional interrupt-controller attributes if the corresponding
+> controller was synthesized to detect and report the input values
+> change to the parental IRQ controller.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> ---
+> 
+> Changelog v2:
+> - Use lowercase hex numbers in the main node name and in the sub-node names.
+> - Use "allOf:" statement to apply uint32 and "minimum/maximum" limitations
+>   on the "snps,nr-gpios" property.
+> - Discard "interrupts-extended" property.
+> - Make sure the sub-nodes have names with either 'gpio-port' or
+>   'gpio-controller' prefixes.
+> 
+> The DT scheme provided by this patch will pass the dt_binding_check
+> command after the next patches are merged to the dt-schema repo:
 
-OK I pushed a fix (moving the vdpa subsystem up a level) and pushed into
-my tree, refs/heads/next .  Seems to build fine now, but I'd appreciate
-it if you can give it a spin.
+Merged now.
 
--- 
-MST
+> ---
+>  .../bindings/gpio/snps,dw-apb-gpio.yaml       | 129 ++++++++++++++++++
+>  .../bindings/gpio/snps-dwapb-gpio.txt         |  65 ---------
+>  2 files changed, 129 insertions(+), 65 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
 
+Reviewed-by: Rob Herring <robh@kernel.org>
