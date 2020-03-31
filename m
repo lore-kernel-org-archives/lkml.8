@@ -2,289 +2,101 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA5FC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C01EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A8120675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8F320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:30:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cfIOZhl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgCaF3P (ORCPT
+        id S1726477AbgCaFaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:29:15 -0400
-Received: from [58.211.163.100] ([58.211.163.100]:62245 "EHLO
-        mail.advantech.com.cn" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726236AbgCaF3P (ORCPT
+        Tue, 31 Mar 2020 01:30:11 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44214 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725809AbgCaFaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:29:15 -0400
-Received: from ACNMB2.ACN.ADVANTECH.CORP (unverified [172.21.128.148]) by ACN-SWEEPER01.ACN.ADVANTECH.CORP
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Tde3d30b370ac1580301704@ACN-SWEEPER01.ACN.ADVANTECH.CORP>;
- Tue, 31 Mar 2020 13:29:01 +0800
-Received: from ADVANTECH.CORP (172.17.10.69) by ACNMB2.ACN.ADVANTECH.CORP
- (172.21.128.148) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 31 Mar
- 2020 13:29:00 +0800
-From:   <yuechao.zhao@advantech.com.cn>
-To:     <345351830@qq.com>
-CC:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, <shengkui.leng@advantech.com.cn>,
-        Yuechao Zhao <yuechao.zhao@advantech.com.cn>
-Subject: [v4,1/1] hwmon: (nct7904) Add watchdog function
-Date:   Tue, 31 Mar 2020 05:28:50 +0000
-Message-ID: <20200331052850.5419-1-yuechao.zhao@advantech.com.cn>
-X-Mailer: git-send-email 2.17.1
+        Tue, 31 Mar 2020 01:30:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585632607;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cFqXXNouokcEA1ClxFQy3YMBVLAfkUsYqF77czd6ZxU=;
+        b=cfIOZhl3EGKOg4DfodxvqmEkKzKmiG7G9n0J/Fpc20WZ9Bxi7AXWrvgWsuWPy6CNzap8Hb
+        uNy6qaDk92++d0ZAXAZ7rFScbqKZHNz7wQH+WiXowrO7u3LBDUDCY7YGiMdp3lnlaHaazf
+        554hAMyG9iKZFjXff7mHQSM37HR4OsU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-nzdgtpyaMqO2qBGBZY26tQ-1; Tue, 31 Mar 2020 01:30:04 -0400
+X-MC-Unique: nzdgtpyaMqO2qBGBZY26tQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96E19800D5C;
+        Tue, 31 Mar 2020 05:30:02 +0000 (UTC)
+Received: from [10.72.12.115] (ovpn-12-115.pek2.redhat.com [10.72.12.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 669CCD767B;
+        Tue, 31 Mar 2020 05:29:57 +0000 (UTC)
+Subject: Re: [PATCH -next] vdpasim: Rerun status in vdpasim_get_status
+To:     YueHaibing <yuehaibing@huawei.com>, mst@redhat.com
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <20200331033501.31272-1-yuehaibing@huawei.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <096a742b-9387-370e-db22-81f220cf7c70@redhat.com>
+Date:   Tue, 31 Mar 2020 13:29:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.69]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- ACNMB2.ACN.ADVANTECH.CORP (172.21.128.148)
+In-Reply-To: <20200331033501.31272-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
 
-implement watchdong functionality into the "hwmon/nct7904.c"
+On 2020/3/31 =E4=B8=8A=E5=8D=8811:35, YueHaibing wrote:
+> vdpasim->status should acquired under spin lock.
+>
+> Fixes: 870448c31775 ("vdpasim: vDPA device simulator")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c b/drivers/virtio/v=
+dpa/vdpa_sim/vdpa_sim.c
+> index 6e8a0cf2fdeb..72863d01a12a 100644
+> --- a/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
+> +++ b/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
+> @@ -488,7 +488,7 @@ static u8 vdpasim_get_status(struct vdpa_device *vd=
+pa)
+>   	status =3D vdpasim->status;
+>   	spin_unlock(&vdpasim->lock);
+>  =20
+> -	return vdpasim->status;
+> +	return status;
+>   }
+>  =20
+>   static void vdpasim_set_status(struct vdpa_device *vdpa, u8 status)
 
-Signed-off-by: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
----
-v4:
-- Set "wdt->timeout" to actual timeout
-- Modify nct7904_wdt_get_timeleft return value
-- Remove code 'i2c_set_clientdata(client, data)'
 
-v3:
-- Delete useless message(noise).
-- Delete useless variable 'ret'.
-- Delete 'ping_timeout'.
-- Use 'wdt->timeout' as basis for setting the chip timeout
-- Implement a get_timeout function
-- Use devm_watchdog_register_device() instead of watchdog_register_device().
-- Use watchdog_stop_on_unregister() when driver remove.
-- Delete nct7904_remove() function.
-- Fix typos.
+Typo in the title but patch looks good.
 
-v2:
-- Modify dependency of NC7904 into "drivers/hwmon/Kconfig".
----
- drivers/hwmon/Kconfig   |   6 ++-
- drivers/hwmon/nct7904.c | 138 +++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 141 insertions(+), 3 deletions(-)
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 05a3083..cd0ae82 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1340,10 +1340,12 @@ config SENSORS_NCT7802
- 
- config SENSORS_NCT7904
- 	tristate "Nuvoton NCT7904"
--	depends on I2C
-+	depends on I2C && WATCHDOG
-+	select WATCHDOG_CORE
- 	help
- 	  If you say yes here you get support for the Nuvoton NCT7904
--	  hardware monitoring chip, including manual fan speed control.
-+	  hardware monitoring chip, including manual fan speed control
-+	  and support for the integrated watchdog.
- 
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nct7904.
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 1f5743d..571a649 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -8,6 +8,9 @@
-  * Copyright (c) 2019 Advantech
-  * Author: Amy.Shih <amy.shih@advantech.com.tw>
-  *
-+ * Copyright (c) 2020 Advantech
-+ * Author: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
-+ *
-  * Supports the following chips:
-  *
-  * Chip        #vin  #fan  #pwm  #temp  #dts  chip ID
-@@ -20,6 +23,7 @@
- #include <linux/i2c.h>
- #include <linux/mutex.h>
- #include <linux/hwmon.h>
-+#include <linux/watchdog.h>
- 
- #define VENDOR_ID_REG		0x7A	/* Any bank */
- #define NUVOTON_ID		0x50
-@@ -87,18 +91,42 @@
- #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
- #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
- 
-+#define WDT_LOCK_REG		0xE0	/* W/O Lock Watchdog Register */
-+#define WDT_EN_REG		0xE1	/* R/O Watchdog Enable Register */
-+#define WDT_STS_REG		0xE2	/* R/O Watchdog Status Register */
-+#define WDT_TIMER_REG		0xE3	/* R/W Watchdog Timer Register */
-+#define WDT_SOFT_EN		0x55	/* Enable soft watchdog timer */
-+#define WDT_SOFT_DIS		0xAA	/* Disable soft watchdog timer */
-+
- #define VOLT_MONITOR_MODE	0x0
- #define THERMAL_DIODE_MODE	0x1
- #define THERMISTOR_MODE		0x3
- 
- #define ENABLE_TSI	BIT(1)
- 
-+#define WATCHDOG_TIMEOUT	1	/* 1 minute default timeout */
-+
-+/*The timeout range is 1-255 minutes*/
-+#define MIN_TIMEOUT		(1 * 60)
-+#define MAX_TIMEOUT		(255 * 60)
-+
-+static int timeout = WATCHDOG_TIMEOUT;
-+module_param(timeout, int, 0);
-+MODULE_PARM_DESC(timeout, "Watchdog timeout in minutes. 1 <= timeout <= 255, default="
-+			__MODULE_STRING(WATCHODOG_TIMEOUT) ".");
-+
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started once started (default="
-+			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-+
- static const unsigned short normal_i2c[] = {
- 	0x2d, 0x2e, I2C_CLIENT_END
- };
- 
- struct nct7904_data {
- 	struct i2c_client *client;
-+	struct watchdog_device wdt;
- 	struct mutex bank_lock;
- 	int bank_sel;
- 	u32 fanin_mask;
-@@ -889,6 +917,95 @@ static int nct7904_detect(struct i2c_client *client,
- 	.info = nct7904_info,
- };
- 
-+/*
-+ * Watchdog Function
-+ */
-+static int nct7904_wdt_start(struct watchdog_device *wdt)
-+{
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+
-+	/* Enable soft watchdog timer */
-+	return nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_EN);
-+}
-+
-+static int nct7904_wdt_stop(struct watchdog_device *wdt)
-+{
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+
-+	return nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-+}
-+
-+static int nct7904_wdt_set_timeout(struct watchdog_device *wdt,
-+				   unsigned int timeout)
-+{
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+	/*
-+	 * The NCT7904 is very special in watchdog function.
-+	 * Its minimum unit is minutes. And wdt->timeout needs
-+	 * to match the actual timeout selected. So, this needs
-+	 * to be: wdt->timeout = timeout / 60 * 60.
-+	 * For example, if the user configures a timeout of
-+	 * 119 seconds, the actual timeout will be 60 seconds.
-+	 * So, wdt->timeout must then be set to 60 seconds.
-+	 */
-+	wdt->timeout = timeout / 60 * 60;
-+
-+	return nct7904_write_reg(data, BANK_0, WDT_TIMER_REG,
-+				 wdt->timeout / 60);
-+}
-+
-+static int nct7904_wdt_ping(struct watchdog_device *wdt)
-+{
-+	/*
-+	 * Note:
-+	 * NCT7904 does not support refreshing WDT_TIMER_REG register when
-+	 * the watchdog is active. Please disable watchdog before feeding
-+	 * the watchdog and enable it again.
-+	 */
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+	int ret;
-+
-+	/* Disable soft watchdog timer */
-+	ret = nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* feed watchdog */
-+	ret = nct7904_write_reg(data, BANK_0, WDT_TIMER_REG, wdt->timeout / 60);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Enable soft watchdog timer */
-+	return nct7904_write_reg(data, BANK_0, WDT_TIMER_REG, WDT_SOFT_EN);
-+}
-+
-+static unsigned int nct7904_wdt_get_timeleft(struct watchdog_device *wdt)
-+{
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+	int ret;
-+
-+	ret = nct7904_read_reg(data, BANK_0, WDT_TIMER_REG);
-+	if (ret < 0)
-+		return 0;
-+
-+	return ret * 60;
-+}
-+
-+static const struct watchdog_info nct7904_wdt_info = {
-+	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-+				WDIOF_MAGICCLOSE,
-+	.identity	= "nct7904 watchdog",
-+};
-+
-+static const struct watchdog_ops nct7904_wdt_ops = {
-+	.owner		= THIS_MODULE,
-+	.start		= nct7904_wdt_start,
-+	.stop		= nct7904_wdt_stop,
-+	.ping		= nct7904_wdt_ping,
-+	.set_timeout	= nct7904_wdt_set_timeout,
-+	.get_timeleft	= nct7904_wdt_get_timeleft,
-+};
-+
- static int nct7904_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -1012,7 +1129,26 @@ static int nct7904_probe(struct i2c_client *client,
- 	hwmon_dev =
- 		devm_hwmon_device_register_with_info(dev, client->name, data,
- 						     &nct7904_chip_info, NULL);
--	return PTR_ERR_OR_ZERO(hwmon_dev);
-+	ret = PTR_ERR_OR_ZERO(hwmon_dev);
-+	if (ret)
-+		return ret;
-+
-+	/* Watchdog initialization */
-+	data->wdt.ops = &nct7904_wdt_ops;
-+	data->wdt.info = &nct7904_wdt_info;
-+
-+	data->wdt.timeout = timeout * 60; /* in seconds */
-+	data->wdt.min_timeout = MIN_TIMEOUT;
-+	data->wdt.max_timeout = MAX_TIMEOUT;
-+	data->wdt.parent = &client->dev;
-+
-+	watchdog_init_timeout(&data->wdt, timeout * 60, &client->dev);
-+	watchdog_set_nowayout(&data->wdt, nowayout);
-+	watchdog_set_drvdata(&data->wdt, data);
-+
-+	watchdog_stop_on_unregister(&data->wdt);
-+
-+	return devm_watchdog_register_device(dev, &data->wdt);
- }
- 
- static const struct i2c_device_id nct7904_id[] = {
--- 
-1.8.3.1
+Thanks
+
 
