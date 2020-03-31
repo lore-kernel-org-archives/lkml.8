@@ -4,62 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5074C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0090DC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812E9212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:24:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D72212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585682686;
-	bh=ctX9sQznsCh8RQn7qnlzihvfcPEAtES3giIe/Y1WAu4=;
+	s=default; t=1585682714;
+	bh=4MXV2g9sB+g72TLc3i34Idwu3Os8Jp5+xBfHGEsvwWQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YPVUxsrS/slVX9l6nZNpX3uk+GRSuKVUUuGOwbMOa9lBIoVmP9cAXgXDJGAVusxXL
-	 XFXNUjkiAmY596wFrZ3w60JmFO3xRyZl+BVSs4aI0ki7rEEyx6bG5qdG3nwNfeyi6B
-	 /f+grWrRAMDqcO6SIouVyKCJQB9+UC9LIOOudzA0=
+	b=dAhI/ANzxps8H7v4SG0De0urU7iTpM+xJL2PZaxr+yo2VCwbLSIBCGhpdBrUw22Qm
+	 Q+HjC5N5zGALpqoQwD91CTnI8wstrz1G93sw/Ip+jA+MbNm4r40bmisp/mibVTeKZ9
+	 mA4itheU/e0AvRcxmh8QQMOxhXmu2TDfF3xt5zpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgCaTYp (ORCPT
+        id S1729108AbgCaTZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:24:45 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40531 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727575AbgCaTYp (ORCPT
+        Tue, 31 Mar 2020 15:25:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44817 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgCaTZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:24:45 -0400
-Received: by mail-io1-f66.google.com with SMTP id k9so23045189iov.7;
-        Tue, 31 Mar 2020 12:24:44 -0700 (PDT)
+        Tue, 31 Mar 2020 15:25:13 -0400
+Received: by mail-io1-f67.google.com with SMTP id r25so11175887ioc.11;
+        Tue, 31 Mar 2020 12:25:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X77i90u4PCyWY02QSuEiirQj2VUMtCdRQ2cq3iyBOh8=;
-        b=LqW1xxh8RSelvIejExMle3J6DDYPpbfV886AhUI2N/zZ4w+x1aTb1/n/FrpEg/1kP2
-         Pr2CVj4EZBRlJUlZ3bt/rALmLJfioMITvwM0HC9EXKsNlcOxHPU+SkfwAvkYrUtadZqj
-         4idhPtecO9w1vXSBraaeESEpkn6iDeDiurOUuvikqUv9en4lGZAYQqTuHUs5oBBQRnfi
-         ouzQPz1B7YBzrvHxRhnBw2I5Q65Izqh6GX51s2Oc382NYLDa6dX9aMARHF6v2/C+wXtn
-         rselP4sNh/4LVf/NEM4eRjn23qmYzEEMWOXRXWdWpOy+w/pqCPLvsU6Uu8ygcUs6UD5Z
-         mZtQ==
-X-Gm-Message-State: ANhLgQ3XoRbFrEj3RouJ715P2Rb+n/HSoId5YsB7CSjB/Y74itamjN4I
-        /2kj0Gzvmkel7dVB1fRbFQ==
-X-Google-Smtp-Source: ADFU+vsSqcC7Ag+/ySb4VioprxxbvnAwFTpsEFlHwD+rQibUQP8A0ZLaFD2aNYVxNYiqgE+AehpjAA==
-X-Received: by 2002:a6b:c916:: with SMTP id z22mr17113646iof.138.1585682684488;
-        Tue, 31 Mar 2020 12:24:44 -0700 (PDT)
+        bh=hFuoTfMAYRshOlVhyJLkMqTe2pxmypampOFQnpBLMbE=;
+        b=LcUsdr6+37YFM2JfrfAb2Fnms1FO86aHhGTCj2wtMvOJv8LedVX3qzjVERmDJ/Tiii
+         fkHR3up1SBxKidey5EAwcX0PTW9/bIt0PeiAMV9vu5/COdqnN/rl+RwPo6xGdxT+qRDp
+         toGtNBFEtuK+cbbrBQ5LC+0jGEsUJR9c322Og0CRq36SGApqjCQAQ4r2ikJtYGLSykr1
+         JeIcVrn743LyLdfVHnyJ7ziMxlgrYsOsy4qvIql0xQZKXtDQEcE4+Cqb3rR6u/jUh4xg
+         t6XwU5DA+NzGgatDy8LUfwbuaArjO+ET21fr7orxdVcG0hOHmTNmnOSNqm5KC7dYeJrO
+         eFtQ==
+X-Gm-Message-State: ANhLgQ2fDdWrbI3xisQ+03dnJEMq6sVg3WSsfJqn5SFyY/tOWiv3xH5D
+        a+BAW81xamfEUOagxB4Z0A==
+X-Google-Smtp-Source: ADFU+vvDimakhgAYrLX4Tfl8Ye8W6pH0OSsQYBCZ2OzX0qbRhMfTva1qv0AlJ6Osl1WF3vqOHIrvIA==
+X-Received: by 2002:a6b:4905:: with SMTP id u5mr11863656iob.134.1585682712569;
+        Tue, 31 Mar 2020 12:25:12 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id y1sm5196263ioq.47.2020.03.31.12.24.42
+        by smtp.gmail.com with ESMTPSA id x4sm4806894ilj.6.2020.03.31.12.25.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 12:24:43 -0700 (PDT)
-Received: (nullmailer pid 20084 invoked by uid 1000);
-        Tue, 31 Mar 2020 19:24:41 -0000
-Date:   Tue, 31 Mar 2020 13:24:41 -0600
+        Tue, 31 Mar 2020 12:25:12 -0700 (PDT)
+Received: (nullmailer pid 20812 invoked by uid 1000);
+        Tue, 31 Mar 2020 19:25:08 -0000
+Date:   Tue, 31 Mar 2020 13:25:08 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Sergey.Semin@baikalelectronics.ru
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
@@ -67,68 +68,40 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] dt-bindings: gpio: Convert snps,dw-apb-gpio to DT
- schema
-Message-ID: <20200331192441.GA32248@bogus>
+Subject: Re: [PATCH v3 3/6] dt-bindings: gpio: Add Sergey Semin to DW APB
+ GPIO driver maintainers
+Message-ID: <20200331192508.GA20754@bogus>
 References: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
  <20200323195401.30338-1-Sergey.Semin@baikalelectronics.ru>
- <20200323195401.30338-2-Sergey.Semin@baikalelectronics.ru>
+ <20200323195401.30338-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323195401.30338-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200323195401.30338-4-Sergey.Semin@baikalelectronics.ru>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 10:53:56PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+On Mon, 23 Mar 2020 22:53:58 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
 > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with DT schema. This commit replaces Synopsys DW GPIO
-> legacy bare text binding with YAML file. As before the binding file
-> states that the corresponding dts node is supposed to be compatible
-> with generic DW I2C controller indicated by the "snps,dw-apb-gpio"
-> compatible string and to provide a mandatory registers memory range.
-> It may also have an optional clock and reset phandle references.
+> Seeing Hoan has been silent for a long time Linus suggested to me
+> to be also maintaining the driver. This patch adds myself to the list
+> of maintainers in the DT schema of the driver.
 > 
-> There must be specified at least one subnode with
-> "snps,dw-apb-gpio-port" compatible string indicating the GPIO port,
-> which would actually export the GPIO controller functionality. Such
-> nodes should have traditional GPIO controller properties together
-> with optional interrupt-controller attributes if the corresponding
-> controller was synthesized to detect and report the input values
-> change to the parental IRQ controller.
-> 
+> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Hoan Tran <hoan@os.amperecomputing.com>
 > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 > Cc: Paul Burton <paulburton@kernel.org>
 > Cc: Ralf Baechle <ralf@linux-mips.org>
 > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
 > ---
+>  Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Changelog v2:
-> - Use lowercase hex numbers in the main node name and in the sub-node names.
-> - Use "allOf:" statement to apply uint32 and "minimum/maximum" limitations
->   on the "snps,nr-gpios" property.
-> - Discard "interrupts-extended" property.
-> - Make sure the sub-nodes have names with either 'gpio-port' or
->   'gpio-controller' prefixes.
-> 
-> The DT scheme provided by this patch will pass the dt_binding_check
-> command after the next patches are merged to the dt-schema repo:
 
-Merged now.
-
-> ---
->  .../bindings/gpio/snps,dw-apb-gpio.yaml       | 129 ++++++++++++++++++
->  .../bindings/gpio/snps-dwapb-gpio.txt         |  65 ---------
->  2 files changed, 129 insertions(+), 65 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
