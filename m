@@ -2,63 +2,98 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3F5C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4369BC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24EFB206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188E320748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585640922;
+	bh=4txxjcpYmzYcU3xSAw4zD8jSTJCG5zsImxZNvCiueKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vaVhP8+sE+hx71rP5rbNIB3MYT4NkRFj89yhflPMDoebgQxsXHux84n5z3oRqa3RM
+	 kedHK8IOag9KVieyU/FMCEumPkQTw/JXSJlFM3hM28/vD+t0Hqb4lWvu038wxpqGs5
+	 aPg1tZkfXai+VqYTbwHFlHmfbDFxffOlSvLPEJS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbgCaHsc (ORCPT
+        id S1730134AbgCaHsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:48:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:37197 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgCaHsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:48:32 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id ABC3168C4E; Tue, 31 Mar 2020 09:48:28 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 09:48:28 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Martijn Coenen <maco@android.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com
-Subject: Re: [PATCH] loop: Add LOOP_SET_FD_WITH_OFFSET ioctl.
-Message-ID: <20200331074828.GA24372@lst.de>
-References: <20200329140459.18155-1-maco@android.com> <20200330010024.GA23640@ming.t460p> <CAB0TPYG4N-2Gg95VwQuQBQ8rvjC=4NQJP4syJWS3Q6CO28HzTQ@mail.gmail.com>
+        Tue, 31 Mar 2020 03:48:41 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34705 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730065AbgCaHsk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:48:40 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 65so24651101wrl.1;
+        Tue, 31 Mar 2020 00:48:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sDDR7wkznk3Ln/XEBAe1hdquHTqCjRL2OUXoeHhs1/I=;
+        b=Z77vJpOfp8yhqPr3LNrlEZ9xKS88nkKs0ooW6hoj05vg2n5TBZrhoIJc6MR9Qz6oFH
+         P/rHVEPKV283YxVZUuFHuP5A3RI7AE7BuZMoHuGEsuDxxsMlb+1YTRZku1x2n66hNtK8
+         GbSaii1CDz4NLElt2y20/ymcp4tCuT9lTh9FXPqoerF9aBEk2D4Qvt84FdtaFxJ1smc+
+         GQdzeKQcE1pAwFiPu/qfRRQpyjBmG12jgmIV7g1FeZbuaKecBuybnlfli8rXpJE4uUoI
+         GZCwhrxyfNMgSh8kHQLJlRkLShUHKuNZQnh6/aQmgnq/ER3uT88UQqNPL9hMwjfL4qwG
+         3ycw==
+X-Gm-Message-State: ANhLgQ3E/2s5bN11iMI0GGDJ83oCOg+8mJxX5pBOTgPPFXPxTujyi45K
+        Jb5NEvrOA7r846EVzJzkJAA=
+X-Google-Smtp-Source: ADFU+vv3EXliVsMAUSV9EjxsWTfTwAunV64IBIwQFULkiEChbiWPpqyxtb84adDetxoemQODGsJkDA==
+X-Received: by 2002:adf:e90b:: with SMTP id f11mr6877457wrm.65.1585640919502;
+        Tue, 31 Mar 2020 00:48:39 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id t81sm2728726wmb.15.2020.03.31.00.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 00:48:37 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:48:36 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200331074836.GB30449@dhcp22.suse.cz>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-2-vbabka@suse.cz>
+ <20200330224422.GX11244@42.do-not-panic.com>
+ <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAB0TPYG4N-2Gg95VwQuQBQ8rvjC=4NQJP4syJWS3Q6CO28HzTQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:06:41AM +0200, Martijn Coenen wrote:
-> Hi Ming,
+On Tue 31-03-20 09:42:46, Vlastimil Babka wrote:
+[...]
+> > Should we not do this, we'll have to live with the consequences of
+> > supporting the full swoop of sysctls are boot params, whatever
+> > consequences those may be.
 > 
-> On Mon, Mar 30, 2020 at 3:00 AM Ming Lei <ming.lei@redhat.com> wrote:
-> > The new ioctl LOOP_SET_FD_WITH_OFFSET looks not generic enough, could
-> > you consider to add one ioctl LOOP_SET_FD_AND_STATUS to cover both
-> > SET_FD and SET_STATUS so that using two ioctl() to setup loop can become
-> > deprecated finally?
-> 
-> I originally started out doing that. However, it is a significantly
-> larger refactoring of the loop driver, and it makes things like error
-> handling more complex. I thought configuring loop with an offset is
-> the most common case. But if there's a preference to do an ioctl that
-> takes the full status, I can work on that.
+> Of course when the first user tries to set some particular sysctl as boot param
+> and finds and reports it doesn't work as intended, then it can be fixed or
+> blacklisted and it can't break anyone else?
 
-I think the full blown set fd an status would seem a lot more useful,
-or even better a LOOP_CTL_ADD variant that sets up everything important
-on the character device so that we avoid the half set up block devices
-entirely.
+Absolutely agreed. I would be really careful to not overengineer this
+whole thing.
+
+-- 
+Michal Hocko
+SUSE Labs
