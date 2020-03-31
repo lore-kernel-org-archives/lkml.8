@@ -2,99 +2,109 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4542C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BB4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF2020772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DlIr6JEf"
+	by mail.kernel.org (Postfix) with ESMTP id 13B93208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585651326;
+	bh=imsnPA4JCAInhZuF+6cN29LP+UEQkzirwfry5AqSjoM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y7LkFeEm6RxHT8gnXF/Kr4mOWSH+pB9PJZ/+eKOnlnNywNDisEUh3+CVo5YCup4LT
+	 2xCzvqmealO33Yh/UBiGxDExfhNwsIpalZ3XvKH22FIDFPWQlAWbWIg7JvrMCYenoR
+	 Gnz3+cKj5QbzSSO8lr4Mu1C4No8yMBsZfLKYHZuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgCaKlw (ORCPT
+        id S1730348AbgCaKmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:41:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41608 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729925AbgCaKlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:41:52 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VAfg2U102853;
-        Tue, 31 Mar 2020 10:41:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=NObmnK1iNc485uqyg9CPnPUrBG5VCXB5zLiIIyBgYsA=;
- b=DlIr6JEffi+S/c2+Sz5MPf2rZdEO1SL9sqQ7AN36TxM3Pz2d+dabhi4VhToYQWfXG+ic
- FeO8ZXkhYTfcMUPj06Ilck2cUk+xx/gSnyNVQj5LV/QaiiIOp726JhFmyH1UY5ieYpiY
- ZIOjkqoupn2AhC6xUOyMWLrxQQOPXcNEg1DGkxbWE707KgURLiwPNeWLZK2kULZGK5pJ
- 13IaXVuSZ+hl+eFltdNKNIlzOsNGtd4oZV7iGQrfWEf3CQx7Z65Hc47YBq5cIMiQ23lg
- ZzxZA3ns86YFcyBL0n/Rg8EVkdo/qoF+RMJOjFm6+3Ehpk4ANuTT46+vNhf0LuorDa97 0Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 303aqhfa8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 10:41:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VAbBL5106348;
-        Tue, 31 Mar 2020 10:41:41 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 302gcc74v0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 10:41:41 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02VAfcLZ016944;
-        Tue, 31 Mar 2020 10:41:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Mar 2020 03:41:37 -0700
-Date:   Tue, 31 Mar 2020 13:41:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: Re: [PATCH] staging: vt6656: Use BIT() macro in vnt_mac_reg_bits_*
- functions
-Message-ID: <20200331104130.GC2066@kadam>
-References: <20200320181326.12156-1-oscar.carter@gmx.com>
- <20200323073214.GJ4650@kadam>
- <20200326171043.GB3629@ubuntu>
+        Tue, 31 Mar 2020 06:42:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729925AbgCaKmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 06:42:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5338F20772;
+        Tue, 31 Mar 2020 10:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585651319;
+        bh=imsnPA4JCAInhZuF+6cN29LP+UEQkzirwfry5AqSjoM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m7Zg/zvTMTOmfZtJP1ZYyyktkLVY0CSxepy30ZLypgvHM4DsTyFltOlU/RhRm4f/x
+         1Oicim8UmkM2ZBnl2BUabChT+WRYIjnoExzKnyfuS2gG1dma3NnIFmQVyPhtDgp/em
+         KJ2zxOOkRZ73azXNHt9/6bZtZOnssh+mAHDsZAjo=
+Date:   Tue, 31 Mar 2020 11:30:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, Nicolas Pitre <nico@fluxnic.net>,
+        Chen Wandun <chenwandun@huawei.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Jiri Slaby <jslaby@suse.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lukas Wunner <lukas@wunner.de>, ghalat@redhat.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] vt: don't use kmalloc() for the unicode screen buffer
+Message-ID: <20200331093041.GA1199411@kroah.com>
+References: <nycvar.YSQ.7.76.2003281745280.2671@knanqh.ubzr>
+ <nycvar.YSQ.7.76.2003282214210.2671@knanqh.ubzr>
+ <20200330190759.GE7594@ravnborg.org>
+ <CAKMK7uF_mZ3yJouqAOO9v7jaso2aL6GSwRK13uOEuUsOevdUBg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326171043.GB3629@ubuntu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- mlxlogscore=828 adultscore=0 suspectscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003310096
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 mlxlogscore=905 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003310096
+In-Reply-To: <CAKMK7uF_mZ3yJouqAOO9v7jaso2aL6GSwRK13uOEuUsOevdUBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 06:10:43PM +0100, Oscar Carter wrote:
-> I will make these changes and i will send and incremental patch with the
-> "Fixes:" tag due to the this patch has already been added to the staging-next
-> branch of the greg staging tree.
+On Tue, Mar 31, 2020 at 10:43:11AM +0200, Daniel Vetter wrote:
+> On Mon, Mar 30, 2020 at 9:08 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >
+> > Hi Nicolas
+> >
+> > On Sat, Mar 28, 2020 at 10:25:11PM -0400, Nicolas Pitre wrote:
+> > > Even if the actual screen size is bounded in vc_do_resize(), the unicode
+> > > buffer is still a little more than twice the size of the glyph buffer
+> > > and may exceed MAX_ORDER down the kmalloc() path. This can be triggered
+> > > from user space.
+> > >
+> > > Since there is no point having a physically contiguous buffer here,
+> > > let's avoid the above issue as well as reducing pressure on high order
+> > > allocations by using vmalloc() instead.
+> > >
+> > > Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+> > > Cc: <stable@vger.kernel.org>
+> > >
+> > > ---
+> > >
+> > > Changes since v1:
+> > >
+> > > - Added missing include, found by kbuild test robot.
+> > >   Strange that my own build doesn't complain.
+> >
+> > When I did the drmP.h removal vmalloc was one of the header files
+> > that turned up missing in many cases - but only for some architectures.
+> > I learned to include alpha in the build.
+> > If it survived building for alpha then I had fixed the majority
+> > of the issues related to random inherited includes.
+> >
+> > The patch itself looks good.
+> >
+> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> Greg, I'm assuming you'll pick this up through the tty tree? I kinda
+> want to stop the habit of merging vt patches, maybe then
+> get_maintainers will stop thinking I'm responsible somehow :-)
 
-Fixes is only for bug fixes, not style issues.
+Yes, I'll take it, and have been taking vt patches for a few releases
+now so don't worry, you aren't responsible anymore :)
 
-regards,
-dan carpenter
+thanks,
 
+greg k-h
