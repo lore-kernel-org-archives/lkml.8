@@ -2,106 +2,110 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B011C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34194C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72A62080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048D520842
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N0z7FKtt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSzLexTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgCaTpk (ORCPT
+        id S1730408AbgCaTp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:45:40 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24123 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727768AbgCaTpj (ORCPT
+        Tue, 31 Mar 2020 15:45:58 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46768 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727875AbgCaTp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:45:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585683938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mcpjr22EubvpvBv5U1Nr7UCjm49Gd0MVWUusU3L0BO0=;
-        b=N0z7FKttUDHft1dUjZNZCHN/2iy6sAX4z9DByWHSPrMy2HSxXx8KbfAMZhxxtVxljvN2lr
-        vZPkF5bCs6U9v/lmGNNlxH9AQzG0Bs49aBBbWmdXqo+OPxplsCsT2hYuh5NklAh5XvnQVb
-        BKa2OwtBQjnzdo4iUIsUpUfQ7QLGrQs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-282-mi-6gqLsPvy_dhd7NAlIvA-1; Tue, 31 Mar 2020 15:40:30 -0400
-X-MC-Unique: mi-6gqLsPvy_dhd7NAlIvA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E35C11084426;
-        Tue, 31 Mar 2020 19:40:28 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-118-184.phx2.redhat.com [10.3.118.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 38C945C1BB;
-        Tue, 31 Mar 2020 19:40:21 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 6A6F42202D7; Tue, 31 Mar 2020 15:40:20 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, vgoyal@redhat.com, aarcange@redhat.com,
-        dhildenb@redhat.com
-Subject: [PATCH 3/4] kvm: Always get async page notifications
-Date:   Tue, 31 Mar 2020 15:40:10 -0400
-Message-Id: <20200331194011.24834-4-vgoyal@redhat.com>
-In-Reply-To: <20200331194011.24834-1-vgoyal@redhat.com>
-References: <20200331194011.24834-1-vgoyal@redhat.com>
+        Tue, 31 Mar 2020 15:45:58 -0400
+Received: by mail-qt1-f193.google.com with SMTP id g7so19452812qtj.13;
+        Tue, 31 Mar 2020 12:45:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=REjYZlG94i8PyvxEbrGw6FROa/0MlwWAThXqw6aFXhA=;
+        b=VSzLexTs4R0b655EBqdGCoSiFIqAQHoDH/UYop0iyse8dwS75rGIg5+JF73dCSmK1g
+         zEphrL0t82cI/7mDQyyl246sSAEeSaZYqwIjLSG8E6an5fc7yedc0djdKKfBh1e/+sX6
+         8hHIphF8tk+LMZqKjxxZasi5b4mRCYJm7kt/urRRmWEJnZRitnDeMeNIozr37N4Wsuxv
+         PY5vrL5L1OYrgDjprWPaodKVqzE4OZXFXydKFQ0owREtK2KnYbdNY9BDVIySeE6mK0L/
+         f1KkeATFooGwCvPN8f86OH2P3zwP7dJWlab2UyZR3iMe+EZDreIPJ6FARa+xmZ8DiT1Y
+         VvyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=REjYZlG94i8PyvxEbrGw6FROa/0MlwWAThXqw6aFXhA=;
+        b=Bhaw6xWlaauB+MTUSw6SCgoP5rPPL458ZDHpYRdfo7Xk8fG+jR6oY5SdNOaLsDP6KQ
+         YEmFDshh+3tB3UAIgdxLU6uwFUzt3N2ueX14qImjT+n1LIitNpEW7AyKKZYDsKZI66WI
+         L2t/gadhJYxjYIq665h+lzDCajtu6pgQ4wgxuI4ZYcsRISThKE2ONm8wkTpFK8Bbl7N/
+         2sbjCFvWRhOp3nYpvf9q/S2wpRh3HzitG0/YQKhB/hLuBGo8YZkdafUC0nZ7cFhuGuGK
+         YtkdKuWqa2K046usOXSAGQ48z8Rt1DvnIBwP8U1MAyFAB6ka6SmYEaCszND6u2PCQe7a
+         6BFw==
+X-Gm-Message-State: ANhLgQ2RFlllpx+2aPwI0IJR3W75L7mLqAzww4oaJgPBbtMPg+8RqjJQ
+        kM59p5aLNYKrpjAUEIilj713rpsJH2v2hoEKuDU=
+X-Google-Smtp-Source: ADFU+vvi0ecOPffFZmRFp24NNImgY9stnVZBzdZ7eyIL1hi/wzu6S8WAYD8vWyl+NrWOBTAx/Emq3hZqKr5dYgtkrY8=
+X-Received: by 2002:ac8:6f1b:: with SMTP id g27mr6856118qtv.117.1585683956976;
+ Tue, 31 Mar 2020 12:45:56 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+References: <20200331164719.15930-1-slava@bacher09.org>
+In-Reply-To: <20200331164719.15930-1-slava@bacher09.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 31 Mar 2020 12:45:46 -0700
+Message-ID: <CAEf4BzadnfAwfa1D0jZb=01Ou783GpK_U7PAYeEJca-L9kdnVA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: disable DEBUG_INFO_SPLIT when BTF is on
+To:     Slava Bacherikov <slava@bacher09.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, we seem to get async pf related notifications only if guest
-is in user mode, or if it is in kernel mode and CONFIG_PREEMPTION is
-enabled. I think idea is that if CONFIG_PREEMPTION is enabled then it
-gives us opportunity to schedule something else if page is not ready.
+On Tue, Mar 31, 2020 at 9:57 AM Slava Bacherikov <slava@bacher09.org> wrote:
+>
+> Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
+> enabled will produce invalid btf file, since gen_btf function in
+> link-vmlinux.sh script doesn't handle *.dwo files.
+>
+> Signed-off-by: Slava Bacherikov <slava@bacher09.org>
+> ---
+>  lib/Kconfig.debug | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index f61d834e02fe..a9429ef5eec8 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -223,6 +223,7 @@ config DEBUG_INFO_DWARF4
+>  config DEBUG_INFO_BTF
+>         bool "Generate BTF typeinfo"
+>         depends on DEBUG_INFO
+> +       depends on !DEBUG_INFO_SPLIT
 
-If KVM_ASYNC_PF_SEND_ALWAYS is not set, then host will not send
-notifications of PAGE_NOT_PRESENT/PAGE_READY. Instead once page
-has been installed guest will run.
+Thanks for following up! This looks good, but I think there are more
+DWARF-related configs that should be banned. See [0] and [1]. If you
+don't mind, let's use your patch to disable all of them in one go. So
+can you please update and disable DEBUG_INFO_REDUCED and
+GCC_PLUGIN_RANDSTRUCT? Thanks!
 
-Now we are adding capability to report errors as part of async pf
-protocol. That means we need async pf related notifications so that
-we can make a task wait and when error is reported, we can either
-send SIGBUS to user process or search through exception tables for
-possible error handler.
+  [0] https://lore.kernel.org/bpf/202003311110.2B08091E@keescook
+  [1] https://lore.kernel.org/bpf/a2b1a025-6a70-c3a5-fc19-155f0266946a@fb.com
 
-Hence enable async pf notifications always. Not sure if this will
-have noticieable performance implication though.
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- arch/x86/kernel/kvm.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 42d17e8c0135..97753a648133 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -336,9 +336,7 @@ static void kvm_guest_cpu_init(void)
- 	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
- 		u64 pa =3D slow_virt_to_phys(this_cpu_ptr(&apf_reason));
-=20
--#ifdef CONFIG_PREEMPTION
- 		pa |=3D KVM_ASYNC_PF_SEND_ALWAYS;
--#endif
- 		pa |=3D KVM_ASYNC_PF_ENABLED;
-=20
- 		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
---=20
-2.25.1
-
+>         help
+>           Generate deduplicated BTF type information from DWARF debug info.
+>           Turning this on expects presence of pahole tool, which will convert
+> --
+> 2.24.1
+>
