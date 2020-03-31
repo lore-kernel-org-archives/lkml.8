@@ -2,174 +2,139 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF2EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B54B0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466FE20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC9A20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:25:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="nao7FYCt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSmdVsQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731405AbgCaWYC (ORCPT
+        id S1731415AbgCaWZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:24:02 -0400
-Received: from gateway20.websitewelcome.com ([192.185.67.41]:19345 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727955AbgCaWYB (ORCPT
+        Tue, 31 Mar 2020 18:25:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53328 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaWZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:24:01 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id B6E1D400CCD6F
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 16:07:53 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id JPIdjsZSM8vkBJPIdjhU8D; Tue, 31 Mar 2020 17:23:59 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QtrrjhC/IDSa1E6R82Hfs8cdkKOlbKVqZ468UCH5J40=; b=nao7FYCtg+9MThAGNOZdSCpa6x
-        06cmaMhyliHKLdyZ+vRXwT27hFbS2isP7mI2jd6OJRldnRaZq8fEmicmIIgYB430lAs9p97Qf2nY3
-        cxDv79p52v2zNv+8Ei58dm1LsicC47DV9QLgYO8SeQNrnHv1lCOqBAqMMGwpEpi/skkIUWT/VSGlx
-        FDoM4/G6vfAAUqp7X3b8XvD+glUrMpGEfWZKDcbZL8tvKU4c1/fnB0TYZgAVbBB3RUmgQW/ii1+6n
-        WMD+k1T/2yp3o4nuPlNN9u07yGHPBJtx01kEDSQn6K064g1P4h5M60ohXXJipRQmuFKTCIl9KKvq9
-        ECJh5Nrw==;
-Received: from [189.218.116.241] (port=36910 helo=[192.168.0.21])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jJPId-002UdD-9g; Tue, 31 Mar 2020 17:23:59 -0500
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-References: <20200331002040.GA11302@embeddedor>
- <20200331220405.2zopmakvcgytfze5@treble>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Subject: Re: [PATCH] objtool: check: Fix NULL pointer dereference
-Message-ID: <883f3016-5156-8b84-b6aa-4f10a3bdb4eb@embeddedor.com>
-Date:   Tue, 31 Mar 2020 17:27:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 31 Mar 2020 18:25:38 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b12so4414285wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xSdN4Bu7ieJk7DdR7Vya+R+Xaggz1lTEs1MBPbcTcOI=;
+        b=YSmdVsQY7GpEjZZCobn8nbd2aLkQj1YokvMnqgXsuyC6tu3cIJr+yV2hivG929M1Yt
+         sZfyO2NXMM5jYmff/dH9NaKf5zzCs6pxaxgfAsbEV5/ukIw9TfaZRb3jo5h8raMXHEvD
+         ej3KERt1t36GL8rFdQ+6P7fjhk0fqPLIvLnFVl3/0cN19+GSNXOMpLe4LwT8CLlDtX9o
+         0eg8WUAjD7VsYL8GorPpIhNzGU/+Ple1Lvle0xvDVic6h/tgRPOHGT5HoXODE6TtbZe6
+         R2J6J4IuWT1BGinEoNJTu2Ht4KgtYRyvKlZQfClRATHtVqjREfg0tu1KVjhWSl7kpj7X
+         Y1Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xSdN4Bu7ieJk7DdR7Vya+R+Xaggz1lTEs1MBPbcTcOI=;
+        b=P9NzvVOf/5kVtWv7n9UJ/xgl1H/eCImUc4S81UtwDXPusBNDEdqy7+wIWw3ZJ1sPyR
+         AJB4AmQTgr6v0C5enlZOUKIidKcBpTpYE7qcmknApBclFNdGz7keM/JBGq/OlxlOTFpw
+         RYUr/JPie0VgFQvZo1eT7YcimU9bPqtwz+afvdbz0oNQ+YKrTCYpn1TJVk420oPjoHzS
+         Y7PYqnlBHyaim8OFcLAJJjFRvM3wQPCJkD5+ppBl2dfhOYX5LLsmO8Ad15mHpG12txC6
+         s1D0rpN0UKDAs/LF2l0d1N2rDGg7oTRiFSepDSa24fy4fEab+94HwtLQRd1rjkCg2J+8
+         cPfg==
+X-Gm-Message-State: AGi0PuZjrA//jq5IhGtnBA6bzBsCjjywYE1Cizsb6kM9cAGCcX27Th+A
+        Uyx+OSdqwDPpZdhHKhWRvzg=
+X-Google-Smtp-Source: APiQypK5u4bGsGrwHjCOm46og9UvvihBNPnQNe1CFDcp05IIiYuE4SY1mawbHnNh/4UrW0d1y7bJpg==
+X-Received: by 2002:a1c:e055:: with SMTP id x82mr1032774wmg.20.1585693537091;
+        Tue, 31 Mar 2020 15:25:37 -0700 (PDT)
+Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
+        by smtp.gmail.com with ESMTPSA id d133sm22516wmd.34.2020.03.31.15.25.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 15:25:35 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 00:25:35 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] clocksource: Add debugfs support
+Message-ID: <20200331222535.GF2954599@ulmo>
+References: <20200331214045.2957710-1-thierry.reding@gmail.com>
+ <CALAqxLXD78StqLMuaGqHqhSfS9L2FBfNCm6yDyWMZT_7iNX-wQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331220405.2zopmakvcgytfze5@treble>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jJPId-002UdD-9g
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [189.218.116.241]:36910
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="B0nZA57HJSoPbsHY"
+Content-Disposition: inline
+In-Reply-To: <CALAqxLXD78StqLMuaGqHqhSfS9L2FBfNCm6yDyWMZT_7iNX-wQ@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--B0nZA57HJSoPbsHY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/31/20 17:04, Josh Poimboeuf wrote:
-> On Mon, Mar 30, 2020 at 07:20:40PM -0500, Gustavo A. R. Silva wrote:
->> In case func is null, there is a null pointer dereference at 2029:
->>
->> 2029                 WARN("%s uses BP as a scratch register",
->> 2030                      func->name);
->>
->> Fix this by null-checking func.
->>
->> Addresses-Coverity-ID: 1492002 ("Dereference after null check")
->> Fixes: c705cecc8431 ("objtool: Track original function across branches")
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->> ---
->>  tools/objtool/check.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
->> index e3bb76358148..182cc48fa892 100644
->> --- a/tools/objtool/check.c
->> +++ b/tools/objtool/check.c
->> @@ -2025,7 +2025,7 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
->>  		return 1;
->>  	}
->>  
->> -	if (state->bp_scratch) {
->> +	if (func && state->bp_scratch) {
->>  		WARN("%s uses BP as a scratch register",
->>  		     func->name);
->>  		return 1;
-> 
-> We should still do the warning even if there's no func.  I'll make a
-> slightly different patch which unconditionally uses WARN_FUNC().
-> 
+On Tue, Mar 31, 2020 at 02:50:47PM -0700, John Stultz wrote:
+> On Tue, Mar 31, 2020 at 2:40 PM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+> >
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > Add a top-level "clocksource" directory to debugfs. For each clocksource
+> > registered with the system, a subdirectory will be added with attributes
+> > that can be queried to obtain information about the clocksource.
+> >
+>=20
+> Curious, what's the need/planned use for this?  I know in the past
+> folks have tried to get timekeeping internals exported to userland so
+> they could create their own parallel userland timekeeping system,
+> which I worry is a poor idea.
 
-Awesome. :)
+This was meant to be purely for debugging purposes. That is as an easy
+way to check that the code was working and that the counter is properly
+updated.
 
-> I'll give you Reported-by credit and keep the coverity tag.  Thanks!
-> 
+I certainly wasn't planning on implementing any userland on top of this.
+Well, I guess it could be useful to use these values in test scripts
+perhaps, since one of the clock sources exposed by one of the drivers I
+have been working on is used across Tegra SoCs for hardware
+timestamping. For that it might be interesting to be able to compare
+those timestamp snapshots to something that I can read from userspace
+during testing.
 
-Great.
+But that's about as far as I was planning on taking this. I agree that
+basing some userland timekeeping system on a debugfs interface sounds
+like a very bad idea.
 
-Thanks
---
-Gustavo
+Thierry
+
+--B0nZA57HJSoPbsHY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6Dw14ACgkQ3SOs138+
+s6El0w//ZaYlL011KCX6wqZ/tyPhYGHVzPc4xLPD3g1eceLbuIjBvAFE3/Wt8/mC
+uL21Jb/fY26IuxvipG3cueMy42+mKGh0qEtH+TqdCcSxKyNEordzJ7/7PGEOxt1g
+CW8UYNn1u14gr7T9tMe+9gQP5S36oWeycVECfs7kR/K2iR2W6q9fvJ1iLkzR7GZ5
+u7Aq4IUDizBmSm0/ciweQz7lG6qtgwuVTQjrLrdeFDapvWvZQIvqxBJUdNhCiWrv
+9eCZU96W+4Zz2TNej2DDqrZgEwUTirACNae8pNwh6mZXoQ3FX40cqPlNKmjWWndL
+L5q2e1MG7HnTp/nDQ7/tDRRO2s4/ZznZyLRLXEaFctp4N4VW7ZzowVntvpXaDB+k
+t2XmzbHwT9rx3NHEjoYD+8d4xsz6XWmxh9vjhJTnqN/mx1EsH1c2tltxfzn3bvez
+WdQY3/E3/GWdAXfWX1XjQtUrSq0TqF34bLE7zVHkLJLV/fdKDOncC3CljZQpDVc+
+JU3uG9ctluDjnh/wvOyhJzRa5Io/MpYQhBMh0yQdHUyW+1RFV4cKY0BdEBPeImnW
+FAdjCgAxRgp4JEjbz5q//6KIk93G1utsFUVFqn6j/S5QU7ZUdSzGO/DQLO22dWqx
+Jg35CbsEXx27HPhRAtZSqkb1l9sZR0nL01pxIUBmMCMLHOfqNBQ=
+=LW0i
+-----END PGP SIGNATURE-----
+
+--B0nZA57HJSoPbsHY--
