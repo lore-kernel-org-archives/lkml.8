@@ -2,343 +2,130 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34976C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5F3C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE00120748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585626642;
-	bh=h7evqLoRS+TtiH8NA805NMyh6rHNmX6o4iSJvYr/zS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RGiSVYmzwmezE9zav2r81vBY+xGKWjTP0+ekAgve65zpg/LlEC+NVXTzQKdoUHJXK
-	 spOk7nYbqSuvlED6uSFwP1hEATRQQtUjHv4w5aXqR96KFqEzLfmX77vMidoiWsp4wU
-	 MmHmy2aRXZPYYtKAy+TsD8wE7ygG9wvTWSZTub0w=
+	by mail.kernel.org (Postfix) with ESMTP id AD9AA2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729609AbgCaDue (ORCPT
+        id S1729695AbgCaDxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 23:50:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729013AbgCaDue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 23:50:34 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47F4E2072D;
-        Tue, 31 Mar 2020 03:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585626633;
-        bh=h7evqLoRS+TtiH8NA805NMyh6rHNmX6o4iSJvYr/zS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sO+vJ2Io2Kcpv5t7uyDGmmYqFc0l7Z3oJpImlqRF4r1m7JY6zbfUh3WAtn29Bmiia
-         0kLxt8g+ZJoMGQZF+t0VaDasZ5P6YBrD9z9iPdvPnx/wd57tkVSNSRTa40gmBddH8j
-         ptZTzV/MIb8DbNlOMmNOuXd9pCK1LNvH0GFu4aJM=
-Date:   Mon, 30 Mar 2020 20:50:32 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Sahitya Tummala <stummala@codeaurora.org>
-Cc:     Chao Yu <yuchao0@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix long latency due to discard during
- umount
-Message-ID: <20200331035032.GA79749@google.com>
-References: <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
- <20200326133700.GR20234@codeaurora.org>
- <2b0d8d4c-a981-4edc-d8ca-fe199a63ea79@huawei.com>
- <20200327030542.GS20234@codeaurora.org>
- <20200330065335.GT20234@codeaurora.org>
- <9adc5c7e-7936-bac7-58b1-50631f8ac5eb@huawei.com>
- <5ec3b2e1-162c-e62d-1834-100c8ae39ff7@huawei.com>
- <20200330105122.GV20234@codeaurora.org>
- <d65e7548-205d-ef28-e9fc-041ae1571cfd@huawei.com>
- <20200331031027.GY20234@codeaurora.org>
+        Mon, 30 Mar 2020 23:53:48 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:56820 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727358AbgCaDxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 23:53:48 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxb97FvoJe+u8hAA--.63S3;
+        Tue, 31 Mar 2020 11:53:43 +0800 (CST)
+Subject: Re: [PATCH 02/39] MIPS: loongson64: Add header files path prefix
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+References: <1585557531-18849-1-git-send-email-maobibo@loongson.cn>
+ <53CC90A0-3926-4642-91D4-F4F265F6AE90@flygoat.com>
+ <778df899-4dc4-c2be-5b7b-79c16223b0fb@loongson.cn>
+ <1712ea7ba9a.dad1f80a33831.4741900511750683483@flygoat.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <8b7b3b19-d5e2-befb-e781-7be53d2cbd54@loongson.cn>
+Date:   Tue, 31 Mar 2020 11:53:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331031027.GY20234@codeaurora.org>
+In-Reply-To: <1712ea7ba9a.dad1f80a33831.4741900511750683483@flygoat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Dxb97FvoJe+u8hAA--.63S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar1DArWDAryxJr4DXw1DZFb_yoW8AF1kpa
+        93Aan09r4UCr4jyrnavrn8Gr4YyrZ8tFZFgry2qryUuasIq3ZxX3Wftry0kryDZF4rKFy8
+        uFWrGasrAF4DZwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkvb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY6wZUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/31, Sahitya Tummala wrote:
-> 
-> Sure Chao. Let us put this patch on hold for now then.
-> 
-> Jaeguek,
-> 
-> Please drop this patch from your tree for time being as it needs
-> further discussion.
 
-Yeah, I dropped it.
 
-Thanks,
-
+On 03/31/2020 11:34 AM, Jiaxun Yang wrote:
 > 
-> Thanks,
 > 
-> On Tue, Mar 31, 2020 at 09:46:30AM +0800, Chao Yu wrote:
-> > Hi Sahitya,
-> > 
-> > On 2020/3/30 18:51, Sahitya Tummala wrote:
-> > > Hi Chao,
-> > > 
-> > > On Mon, Mar 30, 2020 at 06:16:40PM +0800, Chao Yu wrote:
-> > >> On 2020/3/30 16:38, Chao Yu wrote:
-> > >>> Hi Sahitya,
-> > >>>
-> > >>> Bad news, :( I guess we didn't catch the root cause, as after applying v3,
-> > >>> I still can reproduce this issue:
-> > >>>
-> > >>> generic/003 10s ...  30s
-> > >>
-> > >> I use zram as backend device of fstest,
-> > >>
-> > >> Call Trace:
-> > >>  dump_stack+0x66/0x8b
-> > >>  f2fs_submit_discard_endio+0x88/0xa0 [f2fs]
-> > >>  generic_make_request_checks+0x70/0x5f0
-> > >>  generic_make_request+0x3e/0x2e0
-> > >>  submit_bio+0x72/0x140
-> > >>  __submit_discard_cmd.isra.50+0x4a8/0x710 [f2fs]
-> > >>  __issue_discard_cmd+0x171/0x3a0 [f2fs]
-> > >>
-> > >> Does this mean zram uses single queue, so we may always fail to submit 'nowait'
-> > >> IO due to below condition:
-> > >>
-> > >> 	/*
-> > >> 	 * Non-mq queues do not honor REQ_NOWAIT, so complete a bio
-> > >> 	 * with BLK_STS_AGAIN status in order to catch -EAGAIN and
-> > >> 	 * to give a chance to the caller to repeat request gracefully.
-> > >> 	 */
-> > >> 	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q)) {
-> > >> 		status = BLK_STS_AGAIN;
-> > >> 		goto end_io;
-> > >> 	}
-> > >>
-> > > 
-> > > Yes, I have also just figured out that as the reason. But most of the real block
-> > > devic drivers support MQ. Can we thus fix this case by checking for MQ status
-> > > before enabling REQ_NOWAIT as below? Please share your comments.
-> > > 
-> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > index cda7935..e7e2ffe 100644
-> > > --- a/fs/f2fs/segment.c
-> > > +++ b/fs/f2fs/segment.c
-> > > @@ -1131,7 +1131,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > 
-> > >         flag = dpolicy->sync ? REQ_SYNC : 0;
-> > > -       flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > > +
-> > > +       if (sbi->sb->s_bdev->bd_queue && queue_is_mq(sbi->sb->s_bdev->bd_queue))
-> > > +               flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> > 
-> > IMO, it's too tight to couple with block layer logic? however, I don't have
-> > any better idea about the solution.
-> > 
-> > Anyway, I guess we can Cc to Jan and block mailing list for comments to see
-> > whether there is a better solution.
-> > 
-> > Thoughts?
-> > 
-> > Thanks,
-> > 
-> > > 
-> > >         if (dc->state != D_PREP)
-> > >                 return 0;
-> > > 
-> > > Thanks,
-> > > 
-> > >>
-> > >>
-> > >>>
-> > >>> Thanks,
-> > >>>
-> > >>> On 2020/3/30 14:53, Sahitya Tummala wrote:
-> > >>>> Hi Chao,
-> > >>>>
-> > >>>> On Fri, Mar 27, 2020 at 08:35:42AM +0530, Sahitya Tummala wrote:
-> > >>>>> On Fri, Mar 27, 2020 at 09:51:43AM +0800, Chao Yu wrote:
-> > >>>>>>
-> > >>>>>> With this patch, most of xfstest cases cost 5 * n second longer than before.
-> > >>>>>>
-> > >>>>>> E.g. generic/003, during umount(), we looped into retrying one bio
-> > >>>>>> submission.
-> > >>>>>>
-> > >>>>>> [61279.829724] F2FS-fs (zram1): Found nat_bits in checkpoint
-> > >>>>>> [61279.885337] F2FS-fs (zram1): Mounted with checkpoint version = 5cf3cb8e
-> > >>>>>> [61281.912832] submit discard bio start [23555,1]
-> > >>>>>> [61281.912835] f2fs_submit_discard_endio [23555,1] err:-11
-> > >>>>>> [61281.912836] submit discard bio end [23555,1]
-> > >>>>>> [61281.912836] move dc to retry list [23555,1]
-> > >>>>>>
-> > >>>>>> ...
-> > >>>>>>
-> > >>>>>> [61286.881212] submit discard bio start [23555,1]
-> > >>>>>> [61286.881217] f2fs_submit_discard_endio [23555,1] err:-11
-> > >>>>>> [61286.881223] submit discard bio end [23555,1]
-> > >>>>>> [61286.881224] move dc to retry list [23555,1]
-> > >>>>>> [61286.905198] submit discard bio start [23555,1]
-> > >>>>>> [61286.905203] f2fs_submit_discard_endio [23555,1] err:-11
-> > >>>>>> [61286.905205] submit discard bio end [23555,1]
-> > >>>>>> [61286.905206] move dc to retry list [23555,1]
-> > >>>>>> [61286.929157] F2FS-fs (zram1): Issue discard(23555, 23555, 1) failed, ret: -11
-> > >>>>>>
-> > >>>>>> Could you take a look at this issue?
-> > >>>>>
-> > >>>>> Let me check and get back on this.
-> > >>>>
-> > >>>> I found the issue. The dc with multiple bios is getting requeued again and
-> > >>>> again in case if one of its bio gets -EAGAIN error. Even the successfully
-> > >>>> completed bios are getting requeued again resulting into long latency.
-> > >>>> I have fixed it by splitting the dc in such case so that we can requeue only
-> > >>>> the leftover bios into a new dc and retry that later within the 5 sec timeout.
-> > >>>>
-> > >>>> Please help to review v3 posted and if it looks good, I would like to request
-> > >>>> you to test the earlier regression scenario with it to check the result again?
-> > >>>>
-> > >>>> thanks,
-> > >>>>
-> > >>>>>
-> > >>>>> Thanks,
-> > >>>>>
-> > >>>>>>
-> > >>>>>> Thanks,
-> > >>>>>>
-> > >>>>>>>
-> > >>>>>>> Thanks,
-> > >>>>>>>
-> > >>>>>>>> Thanks,
-> > >>>>>>>>
-> > >>>>>>>>> +				break;
-> > >>>>>>>>> +			}
-> > >>>>>>>>> +		}
-> > >>>>>>>>>  
-> > >>>>>>>>>  		atomic_inc(&dcc->issued_discard);
-> > >>>>>>>>>  
-> > >>>>>>>>> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
-> > >>>>>>>>>  	return issued;
-> > >>>>>>>>>  }
-> > >>>>>>>>>  
-> > >>>>>>>>> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
-> > >>>>>>> s> > +		struct discard_policy *dpolicy)
-> > >>>>>>>>> +{
-> > >>>>>>>>> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > >>>>>>>>> +	struct discard_cmd *dc, *tmp;
-> > >>>>>>>>> +	bool retry = false;
-> > >>>>>>>>> +	unsigned long flags;
-> > >>>>>>>>> +
-> > >>>>>>>>> +	if (dpolicy->type != DPOLICY_UMOUNT)
-> > >>>>>>>>> +		f2fs_bug_on(sbi, 1);
-> > >>>>>>>>> +
-> > >>>>>>>>> +	mutex_lock(&dcc->cmd_lock);
-> > >>>>>>>>> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
-> > >>>>>>>>> +		if (dpolicy->timeout != 0 &&
-> > >>>>>>>>> +			f2fs_time_over(sbi, dpolicy->timeout)) {
-> > >>>>>>>>> +			retry = false;
-> > >>>>>>>>> +			break;
-> > >>>>>>>>> +		}
-> > >>>>>>>>> +
-> > >>>>>>>>> +		spin_lock_irqsave(&dc->lock, flags);
-> > >>>>>>>>> +		if (!dc->bio_ref) {
-> > >>>>>>>>> +			dc->state = D_PREP;
-> > >>>>>>>>> +			dc->error = 0;
-> > >>>>>>>>> +			reinit_completion(&dc->wait);
-> > >>>>>>>>> +			__relocate_discard_cmd(dcc, dc);
-> > >>>>>>>>> +			retry = true;
-> > >>>>>>>>> +		}
-> > >>>>>>>>> +		spin_unlock_irqrestore(&dc->lock, flags);
-> > >>>>>>>>> +	}
-> > >>>>>>>>> +	mutex_unlock(&dcc->cmd_lock);
-> > >>>>>>>>> +
-> > >>>>>>>>> +	return retry;
-> > >>>>>>>>> +}
-> > >>>>>>>>> +
-> > >>>>>>>>>  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >>>>>>>>>  					struct discard_policy *dpolicy)
-> > >>>>>>>>>  {
-> > >>>>>>>>> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >>>>>>>>>  	struct list_head *pend_list;
-> > >>>>>>>>>  	struct discard_cmd *dc, *tmp;
-> > >>>>>>>>>  	struct blk_plug plug;
-> > >>>>>>>>> -	int i, issued = 0;
-> > >>>>>>>>> +	int i, err, issued = 0;
-> > >>>>>>>>>  	bool io_interrupted = false;
-> > >>>>>>>>>  
-> > >>>>>>>>>  	if (dpolicy->timeout != 0)
-> > >>>>>>>>>  		f2fs_update_time(sbi, dpolicy->timeout);
-> > >>>>>>>>>  
-> > >>>>>>>>> +retry:
-> > >>>>>>>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-> > >>>>>>>>>  		if (dpolicy->timeout != 0 &&
-> > >>>>>>>>>  				f2fs_time_over(sbi, dpolicy->timeout))
-> > >>>>>>>>> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >>>>>>>>>  				break;
-> > >>>>>>>>>  			}
-> > >>>>>>>>>  
-> > >>>>>>>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > >>>>>>>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
-> > >>>>>>>>> +			if (err == -EAGAIN)
-> > >>>>>>>>> +				congestion_wait(BLK_RW_ASYNC,
-> > >>>>>>>>> +						DEFAULT_IO_TIMEOUT);
-> > >>>>>>>>>  
-> > >>>>>>>>>  			if (issued >= dpolicy->max_requests)
-> > >>>>>>>>>  				break;
-> > >>>>>>>>> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >>>>>>>>>  			break;
-> > >>>>>>>>>  	}
-> > >>>>>>>>>  
-> > >>>>>>>>> +	if (!list_empty(&dcc->retry_list) &&
-> > >>>>>>>>> +		__should_discard_retry(sbi, dpolicy))
-> > >>>>>>>>> +		goto retry;
-> > >>>>>>>>> +
-> > >>>>>>>>>  	if (!issued && io_interrupted)
-> > >>>>>>>>>  		issued = -1;
-> > >>>>>>>>>  
-> > >>>>>>>>> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
-> > >>>>>>>>>  		goto next;
-> > >>>>>>>>>  	}
-> > >>>>>>>>>  
-> > >>>>>>>>> +	if (dpolicy->type == DPOLICY_UMOUNT &&
-> > >>>>>>>>> +		!list_empty(&dcc->retry_list)) {
-> > >>>>>>>>> +		wait_list = &dcc->retry_list;
-> > >>>>>>>>> +		goto next;
-> > >>>>>>>>> +	}
-> > >>>>>>>>> +
-> > >>>>>>>>>  	return trimmed;
-> > >>>>>>>>>  }
-> > >>>>>>>>>  
-> > >>>>>>>>> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
-> > >>>>>>>>>  	for (i = 0; i < MAX_PLIST_NUM; i++)
-> > >>>>>>>>>  		INIT_LIST_HEAD(&dcc->pend_list[i]);
-> > >>>>>>>>>  	INIT_LIST_HEAD(&dcc->wait_list);
-> > >>>>>>>>> +	INIT_LIST_HEAD(&dcc->retry_list);
-> > >>>>>>>>>  	INIT_LIST_HEAD(&dcc->fstrim_list);
-> > >>>>>>>>>  	mutex_init(&dcc->cmd_lock);
-> > >>>>>>>>>  	atomic_set(&dcc->issued_discard, 0);
-> > >>>>>>>>>
-> > >>>>>>>
-> > >>>>>
-> > >>>>> -- 
-> > >>>>> --
-> > >>>>> Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> > >>>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
-> > >>>>
-> > >>>
-> > >>>
-> > >>> _______________________________________________
-> > >>> Linux-f2fs-devel mailing list
-> > >>> Linux-f2fs-devel@lists.sourceforge.net
-> > >>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> > >>> .
-> > >>>
-> > > 
-> 
-> -- 
 > --
-> Sent by a consultant of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> Jiaxun Yang
+> 
+>  ---- 在 星期一, 2020-03-30 18:00:19 maobibo <maobibo@loongson.cn> 撰写 ----
+>  > 
+>  > 
+>  > On 03/30/2020 04:55 PM, Jiaxun Yang wrote:
+>  > > 
+>  > > 
+>  > > 于 2020年3月30日 GMT+08:00 下午4:38:51, bibo mao <maobibo@loongson.cn> 写到:
+>  > >> Remove header files from arch/mips/include/asm/mach-loongson64
+>  > >> to arch/mips/loongson64/include/mach
+>  > >>
+>  > >> Signed-off-by: bibo mao <maobibo@loongson.cn>
+>  > > 
+>  > > Hi Bibo,
+>  > > 
+>  > > Thanks for your patch.
+>  > > 
+>  > > What's your intention?
+>  > > Did you meet any problem about headers?
+>  > > 
+>  > 
+>  > Hi Jiaxun,
+>  > 
+>  > When I add irqchip support for mips kvm, file virt/kvm/irqchip.c
+>  > requires local header file arch/mips/kvm/irq.h, it fails to compile.
+>  > Since there is file with the same name located at:
+>  >   arch/mips/include/asm/mach-generic/irq.h
+>  >   arch/mips/include/asm/mach-loongson64/irq.h
+>  > 
+>  > The compiler fails to choose the correct header file irq.h,
+> 
+> You'd better rename kvm's irq.h in this case.
+why should we rename kvm's irq.h?  It works on other arches like
+x86/aarch/powerpc, it does not work on mips platform. Just because these
+header files are not used with path prefix on mips system, it brings out
+such problem.
+
+Today if we modify generic kvm code, it maybe brings out problem with
+other modules tommorrow. Else we declare that these files can be defined
+locally on all modules:
+  cpu-feature-overrides.h  floppy.h  ide.h  ioremap.h  irq.h
+  kernel-entry-init.h  kmalloc.h  mangle-port.h  mc146818rtc.h
+
+regard
+bibo,mao
+
+> 
+>  > 
+>  > regards
+>  > bibo,mao
+>  > 
+>  > >> ---
+>  > >> arch/mips/Kconfig                                                 | 1 +
+>  > >> arch/mips/loongson64/Platform                                     | 2
+>  > >> +-
+>  > >> arch/mips/loongson64/env.c                                        | 8
+>  > >> ++++----
+> 
+
