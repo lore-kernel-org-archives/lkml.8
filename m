@@ -2,201 +2,120 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0125C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D79C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B500920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7B320781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="YexFoZsy"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ff3OArKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgCaPyC (ORCPT
+        id S1730760AbgCaP4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:54:02 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:43050 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730105AbgCaPyC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:54:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Xbao8KSLFnhUJRMeq0hTDteAoWcuNhiygQmHVbCKMDM=; b=YexFoZsyYEuDb1fxJg7z7vUf7
-        qVgp8yDkyCqRvbgqnPpz4d/Dk6VhnmO40ISGRlv4/aVpY2rjMCG98iBp/dO7f6bjhzwvGrUUKJasj
-        TTg8HXBtITNqM9oEq+GskI5imueF/JW4fAcQZzS5Hq9Z1wZ7GkvwP7jSYba1Z7kAZ/vFrpwehrkan
-        lCRLyoJKkft8YP9hQqoO3I7NtNbOkp3EOhIbkiT+5TaeqvNIRasry/0JaaWrLWsoyzbAfUDx/W7pT
-        wdKnGcS1rBBGf4LhwAcSRx6NaC/4hlLdSL6ecDyKMbyZOZsHNeknedEHJ2IWynIDJbVqv5L5COMNW
-        edNv35deA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60426)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jJJD6-0000g4-7a; Tue, 31 Mar 2020 16:53:52 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jJJD4-0008Ex-9p; Tue, 31 Mar 2020 16:53:50 +0100
-Date:   Tue, 31 Mar 2020 16:53:50 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     David Jander <david@protonic.nl>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
-Message-ID: <20200331155350.GP25745@shell.armlinux.org.uk>
-References: <20200329110457.4113-1-o.rempel@pengutronix.de>
- <20200329150854.GA31812@lunn.ch>
- <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
- <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
- <20200330174114.GG25745@shell.armlinux.org.uk>
- <20200331104459.6857474e@erd988>
- <20200331093648.GL25745@shell.armlinux.org.uk>
- <20200331174103.6c8f5a43@erd988>
+        Tue, 31 Mar 2020 11:56:04 -0400
+Received: from mail-bn7nam10on2104.outbound.protection.outlook.com ([40.107.92.104]:62883
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730105AbgCaP4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:56:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K3FSqN9uQF/U63iCALqJeff91O4864L2c2i5gfLOw2HoD55NnILqMq5TCOl8mr155dbQz7H1pSfBgfPb3r1lwxflpkQJ8mB9AnXXLB8+nKXm96Z3QebodxLFv9jpto3BuOP2tBA8khJ+VNz+IDKnIyMbUtA5QqXxGoHJpkZ/t4yYfONPLp9llIUEN+bHuP3OpLTYP6u8oIkzDY2Y3Nyk40MaIvLGut2HNpyxKqyylQVPl2E8IC/VejfzCfE/2uQmXwA5FFkBuxWC4lc20/4QKKasig2JF3VCMdHkMA+xXQLE0a4AtSdkrkNwvCMd5ifM8nEufcM29ROtkNOGz5b0kQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qtqx90ti8mvhcYFyuE/P7k0efM5dXkZmEu35f9mZt5k=;
+ b=VOuPiWpJaiYK4C4BxcNN2TyV7ZkTXnDlZ/X/w0TUMvnNeboYZw0Dqkjrreh0UShc+GvPrfFym70njrG8FU3bPPt1x8xIfqj+3eQ8ihO9DbFdaJuXDSUVLZE0eOF6FJeXR0OSM/g2VfzoBKIjBEcvuMOChTbAMQZarxSW6250kpTsHp+AfzCemVTpmCo9eN4578c0ctBa5bxUQ5aZ4yy50AOE1klMgGf8lpoFcIdSYvrnRnSmCN/fLWRDQPjdX25e938xVax+UcwtGd8QZ5A7xC5L/qA9JK3z57Meo5ZJqlpiCXxnBkVpIZTnDmUpFj382Q+MrNj47VL7Yh2oXdDt/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qtqx90ti8mvhcYFyuE/P7k0efM5dXkZmEu35f9mZt5k=;
+ b=ff3OArKV2vxwABCYe4/xDjKpLF6Z3r93JjnUIo4oOKgObqYGla5ozgl7DPLpYzdhdQFyJdSbw3waAea9/jflaY451rZWNtXf5bhOOhpCovEhQiq+RRiFrBM/gJc6s7bCl5JN4TmlaVKmo4oC6Zqe+XOrdAtWEs515uVoRu3yb2o=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
+ by BN8PR21MB1362.namprd21.prod.outlook.com (2603:10b6:408:aa::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.5; Tue, 31 Mar
+ 2020 15:56:00 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b%5]) with mapi id 15.20.2878.013; Tue, 31 Mar 2020
+ 15:56:00 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        decui@microsoft.com
+Subject: [PATCH] PM: hibernate: Propagate the return value of hibernation_restore()
+Date:   Tue, 31 Mar 2020 08:55:25 -0700
+Message-Id: <1585670125-45987-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR21CA0072.namprd21.prod.outlook.com
+ (2603:10b6:300:db::34) To BN8PR21MB1139.namprd21.prod.outlook.com
+ (2603:10b6:408:72::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331174103.6c8f5a43@erd988>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR21CA0072.namprd21.prod.outlook.com (2603:10b6:300:db::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2 via Frontend Transport; Tue, 31 Mar 2020 15:55:59 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 27619fe2-7030-47ea-37a5-08d7d58c01ba
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1362:|BN8PR21MB1362:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR21MB1362DCB3067F7B7448A5B4E4BFC80@BN8PR21MB1362.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
+X-Forefront-PRVS: 0359162B6D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(346002)(39860400002)(136003)(366004)(376002)(86362001)(8676002)(36756003)(316002)(5660300002)(8936002)(66476007)(66556008)(66946007)(52116002)(81166006)(81156014)(6512007)(6486002)(6506007)(4744005)(3450700001)(2906002)(2616005)(956004)(26005)(10290500003)(82960400001)(82950400001)(478600001)(6666004)(186003)(16526019);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sjPofr/Y5fgazFLkv3ShcQzuUoIc1tzdPeMSLOGySDkvGREjBR3dRrD7A3LqQFNEZbQ4iLL5fVJCZWfkzQqkt9vdhW1IMtWxb/a1VLiX9l645yls5lUx47I3DzX6vHxen58zsfWSQPtE3AzMfSHLsNAtD0a1OrP5GFZ1dCJnTTvH3eWF3Tpr01waNPpLz2uni3xDMtqKUQQW9uhVDfy2LBD3DaO2Iqk4OjQtotWeO7p/lggub11yurvD0to+pKLmg5o+DvwHVirjsHiKvaBUKrdzek/LjWyaMmg+D4231iTzKAXn6+KkyVL0edNLR0xHu+6m1CU0bygfygU8BLYwPkUsrxu6J5x33wasV6QK/2OR/WFaatJ/R25wpiMziRrBhgyOo75ucENULMQND3pSwgro1vOFVihKDFgj7yxgAw1OL+hEqFtTxC3P45micWX5
+X-MS-Exchange-AntiSpam-MessageData: oaKYCAgBPsI2NoQBELAXvgyg2K4kuNhzuLbrwB38lYU1NMrla71oMJy8iTsJP1AA9Io/EofDUT5j38edz9Pfq9q827IkwELzmhFtWhtjrXCs4PO3dnLcDnMPWGxwLZlQYkdJfwgxpqz5sR5PnEiWnA==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27619fe2-7030-47ea-37a5-08d7d58c01ba
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2020 15:56:00.2450
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lprDkxnGM53Z4ymmY5D0otvKBGcxyYmIvEur7M9NxcMBcNhtP11FHOsfG0Wykfa8i++sXGrtkzdWk59y9z82VA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1362
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:41:03PM +0200, David Jander wrote:
-> 
-> Dear Russell,
-> 
-> On Tue, 31 Mar 2020 10:36:49 +0100
-> Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-> 
-> > On Tue, Mar 31, 2020 at 10:44:59AM +0200, David Jander wrote:
-> > > On Mon, 30 Mar 2020 18:41:14 +0100
-> > > Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-> > >   
-> > > > On Mon, Mar 30, 2020 at 10:33:03AM -0700, Florian Fainelli wrote:  
-> > > > > 
-> > > > > 
-> > > > > On 3/29/2020 10:26 PM, Oleksij Rempel wrote:    
-> > > > > > Hi Andrew,
-> > > > > > 
-> > > > > > On Sun, Mar 29, 2020 at 05:08:54PM +0200, Andrew Lunn wrote:    
-> > > > > >> On Sun, Mar 29, 2020 at 01:04:57PM +0200, Oleksij Rempel wrote:
-> > > > > >>
-> > > > > >> Hi Oleksij
-> > > > > >>    
-> > > > > >>> +config DEPRECATED_PHY_FIXUPS
-> > > > > >>> +	bool "Enable deprecated PHY fixups"
-> > > > > >>> +	default y
-> > > > > >>> +	---help---
-> > > > > >>> +	  In the early days it was common practice to configure PHYs by adding a
-> > > > > >>> +	  phy_register_fixup*() in the machine code. This practice turned out to
-> > > > > >>> +	  be potentially dangerous, because:
-> > > > > >>> +	  - it affects all PHYs in the system
-> > > > > >>> +	  - these register changes are usually not preserved during PHY reset
-> > > > > >>> +	    or suspend/resume cycle.
-> > > > > >>> +	  - it complicates debugging, since these configuration changes were not
-> > > > > >>> +	    done by the actual PHY driver.
-> > > > > >>> +	  This option allows to disable all fixups which are identified as
-> > > > > >>> +	  potentially harmful and give the developers a chance to implement the
-> > > > > >>> +	  proper configuration via the device tree (e.g.: phy-mode) and/or the
-> > > > > >>> +	  related PHY drivers.    
-> > > > > >>
-> > > > > >> This appears to be an IMX only problem. Everybody else seems to of got
-> > > > > >> this right. There is no need to bother everybody with this new
-> > > > > >> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
-> > > > > >> the name.    
-> > > > > > 
-> > > > > > Actually, all fixups seems to do wring thing:
-> > > > > > arch/arm/mach-davinci/board-dm644x-evm.c:915:		phy_register_fixup_for_uid(LXT971_PHY_ID, LXT971_PHY_MASK,
-> > > > > > 
-> > > > > > Increased MII drive strength. Should be probably enabled by the PHY
-> > > > > > driver.
-> > > > > > 
-> > > > > > arch/arm/mach-imx/mach-imx6q.c:167:		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
-> > > > > > arch/arm/mach-imx/mach-imx6q.c:169:		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
-> > > > > > arch/arm/mach-imx/mach-imx6q.c:171:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
-> > > > > > arch/arm/mach-imx/mach-imx6q.c:173:		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,    
-> > > > 
-> > > > As far as I'm concerned, the AR8035 fixup is there with good reason.
-> > > > It's not just "random" but is required to make the AR8035 usable with
-> > > > the iMX6 SoCs.  Not because of a board level thing, but because it's
-> > > > required for the AR8035 to be usable with an iMX6 SoC.  
-> > > 
-> > > I have checked with the datasheet of the AR8035, and AFAICS, what the code
-> > > does is this:
-> > > 
-> > >  - Disable the SmartEEE feature of the phy. The comment in the code implies
-> > >    that for some reason it doesn't work, but the reason itself is not given.
-> > >    Anyway, disabling SmartEEE should IMHO opinion be controlled by a DT
-> > >    setting. There is no reason to believe this problem is specific to the
-> > >    i.MX6. Besides, it is a feature of the phy, so it seems logical to expose
-> > >    that via the DT. Once that is done, it has no place here.
-> > > 
-> > >  - Set the external clock output to 125MHz. This is needed because the i.MX6
-> > >    needs a 125MHz reference clock input. But it is not a requirement to use
-> > >    this output. It is perfectly fine and possible to design a board that uses
-> > >    an external oscillator for this. It is also possible that an i.MX6 design
-> > >    has such a phy connected to a MAC behind a switch or some other interface.
-> > >    Independent of i.MX6 this setting can also be necessary for other hardware
-> > >    designs, based on different SoC's. In summary, this is a feature of the
-> > >    specific hardware design at hand, and has nothing to do with the i.MX6
-> > >    specifically. This should definitely be exposed through the DT and not be
-> > >    here.
-> > > 
-> > >  - Enable TXC delay. To clarify, the RGMII specification version 1 specified
-> > >    that the RXC and TXC traces should be routed long enough to introduce a
-> > >    certain delay to the clock signal, or the delay should be introduced via
-> > >    other means. In a later version of the spec, a provision was given for MAC
-> > >    or PHY devices to generate this delay internally. The i.MX6 MAC interface
-> > >    is unable to generate the required delay internally, so it has to be taken
-> > >    care of either by the board layout, or by the PHY device. This is the
-> > >    crucial point: The amount of delay set by the PHY delay register depends on
-> > >    the board layout. It should NEVER be hard-coded in SoC setup code. The
-> > >    correct way is to specify it in the DT. Needless to say that this too,
-> > >    isn't i.MX6-specific.
-> > >   
-> > > > So, having it registered by the iMX6 SoC code is entirely logical and
-> > > > correct.  
-> > > 
-> > > I'm afraid I don't agree. See above. This code really should never have been
-> > > here. It is not i.MX6-specific as I pointed out above, nor is it necessarily
-> > > applicable to all i.MX6 boards that use those phy devices.  
-> > 
-> > Then we will have to agree to disagree, sorry.
-> 
-> Please forgive me if I am appearing a bit stubborn.
-> If it is not too much to ask, I would really like to know where my reasoning
-> is wrong?
-> Maybe you can explain to me how to solve the following real-life conflict that
-> this introduces:
-> 
-> Suppose we have a board with an i.MX6Q and a KSZ9031 connected to it. Suppose
-> I now take a USB stick with a LAN7800 ethernet chip and a KSZ9031 PHY. These
-> USB sticks do exist, and it does not seem unthinkable to me that one would
-> connect them to such an i.MX6 system in order to get a second LAN port.
+If hibernation_restore() fails, the 'error' should not be zero.
 
-Thanks.  I've already covered how this can be delt with in some code
-I've posted in this thread.  Therefore, I have nothing further to add
-to this point, apart from pointing out that I've provided a solution
-so as far as I'm concerned, it's entirely solvable, and warrants no
-further argument.
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ kernel/power/hibernate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maybe a discussion about solutions would be appropriate, but merely
-re-raising the same point while ignoring proposed solutions is not
-a productive way forward.
-
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index 6dbeedb..86aba87 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -678,7 +678,7 @@ static int load_image_and_restore(void)
+ 	error = swsusp_read(&flags);
+ 	swsusp_close(FMODE_READ);
+ 	if (!error)
+-		hibernation_restore(flags & SF_PLATFORM_MODE);
++		error = hibernation_restore(flags & SF_PLATFORM_MODE);
+ 
+ 	pr_err("Failed to load image, recovering.\n");
+ 	swsusp_free();
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+1.8.3.1
+
