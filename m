@@ -2,99 +2,122 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6E8C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB76AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED65206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EY5aB2IZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9CA2820784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585671154;
+	bh=/thXuoXdfSP+5eZP9hLtzJrWJwY5QW+k+GkgF2uo8tM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0ZpV2w8Smny4qwSRKiVKHiJepFP4K6hj74ZcbNn9d9rHe8K5LcyVteIZpQpnf+j5r
+	 slkTwliwJAqNfEW4JZnYHOmdEsCGZ5DRS5W3fVhRYk6pEB5yg7T1aeD82N7hePVI66
+	 dqNo569XE3lDIjKdL13mgpwdzOs58Ukefxl0/g7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbgCaQM2 (ORCPT
+        id S1731234AbgCaQMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:12:28 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41908 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730149AbgCaQM1 (ORCPT
+        Tue, 31 Mar 2020 12:12:33 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:40602 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731182AbgCaQMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:12:27 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n17so22603600lji.8;
-        Tue, 31 Mar 2020 09:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3kJ5mm1YOrHmUQGCcnHVGzEU+zZ+MYIie0xvbmsLdR0=;
-        b=EY5aB2IZm5Vpo9RHwThnoY0oR6GY+XljzuA5498+JAIHFQRfhJbg5cRDPuto21J3LF
-         Wr02golnyTUCEEmXtYJ0c1JAup4OqmCErYQ3BZXUc3gkmEdKbO2MqqkL2A4whX1OjSIv
-         rCqCbcHMkvBZ4hWVJkwy47HuSol36XtdDMYQBV+PDFQRtAvLHoVr/aqH1EH2JbCY9ZxX
-         JAvRuuIAfP8Vzd+9WMlEgO5EtwNLJ7E7Mb14o14ldatIIJIlrwnVlUQhHMSH41aXtnPI
-         EpmKilYbHeAHoUd3PJs5n8v8RMSIeGnpb8MWHaBDqtyFIZRa/oAqv+vC/odykHajiOou
-         73JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3kJ5mm1YOrHmUQGCcnHVGzEU+zZ+MYIie0xvbmsLdR0=;
-        b=YUJfniK/WngbYgxXuZknlv/UuSNHmn3geqQCMOTJXxWRhFQrOhoRIy3dffOWv3/TTF
-         NUBB+1skh6yLnYfgnFEi/9MATF+Mg4iyHy/IWR4/Z5+3bbUf1PfJ74ast9irlqwCqnF5
-         Begj9J85lrGcwWLVq8kLIcSaCdIgro9x1IaS3daZ86OJWjCyf9GMfrDHesPC8IVYyYm9
-         M7AHRboQZmerQvh2rJYtOWn0yct2JRUL1HL3C5sD3JZU07uiKt/OyctXwJcuZMc0NwY8
-         z0VkKh/XW0j6tCSldXyTcv1IAvuNEKT2YLd5xO3S/N6cL4O3OnbWcV34KzhEfFtKAHSK
-         jSqQ==
-X-Gm-Message-State: AGi0Pua10gAJuKlc3g03b4LRNO0uVAx6dA6K7PtcVWb8ML33xsqSD93I
-        mnLauY4ab8o3z9mmj6/+u6pt06Dj36k=
-X-Google-Smtp-Source: APiQypLqQdmr1GaacubVbtq0EUXJknLP9Tdtt/Flex7ktt0z0TmEV9YaZnHo/L3/sJ4CixEb2npaxw==
-X-Received: by 2002:a2e:89d2:: with SMTP id c18mr9341456ljk.29.1585671144929;
-        Tue, 31 Mar 2020 09:12:24 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id h20sm2634010lji.103.2020.03.31.09.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 09:12:22 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 31 Mar 2020 18:12:15 +0200
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200331161215.GA27676@pc636>
-References: <20200331131628.153118-1-joel@joelfernandes.org>
- <20200331145806.GB236678@google.com>
- <20200331153450.GM30449@dhcp22.suse.cz>
+        Tue, 31 Mar 2020 12:12:33 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02VGCHpj023073;
+        Wed, 1 Apr 2020 01:12:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02VGCHpj023073
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585671138;
+        bh=OjjE9E+FBmI6rjfGxW9oLfbJtU1jLW6j7wjg8xrOEgg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J2zXtLVECqLeUArifH7kDCzdqIULnHZ0pFVKLs2Z5Szpg5xVVEULqwSz1OIKWAVyQ
+         1vjzqg0BQTufXgYn8ReL6b9+r/36y25yEjpp7LVNDAwIumz9zaXEmRc8k5Awi8N8By
+         1mjsphq45isrhCBkun4q8gG9cwdmy/IxFT46SZO4H8vt0xcH0ogm79+BkwOFgUwH7/
+         mHhKCSDy/sreq961xOcEdfNjaiR3wNSJ0+x1sUySiSamrgQkzh9X2mIaV1hpRXt6s5
+         maKDECDXjpOA6zDn5jQscQiu9jVkWmsNdctmlCosABBeEs5lTtlSHgCx9qgHVGXeJx
+         NP/j3VKgpk6qg==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id v24so7906567uak.0;
+        Tue, 31 Mar 2020 09:12:17 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYvevsDFd4QlHuzTeQtP+9EiHQSXf7JWxXUs4+NDvGPGg0bwEnN
+        k4qlSY3ZGTH2Z3HlZyd1MTc7nX9LZW7FahnsrIw=
+X-Google-Smtp-Source: APiQypIl3Ae1UY77vkChuVqugoDHzbGIGnbGHV1y+1vSWEkKpgKXcTiK55DowgXg22KgHqQv6o5shqXmm2G4lcTRjLk=
+X-Received: by 2002:ab0:28d8:: with SMTP id g24mr12123717uaq.121.1585671136346;
+ Tue, 31 Mar 2020 09:12:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331153450.GM30449@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200330180711.14393-1-skhan@linuxfoundation.org>
+In-Reply-To: <20200330180711.14393-1-skhan@linuxfoundation.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 1 Apr 2020 01:11:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARyVVNo8Ck4=s_bkwfxuFXj7MUFr2E_f-oOZEkjgm5Bmg@mail.gmail.com>
+Message-ID: <CAK7LNARyVVNo8Ck4=s_bkwfxuFXj7MUFr2E_f-oOZEkjgm5Bmg@mail.gmail.com>
+Subject: Re: [PATCH] Makefile: Update kselftest help information
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
-> memory reserves regarless of the sleeping status.
-> 
-Michal, just one question here regarding proposed flags. Can we also
-tight it with __GFP_RETRY_MAYFAIL flag? Means it also can repeat a few
-times in order to increase the chance of being success.
+On Tue, Mar 31, 2020 at 3:07 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> Update kselftest help information.
+>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  Makefile | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index e56bf7ef182d..5e5c770423c7 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1470,12 +1470,15 @@ help:
+>         @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
+>         @echo  ''
+>         @echo  'Kernel selftest:'
+> -       @echo  '  kselftest       - Build and run kernel selftest (run as root)'
+> -       @echo  '                    Build, install, and boot kernel before'
+> -       @echo  '                    running kselftest on it'
+> -       @echo  '  kselftest-clean - Remove all generated kselftest files'
+> -       @echo  '  kselftest-merge - Merge all the config dependencies of kselftest to existing'
+> -       @echo  '                    .config.'
+> +       @echo  '  kselftest         - Build and run kernel selftest'
+> +       @echo  '                      Build, install, and boot kernel before'
+> +       @echo  '                      running kselftest on it'
+> +       @echo  '                      Run as root for full coverage'
+> +       @echo  '  kselftest-all     - Build kernel selftest'
+> +       @echo  '  kselftest-install - Build and install kernel selftest'
+> +       @echo  '  kselftest-clean   - Remove all generated kselftest files'
+> +       @echo  '  kselftest-merge   - Merge all the config dependencies of'
+> +       @echo  '                      kselftest to existing .config.'
+>         @echo  ''
+>         @$(if $(dtstree), \
+>                 echo 'Devicetree:'; \
+> --
+> 2.20.1
+>
 
-Thanks!
 
---
-Vlad Rezki
+Applied to linux-kbuild. Thanks.
+
+But, if we have more entries in the future,
+we might want to consider to move these
+to tools/testing/selftests/Makefile.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
