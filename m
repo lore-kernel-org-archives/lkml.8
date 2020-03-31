@@ -2,100 +2,108 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00988C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF7FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B36207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB1F20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:09:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gCFMJoI5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBEAqflk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731186AbgCaVHd (ORCPT
+        id S1731169AbgCaVJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:07:33 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51726 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgCaVHd (ORCPT
+        Tue, 31 Mar 2020 17:09:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35424 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgCaVJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:07:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TdKLErdYAhpy+aevf+rPoQWJBOmm5AFEN10IJcqqdTA=; b=gCFMJoI5t1iLIbrbakBPfey08z
-        r4FSRSNoq+3IjxCH6HfkCgcD3t0IikcK57Uxd2OVPkAj86HJbGfXxW9kJX/Na6iTquXJDPrpzT4jl
-        6WdvpYy7SVc9hdokiiYPKSvick4f5e13cervutSgE+62Rcayfd4phdInk5HqnWXwhRFHKfVZWKrPK
-        Y4FG8hUXpwu9icbvoTJpDysml7UjaN3JyfwRRSYNs17lzEde3eEB9w/1P/M8DBivCR1UKFDt0s5JI
-        KWBwpeR+1JZ4QKaNglBpR+bHh4kEb/IgfZlxRnwoBoljiDZwndCOisJxo6jm+XsH60wb2sWCEVMJn
-        aK+NcPbA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJO6V-0005iL-8I; Tue, 31 Mar 2020 21:07:23 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 692A098354A; Tue, 31 Mar 2020 23:07:20 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 23:07:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-Message-ID: <20200331210720.GG2452@worktop.programming.kicks-ass.net>
-References: <20200326135620.tlmof5fa7p5wct62@treble>
- <20200326154938.GO20713@hirez.programming.kicks-ass.net>
- <20200326195718.GD2452@worktop.programming.kicks-ass.net>
- <20200327010001.i3kebxb4um422ycb@treble>
- <20200330170200.GU20713@hirez.programming.kicks-ass.net>
- <20200330190205.k5ssixd5hpshpjjq@treble>
- <20200330200254.GV20713@hirez.programming.kicks-ass.net>
- <20200331111652.GH20760@hirez.programming.kicks-ass.net>
- <20200331202315.zialorhlxmml6ec7@treble>
- <20200331204047.GF2452@worktop.programming.kicks-ass.net>
+        Tue, 31 Mar 2020 17:09:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d5so27978681wrn.2;
+        Tue, 31 Mar 2020 14:09:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=B6tP3lr4dsdouoEScHUU6AoHIj/KnpsdHoiuwt2FQlI=;
+        b=QBEAqflkVr4c7Z+EqdZW6V8ozD9wyuQSrtALIOiej8I/g6IzRuBffynog5nlY1htxa
+         uBDowuGrSKGLl001UxXtdVoPzAXK2nu2RdMK35lHBPOMyMXWmCrD7ZL4zgmvgMhPWwdR
+         rEJQwYoci9SL6uCt5aHO7XhhJggFHAaGjP3ReLmQ4o7MXpbbV436n3kFaK+VbGCHMpLt
+         1mcGnGxWGSPn7zqFE2zCivkvXRj6QyeMEMJ9A6UJw4fVAoyny6pZ7ZH49wVlDj1HVLXp
+         HzwNv356YsGxiljki9Pi+k5sATTWWJkfi67qWd1IUG54lJbv8VL/2lujr/WlTi0clv3A
+         gzGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=B6tP3lr4dsdouoEScHUU6AoHIj/KnpsdHoiuwt2FQlI=;
+        b=Mm7OAPtx61ClhUT4e9XA+xfTHvaZXTGEKe93A4qCmtMl1SRaKJiAcmRfr7+w5WsKkW
+         zwZxrCY9cCdJADp7PJoZgFAzzXmss+5dZhu8aaAnOrM1IM/CWDvUrUySJc/ZsX70G4+u
+         74HHB+g9yYsGf36nRxb6OxxvqWhS5tZET0/3Zh93K4KvJTrg6Y1An/3+h3p5m7YmjGJ/
+         E3NDt5pcGs5YPlwkYURGvloEf13XXPt07/nde2RHDUOdTAQazem0aOLAhEVXOFVLHgsq
+         PVd7H8XeqYcd5Eyf/VPpmdRaEjlNCWZ8Qv8A8/R4JCIAegW915CRvpIkQrFsNf5wdOwN
+         omGw==
+X-Gm-Message-State: ANhLgQ359Zmhk5sB/rptHeghlgIyvogeFphp6epvNHaU9Saqznpj/PEn
+        ZEh5ysl2AoXfdDI52AwJcaYzihI=
+X-Google-Smtp-Source: ADFU+vtnP7LYldKA1MpO9AVOo9mamivHtPoJiIQxvAeFNqobXfHXYKShtCmojhQAloJDSOy9tDZBcA==
+X-Received: by 2002:a5d:5045:: with SMTP id h5mr21391859wrt.86.1585688948272;
+        Tue, 31 Mar 2020 14:09:08 -0700 (PDT)
+Received: from avx2 ([46.53.248.81])
+        by smtp.gmail.com with ESMTPSA id g3sm29352194wrm.66.2020.03.31.14.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 14:09:07 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 00:09:05 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH] proc: rename "catch" function argument
+Message-ID: <20200331210905.GA31680@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200331204047.GF2452@worktop.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:40:47PM +0200, Peter Zijlstra wrote:
-> On Tue, Mar 31, 2020 at 03:23:15PM -0500, Josh Poimboeuf wrote:
+"catch" is reserved keyword in C++, rename it to something
+both gcc and g++ accept.
 
-> > I now understand what you're trying to do with the RET_TAIL thing, and I
-> > guess it's ok for the ftrace case.  But I'd rather an UNWIND_HINT_IGNORE
-> > before the tail cail, which would tell objtool to just silence the tail
-> > call warning.  It's simpler for the user to understand, it's simpler
-> > logic in objtool, and I think an "ignore warnings for the next insn"
-> > hint would be more generally applicable anyway.
-> 
-> I like how this is specific on how far the stack can be off, as opposed
-> so say 'ignore any warning on this instruction'.
-> 
-> Because by saying this RET should be +8, we'll still get a warning when
-> this is not the case (and in fact I should strengthen the patch to
-> implement that).
+Rename "ign" for symmetry.
 
-Like this; I'm confused on what cfa.offset is vs stack_size though.
+Signed-off-by: _Z6Alexeyv <adobriyan@gmail.com>
+---
 
-But this way we're strict and always warn when the unexpected happens.
+ fs/proc/array.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1423,8 +1423,7 @@ static bool has_modified_stack_frame(str
- 	    !(ret_offset && state->cfa.offset == initial_func_cfi.cfa.offset + ret_offset))
- 		return true;
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -248,8 +248,8 @@ void render_sigset_t(struct seq_file *m, const char *header,
+ 	seq_putc(m, '\n');
+ }
  
--	if (state->stack_size != initial_func_cfi.cfa.offset &&
--	    !(ret_offset && state->stack_size == initial_func_cfi.cfa.offset + ret_offset))
-+	if (state->stack_size != initial_func_cfi.cfa.offset + ret_offset)
- 		return true;
+-static void collect_sigign_sigcatch(struct task_struct *p, sigset_t *ign,
+-				    sigset_t *catch)
++static void collect_sigign_sigcatch(struct task_struct *p, sigset_t *sigign,
++				    sigset_t *sigcatch)
+ {
+ 	struct k_sigaction *k;
+ 	int i;
+@@ -257,9 +257,9 @@ static void collect_sigign_sigcatch(struct task_struct *p, sigset_t *ign,
+ 	k = p->sighand->action;
+ 	for (i = 1; i <= _NSIG; ++i, ++k) {
+ 		if (k->sa.sa_handler == SIG_IGN)
+-			sigaddset(ign, i);
++			sigaddset(sigign, i);
+ 		else if (k->sa.sa_handler != SIG_DFL)
+-			sigaddset(catch, i);
++			sigaddset(sigcatch, i);
+ 	}
+ }
  
- 	for (i = 0; i < CFI_NUM_REGS; i++) {
-
