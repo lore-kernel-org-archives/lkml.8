@@ -2,177 +2,163 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28895C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851F9C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E94F520781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DB220772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:57:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="YdnvjCNV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uubu9Ksq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbgCaK5F (ORCPT
+        id S1730694AbgCaK5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:57:05 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:60005 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730560AbgCaK5E (ORCPT
+        Tue, 31 Mar 2020 06:57:44 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37494 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730510AbgCaK5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:57:04 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id JEZlj7wX5fHuvJEZojAmZA; Tue, 31 Mar 2020 12:57:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585652222; bh=gW0kWytJCFVyt24W1MbP4eqekLHYJlB7+XeNQWNm3wA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=YdnvjCNVeftU3fOLL9O0JLLfTkSRgd9F+jnvNWKayzNqe1Q5Zsqqr6V2MrljPaHt+
-         7fVXsij5KBL0SWEqnuolAE+boawWLo0CsgQwUiwMIN/AEZhCay9daI4S26Dw7LCXpD
-         V+Aunhex5Z8mm80Llib751mz0/yh4hfp5MPw1sY+UjNZAYfU16o0pDYC75PhUiAq6N
-         DQacDaraQGylQx6gv9IHSCltkI0+d8ylu/bL6IG9V1O2Rf6+HENvgI+80kwtDPG1NW
-         LEVhJiYFsOdHPVrrAvNLa63GIMv95c73jH8mZPzhbC6Eq0oGqs93lIMzmiP/Gd6BXS
-         mfREVSYCvmTng==
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 31 Mar 2020 06:57:43 -0400
+Received: by mail-ed1-f68.google.com with SMTP id de14so24545220edb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 03:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=50njG3BRzhgqk7OU18IsJGY20KNwvqHHLF9KB0zfsgo=;
+        b=Uubu9KsqB8aCbhmVIfpW06NMwyishZIZ2ihsBkeCXyNwiVNn0xzBG/t83sDY8fr1Op
+         qrEMYSkr+0QcC0iR4AEETCyc3j6Cb0oC4l/9qmwEkkn4DOuEL3//xA/Z7Bo1LmNQJfbo
+         r1g5SVaFr0kCEr/ygGrytLj2wEpQV5F3Jmn/4m0wf6l3DAOQXSyzqX3OIas/camKKxO4
+         Qu2CROFOeCkgD5hClnp3CIXwQDzI0ujwZcotnH018B/3m+kJQZPss82uZyxPm+WtXVKj
+         VO22dvOX6Seml5X4fPJxnspl/9+jyDDoWYyZ+4oGjRmHlz9M2GAu7aStN1xkns14W3ms
+         ACpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=50njG3BRzhgqk7OU18IsJGY20KNwvqHHLF9KB0zfsgo=;
+        b=kMO2mI4hLGqQGgIhZW6VUW8ScGH93cwLkXfsmy7wjtGCg4+QGgLbC3dCuvIU0ifYQF
+         XYHWZcMTOKAy+qmvTpbT+QOXWBm/vaqv8MAic96+w8UgBry4Rtje0ZJDcw+rZv8OzUG2
+         oKhW7XLATZt4SyHu0P28ufMsejsamxUIM/qJOY7GtbUdZ6BnC+NZ/DZalSRuuaP84M4a
+         ezDM9z2zVKbYu4Qf0C6OOb7/PoRudF+FoS8BGl6g3P12Z0rV/ShMUauk0Hm+jEz5QM61
+         efxVCPOHkKMxJAm+q9m8ApTbRyU39ZckNqSnOTuN2+Vbm4OPVAhX/5cfINKFxylAllcV
+         5cow==
+X-Gm-Message-State: ANhLgQ36qSlTqMkdqYTjGPgP44hsw//iUiTcRBLf2PG3laqP3dw3Fdhj
+        b0xa07VQHh5Weuc6Xgmhl/c=
+X-Google-Smtp-Source: ADFU+vsWMpvsp0nEUUTlASEHri4BOKFbOh2sLTwceT3PcFHSP/2PEQLKrAyUTMhL1W2IflOao7aZSg==
+X-Received: by 2002:a05:6402:351:: with SMTP id r17mr15613299edw.216.1585652261683;
+        Tue, 31 Mar 2020 03:57:41 -0700 (PDT)
+Received: from smtp.gmail.com ([2001:818:e238:a000:51c6:2c09:a768:9c37])
+        by smtp.gmail.com with ESMTPSA id j11sm335968ejk.39.2020.03.31.03.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 03:57:41 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 07:57:34 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Rodrigo.Siqueira@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
-Date:   Tue, 31 Mar 2020 12:56:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Subject: [PATCH 1/4] drm/amd/display: cleanup codestyle type
+ BLOCK_COMMENT_STYLE on dc_link
+Message-ID: <e353f1223561ccfa1ab3fc00a5ab996064a418f9.1585651869.git.melissa.srw@gmail.com>
+References: <cover.1585651869.git.melissa.srw@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfC/ZT10JC4UIPK+4vBfWukfI2h7F6ztLWQVAwUsm0nTj6BE6nclxJNZUGfh8KFaFer7kyPqxkhp7eBA/OuOywgO50LMVFvkW8TfZKSsmR+5nkHXCqEuu
- kQkvr42SCCQ89uCC8+CTmAV3gcomjcXZSjXdYyadE0nSqDV4UR6wV+uSV1VQH4LNjWvHR8/Ij+VQvsFvU7+NZTK0Y5HgTSRTZifImKb4xxU1bbz3Pz25m+dx
- CcE7V0HnO3OU9jnBML6zPJd46QYa7wJ1ecxwPiOc/TA0GQhbOM70FwTU8JHYmThaXDPcU/Cu3hDXUh6gnELX+Ev9oTMVXfyvK5z8VbNcxQlUP6smYDdOVk2I
- QLrOzzTZJnXK3z1fnb/AIOWeBdpw4Wxkhyi/BIoku96WSAvTYVWKCMQTMsMA7GDth8FuPSlpu9pl9iWcyWM8Rxuu7p853sWpY64kUyaUFrY6QPf+UZ9SdA7c
- AmuiAHE7XQnEWThj75mdvJEbraK/C8lf5yMtWj4GYk2z6rxRWh3n7PFApjzv6YDODc6Ln3zaxj1ZHnK2JVO910KI7Sjsf0aVOeX4Ka6EBvg5wFRWSqVNC3Ge
- XVA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1585651869.git.melissa.srw@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 12:32 PM, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
->> On 3/25/20 12:03 PM, Sakari Ailus wrote:
->>> Hi Sowjanya,
->>>
->>> Thanks for the patchset.
->>>
->>> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
->>>> Tegra210 contains a powerful Video Input (VI) hardware controller
->>>> which can support up to 6 MIPI CSI camera sensors.
->>>>
->>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->>>> capture from an external camera sensor connected to CSI or from
->>>> built-in test pattern generator.
->>>>
->>>> Tegra210 supports built-in test pattern generator from CSI to VI.
->>>>
->>>> This patch adds a V4L2 media controller and capture driver support
->>>> for Tegra210 built-in CSI to VI test pattern generator.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>  drivers/staging/media/Kconfig              |    2 +
->>>>  drivers/staging/media/Makefile             |    1 +
->>>>  drivers/staging/media/tegra/Kconfig        |   10 +
->>>>  drivers/staging/media/tegra/Makefile       |    8 +
->>>>  drivers/staging/media/tegra/TODO           |   10 +
->>>>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
->>>>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
->>>>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
->>>>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
->>>>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
->>>>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
->>>>  drivers/staging/media/tegra/tegra-video.h  |   32 +
->>>>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
->>>>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
->>>
->>> Why staging? Are there reasons not to aim this to the kernel proper right
->>> away? If you only support TPG, the driver may not have too many (if any)
->>> real users anyway.
->>>
->>>>  14 files changed, 3182 insertions(+)
->>>>  create mode 100644 drivers/staging/media/tegra/Kconfig
->>>>  create mode 100644 drivers/staging/media/tegra/Makefile
->>>>  create mode 100644 drivers/staging/media/tegra/TODO
->>>>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
->>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
->>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
->>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
->>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
->>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
->>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
->>>>  create mode 100644 drivers/staging/media/tegra/tegra210.c
->>>>  create mode 100644 drivers/staging/media/tegra/tegra210.h
->>>>
->>
->> <snip>
->>
->>>> +static int tegra_channel_g_input(struct file *file, void *priv,
->>>> +				 unsigned int *i)
->>>> +{
->>>> +	*i = 0;
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int tegra_channel_s_input(struct file *file, void *priv,
->>>> +				 unsigned int input)
->>>> +{
->>>> +	if (input > 0)
->>>> +		return -EINVAL;
->>>> +
->>>> +	return 0;
->>>> +}
->>>
->>> Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
->>> linux-media; it's relevant here, too.
->>
->> No, it isn't. The pipeline is controlled by the driver, not by userspace.
->> This is a regular video capture driver, not an ISP driver.
-> 
-> I don't think that really makes a difference, whether a device is an ISP or
-> not, but instead what does is whether there is something to control in its
-> pipeline that cannot be generally done through the regular V4L2 interface.
-> Even plain CSI-2 receiver drivers should be media device centric these days
-> as doing otherwise excludes using a range of sensor drivers with them,
-> including any possible future support for e.g. sensor embedded data.
-> 
+Solve comments alignment problems on dc_link file
 
-We've been back and forth on this before for this driver. I see no reason to make things
-complicated, these are simple video pipelines for video capture. Making this media
-device centric means that existing software using the BSP version of this driver require
-a full rewrite, which is not desirable.
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+---
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 25 +++++++++++--------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-If we are going to require CSI receiver drivers to be media centric, then that's a
-major departure of existing practice. And something that needs to be discussed first,
-since that will require that support for each csi receiver driver is added to libcamera.
-Is libcamera ready for that? Are common applications using libcamera yet?
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+index 67cfff1586e9..f580b533db5f 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
+@@ -64,11 +64,11 @@
+ enum {
+ 	PEAK_FACTOR_X1000 = 1006,
+ 	/*
+-	* Some receivers fail to train on first try and are good
+-	* on subsequent tries. 2 retries should be plenty. If we
+-	* don't have a successful training then we don't expect to
+-	* ever get one.
+-	*/
++	 * Some receivers fail to train on first try and are good
++	 * on subsequent tries. 2 retries should be plenty. If we
++	 * don't have a successful training then we don't expect to
++	 * ever get one.
++	 */
+ 	LINK_TRAINING_MAX_VERIFY_RETRY = 2
+ };
+ 
+@@ -270,7 +270,8 @@ static enum ddc_transaction_type get_ddc_transaction_type(
+ 	case SIGNAL_TYPE_DISPLAY_PORT_MST:
+ 		/* MST does not use I2COverAux, but there is the
+ 		 * SPECIAL use case for "immediate dwnstrm device
+-		 * access" (EPR#370830). */
++		 * access" (EPR#370830).
++		 */
+ 		transaction_type = DDC_TRANSACTION_TYPE_I2C_OVER_AUX;
+ 		break;
+ 
+@@ -369,7 +370,8 @@ bool dc_link_is_dp_sink_present(struct dc_link *link)
+ 	/* Open GPIO and set it to I2C mode */
+ 	/* Note: this GpioMode_Input will be converted
+ 	 * to GpioConfigType_I2cAuxDualMode in GPIO component,
+-	 * which indicates we need additional delay */
++	 * which indicates we need additional delay
++	 */
+ 
+ 	if (GPIO_RESULT_OK != dal_ddc_open(
+ 		ddc, GPIO_MODE_INPUT, GPIO_DDC_CONFIG_TYPE_MODE_I2C)) {
+@@ -414,14 +416,16 @@ static enum signal_type link_detect_sink(
+ 		link->link_enc->id, link->link_id);
+ 
+ 	/* Internal digital encoder will detect only dongles
+-	 * that require digital signal */
++	 * that require digital signal
++	 */
+ 
+ 	/* Detection mechanism is different
+ 	 * for different native connectors.
+ 	 * LVDS connector supports only LVDS signal;
+ 	 * PCIE is a bus slot, the actual connector needs to be detected first;
+ 	 * eDP connector supports only eDP signal;
+-	 * HDMI should check straps for audio */
++	 * HDMI should check straps for audio
++	 */
+ 
+ 	/* PCIE detects the actual connector on add-on board */
+ 
+@@ -432,7 +436,8 @@ static enum signal_type link_detect_sink(
+ 	switch (link->link_id.id) {
+ 	case CONNECTOR_ID_HDMI_TYPE_A: {
+ 		/* check audio support:
+-		 * if native HDMI is not supported, switch to DVI */
++		 * if native HDMI is not supported, switch to DVI
++		 */
+ 		struct audio_support *aud_support = &link->dc->res_pool->audio_support;
+ 
+ 		if (!aud_support->hdmi_audio_native)
+-- 
+2.25.1
 
-Obviously, if NVIDIA decides that this is worth the effort, then I have no objection.
-But I don't think it is something we should require at this stage.
-
-Regards,
-
-	Hans
