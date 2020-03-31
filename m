@@ -2,182 +2,137 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A276EC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F42C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E2A206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78456206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mdyk4hId"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdF9zsV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbgCaQAV (ORCPT
+        id S1731164AbgCaQA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:00:21 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:37240 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730286AbgCaQAV (ORCPT
+        Tue, 31 Mar 2020 12:00:58 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44670 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730286AbgCaQA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:00:21 -0400
-Received: by mail-vs1-f65.google.com with SMTP id o3so13801291vsd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:00:20 -0700 (PDT)
+        Tue, 31 Mar 2020 12:00:58 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b72so10503717pfb.11;
+        Tue, 31 Mar 2020 09:00:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/GMoukOL0KHHE8wEvMLxzDD6OsKNGd37py8qqC7r4eI=;
-        b=Mdyk4hIdWk9iaKwb4+KZqwkLAVAFtwZV/5MocNo0ZUVnr90atdWYJplVeGt1osWlMJ
-         tsGG0jSCSuDfx6UCog8dLugU+8D/yjeNzKb4ikMbN1zz2tOBe/7yHSe5i4d0VKOn18dH
-         u6KGIqmobDm7Jdik275lPhk3ZHks5e56i9mV0=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=taluGmW7CXsRxxAUESqt+d4hAzy0kA0u/yxDfpjf+rM=;
+        b=GdF9zsV7IE7SbPKagJJUruD8yVaU1qODPzCBsbOQcVxNZDzYxv7hcS40rvj194m5iM
+         sxXWgLcHyvwOPHbv/lf5Y+maeDmMBMm5dkY9+8XHE11unHXChTgECEP7V6UPm0KicnEz
+         0rVmZRAXdy9DztRCIaYV7kwtXUwCTCf5YN/LaYwLgeR4HerNSR2kvDy4TFSN8vi4Xq/b
+         lUu7BnVAyJNVBFMY0GzOzBCGPozaf55rQCAASpMJCJzVBbfnw18CXGYTDsQEEFWTI2RY
+         667oXkQN0lbmZJtIcZXvNHRPKelvZD+KDywIr+6Ydxq5Z9OOvcdsmWj8W1LBRiZHpuMk
+         nEDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/GMoukOL0KHHE8wEvMLxzDD6OsKNGd37py8qqC7r4eI=;
-        b=TTSXuIm9ELOimzHH7kAFiq2zh/uzkCGB6Qq+kLQLYm9PBtX24AuGSfKgX9P7YYy9KG
-         M5eFA0cndHccXQAlYxJVhBHokgQ+5DVEKubVRobzsHsJKpQL6nZmAv3TlguHW9iCV7iv
-         Y3vqnZ5Sh8dD7JwpbNTgjClZRACsAraTakkTuJMZaUaW0dXk5JklNezPVJngGSqBaV/8
-         ko4hOhb88AfQQXChDCSs2siFD+zrCRb3u26ve5HS006gWztF/bB+wTX8dpVIk1bkxGdi
-         1T4ZlgUlNh95SzS/m80gb/4FrZHGcXLkhCGX8ELcHm4Nh/JEu04NolDv3h64PdCpm18z
-         qLSQ==
-X-Gm-Message-State: AGi0PuY8xW9K5OWiO9WGsod80h9ubv5Ml1A8aNOHjnd6ejczjr9yY+m1
-        uSUjdjkaNGu0sTkgZR7G/Pi3IOyGWV8=
-X-Google-Smtp-Source: APiQypJluOmGTnohHw8idtaCDxfkYBGczNxce5xoYsATDm56uRkF5W1Cjta1J9jSRCgChsgbV7DA6w==
-X-Received: by 2002:a67:f846:: with SMTP id b6mr11331838vsp.130.1585670419314;
-        Tue, 31 Mar 2020 09:00:19 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id 123sm7000646vsz.33.2020.03.31.09.00.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:00:18 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id r47so7846497uad.11
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:00:18 -0700 (PDT)
-X-Received: by 2002:ab0:7406:: with SMTP id r6mr3595683uap.22.1585670417847;
- Tue, 31 Mar 2020 09:00:17 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=taluGmW7CXsRxxAUESqt+d4hAzy0kA0u/yxDfpjf+rM=;
+        b=t4rKs13H+n4VihgGsix1Oa8671SJ2RPcG0rWl2cRbjODd6HthL0EA85FJJd2pjgQfO
+         u2ikPrqYynvrQ+4aagnJV5d5fUPbFreTVEyVborTqo8bXgYChv3PKp0O3Gk8wsQ4mBQC
+         kBqoQFC/JwJKsjcAUp/bP/XW4XPsqhtn0H8yoWpp20YvHQIzYsvMFuZL4dWmT7M+BpyS
+         g3jnzv3ga6A5eR4ATZmeAHWGmsIqAoXTbztPFaNYoGnq83zBhMmVzc+Q5+Dme4KKqd0i
+         PPuQ95qJlFGz7jNaHgTix8pY/g264s6l2iyOYrqe8nqR432+8PF5wZb3PWSfDhkbJHe9
+         HvcQ==
+X-Gm-Message-State: AGi0PuYzKA8BxCxSW8P3tUF0E8I16Fu0HhOCu0ZEC3D563Ti2+sWV5gr
+        Jz7SKWm1uOMvavwe53LdstsUCeLe
+X-Google-Smtp-Source: APiQypKvYt7+e1jMI+FrEl5EN2RNuaPTl6gPVGE0LLvnv1PhCAMk+CK6GFt3Hy+Jn7QhJV7GbSXx+w==
+X-Received: by 2002:a63:6d87:: with SMTP id i129mr2457339pgc.54.1585670456889;
+        Tue, 31 Mar 2020 09:00:56 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v59sm2253702pjb.26.2020.03.31.09.00.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Mar 2020 09:00:55 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:00:54 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Stefan Riedmueller <s.riedmueller@phytec.de>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] watchdog: da9062: Use pre-configured timeout until
+ userspace takes over
+Message-ID: <20200331160054.GA64188@roeck-us.net>
+References: <20200326150203.371673-1-s.riedmueller@phytec.de>
 MIME-Version: 1.0
-References: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 31 Mar 2020 09:00:06 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-Message-ID: <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326150203.371673-1-s.riedmueller@phytec.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Mar 31, 2020 at 6:58 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> "The PM core always increments the runtime usage counter
-> before calling the ->suspend() callback and decrements it
-> after calling the ->resume() callback"
->
-> DPU and DSI are managed as runtime devices. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend was not getting called
-> and it kept the clocks on which resulted in target not
-> entering into XO shutdown.
->
-> Add changes to force suspend on runtime devices during pm sleep.
->
-> Changes in v1:
->  - Remove unnecessary checks in the function
->     _dpu_kms_disable_dpu (Rob Clark).
->
-> Changes in v2:
->  - Avoid using suspend_late to reset the usagecount
->    as suspend_late might not be called during suspend
->    call failures (Doug).
->
-> Changes in v3:
->  - Use force suspend instead of managing device usage_count
->    via runtime put and get API's to trigger callbacks (Doug).
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+On Thu, Mar 26, 2020 at 04:02:01PM +0100, Stefan Riedmueller wrote:
+> If the watchdog is already running during probe read back its
+> pre-configured timeout (set e.g. by the bootloader) and use it to ping
+> the watchdog until userspace takes over. Otherwise the default timeout
+> set before might not result in a fast enough ping.
+> 
+> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
 > ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 2 ++
->  drivers/gpu/drm/msm/dsi/dsi.c           | 2 ++
->  drivers/gpu/drm/msm/msm_drv.c           | 4 ++++
->  3 files changed, 8 insertions(+)
-
-This looks much saner to me.  Thanks!  I assume it still works fine
-for you?  I'm still no expert on how all the pieces of DRM drivers
-work together, but at least there's not a bunch of strange fiddling
-with pm_runtime state and hopefully it will avoid weird corner
-cases...
-
-
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index ce19f1d..b886d9d 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
->
->  static const struct dev_pm_ops dpu_pm_ops = {
->         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
-> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +                               pm_runtime_force_resume)
+>  drivers/watchdog/da9062_wdt.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+> index 0ad15d55071c..6d81b1276b87 100644
+> --- a/drivers/watchdog/da9062_wdt.c
+> +++ b/drivers/watchdog/da9062_wdt.c
+> @@ -35,6 +35,14 @@ struct da9062_watchdog {
+>  	bool use_sw_pm;
 >  };
->
->  static const struct of_device_id dpu_dt_match[] = {
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-> index 55ea4bc2..62704885 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
-> @@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
->
->  static const struct dev_pm_ops dsi_pm_ops = {
->         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
-> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +                               pm_runtime_force_resume)
->  };
->
->  static struct platform_driver dsi_driver = {
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 7d985f8..2b8c99c 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -1051,6 +1051,8 @@ static int msm_pm_suspend(struct device *dev)
->                 return ret;
->         }
->
-> +       pm_runtime_force_suspend(dev);
-
-nit: check return value of pm_runtime_force_suspend()?
-
-
+>  
+> +static unsigned int da9062_wdt_read_timeout(struct da9062_watchdog *wdt)
+> +{
+> +	int val;
 > +
->         return 0;
->  }
->
-> @@ -1063,6 +1065,8 @@ static int msm_pm_resume(struct device *dev)
->         if (WARN_ON(!priv->pm_state))
->                 return -ENOENT;
->
-> +       pm_runtime_force_resume(dev);
+> +	regmap_read(wdt->hw->regmap, DA9062AA_CONTROL_D, &val);
+> +	return wdt_timeout[val & DA9062AA_TWDSCALE_MASK];
+> +}
+> +
+>  static unsigned int da9062_wdt_timeout_to_sel(unsigned int secs)
+>  {
+>  	unsigned int i;
+> @@ -184,6 +192,7 @@ static int da9062_wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	int ret;
+> +	int timeout;
+>  	struct da9062 *chip;
+>  	struct da9062_watchdog *wdt;
+>  
+> @@ -213,6 +222,13 @@ static int da9062_wdt_probe(struct platform_device *pdev)
+>  	watchdog_set_drvdata(&wdt->wdtdev, wdt);
+>  	dev_set_drvdata(dev, &wdt->wdtdev);
+>  
+> +	timeout = da9062_wdt_read_timeout(wdt);
+> +	if (timeout > 0) {
+> +		wdt->wdtdev.timeout = timeout;
+> +		set_bit(WDOG_HW_RUNNING, &wdt->wdtdev.status);
+> +		dev_info(wdt->hw->dev, "watchdog is running (%u s)", timeout);
 
-nit: check return value of pm_runtime_force_resume()?
+The user won't know what "(%u s)" means.e that "%u" reflects the timeout.
+Also, the newline at the end is missing.
 
+Personally, I think the message is just noise and should be dropped entirely.
 
--Doug
+Guenter
+
+> +	}
+> +
+>  	ret = devm_watchdog_register_device(dev, &wdt->wdtdev);
+>  	if (ret < 0)
+>  		return ret;
