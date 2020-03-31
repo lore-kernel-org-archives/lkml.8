@@ -2,110 +2,118 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958FAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C08C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5AE20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4D220748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pBq0Oh9X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OIjgkqpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgCaGx6 (ORCPT
+        id S1729949AbgCaGye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:53:58 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37933 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgCaGx6 (ORCPT
+        Tue, 31 Mar 2020 02:54:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39239 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCaGyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:53:58 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f6so1290360wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 23:53:55 -0700 (PDT)
+        Tue, 31 Mar 2020 02:54:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i20so20791658ljn.6
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 23:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TIdfTSo/e484Z3PHPHMJ/sokMhYtX+vwmXQLZC2QabA=;
-        b=pBq0Oh9Xy6hU00u/+o8eOfRC0LhWSvo83BSzyEEuxoSEVIKKAdARxOWS4TZxH1tM+r
-         zRo4mw7gQWkHJZ23Q2NYuGXwArr/uRoMWqSSfWomhaFqyjWd4GbFzqNwI/HljS3ZQh7M
-         GOgSlHdzIUGVM03X9wcySplZtR7UhLxDs4GLHwrkE5/xaMdjLZEdtL8sNaSNJNXvcNkO
-         UUidKhR9FQFyOL7WabyBBc5KHYBIIBy4Z8+PzrcWzNhm/cvGMjn45Aac5dbDcnrQIRaZ
-         GWQJugWgsxGsU3FpKqRkjmUK/ySbzggz35S1KB26n5gQ/jxhBjowFFW2KLTCkJ4f3yIo
-         3fxA==
+        bh=h9loUHqcNcd90NK2/m8vbfLtxRqvUnhXKgLBg3C+Bxs=;
+        b=OIjgkqpSthyzQoQAnxzj5NIvlbP71kKJ0P/CkJE7eBmPcfcL2FeLivaWEHhqPU1Sz/
+         k2xaHecJYgvq6cwCG0/cvQnWgbNZ5asEUHtIIyeaoJEy7NhwlDlTP5igNIztW3tYp7J4
+         wG2bJTibUG9rnb0/05JnFFGzHMYnbAdc5IEl7u75eYslxXhWiJn7IGHXfpdk1PGpB0J7
+         sZXy7TaJfc10PwrW6nkR9boV4LI1zDQNx+XvT2KkiBSRBvInIX0Mz9imcw3pWw+RnnBz
+         lXGiGz9nENZTTibTr8HKGg5t2Rox/QJMhuO4q22QLh8f4eoDkEc1iR0xYPHYFTBQvFng
+         wcVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TIdfTSo/e484Z3PHPHMJ/sokMhYtX+vwmXQLZC2QabA=;
-        b=fNCb/cEnqwOCIRbMisEYSL/L7fzzCJD/zrDJWJ0Sxkboz9hyyWyhP9pRscKf01XV2k
-         njtsE8lA4XHpX30RYlpO3DP40oAfajxfi5KuqARzwuUAQHMVieNGGBOIZ/zICDfQlAxi
-         aZimPgVKV51pPQRZ5zQ2fyyoqhtSgH8BqPTgqedxRtul/9RDmxWJYmVzlPZZ/TD63qAG
-         ypaiiOIqXMpgsUQER4XFRcJnU8R87qo00gUe9Bd3ScQ0Ygut9MlrOyDBKYy1yZdIEIPb
-         onlQnz1P0g33M8F2hKUpjTPKIegzLdbHd5I/dWiy0JEsJwp3YmvhCdXFDTyyfJnnFqn0
-         TAsw==
-X-Gm-Message-State: ANhLgQ31/9rr4E1vVLr+DX2CCqYreDtYqwwLzKMCgNtwuZqE6pchn9WE
-        18VnXrOe/h6Yy4k8zBp3DTAQyRTgXS11bXV/xvk=
-X-Google-Smtp-Source: ADFU+vs3wLHXuJQLMByTyAYUwEHsLPKn2CFMgsYdlAca+TWGCwpk7wahIsjNVEjB6mfColESYnBMlYXAaPHvHM3JYyw=
-X-Received: by 2002:a1c:a982:: with SMTP id s124mr1941458wme.105.1585637635174;
- Mon, 30 Mar 2020 23:53:55 -0700 (PDT)
+        bh=h9loUHqcNcd90NK2/m8vbfLtxRqvUnhXKgLBg3C+Bxs=;
+        b=eMn+PiCa6RS6x5+zrWu8AYenmqiIMYKcTLymWCFzV07X9LANsBMyfKC9iUors4sqHa
+         7jK8v7t6EHiijyQCMvZBYQaoBe1Sey0r0cejwtwHItUs/yw6x3Qmf2mcFW+VsGiA1+kD
+         s/23xLrHYqu1/NqkGx7d0sEgKp/UUPl91HGAVZ5mQIwUIhb4kYwxTR+uxRdN546os1QU
+         xBKC368WnFhgVgYJnxyi2LC2KxMedzTgyvDBkf/jW8rihq3q5cJzdh3EpEmOzxkOLffO
+         IkOSPrFtlqmZP9bAJmqKG0gblOgdy8GnKQ8xVlMjmCsjFrOZlsZtJjsHcSh2XipV1ANH
+         A5Lw==
+X-Gm-Message-State: AGi0PuYNaXVcoRTVwyJZYANgZ/kzNTpw042N+J+mpRxJxQzYsyBBsIQz
+        vOvuYl+VKPFvr+r7YvNnQveDycaT5Awk63WsyexouKo9iTs=
+X-Google-Smtp-Source: APiQypKsSaliE6Q6PoMK/k8TNUZpVdg/0QBfIOIvD0et75bjcVTZNgiB84VQ4eWX321HspPPq7LK26pobWEkQYVxQDA=
+X-Received: by 2002:a2e:a495:: with SMTP id h21mr9218182lji.123.1585637669144;
+ Mon, 30 Mar 2020 23:54:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200330220840.21228-1-richard.weiyang@gmail.com>
-In-Reply-To: <20200330220840.21228-1-richard.weiyang@gmail.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Tue, 31 Mar 2020 08:53:44 +0200
-Message-ID: <CAM9Jb+i9CMosGb2ZBWABu5h2JbamqD5sb9Pu+9RPZ8mhqgM0Kw@mail.gmail.com>
-Subject: Re: [Patch v4] mm/page_alloc.c: use NODE_MASK_NONE in build_zonelists()
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, jgg@ziepe.ca,
-        David Hildenbrand <david@redhat.com>, jhubbard@nvidia.com,
-        Baoquan He <bhe@redhat.com>
+References: <20200330202715.86609-1-john.stultz@linaro.org>
+In-Reply-To: <20200330202715.86609-1-john.stultz@linaro.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 31 Mar 2020 12:24:17 +0530
+Message-ID: <CA+G9fYv7XRm2ObuBQQy=iiOAj6rj_JX=8PBTt53JtDBwe5W=_Q@mail.gmail.com>
+Subject: Re: [PATCH] driver core: Use dev_warn() instead of dev_WARN() for
+ deferred_probe_timeout warnings
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Basil Eljuse <Basil.Eljuse@arm.com>,
+        Ferry Toth <fntoth@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Slightly simplify the code by initializing user_mask with NODE_MASK_NONE,
-> instead of later calling nodes_clear(). This saves a line of code.
+On Tue, 31 Mar 2020 at 01:57, John Stultz <john.stultz@linaro.org> wrote:
 >
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
-> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+> In commit c8c43cee29f6 ("driver core: Fix
+> driver_deferred_probe_check_state() logic") and following
+> changes the logic was changes slightly so that if there is no
+> driver to match whats found in the dtb, we wait 30 seconds
+> for modules to be loaded by userland, and then timeout, where
+> as previously we'd print "ignoring dependency for device,
+> assuming no driver" and immediately return -ENODEV after
+> initcall_done.
 >
-> ---
-> v4: adjust subject/description as suggested by John Hubbard
-> v3: adjust the commit log a little
-> v2: use NODE_MASK_NONE as suggested by David Hildenbrand
-> ---
->  mm/page_alloc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> However, in the timeout case (which previously existed but was
+> practicaly un-used without a boot argument), the timeout message
+> uses dev_WARN(). This means folks are now seeing a big backtrace
+> in their boot logs if there a entry in their dts that doesn't
+> have a driver.
 >
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index ef790dfad6aa..dfcf2682ed40 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5587,14 +5587,13 @@ static void build_zonelists(pg_data_t *pgdat)
->  {
->         static int node_order[MAX_NUMNODES];
->         int node, load, nr_nodes = 0;
-> -       nodemask_t used_mask;
-> +       nodemask_t used_mask = NODE_MASK_NONE;
->         int local_node, prev_node;
+> To fix this, lets use dev_warn(), instead of dev_WARN() to match
+> the previous error path.
 >
->         /* NUMA-aware ordering of nodes */
->         local_node = pgdat->node_id;
->         load = nr_online_nodes;
->         prev_node = local_node;
-> -       nodes_clear(used_mask);
->
->         memset(node_order, 0, sizeof(node_order));
->         while ((node = find_next_best_node(local_node, &used_mask)) >= 0) {
-> --
-> 2.23.0
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Basil Eljuse <Basil.Eljuse@arm.com>
+> Cc: Ferry Toth <fntoth@gmail.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Anders Roxell <anders.roxell@linaro.org>
+> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
+I have applied this patch and tested.
+The reported problem is fixed by patch on arm64 Juno-r2 device.
+https://lkft.validation.linaro.org/scheduler/job/1323860#L556
+
+- Naresh
