@@ -2,277 +2,221 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E2BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B310C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E70F20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DA220CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FGsnOaTT"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Q8SznlHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgCaQPx (ORCPT
+        id S1730644AbgCaQS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:15:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55404 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730391AbgCaQPx (ORCPT
+        Tue, 31 Mar 2020 12:18:57 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:18588 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCaQS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:15:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585671351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GDlbd/yfmw9AI7XHrRS/QwDmcPNwKNDqrQzOL4DK62g=;
-        b=FGsnOaTTeF+zkFDMBsh5biewXchqO1yyk1mxi8lQ3rUi3v+Yuibbq+vxYwR+NpGR+U8VTt
-        rmWBQzmWcypAtnkUcIw+WhWKsOVjxDwZRW+XCoJpMYZ1EkkTUCC90Yl/rLF+zwW+WJ8kLx
-        ZlQ4gOuaVM+MCXJvvW7Hl76htDch1ic=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-xTI5boyAOIu98_tFljz-Pg-1; Tue, 31 Mar 2020 12:15:47 -0400
-X-MC-Unique: xTI5boyAOIu98_tFljz-Pg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A8C418C43C9;
-        Tue, 31 Mar 2020 16:15:45 +0000 (UTC)
-Received: from [10.36.112.58] (ovpn-112-58.ams2.redhat.com [10.36.112.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B000860BE0;
-        Tue, 31 Mar 2020 16:15:35 +0000 (UTC)
-Subject: Re: [PATCH V10 07/11] iommu/vt-d: Support flushing more translation
- cache types
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1584746861-76386-8-git-send-email-jacob.jun.pan@linux.intel.com>
- <c90fafad-253a-b2f5-2a6c-87bc319edd02@redhat.com>
- <20200330162834.5ef42700@jacob-builder>
- <20200331091309.6fb369b1@jacob-builder>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <cfa84741-c6f2-883b-cfc5-04f2965ffd38@redhat.com>
-Date:   Tue, 31 Mar 2020 18:15:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 31 Mar 2020 12:18:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585671536; x=1617207536;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=j47iG3/6ABXelKOEb1VGsazRAbxs1IaTL1RoQDUKVho=;
+  b=Q8SznlHnJW4Qu6v4PNcf9Hau0f7dZPKoZdjc9B4Xq/zT4KvbiO3UWnCP
+   HzIkINpvfJwdeldBIdh0vbTfoR/xv0ISELNkPTAE/CNrPG3+Uq87PUITz
+   8dXRYsbVFacwBEAxoc9DJqWDBkZ0uLws84DLHru33Ea8+iCDnHbSTNh4I
+   U=;
+IronPort-SDR: bzVRkZ3wQEhXMzphCLlpGcJWfFkJzlY0Vji48fr6khF9wVdOljVbRVialA9y7Y4Lv43xtq1EWI
+ +GXhjTXNDvYg==
+X-IronPort-AV: E=Sophos;i="5.72,328,1580774400"; 
+   d="scan'208";a="26124928"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 31 Mar 2020 16:18:53 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 0E57BA0706;
+        Tue, 31 Mar 2020 16:18:51 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 31 Mar 2020 16:18:50 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.134) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 31 Mar 2020 16:18:35 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        <alexander.shishkin@linux.intel.com>, <linux-mm@kvack.org>,
+        <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <aarcange@redhat.com>, <acme@kernel.org>, <amit@kernel.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [RFC v5 0/7] Implement Data Access Monitoring-based Memory Operation Schemes
+Date:   Tue, 31 Mar 2020 18:18:19 +0200
+Message-ID: <20200331161819.28544-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200331165155.000028e4@Huawei.com> (raw)
 MIME-Version: 1.0
-In-Reply-To: <20200331091309.6fb369b1@jacob-builder>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.134]
+X-ClientProxiedBy: EX13D15UWB002.ant.amazon.com (10.43.161.9) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+On Tue, 31 Mar 2020 16:51:55 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-On 3/31/20 6:13 PM, Jacob Pan wrote:
-> On Mon, 30 Mar 2020 16:28:34 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> On Mon, 30 Mar 2020 13:50:35 +0200
+> SeongJae Park <sjpark@amazon.com> wrote:
 > 
->> On Fri, 27 Mar 2020 15:46:23 +0100
->> Auger Eric <eric.auger@redhat.com> wrote:
->>
->>> Hi Jacob,
->>>
->>> On 3/21/20 12:27 AM, Jacob Pan wrote:  
->>>> When Shared Virtual Memory is exposed to a guest via vIOMMU,
->>>> scalable IOTLB invalidation may be passed down from outside IOMMU
->>>> subsystems. This patch adds invalidation functions that can be
->>>> used for additional translation cache types.
->>>>
->>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>>>
->>>> ---
->>>> v9 -> v10:
->>>> Fix off by 1 in pasid device iotlb flush
->>>>
->>>> Address v7 missed review from Eric
->>>>
->>>> ---
->>>> ---
->>>>  drivers/iommu/dmar.c        | 36
->>>> ++++++++++++++++++++++++++++++++++++ drivers/iommu/intel-pasid.c |
->>>> 3 ++- include/linux/intel-iommu.h | 20 ++++++++++++++++----
->>>>  3 files changed, 54 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
->>>> index f77dae7ba7d4..4d6b7b5b37ee 100644
->>>> --- a/drivers/iommu/dmar.c
->>>> +++ b/drivers/iommu/dmar.c
->>>> @@ -1421,6 +1421,42 @@ void qi_flush_piotlb(struct intel_iommu
->>>> *iommu, u16 did, u32 pasid, u64 addr, qi_submit_sync(&desc,
->>>> iommu); }
->>>>  
->>>> +/* PASID-based device IOTLB Invalidate */
->>>> +void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid,
->>>> u16 pfsid,
->>>> +		u32 pasid,  u16 qdep, u64 addr, unsigned
->>>> size_order, u64 granu) +{
->>>> +	unsigned long mask = 1UL << (VTD_PAGE_SHIFT + size_order
->>>> - 1);
->>>> +	struct qi_desc desc = {.qw2 = 0, .qw3 = 0};
->>>> +
->>>> +	desc.qw0 = QI_DEV_EIOTLB_PASID(pasid) |
->>>> QI_DEV_EIOTLB_SID(sid) |
->>>> +		QI_DEV_EIOTLB_QDEP(qdep) | QI_DEIOTLB_TYPE |
->>>> +		QI_DEV_IOTLB_PFSID(pfsid);
->>>> +	desc.qw1 = QI_DEV_EIOTLB_GLOB(granu);
->>>> +
->>>> +	/*
->>>> +	 * If S bit is 0, we only flush a single page. If S bit
->>>> is set,
->>>> +	 * The least significant zero bit indicates the
->>>> invalidation address
->>>> +	 * range. VT-d spec 6.5.2.6.
->>>> +	 * e.g. address bit 12[0] indicates 8KB, 13[0] indicates
->>>> 16KB.
->>>> +	 * size order = 0 is PAGE_SIZE 4KB
->>>> +	 * Max Invs Pending (MIP) is set to 0 for now until we
->>>> have DIT in
->>>> +	 * ECAP.
->>>> +	 */
->>>> +	desc.qw1 |= addr & ~mask;
->>>> +	if (size_order)
->>>> +		desc.qw1 |= QI_DEV_EIOTLB_SIZE;
->>>> +
->>>> +	qi_submit_sync(&desc, iommu);
->>>> +}
->>>> +
->>>> +void qi_flush_pasid_cache(struct intel_iommu *iommu, u16 did, u64
->>>> granu, int pasid) +{
->>>> +	struct qi_desc desc = {.qw1 = 0, .qw2 = 0, .qw3 = 0};
->>>> +
->>>> +	desc.qw0 = QI_PC_PASID(pasid) | QI_PC_DID(did) |
->>>> QI_PC_GRAN(granu) | QI_PC_TYPE;
->>>> +	qi_submit_sync(&desc, iommu);
->>>> +}
->>>> +
->>>>  /*
->>>>   * Disable Queued Invalidation interface.
->>>>   */
->>>> diff --git a/drivers/iommu/intel-pasid.c
->>>> b/drivers/iommu/intel-pasid.c index 10c7856afc6b..9f6d07410722
->>>> 100644 --- a/drivers/iommu/intel-pasid.c
->>>> +++ b/drivers/iommu/intel-pasid.c
->>>> @@ -435,7 +435,8 @@ pasid_cache_invalidation_with_pasid(struct
->>>> intel_iommu *iommu, {
->>>>  	struct qi_desc desc;
->>>>  
->>>> -	desc.qw0 = QI_PC_DID(did) | QI_PC_PASID_SEL |
->>>> QI_PC_PASID(pasid);
->>>> +	desc.qw0 = QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
->>>> +		QI_PC_PASID(pasid) | QI_PC_TYPE;    
->>> Just a nit, this fix is not documented in the commit message.
->>>   
->> Thanks, I just sent out this fix separately. Will remove this from the
->> set.
->> https://lkml.org/lkml/2020/3/30/1065
->>
-> I just realized this is not a fix. since I redefined below macros such
-> that I could use them for granularity lookup without the QI_PC_TYPE.
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > DAMON[1] can be used as a primitive for data access awared memory management
+> > optimizations.  That said, users who want such optimizations should run DAMON,
+> > read the monitoring results, analyze it, plan a new memory management scheme,
+> > and apply the new scheme by themselves.  Such efforts will be inevitable for
+> > some complicated optimizations.
+> > 
+> > However, in many other cases, the users could simply want the system to apply a
+> > memory management action to a memory region of a specific size having a
+> > specific access frequency for a specific time.  For example, "page out a memory
+> > region larger than 100 MiB keeping only rare accesses more than 2 minutes", or
+> > "Do not use THP for a memory region larger than 2 MiB rarely accessed for more
+> > than 1 seconds".
+> > 
+> > This RFC patchset makes DAMON to handle such data access monitoring-based
+> > operation schemes.  With this change, users can do the data access awared
+> > optimizations by simply specifying their schemes to DAMON.
 > 
->  -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
->  -#define QI_PC_PASID_SEL		(QI_PC_TYPE | QI_PC_GRAN(1))
->  +/* PASID cache invalidation granu */
->  +#define QI_PC_ALL_PASIDS	0
->  +#define QI_PC_PASID_SEL		1
-ouah ok. So it improves code reading/consistency at least ;-)
+> 
+> Hi SeongJae,
+> 
+> I'm wondering if I'm misreading the results below or a data handling mixup
+> occured. See inline.
 
-Thanks
+Thank you for question, Jonathan!
 
-Eric
 > 
 > Thanks,
 > 
-> Jacob
+> Jonathan
 > 
->>> Besides
->>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->>>
->>> Thanks
->>>
->>> Eric
->>>   
->>>>  	desc.qw1 = 0;
->>>>  	desc.qw2 = 0;
->>>>  	desc.qw3 = 0;
->>>> diff --git a/include/linux/intel-iommu.h
->>>> b/include/linux/intel-iommu.h index 85b05120940e..43539713b3b3
->>>> 100644 --- a/include/linux/intel-iommu.h
->>>> +++ b/include/linux/intel-iommu.h
->>>> @@ -334,7 +334,7 @@ enum {
->>>>  #define QI_IOTLB_GRAN(gran) 	(((u64)gran) >>
->>>> (DMA_TLB_FLUSH_GRANU_OFFSET-4)) #define QI_IOTLB_ADDR(addr)
->>>> (((u64)addr) & VTD_PAGE_MASK) #define
->>>> QI_IOTLB_IH(ih)		(((u64)ih) << 6) -#define
->>>> QI_IOTLB_AM(am)		(((u8)am)) +#define
->>>> QI_IOTLB_AM(am)		(((u8)am) & 0x3f) 
->>>>  #define QI_CC_FM(fm)		(((u64)fm) << 48)
->>>>  #define QI_CC_SID(sid)		(((u64)sid) << 32)
->>>> @@ -353,16 +353,21 @@ enum {
->>>>  #define QI_PC_DID(did)		(((u64)did) << 16)
->>>>  #define QI_PC_GRAN(gran)	(((u64)gran) << 4)
->>>>  
->>>> -#define QI_PC_ALL_PASIDS	(QI_PC_TYPE | QI_PC_GRAN(0))
->>>> -#define QI_PC_PASID_SEL		(QI_PC_TYPE |
->>>> QI_PC_GRAN(1)) +/* PASID cache invalidation granu */
->>>> +#define QI_PC_ALL_PASIDS	0
->>>> +#define QI_PC_PASID_SEL		1
->>>>  
->>>>  #define QI_EIOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
->>>>  #define QI_EIOTLB_IH(ih)	(((u64)ih) << 6)
->>>> -#define QI_EIOTLB_AM(am)	(((u64)am))
->>>> +#define QI_EIOTLB_AM(am)	(((u64)am) & 0x3f)
->>>>  #define QI_EIOTLB_PASID(pasid) 	(((u64)pasid) << 32)
->>>>  #define QI_EIOTLB_DID(did)	(((u64)did) << 16)
->>>>  #define QI_EIOTLB_GRAN(gran) 	(((u64)gran) << 4)
->>>>  
->>>> +/* QI Dev-IOTLB inv granu */
->>>> +#define QI_DEV_IOTLB_GRAN_ALL		1
->>>> +#define QI_DEV_IOTLB_GRAN_PASID_SEL	0> +
->>>>  #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
->>>>  #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
->>>>  #define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
->>>> @@ -662,8 +667,15 @@ extern void qi_flush_iotlb(struct intel_iommu
->>>> *iommu, u16 did, u64 addr, unsigned int size_order, u64 type);
->>>>  extern void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16
->>>> sid, u16 pfsid, u16 qdep, u64 addr, unsigned mask);
->>>> +
->>>>  void qi_flush_piotlb(struct intel_iommu *iommu, u16 did, u32
->>>> pasid, u64 addr, unsigned long npages, bool ih);
->>>> +
->>>> +extern void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu,
->>>> u16 sid, u16 pfsid,
->>>> +			u32 pasid, u16 qdep, u64 addr, unsigned
->>>> size_order, u64 granu); +
->>>> +extern void qi_flush_pasid_cache(struct intel_iommu *iommu, u16
->>>> did, u64 granu, int pasid); +
->>>>  extern int qi_submit_sync(struct qi_desc *desc, struct
->>>> intel_iommu *iommu); 
->>>>  extern int dmar_ir_support(void);
->>>>     
->>>   
->>
->> [Jacob Pan]
+> > 
+[...]
+> > Results
+> > -------
+> > 
+> > Below two tables show the measurement results.  The runtimes are in seconds
+> > while the memory usages are in KiB.  Each configurations except 'orig' shows
+> > its overhead relative to 'orig' in percent within parenthesises.
+> > 
+> > runtime                 orig     rec      (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
+> > parsec3/blackscholes    107.594  107.956  (0.34)     106.750  (-0.78)    107.672  (0.07)     111.916  (4.02)    
+> > parsec3/bodytrack       79.230   79.368   (0.17)     78.908   (-0.41)    79.705   (0.60)     80.423   (1.50)    
+> > parsec3/canneal         142.831  143.810  (0.69)     123.530  (-13.51)   133.778  (-6.34)    144.998  (1.52)    
+> > parsec3/dedup           11.986   11.959   (-0.23)    11.762   (-1.87)    12.028   (0.35)     13.313   (11.07)   
+> > parsec3/facesim         210.125  209.007  (-0.53)    205.226  (-2.33)    207.766  (-1.12)    209.815  (-0.15)   
+> > parsec3/ferret          191.601  191.177  (-0.22)    190.420  (-0.62)    191.775  (0.09)     192.638  (0.54)    
+> > parsec3/fluidanimate    212.735  212.970  (0.11)     209.151  (-1.68)    211.904  (-0.39)    218.573  (2.74)    
+> > parsec3/freqmine        291.225  290.873  (-0.12)    289.258  (-0.68)    289.884  (-0.46)    298.373  (2.45)    
+> > parsec3/raytrace        118.289  119.586  (1.10)     119.045  (0.64)     119.064  (0.66)     137.919  (16.60)   
+> > parsec3/streamcluster   323.565  328.168  (1.42)     279.565  (-13.60)   287.452  (-11.16)   333.244  (2.99)    
+> > parsec3/swaptions       155.140  155.473  (0.21)     153.816  (-0.85)    156.423  (0.83)     156.237  (0.71)    
+> > parsec3/vips            58.979   59.311   (0.56)     58.733   (-0.42)    59.005   (0.04)     61.062   (3.53)    
+> > parsec3/x264            70.539   68.413   (-3.01)    64.760   (-8.19)    67.180   (-4.76)    68.103   (-3.45)   
+> > splash2x/barnes         80.414   81.751   (1.66)     73.585   (-8.49)    80.232   (-0.23)    115.753  (43.95)   
+> > splash2x/fft            33.902   34.111   (0.62)     24.228   (-28.53)   29.926   (-11.73)   44.438   (31.08)   
+> > splash2x/lu_cb          85.556   86.001   (0.52)     84.538   (-1.19)    86.000   (0.52)     91.447   (6.89)    
+> > splash2x/lu_ncb         93.399   93.652   (0.27)     90.463   (-3.14)    94.008   (0.65)     93.901   (0.54)    
+> > splash2x/ocean_cp       45.253   45.191   (-0.14)    43.049   (-4.87)    44.022   (-2.72)    46.588   (2.95)    
+> > splash2x/ocean_ncp      86.927   87.065   (0.16)     50.747   (-41.62)   86.855   (-0.08)    199.553  (129.57)  
+> > splash2x/radiosity      91.433   91.511   (0.09)     90.626   (-0.88)    91.865   (0.47)     104.524  (14.32)   
+> > splash2x/radix          31.923   32.023   (0.31)     25.194   (-21.08)   32.035   (0.35)     39.231   (22.89)   
+> > splash2x/raytrace       84.367   84.677   (0.37)     82.417   (-2.31)    83.505   (-1.02)    84.857   (0.58)    
+> > splash2x/volrend        87.499   87.495   (-0.00)    86.775   (-0.83)    87.311   (-0.21)    87.511   (0.01)    
+> > splash2x/water_nsquared 236.397  236.759  (0.15)     219.902  (-6.98)    224.228  (-5.15)    238.562  (0.92)    
+> > splash2x/water_spatial  89.646   89.767   (0.14)     89.735   (0.10)     90.347   (0.78)     103.585  (15.55)   
+> > total                   3020.570 3028.080 (0.25)     2852.190 (-5.57)    2953.960 (-2.21)    3276.550 (8.47)    
+> > 
+> > 
+> > memused.avg             orig         rec          (overhead) thp          (overhead) ethp         (overhead) prcl         (overhead)
+> > parsec3/blackscholes    1785916.600  1834201.400  (2.70)     1826249.200  (2.26)     1828079.200  (2.36)     1712210.600  (-4.13)   
+> > parsec3/bodytrack       1415049.400  1434317.600  (1.36)     1423715.000  (0.61)     1430392.600  (1.08)     1435136.000  (1.42)    
+> > parsec3/canneal         1043489.800  1058617.600  (1.45)     1040484.600  (-0.29)    1048664.800  (0.50)     1050280.000  (0.65)    
+> > parsec3/dedup           2414453.200  2458493.200  (1.82)     2411379.400  (-0.13)    2400516.000  (-0.58)    2461120.800  (1.93)    
+> > parsec3/facesim         541597.200   550097.400   (1.57)     544364.600   (0.51)     553240.000   (2.15)     552316.400   (1.98)    
+> > parsec3/ferret          317986.600   332346.000   (4.52)     320218.000   (0.70)     331085.000   (4.12)     330895.200   (4.06)    
+> > parsec3/fluidanimate    576183.400   585442.000   (1.61)     577780.200   (0.28)     587703.400   (2.00)     506501.000   (-12.09)  
+> > parsec3/freqmine        990869.200   997817.000   (0.70)     990350.400   (-0.05)    997669.000   (0.69)     763325.800   (-22.96)  
+> > parsec3/raytrace        1748370.800  1757109.200  (0.50)     1746153.800  (-0.13)    1757830.400  (0.54)     1581455.800  (-9.55)   
+> > parsec3/streamcluster   121521.800   140452.400   (15.58)    129725.400   (6.75)     132266.000   (8.84)     130558.200   (7.44)    
+> > parsec3/swaptions       15592.400    29018.800    (86.11)    14765.800    (-5.30)    27260.200    (74.83)    26631.600    (70.80)   
+> > parsec3/vips            2957567.600  2967993.800  (0.35)     2956623.200  (-0.03)    2973062.600  (0.52)     2951402.000  (-0.21)   
+> > parsec3/x264            3169012.400  3175048.800  (0.19)     3190345.400  (0.67)     3189353.000  (0.64)     3172924.200  (0.12)    
+> > splash2x/barnes         1209066.000  1213125.400  (0.34)     1217261.400  (0.68)     1209661.600  (0.05)     921041.800   (-23.82)  
+> > splash2x/fft            9359313.200  9195213.000  (-1.75)    9377562.400  (0.19)     9050957.600  (-3.29)    9517977.000  (1.70)    
+> > splash2x/lu_cb          514966.200   522939.400   (1.55)     520870.400   (1.15)     522635.000   (1.49)     329933.600   (-35.93)  
+> > splash2x/lu_ncb         514180.400   525974.800   (2.29)     521420.200   (1.41)     521063.600   (1.34)     523557.000   (1.82)    
+> > splash2x/ocean_cp       3346493.400  3288078.000  (-1.75)    3382253.800  (1.07)     3289477.600  (-1.70)    3260810.400  (-2.56)   
+> > splash2x/ocean_ncp      3909966.400  3882968.800  (-0.69)    7037196.000  (79.98)    4046363.400  (3.49)     3471452.400  (-11.22)  
+> > splash2x/radiosity      1471119.400  1470626.800  (-0.03)    1482604.200  (0.78)     1472718.400  (0.11)     546893.600   (-62.82)  
+> > splash2x/radix          1748360.800  1729163.400  (-1.10)    1371463.200  (-21.56)   1701993.600  (-2.65)    1817519.600  (3.96)    
+> > splash2x/raytrace       46670.000    60172.200    (28.93)    51901.600    (11.21)    60782.600    (30.24)    52644.800    (12.80)   
+> > splash2x/volrend        150666.600   167444.200   (11.14)    151335.200   (0.44)     163345.000   (8.41)     162760.000   (8.03)    
+> > splash2x/water_nsquared 45720.200    59422.400    (29.97)    46031.000    (0.68)     61801.400    (35.17)    62627.000    (36.98)   
+> > splash2x/water_spatial  663052.200   672855.800   (1.48)     665787.600   (0.41)     674696.200   (1.76)     471052.600   (-28.96)  
+> > total                   40077300.000 40108900.000 (0.08)     42997900.000 (7.29)     40032700.000 (-0.11)    37813000.000 (-5.65)   
+> > 
+> > 
+[...]
+> > 
+> > Efficient THP
+> > ~~~~~~~~~~~~~
+> > 
+> > THP 'always' enabled policy achieves 5.57% speedup but incurs 7.29% memory
+> > overhead.  It achieves 41.62% speedup in best case, but 79.98% memory overhead
+> > in worst case.  Interestingly, both the best and worst case are with
+> > 'splash2x/ocean_ncp').
 > 
-> [Jacob Pan]
+> The results above don't seems to support this any more? 
 > 
+> > runtime                 orig     rec      (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
+> > splash2x/ocean_ncp      86.927   87.065   (0.16)     50.747   (-41.62)   86.855   (-0.08)    199.553  (129.57) 
 
+Hmm... But, I don't get what point you meaning...  In the data, column of 'thp'
+means the THP 'always' enabled policy.  And, the following column shows the
+overhead of it compared to that of 'orig', in percent.  Thus, the data says THP
+'always' enabled policy enabled kernel consumes 50.747 seconds to finish
+splash2x/ocean_ncp, while THP disabled original kernel consumes 86.927 seconds.
+Thus, the overhead is ``(50.747 - 86.927) / 86.927 = -0.4162``.  In other
+words, 41.62% speedup.
+
+Also, 5.57% speedup and 7.29% memory overhead is for _total_.  This data shows
+it.
+
+> > runtime                 orig     rec      (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
+> > total                   3020.570 3028.080 (0.25)     2852.190 (-5.57)    2953.960 (-2.21)    3276.550 (8.47)    
+
+Maybe I made you confused by ambiguously saying this.  Sorry if so.  Or, if I'm
+still misunderstanding your point, please let me know.
+
+
+Thanks,
+SeongJae Park
+ 
+[...]
