@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5F2C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB973C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11945208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8956B2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645808;
-	bh=M2XYznMyPl5ilmTJqLhupO6Wszm9njVFjh1r0tDOHOI=;
+	s=default; t=1585645811;
+	bh=DF2vG2JENOKeJQt1F4AhXFxKkI4NDkRA7YESUG6WUw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Do8eBMJUnlMTuoFXWz6oeQG958phpaAApWxo09hudzvvSDu2y00psE0YMeMq2j2t4
-	 c6Z9/gPpaprOKjjz5Koauq9p3hbl3LDFbxOgyqyK0vd2ANv+AROB8NYL8oDSslG8al
-	 hErk7BatirIex4tGuUUkRuZk3YBy+bCLr4Gy2FQI=
+	b=Z5zc8Bl+KMGWIaPO94NR7jwNzqSPZY2wNP79tYfkGnz51nOxAhvzuE4dwAZ+ZOHXS
+	 /aOxU03Gvk/4zc1QgiaNov5zN+pRzrE71zPEHB9tg806EXdPrtOflyOBN1BjgRuO/v
+	 5U1xuyJ+kW3rAjq5if1nsvzsSoUCf9pyo17FLzec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731380AbgCaJKD (ORCPT
+        id S1731569AbgCaJKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53542 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730626AbgCaJKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:10:00 -0400
+        id S1731174AbgCaJKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:10:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD61208E0;
-        Tue, 31 Mar 2020 09:09:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31ED42072E;
+        Tue, 31 Mar 2020 09:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645800;
-        bh=M2XYznMyPl5ilmTJqLhupO6Wszm9njVFjh1r0tDOHOI=;
+        s=default; t=1585645806;
+        bh=DF2vG2JENOKeJQt1F4AhXFxKkI4NDkRA7YESUG6WUw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBEGZYjM4NaN84E8nLvy6UAD1Plw3a/Iy6IeIhA9RWQLHbjLJ+19GofFqeh371L/R
-         xPxl3ZDKbviLCAPRjXuLmqF3op2clmsPHMj8qvx9Fw0btO1+6HF2i6behXsAtIyiMm
-         XPr1/1pnDzO6eU9j+xrTlNYZofrUCFI4dg0QrMSk=
+        b=0Sq/CyxHs2SW9Bgl4FeNMopcj+qoR8oA1GR5fEWN3Bt7nkSNzMrjivZPWjVVu1kaY
+         lVpCZ9g0mDG+TCm0RLMQ2SBWgJgOkIYterrn7gKkdT/LAl3WhEflZmYhQ5tt50stNr
+         0v2OblOfskGfZQRIihvCAc4qIyeOwDOhoiW4ZRtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>, Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 169/170] media: xirlink_cit: add missing descriptor sanity checks
-Date:   Tue, 31 Mar 2020 10:59:43 +0200
-Message-Id: <20200331085440.578410893@linuxfoundation.org>
+Subject: [PATCH 5.5 155/170] media: flexcop-usb: fix endpoint sanity check
+Date:   Tue, 31 Mar 2020 10:59:29 +0200
+Message-Id: <20200331085439.486016511@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -63,80 +62,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit a246b4d547708f33ff4d4b9a7a5dbac741dc89d8 upstream.
+commit bca243b1ce0e46be26f7c63b5591dfbb41f558e5 upstream.
 
-Make sure to check that we have two alternate settings and at least one
-endpoint before accessing the second altsetting structure and
-dereferencing the endpoint arrays.
+commit 1b976fc6d684 ("media: b2c2-flexcop-usb: add sanity checking") added
+an endpoint sanity check to address a NULL-pointer dereference on probe.
+Unfortunately the check was done on the current altsetting which was later
+changed.
 
-This specifically avoids dereferencing NULL-pointers or corrupting
-memory when a device does not have the expected descriptors.
+Fix this by moving the sanity check to after the altsetting is changed.
 
-Note that the sanity check in cit_get_packet_size() is not redundant as
-the driver is mixing looking up altsettings by index and by number,
-which may not coincide.
-
-Fixes: 659fefa0eb17 ("V4L/DVB: gspca_xirlink_cit: Add support for camera with a bcd version of 0.01")
-Fixes: 59f8b0bf3c12 ("V4L/DVB: gspca_xirlink_cit: support bandwidth changing for devices with 1 alt setting")
-Cc: stable <stable@vger.kernel.org>     # 2.6.37
-Cc: Hans de Goede <hdegoede@redhat.com>
+Fixes: 1b976fc6d684 ("media: b2c2-flexcop-usb: add sanity checking")
+Cc: Oliver Neukum <oneukum@suse.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/xirlink_cit.c |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/media/usb/gspca/xirlink_cit.c
-+++ b/drivers/media/usb/gspca/xirlink_cit.c
-@@ -1442,6 +1442,9 @@ static int cit_get_packet_size(struct gs
- 		return -EIO;
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -511,6 +511,9 @@ static int flexcop_usb_init(struct flexc
+ 		return ret;
  	}
  
-+	if (alt->desc.bNumEndpoints < 1)
++	if (fc_usb->uintf->cur_altsetting->desc.bNumEndpoints < 1)
 +		return -ENODEV;
 +
- 	return le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- }
+ 	switch (fc_usb->udev->speed) {
+ 	case USB_SPEED_LOW:
+ 		err("cannot handle USB speed because it is too slow.");
+@@ -544,9 +547,6 @@ static int flexcop_usb_probe(struct usb_
+ 	struct flexcop_device *fc = NULL;
+ 	int ret;
  
-@@ -2626,6 +2629,7 @@ static int sd_start(struct gspca_dev *gs
- 
- static int sd_isoc_init(struct gspca_dev *gspca_dev)
- {
-+	struct usb_interface_cache *intfc;
- 	struct usb_host_interface *alt;
- 	int max_packet_size;
- 
-@@ -2641,8 +2645,17 @@ static int sd_isoc_init(struct gspca_dev
- 		break;
- 	}
- 
-+	intfc = gspca_dev->dev->actconfig->intf_cache[0];
-+
-+	if (intfc->num_altsetting < 2)
-+		return -ENODEV;
-+
-+	alt = &intfc->altsetting[1];
-+
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	/* Start isoc bandwidth "negotiation" at max isoc bandwidth */
--	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	alt->endpoint[0].desc.wMaxPacketSize = cpu_to_le16(max_packet_size);
- 
- 	return 0;
-@@ -2665,6 +2678,9 @@ static int sd_isoc_nego(struct gspca_dev
- 		break;
- 	}
- 
-+	/*
-+	 * Existence of altsetting and endpoint was verified in sd_isoc_init()
-+	 */
- 	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	if (packet_size <= min_packet_size)
+-	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
+-		return -ENODEV;
+-
+ 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
+ 		err("out of memory\n");
+ 		return -ENOMEM;
 
 
