@@ -2,181 +2,131 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118B1C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97692C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D299920787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6304F20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:40:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lY+or9IM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gB69s7S5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbgCaUgS (ORCPT
+        id S1729974AbgCaUk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:36:18 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45174 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgCaUgS (ORCPT
+        Tue, 31 Mar 2020 16:40:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38358 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbgCaUk6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:36:18 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v4so18451243lfo.12
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 13:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0mi/0DRDkAum6TzV6/ZOqmtHtRb5Bi7gN5ocmdruvlA=;
-        b=lY+or9IMM0v+a4eR3bqqOquIhjMv6zd1VGRJ5G6tJOzkSMw47bVJhZEGQL2Jkz5le2
-         ExCm51xLQ/I9QBGica/BnEtXmBQuSbI2l8/f+mNPA8ePvaIy+F9Y0V89fxZCzfvP0zG8
-         7f7ygV7mWd8GiPAQLmqr/lE+ENfXKyvabAHA0b+KcREEX3kIOmTxrlKhO/F5SCRoodwl
-         q9VxPb9739Y05LN1Yz5vQuM83mybxZ+Tu3+URdsyur2375YDdymFvXmIcBa6TVHymeQV
-         ryFr8E9k7B8rfPEtOzK0PEb8goMQscDaunqyVKfbRDQv8j5UQx5bywx0uPMALdoZiKeg
-         v41A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0mi/0DRDkAum6TzV6/ZOqmtHtRb5Bi7gN5ocmdruvlA=;
-        b=nk2ZMEc/CVlEiVZDv2bv7t86L+RFvsmbGPq+NmEODUbED6BSUsDXjVUCoe83Fy62kC
-         CVe20DAfZ0WdGNPycLYR0VuBasMtDYxH7T4SlxJI5s7Dclip20MwNDC1TEwf23vZxaFx
-         v2X+491TTonYzMgngRkGliF5j0ZEdH0R/KcRL/kHtKISgpIc5IXFTsdfOxqhCZ1oOy6t
-         0koIWsrx61nFWMfL43mYL8TAlLxi2XUoUc/FC2HOLsXdONkoWX7sMK6LSF6vLzFD+NcL
-         SAEQQl/dn5hDCEeSUaGt06Ulj9bVoshPU4KaQ5xu6Ua5KtADPZjcYWUVFR29Ps+rGgbb
-         eUAg==
-X-Gm-Message-State: AGi0Pua8cALKcKtNCYFGwsyLzPSJjmQ9AzTEqS0L7rvAv+MulRqmpxfA
-        MSU0OniyPragSjVUJTIk/ozuumi+JoH+ts4oG/q4Zg==
-X-Google-Smtp-Source: APiQypKL0CnqT/WSQkrPHGw03SMh9fydmwsQsO54VHzAOp6Hm+QlbmqqQBmC1SeoArAR1SsELbPvScFXM7dekGI8wm0=
-X-Received: by 2002:a19:4843:: with SMTP id v64mr12135388lfa.171.1585686975165;
- Tue, 31 Mar 2020 13:36:15 -0700 (PDT)
+        Tue, 31 Mar 2020 16:40:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6tH+zODD2TY2pB32niBjLq/y3AZwAV0LHkQ0NlUifq8=; b=gB69s7S5OwB45mm/PZKHmhMo4W
+        kxWuFeo47HVg2/SumgcIlbH3J3gCLNoi5H4Qx+12uT8nhmrghvzzAndedpoANR8dX9VLYmdVQJXQL
+        T4SrmZqD1eX51M5gVjUg2Rn3SOs+EMkExA7k6KHVoOykgaoC57FnGbGoSDTirKCIokKLuy4mhfa/f
+        mpQcTkd9HjviMuNsQRF6BeyQMyipCkBnkrL6l9t8SZP09VbsX6UHaYlZhsdbmmn/DoW9LE90ubHtQ
+        Md7CBlwUYNfcH8bQT5YPVDtTYFamCDL1EmTkqcrxWmyFuQaU3Ta676Uqf8YANfMSDgKmNZ2adnf3G
+        0hKtcjDw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJNgo-0003iR-1h; Tue, 31 Mar 2020 20:40:50 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D918A98354A; Tue, 31 Mar 2020 22:40:47 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 22:40:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+Message-ID: <20200331204047.GF2452@worktop.programming.kicks-ass.net>
+References: <20200326113049.GD20696@hirez.programming.kicks-ass.net>
+ <20200326135620.tlmof5fa7p5wct62@treble>
+ <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+ <20200326195718.GD2452@worktop.programming.kicks-ass.net>
+ <20200327010001.i3kebxb4um422ycb@treble>
+ <20200330170200.GU20713@hirez.programming.kicks-ass.net>
+ <20200330190205.k5ssixd5hpshpjjq@treble>
+ <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+ <20200331111652.GH20760@hirez.programming.kicks-ass.net>
+ <20200331202315.zialorhlxmml6ec7@treble>
 MIME-Version: 1.0
-References: <1585613987-8453-1-git-send-email-alan.mikhak@sifive.com> <20200331201225.GA19649@google.com>
-In-Reply-To: <20200331201225.GA19649@google.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Tue, 31 Mar 2020 13:36:04 -0700
-Message-ID: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331202315.zialorhlxmml6ec7@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> $ git log --oneline drivers/pci/controller/dwc/pcie-designware-host.c
-> 7fe71aa84b43 ("PCI: dwc: Use pci_parse_request_of_pci_ranges()")
-> 1137e61dcb99 ("PCI: dwc: Fix find_next_bit() usage")
-> 0b24134f7888 ("PCI: dwc: Add validation that PCIe core is set to correct mode")
-> 3924bc2fd1b6 ("PCI: dwc: Group DBI registers writes requiring unlocking")
-> ca98329d3b58 ("PCI: dwc: Export APIs to support .remove() implementation")
-> 9d071cade30a ("PCI: dwc: Add API support to de-initialize host")
-> fe23274f72f4 ("PCI: dwc: Save root bus for driver remove hooks")
->
-> Please make yours match.  Please mention something about the 32-bit
-> limit instead of just "being too big".
->
-> Wrap the commit log to 75 columns to be consistent with the rest of
-> the history.
->
+On Tue, Mar 31, 2020 at 03:23:15PM -0500, Josh Poimboeuf wrote:
+> On Tue, Mar 31, 2020 at 01:16:52PM +0200, Peter Zijlstra wrote:
+> > Subject: objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+> > 
+> > This replaces the SAVE/RESTORE hints with a RET_OFFSET hint that applies
+> > to the following instructions:
+> > 
+> >  - any instruction that terminates a function, like: RETURN and sibling
+> >    calls. It allows the stack-frame to be off by @sp_offset, ie. it
+> >    allows stuffing the return stack.
+> > 
+> >  - EXCEPTION_RETURN (a new INSN_type that splits IRET out of
+> >    CONTEXT_SWITCH) and here it denotes a @sp_offset sized POP and makes
+> >    the instruction continue.
+> 
+> Looking closer, I see how my UNWIND_HINT_ADJUST idea doesn't work for
+> the ftrace_regs_caller() case.  The ORC data is actually correct there.
+> So basically we need a way to tell objtool to be quiet.
 
-Thanks Bjorn for your comments. Will correct in v2.
+Right.
 
-> On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
-> > Output a warning for MEM resource size with
-> > non-zero upper 32-bits.
-> >
-> > ATU programming functions limit the size of
-> > the translated region to 4GB by using a u32 size
-> > parameter. Function dw_pcie_prog_outbound_atu()
-> > does not program the upper 32-bit ATU limit
-> > register. This may result in undefined behavior
-> > for resource sizes with non-zero upper 32-bits.
-> >
-> > For example, a 128GB address space starting at
-> > physical CPU address of 0x2000000000 with size of
-> > 0x2000000000 needs the following values programmed
-> > into the lower and upper 32-bit limit registers:
-> >  0x3fffffff in the upper 32-bit limit register
-> >  0xffffffff in the lower 32-bit limit register
-> >
-> > Currently, only the lower 32-bit limit register is
-> > programmed with a value of 0xffffffff but the upper
-> > 32-bit limit register is not being programmed.
-> > As a result, the upper 32-bit limit register remains
-> > at its default value after reset of 0x0. This would
-> > be a problem for a 128GB PCIe space because in
-> > effect its size gets reduced to 4GB.
-> >
-> > ATU programming functions can be changed to
-> > specify a u64 size parameter for the translated
-> > region. Along with this change, the internal
-> > calculation of the limit address, the address of
-> > the last byte in the translated region, needs to
-> > change such that both the lower 32-bit and upper
-> > 32-bit limit registers can be programmed correctly.
-> >
-> > Changing the ATU programming functions is high
-> > impact. Without change, this issue can go
-> > unnoticed. A warning may prompt the user to
-> > look into possible issues.
->
-> So this is basically a warning, and we could actually *fix* the
-> problem with more effort?  I vote for the fix.
+> I now understand what you're trying to do with the RET_TAIL thing, and I
+> guess it's ok for the ftrace case.  But I'd rather an UNWIND_HINT_IGNORE
+> before the tail cail, which would tell objtool to just silence the tail
+> call warning.  It's simpler for the user to understand, it's simpler
+> logic in objtool, and I think an "ignore warnings for the next insn"
+> hint would be more generally applicable anyway.
 
-The fix would impact all PCIe drivers that depend on dwc.
-I would have no way of validating such a fix without
-breaking it for everyone let alone the bandwidth it needs.
-All drivers that depend on dwc seem to be currently happy
-with the u32 size limit. I suggest we add the warning but
-keep this issue in mind for a solution that allows existing
-PCe drivers to phase into the fix on their own individual
-schedules, if they need to.
+I like how this is specific on how far the stack can be off, as opposed
+so say 'ignore any warning on this instruction'.
 
->
-> > This limitation also means that multiple ATUs
-> > would need to be used to map larger regions.
-> >
-> > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 395feb8ca051..37a8c71ef89a 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >       struct pci_bus *child;
-> >       struct pci_host_bridge *bridge;
-> >       struct resource *cfg_res;
-> > +     resource_size_t mem_size;
-> >       u32 hdr_type;
-> >       int ret;
-> >
-> > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> >               case IORESOURCE_MEM:
-> >                       pp->mem = win->res;
-> >                       pp->mem->name = "MEM";
-> > -                     pp->mem_size = resource_size(pp->mem);
-> > +                     mem_size = resource_size(pp->mem);
-> > +                     if (upper_32_bits(mem_size))
-> > +                             dev_warn(dev, "MEM resource size too big\n");
-> > +                     pp->mem_size = mem_size;
-> >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> >                       break;
-> >               case 0:
-> > --
-> > 2.7.4
-> >
+Because by saying this RET should be +8, we'll still get a warning when
+this is not the case (and in fact I should strengthen the patch to
+implement that).
+
+Also, you don't want to suppress any other valid warning at that
+instruction.
+
+Furthermore, I really don't think we ought to worry about ease-of-use
+here, there's really not that many people writing x86 assembly.
+
+> But also... the RET_OFFSET usage for sync_core() *really* bugs me.
+
+Fair enough.
+
+> I know you said it's like an indirect tail call with a bigger frame, but
+> that's kind of stretching it because the function frame is still there.
+> 
+> And objtool doesn't treat it like a tail call at all.  In fact, it
+> handles it *completely* differently from the normal ret-tail-call case.
+> Instead of silencing a tail call warning, it adjusts the stack offset
+> and continues the code path.
+> 
+> This basically adds *two* new hint types, while trying to call them the
+> same thing.  There's no overlapping functionality between them in
+> objtool, other than the use of the same insn->ret_offset variable.  But
+> it's two distinct functionalities, depending on the context (return/tail
+> vs IRETQ).
+
+I'm not against adding a second/separate hint for this. In fact, I
+almost considered teaching objtool how to interpret the whole IRET frame
+so that we can do it without hints. It's just that that's too much code
+for this one case.
+
+HINT_IRET_SELF ?
