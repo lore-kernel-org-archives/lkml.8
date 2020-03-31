@@ -2,120 +2,103 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A24EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01366C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57812072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="rMSDw//j"
+	by mail.kernel.org (Postfix) with ESMTP id D1E392072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgCaHSZ (ORCPT
+        id S1729991AbgCaHVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:18:25 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:41590 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729819AbgCaHSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:18:25 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1004)
-        id 74EC520B46F0; Tue, 31 Mar 2020 00:18:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 74EC520B46F0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-        s=default; t=1585639104;
-        bh=Zh/cLcI+Ah3wcuYsIdpQ01rlvOu5+wS8MBqhfVdQiOU=;
-        h=From:To:Cc:Subject:Date:Reply-To:From;
-        b=rMSDw//jQGt+IvEV719WbBHeCl6MGjNajTHyFvacQFtTY/DT9pxa2zKdgFcSYWGZe
-         n/k3RKEQjEGghDm8r4kt3bS7kywxAXjsM2h9ThIFMnHaY2GKaZRYnzf2zyXA3w3/8H
-         g3Mjy6gf1Jso3yxSLm1ri6gj53hdeWhjeO1hVHCE=
-From:   longli@linuxonhyperv.com
-To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
-Cc:     Long Li <longli@microsoft.com>
-Subject: [PATCH] cifs: smbd: Update receive credits before sending and deal with credits roll back on failure before sending
-Date:   Tue, 31 Mar 2020 00:18:21 -0700
-Message-Id: <1585639101-117035-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: longli@microsoft.com
+        Tue, 31 Mar 2020 03:21:07 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:60752 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726216AbgCaHVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:21:06 -0400
+Received: from [10.130.0.79] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax9ulc74JetQAiAA--.20S3;
+        Tue, 31 Mar 2020 15:21:01 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Loongson: Use CONFIG_NR_CPUS_DEFAULT_64 to support
+ more CPUs
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+References: <1585638006-19439-1-git-send-email-yangtiezhu@loongson.cn>
+ <6A188705-D65C-4500-BD26-EB944EEF0B21@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <c4520c91-5285-ca8d-c310-5354f3ef3cba@loongson.cn>
+Date:   Tue, 31 Mar 2020 15:21:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <6A188705-D65C-4500-BD26-EB944EEF0B21@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Ax9ulc74JetQAiAA--.20S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr43WrWxGr48JF1kWw45ZFb_yoW8Jw4Upr
+        4kKan2gr4v9F1YkFZYyr93urW3Zr93KrZ3Gr10yry7CF98u34DGrnYgwnFgFWUZr4kta1I
+        9F93CryYkayUCaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+        xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7Mxk0xIA0c2IEe2xFo4CE
+        bIxvr21lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JU9o7NUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Long Li <longli@microsoft.com>
+On 03/31/2020 03:05 PM, Jiaxun Yang wrote:
 
-Recevie credits should be updated before sending the packet, not
-before a work is scheduled. Also, the value needs roll back if
-something fails and cannot send.
+>
+> 于 2020年3月31日 GMT+08:00 下午3:00:06, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
+>> When I update the mainline kernel on the Loongson 2-way platform which
+>> has 8 CPUs, it only shows 4 CPUs due to NR_CPUS is 4, this is obviously
+>> wrong.
+>>
+>> In order to support more CPUs on the Loongson platform, it is better
+>> to use CONFIG_NR_CPUS_DEFAULT_64 instead of CONFIG_NR_CPUS_DEFAULT_4
+>> to specify the maximum number of CPUs which the kernel will support.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Would 16 be a better option?
+> We have only 4 way platform.
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- fs/cifs/smbdirect.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+There maybe have more than 4 cores per CPU or more than 4 ways
+in the future, so I think 64 is better, otherwise we need to
+modify this configuration once more.
 
-diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
-index c7ef2d7ce0ef..bdae6d41748c 100644
---- a/fs/cifs/smbdirect.c
-+++ b/fs/cifs/smbdirect.c
-@@ -450,8 +450,6 @@ static void smbd_post_send_credits(struct work_struct *work)
- 	info->new_credits_offered += ret;
- 	spin_unlock(&info->lock_new_credits_offered);
- 
--	atomic_add(ret, &info->receive_credits);
--
- 	/* Check if we can post new receive and grant credits to peer */
- 	check_and_send_immediate(info);
- }
-@@ -840,7 +838,7 @@ static int smbd_create_header(struct smbd_connection *info,
- 	request = mempool_alloc(info->request_mempool, GFP_KERNEL);
- 	if (!request) {
- 		rc = -ENOMEM;
--		goto err;
-+		goto err_alloc;
- 	}
- 
- 	request->info = info;
-@@ -851,6 +849,7 @@ static int smbd_create_header(struct smbd_connection *info,
- 	packet->credits_granted =
- 		cpu_to_le16(manage_credits_prior_sending(info));
- 	info->send_immediate = false;
-+	atomic_add(packet->credits_granted, &info->receive_credits);
- 
- 	packet->flags = 0;
- 	if (manage_keep_alive_before_sending(info))
-@@ -887,7 +886,7 @@ static int smbd_create_header(struct smbd_connection *info,
- 	if (ib_dma_mapping_error(info->id->device, request->sge[0].addr)) {
- 		mempool_free(request, info->request_mempool);
- 		rc = -EIO;
--		goto err;
-+		goto err_dma;
- 	}
- 
- 	request->sge[0].length = header_length;
-@@ -896,8 +895,17 @@ static int smbd_create_header(struct smbd_connection *info,
- 	*request_out = request;
- 	return 0;
- 
--err:
-+err_dma:
-+	/* roll back receive credits */
-+	spin_lock(&info->lock_new_credits_offered);
-+	info->new_credits_offered += packet->credits_granted;
-+	spin_unlock(&info->lock_new_credits_offered);
-+	atomic_sub(packet->credits_granted, &info->receive_credits);
-+
-+err_alloc:
-+	/* roll back send credits */
- 	atomic_inc(&info->send_credits);
-+
- 	return rc;
- }
- 
--- 
-2.17.1
+>
+>> ---
+>> arch/mips/Kconfig | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>> index a1f973c..a0b11f5 100644
+>> --- a/arch/mips/Kconfig
+>> +++ b/arch/mips/Kconfig
+>> @@ -475,7 +475,7 @@ config MACH_LOONGSON64
+>> 	select ISA
+>> 	select I8259
+>> 	select IRQ_MIPS_CPU
+>> -	select NR_CPUS_DEFAULT_4
+>> +	select NR_CPUS_DEFAULT_64
+>> 	select USE_GENERIC_EARLY_PRINTK_8250
+>> 	select SYS_HAS_CPU_LOONGSON64
+>> 	select SYS_HAS_EARLY_PRINTK
 
