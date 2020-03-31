@@ -2,52 +2,51 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D65C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57510C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A96A20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A28820658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646576;
-	bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
+	s=default; t=1585646585;
+	bh=53iqeY/2ZUDVwxvV3ybd+GcjsI/fnlbrKFLdNi/ocoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NwgE0CYdH6mwEDfLUAeiyMQ2MiNAOsr/tQ0JO6grjnc4yVPAy5v2vG82SEFMmhhb4
-	 cvSdo/mZvhCiJj3M1E0wbNokggOGHd89yqYjqaEKnhI7P0UB8Acq9dAyWqynU0V6pO
-	 zpMSQUbDMPHvPpFKs5ME3IPFkimSm3/jsavR0Bv4=
+	b=IojObjDlKd0QccLRHnDk28fgNv2krGgrDurcrk5syrly7e1WcwfXKW+pnXMx5SnRG
+	 5t2uM36k/GXe91n0PaBYmW8wSxEu2sYzqaQgcS2B8tYRjwmLbFAFPvlMDb79QCMsvZ
+	 DpwFWjExMmWtJJuYu1WoqxBYJxveiXWnKM7G98tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbgCaJWy (ORCPT
+        id S1730904AbgCaJEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:22:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46322 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730582AbgCaJFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:05:22 -0400
+        id S1730655AbgCaJD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC74208E0;
-        Tue, 31 Mar 2020 09:05:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DF7A20787;
+        Tue, 31 Mar 2020 09:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645521;
-        bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
+        s=default; t=1585645436;
+        bh=53iqeY/2ZUDVwxvV3ybd+GcjsI/fnlbrKFLdNi/ocoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G+Zc8guvaoYtBU2j6m14puYYp6EtlW7lHbQcb9XKgE1jUaMvAK7LjxhrwL5/ENjT/
-         +ZGawwHrHezP4Cj69GH4wqalIiVvIZQ6oUg4XQqmwFcyolSw2crD4N2tvloJf78A70
-         XrpJmm3pnjodrl/RQl2Pa+jkKElcI7A0cNR8nESU=
+        b=UueZNbPiXrsqdqUvTcrUkHRtb5vTje5czTNfErHTTLqeaK9UCoYLURXee3UGGEo6c
+         kak5i8mwavWzMj/J/5JbzoC4i/j+NDeJQ7L+rNG1kumj4E3i1dN5H9dBguzoWwF9Pn
+         5mo+IvEUE8IKF0BR7wfBA5SU4WR2cYIQFq5rOZ78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Megha Dey <megha.dey@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 079/170] iommu/vt-d: Fix debugfs register reads
-Date:   Tue, 31 Mar 2020 10:58:13 +0200
-Message-Id: <20200331085432.702392801@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 053/170] hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
+Date:   Tue, 31 Mar 2020 10:57:47 +0200
+Message-Id: <20200331085430.058683605@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,123 +59,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Megha Dey <megha.dey@linux.intel.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit ba3b01d7a6f4ab9f8a0557044c9a7678f64ae070 ]
+[ Upstream commit 173756b86803655d70af7732079b3aa935e6ab68 ]
 
-Commit 6825d3ea6cde ("iommu/vt-d: Add debugfs support to show register
-contents") dumps the register contents for all IOMMU devices.
+hsr_get_node_{list/status}() are not under rtnl_lock() because
+they are callback functions of generic netlink.
+But they use __dev_get_by_index() without rtnl_lock().
+So, it would use unsafe data.
+In order to fix it, rcu_read_lock() and dev_get_by_index_rcu()
+are used instead of __dev_get_by_index().
 
-Currently, a 64 bit read(dmar_readq) is done for all the IOMMU registers,
-even though some of the registers are 32 bits, which is incorrect.
-
-Use the correct read function variant (dmar_readl/dmar_readq) while
-reading the contents of 32/64 bit registers respectively.
-
-Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
-Link: https://lore.kernel.org/r/1583784587-26126-2-git-send-email-megha.dey@linux.intel.com
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iommu/intel-iommu-debugfs.c | 40 ++++++++++++++++++-----------
- include/linux/intel-iommu.h         |  2 ++
- 2 files changed, 27 insertions(+), 15 deletions(-)
+ net/hsr/hsr_framereg.c |    9 ++-------
+ net/hsr/hsr_netlink.c  |   39 +++++++++++++++++++++------------------
+ 2 files changed, 23 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel-iommu-debugfs.c
-index 471f05d452e01..80378c10dd77a 100644
---- a/drivers/iommu/intel-iommu-debugfs.c
-+++ b/drivers/iommu/intel-iommu-debugfs.c
-@@ -32,38 +32,42 @@ struct iommu_regset {
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -482,12 +482,9 @@ int hsr_get_node_data(struct hsr_priv *h
+ 	struct hsr_port *port;
+ 	unsigned long tdiff;
  
- #define IOMMU_REGSET_ENTRY(_reg_)					\
- 	{ DMAR_##_reg_##_REG, __stringify(_reg_) }
--static const struct iommu_regset iommu_regs[] = {
+-	rcu_read_lock();
+ 	node = find_node_by_addr_A(&hsr->node_db, addr);
+-	if (!node) {
+-		rcu_read_unlock();
+-		return -ENOENT;	/* No such entry */
+-	}
++	if (!node)
++		return -ENOENT;
+ 
+ 	ether_addr_copy(addr_b, node->macaddress_B);
+ 
+@@ -522,7 +519,5 @@ int hsr_get_node_data(struct hsr_priv *h
+ 		*addr_b_ifindex = -1;
+ 	}
+ 
+-	rcu_read_unlock();
+-
+ 	return 0;
+ }
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -251,15 +251,16 @@ static int hsr_get_node_status(struct sk
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-				     nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -313,12 +314,10 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF1_SEQ, hsr_node_if1_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_A);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF1_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
+@@ -328,20 +327,22 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF2_SEQ, hsr_node_if2_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_B);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF2_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
++	rcu_read_unlock();
 +
-+static const struct iommu_regset iommu_regs_32[] = {
- 	IOMMU_REGSET_ENTRY(VER),
--	IOMMU_REGSET_ENTRY(CAP),
--	IOMMU_REGSET_ENTRY(ECAP),
- 	IOMMU_REGSET_ENTRY(GCMD),
- 	IOMMU_REGSET_ENTRY(GSTS),
--	IOMMU_REGSET_ENTRY(RTADDR),
--	IOMMU_REGSET_ENTRY(CCMD),
- 	IOMMU_REGSET_ENTRY(FSTS),
- 	IOMMU_REGSET_ENTRY(FECTL),
- 	IOMMU_REGSET_ENTRY(FEDATA),
- 	IOMMU_REGSET_ENTRY(FEADDR),
- 	IOMMU_REGSET_ENTRY(FEUADDR),
--	IOMMU_REGSET_ENTRY(AFLOG),
- 	IOMMU_REGSET_ENTRY(PMEN),
- 	IOMMU_REGSET_ENTRY(PLMBASE),
- 	IOMMU_REGSET_ENTRY(PLMLIMIT),
-+	IOMMU_REGSET_ENTRY(ICS),
-+	IOMMU_REGSET_ENTRY(PRS),
-+	IOMMU_REGSET_ENTRY(PECTL),
-+	IOMMU_REGSET_ENTRY(PEDATA),
-+	IOMMU_REGSET_ENTRY(PEADDR),
-+	IOMMU_REGSET_ENTRY(PEUADDR),
-+};
-+
-+static const struct iommu_regset iommu_regs_64[] = {
-+	IOMMU_REGSET_ENTRY(CAP),
-+	IOMMU_REGSET_ENTRY(ECAP),
-+	IOMMU_REGSET_ENTRY(RTADDR),
-+	IOMMU_REGSET_ENTRY(CCMD),
-+	IOMMU_REGSET_ENTRY(AFLOG),
- 	IOMMU_REGSET_ENTRY(PHMBASE),
- 	IOMMU_REGSET_ENTRY(PHMLIMIT),
- 	IOMMU_REGSET_ENTRY(IQH),
- 	IOMMU_REGSET_ENTRY(IQT),
- 	IOMMU_REGSET_ENTRY(IQA),
--	IOMMU_REGSET_ENTRY(ICS),
- 	IOMMU_REGSET_ENTRY(IRTA),
- 	IOMMU_REGSET_ENTRY(PQH),
- 	IOMMU_REGSET_ENTRY(PQT),
- 	IOMMU_REGSET_ENTRY(PQA),
--	IOMMU_REGSET_ENTRY(PRS),
--	IOMMU_REGSET_ENTRY(PECTL),
--	IOMMU_REGSET_ENTRY(PEDATA),
--	IOMMU_REGSET_ENTRY(PEADDR),
--	IOMMU_REGSET_ENTRY(PEUADDR),
- 	IOMMU_REGSET_ENTRY(MTRRCAP),
- 	IOMMU_REGSET_ENTRY(MTRRDEF),
- 	IOMMU_REGSET_ENTRY(MTRR_FIX64K_00000),
-@@ -126,10 +130,16 @@ static int iommu_regset_show(struct seq_file *m, void *unused)
- 		 * by adding the offset to the pointer (virtual address).
- 		 */
- 		raw_spin_lock_irqsave(&iommu->register_lock, flag);
--		for (i = 0 ; i < ARRAY_SIZE(iommu_regs); i++) {
--			value = dmar_readq(iommu->reg + iommu_regs[i].offset);
-+		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_32); i++) {
-+			value = dmar_readl(iommu->reg + iommu_regs_32[i].offset);
-+			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
-+				   iommu_regs_32[i].regs, iommu_regs_32[i].offset,
-+				   value);
-+		}
-+		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_64); i++) {
-+			value = dmar_readq(iommu->reg + iommu_regs_64[i].offset);
- 			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
--				   iommu_regs[i].regs, iommu_regs[i].offset,
-+				   iommu_regs_64[i].regs, iommu_regs_64[i].offset,
- 				   value);
- 		}
- 		raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 6d8bf4bdf240d..1e5dad8b8e59b 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -120,6 +120,8 @@
+ 	genlmsg_end(skb_out, msg_head);
+ 	genlmsg_unicast(genl_info_net(info), skb_out, info->snd_portid);
  
- #define dmar_readq(a) readq(a)
- #define dmar_writeq(a,v) writeq(v,a)
-+#define dmar_readl(a) readl(a)
-+#define dmar_writel(a, v) writel(v, a)
+ 	return 0;
  
- #define DMAR_VER_MAJOR(v)		(((v) & 0xf0) >> 4)
- #define DMAR_VER_MINOR(v)		((v) & 0x0f)
--- 
-2.20.1
-
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL, NULL);
+ 	return 0;
+@@ -351,6 +352,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
+@@ -377,15 +379,16 @@ static int hsr_get_node_list(struct sk_b
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-				     nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -405,14 +408,11 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	hsr = netdev_priv(hsr_dev);
+ 
+-	rcu_read_lock();
+ 	pos = hsr_get_next_node(hsr, NULL, addr);
+ 	while (pos) {
+ 		res = nla_put(skb_out, HSR_A_NODE_ADDR, ETH_ALEN, addr);
+-		if (res < 0) {
+-			rcu_read_unlock();
++		if (res < 0)
+ 			goto nla_put_failure;
+-		}
+ 		pos = hsr_get_next_node(hsr, pos, addr);
+ 	}
+ 	rcu_read_unlock();
+@@ -422,6 +422,8 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL, NULL);
+ 	return 0;
+@@ -431,6 +433,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
 
 
