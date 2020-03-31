@@ -2,51 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C53C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9579EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F38E20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D42208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646014;
-	bh=nTxRlZrbXFqAbJBx9TxjT33/QaswKJOnZ4Fdd6jn2Cw=;
+	s=default; t=1585646017;
+	bh=7JpCD9VtIEeJ6UaCsPkEJZJ8P/6gANcJ4xXWAYDo6/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vzr/94h7dYxzX4evVvOYmn3FcX4QN+WHIO2VKq5F247M6osWHgwYoMIYiQwGNwFLN
-	 bStAQLgIt8hLn/JU6KLvLoshl9LULCAA90J4bSc5k5dndnm8Yjn8lLCRZDCLFUdJYG
-	 gbj6RT7O5auv1uXJL7ppVvMQSCM7qcN87IbiNX/4=
+	b=SooU5b3B59LocLZnRWkbxNipL40IpWF8M3NfNtVyg69JfYMBfGvIG3/uTg1gth1K/
+	 hhckoBshq8yTzImvFqOVU63xjlRRLdCCv12ZSESIp/4K4Zt6zR6y7NUo3XILtonkDo
+	 xREM6r7mu7eP8ugvYS1+R4R6KWa83dp3Btd7QoEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbgCaJNd (ORCPT
+        id S1730384AbgCaJN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60998 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbgCaJNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:31 -0400
+        id S1730519AbgCaJNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C2B12072E;
-        Tue, 31 Mar 2020 09:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C57220675;
+        Tue, 31 Mar 2020 09:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646010;
-        bh=nTxRlZrbXFqAbJBx9TxjT33/QaswKJOnZ4Fdd6jn2Cw=;
+        s=default; t=1585646005;
+        bh=7JpCD9VtIEeJ6UaCsPkEJZJ8P/6gANcJ4xXWAYDo6/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R65iZIY3ipqzG4HwcpiJL1cZeIFEyvdd0H/dzZLOCt4lSHcXdqLo/u9fuI2zIhHel
-         Y46le8abIaeTrA2JiX6BuVLu/8P0SeuRABKLurRP1QBgTpscydgzwKGNIGvr6fCkeG
-         9cw35JgDIGP/onDQQ+K/LoamXr29GBoW4+GcMMyw=
+        b=Pd4CXrD4ZTdF7vdq68hz0tBSPJmkyz/oWDj1DjtjPG8rzfeEBSLqtK23/dMosi/ga
+         v4ut0e2vROdPkdycxEzRm9qCLs8DJHnxhwRsj4rqRtusMClf7/t3/hBk6IuHxKQBpA
+         t5IQbyZhpBaqLKFDC8HmmRZKYvJVwAY6pzCVnOIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/155] cgroup-v1: cgroup_pidlist_next should update position index
-Date:   Tue, 31 Mar 2020 10:58:14 +0200
-Message-Id: <20200331085424.594555371@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 052/155] net/mlx5e: Fix ICOSQ recovery flow with Striding RQ
+Date:   Tue, 31 Mar 2020 10:58:12 +0200
+Message-Id: <20200331085424.365457865@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,60 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit db8dd9697238be70a6b4f9d0284cd89f59c0e070 ]
+[ Upstream commit e239c6d686e1c37fb2ab143162dfb57471a8643f ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+In striding RQ mode, the buffers of an RX WQE are first
+prepared and posted to the HW using a UMR WQEs via the ICOSQ.
+We maintain the state of these in-progress WQEs in the RQ
+SW struct.
 
- # mount | grep cgroup
- # dd if=/mnt/cgroup.procs bs=1  # normal output
-...
-1294
-1295
-1296
-1304
-1382
-584+0 records in
-584+0 records out
-584 bytes copied
+In the flow of ICOSQ recovery, the corresponding RQ is not
+in error state, hence:
 
-dd: /mnt/cgroup.procs: cannot skip to specified offset
-83  <<< generates end of last line
-1383  <<< ... and whole last line once again
-0+1 records in
-0+1 records out
-8 bytes copied
+- The buffers of the in-progress WQEs must be released
+  and the RQ metadata should reflect it.
+- Existing RX WQEs in the RQ should not be affected.
 
-dd: /mnt/cgroup.procs: cannot skip to specified offset
-1386  <<< generates last line anyway
-0+1 records in
-0+1 records out
-5 bytes copied
+For this, wrap the dealloc of the in-progress WQEs in
+a function, and use it in the ICOSQ recovery flow
+instead of mlx5e_free_rx_descs().
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: be5323c8379f ("net/mlx5e: Report and recover from CQE error on ICOSQ")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/cgroup/cgroup-v1.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h             |    1 
+ drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c |    2 
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c        |   31 +++++++++++----
+ 3 files changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 7f83f4121d8d0..2db582706ec5c 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -473,6 +473,7 @@ static void *cgroup_pidlist_next(struct seq_file *s, void *v, loff_t *pos)
- 	 */
- 	p++;
- 	if (p >= end) {
-+		(*pos)++;
- 		return NULL;
- 	} else {
- 		*pos = *p;
--- 
-2.20.1
-
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -1059,6 +1059,7 @@ int mlx5e_modify_rq_state(struct mlx5e_r
+ void mlx5e_activate_rq(struct mlx5e_rq *rq);
+ void mlx5e_deactivate_rq(struct mlx5e_rq *rq);
+ void mlx5e_free_rx_descs(struct mlx5e_rq *rq);
++void mlx5e_free_rx_in_progress_descs(struct mlx5e_rq *rq);
+ void mlx5e_activate_icosq(struct mlx5e_icosq *icosq);
+ void mlx5e_deactivate_icosq(struct mlx5e_icosq *icosq);
+ 
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
+@@ -90,7 +90,7 @@ static int mlx5e_rx_reporter_err_icosq_c
+ 		goto out;
+ 
+ 	mlx5e_reset_icosq_cc_pc(icosq);
+-	mlx5e_free_rx_descs(rq);
++	mlx5e_free_rx_in_progress_descs(rq);
+ 	clear_bit(MLX5E_SQ_STATE_RECOVERING, &icosq->state);
+ 	mlx5e_activate_icosq(icosq);
+ 	mlx5e_activate_rq(rq);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -824,6 +824,29 @@ int mlx5e_wait_for_min_rx_wqes(struct ml
+ 	return -ETIMEDOUT;
+ }
+ 
++void mlx5e_free_rx_in_progress_descs(struct mlx5e_rq *rq)
++{
++	struct mlx5_wq_ll *wq;
++	u16 head;
++	int i;
++
++	if (rq->wq_type != MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ)
++		return;
++
++	wq = &rq->mpwqe.wq;
++	head = wq->head;
++
++	/* Outstanding UMR WQEs (in progress) start at wq->head */
++	for (i = 0; i < rq->mpwqe.umr_in_progress; i++) {
++		rq->dealloc_wqe(rq, head);
++		head = mlx5_wq_ll_get_wqe_next_ix(wq, head);
++	}
++
++	rq->mpwqe.actual_wq_head = wq->head;
++	rq->mpwqe.umr_in_progress = 0;
++	rq->mpwqe.umr_completed = 0;
++}
++
+ void mlx5e_free_rx_descs(struct mlx5e_rq *rq)
+ {
+ 	__be16 wqe_ix_be;
+@@ -831,14 +854,8 @@ void mlx5e_free_rx_descs(struct mlx5e_rq
+ 
+ 	if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ) {
+ 		struct mlx5_wq_ll *wq = &rq->mpwqe.wq;
+-		u16 head = wq->head;
+-		int i;
+ 
+-		/* Outstanding UMR WQEs (in progress) start at wq->head */
+-		for (i = 0; i < rq->mpwqe.umr_in_progress; i++) {
+-			rq->dealloc_wqe(rq, head);
+-			head = mlx5_wq_ll_get_wqe_next_ix(wq, head);
+-		}
++		mlx5e_free_rx_in_progress_descs(rq);
+ 
+ 		while (!mlx5_wq_ll_is_empty(wq)) {
+ 			struct mlx5e_rx_wqe_ll *wqe;
 
 
