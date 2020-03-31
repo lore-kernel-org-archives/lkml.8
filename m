@@ -2,124 +2,291 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB098C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E4BC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4762206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74588206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BieI9KA7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npyePQy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731159AbgCaUKW (ORCPT
+        id S1730774AbgCaUMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:10:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41568 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727720AbgCaUKV (ORCPT
+        Tue, 31 Mar 2020 16:12:02 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38961 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaUMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:10:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585685420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9tiFegyAVmmAr1Blf/zEd5Ozn4gaTM1GAemIQes9+TA=;
-        b=BieI9KA7faroJ6Y4BsBcj8VOmTdWhL24yZLN2NVJZ2rU4ELM8s0MIRcL9HVL1ZTNXef0IE
-        vD07PSvnci/q54V1J6lvt4xw/oWF6DrqHr9bd19Elw6XlmL1ChEap+ZuYlBs9v+2GSyDck
-        shv5cryf8Rj2oi0eaBt8TACrbPOc6hk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-422-1tFIgNMfN5aGcZnHSE4dlg-1; Tue, 31 Mar 2020 15:40:27 -0400
-X-MC-Unique: 1tFIgNMfN5aGcZnHSE4dlg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2260DB6F;
-        Tue, 31 Mar 2020 19:40:26 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-118-184.phx2.redhat.com [10.3.118.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3339160BE0;
-        Tue, 31 Mar 2020 19:40:21 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 595FB220291; Tue, 31 Mar 2020 15:40:20 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, vgoyal@redhat.com, aarcange@redhat.com,
-        dhildenb@redhat.com
-Subject: [RFC PATCH 0/4] kvm,x86,async_pf: Add capability to return page fault error 
-Date:   Tue, 31 Mar 2020 15:40:07 -0400
-Message-Id: <20200331194011.24834-1-vgoyal@redhat.com>
+        Tue, 31 Mar 2020 16:12:02 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p10so27691335wrt.6;
+        Tue, 31 Mar 2020 13:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RUmPx3cevd5HZrmJAUoNAL0yIpKXpLkOD4yFNFX1yoU=;
+        b=npyePQy8NbdBmc1YC1LMGz/bFjU+8XHeYhdTjCxlwuasRIKbBvchVKMttTRkTSRkxZ
+         2tbdIV0bW9GOyOWmN577i1quhz9M1+xoSGLzvFpJzCleJyzg2rtXfNvlMxe/FJNZ+05J
+         xMvm0UrcFusDPGkNJSr9r2xsTiu7YrafZeW1IMAf4llJ8u8yu7h6HrafmYiEZ0tDr5Zv
+         KxRJhAw/m5KAFBL+fpU9g8nUitWHiejc9F/MznGeZ6lmGQljDr3hyCQLEBvpxjX6ebHj
+         lc3n9rQPouoYxgidALQ4sfe3U62t1OGba+V/TsSJHwtKaEiBoKa1ZXYuCKo/elh44/x+
+         iZsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RUmPx3cevd5HZrmJAUoNAL0yIpKXpLkOD4yFNFX1yoU=;
+        b=KjkkoNkWF+JvTsPOsAjpv9tiUpjPo7d7bY0WNo/717DTQTxWM1vVCvxCMcKdlqmzQZ
+         Uq80Pu1kCItyVuSSFqaqMibqqjFf98whK4X0CnsDNcm9/mwCQcpmTmXjLXFECgdKINKO
+         MagokDol9N1dR2s3O07zrCjcMGMapzCg2xTW2VJ3Ys8nVjVNIAxQLlBfIOqtAoDU3CFt
+         3kOV5bZaC6TysFB8QtMDDx0aewvZPdSdWqMUwzF7UiATkMWT9WLd/wlVPyJZxP+D0Fm6
+         z7nRiZOXHQVF5pFn4gG/F7o49t6dsOdN+Bwb3Rim3F7Osctb8R81K/tgfJ+g3Tpq1de3
+         CZgA==
+X-Gm-Message-State: ANhLgQ1U3AcNTMwrdtAI/kZkDxb9Tyr17+Iq6AKJxNK10ZzhC6osIsK0
+        pw1tXYAHdeUyOgaiB7DoW1YDEqUn
+X-Google-Smtp-Source: ADFU+vuu2swnichiks2Lj/ihW0G02ubfVMQczz01OL3K+e+8SgMvcZ+yDC59CMOWBd7lXFOZ5gtvTA==
+X-Received: by 2002:adf:ee12:: with SMTP id y18mr21325311wrn.289.1585685519143;
+        Tue, 31 Mar 2020 13:11:59 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id m11sm5109328wmf.9.2020.03.31.13.11.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 13:11:58 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, tycho@tycho.ws, jannh@google.com,
+        cyphar@cyphar.com, christian.brauner@ubuntu.com, oleg@redhat.com,
+        luto@amacapital.net, viro@zeniv.linux.org.uk,
+        gpascutto@mozilla.com, ealvarez@mozilla.com, fweimer@redhat.com,
+        jld@mozilla.com, arnd@arndb.de,
+        linux-man <linux-man@vger.kernel.org>
+Subject: RFC: pidfd_getfd(2) manual page
+To:     Sargun Dhillon <sargun@sargun.me>, linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200107175927.4558-1-sargun@sargun.me>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <5ea5233c-9247-aa7c-2819-51b7670de127@gmail.com>
+Date:   Tue, 31 Mar 2020 22:11:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200107175927.4558-1-sargun@sargun.me>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current page fault logic in kvm seems to assume that host will always
-be able to successfully resolve page fault soon or later. There does not
-seem to be any mechanism for hypervisor to return an error say -EFAULT
-to guest.
+Hello Sargun et al.
 
-We are writing DAX support for virtiofs filesystem. This will allow
-directly mapping host page cache page into guest user space process.
+I've taken a shot at writing a manual page for pidfd_getfd().
+I would be happy to receive comments, suggestions for
+improvements, etc. The text is as follows (the groff source 
+is at the foot of this mail):
 
-This mechanism now needs additional support from kvm where a page
-fault error needs to be propagated back into guest. For example, say
-guest process mmaped a file (and this did an mmap of portion of file
-on host into qemu address space). Now file gets truncated and guest
-process tries to access mapped region. It will generate page fault
-in host and it will try to map the file page. But page is not there
-any more so it will get back -EFAULT. But there is no mechanism to
-send this information back to guest and currently host sends PAGE_READY
-to guest, guest retries and fault happens again and host tries to
-resolve page fault again and this becomes an infinite loop.
+NAME
+       pidfd_getfd  -  obtain  a  duplicate  of  another  process's  file
+       descriptor
 
-This is an RFC patch series which tries to extend async page fault
-mechanism to also be able to communicate back that an error occurred
-while resolving the page fault. Then guest can send SIGBUS to guest
-process accessing the truncated portion of file. Or if access happened
-in guest kernel, then it can try to fixup the exception and jump
-to error handling portion if there is one. =20
+SYNOPSIS
+       int pidfd_getfd(int pidfd, int targetfd, unsigned int flags);
 
-This patch series tries to solve it only for x86 architecture on intel
-vmx only. Also it does not solve the problem for nested virtualization.
+DESCRIPTION
+       The pidfd_getfd() system call allocates a new file  descriptor  in
+       the  calling  process.  This new file descriptor is a duplicate of
+       an existing file descriptor, targetfd, in the process referred  to
+       by the PID file descriptor pidfd.
 
-Is extending async page fault mechanism to report error back to
-guest is right thing to do? Or there needs to be another way.
+       The  duplicate  file  descriptor  refers  to  the  same  open file
+       description (see open(2)) as the original file descriptor  in  the
+       process referred to by pidfd.  The two file descriptors thus share
+       file status flags and file offset.  Furthermore, operations on the
+       underlying  file  object  (for  example, assigning an address to a
+       socket object using bind(2)) can be equally be performed  via  the
+       duplicate file descriptor.
 
-Any feedback or comments are welcome.=20
+       The  close-on-exec  flag  (FD_CLOEXEC; see fcntl(2)) is set on the
+       file descriptor returned by pidfd_getfd().
 
-Thanks
-Vivek
+       The flags argument is reserved for future use.  Currently, it must
+       be specified as 0.
 
-Vivek Goyal (4):
-  kvm: Add capability to be able to report async pf error to guest
-  kvm: async_pf: Send faulting gva address in case of error
-  kvm: Always get async page notifications
-  kvm,x86,async_pf: Search exception tables in case of error
+       Permission  to duplicate another process's file descriptor is gov‐
+       erned by a ptrace access mode  PTRACE_MODE_ATTACH_REALCREDS  check
+       (see ptrace(2)).
 
- Documentation/virt/kvm/cpuid.rst     |  4 ++
- Documentation/virt/kvm/msr.rst       | 11 +++--
- arch/x86/include/asm/kvm_host.h      | 17 ++++++-
- arch/x86/include/asm/kvm_para.h      | 13 +++---
- arch/x86/include/asm/vmx.h           |  2 +
- arch/x86/include/uapi/asm/kvm_para.h | 12 ++++-
- arch/x86/kernel/kvm.c                | 69 ++++++++++++++++++++++------
- arch/x86/kvm/cpuid.c                 |  3 +-
- arch/x86/kvm/mmu/mmu.c               | 12 +++--
- arch/x86/kvm/vmx/nested.c            |  2 +-
- arch/x86/kvm/vmx/vmx.c               | 11 ++++-
- arch/x86/kvm/x86.c                   | 37 +++++++++++----
- include/linux/kvm_host.h             |  1 +
- virt/kvm/async_pf.c                  |  6 ++-
- 14 files changed, 156 insertions(+), 44 deletions(-)
+RETURN VALUE
+       On  success,  pidfd_getfd() returns a nonnegative file descriptor.
+       On error, -1 is returned and errno is set to indicate the cause of
+       the error.
 
---=20
-2.25.1
+ERRORS
+       EBADF  pidfd is not a valid PID file descriptor.
 
+       EBADF  targetfd  is  not  an  open  file descriptor in the process
+              referred to by pidfd.
+
+       EINVAL flags is not 0.
+
+       EMFILE The per-process limit on the number of open  file  descrip‐
+              tors has been reached (see the description of RLIMIT_NOFILE
+              in getrlimit(2)).
+
+       ENFILE The system-wide limit on the total number of open files has
+              been reached.
+
+       ESRCH  The  process  referred to by pidfd does not exist (i.e., it
+              has terminated and been waited on).
+
+VERSIONS
+       pidfd_getfd() first appeared in Linux 5.6.
+
+CONFORMING TO
+       pidfd_getfd() is Linux specific.
+
+NOTES
+       Currently, there is no glibc wrapper for this system call; call it
+       using syscall(2).
+
+       For a description of PID file descriptors, see pidfd_open(2).
+
+SEE ALSO
+       clone3(2), kcmp(2), pidfd_open(2)
+
+Cheers,
+
+Michael
+
+.\" Copyright (c) 2020 by Michael Kerrisk <mtk.manpages@gmail.com>
+.\"
+.\" %%%LICENSE_START(VERBATIM)
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\" %%%LICENSE_END
+.\"
+.TH PIDFD_GETFD 2 2020-03-31 "Linux" "Linux Programmer's Manual"
+.SH NAME
+pidfd_getfd \- obtain a duplicate of another process's file descriptor
+.SH SYNOPSIS
+.nf
+.BI "int pidfd_getfd(int " pidfd ", int " targetfd ", unsigned int " flags );
+.fi
+.SH DESCRIPTION
+The
+.BR pidfd_getfd ()
+system call allocates a new file descriptor in the calling process.
+This new file descriptor is a duplicate of an existing file descriptor,
+.IR targetfd ,
+in the process referred to by the PID file descriptor
+.IR pidfd .
+.PP
+The duplicate file descriptor refers to the same open file description (see
+.BR open (2))
+as the original file descriptor in the process referred to by
+.IR pidfd .
+The two file descriptors thus share file status flags and file offset.
+Furthermore, operations on the underlying file object
+(for example, assigning an address to a socket object using
+.BR bind (2))
+can be equally be performed via the duplicate file descriptor.
+.PP
+The close-on-exec flag
+.RB ( FD_CLOEXEC ;
+see
+.BR fcntl (2))
+is set on the file descriptor returned by
+.BR pidfd_getfd ().
+.PP
+The
+.I flags
+argument is reserved for future use.
+Currently, it must be specified as 0.
+.PP
+Permission to duplicate another process's file descriptor
+is governed by a ptrace access mode
+.B PTRACE_MODE_ATTACH_REALCREDS
+check (see
+.BR ptrace (2)).
+.SH RETURN VALUE
+On success,
+.BR pidfd_getfd ()
+returns a nonnegative file descriptor.
+On error, \-1 is returned and
+.I errno
+is set to indicate the cause of the error.
+.SH ERRORS
+.TP
+.B EBADF
+.I pidfd
+is not a valid PID file descriptor.
+.TP
+.B EBADF
+.I targetfd
+is not an open file descriptor in the process referred to by
+.IR pidfd .
+.BR 
+.TP
+.B EINVAL
+.I flags
+is not 0.
+.TP
+.B EMFILE
+The per-process limit on the number of open file descriptors has been reached
+(see the description of
+.BR RLIMIT_NOFILE
+in
+.BR getrlimit (2)).
+.TP
+.B ENFILE
+The system-wide limit on the total number of open files has been reached.
+.TP
+.B ESRCH
+The process referred to by
+.I pidfd
+does not exist
+(i.e., it has terminated and been waited on).
+.SH VERSIONS
+.BR pidfd_getfd ()
+first appeared in Linux 5.6.
+.\" commit 8649c322f75c96e7ced2fec201e123b2b073bf09
+.SH CONFORMING TO
+.BR pidfd_getfd ()
+is Linux specific.
+.SH NOTES
+Currently, there is no glibc wrapper for this system call; call it using
+.BR syscall (2).
+.PP
+For a description of PID file descriptors, see
+.BR pidfd_open (2).
+.SH SEE ALSO
+.BR clone3 (2),
+.BR kcmp (2),
+.BR pidfd_open (2)
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
