@@ -2,160 +2,158 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B5AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3197FC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7788520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585665556;
-	bh=VQTYjDLJpBPL64v+KHcwfSavLEUmQ5VPbYuKeDQvfh4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kxgrF2NXjeSM7OJ5ha2YEfO9KUpkWSkWS3sstHGPpDuysEzwbgwqva+7Cq2GqiO+m
-	 cViGeyaqMxrtExIYkEFlf1n9A01tQ6kj24P7a8/EGuyuhCo3rog9HfpCPVGaYUdPTL
-	 O9wKutMnRR+PkMjPuhiOXJE0wpz5qtc1DYQeqJc4=
+	by mail.kernel.org (Postfix) with ESMTP id 12B9220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbgCaOjP (ORCPT
+        id S1730577AbgCaOj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:39:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgCaOjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:39:13 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 31 Mar 2020 10:39:27 -0400
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:19264 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCaOj0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 10:39:26 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4A0F214D8;
-        Tue, 31 Mar 2020 14:39:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585665552;
-        bh=VQTYjDLJpBPL64v+KHcwfSavLEUmQ5VPbYuKeDQvfh4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=w9kKXD8z4sqI86PU33XbHmfq5R7o1rl1Yc6oUOAz42cwHppv6UAYyiBVNzHr/8rGq
-         fiuijzJ4syHgX49+YFivKcsWhdJV6fv/bOG69I3vdo0Lq1npTDVuNQt+ItarZp4b9G
-         a/bP28cpaoxY9yg7N1tSpyTZfOjD00o0nNDF4FO0=
-Received: by mail-qk1-f175.google.com with SMTP id l25so23220051qki.7;
-        Tue, 31 Mar 2020 07:39:12 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1Yn4A9Q6+UE+Fanv4lnS9wOsS2mOqlYHd34dkABj36/5Rng+QK
-        5l9WpzStfcaqEjMA1sRPag/9oA3L9MsbAp5F3A==
-X-Google-Smtp-Source: ADFU+vs96kIPVk/bUhQUvXuwHTzxBhEjf4smiGd+iZOn7jyc5rfIytLi140jinW+le6E+iSeEnGKe3qbfJEIB3it89g=
-X-Received: by 2002:a37:aa92:: with SMTP id t140mr4802134qke.119.1585665551704;
- Tue, 31 Mar 2020 07:39:11 -0700 (PDT)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 48sBmX0b2jzQlF1;
+        Tue, 31 Mar 2020 16:39:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id FoOKAboSO1mL; Tue, 31 Mar 2020 16:39:20 +0200 (CEST)
+Date:   Wed, 1 Apr 2020 01:39:11 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH man-pages v2 2/2] openat2.2: document new openat2(2)
+ syscall
+Message-ID: <20200331143911.lokfoq3lqfri2mgy@yavin.dot.cyphar.com>
+References: <20200202151907.23587-1-cyphar@cyphar.com>
+ <20200202151907.23587-3-cyphar@cyphar.com>
+ <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com>
 MIME-Version: 1.0
-References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-5-robh@kernel.org>
- <CAK7LNARJn4uugHxcjK+WOWBs0gPVZQsCu4y6M8hkNK1U5FehRA@mail.gmail.com> <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
-In-Reply-To: <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 31 Mar 2020 08:39:00 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLDL6mVZ3Bb3f6eObF9SNwy6WK_srX5=m=NCN8Jq+-R+g@mail.gmail.com>
-Message-ID: <CAL_JsqLDL6mVZ3Bb3f6eObF9SNwy6WK_srX5=m=NCN8Jq+-R+g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: Add missing 'additionalProperties: false'
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l2lpn76pgjx5xchv"
+Content-Disposition: inline
+In-Reply-To: <1567baea-5476-6d21-4f03-142def0f62e3@gmail.com>
+X-Rspamd-Queue-Id: CF12A1743
+X-Rspamd-Score: -2.96 / 15.00 / 200.00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 2:38 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Rob,
->
-> On Mon, Mar 30, 2020 at 4:09 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > On Thu, Mar 26, 2020 at 7:06 AM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > Setting 'additionalProperties: false' is frequently omitted, but is
-> > > important in order to check that there aren't extra undocumented
-> > > properties in a binding.
-> > >
-> > > Ideally, we'd just add this automatically and make this the default, but
-> > > there's some cases where it doesn't work. For example, if a common
-> > > schema is referenced, then properties in the common schema aren't part
-> > > of what's considered for 'additionalProperties'. Also, sometimes there
-> > > are bus specific properties such as 'spi-max-frequency' that go into
-> > > bus child nodes, but aren't defined in the child node's schema.
-> > >
-> > > So let's stick with the json-schema defined default and add
-> > > 'additionalProperties: false' where needed. This will be a continual
-> > > review comment and game of wack-a-mole.
-> > >
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> >
-> >
-> > >  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 2 ++
-> >
-> >
-> > You may have already queue this up, but just in case.
-> >
-> > Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
->
->
-> I take back Ack for socionext,uniphier-gpio.yaml
->
->
->
-> Now "make dt_binding_check" produces a new warning.
->
-> gpio@55000000: 'interrupt-parent' does not match any of the regexes:
-> 'pinctrl-[0-9]+'
->
->
-> This binding uses 'interrupt-parent'
-> without 'interrupts'.
->
-> Instead, the mapping of the interrupt numbers
-> is specified by the vendor-specific property
-> socionext,interrupt-ranges
->
->
->
-> I cannot add   "interrupt-parent: true" because
-> dt-schema/meta-schemas/interrupts.yaml
-> has "interrupt-parent: false".
->
->
-> Is there any solution?
 
-I'd meant to just drop socionext,uniphier-gpio.yaml.
+--l2lpn76pgjx5xchv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On 2020-03-30, Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+> Hello Aleksa,
+>=20
+> On 2/2/20 4:19 PM, Aleksa Sarai wrote:
+> > Rather than trying to merge the new syscall documentation into open.2
+> > (which would probably result in the man-page being incomprehensible),
+> > instead the new syscall gets its own dedicated page with links between
+> > open(2) and openat2(2) to avoid duplicating information such as the list
+> > of O_* flags or common errors.
+> >=20
+> > In addition to describing all of the key flags, information about the
+> > extensibility design is provided so that users can better understand why
+> > they need to pass sizeof(struct open_how) and how their programs will
+> > work across kernels. After some discussions with David Laight, I also
+> > included explicit instructions to zero the structure to avoid issues
+> > when recompiling with new headers.
+> >=20
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+>=20
+> Thanks. I've applied this patch, but also done quite a lot of
+> editing of the page. The current draft is below (and also pushed=20
+> to Git). Could I ask you to review the page, to see if I injected
+> any error during my edits.
+
+Looks good to me.
+
+> In addition, I've added a number of FIXMEs in comments
+> in the page source. Can you please check these, and let me
+> know your thoughts.
+
+Will do, see below.
+
+> .\" FIXME I find the "previously-functional systems" in the previous
+> .\" sentence a little odd (since openat2() ia new sysycall), so I would
+> .\" like to clarify a little...
+> .\" Are you referring to the scenario where someone might take an
+> .\" existing application that uses openat() and replaces the uses
+> .\" of openat() with openat2()? In which case, is it correct to
+> .\" understand that you mean that one should not just indiscriminately
+> .\" add the RESOLVE_NO_XDEV flag to all of the openat2() calls?
+> .\" If I'm not on the right track, could you point me in the right
+> .\" direction please.
+
+This is mostly meant as a warning to hopefully avoid applications
+because the developer didn't realise that system paths may contain
+symlinks or bind-mounts. For an application which has switched to
+openat2() and then uses RESOLVE_NO_SYMLINKS for a non-security reason,
+it's possible that on some distributions (or future versions of a
+distribution) that their application will stop working because a system
+path suddenly contains a symlink or is a bind-mount.
+
+This was a concern which was brought up on LWN some time ago. If you can
+think of a phrasing that makes this more clear, I'd appreciate it.
+
+> .\" FIXME: what specific details in symlink(7) are being referred
+> .\" by the following sentence? It's not clear.
+
+The section on magic-links, but you're right that the sentence ordering
+is a bit odd. It should probably go after the first sentence.
+
+> .\" FIXME I found the following hard to understand (in particular, the
+> .\" meaning of "scoped" is unclear) , and reworded as below. Is it okay?
+> .\"     Absolute symbolic links and ".." path components will be scoped to
+> .\"     .IR dirfd .
+
+Scoped does broadly mean "interpreted relative to", though the
+difference is mainly that when I said scoped it's meant to be more of an
+assertive claim ("the kernel promises to always treat this path inside
+dirfd"). But "interpreted relative to" is a clearer way of phrasing the
+semantics, so I'm okay with this change.
+
+> .\" FIXME The next piece is unclear (to me). What kind of ".." escape
+> .\" attempts does chroot() not detect that RESOLVE_IN_ROOT does?
+
+If the root is moved, you can escape from a chroot(2). But this sentence
+might not really belong in a man-page since it's describing (important)
+aspects of the implementation and not the semantics.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--l2lpn76pgjx5xchv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXoNWDAAKCRCdlLljIbnQ
+EuhhAQDrGJcSC2tvaVHSZirH1uENpWOgqxV1HHQaNXnurRE1MwD/eS7jz/feBrZa
+HAM6s15BEz8f1DvF4UAf0nb8LHajngw=
+=O1HR
+-----END PGP SIGNATURE-----
+
+--l2lpn76pgjx5xchv--
