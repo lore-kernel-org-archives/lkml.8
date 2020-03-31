@@ -2,112 +2,122 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99164C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE81C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7345C20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538AE20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELhoeap4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RwsMC/4n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgCaT0l (ORCPT
+        id S1728920AbgCaT2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:26:41 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42722 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgCaT0l (ORCPT
+        Tue, 31 Mar 2020 15:28:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30885 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726290AbgCaT2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:26:41 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z5so23056363oth.9;
-        Tue, 31 Mar 2020 12:26:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p2qtUegF86XJQD0U9mJ6PbruzGtXxYRXcPJJraWyFNo=;
-        b=ELhoeap4k3w9h7bN3wcxhblGlHt/Y266s4gRXs/8+KgpSlLbX53w29ryNSlWfNUzzQ
-         24uFWR202K7G8mT2ecteqfqcIpE5MUB232V4d2zGoMuPdMcvMWJCGvLAvYlLtivgvk24
-         9f7Va3tctc42c6KdTNAua8en3Zu5c9haPM2AIig3nIlVr8KoIHpqEWxrDbL/mH7Wk5go
-         bTNDD4AzNg1XiGfXf0zTNMnmIKZJakNmMkpNdOXAYmsE+MyF5+hDdaulyYmaktYRJpD6
-         rOYajfFz26v+Q5z+IaPvvG3nosGY3Jb5lF8ECN+Fs7lP7jeC0tqU+BzWyljNdbv4IOOj
-         cspQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p2qtUegF86XJQD0U9mJ6PbruzGtXxYRXcPJJraWyFNo=;
-        b=F2+D6bGTAAZk9XhYz3Y9ZDhVNpFm5RknWqYhG90j/g7ldNyljFLt++I2ffirUamg/m
-         UvfJdqTAUOpOT0NGvMzLadD5WdFDWwNFl/8WN24SMQLnPryD9Nb20y6ElX0J9s+c0VWt
-         YWmoxefhQ0kMR/UVTr80R+SbHXK4vAtAySwHBZao4sxoN4v+TppuavLTFxhoDPiWv/Pn
-         1BewEJnixZyy9XyOIqQspiO1BkkOyg1YtnX61DKEIx8z9zXPdO10g9OzYVdiBheTyFIx
-         DaafEHI9zb3WuaJI2Tti3Z8uOuyVOz5keOsrcvf8nXFg8KvoRw096QN+jOOac2jKZ7gt
-         iJfA==
-X-Gm-Message-State: ANhLgQ0k9lh2LPMGITR8FcqDmR0oPBDUCob9wnti22eWfoE/IT+tFy2Z
-        XsuX0b9Kufu9YbZCmkAZ7+w=
-X-Google-Smtp-Source: ADFU+vsdiPcZYYBWdzojItr8T5o1ryKfN0bU1KvGxWA3rNxYN6SUUNiqR3EJ1ted02/26RlWPqXaEw==
-X-Received: by 2002:a9d:a6b:: with SMTP id 98mr13525220otg.21.1585682800831;
-        Tue, 31 Mar 2020 12:26:40 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 90sm5487928otc.29.2020.03.31.12.26.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 12:26:39 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 12:26:37 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH v2] kbuild: Enable -Wtautological-compare
-Message-ID: <20200331192637.GA54270@ubuntu-m2-xlarge-x86>
-References: <20200326194155.29107-1-natechancellor@gmail.com>
- <CAK7LNAQ8uHtuhd7DiGGOLbkEX524rPjfUuWAHjU-_92Ow3_1Pg@mail.gmail.com>
- <20200331101122.GA6292@ubuntu-m2-xlarge-x86>
- <CAKwvOdkkpnkLwtNctSnebXTwumfprEQtLiuM5_4e-UBFTYBUxg@mail.gmail.com>
+        Tue, 31 Mar 2020 15:28:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585682897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=bZBZ2PvIvDxfPAe1u1A6kkjjW8ODyemq7LucCatSJOc=;
+        b=RwsMC/4nz845t6j+oEJjQvD8Tbt93sCqs3XKPYFJ+Y62mfgDEIJsmjDP47cLrJ+DG4eNCB
+        p4dmatsEDBASFs9UvaDEE/QUc5TJ87P0AuAq2YfrtVd8lRxPro1IYlmkjAhtb8ExAw34IU
+        M85spl5PTHYbrossDyeeTv9LxDeoe4Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-PaRuMewrOIaDewXx01564w-1; Tue, 31 Mar 2020 15:28:14 -0400
+X-MC-Unique: PaRuMewrOIaDewXx01564w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F07C418A6EC1;
+        Tue, 31 Mar 2020 19:28:12 +0000 (UTC)
+Received: from eperezma.remote.csb (ovpn-112-92.ams2.redhat.com [10.36.112.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BE2898A57;
+        Tue, 31 Mar 2020 19:28:07 +0000 (UTC)
+From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH v3 0/8] vhost: Reset batched descriptors on SET_VRING_BASE call
+Date:   Tue, 31 Mar 2020 21:27:56 +0200
+Message-Id: <20200331192804.6019-1-eperezma@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkkpnkLwtNctSnebXTwumfprEQtLiuM5_4e-UBFTYBUxg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:02:19AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> On Tue, Mar 31, 2020 at 3:11 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > Just a follow up, those two patches have been picked up and should be in
-> > this coming release:
-> >
-> > https://git.kernel.org/balbi/usb/c/58582220d2d34228e5a1e1585e41b735713988bb
-> > https://git.kernel.org/rostedt/linux-trace/c/bf2cbe044da275021b2de5917240411a19e5c50d
-> >
-> > As of next-20200331, with the former applied (because it is not there
-> > yet) along with this patch, I see no warnings on arm, arm64, x86_64
-> > all{mod,yes}config.
-> 
-> kbuild test robot is testing more arch's than that with Clang so it
-> may report if it finds more instances of that warning in those.
-> 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
-> 
+Vhost did not reset properly the batched descriptors on SET_VRING_BASE
+event. Because of that, is possible to return an invalid descriptor to
+the guest.
 
-I'll keep an eye out. Hopefully not too many more are lurking but we
-have definitely caught some bad behavior with this warning already so
-getting it turned on so that all CI systems can benefit from it is
-important.
+This series ammend this, resetting them every time backend changes, and
+creates a test to assert correct behavior. To do that, they need to
+expose a new function in virtio_ring, virtqueue_reset_free_head, only
+on test code.
 
-Cheers,
-Nathan
+Another useful thing would be to check if mutex is properly get in
+vq private_data accessors. Not sure if mutex debug code allow that,
+similar to C++ unique lock::owns_lock. Not acquiring in the function
+because caller code holds the mutex in order to perform more actions.
+
+v3:
+* Rename accesors functions.
+* Make scsi and test use the accesors too.
+
+v2:
+* Squashed commits.
+* Create vq private_data accesors (mst).
+
+This is meant to be applied on top of
+c4f1c41a6094582903c75c0dcfacb453c959d457 in
+git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git.
+
+Eugenio P=C3=A9rez (5):
+  vhost: Create accessors for virtqueues private_data
+  tools/virtio: Add --batch option
+  tools/virtio: Add --batch=3Drandom option
+  tools/virtio: Add --reset=3Drandom
+  tools/virtio: Make --reset reset ring idx
+
+Michael S. Tsirkin (3):
+  vhost: option to fetch descriptors through an independent struct
+  vhost: use batched version by default
+  vhost: batching fetches
+
+ drivers/vhost/net.c          |  28 ++--
+ drivers/vhost/scsi.c         |  14 +-
+ drivers/vhost/test.c         |  69 ++++++++-
+ drivers/vhost/test.h         |   1 +
+ drivers/vhost/vhost.c        | 271 +++++++++++++++++++++++------------
+ drivers/vhost/vhost.h        |  44 +++++-
+ drivers/vhost/vsock.c        |  14 +-
+ drivers/virtio/virtio_ring.c |  29 ++++
+ tools/virtio/linux/virtio.h  |   2 +
+ tools/virtio/virtio_test.c   | 123 ++++++++++++++--
+ 10 files changed, 456 insertions(+), 139 deletions(-)
+
+--=20
+2.18.1
+
