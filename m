@@ -2,134 +2,129 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15A2C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2DEC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A496420784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:56:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sPjiUuqt"
+	by mail.kernel.org (Postfix) with ESMTP id F0FCD20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbgCaN44 (ORCPT
+        id S1730895AbgCaN7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:56:56 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15202 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730216AbgCaN44 (ORCPT
+        Tue, 31 Mar 2020 09:59:41 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:52797 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730442AbgCaN7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:56:56 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e834c1a0000>; Tue, 31 Mar 2020 06:56:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 31 Mar 2020 06:56:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 31 Mar 2020 06:56:55 -0700
-Received: from [10.26.72.141] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 31 Mar
- 2020 13:56:54 +0000
-Subject: Re: [PATCH V2 1/3] soc/tegra: fuse: Add custom SoC attributes
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200331103341.19571-1-jonathanh@nvidia.com>
- <4f1fabbb-a0a3-6f7d-f62c-2bd545f2644a@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <bd1b2056-dc72-323b-bda5-d99df3a139a6@nvidia.com>
-Date:   Tue, 31 Mar 2020 14:56:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <4f1fabbb-a0a3-6f7d-f62c-2bd545f2644a@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585663002; bh=kzFsughcFE0TQtZJTETz31yFA7yQ/27hpX9Njq52hy4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=sPjiUuqtZqe15GRCaVr4cakBP79Sk4wSsuTCV/lRiRgi5KAWuC5kqsP07t9m4tb/6
-         sYGavEv9r2w0ELFTdKP6NvZctxnbv/JNw3Dzz55+8BuU2pIX6bwGiwMI7tStP7AG6u
-         5oO770HUDDg08SzpWaTjMjK33JCUqLdTIISb2EQovO1BIfxvjfv2IGZp+vNFMA4BwQ
-         1ewKo4q7A+v2BpC2ZmKHyOM6jZv4RI+nEImbzGwsm9VT3DPUa0UaQkEROHWvStLmYu
-         uHPrSri7LQXplOythTWIry/Rk/uekzCcZhJOOvepeYX1GWtXnff3JD19G7a7jT0kGr
-         MwiAGvtxUjdnA==
+        Tue, 31 Mar 2020 09:59:40 -0400
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 31 Mar 2020 19:28:53 +0530
+Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 31 Mar 2020 19:28:30 +0530
+Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
+        id BC89B47A1; Tue, 31 Mar 2020 19:28:29 +0530 (IST)
+From:   Kalyan Thota <kalyan_t@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        dianders@chromium.org, jsanka@codeaurora.org,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Subject: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+Date:   Tue, 31 Mar 2020 19:28:27 +0530
+Message-Id: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"The PM core always increments the runtime usage counter
+before calling the ->suspend() callback and decrements it
+after calling the ->resume() callback"
 
-On 31/03/2020 14:39, Dmitry Osipenko wrote:
-> 31.03.2020 13:33, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Add a custom SoC attribute for Tegra to expose the HIDREV register
->> fields to userspace via the sysfs. This register provides additional
->> details about the type of device (eg, silicon, FPGA, etc) as well as
->> revision. Exposing this information is useful for identifying the
->> exact device revision and device type.
->>
->> For Tegra devices up until Tegra186, the majorrev and minorrev fields of
->> the HIDREV register are used to determine the device revision and device
->> type. For Tegra194, the majorrev and minorrev fields only determine the
->> revision. Starting with Tegra194, there is an additional field,
->> pre_si_platform (which occupies bits 20-23), that now determines device
->> type. Therefore, for all Tegra devices, add a custom SoC attribute for
->> the majorrev and minorrev fields and for Tegra194 add an additional
->> attribute for the pre_si_platform field.
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->> ---
->>  drivers/soc/tegra/fuse/fuse-tegra.c    | 51 ++++++++++++++++++++++++++
->>  drivers/soc/tegra/fuse/fuse-tegra20.c  |  1 +
->>  drivers/soc/tegra/fuse/fuse-tegra30.c  |  6 +++
->>  drivers/soc/tegra/fuse/fuse.h          |  8 ++++
->>  drivers/soc/tegra/fuse/tegra-apbmisc.c | 10 +++++
->>  5 files changed, 76 insertions(+)
->>
->> diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fus=
-e/fuse-tegra.c
->> index 802717b9f6a3..639734dca5df 100644
->> --- a/drivers/soc/tegra/fuse/fuse-tegra.c
->> +++ b/drivers/soc/tegra/fuse/fuse-tegra.c
->> @@ -300,6 +300,56 @@ static void tegra_enable_fuse_clk(void __iomem *bas=
-e)
->>  	writel(reg, base + 0x14);
->>  }
->> =20
->> +static ssize_t tegra_soc_majorrev_show(struct device *dev,
->> +				       struct device_attribute *attr,
->> +				       char *buf)
->> +{
->> +	return sprintf(buf, "%d\n", tegra_get_major_rev());
->> +}
->> +
->> +static DEVICE_ATTR(majorrev, S_IRUGO, tegra_soc_majorrev_show,  NULL);
->> +
->> +static ssize_t tegra_soc_minorrev_show(struct device *dev,
->> +				       struct device_attribute *attr,
->> +				       char *buf)
->> +{
->> +	return sprintf(buf, "%d\n", tegra_get_minor_rev());
->> +}
->> +
->> +static DEVICE_ATTR(minorrev, S_IRUGO, tegra_soc_minorrev_show,  NULL);
->=20
-> Checkpatch should give a warning about that permission isn't in octal
-> format, please don't ignore it.
+DPU and DSI are managed as runtime devices. When
+suspend is triggered, PM core adds a refcount on all the
+devices and calls device suspend, since usage count is
+already incremented, runtime suspend was not getting called
+and it kept the clocks on which resulted in target not
+entering into XO shutdown.
 
-Indeed. Will fix. I thought I had ran this previously, obviously not.
+Add changes to force suspend on runtime devices during pm sleep.
 
-Jon
+Changes in v1:
+ - Remove unnecessary checks in the function
+    _dpu_kms_disable_dpu (Rob Clark).
 
---=20
-nvpublic
+Changes in v2:
+ - Avoid using suspend_late to reset the usagecount
+   as suspend_late might not be called during suspend
+   call failures (Doug).
+
+Changes in v3:
+ - Use force suspend instead of managing device usage_count
+   via runtime put and get API's to trigger callbacks (Doug).
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 2 ++
+ drivers/gpu/drm/msm/dsi/dsi.c           | 2 ++
+ drivers/gpu/drm/msm/msm_drv.c           | 4 ++++
+ 3 files changed, 8 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index ce19f1d..b886d9d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
+ 
+ static const struct dev_pm_ops dpu_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static const struct of_device_id dpu_dt_match[] = {
+diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
+index 55ea4bc2..62704885 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi.c
++++ b/drivers/gpu/drm/msm/dsi/dsi.c
+@@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
+ 
+ static const struct dev_pm_ops dsi_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
+ };
+ 
+ static struct platform_driver dsi_driver = {
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 7d985f8..2b8c99c 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1051,6 +1051,8 @@ static int msm_pm_suspend(struct device *dev)
+ 		return ret;
+ 	}
+ 
++	pm_runtime_force_suspend(dev);
++
+ 	return 0;
+ }
+ 
+@@ -1063,6 +1065,8 @@ static int msm_pm_resume(struct device *dev)
+ 	if (WARN_ON(!priv->pm_state))
+ 		return -ENOENT;
+ 
++	pm_runtime_force_resume(dev);
++
+ 	ret = drm_atomic_helper_resume(ddev, priv->pm_state);
+ 	if (!ret)
+ 		priv->pm_state = NULL;
+-- 
+1.9.1
+
