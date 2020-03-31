@@ -2,182 +2,109 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3139C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179B6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA9720675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646198;
-	bh=NIxqvIwYmSHXNc7yYh3cDSevwbxvddLQ+0ZJPC75KYQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RkwmgXT8ZcQo6EkgUCkzXXeAZZcQKGDdV8aeN+tLwQt/nGlDB8EQh5CuMPAiydmfU
-	 Alx9elLe/UBIZFhCRGcHXa77X32Lk2ZzT+AGfwxMEOiD2F8GIy8MStZqhPV/MfuLUa
-	 NhjRA0ryT5kgrxjO3H11rsRnLAN8P8lB7uu1ud9o=
+	by mail.kernel.org (Postfix) with ESMTP id D86ED20772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KKKuEq4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731974AbgCaJQh (ORCPT
+        id S1731980AbgCaJQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:16:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730328AbgCaJQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80C6B20675;
-        Tue, 31 Mar 2020 09:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646195;
-        bh=NIxqvIwYmSHXNc7yYh3cDSevwbxvddLQ+0ZJPC75KYQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DGMnCjWKhbarWeEs+mHCuYv+YcmdLBxde/v5Q7aIqDDJm8iGqNYX4imPes24jW5kn
-         a2P0l5s1fP6VxSRhzfaGawZpw81zFpM4yWyH987r0fdQUwROyu4KRBslgqEFLosopV
-         LkWfk+VFRyEX+0h4Ef/V2DKKCdoPx/hrlxeplpq0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 112/155] vti[6]: fix packet tx through bpf_redirect() in XinY cases
-Date:   Tue, 31 Mar 2020 10:59:12 +0200
-Message-Id: <20200331085431.136078616@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
-References: <20200331085418.274292403@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 31 Mar 2020 05:16:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52490 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730328AbgCaJQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:16:38 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02V9BPwH080439;
+        Tue, 31 Mar 2020 09:16:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=soT205CLbo3pSZEAx9AVjNKeXiqZkOzPFfSpgHTqh+M=;
+ b=KKKuEq4ZbL21qiOck4SWuo0lJ4mO0T+NNuoZZdFAcdVJtohEC/BLrX0w9NUhzRiLNoOh
+ G6O+gw140niz57E14RFYNOVpM8oyF9+tHiH47ejsxspUucqxPQgsX+KPiEX0v80B2gvm
+ G2Zuu0c6Bb4BLcMPfuXvSlBC2N2aJ6rRxZOO6OdECLNnh0GS2rS3Z3jP+jk5POszxnLE
+ 4pijWU5bcmpShEn1rnX3W/UdV/upHH3sMu8QhdkxFNh0Xwcru6yuwITXesDvGZxcZqtw
+ lcMBf8iV8RmTVDeRoI3HJDEnjo/NN6esFWteR280KbCugmc75XHcTnPUpdQ9s4s4EBaT +g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 303ceuxeg2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 09:16:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02V96ubU002205;
+        Tue, 31 Mar 2020 09:16:34 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 302g2dq5kj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 09:16:34 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02V9GXDA017837;
+        Tue, 31 Mar 2020 09:16:33 GMT
+Received: from [10.175.15.184] (/10.175.15.184)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 31 Mar 2020 02:16:33 -0700
+From:   Vegard Nossum <vegard.nossum@oracle.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>,
+        linux-kbuild@vger.kernel.org
+Subject: single target builds are broken
+Message-ID: <a5ce79eb-be9d-df97-0b58-5aee5a48f4d3@oracle.com>
+Date:   Tue, 31 Mar 2020 11:16:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003310082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1011 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003310082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-commit f1ed10264ed6b66b9cd5e8461cffce69be482356 upstream.
+Hi,
 
-I forgot the 4in6/6in4 cases in my previous patch. Let's fix them.
+I often run 'make foo/bar.o' as part of my workflow, even when bar.o is
+not specified in any kernel makefile, and this has worked just fine for
+years.
 
-Fixes: 95224166a903 ("vti[6]: fix packet tx through bpf_redirect()")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is broken after commit 394053f4a4b3e3eeeaa67b67fc886a9a75bd9e4d
+(kbuild: make single targets work more correctly) and just gives an error:
 
----
- net/ipv4/Kconfig   |    1 +
- net/ipv4/ip_vti.c  |   36 +++++++++++++++++++++++++++++-------
- net/ipv6/ip6_vti.c |   32 +++++++++++++++++++++++++-------
- 3 files changed, 55 insertions(+), 14 deletions(-)
+$ make kernel/test.o
+   CALL    scripts/checksyscalls.sh
+   CALL    scripts/atomic/check-atomics.sh
+   DESCEND  objtool
+make[2]: *** No rule to make target 'kernel/test.o'.  Stop.
+scripts/Makefile.build:502: recipe for target '__build' failed
+make[1]: *** [__build] Error 2
+Makefile:1670: recipe for target 'kernel' failed
+make: *** [kernel] Error 2
 
---- a/net/ipv4/Kconfig
-+++ b/net/ipv4/Kconfig
-@@ -303,6 +303,7 @@ config SYN_COOKIES
- 
- config NET_IPVTI
- 	tristate "Virtual (secure) IP: tunneling"
-+	depends on IPV6 || IPV6=n
- 	select INET_TUNNEL
- 	select NET_IP_TUNNEL
- 	select XFRM
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -187,17 +187,39 @@ static netdev_tx_t vti_xmit(struct sk_bu
- 	int mtu;
- 
- 	if (!dst) {
--		struct rtable *rt;
-+		switch (skb->protocol) {
-+		case htons(ETH_P_IP): {
-+			struct rtable *rt;
- 
--		fl->u.ip4.flowi4_oif = dev->ifindex;
--		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
--		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
--		if (IS_ERR(rt)) {
-+			fl->u.ip4.flowi4_oif = dev->ifindex;
-+			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
-+			if (IS_ERR(rt)) {
-+				dev->stats.tx_carrier_errors++;
-+				goto tx_error_icmp;
-+			}
-+			dst = &rt->dst;
-+			skb_dst_set(skb, dst);
-+			break;
-+		}
-+#if IS_ENABLED(CONFIG_IPV6)
-+		case htons(ETH_P_IPV6):
-+			fl->u.ip6.flowi6_oif = dev->ifindex;
-+			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				dst = NULL;
-+				dev->stats.tx_carrier_errors++;
-+				goto tx_error_icmp;
-+			}
-+			skb_dst_set(skb, dst);
-+			break;
-+#endif
-+		default:
- 			dev->stats.tx_carrier_errors++;
- 			goto tx_error_icmp;
- 		}
--		dst = &rt->dst;
--		skb_dst_set(skb, dst);
- 	}
- 
- 	dst_hold(dst);
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -450,15 +450,33 @@ vti6_xmit(struct sk_buff *skb, struct ne
- 	int mtu;
- 
- 	if (!dst) {
--		fl->u.ip6.flowi6_oif = dev->ifindex;
--		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
--		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
--		if (dst->error) {
--			dst_release(dst);
--			dst = NULL;
-+		switch (skb->protocol) {
-+		case htons(ETH_P_IP): {
-+			struct rtable *rt;
-+
-+			fl->u.ip4.flowi4_oif = dev->ifindex;
-+			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
-+			if (IS_ERR(rt))
-+				goto tx_err_link_failure;
-+			dst = &rt->dst;
-+			skb_dst_set(skb, dst);
-+			break;
-+		}
-+		case htons(ETH_P_IPV6):
-+			fl->u.ip6.flowi6_oif = dev->ifindex;
-+			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				dst = NULL;
-+				goto tx_err_link_failure;
-+			}
-+			skb_dst_set(skb, dst);
-+			break;
-+		default:
- 			goto tx_err_link_failure;
- 		}
--		skb_dst_set(skb, dst);
- 	}
- 
- 	dst_hold(dst);
+For top-level objects (e.g. 'make bar.o') the situation is even worse,
+since make exits with status 0 without building anything :-/
+
+Is there any chance we can get this back? It was super useful for me.
 
 
+Vegard
