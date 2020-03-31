@@ -2,166 +2,161 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49679C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED47C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172BD206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C012206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gEqZNQgf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FXZX8Ueh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730966AbgCaQLu (ORCPT
+        id S1731181AbgCaQL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:11:50 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37570 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaQLt (ORCPT
+        Tue, 31 Mar 2020 12:11:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43367 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbgCaQL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:11:49 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i34so418147pgl.4;
-        Tue, 31 Mar 2020 09:11:47 -0700 (PDT)
+        Tue, 31 Mar 2020 12:11:59 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g20so1069792pgk.10
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:11:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w9aZt5kj5dEodJPJpXH7a5YTDfiFLHJYid+xgTUSEqk=;
-        b=gEqZNQgfhN4RRt0lF/OEy9kx/LD/Nhw7gepxbzUe+Dj2K7MQrHvr8mszW9PJJwq7cd
-         zAXZAcH+Ur/EWa6r9/MuAI1WqO4faTCjiZBwXmjRLFbv6ciCwrY0dNxdKLo4nxZw8nSa
-         MCZKFUX1hkU4a7g3dWGl2HVSjk/xO7mk6CDuYyzU4MXQM2n0iW4M1vCP3nnMDwT6EYqf
-         u3pz4GFPxoMS0EvGbg0MUEYlPOPCZLcbQQ//z88cAp6R24kTBNAP6LepeBtdl7ajZBLg
-         9Dh9YZ2aO0QB4kAPg/pB6f+99f8SIm92H58TI6XimTawgvwFblrIsoQbsvWtG2I8WFIH
-         P7mw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
+        b=FXZX8UehOEz9Kni4GELnb/5/v6Qj6xwLNsOHkCFRAvqmZJFoMimJsYJGlR8qWuT3JP
+         /jiEuMvyz9s8viO8XrGdI9iGKa+z0LkGhzTuGioisjEORu/Jtd6YUUxEyaeT+fkbg+AI
+         hklRTmvh3uljXeEwgl9dNw7H3nNlcCzTsAfVo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=w9aZt5kj5dEodJPJpXH7a5YTDfiFLHJYid+xgTUSEqk=;
-        b=BgKWPRHsAPTdHzOOeg4xtI8Z4l/9zkoc9WS1QCPiEEp+WrMZn9jiyeuVeDn+sR+8eb
-         JxnyrDzkHlfnzPPxSr17IMHI9mGXyRnL4tPzmkw9cwVsrnCldJ8Ms6f8CtbZ2LuVB1io
-         r51sfld2+LhC82+3NfCJhSVwhJFDufY0qAY/iOb1d6B7LASE4XOLFRptjBmyAq09sVla
-         xSuUGlkiQfijaqsXXzeNrrut+BGZLsLPn1TFi/KpOas9WRzASHVmeOGGJBzB+DZk6nF/
-         1vd+50CZ8P3nZe8uFAeWGzDtqBWIngDL/jw0OefXoWgewckcq58bDMQQMfO/5DBx/+xn
-         xcdA==
-X-Gm-Message-State: ANhLgQ1JO805OICyvh1D0wciskDCox+EYC1IfAKqmmhJYp11a3vyhPkg
-        fWQc9NSc/BB2Aq+uS0pw1J6gyFAT
-X-Google-Smtp-Source: ADFU+vuYyprfaK6MnpO5n5k9ZNFba/my0hFDDzPzu7DxGXyclceI+9t3jPhSJk0TM142DDm6hFnARA==
-X-Received: by 2002:a63:1660:: with SMTP id 32mr18108713pgw.169.1585671106300;
-        Tue, 31 Mar 2020 09:11:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m28sm12068793pgn.7.2020.03.31.09.11.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
+        b=oBSSqfH5QGyiITVusXXhwQWLWJYpk77cy/Je4UA182W6+C0iRrlmN+hAn+8FTnpACt
+         XFTcpZxM848xW1agz69e4Gv7XxplVy9YesPZcNS4VU1ucLFX45ugc9f8MZ7aG4Zj6hH6
+         7A4aHrFPwYpFvITDIfli77jCup4+beFdIBnSoIboulGzfgsaxiLVk9ugcwJHC7j3UwY8
+         K9YhBwqLGMZme0ZPR2uj5mUe4GDsZZ6yUqptO0MLuQkFLbKttpx4cSgl/SPdIix8PHB8
+         F1qD8TblzVU8EiXWrXcnEA9n7doxWT0SMDmvVzDsmV1Pfix96ET9Iev3pumY3xxXQpZo
+         +w2w==
+X-Gm-Message-State: ANhLgQ2ire6FVaideUqg1yJ8zd+N6VXQgy1Jd63ONlY6tbj3PZC+++jc
+        ShIBJBjGF3Mxcw5sndntwu2ClA==
+X-Google-Smtp-Source: ADFU+vtfSPh8HumDN4cjkDTaweYzwxq2FI8K3EiPnKxEhov9TRTsTgaPcIbaDj4F/2NhI4oOVc9T0Q==
+X-Received: by 2002:a62:7c15:: with SMTP id x21mr19812360pfc.132.1585671117785;
+        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z7sm12830932pfz.24.2020.03.31.09.11.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:11:45 -0700 (PDT)
-Subject: Re: [PATCH 3/3] watchdog: da9062: No need to ping manually before
- setting timeout
-To:     Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200326150203.371673-1-s.riedmueller@phytec.de>
- <20200326150203.371673-3-s.riedmueller@phytec.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6331c612-70f0-5dc6-c3d1-a7a5a72e61fe@roeck-us.net>
-Date:   Tue, 31 Mar 2020 09:11:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:11:55 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Cc:     Felipe Balbi <balbi@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200331161155.GD199755@google.com>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
+ <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
+ <20200329171756.GA199755@google.com>
+ <87h7y62r28.fsf@kernel.org>
+ <20200330155038.GC199755@google.com>
+ <87zhbx1q6q.fsf@kernel.org>
+ <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200326150203.371673-3-s.riedmueller@phytec.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 8:02 AM, Stefan Riedmueller wrote:
-> There is actually no need to ping the watchdog before disabling it
-> during timeout change. Disabling the watchdog already takes care of
-> resetting the counter.
+On Tue, Mar 31, 2020 at 10:45:19AM +0530, Sandeep Maheswaram (Temp) wrote:
+> Hi,
 > 
-> This fixes an issue during boot when the userspace watchdog handler takes
-> over and the watchdog is already running. Opening the watchdog in this case
-> leads to the first ping and directly after that without the required
-> heartbeat delay a second ping issued by the set_timeout call. Due to the
-> missing delay this resulted in a reset.
-> 
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+> On 3/31/2020 3:05 AM, Felipe Balbi wrote:
+> > Hi,
+> > 
+> > Matthias Kaehlcke <mka@chromium.org> writes:
+> > > > Matthias Kaehlcke <mka@chromium.org> writes:
+> > > > > > Add interconnect support in dwc3-qcom driver to vote for bus
+> > > > > > bandwidth.
+> > > > > > 
+> > > > > > This requires for two different paths - from USB master to
+> > > > > > DDR slave. The other is from APPS master to USB slave.
+> > > > > > 
+> > > > > > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> > > > > > Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+> > > > > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > > ---
+> > > > > >   drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
+> > > > > >   1 file changed, 126 insertions(+), 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > index 1dfd024..7e85fe6 100644
+> > > > > > --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > 
+> > > > > > ...
+> > > > > > 
+> > > > > > +/* To disable an interconnect, we just set its bandwidth to 0 */
+> > > > > > +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+> > > > > > +{
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+> > > > > > +	if (ret)
+> > > > > > +		goto err_reenable_memory_path;
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > > +
+> > > > > > +	/* Re-enable things in the event of an error */
+> > > > > > +err_reenable_memory_path:
+> > > > > > +	ret = dwc3_qcom_interconnect_enable(qcom);
+> > > > > This overwrites the error that led to the execution of this code path.
+> > > > > The function should return original error, not the result of the
+> > > > > _interconnect_enable() call.
+> > > > > 
+> > > > > I saw Felipe queued the patch for v5.8. I think the main options to fix this
+> > > > > are:
+> > > > > 
+> > > > > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
+> > > > >    anyway once there is a v5.7-rc)
+> > > > > - send the fix as a separate patch
+> > > > > - Felipe amends the patch in his tree
+> > > > > 
+> > > > > Felipe, what would work best for you?
+> > > > Let's go for a v6, which commits should I drop? I can't find anything
+> > > > related to $subject in my queue:
+> > > > 
+> > > > $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
+> > > > 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+> > > I thought I saw a "queued for v5.8" message from you, but can't find that back.
+> > > I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
+> > > series and thought it was for this one. Sorry for the confusion.
+> > no worries :-)
+> > 
+> Should I remove the ret from below line and send a new version?
+> +	ret = dwc3_qcom_interconnect_enable(qcom);
 
-Makes sense to me.
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-Guenter
-
-> ---
->  drivers/watchdog/da9062_wdt.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-> index 6d81b1276b87..c5bd075c8b14 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -66,11 +66,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
->  					      unsigned int regval)
->  {
->  	struct da9062 *chip = wdt->hw;
-> -	int ret;
-> -
-> -	ret = da9062_reset_watchdog_timer(wdt);
-> -	if (ret)
-> -		return ret;
->  
->  	regmap_update_bits(chip->regmap,
->  				  DA9062AA_CONTROL_D,
-> 
-
+Yes, please!
