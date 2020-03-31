@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B098C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0B7C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5963B20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF0D20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646255;
-	bh=kdFz8qo7QSZ0eaaRBaUvwnOGED9tNdNhPXMmLES0Pvo=;
+	s=default; t=1585646260;
+	bh=a8XezzxjN5S1JRqUr8SNZof8KPX+QNGlFFUWtVuxuEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwZ6f6T2fiv5E4OfDIhxra8j15lZmTQ0nDErvRXfa6HSotSoaH0oCtUV9lrDwH574
-	 2USQqSuv5jRG01DDtsG7EXJlERoDBqSpaJroOXAGPsfSE07QA6bIfF7OeP/L6PVJLU
-	 ed2jMNgfjyRr2VSJkplI4lkl1KhIB5GO6Veybeq4=
+	b=zgHk/O3pWHiZlUfXcXFS+5ISlz7YqOlMEPCFRlNymJ8LuLlEld3Hx4vVqkYyQceYZ
+	 rhNV+yGL+0bdB39VsJcbZkE7LB9qfJr4eKyNxIr3QcUMwBzo3YESoQo/yYQneYIBMl
+	 tagsSS+eBs4bCd4f7kncygCI02bRA6eAMFLvay08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbgCaJRe (ORCPT
+        id S1731393AbgCaJRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38620 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732062AbgCaJRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:30 -0400
+        id S1730666AbgCaJRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C0FF20772;
-        Tue, 31 Mar 2020 09:17:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F29C020675;
+        Tue, 31 Mar 2020 09:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646249;
-        bh=kdFz8qo7QSZ0eaaRBaUvwnOGED9tNdNhPXMmLES0Pvo=;
+        s=default; t=1585646257;
+        bh=a8XezzxjN5S1JRqUr8SNZof8KPX+QNGlFFUWtVuxuEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pZns82jaKTT6uRbrrxF1MbS0xShy4nJTw4QyaEYzB9Kti2+eQptR1siyawKyMn8U9
-         y3BO1GPGRmG+LGpklTcLcOiP05uuErUkgl+DTIC8zUDOrAUf7rMdwWWWK+N7Ew4riM
-         EyluqiL11fbEZV7oWitr2A4kHHcWAYn+AdV8BhUQ=
+        b=qzLbza3XmoJR1JGQbTyQ55g5BAV9flVHVL8fzaupq9XGU1kpE/J/5uVjXsoRjiy+s
+         C3jSjElRyUjQKou6qCP7P2hSyGPUP3Wi3on0sfPi4d7YKx05ClQ71/CmMMEep3pzQ2
+         RsUWGc2IbHN8l4oaDEhUO1enDV7HSHIpCSj6pCpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.4 130/155] bpf/btf: Fix BTF verification of enum members in struct/union
-Date:   Tue, 31 Mar 2020 10:59:30 +0200
-Message-Id: <20200331085432.883481541@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.4 104/155] gpiolib: acpi: Correct comment for HP x2 10 honor_wakeup quirk
+Date:   Tue, 31 Mar 2020 10:59:04 +0200
+Message-Id: <20200331085430.163215528@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,37 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshiki Komachi <komachi.yoshiki@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit da6c7faeb103c493e505e87643272f70be586635 upstream.
+commit efaa87fa0947d525cf7c075316adde4e3ac7720b upstream.
 
-btf_enum_check_member() was currently sure to recognize the size of
-"enum" type members in struct/union as the size of "int" even if
-its size was packed.
+Commit aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option +
+quirk mechanism") added a quirk for some models of the HP x2 10 series.
 
-This patch fixes BTF enum verification to use the correct size
-of member in BPF programs.
+There are 2 issues with the comment describing the quirk:
+1) The comment claims the DMI quirk applies to all Cherry Trail based HP x2
+   10 models. In the mean time I have learned that there are at least 3
+   models of the HP x2 10 models:
 
-Fixes: 179cde8cef7e ("bpf: btf: Check members of struct/union")
-Signed-off-by: Yoshiki Komachi <komachi.yoshiki@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/1583825550-18606-2-git-send-email-komachi.yoshiki@gmail.com
+   Bay Trail SoC + AXP288 PMIC
+   Cherry Trail SoC + AXP288 PMIC
+   Cherry Trail SoC + TI PMIC
+
+   And this quirk's DMI matches only match the Cherry Trail SoC + TI PMIC
+   SoC, which is good because we want a slightly different quirk for the
+   others. This commit updates the comment to make it clear that the quirk
+   is only for the Cherry Trail SoC + TI PMIC models.
+
+2) The comment says that it is ok to disable wakeup on all ACPI GPIO event
+   handlers, because there is only the one for the embedded-controller
+   events. This is not true, there also is a handler for the special
+   INT0002 device which is related to USB wakeups. We need to also disable
+   wakeups on that one because the device turns of the USB-keyboard built
+   into the dock when closing the lid. The XHCI controller takes a while
+   to notice this, so it only notices it when already suspended, causing
+   a spurious wakeup because of this. So disabling wakeup on all handlers
+   is the right thing to do, but not because there only is the one handler
+   for the EC events. This commit updates the comment to correctly reflect
+   this.
+
+Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200302111225.6641-1-hdegoede@redhat.com
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/btf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpiolib-acpi.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -2309,7 +2309,7 @@ static int btf_enum_check_member(struct
- 
- 	struct_size = struct_type->size;
- 	bytes_offset = BITS_ROUNDDOWN_BYTES(struct_bits_off);
--	if (struct_size - bytes_offset < sizeof(int)) {
-+	if (struct_size - bytes_offset < member_type->size) {
- 		btf_verifier_log_member(env, struct_type, member,
- 					"Member exceeds struct_size");
- 		return -EINVAL;
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -1338,12 +1338,14 @@ static const struct dmi_system_id gpioli
+ 	},
+ 	{
+ 		/*
+-		 * Various HP X2 10 Cherry Trail models use an external
+-		 * embedded-controller connected via I2C + an ACPI GPIO
+-		 * event handler. The embedded controller generates various
+-		 * spurious wakeup events when suspended. So disable wakeup
+-		 * for its handler (it uses the only ACPI GPIO event handler).
+-		 * This breaks wakeup when opening the lid, the user needs
++		 * HP X2 10 models with Cherry Trail SoC + TI PMIC use an
++		 * external embedded-controller connected via I2C + an ACPI GPIO
++		 * event handler on INT33FF:01 pin 0, causing spurious wakeups.
++		 * When suspending by closing the LID, the power to the USB
++		 * keyboard is turned off, causing INT0002 ACPI events to
++		 * trigger once the XHCI controller notices the keyboard is
++		 * gone. So INT0002 events cause spurious wakeups too. Ignoring
++		 * EC wakes breaks wakeup when opening the lid, the user needs
+ 		 * to press the power-button to wakeup the system. The
+ 		 * alternative is suspend simply not working, which is worse.
+ 		 */
 
 
