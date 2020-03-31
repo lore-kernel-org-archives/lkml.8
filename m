@@ -2,52 +2,53 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88E8C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DECBC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDBE20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E402072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646069;
-	bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
+	s=default; t=1585646073;
+	bh=nv9bj0SckG+5zvW62Wz0XBvFku4jA7ClL8TNlF0sebE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0W0MxXa83VouUasD8kDZmjYCl3rGsupaX5C0nKOMhR87BcEgnGZtLa+lUvdRxMxm1
-	 JznRdGFKHneJGC17xPKIq1zpxuDomxbZVJOx0mGW7/AyDzvulhZ0M4c/EQY8nALsHF
-	 x2R+QfYwevO5T+O1Bihirzm6xQvJ/lXiVSTa+6zM=
+	b=fxXOCzJgodXONA90u8Wq7mgvjzzl04FBgfaRHdqsC6kzgbiTuRuvthg+aahv6fqRr
+	 CQhSDkqvTKLtoodLxLfqgwR/gj0Mcmbe7EKvVvDq0YvkaCI9Fc1lZY/J2iOufj+uI+
+	 j5wXi2zQmlER3uGUBnw8eOzLNy5F3IacdIqHCezU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbgCaJO2 (ORCPT
+        id S1731528AbgCaJOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34218 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730391AbgCaJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:14:26 -0400
+        id S1731535AbgCaJO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:14:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 999122072E;
-        Tue, 31 Mar 2020 09:14:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2360E2072E;
+        Tue, 31 Mar 2020 09:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646065;
-        bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
+        s=default; t=1585646067;
+        bh=nv9bj0SckG+5zvW62Wz0XBvFku4jA7ClL8TNlF0sebE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxp7pjgC4getO6scqwh7xv0DHIzLD/oKR798saECooSPCeuP8t34HmRqIN4OzKRjM
-         AfuR8LnmHSP2EuZ55oSnucpoDYewIgV09qmdv+jR4g4sGwT7YITVwE9ceH4+dwu0d4
-         3/rZttJFs2gZHd9H02lXchVMQF64nhfWaY8gfjuA=
+        b=a7Xf08SToPPH2S9ibs20jlBi/3T+3eiTMDuQ2YoMj1Z6UPzwToEJh/5m+263POX9R
+         amlpeCReQ40vKylBfr7l9MlskQ6HSEYi2qhAYTTVM0n2NVTDUCCZc0Zkz1zqasXjLj
+         4ulv5NIJBcEPm8tSMV/8VB6ZuoyQyIG9i7G1IhZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Megha Dey <megha.dey@linux.intel.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Megha Dey <megha.dey@linux.intel.com>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 073/155] iommu/vt-d: Fix debugfs register reads
-Date:   Tue, 31 Mar 2020 10:58:33 +0200
-Message-Id: <20200331085426.574364408@linuxfoundation.org>
+Subject: [PATCH 5.4 074/155] iommu/vt-d: Populate debugfs if IOMMUs are detected
+Date:   Tue, 31 Mar 2020 10:58:34 +0200
+Message-Id: <20200331085426.686573184@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -62,121 +63,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Megha Dey <megha.dey@linux.intel.com>
 
-[ Upstream commit ba3b01d7a6f4ab9f8a0557044c9a7678f64ae070 ]
+[ Upstream commit 1da8347d8505c137fb07ff06bbcd3f2bf37409bc ]
 
-Commit 6825d3ea6cde ("iommu/vt-d: Add debugfs support to show register
-contents") dumps the register contents for all IOMMU devices.
+Currently, the intel iommu debugfs directory(/sys/kernel/debug/iommu/intel)
+gets populated only when DMA remapping is enabled (dmar_disabled = 0)
+irrespective of whether interrupt remapping is enabled or not.
 
-Currently, a 64 bit read(dmar_readq) is done for all the IOMMU registers,
-even though some of the registers are 32 bits, which is incorrect.
+Instead, populate the intel iommu debugfs directory if any IOMMUs are
+detected.
 
-Use the correct read function variant (dmar_readl/dmar_readq) while
-reading the contents of 32/64 bit registers respectively.
-
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: ee2636b8670b1 ("iommu/vt-d: Enable base Intel IOMMU debugfs support")
 Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
-Link: https://lore.kernel.org/r/1583784587-26126-2-git-send-email-megha.dey@linux.intel.com
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu-debugfs.c | 40 ++++++++++++++++++-----------
- include/linux/intel-iommu.h         |  2 ++
- 2 files changed, 27 insertions(+), 15 deletions(-)
+ drivers/iommu/intel-iommu-debugfs.c |   11 ++++++++++-
+ drivers/iommu/intel-iommu.c         |    4 +++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel-iommu-debugfs.c
-index 471f05d452e01..80378c10dd77a 100644
 --- a/drivers/iommu/intel-iommu-debugfs.c
 +++ b/drivers/iommu/intel-iommu-debugfs.c
-@@ -32,38 +32,42 @@ struct iommu_regset {
+@@ -281,9 +281,16 @@ static int dmar_translation_struct_show(
+ {
+ 	struct dmar_drhd_unit *drhd;
+ 	struct intel_iommu *iommu;
++	u32 sts;
  
- #define IOMMU_REGSET_ENTRY(_reg_)					\
- 	{ DMAR_##_reg_##_REG, __stringify(_reg_) }
--static const struct iommu_regset iommu_regs[] = {
-+
-+static const struct iommu_regset iommu_regs_32[] = {
- 	IOMMU_REGSET_ENTRY(VER),
--	IOMMU_REGSET_ENTRY(CAP),
--	IOMMU_REGSET_ENTRY(ECAP),
- 	IOMMU_REGSET_ENTRY(GCMD),
- 	IOMMU_REGSET_ENTRY(GSTS),
--	IOMMU_REGSET_ENTRY(RTADDR),
--	IOMMU_REGSET_ENTRY(CCMD),
- 	IOMMU_REGSET_ENTRY(FSTS),
- 	IOMMU_REGSET_ENTRY(FECTL),
- 	IOMMU_REGSET_ENTRY(FEDATA),
- 	IOMMU_REGSET_ENTRY(FEADDR),
- 	IOMMU_REGSET_ENTRY(FEUADDR),
--	IOMMU_REGSET_ENTRY(AFLOG),
- 	IOMMU_REGSET_ENTRY(PMEN),
- 	IOMMU_REGSET_ENTRY(PLMBASE),
- 	IOMMU_REGSET_ENTRY(PLMLIMIT),
-+	IOMMU_REGSET_ENTRY(ICS),
-+	IOMMU_REGSET_ENTRY(PRS),
-+	IOMMU_REGSET_ENTRY(PECTL),
-+	IOMMU_REGSET_ENTRY(PEDATA),
-+	IOMMU_REGSET_ENTRY(PEADDR),
-+	IOMMU_REGSET_ENTRY(PEUADDR),
-+};
-+
-+static const struct iommu_regset iommu_regs_64[] = {
-+	IOMMU_REGSET_ENTRY(CAP),
-+	IOMMU_REGSET_ENTRY(ECAP),
-+	IOMMU_REGSET_ENTRY(RTADDR),
-+	IOMMU_REGSET_ENTRY(CCMD),
-+	IOMMU_REGSET_ENTRY(AFLOG),
- 	IOMMU_REGSET_ENTRY(PHMBASE),
- 	IOMMU_REGSET_ENTRY(PHMLIMIT),
- 	IOMMU_REGSET_ENTRY(IQH),
- 	IOMMU_REGSET_ENTRY(IQT),
- 	IOMMU_REGSET_ENTRY(IQA),
--	IOMMU_REGSET_ENTRY(ICS),
- 	IOMMU_REGSET_ENTRY(IRTA),
- 	IOMMU_REGSET_ENTRY(PQH),
- 	IOMMU_REGSET_ENTRY(PQT),
- 	IOMMU_REGSET_ENTRY(PQA),
--	IOMMU_REGSET_ENTRY(PRS),
--	IOMMU_REGSET_ENTRY(PECTL),
--	IOMMU_REGSET_ENTRY(PEDATA),
--	IOMMU_REGSET_ENTRY(PEADDR),
--	IOMMU_REGSET_ENTRY(PEUADDR),
- 	IOMMU_REGSET_ENTRY(MTRRCAP),
- 	IOMMU_REGSET_ENTRY(MTRRDEF),
- 	IOMMU_REGSET_ENTRY(MTRR_FIX64K_00000),
-@@ -126,10 +130,16 @@ static int iommu_regset_show(struct seq_file *m, void *unused)
- 		 * by adding the offset to the pointer (virtual address).
- 		 */
- 		raw_spin_lock_irqsave(&iommu->register_lock, flag);
--		for (i = 0 ; i < ARRAY_SIZE(iommu_regs); i++) {
--			value = dmar_readq(iommu->reg + iommu_regs[i].offset);
-+		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_32); i++) {
-+			value = dmar_readl(iommu->reg + iommu_regs_32[i].offset);
-+			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
-+				   iommu_regs_32[i].regs, iommu_regs_32[i].offset,
-+				   value);
+ 	rcu_read_lock();
+ 	for_each_active_iommu(iommu, drhd) {
++		sts = dmar_readl(iommu->reg + DMAR_GSTS_REG);
++		if (!(sts & DMA_GSTS_TES)) {
++			seq_printf(m, "DMA Remapping is not enabled on %s\n",
++				   iommu->name);
++			continue;
 +		}
-+		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_64); i++) {
-+			value = dmar_readq(iommu->reg + iommu_regs_64[i].offset);
- 			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
--				   iommu_regs[i].regs, iommu_regs[i].offset,
-+				   iommu_regs_64[i].regs, iommu_regs_64[i].offset,
- 				   value);
- 		}
- 		raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 6d8bf4bdf240d..1e5dad8b8e59b 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -120,6 +120,8 @@
+ 		root_tbl_walk(m, iommu);
+ 		seq_putc(m, '\n');
+ 	}
+@@ -353,6 +360,7 @@ static int ir_translation_struct_show(st
+ 	struct dmar_drhd_unit *drhd;
+ 	struct intel_iommu *iommu;
+ 	u64 irta;
++	u32 sts;
  
- #define dmar_readq(a) readq(a)
- #define dmar_writeq(a,v) writeq(v,a)
-+#define dmar_readl(a) readl(a)
-+#define dmar_writel(a, v) writel(v, a)
+ 	rcu_read_lock();
+ 	for_each_active_iommu(iommu, drhd) {
+@@ -362,7 +370,8 @@ static int ir_translation_struct_show(st
+ 		seq_printf(m, "Remapped Interrupt supported on IOMMU: %s\n",
+ 			   iommu->name);
  
- #define DMAR_VER_MAJOR(v)		(((v) & 0xf0) >> 4)
- #define DMAR_VER_MINOR(v)		((v) & 0x0f)
--- 
-2.20.1
-
+-		if (iommu->ir_table) {
++		sts = dmar_readl(iommu->reg + DMAR_GSTS_REG);
++		if (iommu->ir_table && (sts & DMA_GSTS_IRES)) {
+ 			irta = virt_to_phys(iommu->ir_table->base);
+ 			seq_printf(m, " IR table address:%llx\n", irta);
+ 			ir_tbl_remap_entry_show(m, iommu);
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4961,6 +4961,9 @@ int __init intel_iommu_init(void)
+ 
+ 	down_write(&dmar_global_lock);
+ 
++	if (!no_iommu)
++		intel_iommu_debugfs_init();
++
+ 	if (no_iommu || dmar_disabled) {
+ 		/*
+ 		 * We exit the function here to ensure IOMMU's remapping and
+@@ -5056,7 +5059,6 @@ int __init intel_iommu_init(void)
+ 	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
+ 
+ 	intel_iommu_enabled = 1;
+-	intel_iommu_debugfs_init();
+ 
+ 	return 0;
+ 
 
 
