@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01401C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B060C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2353208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075F6208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645235;
-	bh=Ne9+LlSQFMWHN1DGAzP8M7ivWUlamrWM9ZR/Ae2AiRA=;
+	s=default; t=1585645239;
+	bh=Gyq5CPIWhGyETl7u146YtvZnj20MLETTWKjndr0vl/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MaBGymPj5WVrqbGW6HY44yy1Ud48FYh1dNOffok7BGpuKOExOwrVPsHOXd4wsWNme
-	 ZvtYPQsMQHIQY+ruMo1z6dDlVeVKYv1mWlFVIdave+OUCbIr8nglq38gm11y7iPf2C
-	 Uy35w2GuLwev+Hk/CtHET0HAF/eu7CzNqUadWqM0=
+	b=cZOMBb8iOORuxaAY9qDIxLbv/b3K/dlWwgFY2au+0AK5mgFd0qX6U/WU1Cqa+loqq
+	 EynpjIVABzAl6tao11hqScSjMD0iH8QuhtwjuIwi3ujw8w3YPsRCMmBhVzgsGp4+CS
+	 jf+D4TyVwdnOomZYW1tLxnVit2KBmcsbWE4e8lBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbgCaJAf (ORCPT
+        id S1730422AbgCaJAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:00:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39310 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgCaJAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:00:34 -0400
+        id S1729425AbgCaJAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:00:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5F2220787;
-        Tue, 31 Mar 2020 09:00:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00025208E0;
+        Tue, 31 Mar 2020 09:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645233;
-        bh=Ne9+LlSQFMWHN1DGAzP8M7ivWUlamrWM9ZR/Ae2AiRA=;
+        s=default; t=1585645237;
+        bh=Gyq5CPIWhGyETl7u146YtvZnj20MLETTWKjndr0vl/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BciVf1HCNPcIxkyazbhR59SldKOIC2vS2VE+kYPZD5JWILAtgLLH2gz9+zRTQwOAW
-         7x6/eAnMI55WreYzkCzQM1ilUiKOO/snHkHN0FZG1Gd7OxTnVzjIXMZ7d7t+48iOKM
-         bl4SnieZkxFgXBM+SeHQuuZHSxMJhYNZB1pwpMzo=
+        b=fRMEqYMF049U6BPmtLGXcpeTsy6Vx6Zgc+tVcx/9VbIwVzhc31s1iHj8oF1HCc2/Z
+         MWqcGWSsUsmXIr7gl/r04P99T875W9lfiPWxBnSAh2LqOr5hFIMXh8iBz9iES9TDuq
+         eo73Q4PmzSr/O6NrNDzEUYyVFfoaZcVCNtNLV+kE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Mallet <anthony.mallet@laas.fr>,
-        Oliver Neukum <oneukum@suse.com>,
-        Matthias Reichl <hias@horus.com>
-Subject: [PATCH 5.6 05/23] USB: cdc-acm: restore capability check order
-Date:   Tue, 31 Mar 2020 10:59:17 +0200
-Message-Id: <20200331085311.180066588@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
+Subject: [PATCH 5.6 06/23] USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interrupt_callback
+Date:   Tue, 31 Mar 2020 10:59:18 +0200
+Message-Id: <20200331085311.333835590@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -60,56 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 62d65bdd9d05158aa2547f8ef72375535f3bc6e3 upstream.
+commit 57aa9f294b09463492f604feaa5cc719beaace32 upstream.
 
-commit b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
-introduced a regression by changing the order of capability and close
-settings change checks. When running with CAP_SYS_ADMIN setting the
-close settings to the values already set resulted in -EOPNOTSUPP.
+Fix slab-out-of-bounds read in the interrupt-URB completion handler.
 
-Fix this by changing the check order back to how it was before.
+The boundary condition should be (length - 1) as we access
+data[position + 1].
 
-Fixes: b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
-Cc: Anthony Mallet <anthony.mallet@laas.fr>
+Reported-and-tested-by: syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Cc: stable <stable@vger.kernel.org>
-Cc: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Link: https://lore.kernel.org/r/20200327150350.3657-1-hias@horus.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/cdc-acm.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/usb/serial/io_edgeport.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -923,16 +923,16 @@ static int set_serial_info(struct tty_st
- 
- 	mutex_lock(&acm->port.mutex);
- 
--	if ((ss->close_delay != old_close_delay) ||
--            (ss->closing_wait != old_closing_wait)) {
--		if (!capable(CAP_SYS_ADMIN))
-+	if (!capable(CAP_SYS_ADMIN)) {
-+		if ((ss->close_delay != old_close_delay) ||
-+		    (ss->closing_wait != old_closing_wait))
- 			retval = -EPERM;
--		else {
--			acm->port.close_delay  = close_delay;
--			acm->port.closing_wait = closing_wait;
--		}
--	} else
--		retval = -EOPNOTSUPP;
-+		else
-+			retval = -EOPNOTSUPP;
-+	} else {
-+		acm->port.close_delay  = close_delay;
-+		acm->port.closing_wait = closing_wait;
-+	}
- 
- 	mutex_unlock(&acm->port.mutex);
- 	return retval;
+--- a/drivers/usb/serial/io_edgeport.c
++++ b/drivers/usb/serial/io_edgeport.c
+@@ -710,7 +710,7 @@ static void edge_interrupt_callback(stru
+ 		/* grab the txcredits for the ports if available */
+ 		position = 2;
+ 		portNumber = 0;
+-		while ((position < length) &&
++		while ((position < length - 1) &&
+ 				(portNumber < edge_serial->serial->num_ports)) {
+ 			txCredits = data[position] | (data[position+1] << 8);
+ 			if (txCredits) {
 
 
