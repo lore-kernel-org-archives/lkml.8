@@ -2,111 +2,118 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B7DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7B5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8437120757
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A2D20772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:23:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ThQ8+U00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbgCaUVA (ORCPT
+        id S1729368AbgCaUXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:21:00 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:31635 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727708AbgCaUVA (ORCPT
+        Tue, 31 Mar 2020 16:23:24 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21423 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727852AbgCaUXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:21:00 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 31 Mar 2020 13:20:59 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 31 Mar 2020 13:20:58 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id C20AA4BC2; Tue, 31 Mar 2020 13:20:58 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 13:20:58 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and
- function
-Message-ID: <20200331202058.GB25781@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
- <20200330204359.GB5107@codeaurora.org>
- <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+        Tue, 31 Mar 2020 16:23:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585686203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=W1OdirHNeVVh5N6MfUuTvEJyEgcCw9DPaOMxYfCgKLQ=;
+        b=ThQ8+U00NbT2LGXue+UjCm5Gm9gJe7ad5OCCTvX7ZfQAAkh0aGQyMkYgbcHT/dqGop9uBz
+        tNeXBL+x/C0nWrZMATTIM6dQ8LkbfZ8BRs34KsE87Cr59OPpp0fFcMyPd7/zkRzGSW8tIQ
+        s9IoB03cfLOvLO0XCPgs/4JBhIp1JDk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-h-_zVjEpM_K6MpHqc1JKFQ-1; Tue, 31 Mar 2020 16:23:19 -0400
+X-MC-Unique: h-_zVjEpM_K6MpHqc1JKFQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5D0718A8C94;
+        Tue, 31 Mar 2020 20:23:17 +0000 (UTC)
+Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CE7045E009;
+        Tue, 31 Mar 2020 20:23:16 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 15:23:15 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+Message-ID: <20200331202315.zialorhlxmml6ec7@treble>
+References: <20200325174605.369570202@infradead.org>
+ <20200326113049.GD20696@hirez.programming.kicks-ass.net>
+ <20200326135620.tlmof5fa7p5wct62@treble>
+ <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+ <20200326195718.GD2452@worktop.programming.kicks-ass.net>
+ <20200327010001.i3kebxb4um422ycb@treble>
+ <20200330170200.GU20713@hirez.programming.kicks-ass.net>
+ <20200330190205.k5ssixd5hpshpjjq@treble>
+ <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+ <20200331111652.GH20760@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200331111652.GH20760@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:24:52PM +0200, Arnd Bergmann wrote:
-> On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
-> <gurus@codeaurora.org> wrote:
-> >
-> > On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
-> > > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> > >
-> > > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > >
-> > > >         period_cycles /= prescale;
-> > > >         c = (unsigned long long)period_cycles * state->duty_cycle;
-> > > > -       do_div(c, state->period);
-> > > > -       duty_cycles = c;
-> > > > +       duty_cycles = div64_u64(c, state->period);
-> > > >
-> > >
-> > > This change looks fine, but I wonder if the code directly above it
-> > >
-> > >         c = clk_get_rate(imx->clk_per);
-> > >         c *= state->period;
-> > >         do_div(c, 1000000000);
-> > >         period_cycles = c;
-> > >
-> > > might run into an overflow when both the clock rate and the period
-> > > are large numbers.
-> >
-> > Hmm. Seems to me like addressing this would be outside the scope of this
-> > patch series.
+On Tue, Mar 31, 2020 at 01:16:52PM +0200, Peter Zijlstra wrote:
+> Subject: objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
 > 
-> I think it should be part of the same series, addressing bugs that
-> were introduced
-> by the change to 64-bit period. If it's not getting fixed along with
-> the other regressions,
-> I fear nobody is going to go back and fix it later.
+> This replaces the SAVE/RESTORE hints with a RET_OFFSET hint that applies
+> to the following instructions:
+> 
+>  - any instruction that terminates a function, like: RETURN and sibling
+>    calls. It allows the stack-frame to be off by @sp_offset, ie. it
+>    allows stuffing the return stack.
+> 
+>  - EXCEPTION_RETURN (a new INSN_type that splits IRET out of
+>    CONTEXT_SWITCH) and here it denotes a @sp_offset sized POP and makes
+>    the instruction continue.
 
-Makes sense, I agree. Would this be an acceptable fix?
+Looking closer, I see how my UNWIND_HINT_ADJUST idea doesn't work for
+the ftrace_regs_caller() case.  The ORC data is actually correct there.
+So basically we need a way to tell objtool to be quiet.
 
-Instead of multiplying c and state->period first and then dividing by
-10^9, first divide state->period by 10^9 and then multiply the quotient
-of that division with c and assign it to period_cycles. Like so:
+I now understand what you're trying to do with the RET_TAIL thing, and I
+guess it's ok for the ftrace case.  But I'd rather an UNWIND_HINT_IGNORE
+before the tail cail, which would tell objtool to just silence the tail
+call warning.  It's simpler for the user to understand, it's simpler
+logic in objtool, and I think an "ignore warnings for the next insn"
+hint would be more generally applicable anyway.
 
-	c = clk_get_rate(imx->clk_per);
-	c *= div_u64(state->period, 1000000000);
-	period_cycles = c;
+But also... the RET_OFFSET usage for sync_core() *really* bugs me.
 
-This should take care of overflow not happening because state->period is
-converted from nanoseconds to seconds early on and so becomes a small
-number.
+I know you said it's like an indirect tail call with a bigger frame, but
+that's kind of stretching it because the function frame is still there.
 
-Thank you.
+And objtool doesn't treat it like a tail call at all.  In fact, it
+handles it *completely* differently from the normal ret-tail-call case.
+Instead of silencing a tail call warning, it adjusts the stack offset
+and continues the code path.
 
-Guru Das.
+This basically adds *two* new hint types, while trying to call them the
+same thing.  There's no overlapping functionality between them in
+objtool, other than the use of the same insn->ret_offset variable.  But
+it's two distinct functionalities, depending on the context (return/tail
+vs IRETQ).
+
+I'll try to work up some patches with a different approach in a bit.
+
+-- 
+Josh
+
