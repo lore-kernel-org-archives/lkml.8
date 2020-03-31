@@ -2,52 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0599DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52952C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0A620675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270DF20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646551;
-	bh=8kvesJQdmcKceXcBaFDnyhVeYcYpRlzrJivzrwLtwbE=;
+	s=default; t=1585646554;
+	bh=a6j/XWE8nTq+3h5O4aoFe2okcRGUNuXiPGmpylvwukc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zkb6NsMLEE2B4+GnyqTdXmo6NoQEWQ7eMphPTnhu1io5Gu4yVIx9fBvY/Ve3QkOpn
-	 G96KmVqRVAJBFQZ9tJ7VjkZ8/HWeqrcWCm+NPC66fEFFW/2rNzCuvmp4OQuTQjzxlE
-	 b/mofmvp7cSOBgtM3qXVDskI1hteGGb6PdH5mWOA=
+	b=Wjqh3P+/+K8EeTNRyMFIKjXCHjdz5t77yQt64L4qwgMuv3IO5oCaMDgQUvP3XF2MT
+	 txaR1HW7pAfiLxKS5EUUpPJarMsf5nYV9gLgPyJCjOZXf9z6RxTU5AdxP76i+xt18Y
+	 Ucmk2TbTiaSic1R/0wMiw2zGnAxLURIpdizykd5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731196AbgCaJHH (ORCPT
+        id S1731278AbgCaJWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:07:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48546 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730666AbgCaJG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:06:56 -0400
+        id S1731195AbgCaJHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:07:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACC3120675;
-        Tue, 31 Mar 2020 09:06:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 665B820B1F;
+        Tue, 31 Mar 2020 09:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645616;
-        bh=8kvesJQdmcKceXcBaFDnyhVeYcYpRlzrJivzrwLtwbE=;
+        s=default; t=1585645626;
+        bh=a6j/XWE8nTq+3h5O4aoFe2okcRGUNuXiPGmpylvwukc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZEJYZpgZ+s+AhTDmfI7TZqARLQxxPwZ94nAcuETfBOXT2W747oUEBWUWejkyZo19A
-         /ZF4Bw2A9CLKMJbnnWyyLAxq2ZdUIHeaKnRMnV6LRwaqPKGHW1VUK1DR2VNSuTKbLF
-         TaOom/poV09h5UXt/byM9pmmZddPRtrKehfknaDg=
+        b=IV/Wphggwh2/Xvb7K9oYymIhdblZRrO1uXYdEm7qtHx8ULM12wmaIXi662CofVm/s
+         8hm6zq4ckSSYd1t8neE5wB55CVHFUofNZFvmp9wI8WtfcWRzgHiJIrC0rXIIqkwe1d
+         p1g472+rHPjdoMw2Hk9l5BZKKRaz2/WepGVBuz8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bryan Gurney <bgurney@redhat.com>,
-        Bernhard Sulzer <micraft.b@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.5 107/170] scsi: sd: Fix optimal I/O size for devices that change reported values
-Date:   Tue, 31 Mar 2020 10:58:41 +0200
-Message-Id: <20200331085435.564769671@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 073/170] iommu/vt-d: Silence RCU-list debugging warnings
+Date:   Tue, 31 Mar 2020 10:58:07 +0200
+Message-Id: <20200331085432.115748881@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,54 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin K. Petersen <martin.petersen@oracle.com>
+From: Qian Cai <cai@lca.pw>
 
-commit ea697a8bf5a4161e59806fab14f6e4a46dc7dcb0 upstream.
+[ Upstream commit f5152416528c2295f35dd9c9bd4fb27c4032413d ]
 
-Some USB bridge devices will return a default set of characteristics during
-initialization. And then, once an attached drive has spun up, substitute
-the actual parameters reported by the drive. According to the SCSI spec,
-the device should return a UNIT ATTENTION in case any reported parameters
-change. But in this case the change is made silently after a small window
-where default values are reported.
+Similar to the commit 02d715b4a818 ("iommu/vt-d: Fix RCU list debugging
+warnings"), there are several other places that call
+list_for_each_entry_rcu() outside of an RCU read side critical section
+but with dmar_global_lock held. Silence those false positives as well.
 
-Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of
-physical block size") validated the reported optimal I/O size against the
-physical block size to overcome problems with devices reporting nonsensical
-transfer sizes. However, this validation did not account for the fact that
-aforementioned devices will return default values during a brief window
-during spin-up. The subsequent change in reported characteristics would
-invalidate the checking that had previously been performed.
+ drivers/iommu/intel-iommu.c:4288 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1ad/0xb97
 
-Unset a previously configured optimal I/O size should the sanity checking
-fail on subsequent revalidate attempts.
+ drivers/iommu/dmar.c:366 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x125/0xb97
 
-Link: https://lore.kernel.org/r/33fb522e-4f61-1b76-914f-c9e6a3553c9b@gmail.com
-Cc: Bryan Gurney <bgurney@redhat.com>
-Cc: <stable@vger.kernel.org>
-Reported-by: Bernhard Sulzer <micraft.b@gmail.com>
-Tested-by: Bernhard Sulzer <micraft.b@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ drivers/iommu/intel-iommu.c:5057 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+  #0: ffffffffa71892c8 (dmar_global_lock){++++}, at: intel_iommu_init+0x61a/0xb13
 
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sd.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iommu/dmar.c | 3 ++-
+ include/linux/dmar.h | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3181,9 +3181,11 @@ static int sd_revalidate_disk(struct gen
- 	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
- 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
- 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
--	} else
-+	} else {
-+		q->limits.io_opt = 0;
- 		rw_max = min_not_zero(logical_to_sectors(sdp, dev_max),
- 				      (sector_t)BLK_DEF_MAX_SECTORS);
-+	}
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index 93f8e646cb0b0..f7a86652a9841 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -371,7 +371,8 @@ dmar_find_dmaru(struct acpi_dmar_hardware_unit *drhd)
+ {
+ 	struct dmar_drhd_unit *dmaru;
  
- 	/* Do not exceed controller limit */
- 	rw_max = min(rw_max, queue_max_hw_sectors(q));
+-	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list)
++	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list,
++				dmar_rcu_check())
+ 		if (dmaru->segment == drhd->segment &&
+ 		    dmaru->reg_base_addr == drhd->address)
+ 			return dmaru;
+diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+index 712be8bc6a7c8..d7bf029df737d 100644
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -74,11 +74,13 @@ extern struct list_head dmar_drhd_units;
+ 				dmar_rcu_check())
+ 
+ #define for_each_active_drhd_unit(drhd)					\
+-	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
++	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
++				dmar_rcu_check())			\
+ 		if (drhd->ignored) {} else
+ 
+ #define for_each_active_iommu(i, drhd)					\
+-	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
++	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
++				dmar_rcu_check())			\
+ 		if (i=drhd->iommu, drhd->ignored) {} else
+ 
+ #define for_each_iommu(i, drhd)						\
+-- 
+2.20.1
+
 
 
