@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3716C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8E8C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAC620675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA8220787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645993;
-	bh=lPv5/SVxRUsJE9C6iPhlGEWnmckp85fixzSHFBBxPAU=;
+	s=default; t=1585645995;
+	bh=xTx3IFmtgVOpPk5qCDwPxc5sdjDZyhiGdgIG54GnXQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OA+nEVnOYSHcufvJAg5tqQNYif5+q+99KccHpJX8JXKa7NWGTeSWuyXDxG0aiDUa/
-	 NGqER4aEhpB6ePvzvrQkYy74MDygzAFpWFujxml3VJY3+WqjoUzYEXtY3Bsknh0OwB
-	 5uuabeSM3eQQp6ssOuIZFnUzOQyZQbeoHmisqhWU=
+	b=H15VZl+gFi/EJgijX19Lw8wUygyPB9HxbEOmjdrFHPnBV8jwIqA40jbWdPQPYxsH/
+	 JZPQtcezNewswuvIwkb7NEq1OHnSLdh9U4EdDj7CIuxqrXEsD4BNRPDrjkzZwjx5bO
+	 yN1uSn00mfiG1sEr3smV8eMwiEsIyqXC3RBQZRCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgCaJNL (ORCPT
+        id S1730308AbgCaJNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60354 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730244AbgCaJNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:08 -0400
+        id S1730454AbgCaJNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02DBC20675;
-        Tue, 31 Mar 2020 09:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 705F120675;
+        Tue, 31 Mar 2020 09:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645987;
-        bh=lPv5/SVxRUsJE9C6iPhlGEWnmckp85fixzSHFBBxPAU=;
+        s=default; t=1585645990;
+        bh=xTx3IFmtgVOpPk5qCDwPxc5sdjDZyhiGdgIG54GnXQE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0Gue4b2t6zI70++bUXrkhVpTEzMD+vJlPb+IVx9e6sxbWNYJyIN6kcKg2HplAOWx
-         qu93ZkHu4nQlxt1xKr2oem2g2ZtLI0GmI99uoeED06v0PqD/+SDpFKSVmYZ/YTXZ0g
-         CmoYLFf++aPuclRwkjwTVI4RA6cpKRYKH/nxPQCk=
+        b=ZijNzPYXQ7yUTIfzJDE7wRwfna4Zd8VZNSSzITBrC2d5z0CXAxsDrA2uHBi43jGGA
+         HKUr24D3MYozM976LpTwfXtsXtNyLeXDbhhpLqPYkOURdF6WdAMBgphb292VI6aOM+
+         YT4G7t9zdaZ/bG/w1ip31F5G8Ri9KI08Kc+1pyVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org, Jon Rosen <jrosen@cisco.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 048/155] hsr: set .netnsok flag
-Date:   Tue, 31 Mar 2020 10:58:08 +0200
-Message-Id: <20200331085423.855557540@linuxfoundation.org>
+Subject: [PATCH 5.4 022/155] net/packet: tpacket_rcv: avoid a producer race condition
+Date:   Tue, 31 Mar 2020 10:57:42 +0200
+Message-Id: <20200331085420.872307193@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,34 +60,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 09e91dbea0aa32be02d8877bd50490813de56b9a ]
+[ Upstream commit 61fad6816fc10fb8793a925d5c1256d1c3db0cd2 ]
 
-The hsr module has been supporting the list and status command.
-(HSR_C_GET_NODE_LIST and HSR_C_GET_NODE_STATUS)
-These commands send node information to the user-space via generic netlink.
-But, in the non-init_net namespace, these commands are not allowed
-because .netnsok flag is false.
-So, there is no way to get node information in the non-init_net namespace.
+PACKET_RX_RING can cause multiple writers to access the same slot if a
+fast writer wraps the ring while a slow writer is still copying. This
+is particularly likely with few, large, slots (e.g., GSO packets).
 
-Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Synchronize kernel thread ownership of rx ring slots with a bitmap.
+
+Writers acquire a slot race-free by testing tp_status TP_STATUS_KERNEL
+while holding the sk receive queue lock. They release this lock before
+copying and set tp_status to TP_STATUS_USER to release to userspace
+when done. During copying, another writer may take the lock, also see
+TP_STATUS_KERNEL, and start writing to the same slot.
+
+Introduce a new rx_owner_map bitmap with a bit per slot. To acquire a
+slot, test and set with the lock held. To release race-free, update
+tp_status and owner bit as a transaction, so take the lock again.
+
+This is the one of a variety of discussed options (see Link below):
+
+* instead of a shadow ring, embed the data in the slot itself, such as
+in tp_padding. But any test for this field may match a value left by
+userspace, causing deadlock.
+
+* avoid the lock on release. This leaves a small race if releasing the
+shadow slot before setting TP_STATUS_USER. The below reproducer showed
+that this race is not academic. If releasing the slot after tp_status,
+the race is more subtle. See the first link for details.
+
+* add a new tp_status TP_KERNEL_OWNED to avoid the transactional store
+of two fields. But, legacy applications may interpret all non-zero
+tp_status as owned by the user. As libpcap does. So this is possible
+only opt-in by newer processes. It can be added as an optional mode.
+
+* embed the struct at the tail of pg_vec to avoid extra allocation.
+The implementation proved no less complex than a separate field.
+
+The additional locking cost on release adds contention, no different
+than scaling on multicore or multiqueue h/w. In practice, below
+reproducer nor small packet tcpdump showed a noticeable change in
+perf report in cycles spent in spinlock. Where contention is
+problematic, packet sockets support mitigation through PACKET_FANOUT.
+And we can consider adding opt-in state TP_KERNEL_OWNED.
+
+Easy to reproduce by running multiple netperf or similar TCP_STREAM
+flows concurrently with `tcpdump -B 129 -n greater 60000`.
+
+Based on an earlier patchset by Jon Rosen. See links below.
+
+I believe this issue goes back to the introduction of tpacket_rcv,
+which predates git history.
+
+Link: https://www.mail-archive.com/netdev@vger.kernel.org/msg237222.html
+Suggested-by: Jon Rosen <jrosen@cisco.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Jon Rosen <jrosen@cisco.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_netlink.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/packet/af_packet.c |   21 +++++++++++++++++++++
+ net/packet/internal.h  |    5 ++++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
---- a/net/hsr/hsr_netlink.c
-+++ b/net/hsr/hsr_netlink.c
-@@ -470,6 +470,7 @@ static struct genl_family hsr_genl_famil
- 	.version = 1,
- 	.maxattr = HSR_A_MAX,
- 	.policy = hsr_genl_policy,
-+	.netnsok = true,
- 	.module = THIS_MODULE,
- 	.ops = hsr_ops,
- 	.n_ops = ARRAY_SIZE(hsr_ops),
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2172,6 +2172,7 @@ static int tpacket_rcv(struct sk_buff *s
+ 	struct timespec ts;
+ 	__u32 ts_status;
+ 	bool is_drop_n_account = false;
++	unsigned int slot_id = 0;
+ 	bool do_vnet = false;
+ 
+ 	/* struct tpacket{2,3}_hdr is aligned to a multiple of TPACKET_ALIGNMENT.
+@@ -2274,6 +2275,13 @@ static int tpacket_rcv(struct sk_buff *s
+ 	if (!h.raw)
+ 		goto drop_n_account;
+ 
++	if (po->tp_version <= TPACKET_V2) {
++		slot_id = po->rx_ring.head;
++		if (test_bit(slot_id, po->rx_ring.rx_owner_map))
++			goto drop_n_account;
++		__set_bit(slot_id, po->rx_ring.rx_owner_map);
++	}
++
+ 	if (do_vnet &&
+ 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
+ 				    sizeof(struct virtio_net_hdr),
+@@ -2379,7 +2387,10 @@ static int tpacket_rcv(struct sk_buff *s
+ #endif
+ 
+ 	if (po->tp_version <= TPACKET_V2) {
++		spin_lock(&sk->sk_receive_queue.lock);
+ 		__packet_set_status(po, h.raw, status);
++		__clear_bit(slot_id, po->rx_ring.rx_owner_map);
++		spin_unlock(&sk->sk_receive_queue.lock);
+ 		sk->sk_data_ready(sk);
+ 	} else {
+ 		prb_clear_blk_fill_status(&po->rx_ring);
+@@ -4276,6 +4287,7 @@ static int packet_set_ring(struct sock *
+ {
+ 	struct pgv *pg_vec = NULL;
+ 	struct packet_sock *po = pkt_sk(sk);
++	unsigned long *rx_owner_map = NULL;
+ 	int was_running, order = 0;
+ 	struct packet_ring_buffer *rb;
+ 	struct sk_buff_head *rb_queue;
+@@ -4361,6 +4373,12 @@ static int packet_set_ring(struct sock *
+ 			}
+ 			break;
+ 		default:
++			if (!tx_ring) {
++				rx_owner_map = bitmap_alloc(req->tp_frame_nr,
++					GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO);
++				if (!rx_owner_map)
++					goto out_free_pg_vec;
++			}
+ 			break;
+ 		}
+ 	}
+@@ -4390,6 +4408,8 @@ static int packet_set_ring(struct sock *
+ 		err = 0;
+ 		spin_lock_bh(&rb_queue->lock);
+ 		swap(rb->pg_vec, pg_vec);
++		if (po->tp_version <= TPACKET_V2)
++			swap(rb->rx_owner_map, rx_owner_map);
+ 		rb->frame_max = (req->tp_frame_nr - 1);
+ 		rb->head = 0;
+ 		rb->frame_size = req->tp_frame_size;
+@@ -4421,6 +4441,7 @@ static int packet_set_ring(struct sock *
+ 	}
+ 
+ out_free_pg_vec:
++	bitmap_free(rx_owner_map);
+ 	if (pg_vec)
+ 		free_pg_vec(pg_vec, order, req->tp_block_nr);
+ out:
+--- a/net/packet/internal.h
++++ b/net/packet/internal.h
+@@ -70,7 +70,10 @@ struct packet_ring_buffer {
+ 
+ 	unsigned int __percpu	*pending_refcnt;
+ 
+-	struct tpacket_kbdq_core	prb_bdqc;
++	union {
++		unsigned long			*rx_owner_map;
++		struct tpacket_kbdq_core	prb_bdqc;
++	};
+ };
+ 
+ extern struct mutex fanout_mutex;
 
 
