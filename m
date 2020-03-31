@@ -2,153 +2,258 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155EAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B35C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED1F2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:15:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FFfCDXSd"
+	by mail.kernel.org (Postfix) with ESMTP id 66DEB2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:23:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgCaFPp (ORCPT
+        id S1726365AbgCaFXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:15:45 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:50144 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726299AbgCaFPo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:15:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585631743; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=dA6bvcGTput8Imgq5d/DRsbXCLiTBtRU6iE8eOYQx5I=; b=FFfCDXSd0Mo09G1/heQ3ETv+g9k4k9lKu3DCXhoxLKzjweIyAOo+2DydAijyzug5HbWC7IwP
- jCWyIz4llkgk7DOxU//jGPssgrBWNaQAChEHQO8YcZH4TYIV1Aqopi8GuWqIeoorKR9v0jnZ
- kdQwsEBOuxESB/T/bD2S89I6kfk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e82d1f5.7f8b463fa110-smtp-out-n01;
- Tue, 31 Mar 2020 05:15:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 13A95C433F2; Tue, 31 Mar 2020 05:15:32 +0000 (UTC)
-Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A93B5C433D2;
-        Tue, 31 Mar 2020 05:15:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A93B5C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-To:     Felipe Balbi <balbi@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
- <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
- <20200329171756.GA199755@google.com> <87h7y62r28.fsf@kernel.org>
- <20200330155038.GC199755@google.com> <87zhbx1q6q.fsf@kernel.org>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
-Date:   Tue, 31 Mar 2020 10:45:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 31 Mar 2020 01:23:01 -0400
+Received: from mga03.intel.com ([134.134.136.65]:54943 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgCaFXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 01:23:01 -0400
+IronPort-SDR: 2WdlGBpJA0QpPP19HVBvks/ILNye5rkwu/49m8gpiVasdivwWUQlGQzC/J5mkJ/JUDzyLlU98B
+ iNbIOaf/mVIw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 22:23:00 -0700
+IronPort-SDR: fDRzZTHLxln6TdmAer/MJY2A9P96GX+J/DHSIMv876Rzioyv+DMLuJQ8hF72q1B6B0jEdhQBaF
+ yfmZKRIN8iTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
+   d="scan'208";a="448536005"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by fmsmga005.fm.intel.com with ESMTP; 30 Mar 2020 22:22:57 -0700
+Date:   Tue, 31 Mar 2020 13:01:41 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH v3 3/7] fpga: dfl: introduce interrupt trigger setting API
+Message-ID: <20200331050141.GC8468@hao-dev>
+References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
+ <1585038763-22944-4-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <87zhbx1q6q.fsf@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585038763-22944-4-git-send-email-yilun.xu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 24, 2020 at 04:32:39PM +0800, Xu Yilun wrote:
+> FPGA user applications may be interested in interrupts generated by
+> DFL features. For example, users can implement their own FPGA
+> logics with interrupts enabled in AFU (Accelerated Function Unit,
+> dynamic region of DFL based FPGA). So user applications need to be
+> notified to handle these interrupts.
+> 
+> In order to allow userspace applications to monitor interrupts,
+> driver requires userspace to provide eventfds as interrupt
+> notification channels. Applications then poll/select on the eventfds
+> to get notified.
+> 
+> This patch introduces a generic helper function for sub features to
+> do eventfds binding with given interrupts.
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> ----
+> v2: use unsigned int instead of int for irq array indexes in
+>     dfl_fpga_set_irq_triggers()
+>     Improves comments for NULL fds param in dfl_fpga_set_irq_triggers()
+> v3: Improve comments of dfl_fpga_set_irq_triggers()
+>     refines code for dfl_fpga_set_irq_triggers, delete local variable j
+> ---
+>  drivers/fpga/dfl.c | 97 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/fpga/dfl.h | 11 +++++++
+>  2 files changed, 108 insertions(+)
+> 
+> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> index bc8d966..80805e5 100644
+> --- a/drivers/fpga/dfl.c
+> +++ b/drivers/fpga/dfl.c
+> @@ -535,6 +535,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+>  		unsigned int i;
+>  
+>  		/* save resource information for each feature */
+> +		feature->dev = fdev;
+>  		feature->id = finfo->fid;
+>  		feature->resource_index = index;
+>  		feature->ioaddr = finfo->ioaddr;
+> @@ -1389,6 +1390,102 @@ int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vfs)
+>  }
+>  EXPORT_SYMBOL_GPL(dfl_fpga_cdev_config_ports_vf);
+>  
+> +static irqreturn_t dfl_irq_handler(int irq, void *arg)
+> +{
+> +	struct eventfd_ctx *trigger = arg;
+> +
+> +	eventfd_signal(trigger, 1);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int do_set_irq_trigger(struct dfl_feature *feature, unsigned int idx,
+> +			      int fd)
+> +{
+> +	struct platform_device *pdev = feature->dev;
+> +	struct eventfd_ctx *trigger;
+> +	int irq, ret;
+> +
+> +	if (idx >= feature->nr_irqs)
+> +		return -EINVAL;
+> +
+> +	irq = feature->irq_ctx[idx].irq;
+> +
+> +	if (feature->irq_ctx[idx].trigger) {
+> +		free_irq(irq, feature->irq_ctx[idx].trigger);
+> +		kfree(feature->irq_ctx[idx].name);
+> +		eventfd_ctx_put(feature->irq_ctx[idx].trigger);
+> +		feature->irq_ctx[idx].trigger = NULL;
+> +	}
+> +
+> +	if (fd < 0)
+> +		return 0;
+> +
+> +	feature->irq_ctx[idx].name =
+> +		kasprintf(GFP_KERNEL, "fpga-irq[%u](%s-%llx)", idx,
+> +			  dev_name(&pdev->dev),
+> +			  (unsigned long long)feature->id);
+> +	if (!feature->irq_ctx[idx].name)
+> +		return -ENOMEM;
+> +
+> +	trigger = eventfd_ctx_fdget(fd);
+> +	if (IS_ERR(trigger)) {
+> +		ret = PTR_ERR(trigger);
+> +		goto free_name;
+> +	}
+> +
+> +	ret = request_irq(irq, dfl_irq_handler, 0,
+> +			  feature->irq_ctx[idx].name, trigger);
+> +	if (!ret) {
+> +		feature->irq_ctx[idx].trigger = trigger;
+> +		return ret;
+> +	}
+> +
+> +	eventfd_ctx_put(trigger);
+> +free_name:
+> +	kfree(feature->irq_ctx[idx].name);
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * dfl_fpga_set_irq_triggers - set eventfd triggers for dfl feature interrupts
+> + *
+> + * @feature: dfl sub feature.
+> + * @start: start of irq index in this dfl sub feature.
+> + * @count: number of irqs.
+> + * @fds: eventfds to bind with irqs. unbind related irq if fds[n] is negative.
+> + *	 unbind "count" specified number of irqs if fds ptr is NULL.
+> + *
+> + * Bind given eventfds with irqs in this dfl sub feature. Unbind related irq if
+> + * fds[n] is negative. Unbind "count" specified number of irqs if fds ptr is
+> + * NULL.
+> + *
+> + * Return: 0 on success, negative error code otherwise.
+> + */
+> +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
+> +			      unsigned int count, int32_t *fds)
+> +{
+> +	unsigned int i;
+> +	int ret = 0;
+> +
+> +	if (start + count < start || start + count > feature->nr_irqs)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		int fd = fds ? fds[i] : -1;
+> +
+> +		ret = do_set_irq_trigger(feature, start + i, fd);
+> +		if (ret) {
+> +			while (i--)
+> +				do_set_irq_trigger(feature, start + i, -1);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dfl_fpga_set_irq_triggers);
 
-On 3/31/2020 3:05 AM, Felipe Balbi wrote:
-> Hi,
->
-> Matthias Kaehlcke <mka@chromium.org> writes:
->>> Matthias Kaehlcke <mka@chromium.org> writes:
->>>>> Add interconnect support in dwc3-qcom driver to vote for bus
->>>>> bandwidth.
->>>>>
->>>>> This requires for two different paths - from USB master to
->>>>> DDR slave. The other is from APPS master to USB slave.
->>>>>
->>>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->>>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
->>>>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->>>>> ---
->>>>>   drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
->>>>>   1 file changed, 126 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
->>>>> index 1dfd024..7e85fe6 100644
->>>>> --- a/drivers/usb/dwc3/dwc3-qcom.c
->>>>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->>>>>
->>>>> ...
->>>>>
->>>>> +/* To disable an interconnect, we just set its bandwidth to 0 */
->>>>> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
->>>>> +{
->>>>> +	int ret;
->>>>> +
->>>>> +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
->>>>> +	if (ret)
->>>>> +		return ret;
->>>>> +
->>>>> +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
->>>>> +	if (ret)
->>>>> +		goto err_reenable_memory_path;
->>>>> +
->>>>> +	return 0;
->>>>> +
->>>>> +	/* Re-enable things in the event of an error */
->>>>> +err_reenable_memory_path:
->>>>> +	ret = dwc3_qcom_interconnect_enable(qcom);
->>>> This overwrites the error that led to the execution of this code path.
->>>> The function should return original error, not the result of the
->>>> _interconnect_enable() call.
->>>>
->>>> I saw Felipe queued the patch for v5.8. I think the main options to fix this
->>>> are:
->>>>
->>>> - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
->>>>    anyway once there is a v5.7-rc)
->>>> - send the fix as a separate patch
->>>> - Felipe amends the patch in his tree
->>>>
->>>> Felipe, what would work best for you?
->>> Let's go for a v6, which commits should I drop? I can't find anything
->>> related to $subject in my queue:
->>>
->>> $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
->>> 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->> I thought I saw a "queued for v5.8" message from you, but can't find that back.
->> I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
->> series and thought it was for this one. Sorry for the confusion.
-> no worries :-)
->
-Should I remove the ret from below line and send a new version?
-+	ret = dwc3_qcom_interconnect_enable(qcom);
+When i looked into patch 4, 5, 6. I found the ioctl handling functions to set
+irq triggers are exact the same. Do you think is it possible to share more
+common code then?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Other place looks good to me.
+
+Thanks
+Hao
+
+> +
+>  static void __exit dfl_fpga_exit(void)
+>  {
+>  	dfl_chardev_uinit();
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index 4bc165f..63eacef 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -24,6 +24,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/uuid.h>
+>  #include <linux/fpga/fpga-region.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/eventfd.h>
+>  
+>  /* maximum supported number of ports */
+>  #define MAX_DFL_FPGA_PORT_NUM 4
+> @@ -213,14 +215,19 @@ struct dfl_feature_driver {
+>   * struct dfl_feature_irq_ctx - dfl private feature interrupt context
+>   *
+>   * @irq: Linux IRQ number of this interrupt.
+> + * @trigger: eventfd context to signal when interrupt happens.
+> + * @name: irq name needed when requesting irq.
+>   */
+>  struct dfl_feature_irq_ctx {
+>  	int irq;
+> +	struct eventfd_ctx *trigger;
+> +	char *name;
+>  };
+>  
+>  /**
+>   * struct dfl_feature - sub feature of the feature devices
+>   *
+> + * @dev: ptr to pdev of the feature device which has the sub feature.
+>   * @id: sub feature id.
+>   * @resource_index: each sub feature has one mmio resource for its registers.
+>   *		    this index is used to find its mmio resource from the
+> @@ -231,6 +238,7 @@ struct dfl_feature_irq_ctx {
+>   * @ops: ops of this sub feature.
+>   */
+>  struct dfl_feature {
+> +	struct platform_device *dev;
+>  	u64 id;
+>  	int resource_index;
+>  	void __iomem *ioaddr;
+> @@ -506,4 +514,7 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id);
+>  int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id);
+>  void dfl_fpga_cdev_config_ports_pf(struct dfl_fpga_cdev *cdev);
+>  int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vf);
+> +
+> +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
+> +			      unsigned int count, int32_t *fds);
+>  #endif /* __FPGA_DFL_H */
+> -- 
+> 2.7.4
