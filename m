@@ -2,102 +2,117 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B403C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C68AC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381BD2145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:58:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585677539;
-	bh=1rPhOHlMHpopYI/diEgrF0e8XTjh7OaDPcnw8/TvA80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2d7MylJGMJ7vpA4lRGZsbgTMBY34MKYpaftbb+7Ph5/idpyt0szFs/p1XThM3I9Ns
-	 gNDloxnEEzV6YXvekmWSD7EJcLdeN26IeD036BA3ZYXrdMOYJEyjwhxxH7frQJq7Jv
-	 dUzCmc48EdMPiDTPQKIsedJpUZt8DEhFATkdKyGk=
+	by mail.kernel.org (Postfix) with ESMTP id 082FD212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d56SjWTA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCaR66 (ORCPT
+        id S1727505AbgCaSAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:58:58 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44006 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgCaR66 (ORCPT
+        Tue, 31 Mar 2020 14:00:22 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60109 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725988AbgCaSAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:58:58 -0400
-Received: by mail-io1-f67.google.com with SMTP id x9so16241652iom.10;
-        Tue, 31 Mar 2020 10:58:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=td5o5/tiHIRBYofYMDETAP0Ltd0LRLXxBohco08C/no=;
-        b=WhQ5BXIoFNInaHzPI7eu0BM1DVTn2dclDosGzbeE5vR+Hpjzjw8uudivAYkAJi6oT8
-         o3PjdHm9DKPtVrV99xPNZ7h7pWz0TuaXOSYxlrqP2EL6C88ELRoAZ5wTWG+TQczWSRjA
-         34524e58llqubX888TK0Rh1HfkPZntJe1vBkP5bh9HvQRrzDAaZv9itHl2nfb4YUhLBe
-         qdt89Xe4smqHeFkl36YVanxA/mC/PjCqXr2UMmBuAssZYwtSuE3zNoRwTBKYe7hntR+p
-         ArWIfWYyqJgohf0u6L0Ca2gBimDmbK33jZsvOsUFOLHrV8DGmYcZ9KUEURVVxGl/7K0g
-         v2dw==
-X-Gm-Message-State: ANhLgQ3Wl16e4VW6iTq3ycVh2PwDuslBnr1Py//5M8vLZWmUto6zKOT3
-        VSuR/B/Ka2o0f3YnPRC6enLxzj4=
-X-Google-Smtp-Source: ADFU+vusw14RdmuJ7zrBadBBFp8IzG2PeGojTVZrZsBXAA0o/Wml8YZzKjsZTDX9R92K6374xp15Yw==
-X-Received: by 2002:a02:9988:: with SMTP id a8mr16525847jal.3.1585677537116;
-        Tue, 31 Mar 2020 10:58:57 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b4sm6160512ilg.58.2020.03.31.10.58.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:58:56 -0700 (PDT)
-Received: (nullmailer pid 31762 invoked by uid 1000);
-        Tue, 31 Mar 2020 17:58:55 -0000
-Date:   Tue, 31 Mar 2020 11:58:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: iio: Add bindings for sx9310 sensor
-Message-ID: <20200331175855.GA30009@bogus>
-References: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
+        Tue, 31 Mar 2020 14:00:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585677620;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cFoxPzLg3hdCD0+oBUzFhDTOM1NMJFZ5aeMIjUALD/M=;
+        b=d56SjWTAWP+qGQ5JfP6Xn9ZMqEL19UoW/3tPIqd9NEDNdvOeLZdw1vm1/WcQXAMb+7PEGr
+        ln4LjRVu0eDrxgv0Iz1Xna1wtQYimgddwFab4Fz3Z9outPNCHtk08ex8QnGUIttbjednY6
+        t9eTKAV/0GpkXQY5pbrsEhoqcd7VwDk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-UG21D0t2MnuDehxvHf0PFg-1; Tue, 31 Mar 2020 14:00:17 -0400
+X-MC-Unique: UG21D0t2MnuDehxvHf0PFg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1FEE1084424;
+        Tue, 31 Mar 2020 18:00:15 +0000 (UTC)
+Received: from eperezma.remote.csb (ovpn-112-92.ams2.redhat.com [10.36.112.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 25924608E7;
+        Tue, 31 Mar 2020 18:00:10 +0000 (UTC)
+From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH v2 0/8] vhost: Reset batched descriptors on SET_VRING_BASE call
+Date:   Tue, 31 Mar 2020 19:59:58 +0200
+Message-Id: <20200331180006.25829-1-eperezma@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:45:14PM -0600, Daniel Campello wrote:
-> Adds device tree bandings for sx9310 sensor.
-> 
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> ---
-> 
->  .../iio/proximity/semtech,sx9310.yaml         | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> new file mode 100644
-> index 00000000000000..da3424abe37e9d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> @@ -0,0 +1,52 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Vhost did not reset properly the batched descriptors on SET_VRING_BASE
+event. Because of that, is possible to return an invalid descriptor to
+the guest.
 
-Dual license new bindings:
+This series ammend this, resetting them every time backend changes, and
+creates a test to assert correct behavior. To do that, they need to
+expose a new function in virtio_ring, virtqueue_reset_free_head, only
+on test code.
 
-(GPL-2.0-only OR BSD-2-Clause)
+Another useful thing would be to check if mutex is properly get in
+vq private_data accessors. Not sure if mutex debug code allow that,
+similar to C++ unique lock::owns_lock. Not acquiring in the function
+because caller code holds the mutex in order to perform more actions.
 
-With that,
+v2:
+* Squashed commits.
+* Create vq private_data accesors (mst).
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is meant to be applied on top of
+c4f1c41a6094582903c75c0dcfacb453c959d457 in
+git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git.
+
+Eugenio P=C3=A9rez (5):
+  vhost: Create accessors for virtqueues private_data
+  tools/virtio: Add --batch option
+  tools/virtio: Add --batch=3Drandom option
+  tools/virtio: Add --reset=3Drandom
+  tools/virtio: Make --reset reset ring idx
+
+Michael S. Tsirkin (3):
+  vhost: option to fetch descriptors through an independent struct
+  vhost: use batched version by default
+  vhost: batching fetches
+
+ drivers/vhost/net.c          |  28 ++--
+ drivers/vhost/test.c         |  59 +++++++-
+ drivers/vhost/test.h         |   1 +
+ drivers/vhost/vhost.c        | 271 +++++++++++++++++++++++------------
+ drivers/vhost/vhost.h        |  45 +++++-
+ drivers/vhost/vsock.c        |  14 +-
+ drivers/virtio/virtio_ring.c |  29 ++++
+ tools/virtio/linux/virtio.h  |   2 +
+ tools/virtio/virtio_test.c   | 123 ++++++++++++++--
+ 9 files changed, 445 insertions(+), 127 deletions(-)
+
+--=20
+2.18.1
+
