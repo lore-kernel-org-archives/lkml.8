@@ -2,166 +2,84 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AF1C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF9FC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1A020772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EEE420772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:25:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cmejOzvw"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="N/GLW1oF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbgCaLXg (ORCPT
+        id S1730483AbgCaLZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:23:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41422 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730180AbgCaLXg (ORCPT
+        Tue, 31 Mar 2020 07:25:56 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41427 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbgCaLZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:23:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a24so3365170pfc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 04:23:35 -0700 (PDT)
+        Tue, 31 Mar 2020 07:25:56 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n17so21578214lji.8
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 04:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JXxdjqfqKsI367q8g3+EJ/v0hXOY5Q6mELpkQJCd7wk=;
-        b=cmejOzvwxWsAKsSDIXk6EJoFXbWVfi1jjPgaxvRqVm37ksv/8dHWnJd7OFc9fHcCdj
-         Ly8QIKPqZvBgj8i5qgQZQHj1fIFL0+vuLzq5wXxn4WGbs4Z16J4k7hmf9Xx6t6vtoiyu
-         iTdJ3gqKOcq/WFlXjreQNLgLQAlQ1TSEo404PBkG1Pw5dRerooiFmTTbRR+SQVC7Sacz
-         H7VNtsQgFmo8SvrYmoswPnuXD9wOWBGORwHhyx0MT7ByTGjLcvmOteA5TgEE4rbXKqGE
-         fWkXSnR4TPGDrm0CtwxzEcnT+gcj20xIHioZ78D30FUbqbUfp1LhXXedGi/oLbLt1Xvp
-         Fr+g==
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jgIzEqM2LnXzzHvamHw2Hc0doSxZZqIged014OPYZ0c=;
+        b=N/GLW1oFEDCQ7URS2WLGzLmJwWLDAHhMdnP/DjtzUiv/pmSayZhM604q+eXRSuKSox
+         fVIur3LF2iFCCwdN9TPJmP2ZJBMiRnUUon4gjk8p4INkbpG3/wbZ4d8HaR8WjOgaR0XP
+         VX7ae0ZYBui7NTCWEUNvg9Cm4feg1FDJi+4pmphpaOBMZlVjACtYYkAdS5kPPiWJU9sa
+         vTFCuVaPHaKBshlk3/mEPamPWmBOjLqK2DzRJyP33+cHCTCBjwayCZu7YvmGkKGyVI3C
+         cdNLr7VZu3I3e1CkVMYuWphdHkkNUsRc4GvY07AMDIjH7fmxKEAQX59A7pEMYxl6Osit
+         Jkwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JXxdjqfqKsI367q8g3+EJ/v0hXOY5Q6mELpkQJCd7wk=;
-        b=PYw7qnRst4gt9tzgKuEY1hieL64Fcef4QLd6o7Pj6kv5j+Dc8Bv2VERZ7N7WWYAO+/
-         QclNMpfgwNduHgrxXHf/wRCSFOGYvqY3JCQ5SGYq05+qlhPH/gYUddlwVFQzeSkaoYpV
-         HObHcfwvNTjGQbKYRRaKspQoBffvo2umBV1NIxG3jjjDdaeLe74PqZIaAsL3UCYS5BFs
-         QNJIGIusQo+DNxwr4SnFzzu1t4oOab7jafJ/YLj4D81PHDyqnTSK3hUQEZgqohN4aT/l
-         sMlroTeVjIlFb58siHhawrmhmrxOTqCQPuC8xoMK0iT7BYm1Re/+92ihanfX9wAcDQuQ
-         npqg==
-X-Gm-Message-State: ANhLgQ2EzBOauJGLlQ9S88pr+3iYSGeZzcqPiNtHWTmLKyXRTMGKIt8k
-        auaao7eyOgejR1np6mNyUx66
-X-Google-Smtp-Source: ADFU+vua2WWw22BJNgir87I4Bn/FSDg8vWUO/X+nkfFs5lP44LsMIG180Kn7igbKPzREsGKTyjW1iw==
-X-Received: by 2002:a65:5383:: with SMTP id x3mr17166618pgq.279.1585653814612;
-        Tue, 31 Mar 2020 04:23:34 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:630f:1337:c28:2530:7bf4:e941])
-        by smtp.gmail.com with ESMTPSA id q71sm12347339pfc.92.2020.03.31.04.23.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 04:23:33 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 16:53:26 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Chris Lew <clew@codeaurora.org>, gregkh@linuxfoundation.org,
-        davem@davemloft.net, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v3 6/7] net: qrtr: Add MHI transport layer
-Message-ID: <20200331112326.GB21688@Mani-XPS-13-9360>
-References: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
- <20200324061050.14845-7-manivannan.sadhasivam@linaro.org>
- <20200324203952.GC119913@minitux>
- <20200325103758.GA7216@Mani-XPS-13-9360>
- <89f3c60c-70fb-23d3-d50f-98d1982b84b9@codeaurora.org>
- <20200330094913.GA2642@Mani-XPS-13-9360>
- <20200330221932.GB215915@minitux>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jgIzEqM2LnXzzHvamHw2Hc0doSxZZqIged014OPYZ0c=;
+        b=GEZkStC+oYPH6rok30+n+62S3j27bSkc19uv77SDmZbpGX+NCIeFQez78klSybyZu3
+         5wGzM7nVRY3AYkuZ9pUPncPkiVMolGNUM/hdGYHWc5AVo9xygGY7q9sZNZdDQxpxPQLc
+         eK4QoFcEgyqv0MmlfvmJYXCmvZZJXTFYlFXJrV7ZzoZVhj7F/EZ0plgCE7LN99ABgjpW
+         D+mE9PthjmtSSMFilO6UdqJoALtQ3wraWSh19mT9tHxSfaTKasQHnExtB+T6GWzOdHMQ
+         lcdo8ZfyFLXLabzHoOCZRw59qTEmnQwJD1uXDt45qEjcwJTSbRIAf9jGaz63HfG576tP
+         WS7g==
+X-Gm-Message-State: AGi0PuYExaYyByqT4sOsqsT/xdJmaXUGdK0VaDchR923U6xFdWkxJo7C
+        JVPFv6Y/7GKu7J9aSR9Tee3MQ/9bhMrKUTKScnWY2g==
+X-Google-Smtp-Source: APiQypJTsUNMZl+N2BPqArgyZP2C2flmTEyblIXo71oiZxzoozA+8v6tymPhb52VSmB4cJtT70qkRRWfTUvd6eB5w4U=
+X-Received: by 2002:a2e:9681:: with SMTP id q1mr10418971lji.179.1585653953043;
+ Tue, 31 Mar 2020 04:25:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330221932.GB215915@minitux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200329140459.18155-1-maco@android.com> <20200330010024.GA23640@ming.t460p>
+ <CAB0TPYG4N-2Gg95VwQuQBQ8rvjC=4NQJP4syJWS3Q6CO28HzTQ@mail.gmail.com> <20200331074828.GA24372@lst.de>
+In-Reply-To: <20200331074828.GA24372@lst.de>
+From:   Martijn Coenen <maco@android.com>
+Date:   Tue, 31 Mar 2020 13:25:41 +0200
+Message-ID: <CAB0TPYEwOd-jYJTkq1DYp=c7uXMKvpSpgpcpZGMwW2QsYkOtSw@mail.gmail.com>
+Subject: Re: [PATCH] loop: Add LOOP_SET_FD_WITH_OFFSET ioctl.
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Tue, Mar 31, 2020 at 9:48 AM Christoph Hellwig <hch@lst.de> wrote:
+> I think the full blown set fd an status would seem a lot more useful,
+> or even better a LOOP_CTL_ADD variant that sets up everything important
+> on the character device so that we avoid the half set up block devices
+> entirely.
 
-On Mon, Mar 30, 2020 at 03:19:32PM -0700, Bjorn Andersson wrote:
-> On Mon 30 Mar 02:49 PDT 2020, Manivannan Sadhasivam wrote:
-> 
-> > Hi Chris,
-> > 
-> > On Thu, Mar 26, 2020 at 03:54:42PM -0700, Chris Lew wrote:
-> > > 
-> > > 
-> > > On 3/25/2020 3:37 AM, Manivannan Sadhasivam wrote:
-> > > > Hi Bjorn,
-> > > > 
-> > > > + Chris Lew
-> > > > 
-> > > > On Tue, Mar 24, 2020 at 01:39:52PM -0700, Bjorn Andersson wrote:
-> > > > > On Mon 23 Mar 23:10 PDT 2020, Manivannan Sadhasivam wrote:
-> [..]
-> > > > > > +	spin_lock_irqsave(&qdev->ul_lock, flags);
-> > > > > > +	list_for_each_entry(pkt, &qdev->ul_pkts, node)
-> > > > > > +		complete_all(&pkt->done);
-> > > > 
-> > > > Chris, shouldn't we require list_del(&pkt->node) here?
-> > > > 
-> > > 
-> > > No this isn't a full cleanup, with the "early notifier" we just unblocked
-> > > any threads waiting for the ul_callback. Those threads will wake, check
-> > > in_reset, return an error back to the caller. Any list cleanup will be done
-> > > in the ul_callbacks that the mhi bus will do for each queued packet right
-> > > before device remove.
-> > > 
-> > > Again to simplify the code, we can probable remove the in_reset handling
-> > > since it's not required with the current feature set.
-> > > 
-> > 
-> > So since we are not getting status_cb for fatal errors, I think we should just
-> > remove status_cb, in_reset and timeout code.
-> > 
-> 
-> Looks reasonable.
-> 
-> [..]
-> > > I thought having the client get an error on timeout and resend the packet
-> > > would be better than silently dropping it. In practice, we've really only
-> > > seen the timeout or ul_callback errors on unrecoverable errors so I think
-> > > the timeout handling can definitely be redone.
-> > > 
-> > 
-> > You mean we can just remove the timeout handling part and return after
-> > kref_put()?
-> > 
-> 
-> If all messages are "generated" by qcom_mhi_qrtr_send() and "released"
-> in qcom_mhi_qrtr_ul_callback() I don't think you need the refcounting at
-> all.
-> 
+Thanks for the feedback, I will work on that then. I think I could do
+both - LOOP_SET_FD_AND_STATUS and a new variant of LOOP_CTL_ADD that
+calls it - the former could still be useful if the kernel pre-created
+a large amount of loop devices.
 
-Hmm, you're right. We can move the packet releasing part to ul_callback now.
-
-> 
-> Presumably though, it would have been nice to not have to carry a
-> separate list of packets (and hope that it's in sync with the mhi core)
-> and instead have the ul callback somehow allow us to derive the skb to
-> be freed.
-> 
-
-Yep, MHI stack holds the skb in buf_addr member of mhi_result. So, we can just
-use below to get the skb in ul_callback:
-
-struct sk_buff *skb = (struct sk_buff *)mhi_res->buf_addr;
-
-This will help us to avoid the use of pkt, ul_pkts list and use the skb directly
-everywhere. At the same time I think we can also remove the ul_lock which
-was added to protect the ul_pkts list.
-
-Let me know your opinion, I'll just send a series with this modified QRTR MHI
-client driver and MHI suspend/resume patches.
-
-Thanks,
-Mani
-
-> Regards,
-> Bjorn
+Martijn
