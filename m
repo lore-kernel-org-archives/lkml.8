@@ -2,137 +2,135 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F42C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A812C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78456206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10256214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:01:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdF9zsV7"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iTuWUT6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbgCaQA6 (ORCPT
+        id S1731170AbgCaQBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:00:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44670 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730286AbgCaQA6 (ORCPT
+        Tue, 31 Mar 2020 12:01:19 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35373 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730845AbgCaQBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:00:58 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b72so10503717pfb.11;
-        Tue, 31 Mar 2020 09:00:57 -0700 (PDT)
+        Tue, 31 Mar 2020 12:01:19 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k13so23565910qki.2
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=taluGmW7CXsRxxAUESqt+d4hAzy0kA0u/yxDfpjf+rM=;
-        b=GdF9zsV7IE7SbPKagJJUruD8yVaU1qODPzCBsbOQcVxNZDzYxv7hcS40rvj194m5iM
-         sxXWgLcHyvwOPHbv/lf5Y+maeDmMBMm5dkY9+8XHE11unHXChTgECEP7V6UPm0KicnEz
-         0rVmZRAXdy9DztRCIaYV7kwtXUwCTCf5YN/LaYwLgeR4HerNSR2kvDy4TFSN8vi4Xq/b
-         lUu7BnVAyJNVBFMY0GzOzBCGPozaf55rQCAASpMJCJzVBbfnw18CXGYTDsQEEFWTI2RY
-         667oXkQN0lbmZJtIcZXvNHRPKelvZD+KDywIr+6Ydxq5Z9OOvcdsmWj8W1LBRiZHpuMk
-         nEDA==
+        bh=KUXmLIQ+aLx+dsd2X6HDAS3m5DJ2KKoj8xObBaVjK4k=;
+        b=iTuWUT6v6SPVuXPY9PvsAXbyhjYvsl0LYe57OruuLwH4ntWsnzYQJa0fyxayYlq8hB
+         sbrLQW99kG1zDFcfBUsesq/nKvY3XcbTSh74JL27Fas3ze+KrwEBFFKob958qMMnSgkC
+         jYoxFLqxXoBLeYzwZ2UMAsxNjVMZ+k4Ak8d8g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=taluGmW7CXsRxxAUESqt+d4hAzy0kA0u/yxDfpjf+rM=;
-        b=t4rKs13H+n4VihgGsix1Oa8671SJ2RPcG0rWl2cRbjODd6HthL0EA85FJJd2pjgQfO
-         u2ikPrqYynvrQ+4aagnJV5d5fUPbFreTVEyVborTqo8bXgYChv3PKp0O3Gk8wsQ4mBQC
-         kBqoQFC/JwJKsjcAUp/bP/XW4XPsqhtn0H8yoWpp20YvHQIzYsvMFuZL4dWmT7M+BpyS
-         g3jnzv3ga6A5eR4ATZmeAHWGmsIqAoXTbztPFaNYoGnq83zBhMmVzc+Q5+Dme4KKqd0i
-         PPuQ95qJlFGz7jNaHgTix8pY/g264s6l2iyOYrqe8nqR432+8PF5wZb3PWSfDhkbJHe9
-         HvcQ==
-X-Gm-Message-State: AGi0PuYzKA8BxCxSW8P3tUF0E8I16Fu0HhOCu0ZEC3D563Ti2+sWV5gr
-        Jz7SKWm1uOMvavwe53LdstsUCeLe
-X-Google-Smtp-Source: APiQypKvYt7+e1jMI+FrEl5EN2RNuaPTl6gPVGE0LLvnv1PhCAMk+CK6GFt3Hy+Jn7QhJV7GbSXx+w==
-X-Received: by 2002:a63:6d87:: with SMTP id i129mr2457339pgc.54.1585670456889;
-        Tue, 31 Mar 2020 09:00:56 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v59sm2253702pjb.26.2020.03.31.09.00.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 09:00:55 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:00:54 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stefan Riedmueller <s.riedmueller@phytec.de>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] watchdog: da9062: Use pre-configured timeout until
- userspace takes over
-Message-ID: <20200331160054.GA64188@roeck-us.net>
-References: <20200326150203.371673-1-s.riedmueller@phytec.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KUXmLIQ+aLx+dsd2X6HDAS3m5DJ2KKoj8xObBaVjK4k=;
+        b=VwlpK+wK/k1aIwwn4iHUe/5APGjNirMg85SJNvh1gT6wkAdgwM1kj5dFWF/6LWcdz3
+         NTkdRknTCXGIUe8yrsxOldmcP8sIVEYuFLbXVMuyQQe2JmarC/X79DeMcwBXtW8NyI7v
+         oJu1SBbFrOVhmjH3fa12worsfn6pAIu3ShtxISY51zKZMGw3jtZglIFDcdFmlv11V65P
+         9fBNCszB5YMPfCpOLTtnYp6hZtxC8nfsrwR9ikKH+xnsVpr5tc6yLBPBk1V7FuMdo0ZS
+         iQA1m4KDJsBey6XD1Jp4VlAlpzP7hdwUloPHvC7uSGs8RBIr1JeTCCQ2Sw8Ny6Y7rYiH
+         9xPQ==
+X-Gm-Message-State: AGi0PuY1p6C7vJs79WCzdZgvswdsa/mAn+V2U54053brWfrXRCiqBAe5
+        XHYaKyaNRvsWmneoMZhaVcRPpg==
+X-Google-Smtp-Source: APiQypJlQCeOHLVheNSd8NA+Re55P3E8j2hVLv1JFketxo3lxvPNs0ci4X6V6rEh2Rw+3VC64pNnJQ==
+X-Received: by 2002:a37:a88e:: with SMTP id r136mr269788qke.12.1585670478283;
+        Tue, 31 Mar 2020 09:01:18 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id b145sm12861514qkg.52.2020.03.31.09.01.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 09:01:17 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 12:01:17 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200331160117.GA170994@google.com>
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331145806.GB236678@google.com>
+ <20200331153450.GM30449@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326150203.371673-1-s.riedmueller@phytec.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200331153450.GM30449@dhcp22.suse.cz>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:02:01PM +0100, Stefan Riedmueller wrote:
-> If the watchdog is already running during probe read back its
-> pre-configured timeout (set e.g. by the bootloader) and use it to ping
-> the watchdog until userspace takes over. Otherwise the default timeout
-> set before might not result in a fast enough ping.
+On Tue, Mar 31, 2020 at 05:34:50PM +0200, Michal Hocko wrote:
+> On Tue 31-03-20 10:58:06, Joel Fernandes wrote:
+> [...]
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 4be763355c9fb..965deefffdd58 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
+> > >  
+> > >  	if (!ptr)
+> > >  		ptr = kmalloc(sizeof(unsigned long *) +
+> > > -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
+> > > +				sizeof(struct rcu_head), GFP_MEMALLOC);
+> > 
+> > Just to add, the main requirements here are:
+> > 1. Allocation should be bounded in time.
+> > 2. Allocation should try hard (possibly tapping into reserves)
+> > 3. Sleeping is Ok but should not affect the time bound.
 > 
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> ---
->  drivers/watchdog/da9062_wdt.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
 > 
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-> index 0ad15d55071c..6d81b1276b87 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -35,6 +35,14 @@ struct da9062_watchdog {
->  	bool use_sw_pm;
->  };
->  
-> +static unsigned int da9062_wdt_read_timeout(struct da9062_watchdog *wdt)
-> +{
-> +	int val;
-> +
-> +	regmap_read(wdt->hw->regmap, DA9062AA_CONTROL_D, &val);
-> +	return wdt_timeout[val & DA9062AA_TWDSCALE_MASK];
-> +}
-> +
->  static unsigned int da9062_wdt_timeout_to_sel(unsigned int secs)
->  {
->  	unsigned int i;
-> @@ -184,6 +192,7 @@ static int da9062_wdt_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	int ret;
-> +	int timeout;
->  	struct da9062 *chip;
->  	struct da9062_watchdog *wdt;
->  
-> @@ -213,6 +222,13 @@ static int da9062_wdt_probe(struct platform_device *pdev)
->  	watchdog_set_drvdata(&wdt->wdtdev, wdt);
->  	dev_set_drvdata(dev, &wdt->wdtdev);
->  
-> +	timeout = da9062_wdt_read_timeout(wdt);
-> +	if (timeout > 0) {
-> +		wdt->wdtdev.timeout = timeout;
-> +		set_bit(WDOG_HW_RUNNING, &wdt->wdtdev.status);
-> +		dev_info(wdt->hw->dev, "watchdog is running (%u s)", timeout);
+> __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
+> memory reserves regarless of the sleeping status.
+> 
+> Using __GFP_MEMALLOC is quite dangerous because it can deplete _all_ the
+> memory. What does prevent the above code path to do that?
 
-The user won't know what "(%u s)" means.e that "%u" reflects the timeout.
-Also, the newline at the end is missing.
+Can you suggest what prevents other users of GFP_MEMALLOC from doing that
+also? That's the whole point of having a reserve, in normal usage no one will
+use it, but some times you need to use it. Keep in mind this is not a common
+case in this code here, this is triggered only if earlier allocation attempts
+failed. Only *then* we try with GFP_MEMALLOC with promises to free additional
+memory soon.
 
-Personally, I think the message is just noise and should be dropped entirely.
+> If a partial access to reserves is sufficient then why the existing
+> modifiers (mentioned above are not sufficient?
 
-Guenter
+The point with using GFP_MEMALLOC is it is useful for situations where you
+are about to free memory and needed some memory temporarily, to free that. It
+depletes it a bit temporarily to free even more. Is that not the point of
+PF_MEMALLOC?
+* %__GFP_MEMALLOC allows access to all memory. This should only be used when
+ * the caller guarantees the allocation will allow more memory to be freed
+ * very shortly e.g. process exiting or swapping. Users either should
+ * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
 
-> +	}
-> +
->  	ret = devm_watchdog_register_device(dev, &wdt->wdtdev);
->  	if (ret < 0)
->  		return ret;
+I was just recommending usage of this flag here because it fits the
+requirement of allocating some memory to free some memory. I am also Ok with
+GFP_ATOMIC with the GFP_NOWARN removed, if you are Ok with that.
+
+thanks,
+
+ - Joel
+
