@@ -2,139 +2,128 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15BAC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2961CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 766412072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01EA2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbufxDdy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fq6caj6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729754AbgCaC2i (ORCPT
+        id S1729783AbgCaC2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:28:38 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42846 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729591AbgCaC2i (ORCPT
+        Mon, 30 Mar 2020 22:28:40 -0400
+Received: from mail-yb1-f202.google.com ([209.85.219.202]:36182 "EHLO
+        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729591AbgCaC2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:28:38 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t9so17079426qto.9;
-        Mon, 30 Mar 2020 19:28:37 -0700 (PDT)
+        Mon, 30 Mar 2020 22:28:39 -0400
+Received: by mail-yb1-f202.google.com with SMTP id u1so7682808ybm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 19:28:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Eswrbi+TW9i4zBrNR421oAkiEgU39P/E20ccg2jKp0=;
-        b=XbufxDdyKxF6IxecIKX1ZwR3v13NTl1c0irTPT13iVOAemS1d4QQGPNdE8aX5ZJR7a
-         PRYP7DhKw5BCgxY7SGSzYWNZgaGcWWSc6YGqUcJQu60Lfm4Q4OSUxTA+2thEsMP1fxNR
-         VJwh3EmB3AOXnRQbyYLd1sv5QNoWFYPHe3e7QaLHgo50B+O0+HGrMpsHrGHsmsEZZO9I
-         kg+3wYBZar0w5tO557g0O7FJMVrKJPzT9zL6YdvW2GEVYbw5IdwhUXKbWcQbdUPqfswu
-         eBRpuqpc4K2baE54CChc6Yg8aq9BWGgIZ1HFGX7tAWIF3k1mIqsNGhpbsGFO+pMH5Jui
-         8/8w==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:subject:from:to:cc;
+        bh=wcHOUyNyWvsDheDbqs/1406ENgHkhru6zuh5wukvqu8=;
+        b=fq6caj6e0DkW061ixX2SM9kwK/+hjZ8IPJCPmJ4gLtZze89R54Nd5KVdDnFKdTEKU1
+         8qciiW70D4PrgYex6q3V3EVtwkNOFeof1onnGeF1xprFJz1ZIJ9Z9bMRXBDnnjci9+Hm
+         qTPKGNhcgnHYQxhiq4qsUHIJjqEuRPRhgbDKGtFTnV1mT8l3FfsNcgHS5SGV8dj5oAZj
+         PyoA2U8XsjF8cfBNWAhHMFTGTgjLrOYAqxVHcfwe0/PZlkBI4TseGKD6y6/SgIybByRc
+         TJQB9Dr8xaFqKfz9E6eI+zkoq+JhK1JBbm/089GQT1j+pzQ87BfFm7Pc7OxzEMMjik+N
+         kKGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Eswrbi+TW9i4zBrNR421oAkiEgU39P/E20ccg2jKp0=;
-        b=ryP/w4jlxmrFVdcf4c7mKVfT4bIp+qu+sFDAiTybFm2uWVfVbS5ns/dlfi9SeT3GcN
-         Xp9LsWDxXN6Hnj4dDWrUzX7wKWjni6XcjvnH7YvoJNJ9aNxzOixtLVhNx+LvRrHZ/lcC
-         jrJr8Iv5R6AEFNFH8aqS6/S3bCH4hQscv85OinnLCkF1TM66oIVdzQD/ThjCWu6vCIJB
-         E+7q/9SMB9ERSVVBvdhk1SUFzIrhC+sZKlZr8rGikB+ZpIFeSmMr8pc5ShFiPtwUBEEA
-         /0XLvUj5lFb8JsVhWMfK/SaOPsAbCWUHTswVLGD79N4v1CoWw4AXcVZhoUJ2L5u0w1Br
-         +IJw==
-X-Gm-Message-State: ANhLgQ1tDwsrbIgZ/zV5ntzZt+m7TXgtVxsdR59Qoyed11l6G5xsBcID
-        OO/9ZAGaKR4BmF73RCMlHtmXypkHoglsSdEvIHw=
-X-Google-Smtp-Source: ADFU+vsVu3tV6CH4YdMfKECtdWJWGuZrgZY25WwzSudJxQGrid6FAxBQVVLlDNJ6nM/kHaMida9sj9zwiJxjuWI1mgI=
-X-Received: by 2002:ac8:6f4e:: with SMTP id n14mr2947163qtv.121.1585621716954;
- Mon, 30 Mar 2020 19:28:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1583725533.git.shengjiu.wang@nxp.com> <24f69c50925b93afd7a706bd888ee25d27247c78.1583725533.git.shengjiu.wang@nxp.com>
- <20200309211943.GB11333@Asurada-Nvidia.nvidia.com> <20200320173213.GA9093@bogus>
- <20200323212038.GA7527@Asurada-Nvidia.nvidia.com>
-In-Reply-To: <20200323212038.GA7527@Asurada-Nvidia.nvidia.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Tue, 31 Mar 2020 10:28:25 +0800
-Message-ID: <CAA+D8APu0JYqnUvY+fCYTcZ9U1BCv-zU8J4Zt-5doZcNkgaXFQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version:subject
+         :from:to:cc;
+        bh=wcHOUyNyWvsDheDbqs/1406ENgHkhru6zuh5wukvqu8=;
+        b=nPJYLvKq3hWGB0jCCIWkkCxL5SNjQDxntu/uRwJeYxpCeOXVlhAhOxMHFMKFWBR3oe
+         HwWJpYKXVsu29QPfSlZFr870zoBHiVjH/oAuBS+HERfnPpihjOygMv8356swMEwWf/se
+         MwyKCQ1m0CzRiyFy2IeJ+fENEAwqlvf7YF+muJtOm9BYYRT2sZbVRc8hJqDl1PDKM7MD
+         k6xQjBbG5PTYcJ1VUIi9eaQYHYO9cAcQk/PFq4Xmi0ttzJqqL0XUF/JUVn3c3ORTr/ld
+         agJJTRrvPKzqoKLOTr5UKXPk3XIG9fGOcCCMFTqiidLYyxshqqoTsGQ5ZzwKiylSa6Lj
+         Or/Q==
+X-Gm-Message-State: ANhLgQ39JAjQMcDIYsEHkEi3fOQvsscNVrVjq+SosxIddXzETAxjM7t/
+        W/mavlcDJAX3GlpVcegHDAjTXJYI6/h25XE=
+X-Google-Smtp-Source: ADFU+vvVs8cPkJsMZgfz9suRZZsRYAjo7ErBqpuhJ8If7QApLS5BPo1lpVF5tun2tbzfFFAKQBydj6JBilhb3hU=
+X-Received: by 2002:a25:9d8f:: with SMTP id v15mr23139034ybp.49.1585621718137;
+ Mon, 30 Mar 2020 19:28:38 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 19:28:32 -0700
+In-Reply-To: <CAGETcx9nhF4hjs6BQ21Ees4LJLM7kENj6Ja619Sonjvvt1o7wA@mail.gmail.com>
+Message-Id: <20200331022832.209618-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v1] driver core: Fix handling of fw_devlink=permissive
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+When commit 8375e74f2bca ("driver core: Add fw_devlink kernel
+commandline option") added fw_devlink, it didn't implement "permissive"
+mode correctly.
 
-On Tue, Mar 24, 2020 at 5:22 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Fri, Mar 20, 2020 at 11:32:13AM -0600, Rob Herring wrote:
-> > On Mon, Mar 09, 2020 at 02:19:44PM -0700, Nicolin Chen wrote:
-> > > On Mon, Mar 09, 2020 at 11:58:28AM +0800, Shengjiu Wang wrote:
-> > > > In order to support new EASRC and simplify the code structure,
-> > > > We decide to share the common structure between them. This bring
-> > > > a problem that EASRC accept format directly from devicetree, but
-> > > > ASRC accept width from devicetree.
-> > > >
-> > > > In order to align with new ESARC, we add new property fsl,asrc-format.
-> > > > The fsl,asrc-format can replace the fsl,asrc-width, then driver
-> > > > can accept format from devicetree, don't need to convert it to
-> > > > format through width.
-> > > >
-> > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > > > index cb9a25165503..780455cf7f71 100644
-> > > > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > > > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
-> > > > @@ -51,6 +51,11 @@ Optional properties:
-> > > >                     will be in use as default. Otherwise, the big endian
-> > > >                     mode will be in use for all the device registers.
-> > > >
-> > > > +   - fsl,asrc-format     : Defines a mutual sample format used by DPCM Back
-> > > > +                   Ends, which can replace the fsl,asrc-width.
-> > > > +                   The value is SNDRV_PCM_FORMAT_S16_LE, or
-> > > > +                   SNDRV_PCM_FORMAT_S24_LE
-> > >
-> > > I am still holding the concern at the DT binding of this format,
-> > > as it uses values from ASoC header file instead of a dt-binding
-> > > header file -- not sure if we can do this. Let's wait for Rob's
-> > > comments.
-> >
-> > I assume those are an ABI as well, so it's okay to copy them unless we
->
-> They are defined under include/uapi. So I think we can use them?
->
-> > already have some format definitions for DT. But it does need to be copy
-> > in a header under include/dt-bindings/.
->
-> Shengjiu is actually quoting those integral values, rather than
-> those macros, so actually no need copy to include/dt-bindings,
-> yet whoever adds this format property to a new DT would need to
-> look up the value in a header file under include/uapi. I's just
-> wondering if that's okay.
->
-> Thanks
-Shall I keep this change or drop this change?
+That commit got the device links flags correct to make sure unprobed
+suppliers don't block the probing of a consumer. However, if a consumer
+is waiting for mandatory suppliers to register, that could still block a
+consumer from probing.
 
-best regards
-wang shengjiu
+This commit fixes that by making sure in permissive mode, all suppliers
+to a consumer are treated as a optional suppliers. So, even if a
+consumer is waiting for suppliers to register and link itself (using the
+DL_FLAG_SYNC_STATE_ONLY flag) to the supplier, the consumer is never
+blocked from probing.
+
+Fixes: 8375e74f2bca ("driver core: Add fw_devlink kernel commandline option")
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+Hi Marek,
+
+If you pull in this patch and then add back in my patch that created the
+boot problem for you, can you see if that fixes the boot issue for you?
+
+Thanks,
+Saravana
+
+ drivers/base/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 5e3cc1651c78..1be26a7f0866 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2370,6 +2370,11 @@ u32 fw_devlink_get_flags(void)
+ 	return fw_devlink_flags;
+ }
+ 
++static bool fw_devlink_is_permissive(void)
++{
++	return fw_devlink_flags == DL_FLAG_SYNC_STATE_ONLY;
++}
++
+ /**
+  * device_add - add device to device hierarchy.
+  * @dev: device.
+@@ -2524,7 +2529,7 @@ int device_add(struct device *dev)
+ 	if (fw_devlink_flags && is_fwnode_dev &&
+ 	    fwnode_has_op(dev->fwnode, add_links)) {
+ 		fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+-		if (fw_ret == -ENODEV)
++		if (fw_ret == -ENODEV && !fw_devlink_is_permissive())
+ 			device_link_wait_for_mandatory_supplier(dev);
+ 		else if (fw_ret)
+ 			device_link_wait_for_optional_supplier(dev);
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
+
