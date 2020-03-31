@@ -2,125 +2,288 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C65E7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D65C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997532072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6663A20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xV2QllTv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QPs5ozvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgCaHgZ (ORCPT
+        id S1729999AbgCaHg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:36:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38216 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726397AbgCaHgY (ORCPT
+        Tue, 31 Mar 2020 03:36:56 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:37135 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgCaHgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:36:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585640184; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=gb7Dm9+ZO/tL/05FL1gIARuoKSdDON1AWF1u2v9LPbA=;
- b=xV2QllTvVlSKciVIxuYZSRl/D3nV4uN3YMSsQMDcXofT+xWTSZPnfG8WAE33WIoGKD6H7xVB
- w/RUuYPWkZRNyw6TMz9/gYg8A536qxaWzWueBKchgYx3VNEvv9qIN9Z7n5aiECRZJnhYaWq/
- pKt2ViZiFyQNNoJY/6TeRS5Uhw4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e82f2ec.7f3b307aa340-smtp-out-n03;
- Tue, 31 Mar 2020 07:36:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ACC4BC44788; Tue, 31 Mar 2020 07:36:12 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0830EC433F2;
-        Tue, 31 Mar 2020 07:36:11 +0000 (UTC)
+        Tue, 31 Mar 2020 03:36:55 -0400
+Received: by mail-vk1-f193.google.com with SMTP id o124so5441824vkc.4
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S6Q9hQ2oX9Ox06YI7dtd+yeRUlkspby1i/hG2sHJOwk=;
+        b=QPs5ozvIbF42Ytw0UwR9mtN42EIVg+Uhckg5kKc+/HZlfqR2lrKjQMDMC0u16BYIRJ
+         lGDVlYNa6YxP1XX2KmFecCHQO+1hdmrptQMWezPbNv8ZGok0DAVsLxwy3rE+1DjsWUgW
+         j8mmb1/Dd5UoAKKQMzm6uy6q2u1RWfpt2inKE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S6Q9hQ2oX9Ox06YI7dtd+yeRUlkspby1i/hG2sHJOwk=;
+        b=mMM1QQJraaNv6PELifu9veHoxrS+T6xVi3q+2PyXPYzFvD7YQcRILnwammAYmtSZ47
+         ptW+ybgELgZBX8DbsygcICV7mSEK1EDJ9a6+j0PUTUZXMB8fJFIUMRQzl207By5lsmN/
+         lJy7k1D62J/+ELDLH9ETILtY/ImioIHw5I1LEKnORmcNdaNilUfBTBUcgHUcU3j/Kgg2
+         V4VDe7EMJh0ZFiJ0DHwJQjTFOkbFmmfxzO+2rYVWYSz3dHMTOCIPvTrymSWoIlC6xuEz
+         ri3MEBGUk4aEriO5zXVbPveYi9DEVSFbSGk7SG423Dza5l3kn0u5/GxiEW0/rpSmWyML
+         SaLg==
+X-Gm-Message-State: AGi0PubXIY+JEi2PUFh23lUYbAZz0G7O1jPQJp8iOBvpLQW+qxyPpkxj
+        LRTyoj+nRjdoVFaK5fYr3fhzp1oFLZEsSeWWR89lBg==
+X-Google-Smtp-Source: APiQypLerFdT3MKzpJXcwDaQOekBA6oEi5+6wAfkecHdEyHJfLkPPjYL+dMfVJRSqp0BLWf6eFEaeWcDO7a0xb6AIq0=
+X-Received: by 2002:a05:6122:2d0:: with SMTP id k16mr10595740vki.54.1585640214209;
+ Tue, 31 Mar 2020 00:36:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Mar 2020 13:06:11 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "list@263.net:IOMMU DRIVERS , Joerg Roedel <joro@8bytes.org>," 
-        <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iommu/arm-smmu: Demote error messages to debug in
- shutdown callback
-In-Reply-To: <CAD=FV=WXTN6xxqtL6d6MHxG8Epuo6FSQERRPfnoSCskhjh1KeQ@mail.gmail.com>
-References: <20200327132852.10352-1-saiprakash.ranjan@codeaurora.org>
- <0023bc68-45fb-4e80-00c8-01fd0369243f@arm.com>
- <37db9a4d524aa4d7529ae47a8065c9e0@codeaurora.org>
- <5858bdac-b7f9-ac26-0c0d-c9653cef841d@arm.com>
- <d60196b548e1241b8334fadd0e8c2fb5@codeaurora.org>
- <CAD=FV=WXTN6xxqtL6d6MHxG8Epuo6FSQERRPfnoSCskhjh1KeQ@mail.gmail.com>
-Message-ID: <890456524e2df548ba5d44752513a62c@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1585627657-3265-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1585627657-3265-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 31 Mar 2020 15:36:43 +0800
+Message-ID: <CANMq1KBqeUHj0gKcknPDvgzRzGMt26pq-_rt_ZM89phCHO9jqQ@mail.gmail.com>
+Subject: Re: [PATCH v11 3/5] mfd: Add support for the MediaTek MT6358 PMIC
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 31, 2020 at 12:07 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> This adds support for the MediaTek MT6358 PMIC. This is a
+> multifunction device with the following sub modules:
+>
+> - Regulator
+> - RTC
+> - Codec
+> - Interrupt
+>
+> It is interfaced to the host controller using SPI interface
+> by a proprietary hardware called PMIC wrapper or pwrap.
+> MT6358 MFD is a child device of the pwrap.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 
-On 2020-03-30 23:54, Doug Anderson wrote:
-> Hi,
-> 
-> On Sat, Mar 28, 2020 at 12:35 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> > Of course the fact that in practice we'll *always* see the warning
->> > because there's no way to tear down the default DMA domains, and even
->> > if all devices *have* been nicely quiesced there's no way to tell, is
->> > certainly less than ideal. Like I say, it's not entirely clear-cut
->> > either way...
->> >
->> 
->> Thanks for these examples, good to know these scenarios in case we 
->> come
->> across these.
->> However, if we see these error/warning messages appear everytime then
->> what will be
->> the credibility of these messages? We will just ignore these messages
->> when
->> these issues you mention actually appears because we see them 
->> everytime
->> on
->> reboot or shutdown.
-> 
-> I would agree that if these messages are expected to be seen every
-> time, there's no way to fix them, and they're not indicative of any
-> problem then something should be done.  Seeing something printed at
-> "dev_error" level with an exclamation point (!) at the end makes me
-> feel like this is something that needs immediate action on my part.
-> 
-> If we really can't do better but feel that the messages need to be
-> there, at least make them dev_info and less scary like:
-> 
->   arm-smmu 15000000.iommu: turning off; DMA should be quiesced before 
-> now
-> 
-> ...that would still give you a hint in the logs that if you saw a DMA
-> transaction after the message that it was a bug but also wouldn't
-> sound scary to someone who wasn't seeing any other problems.
-> 
+This is missing a few comments from Lee Jones on v10, actually, repeated below:
+https://patchwork.kernel.org/patch/11431239/#23244041
 
-We can do this if Robin is OK?
+> ---
+>  drivers/mfd/Makefile                 |   2 +-
+>  drivers/mfd/mt6358-irq.c             | 236 +++++++++++++++++++++++++++++
+>  drivers/mfd/mt6397-core.c            |  55 ++++++-
+>  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
+>  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h      |   3 +
+>  6 files changed, 731 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/mfd/mt6358-irq.c
+>  create mode 100644 include/linux/mfd/mt6358/core.h
+>  create mode 100644 include/linux/mfd/mt6358/registers.h
+>
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index b83f172..9af1414 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -238,7 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
+> -mt6397-objs    := mt6397-core.o mt6397-irq.o
+> +mt6397-objs                    := mt6397-core.o mt6397-irq.o mt6358-irq.o
+>  obj-$(CONFIG_MFD_MT6397)       += mt6397.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)     += intel_soc_pmic_mrfld.o
+>
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> new file mode 100644
+> index 0000000..022e5f5
+> --- /dev/null
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -0,0 +1,236 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2019 MediaTek Inc.
 
--Sai
+2020
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/mt6358/core.h>
+> +#include <linux/mfd/mt6358/registers.h>
+> +#include <linux/mfd/mt6397/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +static struct irq_top_t mt6358_ints[] = {
+> +       MT6358_TOP_GEN(BUCK),
+> +       MT6358_TOP_GEN(LDO),
+> +       MT6358_TOP_GEN(PSC),
+> +       MT6358_TOP_GEN(SCK),
+> +       MT6358_TOP_GEN(BM),
+> +       MT6358_TOP_GEN(HK),
+> +       MT6358_TOP_GEN(AUD),
+> +       MT6358_TOP_GEN(MISC),
+> +};
+> +
+> +static void pmic_irq_enable(struct irq_data *data)
+> +{
+> +       unsigned int hwirq = irqd_to_hwirq(data);
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       irqd->enable_hwirq[hwirq] = true;
+> +}
+> +
+> +static void pmic_irq_disable(struct irq_data *data)
+> +{
+> +       unsigned int hwirq = irqd_to_hwirq(data);
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       irqd->enable_hwirq[hwirq] = false;
+> +}
+> +
+> +static void pmic_irq_lock(struct irq_data *data)
+> +{
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +
+> +       mutex_lock(&chip->irqlock);
+> +}
+> +
+> +static void pmic_irq_sync_unlock(struct irq_data *data)
+> +{
+> +       unsigned int i, top_gp, gp_offset, en_reg, int_regs, shift;
+> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct pmic_irq_data *irqd = chip->irq_data;
+> +
+> +       for (i = 0; i < irqd->num_pmic_irqs; i++) {
+> +               if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
+> +                       continue;
+> +
+> +               /* Find out the IRQ group */
+> +               top_gp = 0;
+> +               while ((top_gp + 1) < irqd->num_top &&
+> +                      i >= mt6358_ints[top_gp + 1].hwirq_base)
+> +                       top_gp++;
+> +
+> +               /* Find the irq registers */
+
+From Lee Jones: 'Nit: "IRQ"'
+
+> +               gp_offset = i - mt6358_ints[top_gp].hwirq_base;
+> +               int_regs = gp_offset / MT6358_REG_WIDTH;
+> +               shift = gp_offset % MT6358_REG_WIDTH;
+> +               en_reg = mt6358_ints[top_gp].en_reg +
+> +                        (mt6358_ints[top_gp].en_reg_shift * int_regs);
+> +
+[...]
+> +static const struct irq_domain_ops mt6358_irq_domain_ops = {
+> +       .map = pmic_irq_domain_map,
+> +       .xlate = irq_domain_xlate_twocell,
+> +};
+> +
+> +int mt6358_irq_init(struct mt6397_chip *chip)
+> +{
+> +       int i, j, ret;
+> +       struct pmic_irq_data *irqd;
+> +
+> +       irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
+
+From Lee Jones: 'sizeof(*irqd)'
+
+> +                           GFP_KERNEL);
+> +       if (!irqd)
+> +               return -ENOMEM;
+> +
+> +       chip->irq_data = irqd;
+> +
+[...]
+> @@ -154,19 +184,33 @@ static int mt6397_probe(struct platform_device *pdev)
+>         if (pmic->irq <= 0)
+>                 return pmic->irq;
+>
+> -       ret = mt6397_irq_init(pmic);
+> -       if (ret)
+> -               return ret;
+> -
+>         switch (pmic->chip_id) {
+>         case MT6323_CHIP_ID:
+> +               ret = mt6397_irq_init(pmic);
+> +               if (ret)
+> +                       return ret;
+> +
+>                 ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
+>                                            mt6323_devs, ARRAY_SIZE(mt6323_devs),
+>                                            NULL, 0, pmic->irq_domain);
+>                 break;
+>
+> +       case MT6358_CHIP_ID:
+> +               ret = mt6358_irq_init(pmic);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
+> +                                          mt6358_devs, ARRAY_SIZE(mt6358_devs),
+> +                                          NULL, 0, pmic->irq_domain);
+> +               break;
+
+From Lee Jones: "In a subsequent patch you can choose the correct
+mtXXXX_devs structure to pass and call devm_mfd_add_devices() only
+once below the switch()."
+
+Can you look into that as a follow-up patch?
+
+
+> +
+>         case MT6391_CHIP_ID:
+>         case MT6397_CHIP_ID:
+> +               ret = mt6397_irq_init(pmic);
+> +               if (ret)
+> +                       return ret;
+> +
+>                 ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
+>                                            mt6397_devs, ARRAY_SIZE(mt6397_devs),
+>                                            NULL, 0, pmic->irq_domain);
+
+[snip]
