@@ -2,108 +2,124 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899C7C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CD7C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6484A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE159208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585648202;
+	bh=U95vwbFTygmmbR2tfTYI3Gi5UmwdSK97VHeFfxxeMLA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=R2D4WykFhP0y/GS1/5WhqnVs38b+HuXVO6n4xRYwdyjQcUZYBb/Zu0nq68A+uxd49
+	 Th5/kWd6Yn3icODfz2L1WuRP6ocafR4sW6gS6lDBLOz3i1ywpaAy0gswEboF+3kEJb
+	 ZDllJzCo41AlBsCx3K8YdxEcYg7Yu5/K7DNpxPyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbgCaJt7 (ORCPT
+        id S1730471AbgCaJuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:49:59 -0400
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:14591 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730409AbgCaJt5 (ORCPT
+        Tue, 31 Mar 2020 05:50:01 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:30953 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730425AbgCaJt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:49:57 -0400
-Received: from ATCSQR.andestech.com (localhost [127.0.0.2] (may be forged))
-        by ATCSQR.andestech.com with ESMTP id 02V9XJDk065695
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 17:33:19 +0800 (GMT-8)
-        (envelope-from tesheng@andestech.com)
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id 02V9WLWb065506;
-        Tue, 31 Mar 2020 17:32:21 +0800 (GMT-8)
-        (envelope-from tesheng@andestech.com)
-Received: from atcsqa06.andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Tue, 31 Mar 2020
- 17:33:15 +0800
-From:   Eric Lin <tesheng@andestech.com>
-To:     <linux-riscv@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <green.hu@gmail.com>, <Anup.Patel@wdc.com>,
-        <akpm@linux-foundation.org>, <logang@deltatee.com>,
-        <david.abdurachmanov@gmail.com>, <atish.patra@wdc.com>,
-        <tglx@linutronix.de>, <bp@suse.de>, <yash.shah@sifive.com>,
-        <alex@ghiti.fr>, <zong.li@sifive.com>, <gary@garyguo.net>,
-        <rppt@linux.ibm.com>, <steven.price@arm.com>,
-        Eric Lin <tesheng@andestech.com>,
-        Alan Kao <alankao@andestech.com>
-Subject: [PATCH 3/3] riscv/mm: Add pkmap in print_vm_layout()
-Date:   Tue, 31 Mar 2020 17:32:41 +0800
-Message-ID: <20200331093241.3728-4-tesheng@andestech.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20200331093241.3728-1-tesheng@andestech.com>
-References: <20200331093241.3728-1-tesheng@andestech.com>
+        Tue, 31 Mar 2020 05:49:59 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02V9nteA014517;
+        Tue, 31 Mar 2020 18:49:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02V9nteA014517
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585648196;
+        bh=PJEi61f0eXDArR9pXCoZ/Z/BGWbJnqqejf5xDCJSlfM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=stvV9/fegBpehk7fgbJMhsvCS1+6Io735ElZFseXsd7KumwfWryM3VKA7jAeDG/hO
+         7s+d0TLz3rsWV+ebVFxOU/JKKQN6IDbfb4/qquibSoYuAJML6gDvx4q8UMgjhlym0/
+         xo21BKcrjqqQckxisq5nwO6F7Kl3SBHis6G8jJq8ivwoZKY9dhFJkCSvXHFNGoDFmt
+         sbMTXSHFCiDaBcRy5lby+IH/KrdTOM+r9Gq/UOGXzTUss4I6LbSL6dzJSNuTW2pctx
+         +/ULlD2rXHjftkHCK9K1zn3PPRy5IcD5q6M4rgdXhU/EP7d3u4wQqPq9xBQqZa4WTC
+         TZeqPqc46u4Qg==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id a6so7444004uao.2;
+        Tue, 31 Mar 2020 02:49:56 -0700 (PDT)
+X-Gm-Message-State: AGi0PubSeL1UXPbjIXexQbBfJNhuiqld7w1fT02DExM4+F3NSk4yJHeF
+        n0Ve2D5DTdgkBkUf7471fSZvQfC30Wr9RUGZgZM=
+X-Google-Smtp-Source: APiQypIimurUkMjDdWAC3rg/jiqG8zx6Nv5xFZ+/8O3gxpsq8vLwlbUtzCWSeJ5/ovngutBvnVuaJ+W1QeCQEx5D+Tg=
+X-Received: by 2002:ab0:28d8:: with SMTP id g24mr10825054uaq.121.1585648195026;
+ Tue, 31 Mar 2020 02:49:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com 02V9WLWb065506
+References: <a5ce79eb-be9d-df97-0b58-5aee5a48f4d3@oracle.com>
+In-Reply-To: <a5ce79eb-be9d-df97-0b58-5aee5a48f4d3@oracle.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 31 Mar 2020 18:49:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ8LZMPxrjVkuLizHjVZyBtSmLFZ=EvDCCAPb-XGfJLHA@mail.gmail.com>
+Message-ID: <CAK7LNAQ8LZMPxrjVkuLizHjVZyBtSmLFZ=EvDCCAPb-XGfJLHA@mail.gmail.com>
+Subject: Re: single target builds are broken
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When enabling CONFIG_HIGHMEM, lowmem will before pkmap
-region and the memory layout will be like as below:
+On Tue, Mar 31, 2020 at 6:16 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+>
+>
+> Hi,
+>
+> I often run 'make foo/bar.o' as part of my workflow, even when bar.o is
+> not specified in any kernel makefile, and this has worked just fine for
+> years.
+>
+> This is broken after commit 394053f4a4b3e3eeeaa67b67fc886a9a75bd9e4d
+> (kbuild: make single targets work more correctly) and just gives an error:
+>
+> $ make kernel/test.o
+>    CALL    scripts/checksyscalls.sh
+>    CALL    scripts/atomic/check-atomics.sh
+>    DESCEND  objtool
+> make[2]: *** No rule to make target 'kernel/test.o'.  Stop.
+> scripts/Makefile.build:502: recipe for target '__build' failed
+> make[1]: *** [__build] Error 2
+> Makefile:1670: recipe for target 'kernel' failed
+> make: *** [kernel] Error 2
 
-Virtual kernel memory layout:
-      lowmem : 0xc0000000 - 0xf5400000   ( 852 MB)
-       pkmap : 0xf5600000 - 0xf5800000   (   2 MB)
-      fixmap : 0xf5800000 - 0xf5c00000   (4096 kB)
-      pci io : 0xf5c00000 - 0xf6c00000   (  16 MB)
-     vmemmap : 0xf6c00000 - 0xf7bfffff   (  15 MB)
-     vmalloc : 0xf7c00000 - 0xffc00000   ( 128 MB)
 
-Signed-off-by: Eric Lin <tesheng@andestech.com>
-Cc: Alan Kao <alankao@andestech.com>
----
- arch/riscv/mm/init.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This is intentional to make the single target builds
+work in the same manner as the normal builds.
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 59afb479176a..b32d558e3f99 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -80,6 +80,12 @@ static inline void print_mlm(char *name, unsigned long b, unsigned long t)
- static void print_vm_layout(void)
- {
- 	pr_notice("Virtual kernel memory layout:\n");
-+#ifdef CONFIG_HIGHMEM
-+	print_mlm("lowmem", (unsigned long)PAGE_OFFSET,
-+		  (unsigned long)high_memory);
-+	print_mlm("pkmap", (unsigned long)PKMAP_BASE,
-+		  (unsigned long)FIXADDR_START);
-+#endif
- 	print_mlk("fixmap", (unsigned long)FIXADDR_START,
- 		  (unsigned long)FIXADDR_TOP);
- 	print_mlm("pci io", (unsigned long)PCI_IO_START,
-@@ -88,8 +94,10 @@ static void print_vm_layout(void)
- 		  (unsigned long)VMEMMAP_END);
- 	print_mlm("vmalloc", (unsigned long)VMALLOC_START,
- 		  (unsigned long)VMALLOC_END);
-+#ifndef CONFIG_HIGHMEM
- 	print_mlm("lowmem", (unsigned long)PAGE_OFFSET,
- 		  (unsigned long)high_memory);
-+#endif
- }
- #else
- static void print_vm_layout(void) { }
+
+The necessary CONFIG dependency must be met.
+
+obj-$(CONFIG_FOO) += foo.o
+
+foo.o can be built only when CONFIG_FOO is y/m.
+
+
+
+> For top-level objects (e.g. 'make bar.o') the situation is even worse,
+> since make exits with status 0 without building anything :-/
+
+
+There is no .c or .S file at the top-level of the kernel source tree.
+
+'make bar.o' never happens.
+
+
+
+> Is there any chance we can get this back? It was super useful for me.
+
+
+What you want is "Let's build whatever", right?
+
+No, please add 'obj-y += test.o' if you want to
+test your local file.
+
+
 -- 
-2.17.0
-
+Best Regards
+Masahiro Yamada
