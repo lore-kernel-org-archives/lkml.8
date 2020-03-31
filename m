@@ -2,226 +2,216 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7717CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F002C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFCC20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:52:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RSbSxYZe"
+	by mail.kernel.org (Postfix) with ESMTP id 45AA020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730748AbgCaLwc (ORCPT
+        id S1730544AbgCaLyc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:52:32 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60568 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730543AbgCaLwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:52:31 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DC4AE999;
-        Tue, 31 Mar 2020 13:52:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585655548;
-        bh=JkGWVHiizYwHOg5qMpasQNMfj5M8ESU2sYXu/vXYS8U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RSbSxYZeqrhlaoUzAQT3FImFvs5GYlPriEqhYfYrLCoP+920TwIhW8LX+OyjRjRA1
-         CmvUvSbdjIitRJ3SynGAhjfE2YA7H8gLAwBIeFNcm/5paWiw4pCe7rm6VylicDdmJE
-         XZjoKvQxtffWYbBiDUUREuga8zC8L0IL5yWyDRcI=
-Date:   Tue, 31 Mar 2020 14:52:21 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-Message-ID: <20200331115221.GA4767@pendragon.ideasonboard.com>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
- <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
- <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
+        Tue, 31 Mar 2020 07:54:32 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4171 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730357AbgCaLyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 07:54:32 -0400
+IronPort-SDR: FD9P8U211bxNlGXPbKa5c0RAEpvI8ZNAs8UJxVVMz6VBlOuY/LIhRAxNkYu7lJ0y0MUeDwvbgU
+ xDPU9RkiIgaQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 04:54:31 -0700
+IronPort-SDR: jVzNgoxsBvTeACswyPw0g3F8gBbwAcWBsNPozis+fEdbZAPIf8R5uIU/TJB3wVIQpzJibXb0NN
+ agU6zcQmyP5w==
+X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
+   d="scan'208";a="422268159"
+Received: from unknown (HELO localhost) ([10.249.38.166])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 04:54:27 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Peter Lister <peter@bikeshed.quignogs.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/1] Compactly make code examples into literal blocks
+In-Reply-To: <7d7f4cbb-e8e8-411d-62f4-7a32a2ac8d8a@bikeshed.quignogs.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200326192947.GM22483@bombadil.infradead.org> <20200326195156.11858-1-peter@bikeshed.quignogs.org.uk> <87imiqghop.fsf@intel.com> <20200327104126.667b5d5b@lwn.net> <7d7f4cbb-e8e8-411d-62f4-7a32a2ac8d8a@bikeshed.quignogs.org.uk>
+Date:   Tue, 31 Mar 2020 14:54:24 +0300
+Message-ID: <87sghog2of.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Tue, Mar 31, 2020 at 01:27:19PM +0200, Hans Verkuil wrote:
-> On 3/31/20 1:10 PM, Sakari Ailus wrote:
-> > On Tue, Mar 31, 2020 at 12:56:57PM +0200, Hans Verkuil wrote:
-> >> On 3/31/20 12:32 PM, Sakari Ailus wrote:
-> >>> On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
-> >>>> On 3/25/20 12:03 PM, Sakari Ailus wrote:
-> >>>>> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
-> >>>>>> Tegra210 contains a powerful Video Input (VI) hardware controller
-> >>>>>> which can support up to 6 MIPI CSI camera sensors.
-> >>>>>>
-> >>>>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
-> >>>>>> capture from an external camera sensor connected to CSI or from
-> >>>>>> built-in test pattern generator.
-> >>>>>>
-> >>>>>> Tegra210 supports built-in test pattern generator from CSI to VI.
-> >>>>>>
-> >>>>>> This patch adds a V4L2 media controller and capture driver support
-> >>>>>> for Tegra210 built-in CSI to VI test pattern generator.
-> >>>>>>
-> >>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> >>>>>> ---
-> >>>>>>  drivers/staging/media/Kconfig              |    2 +
-> >>>>>>  drivers/staging/media/Makefile             |    1 +
-> >>>>>>  drivers/staging/media/tegra/Kconfig        |   10 +
-> >>>>>>  drivers/staging/media/tegra/Makefile       |    8 +
-> >>>>>>  drivers/staging/media/tegra/TODO           |   10 +
-> >>>>>>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
-> >>>>>>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
-> >>>>>>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
-> >>>>>>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
-> >>>>>>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
-> >>>>>>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
-> >>>>>>  drivers/staging/media/tegra/tegra-video.h  |   32 +
-> >>>>>>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
-> >>>>>>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
-> >>>>>
-> >>>>> Why staging? Are there reasons not to aim this to the kernel proper right
-> >>>>> away? If you only support TPG, the driver may not have too many (if any)
-> >>>>> real users anyway.
-> >>>>>
-> >>>>>>  14 files changed, 3182 insertions(+)
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/Kconfig
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/Makefile
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/TODO
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra210.c
-> >>>>>>  create mode 100644 drivers/staging/media/tegra/tegra210.h
-> >>>>>>
-> >>>>
-> >>>> <snip>
-> >>>>
-> >>>>>> +static int tegra_channel_g_input(struct file *file, void *priv,
-> >>>>>> +				 unsigned int *i)
-> >>>>>> +{
-> >>>>>> +	*i = 0;
-> >>>>>> +	return 0;
-> >>>>>> +}
-> >>>>>> +
-> >>>>>> +static int tegra_channel_s_input(struct file *file, void *priv,
-> >>>>>> +				 unsigned int input)
-> >>>>>> +{
-> >>>>>> +	if (input > 0)
-> >>>>>> +		return -EINVAL;
-> >>>>>> +
-> >>>>>> +	return 0;
-> >>>>>> +}
-> >>>>>
-> >>>>> Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
-> >>>>> linux-media; it's relevant here, too.
-> >>>>
-> >>>> No, it isn't. The pipeline is controlled by the driver, not by userspace.
-> >>>> This is a regular video capture driver, not an ISP driver.
-> >>>
-> >>> I don't think that really makes a difference, whether a device is an ISP or
-> >>> not, but instead what does is whether there is something to control in its
-> >>> pipeline that cannot be generally done through the regular V4L2 interface.
-> >>> Even plain CSI-2 receiver drivers should be media device centric these days
-> >>> as doing otherwise excludes using a range of sensor drivers with them,
-> >>> including any possible future support for e.g. sensor embedded data.
-> >>>
-> >>
-> >> We've been back and forth on this before for this driver. I see no reason to make things
-> >> complicated, these are simple video pipelines for video capture. Making this media
-> >> device centric means that existing software using the BSP version of this driver require
-> >> a full rewrite, which is not desirable.
-> >>
-> >> If we are going to require CSI receiver drivers to be media centric, then that's a
-> >> major departure of existing practice. And something that needs to be discussed first,
-> > 
-> > I'd be happy to discuss that.
-> > 
-> > Either way, the current design is problematic as it excludes a range of
-> > camera sensors being used with the driver --- addressing of which requires
-> > converting the driver MC centric. If the driver is merged to mainline, then
-> > the user might face a Kconfig option or a module parameter to choose
-> > between the two --- this defines uAPI behaviour after all.
-> > 
-> > The only way to avoid that in the future is to make it MC-centric right
-> > away.
-> > 
-> >> since that will require that support for each csi receiver driver is added to libcamera.
-> >> Is libcamera ready for that? Are common applications using libcamera yet?
-> >>
-> >> Obviously, if NVIDIA decides that this is worth the effort, then I have no objection.
-> >> But I don't think it is something we should require at this stage.
-> > 
-> > Works for me. But in that case NVIDIA should also be aware that doing so
-> > has consequences.
-> > 
-> > We also haven't discussed what to do with old V4L2-centric drivers which
-> > you'd use with sensors that expose their own subdevs. The proportion of all
-> > sensors might not be large currently but it is almost certainly bound to
-> > grow in the future.
-> > 
-> > FWIW, Intel ipu3-cio2 CSI-2 receiver driver is MC-centric e.g. for the
-> > above reasons. Libcamera supports it currently. I'll let Laurent (cc'd)
-> > comment on the details.
-> 
-> I think it would be good to at least describe in some detail what you gain
-> by taking the media centric route, and what the obstacles are (loss of compatibility
-> with existing applications, requiring libcamera support).
-
-In this case the main gain is control of the camera sensor. Sensors can
-appear as simple when you don't look too closely at them, but many
-sensors (especially the ones modelled after SMIA++ and the now standard
-- and open! - MIPI CCS specification) have 3 locations to perform
-cropping (analog, digital and output), and 3 locations to perform
-scaling (binning, skipping, and full-featured scaler). All of these need
-to be controlled by userspace one way or another if you want to
-implement proper camera algorithms, which those platforms target.
-
-> My personal feeling has always been that for ISP drivers the pros of making
-> a media-centric driver outweigh the cons, but that for a standard video capture
-> pipeline without complex processing blocks the cons outweigh the pros.
+On Mon, 30 Mar 2020, Peter Lister <peter@bikeshed.quignogs.org.uk> wrote:
+> On 27/03/2020 16:41, Jonathan Corbet wrote:
 >
-> This might change if libcamera becomes widely used, but we're not there yet.
-> 
-> To be honest, I am not opposed to having a kernel config option for drivers
-> like this that select the media-centric API vs a regular API, if that can be
-> done without too much work. If you need full control for your embedded system,
-> then you enable the option. If you want full compatibility with existing
-> applications, then disable it.
+>> On Fri, 27 Mar 2020 13:28:54 +0200
+>> Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>>
+>>> IMHO the real problem is kernel-doc doing too much preprocessing on the
+>>> input, preventing us from doing what would be the sensible thing in
+>>> rst. The more we try to fix the problem by adding more kernel-doc
+>>> processing, the further we dig ourselves into this hole.
+>>>
+>>> If kernel-doc didn't have its own notion of section headers, such as
+>>> "example:", we wouldn't have this problem to begin with. We could just
+>>> use the usual rst construct; "example::" followed by an indented block.
+>>>
+>>> I'm not going to stand in the way of the patch, but I'm telling you,
+>>> this is going to get harder, not easier, on this path.
+>> I agree with you in principle.  The problem, of course, is that this is a
+>> legacy gift from before the RST days and it will be hard to change.
+>>
+>> A quick grep shows that the pattern:
+>>
+>> 	* Example:
+>>
+>> appears nearly 100 times in current kernels.  It is not inconceivable to
+>> make a push to get rid of all of those, turning them into ordinary RST
+>> syntax - especially since not all of those are actually kerneldoc
+>> comments.
+>>
+>> The same quick grep says that "returns?:" appears about 10,000 times.
+>> *That* will be painful to change, and I can only imagine that some
+>> resistance would have to be overcome at some point.
+>>
+>> So what do folks think we should do? :)
+>>
+>> I want to ponder on this for a bit.  Peter, that may mean that I hold this
+>> patch past the 5.7 merge window, which perhaps makes sense at this point
+>> anyway, sorry.  But I really would like to push things into a direction
+>> that moves us away from gnarly perl hacks and toward something more
+>> maintainable in the long term.
+>
+> I would have been surprised if it had been accepted as is.
+>
+> Matthew and Greg, thanks for reviewing - I have a feeling you might need 
+> to do this a few times more.
+>
+> Over the past few days, I too have been pondering, certain thatthis 
+> patch, a mini tweak of the existing kernel-doc, is not theright 
+> answer.Equally, I'm unconvinced that the "right" answer is a wholesale 
+> move to ReST, so where's the happy medium?
+>
+> <alert: long email, tldr: "Finding the happy medium on kerneldoc layout 
+> in C source comments">
+>
+> A week or two back, I tried to fix doc build "indentation" warnings due 
+> to return value listsin sfb-bus.c. Russell King didn't like my patch 
+> saying "I think it's more important that the documentation interferes to 
+> a minimal degree with the code in the file".[ Mauro's patch to sfb-bus.c 
+> is now in linux-next. He fixed the problem with a bullet list - 
+> thriftier with the line breaks andthe official fix in the kerneldoc 
+> notes - but I'll argue that a simple list or definition list might be 
+> more appropriate. ]
+>
+> Russell and Matthew argue that the primary purpose of source annotation 
+> is to aid developers and that any significant detraction (verbosity, 
+> whitespace) is not excused by prettier docs. FWIW, my background is 
+> sysadmin (much perl) and system/kernel programming (mostly C) and I 
+> agree with them.
+>
+> Jani, if you see risks of complexity and maintenance problems, then so 
+> do I. But the point of kernel-doc is surely to be a specific semantic 
+> markup which works for developers and maintainers and allows doc authors 
+> access to their annotation.  The format clearly needs thought,perl is 
+> less fashionable than it was and kernel-doc - er - needs work, but I 
+> don't see the *idea* as inherently broken. I suggest that there would be 
+> good developer buy-in to searchable pretty docs if a few compact idioms 
+> reliably did The Right Thing and didn't spit out doc build warnings.
 
-How would distributions be supposed to handle those ? That could in the
-end need to be a per-driver option, and it would be very messy. Maybe
-it's unavoidable, I'm trying to figure out a way to avoid such an option
-for sensor drivers, to decide to expose them as a single subdev or
-multiple subdevs in order to support multiple streams CSI-2 streams, and
-I'm not sure I'll succeed.
+Historically the kernel documentation build was a Rube Goldberg machine,
+and if you were lucky, you reached the end. There were failure points
+all over the place. There were "impedance mismatches" in the inputs and
+outputs at various stages. There were *insane* escaping issues to get
+some text passed through as intended.
+
+At the high level, we've reduced that to *two*, Sphinx and kernel-doc
+the perl script, we've made kernel-doc emit rst instead of xml/html, and
+we even run the script from within a Sphinx extension to get the error
+reporting and dependency management right.
+
+Being able to throw away a lot of conversion and interpretation from
+kernel-doc was a goal, passing through the kernel-doc comments unchanged
+as much as possible was a feature. This was really the key to making it
+possible to document the kernel with Sphinx to begin with.
+
+I think it's a mistake to add anything to kernel-doc that isn't trying
+to streamline that process even more. Minimize what kernel-doc does as
+much as possible (but not more).
+
+The moment you start adding "a few compact idioms", you start
+introducing more ways to trip over the mismatch between kernel-doc
+syntax and rst. And you end up trying to figure out ways to escape stuff
+in one or the other.
+
+
+BR,
+Jani.
+
+
+PS. The kernel was always going to be held back by insane amounts of
+existing kernel-doc comments, as well as aversion to adding build
+dependencies. My vision of what a minimalistic Sphinx based C code
+documentation system free of those ties might look like is Hawkmoth [1].
+
+[1] https://github.com/jnikula/hawkmoth
+
+
+>
+> The build warnings I currently observe do not tell me "the author got it 
+> wrong", but rather "kernel-doc didn't understand the author's intention".
+>
+> Consider this excerpt from the kerneldoc comment for bitmap_cut(), 
+> recently added to lib/bitmap.c. (NB - this is an example in the 
+> description section - the parameters, including src, have already been 
+> described).
+>
+>   * In pictures, example for a big-endian 32-bit architecture:
+>   *
+>   * @src:
+>   * 31                                   63
+>   * |                                    |
+>   * 10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
+>   *                 | |              |                                    |
+>   *                16 14             0                                   32
+>   *
+>
+> This fails because 1) the diagram isn't made literal (and so generates a 
+> indentation build warning) and 2) "@src:" is interpreted as an extra 
+> definition of src which scrunges the first one. I find it hard to assert 
+> that the author's intentions were wrong; it's the kind of good 
+> annotation we should hope for in a newly added function. If "* @src:" 
+> gained an double colon and we guaranteed that, after a description 
+> section header, references to a parameter didn't overwrite the original 
+> definition, this would work fine.
+>
+> My instinct is to fix doc build issues with minimal changes: not actual 
+> ReST, but clear idioms reliably generating good ReST. This should be 
+> accompanied by tests for developers and reviewers so that we can have a 
+> fair stab at getting it right first time and (of course) documentation.
+>
+> Could I ask anyone who disagrees to suggest their preferred way to lay 
+> out the comment for bitmap_cut()?
+>
+> One head-on approachis to literalise *all* kerneldoc comments for 
+> functions and structures. The kerneldoc keywords then serve only to 
+> generate links; the ReST output is minimal but guaranteed validand 
+> warning free. Would any readers of API docs be inconvenienced? The 
+> target readership are presumably programmers, and the searchability of 
+> the sphinx RTD is more useful to me than the formatting.
+>
+> All the best,
+> Peter
 
 -- 
-Regards,
-
-Laurent Pinchart
+Jani Nikula, Intel Open Source Graphics Center
