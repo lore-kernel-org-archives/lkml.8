@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2FEC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA09C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6CCC20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097E020B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645632;
-	bh=qQwBDFzSp4aOGOwQwSFV8JxU0PnUe5HGBU7fJ4SIY5M=;
+	s=default; t=1585645635;
+	bh=LO6+gl4fRQ+CxZBnI0a3blprYN0P7Vg0OaMiOyCbBWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+5SAblPMJfJZHWsH+iAeJpSt85TYOv+16a5q25RkUDAUh6/z6xdkOynrIwDHl1bt
-	 62kKjKq0twGwQMuPvFaVwatAF4pRp1046LmoBKug0LaLbpp216l04PsVp5hvc/+pp+
-	 fZjJxq7MOoEq8M3q4OSHN9+ifO8YDjkgZvn6h42w=
+	b=QYR3qnH9P5g+yYRMbK+1XJ+09iv8sDgKKNHE2PRqR5EngwmFzpDSsBMFhIxLNPdcg
+	 Nn3H4Ih5DEFK/VzmfCdIPaLzZd5kC58tTirC318h6NMsJHE6pPkIFCyUVFdwCrJkBU
+	 B37ZXvQgB9f4W/aSo9ogVoiP3/6aLbvPo95UzpBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbgCaJHL (ORCPT
+        id S1731211AbgCaJHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48662 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731181AbgCaJHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:07:01 -0400
+        id S1730732AbgCaJHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:07:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D341D20675;
-        Tue, 31 Mar 2020 09:07:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFC6620675;
+        Tue, 31 Mar 2020 09:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645621;
-        bh=qQwBDFzSp4aOGOwQwSFV8JxU0PnUe5HGBU7fJ4SIY5M=;
+        s=default; t=1585645624;
+        bh=LO6+gl4fRQ+CxZBnI0a3blprYN0P7Vg0OaMiOyCbBWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=or2KBLcn1wUikRUey5gq36nLtUDWlwwTnSEE5uHvcK+LX5c83pyikTRsQRE+G38Ru
-         EYRYSlamnAxKfr8lbsaYRlGcE2FZaS9Ds2CPT33q1oQLX9KbQ/miERJSJ0ZPrOBNdm
-         n2iRQViA9V773NlfoADuUP6R4aNX9OrFZ8CpLIaA=
+        b=BxZTUOZGq6NG3CwqJUOmfhWwsnshlzOQ1F06w+fx2DIybiGEK6OGfP8AmxX0BQG04
+         Vb1XTsP/+LoT+U1fYop7So8A7X1VNS48Ka5greZrLJ6W6dAdGT87fysMM8FKj5Czef
+         rlFotbeT42p1KtRUBvoUwwPpMfAj5W9TqyIAgwlw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.5 108/170] nl80211: fix NL80211_ATTR_CHANNEL_WIDTH attribute type
-Date:   Tue, 31 Mar 2020 10:58:42 +0200
-Message-Id: <20200331085435.660024649@linuxfoundation.org>
+        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 5.5 109/170] mac80211: drop data frames without key on encrypted links
+Date:   Tue, 31 Mar 2020 10:58:43 +0200
+Message-Id: <20200331085435.762508847@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,35 +62,154 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johannes Berg <johannes.berg@intel.com>
 
-commit 0016d3201753b59f3ae84b868fe66c86ad256f19 upstream.
+commit a0761a301746ec2d92d7fcb82af69c0a6a4339aa upstream.
 
-The new opmode notification used this attribute with a u8, when
-it's documented as a u32 and indeed used in userspace as such,
-it just happens to work on little-endian systems since userspace
-isn't doing any strict size validation, and the u8 goes into the
-lower byte. Fix this.
+If we know that we have an encrypted link (based on having had
+a key configured for TX in the past) then drop all data frames
+in the key selection handler if there's no key anymore.
+
+This fixes an issue with mac80211 internal TXQs - there we can
+buffer frames for an encrypted link, but then if the key is no
+longer there when they're dequeued, the frames are sent without
+encryption. This happens if a station is disconnected while the
+frames are still on the TXQ.
+
+Detecting that a link should be encrypted based on a first key
+having been configured for TX is fine as there are no use cases
+for a connection going from with encryption to no encryption.
+With extended key IDs, however, there is a case of having a key
+configured for only decryption, so we can't just trigger this
+behaviour on a key being configured.
 
 Cc: stable@vger.kernel.org
-Fixes: 466b9936bf93 ("cfg80211: Add support to notify station's opmode change to userspace")
+Reported-by: Jouni Malinen <j@w1.fi>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/20200325090531.be124f0a11c7.Iedbf4e197a85471ebd729b186d5365c0343bf7a8@changeid
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200326150855.6865c7f28a14.I9fb1d911b064262d33e33dfba730cdeef83926ca@changeid
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/debugfs_sta.c |    3 ++-
+ net/mac80211/key.c         |   20 ++++++++++++--------
+ net/mac80211/sta_info.h    |    1 +
+ net/mac80211/tx.c          |   12 +++++++++---
+ 4 files changed, 24 insertions(+), 12 deletions(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -16416,7 +16416,7 @@ void cfg80211_sta_opmode_change_notify(s
- 		goto nla_put_failure;
+--- a/net/mac80211/debugfs_sta.c
++++ b/net/mac80211/debugfs_sta.c
+@@ -5,7 +5,7 @@
+  * Copyright 2007	Johannes Berg <johannes@sipsolutions.net>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+  * Copyright(c) 2016 Intel Deutschland GmbH
+- * Copyright (C) 2018 - 2019 Intel Corporation
++ * Copyright (C) 2018 - 2020 Intel Corporation
+  */
  
- 	if ((sta_opmode->changed & STA_OPMODE_MAX_BW_CHANGED) &&
--	    nla_put_u8(msg, NL80211_ATTR_CHANNEL_WIDTH, sta_opmode->bw))
-+	    nla_put_u32(msg, NL80211_ATTR_CHANNEL_WIDTH, sta_opmode->bw))
- 		goto nla_put_failure;
+ #include <linux/debugfs.h>
+@@ -78,6 +78,7 @@ static const char * const sta_flag_names
+ 	FLAG(MPSP_OWNER),
+ 	FLAG(MPSP_RECIPIENT),
+ 	FLAG(PS_DELIVER),
++	FLAG(USES_ENCRYPTION),
+ #undef FLAG
+ };
  
- 	if ((sta_opmode->changed & STA_OPMODE_N_SS_CHANGED) &&
+--- a/net/mac80211/key.c
++++ b/net/mac80211/key.c
+@@ -6,7 +6,7 @@
+  * Copyright 2007-2008	Johannes Berg <johannes@sipsolutions.net>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+  * Copyright 2015-2017	Intel Deutschland GmbH
+- * Copyright 2018-2019  Intel Corporation
++ * Copyright 2018-2020  Intel Corporation
+  */
+ 
+ #include <linux/if_ether.h>
+@@ -262,22 +262,29 @@ static void ieee80211_key_disable_hw_acc
+ 			  sta ? sta->sta.addr : bcast_addr, ret);
+ }
+ 
+-int ieee80211_set_tx_key(struct ieee80211_key *key)
++static int _ieee80211_set_tx_key(struct ieee80211_key *key, bool force)
+ {
+ 	struct sta_info *sta = key->sta;
+ 	struct ieee80211_local *local = key->local;
+ 
+ 	assert_key_lock(local);
+ 
++	set_sta_flag(sta, WLAN_STA_USES_ENCRYPTION);
++
+ 	sta->ptk_idx = key->conf.keyidx;
+ 
+-	if (!ieee80211_hw_check(&local->hw, AMPDU_KEYBORDER_SUPPORT))
++	if (force || !ieee80211_hw_check(&local->hw, AMPDU_KEYBORDER_SUPPORT))
+ 		clear_sta_flag(sta, WLAN_STA_BLOCK_BA);
+ 	ieee80211_check_fast_xmit(sta);
+ 
+ 	return 0;
+ }
+ 
++int ieee80211_set_tx_key(struct ieee80211_key *key)
++{
++	return _ieee80211_set_tx_key(key, false);
++}
++
+ static void ieee80211_pairwise_rekey(struct ieee80211_key *old,
+ 				     struct ieee80211_key *new)
+ {
+@@ -441,11 +448,8 @@ static int ieee80211_key_replace(struct
+ 		if (pairwise) {
+ 			rcu_assign_pointer(sta->ptk[idx], new);
+ 			if (new &&
+-			    !(new->conf.flags & IEEE80211_KEY_FLAG_NO_AUTO_TX)) {
+-				sta->ptk_idx = idx;
+-				clear_sta_flag(sta, WLAN_STA_BLOCK_BA);
+-				ieee80211_check_fast_xmit(sta);
+-			}
++			    !(new->conf.flags & IEEE80211_KEY_FLAG_NO_AUTO_TX))
++				_ieee80211_set_tx_key(new, true);
+ 		} else {
+ 			rcu_assign_pointer(sta->gtk[idx], new);
+ 		}
+--- a/net/mac80211/sta_info.h
++++ b/net/mac80211/sta_info.h
+@@ -98,6 +98,7 @@ enum ieee80211_sta_info_flags {
+ 	WLAN_STA_MPSP_OWNER,
+ 	WLAN_STA_MPSP_RECIPIENT,
+ 	WLAN_STA_PS_DELIVER,
++	WLAN_STA_USES_ENCRYPTION,
+ 
+ 	NUM_WLAN_STA_FLAGS,
+ };
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -590,10 +590,13 @@ ieee80211_tx_h_select_key(struct ieee802
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(tx->skb);
+ 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)tx->skb->data;
+ 
+-	if (unlikely(info->flags & IEEE80211_TX_INTFL_DONT_ENCRYPT))
++	if (unlikely(info->flags & IEEE80211_TX_INTFL_DONT_ENCRYPT)) {
+ 		tx->key = NULL;
+-	else if (tx->sta &&
+-		 (key = rcu_dereference(tx->sta->ptk[tx->sta->ptk_idx])))
++		return TX_CONTINUE;
++	}
++
++	if (tx->sta &&
++	    (key = rcu_dereference(tx->sta->ptk[tx->sta->ptk_idx])))
+ 		tx->key = key;
+ 	else if (ieee80211_is_group_privacy_action(tx->skb) &&
+ 		(key = rcu_dereference(tx->sdata->default_multicast_key)))
+@@ -654,6 +657,9 @@ ieee80211_tx_h_select_key(struct ieee802
+ 		if (!skip_hw && tx->key &&
+ 		    tx->key->flags & KEY_FLAG_UPLOADED_TO_HARDWARE)
+ 			info->control.hw_key = &tx->key->conf;
++	} else if (!ieee80211_is_mgmt(hdr->frame_control) && tx->sta &&
++		   test_sta_flag(tx->sta, WLAN_STA_USES_ENCRYPTION)) {
++		return TX_DROP;
+ 	}
+ 
+ 	return TX_CONTINUE;
 
 
