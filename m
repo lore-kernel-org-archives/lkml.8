@@ -2,125 +2,96 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A43EC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A06DC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2392071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D362071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CX6rpgNk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbgCaNdz (ORCPT
+        id S1731025AbgCaNd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:33:55 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:37368 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730845AbgCaNdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:33:54 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf9+pRoNeSSIiAA--.19S2;
-        Tue, 31 Mar 2020 21:33:30 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 0/3] Add basic support for Loongson 7A1000 bridge chip
-Date:   Tue, 31 Mar 2020 21:33:25 +0800
-Message-Id: <1585661608-3356-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxf9+pRoNeSSIiAA--.19S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCrWfZF1DZryrZrW7Jr47urg_yoW5Ar4kpF
-        W5ua1fGr1DGr1xAas3ur18uF4Fyrn3JrZxWwsrGryUAasIqF1jqr929F15K3W2k3sa9a1U
-        Xry2g3ykK3Z8Ca7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyG14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-        6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
-        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-        vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-        xKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-        67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUj6pB7UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 31 Mar 2020 09:33:58 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37391 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730995AbgCaNd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:33:57 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so26051047wrm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 06:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oWqPN/2F35kUoboB7VuE68BOKEz/BXfljK/zGatyCzo=;
+        b=CX6rpgNk5Dr3qKnrubMvK4q2UgrMeUkjr0E0F1JgHADGyPC55iYFRLqqwEoNKST6nU
+         TpLcGrh+pmaxEVHOtDSD6OuZT/Ndnhg57uaHqlvXy4DomvQNq1AdGLybR7F1F9CJvUxk
+         yA9hK1JEZDI/fRjyCLIUziE6uXDS1AYzE17wfcFI7hlEpU94InlVQbrE6W2sXLF1eGUw
+         gNjpV8lWh5cdXoz8cPICBXHh+x7omJKnUJC80LxDenNWHvPHmlLlEG026qnejDduZWrG
+         oJhe8g2MqDHIUyLNQudXifQmq1vvvFzwdtix95uSlvlOmhJC5tsXDCLfA5GOC+64IRmD
+         dejA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oWqPN/2F35kUoboB7VuE68BOKEz/BXfljK/zGatyCzo=;
+        b=HTuqghnhCAapkP0zD5MIciBBhE9qujg6rNnw4QGMVTUvCIF+sYnV9fL+LQK2DyUyFw
+         693sNzHhivvXeD1ZsQI6+b/MKMjF7WOSdllH4mdIqyBXYGl3ElTYgUyN3aP6T2f1tKvy
+         Er5K8ltt84WhsLAkdlay0mK46yj6Dhc/a5I9ltEIcLG5XvZhnPKJ8WI4qa5iZNF4j9b/
+         2+ZU/S3TNZyqsw5BiNLJf4UfdVcfx2W3F+6E1+/CSa01pkazNvxtv/7FU3g7EtzHlqxG
+         8E6tTyWUMkCswIFIJEhr0+BCeiTJxWwwjZfNMPiH8U0SvSFxgv4lXXufw3OB0AejWnDv
+         BwzA==
+X-Gm-Message-State: ANhLgQ2qKapTj4m/b95r768p6mNhZmA4qZOS1d6E9k2wFw4pUg9NR2v9
+        em8texTD+hPewd0Y+0NtOjhszw==
+X-Google-Smtp-Source: ADFU+vu4XlDHD+eAXmhnbIITSDymKAgWq0Yc108LTSVU+JOlZDZX5TChQouQWuBq86nDsCf9jJIwSg==
+X-Received: by 2002:adf:e684:: with SMTP id r4mr20689718wrm.6.1585661635563;
+        Tue, 31 Mar 2020 06:33:55 -0700 (PDT)
+Received: from localhost.localdomain ([37.120.50.78])
+        by smtp.gmail.com with ESMTPSA id 61sm28623081wrn.82.2020.03.31.06.33.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 06:33:54 -0700 (PDT)
+From:   Robert Foss <robert.foss@linaro.org>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Robert Foss <robert.foss@linaro.org>
+Subject: [PATCH v3 0/3] media: ov8856: Add devicetree support
+Date:   Tue, 31 Mar 2020 15:33:43 +0200
+Message-Id: <20200331133346.372517-1-robert.foss@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Loongson 7A1000 bridge chip has been released for several years
-since the second half of 2017, but it is not supported by the Linux
-mainline kernel while it only works well with the Loongson internal
-kernel version. When I update the latest version of Linux mainline
-kernel on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
-the boot process failed and I feel depressed.
+This adds devicetree support to the ov8856 driver.
+In order to to aid debugging and enable future sensor
+modes to be supported, module revision detection is also added.
 
-The 7A1000 bridge chip is used a lot with 3A3000 or 3A4000 CPU in
-the most Loongson desktop and sever products, it is important to
-support Loongson 7A1000 bridge chip by the Linux mainline kernel.
+Dongchun Zhu (1):
+  media: dt-bindings: ov8856: Document YAML bindings
 
-This patch series adds the basic support for the Loongson 7A1000
-bridge chip, the patch about vendor ID and SATA has been merged
-into the mainline tree, the next work is to refactor the code about
-the interrupt controller, and then power management and some other
-controller device drivers.
+Robert Foss (2):
+  media: ov8856: Add devicetree support
+  media: ov8856: Implement sensor module revision identification
 
-By the way, if you want the boot process is successful (just for
-test) on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
-you should not only apply these patches, but also need the support
-for SATA and interrupt controller in the v1 patch series.
-
-This patch series is based on mips-next.
-
-If you have any questions and suggestions, please let me know.
-
-Thanks,
-
-Tiezhu Yang
-
-v2:
-  - The split patch series about Loongson vendor ID and SATA controller
-    has been merged into the linux-block.git by Jens Axboe [1].
-
-  - Think about using hierarchy IRQ domain in the patch of interrupt
-    controller, and this maybe depend on the patch series by Jiaxun
-    ("Modernize Loongson64 Machine"), so the patch about interrupt is
-    not included in this v2 patch series.
-
-v3:
-  - The split patch series about Loongson vendor ID and SATA controller
-    has been merged into the mainline tree [2]
-
-  - Modify the macro definition and add comment to make it easy to read
-
-  - Move ls7a1000_pci_class_quirk() to fixup-loongson3.c
-
-  - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
-    https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e49bd683e00b
-
-Tiezhu Yang (3):
-  MIPS: Loongson: Get host bridge information
-  MIPS: Loongson: Add DMA support for 7A1000
-  MIPS: Loongson: Add PCI support for 7A1000
-
- arch/mips/include/asm/mach-loongson64/boot_param.h | 20 +++++++
- arch/mips/loongson64/dma.c                         |  9 ++--
- arch/mips/loongson64/env.c                         | 22 ++++++++
- arch/mips/loongson64/init.c                        | 17 ++++++
- arch/mips/pci/fixup-loongson3.c                    | 12 +++++
- arch/mips/pci/ops-loongson3.c                      | 63 ++++++++++++++++++++--
- 6 files changed, 136 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++
+ MAINTAINERS                                   |   1 +
+ drivers/media/i2c/ov8856.c                    | 192 ++++++++++++++++--
+ 3 files changed, 327 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
 
 -- 
-2.1.0
+2.25.1
 
