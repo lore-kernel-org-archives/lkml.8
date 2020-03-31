@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B8FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F01C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E392072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D868208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645772;
-	bh=NIEIKCy9cL7aoKh2+5n6+O8oP4NPlsO/4nHYs2/xhoM=;
+	s=default; t=1585645775;
+	bh=AWCdgu6dNEmRTTcrueFTFFBMA8I6/uWJz3XKank3eVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQTICXpgaOcFdY9ND6kVtq+jz/TgeqQIt42EDhTnfl3uobAaScG3aULAU/LXE0spz
-	 m4oCWA5Xb6FPxGIY/gqFfqV+oHAXESIseIDfNmOG9e3vaK0SCxHhJL7QzleNsR/Nbh
-	 7XthFZcVuDMbCuss3Uv9Bhqe8KgMcMuuwl1wkTR8=
+	b=BjAG/iiZV0v0kVw0+jaNF4TCAINV/azHdgS6XRI+s1Ye+kUC4r5JJ8NY73hBTNp3P
+	 sWlZvh27vOhRJiz6DQ21IhR9RhC3rE/+XGwI7589njouuv05vBrJf2a75/JQUBmCoT
+	 97btTeF6dvnD6tM1y+pdy7F+reiv59BNt9rZ9lfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbgCaJJa (ORCPT
+        id S1731481AbgCaJJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52572 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731240AbgCaJJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:09:26 -0400
+        id S1731473AbgCaJJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:09:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90CFA20675;
-        Tue, 31 Mar 2020 09:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C319D20675;
+        Tue, 31 Mar 2020 09:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645766;
-        bh=NIEIKCy9cL7aoKh2+5n6+O8oP4NPlsO/4nHYs2/xhoM=;
+        s=default; t=1585645770;
+        bh=AWCdgu6dNEmRTTcrueFTFFBMA8I6/uWJz3XKank3eVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSbzZptPJGfv4ffhRQ4VBSLGVVXzI5oCMcQaNDSYrme0AJNvotgU0XnEOhFBSTKdS
-         kqgdbhRbygJmDqO/597G2k15xNrfJ5ZctRkgD4oDGe34zf62m72GdFyMsbZxzTlNVm
-         3sbqsPEz0NiMQBH3NRdeaVxTfn3uSwYULn0QI4Iw=
+        b=gYvqBUCXc7upa2WEce+8k36V3/1VDsS7zi/6b1jCBuEuCC6Kt36MFO8Hbd+cmLxV5
+         eFUjlHjtD/uLdxPEb3V23H9dsY6AJc0J/3jXDTMVY/bvOx5Pl1QG0ZMUrCK9AL32bt
+         CxGCVkPFhRrF0lr+o1/X4pCJjd6YZyG+cretx2mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.5 117/170] gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 BYT + AXP288 model
-Date:   Tue, 31 Mar 2020 10:58:51 +0200
-Message-Id: <20200331085436.577200294@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Roman Gushchin <guro@fb.com>
+Subject: [PATCH 5.5 118/170] bpf: Fix cgroup ref leak in cgroup_bpf_inherit on out-of-memory
+Date:   Tue, 31 Mar 2020 10:58:52 +0200
+Message-Id: <20200331085436.664958401@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,64 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit 0e91506ba00730f088961a8d39f8693b0f8e3fea upstream.
+commit 1d8006abaab4cb90f81add86e8d1bf9411add05a upstream.
 
-Commit aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option +
-quirk mechanism") was added to deal with spurious wakeups on one specific
-model of the HP x2 10 series. In the mean time I have learned that there
-are at least 3 different HP x2 10 models:
+There is no compensating cgroup_bpf_put() for each ancestor cgroup in
+cgroup_bpf_inherit(). If compute_effective_progs returns error, those cgroups
+won't be freed ever. Fix it by putting them in cleanup code path.
 
-Bay Trail SoC + AXP288 PMIC
-Cherry Trail SoC + AXP288 PMIC
-Cherry Trail SoC + TI PMIC
-
-And the original quirk is only correct for (and only matches the)
-Cherry Trail SoC + TI PMIC model.
-
-The Bay Trail SoC + AXP288 PMIC model has different DMI strings, has
-the external EC interrupt on a different GPIO pin and only needs to ignore
-wakeups on the EC interrupt, the INT0002 device works fine on this model.
-
-This commit adds an extra DMI based quirk for the HP x2 10 BYT + AXP288
-model, ignoring wakeups for ACPI GPIO events on the EC interrupt pin
-on this model. This fixes spurious wakeups from suspend on this model.
-
-Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200302111225.6641-3-hdegoede@redhat.com
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: e10360f815ca ("bpf: cgroup: prevent out-of-order release of cgroup bpf")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Roman Gushchin <guro@fb.com>
+Link: https://lore.kernel.org/bpf/20200309224017.1063297-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ kernel/bpf/cgroup.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1422,6 +1422,21 @@ static const struct dmi_system_id gpioli
- 			.ignore_wake = "INT33FF:01@0,INT0002:00@2",
- 		},
- 	},
-+	{
-+		/*
-+		 * HP X2 10 models with Bay Trail SoC + AXP288 PMIC use an
-+		 * external embedded-controller connected via I2C + an ACPI GPIO
-+		 * event handler on INT33FC:02 pin 28, causing spurious wakeups.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion x2 Detachable"),
-+			DMI_MATCH(DMI_BOARD_NAME, "815D"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_wake = "INT33FC:02@28",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -228,6 +228,9 @@ cleanup:
+ 	for (i = 0; i < NR; i++)
+ 		bpf_prog_array_free(arrays[i]);
  
++	for (p = cgroup_parent(cgrp); p; p = cgroup_parent(p))
++		cgroup_bpf_put(p);
++
+ 	percpu_ref_exit(&cgrp->bpf.refcnt);
+ 
+ 	return -ENOMEM;
 
 
