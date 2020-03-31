@@ -2,120 +2,103 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D79C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1480C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7B320781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A749D20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:57:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ff3OArKV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QnLhmESE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbgCaP4E (ORCPT
+        id S1731034AbgCaP5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:56:04 -0400
-Received: from mail-bn7nam10on2104.outbound.protection.outlook.com ([40.107.92.104]:62883
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730105AbgCaP4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:56:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K3FSqN9uQF/U63iCALqJeff91O4864L2c2i5gfLOw2HoD55NnILqMq5TCOl8mr155dbQz7H1pSfBgfPb3r1lwxflpkQJ8mB9AnXXLB8+nKXm96Z3QebodxLFv9jpto3BuOP2tBA8khJ+VNz+IDKnIyMbUtA5QqXxGoHJpkZ/t4yYfONPLp9llIUEN+bHuP3OpLTYP6u8oIkzDY2Y3Nyk40MaIvLGut2HNpyxKqyylQVPl2E8IC/VejfzCfE/2uQmXwA5FFkBuxWC4lc20/4QKKasig2JF3VCMdHkMA+xXQLE0a4AtSdkrkNwvCMd5ifM8nEufcM29ROtkNOGz5b0kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qtqx90ti8mvhcYFyuE/P7k0efM5dXkZmEu35f9mZt5k=;
- b=VOuPiWpJaiYK4C4BxcNN2TyV7ZkTXnDlZ/X/w0TUMvnNeboYZw0Dqkjrreh0UShc+GvPrfFym70njrG8FU3bPPt1x8xIfqj+3eQ8ihO9DbFdaJuXDSUVLZE0eOF6FJeXR0OSM/g2VfzoBKIjBEcvuMOChTbAMQZarxSW6250kpTsHp+AfzCemVTpmCo9eN4578c0ctBa5bxUQ5aZ4yy50AOE1klMgGf8lpoFcIdSYvrnRnSmCN/fLWRDQPjdX25e938xVax+UcwtGd8QZ5A7xC5L/qA9JK3z57Meo5ZJqlpiCXxnBkVpIZTnDmUpFj382Q+MrNj47VL7Yh2oXdDt/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qtqx90ti8mvhcYFyuE/P7k0efM5dXkZmEu35f9mZt5k=;
- b=ff3OArKV2vxwABCYe4/xDjKpLF6Z3r93JjnUIo4oOKgObqYGla5ozgl7DPLpYzdhdQFyJdSbw3waAea9/jflaY451rZWNtXf5bhOOhpCovEhQiq+RRiFrBM/gJc6s7bCl5JN4TmlaVKmo4oC6Zqe+XOrdAtWEs515uVoRu3yb2o=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
- by BN8PR21MB1362.namprd21.prod.outlook.com (2603:10b6:408:aa::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.5; Tue, 31 Mar
- 2020 15:56:00 +0000
-Received: from BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::b5da:34dd:f205:560b]) by BN8PR21MB1139.namprd21.prod.outlook.com
- ([fe80::b5da:34dd:f205:560b%5]) with mapi id 15.20.2878.013; Tue, 31 Mar 2020
- 15:56:00 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        decui@microsoft.com
-Subject: [PATCH] PM: hibernate: Propagate the return value of hibernation_restore()
-Date:   Tue, 31 Mar 2020 08:55:25 -0700
-Message-Id: <1585670125-45987-1-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR21CA0072.namprd21.prod.outlook.com
- (2603:10b6:300:db::34) To BN8PR21MB1139.namprd21.prod.outlook.com
- (2603:10b6:408:72::10)
+        Tue, 31 Mar 2020 11:57:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51242 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730105AbgCaP5S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:57:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=IR8334MICP/itrXFKZ7XJElA4DTHI+lesZJHs7BI8LI=; b=QnLhmESEiWE/1K1D2B4SbDT/jC
+        kDF8e4PDMq1iCBqDKvpaFe9otGx76hwwO6MjPad0nWlQLO+crAZyAaVixKeOpcrWmwgKdK7PGp5Wr
+        T0CDkPj0S6tiVlCEyreYIAHDNRzfqDd3J8bMJgNIojozqZIYSEG6qLYjHb7jRRdcHQqyVdCCWm0OG
+        RuH6ytrENnYuifNr7UoQfbCg8qOwXr1OfAJKliI4a9rWmDVvR66xrRJUNhBd7FuQJjTt1Ink8eTwY
+        hawXhf7LonA/tzC8QHqFc28WkVaudwCcibpoHPbAHnGSiIq4F+K+LXkqlHOC261z02sw7fsvcpw8p
+        PjowFyqw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJJGJ-00011I-9m; Tue, 31 Mar 2020 15:57:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C83AC3012D8;
+        Tue, 31 Mar 2020 17:57:08 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AA8B029D910D5; Tue, 31 Mar 2020 17:57:08 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 17:57:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Chris Friesen <chris.friesen@windriver.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jim Somerville <Jim.Somerville@windriver.com>,
+        Christoph Lameter <cl@linux.com>
+Subject: Re: [patch 3/3] isolcpus: undeprecate on documentation
+Message-ID: <20200331155708.GU20730@hirez.programming.kicks-ass.net>
+References: <20200328152117.881555226@redhat.com>
+ <20200328152503.271570281@redhat.com>
+ <20200331152217.GT20730@hirez.programming.kicks-ass.net>
+ <20200331154146.GA28556@fuller.cnet>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR21CA0072.namprd21.prod.outlook.com (2603:10b6:300:db::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.2 via Frontend Transport; Tue, 31 Mar 2020 15:55:59 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 27619fe2-7030-47ea-37a5-08d7d58c01ba
-X-MS-TrafficTypeDiagnostic: BN8PR21MB1362:|BN8PR21MB1362:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR21MB1362DCB3067F7B7448A5B4E4BFC80@BN8PR21MB1362.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1468;
-X-Forefront-PRVS: 0359162B6D
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(346002)(39860400002)(136003)(366004)(376002)(86362001)(8676002)(36756003)(316002)(5660300002)(8936002)(66476007)(66556008)(66946007)(52116002)(81166006)(81156014)(6512007)(6486002)(6506007)(4744005)(3450700001)(2906002)(2616005)(956004)(26005)(10290500003)(82960400001)(82950400001)(478600001)(6666004)(186003)(16526019);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sjPofr/Y5fgazFLkv3ShcQzuUoIc1tzdPeMSLOGySDkvGREjBR3dRrD7A3LqQFNEZbQ4iLL5fVJCZWfkzQqkt9vdhW1IMtWxb/a1VLiX9l645yls5lUx47I3DzX6vHxen58zsfWSQPtE3AzMfSHLsNAtD0a1OrP5GFZ1dCJnTTvH3eWF3Tpr01waNPpLz2uni3xDMtqKUQQW9uhVDfy2LBD3DaO2Iqk4OjQtotWeO7p/lggub11yurvD0to+pKLmg5o+DvwHVirjsHiKvaBUKrdzek/LjWyaMmg+D4231iTzKAXn6+KkyVL0edNLR0xHu+6m1CU0bygfygU8BLYwPkUsrxu6J5x33wasV6QK/2OR/WFaatJ/R25wpiMziRrBhgyOo75ucENULMQND3pSwgro1vOFVihKDFgj7yxgAw1OL+hEqFtTxC3P45micWX5
-X-MS-Exchange-AntiSpam-MessageData: oaKYCAgBPsI2NoQBELAXvgyg2K4kuNhzuLbrwB38lYU1NMrla71oMJy8iTsJP1AA9Io/EofDUT5j38edz9Pfq9q827IkwELzmhFtWhtjrXCs4PO3dnLcDnMPWGxwLZlQYkdJfwgxpqz5sR5PnEiWnA==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27619fe2-7030-47ea-37a5-08d7d58c01ba
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2020 15:56:00.2450
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lprDkxnGM53Z4ymmY5D0otvKBGcxyYmIvEur7M9NxcMBcNhtP11FHOsfG0Wykfa8i++sXGrtkzdWk59y9z82VA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1362
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331154146.GA28556@fuller.cnet>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If hibernation_restore() fails, the 'error' should not be zero.
+On Tue, Mar 31, 2020 at 12:41:46PM -0300, Marcelo Tosatti wrote:
+> On Tue, Mar 31, 2020 at 05:22:17PM +0200, Peter Zijlstra wrote:
+> > On Sat, Mar 28, 2020 at 12:21:20PM -0300, Marcelo Tosatti wrote:
+> > > isolcpus is used to control steering of interrupts to managed_irqs and
+> > > kernel threads, therefore its incorrect to state that its deprecated.
+> > > 
+> > > Remove deprecation warning.
+> > > 
+> > > Suggested-by: Chris Friesen <chris.friesen@windriver.com>
+> > > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+> > > 
+> > > ---
+> > >  Documentation/admin-guide/kernel-parameters.txt |    1 -
+> > >  1 file changed, 1 deletion(-)
+> > > 
+> > > Index: linux-2.6/Documentation/admin-guide/kernel-parameters.txt
+> > > ===================================================================
+> > > --- linux-2.6.orig/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ linux-2.6/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -1926,7 +1926,6 @@
+> > >  			Format: <RDP>,<reset>,<pci_scan>,<verbosity>
+> > >  
+> > >  	isolcpus=	[KNL,SMP,ISOL] Isolate a given set of CPUs from disturbance.
+> > > -			[Deprecated - use cpusets instead]
+> > >  			Format: [flag-list,]<cpu-list>
+> > >  
+> > 
+> > It's still an absolute horrible piece of crap though. nozh_full piling
+> > more and more shit on it doesn't make it more shiny.
+> 
+> Hi Peter,
+> 
+> Why do you dislike it? What you think would be a decent approach?
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- kernel/power/hibernate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 6dbeedb..86aba87 100644
---- a/kernel/power/hibernate.c
-+++ b/kernel/power/hibernate.c
-@@ -678,7 +678,7 @@ static int load_image_and_restore(void)
- 	error = swsusp_read(&flags);
- 	swsusp_close(FMODE_READ);
- 	if (!error)
--		hibernation_restore(flags & SF_PLATFORM_MODE);
-+		error = hibernation_restore(flags & SF_PLATFORM_MODE);
- 
- 	pr_err("Failed to load image, recovering.\n");
- 	swsusp_free();
--- 
-1.8.3.1
-
+Try and reconfigure it after boot.
