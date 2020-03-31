@@ -2,187 +2,71 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2639CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8065C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAAF620748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC66D20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgCaAs4 (ORCPT
+        id S1729564AbgCaAtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:48:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50580 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729019AbgCaAs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:48:56 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 52B3439396BD4E43F37C;
-        Tue, 31 Mar 2020 08:48:53 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 31 Mar
- 2020 08:48:50 +0800
-Subject: Re: [PATCH] f2fs: use round_up()/DIV_ROUND_UP()
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200330100349.56127-1-yuchao0@huawei.com>
- <20200330184230.GB34947@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <2b5ec2a6-218a-a291-a6fc-d87cd40be4db@huawei.com>
-Date:   Tue, 31 Mar 2020 08:48:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200330184230.GB34947@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+        Mon, 30 Mar 2020 20:49:49 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45078 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729019AbgCaAts (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 20:49:48 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EC27A15D057FD;
+        Mon, 30 Mar 2020 17:49:46 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 17:49:44 -0700 (PDT)
+Message-Id: <20200330.174944.1829532392145435132.davem@davemloft.net>
+To:     stefano.salsano@uniroma2.it
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        dav.lebrun@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, leon@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, bpf@vger.kernel.org,
+        paolo.lungaroni@cnit.it, ahmed.abdelsalam@gssi.it
+Subject: Re: [net-next] seg6: add support for optional attributes during
+ behavior construction
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200331012348.e0b2373bd4a96fecc77686b6@uniroma2.it>
+References: <20200319183641.29608-1-andrea.mayer@uniroma2.it>
+        <20200325.193016.1654692564933635575.davem@davemloft.net>
+        <20200331012348.e0b2373bd4a96fecc77686b6@uniroma2.it>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 30 Mar 2020 17:49:47 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/31 2:42, Jaegeuk Kim wrote:
-> On 03/30, Chao Yu wrote:
->> .i_cluster_size should be power of 2, so we can use round_up() instead
->> of roundup() to enhance the calculation.
->>
->> In addition, use DIV_ROUND_UP to clean up codes.
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/data.c | 16 ++++++----------
->>  fs/f2fs/file.c | 17 +++++------------
->>  2 files changed, 11 insertions(+), 22 deletions(-)
->>
->> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->> index 0a829a89f596..8257d5e7aa3b 100644
->> --- a/fs/f2fs/data.c
->> +++ b/fs/f2fs/data.c
->> @@ -1969,8 +1969,6 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->>  					bool is_readahead)
->>  {
->>  	struct bio *bio = *bio_ret;
->> -	const unsigned blkbits = inode->i_blkbits;
->> -	const unsigned blocksize = 1 << blkbits;
->>  	sector_t block_in_file;
->>  	sector_t last_block;
->>  	sector_t last_block_in_file;
->> @@ -1979,8 +1977,8 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->>  
->>  	block_in_file = (sector_t)page_index(page);
->>  	last_block = block_in_file + nr_pages;
->> -	last_block_in_file = (f2fs_readpage_limit(inode) + blocksize - 1) >>
->> -							blkbits;
->> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
->> +								PAGE_SIZE);
+From: Stefano Salsano <stefano.salsano@uniroma2.it>
+Date: Tue, 31 Mar 2020 01:23:48 +0200
+
+> Of course a new application (e.g. iproute2, pyroute) using a new optional
+> parameter will not work on older kernels, but simply because the new parameter
+> is not supported. It will not work even without our proposed patch.
 > 
-> What if PAGE_SIZE is bigger than 4KB?
+> On the other hand, we think that the solution in the patch is more backward
+> compatible. Without the patch, if we define new attributes, old applications
+> (e.g. iproute2 scripts) will not work on newer kernels, while with the optional
+> attributes approach proposed in the patch they will work with no issues !
 
-We don't support 8kb+ sized-page, right?
+Translation: You want to add backwards compatibility problems because
+otherwise you'll have to add backwards compatibility problems.
 
-static int __init init_f2fs_fs(void)
-{
-	int err;
+Sorry, I'm still not convinced.
 
-	if (PAGE_SIZE != F2FS_BLKSIZE) {
-		printk("F2FS not supported on PAGE_SIZE(%lu) != %d\n",
-				PAGE_SIZE, F2FS_BLKSIZE);
-		return -EINVAL;
-	}
-
-Thanks,
-
-> 
->>  	if (last_block > last_block_in_file)
->>  		last_block = last_block_in_file;
->>  
->> @@ -2062,7 +2060,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->>  	 */
->>  	f2fs_wait_on_block_writeback(inode, block_nr);
->>  
->> -	if (bio_add_page(bio, page, blocksize, 0) < blocksize)
->> +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
->>  		goto submit_and_realloc;
->>  
->>  	inc_page_count(F2FS_I_SB(inode), F2FS_RD_DATA);
->> @@ -2091,16 +2089,14 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
->>  	struct bio *bio = *bio_ret;
->>  	unsigned int start_idx = cc->cluster_idx << cc->log_cluster_size;
->>  	sector_t last_block_in_file;
->> -	const unsigned blkbits = inode->i_blkbits;
->> -	const unsigned blocksize = 1 << blkbits;
->>  	struct decompress_io_ctx *dic = NULL;
->>  	int i;
->>  	int ret = 0;
->>  
->>  	f2fs_bug_on(sbi, f2fs_cluster_is_empty(cc));
->>  
->> -	last_block_in_file = (f2fs_readpage_limit(inode) +
->> -					blocksize - 1) >> blkbits;
->> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
->> +								PAGE_SIZE);
->>  
->>  	/* get rid of pages beyond EOF */
->>  	for (i = 0; i < cc->cluster_size; i++) {
->> @@ -2197,7 +2193,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
->>  
->>  		f2fs_wait_on_block_writeback(inode, blkaddr);
->>  
->> -		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
->> +		if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
->>  			goto submit_and_realloc;
->>  
->>  		inc_page_count(sbi, F2FS_RD_DATA);
->> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->> index c2d38a1c4972..0f8be076620c 100644
->> --- a/fs/f2fs/file.c
->> +++ b/fs/f2fs/file.c
->> @@ -736,16 +736,9 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
->>  	 * for compressed file, only support cluster size
->>  	 * aligned truncation.
->>  	 */
->> -	if (f2fs_compressed_file(inode)) {
->> -		size_t cluster_shift = PAGE_SHIFT +
->> -					F2FS_I(inode)->i_log_cluster_size;
->> -		size_t cluster_mask = (1 << cluster_shift) - 1;
->> -
->> -		free_from = from >> cluster_shift;
->> -		if (from & cluster_mask)
->> -			free_from++;
->> -		free_from <<= cluster_shift;
->> -	}
->> +	if (f2fs_compressed_file(inode))
->> +		free_from = round_up(from,
->> +				F2FS_I(inode)->i_cluster_size << PAGE_SHIFT);
->>  #endif
->>  
->>  	err = f2fs_do_truncate_blocks(inode, free_from, lock);
->> @@ -3537,7 +3530,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->>  
->>  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->>  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
->> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
->> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
->>  
->>  		ret = release_compress_blocks(&dn, count);
->>  
->> @@ -3689,7 +3682,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->>  
->>  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->>  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
->> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
->> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
->>  
->>  		ret = reserve_compress_blocks(&dn, count);
->>  
->> -- 
->> 2.18.0.rc1
-> .
-> 
+You must find another way to achieve your objective.
