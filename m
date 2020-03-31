@@ -2,93 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CF6C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64265C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5091820838
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585657546;
-	bh=lEz1klH4TymFRjb7lKYsi1k0Zi49pYdqaWSFWXTIeuk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DBxELAtAg9urBIjRStcVuw921JlKYtRDxupS8fZGm0GLnFWukD6cibKf4BJ1L3SpF
-	 rgVGxFOSGArwZLOfqW70JpG+D5dAl1TaBOyASAH0NfIl4i5oEJ/uOUvOfzgqZvRmOH
-	 VvSMzLh6t6seJiygVs8QYL4C4nrWMR7+OGWAS7Hw=
+	by mail.kernel.org (Postfix) with ESMTP id 417B420838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbgCaMZp (ORCPT
+        id S1730808AbgCaMZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:25:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:52278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbgCaMZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:25:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EB9A31B;
-        Tue, 31 Mar 2020 05:25:42 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 020F63F68F;
-        Tue, 31 Mar 2020 05:25:42 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 13:25:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
-Cc:     lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
-        daniel.baluta@gmail.com, linux-imx@nxp.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        yuehaibing@huawei.com, krzk@kernel.org,
-        linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH 2/5] ASoC: SOF: imx: fix undefined reference issue
-Message-ID: <20200331122540.GD4802@sirena.org.uk>
-References: <20200319194957.9569-1-daniel.baluta@oss.nxp.com>
- <20200319194957.9569-3-daniel.baluta@oss.nxp.com>
+        Tue, 31 Mar 2020 08:25:58 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:48496 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730343AbgCaMZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 08:25:57 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 4402FE814E3;
+        Tue, 31 Mar 2020 14:25:55 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id CBD63160704; Tue, 31 Mar 2020 14:25:54 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 14:25:54 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Karel Zak <kzak@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200331122554.GA27469@gardel-login>
+References: <1445647.1585576702@warthog.procyon.org.uk>
+ <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+ <CAJfpegtjmkJUSqORFv6jw-sYbqEMh9vJz64+dmzWhATYiBmzVQ@mail.gmail.com>
+ <20200331083430.kserp35qabnxvths@ws.net.home>
+ <CAJfpegsNpabFwoLL8HffNbi_4DuGMn4eYpFc6n7223UFnEPAbA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sXc4Kmr5FA7axrvy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319194957.9569-3-daniel.baluta@oss.nxp.com>
-X-Cookie: It's later than you think.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJfpegsNpabFwoLL8HffNbi_4DuGMn4eYpFc6n7223UFnEPAbA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Di, 31.03.20 10:56, Miklos Szeredi (miklos@szeredi.hu) wrote:
 
---sXc4Kmr5FA7axrvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Mar 31, 2020 at 10:34 AM Karel Zak <kzak@redhat.com> wrote:
+> >
+> > On Tue, Mar 31, 2020 at 07:11:11AM +0200, Miklos Szeredi wrote:
+> > > On Mon, Mar 30, 2020 at 11:17 PM Christian Brauner
+> > > <christian.brauner@ubuntu.com> wrote:
+> > >
+> > > > Fwiw, putting down my kernel hat and speaking as someone who maintains
+> > > > two container runtimes and various other low-level bits and pieces in
+> > > > userspace who'd make heavy use of this stuff I would prefer the fd-based
+> > > > fsinfo() approach especially in the light of across namespace
+> > > > operations, querying all properties of a mount atomically all-at-once,
+> > >
+> > > fsinfo(2) doesn't meet the atomically all-at-once requirement.
+> >
+> > I guess your /proc based idea have exactly the same problem...
+>
+> Yes, that's exactly what I wanted to demonstrate: there's no
+> fundamental difference between the two API's in this respect.
+>
+> > I see two possible ways:
+> >
+> > - after open("/mnt", O_PATH) create copy-on-write object in kernel to
+> >   represent mount node -- kernel will able to modify it, but userspace
+> >   will get unchanged data from the FD until to close()
+> >
+> > - improve fsinfo() to provide set (list) of the attributes by one call
+>
+> I think we are approaching this from the wrong end.   Let's just
+> ignore all of the proposed interfaces for now and only concentrate on
+> what this will be used for.
+>
+> Start with a set of use cases by all interested parties.  E.g.
+>
+>  - systemd wants to keep track attached mounts in a namespace, as well
+> as new detached mounts created by fsmount()
+>
+>  - systemd need to keep information (such as parent, children, mount
+> flags, fs options, etc) up to date on any change of topology or
+> attributes.
 
-On Thu, Mar 19, 2020 at 09:49:54PM +0200, Daniel Baluta wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
+- We also have code that recursively remounts r/o or unmounts some
+  directory tree (with filters), which is currently nasty to do since
+  the relationships between dirs are not always clear from
+  /proc/self/mountinfo alone, in particular not in an even remotely
+  atomic fashion, or when stuff is overmounted.
 
-> Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF
-> dependency")
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+- We also have code that needs to check if /dev/ is plain tmpfs or
+  devtmpfs. We cannot use statfs for that, since in both cases
+  TMPFS_MAGIC is reported, hence we currently parse
+  /proc/self/mountinfo for that to find the fstype string there, which
+  is different for both cases.
 
-This has you as the author but you list a signoff by Pierre before you?
+Lennart
 
---sXc4Kmr5FA7axrvy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6DNsMACgkQJNaLcl1U
-h9AAewf/SRLQsBBj6wlAv5rhKMVQLnmnQY5R9scerh2jz6AEv/pHxINQd4zTWjnh
-pIhrebacgZCwofsY/n31xPI/thHIHJIo4bqgKIQs85UkXwCVHXXctSlyWKPsQz7y
-yuwX5Wp7Yamg32an6JuCQo3KCVC5kZt9TMT36nkVKSyhdxmVAkDj7x78EjJRPBTV
-1kvi+UzHvDghla+wt2olnvA5KfhNc2SlMi7hDBPtXAEnHr3XDwVoeDxIwobdLC4j
-KK0gxmGaHrmB5darIqDjRJeRiG9uzurATnY2GJREkJHgOnRV3mZkeOeQ4yFMoAvG
-iJphl8WUXrpNLg0rdwTMnxFHXL4fPg==
-=aJV2
------END PGP SIGNATURE-----
-
---sXc4Kmr5FA7axrvy--
+--
+Lennart Poettering, Berlin
