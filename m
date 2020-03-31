@@ -2,116 +2,94 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A7DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DB8C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DBB208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:14:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcBI+VTx"
+	by mail.kernel.org (Postfix) with ESMTP id 49BC820838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585656886;
+	bh=zMWOFFv4ct6bAsND3kQvkxIGAcQNiNWGobm31SRZOKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KY1xu3cQmSGUpOGEtNr0M2r9fKNIGMGu61fLSyN5cjY1fAlO5LXb8GtcNE1juz3dd
+	 C0C48wMnvjzJnVkmWP+sLWy8N//giMFS+hipTKoq/2jv0g7AXLOniUjoxm5/I+Wd5v
+	 p0/MOosPucZD005IfA97ZSGnLSX0JO/dVRq/o5Ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730691AbgCaMOF (ORCPT
+        id S1730733AbgCaMOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:14:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41362 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730543AbgCaMOC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:14:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h9so25589576wrc.8;
-        Tue, 31 Mar 2020 05:14:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=o49PLtczjrvnDvwyYGD9D+ZfmKnK23dv8VxdMQjHLQo=;
-        b=GcBI+VTxX4A3aVLmPkgITDWYoC2Han02vraisjcoDy6dieWJWqK7aSepeeBupCGFgQ
-         ha+cEwrNujyV0gQQIpmvWoHL8bZxiS/HVBgNLhX4JuyVLXMBlp+8Om4/GZUPb1f1rgbZ
-         d+5LVd54abHb4j9SRHvr/5Zhja9h0dbPkgmCgfHWA0lL/PB4XKfJFk0StUfIO886iYxG
-         wfKrwaINP5VIYI2c3gC1GhqraRZJNiaRAz4hyRIn0foos/63M0K/2ZP1+2izbIoBNh6x
-         8ZIWMZsFqGurcUbLTezggmynH/BiIPxgJDIlD/YT+KsKlPoMgh8dIX3B2gFvpntRZ2Ku
-         9nCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=o49PLtczjrvnDvwyYGD9D+ZfmKnK23dv8VxdMQjHLQo=;
-        b=A+IqPBcJF9vDhF8psHp7vjPJ0XUAmWpbpGmoaP7lHXeAFu1WOARiJ0Vyfw0nfDvWAh
-         IGGVjORxAyGZRUuiuoomG6lpCD55kEYaOOPFkl/o34RPI3+34TUOx8uClbIRTWUh3xaw
-         HzsiZIuVDDREJHJUt4wrSFWsMU51fjOP4FHi9tCrZv7ku4jMGxo4e9r9znOE33jOMQN0
-         flO2xPyK44/A1BF82lvC4y1dBFU/IlAzbe/f7NYVbm2n/PYEwtZGJqLyTnonqTGom9+Q
-         wpypl8hjzHWrYsNztndAvhtEbf5O0GiUQIiiMzKUSo9XfqYlGKszQ4eeB7zOKAHxQJU6
-         LVBw==
-X-Gm-Message-State: ANhLgQ0Hd+5GpznHQ0LZW3LO/BBuEbUrGzwKu8+d+9q/Rkb5quwFDYgv
-        gn4KqgYh02YyBBouTIeNzU4=
-X-Google-Smtp-Source: ADFU+vuz27mAc1lNVPQfLWPm/LTORsy6muqNkMdbp2qKAPkgBcrIlks83Udd1Fa6w5TPOn0as3gJjg==
-X-Received: by 2002:a5d:4cc4:: with SMTP id c4mr19884904wrt.346.1585656840655;
-        Tue, 31 Mar 2020 05:14:00 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 127sm3754936wmd.38.2020.03.31.05.13.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Mar 2020 05:14:00 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v3 2/2] ARM: dts: rockchip: fix yaml warnings for rk3288-pmu-sram compatible nodes
-Date:   Tue, 31 Mar 2020 14:13:52 +0200
-Message-Id: <20200331121352.3825-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200331121352.3825-1-jbx6244@gmail.com>
-References: <20200331121352.3825-1-jbx6244@gmail.com>
+        Tue, 31 Mar 2020 08:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730500AbgCaMOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 08:14:44 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1BE720714;
+        Tue, 31 Mar 2020 12:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585656884;
+        bh=zMWOFFv4ct6bAsND3kQvkxIGAcQNiNWGobm31SRZOKY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FvN3gzNKla8HX54j+mWh1lP9C5LxT9buw08aRf86vWDaELxDR9AcbD9GXzXPLrBVu
+         xAK9iUT/Q+wzL3cFak4C3PbLEj2CNdU4n1HXjjw7D8NrtTuoyKGz8ELWtkO8Zf61EF
+         YuxUKaOLvEHNfHTHbiCtL8Ow0n4n3fZeKW2Oi8NY=
+Date:   Tue, 31 Mar 2020 13:14:39 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-team@android.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: [RFC PATCH] tun: Don't put_page() for all negative return values
+ from XDP program
+Message-ID: <20200331121438.GA30061@willie-the-truck>
+References: <20200330161234.12777-1-will@kernel.org>
+ <fd4d792f-32df-953a-a076-c09ed5dea573@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fd4d792f-32df-953a-a076-c09ed5dea573@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives for example these warnings:
+On Tue, Mar 31, 2020 at 10:59:01AM +0800, Jason Wang wrote:
+> On 2020/3/31 上午12:12, Will Deacon wrote:
+> > When an XDP program is installed, tun_build_skb() grabs a reference to
+> > the current page fragment page if the program returns XDP_REDIRECT or
+> > XDP_TX. However, since tun_xdp_act() passes through negative return
+> > values from the XDP program, it is possible to trigger the error path by
+> > mistake and accidentally drop a reference to the fragments page without
+> > taking one, leading to a spurious free. This is believed to be the cause
+> > of some KASAN use-after-free reports from syzbot [1], although without a
+> > reproducer it is not possible to confirm whether this patch fixes the
+> > problem.
+> > 
+> > Ensure that we only drop a reference to the fragments page if the XDP
+> > transmit or redirect operations actually fail.
+> > 
+> > [1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
+> 
+> 
+> I think the patch fixes the issue reported. Since I can see the warn of bad
+> page state in put_page().
 
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'#size-cells' is a required property
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'ranges' is a required property
+[...]
 
-Fix this error by adding '#address-cells', '#size-cells' and
-'ranges' to the 'rockchip,rk3288-pmu-sram' compatible node
-in rk3288.dtsi.
+> Acked-by: Jason Wang <jasowang@redhat.com>
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/sram.yaml
+Thanks, Jason. In which case, I'll add this tag along with:
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Not tested with hardware.
+Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
 
-Changed v2:
-  Fix dtsi.
----
- arch/arm/boot/dts/rk3288.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 9c8741bb1..f102fec69 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -730,6 +730,9 @@
- 	pmu_sram: sram@ff720000 {
- 		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
- 		reg = <0x0 0xff720000 0x0 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x0 0xff720000 0x1000>;
- 	};
- 
- 	pmu: power-management@ff730000 {
--- 
-2.11.0
-
+Will
