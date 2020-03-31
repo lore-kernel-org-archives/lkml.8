@@ -2,171 +2,101 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F498C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD65CC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2D2207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:55:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585644919;
-	bh=avolQhQA3rM9AQ9vPZQc+YuGqJrZjG1zpY/AU58qmAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yykbDCSz+rbRYEnMQ3oxUsDJKqX/4Q3A+LxGSIc0KgJ1jrramYNt5FhyNuAtIMERi
-	 AczMDsvkXozUEBIMr5FDHPBiHpFEiZozI4lJDAQ6wYOMUYLC0lJxpMG2OJRacZqgkC
-	 lFrG8fKNLEPKiNPTqEa34cAAgADMLSZecb7MyGHM=
+	by mail.kernel.org (Postfix) with ESMTP id 817E7207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kvhOJMfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbgCaIzS (ORCPT
+        id S1730203AbgCaI4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:55:18 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39695 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgCaIzS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:55:18 -0400
-Received: by mail-wm1-f66.google.com with SMTP id e9so1636652wme.4;
-        Tue, 31 Mar 2020 01:55:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rTdu7oh4JjjFUdNyXovYxN1QmbRl7JqIGXsfhw5Wa0c=;
-        b=psBCthknpM7/IfGy2Y2HJrDpZ7euLtHQprV6EQF2OcQ/Z56YSt/t0Dgl7ebNEvOUNM
-         AkrDEANo0/ZO4vQelGbjtDtnw8SdAyxlj+9Viks88bqwvtDC79UTLg/5n8Heq8Y0gZ6p
-         XSl6ptBagsP5AHDWu4ruhp08gsLFYKPYk/7tA4E14sYXXQs40i/Z/W6pizvKqN+z3rDY
-         0o300+liq89Nesy36L1dcI17MP9H4743q6lXXN1iNPlYHE2cp2wajmoNUaG420VBoKFc
-         oTLygocFyYAY4SUzhbiPqzSbmXmpSA6lF9r6m04rXWIQNNxPvIsFCmLBFpNjWDRhktSh
-         XdYQ==
-X-Gm-Message-State: ANhLgQ2100yrSfUE5fISHlWua+t/dIE9TDbXcv+zrISzNMD4hYbLz2Pd
-        xutcZwAFMnzQCrNHE1jIhH4=
-X-Google-Smtp-Source: ADFU+vuscSRwsLwXmVoQv1xnwhJFZnnlCFmntVIImf+p0Rb3SHZnEYoHiIxLd4qO4YJEIRanvIyR4Q==
-X-Received: by 2002:a1c:b60b:: with SMTP id g11mr2406590wmf.175.1585644915034;
-        Tue, 31 Mar 2020 01:55:15 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id v11sm26003208wrm.43.2020.03.31.01.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 01:55:14 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 10:55:13 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200331085513.GE30449@dhcp22.suse.cz>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
+        Tue, 31 Mar 2020 04:56:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:57847 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbgCaI4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:56:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48s38Z73C3z9sR4;
+        Tue, 31 Mar 2020 19:56:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585644975;
+        bh=KqGbhMnBF2j9YnXQQuOMYuwr0ZhKMQgkIB87z8RrPhc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kvhOJMfT1PVSNBlWl/czsJ8Ts24c+9meGPOhkwP9eYvvkHvt9NyaMBPEnlbEAob3u
+         /OadihYFkLnGe5LS+F6GvHhlL2gX8EHotWf7ZpYAwsxGxDFuMc/Bh1m7ZMclFXdX1h
+         WkXh4DpD86RjKplyh81q5Lq1nNWUxFLF6iFez8c8yknNZpDxoOyQUns02aiTMrQlh1
+         LHr1XFiYq19rg08BF/fTKUQCFPLyVNKRdjF7NWvWmZkGxjXn0XeQ4CuJ2JYM8+Zfke
+         A1qUb3amxqOIbhCjZxZiAIEExOMCNXcftpB4/HtnGn222HE2JWAgqgyE6A1Shfll9K
+         wjYL8sCObVhnA==
+Date:   Tue, 31 Mar 2020 19:56:12 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Longpeng <longpeng2@huawei.com>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20200331195612.64c06485@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331081423.GE30942@linux.ibm.com>
+Content-Type: multipart/signed; boundary="Sig_/zjBK/bv5oO=dW4e0jKXEPR=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> On Mon, Mar 30, 2020 at 08:23:01PM +0200, Michal Hocko wrote:
-> > On Mon 30-03-20 20:51:00, Mike Rapoport wrote:
-> > > On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
-> > > > On Sat 28-03-20 11:31:17, Hoan Tran wrote:
-> > > > > In NUMA layout which nodes have memory ranges that span across other nodes,
-> > > > > the mm driver can detect the memory node id incorrectly.
-> > > > > 
-> > > > > For example, with layout below
-> > > > > Node 0 address: 0000 xxxx 0000 xxxx
-> > > > > Node 1 address: xxxx 1111 xxxx 1111
-> > > > > 
-> > > > > Note:
-> > > > >  - Memory from low to high
-> > > > >  - 0/1: Node id
-> > > > >  - x: Invalid memory of a node
-> > > > > 
-> > > > > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> > > > > config, mm only checks the memory validity but not the node id.
-> > > > > Because of that, Node 1 also detects the memory from node 0 as below
-> > > > > when it scans from the start address to the end address of node 1.
-> > > > > 
-> > > > > Node 0 address: 0000 xxxx xxxx xxxx
-> > > > > Node 1 address: xxxx 1111 1111 1111
-> > > > > 
-> > > > > This layout could occur on any architecture. Most of them enables
-> > > > > this config by default with CONFIG_NUMA. This patch, by default, enables
-> > > > > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
-> > > > 
-> > > > I am not opposed to this at all. It reduces the config space and that is
-> > > > a good thing on its own. The history has shown that meory layout might
-> > > > be really wild wrt NUMA. The config is only used for early_pfn_in_nid
-> > > > which is clearly an overkill.
-> > > > 
-> > > > Your description doesn't really explain why this is safe though. The
-> > > > history of this config is somehow messy, though. Mike has tried
-> > > > to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
-> > > > NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
-> > > > ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
-> > > > reasoning what so ever. This doesn't make it really easy see whether
-> > > > reasons for reintroduction are still there. Maybe there are some subtle
-> > > > dependencies. I do not see any TBH but that might be burried deep in an
-> > > > arch specific code.
-> > > 
-> > > I've looked at this a bit more and it seems that the check for
-> > > early_pfn_in_nid() in memmap_init_zone() can be simply removed.
-> > > 
-> > > The commits you've mentioned were way before the addition of
-> > > HAVE_MEMBLOCK_NODE_MAP and the whole infrastructure that calculates zone
-> > > sizes and boundaries based on the memblock node map.
-> > > So, the memmap_init_zone() is called when zone boundaries are already
-> > > within a node.
-> > 
-> > But zones from different nodes might overlap in the pfn range. And this
-> > check is there to skip over those overlapping areas.
-> 
-> Maybe I mis-read the code, but I don't see how this could happen. In the
-> HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> calculate_node_totalpages() that ensures that node->node_zones are entirely
-> within the node because this is checked in zone_spanned_pages_in_node().
+--Sig_/zjBK/bv5oO=dW4e0jKXEPR=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-zone_spanned_pages_in_node does chech the zone boundaries are within the
-node boundaries. But that doesn't really tell anything about other
-potential zones interleaving with the physical memory range.
-zone->spanned_pages simply gives the physical range for the zone
-including holes. Interleaving nodes are essentially a hole
-(__absent_pages_in_range is going to skip those).
+Hi all,
 
-That means that when free_area_init_core simply goes over the whole
-physical zone range including holes and that is why we need to check
-both for physical and logical holes (aka other nodes).
+After merging the akpm-current tree, today's linux-next build (i386
+defconfig) produced this warning:
 
-The life would be so much easier if the whole thing would simply iterate
-over memblocks...
+mm/hugetlb.c: In function 'huge_pte_offset':
+cc1: warning: function may return address of local variable [-Wreturn-local=
+-addr]
+mm/hugetlb.c:5361:14: note: declared here
+ 5361 |  pud_t *pud, pud_entry;
+      |              ^~~~~~~~~
+cc1: warning: function may return address of local variable [-Wreturn-local=
+-addr]
+mm/hugetlb.c:5360:14: note: declared here
+ 5360 |  p4d_t *p4d, p4d_entry;
+      |              ^~~~~~~~~
 
--- 
-Michal Hocko
-SUSE Labs
+Introduced by commit
+
+  826ddc88e2cf ("mm/hugetlb: fix a addressing exception caused by huge_pte_=
+offset")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zjBK/bv5oO=dW4e0jKXEPR=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6DBawACgkQAVBC80lX
+0GzuMwf9HnMeZGRTCVTyUMkj09xSVS7eZTYfC/WzQzG7HczBUVXkqIdqxXwQSHKg
+2NlWyMW7vyvn4ILTnoDoZwIc1twb7SRynr52SG+uDs75LrjPuEKBhkbZPwAH541/
+yaf5NvPIYC/g+pfW7GpmguBRpHf3VBe1XlyaxkMbQ09l+wmL+J/sBNloaBUay8+O
+xGUDNvPgtRdKSr8rztJgZ+jJiwI1KuCesJiKMHeKELlmLJ5B8NdY03ycePut32c2
+5kTzyJYAsNkkmvtBNYmZSKccgPSAy4nYuKrH6gqa5F2kl6SN1UW1PDJt8sf7kZAc
+LYQRjoZxQpW1W+01u/FcXvFnoFRBNw==
+=o7iV
+-----END PGP SIGNATURE-----
+
+--Sig_/zjBK/bv5oO=dW4e0jKXEPR=--
