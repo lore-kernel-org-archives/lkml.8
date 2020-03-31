@@ -2,64 +2,58 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D730C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CD9C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADA020B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F7C20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645258;
-	bh=dfqYNWtV6N2QvxTrhWoNvRT2A8B0C2lVe/1IAFnNmJI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=T5dD1glhdhhYcdpLN/za+idDWQqCXpyGpxLgyRNKW3ko9GxNaFAUrZlOgDx5UFiMH
-	 vOTCA5SeGky8yQ3mmnijhoa3m04mYjWyF+zob/s9KjfiqcXorZQqttwcNve+FK2CBr
-	 zJ+yaYfCMuVl577BApEhjHMf/wGat1ccqvZPXRLA=
+	s=default; t=1585645262;
+	bh=M2XYznMyPl5ilmTJqLhupO6Wszm9njVFjh1r0tDOHOI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BaUlc/YWiASH2BbV7Qm0J+4WL2SGf2t8GvDZNag1doPrgRBeW6F+NQ0gJvdA1FDdh
+	 /HgZXM9O/H/wJjL74/GPjNmip7Aiqo/BRfM/QBxzaiibKUZbBo2kvqvQbv55L9n7Gt
+	 49oE2bcWd5V3CQJG43tW+zOmMpgR06Jb+/4fCsug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbgCaJA5 (ORCPT
+        id S1730495AbgCaJBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39748 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730031AbgCaJAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:00:49 -0400
+        id S1730480AbgCaJA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:00:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C99D8214D8;
-        Tue, 31 Mar 2020 09:00:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF6C20B1F;
+        Tue, 31 Mar 2020 09:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645248;
-        bh=dfqYNWtV6N2QvxTrhWoNvRT2A8B0C2lVe/1IAFnNmJI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pOkCmZ6wMgVJPwjg/NvOyORhugA4pPcaQkEiACLEi0N8+/lY2uHi7CPjLDaDtW8zh
-         yP4buFMJonydxUO19317n2mwkmgqNK+N4DkBmP+nb36Ym0lmxU1M/hDHAQKuz5UhbX
-         QlrqVpVHDDFpPYYrxKJHDnHZO9YNPshzW7XtQ44c=
+        s=default; t=1585645255;
+        bh=M2XYznMyPl5ilmTJqLhupO6Wszm9njVFjh1r0tDOHOI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PwWhWQmTYj+IlrOgx2+RFt0/60tJG9ACvVRD5/EI9pntZfwZztHYQX5NG6REr9cxF
+         nU2IW9bsfO9ZB9tP96TT4FRF/2mQTUZX9VKyQR9J6SVJ7cgG91TGCR7bs9kwI79CVj
+         r2Uq7dCx7KsaI2fhyy40QnOJUiWzKOXAqphd7sOk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.6 00/23] 5.6.1-rc1 review
-Date:   Tue, 31 Mar 2020 10:59:12 +0200
-Message-Id: <20200331085308.098696461@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Johan Hovold <johan@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.6 22/23] media: xirlink_cit: add missing descriptor sanity checks
+Date:   Tue, 31 Mar 2020 10:59:34 +0200
+Message-Id: <20200331085317.512897637@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
+In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
+References: <20200331085308.098696461@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.6.1-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.6.1-rc1
-X-KernelTest-Deadline: 2020-04-02T08:53+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,131 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.6.1 release.
-There are 23 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Johan Hovold <johan@kernel.org>
 
-Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
-Anything received after that time might be too late.
+commit a246b4d547708f33ff4d4b9a7a5dbac741dc89d8 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-and the diffstat can be found below.
+Make sure to check that we have two alternate settings and at least one
+endpoint before accessing the second altsetting structure and
+dereferencing the endpoint arrays.
 
-thanks,
+This specifically avoids dereferencing NULL-pointers or corrupting
+memory when a device does not have the expected descriptors.
 
-greg k-h
+Note that the sanity check in cit_get_packet_size() is not redundant as
+the driver is mixing looking up altsettings by index and by number,
+which may not coincide.
 
--------------
-Pseudo-Shortlog of commits:
+Fixes: 659fefa0eb17 ("V4L/DVB: gspca_xirlink_cit: Add support for camera with a bcd version of 0.01")
+Fixes: 59f8b0bf3c12 ("V4L/DVB: gspca_xirlink_cit: support bandwidth changing for devices with 1 alt setting")
+Cc: stable <stable@vger.kernel.org>     # 2.6.37
+Cc: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.6.1-rc1
+---
+ drivers/media/usb/gspca/xirlink_cit.c |   18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-    media: v4l2-core: fix a use-after-free bug of sd->devnode
-
-Johan Hovold <johan@kernel.org>
-    media: xirlink_cit: add missing descriptor sanity checks
-
-Johan Hovold <johan@kernel.org>
-    media: stv06xx: add missing descriptor sanity checks
-
-Johan Hovold <johan@kernel.org>
-    media: dib0700: fix rc endpoint lookup
-
-Johan Hovold <johan@kernel.org>
-    media: ov519: add missing endpoint sanity checks
-
-Eric Biggers <ebiggers@google.com>
-    libfs: fix infoleak in simple_attr_read()
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    ahci: Add Intel Comet Lake H RAID PCI ID
-
-Michał Mirosław <mirq-linux@rere.qmqm.pl>
-    staging: wfx: annotate nested gc_list vs tx queue locking
-
-Michał Mirosław <mirq-linux@rere.qmqm.pl>
-    staging: wfx: fix init/remove vs IRQ race
-
-Michał Mirosław <mirq-linux@rere.qmqm.pl>
-    staging: wfx: add proper "compatible" string
-
-Qiujun Huang <hqjagain@gmail.com>
-    staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
-
-Qiujun Huang <hqjagain@gmail.com>
-    staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
-
-Larry Finger <Larry.Finger@lwfinger.net>
-    staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    staging: kpc2000: prevent underflow in cpld_reconfigure()
-
-Johan Hovold <johan@kernel.org>
-    media: usbtv: fix control-message timeouts
-
-Johan Hovold <johan@kernel.org>
-    media: flexcop-usb: fix endpoint sanity check
-
-Mans Rullgard <mans@mansr.com>
-    usb: musb: fix crash with highmen PIO and usbmon
-
-Qiujun Huang <hqjagain@gmail.com>
-    USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interrupt_callback
-
-Matthias Reichl <hias@horus.com>
-    USB: cdc-acm: restore capability check order
-
-Pawel Dembicki <paweldembicki@gmail.com>
-    USB: serial: option: add Wistron Neweb D19Q1
-
-Pawel Dembicki <paweldembicki@gmail.com>
-    USB: serial: option: add BroadMobi BM806U
-
-Pawel Dembicki <paweldembicki@gmail.com>
-    USB: serial: option: add support for ASKEY WWHC050
-
-Daniel Borkmann <daniel@iogearbox.net>
-    bpf: Undo incorrect __reg_bound_offset32 handling
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +--
- drivers/ata/ahci.c                                 |  1 +
- drivers/media/usb/b2c2/flexcop-usb.c               |  6 ++--
- drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +--
- drivers/media/usb/gspca/ov519.c                    | 10 ++++++
- drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 +++++++++-
- drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +++
- drivers/media/usb/gspca/xirlink_cit.c              | 18 +++++++++-
- drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
- drivers/media/usb/usbtv/usbtv-video.c              |  5 +--
- drivers/media/v4l2-core/v4l2-device.c              |  1 +
- drivers/staging/kpc2000/kpc2000/core.c             |  4 +--
- drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
- .../bindings/net/wireless/siliabs,wfx.txt          |  7 ++--
- drivers/staging/wfx/bus_sdio.c                     | 15 ++++----
- drivers/staging/wfx/bus_spi.c                      | 41 +++++++++++++---------
- drivers/staging/wfx/main.c                         | 21 ++++++-----
- drivers/staging/wfx/main.h                         |  1 -
- drivers/staging/wfx/queue.c                        | 16 ++++-----
- drivers/staging/wlan-ng/hfa384x_usb.c              |  2 ++
- drivers/staging/wlan-ng/prism2usb.c                |  1 +
- drivers/usb/class/cdc-acm.c                        | 18 +++++-----
- drivers/usb/musb/musb_host.c                       | 17 +++------
- drivers/usb/serial/io_edgeport.c                   |  2 +-
- drivers/usb/serial/option.c                        |  6 ++++
- fs/libfs.c                                         |  8 +++--
- kernel/bpf/verifier.c                              | 19 ----------
- 27 files changed, 149 insertions(+), 104 deletions(-)
+--- a/drivers/media/usb/gspca/xirlink_cit.c
++++ b/drivers/media/usb/gspca/xirlink_cit.c
+@@ -1442,6 +1442,9 @@ static int cit_get_packet_size(struct gs
+ 		return -EIO;
+ 	}
+ 
++	if (alt->desc.bNumEndpoints < 1)
++		return -ENODEV;
++
+ 	return le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
+ }
+ 
+@@ -2626,6 +2629,7 @@ static int sd_start(struct gspca_dev *gs
+ 
+ static int sd_isoc_init(struct gspca_dev *gspca_dev)
+ {
++	struct usb_interface_cache *intfc;
+ 	struct usb_host_interface *alt;
+ 	int max_packet_size;
+ 
+@@ -2641,8 +2645,17 @@ static int sd_isoc_init(struct gspca_dev
+ 		break;
+ 	}
+ 
++	intfc = gspca_dev->dev->actconfig->intf_cache[0];
++
++	if (intfc->num_altsetting < 2)
++		return -ENODEV;
++
++	alt = &intfc->altsetting[1];
++
++	if (alt->desc.bNumEndpoints < 1)
++		return -ENODEV;
++
+ 	/* Start isoc bandwidth "negotiation" at max isoc bandwidth */
+-	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
+ 	alt->endpoint[0].desc.wMaxPacketSize = cpu_to_le16(max_packet_size);
+ 
+ 	return 0;
+@@ -2665,6 +2678,9 @@ static int sd_isoc_nego(struct gspca_dev
+ 		break;
+ 	}
+ 
++	/*
++	 * Existence of altsetting and endpoint was verified in sd_isoc_init()
++	 */
+ 	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
+ 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
+ 	if (packet_size <= min_packet_size)
 
 
