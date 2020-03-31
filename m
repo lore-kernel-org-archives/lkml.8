@@ -2,53 +2,54 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C07AC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0980C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675E0215A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F65320B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645644;
-	bh=CamO4UEFcXfw9TeICbbmIbQ1M6RNs/sXyPRb67bcy08=;
+	s=default; t=1585645647;
+	bh=fonGa2Jo6J/Aqu3Gec9US4klKsW7E93xxowFHt7fUKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9PBjOkl8FdzcxDe5tOxUdwCtpcHsLaqyo9u3fP+S/tdvlOpjxw4cEWfZEpgDdw7H
-	 ObAGncBB8jYcKNdjif7RGgVkZqAB3RykTtB1cwcic/y5lqt6fiBM472ls9MtxbYOWn
-	 4uUTCIuHcK9IgsVyWobSrSZvbdaLs8WIJPjEd6fQ=
+	b=XgOeeDaP87wCLRIc3kG91LArZxN+Pq6cy5QJtak3Er65G63vOsTsst2znNyrwCBaZ
+	 ArMkICNcZhM7AKjU4rq8gqLddpuZE4+qAL1+q0efQLuys9APjkfHLUfpXG9Iu/TVxt
+	 xB5QWzpsjSCUMweV/vXrgI2K5h2qSf1OXSDMODyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731231AbgCaJHW (ORCPT
+        id S1731237AbgCaJH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:07:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48986 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731219AbgCaJHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:07:16 -0400
+        id S1731205AbgCaJHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:07:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7816020675;
-        Tue, 31 Mar 2020 09:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A345520675;
+        Tue, 31 Mar 2020 09:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645635;
-        bh=CamO4UEFcXfw9TeICbbmIbQ1M6RNs/sXyPRb67bcy08=;
+        s=default; t=1585645639;
+        bh=fonGa2Jo6J/Aqu3Gec9US4klKsW7E93xxowFHt7fUKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FPV5FsvTUUGEooexGkto0tOBE5AZlOk4TMHmKPXJMcDM10psEF9pgrqmW9hQ7YkWd
-         umAcSjzRk1mpRLC0wMJxVZfQs5w1fILIkr7ikxGJZfGccEufkeJCP2w0VaBRRre4aV
-         enaZ6o+ch+CULKfqRslrsbNbkKiAoe7vXQ9qJYG8=
+        b=QQKRZXeqOzJuYjZAzQcqeB0Wi0PYCouLyrpDxhcbAFbl50hz7Qozp0rzsmvdxAOqc
+         ynk9UZ54QKLhmw6zINOhxevlBeqR/O/g5hT60dNUtTt8CyMrygGHohC6SUJpL/Rage
+         oxIglGeTxk5xECxz4DQu6jJ22vZWXt1T4KJY1GlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
-        Johannes Berg <johannes.berg@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 076/170] mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
-Date:   Tue, 31 Mar 2020 10:58:10 +0200
-Message-Id: <20200331085432.419679919@linuxfoundation.org>
+Subject: [PATCH 5.5 077/170] dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
+Date:   Tue, 31 Mar 2020 10:58:11 +0200
+Message-Id: <20200331085432.504560513@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -61,36 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit ba32679cac50c38fdf488296f96b1f3175532b8e ]
+[ Upstream commit 7395f62d95aafacdb9bd4996ec2f95b4a655d7e6 ]
 
-When trying to transmit to an unknown destination, the mesh code would
-unconditionally transmit a HWMP PREQ even if HWMP is not the current
-path selection algorithm.
+Clang warns:
 
-Signed-off-by: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
-Link: https://lore.kernel.org/r/20200305140409.12204-1-cavallar@lri.fr
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
+converting the result of '?:' with integer constants to a boolean always
+evaluates to 'true' [-Wtautological-constant-compare]
+        return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+               ^
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
+from macro 'DPAA_FD_DATA_ALIGNMENT'
+\#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
+                                 ^
+1 warning generated.
+
+This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
+workaround") even though it appears to have been an issue since the
+introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
+Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
+
+Just replace the whole boolean expression with the true branch, as it is
+always been true.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/928
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index d699833703819..38a0383dfbcfa 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -1152,7 +1152,8 @@ int mesh_nexthop_resolve(struct ieee80211_sub_if_data *sdata,
- 		}
- 	}
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index 36e2e28fa6e38..1e8dcae5f4b40 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2845,9 +2845,7 @@ static inline u16 dpaa_get_headroom(struct dpaa_buffer_layout *bl)
+ 	headroom = (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
+ 		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
  
--	if (!(mpath->flags & MESH_PATH_RESOLVING))
-+	if (!(mpath->flags & MESH_PATH_RESOLVING) &&
-+	    mesh_path_sel_is_hwmp(sdata))
- 		mesh_queue_preq(mpath, PREQ_Q_F_START);
+-	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+-					      DPAA_FD_DATA_ALIGNMENT) :
+-					headroom;
++	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
+ }
  
- 	if (skb_queue_len(&mpath->frame_queue) >= MESH_FRAME_QUEUE_LEN)
+ static int dpaa_eth_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
