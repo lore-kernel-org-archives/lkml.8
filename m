@@ -2,124 +2,185 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6AFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EC2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C0A207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="SRrMxw42"
+	by mail.kernel.org (Postfix) with ESMTP id E30E0207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgCaI4t (ORCPT
+        id S1730322AbgCaI5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:56:49 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:41314 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730161AbgCaI4s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:56:48 -0400
-Received: by mail-ed1-f68.google.com with SMTP id v1so24148077edq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 01:56:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=naz5vFiOyfqlYWnFE99McWHBp3JuwM6PJW7GvvgW6Cc=;
-        b=SRrMxw42id0lcjITOkFTm2e3NqOUSpRQCBgX9s9jnPN2a4QIoRIquUmMdmA0BMf4Xp
-         U9VQN9PleCKPt5lfXlorjcO0kIf7U2qTLno3a5/zbtdGi6/2rue+eSwXvWzUkQQ0e/+T
-         wx6QHGfcYE219bRqR+z8DEBh5rBLCib4PDNcg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=naz5vFiOyfqlYWnFE99McWHBp3JuwM6PJW7GvvgW6Cc=;
-        b=MwbZBygwphHWh9lU0vMqfpfFTTGlsNneAU5OkfAvWW1vcy+eowAXCiTPcglC4FpC/9
-         DwB7mbr/HslBfRjRHtEQguqDle2wLZC0M+ykY/nNbhT3GuARqsaVcdirtReAPXBUUA3D
-         Du9c8Hn77jj/5oOgGkvlkqFnM0RP0l61zQhz8TTLJckNFS9/c+BrxcLs0mj03utdEuGq
-         lrOvOpX9SkCG1RTNTvsXD1L0S1QOYwGXSPa9C1QuGq4OLqj66hGDKK/z4Do3JM//KyDz
-         QeUx/VrIy9/Fnpe8AMIfMooWJZhOdEzU3ypKTKQejMllKQ6g85evvRcacwlD6Kd6ldYA
-         rT9w==
-X-Gm-Message-State: ANhLgQ2lKlgVSajZMwlwru5davJAR+hoI1vGrPP3VHgEvocMwx8wIIYE
-        yJx68qcsSeSdrafVi7KyqiUCEbNmendnbjHqeiexug==
-X-Google-Smtp-Source: ADFU+vuc3wwrmQlPzGgTvWh3b6LAUponQqY+y346aNWSjswhKCEVIqgH877rVN/HXD7gX3ps66sOeJ/wC9Whp3TCFTQ=
-X-Received: by 2002:a17:906:848d:: with SMTP id m13mr14671902ejx.348.1585645006637;
- Tue, 31 Mar 2020 01:56:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <1445647.1585576702@warthog.procyon.org.uk> <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
- <CAJfpegtjmkJUSqORFv6jw-sYbqEMh9vJz64+dmzWhATYiBmzVQ@mail.gmail.com> <20200331083430.kserp35qabnxvths@ws.net.home>
-In-Reply-To: <20200331083430.kserp35qabnxvths@ws.net.home>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 31 Mar 2020 10:56:35 +0200
-Message-ID: <CAJfpegsNpabFwoLL8HffNbi_4DuGMn4eYpFc6n7223UFnEPAbA@mail.gmail.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-To:     Karel Zak <kzak@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 31 Mar 2020 04:57:07 -0400
+Received: from mx.sdf.org ([205.166.94.20]:59176 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbgCaI5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:57:06 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02V8v0Ub009740
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Tue, 31 Mar 2020 08:57:00 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02V8v0M2023642;
+        Tue, 31 Mar 2020 08:57:00 GMT
+Date:   Tue, 31 Mar 2020 08:57:00 GMT
+Message-Id: <83ee0c2ed66c1acdc1385514f5aeaba8cd124beb.1585644000.git.lkml@sdf.org>
+In-Reply-To: <9916203ec97be0f24886fc8478437d161b56f053.1585644000.git.lkml@sdf.org>
+References: <9916203ec97be0f24886fc8478437d161b56f053.1585644000.git.lkml@sdf.org>
+From:   George Spelvin <lkml@sdf.org>
+Subject: [PATCH 3/3] random: use better approximation in calc_entropy_frac()
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        linux-kernel@vger.kernel.org, lkml@sdf.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:34 AM Karel Zak <kzak@redhat.com> wrote:
->
-> On Tue, Mar 31, 2020 at 07:11:11AM +0200, Miklos Szeredi wrote:
-> > On Mon, Mar 30, 2020 at 11:17 PM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> >
-> > > Fwiw, putting down my kernel hat and speaking as someone who maintains
-> > > two container runtimes and various other low-level bits and pieces in
-> > > userspace who'd make heavy use of this stuff I would prefer the fd-based
-> > > fsinfo() approach especially in the light of across namespace
-> > > operations, querying all properties of a mount atomically all-at-once,
-> >
-> > fsinfo(2) doesn't meet the atomically all-at-once requirement.
->
-> I guess your /proc based idea have exactly the same problem...
+Rather than a linear approximation to 1-exp(-x) which has 25% error for
+small x (the common case), this uses a quadratic approximation which is
+best for small x.
 
-Yes, that's exactly what I wanted to demonstrate: there's no
-fundamental difference between the two API's in this respect.
+Both compute the same approximation 0.375 (-4.7% error) at x=0.5, the
+high end of the input range.
 
-> I see two possible ways:
->
-> - after open("/mnt", O_PATH) create copy-on-write object in kernel to
->   represent mount node -- kernel will able to modify it, but userspace
->   will get unchanged data from the FD until to close()
->
-> - improve fsinfo() to provide set (list) of the attributes by one call
+If the processor supports it, a 32x32->64-bit multiply is used for greater
+accuracy. If not, an intermediate normalizing shift is added to ensure
+the product fits into 32 bits.
 
-I think we are approaching this from the wrong end.   Let's just
-ignore all of the proposed interfaces for now and only concentrate on
-what this will be used for.
+This also allows ENTROPY_SHIFT to be increased to 4, tracking entropy
+in 1/16 bit increments.
 
-Start with a set of use cases by all interested parties.  E.g.
+Signed-off-by: George Spelvin <lkml@sdf.org>
+---
+There's a lot of estimated entropy wasted by inaccurate accounting whwn
+we add it in small increments.  This improves that.
 
- - systemd wants to keep track attached mounts in a namespace, as well
-as new detached mounts created by fsmount()
+ drivers/char/random.c | 69 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 16 deletions(-)
 
- - systemd need to keep information (such as parent, children, mount
-flags, fs options, etc) up to date on any change of topology or
-attributes.
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index de90bab5af36..b10962861c5e 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -336,6 +336,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/completion.h>
+ #include <linux/uuid.h>
++#include <linux/math64.h>
+ #include <crypto/chacha.h>
+ 
+ #include <asm/processor.h>
+@@ -363,13 +364,16 @@
+ 
+ /*
+  * To allow fractional bits to be tracked, the entropy_count field is
+- * denominated in units of 1/8th bits.
++ * denominated in units of 1/16 bits.
+  *
+- * 2*(ENTROPY_SHIFT + poolbitshift) must <= 31, or the multiply in
+- * credit_entropy_bits() needs to be 64 bits wide.
++ * 2*(ENTROPY_SHIFT + poolbitshift) must <= 32, or the code in
++ * entropy_frac_add() must be adjusted to use a larger first multiply.
+  */
+-#define ENTROPY_SHIFT 3
++#define ENTROPY_SHIFT 4
+ #define ENTROPY_BITS(r) ((r)->entropy_count >> ENTROPY_SHIFT)
++#if INPUT_POOL_SHIFT + ENTROPY_SHIFT > 16
++#error Those parameters are not going to work.
++#endif
+ 
+ /*
+  * If the entropy count falls under this number of bits, then we
+@@ -662,12 +666,34 @@ static void process_random_ready_list(void)
+  * entropy += (capacity - entropy) * (1 - exp(-add/capacity))
+  *
+  * To avoid evaluating an exponential in interrupt context, we use a
+- * simple fixed-point underestimate.
++ * simple fixed-point underestimate for 1 - exp(-x).  A second-order
++ * Taylor approximation works well:  x * (1 - x/2) <= 1 - exp(-x)
+  *
+- * For add <= capacity/2 then
+- * (1 - exp(-add/capacity)) >= (add/capacity)*0.7869...
+- * so we can approximate the exponential with 3/4*add/capacity and still
+- * be on the safe side by adding at most capacity/2 at a time.
++ * This approximation is excellent for small x:
++ * x = 0.1 ->  0.17% low
++ * x = 0.2 ->  0.70% low
++ * x = 0.3 ->  1.61% low
++ * x = 0.4 ->  2.94% low
++ * x = 0.5 ->  4.69% low
++ * x = 1.0 -> 58.19% low
++ *
++ * It breaks (100% low) for x = 2.0, so in the rare case that add is
++ * large relative to capacity, we add the entropy a piece at a time.
++ * (We actually let the threshold equal half the pool size, but the
++ * exact value is not critical.)
++ *
++ * We are trying to compute
++ * (capacity - entropy) * (add/capacity) * (1 - add/capacity/2)
++ * using fixed-point, in fractional bits scaled by ENTROPY_SHIFT.
++ *
++ * For maximum accuracy, we'd do all the divisions last:
++ * (capacity - entropy) * add * (2*capacity - add) / (2*capacity^2)
++ * but at the maximum value of add = capacity/2, the intermediate
++ * product is almost capacity^3, which overflows 32 bits.
++ *
++ * If we are on a 64-bit processor OR have an arch-specific mul_u32_u32(),
++ * then use a 64-bit intermediate product.  Otherwise, use a normalizing
++ * shift (the smallest possible) between the two multiplies.
+  */
+ static int calc_entropy_frac(int add, int entropy,
+ 			     struct entropy_store const *r)
+@@ -679,13 +705,24 @@ static int calc_entropy_frac(int add, int entropy,
+ 		/* Debit */
+ 		entropy += add;
+ 	} else {
+-		const int s = info->poolbitshift + ENTROPY_SHIFT + 2;
+-		/* The +2 corresponds to the denominator of the 3/4 */
++		const int s = info->poolbitshift + ENTROPY_SHIFT;
+ 
+ 		do {
+ 			unsigned int frac = min(add, capacity/2);
+-			unsigned int delta = ((capacity - entropy)*frac*3) >> s;
++			u32 delta = frac * (2*capacity - frac);
+ 
++#if defined(mul_u32_u32) || BITS_PER_LONG == 64
++			/* Use a 64-bit product */
++			delta = mul_u32_u32(delta, capacity - entropy) >>
++				(2*s + 1);
++#else
++			/* Use only 32-bit products */
++			const int s1 = max(3*s - 32, 0);
++
++			delta >>= s1;
++			delta *= capacity - entropy;
++			delta >>= 2*s + 1 - s1;
++#endif
+ 			entropy += delta;
+ 			add -= frac;
+ 		} while (unlikely(add) && entropy < capacity-2);
+@@ -702,12 +739,12 @@ static int calc_entropy_frac(int add, int entropy,
+ 		 */
+ 	}
+ 
+-	if (WARN_ON(entropy < 0)) {
++	/* If out of range (should never happen), warn and clamp. */
++	if (WARN_ON(entropy < 0 || entropy > capacity)) {
+ 		pr_warn("negative entropy/overflow: pool %s count %d\n",
+ 			r->name, entropy);
+-		entropy = 0;
+-	} else if (unlikely(entropy > capacity))
+-		entropy = capacity;
++		entropy = entropy < 0 ? 0 : capacity;
++	}
+ 	return entropy;
+ }
+ 
+-- 
+2.26.0
 
- - util linux needs to display the topology and state of mounts in the
-system that corresponds to a consistent state that set of mounts
-
- - etc...
-
-From that we can derive a set of requirements for the API.
-
-Thanks,
-Miklos
