@@ -2,328 +2,303 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2837EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36A6C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E791E2166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8865320781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgCaPLr (ORCPT
+        id S1730701AbgCaPNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:11:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:54910 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbgCaPLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:11:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA13631B;
-        Tue, 31 Mar 2020 08:11:45 -0700 (PDT)
-Received: from mbp (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13D293F71E;
-        Tue, 31 Mar 2020 08:11:44 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 16:11:34 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 updates for 5.7
-Message-ID: <20200331151131.GA17516@mbp>
+        Tue, 31 Mar 2020 11:13:10 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59897 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCaPNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:13:10 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jJIZZ-0004xt-9e; Tue, 31 Mar 2020 17:13:01 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jJIZR-00038u-QY; Tue, 31 Mar 2020 17:12:53 +0200
+Date:   Tue, 31 Mar 2020 17:12:53 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200331151253.q6ody3erhvsabznz@pengutronix.de>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200331133346.372517-2-robert.foss@linaro.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 16:59:20 up 137 days,  6:17, 160 users,  load average: 0.00, 0.03,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Robert,
 
-Please pull the arm64 updates below. The bulk is in-kernel pointer
-authentication, activity monitors and lots of asm symbol annotations. I
-also queued the sys_mremap() patch commenting the asymmetry in the
-address untagging.
+On 20-03-31 15:33, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> 
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+> 
+> - Changes since v5:
+>   * Add assigned-clocks and assigned-clock-rates
+>   * robher: dt-schema errors
+> 
+> - Changes since v4:
+>   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+>   * Add clock-lanes property to example
+>   * robher: Fix syntax error in devicetree example
+> 
+> - Changes since v3:
+>   * robher: Fix syntax error
+>   * robher: Removed maxItems
+>   * Fixes yaml 'make dt-binding-check' errors
+> 
+> - Changes since v2:
+>   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+>   * Convert text documentation to YAML schema.
+> 
+> - Changes since v1:
+>   Fixes comments from Sakari, Tomasz
+>   * Add clock-frequency and link-frequencies in DT
+> 
+>  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> new file mode 100644
+> index 000000000000..beeddfbb8709
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2019 MediaTek Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ben Kao <ben.kao@intel.com>
+> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> +
+> +description: |-
+> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> +  serial data output (up to 4-lane).
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov8856
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Input clock for the sensor.
+> +    items:
+> +      - const: xvclk
+> +
+> +  clock-frequency:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
 
-Thanks.
+Why do we need this here?
 
-The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
+> +  assigned-clocks:
+> +    description:
+> +      Input clock for the sensor.
+> +
+> +  assigned-clock-rates:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
 
-  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+Also this isn't related to the chip. You need this because you are using
+a qcom platform which provides the clock.
 
-are available in the Git repository at:
+IMHO you only need to specify the clock. You can get the frequency with
+the clk_get_rate() function.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-upstream
+> +  dovdd-supply:
+> +    description:
+> +      Definition of the regulator used as interface power supply.
 
-for you to fetch changes up to b2a84de2a2deb76a6a51609845341f508c518c03:
+Phandle to the interface power supply regulator?
 
-  mm/mremap: Add comment explaining the untagging behaviour of mremap() (2020-03-26 11:28:57 +0000)
+> +
+> +  avdd-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+> +
+> +  dvdd-supply:
+> +    description:
+> +      Definition of the regulator used as digital power supply.
+> +
+> +  reset-gpios:
+> +    description:
+> +      The phandle and specifier for the GPIO that controls sensor reset.
+> +      This corresponds to the hardware pin XSHUTDOWN which is physically
+> +      active low.
+> +
+> +  port:
+> +    type: object
+> +    additionalProperties: false
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +
+> +        properties:
+> +          clock-lanes:
+> +            maxItems: 1
+> +
+> +          data-lanes:
+> +            maxItems: 1
+> +
+> +          remote-endpoint: true
+> +
+> +        required:
+> +          - clock-lanes
+> +          - data-lanes
+> +          - remote-endpoint
+> +
+> +    required:
+> +      - endpoint
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - clock-frequency
+> +  - assigned-clocks
+> +  - assigned-clock-rates
+> +  - dovdd-supply
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - reset-gpios
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/clock/qcom,camcc-sdm845.h>
 
-----------------------------------------------------------------
-arm64 updates for 5.7:
+IMHO we should avoid examples with hardware specific includes.
 
-- In-kernel Pointer Authentication support (previously only offered to
-  user space).
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov8856: camera@10 {
+> +            compatible = "ovti,ov8856";
+> +            reg = <0x10>;
+> +
+> +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&clk_24m_cam>;
+> +
+> +            clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
+> +            clock-names = "xvclk";
+> +            clock-frequency = <19200000>;
+> +            assigned-clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
+> +            assigned-clock-rates = <19200000>;
+> +
+> +            avdd-supply = <&mt6358_vcama2_reg>;
+> +            dvdd-supply = <&mt6358_vcamd_reg>;
+> +            dovdd-supply = <&mt6358_vcamio_reg>;
+> +
+> +            port {
+> +                wcam_out: endpoint {
+> +                    remote-endpoint = <&mipi_in_wcam>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2 3 4>;
+> +                    link-frequencies = /bits/ 64 <360000000 180000000>;
 
-- ARM Activity Monitors (AMU) extension support allowing better CPU
-  utilisation numbers for the scheduler (frequency invariance).
+Should we add the link-frequencies as optional param?
 
-- Memory hot-remove support for arm64.
+Regards,
+  Marco
 
-- Lots of asm annotations (SYM_*) in preparation for the in-kernel
-  Branch Target Identification (BTI) support.
-
-- arm64 perf updates: ARMv8.5-PMU 64-bit counters, refactoring the PMU
-  init callbacks, support for new DT compatibles.
-
-- IPv6 header checksum optimisation.
-
-- Fixes: SDEI (software delegated exception interface) double-lock on
-  hibernate with shared events.
-
-- Minor clean-ups and refactoring: cpu_ops accessor, cpu_do_switch_mm()
-  converted to C, cpufeature finalisation helper.
-
-- sys_mremap() comment explaining the asymmetric address untagging
-  behaviour.
-
-----------------------------------------------------------------
-Amit Daniel Kachhap (8):
-      arm64: cpufeature: Fix meta-capability cpufeature check
-      arm64: ptrauth: Add bootup/runtime flags for __cpu_setup
-      arm64: cpufeature: Move cpu capability helpers inside C file
-      arm64: initialize ptrauth keys for kernel booting task
-      arm64: mask PAC bits of __builtin_return_address
-      arm64: __show_regs: strip PAC from lr in printk
-      arm64: suspend: restore the kernel ptrauth keys
-      lkdtm: arm64: test kernel pointer authentication
-
-Andrew Murray (3):
-      arm64: cpufeature: Extract capped perfmon fields
-      KVM: arm64: limit PMU version to PMUv3 for ARMv8.1
-      arm64: perf: Add support for ARMv8.5-PMU 64-bit counters
-
-Anshuman Khandual (2):
-      arm64/mm: Hold memory hotplug lock while walking for kernel page table dump
-      arm64/mm: Enable memory hot remove
-
-Catalin Marinas (4):
-      Merge branches 'for-next/memory-hotremove', 'for-next/arm_sdei', 'for-next/amu', 'for-next/final-cap-helper', 'for-next/cpu_ops-cleanup', 'for-next/misc' and 'for-next/perf' into for-next/core
-      Merge branch 'for-next/asm-annotations' into for-next/core
-      Merge branch 'for-next/asm-cleanups' into for-next/core
-      Merge branch 'for-next/kernel-ptrauth' into for-next/core
-
-Gavin Shan (4):
-      arm64/kernel: Simplify __cpu_up() by bailing out early
-      arm64: Declare ACPI parking protocol CPU operation if needed
-      arm64: Rename cpu_read_ops() to init_cpu_ops()
-      arm64: Introduce get_cpu_ops() helper function
-
-Ionela Voinescu (7):
-      arm64: add support for the AMU extension v1
-      arm64: trap to EL1 accesses to AMU counters from EL0
-      arm64/kvm: disable access to AMU registers from kvm guests
-      Documentation: arm64: document support for the AMU extension
-      cpufreq: add function to get the hardware max frequency
-      arm64: use activity monitors for frequency invariance
-      clocksource/drivers/arm_arch_timer: validate arch_timer_rate
-
-James Morse (2):
-      firmware: arm_sdei: fix double-lock on hibernate with shared events
-      firmware: arm_sdei: Use cpus_read_lock() to avoid races with cpuhp
-
-Kristina Martsenko (7):
-      arm64: cpufeature: add pointer auth meta-capabilities
-      arm64: rename ptrauth key structures to be user-specific
-      arm64: install user ptrauth keys at kernel exit time
-      arm64: cpufeature: handle conflicts based on capability
-      arm64: enable ptrauth earlier
-      arm64: initialize and switch ptrauth kernel keys
-      arm64: compile the kernel with ptrauth return address signing
-
-Kunihiko Hayashi (1):
-      arm64: entry-ftrace.S: Fix missing argument for CONFIG_FUNCTION_GRAPH_TRACER=y
-
-Li Tao (1):
-      arm64: kexec_file: Fixed code style.
-
-Liguang Zhang (2):
-      firmware: arm_sdei: fix possible double-lock on hibernate error path
-      firmware: arm_sdei: clean up sdei_event_create()
-
-Mark Brown (18):
-      arm64: crypto: Modernize some extra assembly annotations
-      arm64: crypto: Modernize names for AES function macros
-      arm64: entry: Annotate vector table and handlers as code
-      arm64: entry: Annotate ret_from_fork as code
-      arm64: entry: Additional annotation conversions for entry.S
-      arm64: entry-ftrace.S: Convert to modern annotations for assembly functions
-      arm64: ftrace: Correct annotation of ftrace_caller assembly
-      arm64: ftrace: Modernise annotation of return_to_handler
-      arm64: head.S: Convert to modern annotations for assembly functions
-      arm64: head: Annotate stext and preserve_boot_args as code
-      arm64: kernel: Convert to modern annotations for assembly data
-      arm64: kvm: Annotate assembly using modern annoations
-      arm64: kvm: Modernize annotation for __bp_harden_hyp_vecs
-      arm64: kvm: Modernize __smccc_workaround_1_smc_start annotations
-      arm64: sdei: Annotate SDEI entry points using new style annotations
-      arm64: vdso: Convert to modern assembler annotations
-      arm64: vdso32: Convert to modern assembler annotations
-      arm64: head: Convert install_el2_stub to SYM_INNER_LABEL
-
-Mark Rutland (5):
-      arm64: mm: convert cpu_do_switch_mm() to C
-      arm64: entry: unmask IRQ in el0_sp()
-      arm64: cpufeature: add cpus_have_final_cap()
-      arm64: kvm: hyp: use cpus_have_final_cap()
-      arm64: unwind: strip PAC from kernel addresses
-
-Masahiro Yamada (1):
-      arm64: efi: add efi-entry.o to targets instead of extra-$(CONFIG_EFI)
-
-Nathan Chancellor (1):
-      arm64: Mark call_smc_arch_workaround_1 as __maybe_unused
-
-Nick Desaulniers (1):
-      arm64: Kconfig: verify binutils support for ARM64_PTR_AUTH
-
-Randy Dunlap (1):
-      arm64: fix NUMA Kconfig typos
-
-Remi Denis-Courmont (3):
-      arm64: remove gratuitious/stray .ltorg stanzas
-      arm64: use mov_q instead of literal ldr
-      arm64: move kimage_vaddr to .rodata
-
-Robin Murphy (4):
-      arm64: perf: Refactor PMU init callbacks
-      arm64: perf: Support new DT compatibles
-      arm64: csum: Optimise IPv6 header checksum
-      arm64: perf: Clean up enable/disable calls
-
-Takashi Iwai (1):
-      perf: arm-ccn: Use scnprintf() for robustness
-
-Vincenzo Frascino (1):
-      kconfig: Add support for 'as-option'
-
-Will Deacon (2):
-      arm64: Update comment for ASID() macro
-      mm/mremap: Add comment explaining the untagging behaviour of mremap()
-
-Zheng Wei (1):
-      arm64: add blank after 'if'
-
-glider@google.com (1):
-      arm64: define __alloc_zeroed_user_highpage
-
-luanshi (1):
-      perf: arm_spe: Remove unnecessary zero check on 'nr_pages'
-
-王程刚 (1):
-      arch/arm64: fix typo in a comment
-
-韩科才 (2):
-      arm64: fix spelling mistake "ca not" -> "cannot"
-      arm64: remove redundant blank for '=' operator
-
- Documentation/arm64/amu.rst               | 112 +++++++++
- Documentation/arm64/booting.rst           |  14 ++
- Documentation/arm64/index.rst             |   1 +
- arch/arm64/Kconfig                        |  69 +++++-
- arch/arm64/Makefile                       |  11 +
- arch/arm64/crypto/aes-ce.S                |   4 +-
- arch/arm64/crypto/aes-modes.S             |  48 ++--
- arch/arm64/crypto/aes-neon.S              |   4 +-
- arch/arm64/crypto/ghash-ce-core.S         |  16 +-
- arch/arm64/include/asm/asm_pointer_auth.h |  65 +++++
- arch/arm64/include/asm/assembler.h        |  16 +-
- arch/arm64/include/asm/checksum.h         |   7 +-
- arch/arm64/include/asm/compiler.h         |  24 ++
- arch/arm64/include/asm/cpu_ops.h          |   8 +-
- arch/arm64/include/asm/cpucaps.h          |   5 +-
- arch/arm64/include/asm/cpufeature.h       | 125 +++++++---
- arch/arm64/include/asm/esr.h              |   2 +-
- arch/arm64/include/asm/kvm_arm.h          |   1 +
- arch/arm64/include/asm/kvm_asm.h          |   4 +
- arch/arm64/include/asm/kvm_mmu.h          |   9 +-
- arch/arm64/include/asm/memory.h           |   1 +
- arch/arm64/include/asm/mmu.h              |  10 +-
- arch/arm64/include/asm/mmu_context.h      |   2 +
- arch/arm64/include/asm/page.h             |   4 +
- arch/arm64/include/asm/perf_event.h       |   3 +-
- arch/arm64/include/asm/pointer_auth.h     |  50 ++--
- arch/arm64/include/asm/proc-fns.h         |   2 -
- arch/arm64/include/asm/processor.h        |   3 +-
- arch/arm64/include/asm/smp.h              |  12 +
- arch/arm64/include/asm/stackprotector.h   |   5 +
- arch/arm64/include/asm/sysreg.h           |  48 ++++
- arch/arm64/include/asm/topology.h         |   9 +
- arch/arm64/kernel/Makefile                |   2 +-
- arch/arm64/kernel/armv8_deprecated.c      |   2 +-
- arch/arm64/kernel/asm-offsets.c           |  16 ++
- arch/arm64/kernel/cpu-reset.S             |   2 +-
- arch/arm64/kernel/cpu_errata.c            |  18 +-
- arch/arm64/kernel/cpu_ops.c               |  11 +-
- arch/arm64/kernel/cpufeature.c            | 165 +++++++++++--
- arch/arm64/kernel/cpuidle.c               |   9 +-
- arch/arm64/kernel/entry-common.c          |   2 +-
- arch/arm64/kernel/entry-ftrace.S          |  48 ++--
- arch/arm64/kernel/entry.S                 | 121 +++++-----
- arch/arm64/kernel/head.S                  |  86 +++----
- arch/arm64/kernel/hibernate-asm.S         |   2 -
- arch/arm64/kernel/hyp-stub.S              |   2 +-
- arch/arm64/kernel/machine_kexec_file.c    |   2 +-
- arch/arm64/kernel/perf_event.c            | 338 +++++++++++++-------------
- arch/arm64/kernel/pointer_auth.c          |   7 +-
- arch/arm64/kernel/process.c               |   5 +-
- arch/arm64/kernel/ptrace.c                |  16 +-
- arch/arm64/kernel/relocate_kernel.S       |   4 +-
- arch/arm64/kernel/setup.c                 |   8 +-
- arch/arm64/kernel/sleep.S                 |   2 +
- arch/arm64/kernel/smp.c                   | 159 +++++++------
- arch/arm64/kernel/stacktrace.c            |   5 +-
- arch/arm64/kernel/topology.c              | 180 ++++++++++++++
- arch/arm64/kernel/vdso/sigreturn.S        |   4 +-
- arch/arm64/kernel/vdso32/sigreturn.S      |  23 +-
- arch/arm64/kvm/hyp-init.S                 |  18 +-
- arch/arm64/kvm/hyp.S                      |   4 +-
- arch/arm64/kvm/hyp/fpsimd.S               |   8 +-
- arch/arm64/kvm/hyp/hyp-entry.S            |  27 ++-
- arch/arm64/kvm/hyp/switch.c               |  28 ++-
- arch/arm64/kvm/hyp/sysreg-sr.c            |   8 +-
- arch/arm64/kvm/hyp/tlb.c                  |   8 +-
- arch/arm64/kvm/sys_regs.c                 | 103 +++++++-
- arch/arm64/lib/csum.c                     |  27 +++
- arch/arm64/lib/strcmp.S                   |   2 +-
- arch/arm64/mm/context.c                   |  32 ++-
- arch/arm64/mm/mmu.c                       | 379 +++++++++++++++++++++++++++++-
- arch/arm64/mm/proc.S                      | 104 ++++----
- arch/arm64/mm/ptdump_debugfs.c            |   4 +
- drivers/base/arch_topology.c              |  12 +
- drivers/clocksource/arm_arch_timer.c      |  18 +-
- drivers/cpufreq/cpufreq.c                 |  20 ++
- drivers/firmware/arm_sdei.c               |  71 +++---
- drivers/misc/lkdtm/bugs.c                 |  36 +++
- drivers/misc/lkdtm/core.c                 |   1 +
- drivers/misc/lkdtm/lkdtm.h                |   1 +
- drivers/perf/arm-ccn.c                    |  20 +-
- drivers/perf/arm_spe_pmu.c                |   2 +-
- include/linux/arch_topology.h             |   2 +
- include/linux/cpufreq.h                   |   5 +
- include/linux/perf/arm_pmu.h              |   1 +
- include/linux/stackprotector.h            |   2 +-
- mm/mremap.c                               |  10 +
- scripts/Kconfig.include                   |   6 +
- 88 files changed, 2192 insertions(+), 700 deletions(-)
- create mode 100644 Documentation/arm64/amu.rst
- create mode 100644 arch/arm64/include/asm/asm_pointer_auth.h
- create mode 100644 arch/arm64/include/asm/compiler.h
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> \ No newline at end of file
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a6fbdf354d34..0f99e863978a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12355,6 +12355,7 @@ L:	linux-media@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+>  F:	drivers/media/i2c/ov8856.c
+> +F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+>  
+>  OMNIVISION OV9650 SENSOR DRIVER
+>  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+> -- 
+> 2.25.1
+> 
+> 
 
 -- 
-Catalin
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
