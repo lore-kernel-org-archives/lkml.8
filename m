@@ -2,167 +2,93 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CB6C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CF6C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF50207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5091820838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585657546;
+	bh=lEz1klH4TymFRjb7lKYsi1k0Zi49pYdqaWSFWXTIeuk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DBxELAtAg9urBIjRStcVuw921JlKYtRDxupS8fZGm0GLnFWukD6cibKf4BJ1L3SpF
+	 rgVGxFOSGArwZLOfqW70JpG+D5dAl1TaBOyASAH0NfIl4i5oEJ/uOUvOfzgqZvRmOH
+	 VvSMzLh6t6seJiygVs8QYL4C4nrWMR7+OGWAS7Hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbgCaMYW (ORCPT
+        id S1730711AbgCaMZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:24:22 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39701 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbgCaMYV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:24:21 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h6so11349486lfp.6;
-        Tue, 31 Mar 2020 05:24:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ohvImCp014Io4Oupmt5+qexhjRs8YPgpvAzigx1eCkE=;
-        b=LRJmYqiXgdKXOmY2E9QMyluGRVc8goimhORDlaNqMhHWiZ2ehuuJ+HMnaiOOVjniC/
-         gQIoZp/wGB73/hvyIRMa5u9RUVLB8PXu9mvHSmO/x2ZdYjxP/vq7rCr6MR/hzmEbYJKY
-         RCkqrVhRRZZ0T1CJroFEkL/4iBDymV6X9si+yuVGIrRoVoa1ONNJrNuFQCAJmACQ9XvR
-         t56jt5MI680valm/rDUrJO1A6SldjntKeA6ZCAbvnLKU5R1WF+t5FIwzkwL6Z9nj92MO
-         WySZtYJWBpA9ES6FdtnUMzzZMeiX9q2VNf5vINujhkSsPktBeSzoznYd9MyNGzq21Qsm
-         tNKQ==
-X-Gm-Message-State: AGi0Pubf4aDKXd9xd3Y6f+mCJAvMdYtjchGQdLQk+wjZnXYk3toMBc44
-        8UvmntPXOxcXMCneSoiuePQ=
-X-Google-Smtp-Source: APiQypLBiVKJIKEgNhjpWZGa7KnMSdP7F9H6Tf0LekUtYuYRMZ/lvYBKbwBNamrrXtL3RAdTIqkmWg==
-X-Received: by 2002:a19:3847:: with SMTP id d7mr10980112lfj.158.1585657458994;
-        Tue, 31 Mar 2020 05:24:18 -0700 (PDT)
-Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
-        by smtp.gmail.com with ESMTPSA id b21sm9939563ljo.54.2020.03.31.05.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 05:24:18 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 15:24:10 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Tal Gilboa <talgi@mellanox.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH v7 05/10] power: supply: bd70528: rename linear_range to
- avoid collision
-Message-ID: <d9cb874134ae7a047e2cf8c87e8e949fe852ddab.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 31 Mar 2020 08:25:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:52278 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730343AbgCaMZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 08:25:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EB9A31B;
+        Tue, 31 Mar 2020 05:25:42 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 020F63F68F;
+        Tue, 31 Mar 2020 05:25:42 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 13:25:40 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
+Cc:     lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
+        daniel.baluta@gmail.com, linux-imx@nxp.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        yuehaibing@huawei.com, krzk@kernel.org,
+        linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH 2/5] ASoC: SOF: imx: fix undefined reference issue
+Message-ID: <20200331122540.GD4802@sirena.org.uk>
+References: <20200319194957.9569-1-daniel.baluta@oss.nxp.com>
+ <20200319194957.9569-3-daniel.baluta@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sXc4Kmr5FA7axrvy"
 Content-Disposition: inline
-In-Reply-To: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200319194957.9569-3-daniel.baluta@oss.nxp.com>
+X-Cookie: It's later than you think.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Follow-up patches in this series will add a generic struct
-linear_range. Rename bd70528 internal struct to avoid collision.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+--sXc4Kmr5FA7axrvy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No changes since v6
+On Thu, Mar 19, 2020 at 09:49:54PM +0200, Daniel Baluta wrote:
+> From: Daniel Baluta <daniel.baluta@nxp.com>
 
- drivers/power/supply/bd70528-charger.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF
+> dependency")
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
-index b8e1ec106627..3b820110ecfa 100644
---- a/drivers/power/supply/bd70528-charger.c
-+++ b/drivers/power/supply/bd70528-charger.c
-@@ -335,14 +335,14 @@ static int bd70528_get_present(struct bd70528_psy *bdpsy, int *val)
- 	return 0;
- }
- 
--struct linear_range {
-+struct bd70528_linear_range {
- 	int min;
- 	int step;
- 	int vals;
- 	int low_sel;
- };
- 
--static const struct linear_range current_limit_ranges[] = {
-+static const struct bd70528_linear_range current_limit_ranges[] = {
- 	{
- 		.min = 5,
- 		.step = 1,
-@@ -374,7 +374,7 @@ static const struct linear_range current_limit_ranges[] = {
-  * voltage for low temperatures. The driver currently only reads
-  * the charge current at room temperature. We do set both though.
-  */
--static const struct linear_range warm_charge_curr[] = {
-+static const struct bd70528_linear_range warm_charge_curr[] = {
- 	{
- 		.min = 10,
- 		.step = 10,
-@@ -398,7 +398,7 @@ static const struct linear_range warm_charge_curr[] = {
- #define MAX_WARM_CHG_CURR_SEL 0x1f
- #define MIN_CHG_CURR_SEL 0x0
- 
--static int find_value_for_selector_low(const struct linear_range *r,
-+static int find_value_for_selector_low(const struct bd70528_linear_range *r,
- 				       int selectors, unsigned int sel,
- 				       unsigned int *val)
- {
-@@ -420,7 +420,7 @@ static int find_value_for_selector_low(const struct linear_range *r,
-  * I guess it is enough if we use voltage/current which is closest (below)
-  * the requested?
-  */
--static int find_selector_for_value_low(const struct linear_range *r,
-+static int find_selector_for_value_low(const struct bd70528_linear_range *r,
- 				       int selectors, unsigned int val,
- 				       unsigned int *sel, bool *found)
- {
--- 
-2.21.0
+This has you as the author but you list a signoff by Pierre before you?
 
+--sXc4Kmr5FA7axrvy
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+-----BEGIN PGP SIGNATURE-----
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6DNsMACgkQJNaLcl1U
+h9AAewf/SRLQsBBj6wlAv5rhKMVQLnmnQY5R9scerh2jz6AEv/pHxINQd4zTWjnh
+pIhrebacgZCwofsY/n31xPI/thHIHJIo4bqgKIQs85UkXwCVHXXctSlyWKPsQz7y
+yuwX5Wp7Yamg32an6JuCQo3KCVC5kZt9TMT36nkVKSyhdxmVAkDj7x78EjJRPBTV
+1kvi+UzHvDghla+wt2olnvA5KfhNc2SlMi7hDBPtXAEnHr3XDwVoeDxIwobdLC4j
+KK0gxmGaHrmB5darIqDjRJeRiG9uzurATnY2GJREkJHgOnRV3mZkeOeQ4yFMoAvG
+iJphl8WUXrpNLg0rdwTMnxFHXL4fPg==
+=aJV2
+-----END PGP SIGNATURE-----
+
+--sXc4Kmr5FA7axrvy--
