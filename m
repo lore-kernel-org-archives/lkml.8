@@ -2,107 +2,150 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BA0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D16CC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A433E20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585649039;
-	bh=7F+5e0uIUrP9gif9JBbsKudFuxlnCWBdawj4CpaS5hU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Pjng9p2AK+IHw6l/mtaVTpIQAIYLLqJA+yHovXXft6x55iuVo27yPtrhIme3cNO77
-	 cvqw/yajK1PYQNvuoPfS94VzO1sygr4IEDq/4pbFbrO+NTeTyxxnGlCoVoiq0Rxvo2
-	 nWwqLWvXHv6kRjnShVMY9UUVXKlBcUJ22FmsDizU=
+	by mail.kernel.org (Postfix) with ESMTP id 715BA206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cmh9cw24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbgCaKD6 (ORCPT
+        id S1730388AbgCaKF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:03:58 -0400
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:36449 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730153AbgCaKD6 (ORCPT
+        Tue, 31 Mar 2020 06:05:27 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32925 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729997AbgCaKF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:03:58 -0400
-Received: by mail-wm1-f51.google.com with SMTP id g62so1896189wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 03:03:56 -0700 (PDT)
+        Tue, 31 Mar 2020 06:05:27 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d17so10143528pgo.0;
+        Tue, 31 Mar 2020 03:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=FgHDUvICQzRsu5J2IxUyl5QfRMigRWMaWEUITezGk2Q=;
-        b=Uinvyji3GJbF1sPHoDxAOKE7d+NtZvRPQpymdzJKkJ22pKOtawHhOoI3xofLbiB2a2
-         9ohDa+7eWnJLzoVarkYxa812wVHJr5ajdwHK3tim7AfI0Vs9C7fjgYEohp2tFZXINVMM
-         M6JHniaYhgd9X28G8GcXVhJhQbf73pv3MJ3ELRhZw/AprKcsZuthpBlQhIQfVfhCMjCj
-         hmyazB/UPUnTBwezXe1P9A4DK3Wvhy+GGiwim9qKdGbbSt+jUPzhUpN45/IYuElKdVJ5
-         siVsOlScdoSABQjPnrn5kmmQtanTuedec4Tbtzsnnw7f7JfocVoAVqKo98hwD9TDLDSJ
-         fdPg==
+        h=from:to:cc:subject:date:message-id;
+        bh=MW/RUvnmQuaynAgrPchgXaGJmLy9K9MyZdsdP/atZxQ=;
+        b=Cmh9cw24+M8BWilx0CjDUaHf3t3v0OLeGEIO8C7anSi3OCUwApzJwB0Hw7p6WnUU2H
+         VzCDTbCiTCx7KjDthnON+VQ9NoMDSpUhT+dyRXmi24ctl3Fb0aCmyxTU/WO+Iub2adeN
+         6uWNuA1aM3OR5hjG2UcG4Lehhj4m3w3BbaM1/Y4WBCPWamS5d+6ZlHveR22Klk50zxcS
+         9+K3yze1rm4Nk9/eAQ65MJaRP7i21Szd89R3bx9w/2d9qbu+1rncnYSlV+ET69dVBcCS
+         tDRaa0fYD76+XDtusbMepi42XR2QU8i5ydYHkqzBQacptIj9jIOcyJbHHZ/fDPQZ2U64
+         aaxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=FgHDUvICQzRsu5J2IxUyl5QfRMigRWMaWEUITezGk2Q=;
-        b=h6AU0226/hb2oraBZiSIgO/g4ZDbOBVHqFUnGLGTdddSeD4CAblbpLjH2PBWMyAURV
-         DKGDCPxLl25D1ZydGkf2hJH2LOouqOTLF1kVc5SX/2WIrcZnIxVCP7xMEH0vA3E9IS7e
-         qy3l8s6YxDge/xckSAQtvaulCGtLgf76a94yiSnrW0mQ4Mm/13EjnRWpTUpDo915njhr
-         0bR0xsEl97Z1Dh3659Zt2AsorLgIZzZIsAZ8kiF7VMsWP5vPniX6KHYAGdQy6Z/QqpN4
-         oXmTMBtKTGG2b5+wjRT/ut+b0HYLXEu2raPvSQV/1cj6vD76aL1qpDJ/d5AsCgndIwwX
-         AaGg==
-X-Gm-Message-State: ANhLgQ32Sb7vYzVBmPzp5JzgIBekSXNiC6ldxNd2WTKOk2sr6TksebxD
-        2xMSXRVjh1p4tpUXqEObhO8=
-X-Google-Smtp-Source: ADFU+vvPJk4oau3EJw76PYg8m81JniOJSi2Vwezvg1+8clyKgKFP6Gw1TbgwCTD9qd5WY+ZCSaqbAw==
-X-Received: by 2002:a7b:ce8b:: with SMTP id q11mr1495155wmj.91.1585649035874;
-        Tue, 31 Mar 2020 03:03:55 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id x11sm19939461wru.62.2020.03.31.03.03.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 03:03:55 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 12:03:53 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/vmware changes for v5.7
-Message-ID: <20200331100353.GA37509@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MW/RUvnmQuaynAgrPchgXaGJmLy9K9MyZdsdP/atZxQ=;
+        b=QYVYRSkwl+XQvAK9AZjaoCmYH2j4pRhu0TVB5SBwLnhDgIlOoYHj4SR8r29q85XLxk
+         +nkoLKRhaRC259hmM5Kxx10sPsprXvyHHRJAzkK0+c75NtMssIH85yUVgV+F04rBJlI+
+         EtpVZ3HjdvoAayNb7BRt0D7TO3lgSNjwJvAcrD2zB8Th3uqrz9qqcBo445UwLsCJQp9e
+         mYnIwM/yiywo9Hjyze1ptbm6myxH7GQapr6X4j5NKrw6nYdgJrRiAjGZxYkEFdPhxdVW
+         pA+8qlSjcTDiqA3gxlmU1iqXn5Zm97vP4m/s6gz1aRIdKiKtG93rAW5+lcKTiiBd+u64
+         FR6w==
+X-Gm-Message-State: ANhLgQ0JQkjYZYcx74RVUUUuCPF/6kZZYjWS+8MEGG40gOu4Buje+07k
+        tFuPB32goO7r3H44nmblMyg=
+X-Google-Smtp-Source: ADFU+vvFwk9gIaYwzFtN+osinFKTYw7KGYLSDcNh/AYWbMCZViWyLramfoAPmOtxgl1fyoVsw37kdA==
+X-Received: by 2002:a62:2a8c:: with SMTP id q134mr18037787pfq.35.1585649123998;
+        Tue, 31 Mar 2020 03:05:23 -0700 (PDT)
+Received: from dev.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id y207sm12354592pfb.189.2020.03.31.03.05.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Mar 2020 03:05:22 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     hannes@cmpxchg.org, peterz@infradead.org, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v2 0/2] psi: enhance psi with the help of ebpf
+Date:   Tue, 31 Mar 2020 06:04:35 -0400
+Message-Id: <1585649077-10896-1-git-send-email-laoar.shao@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+PSI gives us a powerful way to anaylze memory pressure issue, but we can
+make it more powerful with the help of tracepoint, kprobe, ebpf and etc.
+Especially with ebpf we can flexiblely get more details of the memory
+pressure.
 
-Please pull the latest x86-vmware-for-linus git tree from:
+In orderc to achieve this goal, a new parameter is added into
+psi_memstall_{enter, leave}, which indicates the specific type of a
+memstall. There're totally ten memstalls by now,
+        MEMSTALL_KSWAPD
+        MEMSTALL_RECLAIM_DIRECT
+        MEMSTALL_RECLAIM_MEMCG
+        MEMSTALL_RECLAIM_HIGH
+        MEMSTALL_KCOMPACTD
+        MEMSTALL_COMPACT
+        MEMSTALL_WORKINGSET_REFAULT
+        MEMSTALL_WORKINGSET_THRASH
+        MEMSTALL_MEMDELAY
+        MEMSTALL_SWAPIO
+With the help of kprobe or tracepoint to trace this newly added agument we
+can know which type of memstall it is and then do corresponding
+improvement. I can also help us to analyze the latency spike caused by
+memory pressure.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-vmware-for-linus
+But note that we can't use it to build memory pressure for a specific type
+of memstall, e.g. memcg pressure, compaction pressure and etc, because it
+doesn't implement various types of task->in_memstall, e.g.
+task->in_memcgstall, task->in_compactionstall and etc.
 
-   # HEAD: 8fefe9dacdb0a1347d3dac871bb1bba3cbc32945 x86/vmware: Use bool type for vmw_sched_clock
+Although there're already some tracepoints can help us to achieve this
+goal, e.g.
+        vmscan:mm_vmscan_kswapd_{wake, sleep}
+        vmscan:mm_vmscan_direct_reclaim_{begin, end}
+        vmscan:mm_vmscan_memcg_reclaim_{begin, end}
+        /* no tracepoint for memcg high reclaim*/
+        compcation:mm_compaction_kcompactd_{wake, sleep}
+        compcation:mm_compaction_begin_{begin, end}
+        /* no tracepoint for workingset refault */
+        /* no tracepoint for workingset thrashing */
+        /* no tracepoint for use memdelay */
+        /* no tracepoint for swapio */
+but psi_memstall_{enter, leave} gives us a unified entrance for all
+types of memstall and we don't need to add many begin and end tracepoints
+that hasn't been implemented yet.
 
-The main change in this tree is the addition of "steal time clock 
-support" for VMware guests.
+Patch #2 gives us an example of how to use it with ebpf. With the help of
+ebpf we can trace a specific task, application, container and etc. It also
+can help us to analyze the spread of latencies and whether they were
+clustered at a point of time or spread out over long periods of time.
 
- Thanks,
+To summarize, with the pressure data in /proc/pressure/memroy we know that
+the system is under memory pressure, and then with the newly added tracing
+facility in this patchset we can get the reason of this memory pressure,
+and then thinks about how to make the change.
+The workflow can be illustrated as bellow.
 
-	Ingo
+		   REASON	  ACTION
+		 | compcation	| improve compcation	|
+		 | vmscan	| improve vmscan	|
+Memory pressure -| workingset	| improve workingset	|
+		 | etc		| ...			|
 
------------------->
-Alexey Makhalov (5):
-      x86/vmware: Make vmware_select_hypercall() __init
-      x86/vmware: Remove vmware_sched_clock_setup()
-      x86/vmware: Add steal time clock support for VMware guests
-      x86/vmware: Enable steal time accounting
-      x86/vmware: Use bool type for vmw_sched_clock
+Yafang Shao (2):
+  psi: introduce various types of memstall
+  psi, tracepoint: introduce tracepoints for psi_memstall_{enter, leave}
 
+ block/blk-cgroup.c           |  4 ++--
+ block/blk-core.c             |  4 ++--
+ include/linux/psi.h          | 15 +++++++++++----
+ include/linux/psi_types.h    | 13 +++++++++++++
+ include/trace/events/sched.h | 41 +++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/psi.c           | 14 ++++++++++++--
+ mm/compaction.c              |  4 ++--
+ mm/filemap.c                 |  4 ++--
+ mm/memcontrol.c              |  4 ++--
+ mm/page_alloc.c              |  8 ++++----
+ mm/page_io.c                 |  4 ++--
+ mm/vmscan.c                  |  8 ++++----
+ 12 files changed, 97 insertions(+), 26 deletions(-)
 
- Documentation/admin-guide/kernel-parameters.txt |   2 +-
- arch/x86/kernel/cpu/vmware.c                    | 229 +++++++++++++++++++++++-
- 2 files changed, 222 insertions(+), 9 deletions(-)
+-- 
+2.18.2
+
