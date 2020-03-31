@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA24C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BA4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405A6208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EA3208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645662;
-	bh=NIxqvIwYmSHXNc7yYh3cDSevwbxvddLQ+0ZJPC75KYQ=;
+	s=default; t=1585645665;
+	bh=IBrtUwAj/kudXzIhfRRZJyZCAvHi7O3Iql1xDAT/T4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZX/kqNK0oQDmiFZxukfd1FNhQb3coMV9fTbb+hdIPz2O9BK6iRyYgA0DbCX7JIL0u
-	 5W7FfRx7kHtQGAjcLsQkIWoQrgQEiFeVnwjtk2x3EepeeUsPOHaSXOXuVbrPzg/4kB
-	 MVTZW8MGzI7r1e4R8M3GA7mru9m/KkN7mCrrEVl0=
+	b=DThnfhZdrOSLisiHpZOwhtkceC/wrTUN+aepIiVqiClSUz0xLYVq8tuzASp+z1XX3
+	 bFw/vD2VcZUXSUB2KAibMuG02Vi1ikoR59zpJwL65x7ofFwmh/0GuWwVVimJlBX+CZ
+	 EHJho1G1kgksKwzm+pV2nQE4U4BeE4opPV06PN5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgCaJHk (ORCPT
+        id S1731261AbgCaJHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49468 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731253AbgCaJHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:07:37 -0400
+        id S1731253AbgCaJHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:07:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 234EC2137B;
-        Tue, 31 Mar 2020 09:07:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF6C20675;
+        Tue, 31 Mar 2020 09:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645656;
-        bh=NIxqvIwYmSHXNc7yYh3cDSevwbxvddLQ+0ZJPC75KYQ=;
+        s=default; t=1585645660;
+        bh=IBrtUwAj/kudXzIhfRRZJyZCAvHi7O3Iql1xDAT/T4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VO3f8AN96FE8nlrKiwYLhyXfGJW/CMrnSJCjAdklj8ol7KUmvfRVDZgoV9k6ao4Pa
-         Fz6eiquMo9mWiuslSjG66kCe+QPh/ly6zMbZyAVMlTLtRWGGIhE9od7eyOQemA4NC9
-         MFEf1/D5rPFb0MszcRIp6VOrxLunKFizFARvPwf8=
+        b=LBuHdiB0m2qNezTdFzUNNhn4+eX8q0bXJz4ojlTD7NovclX2XPG7PBB4x+54RZNOv
+         j8Y5YLc4FpjugyYxKIUzaSXxQyYHAGbzw5sdTfYWdkWqhZXPfC13sR2jD27dU+5eEV
+         NI+wMeELfM+8BY0pWWe2gIzyohqrGnnvfGYPvKRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.5 123/170] vti[6]: fix packet tx through bpf_redirect() in XinY cases
-Date:   Tue, 31 Mar 2020 10:58:57 +0200
-Message-Id: <20200331085437.049155458@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 124/170] RDMA/mlx5: Fix the number of hwcounters of a dynamic counter
+Date:   Tue, 31 Mar 2020 10:58:58 +0200
+Message-Id: <20200331085437.118041944@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,124 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Mark Zhang <markz@mellanox.com>
 
-commit f1ed10264ed6b66b9cd5e8461cffce69be482356 upstream.
+commit ec16b6bbdab1ce2b03f46271460efc7f450658cd upstream.
 
-I forgot the 4in6/6in4 cases in my previous patch. Let's fix them.
+When we read the global counter and there's any dynamic counter allocated,
+the value of a hwcounter is the sum of the default counter and all dynamic
+counters. So the number of hwcounters of a dynamically allocated counter
+must be same as of the default counter, otherwise there will be read
+violations.
 
-Fixes: 95224166a903 ("vti[6]: fix packet tx through bpf_redirect()")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+This fixes the KASAN slab-out-of-bounds bug:
+
+  BUG: KASAN: slab-out-of-bounds in rdma_counter_get_hwstat_value+0x36d/0x390 [ib_core]
+  Read of size 8 at addr ffff8884192a5778 by task rdma/10138
+
+  CPU: 7 PID: 10138 Comm: rdma Not tainted 5.5.0-for-upstream-dbg-2020-02-06_18-30-19-27 #1
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+  Call Trace:
+   dump_stack+0xb7/0x10b
+   print_address_description.constprop.4+0x1e2/0x400
+   ? rdma_counter_get_hwstat_value+0x36d/0x390 [ib_core]
+   __kasan_report+0x15c/0x1e0
+   ? mlx5_ib_query_q_counters+0x13f/0x270 [mlx5_ib]
+   ? rdma_counter_get_hwstat_value+0x36d/0x390 [ib_core]
+   kasan_report+0xe/0x20
+   rdma_counter_get_hwstat_value+0x36d/0x390 [ib_core]
+   ? rdma_counter_query_stats+0xd0/0xd0 [ib_core]
+   ? memcpy+0x34/0x50
+   ? nla_put+0xe2/0x170
+   nldev_stat_get_doit+0x9c7/0x14f0 [ib_core]
+   ...
+   do_syscall_64+0x95/0x490
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  RIP: 0033:0x7fcc457fe65a
+  Code: bb 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 8b 05 fa f1 2b 00 45 89 c9 4c 63 d1 48 63 ff 85 c0 75 15 b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 76 f3 c3 0f 1f 40 00 41 55 41 54 4d 89 c5 55
+  RSP: 002b:00007ffc0586f868 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fcc457fe65a
+  RDX: 0000000000000020 RSI: 00000000013db920 RDI: 0000000000000003
+  RBP: 00007ffc0586fa90 R08: 00007fcc45ac10e0 R09: 000000000000000c
+  R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004089c0
+  R13: 0000000000000000 R14: 00007ffc0586fab0 R15: 00000000013dc9a0
+
+  Allocated by task 9700:
+   save_stack+0x19/0x80
+   __kasan_kmalloc.constprop.7+0xa0/0xd0
+   mlx5_ib_counter_alloc_stats+0xd1/0x1d0 [mlx5_ib]
+   rdma_counter_alloc+0x16d/0x3f0 [ib_core]
+   rdma_counter_bind_qpn_alloc+0x216/0x4e0 [ib_core]
+   nldev_stat_set_doit+0x8c2/0xb10 [ib_core]
+   rdma_nl_rcv_msg+0x3d2/0x730 [ib_core]
+   rdma_nl_rcv+0x2a8/0x400 [ib_core]
+   netlink_unicast+0x448/0x620
+   netlink_sendmsg+0x731/0xd10
+   sock_sendmsg+0xb1/0xf0
+   __sys_sendto+0x25d/0x2c0
+   __x64_sys_sendto+0xdd/0x1b0
+   do_syscall_64+0x95/0x490
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 18d422ce8ccf ("IB/mlx5: Add counter_alloc_stats() and counter_update_stats() support")
+Link: https://lore.kernel.org/r/20200305124052.196688-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/Kconfig   |    1 +
- net/ipv4/ip_vti.c  |   36 +++++++++++++++++++++++++++++-------
- net/ipv6/ip6_vti.c |   32 +++++++++++++++++++++++++-------
- 3 files changed, 55 insertions(+), 14 deletions(-)
+ drivers/infiniband/hw/mlx5/main.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/Kconfig
-+++ b/net/ipv4/Kconfig
-@@ -303,6 +303,7 @@ config SYN_COOKIES
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -5666,9 +5666,10 @@ mlx5_ib_counter_alloc_stats(struct rdma_
+ 	const struct mlx5_ib_counters *cnts =
+ 		get_counters(dev, counter->port - 1);
  
- config NET_IPVTI
- 	tristate "Virtual (secure) IP: tunneling"
-+	depends on IPV6 || IPV6=n
- 	select INET_TUNNEL
- 	select NET_IP_TUNNEL
- 	select XFRM
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -187,17 +187,39 @@ static netdev_tx_t vti_xmit(struct sk_bu
- 	int mtu;
+-	/* Q counters are in the beginning of all counters */
+ 	return rdma_alloc_hw_stats_struct(cnts->names,
+-					  cnts->num_q_counters,
++					  cnts->num_q_counters +
++					  cnts->num_cong_counters +
++					  cnts->num_ext_ppcnt_counters,
+ 					  RDMA_HW_STATS_DEFAULT_LIFESPAN);
+ }
  
- 	if (!dst) {
--		struct rtable *rt;
-+		switch (skb->protocol) {
-+		case htons(ETH_P_IP): {
-+			struct rtable *rt;
- 
--		fl->u.ip4.flowi4_oif = dev->ifindex;
--		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
--		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
--		if (IS_ERR(rt)) {
-+			fl->u.ip4.flowi4_oif = dev->ifindex;
-+			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
-+			if (IS_ERR(rt)) {
-+				dev->stats.tx_carrier_errors++;
-+				goto tx_error_icmp;
-+			}
-+			dst = &rt->dst;
-+			skb_dst_set(skb, dst);
-+			break;
-+		}
-+#if IS_ENABLED(CONFIG_IPV6)
-+		case htons(ETH_P_IPV6):
-+			fl->u.ip6.flowi6_oif = dev->ifindex;
-+			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				dst = NULL;
-+				dev->stats.tx_carrier_errors++;
-+				goto tx_error_icmp;
-+			}
-+			skb_dst_set(skb, dst);
-+			break;
-+#endif
-+		default:
- 			dev->stats.tx_carrier_errors++;
- 			goto tx_error_icmp;
- 		}
--		dst = &rt->dst;
--		skb_dst_set(skb, dst);
- 	}
- 
- 	dst_hold(dst);
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -450,15 +450,33 @@ vti6_xmit(struct sk_buff *skb, struct ne
- 	int mtu;
- 
- 	if (!dst) {
--		fl->u.ip6.flowi6_oif = dev->ifindex;
--		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
--		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
--		if (dst->error) {
--			dst_release(dst);
--			dst = NULL;
-+		switch (skb->protocol) {
-+		case htons(ETH_P_IP): {
-+			struct rtable *rt;
-+
-+			fl->u.ip4.flowi4_oif = dev->ifindex;
-+			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
-+			if (IS_ERR(rt))
-+				goto tx_err_link_failure;
-+			dst = &rt->dst;
-+			skb_dst_set(skb, dst);
-+			break;
-+		}
-+		case htons(ETH_P_IPV6):
-+			fl->u.ip6.flowi6_oif = dev->ifindex;
-+			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				dst = NULL;
-+				goto tx_err_link_failure;
-+			}
-+			skb_dst_set(skb, dst);
-+			break;
-+		default:
- 			goto tx_err_link_failure;
- 		}
--		skb_dst_set(skb, dst);
- 	}
- 
- 	dst_hold(dst);
 
 
