@@ -2,175 +2,146 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E879AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA87C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9246C20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AA120748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d2b2GpYM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="JOlysKBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbgCaESS (ORCPT
+        id S1726328AbgCaEVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 00:18:18 -0400
-Received: from mail-eopbgr60067.outbound.protection.outlook.com ([40.107.6.67]:44512
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbgCaESS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 00:18:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mWt/zS8ZLU9E0hcPOfOxwGwt9JQgX/x79cY4TI7tyDc2/U14JjBKP0KNpt1081sfyGGn+ALo3RDuoR1DrfyP91Odtii75G6UXypK4rI2qb1YkVxmME6VAcC2hCXyW0mnFxEYDOp9I79xyJp805mKOa8K7p8BF3qxjyIBbJ1vOdTtUa62ZTM1cY78X7cxPx6YuIO90dfinWUKZ13EfzCJo2VXzA+X51H7dazwZGkyyNg6iK2/qRnyDyutHQe5OVVaWvYcpcsGlFCtHCnfsDs8s673Cw7URxXdrN58F5OTyPqIojjf2Ko2ExemKrFen+QnImLhyF/RerWM0UZD8MDVkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RwIjb4FCBWO2lb+LYWrWtaUAF+9DvAoa1pJp4nndKHk=;
- b=XxT5QWEfUh+Be/yx1YbltIumkMrmRSbW4cA6iUkO7yfaSm1zwT7MmT+vj2GSRabYmL2Iz++ptknUro6pY1nFi4GZenJ6FFHTYcRKCqgDI61GbddbUy4+4yiU1yzZoceZQKZLn3ortsIlNpqP2mlmZBSchpKSImPcq6uusjCCU25JVdxqMejRG2cjmrLXNBXDBLzds5EeM95icygxQPYJjr+q9M+8APHQQatk/JZgavPrGzS8JLqifGywku5v/fIQclErCGC+x2Qa8Kll5TcKOowqkvQAS0chwJXI9cV7b73BsybB6o9Gidi2iJFzNFc6SEL4nS0tyeSIJ/JI8LESbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RwIjb4FCBWO2lb+LYWrWtaUAF+9DvAoa1pJp4nndKHk=;
- b=d2b2GpYMYuN9RexDel/IAUd5JeZDpDqRQajNqqbwChizwZdUpqX6Sp+BMUTalV55pf92wlEuBb4BocUQ9TdSFbZDOR38iEzWavjosrWvkmWt9UO66Dxxpl872s7tmAu2K8R59AErr4+RkUypGU0irme0WoDRn3OVBl02GfJwi00=
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (10.141.174.88) by
- AM7PR04MB6950.eurprd04.prod.outlook.com (10.141.172.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.18; Tue, 31 Mar 2020 04:18:10 +0000
-Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::dcc0:6a0:c64b:9f94]) by AM7PR04MB6885.eurprd04.prod.outlook.com
- ([fe80::dcc0:6a0:c64b:9f94%2]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
- 04:18:10 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: RE: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
-Thread-Topic: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
-Thread-Index: AQHV/qQWBIiKj5A/T0WD8BjMeGVxRqhXvRSAgADnAvCAALTjgIABSqMQgABMsoCAAQih4IAGMAqA
-Date:   Tue, 31 Mar 2020 04:18:10 +0000
-Message-ID: <AM7PR04MB68853D5057F34E5CF0A26479F8C80@AM7PR04MB6885.eurprd04.prod.outlook.com>
-References: <20200320103726.32559-1-yangbo.lu@nxp.com>
- <20200320103726.32559-7-yangbo.lu@nxp.com> <20200324130733.GA18149@localhost>
- <AM7PR04MB688500546D0FC4A64F0DA19DF8CE0@AM7PR04MB6885.eurprd04.prod.outlook.com>
- <20200325134147.GB32284@localhost>
- <AM7PR04MB68853749A1196B30C917A232F8CF0@AM7PR04MB6885.eurprd04.prod.outlook.com>
- <20200326135941.GA20841@localhost>
- <AM7PR04MB6885113954C96DFD69F2C692F8CC0@AM7PR04MB6885.eurprd04.prod.outlook.com>
-In-Reply-To: <AM7PR04MB6885113954C96DFD69F2C692F8CC0@AM7PR04MB6885.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5523aa37-8719-4672-5d09-08d7d52a85f1
-x-ms-traffictypediagnostic: AM7PR04MB6950:|AM7PR04MB6950:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB6950A505B6CADD6BA48D0989F8C80@AM7PR04MB6950.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0359162B6D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB6885.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(376002)(136003)(39860400002)(396003)(366004)(2906002)(76116006)(81166006)(478600001)(66476007)(81156014)(8936002)(71200400001)(53546011)(66446008)(6506007)(64756008)(8676002)(66946007)(66556008)(5660300002)(4326008)(316002)(33656002)(7696005)(26005)(9686003)(86362001)(186003)(54906003)(55016002)(6916009)(52536014);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dvZ2eo95KjSL4WHcRJZzvlNNoSXE8HhaesORVq4f5XoPpFonTPWy4jxFBkCAVUCgau+xsETdi6Y8OLevqXHcL/mGdglJrFykFONKQTAGyIgxNB0X0VEEwOiMVVwf9nm6OOjA8BKJsblY1rRfzmef5FM2o8f6lvF0iLV4Jy36X4y4vkfbqHk4QHyAOoBamZYUMZbuWEz6XPM8o4BvewBt/hGiqbKx9BB2MwPI4i7QAcy/0PSoqY6QqWbNRcf/pB0wUNom9PUCMLc4ht59vKAEJoFfku6/W+aEowf8Q8FdSPblMOzdEXoA6DdR2aKmrCQcYujxSSI45bs8Bokt2uq4ViHcNj/iiQ0LWEHFUqsLXZ+D2ZSfNR0rWu2oFK2YkVTI0JUqCMpOrZwpXNtwUhavNlWilAgDqn17O6KRlcD0zfLhrJlqGp0A8YxzUo+TYVIy
-x-ms-exchange-antispam-messagedata: gViaHSFnWhCHkEEbhIuKURNmeNC6aVzQkPBpkeRPyZqNzxd+imNieZkkIbXJVOCAp2H0t2G9b0DWu0yIZvw/b8XR1MgugJP5N5WOkaW6xU52+lIBkNrWBnqzji7IcylFSElFdAYRSc3SaYeCfq1A8Q==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 31 Mar 2020 00:21:45 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17983 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725809AbgCaEVo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 00:21:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585628478;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=bT7rXjvoHMOFCMr3Su++NGNORylpvyEgwGAQykaU+Ik=;
+        b=JOlysKBDeALyWOFC1VELta1YeAqqnBgp+RsP0MtIsFPuUuM8ceEyo8nab2pqdxlF
+        R1m6pKQsBjYK6OkcQop57tM70dmysJ+5bgH/r8xlP/ONVmfm40eLRJvNDCMJrFfGYKU
+        D3C+2ki3tU9HTf9uRAKJMcDvWvmYXExb8nuzUMBY=
+Received: from [10.233.233.252] (183.156.33.130 [183.156.33.130]) by mx.zoho.com.cn
+        with SMTPS id 1585628476562765.1152687312807; Tue, 31 Mar 2020 12:21:16 +0800 (CST)
+Date:   Tue, 31 Mar 2020 12:21:10 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <8b7b3b19-d5e2-befb-e781-7be53d2cbd54@loongson.cn>
+References: <1585557531-18849-1-git-send-email-maobibo@loongson.cn> <53CC90A0-3926-4642-91D4-F4F265F6AE90@flygoat.com> <778df899-4dc4-c2be-5b7b-79c16223b0fb@loongson.cn> <1712ea7ba9a.dad1f80a33831.4741900511750683483@flygoat.com> <8b7b3b19-d5e2-befb-e781-7be53d2cbd54@loongson.cn>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5523aa37-8719-4672-5d09-08d7d52a85f1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 04:18:10.8316
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NMF09aeo9RGUHen8HLbJGzxoAFpAqkXLoyNeSeLRP80dAPunAF2kNW/1f/onx+y+nAnMU9eBD9MqFeIkrRMtqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6950
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 02/39] MIPS: loongson64: Add header files path prefix
+To:     maobibo <maobibo@loongson.cn>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <3200DF9C-25CE-4563-B9EC-F81B375E4028@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Y.b. Lu
-> Sent: Friday, March 27, 2020 1:48 PM
-> To: Richard Cochran <richardcochran@gmail.com>
-> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; David S . Mille=
-r
-> <davem@davemloft.net>; Vladimir Oltean <vladimir.oltean@nxp.com>;
-> Claudiu Manoil <claudiu.manoil@nxp.com>; Andrew Lunn <andrew@lunn.ch>;
-> Vivien Didelot <vivien.didelot@gmail.com>; Florian Fainelli
-> <f.fainelli@gmail.com>; Alexandre Belloni <alexandre.belloni@bootlin.com>=
-;
-> Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-> Subject: RE: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
->=20
-> > -----Original Message-----
-> > From: Richard Cochran <richardcochran@gmail.com>
-> > Sent: Thursday, March 26, 2020 10:00 PM
-> > To: Y.b. Lu <yangbo.lu@nxp.com>
-> > Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; David S . Mil=
-ler
-> > <davem@davemloft.net>; Vladimir Oltean <vladimir.oltean@nxp.com>;
-> > Claudiu Manoil <claudiu.manoil@nxp.com>; Andrew Lunn
-> <andrew@lunn.ch>;
-> > Vivien Didelot <vivien.didelot@gmail.com>; Florian Fainelli
-> > <f.fainelli@gmail.com>; Alexandre Belloni <alexandre.belloni@bootlin.co=
-m>;
-> > Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-> > Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
-> >
-> > On Thu, Mar 26, 2020 at 09:34:52AM +0000, Y.b. Lu wrote:
-> > > > Of course, that is horrible, and I am going to find a way to fix it=
-.
-> > >
-> > > Thanks a lot.
-> > > Do you think it is ok to move protection into ptp_set_pinfunc() to pr=
-otect
-> > just pin_config accessing?
-> > > ptp_disable_pinfunc() not touching pin_config could be out of protect=
-ion.
-> > > But it seems indeed total ptp_set_pinfunc() should be under protectio=
-n...
-> >
-> > Yes, and I have way to fix that.  I will post a patch soon...
-> >
-> > > I could modify commit messages to indicate the pin supports both
-> > PTP_PF_PEROUT and PTP_PF_EXTTS, and PTP_PF_EXTTS support will be
-> added
-> > in the future.
-> >
-> > Thanks for explaining.  Since you do have programmable pin, please
-> > wait for my patch to fix the deadlock.
->=20
-> Thanks a lot. Will wait your fix-up.
 
-I see the fix-up was merged. Thanks Richard.
-62582a7 ptp: Avoid deadlocks in the programmable pin code.
 
-I just sent out v2 patch-set based on that:)
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8831=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+1:53:41, maobibo <maobibo@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>
+>
+>On 03/31/2020 11:34 AM, Jiaxun Yang wrote:
+>>=20
+>>=20
+>> --
+>> Jiaxun Yang
+>>=20
+>>  ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E4=B8=80, 2020-03-30 18:00:19 maobib=
+o <maobibo@loongson=2Ecn> =E6=92=B0=E5=86=99
+>----
+>>  >=20
+>>  >=20
+>>  > On 03/30/2020 04:55 PM, Jiaxun Yang wrote:
+>>  > >=20
+>>  > >=20
+>>  > > =E4=BA=8E 2020=E5=B9=B43=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8B=
+=E5=8D=884:38:51, bibo mao <maobibo@loongson=2Ecn>
+>=E5=86=99=E5=88=B0:
+>>  > >> Remove header files from arch/mips/include/asm/mach-loongson64
+>>  > >> to arch/mips/loongson64/include/mach
+>>  > >>
+>>  > >> Signed-off-by: bibo mao <maobibo@loongson=2Ecn>
+>>  > >=20
+>>  > > Hi Bibo,
+>>  > >=20
+>>  > > Thanks for your patch=2E
+>>  > >=20
+>>  > > What's your intention?
+>>  > > Did you meet any problem about headers?
+>>  > >=20
+>>  >=20
+>>  > Hi Jiaxun,
+>>  >=20
+>>  > When I add irqchip support for mips kvm, file virt/kvm/irqchip=2Ec
+>>  > requires local header file arch/mips/kvm/irq=2Eh, it fails to
+>compile=2E
+>>  > Since there is file with the same name located at:
+>>  >   arch/mips/include/asm/mach-generic/irq=2Eh
+>>  >   arch/mips/include/asm/mach-loongson64/irq=2Eh
+>>  >=20
+>>  > The compiler fails to choose the correct header file irq=2Eh,
+>>=20
+>> You'd better rename kvm's irq=2Eh in this case=2E
+>why should we rename kvm's irq=2Eh?  It works on other arches like
+>x86/aarch/powerpc, it does not work on mips platform=2E Just because
+>these
+>header files are not used with path prefix on mips system, it brings
+>out
+>such problem=2E
+>
+>Today if we modify generic kvm code, it maybe brings out problem with
+>other modules tommorrow=2E Else we declare that these files can be
+>defined
+>locally on all modules:
+>  cpu-feature-overrides=2Eh  floppy=2Eh  ide=2Eh  ioremap=2Eh  irq=2Eh
+>  kernel-entry-init=2Eh  kmalloc=2Eh  mangle-port=2Eh  mc146818rtc=2Eh
 
->=20
-> Best regards,
-> Yangbo Lu
->=20
-> >
-> > Thanks,
-> > Richard
+It sounds reasonable=2E
+But I just don't want to rush into this kind of tree wide
+"scrub" unless the problem is urgent=2E
+
+For your problem, a simple workaround might be fine=2E
+
+And there might be some reference to these mach headers in other subsystem=
+s=2E
+
+Please examine them extremely carefully and do compile test with
+all yes config for all the platforms=2E
+
+Thomas said he is going to drop some platform support in this cycle,
+so you can do less work after that=2E
+
+I'll miss these header hacks anyway=2E
+
+Thanks=2E
+
+>
+>regard
+>bibo,mao
+>
+>>=20
+>>  >=20
+>>  > regards
+>>  > bibo,mao
+>>  >=20
+--=20
+Jiaxun Yang
