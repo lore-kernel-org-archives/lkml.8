@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A78AC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C30C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A5C20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBADA2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645715;
-	bh=0YWN7uw21TRiOC+QdCdepE6qoKwvoYs7NgnThVS7TJk=;
+	s=default; t=1585645720;
+	bh=Tj/iq0FRyUK/KJfzZTg+0+d4QNo001tjbb7+70vHkUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SzX/LUPoLQdDIEDxm1XSa3UxS5XLs8fC0aXi9030LN42tOfZ7xLHnNu2maK3289Qn
-	 EPdNEfaoPz+0WU1umRrxti4t2ilf+z+E2+qr+zQZv0DLXBF8qAKtCS8j56+fBTV+Qm
-	 v8COmJeVUgX2PrT9OH9HkDv/N8Yjd0RzssoYbwoA=
+	b=eL9xvUC5RSfbrFQcFr6bkGceCi/f9fYu//Ccwk1c++GIElAgXRbDgYXvu+x4nkuZw
+	 fTRDQt4FOMr11SB/giG6OjIx45oJW/EM1KE9zW/T4+zry2ybXcfpG36G7p7eZBEdlU
+	 G5vpmlxCd4BDRUcHa9gN3PDGh2f8veuG050HdZ/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731363AbgCaJId (ORCPT
+        id S1731370AbgCaJIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:08:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730570AbgCaJIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:08:32 -0400
+        id S1730570AbgCaJIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:08:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AB4620787;
-        Tue, 31 Mar 2020 09:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B726F2072E;
+        Tue, 31 Mar 2020 09:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645711;
-        bh=0YWN7uw21TRiOC+QdCdepE6qoKwvoYs7NgnThVS7TJk=;
+        s=default; t=1585645714;
+        bh=Tj/iq0FRyUK/KJfzZTg+0+d4QNo001tjbb7+70vHkUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikkR2CbCmz25jxnslqQraa/S+8H+9Co9d68kJCFlII/SabMcbt/NNaqwksfcA8CR+
-         FtxSg2gDshXMtHdE9/J6MDVTfKVsCpkGLDvK24mqjB+R3X/xN8DPIYMv3FZWOt14y9
-         5EPXNaVkaFwhIcVFRCvzl04cOmx2HRx5I6xHBXdg=
+        b=PsYS3PkFWv94gHxV+WZM2er/Dau1subeq7z3JvE54vSQ5ync4DsDzbaFmZygTMCDm
+         XGf//FPjQB77Ku4ImrMEcIW3x1OPxdHNrJQJ3DwNPITtNHExT8Cx/CCDnnPfKS7eS6
+         /PhB2xmcUMLfOLFpx38or0Zkrzc17WgvWzQOoLzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 113/170] mm/sparse: fix kernel crash with pfn_section_valid check
-Date:   Tue, 31 Mar 2020 10:58:47 +0200
-Message-Id: <20200331085436.185695146@linuxfoundation.org>
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.5 140/170] bpf, x32: Fix bug with JMP32 JSET BPF_X checking upper bits
+Date:   Tue, 31 Mar 2020 10:59:14 +0200
+Message-Id: <20200331085438.307159701@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -70,126 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-commit b943f045a9af9fd02f923e43fe8d7517e9961701 upstream.
+commit 80f1f85036355e5581ec0b99913410345ad3491b upstream.
 
-Fix the crash like this:
+The current x32 BPF JIT is incorrect for JMP32 JSET BPF_X when the upper
+32 bits of operand registers are non-zero in certain situations.
 
-    BUG: Kernel NULL pointer dereference on read at 0x00000000
-    Faulting instruction address: 0xc000000000c3447c
-    Oops: Kernel access of bad area, sig: 11 [#1]
-    LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-    CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
-    ...
-    NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
-    LR [c000000000088354] vmemmap_free+0x144/0x320
-    Call Trace:
-       section_deactivate+0x220/0x240
-       __remove_pages+0x118/0x170
-       arch_remove_memory+0x3c/0x150
-       memunmap_pages+0x1cc/0x2f0
-       devm_action_release+0x30/0x50
-       release_nodes+0x2f8/0x3e0
-       device_release_driver_internal+0x168/0x270
-       unbind_store+0x130/0x170
-       drv_attr_store+0x44/0x60
-       sysfs_kf_write+0x68/0x80
-       kernfs_fop_write+0x100/0x290
-       __vfs_write+0x3c/0x70
-       vfs_write+0xcc/0x240
-       ksys_write+0x7c/0x140
-       system_call+0x5c/0x68
+The problem is in the following code:
 
-The crash is due to NULL dereference at
-
-	test_bit(idx, ms->usage->subsection_map);
-
-due to ms->usage = NULL in pfn_section_valid()
-
-With commit d41e2f3bd546 ("mm/hotplug: fix hot remove failure in
-SPARSEMEM|!VMEMMAP case") section_mem_map is set to NULL after
-depopulate_section_mem().  This was done so that pfn_page() can work
-correctly with kernel config that disables SPARSEMEM_VMEMMAP.  With that
-config pfn_to_page does
-
-	__section_mem_map_addr(__sec) + __pfn;
-
-where
-
-  static inline struct page *__section_mem_map_addr(struct mem_section *section)
-  {
-	unsigned long map = section->section_mem_map;
-	map &= SECTION_MAP_MASK;
-	return (struct page *)map;
-  }
-
-Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is
-used to check the pfn validity (pfn_valid()).  Since section_deactivate
-release mem_section->usage if a section is fully deactivated,
-pfn_valid() check after a subsection_deactivate cause a kernel crash.
-
-  static inline int pfn_valid(unsigned long pfn)
-  {
+  case BPF_JMP | BPF_JSET | BPF_X:
+  case BPF_JMP32 | BPF_JSET | BPF_X:
   ...
-	return early_section(ms) || pfn_section_valid(ms, pfn);
-  }
 
-where
+  /* and dreg_lo,sreg_lo */
+  EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
+  /* and dreg_hi,sreg_hi */
+  EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
+  /* or dreg_lo,dreg_hi */
+  EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
 
-  static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
-  {
-	int idx = subsection_map_index(pfn);
+This code checks the upper bits of the operand registers regardless if
+the BPF instruction is BPF_JMP32 or BPF_JMP64. Registers dreg_hi and
+dreg_lo are not loaded from the stack for BPF_JMP32, however, they can
+still be polluted with values from previous instructions.
 
-	return test_bit(idx, ms->usage->subsection_map);
-  }
+The following BPF program demonstrates the bug. The jset64 instruction
+loads the temporary registers and performs the jump, since ((u64)r7 &
+(u64)r8) is non-zero. The jset32 should _not_ be taken, as the lower
+32 bits are all zero, however, the current JIT will take the branch due
+the pollution of temporary registers from the earlier jset64.
 
-Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is
-freed.  For architectures like ppc64 where large pages are used for
-vmmemap mapping (16MB), a specific vmemmap mapping can cover multiple
-sections.  Hence before a vmemmap mapping page can be freed, the kernel
-needs to make sure there are no valid sections within that mapping.
-Clearing the section valid bit before depopulate_section_memap enables
-this.
+  mov64    r0, 0
+  ld64     r7, 0x8000000000000000
+  ld64     r8, 0x8000000000000000
+  jset64   r7, r8, 1
+  exit
+  jset32   r7, r8, 1
+  mov64    r0, 2
+  exit
 
-[aneesh.kumar@linux.ibm.com: add comment]
-  Link: http://lkml.kernel.org/r/20200326133235.343616-1-aneesh.kumar@linux.ibm.comLink: http://lkml.kernel.org/r/20200325031914.107660-1-aneesh.kumar@linux.ibm.com
-Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The expected return value of this program is 2; under the buggy x32 JIT
+it returns 0. The fix is to skip using the upper 32 bits for jset32 and
+compare the upper 32 bits for jset64 only.
+
+All tests in test_bpf.ko and selftests/bpf/test_verifier continue to
+pass with this change.
+
+We found this bug using our automated verification tool, Serval.
+
+Fixes: 69f827eb6e14 ("x32: bpf: implement jitting of JMP32")
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20200305234416.31597-1-luke.r.nels@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/sparse.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/net/bpf_jit_comp32.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -791,6 +791,12 @@ static void section_deactivate(unsigned
- 			ms->usage = NULL;
+--- a/arch/x86/net/bpf_jit_comp32.c
++++ b/arch/x86/net/bpf_jit_comp32.c
+@@ -2039,10 +2039,12 @@ static int do_jit(struct bpf_prog *bpf_p
+ 			}
+ 			/* and dreg_lo,sreg_lo */
+ 			EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
+-			/* and dreg_hi,sreg_hi */
+-			EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
+-			/* or dreg_lo,dreg_hi */
+-			EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
++			if (is_jmp64) {
++				/* and dreg_hi,sreg_hi */
++				EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
++				/* or dreg_lo,dreg_hi */
++				EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
++			}
+ 			goto emit_cond_jmp;
  		}
- 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-+		/*
-+		 * Mark the section invalid so that valid_section()
-+		 * return false. This prevents code from dereferencing
-+		 * ms->usage array.
-+		 */
-+		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
- 	}
- 
- 	if (section_is_early && memmap)
+ 		case BPF_JMP | BPF_JSET | BPF_K:
 
 
