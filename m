@@ -2,102 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E23C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E41C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE0E20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF35E208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585692811;
+	bh=rFvt+ToLBB95MFxc/H8l53W1M0wuKHcQEL61VsTaY90=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lACxvatVFOh/M7MWcbgeZmvr0PYBVBL/on33EjehbOXKH0APSRrlA+P/1N9O5sIza
+	 QQO3J2SAIq6rmtnreg6mcoW+PVCgRaMfTj0VrPMu4fykj5c4xmrR0S8b3c3+yJ5A0V
+	 7g2FS/CsH1d8qE+aJt/W/tm5C19R1XjXy6Wx8u4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbgCaWN2 (ORCPT
+        id S1731367AbgCaWN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:13:28 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:54175 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731255AbgCaWN1 (ORCPT
+        Tue, 31 Mar 2020 18:13:27 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45600 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaWN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 18:13:27 -0400
-Received: from dread.disaster.area (pa49-179-23-206.pa.nsw.optusnet.com.au [49.179.23.206])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 89CFF7EA612;
-        Wed,  1 Apr 2020 09:13:25 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jJP8O-00058z-H4; Wed, 01 Apr 2020 09:13:24 +1100
-Date:   Wed, 1 Apr 2020 09:13:24 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: xfs metadata corruption since 30 March
-Message-ID: <20200331221324.GZ10776@dread.disaster.area>
-References: <990EDC4E-1A4E-4AC3-84D9-078ACF5EB9CC@lca.pw>
+Received: by mail-lf1-f68.google.com with SMTP id v4so18658627lfo.12
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mtbYTciJK07jpdPYpkNJRH8jV4d1kYg8E62AbUGe3pw=;
+        b=HE60VHr7dC08AjHaH2CgEeHp+dZk7gZqcXrCAw5ifgJOucC6ubxyOlVQwquxMFIsF5
+         O6NSLvh2yE3irvxWcdx+uCSeJo3zKjKq1sRi3XBH/Ek+Vj7dHkcye6EDJRRI6WOUV++t
+         61C7te9TAISjpbHISGWt0qjBDA6+IaHouXsas=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mtbYTciJK07jpdPYpkNJRH8jV4d1kYg8E62AbUGe3pw=;
+        b=Up1+C8Z9ASg+/VUQN64ROJRd0No6lnnNGDhu0cQ14MxKwDbjn+wy8rC/kMPx66o8VA
+         a8OTAVgdIoQVKmn5DNATigdXx0b2Ua9BLAqyqfTXKk3VV+GskZg7xxVAcbNTdgi84jxG
+         56As+yIwNMxA7R6ymLYnrA7ruWk1mizxfeHReqVO2KLNTVYLsdxDaUl9Nj2/ljxueMnq
+         BLiz2KNGEB+hrbkK1B4iqxW2J7DMBZfA39vwt2eXFGF9hlZ3EnSMQ1OIal8OScGV7EZ/
+         dzBMD/oUA1Obs3T2vpTWKmeA9pRmCxN1kQi4ehHISBpBxILiuN1kOEfwIC58I2EeEU1W
+         ca9A==
+X-Gm-Message-State: AGi0PubvIzvD324lrLQHJlCV+j9dAJetzUYpfXjyvsHaDymSSVZsiMTy
+        rE2BhAM5pzOg4o1JaopmwMcRCWmOXP8=
+X-Google-Smtp-Source: APiQypJsb6KXHjMilNHfOE/Mblc2HDKdpOkL/lVIRmXZNDJ0/i73V6bliIOwmZ8EXVBy2H+eYX3gyQ==
+X-Received: by 2002:ac2:5327:: with SMTP id f7mr10348987lfh.214.1585692803545;
+        Tue, 31 Mar 2020 15:13:23 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id f2sm9268199ljn.101.2020.03.31.15.13.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 15:13:22 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id u15so9607257lfi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:13:22 -0700 (PDT)
+X-Received: by 2002:a19:7f96:: with SMTP id a144mr12862417lfd.31.1585692801950;
+ Tue, 31 Mar 2020 15:13:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <990EDC4E-1A4E-4AC3-84D9-078ACF5EB9CC@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=n/Z79dAqQwRlp4tcgfhWYA==:117 a=n/Z79dAqQwRlp4tcgfhWYA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=7DPh_joMaso9liLfkDcA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <CAHC9VhQoqpqiFncTP1w0+--hGTwcm57LXgrXVsGnNqcRSof1WA@mail.gmail.com>
+In-Reply-To: <CAHC9VhQoqpqiFncTP1w0+--hGTwcm57LXgrXVsGnNqcRSof1WA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 31 Mar 2020 15:13:06 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgZ6WCa_8dK4=DBiFMqP5yHzmSgZHqdXuEqHUcejUtw2A@mail.gmail.com>
+Message-ID: <CAHk-=wgZ6WCa_8dK4=DBiFMqP5yHzmSgZHqdXuEqHUcejUtw2A@mail.gmail.com>
+Subject: Re: [GIT PULL] SELinux patches for v5.7
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     selinux@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:57:24PM -0400, Qian Cai wrote:
-> Ever since two days ago, linux-next starts to trigger xfs metadata corruption
-> during compilation workloads on both powerpc and arm64,
+On Mon, Mar 30, 2020 at 5:38 PM Paul Moore <paul@paul-moore.com> wrote:
+>
+> The merge conflict is in security/selinux/hooks.c and is against a
+> binder fs name fix we sent during the v5.6-rcX cycle; the fixup is
+> trivial but if you need me to fix it, let me know.
 
-Is this on an existing filesystem, or a new filesystem?
+No problem, it was as trivial as you said, and I don't think I screwed it up.
 
-> I suspect it could be one of those commits,
-> 
-> https://lore.kernel.org/linux-xfs/20200328182533.GM29339@magnolia/
-> 
-> Especially, those commits that would mark corruption more aggressively?
-> 
->       [8d57c21600a5] xfs: add a function to deal with corrupt buffers post-verifiers
->       [e83cf875d67a] xfs: xfs_buf_corruption_error should take __this_address
->       [ce99494c9699] xfs: fix buffer corruption reporting when xfs_dir3_free_header_check fails
->       [1cb5deb5bc09] xfs: don't ever return a stale pointer from __xfs_dir3_free_read
->       [6fb5aac73310] xfs: check owner of dir3 free blocks
->       [a10c21ed5d52] xfs: check owner of dir3 data blocks
->       [1b2c1a63b678] xfs: check owner of dir3 blocks
->       [2e107cf869ee] xfs: mark dir corrupt when lookup-by-hash fails
->       [806d3909a57e] xfs: mark extended attr corrupt when lookup-by-hash fails
+I appreciate the heads-up, though, since not only does it mean I don't
+get nasty surprises, it also means that I get that warm and fuzzy
+feeling of knowing you're on the ball..
 
-Doubt it - they only add extra detection code and these:
+> The maintainer
+> screw-up deals with the second patch from the top of the pull request,
+> the NFS fix.  The screw-up isn't the fact that this is a NFS patch, we
+> talked to the NFS guys and they are okay with it.  The issue is that
+> the commit date is today - during the merge window - which doesn't
+> reflect the testing the patch received.  The reality is that I merged
+> this patch back on March 12th, and it has been part of our testing
+> ever since, but when putting this pull request together I noticed that
+> I had dropped the subject line from the patch when I was merging it.
+> Not wanting a malformed commit, I popped the top two patches from the
+> stack and restored the missing subject line; this had the unfortunate
+> side effect of making it look like the two top patches were just
+> merged today - my apologies.
 
-> [29331.182313][  T665] XFS (dm-2): Metadata corruption detected at xfs_inode_buf_verify+0x2b8/0x350 [xfs], xfs_inode block 0xa9b97900 xfs_inode_buf_verify
-> xfs_inode_buf_verify at fs/xfs/libxfs/xfs_inode_buf.c:101
-> [29331.182373][  T665] XFS (dm-2): Unmount and run xfs_repair
-> [29331.182386][  T665] XFS (dm-2): First 128 bytes of corrupted metadata buffer:
-> [29331.182402][  T665] 00000000: 2f 2a 20 53 50 44 58 2d 4c 69 63 65 6e 73 65 2d  /* SPDX-License-
-> [29331.182426][  T665] 00000010: 49 64 65 6e 74 69 66 69 65 72 3a 20 47 50 4c 2d  Identifier: GPL-
+Again, this is very much the way to let me know, so that I don't get
+that uneasy feeling about anything.
 
-Would get caught by the existing  verifiers as they aren't valid
-metadata at all.
+Thanks.
 
-Basically, you are getting file data where there should be inode
-metadata. First thing to do is fix the existing corruptions with
-xfs_repair - please post the entire output so we can see what was
-corruption and what it fixed.
-
-Then if the problem is still reproducable, I suspect you are going
-to have to bisect it. i.e. run test, get corruption, mark bisect
-bad, run xfs_repair or mkfs to fix mess, install new kernel, run
-test again....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+               Linus
