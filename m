@@ -2,142 +2,84 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EC6C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE06C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD50C206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZYmNlggm"
+	by mail.kernel.org (Postfix) with ESMTP id E1E1F20757
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgCaF4o (ORCPT
+        id S1726582AbgCaGEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:56:44 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26641 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726216AbgCaF4n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:56:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585634203; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=KhlT5+PQRIk/0ZJMDG0Z38jPRs2dicpw6nQbDYSyMhU=; b=ZYmNlggm5fgY0KpUv2cse/pRAVwuZuWnnXHkR33PQYlOso/VrUR2S+VJ09moyxtdGHYGiwVY
- Jpz6ru/gzRIMmjjWPK77RQtZ9TJHcQJXOxDy26v0it+jQSr2cjvjLfHl9xK61TRDEQ7kxccu
- 3TRSEqAPHLZ4eG4NI/3PoFDyKw4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e82db85.7fba377c3c70-smtp-out-n01;
- Tue, 31 Mar 2020 05:56:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AE955C433D2; Tue, 31 Mar 2020 05:56:20 +0000 (UTC)
-Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E5B8C433F2;
-        Tue, 31 Mar 2020 05:55:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E5B8C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   Rakesh Pillai <pillair@codeaurora.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-Subject: [PATCH v8] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Tue, 31 Mar 2020 11:24:57 +0530
-Message-Id: <1585634097-4590-1-git-send-email-pillair@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 31 Mar 2020 02:04:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12660 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725809AbgCaGEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 02:04:12 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 128B67015BC6416B1C16;
+        Tue, 31 Mar 2020 14:04:05 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 31 Mar 2020 14:04:01 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <davem@davemloft.net>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <kuba@kernel.org>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
+        <kafai@fb.com>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>, <jwi@linux.ibm.com>,
+        <toshiaki.makita1@gmail.com>, <jianglidong3@jd.com>,
+        <edumazet@google.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH net v2] veth: xdp: use head instead of hard_start
+Date:   Tue, 31 Mar 2020 14:06:41 +0800
+Message-ID: <20200331060641.79999-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
+References: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device node for the ath10k SNOC platform driver probe
-and add resources required for WCN3990 on sc7180 soc.
+xdp.data_hard_start is equal to first address of
+struct xdp_frame, which is mentioned in
+convert_to_xdp_frame(). But the pointer hard_start
+in veth_xdp_rcv_one() is 32 bytes offset of frame,
+so it should use head instead of hard_start to
+set xdp.data_hard_start. Otherwise, if BPF program
+calls helper_function such as bpf_xdp_adjust_head, it
+will be confused for xdp_frame_end.
 
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 ---
+ v2: add fixes tag, as well as commit log.
+ drivers/net/veth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Depends on https://patchwork.kernel.org/patch/11455345/
-The above patch adds the dt-bindings for wifi-firmware
-subnode
-
-Changes from v7:
-- Correct the wlan_fw_mem start address
----
- arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 043c9b9..a6168a4 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -327,6 +327,14 @@
- 	};
- };
+diff --git a/drivers/net/veth.c b/drivers/net/veth.c
+index d4cbb9e8c63f..5ea550884bf8 100644
+--- a/drivers/net/veth.c
++++ b/drivers/net/veth.c
+@@ -506,7 +506,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
+ 		struct xdp_buff xdp;
+ 		u32 act;
  
-+&wifi {
-+	status = "okay";
-+	qcom,msa-fixed-perm;
-+	wifi-firmware {
-+		iommus = <&apps_smmu 0xc2 0x1>;
-+	};
-+};
-+
- /* PINCTRL - additions to nodes defined in sc7180.dtsi */
- 
- &qspi_clk {
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 998f101..c03b6a7 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -83,6 +83,11 @@
- 			reg = <0 0x8f600000 0 0x500000>;
- 			no-map;
- 		};
-+
-+		wlan_fw_mem: memory@94100000 {
-+			reg = <0 0x94100000 0 0x200000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
-@@ -835,6 +840,28 @@
- 			};
- 		};
- 
-+		wifi: wifi@18800000 {
-+			compatible = "qcom,wcn3990-wifi";
-+			reg = <0 0x18800000 0 0x800000>;
-+			reg-names = "membase";
-+			iommus = <&apps_smmu 0xc0 0x1>;
-+			interrupts =
-+				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-+				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-+				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-+				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-+				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-+				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-+				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-+				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-+				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-+				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-+				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-+				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-+			memory-region = <&wlan_fw_mem>;
-+			status = "disabled";
-+		};
-+
- 		config_noc: interconnect@1500000 {
- 			compatible = "qcom,sc7180-config-noc";
- 			reg = <0 0x01500000 0 0x28000>;
+-		xdp.data_hard_start = hard_start;
++		xdp.data_hard_start = head;
+ 		xdp.data = frame->data;
+ 		xdp.data_end = frame->data + frame->len;
+ 		xdp.data_meta = frame->data - frame->metasize;
 -- 
-2.7.4
+2.20.1
+
