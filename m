@@ -2,94 +2,171 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4B1C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA9AC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DC220578
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585673381;
-	bh=yHAS29L5m0Tj17+jqpkqcxGQISwvDIxvJMm/vfNg7QU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VliCdtGIl4iCVGbq+fsEwRQIcCdzN0ikNF4+1wXWpvRyNIlhmmGjl3eVZtCle0Ac8
-	 F6e+yb1x8hCTyI8GWomrXU/x/tM9+npiD/aUvn0QqMy+Lqxfnu0zIpNOLdyo9OxlEY
-	 pMjHJcktVMy0bbMWQSwS588WUVaRv4C9iv5YXPSY=
+	by mail.kernel.org (Postfix) with ESMTP id 0211C20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:50:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbgCaQtk (ORCPT
+        id S1731203AbgCaQuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:49:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38442 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCaQtk (ORCPT
+        Tue, 31 Mar 2020 12:50:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:36294 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730592AbgCaQuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:49:40 -0400
-Received: by mail-io1-f65.google.com with SMTP id m15so22495993iob.5;
-        Tue, 31 Mar 2020 09:49:39 -0700 (PDT)
+        Tue, 31 Mar 2020 12:50:05 -0400
+Received: by mail-io1-f72.google.com with SMTP id s66so19833811iod.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:50:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3QwrQutvISOdwRt5xFRlvMoy4S4i7e5APKKFlmWfPlI=;
-        b=PvlCBlOVhWpiEE5vOlhHcqN26W3aL5DkkchPoDew3CcASddiAUT2tm3rbub6g58/U6
-         y6UbJDsXPEaMQ86yFvefEQAT7/skAvRU9KmpQ/3mM47im7p/rHF275Ag59VllBgo+GD9
-         E1SR6I77dXgOqvAKi1V4abV2UCa/2u7GkfDWbsuuKmoB+EqqGQvfeOTOnYpZR2UKmapI
-         08Q49ocMaabZMLSOhasoLTIFhj+cGGDVJ3qHuDZB4G2wCHZ8e7crL1Z3PB/qQXde7rwd
-         os5C1S4d494Yx2zyTPWrO0F5gyrYH9L8Ffri8zKw6qtC5vo354BuHsi91KdK4UJs9Q/9
-         AwsA==
-X-Gm-Message-State: ANhLgQ33odvHo52AVS4GKqggNVwT126y0KI4yq6Ivt3emb+8Dy0WFKbJ
-        oiIKz8uniI6isEqG1lcvjg==
-X-Google-Smtp-Source: ADFU+vu0uvJu27akUkqWds8x0YrvgBWePU3mk/Nwbnw0BEYSzZyw5fX/kIW3WxqJWs3yGGKUbPvnEA==
-X-Received: by 2002:a02:5a82:: with SMTP id v124mr8013603jaa.132.1585673378445;
-        Tue, 31 Mar 2020 09:49:38 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l17sm6133742ilf.28.2020.03.31.09.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 09:49:37 -0700 (PDT)
-Received: (nullmailer pid 20383 invoked by uid 1000);
-        Tue, 31 Mar 2020 16:49:36 -0000
-Date:   Tue, 31 Mar 2020 10:49:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     fabrice.gasnier@st.com, lee.jones@linaro.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] dt-bindings: mfd: Document STM32 low power timer
- bindings
-Message-ID: <20200331164936.GA18783@bogus>
-References: <20200331083146.10462-1-benjamin.gaignard@st.com>
- <20200331083146.10462-2-benjamin.gaignard@st.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=FnPVIE4Y4YoAbVewZLcfDMvis4c3vgY/mVpUeoEtT+Y=;
+        b=ndDQXfxVLGsWqveh5UbjpTMxIPTuc+e5F+WxjTbrkpalq7Z4MW+1ngWswpZN31fYKx
+         dl6SdRnODtCtBXfNnVtcXugy8aMdhEljHo7+I1VF6fNNtBfBs3lPcNvpC7lc9bTwZZe9
+         CL1LN2hDzAzf3tKPGwv3wOGAjE7Rwm6mhVo2b4HmKINR3OoaDL94LgV7dbUrl/GbbbtC
+         5y9IbT+W7ZHbf5zaIU6JAkzsvypMqK7oFA4XJsW3rWs47jIPoUwJMv5XmUFv617KWD9R
+         XFyPcdAum8+7pk4BUGHGDpMGCctUuiPiN4qPhNsCMxjO/C1cwLcYxhKSxycF2gzzdh12
+         BmYQ==
+X-Gm-Message-State: ANhLgQ0HXUhJdBbzK00iSUtUY4lhjhOW8JIGROgUmUATMHn5MHnMMWrA
+        9VxWvtP1HJrQai8zGGONfCBBGjMhFyrg8rVNavMKntEAdgiY
+X-Google-Smtp-Source: ADFU+vv/iTauQfniYclFQg/kjihb1SPLPslGxg7z0kHqR/jnKPkNv1jM5/SfGgQjO4Jm58kCuRt6HLbibZICuV6sU4IKTlrrofCQ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331083146.10462-2-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a02:7a18:: with SMTP id a24mr16791632jac.54.1585673403754;
+ Tue, 31 Mar 2020 09:50:03 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:50:03 -0700
+In-Reply-To: <CADG63jCwP1D3dBRFTB6FXePD6ys5n1j+1=JrkJjZXC80eKLehQ@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f5ede505a2295b59@google.com>
+Subject: Re: KASAN: use-after-free Write in ath9k_htc_rx_msg
+From:   syzbot <syzbot+b1c61e5f11be5782f192@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, anenbupt@gmail.com,
+        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:31:41AM +0200, Benjamin Gaignard wrote:
-> Add a subnode to STM low power timer bindings to support timer driver
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 5:
-> - the previous has been acked-by Rob but since I have docummented
->   interrupts and interrupt-names properties I haven't applied it here.
-> 
-> version 4:
-> - change compatible and subnode names
-> - document wakeup-source property
-> 
->  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+Hello,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+syzbot has tested the proposed patch but the reproducer still triggered crash:
+KASAN: use-after-free Write in ath9k_htc_rx_msg
+
+==================================================================
+BUG: KASAN: use-after-free in htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
+BUG: KASAN: use-after-free in ath9k_htc_rx_msg+0xa25/0xaf0 drivers/net/wireless/ath/ath9k/htc_hst.c:442
+Write of size 2 at addr ffff8881d46881b0 by task swapper/0/0
+
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ htc_process_conn_rsp drivers/net/wireless/ath/ath9k/htc_hst.c:131 [inline]
+ ath9k_htc_rx_msg+0xa25/0xaf0 drivers/net/wireless/ath/ath9k/htc_hst.c:442
+ ath9k_hif_usb_reg_in_cb+0x1ba/0x630 drivers/net/wireless/ath/ath9k/hif_usb.c:718
+ __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
+ usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
+ dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+ call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+ __do_softirq+0x21e/0x950 kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x178/0x1a0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:default_idle+0x28/0x300 arch/x86/kernel/process.c:696
+Code: cc cc 41 56 41 55 65 44 8b 2d 04 3b 72 7a 41 54 55 53 0f 1f 44 00 00 e8 b6 27 b5 fb e9 07 00 00 00 0f 00 2d aa d0 52 00 fb f4 <65> 44 8b 2d e0 3a 72 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
+RSP: 0018:ffffffff87007d80 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: ffffffff8702cc40 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff8702d48c
+RBP: fffffbfff0e05988 R08: ffffffff8702cc40 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: ffffffff87e612c0 R15: 0000000000000000
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x3e0/0x500 kernel/sched/idle.c:269
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:361
+ start_kernel+0xe16/0xe5a init/main.c:998
+ secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:242
+
+Allocated by task 2593:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
+ slab_post_alloc_hook mm/slab.h:584 [inline]
+ slab_alloc_node mm/slub.c:2786 [inline]
+ slab_alloc mm/slub.c:2794 [inline]
+ kmem_cache_alloc+0xd8/0x300 mm/slub.c:2799
+ getname_flags fs/namei.c:138 [inline]
+ getname_flags+0xd2/0x5b0 fs/namei.c:128
+ do_sys_openat2+0x3cf/0x740 fs/open.c:1140
+ do_sys_open+0xc3/0x140 fs/open.c:1162
+ do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 2593:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
+ slab_free_hook mm/slub.c:1444 [inline]
+ slab_free_freelist_hook mm/slub.c:1477 [inline]
+ slab_free mm/slub.c:3034 [inline]
+ kmem_cache_free+0x9b/0x360 mm/slub.c:3050
+ putname+0xe1/0x120 fs/namei.c:259
+ do_sys_openat2+0x43a/0x740 fs/open.c:1155
+ do_sys_open+0xc3/0x140 fs/open.c:1162
+ do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881d4688000
+ which belongs to the cache names_cache of size 4096
+The buggy address is located 432 bytes inside of
+ 4096-byte region [ffff8881d4688000, ffff8881d4689000)
+The buggy address belongs to the page:
+page:ffffea000751a200 refcount:1 mapcount:0 mapping:ffff8881da11c000 index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da11c000
+raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881d4688080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881d4688100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881d4688180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                     ^
+ ffff8881d4688200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881d4688280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+Tested on:
+
+commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d6096de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a782c087b1f425c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=b1c61e5f11be5782f192
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1782b063e00000
+
