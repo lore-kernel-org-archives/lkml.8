@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE0AC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AE8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B3F20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E629320787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645655;
-	bh=P+xbvLnFql78MXSZ8QQAh7lcSKnJ3y236Lpr2qx86rw=;
+	s=default; t=1585645659;
+	bh=bg3dzst6b/qDwfReX3F+WLNx7bdv+k/dh8LP372xMk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mxAPGn2K/giAyxXTNLrOoIpd77spiwH5u1RvR+rNAbed0pE7fK8Zdzi+uV5SKz7OX
-	 loTCWaZ0gqUVqmv+besvc/VojkryeEoI5idwOyOdHsKogSgKXgPkhezWBiLGL6w9JG
-	 oZg0XVoQywIR3uaZqL0UBdzch6h7HarvWJWujFtA=
+	b=AbVVXDRY1D+twEOVH9dAcqEmPI5064E/okzwiOAoMQijym3rFgL++Zfjo5Iaks10z
+	 j1yN4/6bD0lnyGX5Qpg4AwXSLbPPiZJ5XdDr78yZL0fbBEKjnkgybEoUR/zp8FgeaK
+	 FJWcqBK4yIqNul2gEBt5lLJyhhjxv7mRg3uD7ygc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731244AbgCaJHe (ORCPT
+        id S1731252AbgCaJHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:07:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730807AbgCaJH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:07:28 -0400
+        id S1731235AbgCaJH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:07:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0C220B1F;
-        Tue, 31 Mar 2020 09:07:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C37C20675;
+        Tue, 31 Mar 2020 09:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645648;
-        bh=P+xbvLnFql78MXSZ8QQAh7lcSKnJ3y236Lpr2qx86rw=;
+        s=default; t=1585645645;
+        bh=bg3dzst6b/qDwfReX3F+WLNx7bdv+k/dh8LP372xMk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JfxoGPC0GdXQ/3HCA15ZK2rkPuoWHHo6dC3ipdtdRAnAkpNaJKbiMMojNr3AI5xuU
-         IaAtr5ir6Tr9nIjr0rf9NIvnmf4d4nc7WXcLIySMKEoF7Nv/nXasdPxgYPCsy+sjWn
-         st6xQp0XPsXUb9yonfx03Q9C3aKGbR/OO+MiIg+o=
+        b=TsnD06R8HDaEDyrV6VM66vG4vToXdBuqQ2EJJCxzuB6CYhms/N67XW31tmhHKS4Mz
+         C/xMuglQScvHzZL4eZLj7t3j9uYRQ/TNkkUC4w7BjQgm1d9P4rVM2lr3Y73mHXP0MW
+         3TKLewLcAKrbJ0SNiHLk/AEYDxCn8tvVs2WeW2t8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.5 120/170] afs: Fix handling of an abort from a service handler
-Date:   Tue, 31 Mar 2020 10:58:54 +0200
-Message-Id: <20200331085436.828924963@linuxfoundation.org>
+        stable@vger.kernel.org, Naohiro Aota <naohiro.aota@wdc.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qais Youef <qais.yousef@arm.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 111/170] mm/swapfile.c: move inode_lock out of claim_swapfile
+Date:   Tue, 31 Mar 2020 10:58:45 +0200
+Message-Id: <20200331085435.972835256@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -58,203 +63,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Naohiro Aota <naohiro.aota@wdc.com>
 
-commit dde9f095583b3f375ba23979045ee10dfcebec2f upstream.
+commit d795a90e2ba024dbf2f22107ae89c210b98b08b8 upstream.
 
-When an AFS service handler function aborts a call, AF_RXRPC marks the call
-as complete - which means that it's not going to get any more packets from
-the receiver.  This is a problem because reception of the final ACK is what
-triggers afs_deliver_to_call() to drop the final ref on the afs_call
-object.
+claim_swapfile() currently keeps the inode locked when it is successful,
+or the file is already swapfile (with -EBUSY).  And, on the other error
+cases, it does not lock the inode.
 
-Instead, aborted AFS service calls may then just sit around waiting for
-ever or until they're displaced by a new call on the same connection
-channel or a connection-level abort.
+This inconsistency of the lock state and return value is quite confusing
+and actually causing a bad unlock balance as below in the "bad_swap"
+section of __do_sys_swapon().
 
-Fix this by calling afs_set_call_complete() to finalise the afs_call struct
-representing the call.
+This commit fixes this issue by moving the inode_lock() and IS_SWAPFILE
+check out of claim_swapfile().  The inode is unlocked in
+"bad_swap_unlock_inode" section, so that the inode is ensured to be
+unlocked at "bad_swap".  Thus, error handling codes after the locking now
+jumps to "bad_swap_unlock_inode" instead of "bad_swap".
 
-However, we then need to drop the ref that stops the call from being
-deallocated.  We can do this in afs_set_call_complete(), as the work queue
-is holding a separate ref of its own, but then we shouldn't do it in
-afs_process_async_call() and afs_delete_async_call().
+    =====================================
+    WARNING: bad unlock balance detected!
+    5.5.0-rc7+ #176 Not tainted
+    -------------------------------------
+    swapon/4294 is trying to release lock (&sb->s_type->i_mutex_key) at: __do_sys_swapon+0x94b/0x3550
+    but there are no more locks to release!
 
-call->drop_ref is set to indicate that a ref needs dropping for a call and
-this is dealt with when we transition a call to AFS_CALL_COMPLETE.
+    other info that might help us debug this:
+    no locks held by swapon/4294.
 
-But then we also need to get rid of the ref that pins an asynchronous
-client call.  We can do this by the same mechanism, setting call->drop_ref
-for an async client call too.
+    stack backtrace:
+    CPU: 5 PID: 4294 Comm: swapon Not tainted 5.5.0-rc7-BTRFS-ZNS+ #176
+    Hardware name: ASUS All Series/H87-PRO, BIOS 2102 07/29/2014
+    Call Trace:
+     dump_stack+0xa1/0xea
+     print_unlock_imbalance_bug.cold+0x114/0x123
+     lock_release+0x562/0xed0
+     up_write+0x2d/0x490
+     __do_sys_swapon+0x94b/0x3550
+     __x64_sys_swapon+0x54/0x80
+     do_syscall_64+0xa4/0x4b0
+     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    RIP: 0033:0x7f15da0a0dc7
 
-We can also get rid of call->incoming since nothing ever sets it and only
-one thing ever checks it (futilely).
-
-
-A trace of the rxrpc_call and afs_call struct ref counting looks like:
-
-          <idle>-0     [001] ..s5   164.764892: rxrpc_call: c=00000002 SEE u=3 sp=rxrpc_new_incoming_call+0x473/0xb34 a=00000000442095b5
-          <idle>-0     [001] .Ns5   164.766001: rxrpc_call: c=00000002 QUE u=4 sp=rxrpc_propose_ACK+0xbe/0x551 a=00000000442095b5
-          <idle>-0     [001] .Ns4   164.766005: rxrpc_call: c=00000002 PUT u=3 sp=rxrpc_new_incoming_call+0xa3f/0xb34 a=00000000442095b5
-          <idle>-0     [001] .Ns7   164.766433: afs_call: c=00000002 WAKE  u=2 o=11 sp=rxrpc_notify_socket+0x196/0x33c
-     kworker/1:2-1810  [001] ...1   164.768409: rxrpc_call: c=00000002 SEE u=3 sp=rxrpc_process_call+0x25/0x7ae a=00000000442095b5
-     kworker/1:2-1810  [001] ...1   164.769439: rxrpc_tx_packet: c=00000002 e9f1a7a8:95786a88:00000008:09c5 00000001 00000000 02 22 ACK CallAck
-     kworker/1:2-1810  [001] ...1   164.769459: rxrpc_call: c=00000002 PUT u=2 sp=rxrpc_process_call+0x74f/0x7ae a=00000000442095b5
-     kworker/1:2-1810  [001] ...1   164.770794: afs_call: c=00000002 QUEUE u=3 o=12 sp=afs_deliver_to_call+0x449/0x72c
-     kworker/1:2-1810  [001] ...1   164.770829: afs_call: c=00000002 PUT   u=2 o=12 sp=afs_process_async_call+0xdb/0x11e
-     kworker/1:2-1810  [001] ...2   164.771084: rxrpc_abort: c=00000002 95786a88:00000008 s=0 a=1 e=1 K-1
-     kworker/1:2-1810  [001] ...1   164.771461: rxrpc_tx_packet: c=00000002 e9f1a7a8:95786a88:00000008:09c5 00000002 00000000 04 00 ABORT CallAbort
-     kworker/1:2-1810  [001] ...1   164.771466: afs_call: c=00000002 PUT   u=1 o=12 sp=SRXAFSCB_ProbeUuid+0xc1/0x106
-
-The abort generated in SRXAFSCB_ProbeUuid(), labelled "K-1", indicates that
-the local filesystem/cache manager didn't recognise the UUID as its own.
-
-Fixes: 2067b2b3f484 ("afs: Fix the CB.ProbeUuid service handler to reply correctly")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 1638045c3677 ("mm: set S_SWAPFILE on blockdev swap devices")
+Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Qais Youef <qais.yousef@arm.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200206090132.154869-1-naohiro.aota@wdc.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/afs/cmservice.c |   14 ++++++++++++--
- fs/afs/internal.h  |   12 ++++++++++--
- fs/afs/rxrpc.c     |   33 ++++-----------------------------
- 3 files changed, 26 insertions(+), 33 deletions(-)
+ mm/swapfile.c |   39 +++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 20 deletions(-)
 
---- a/fs/afs/cmservice.c
-+++ b/fs/afs/cmservice.c
-@@ -244,6 +244,17 @@ static void afs_cm_destructor(struct afs
- }
- 
- /*
-+ * Abort a service call from within an action function.
-+ */
-+static void afs_abort_service_call(struct afs_call *call, u32 abort_code, int error,
-+				   const char *why)
-+{
-+	rxrpc_kernel_abort_call(call->net->socket, call->rxcall,
-+				abort_code, error, why);
-+	afs_set_call_complete(call, error, 0);
-+}
-+
-+/*
-  * The server supplied a list of callbacks that it wanted to break.
-  */
- static void SRXAFSCB_CallBack(struct work_struct *work)
-@@ -510,8 +521,7 @@ static void SRXAFSCB_ProbeUuid(struct wo
- 	if (memcmp(r, &call->net->uuid, sizeof(call->net->uuid)) == 0)
- 		afs_send_empty_reply(call);
- 	else
--		rxrpc_kernel_abort_call(call->net->socket, call->rxcall,
--					1, 1, "K-1");
-+		afs_abort_service_call(call, 1, 1, "K-1");
- 
- 	afs_put_call(call);
- 	_leave("");
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -154,7 +154,7 @@ struct afs_call {
- 	};
- 	unsigned char		unmarshall;	/* unmarshalling phase */
- 	unsigned char		addr_ix;	/* Address in ->alist */
--	bool			incoming;	/* T if incoming call */
-+	bool			drop_ref;	/* T if need to drop ref for incoming call */
- 	bool			send_pages;	/* T if data from mapping should be sent */
- 	bool			need_attention;	/* T if RxRPC poked us */
- 	bool			async;		/* T if asynchronous */
-@@ -1209,8 +1209,16 @@ static inline void afs_set_call_complete
- 		ok = true;
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -2899,10 +2899,6 @@ static int claim_swapfile(struct swap_in
+ 		p->bdev = inode->i_sb->s_bdev;
  	}
- 	spin_unlock_bh(&call->state_lock);
--	if (ok)
-+	if (ok) {
- 		trace_afs_call_done(call);
-+
-+		/* Asynchronous calls have two refs to release - one from the alloc and
-+		 * one queued with the work item - and we can't just deallocate the
-+		 * call because the work item may be queued again.
-+		 */
-+		if (call->drop_ref)
-+			afs_put_call(call);
-+	}
+ 
+-	inode_lock(inode);
+-	if (IS_SWAPFILE(inode))
+-		return -EBUSY;
+-
+ 	return 0;
  }
  
- /*
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -18,7 +18,6 @@ struct workqueue_struct *afs_async_calls
+@@ -3157,17 +3153,22 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 	mapping = swap_file->f_mapping;
+ 	inode = mapping->host;
  
- static void afs_wake_up_call_waiter(struct sock *, struct rxrpc_call *, unsigned long);
- static void afs_wake_up_async_call(struct sock *, struct rxrpc_call *, unsigned long);
--static void afs_delete_async_call(struct work_struct *);
- static void afs_process_async_call(struct work_struct *);
- static void afs_rx_new_call(struct sock *, struct rxrpc_call *, unsigned long);
- static void afs_rx_discard_new_call(struct rxrpc_call *, unsigned long);
-@@ -402,8 +401,10 @@ void afs_make_call(struct afs_addr_curso
- 	/* If the call is going to be asynchronous, we need an extra ref for
- 	 * the call to hold itself so the caller need not hang on to its ref.
+-	/* If S_ISREG(inode->i_mode) will do inode_lock(inode); */
+ 	error = claim_swapfile(p, inode);
+ 	if (unlikely(error))
+ 		goto bad_swap;
+ 
++	inode_lock(inode);
++	if (IS_SWAPFILE(inode)) {
++		error = -EBUSY;
++		goto bad_swap_unlock_inode;
++	}
++
+ 	/*
+ 	 * Read the swap header.
  	 */
--	if (call->async)
-+	if (call->async) {
- 		afs_get_call(call, afs_call_trace_get);
-+		call->drop_ref = true;
-+	}
- 
- 	/* create a call */
- 	rxcall = rxrpc_kernel_begin_call(call->net->socket, srx, call->key,
-@@ -584,8 +585,6 @@ static void afs_deliver_to_call(struct a
- done:
- 	if (call->type->done)
- 		call->type->done(call);
--	if (state == AFS_CALL_COMPLETE && call->incoming)
--		afs_put_call(call);
- out:
- 	_leave("");
- 	return;
-@@ -745,21 +744,6 @@ static void afs_wake_up_async_call(struc
- }
- 
- /*
-- * Delete an asynchronous call.  The work item carries a ref to the call struct
-- * that we need to release.
-- */
--static void afs_delete_async_call(struct work_struct *work)
--{
--	struct afs_call *call = container_of(work, struct afs_call, async_work);
--
--	_enter("");
--
--	afs_put_call(call);
--
--	_leave("");
--}
--
--/*
-  * Perform I/O processing on an asynchronous call.  The work item carries a ref
-  * to the call struct that we either need to release or to pass on.
-  */
-@@ -774,16 +758,6 @@ static void afs_process_async_call(struc
- 		afs_deliver_to_call(call);
+ 	if (!mapping->a_ops->readpage) {
+ 		error = -EINVAL;
+-		goto bad_swap;
++		goto bad_swap_unlock_inode;
+ 	}
+ 	page = read_mapping_page(mapping, 0, swap_file);
+ 	if (IS_ERR(page)) {
+@@ -3179,14 +3180,14 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 	maxpages = read_swap_header(p, swap_header, inode);
+ 	if (unlikely(!maxpages)) {
+ 		error = -EINVAL;
+-		goto bad_swap;
++		goto bad_swap_unlock_inode;
  	}
  
--	if (call->state == AFS_CALL_COMPLETE) {
--		/* We have two refs to release - one from the alloc and one
--		 * queued with the work item - and we can't just deallocate the
--		 * call because the work item may be queued again.
--		 */
--		call->async_work.func = afs_delete_async_call;
--		if (!queue_work(afs_async_calls, &call->async_work))
--			afs_put_call(call);
--	}
--
- 	afs_put_call(call);
- 	_leave("");
- }
-@@ -810,6 +784,7 @@ void afs_charge_preallocation(struct wor
- 			if (!call)
- 				break;
+ 	/* OK, set up the swap map and apply the bad block list */
+ 	swap_map = vzalloc(maxpages);
+ 	if (!swap_map) {
+ 		error = -ENOMEM;
+-		goto bad_swap;
++		goto bad_swap_unlock_inode;
+ 	}
  
-+			call->drop_ref = true;
- 			call->async = true;
- 			call->state = AFS_CALL_SV_AWAIT_OP_ID;
- 			init_waitqueue_head(&call->waitq);
+ 	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
+@@ -3211,7 +3212,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 					GFP_KERNEL);
+ 		if (!cluster_info) {
+ 			error = -ENOMEM;
+-			goto bad_swap;
++			goto bad_swap_unlock_inode;
+ 		}
+ 
+ 		for (ci = 0; ci < nr_cluster; ci++)
+@@ -3220,7 +3221,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 		p->percpu_cluster = alloc_percpu(struct percpu_cluster);
+ 		if (!p->percpu_cluster) {
+ 			error = -ENOMEM;
+-			goto bad_swap;
++			goto bad_swap_unlock_inode;
+ 		}
+ 		for_each_possible_cpu(cpu) {
+ 			struct percpu_cluster *cluster;
+@@ -3234,13 +3235,13 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 
+ 	error = swap_cgroup_swapon(p->type, maxpages);
+ 	if (error)
+-		goto bad_swap;
++		goto bad_swap_unlock_inode;
+ 
+ 	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
+ 		cluster_info, maxpages, &span);
+ 	if (unlikely(nr_extents < 0)) {
+ 		error = nr_extents;
+-		goto bad_swap;
++		goto bad_swap_unlock_inode;
+ 	}
+ 	/* frontswap enabled? set up bit-per-page map for frontswap */
+ 	if (IS_ENABLED(CONFIG_FRONTSWAP))
+@@ -3280,7 +3281,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 
+ 	error = init_swap_address_space(p->type, maxpages);
+ 	if (error)
+-		goto bad_swap;
++		goto bad_swap_unlock_inode;
+ 
+ 	/*
+ 	 * Flush any pending IO and dirty mappings before we start using this
+@@ -3290,7 +3291,7 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 	error = inode_drain_writes(inode);
+ 	if (error) {
+ 		inode->i_flags &= ~S_SWAPFILE;
+-		goto bad_swap;
++		goto bad_swap_unlock_inode;
+ 	}
+ 
+ 	mutex_lock(&swapon_mutex);
+@@ -3315,6 +3316,8 @@ SYSCALL_DEFINE2(swapon, const char __use
+ 
+ 	error = 0;
+ 	goto out;
++bad_swap_unlock_inode:
++	inode_unlock(inode);
+ bad_swap:
+ 	free_percpu(p->percpu_cluster);
+ 	p->percpu_cluster = NULL;
+@@ -3322,6 +3325,7 @@ bad_swap:
+ 		set_blocksize(p->bdev, p->old_block_size);
+ 		blkdev_put(p->bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
+ 	}
++	inode = NULL;
+ 	destroy_swap_extents(p);
+ 	swap_cgroup_swapoff(p->type);
+ 	spin_lock(&swap_lock);
+@@ -3333,13 +3337,8 @@ bad_swap:
+ 	kvfree(frontswap_map);
+ 	if (inced_nr_rotate_swap)
+ 		atomic_dec(&nr_rotate_swap);
+-	if (swap_file) {
+-		if (inode) {
+-			inode_unlock(inode);
+-			inode = NULL;
+-		}
++	if (swap_file)
+ 		filp_close(swap_file, NULL);
+-	}
+ out:
+ 	if (page && !IS_ERR(page)) {
+ 		kunmap(page);
 
 
