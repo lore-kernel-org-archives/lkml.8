@@ -2,88 +2,83 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF29C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF92C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B710B20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585693709;
-	bh=+H9KYhTtif68WkFgafmI7NOvOk2qeubzD+Ql+KQDxVw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=qrDgCbIlYYvp86P8iCllxX2UXPlWZeyDDToYvxzqAcWjEondczuqc9rjY7hN2pg2z
-	 rwIpD8LMq/WzHtcS9UZ0u7LDwhocMFg4ONONndrwv+VfP8VczX7mW+o7/J/8PQXQJx
-	 mJzsbhmtZkyqPObicXWAYORWKe4UYtydDMhiWnFU=
+	by mail.kernel.org (Postfix) with ESMTP id 214C920787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:29:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="SqTtYT0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbgCaW22 (ORCPT
+        id S1731497AbgCaW3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:28:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33602 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727955AbgCaW22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:28:28 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8481320787;
-        Tue, 31 Mar 2020 22:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585693708;
-        bh=+H9KYhTtif68WkFgafmI7NOvOk2qeubzD+Ql+KQDxVw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZJp0Q0KBO4cZ7UQ8Q9pq3OHIGpglwfs4UCLvDkvjDjy45J1WQUuyNbzTpWMHw32c6
-         404GXODq9yE3d260tmuGtNwdUXRgQU94G30Sf/fgBz6M5negMD5Sco9OYw7tzLDNXX
-         Qo2tfzmfITPhRTq9ToMn0y+vuhCiuMs+nSDbwMhs=
-Subject: Re: [PATCH 5.5 000/171] 5.5.14-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200331141450.035873853@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ecc90e76-fe9b-fd58-5eaf-dd0bfb433b0d@kernel.org>
-Date:   Tue, 31 Mar 2020 16:28:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 31 Mar 2020 18:29:03 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46253 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaW3C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 18:29:02 -0400
+Received: by mail-qk1-f194.google.com with SMTP id u4so24932861qkj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oPoi9s3rBPglRyVbK9MBhYyYu13c18TXPi71CbVQVpk=;
+        b=SqTtYT0zo8AT/7bG/6GBA7zmIQtZBva52UjWxHaBAFH+zgmuU7kyBugY6NFUaXrBeq
+         6bpLplZ/sxNgCTGS+92/8O72wVE4sZk5JnRE9hviebuKNpjhvwB07/IFgkJDaRcJQy7h
+         fuhNwVf929ETl+0pedmNfaLjcE6gQCPgmNiYbyEEOvQyyMjEEB/NnyIgd22LFEw/AZuN
+         7C2/gDHepVW/RV9/LAVFXDS38kLVjNqCvWrmXNQPg96IRpjg4M3rcDYuAGn1ZPpKPhDp
+         HEqFoAo+D/1O//ctK/ooKx2E1UughUQcITILG4SUJTd68YfHP938m95dYQPDW5HDg/uJ
+         Y/vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oPoi9s3rBPglRyVbK9MBhYyYu13c18TXPi71CbVQVpk=;
+        b=J2zh9dIDz/nS2f08wsQdovg9sOWYBObnjRjxP5dHqbzxmFRp3dYzoMkASq3dtuWUdw
+         MZb/vqrsEhggCk9qz6B5HgpL3xi1xwN5BcmFfrxACb9sTmEGpvOgmAWfAAiNIRwnc+Bu
+         kWpga7n7wrW1MV6AGeG+20cVZ7qjVJM1FBhG/EOQYsiGgbBFtEIL4woLAdSUEU86SsVG
+         2EXIHi+Gl/g4PeTiDzyHM5JbDHgc6XG+A8Ntq2uFHHpDnWTQq1VHSkmJ2XXboUVYgw+j
+         eLJpEjikhOcUKIf0YJm7tLSGxjswDsw9sJHsh85/msn7kueMRLK/PjwSGpM3CAvOhCsi
+         1Uxg==
+X-Gm-Message-State: ANhLgQ2fGQ/uZYRmiN+wlFJZs7AVKIJeBS61VPVMYa+33+8oI8u+x3fE
+        yLhzpLE2fCbhQi5hH9szPdTpJQ==
+X-Google-Smtp-Source: ADFU+vvCu4qHgFR6s5NfZIjtIf9WjNDoQvgV9EeC0cyylVFte2B6Dnv4zBvDYTCKukRVjzSX0xo2iQ==
+X-Received: by 2002:a37:9b4c:: with SMTP id d73mr6568366qke.242.1585693741416;
+        Tue, 31 Mar 2020 15:29:01 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id 206sm238659qkn.36.2020.03.31.15.28.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 15:29:01 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     linux-doc@vger.kernel.org
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH 0/2] Documentation: Convert sysfs-pci to ReST
+Date:   Tue, 31 Mar 2020 19:28:55 -0300
+Message-Id: <cover.1585693146.git.vitor@massaru.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <20200331141450.035873853@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 9:32 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.14 release.
-> There are 171 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 02 Apr 2020 14:12:02 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.14-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Vitor Massaru Iha (2):
+  Documentation: filesystems: Convert sysfs-pci to ReST
+  Documentation: filesystems: remove whitespaces
 
-Compiled and booted on my test system. No dmesg regressions.
+ .../{sysfs-pci.txt => sysfs-pci.rst}          | 44 ++++++++++---------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
+ rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst} (81%)
 
-thanks,
--- Shuah
+-- 
+2.21.1
 
