@@ -2,64 +2,163 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3E0C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAE0C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9808B206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933F5207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:34:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CrcLjf5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgCaA1w (ORCPT
+        id S1729648AbgCaAeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:27:52 -0400
-Received: from mx.sdf.org ([205.166.94.20]:50593 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729509AbgCaA1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:27:52 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02V0Rcil008616
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Tue, 31 Mar 2020 00:27:39 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02V0RcpH025667;
-        Tue, 31 Mar 2020 00:27:38 GMT
-Date:   Tue, 31 Mar 2020 00:27:38 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, lkml@sdf.org
-Subject: Re: [RFC PATCH v1 44/50] arm64: ptr auth: Use get_random_u64 instead
- of _bytes
-Message-ID: <20200331002738.GE9199@SDF.ORG>
-References: <202003281643.02SGhOi3016886@sdf.org>
- <20200330105745.GA1309@C02TD0UTHF1T.local>
- <20200330193237.GC9199@SDF.ORG>
+        Mon, 30 Mar 2020 20:34:18 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10780 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729299AbgCaAeS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 20:34:18 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e828fd80000>; Mon, 30 Mar 2020 17:33:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 30 Mar 2020 17:34:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 30 Mar 2020 17:34:16 -0700
+Received: from [10.2.57.122] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 31 Mar
+ 2020 00:34:15 +0000
+Subject: Re: [PATCH 3/3] kernel/hung_task convert hung_task_panic boot
+ parameter to sysctl
+To:     Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
+CC:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <linux-mm@kvack.org>,
+        Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-4-vbabka@suse.cz> <202003301042.97F3B00@keescook>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <13ae67d8-4b31-db20-7ba4-1602906a291e@nvidia.com>
+Date:   Mon, 30 Mar 2020 17:34:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330193237.GC9199@SDF.ORG>
+In-Reply-To: <202003301042.97F3B00@keescook>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585614808; bh=obsV1UARPS0bhJ0G+nqxDoZVF3Y4NftMC1+6ch1S31A=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CrcLjf5XXnta60pIlUd4E7H1NdfGknlCWJRtYGrj8ldZ6gZlN5X338rTi3VfumCcp
+         v6TI7Cvuuv3N2tEDq2EX0Uei3cRAnqrwrtie5e8B6JFM3kYzc4MCv+XmGseiFHfsLy
+         3AvrSXk5ILdH3+4NLwFMo41stsmpqcyBTuyFbTaFWnJz++1GMdPNlWUje9jzy6iN4E
+         f6XKURucBI7rkG5Kp0lkEMoycC5oPK8Hj1noLpXGzMC28Hes2UJQjT5lhz5eyVDsLt
+         zo5bXMyelp6WwkT76rCvwsumjM3iy5J2Now7sp2ZdnHYo7KoaLP/N3hYZOKSOn9hD/
+         BSozNoXu4MhRg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:32:37PM +0000, George Spelvin wrote:
-> On Mon, Mar 30, 2020 at 11:57:45AM +0100, Mark Rutland wrote:
->> As I am unaware, how does the cost of get_random_bytes() compare to the
->> cost of get_random_u64()?
+On 3/30/20 10:43 AM, Kees Cook wrote:
+...
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 81ff626fc700..e0b8840404a1 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -1457,7 +1457,7 @@
+>>   			[KNL] Should the hung task detector generate panics.
+>>   			Format: <integer>
+>>   
+>> -			A nonzero value instructs the kernel to panic when a
+>> +			A value of 1 instructs the kernel to panic when a
+>>   			hung task is detected. The default value is controlled
+>>   			by the CONFIG_BOOTPARAM_HUNG_TASK_PANIC build-time
+>>   			option. The value selected by this boot parameter can
+>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+>> index 97eb0b552bf8..77b1b844b02b 100644
+>> --- a/fs/proc/proc_sysctl.c
+>> +++ b/fs/proc/proc_sysctl.c
+>> @@ -1743,6 +1743,7 @@ struct sysctl_alias {
+>>    */
+>>   static const struct sysctl_alias sysctl_aliases[] = {
+>>   	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+
+
+Hi Vlastimil,
+
+Maybe best to delete the above line? Because:
+
+     a) it was added as an example, and now that you have a real use case in this patch,
+        the example is no longer required, and
+
+     b) numa_zonelist_order is deprecated, as a boot param. Adding support to it in this
+        brand-new mechanism seems to be going a bit in the opposite direction of deprecation.
+
+And, I don't think you really want all the sysctls to be enabled as boot params, right? Your
+comment right above sysctl_aliases[] (shown in patch 2) sort of indicates that only some items
+are meant to be both sysctl's and boot params. And that makes sense.
+
+In fact, the sysctl_aliases[] is (or could be) effectively the whitelist that Luis Chamberlain
+was requesting in another thread. A whitelist makes good sense, for the reasons Luis listed.
+As such, keeping it limited to items that we want, seems like the way to go, IMHO.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
+
+>> +	{"hung_task_panic",		"kernel.hung_task_panic" },
+>>   	{ }
+>>   };
+>>   
+>> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+>> index 14a625c16cb3..b22b5eeab3cb 100644
+>> --- a/kernel/hung_task.c
+>> +++ b/kernel/hung_task.c
+>> @@ -63,16 +63,6 @@ static struct task_struct *watchdog_task;
+>>   unsigned int __read_mostly sysctl_hung_task_panic =
+>>   				CONFIG_BOOTPARAM_HUNG_TASK_PANIC_VALUE;
+>>   
+>> -static int __init hung_task_panic_setup(char *str)
+>> -{
+>> -	int rc = kstrtouint(str, 0, &sysctl_hung_task_panic);
+>> -
+>> -	if (rc)
+>> -		return rc;
+>> -	return 1;
+>> -}
+>> -__setup("hung_task_panic=", hung_task_panic_setup);
+>> -
+>>   static int
+>>   hung_task_panic(struct notifier_block *this, unsigned long event, void *ptr)
+>>   {
+>> -- 
+>> 2.25.1
+>>
 > 
-> It's approximately 8 times the cost.
-
-Just a expand on on a point I may have left unclear: One 
-get_random_bytes(), for a length up to 32 bytes, is approximately
-8x the one get_random_u64().  (Then it jumps to 16x for up
-to 96 bytes.)
-
-Since were're using *two* get_random_u64() calls to replace one
-get_random_bytes(), it's a 4x cost difference between the two
-alternative ways of generating a 128-bit key.
