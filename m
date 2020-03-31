@@ -2,149 +2,229 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19150C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD778C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8CA020776
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F1F020748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbgCaFBO (ORCPT
+        id S1726426AbgCaFCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:01:14 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:47621 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgCaFBO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:01:14 -0400
-Received: by mail-io1-f71.google.com with SMTP id c2so18303900iok.14
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 22:01:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=h1EcTAjBL9giECRKEy/OwPSPCm+qEqUPJT92ImACxKU=;
-        b=fpn0TkfmgIhtg5nuMibI46S66CcRdSWWW4kh5bwoN2UWEofaObxBtFl0QPKOQU/YAI
-         k+FN00MWl2e15iaFj9TjI8lIBYtVw43g6nZdJ0KuRLBx/T9toMjVxobgRrGb8WPPB1tk
-         +GHTCq9DVGseUAqrbcelct1YI7fFGlWobbTAhFn34fTZiHl6gz4t8VaggSFrhXHjMJid
-         L8yOvEZiKJIQl6f7h8CJRcHnDZcZBkxI9w1oZVT3nRZlPMhE90tfrRa+m2k6M491/plJ
-         YWgLiQRZKWKHKngCf5TpJ2a9jr4sDL8lu7ZzJpamIKXhoGg/xo8TyviGiQCxHu3Qcw7D
-         MGLg==
-X-Gm-Message-State: ANhLgQ20eXKwDzAMBy6n49Psa/fsmgWi5d19svDvu4lE/AEQOs5LuwNw
-        CAZtNKsT78m35866JQRH1E3pP2jp/31ygml9eUcdlJ8bQdEn
-X-Google-Smtp-Source: ADFU+vs8PEM6n/rOiITdNiiyeJ82cuLzZayEjKLAJ7DTImTlXS234lT8tWx2MLM2/7MEa6TXZgYZ9RkLAF3OnzGV8sPOPAJ8Cxj7
+        Tue, 31 Mar 2020 01:02:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:42556 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgCaFCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 01:02:39 -0400
+IronPort-SDR: bP8VyzM41dR65H9mjT/N2rXOMgQUUt0CnZkQSJlN8ZMfjQmQhvTL3ixonSDnXXm+ALrQ4ibpIl
+ m+p6leDaCu5w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 22:02:38 -0700
+IronPort-SDR: SGkY7AcNeGoks8wjIxO5mQBYElSn5rlPxXqNNGZg787AlYtih96yaAWeKcJlZwXdML1UUJZrpy
+ HsqY7Tzjvu2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
+   d="scan'208";a="267158195"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2020 22:02:36 -0700
+Date:   Tue, 31 Mar 2020 12:41:20 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH v3 2/7] fpga: dfl: pci: add irq info for feature devices
+ enumeration
+Message-ID: <20200331044120.GB8468@hao-dev>
+References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
+ <1585038763-22944-3-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:d808:: with SMTP id y8mr13638810iob.121.1585630872865;
- Mon, 30 Mar 2020 22:01:12 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 22:01:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ec257905a21f7415@google.com>
-Subject: INFO: trying to register non-static key in try_to_wake_up
-From:   syzbot <syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585038763-22944-3-git-send-email-yilun.xu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Mar 24, 2020 at 04:32:38PM +0800, Xu Yilun wrote:
+> Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
+> Card) support MSI-X based interrupts. This patch allows PCIe driver
+> to prepare and pass interrupt resources to DFL via enumeration API.
+> These interrupt resources could then be assigned to actual features
+> which use them.
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> ----
+> v2: put irq resources init code inside cce_enumerate_feature_dev()
+>     Some minor changes for Hao's comments.
+> v3: Some minor fix for Hao's comments for v2.
+> ---
+>  drivers/fpga/dfl-pci.c | 76 ++++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 67 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+> index 5387550..66027aa 100644
+> --- a/drivers/fpga/dfl-pci.c
+> +++ b/drivers/fpga/dfl-pci.c
+> @@ -39,6 +39,28 @@ static void __iomem *cci_pci_ioremap_bar(struct pci_dev *pcidev, int bar)
+>  	return pcim_iomap_table(pcidev)[bar];
+>  }
+>  
+> +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
+> +{
+> +	int nvec = pci_msix_vec_count(pcidev);
+> +	int ret;
 
-syzbot found the following crash on:
+maybe int ret, nvec = pci_msix..
 
-HEAD commit:    9420e8ad Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1206ed4be00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
-dashboard link: https://syzkaller.appspot.com/bug?extid=e84d7ebd1361da13c356
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> +
+> +	if (nvec <= 0) {
+> +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
+> +		return 0;
+> +	}
+> +
+> +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return nvec;
+> +}
+> +
+> +static void cci_pci_free_irq(struct pci_dev *pcidev)
+> +{
+> +	pci_free_irq_vectors(pcidev);
+> +}
+> +
+>  /* PCI Device ID */
+>  #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
+>  #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
+> @@ -78,17 +100,33 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
+>  
+>  	/* remove all children feature devices */
+>  	dfl_fpga_feature_devs_remove(drvdata->cdev);
+> +	cci_pci_free_irq(pcidev);
+> +}
+> +
+> +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
+> +{
+> +	unsigned int i;
+> +	int *table;
+> +
+> +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
+> +	if (table) {
+> +		for (i = 0; i < nvec; i++)
+> +			table[i] = pci_irq_vector(pcidev, i);
+> +	}
+> +
+> +	return table;
+>  }
+>  
+>  /* enumerate feature devices under pci device */
+>  static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  {
+>  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+> +	int port_num, bar, i, nvec, ret = 0;
+>  	struct dfl_fpga_enum_info *info;
+>  	struct dfl_fpga_cdev *cdev;
+>  	resource_size_t start, len;
+> -	int port_num, bar, i, ret = 0;
+>  	void __iomem *base;
+> +	int *irq_table;
+>  	u32 offset;
+>  	u64 v;
+>  
+> @@ -97,11 +135,30 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  	if (!info)
+>  		return -ENOMEM;
+>  
+> +	/* add irq info for enumeration if the device support irq */
+> +	nvec = cci_pci_alloc_irq(pcidev);
+> +	if (nvec < 0) {
+> +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", nvec);
+> +		ret = nvec;
+> +		goto enum_info_free_exit;
+> +	} else if (nvec) {
+> +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
+> +		if (!irq_table) {
+> +			ret = -ENOMEM;
+> +			goto irq_free_exit;
+> +		}
+> +
+> +		ret = dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
+> +		kfree(irq_table);
 
-Unfortunately, I don't have any reproducer for this crash yet.
+i see you create a function for cci_pci_free_irq instead of using kernel api
+directly, to make it more readable, so why not have a remove irq table function
+here too.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com
+Actually patch looks good to me, with above minor fixes.
 
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 1014 Comm: syz-executor.0 Not tainted 5.6.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:880 [inline]
- register_lock_class+0x14c4/0x1540 kernel/locking/lockdep.c:1189
- __lock_acquire+0xfc/0x3ca0 kernel/locking/lockdep.c:3836
- lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
- try_to_wake_up+0x9f/0x17c0 kernel/sched/core.c:2547
- wake_up_worker kernel/workqueue.c:836 [inline]
- insert_work+0x2ad/0x3a0 kernel/workqueue.c:1337
- __queue_work+0x50d/0x1280 kernel/workqueue.c:1488
- call_timer_fn+0x195/0x760 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1444 [inline]
- __run_timers kernel/time/timer.c:1773 [inline]
- __run_timers kernel/time/timer.c:1740 [inline]
- run_timer_softirq+0x412/0x1600 kernel/time/timer.c:1786
- __do_softirq+0x26c/0x99d kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x192/0x1d0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:546 [inline]
- smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:slow_down_io arch/x86/include/asm/paravirt.h:42 [inline]
-RIP: 0010:outb_p arch/x86/include/asm/io.h:334 [inline]
-RIP: 0010:vga_io_w include/video/vga.h:209 [inline]
-RIP: 0010:vga_io_rgfx include/video/vga.h:388 [inline]
-RIP: 0010:setcolor drivers/video/fbdev/vga16fb.c:170 [inline]
-RIP: 0010:vga_imageblit_expand drivers/video/fbdev/vga16fb.c:1164 [inline]
-RIP: 0010:vga16fb_imageblit+0x91b/0x2210 drivers/video/fbdev/vga16fb.c:1260
-Code: 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 0f b6 04 02 84 c0 74 09 3c 03 7f 05 e8 91 43 f7 fd 41 8b 5f 10 31 c0 ba ce 03 00 00 ee <48> c7 c2 b8 b3 73 89 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80
-RSP: 0018:ffffc900163cf5a0 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000000 RBX: 0000000000000007 RCX: ffffc90001a49000
-RDX: 00000000000003ce RSI: ffffffff83b7a8ce RDI: ffffc900163cf748
-RBP: ffffc900163cf73c R08: ffff88803ac523c0 R09: 0000000000000000
-R10: ffffed10431bd353 R11: ffff888218de9a9f R12: 0000000000000000
-R13: ffff8880a3500f00 R14: 0000000000000001 R15: ffffc900163cf738
- bit_putcs_unaligned drivers/video/fbdev/core/bitblit.c:139 [inline]
- bit_putcs+0x910/0xe10 drivers/video/fbdev/core/bitblit.c:188
- fbcon_putcs+0x345/0x3f0 drivers/video/fbdev/core/fbcon.c:1360
- do_update_region+0x398/0x630 drivers/tty/vt/vt.c:677
- redraw_screen+0x646/0x770 drivers/tty/vt/vt.c:1022
- fbcon_blank+0x8ca/0xc10 drivers/video/fbdev/core/fbcon.c:2421
- do_unblank_screen drivers/tty/vt/vt.c:4286 [inline]
- do_unblank_screen+0x23c/0x420 drivers/tty/vt/vt.c:4254
- vt_ioctl+0xdc0/0x2470 drivers/tty/vt/vt_ioctl.c:490
- tty_ioctl+0xedd/0x1440 drivers/tty/tty_io.c:2656
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c849
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f91f6f81c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f91f6f826d4 RCX: 000000000045c849
-RDX: 0000000000000000 RSI: 0000000000004b3a RDI: 0000000000000003
-RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000573 R14: 00000000004c8075 R15: 000000000076bf0c
+Acked-by: Wu Hao <hao.wu@intel.com>
 
+Hao
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> +		if (ret)
+> +			goto irq_free_exit;
+> +	}
+> +
+>  	/* start to find Device Feature List from Bar 0 */
+>  	base = cci_pci_ioremap_bar(pcidev, 0);
+>  	if (!base) {
+>  		ret = -ENOMEM;
+> -		goto enum_info_free_exit;
+> +		goto irq_free_exit;
+>  	}
+>  
+>  	/*
+> @@ -154,7 +211,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  		dfl_fpga_enum_info_add_dfl(info, start, len, base);
+>  	} else {
+>  		ret = -ENODEV;
+> -		goto enum_info_free_exit;
+> +		goto irq_free_exit;
+>  	}
+>  
+>  	/* start enumeration with prepared enumeration information */
+> @@ -162,11 +219,14 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+>  	if (IS_ERR(cdev)) {
+>  		dev_err(&pcidev->dev, "Enumeration failure\n");
+>  		ret = PTR_ERR(cdev);
+> -		goto enum_info_free_exit;
+> +		goto irq_free_exit;
+>  	}
+>  
+>  	drvdata->cdev = cdev;
+>  
+> +irq_free_exit:
+> +	if (ret)
+> +		cci_pci_free_irq(pcidev);
+>  enum_info_free_exit:
+>  	dfl_fpga_enum_info_free(info);
+>  
+> @@ -211,12 +271,10 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
+>  	}
+>  
+>  	ret = cci_enumerate_feature_devs(pcidev);
+> -	if (ret) {
+> -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+> -		goto disable_error_report_exit;
+> -	}
+> +	if (!ret)
+> +		return ret;
+>  
+> -	return ret;
+> +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
+>  
+>  disable_error_report_exit:
+>  	pci_disable_pcie_error_reporting(pcidev);
+> -- 
+> 2.7.4
