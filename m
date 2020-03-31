@@ -2,104 +2,100 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571FEC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC237C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1C02145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wHDzmtI3"
+	by mail.kernel.org (Postfix) with ESMTP id C9F562137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbgCaQEU (ORCPT
+        id S1731397AbgCaQE3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:04:20 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:63917 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731253AbgCaQDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:03:41 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48sDdl1NYYz9twdZ;
-        Tue, 31 Mar 2020 18:03:39 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=wHDzmtI3; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id RUXVmZQCXCTh; Tue, 31 Mar 2020 18:03:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48sDdl0MQbz9twdT;
-        Tue, 31 Mar 2020 18:03:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585670619; bh=6dnGmEP9kaYDu3frjLwq4tVxGR7ljMwwBq0u7Py+ixo=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=wHDzmtI3V9cWHr3qGCm13i2VIkk8rPqqIdSzI4Lk2Gwqr+2ewxYhwIXQgpFTAO9Ue
-         E9tb1oI+RAypim8lEbsIQMPfwQgKIXmVbekJrQ833H5EiosPy45ZQEvQgOcUfa0LSr
-         xH6W1ranwAOD+QrKNapFZfg0RNJFggXEA8y8S57A=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AC9D18B868;
-        Tue, 31 Mar 2020 18:03:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id cwxwwFWIHa4z; Tue, 31 Mar 2020 18:03:40 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6FFC38B752;
-        Tue, 31 Mar 2020 18:03:40 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 60447656AC; Tue, 31 Mar 2020 16:03:40 +0000 (UTC)
-Message-Id: <eaab3bff961c3bfe149f1d0bd3593291ef939dcc.1585670437.git.christophe.leroy@c-s.fr>
-In-Reply-To: <1ae02b6637b87fc5aaa1d5012c3e2cb30e62b4a3.1585670437.git.christophe.leroy@c-s.fr>
-References: <1ae02b6637b87fc5aaa1d5012c3e2cb30e62b4a3.1585670437.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 05/12] powerpc/mem: Blacklist flush_dcache_icache_phys()
- for kprobe
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Tue, 31 Mar 2020 12:04:29 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:49419 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730286AbgCaQE0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:04:26 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MALql-1jTRSd3xkp-00BrdT for <linux-kernel@vger.kernel.org>; Tue, 31 Mar
+ 2020 18:04:25 +0200
+Received: by mail-qt1-f176.google.com with SMTP id i3so18735962qtv.8
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:04:24 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0ZW6WE9aOIDvedDgWazgcy1lTeMG+o8/HVz0I/Gh0b4MSQxt6p
+        nEizwzjuZv4+X4HgFLSw/PugzfDsuyn9dlE5LeA=
+X-Google-Smtp-Source: ADFU+vsV7OUw/yG7jiZrXNFRLm1eXbesdhE6Gt+5x4dwrPNxojl+8IV+jXHl3G0MV03Bhz5TSjaj1rNqxNpqeElwkyI=
+X-Received: by 2002:aed:20e3:: with SMTP id 90mr5691505qtb.142.1585670663815;
+ Tue, 31 Mar 2020 09:04:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <698e9a42a06eb856eef4501c3c0a182c034a5d8c.1585640941.git.christophe.leroy@c-s.fr>
+ <50d0ce1a96fa978cd0dfabde30cf75d23691622a.1585640942.git.christophe.leroy@c-s.fr>
+ <CAK8P3a3u4y7Zm8w43QScqUk6macBL1wO3S0qPisf9+d9FqSHfw@mail.gmail.com> <833d63fe-3b94-a3be-1abb-a629386aa0dd@c-s.fr>
+In-Reply-To: <833d63fe-3b94-a3be-1abb-a629386aa0dd@c-s.fr>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 31 Mar 2020 18:04:07 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a244P38c+JCRnf1EscQOSzaQQNZc6b5F=LFE2a_im8AqQ@mail.gmail.com>
+Message-ID: <CAK8P3a244P38c+JCRnf1EscQOSzaQQNZc6b5F=LFE2a_im8AqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/11] powerpc/platforms: Move files from 4xx to 44x
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        naveen.n.rao@linux.vnet.ibm.com
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 31 Mar 2020 16:03:40 +0000 (UTC)
+        Michal Simek <michal.simek@xilinx.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:wXb/7BkaxMjzCjUbnx6uHrIPLA9gNqpAmb7B3y1ftL5qH0GeGAm
+ lasEOHdiEIxVPUYAPfqTmxlFMT22xpp8vFaUDyQxEtF7kYaM6mMLYMEYLCLFvPpmrwkDFWO
+ 60wSSrD56d32owwZnIMc1dsLDX99YZ0/spl+eqQ48FULsrmYRbpQ1rmGrXW2G2kHkQoNPyp
+ 7F9NpeytrYCl61vv/uVNQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ni0uznTSXUQ=:uraL2y1f9eNK1mUfyzJ+N0
+ eCQAM/Xvk4gcDB/G8+wwa2Z9GKKHxkWQXNuKuCWw0y7l019PBUMqSV1y8Z8u6tHelANNI+Vj5
+ u/pWiFbHmArYup3keIZX18aKY00KnAsOprBPhzte5wy9hrz7GCm0lM52VXeN+IfifNhd/iWX/
+ t1FNxvieSv+d1z6NmVH16dLBJHlVq7QcZxoalROF9NeRY11btCX0nOW5sQaOo9gh4bvfuRHzo
+ xIckrvKreNYcoqURd5AwkiXfC2ySTbSOJVdKEzWsmCVFTRlHl8ToT3JioW2+KVr+fuxBQGYxb
+ SdGlfuKSQxJKkMjq04TmdruDzRgf6zylfYf0YpAgdfvKi0daXDWF313PZ/lFSuj/4Erx81me5
+ cq5Zh0x2Bfikv6WM4HuP1PQbPpPTrgQWTLNckXTO4EXMctCnL5OblvKM5JDMivAM87EoVYLKN
+ NgjoGLZoSW2Vs+zaEVgsYijOobTuqCwvxB13RoJxMwf7zUO8TKVIZS7wuPmVGQapzZBp1JDZp
+ A5ZekrIfdcXgVmfMxI+QWSP5OSwI/wzkVG+mk+HbCYEAXTEnHqCCxivTZEGzxaGXcGWS8YrZ2
+ tbfUkZ/MCJBIZHI6U7b3x7TEue9CqJgpc29D5JM+tsXOsoI3CcfkCgISkVCfBooBwCRYltMMH
+ zZeJOckgbk6JiRFgs31LmISL6UYcg0zOpIbOEEVf2smNT0WU8gZLH1z+9OI8YuEJb4tQcAoU3
+ euHeEwkH/uibNG9VDquLfVWXP9QHKy4R9f/1nDMk9nfF4tAE/fTBx7frHOpL1sDCvYEk828qx
+ 4lw45Ofd3i7CRoCxtGNI0WrwjWac5yx2IsMi/Eij2cJ+HWs1/0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kprobe does not handle events happening in real mode, all
-functions running with MMU disabled have to be blacklisted.
+On Tue, Mar 31, 2020 at 5:26 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+> Le 31/03/2020 à 17:14, Arnd Bergmann a écrit :
+> > On Tue, Mar 31, 2020 at 9:49 AM Christophe Leroy
+> > <christophe.leroy@c-s.fr> wrote:
+> >>
+> >> Only 44x uses 4xx now, so only keep one directory.
+> >>
+> >> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> >> ---
+> >>   arch/powerpc/platforms/44x/Makefile           |  9 +++++++-
+> >>   arch/powerpc/platforms/{4xx => 44x}/cpm.c     |  0
+> >
+> > No objections to moving everything into one place, but I wonder if the
+> > combined name should be 4xx instead of 44x, given that 44x currently
+> > include 46x and 47x. OTOH your approach has the advantage of
+> > moving fewer files.
+> >
+>
+> In that case, should we also rename CONFIG_44x to CONFIG_4xx ?
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
- arch/powerpc/mm/mem.c | 2 ++
- 1 file changed, 2 insertions(+)
+That has the risk of breaking user's defconfig files, but given the
+small number of users, it may be nicer for consistency. In either
+case, the two symbols should probably hang around as synonyms,
+the question is just which one is user visible.
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 9b4f5fb719e0..bcb6af6ba29a 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -32,6 +32,7 @@
- #include <linux/vmalloc.h>
- #include <linux/memremap.h>
- #include <linux/dma-direct.h>
-+#include <linux/kprobes.h>
- 
- #include <asm/pgalloc.h>
- #include <asm/prom.h>
-@@ -466,6 +467,7 @@ static void flush_dcache_icache_phys(unsigned long physaddr)
- 		: "r" (nb), "r" (msr), "i" (bytes), "r" (msr0)
- 		: "ctr", "memory");
- }
-+NOKPROBE_SYMBOL(flush_dcache_icache_phys)
- #endif // !defined(CONFIG_PPC_8xx) && !defined(CONFIG_PPC64)
- 
- /*
--- 
-2.25.0
-
+       Arnd
