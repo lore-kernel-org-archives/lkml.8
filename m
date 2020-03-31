@@ -2,195 +2,155 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DABC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B2CC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3DE820848
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86251207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:57:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BV1hpcUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbgCaI5L (ORCPT
+        id S1730130AbgCaI5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:57:11 -0400
-Received: from mx.sdf.org ([205.166.94.20]:59173 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgCaI5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:57:06 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02V8uxem021803
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Tue, 31 Mar 2020 08:57:00 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02V8uxMY024939;
-        Tue, 31 Mar 2020 08:56:59 GMT
-Date:   Tue, 31 Mar 2020 08:56:59 GMT
-Message-Id: <35dd80650fe673c446a5a016b51b6680ce49350d.1585644000.git.lkml@sdf.org>
-In-Reply-To: <9916203ec97be0f24886fc8478437d161b56f053.1585644000.git.lkml@sdf.org>
-References: <9916203ec97be0f24886fc8478437d161b56f053.1585644000.git.lkml@sdf.org>
-From:   George Spelvin <lkml@sdf.org>
-Subject: [PATCH 2/3] random: Factor helper calc_entropy_frac() out of
- credit_entropy_bits()
-To:     "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        linux-kernel@vger.kernel.org, lkml@sdf.org
+        Tue, 31 Mar 2020 04:57:52 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21336 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729624AbgCaI5w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:57:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585645071; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=8zUKrH2eIVqN6GKTdxqKOn/YdfA3gQCLto6btL9KOfk=; b=BV1hpcUSDkvzNSgl+uaW4ET8M+QDnKDh2zNwa6Hq/4M90pKrKtvoZxspjRywfCJwsoioN0B1
+ yq4F+0kzshQeE7xeCSR3k+yUFYwhNRcmArQvVKdEdi1QKDHZX3WJBQkFJEiAJpsjnk2Bka86
+ jXNGo+mPttAsBTYOc2o8g4SWveU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e83060d.7fe39cd5b960-smtp-out-n03;
+ Tue, 31 Mar 2020 08:57:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D8A0AC4478F; Tue, 31 Mar 2020 08:57:49 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.183.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16C5DC433F2;
+        Tue, 31 Mar 2020 08:57:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16C5DC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v14 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS
+ for active request
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
+ <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
+ <8d19958d-7334-ca4e-d7ba-f5919a56b279@codeaurora.org>
+ <CAD=FV=UZTyfVN=a35hiXxdNSvdhfK60HewP_p_VvH1KdoUa1ww@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <65eb7236-0df0-8256-bfda-34d8d57b282d@codeaurora.org>
+Date:   Tue, 31 Mar 2020 14:27:41 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAD=FV=UZTyfVN=a35hiXxdNSvdhfK60HewP_p_VvH1KdoUa1ww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The helper is mathematically complex, with a large comment
-explaining it.  credit_entropy_bits() has atomicity complexity.
-Breaking them apart makes both easier to read and understand.
+Hi,
 
-No functional change.
+On 3/28/2020 12:12 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Fri, Mar 27, 2020 at 5:04 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>>> Why can't rpmh_write()
+>>> / rpmh_write_async() / rpmh_write_batch() just always unconditionally
+>>> mark the cache dirty?  Are there really lots of cases when those calls
+>>> are made and they do nothing?
+>> At rpmh.c, it doesn't know that rpmh-rsc.c worked on borrowed TCS to finish the request.
+>>
+>> We should not blindly mark caches dirty everytime.
+> In message ID "5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org"
+> which seems to be missing from the archives, you said:
+>
+>> yes we should trust callers not to send duplicate data
+> ...you can see some reference to it in my reply:
+>
+> https://lore.kernel.org/r/CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com/
+>
+> If callers are trusted to never send duplicate data then ever call to
+> rpmh_write() will make a change.  ...and thus the cache should always
+> be marked dirty, no?  Also note that since rpmh_write() to "active"
+> also counts as a write to "wake" even those will dirty the cache.
+>
+> Which case are you expecting a rpmh_write() call to not dirty the cache?
+Ok, i will remove marking cache dirty here.
+>
+>
+>>> ...interestingly after your patch I guess now I guess tcs_invalidate()
+>>> no longer needs spinlocks since it's only ever called from PM code on
+>>> the last CPU.  ...if you agree, I can always do it in my cleanup
+>>> series.  See:
+>>>
+>>> https://lore.kernel.org/r/CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com
+>>>
+>>> -Doug
+>> There are other RSCs which use same driver, so lets keep spinlock.
+> It is really hard to try to write keeping in mind these "other RSCs"
+> for which there is no code upstream.  IMO we should write the code
+> keeping in mind what is supported upstream and then when those "other
+> RSCs" get added we can evaluate their needs.
 
-Signed-off-by: George Spelvin <lkml@sdf.org>
----
-And it makes the approximation easier to change in the next patch.
+Agree but i would insist not remove locks in your cleanup/documentation 
+series which are already there.
 
- drivers/char/random.c | 114 +++++++++++++++++++++++-------------------
- 1 file changed, 63 insertions(+), 51 deletions(-)
+These will be again need to be added.
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 273dcbb4a790..de90bab5af36 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -653,6 +653,64 @@ static void process_random_ready_list(void)
- 	spin_unlock_irqrestore(&random_ready_list_lock, flags);
- }
- 
-+/*
-+ * Add some new entropy to an existing pool with finite capacity.  We have
-+ * to account for the possibility of overwriting already present entropy.
-+ * Even in the ideal case of pure Shannon entropy, new contributions
-+ * approach the pool capacity asymptotically:
-+ *
-+ * entropy += (capacity - entropy) * (1 - exp(-add/capacity))
-+ *
-+ * To avoid evaluating an exponential in interrupt context, we use a
-+ * simple fixed-point underestimate.
-+ *
-+ * For add <= capacity/2 then
-+ * (1 - exp(-add/capacity)) >= (add/capacity)*0.7869...
-+ * so we can approximate the exponential with 3/4*add/capacity and still
-+ * be on the safe side by adding at most capacity/2 at a time.
-+ */
-+static int calc_entropy_frac(int add, int entropy,
-+			     struct entropy_store const *r)
-+{
-+	struct poolinfo const *info = r->poolinfo;
-+	const int capacity = info->poolfracbits;
-+
-+	if (add < 0) {
-+		/* Debit */
-+		entropy += add;
-+	} else {
-+		const int s = info->poolbitshift + ENTROPY_SHIFT + 2;
-+		/* The +2 corresponds to the denominator of the 3/4 */
-+
-+		do {
-+			unsigned int frac = min(add, capacity/2);
-+			unsigned int delta = ((capacity - entropy)*frac*3) >> s;
-+
-+			entropy += delta;
-+			add -= frac;
-+		} while (unlikely(add) && entropy < capacity-2);
-+		/*
-+		 * Because we're careful to always round down, the pool
-+		 * will never be completely full.  In fact, the maximum
-+		 * delta is 3/8 of the space remaining, which means that 3
-+		 * fractional bits remaining will round to +1, but 2 will
-+		 * round to +0, so there's no sense continuing.
-+		 *
-+		 * Stopping at capacity-2 also limits the loop to
-+		 * log2(pool_size)/log2(5/8) = 1.475*log2(pool_size)
-+		 * iterations no matter how large add is.
-+		 */
-+	}
-+
-+	if (WARN_ON(entropy < 0)) {
-+		pr_warn("negative entropy/overflow: pool %s count %d\n",
-+			r->name, entropy);
-+		entropy = 0;
-+	} else if (unlikely(entropy > capacity))
-+		entropy = capacity;
-+	return entropy;
-+}
-+
- /*
-  * Credit (or debit) the entropy store with n bits of entropy.
-  * Use credit_entropy_bits_safe() if the value comes from userspace
-@@ -661,61 +719,15 @@ static void process_random_ready_list(void)
- static void credit_entropy_bits(struct entropy_store *r, int nbits)
- {
- 	int entropy_count, orig;
--	const int pool_size = r->poolinfo->poolfracbits;
--	int nfrac = nbits << ENTROPY_SHIFT;
- 
- 	if (!nbits)
- 		return;
- 
--retry:
--	entropy_count = orig = READ_ONCE(r->entropy_count);
--	if (nfrac < 0) {
--		/* Debit */
--		entropy_count += nfrac;
--	} else {
--		/*
--		 * Credit: we have to account for the possibility of
--		 * overwriting already present entropy.	 Even in the
--		 * ideal case of pure Shannon entropy, new contributions
--		 * approach the full value asymptotically:
--		 *
--		 * entropy <- entropy + (pool_size - entropy) *
--		 *	(1 - exp(-add_entropy/pool_size))
--		 *
--		 * For add_entropy <= pool_size/2 then
--		 * (1 - exp(-add_entropy/pool_size)) >=
--		 *    (add_entropy/pool_size)*0.7869...
--		 * so we can approximate the exponential with
--		 * 3/4*add_entropy/pool_size and still be on the
--		 * safe side by adding at most pool_size/2 at a time.
--		 *
--		 * The use of pool_size-2 in the while statement is to
--		 * prevent rounding artifacts from making the loop
--		 * arbitrarily long; this limits the loop to log2(pool_size)*2
--		 * turns no matter how large nbits is.
--		 */
--		int pnfrac = nfrac;
--		const int s = r->poolinfo->poolbitshift + ENTROPY_SHIFT + 2;
--		/* The +2 corresponds to the /4 in the denominator */
--
--		do {
--			unsigned int anfrac = min(pnfrac, pool_size/2);
--			unsigned int add =
--				((pool_size - entropy_count)*anfrac*3) >> s;
--
--			entropy_count += add;
--			pnfrac -= anfrac;
--		} while (unlikely(entropy_count < pool_size-2 && pnfrac));
--	}
--
--	if (WARN_ON(entropy_count < 0)) {
--		pr_warn("negative entropy/overflow: pool %s count %d\n",
--			r->name, entropy_count);
--		entropy_count = 0;
--	} else if (entropy_count > pool_size)
--		entropy_count = pool_size;
--	if (cmpxchg(&r->entropy_count, orig, entropy_count) != orig)
--		goto retry;
-+	do {
-+		orig = READ_ONCE(r->entropy_count);
-+		entropy_count = calc_entropy_frac(nbits << ENTROPY_SHIFT,
-+						  orig, r);
-+	} while (cmpxchg(&r->entropy_count, orig, entropy_count) != orig);
- 
- 	entropy_count >>= ENTROPY_SHIFT;	/* Convert to bits */
- 	trace_credit_entropy_bits(r->name, nbits, entropy_count, _RET_IP_);
+The locks don't cause any issue being there since only last cpu is 
+invoking rpmh_flush() at present.
+
+Adding support for other RSCs is in my to do list, and when that is 
+being done we can re-evaluate and
+
+remove if not required.
+
+>
+> Specifically when reasoning about rpmh.c and rpmh-rsc.c I can only
+> look at the code that's there now and decide whether it is race free
+> or there are races.  Back when I was analyzing the proposal to do
+> rpmh_flush() all the time (not from PM code) it felt like there were a
+> bunch of races, especially in the zero-active-TCS case.  Most of the
+> races go away when you assume that rpmh_flush() is only ever called
+> from the PM code when nobody could be in the middle of an active
+> transfer.
+>
+> If we are ever planning to call rpmh_flush() from another place we
+> need to re-look at all those races.
+Sure. we can re-look all cases.
+>
+>
+> -Doug
+Thanks,
+Maulik
+
 -- 
-2.26.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
