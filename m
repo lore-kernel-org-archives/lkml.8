@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86869C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88E8C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7E220787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCDBE20772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646066;
-	bh=xluyj0zuzesqOXbJY4Nak2oA9OlTyRQhQwI56NsHeus=;
+	s=default; t=1585646069;
+	bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAP3Z5kCR3ftizAI7hf+6a3+Mn53im97+uAWYqBETIfB8Y8UCKCJ/xCfFd69jSYVJ
-	 EmrNmMxuxEAfWUgDYWbG5nz2mLc0OAGE1/sxUowUIsy+RWvAEN4OqlhjsqZb3M0KNO
-	 oKwPSVBsvdo2maRJDgAUauCVq8c7m3fCupHqB1M8=
+	b=0W0MxXa83VouUasD8kDZmjYCl3rGsupaX5C0nKOMhR87BcEgnGZtLa+lUvdRxMxm1
+	 JznRdGFKHneJGC17xPKIq1zpxuDomxbZVJOx0mGW7/AyDzvulhZ0M4c/EQY8nALsHF
+	 x2R+QfYwevO5T+O1Bihirzm6xQvJ/lXiVSTa+6zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbgCaJOV (ORCPT
+        id S1731838AbgCaJO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34088 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:14:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730452AbgCaJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:14:18 -0400
+        id S1730391AbgCaJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:14:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D72420675;
-        Tue, 31 Mar 2020 09:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 999122072E;
+        Tue, 31 Mar 2020 09:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646058;
-        bh=xluyj0zuzesqOXbJY4Nak2oA9OlTyRQhQwI56NsHeus=;
+        s=default; t=1585646065;
+        bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gd5Z1YNbP2eA30xgjvS3Z5EiBdXwVu+UrcDUCwHMWBUhf0K4brarQhJA1sXE3MPJC
-         Vy1M4f0kpSjsaEhQsKhWV8jCk/Kh+3znhh6v9pU1IzQ6IM+VXoms5cDokQx+6nf5br
-         y6P6WRJchxeYu0sVf9/o9FEGuSY5UakxPwUA21Ao=
+        b=xxp7pjgC4getO6scqwh7xv0DHIzLD/oKR798saECooSPCeuP8t34HmRqIN4OzKRjM
+         AfuR8LnmHSP2EuZ55oSnucpoDYewIgV09qmdv+jR4g4sGwT7YITVwE9ceH4+dwu0d4
+         3/rZttJFs2gZHd9H02lXchVMQF64nhfWaY8gfjuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominik Czarnota <dominik.b.czarnota@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 071/155] sxgbe: Fix off by one in samsung driver strncpy size arg
-Date:   Tue, 31 Mar 2020 10:58:31 +0200
-Message-Id: <20200331085426.355997346@linuxfoundation.org>
+        stable@vger.kernel.org, Megha Dey <megha.dey@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 073/155] iommu/vt-d: Fix debugfs register reads
+Date:   Tue, 31 Mar 2020 10:58:33 +0200
+Message-Id: <20200331085426.574364408@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,42 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dominik Czarnota <dominik.b.czarnota@gmail.com>
+From: Megha Dey <megha.dey@linux.intel.com>
 
-[ Upstream commit f3cc008bf6d59b8d93b4190e01d3e557b0040e15 ]
+[ Upstream commit ba3b01d7a6f4ab9f8a0557044c9a7678f64ae070 ]
 
-This patch fixes an off-by-one error in strncpy size argument in
-drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c. The issue is that in:
+Commit 6825d3ea6cde ("iommu/vt-d: Add debugfs support to show register
+contents") dumps the register contents for all IOMMU devices.
 
-        strncmp(opt, "eee_timer:", 6)
+Currently, a 64 bit read(dmar_readq) is done for all the IOMMU registers,
+even though some of the registers are 32 bits, which is incorrect.
 
-the passed string literal: "eee_timer:" has 10 bytes (without the NULL
-byte) and the passed size argument is 6. As a result, the logic will
-also accept other, malformed strings, e.g. "eee_tiXXX:".
+Use the correct read function variant (dmar_readl/dmar_readq) while
+reading the contents of 32/64 bit registers respectively.
 
-This bug doesn't seem to have any security impact since its present in
-module's cmdline parsing code.
-
-Signed-off-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+Link: https://lore.kernel.org/r/1583784587-26126-2-git-send-email-megha.dey@linux.intel.com
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel-iommu-debugfs.c | 40 ++++++++++++++++++-----------
+ include/linux/intel-iommu.h         |  2 ++
+ 2 files changed, 27 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-index c56fcbb370665..38767d7979147 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-@@ -2279,7 +2279,7 @@ static int __init sxgbe_cmdline_opt(char *str)
- 	if (!str || !*str)
- 		return -EINVAL;
- 	while ((opt = strsep(&str, ",")) != NULL) {
--		if (!strncmp(opt, "eee_timer:", 6)) {
-+		if (!strncmp(opt, "eee_timer:", 10)) {
- 			if (kstrtoint(opt + 10, 0, &eee_timer))
- 				goto err;
+diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel-iommu-debugfs.c
+index 471f05d452e01..80378c10dd77a 100644
+--- a/drivers/iommu/intel-iommu-debugfs.c
++++ b/drivers/iommu/intel-iommu-debugfs.c
+@@ -32,38 +32,42 @@ struct iommu_regset {
+ 
+ #define IOMMU_REGSET_ENTRY(_reg_)					\
+ 	{ DMAR_##_reg_##_REG, __stringify(_reg_) }
+-static const struct iommu_regset iommu_regs[] = {
++
++static const struct iommu_regset iommu_regs_32[] = {
+ 	IOMMU_REGSET_ENTRY(VER),
+-	IOMMU_REGSET_ENTRY(CAP),
+-	IOMMU_REGSET_ENTRY(ECAP),
+ 	IOMMU_REGSET_ENTRY(GCMD),
+ 	IOMMU_REGSET_ENTRY(GSTS),
+-	IOMMU_REGSET_ENTRY(RTADDR),
+-	IOMMU_REGSET_ENTRY(CCMD),
+ 	IOMMU_REGSET_ENTRY(FSTS),
+ 	IOMMU_REGSET_ENTRY(FECTL),
+ 	IOMMU_REGSET_ENTRY(FEDATA),
+ 	IOMMU_REGSET_ENTRY(FEADDR),
+ 	IOMMU_REGSET_ENTRY(FEUADDR),
+-	IOMMU_REGSET_ENTRY(AFLOG),
+ 	IOMMU_REGSET_ENTRY(PMEN),
+ 	IOMMU_REGSET_ENTRY(PLMBASE),
+ 	IOMMU_REGSET_ENTRY(PLMLIMIT),
++	IOMMU_REGSET_ENTRY(ICS),
++	IOMMU_REGSET_ENTRY(PRS),
++	IOMMU_REGSET_ENTRY(PECTL),
++	IOMMU_REGSET_ENTRY(PEDATA),
++	IOMMU_REGSET_ENTRY(PEADDR),
++	IOMMU_REGSET_ENTRY(PEUADDR),
++};
++
++static const struct iommu_regset iommu_regs_64[] = {
++	IOMMU_REGSET_ENTRY(CAP),
++	IOMMU_REGSET_ENTRY(ECAP),
++	IOMMU_REGSET_ENTRY(RTADDR),
++	IOMMU_REGSET_ENTRY(CCMD),
++	IOMMU_REGSET_ENTRY(AFLOG),
+ 	IOMMU_REGSET_ENTRY(PHMBASE),
+ 	IOMMU_REGSET_ENTRY(PHMLIMIT),
+ 	IOMMU_REGSET_ENTRY(IQH),
+ 	IOMMU_REGSET_ENTRY(IQT),
+ 	IOMMU_REGSET_ENTRY(IQA),
+-	IOMMU_REGSET_ENTRY(ICS),
+ 	IOMMU_REGSET_ENTRY(IRTA),
+ 	IOMMU_REGSET_ENTRY(PQH),
+ 	IOMMU_REGSET_ENTRY(PQT),
+ 	IOMMU_REGSET_ENTRY(PQA),
+-	IOMMU_REGSET_ENTRY(PRS),
+-	IOMMU_REGSET_ENTRY(PECTL),
+-	IOMMU_REGSET_ENTRY(PEDATA),
+-	IOMMU_REGSET_ENTRY(PEADDR),
+-	IOMMU_REGSET_ENTRY(PEUADDR),
+ 	IOMMU_REGSET_ENTRY(MTRRCAP),
+ 	IOMMU_REGSET_ENTRY(MTRRDEF),
+ 	IOMMU_REGSET_ENTRY(MTRR_FIX64K_00000),
+@@ -126,10 +130,16 @@ static int iommu_regset_show(struct seq_file *m, void *unused)
+ 		 * by adding the offset to the pointer (virtual address).
+ 		 */
+ 		raw_spin_lock_irqsave(&iommu->register_lock, flag);
+-		for (i = 0 ; i < ARRAY_SIZE(iommu_regs); i++) {
+-			value = dmar_readq(iommu->reg + iommu_regs[i].offset);
++		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_32); i++) {
++			value = dmar_readl(iommu->reg + iommu_regs_32[i].offset);
++			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
++				   iommu_regs_32[i].regs, iommu_regs_32[i].offset,
++				   value);
++		}
++		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_64); i++) {
++			value = dmar_readq(iommu->reg + iommu_regs_64[i].offset);
+ 			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
+-				   iommu_regs[i].regs, iommu_regs[i].offset,
++				   iommu_regs_64[i].regs, iommu_regs_64[i].offset,
+ 				   value);
  		}
+ 		raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 6d8bf4bdf240d..1e5dad8b8e59b 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -120,6 +120,8 @@
+ 
+ #define dmar_readq(a) readq(a)
+ #define dmar_writeq(a,v) writeq(v,a)
++#define dmar_readl(a) readl(a)
++#define dmar_writel(a, v) writel(v, a)
+ 
+ #define DMAR_VER_MAJOR(v)		(((v) & 0xf0) >> 4)
+ #define DMAR_VER_MINOR(v)		((v) & 0x0f)
 -- 
 2.20.1
 
