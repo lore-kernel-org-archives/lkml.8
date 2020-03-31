@@ -2,101 +2,129 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D10AC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F51C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE7C206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:10:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pl3sFafD"
+	by mail.kernel.org (Postfix) with ESMTP id 12CDF20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbgCaHKf (ORCPT
+        id S1729813AbgCaHR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:10:35 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:47018 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726420AbgCaHKf (ORCPT
+        Tue, 31 Mar 2020 03:17:56 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41086 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgCaHR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:10:35 -0400
-X-UUID: 72369b837d594f6ba68a801989bb2769-20200331
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=tjPRKJwv3JpOCljaRUaL4xSBagZpOnRqSFRVswzw7Gs=;
-        b=pl3sFafDlzdqzPr2tiyYdnfDuM8e2VR5yyrpb56+s6YCZInYGQz7eFVwID0N/vWNuiQfSKrJ16r2al4CpLWqtCbiNnMbhtayoyFDENSBlRIOj8n088F93u2WgR7jJ774noNjnV32YfBnGiZbOJFLeJ9X+2IurBI/yb5Et7QgAoA=;
-X-UUID: 72369b837d594f6ba68a801989bb2769-20200331
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 224437747; Tue, 31 Mar 2020 15:10:23 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 31 Mar
- 2020 15:10:21 +0800
-Received: from [10.16.6.141] (10.16.6.141) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 31 Mar 2020 15:10:19 +0800
-Message-ID: <1585638593.31955.5.camel@mszsdaap41>
-Subject: Re: [PATCH v3 1/4] dt-bindings: display: mediatek: add property to
- control mipi tx drive current
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Tue, 31 Mar 2020 03:17:56 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 867CC296952
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Martyn Welch <martyn.welch@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        linux-rockchip@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
-        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
-        <stonea168@163.com>, <huijuan.xie@mediatek.com>
-Date:   Tue, 31 Mar 2020 15:09:53 +0800
-In-Reply-To: <20200323220033.GA29463@bogus>
-References: <20200311074032.119481-1-jitao.shi@mediatek.com>
-         <20200311074032.119481-2-jitao.shi@mediatek.com>
-         <20200323220033.GA29463@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v5 4/5] drm: imx: Add i.MX 6 MIPI DSI host platform driver
+In-Reply-To: <246bf7c71620021258355c2fc32dd38ac6b0cc45.camel@collabora.com>
+References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
+ <20200330113542.181752-5-adrian.ratiu@collabora.com>
+ <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
+ <4a9d2d6e5cecbe296c14119d27a8793a7dbed7b2.camel@collabora.com>
+ <877dz134xf.fsf@collabora.com>
+ <246bf7c71620021258355c2fc32dd38ac6b0cc45.camel@collabora.com>
+Date:   Tue, 31 Mar 2020 10:19:00 +0300
+Message-ID: <874ku52dqz.fsf@collabora.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 518E88426F51400BDCEE41B35C4881984A15EE42DB8BBE274CDC847E3BBA18762000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBNb24sIDIwMjAtMDMtMjMgYXQgMTY6MDAgLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0K
-PiBPbiBXZWQsIE1hciAxMSwgMjAyMCBhdCAwMzo0MDoyOVBNICswODAwLCBKaXRhbyBTaGkgd3Jv
-dGU6DQo+ID4gQWRkIGEgcHJvcGVydHkgdG8gY29udHJvbCBtaXBpIHR4IGRyaXZlIGN1cnJlbnQ6
-DQo+ID4gImRyaXZlLXN0cmVuZ3RoLW1pY3JvYW1wIg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
-IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0ICAgICB8
-IDQgKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21l
-ZGlhdGVrL21lZGlhdGVrLGRzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0DQo+ID4gaW5kZXggYTE5YTZjYzM3
-NWVkLi5kNTAxZjlmZjRiMWYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dA0KPiA+ICsrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlh
-dGVrLGRzaS50eHQNCj4gPiBAQCAtMzMsNiArMzMsOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
-PiA+ICAtICNjbG9jay1jZWxsczogbXVzdCBiZSA8MD47DQo+ID4gIC0gI3BoeS1jZWxsczogbXVz
-dCBiZSA8MD4uDQo+ID4gIA0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIGRyaXZl
-LXN0cmVuZ3RoLW1pY3JvYW1wOiBhZGp1c3QgZHJpdmluZyBjdXJyZW50LCBzaG91bGQgYmUgMSB+
-IDB4Rg0KPiANCj4gVEJDLCAxLTB4ZiBpcyBpbiB1bml0cyBvZiBtaWNyb2FtcHM/IFNvIGEgbWF4
-IGRyaXZlIHN0cmVuZ3RoIG9mIDE1dUE/IA0KPiBTZWVtcyBhIGJpdCBsb3cuDQo+IA0KDQpUaGUg
-bWluaW11bSBhbXAgaXMgMzAwMCBtYWNyb2FtcHMsICBzdGVwIGlzIDIwMG1hY3JvYW1wcy4NClNv
-IHRoZSBkcml2ZSBjdXJyZW50IGlzIDMwMDAgKyAyMDAgKiBkcml2ZS1zdHJlbmd0aC1taWNyb2Ft
-cCBhbXBzLg0KDQpJIHdpbGwgdXBkYXRlICJkcml2ZS1zdHJlbmd0aC1taWNyb2FtcCIgZGVmaW5l
-IG5leHQgdmVyc2lvbi4NCg0KQlINCkppdGFvDQo+ID4gKw0KPiA+ICBFeGFtcGxlOg0KPiA+ICAN
-Cj4gPiAgbWlwaV90eDA6IG1pcGktZHBoeUAxMDIxNTAwMCB7DQo+ID4gQEAgLTQyLDYgKzQ1LDcg
-QEAgbWlwaV90eDA6IG1pcGktZHBoeUAxMDIxNTAwMCB7DQo+ID4gIAljbG9jay1vdXRwdXQtbmFt
-ZXMgPSAibWlwaV90eDBfcGxsIjsNCj4gPiAgCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiAgCSNw
-aHktY2VsbHMgPSA8MD47DQo+ID4gKwlkcml2ZS1zdHJlbmd0aC1taWNyb2FtcCA9IDwweDg+Ow0K
-PiA+ICB9Ow0KPiA+ICANCj4gPiAgZHNpMDogZHNpQDE0MDFiMDAwIHsNCj4gPiAtLSANCj4gPiAy
-LjIxLjANCg0KDQo=
+On Tue, 31 Mar 2020, Ezequiel Garcia <ezequiel@collabora.com> 
+wrote:
+> On Tue, 2020-03-31 at 00:31 +0300, Adrian Ratiu wrote: 
+>> On Mon, 30 Mar 2020, Ezequiel Garcia <ezequiel@collabora.com> 
+>> wrote: 
+>> > Hello Fabio, Adrian:   On Mon, 2020-03-30 at 08:49 -0300, 
+>> > Fabio Estevam wrote:  
+>> > > Hi Adrian,  On Mon, Mar 30, 2020 at 8:34 AM Adrian Ratiu 
+>> > > <adrian.ratiu@collabora.com> wrote:  
+>> > > > This adds support for the Synopsis DesignWare MIPI DSI 
+>> > > > v1.01  host controller which is embedded in i.MX 6 SoCs. 
+>> > > > Based on  following patches, but updated/extended to work 
+>> > > > with existing  support found in the kernel:  - drm: imx: 
+>> > > > Support Synopsys  DesignWare MIPI DSI host controller  
+>> > > >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>  
+>> > > >  - ARM: dtsi: imx6qdl: Add support for MIPI DSI host  
+>> > > > controller  
+>> > > >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>  
+>> > >  This one looks like a devicetree patch, but this patch 
+>> > >  does  
+>> > > not touch devicetree.   
+>> > > > +       ret = clk_prepare_enable(dsi->pllref_clk); + 
+>> > > > if  (ret) { +               dev_err(dev, "%s: Failed to 
+>> > > > enable  pllref_clk\n", __func__); +               return 
+>> > > > ret; +  } + +       dsi->mux_sel = 
+>> > > > syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr"); 
+>> > > > +  if (IS_ERR(dsi->mux_sel)) { +               ret = 
+>> > > > PTR_ERR(dsi->mux_sel); +               dev_err(dev, "%s: 
+>> > > > Failed to get GPR regmap: %d\n", +  __func__, ret); + 
+>> > > > return ret;  
+>> > >  You should disable the dsi->pllref_clk clock prior to  
+>> > > returning the error.   
+>> >  Another approach could be moving the clock on and off to to 
+>> > component_ops.{bind,unbind} (as rockhip driver does).    What 
+>> > exactly is the PLL clock needed for? Would it make sense to 
+>> > move it some of the PHY power on/off? (Maybe not, but it's 
+>> > worthing checking).    Also, it seems the other IP blocks 
+>> > have this PLL clock, so maybe  it could be moved to the 
+>> > dw_mipi_dsi core? This could be  something for a follow-up, 
+>> > to avoid creeping this series. 
+>>  Hi Ezequiel,  pll is the video reference clock which drives 
+>> the data lanes and  yes all drivers have it as it's a basic 
+>> requirement, so moving it  to the common bridge is indeed a 
+>> good idea, however this kind of  driver refactoring is out of 
+>> scope for this specific patch series,  because, for now, I'd 
+>> like to get the regmap and the imx6 driver  in, once that is 
+>> done we can think how to further abstract away  common logic 
+>> and slim down the existing drivers further.   Basically I just 
+>> want to avoid feature creep as I expect v6 to be  ~ 8 patches 
+>> big and the series is already over 1200 lines.  
+> 
+> Oh, absolutely: if there's one thing I try to avoid is feature 
+> creep -- together with bikeshedding! 
+> 
+> Do note however, that you could move the PLL clock handling to 
+> component_ops.{bind,unbind} and maybe simplify the error 
+> handling. 
+> 
+> (BTW, great work!)
 
+Thanks! I'll do the bind/unbind move for the new imx6 driver which 
+I'm
+adding in this series to make it resemble the existing rockchip 
+driver a bit more, then I'll stop short of further driver 
+refactorings.
+
+>
+> Cheers,
+> Ezequiel
