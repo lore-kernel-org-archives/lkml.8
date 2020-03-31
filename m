@@ -2,369 +2,112 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B92C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99164C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBB520784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7345C20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9amOu6K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELhoeap4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgCaTZV (ORCPT
+        id S1728826AbgCaT0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:25:21 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46401 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgCaTZU (ORCPT
+        Tue, 31 Mar 2020 15:26:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42722 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgCaT0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:25:20 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 111so23290257oth.13;
-        Tue, 31 Mar 2020 12:25:18 -0700 (PDT)
+        Tue, 31 Mar 2020 15:26:41 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z5so23056363oth.9;
+        Tue, 31 Mar 2020 12:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7LqlyO0sBVCp3qqMELPy+Cw9S+9K5Fr/pLVqCZqCgbk=;
-        b=f9amOu6KnOtlbqoKEiOkcUpnIbMt66RBX6/qcUZLLU4p4/EkyxV/F+66E2YEdVxM5B
-         q9ljZzKFngBVKFEr4xCr5JmqIWT6S6fxIQCuIdL5+B0PPAyP4nIcbPLu2/G6Zvl9OE/g
-         jKb+HT/TfYm2POSEKPDVP+6OZeq8PohjlSsM9sOXlSHfjCT1yqsIowaO4HQ5sIhb2rNS
-         kVkehDM3bwjYFW/BMBiMSAfHfEAMm4dKjGnHFyOEFExCmRaQhqU2r0maO7iK2TIlKSOT
-         OpTvY0GEIOtE1c7WAP1JHnzbMjkCM7vqkJB2Pf5C4Wvmy5HC6BfPrx7WPICGrrrQfi/8
-         anlw==
+         :content-disposition:in-reply-to:user-agent;
+        bh=p2qtUegF86XJQD0U9mJ6PbruzGtXxYRXcPJJraWyFNo=;
+        b=ELhoeap4k3w9h7bN3wcxhblGlHt/Y266s4gRXs/8+KgpSlLbX53w29ryNSlWfNUzzQ
+         24uFWR202K7G8mT2ecteqfqcIpE5MUB232V4d2zGoMuPdMcvMWJCGvLAvYlLtivgvk24
+         9f7Va3tctc42c6KdTNAua8en3Zu5c9haPM2AIig3nIlVr8KoIHpqEWxrDbL/mH7Wk5go
+         bTNDD4AzNg1XiGfXf0zTNMnmIKZJakNmMkpNdOXAYmsE+MyF5+hDdaulyYmaktYRJpD6
+         rOYajfFz26v+Q5z+IaPvvG3nosGY3Jb5lF8ECN+Fs7lP7jeC0tqU+BzWyljNdbv4IOOj
+         cspQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7LqlyO0sBVCp3qqMELPy+Cw9S+9K5Fr/pLVqCZqCgbk=;
-        b=TQc8XMin5NpCyjZSqYOhKPbe8XqURF+/EuzfgFIAgqfIIMh8zGZq2xp/h/9l+kalFc
-         w1JRgJQfBJMTC3OT6ADX+GWP6/CEAWDfy9kAPrm5axafq42358hXLnbTbQQKnoEFlgTW
-         Nce4DgP3ywS8D7MFy5r8a+BfNRYy+gXd/8338weHu7buivarIiK2RJrTi301woJNMsdk
-         mP/zF74OY/BECfSKBNzXYN/f7Uq2tixZjdTCds8fdsZc+i7l1yRcw5OohnyAyyzo9bY1
-         V1nY8AIxSifwQ8eFJLZT5VxcsELcmEr2Tn86N/E0SnCR2Mvfbd6h/VG2jR294WoTYWyB
-         F6dQ==
-X-Gm-Message-State: ANhLgQ29EBvWfyj6tozfPFJdPWPkk7jfCObanGGa4NaWsg5TD1XkZQcf
-        x5RnTwUk34VymncFeYCjX6/3IKFmDpU=
-X-Google-Smtp-Source: ADFU+vt1lSToLejZ0FodgvfZBT0DKmAYzVGkrt/D1UDkhlQ/9V5Q6msKtCKILbO/n58tByc5/x5j4A==
-X-Received: by 2002:a9d:5545:: with SMTP id h5mr14690011oti.323.1585682718048;
-        Tue, 31 Mar 2020 12:25:18 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p2qtUegF86XJQD0U9mJ6PbruzGtXxYRXcPJJraWyFNo=;
+        b=F2+D6bGTAAZk9XhYz3Y9ZDhVNpFm5RknWqYhG90j/g7ldNyljFLt++I2ffirUamg/m
+         UvfJdqTAUOpOT0NGvMzLadD5WdFDWwNFl/8WN24SMQLnPryD9Nb20y6ElX0J9s+c0VWt
+         YWmoxefhQ0kMR/UVTr80R+SbHXK4vAtAySwHBZao4sxoN4v+TppuavLTFxhoDPiWv/Pn
+         1BewEJnixZyy9XyOIqQspiO1BkkOyg1YtnX61DKEIx8z9zXPdO10g9OzYVdiBheTyFIx
+         DaafEHI9zb3WuaJI2Tti3Z8uOuyVOz5keOsrcvf8nXFg8KvoRw096QN+jOOac2jKZ7gt
+         iJfA==
+X-Gm-Message-State: ANhLgQ0k9lh2LPMGITR8FcqDmR0oPBDUCob9wnti22eWfoE/IT+tFy2Z
+        XsuX0b9Kufu9YbZCmkAZ7+w=
+X-Google-Smtp-Source: ADFU+vsdiPcZYYBWdzojItr8T5o1ryKfN0bU1KvGxWA3rNxYN6SUUNiqR3EJ1ted02/26RlWPqXaEw==
+X-Received: by 2002:a9d:a6b:: with SMTP id 98mr13525220otg.21.1585682800831;
+        Tue, 31 Mar 2020 12:26:40 -0700 (PDT)
 Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id d185sm289221oob.16.2020.03.31.12.25.16
+        by smtp.gmail.com with ESMTPSA id 90sm5487928otc.29.2020.03.31.12.26.38
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 12:25:16 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 12:25:15 -0700
+        Tue, 31 Mar 2020 12:26:39 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 12:26:37 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dirk =?iso-8859-1?Q?M=FCller?= <dmueller@suse.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5.5 102/170] scripts/dtc: Remove redundant YYLOC global
- declaration
-Message-ID: <20200331192515.GA39354@ubuntu-m2-xlarge-x86>
-References: <20200331085423.990189598@linuxfoundation.org>
- <20200331085435.053942582@linuxfoundation.org>
- <20200331095323.GA32667@ubuntu-m2-xlarge-x86>
- <20200331100238.GA1204199@kroah.com>
- <5B6493BE-F9FE-41A4-A88A-5E4DF5BCE098@suse.com>
- <20200331120917.GA1617997@kroah.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH v2] kbuild: Enable -Wtautological-compare
+Message-ID: <20200331192637.GA54270@ubuntu-m2-xlarge-x86>
+References: <20200326194155.29107-1-natechancellor@gmail.com>
+ <CAK7LNAQ8uHtuhd7DiGGOLbkEX524rPjfUuWAHjU-_92Ow3_1Pg@mail.gmail.com>
+ <20200331101122.GA6292@ubuntu-m2-xlarge-x86>
+ <CAKwvOdkkpnkLwtNctSnebXTwumfprEQtLiuM5_4e-UBFTYBUxg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="17pEHd4RhPHOinZp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200331120917.GA1617997@kroah.com>
+In-Reply-To: <CAKwvOdkkpnkLwtNctSnebXTwumfprEQtLiuM5_4e-UBFTYBUxg@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---17pEHd4RhPHOinZp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-
-On Tue, Mar 31, 2020 at 02:09:17PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Mar 31, 2020 at 01:45:09PM +0200, Dirk Müller wrote:
-> > Hi Greg,
-> > 
-> > >> $ sed -i 's;scripts/dtc/dtc-lexer.l;scripts/dtc/dtc-lexer.lex.c_shipped;g' \
-> > >> queue-{4.4,4.9,4.14}/scripts-dtc-remove-redundant-yyloc-global-declaration.patch
-> > >> If you would prefer a set of patches, let me know.
-> > > Should I just drop the patch from 4.4, 4.9, and 4.14 instead?
-> > 
-> > as the original author of the patch, I am not sure why it was backported to the LTS releases (unless enablement for gcc 10.x or
-> > other new toolchains is a requirement, which I'm not aware of). 
-
-The reason I am commenting on this is that Clang 11 is matching GCC's
--fno-common change. Google will run into this when they do their
-toolchain uprev on Android (sooner rather than later) so it'd be good
-to deal with this now:
-
-https://android.googlesource.com/kernel/build/+/refs/heads/master/build.sh#226
-
-Their devices back to 4.4 see builds with newer and newer toolchains so
-we need this back to 4.4. I am sure Chrome OS will also run into this
-shortly as well.
-
-> > However I think the sed above on the *patch* means that the patch will *only* modify the generated sources, not the input sources. I think
-> > it would be better to patch both *input* and *generated* sources, or backport the generate-at-runtime patch as well (which might be
-> > even further outside the stable policy). 
+On Tue, Mar 31, 2020 at 09:02:19AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> On Tue, Mar 31, 2020 at 3:11 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> > Just a follow up, those two patches have been picked up and should be in
+> > this coming release:
+> >
+> > https://git.kernel.org/balbi/usb/c/58582220d2d34228e5a1e1585e41b735713988bb
+> > https://git.kernel.org/rostedt/linux-trace/c/bf2cbe044da275021b2de5917240411a19e5c50d
+> >
+> > As of next-20200331, with the former applied (because it is not there
+> > yet) along with this patch, I see no warnings on arm, arm64, x86_64
+> > all{mod,yes}config.
 > 
-> What do you mean by "input sources" here?
-
-dtc-lexer.l is the input source for dtc-lexer.lex.c, which was then
-copied to dtc-lexer.lex.c_shipped prior to e039139be8c2 ("scripts/dtc:
-generate lexer and parser during build instead of shipping"). In other
-words, prior to 4.17, dtc-lexer.l is not used at all in the build
-system.
-
-However, I agree with Dirk that it would be most proper to apply the fix
-to both dtc-lexer.l and dtc-lexer.lex.c_shipped so I have attached a
-backport for 4.4, 4.9, and 4.14 that has does just that.
-
-> > Not knowing why it was backported, I would suggest to just dequeue the patch from the older trees. 
+> kbuild test robot is testing more arch's than that with Clang so it
+> may report if it finds more instances of that warning in those.
 > 
-> If I drop it for now, I'll have to add it back when gcc10 is pushed out
-> to my build systems and laptops :(
+> -- 
+> Thanks,
+> ~Nick Desaulniers
 > 
-> thanks,
-> 
-> greg k-h
 
-Hope this makes sense/isn't confusing.
+I'll keep an eye out. Hopefully not too many more are lurking but we
+have definitely caught some bad behavior with this warning already so
+getting it turned on so that all CI systems can benefit from it is
+important.
 
 Cheers,
 Nathan
-
---17pEHd4RhPHOinZp
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="4.4-0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch"
-
-From c5607dedb1e9636e76c8d026b5209c54a52087d2 Mon Sep 17 00:00:00 2001
-From: Dirk Mueller <dmueller@suse.com>
-Date: Tue, 14 Jan 2020 18:53:41 +0100
-Subject: [PATCH 4.4] scripts/dtc: Remove redundant YYLOC global declaration
-
-commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
-
-gcc 10 will default to -fno-common, which causes this error at link
-time:
-
-  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-
-This is because both dtc-lexer as well as dtc-parser define the same
-global symbol yyloc. Before with -fcommon those were merged into one
-defintion. The proper solution would be to to mark this as "extern",
-however that leads to:
-
-  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-   26 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-In file included from dtc-lexer.l:24:
-dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-  127 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-cc1: all warnings being treated as errors
-
-which means the declaration is completely redundant and can just be
-dropped.
-
-Signed-off-by: Dirk Mueller <dmueller@suse.com>
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-[robh: cherry-pick from upstream]
-Cc: stable@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-[nc: Also apply to dtc-lexer.lex.c_shipped due to a lack of
-     e039139be8c2, where dtc-lexer.l started being used]
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- scripts/dtc/dtc-lexer.l             | 1 -
- scripts/dtc/dtc-lexer.lex.c_shipped | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
-index 790fbf6cf2d7..e4e0f6a8d07b 100644
---- a/scripts/dtc/dtc-lexer.l
-+++ b/scripts/dtc/dtc-lexer.l
-@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-diff --git a/scripts/dtc/dtc-lexer.lex.c_shipped b/scripts/dtc/dtc-lexer.lex.c_shipped
-index ba525c2f9fc2..750f7a4e3ece 100644
---- a/scripts/dtc/dtc-lexer.lex.c_shipped
-+++ b/scripts/dtc/dtc-lexer.lex.c_shipped
-@@ -637,7 +637,6 @@ char *yytext;
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
--- 
-2.26.0
-
-
---17pEHd4RhPHOinZp
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="4.9-0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch"
-
-From c5607dedb1e9636e76c8d026b5209c54a52087d2 Mon Sep 17 00:00:00 2001
-From: Dirk Mueller <dmueller@suse.com>
-Date: Tue, 14 Jan 2020 18:53:41 +0100
-Subject: [PATCH 4.9] scripts/dtc: Remove redundant YYLOC global declaration
-
-commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
-
-gcc 10 will default to -fno-common, which causes this error at link
-time:
-
-  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-
-This is because both dtc-lexer as well as dtc-parser define the same
-global symbol yyloc. Before with -fcommon those were merged into one
-defintion. The proper solution would be to to mark this as "extern",
-however that leads to:
-
-  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-   26 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-In file included from dtc-lexer.l:24:
-dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-  127 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-cc1: all warnings being treated as errors
-
-which means the declaration is completely redundant and can just be
-dropped.
-
-Signed-off-by: Dirk Mueller <dmueller@suse.com>
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-[robh: cherry-pick from upstream]
-Cc: stable@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-[nc: Also apply to dtc-lexer.lex.c_shipped due to a lack of
-     e039139be8c2, where dtc-lexer.l started being used]
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- scripts/dtc/dtc-lexer.l             | 1 -
- scripts/dtc/dtc-lexer.lex.c_shipped | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
-index 790fbf6cf2d7..e4e0f6a8d07b 100644
---- a/scripts/dtc/dtc-lexer.l
-+++ b/scripts/dtc/dtc-lexer.l
-@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-diff --git a/scripts/dtc/dtc-lexer.lex.c_shipped b/scripts/dtc/dtc-lexer.lex.c_shipped
-index ba525c2f9fc2..750f7a4e3ece 100644
---- a/scripts/dtc/dtc-lexer.lex.c_shipped
-+++ b/scripts/dtc/dtc-lexer.lex.c_shipped
-@@ -637,7 +637,6 @@ char *yytext;
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
--- 
-2.26.0
-
-
---17pEHd4RhPHOinZp
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="4.14-0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch"
-
-From c5607dedb1e9636e76c8d026b5209c54a52087d2 Mon Sep 17 00:00:00 2001
-From: Dirk Mueller <dmueller@suse.com>
-Date: Tue, 14 Jan 2020 18:53:41 +0100
-Subject: [PATCH 4.14] scripts/dtc: Remove redundant YYLOC global declaration
-
-commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
-
-gcc 10 will default to -fno-common, which causes this error at link
-time:
-
-  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-
-This is because both dtc-lexer as well as dtc-parser define the same
-global symbol yyloc. Before with -fcommon those were merged into one
-defintion. The proper solution would be to to mark this as "extern",
-however that leads to:
-
-  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-   26 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-In file included from dtc-lexer.l:24:
-dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-  127 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-cc1: all warnings being treated as errors
-
-which means the declaration is completely redundant and can just be
-dropped.
-
-Signed-off-by: Dirk Mueller <dmueller@suse.com>
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-[robh: cherry-pick from upstream]
-Cc: stable@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
-[nc: Also apply to dtc-lexer.lex.c_shipped due to a lack of
-     e039139be8c2, where dtc-lexer.l started being used]
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- scripts/dtc/dtc-lexer.l             | 1 -
- scripts/dtc/dtc-lexer.lex.c_shipped | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
-index 790fbf6cf2d7..e4e0f6a8d07b 100644
---- a/scripts/dtc/dtc-lexer.l
-+++ b/scripts/dtc/dtc-lexer.l
-@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-diff --git a/scripts/dtc/dtc-lexer.lex.c_shipped b/scripts/dtc/dtc-lexer.lex.c_shipped
-index ba525c2f9fc2..750f7a4e3ece 100644
---- a/scripts/dtc/dtc-lexer.lex.c_shipped
-+++ b/scripts/dtc/dtc-lexer.lex.c_shipped
-@@ -637,7 +637,6 @@ char *yytext;
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
- 
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
--- 
-2.26.0
-
-
---17pEHd4RhPHOinZp--
