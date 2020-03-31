@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743ABC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC017C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B65420675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6B620772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645946;
-	bh=AOlABSJEi1QNjc0Zau+Hv0wo2EflZ+cMwmH7/g9BMtw=;
+	s=default; t=1585645953;
+	bh=PFJ61hZlXewm98PbidinrVr4O2dRVdQs+bRrFd1QcbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9wZDYcxaK9Swuq4hpg2vNQWH17kMtWCFrdpCUwdqcitryUWJ7vTTIGZp0vvF/O2n
-	 x5TW7nYfd/3wVmasWxGYMKBkh1LjEyNuttTQSeKeSMd0nXpyGrbcgBPRDX+C2xxpHO
-	 Hse3JBPhyoHjzlLTBBr80d/ud3J917H/fTpeBZjs=
+	b=bY7tkswwxHxpxaw9GP9DhghQcNuKLXncqyPtAYO6AHmsU0PEKsPuZSbGn2bd298nL
+	 uWWYbthUEL7qenn4rG4ilaytTJp8N3QkDec9UO+2juxzcM5PS1ItBoFggcSMnUjm5B
+	 y2AzYaVCR48/pjdrs8vPE+lzUixonYx7VfMoLZXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbgCaJMY (ORCPT
+        id S1731610AbgCaJMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:12:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58666 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbgCaJMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:12:21 -0400
+        id S1731129AbgCaJM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:12:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6456220675;
-        Tue, 31 Mar 2020 09:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 266A4208FE;
+        Tue, 31 Mar 2020 09:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645940;
-        bh=AOlABSJEi1QNjc0Zau+Hv0wo2EflZ+cMwmH7/g9BMtw=;
+        s=default; t=1585645948;
+        bh=PFJ61hZlXewm98PbidinrVr4O2dRVdQs+bRrFd1QcbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QdKXVS9LVYTFeLgJqnhYhXOF8DclNnrpdP/Zmgn/AsnV3AzLdg4Kmv+HWSZnB4nNi
-         GUq1mLjwGemyeSN6kdsle7E+Ctee2WAfmXafgxPX6par5plXhzgUv9OhwhqK+e9zSc
-         bYcfF1SuZFJgr84JSkFA0p91H5AxkWG7nESTZwyw=
+        b=ODjVxOFuiXpfkKNXJq/CbnYm7Egq3yJU2n83IEN/y2K4pW641kfN7gtmR97cyzVRz
+         KlqZLPMmap5B1IVnA6ds+qJ/FdPx3dxS4tBeIauuSBiLR0DxPUO4LfKiDYE8kSMUDq
+         X0OlZt5rcYalrEjiW/cVlKyY6Q+/40l25UbFd5j8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 039/155] bnxt_en: Fix Priority Bytes and Packets counters in ethtool -S.
-Date:   Tue, 31 Mar 2020 10:57:59 +0200
-Message-Id: <20200331085422.786023767@linuxfoundation.org>
+Subject: [PATCH 5.4 040/155] bnxt_en: fix memory leaks in bnxt_dcbnl_ieee_getets()
+Date:   Tue, 31 Mar 2020 10:58:00 +0200
+Message-Id: <20200331085422.897153000@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,94 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Edwin Peer <edwin.peer@broadcom.com>
 
-[ Upstream commit a24ec3220f369aa0b94c863b6b310685a727151c ]
+[ Upstream commit 62d4073e86e62e316bea2c53e77db10418fd5dd7 ]
 
-There is an indexing bug in determining these ethtool priority
-counters.  Instead of using the queue ID to index, we need to
-normalize by modulo 10 to get the index.  This index is then used
-to obtain the proper CoS queue counter.  Rename bp->pri2cos to
-bp->pri2cos_idx to make this more clear.
+The allocated ieee_ets structure goes out of scope without being freed,
+leaking memory. Appropriate result codes should be returned so that
+callers do not rely on invalid data passed by reference.
 
-Fixes: e37fed790335 ("bnxt_en: Add ethtool -S priority counters.")
+Also cache the ETS config retrieved from the device so that it doesn't
+need to be freed. The balance of the code was clearly written with the
+intent of having the results of querying the hardware cached in the
+device structure. The commensurate store was evidently missed though.
+
+Fixes: 7df4ae9fe855 ("bnxt_en: Implement DCBNL to support host-based DCBX.")
+Signed-off-by: Edwin Peer <edwin.peer@broadcom.com>
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   10 +++++++++-
- drivers/net/ethernet/broadcom/bnxt/bnxt.h         |    2 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c |    8 ++++----
- 3 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7387,14 +7387,22 @@ static int bnxt_hwrm_port_qstats_ext(str
- 		pri2cos = &resp2->pri0_cos_queue_id;
- 		for (i = 0; i < 8; i++) {
- 			u8 queue_id = pri2cos[i];
-+			u8 queue_idx;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
+@@ -479,24 +479,26 @@ static int bnxt_dcbnl_ieee_getets(struct
+ {
+ 	struct bnxt *bp = netdev_priv(dev);
+ 	struct ieee_ets *my_ets = bp->ieee_ets;
++	int rc;
  
-+			/* Per port queue IDs start from 0, 10, 20, etc */
-+			queue_idx = queue_id % 10;
-+			if (queue_idx > BNXT_MAX_QUEUE) {
-+				bp->pri2cos_valid = false;
-+				goto qstats_done;
-+			}
- 			for (j = 0; j < bp->max_q; j++) {
- 				if (bp->q_ids[j] == queue_id)
--					bp->pri2cos[i] = j;
-+					bp->pri2cos_idx[i] = queue_idx;
- 			}
- 		}
- 		bp->pri2cos_valid = 1;
+ 	ets->ets_cap = bp->max_tc;
+ 
+ 	if (!my_ets) {
+-		int rc;
+-
+ 		if (bp->dcbx_cap & DCB_CAP_DCBX_HOST)
+ 			return 0;
+ 
+ 		my_ets = kzalloc(sizeof(*my_ets), GFP_KERNEL);
+ 		if (!my_ets)
+-			return 0;
++			return -ENOMEM;
+ 		rc = bnxt_hwrm_queue_cos2bw_qcfg(bp, my_ets);
+ 		if (rc)
+-			return 0;
++			goto error;
+ 		rc = bnxt_hwrm_queue_pri2cos_qcfg(bp, my_ets);
+ 		if (rc)
+-			return 0;
++			goto error;
++
++		/* cache result */
++		bp->ieee_ets = my_ets;
  	}
-+qstats_done:
- 	mutex_unlock(&bp->hwrm_cmd_lock);
- 	return rc;
+ 
+ 	ets->cbs = my_ets->cbs;
+@@ -505,6 +507,9 @@ static int bnxt_dcbnl_ieee_getets(struct
+ 	memcpy(ets->tc_tsa, my_ets->tc_tsa, sizeof(ets->tc_tsa));
+ 	memcpy(ets->prio_tc, my_ets->prio_tc, sizeof(ets->prio_tc));
+ 	return 0;
++error:
++	kfree(my_ets);
++	return rc;
  }
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -1688,7 +1688,7 @@ struct bnxt {
- 	u16			fw_rx_stats_ext_size;
- 	u16			fw_tx_stats_ext_size;
- 	u16			hw_ring_stats_size;
--	u8			pri2cos[8];
-+	u8			pri2cos_idx[8];
- 	u8			pri2cos_valid;
  
- 	u16			hwrm_max_req_len;
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -589,25 +589,25 @@ skip_ring_stats:
- 		if (bp->pri2cos_valid) {
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_rx_bytes_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
- 
- 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
- 			}
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_rx_pkts_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
- 
- 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
- 			}
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_tx_bytes_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
- 
- 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
- 			}
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_tx_pkts_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
- 
- 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
- 			}
+ static int bnxt_dcbnl_ieee_setets(struct net_device *dev, struct ieee_ets *ets)
 
 
