@@ -4,59 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3491AC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7385CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C93A20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9AD20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646408;
-	bh=njbwwtwH2gQSrWyiV6cvvDdtJ368sq8JCDsnpEetON0=;
+	s=default; t=1585646415;
+	bh=PVwq12ikNVjYzL7dLyszQb2N26rWLUYHtiw4e8tlS6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=odMzjDOb2oRIGDDcS53kww9PHSEdsLXoGAuCXxWjz/F8wwC74o+/6PjWR2WwReqRb
-	 1dh1/j8a8ausDXkDhZn38b6EiNsnKWBmp9mqead5J+qoU3dmJVcuPZqI3IoiGRWM58
-	 kRjias5S/kaawAVmLdxSr06pFt+10TSm5mJ4HUpE=
+	b=GO/ESTL5bXVR70Xyvoro5RlSD1ByubQcGxYtqgzCj0Iq/LcozfCsav4nlRAHYet/Q
+	 Y6pNhDDqXYmPXe3+K0+UX+Z9SAjKH2J7jO8NSEBD3q7Z5m38Szr6oUCiBTAP75pUe4
+	 lNHzgeKWNss4bGlddSmD1GUoHzjfQOV+yuaTyybg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731911AbgCaJUH (ORCPT
+        id S1731935AbgCaJUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:20:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:20:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731917AbgCaJPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:15:38 -0400
+        id S1731881AbgCaJPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:15:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6FDA20675;
-        Tue, 31 Mar 2020 09:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E8CA20675;
+        Tue, 31 Mar 2020 09:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646137;
-        bh=njbwwtwH2gQSrWyiV6cvvDdtJ368sq8JCDsnpEetON0=;
+        s=default; t=1585646123;
+        bh=PVwq12ikNVjYzL7dLyszQb2N26rWLUYHtiw4e8tlS6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yYUQ6ipTvNqS2nYDgh8MOLK9ytRT+xli6J2IkZ3RZyTAMO44Wew3wzqfudniq9kog
-         xknCE1KUMpH2oMWRok6wKsPlqnCPQwut5flKcWfgFxZ3OqFh+QUyW/pMTU44DzuQ5+
-         eGHVymvV9/ohMmUEuQiTXYXYDnMwU/2qacqTGJQY=
+        b=o8Q3OArrffZllIvUD5o1dVpOn5EK/rD2QRrjwTWTdXPCnZKngzXNRvTaWI+i16ghZ
+         pjPUDtNPP2ZasIdmEUr+mBLV0M8D8DRpzfu3Aaxs8MsFiqz8uBIL+4HY8dY5KxJocQ
+         mobAzy1yqfe5ZAZyV74hUcZVd2m9vctu5hfKx27o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 094/155] tools: Let O= makes handle a relative path with -C option
-Date:   Tue, 31 Mar 2020 10:58:54 +0200
-Message-Id: <20200331085429.173562151@linuxfoundation.org>
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH 5.4 090/155] x86/ioremap: Fix CONFIG_EFI=n build
+Date:   Tue, 31 Mar 2020 10:58:50 +0200
+Message-Id: <20200331085428.515591878@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -69,72 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Borislav Petkov <bp@suse.de>
 
-commit be40920fbf1003c38ccdc02b571e01a75d890c82 upstream.
+commit 870b4333a62e45b0b2000d14b301b7b8b8cad9da upstream.
 
-When I tried to compile tools/perf from the top directory with the -C
-option, the O= option didn't work correctly if I passed a relative path:
+In order to use efi_mem_type(), one needs CONFIG_EFI enabled. Otherwise
+that function is undefined. Use IS_ENABLED() to check and avoid the
+ifdeffery as the compiler optimizes away the following unreachable code
+then.
 
-  $ make O=BUILD -C tools/perf/
-  make: Entering directory '/home/mhiramat/ksrc/linux/tools/perf'
-    BUILD:   Doing 'make -j8' parallel build
-  ../scripts/Makefile.include:4: *** O=/home/mhiramat/ksrc/linux/tools/perf/BUILD does not exist.  Stop.
-  make: *** [Makefile:70: all] Error 2
-  make: Leaving directory '/home/mhiramat/ksrc/linux/tools/perf'
-
-The O= directory existence check failed because the check script ran in
-the build target directory instead of the directory where I ran the make
-command.
-
-To fix that, once change directory to $(PWD) and check O= directory,
-since the PWD is set to where the make command runs.
-
-Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
+Fixes: 985e537a4082 ("x86/ioremap: Map EFI runtime services data as encrypted for SEV")
 Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158351957799.3363.15269768530697526765.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/7561e981-0d9b-d62c-0ef2-ce6007aff1ab@infradead.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/Makefile            |    2 +-
- tools/scripts/Makefile.include |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/mm/ioremap.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/tools/perf/Makefile
-+++ b/tools/perf/Makefile
-@@ -35,7 +35,7 @@ endif
- # Only pass canonical directory names as the output directory:
- #
- ifneq ($(O),)
--  FULL_O := $(shell readlink -f $(O) || echo $(O))
-+  FULL_O := $(shell cd $(PWD); readlink -f $(O) || echo $(O))
- endif
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -115,6 +115,9 @@ static void __ioremap_check_other(resour
+ 	if (!sev_active())
+ 		return;
  
- #
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- ifneq ($(O),)
- ifeq ($(origin O), command line)
--	dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
--	ABSOLUTE_O := $(shell cd $(O) ; pwd)
-+	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-+	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
- 	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
- 	COMMAND_O := O=$(ABSOLUTE_O)
- ifeq ($(objtree),)
++	if (!IS_ENABLED(CONFIG_EFI))
++		return;
++
+ 	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
+ 		desc->flags |= IORES_MAP_ENCRYPTED;
+ }
 
 
