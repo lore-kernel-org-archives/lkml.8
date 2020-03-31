@@ -2,184 +2,119 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF3AC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CE7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F852072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EC82072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hDb/puwp"
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="ROkgmOBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgCaSzv (ORCPT
+        id S1727851AbgCaS4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:55:51 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60107 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726295AbgCaSzu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:55:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585680950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9N83ulIWUt944dVDEJ06AJzgWaetQqP5tl+Ibkm3ba4=;
-        b=hDb/puwpT4Iu1MHaTt4AKvXL2NAyF0iXNZ0+xRa1/g4IKaFpKe4Q1MlGqBWy2fNGEoaolX
-        yvEDHK1rieRLs96sLwz3bO7sX/E5FlIirwiwcq3ycgm0dTkr6DUTftxzxZ5KyNnLzVCea+
-        LLHRW2piPxeL1LYKj35WZsQ5R6eVLfY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-8Ao8Gkc-MOa1F4ej1oUXDQ-1; Tue, 31 Mar 2020 14:55:46 -0400
-X-MC-Unique: 8Ao8Gkc-MOa1F4ej1oUXDQ-1
-Received: by mail-wr1-f69.google.com with SMTP id y1so13365723wrn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:55:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9N83ulIWUt944dVDEJ06AJzgWaetQqP5tl+Ibkm3ba4=;
-        b=QnkgE7LVr5lvjqJGoolbwBhGefoLlIAtWgNEeyDgEM0A8FT9DDn5y7IPW2lVWqPdrZ
-         iP+eKJ+PDfYQ6/OUj5fisOfAQkMb8KHzg3OGSlmmlr+vNPK15FfEYWaed9MAkGebHT67
-         16CiXNlEQunExAXQ3xEGYkcvJKX5nxI0rUgVSTKRiQdVu6cKJQuJ/YtJzwet6RyQh+i0
-         NICeuCIHSMRyp5/BWRHvZt1BexyYTAhgx/g3GTDhjCliFAPqj2ZWKHEN1svOEsm8rjtE
-         KSRFBAqvZ6SAPJCATT7pqeYtFMdihoSiXRJRWnqcTLQ/W3tIMfSYGJ37QnwIKMt0Clhm
-         qcUw==
-X-Gm-Message-State: AGi0PuYdOylB3//lkjxVWCFW45TRPMQXV6uT2qpxBmbtOkmfRMAvzn1K
-        grOqRMe93+/MBofV8TFp89flBwQS0jkGtOcYlLT5b2JlMerijhqbSpJ91fq3+E2JAZd1W478JGG
-        d/2jzG9dCJry0YxNGB92gNBB2
-X-Received: by 2002:a1c:82:: with SMTP id 124mr257867wma.63.1585680945326;
-        Tue, 31 Mar 2020 11:55:45 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIItSTAIpN2eJyUg/bKQdlRjERgE+twajxI2WUL+EtqTwGmwdqtCNM2ixY8sVPtXuyHJWpU4g==
-X-Received: by 2002:a1c:82:: with SMTP id 124mr257825wma.63.1585680944950;
-        Tue, 31 Mar 2020 11:55:44 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id y7sm30626556wrq.54.2020.03.31.11.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 11:55:44 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 14:55:41 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Tue, 31 Mar 2020 14:56:55 -0400
+Received: from mail-eopbgr80133.outbound.protection.outlook.com ([40.107.8.133]:64534
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726290AbgCaS4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 14:56:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GryuARC6WEwfPWGvK/HYOcfDmBzhT90CmVK61iJ38d/jkJkG5CjHMfIgQ9PU4YdQ1CayKuZtn7zOBiw044HXNe8LXDGDA82pk9DGW24WFVnjvUQhk5NVVKYNZzWcwD0IZWFL1TzmFkkd2V3XsE3TrIugvuq0IcOCAKghVYDpwI/Vh6j9vLWPko3wF4hzIBvMJgEoQpzfw8iER5gfUWlouRjbSo50kE2JIOcMuuM2J3IpsPUHyCyWSVnNihs6AyYF7eyGZTVWw/qEYi+yb+pwn1Mh4yRnF6ZOLX0YWzgHkCER/oAlp2+c9Lg86ZgMuCtmaOgKuMEKSZAGbAsXoTYRIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J0sEbtWBleY6lf+7u0Z1p8PRRvba6Dh3Dg/R2UrtjdA=;
+ b=DpBMFQY0DWvShxPREymZFh2Jp1lBbykxM0p3+Amgqx4/Vjg3xX4Kw2Uk7ePVf79baRLTFtsVhICWZ2NfIM6x7Psicj74MZ4i/h93MU4ASdoCnl7UbODvWOJNjDXDLYzv0lDBSoXTFqBk1DFntxmkR2HxZ4sadeYLxtYr3QQRbbyfsXpZmOTmpQAg9QIJX5/tg5xVr/mvTMnzw+w8ZsXl4l84NXYWf4Le3uqRN7cp4JNJfMaidSQXOIlHervYtNC781c+SaiglrZHHYWNW5LA8CDBV873lBlypUzDhnAxmawccAfZV6UxhPRS58s/aT5fI930yiUQofpyfGQAdXDHbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J0sEbtWBleY6lf+7u0Z1p8PRRvba6Dh3Dg/R2UrtjdA=;
+ b=ROkgmOBv6U976wd5F5ge58kZmOTlmUqNaCsXN7qcc8iaJWkL0TFrjxNhdwFP9axghWixB1Krf6DuWjg3gAzxnGsgrw6svdllCwFIDQvPDYp/AcObVNJVREvaUeuf0UR8nK+TvDPvHRLwU8g7iQUhgNVH4gckg7lvA2ihVgsT1xs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=rasmus.villemoes@prevas.dk; 
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM (20.178.126.85) by
+ VI1PR10MB1837.EURPRD10.PROD.OUTLOOK.COM (10.165.195.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Tue, 31 Mar 2020 18:56:51 +0000
+Received: from VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e58f:1097:b71d:32c7]) by VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::e58f:1097:b71d:32c7%5]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
+ 18:56:51 +0000
+Subject: Re: [PATCH] compiler.h: fix error in BUILD_BUG_ON() reporting
+To:     Joe Perches <joe@perches.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Daniel Santos <daniel.santos@pobox.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: mmotm 2020-03-30-18-46 uploaded (VDPA + vhost)
-Message-ID: <20200331144650-mutt-send-email-mst@kernel.org>
-References: <20200331014748.ajL0G62jF%akpm@linux-foundation.org>
- <969cacf1-d420-223d-7cc7-5b1b2405ec2a@infradead.org>
- <20200331143437-mutt-send-email-mst@kernel.org>
- <9c03fee8-af1a-2035-b903-611a631094b0@infradead.org>
+        Ian Abbott <abbotti@mev.co.uk>
+References: <20200331112637.25047-1-vegard.nossum@oracle.com>
+ <dc53b8704ec674cba636b41d7f55bf507a7bd7aa.camel@perches.com>
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Message-ID: <123d3606-cebf-4261-4b04-7d53d1fcdb07@prevas.dk>
+Date:   Tue, 31 Mar 2020 20:56:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <dc53b8704ec674cba636b41d7f55bf507a7bd7aa.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM6P191CA0054.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:209:7f::31) To VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c03fee8-af1a-2035-b903-611a631094b0@infradead.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.149] (5.186.116.45) by AM6P191CA0054.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:7f::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Tue, 31 Mar 2020 18:56:50 +0000
+X-Originating-IP: [5.186.116.45]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2a8fa453-f5d8-4a8d-8d15-08d7d5a54597
+X-MS-TrafficTypeDiagnostic: VI1PR10MB1837:
+X-Microsoft-Antispam-PRVS: <VI1PR10MB183798126FAE38CE3FF60D5B93C80@VI1PR10MB1837.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0359162B6D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR10MB2765.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(366004)(396003)(346002)(39850400004)(136003)(54906003)(316002)(110136005)(86362001)(16526019)(478600001)(44832011)(956004)(186003)(66476007)(26005)(31696002)(66946007)(66556008)(31686004)(2616005)(4326008)(4744005)(2906002)(8676002)(16576012)(5660300002)(36756003)(6486002)(8936002)(81166006)(81156014)(8976002)(52116002);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: prevas.dk does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3NBLE4605JJWO0X3QxGiejYnnvwX0YBHHBew345k1lylQ77Wv7VgFIirzPliPdegIOv+r+fN+ftOl6KKsZA2FucwraXDqi33Tu0N8tQ50iKShiZ8IEX/2EFv/70FrbnkKmMac+wiqNPmlei15j1D4Uz+n4afW5PaiweaD1qkA9bUQK+viSj+0zDiOGJHYO6XvQNw6Eeg27IB/1z+Ob7mUnEuDuGf5JqMvou8E58ZQNrK4G2Tmpt9pvryVT07nNhfPWSma4WE09YDkZafHpu6XsHP3yHG2DB4hFujBsZhoOgVkXvGJ1lHZI0SttDi1q8in3tPk37ZP2ttTnRqxEE74Ncj0QvkWu2Jtzj+0cq8b/mZe1NVAQEkg9Id8WzlOqfcKqDaVERcNBCheEB6KPJ04bpl68RKaI79PxfmQBxI+z42XNdgC+7+so6LB2G12kWP
+X-MS-Exchange-AntiSpam-MessageData: shhP9JW+g3lUB+VTWvN8zG78579USA5uBHzsXB8ff6FB7EZ0rsHhVOo1cTQzZfTx0pdrzFFGz+KgPyKpslArWSk7BMT3s7GM7fvdudwtLs2Bi3WF0yYMOY5y9yxe05gJgvsA0T0KxPlmQzQd+DSyjQ==
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a8fa453-f5d8-4a8d-8d15-08d7d5a54597
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2020 18:56:51.1463
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hM55+/LZHLMzdDsAuB12uBPhe0SVDCx3Dnl8jDAhjHbKnMewpTQbYZCPCvaQO+fCGTUZXSRY0Nh+/cFMnhwhi40XBtmy0VZBLIHuv4Wt4pQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1837
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:42:47AM -0700, Randy Dunlap wrote:
-> On 3/31/20 11:37 AM, Michael S. Tsirkin wrote:
-> > On Tue, Mar 31, 2020 at 11:27:54AM -0700, Randy Dunlap wrote:
-> >> On 3/30/20 6:47 PM, akpm@linux-foundation.org wrote:
-> >>> The mm-of-the-moment snapshot 2020-03-30-18-46 has been uploaded to
-> >>>
-> >>>    http://www.ozlabs.org/~akpm/mmotm/
-> >>>
-> >>> mmotm-readme.txt says
-> >>>
-> >>> README for mm-of-the-moment:
-> >>>
-> >>> http://www.ozlabs.org/~akpm/mmotm/
-> >>>
-> >>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> >>> more than once a week.
-> >>>
-> >>> You will need quilt to apply these patches to the latest Linus release (5.x
-> >>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> >>> http://ozlabs.org/~akpm/mmotm/series
-> >>>
-> >>> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> >>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> >>> followed by the base kernel version against which this patch series is to
-> >>> be applied.
-> >>>
-> >>> This tree is partially included in linux-next.  To see which patches are
-> >>> included in linux-next, consult the `series' file.  Only the patches
-> >>> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-> >>> linux-next.
-> >>>
-> >>>
-> >>> A full copy of the full kernel tree with the linux-next and mmotm patches
-> >>> already applied is available through git within an hour of the mmotm
-> >>> release.  Individual mmotm releases are tagged.  The master branch always
-> >>> points to the latest release, so it's constantly rebasing.
-> >>>
-> >>> 	https://github.com/hnaz/linux-mm
-> >>
-> >> on i386:
-> >>
-> >> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_init':
-> >> vdpa.c:(.init.text+0x52): undefined reference to `__vdpa_register_driver'
-> >> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_exit':
-> >> vdpa.c:(.exit.text+0x14): undefined reference to `vdpa_unregister_driver'
-> >>
-> >>
-> >>
-> >> drivers/virtio/vdpa/ is not being built. (confusing!)
-> >>
-> >> CONFIG_VIRTIO=m
-> >> # CONFIG_VIRTIO_MENU is not set
-> >> CONFIG_VDPA=y
-> > 
-> > Hmm. OK. Can't figure it out. CONFIG_VDPA is set why isn't
-> > drivers/virtio/vdpa/ built?
-> > we have:
-> > 
+On 31/03/2020 20.20, Joe Perches wrote:
+> On Tue, 2020-03-31 at 13:26 +0200, Vegard Nossum wrote:
+
+>>  #define compiletime_assert(condition, msg) \
+>> -	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>> +	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
 > 
-> Ack.  Hopefully Yamada-san can tell us what is happening here.
-
-
-I reproduced this without difficulty btw, thanks for the report!
-
-
-> > 
-> > obj-$(CONFIG_VDPA) += vdpa/
-> > 
-> > and under that:
-> > 
-> > obj-$(CONFIG_VDPA) += vdpa.o
-> > 
-> > 
-> >> CONFIG_VDPA_MENU=y
-> >> # CONFIG_VDPA_SIM is not set
-> >> CONFIG_VHOST_IOTLB=y
-> >> CONFIG_VHOST_RING=m
-> >> CONFIG_VHOST=y
-> >> CONFIG_VHOST_SCSI=m
-> >> CONFIG_VHOST_VDPA=y
-> >>
-> >> Full randconfig file is attached.
-> >>
-> >> (This same build failure happens with today's linux-next, Mar. 31.)
-> >>
-> >> @Yamada-san:  Is this a kbuild problem (or feature)?
-> >>
-> >> -- 
-> >> ~Randy
-> >> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > 
+> This might be better using something like __LINE__ ## _ ## __COUNTER__
 > 
+> as line # is somewhat useful to identify the specific assert in a file.
 > 
-> -- 
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
 
+Eh, if the assert fires, doesn't the compiler's diagnostics already
+contain all kinds of location information?
+
+Rasmus
