@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85400C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B098C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A47E208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5963B20772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646252;
-	bh=yOKg1tKJy2bt2wOT/yU5kFgS1IBYg+vcjwOpadC+8l0=;
+	s=default; t=1585646255;
+	bh=kdFz8qo7QSZ0eaaRBaUvwnOGED9tNdNhPXMmLES0Pvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=roIEKl+eCieiBYAbhR9aq2YzXbUU1qOc/M6cCmrlnptrU3YQAmAl55pFb36Tlo8BD
-	 ooPreljfhi8pBHo28yC/cUIL3bAFpQaPOYJ/lI4O8/byPLkB/8HgLW17F/c4lQAOXr
-	 ZCGI3tCWgZXeno7AZIkznY/TvwAqu50YoweB+CrU=
+	b=dwZ6f6T2fiv5E4OfDIhxra8j15lZmTQ0nDErvRXfa6HSotSoaH0oCtUV9lrDwH574
+	 2USQqSuv5jRG01DDtsG7EXJlERoDBqSpaJroOXAGPsfSE07QA6bIfF7OeP/L6PVJLU
+	 ed2jMNgfjyRr2VSJkplI4lkl1KhIB5GO6Veybeq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731820AbgCaJRa (ORCPT
+        id S1730888AbgCaJRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38548 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731616AbgCaJR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:27 -0400
+        id S1732062AbgCaJRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF3F5208FE;
-        Tue, 31 Mar 2020 09:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0FF20772;
+        Tue, 31 Mar 2020 09:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646247;
-        bh=yOKg1tKJy2bt2wOT/yU5kFgS1IBYg+vcjwOpadC+8l0=;
+        s=default; t=1585646249;
+        bh=kdFz8qo7QSZ0eaaRBaUvwnOGED9tNdNhPXMmLES0Pvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7DN2Ijcg/RB5J894pwwnAgXalzy0Ct6M0FSSSSLnQKFfhL/V7S+1myv8vAZc/iUN
-         UMIPZLbRRhu/71jhvnfLGenBv7YFzuYSFWm9l2H21+WS+2qWd9dJVRGdSpzDTDsrBC
-         D5efQhn99SjqRdAM4zUONVCzSZiDFs/KF9+xtrfc=
+        b=pZns82jaKTT6uRbrrxF1MbS0xShy4nJTw4QyaEYzB9Kti2+eQptR1siyawKyMn8U9
+         y3BO1GPGRmG+LGpklTcLcOiP05uuErUkgl+DTIC8zUDOrAUf7rMdwWWWK+N7Ew4riM
+         EyluqiL11fbEZV7oWitr2A4kHHcWAYn+AdV8BhUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        stable@vger.kernel.org,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.4 129/155] bpf: Initialize storage pointers to NULL to prevent freeing garbage pointer
-Date:   Tue, 31 Mar 2020 10:59:29 +0200
-Message-Id: <20200331085432.766853128@linuxfoundation.org>
+Subject: [PATCH 5.4 130/155] bpf/btf: Fix BTF verification of enum members in struct/union
+Date:   Tue, 31 Mar 2020 10:59:30 +0200
+Message-Id: <20200331085432.883481541@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Yoshiki Komachi <komachi.yoshiki@gmail.com>
 
-commit 62039c30c19dcab96621e074aeeb90da7100def7 upstream.
+commit da6c7faeb103c493e505e87643272f70be586635 upstream.
 
-Local storage array isn't initialized, so if cgroup storage allocation fails
-for BPF_CGROUP_STORAGE_SHARED, error handling code will attempt to free
-uninitialized pointer for BPF_CGROUP_STORAGE_PERCPU storage type. Avoid this
-by always initializing storage pointers to NULLs.
+btf_enum_check_member() was currently sure to recognize the size of
+"enum" type members in struct/union as the size of "int" even if
+its size was packed.
 
-Fixes: 8bad74f9840f ("bpf: extend cgroup bpf core to allow multiple cgroup storage types")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+This patch fixes BTF enum verification to use the correct size
+of member in BPF programs.
+
+Fixes: 179cde8cef7e ("bpf: btf: Check members of struct/union")
+Signed-off-by: Yoshiki Komachi <komachi.yoshiki@gmail.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200309222756.1018737-1-andriin@fb.com
+Link: https://lore.kernel.org/bpf/1583825550-18606-2-git-send-email-komachi.yoshiki@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/cgroup.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/bpf/btf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -303,8 +303,8 @@ int __cgroup_bpf_attach(struct cgroup *c
- {
- 	struct list_head *progs = &cgrp->bpf.progs[type];
- 	struct bpf_prog *old_prog = NULL;
--	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE],
--		*old_storage[MAX_BPF_CGROUP_STORAGE_TYPE] = {NULL};
-+	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = {};
-+	struct bpf_cgroup_storage *old_storage[MAX_BPF_CGROUP_STORAGE_TYPE] = {};
- 	enum bpf_cgroup_storage_type stype;
- 	struct bpf_prog_list *pl;
- 	bool pl_was_allocated;
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -2309,7 +2309,7 @@ static int btf_enum_check_member(struct
+ 
+ 	struct_size = struct_type->size;
+ 	bytes_offset = BITS_ROUNDDOWN_BYTES(struct_bits_off);
+-	if (struct_size - bytes_offset < sizeof(int)) {
++	if (struct_size - bytes_offset < member_type->size) {
+ 		btf_verifier_log_member(env, struct_type, member,
+ 					"Member exceeds struct_size");
+ 		return -EINVAL;
 
 
