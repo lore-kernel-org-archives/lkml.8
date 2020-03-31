@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7DFC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249E7C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2232073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED08E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbgCaJlR (ORCPT
+        id S1730460AbgCaJlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:41:17 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34077 "EHLO 1wt.eu"
+        Tue, 31 Mar 2020 05:41:23 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34081 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730273AbgCaJlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:41:15 -0400
+        id S1730182AbgCaJlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:41:21 -0400
 Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f6hP024526;
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 02V9f6r2024524;
         Tue, 31 Mar 2020 11:41:06 +0200
 From:   Willy Tarreau <w@1wt.eu>
 To:     Denis Efremov <efremov@linux.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 19/23] floppy: cleanup: make check_wp() not rely on current_{fdc,drive} anymore
-Date:   Tue, 31 Mar 2020 11:40:50 +0200
-Message-Id: <20200331094054.24441-20-w@1wt.eu>
+Subject: [PATCH 17/23] floppy: cleanup: make fdc_configure() not rely on current_fdc anymore
+Date:   Tue, 31 Mar 2020 11:40:48 +0200
+Message-Id: <20200331094054.24441-18-w@1wt.eu>
 X-Mailer: git-send-email 2.9.0
 In-Reply-To: <20200331094054.24441-1-w@1wt.eu>
 References: <20200331094054.24441-1-w@1wt.eu>
@@ -37,69 +37,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the fdc and drive are passed in argument so that the function does
-not use current_fdc nor current_drive anymore.
+Now the fdc is passed in argument so that the function does not
+use current_fdc anymore.
 
 Signed-off-by: Willy Tarreau <w@1wt.eu>
 ---
- drivers/block/floppy.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/block/floppy.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index b929b60afe9b..b9a3a04c2636 100644
+index fcccbb4c143e..c1338c4bb941 100644
 --- a/drivers/block/floppy.c
 +++ b/drivers/block/floppy.c
-@@ -1561,29 +1561,29 @@ static void seek_interrupt(void)
- 	floppy_ready();
- }
+@@ -1240,16 +1240,15 @@ static void perpendicular_mode(int fdc)
+ static int fifo_depth = 0xa;
+ static int no_fifo;
  
--static void check_wp(void)
-+static void check_wp(int fdc, int drive)
+-static int fdc_configure(void)
++static int fdc_configure(int fdc)
  {
--	if (test_bit(FD_VERIFY_BIT, &drive_state[current_drive].flags)) {
-+	if (test_bit(FD_VERIFY_BIT, &drive_state[drive].flags)) {
- 					/* check write protection */
--		output_byte(current_fdc, FD_GETSTATUS);
--		output_byte(current_fdc, UNIT(current_drive));
--		if (result(current_fdc) != 1) {
--			fdc_state[current_fdc].reset = 1;
-+		output_byte(fdc, FD_GETSTATUS);
-+		output_byte(fdc, UNIT(drive));
-+		if (result(fdc) != 1) {
-+			fdc_state[fdc].reset = 1;
- 			return;
- 		}
--		clear_bit(FD_VERIFY_BIT, &drive_state[current_drive].flags);
-+		clear_bit(FD_VERIFY_BIT, &drive_state[drive].flags);
- 		clear_bit(FD_NEED_TWADDLE_BIT,
--			  &drive_state[current_drive].flags);
--		debug_dcl(drive_params[current_drive].flags,
-+			  &drive_state[drive].flags);
-+		debug_dcl(drive_params[drive].flags,
- 			  "checking whether disk is write protected\n");
--		debug_dcl(drive_params[current_drive].flags, "wp=%x\n",
-+		debug_dcl(drive_params[drive].flags, "wp=%x\n",
- 			  reply_buffer[ST3] & 0x40);
- 		if (!(reply_buffer[ST3] & 0x40))
- 			set_bit(FD_DISK_WRITABLE_BIT,
--				&drive_state[current_drive].flags);
-+				&drive_state[drive].flags);
- 		else
- 			clear_bit(FD_DISK_WRITABLE_BIT,
--				  &drive_state[current_drive].flags);
-+				  &drive_state[drive].flags);
- 	}
+ 	/* Turn on FIFO */
+-	output_byte(current_fdc, FD_CONFIGURE);
+-	if (need_more_output(current_fdc) != MORE_OUTPUT)
++	output_byte(fdc, FD_CONFIGURE);
++	if (need_more_output(fdc) != MORE_OUTPUT)
+ 		return 0;
+-	output_byte(current_fdc, 0);
+-	output_byte(current_fdc, 0x10 | (no_fifo & 0x20) | (fifo_depth & 0xf));
+-	output_byte(current_fdc, 0);		/* pre-compensation from track
+-				   0 upwards */
++	output_byte(fdc, 0);
++	output_byte(fdc, 0x10 | (no_fifo & 0x20) | (fifo_depth & 0xf));
++	output_byte(fdc, 0);    /* pre-compensation from track 0 upwards */
+ 	return 1;
  }
  
-@@ -1627,7 +1627,7 @@ static void seek_floppy(void)
- 			track = 1;
- 		}
- 	} else {
--		check_wp();
-+		check_wp(current_fdc, current_drive);
- 		if (raw_cmd->track != drive_state[current_drive].track &&
- 		    (raw_cmd->flags & FD_RAW_NEED_SEEK))
- 			track = raw_cmd->track;
+@@ -1288,7 +1287,7 @@ static void fdc_specify(void)
+ 
+ 	if (fdc_state[current_fdc].need_configure &&
+ 	    fdc_state[current_fdc].version >= FDC_82072A) {
+-		fdc_configure();
++		fdc_configure(current_fdc);
+ 		fdc_state[current_fdc].need_configure = 0;
+ 	}
+ 
+@@ -4318,7 +4317,7 @@ static char __init get_fdc_version(void)
+ 		return FDC_UNKNOWN;
+ 	}
+ 
+-	if (!fdc_configure()) {
++	if (!fdc_configure(current_fdc)) {
+ 		pr_info("FDC %d is an 82072\n", current_fdc);
+ 		return FDC_82072;	/* 82072 doesn't know CONFIGURE */
+ 	}
 -- 
 2.20.1
 
