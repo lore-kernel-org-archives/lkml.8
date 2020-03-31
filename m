@@ -2,113 +2,177 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0BCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E02BC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64693207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:57:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GhnxmH2v"
+	by mail.kernel.org (Postfix) with ESMTP id 2E429208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585648690;
+	bh=j53bvZidThROsMlIKqxJh6L5OROspIzLNeciEaCtFzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gP922iMwXwzfNIlYlFer62dKdIDxQdJ/Wi0tVIu/VY47t5iEYd+yBX+CTdAq28YIw
+	 aDvh1JHX0QUAiNUkOiyinuq+Uml0mBqjgyyl8XWssFjftvVQ809JFwtJySJ0AsbtDU
+	 9IyeLy3Bs+wGJXgJ7kvcvDHhFkbYewLthjam5mj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbgCaJ5y (ORCPT
+        id S1730365AbgCaJ6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:57:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42880 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729997AbgCaJ5y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:57:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=iOKElgmkO7oC+ndGm2kOhGae8J3RZLJOYtpE5DlQ7Tc=; b=GhnxmH2v4xs6HeVqibsU//Qus8
-        HHcERa/r0hxFhrSPffCRqR3ExQACaXp4XksYvwq3fAIlkK9wfl1ydB2+BULoeFY+uLBMbkBrqwwk7
-        EXo/EV9zlA1cGi8oKBSIobst9kQSFCe04i6J4UOaHbgm9vsI1qA+qPmLML/tBp+1FvCns/lNImPL+
-        nKEmoU9D9Nl8FmPqZotmU344Vb9SeTkpVMieQRlTN+EP9FDUn4IBWXvzIV2y90KRjHi72FVYMCMJh
-        f7yUQaTcNIFhS7eT9zT4c+9zZ2manT/pjouyjMKRx8G6gN1jHLrlEYPMzADTzbY/C5NZhgeTZhuKz
-        pc/5OX+w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJDeN-0005Ta-MN; Tue, 31 Mar 2020 09:57:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 31 Mar 2020 05:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729997AbgCaJ6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:58:09 -0400
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 304603012D8;
-        Tue, 31 Mar 2020 11:57:37 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1A70A29C6922A; Tue, 31 Mar 2020 11:57:37 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 11:57:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     syzbot <syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com>
-Cc:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Subject: Re: INFO: trying to register non-static key in try_to_wake_up
-Message-ID: <20200331095737.GO20730@hirez.programming.kicks-ass.net>
-References: <000000000000ec257905a21f7415@google.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36A8E207FF;
+        Tue, 31 Mar 2020 09:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585648687;
+        bh=j53bvZidThROsMlIKqxJh6L5OROspIzLNeciEaCtFzs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EBh8rBOM0iPoZa7T/yhJaggNiQYCjxnXFxSfp8oiusNoEvZ4xsfOUikvuWa9iDab0
+         SYiB81mMVKdi6dCCj2pSvw4JtoTuDykVQMTK+90otGUorPI0gLF7vaojwQRvZ5Zf4C
+         rE+n0qnyXYoAIBul8CIKKf7+gNUMbxgwddThTcs0=
+Date:   Tue, 31 Mar 2020 11:58:02 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] modpost: move the namespace field in Module.symvers
+ last
+Message-ID: <20200331095802.GA3026@linux-8ccs>
+References: <20200311170120.12641-1-jeyu@kernel.org>
+ <CANcMJZDhSUV8CU_ixOSxstVVBMW3rVrrQVYMmy1fz=OdhxA_GQ@mail.gmail.com>
+ <CANcMJZD9Lz-J_idL5i225VR_3Mo6PcTRsYBBrGsMByX6W4jepQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <000000000000ec257905a21f7415@google.com>
+In-Reply-To: <CANcMJZD9Lz-J_idL5i225VR_3Mo6PcTRsYBBrGsMByX6W4jepQ@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:01:12PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    9420e8ad Merge tag 'for-linus' of git://git.kernel.org/pub..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1206ed4be00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e84d7ebd1361da13c356
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com
-> 
-> INFO: trying to register non-static key.
-> the code is fine but needs lockdep annotation.
-> turning off the locking correctness validator.
-> CPU: 1 PID: 1014 Comm: syz-executor.0 Not tainted 5.6.0-rc7-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  <IRQ>
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  assign_lock_key kernel/locking/lockdep.c:880 [inline]
->  register_lock_class+0x14c4/0x1540 kernel/locking/lockdep.c:1189
->  __lock_acquire+0xfc/0x3ca0 kernel/locking/lockdep.c:3836
->  lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
->  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
->  _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
->  try_to_wake_up+0x9f/0x17c0 kernel/sched/core.c:2547
++++ John Stultz [30/03/20 23:25 -0700]:
+>On Mon, Mar 30, 2020 at 10:49 PM John Stultz <john.stultz@linaro.org> wrote:
+>> On Wed, Mar 11, 2020 at 10:03 AM Jessica Yu <jeyu@kernel.org> wrote:
+>> >
+>> > In order to preserve backwards compatability with kmod tools, we have to
+>> > move the namespace field in Module.symvers last, as the depmod -e -E
+>> > option looks at the first three fields in Module.symvers to check symbol
+>> > versions (and it's expected they stay in the original order of crc,
+>> > symbol, module).
+>> >
+>> > In addition, update an ancient comment above read_dump() in modpost that
+>> > suggested that the export type field in Module.symvers was optional. I
+>> > suspect that there were historical reasons behind that comment that are
+>> > no longer accurate. We have been unconditionally printing the export
+>> > type since 2.6.18 (commit bd5cbcedf44), which is over a decade ago now.
+>> >
+>> > Fix up read_dump() to treat each field as non-optional. I suspect the
+>> > original read_dump() code treated the export field as optional in order
+>> > to support pre <= 2.6.18 Module.symvers (which did not have the export
+>> > type field). Note that although symbol namespaces are optional, the
+>> > field will not be omitted from Module.symvers if a symbol does not have
+>> > a namespace. In this case, the field will simply be empty and the next
+>> > delimiter or end of line will follow.
+>> >
+>> > Cc: stable@vger.kernel.org
+>> > Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+>> > Tested-by: Matthias Maennich <maennich@google.com>
+>> > Reviewed-by: Matthias Maennich <maennich@google.com>
+>> > Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+>> > Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>> > ---
+>> > v2:
+>> >
+>> >   - Explain the changes to read_dump() and the comment (and provide
+>> >     historical context) in the commit message. (Lucas De Marchi)
+>> >
+>> >  Documentation/kbuild/modules.rst |  4 ++--
+>> >  scripts/export_report.pl         |  2 +-
+>> >  scripts/mod/modpost.c            | 24 ++++++++++++------------
+>> >  3 files changed, 15 insertions(+), 15 deletions(-)
+>> >
+>> > diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
+>> > index 69fa48ee93d6..e0b45a257f21 100644
+>> > --- a/Documentation/kbuild/modules.rst
+>> > +++ b/Documentation/kbuild/modules.rst
+>> > @@ -470,9 +470,9 @@ build.
+>> >
+>> >         The syntax of the Module.symvers file is::
+>> >
+>> > -       <CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
+>> > +       <CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
+>> >
+>> > -       0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
+>> > +       0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
+>> >
+>> >         The fields are separated by tabs and values may be empty (e.g.
+>> >         if no namespace is defined for an exported symbol).
+>>
+>> Despite the documentation here claiming the namespace field can be
+>> empty, I'm seeing some trouble with this patch when building external
+>> modules:
+>>   FATAL: parse error in symbol dump file
+>>
+>> I've confirmed reverting it make things work again, but its not clear
+>> to me quite yet why.
+>>
+>> The only difference I can find is that the Module.symvers in the
+>> external module project doesn't seem to have a tab at the end of each
+>> line (where as Module.symvers for the kernel - which doesn't seem to
+>> have any namespace names - does).
+>>
+>> Is there something I need to tweak on the external Kbuild to get
+>> Module.symvers to be generated properly (with the empty tab at the
+>> end) for this new change?
+>> Or does the parser need to be a bit more flexible?
+>>
+>
+>One extra clue on this: I noticed the external module Makefile had
+>KBUILD_EXTRA_SYMBOLS="$(EXTRA_SYMBOLS)"  in the $(MAKE) string, where
+>EXTRA_SYMBOLS pointed to some files that no longer exist.  I removed
+>the KBUILD_EXTRA_SYMBOLS= argument, and magically, the generated
+>Module.symvers now had tabs at the end of each line.
+>
+>I wonder if there some path in the KBUILD_EXTRA_SYMBOLS= handling that
+>isn't generating the output in the same way?
 
-That's p->pi_lock, which gets initialized in rt_mutex_init_task() in
-copy_process(). This should be impossible. Very odd.
+I'm afraid we're going to need some specifics on reproducing this
+issue. Could you provide a reproducer or steps on how to reproduce? I
+have not been able to trigger this problem even with
+KBUILD_EXTRA_SYMBOLS pointing to an invalid path (I also tested with
+valid paths).
 
->  wake_up_worker kernel/workqueue.c:836 [inline]
->  insert_work+0x2ad/0x3a0 kernel/workqueue.c:1337
->  __queue_work+0x50d/0x1280 kernel/workqueue.c:1488
->  call_timer_fn+0x195/0x760 kernel/time/timer.c:1404
->  expire_timers kernel/time/timer.c:1444 [inline]
->  __run_timers kernel/time/timer.c:1773 [inline]
->  __run_timers kernel/time/timer.c:1740 [inline]
->  run_timer_softirq+0x412/0x1600 kernel/time/timer.c:1786
->  __do_softirq+0x26c/0x99d kernel/softirq.c:292
->  invoke_softirq kernel/softirq.c:373 [inline]
->  irq_exit+0x192/0x1d0 kernel/softirq.c:413
->  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
->  smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
->  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->  </IRQ>
+I tested with a skeleton external module that exports two functions,
+one with a namespace and one without. I built this module against the
+latest v5.6 kernel. The generated Module.symvers was correct - the
+namespaced function had the namespace at the end and the other
+function without a namespace had a tab at the end.
+
+I also tested with two external modules, one with a symbol dependency
+on the other, so KBUILD_EXTRA_SYMBOLS usage is required here. The
+generated Module.symvers was also correct here.
+
+The only advice I can offer at this time is that all external modules
+must be built against the new kernel to generate a correctly formated
+Module.symvers file. If you have any KBUILD_EXTRA_SYMBOLS pointing to
+an outdated Module.symvers file for example, you will see the "FATAL:
+parse error in symbol dump file" error.
+
+Hope this helps,
+
+Jessica
+
