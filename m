@@ -2,267 +2,88 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7AFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D504FC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E223A206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6962206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585683132;
+	bh=R/xbQ3x0Tl3UR+fUjZS4V0QbsUouAGo0fp+vGcIXflI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q0lqvGy73anUorTVbOJdPJZrv3PH2DwkxCwYpdQR4AvgQvamRsDgKOjejNA5G6zMI
+	 d5STZCVvqAdONxARRmgMC0To3F8vzyedb8psuc9mVrWoFcFQbzC6GpazvmDR5Q1GB8
+	 3mG2Xr0FyC4BrHLAWBv3w3jiY/eXtH8qXTLOR4wQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbgCaTaa (ORCPT
+        id S1729405AbgCaTcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:30:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:18117 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbgCaTaa (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:30:30 -0400
-IronPort-SDR: rtfxLbm5RkI9JIuBvUa/COyfMKWcv8Iq25ng+akFGOfcVnFGiRnF4my+TQcq1XDR/j8V3Mzp1T
- TC3HiUpltAgw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 12:30:29 -0700
-IronPort-SDR: Gip97aRSbXPMHQh6BQo1/euN3xJv3VtIvPXNoDpNk7poNict4KawwQcfSw87qUKiFevnmh2eSM
- 7a2Jth9YxKwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="240227846"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 12:30:28 -0700
-Received: from [10.255.229.165] (kliang2-mobl.ccr.corp.intel.com [10.255.229.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id B135158077B;
-        Tue, 31 Mar 2020 12:30:27 -0700 (PDT)
-Subject: Re: [PATCH] perf/x86/pmu-events: Use CPU_CLK_UNHALTED.THREAD in
- Kernel_Utilization metric
-To:     Jin Yao <yao.jin@linux.intel.com>, acme@kernel.org,
-        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200309013125.7559-1-yao.jin@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <3e2ee47f-d351-64c3-b547-993a2b65f871@linux.intel.com>
-Date:   Tue, 31 Mar 2020 15:30:25 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 15:32:12 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:40112 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgCaTcL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 15:32:11 -0400
+Received: by mail-il1-f196.google.com with SMTP id j9so20687466ilr.7;
+        Tue, 31 Mar 2020 12:32:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ffyuJBft5eRj0uXoExB7KaHT1VC+KdBgrEZukPCp/jk=;
+        b=IAUlI2ghkL9cn58LkUS49/bjbCNzfOlDNObjJN/kNLwam+bz7q7J0PqGi2/wMVe7f5
+         Yz/LCLVveHaAMmshrLoePN9r849zogGjRYnVgQ2u3t7Xl2EdbjXv4LcvD1GEe/+V17Ud
+         /gjyp6HpEOyQUKMaZyfGo+LDEkhbo4LIW1JaiEku2ErdWR+dMDIj8TYkSpvOVr9nG8kR
+         iTTQgmbQqRVOPJ23Q/iP48NRHjjP/5XnBtYZhPLUZ5gvJCgkOQJS+/J+2Tsuxkna8yrF
+         mh8TJJhNoP9eUNnK5Cwff39DXJ6f0aoiZV/uMjuYIS1Y4L+XoI1Ul9W2ipe8foJdL1sY
+         m6lw==
+X-Gm-Message-State: ANhLgQ3/LCTsXW8HNBdyFZ43eKLAn9OTbBHPk3cVA5s3ExstqFC0mz9i
+        KRw+M4vTTa+Pi1ffoOtm0A==
+X-Google-Smtp-Source: ADFU+vs20F/WPfwobCVQDiWAIDI6LL0zgRgv9YyT1gwXPo5RofbdAd8avWmVDPg2Lg2rbY31XKH7RA==
+X-Received: by 2002:a92:48cb:: with SMTP id j72mr18224637ilg.162.1585683130347;
+        Tue, 31 Mar 2020 12:32:10 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id d70sm6197008ill.57.2020.03.31.12.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 12:32:09 -0700 (PDT)
+Received: (nullmailer pid 30593 invoked by uid 1000);
+        Tue, 31 Mar 2020 19:32:08 -0000
+Date:   Tue, 31 Mar 2020 13:32:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, heiko@sntech.de,
+        robh+dt@kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] dt-bindings: sound: rockchip-i2s: add
+ power-domains property
+Message-ID: <20200331193208.GA30530@bogus>
+References: <20200324094149.6904-1-jbx6244@gmail.com>
+ <20200324094149.6904-3-jbx6244@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200309013125.7559-1-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324094149.6904-3-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/8/2020 9:31 PM, Jin Yao wrote:
-> The kernel utilization metric does multiplexing currently and is somewhat
-> unreliable. The problem is that it uses two instances of the fixed counter,
-> and the kernel has to multipleplex which causes errors. So should use
-> CPU_CLK_UNHALTED.THREAD instead.
+On Tue, 24 Mar 2020 10:41:49 +0100, Johan Jonker wrote:
+> In the old txt situation we add/describe only properties that are used
+> by the driver/hardware itself. With yaml it also filters things in a
+> node that are used by other drivers like 'power-domains' for rk3399,
+> so add it to 'rockchip-i2s.yaml'.
 > 
-> Before:
-> 
->    # perf stat -M Kernel_Utilization -- sleep 1
-> 
->    Performance counter stats for 'sleep 1':
-> 
->            1,419,425      cpu_clk_unhalted.ref_tsc:k
->        <not counted>      cpu_clk_unhalted.ref_tsc	(0.00%)
-> 
-> After:
-> 
->    # perf stat -M Kernel_Utilization -- sleep 1
-> 
->    Performance counter stats for 'sleep 1':
-> 
->              746,688      cpu_clk_unhalted.thread:k #      0.7 Kernel_Utilization
->            1,088,348      cpu_clk_unhalted.thread
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->   tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json     | 2 +-
->   tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json | 2 +-
->   tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json    | 2 +-
->   tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 2 +-
->   tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json       | 2 +-
->   tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json      | 2 +-
->   tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json     | 2 +-
->   tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json       | 2 +-
->   tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json      | 2 +-
->   tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json   | 2 +-
->   tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json       | 2 +-
->   tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json      | 2 +-
->   12 files changed, 12 insertions(+), 12 deletions(-)
+>  Documentation/devicetree/bindings/sound/rockchip-i2s.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> index 45a34ce4fe89..8cdc7c13dc2a 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
-> @@ -297,7 +297,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> index 961fe4395758..16fd8a7490fc 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
-> @@ -115,7 +115,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> index 746734ce09be..1eb0415fa11a 100644
-> --- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
-> @@ -297,7 +297,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-> index f94653229dd4..a2c32db8f14e 100644
-> --- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-> @@ -315,7 +315,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-> index 5402cd3120f9..f57c5f3506c2 100644
-> --- a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
-> @@ -267,7 +267,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-> index 832f3cb40b34..311a005dc35b 100644
-> --- a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
-> @@ -267,7 +267,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-> index d69b2a8fc0bc..28e25447d3ef 100644
-> --- a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
-> @@ -285,7 +285,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-> index 5f465fd81315..db23db2e98be 100644
-> --- a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
-> @@ -285,7 +285,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-> index 3e909b306003..dbb33e00b72a 100644
-> --- a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-> @@ -171,7 +171,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-> index 50c053235752..fb2d7b8875f8 100644
-> --- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
-> @@ -171,7 +171,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-> index e7feb60f9fa9..e3afc3178958 100644
-> --- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-> @@ -303,7 +303,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-> index 21d7a0c2c2e8..12d1efba79bb 100644
-> --- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-> @@ -315,7 +315,7 @@
->       },
->       {
->           "BriefDescription": "Fraction of cycles spent in Kernel mode",
-> -        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
-> +        "MetricExpr": "CPU_CLK_UNHALTED.THREAD:k / CPU_CLK_UNHALTED.THREAD",
->           "MetricGroup": "Summary",
->           "MetricName": "Kernel_Utilization"
->       },
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
