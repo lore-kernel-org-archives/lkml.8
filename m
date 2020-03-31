@@ -2,132 +2,141 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15404C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B9FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE05520786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEB52071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLgHxdRg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4pm9+43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730963AbgCaNjU (ORCPT
+        id S1730972AbgCaNk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:39:20 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37586 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730466AbgCaNjU (ORCPT
+        Tue, 31 Mar 2020 09:40:27 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:32995 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730358AbgCaNk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:39:20 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t11so4913643lfe.4;
-        Tue, 31 Mar 2020 06:39:18 -0700 (PDT)
+        Tue, 31 Mar 2020 09:40:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a25so26051926wrd.0;
+        Tue, 31 Mar 2020 06:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ehKtKTWv5OyhK/hGbOxIcxVSEDA0CMEW5sXQeZ5+B9o=;
-        b=gLgHxdRgN81Otol41/DHoOjlFwlqON+SrxjeJ/Mpf7S6ljPvZ0yl2WgV0Ov0S755Ej
-         J8/Xpkno7dy9VnfXtBX4UmMreaU/B8+0A0LhUc0dt3RjLn5nNa8g1LUyCciuwqpGAPVM
-         P5PsUu/z0yaO+2v6U2yZpAmPKw1tVFpTPcNx2M4iydOGozyZqxBTxEFVkyHGdD8pa4Qr
-         SkUk24PyogAjDuYcLrzkktgJGxDCBq5eulmN43Ojbe7Jolgno/K8rGAg+FwZ1U/ZDFpq
-         CFQWa+cfLl6B08GB6g00y+NcdpmU4DqDwKW/4B206cE6KPayopTIFolK7PdaMcda7CQS
-         kr1w==
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/9EBLsEVdQd7BkOtwGcu2A+J/8+N6QWVnG9D8e7od0M=;
+        b=Z4pm9+43OQMQ6wPQx3hcVAmJKO4eQWoLgN0mN01kAC4wEmCM75Ib/Y1iQdgVnufnPK
+         ChnyW7D1c+M1SipJ/qk1kxVqz+pzOiI9+y3ueuHZ93STWnkqnoEE1Yd3zmbiHojnKkMu
+         B6gy1kWGVxyInzD2qwfqhWlGCyx8t6TNxieUWyrNYW9ypEzfKF4345Pq08EeE66fULQc
+         rvY0dv0v1saRmts2cWUCwYiMk3056rNt5KzHF5KQpTS3XQh8BAifgXMtcqTRV6Ao0oBk
+         qxEw89nPLdNUGaCxnQo8dR/acFZDc0IJ087mipHVBwHlNMeyXr5Js8TYf/xTngz285Do
+         40hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ehKtKTWv5OyhK/hGbOxIcxVSEDA0CMEW5sXQeZ5+B9o=;
-        b=gJCzbto3ueGfWkWtdR7YILQIAk33Jufkgem1rMtCyu9qqni7cENkER8uVZQSrCELlg
-         7wz0suu4D+eJcNet7cRZWBaauyFNJPo+1NDq65UjuW1tdPht9nImyorNtjZFRcHL4+7E
-         2HvksgAF1cn1QFJvtiGtVkcCtHbUY+nTJXZwEnvSqU7BhWYiMkWlue6we87VTC8AL2D8
-         K6vD0j5ITNPf7XbTBwHrorsvKj4RGuDWzsl+HAzDyGXWsXBt4XsKhJyjkxRMLCF0kxEa
-         Tg2bDsF0OF7vGzTC4vaHSEJEZIQm+GzQz/3ZMVMm7ei/HllDW3p1K8OyPN9I7CCx/UGq
-         L8Dw==
-X-Gm-Message-State: AGi0PuZTBj9RhmEd9BLOLgChtDelLEst/4puLj1owCjtqyeuUu5DU5i8
-        tW9mPLKGR0Y3oGX5KD+xL2/g5yk0
-X-Google-Smtp-Source: APiQypLMbRuqPTbzyhWJVMZKaKd9HESlTW88JEevuceUcltAFvBlfSuotj2xzvwzqHWTNBn3rtW3Sw==
-X-Received: by 2002:ac2:5e27:: with SMTP id o7mr11685495lfg.163.1585661957416;
-        Tue, 31 Mar 2020 06:39:17 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id x128sm9840997lff.67.2020.03.31.06.39.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 06:39:16 -0700 (PDT)
-Subject: Re: [PATCH V2 1/3] soc/tegra: fuse: Add custom SoC attributes
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200331103341.19571-1-jonathanh@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4f1fabbb-a0a3-6f7d-f62c-2bd545f2644a@gmail.com>
-Date:   Tue, 31 Mar 2020 16:39:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/9EBLsEVdQd7BkOtwGcu2A+J/8+N6QWVnG9D8e7od0M=;
+        b=Pq01kmiNuLsp3Wv2sjCbB1ee+uzRpOWCXOK7zuym8l4xxKOvClgOnDHiGVUrZ34nAY
+         egYU2MmvfuCjV31UEHpFg3xJdiJd5dklPnUkKKZNsWT8A/xi/qGEq7s7X5G9RcaDo40G
+         4TwTBQNbouw9D03qn57V36OTbYXKAUJubaZ2Miu6TJGjQM+1bhZnuw8yBSzgJCagie7B
+         pTjGlhIONe/1GctINmyaiDPVm/SjcbDgId7Eewh6WUCWjXxYCVgSh5bKTKCc7ERHLxe3
+         MsvLjGkvqEl3am6OvOBc9/gUQ63bputpB+TAllqxDHC1MEyD2SpbDSz1GRwEcGuf3uzY
+         Mo2A==
+X-Gm-Message-State: ANhLgQ0BhVE3rWJ3PQcN8sYTmhTuCXIAL5W8pdHU56cBPNFR1MLi//sI
+        3/xw73N+X1TAg/5ZPCWYOf0=
+X-Google-Smtp-Source: ADFU+vv/+83E/R4QRbX3VtDC3JObIjDIHUKnP6E+i30VA7ZF/7O6PARVZN/MafwHZ+8o8pc2LujPMA==
+X-Received: by 2002:adf:b35d:: with SMTP id k29mr21052741wrd.239.1585662024316;
+        Tue, 31 Mar 2020 06:40:24 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id d21sm27844585wrb.51.2020.03.31.06.40.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Mar 2020 06:40:21 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 13:40:21 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
+ than XA_ZERO_ENTRY
+Message-ID: <20200331134020.xejcx3mggobmzmji@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-7-richard.weiyang@gmail.com>
+ <20200330125006.GZ22483@bombadil.infradead.org>
+ <20200330134519.ykdtqwqxjazqy3jm@master>
+ <20200330134903.GB22483@bombadil.infradead.org>
+ <20200330141350.ey77odenrbvixotb@master>
+ <20200330142708.GC22483@bombadil.infradead.org>
+ <20200330222013.34nkqen2agujhd6j@master>
+ <20200331000649.GG22483@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200331103341.19571-1-jonathanh@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331000649.GG22483@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.03.2020 13:33, Jon Hunter пишет:
-> Add a custom SoC attribute for Tegra to expose the HIDREV register
-> fields to userspace via the sysfs. This register provides additional
-> details about the type of device (eg, silicon, FPGA, etc) as well as
-> revision. Exposing this information is useful for identifying the
-> exact device revision and device type.
-> 
-> For Tegra devices up until Tegra186, the majorrev and minorrev fields of
-> the HIDREV register are used to determine the device revision and device
-> type. For Tegra194, the majorrev and minorrev fields only determine the
-> revision. Starting with Tegra194, there is an additional field,
-> pre_si_platform (which occupies bits 20-23), that now determines device
-> type. Therefore, for all Tegra devices, add a custom SoC attribute for
-> the majorrev and minorrev fields and for Tegra194 add an additional
-> attribute for the pre_si_platform field.
-> 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/soc/tegra/fuse/fuse-tegra.c    | 51 ++++++++++++++++++++++++++
->  drivers/soc/tegra/fuse/fuse-tegra20.c  |  1 +
->  drivers/soc/tegra/fuse/fuse-tegra30.c  |  6 +++
->  drivers/soc/tegra/fuse/fuse.h          |  8 ++++
->  drivers/soc/tegra/fuse/tegra-apbmisc.c | 10 +++++
->  5 files changed, 76 insertions(+)
-> 
-> diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-> index 802717b9f6a3..639734dca5df 100644
-> --- a/drivers/soc/tegra/fuse/fuse-tegra.c
-> +++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-> @@ -300,6 +300,56 @@ static void tegra_enable_fuse_clk(void __iomem *base)
->  	writel(reg, base + 0x14);
->  }
->  
-> +static ssize_t tegra_soc_majorrev_show(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       char *buf)
-> +{
-> +	return sprintf(buf, "%d\n", tegra_get_major_rev());
-> +}
-> +
-> +static DEVICE_ATTR(majorrev, S_IRUGO, tegra_soc_majorrev_show,  NULL);
-> +
-> +static ssize_t tegra_soc_minorrev_show(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       char *buf)
-> +{
-> +	return sprintf(buf, "%d\n", tegra_get_minor_rev());
-> +}
-> +
-> +static DEVICE_ATTR(minorrev, S_IRUGO, tegra_soc_minorrev_show,  NULL);
+On Mon, Mar 30, 2020 at 05:06:49PM -0700, Matthew Wilcox wrote:
+>On Mon, Mar 30, 2020 at 10:20:13PM +0000, Wei Yang wrote:
+>> On Mon, Mar 30, 2020 at 07:27:08AM -0700, Matthew Wilcox wrote:
+>> >On Mon, Mar 30, 2020 at 02:13:50PM +0000, Wei Yang wrote:
+>> >> On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
+>> >> >On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
+>> >> >> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
+>> >> >> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
+>> >> >> >> As the comment mentioned, we reserved several ranges of internal node
+>> >> >> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
+>> >> >> >> XA_ZERO_ENTRY is a normal node.
+>> >> >> >> 
+>> >> >> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
+>> >> >> >
+>> >> >> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
+>> >> >> >is not guaranteed to be the largest reserved entry.
+>> >> >> 
+>> >> >> Then why we choose 4096?
+>> >> >
+>> >> >Because 4096 is the smallest page size supported by Linux, so we're
+>> >> >guaranteed that anything less than 4096 is not a valid pointer.
+>> >> 
+>> 
+>> So you want to say, the 4096 makes sure XArray will not store an address in
+>> first page? If this is the case, I have two suggestions:
+>> 
+>>   * use PAGE_SIZE would be more verbose?
+>
+>But also incorrect, because it'll be different on different architectures.
+>It's 4096.  That's all.
+>
+>>   * a node is an internal entry, do we need to compare with xa_mk_internal()
+>>     instead?
+>
+>No.  4096 is better because it's a number which is easily expressible in
+>many CPU instruction sets.  4094 is much less likely to be an easy number
+>to encode.
+>
+>> >(it is slightly out of date; the XArray actually supports storing unaligned
+>> >pointers now, but that's not relevant to this discussion)
+>> 
+>> Ok, maybe this document need to update.
+>
+>Did you want to send a patch?
 
-Checkpatch should give a warning about that permission isn't in octal
-format, please don't ignore it.
+I am not clear how it supports unaligned pointers. So maybe not now.
+
+Actually, I still not get the point between page size and valid pointer. Why a
+valid pointer couldn't be less than 4096? The first page in address space is
+handled differently? Maybe I miss some point. I'd appreciate it if you'd share
+some light.
+
+Thanks
+-- 
+Wei Yang
+Help you, Help me
