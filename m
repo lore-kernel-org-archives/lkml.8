@@ -2,53 +2,51 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57BDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C337BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722EC208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E9220675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645476;
-	bh=8eomCZrlpS/TCs3dRXpFrmJQOARXZnLrGcwtpcnyBwg=;
+	s=default; t=1585645478;
+	bh=rY05YLwtbtXzyT165RkLIipQqmrwA6WUFyYk2qA7868=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hp+aP1KLcWB1VO9P031CzeLJpY/Yd+Zw/05nXkcPRIe97nVlLLD2A43KLu/64NITb
-	 hfnYthkcfkglewNhBadlD2T46xni6TMRKP2BZ7OBKuYTEnDgd67wtq/BSd/JHa+KIB
-	 z5rgCT2C/+m5v2/L6RGfnkTElyu175k7UFE+ciD4=
+	b=kxsBsSm+xPm1TNdqPW6ykAe27PuIL9g3Qng+vlBZr2YSG23vHpaC5c1bthjgIk2dx
+	 MfvUkGpK6Z4UEbDI9baF+5Z1Xqi8NgZVLFFKO0zNUnX78qe01UcyUnQ5M1wFQCBgYz
+	 iJu5xW38t3Hid0gGxhKryV7aSOCEteOCAJO83cIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730977AbgCaJEe (ORCPT
+        id S1730986AbgCaJEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45030 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:04:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730965AbgCaJEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:04:30 -0400
+        id S1730662AbgCaJEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:04:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C67EB20675;
-        Tue, 31 Mar 2020 09:04:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F91208E0;
+        Tue, 31 Mar 2020 09:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645470;
-        bh=8eomCZrlpS/TCs3dRXpFrmJQOARXZnLrGcwtpcnyBwg=;
+        s=default; t=1585645472;
+        bh=rY05YLwtbtXzyT165RkLIipQqmrwA6WUFyYk2qA7868=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SubkYtWUuVg/ndKFzhUi/iUQb3CyjMIby45qow77tLoqatZpgYFvRf0OCoVmc+gQC
-         BjyZbuUW9WbXQOtOW+ChvL42y3YMGCWpT1ZQeTJBrTU0PSV+Rxz/+ytBWVchP9FTid
-         4kOOtNfTO1AoCx3b376zvIAYO2yO0RDwne8rFNg0=
+        b=B3kVvNn7ga2laIjpS5HQazm1/aIOTv3BkgJ1fH9D3HXJ0zDFyDEZiRKtmMLehlFHf
+         nsBs0sHXjBgI6qJOcB0FRS7Z+jltbCsARxfixPDOCOLkWoMB9JJHNIRwKUn6gRA2SF
+         35Uq2oNCzhUTwN8G+4mA8Cw6x9+MCaC3RtaIHnUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Hense <sebastian.hense1@ibm.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 063/170] net/mlx5e: Fix endianness handling in pedit mask
-Date:   Tue, 31 Mar 2020 10:57:57 +0200
-Message-Id: <20200331085431.190535282@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 064/170] cgroup-v1: cgroup_pidlist_next should update position index
+Date:   Tue, 31 Mar 2020 10:57:58 +0200
+Message-Id: <20200331085431.290036933@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -61,39 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Hense <sebastian.hense1@ibm.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 404402abd5f90aa90a134eb9604b1750c1941529 ]
+[ Upstream commit db8dd9697238be70a6b4f9d0284cd89f59c0e070 ]
 
-The mask value is provided as 64 bit and has to be casted in
-either 32 or 16 bit. On big endian systems the wrong half was
-casted which resulted in an all zero mask.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-Fixes: 2b64beba0251 ("net/mlx5e: Support header re-write of partial fields in TC pedit offload")
-Signed-off-by: Sebastian Hense <sebastian.hense1@ibm.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ # mount | grep cgroup
+ # dd if=/mnt/cgroup.procs bs=1  # normal output
+...
+1294
+1295
+1296
+1304
+1382
+584+0 records in
+584+0 records out
+584 bytes copied
+
+dd: /mnt/cgroup.procs: cannot skip to specified offset
+83  <<< generates end of last line
+1383  <<< ... and whole last line once again
+0+1 records in
+0+1 records out
+8 bytes copied
+
+dd: /mnt/cgroup.procs: cannot skip to specified offset
+1386  <<< generates last line anyway
+0+1 records in
+0+1 records out
+5 bytes copied
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/cgroup/cgroup-v1.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -2432,10 +2432,11 @@ static int offload_pedit_fields(struct p
- 			continue;
- 
- 		if (f->field_bsize == 32) {
--			mask_be32 = *(__be32 *)&mask;
-+			mask_be32 = (__be32)mask;
- 			mask = (__force unsigned long)cpu_to_le32(be32_to_cpu(mask_be32));
- 		} else if (f->field_bsize == 16) {
--			mask_be16 = *(__be16 *)&mask;
-+			mask_be32 = (__be32)mask;
-+			mask_be16 = *(__be16 *)&mask_be32;
- 			mask = (__force unsigned long)cpu_to_le16(be16_to_cpu(mask_be16));
- 		}
- 
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index 09f3a413f6f89..84bedb87ae137 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -473,6 +473,7 @@ static void *cgroup_pidlist_next(struct seq_file *s, void *v, loff_t *pos)
+ 	 */
+ 	p++;
+ 	if (p >= end) {
++		(*pos)++;
+ 		return NULL;
+ 	} else {
+ 		*pos = *p;
+-- 
+2.20.1
+
 
 
