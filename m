@@ -2,86 +2,102 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E79D2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B403C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD2E20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381BD2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585677539;
+	bh=1rPhOHlMHpopYI/diEgrF0e8XTjh7OaDPcnw8/TvA80=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2d7MylJGMJ7vpA4lRGZsbgTMBY34MKYpaftbb+7Ph5/idpyt0szFs/p1XThM3I9Ns
+	 gNDloxnEEzV6YXvekmWSD7EJcLdeN26IeD036BA3ZYXrdMOYJEyjwhxxH7frQJq7Jv
+	 dUzCmc48EdMPiDTPQKIsedJpUZt8DEhFATkdKyGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgCaR6U (ORCPT
+        id S1727417AbgCaR66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:58:20 -0400
-Received: from smtprelay0188.hostedemail.com ([216.40.44.188]:52270 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725999AbgCaR6R (ORCPT
+        Tue, 31 Mar 2020 13:58:58 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44006 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgCaR66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:58:17 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 83B8C18021E49;
-        Tue, 31 Mar 2020 17:58:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: boys35_481ed8d64f731
-X-Filterd-Recvd-Size: 2177
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 31 Mar 2020 17:58:15 +0000 (UTC)
-Message-ID: <78a8ba04459f8a4ea6bcb8811f35490018b763f2.camel@perches.com>
-Subject: Re: single target builds are broken
-From:   Joe Perches <joe@perches.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Date:   Tue, 31 Mar 2020 10:56:20 -0700
-In-Reply-To: <CAK7LNAT-8TbLRPB=PNsbAORKYvYL+m3JmA-iSDieK8Uv7MAvGA@mail.gmail.com>
-References: <a5ce79eb-be9d-df97-0b58-5aee5a48f4d3@oracle.com>
-         <CAK7LNAQ8LZMPxrjVkuLizHjVZyBtSmLFZ=EvDCCAPb-XGfJLHA@mail.gmail.com>
-         <8c491e3b-a622-14c1-15c3-8cff061017ba@oracle.com>
-         <CAK7LNAT-8TbLRPB=PNsbAORKYvYL+m3JmA-iSDieK8Uv7MAvGA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 31 Mar 2020 13:58:58 -0400
+Received: by mail-io1-f67.google.com with SMTP id x9so16241652iom.10;
+        Tue, 31 Mar 2020 10:58:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=td5o5/tiHIRBYofYMDETAP0Ltd0LRLXxBohco08C/no=;
+        b=WhQ5BXIoFNInaHzPI7eu0BM1DVTn2dclDosGzbeE5vR+Hpjzjw8uudivAYkAJi6oT8
+         o3PjdHm9DKPtVrV99xPNZ7h7pWz0TuaXOSYxlrqP2EL6C88ELRoAZ5wTWG+TQczWSRjA
+         34524e58llqubX888TK0Rh1HfkPZntJe1vBkP5bh9HvQRrzDAaZv9itHl2nfb4YUhLBe
+         qdt89Xe4smqHeFkl36YVanxA/mC/PjCqXr2UMmBuAssZYwtSuE3zNoRwTBKYe7hntR+p
+         ArWIfWYyqJgohf0u6L0Ca2gBimDmbK33jZsvOsUFOLHrV8DGmYcZ9KUEURVVxGl/7K0g
+         v2dw==
+X-Gm-Message-State: ANhLgQ3Wl16e4VW6iTq3ycVh2PwDuslBnr1Py//5M8vLZWmUto6zKOT3
+        VSuR/B/Ka2o0f3YnPRC6enLxzj4=
+X-Google-Smtp-Source: ADFU+vusw14RdmuJ7zrBadBBFp8IzG2PeGojTVZrZsBXAA0o/Wml8YZzKjsZTDX9R92K6374xp15Yw==
+X-Received: by 2002:a02:9988:: with SMTP id a8mr16525847jal.3.1585677537116;
+        Tue, 31 Mar 2020 10:58:57 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id b4sm6160512ilg.58.2020.03.31.10.58.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 10:58:56 -0700 (PDT)
+Received: (nullmailer pid 31762 invoked by uid 1000);
+        Tue, 31 Mar 2020 17:58:55 -0000
+Date:   Tue, 31 Mar 2020 11:58:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: Add bindings for sx9310 sensor
+Message-ID: <20200331175855.GA30009@bogus>
+References: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-01 at 01:03 +0900, Masahiro Yamada wrote:
-> On Tue, Mar 31, 2020 at 8:02 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
-> > It's really useful to be able to build object files separately, but as
-> > if it was part of the kernel (so e.g. with all the gcc flags, include
-> > paths, etc.).
-[]
-> So, there were lots of cases where single builds did not work:
+On Mon, Mar 23, 2020 at 12:45:14PM -0600, Daniel Campello wrote:
+> Adds device tree bandings for sx9310 sensor.
 > 
-> https://www.spinics.net/lists/linux-kbuild/msg21921.html
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
 > 
-> The way to do this correctly is to
-> descend directories one by one, parsing Makefiles.
+>  .../iio/proximity/semtech,sx9310.yaml         | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
 > 
-> With no entry in obj-y/m,
-> Kbuild cannot determine where to build that object.
-> 
-> > At the very least, can we find a way to reduce the typing overhead for
-> > testing one-offs like that? 'make STANDALONE=1 test.o' or something?
-> 
-> Probably, I do not want to do this.
-> 
-> Supporting everybody's demand is not a good idea.
-> So, I draw a line somewhere.
-> 
-> Saving some typing is less important.
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> new file mode 100644
+> index 00000000000000..da3424abe37e9d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-I too find this regression less than desirable.
+Dual license new bindings:
 
-make <single_object> is/was quite useful even
-if it didn't always work.
+(GPL-2.0-only OR BSD-2-Clause)
 
+With that,
 
-
+Reviewed-by: Rob Herring <robh@kernel.org>
