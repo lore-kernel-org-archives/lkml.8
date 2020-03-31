@@ -4,36 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEFDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D31FC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C98F208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3230208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbgCaKwp (ORCPT
+        id S1730765AbgCaKwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:52:45 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:43593 "EHLO
+        Tue, 31 Mar 2020 06:52:43 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:43589 "EHLO
         esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730739AbgCaKwm (ORCPT
+        with ESMTP id S1730410AbgCaKwl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:52:42 -0400
-IronPort-SDR: H0FMrk3rZITyUbkekZtFY6TVq0gtVnDNvvr8fPBijDEh0fOMjNK/oCSfRREImRB5FpqijCOZwx
- gRKqzd9biEZ8AugEIqv6e/Ub6x4eNpZ+fpaAMrQaTr8WddePCFJCUUT4JTkOrHpt+2zF+FkipX
- IY9ldvFxSH2ccG2Fnfnt0NKZKfkJM1mwifh/Xrb0zxPsvm3bRz1i9SS30u6fS/HZRNWsCNIqTs
- HGCfaDC5YPOU+nVvMkgnTIETFOjZ9PC+PXCkKVi559HgBOHzPmcJa1lDzZfZraCwzNLH6OcBTf
- KZM=
+        Tue, 31 Mar 2020 06:52:41 -0400
+IronPort-SDR: WSr5aFtAVBAuO1ZWcPTOFCeH/XzbFvsNUj077Jakg7miE2nWDdGe0fSPZzWPJ6IG7vWk3GEjOC
+ r+mqnvv+q/6lcRR+q4Si5wTYDxTCZHpBDTCaUIieJ7VWsvOyHgX1kJbWtLxWyMhD8EetqCzibN
+ aiviAJQDioH5BiR4tEIeMXTy9br33pIEigoBzCjTr4UJdgwl3LrMHHpUpdbq8KuswscwcHrzuu
+ NbT64ypXEnRZ9WvwqVYLNusiwtGvuWtaGjnPbJGn5oEfpe3t45c13ys89ociWElJJUL5U4DPih
+ rgw=
 X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="47330790"
+   d="scan'208";a="47330781"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 31 Mar 2020 02:52:38 -0800
-IronPort-SDR: E7PXX0zs2PIMiFs4wsNLxmGnJ+JBPB8DfvY7UIHBfcPLRcLHDQ8cVFsamDB3IHsmq/Vqwk7Z4P
- OH0ycQspC7uE25wwUalK3BDewt3iTmDi4fkjLdpBOzRl+HJu2yaVs4eVtqUCFnIVslxiIppoNB
- QEt/GWU85m5i/m6S2s11Xi7rYbSovS25+qdzOBFzZrO507ayUMKuq3Mmz3vvh8Bxorei7Xr+1w
- Ft+9rNJfVNSBPq2B2xmtu+E2w73Ch03A3bwixcZXvSyuEMTnya+FGbKGq1f4u6CiFXoN2FwNsr
- 4Cs=
+  by esa4.mentor.iphmx.com with ESMTP; 31 Mar 2020 02:52:27 -0800
+IronPort-SDR: xYj3WjZ7xzVpP3B4o0FJ2Bxp3/qRGU9qWd4U/9rbi0ZdfHQshd1hTq+dW7+P6i025nQ5szXVoB
+ oTK7CsXGh4SyPDMgBv2yhgDxnxBe9wRBA2XMpTkGcqajiQX3gVeqPNDm9cpsLX+QkFFvBwoKHO
+ +1KZfBpq837YmFiyikJzHyJyhtywwJ44/rTow5eJnNegNOQZGO5+IZ6sGqbDefSiPQm4B9F26r
+ FzF0dywtIuOD8UBrOsQeEAWzO2pUu3zvZsM154AU8NYLNsJofPxM80GvKLhukznnzDRovaHARY
+ E0s=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -41,9 +42,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v10 27/55] Input: atmel_mxt_ts - combine bootloader version query with probe
-Date:   Tue, 31 Mar 2020 03:50:23 -0700
-Message-ID: <20200331105051.58896-28-jiada_wang@mentor.com>
+Subject: [PATCH v10 24/55] Input: atmel_mxt_ts - add config checksum attribute to sysfs
+Date:   Tue, 31 Mar 2020 03:50:20 -0700
+Message-ID: <20200331105051.58896-25-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200331105051.58896-1-jiada_wang@mentor.com>
 References: <20200331105051.58896-1-jiada_wang@mentor.com>
@@ -54,102 +55,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: karl tsou <karl.funlab@gmail.com>
 
-This removes some complexity from the bootloader state machine, and means
-that we always output some debug about the version as soon as we start
-talking to the bootloader.
+Add config checksum attribute to sysfs
 
+Signed-off-by: karl tsou <karl.funlab@gmail.com>
 Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit a2d141f170c80fea6663af98aab0be32abc0ddb0)
+(cherry picked from ndyer/linux/for-upstream commit 03477477ddbe5dcad42853ab3f84166a8f807acf)
+[gdavis: Forward port and fix conflicts.]
 Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: Add commit description
+	Rename mxt_config_crc_show to config_crc_show
+	Replace DEVICE_ATTR with DEVICE_ATTR_RO]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 45 +++++++-----------------
- 1 file changed, 13 insertions(+), 32 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 11b2f133e6be..71d5781d3539 100644
+index dfc20c0ca0a5..67931cf64629 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -558,47 +558,31 @@ static int mxt_probe_bootloader(struct mxt_data *data, bool alt_address)
- {
- 	struct device *dev = &data->client->dev;
- 	int error;
--	u8 val;
--	bool crc_failure;
-+	u8 buf[3];
-+	bool crc_failure, extended_id;
- 
- 	error = mxt_lookup_bootloader_address(data, alt_address);
- 	if (error)
- 		return error;
- 
--	error = mxt_bootloader_read(data, &val, 1);
-+	/* Check bootloader status and version information */
-+	error = mxt_bootloader_read(data, buf, sizeof(buf));
- 	if (error)
- 		return error;
- 
--	/* Check app crc fail mode */
--	crc_failure = (val & ~MXT_BOOT_STATUS_MASK) == MXT_APP_CRC_FAIL;
-+	crc_failure = (buf[0] & ~MXT_BOOT_STATUS_MASK) == MXT_APP_CRC_FAIL;
-+	extended_id = buf[0] & MXT_BOOT_EXTENDED_ID;
- 
--	dev_err(dev, "Detected bootloader, status:%02X%s\n",
--			val, crc_failure ? ", APP_CRC_FAIL" : "");
-+	dev_info(dev, "Found bootloader addr:%02x ID:%u%s%u%s\n",
-+		 data->bootloader_addr,
-+		 extended_id ? (buf[1] & MXT_BOOT_ID_MASK) : buf[0],
-+		 extended_id ? " version:" : "",
-+		 extended_id ? buf[2] : 0,
-+		 crc_failure ? ", APP_CRC_FAIL" : "");
- 
- 	return 0;
+@@ -3128,6 +3128,15 @@ static int mxt_configure_objects(struct mxt_data *data,
+ 	return error;
  }
  
--static u8 mxt_get_bootloader_version(struct mxt_data *data, u8 val)
--{
--	struct device *dev = &data->client->dev;
--	u8 buf[3];
--
--	if (val & MXT_BOOT_EXTENDED_ID) {
--		if (mxt_bootloader_read(data, &buf[0], 3) != 0) {
--			dev_err(dev, "%s: i2c failure\n", __func__);
--			return val;
--		}
--
--		dev_dbg(dev, "Bootloader ID:%d Version:%d\n", buf[1], buf[2]);
--
--		return buf[0];
--	} else {
--		dev_dbg(dev, "Bootloader ID:%d\n", val & MXT_BOOT_ID_MASK);
--
--		return val;
--	}
--}
--
- static int mxt_check_bootloader(struct mxt_data *data, unsigned int state,
- 				bool wait)
- {
-@@ -632,9 +616,6 @@ static int mxt_check_bootloader(struct mxt_data *data, unsigned int state,
- 	if (ret)
- 		return ret;
++/* Configuration crc check sum is returned as hex xxxxxx */
++static ssize_t config_crc_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	struct mxt_data *data = dev_get_drvdata(dev);
++
++	return scnprintf(buf, PAGE_SIZE, "%06x\n", data->config_crc);
++}
++
+ /* Firmware Version is returned as Major.Minor.Build */
+ static ssize_t fw_version_show(struct device *dev,
+ 			       struct device_attribute *attr, char *buf)
+@@ -3481,12 +3490,14 @@ static DEVICE_ATTR_RO(fw_version);
+ static DEVICE_ATTR_RO(hw_version);
+ static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
+ static DEVICE_ATTR_WO(update_cfg);
++static DEVICE_ATTR_RO(config_crc);
  
--	if (state == MXT_WAITING_BOOTLOAD_CMD)
--		val = mxt_get_bootloader_version(data, val);
--
- 	switch (state) {
- 	case MXT_WAITING_BOOTLOAD_CMD:
- 	case MXT_WAITING_FRAME_DATA:
-@@ -3283,7 +3264,7 @@ static int mxt_enter_bootloader(struct mxt_data *data)
- 		msleep(MXT_RESET_TIME);
- 
- 		/* Do not need to scan since we know family ID */
--		ret = mxt_lookup_bootloader_address(data, 0);
-+		ret = mxt_probe_bootloader(data, 0);
- 		if (ret)
- 			return ret;
+ static struct attribute *mxt_attrs[] = {
+ 	&dev_attr_fw_version.attr,
+ 	&dev_attr_hw_version.attr,
+ 	&dev_attr_object.attr,
+ 	&dev_attr_update_cfg.attr,
++	&dev_attr_config_crc.attr,
+ 	NULL
+ };
  
 -- 
 2.17.1
