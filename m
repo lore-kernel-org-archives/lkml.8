@@ -2,104 +2,82 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33174C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555FBC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03309207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VOuG5LKM"
+	by mail.kernel.org (Postfix) with ESMTP id 34AEA207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:04:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgCaLDb (ORCPT
+        id S1730486AbgCaLEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:03:31 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19827 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730410AbgCaLDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:03:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585652610; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=2rsGgE6kxJOfKICJK2M5MN0aGFpCfcgS/HPOQr3wV6w=; b=VOuG5LKMtYsApTAihJWQ2BZpzRHUg9Fgf0sOl3Wqbs5crgxwvbMMjuczViFGkd3XgBibBM+/
- BHeBcV6eWmd6xA/wMTS4bLZyubz6TeNo46a2rxlxY0Hvp2jm2aF7s9PWbWuOOlasMWlplvJV
- +WFTcAGFmo93M/wZS9QsneJeILE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e83237e.7facd3ebe148-smtp-out-n02;
- Tue, 31 Mar 2020 11:03:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B8195C433BA; Tue, 31 Mar 2020 11:03:26 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 837BCC433D2;
-        Tue, 31 Mar 2020 11:03:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 837BCC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anenbupt@gmail.com
-Subject: Re: [PATCH] ath9k: fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-References: <1585625296-31013-1-git-send-email-hqjagain@gmail.com>
-Date:   Tue, 31 Mar 2020 14:03:22 +0300
-In-Reply-To: <1585625296-31013-1-git-send-email-hqjagain@gmail.com> (Qiujun
-        Huang's message of "Tue, 31 Mar 2020 11:28:16 +0800")
-Message-ID: <87bloc23d1.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 31 Mar 2020 07:04:43 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:34203 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730377AbgCaLEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 07:04:42 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 02VB1a4e024578;
+        Tue, 31 Mar 2020 13:01:36 +0200
+Date:   Tue, 31 Mar 2020 13:01:36 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Denis Efremov <efremov@linux.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>, Ian Molton <spyro@f2s.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>, x86@kernel.org
+Subject: Re: [PATCH 00/23] Floppy driver cleanups
+Message-ID: <20200331110136.GB24562@1wt.eu>
+References: <20200331094054.24441-1-w@1wt.eu>
+ <20200331101019.GA6299@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331101019.GA6299@infradead.org>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qiujun Huang <hqjagain@gmail.com> writes:
+Hi Christoph,
 
-> Add barrier to accessing the stack array skb_pool.
->
-> Reported-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  drivers/net/wireless/ath/ath9k/hif_usb.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
-> index dd0c323..c4a2b72 100644
-> --- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-> +++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-> @@ -612,6 +612,11 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
->  			hif_dev->remain_skb = nskb;
->  			spin_unlock(&hif_dev->rx_lock);
->  		} else {
-> +			if (pool_index == MAX_PKT_NUM_IN_TRANSFER) {
-> +				dev_err(&hif_dev->udev->dev,
-> +					"ath9k_htc: over RX MAX_PKT_NUM\n");
-> +				goto err;
-> +			}
+On Tue, Mar 31, 2020 at 03:10:19AM -0700, Christoph Hellwig wrote:
+> Hi Willy,
+> 
+> given that you are actively maintaining the floppy driver now,
 
-What about 'pool_index >= MAX_PKT_NUM_IN_TRANSFER' just to be on the
-safe side? Ah, but then error handling won't work:
+No no no I'm not! Denis is :-) Really, I mean I just proposed some help
+to clean up this mess after being tricked into not believing a bug report
+just because the code was too confusing.
 
-err:
-	for (i = 0; i < pool_index; i++) {
-		RX_STAT_ADD(skb_completed_bytes, skb_pool[i]->len);
-		ath9k_htc_rx_msg(hif_dev->htc_handle, skb_pool[i],
-				 skb_pool[i]->len, USB_WLAN_RX_PIPE);
-		RX_STAT_INC(skb_completed);
-	}
+> any
+> chance I could trick you into proper highmem handling?  I've been trying
+> to phase out block layer bounce buffering, and any help from a competent
+> maintainer to move their drivers to properly support highmem by kmapping
+> for PIO/MMIO I/O would be very helpful.
 
-Maybe that should use 'min(pool_index, MAX_PKT_NUM_IN_TRANSFER - 1)' or
-something? Or maybe it's just overengineerin, dunno.
+I'm not sure what this implies regarding this code, to be honest. It's
+very tricky and implements sort of a state machine using function pointers
+within its interrupt handler so you never know exactly what accesses what,
+and quite a part of it remains obscure to me :-/  I can accept to help, I
+can even run tests since I still have running hardware, but I'd at least
+need some guidance. And probably Denis would know better than me there.
+Also I doubt we'd get sufficient testing on less common archs. While I
+do have sparc64/parisc/alpha available, I haven't booted a recent kernel
+on any of them for a while (2.4 used to be the last ones), and I'm not
+sure it's reasonable to go into such changes without proper testing.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+What do you think ?
+
+Willy
