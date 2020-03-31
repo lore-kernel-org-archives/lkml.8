@@ -2,111 +2,105 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFE0C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E88AC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7EC2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cy44Ew/g"
+	by mail.kernel.org (Postfix) with ESMTP id 0AA8E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585691886;
+	bh=LGdCqe9ICfS1ZP4zD/UtW5mZe+3VLA+Ia7BX+4lYg9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rD6H0dcvQh9D/VNINWu0nC1JyCOq9Ff0sOeLipvYgtKAwPZhkLlhxCt5FxMoS63CR
+	 uaRwcueberAIcQ/bOjYNprijU+mZBgboL9E3oj9kSyHUK6YQhYf5ApdehpcBnhl6qF
+	 UkONPTalxY8ZjsU1Xs+DcZkfW2EWngKxO3zpgRio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731530AbgCaV6B (ORCPT
+        id S1731495AbgCaV6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:58:01 -0400
-Received: from ozlabs.org ([203.11.71.1]:58275 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgCaV6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:58:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sNVW6rPHz9sSM;
-        Wed,  1 Apr 2020 08:57:55 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585691878;
-        bh=2jTbOx6UDNCCJt7scrIlbo1YKUJvdCR9MpDmRqeyOXc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cy44Ew/gBN+Xw+PVJYzSfBaD8o7XYDwrdQG2Ru5aNa8rJ1RvmppA9Z/nqM8HrkQlD
-         WcZ+ZhbSgUrWbzWa1tiVu2Gv1vn5OIj88i/GCFVFaBdsvQC4T1mkLIGDIkkSN3L+io
-         ihzdHgDlpLASBlytd9ZKV1N9eohbWrTHoALHpAbBtINWQZfn2N3hBmhkkSAtjoRpa0
-         hJTWKGpo+29T2Lv471RHjsjPvvyqJK37JaTMhDlODucNr1kpkZg26LqdXWz75iTgpf
-         XN674BdYNhqF3zRP0ZT0R2OOGcGTpenmoB+4zHQ4yYeTZlqp/KoNn+qWg6ft1PZG5C
-         4R/+9DqWSBcEg==
-Date:   Wed, 1 Apr 2020 08:57:53 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: linux-next: build warning after merge of the tip tree
-Message-ID: <20200401085753.617c1636@canb.auug.org.au>
-In-Reply-To: <20200330134746.627dcd93@canb.auug.org.au>
-References: <20200330134746.627dcd93@canb.auug.org.au>
+        Tue, 31 Mar 2020 17:58:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41698 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgCaV6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 17:58:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id b12so7246460ion.8;
+        Tue, 31 Mar 2020 14:58:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jIozpEk7R1PWhZJHP9ojDFOfKg1S3YK7gkqKMg9XXHk=;
+        b=QPidKuxGI964vU+w0yj8FdrizZ34M/TsuP8aHMcghFIWTeuzlA/3LMproIeLBAoHCq
+         VbnHDcDhMLKpMP4i9xnriVo/R1NwS0lo903WuiY6ko816A4C3mDfQrhxxafkwaJirhT9
+         cbBO1+B3z2pKhCuRGVw8OHD7yHDjeWsVuk6aoOxhnMeTl3NLFnNM3v3bWDA+PBlzDM4C
+         SVvWzrwdjCjASzSjmlniO1GmrWahkqD0TUjat0Q7fuTRQFdF10qNECW/yJSTJ+USo9/Y
+         yUIQRDbSy+i6wzFS88NCl2p0L14hVhmLF9UNS1t+EZqV4gtqSaTuIYaZlEUcrl8bmBGh
+         cn3Q==
+X-Gm-Message-State: ANhLgQ3Rp+0GRQWCifvs/NHp11DN5naq7cIs/y98BCoetBAsgxnUpo3F
+        m5cuT0HRZZqE1t2NwkIjlw==
+X-Google-Smtp-Source: ADFU+vu0NMEdlvuQiIfFmwmzLSErBtVKPP2kioAGYOPrT6CrZ8qm7nBCn4yQsGAHOA4m8jUxbO73IQ==
+X-Received: by 2002:a6b:2d7:: with SMTP id 206mr17354362ioc.42.1585691882134;
+        Tue, 31 Mar 2020 14:58:02 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id t77sm36579ilk.83.2020.03.31.14.58.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 14:58:01 -0700 (PDT)
+Received: (nullmailer pid 12849 invoked by uid 1000);
+        Tue, 31 Mar 2020 21:58:00 -0000
+Date:   Tue, 31 Mar 2020 15:58:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     frowand.list@gmail.com
+Cc:     pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 2/2] of: some unittest overlays not untracked
+Message-ID: <20200331215800.GA12799@bogus>
+References: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
+ <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DX5omHHHCR4=V+XF50fjow3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DX5omHHHCR4=V+XF50fjow3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 25 Mar 2020 20:45:31 -0500, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> kernel test robot reported "WARNING: held lock freed!" triggered by
+> unittest_gpio_remove(), which should not have been called because
+> the related gpio overlay was not tracked.  Another overlay that
+> was tracked had previously used the same id as the gpio overlay
+> but had not been untracked when the overlay was removed.  Thus the
+> clean up function of_unittest_destroy_tracked_overlays() incorrectly
+> attempted to remove the reused overlay id.
+> 
+> Patch contents:
+> 
+>   - Create tracking related helper functions
+>   - Change BUG() to WARN_ON() for overlay id related issues
+>   - Add some additional error checking for valid overlay id values
+>   - Add the missing overlay untrack
+>   - update comment on expectation that overlay ids are assigned in
+>     sequence
+> 
+> Fixes: 492a22aceb75 ("of: unittest: overlay: Keep track of created overlays")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>  drivers/of/unittest.c | 30 +++++++++++++++++++++++-------
+>  1 file changed, 23 insertions(+), 7 deletions(-)
+> 
 
-Hi all,
+Applied, thanks.
 
-On Mon, 30 Mar 2020 13:47:46 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> After merging the tip tree, today's linux-next build (arm
-> multi_v7_defconfig) produced this warning:
->=20
-> kernel/futex.c: In function 'do_futex':
-> kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in th=
-is function [-Wmaybe-uninitialized]
->  1676 |   return oldval =3D=3D cmparg;
->       |          ~~~~~~~^~~~~~~~~
-> kernel/futex.c:1652:6: note: 'oldval' was declared here
->  1652 |  int oldval, ret;
->       |      ^~~~~~
->=20
-> Introduced by commit
->=20
->   a08971e9488d ("futex: arch_futex_atomic_op_inuser() calling conventions=
- change")
->=20
-> but I don't see how it makes this difference :-(
-
-I now get this warning from building Linus' tree :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DX5omHHHCR4=V+XF50fjow3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6DvOEACgkQAVBC80lX
-0GwRPwgAjbTwhKZtLS/8RkEUC6ICv/zAc7X7bQGdchzK8dKf2/fnPo1Sr2bsPWyj
-bEjfLXoFmSgSKhuy4L2kFvjAdhj5IJVP08+stdbhPfUjuliRI5Buk7Cf8G5s8SHq
-ZworVHHnHlDuGC19gbdTYKZ3Y6LHYwNv6hi5A/jTFCO9lIUSiEJiJP4C8uIVNS1q
-VUzj4TTSdKMT1K/lwpcr/uSAnGhFhum91sBM13N5AV9zmSnqWZP8Oh0K5fyhaG2e
-ga6l6iCxmw9sCswMBTBUN8k8mshFjwNq2PSrpthPGpdmezXeKO7l4S3cjY+CcsrE
-A+QC4YKMfpm0RrQiizfaGTNdj/8d6Q==
-=yUPm
------END PGP SIGNATURE-----
-
---Sig_/DX5omHHHCR4=V+XF50fjow3--
+Rob
