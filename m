@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEE6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2A2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C522B208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4522208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646231;
-	bh=+1xLu4UM8eC0DtDYdw0C89iwUWF2tSN4pL1u48vjWDk=;
+	s=default; t=1585646233;
+	bh=TrQ9bXYqDqJZn6xqBTJRNSepK0YrBxb6BXjVJP/ryjw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p8i+d2OkbVYtk1cAJHjQHJ2Y+21K1Hz8UA2Wexrn6VjxymUZV8GHL47yrEyZrFbji
-	 IyZyuHMG7xhw78HUK7o3ywQZRVqoMLBSlJ71y3yZNumEUH//sRv1E3IXV4HAeQxI/w
-	 vDLroATxLNHhEwTkHZ0JxCTRpOVbEaZ4jShNMQBM=
+	b=iEhACpSxDSaWeL6z1Q2Z8ODTDkVl0uTjxYOWM4XOPpPrAhOhSf+B9QLGZa4ASDwIq
+	 RkWat5ykyZlGqYaxhQ10XcYuE/PxBQDlf2Ictg8RukJuQ49bcBhcR8YT5OT3U9L3aT
+	 2u2a0AtG8FS51nuIhmTjancBFG0214iDq3RDJEcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbgCaJRK (ORCPT
+        id S1731790AbgCaJRM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38156 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732012AbgCaJRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:07 -0400
+        id S1732012AbgCaJRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84B8E208E0;
-        Tue, 31 Mar 2020 09:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60405208E0;
+        Tue, 31 Mar 2020 09:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646227;
-        bh=+1xLu4UM8eC0DtDYdw0C89iwUWF2tSN4pL1u48vjWDk=;
+        s=default; t=1585646230;
+        bh=TrQ9bXYqDqJZn6xqBTJRNSepK0YrBxb6BXjVJP/ryjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7sGWK+vEzhr74ST8CJw8vY76bQETDH4gJfjAnTok/FTgeFoDO97tKHjXZeE3kxp0
-         IXyUzkxvwkVYciZnwQZAHqGkcCD5bGw2Qh7+JYLWhCD7eFrCYn5nplVlQ3R0ua+hTV
-         WVojnp5608N0oDB2bqQat7hQ1q7/4YbRa3rOsGGI=
+        b=doEIbTNK9SvAicWzmFmZS8OxPTk9L+/yhDb/XxTN8pavbBeANzRDExN7Fzyw3qTPE
+         nDPS6A0eve7jMJxAp+1/o/+89gjGibz3dAmePSoXG+dhNo/Qp4PK6zg6tCjafaUiSA
+         IxgjCfZ6XdLmtt0Xkdohmuj888L1ZDurasYGPEEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.4 122/155] ieee80211: fix HE SPR size calculation
-Date:   Tue, 31 Mar 2020 10:59:22 +0200
-Message-Id: <20200331085432.059735760@linuxfoundation.org>
+Subject: [PATCH 5.4 123/155] mac80211: set IEEE80211_TX_CTRL_PORT_CTRL_PROTO for nl80211 TX
+Date:   Tue, 31 Mar 2020 10:59:23 +0200
+Message-Id: <20200331085432.156275849@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,41 +60,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johannes Berg <johannes.berg@intel.com>
 
-commit 575a97acc3b7446094b0dcaf6285c7c6934c2477 upstream.
+commit b95d2ccd2ccb834394d50347d0e40dc38a954e4a upstream.
 
-The he_sr_control field is just a u8, so le32_to_cpu()
-shouldn't be applied to it; this was evidently copied
-from ieee80211_he_oper_size(). Fix it, and also adjust
-the type of the local variable.
+When a frame is transmitted via the nl80211 TX rather than as a
+normal frame, IEEE80211_TX_CTRL_PORT_CTRL_PROTO wasn't set and
+this will lead to wrong decisions (rate control etc.) being made
+about the frame; fix this.
 
-Fixes: ef11a931bd1c ("mac80211: HE: add Spatial Reuse element parsing support")
+Fixes: 911806491425 ("mac80211: Add support for tx_control_port")
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/20200325090918.dfe483b49e06.Ia53622f23b2610a2ae6ea39a199866196fe946c1@changeid
+Link: https://lore.kernel.org/r/20200326155333.f183f52b02f0.I4054e2a8c11c2ddcb795a0103c87be3538690243@changeid
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/ieee80211.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mac80211/tx.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -2102,14 +2102,14 @@ ieee80211_he_spr_size(const u8 *he_spr_i
- {
- 	struct ieee80211_he_spr *he_spr = (void *)he_spr_ie;
- 	u8 spr_len = sizeof(struct ieee80211_he_spr);
--	u32 he_spr_params;
-+	u8 he_spr_params;
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -5,7 +5,7 @@
+  * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
+  * Copyright 2007	Johannes Berg <johannes@sipsolutions.net>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+- * Copyright (C) 2018 Intel Corporation
++ * Copyright (C) 2018, 2020 Intel Corporation
+  *
+  * Transmit and frame generation functions.
+  */
+@@ -5067,6 +5067,7 @@ int ieee80211_tx_control_port(struct wip
+ 	struct ieee80211_local *local = sdata->local;
+ 	struct sk_buff *skb;
+ 	struct ethhdr *ehdr;
++	u32 ctrl_flags = 0;
+ 	u32 flags;
  
- 	/* Make sure the input is not NULL */
- 	if (!he_spr_ie)
- 		return 0;
+ 	/* Only accept CONTROL_PORT_PROTOCOL configured in CONNECT/ASSOCIATE
+@@ -5076,6 +5077,9 @@ int ieee80211_tx_control_port(struct wip
+ 	    proto != cpu_to_be16(ETH_P_PREAUTH))
+ 		return -EINVAL;
  
- 	/* Calc required length */
--	he_spr_params = le32_to_cpu(he_spr->he_sr_control);
-+	he_spr_params = he_spr->he_sr_control;
- 	if (he_spr_params & IEEE80211_HE_SPR_NON_SRG_OFFSET_PRESENT)
- 		spr_len++;
- 	if (he_spr_params & IEEE80211_HE_SPR_SRG_INFORMATION_PRESENT)
++	if (proto == sdata->control_port_protocol)
++		ctrl_flags |= IEEE80211_TX_CTRL_PORT_CTRL_PROTO;
++
+ 	if (unencrypted)
+ 		flags = IEEE80211_TX_INTFL_DONT_ENCRYPT;
+ 	else
+@@ -5101,7 +5105,7 @@ int ieee80211_tx_control_port(struct wip
+ 	skb_reset_mac_header(skb);
+ 
+ 	local_bh_disable();
+-	__ieee80211_subif_start_xmit(skb, skb->dev, flags, 0);
++	__ieee80211_subif_start_xmit(skb, skb->dev, flags, ctrl_flags);
+ 	local_bh_enable();
+ 
+ 	return 0;
 
 
