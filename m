@@ -2,83 +2,95 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C17C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E180C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5673920772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jpt/K2zA"
+	by mail.kernel.org (Postfix) with ESMTP id 63DF42072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585646128;
+	bh=bDOyWPwtHpt7ua7OxR166RVFsXRO6Ja9g+epQkrZGuk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fo8IJyf9oq8ywarlEj+TqQs3RZWr1Pzo8aJkXM25Cxgs1Zg2iH0SaHbPGIHtrmChh
+	 iXwkhrZhoDPlDnfUa6YV1HOD8SKFIlnINBtIkXDPIam1bk+kVgarLpOkB6oHyqVEx3
+	 kjFTP6rSSyKG7x9RdNZEbQ9pW5sFT/zuRN3CSzN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbgCaJPW (ORCPT
+        id S1731902AbgCaJP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:15:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59502 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730719AbgCaJPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:15:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6OrjNgWSgjsVgH6reFO8z2ixicWhI/e5FNsva6w55pc=; b=jpt/K2zABPB39L9L1UfINWG0kU
-        a0UjPT+0UTlvycvxpmjj3Mq1U8yayR5ZBsKUzFqvVDicdd32QYL8er5THUVvNLjGiyRPX6Z0kFicC
-        0RtlvWV12hqst+lQ525f5GfHeel9HHwSoCjB3llxC5VE7FRMnUyWYu3qe7XgP9eI0W9hp8Eu2kUpr
-        uIGgzewZCfwXyV/L98BrMA9AFZVx/7HoQZSCb1RBkCthBzxi4l54KdNjQIi9AwIge4lH74tkMMEBb
-        6yoBbH1EnjdQJDw9b98IH3iFRCgGvJZo/BoFJ3FRlm4BIngrmV638qrHeyqKdgUce/pjZXG2YKzTj
-        7sCTm1RA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJCzF-0004Sr-Ij; Tue, 31 Mar 2020 09:15:09 +0000
-Date:   Tue, 31 Mar 2020 02:15:09 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>, "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Message-ID: <20200331091509.GA12040@infradead.org>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
- <20200331075331.GA26583@infradead.org>
- <A2975661238FB949B60364EF0F2C25743A21A9BB@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21A9ED@SHSMSX104.ccr.corp.intel.com>
+        Tue, 31 Mar 2020 05:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730701AbgCaJPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:15:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53F5220675;
+        Tue, 31 Mar 2020 09:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585646116;
+        bh=bDOyWPwtHpt7ua7OxR166RVFsXRO6Ja9g+epQkrZGuk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mHkSEBzg7RqRlbxJ5uLiuFxma20Ag0dJzsLVQwW5dM1o13StJH9q7+0pRu780Riai
+         4l5Sw5g8ZPERuN4wGblMnqwiG5XXpLKafb4/W8ZxAZMqXzADJGHB48g/d+EkTueF0f
+         x3OzkjfdBizr+WRZnoRA4rxFQIemFG9xciebWYlM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, stable@kernel.org,
+        Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.4 089/155] ARM: dts: omap5: Add bus_dma_limit for L3 bus
+Date:   Tue, 31 Mar 2020 10:58:49 +0200
+Message-Id: <20200331085428.309556173@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
+References: <20200331085418.274292403@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A21A9ED@SHSMSX104.ccr.corp.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 08:36:32AM +0000, Liu, Yi L wrote:
-> > From: Liu, Yi L
-> > Sent: Tuesday, March 31, 2020 4:33 PM
-> > To: 'Christoph Hellwig' <hch@infradead.org>
-> > Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-> > 
-> > > From: Christoph Hellwig <hch@infradead.org>
-> > > Sent: Tuesday, March 31, 2020 3:54 PM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>
-> > > Subject: Re: [PATCH v1 1/8] vfio: Add
-> > > VFIO_IOMMU_PASID_REQUEST(alloc/free)
-> > >
-> > > Who is going to use thse exports?  Please submit them together with a
-> > > driver actually using them.
-> the user of the symbols are already in this patch. sorry for the split answer..
+From: Roger Quadros <rogerq@ti.com>
 
-Thanks, sorry for the noise!
+commit dfa7ea303f56a3a8b1ed3b91ef35af2da67ca4ee upstream.
+
+The L3 interconnect's memory map is from 0x0 to
+0xffffffff. Out of this, System memory (SDRAM) can be
+accessed from 0x80000000 to 0xffffffff (2GB)
+
+OMAP5 does support 4GB of SDRAM but upper 2GB can only be
+accessed by the MPU subsystem.
+
+Add the dma-ranges property to reflect the physical address limit
+of the L3 bus.
+
+Cc: stable@kernel.org
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arm/boot/dts/omap5.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -143,6 +143,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0 0 0xc0000000>;
++		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
+ 		reg = <0 0x44000000 0 0x2000>,
+ 		      <0 0x44800000 0 0x3000>,
+
+
