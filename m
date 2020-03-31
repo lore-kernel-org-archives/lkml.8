@@ -2,94 +2,101 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F91C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6CDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8F220781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4CA20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:24:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jp6L2Wk4"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nbjHHR5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgCaGXl (ORCPT
+        id S1729013AbgCaGYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:23:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:55061 "EHLO ozlabs.org"
+        Tue, 31 Mar 2020 02:24:44 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:61007 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgCaGXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:23:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rzmV3gywz9sR4;
-        Tue, 31 Mar 2020 17:23:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585635818;
-        bh=DKwvoyZfpSqHC0FSx4sxi26RxC3nIH/Csn6E+yW23WY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jp6L2Wk47qXSQiHx7JslvuSVDzijVgX/0XTcNfFchAlwPe2qI9udlRLSdJ2Uafwxx
-         YeQ1AoPTdFcsBxSoGJlCPAfhUrMwojd8Uj7OjSkFUQDvmxDM2aLcBjvtToZ1c3Iwhd
-         6LQBInw7Y1b7cVMLDfTZc+Xb3m4V/Mmzp7wZi+wxilVusnQwFNNoSTbpeAqPdaIE80
-         xKena7+AxZD+GyJI1dCMsNVsu0HinaZmdyMN7Q8FH8/3v45iThDq14JifArzVZtq15
-         XiAyBk+dqDi+0XsILk+7zVXG7zT/DNIT/AIgd1N/nHxNGjd1cYr46rRIOcwTF1/p28
-         5GEdpOBMhu1Fw==
-Date:   Tue, 31 Mar 2020 17:23:35 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: linux-next: build failure after merge of the hyperv tree
-Message-ID: <20200331172335.2f71021b@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IkVd2zwsszL6kSNj3g2+w43";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1726001AbgCaGYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 02:24:43 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48rznh7100z9v0KD;
+        Tue, 31 Mar 2020 08:24:40 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=nbjHHR5n; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1Rbbg18LYNuf; Tue, 31 Mar 2020 08:24:40 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48rznh5jJwz9v0KC;
+        Tue, 31 Mar 2020 08:24:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585635880; bh=rQwkTfrjFiqmfYf4WsSfoDHWRa98N9YqiVIvJYZF6i0=;
+        h=From:Subject:To:Cc:Date:From;
+        b=nbjHHR5n/f0kVmtS3m+JiIFaxt5kkB5IhHcIRyh1lPQz0j5uTiIo51tMcvXKJ1FK9
+         U/KKuTm3VaKmOmRGh6fZffDFqDOF7nCtQyHSeSl0iYAnhhJ5bQBRUj4g9VrtQxmulG
+         6Eh0HDtgyTUooUF6AvzynMuhFzLg/8avau2lLpb0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 90D528B784;
+        Tue, 31 Mar 2020 08:24:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ff4uzgkKsQ-o; Tue, 31 Mar 2020 08:24:41 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C7C98B752;
+        Tue, 31 Mar 2020 08:24:41 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3064065673; Tue, 31 Mar 2020 06:24:41 +0000 (UTC)
+Message-Id: <40899eb1b8f10da3706acd06c3d46d2418c8886e.1585635837.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 01/10] powerpc: Mark 4xx as Orphan in MAINTAINERS
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 31 Mar 2020 06:24:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/IkVd2zwsszL6kSNj3g2+w43
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-Hi all,
+The 4xx platforms are no longer maintained.
 
-After merging the hyperv tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Cc: Alistair Popple <alistair@popple.id.au>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Acked-by: Alistair Popple <alistair@popple.id.au>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ MAINTAINERS | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-ERROR: modpost: "panic_on_oops" [drivers/hv/hv_vmbus.ko] undefined!
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5a5332b3591d..054c5af124a5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9647,11 +9647,8 @@ F:	arch/powerpc/platforms/512x/
+ F:	arch/powerpc/platforms/52xx/
+ 
+ LINUX FOR POWERPC EMBEDDED PPC4XX
+-M:	Alistair Popple <alistair@popple.id.au>
+-M:	Matt Porter <mporter@kernel.crashing.org>
+-W:	http://www.penguinppc.org/
+ L:	linuxppc-dev@lists.ozlabs.org
+-S:	Maintained
++S:	Orphan
+ F:	arch/powerpc/platforms/40x/
+ F:	arch/powerpc/platforms/44x/
+ 
+-- 
+2.25.0
 
-Caused by commit
-
-  a6a5aa4b0179 ("x86/Hyper-V: Report crash data in die() when panic_on_oops=
- is set")
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/IkVd2zwsszL6kSNj3g2+w43
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6C4ecACgkQAVBC80lX
-0GwU5gf/e+XdKSplUrfXzdUT9h1RQsimOrR38LwqlN4pm3Be6YiaenDGSHvVGn1D
-rrdhcPnbpN/uE4PJ1ZVC2hIlke5vXjKwBl1YaHhdG0G7eIAW8Bpd6pYN6pEZUVwq
-2dcSxZUNyxUQ72rraSATU8ewPXcorG91ntc+umF0yG/lUnuXNa8dY941zY65BpeG
-qGCfZnyVTudqJTIOV5GHwEK0l2/6EHKXgXbNqJ9lLCVOxDIPUbQtFmP8Pg4upSmn
-GA7T3Oh2XzqQzsQCv2TB3tLM7i6h1Dg468jvt+kSImmCNx3GkljQPED5pPDLLg7W
-T/Hmo31Dc6bIECPlbFKpYoyXSmWqyQ==
-=uVjV
------END PGP SIGNATURE-----
-
---Sig_/IkVd2zwsszL6kSNj3g2+w43--
