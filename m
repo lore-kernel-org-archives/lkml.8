@@ -2,236 +2,270 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEEBC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68BBC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC7F20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BDA2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwFH5kmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCaRRH (ORCPT
+        id S1727742AbgCaRRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:17:07 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56741 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgCaRRG (ORCPT
+        Tue, 31 Mar 2020 13:17:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36068 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgCaRRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:17:06 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jJKVZ-0004gz-3s; Tue, 31 Mar 2020 19:17:01 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jJKVX-0007ei-6x; Tue, 31 Mar 2020 19:16:59 +0200
-Date:   Tue, 31 Mar 2020 19:16:59 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     David Jander <david@protonic.nl>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
-Message-ID: <20200331171659.yytmgrtday3243fj@pengutronix.de>
-References: <20200329110457.4113-1-o.rempel@pengutronix.de>
- <20200329150854.GA31812@lunn.ch>
- <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
- <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
- <20200330174114.GG25745@shell.armlinux.org.uk>
- <20200331104459.6857474e@erd988>
- <20200331170300.GQ25745@shell.armlinux.org.uk>
+        Tue, 31 Mar 2020 13:17:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c23so2241704pgj.3;
+        Tue, 31 Mar 2020 10:17:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ICG30y4zNo3hKOg/q4ebTZ3HatLK/FPtksBkCKfh5oE=;
+        b=lwFH5kmT+xLvy9HSwYOt8c/RcSf5tLMxfoJsICsjA0usmFsli0bz/+4fkqdmDJ5jBJ
+         JUC5rh5EnE7CoBMWczQaQu7OMUhQDZ6zyfUwOwWo2M332Y64DVimNpsOHsbdiAfrSKsj
+         K8pOGk/j3JYJTa4P1eRVAu2p/rr+RT7QhE3StZPZiKLkg8WvC5LNs/+Ih5oGSQzyolyO
+         YNNPQAYFNaea9PXB+ZeI7H3pYAJBT4ARacB9ILpO0JEWsJSqw9wQvd+GcDe7z/CD54bc
+         XvxmLWPInyTqZ9U2/hpPLq0EuGY9/gQDEJRiF3ic4THAw+n3MtLiJQmFVEKm5wqB+6mV
+         NISA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ICG30y4zNo3hKOg/q4ebTZ3HatLK/FPtksBkCKfh5oE=;
+        b=ifp5Xix2fpM3r3zSNGKlE5gUnjL/ebDk38n/MGdXNHitWU4wqIOCgEMSfWXFONvrx/
+         ewQIPQwHVh615nHTVACKF3Dvify1T/OvniqVZJAH7AwvSVrrNYnhHZIbTvgkMD31Dhxh
+         PFC+Qgw9eWA3W9JFNkjvMwYIHHKFKETNdveLbvhupekIvKkjYBINM/ok1871qZohW6sZ
+         OT4c5Egydc1HO/jlwCsH+018N8sGAIEo19Foth3Yv6oPx9soVOeHmhOViVfH1RL7U6e7
+         QdMSvhrr44C1Vp/zKN1mY4AzbCN0UxzxE4vcnJEVIEjhrvEXo1GdSB7dSU7tarmyeKPW
+         ZhhQ==
+X-Gm-Message-State: AGi0PuaHbbtyH1UN7a5uCQ8c13Jum4/oAmJwSU6liay0PIlWyuQgnxe4
+        dYT32YnPj1xiGoZOWyDPtf33jtx5sCmVr+q/oDCv7590u1c=
+X-Google-Smtp-Source: APiQypITqjeLzwW4boEvUSsGDOoC+q4vHjDm4i1oNqkLNQ44cl3FP6ZfCeBQoQoj9BDo8xbrDf6MQJrhnGaIPsTBxno=
+X-Received: by 2002:a63:7b1d:: with SMTP id w29mr5024588pgc.4.1585675055307;
+ Tue, 31 Mar 2020 10:17:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w5qomzsamt5uzh2a"
-Content-Disposition: inline
-In-Reply-To: <20200331170300.GQ25745@shell.armlinux.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 19:10:45 up 137 days,  8:29, 156 users,  load average: 0.03, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200306135451.4AF0480307C4@mail.baikalelectronics.ru> <20200331114824.e3uljdymvsjuh6wh@ubsrv2.baikal.int>
+ <20200331142530.GM1922688@smile.fi.intel.com> <20200331162813.dnpmyzs35tvkeavx@ubsrv2.baikal.int>
+In-Reply-To: <20200331162813.dnpmyzs35tvkeavx@ubsrv2.baikal.int>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 20:17:28 +0300
+Message-ID: <CAHp75VfOxRdEZ81-rFUrAiQDdruKqhJn_Wh+PJnyB5WL2vMUCQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics support
+To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 31, 2020 at 7:29 PM Sergey Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Tue, Mar 31, 2020 at 05:25:30PM +0300, Andy Shevchenko wrote:
+> > On Tue, Mar 31, 2020 at 02:48:24PM +0300, Sergey Semin wrote:
+> > > On Fri, Mar 06, 2020 at 03:54:45PM +0200, Andy Shevchenko wrote:
 
---w5qomzsamt5uzh2a
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Tue, Mar 31, 2020 at 06:03:00PM +0100, Russell King - ARM Linux admin wr=
-ote:
-> On Tue, Mar 31, 2020 at 10:44:59AM +0200, David Jander wrote:
-> > I have checked with the datasheet of the AR8035, and AFAICS, what the c=
-ode
-> > does is this:
-> >=20
-> >  - Disable the SmartEEE feature of the phy. The comment in the code imp=
-lies
-> >    that for some reason it doesn't work, but the reason itself is not g=
-iven.
-> >    Anyway, disabling SmartEEE should IMHO opinion be controlled by a DT
-> >    setting. There is no reason to believe this problem is specific to t=
-he
-> >    i.MX6. Besides, it is a feature of the phy, so it seems logical to e=
-xpose
-> >    that via the DT. Once that is done, it has no place here.
-> >=20
-> >  - Set the external clock output to 125MHz. This is needed because the =
-i.MX6
-> >    needs a 125MHz reference clock input. But it is not a requirement to=
- use
-> >    this output. It is perfectly fine and possible to design a board tha=
-t uses
-> >    an external oscillator for this. It is also possible that an i.MX6 d=
-esign
-> >    has such a phy connected to a MAC behind a switch or some other inte=
-rface.
-> >    Independent of i.MX6 this setting can also be necessary for other ha=
-rdware
-> >    designs, based on different SoC's. In summary, this is a feature of =
-the
-> >    specific hardware design at hand, and has nothing to do with the i.M=
-X6
-> >    specifically. This should definitely be exposed through the DT and n=
-ot be
-> >    here.
-> >=20
-> >  - Enable TXC delay. To clarify, the RGMII specification version 1 spec=
-ified
-> >    that the RXC and TXC traces should be routed long enough to introduc=
-e a
-> >    certain delay to the clock signal, or the delay should be introduced=
- via
-> >    other means. In a later version of the spec, a provision was given f=
-or MAC
-> >    or PHY devices to generate this delay internally. The i.MX6 MAC inte=
-rface
-> >    is unable to generate the required delay internally, so it has to be=
- taken
-> >    care of either by the board layout, or by the PHY device. This is the
-> >    crucial point: The amount of delay set by the PHY delay register dep=
-ends on
-> >    the board layout. It should NEVER be hard-coded in SoC setup code. T=
-he
-> >    correct way is to specify it in the DT. Needless to say that this to=
-o,
-> >    isn't i.MX6-specific.
->=20
-> Let's say this is simple to do, shall we?
->=20
-> So, if I disable the call to ar8031_phy_fixup() from ar8035_phy_fixup(),
-> and add the following to the imx6qdl-sr-som.dtsi fragment:
->=20
-> &fec {
-> ...
->         phy-handle =3D <&phy>;
->=20
->         mdio {
->                 #address-cells =3D <1>;
->                 #size-cells =3D <0>;
->=20
->                 phy: ethernet-phy@0 {
->                         reg =3D <0>;
->                         qca,clk-out-frequency =3D <125000000>;
->                 };
->         };
-> };
->=20
-> Note that phy-mode is already RGMII-ID.  This should work, right?
->=20
-> The link still comes up, which is good, but the PHY registers for
-> the clock output are wrong.
->=20
-> MMD 3 register 0x8016 contains 0xb282, not 0xb29a which it has
-> _with_ the quirk - and thus the above clock frequency stated in
-> DT is not being selected.  Forcing this register to the right
-> value restores networking.
->=20
-> Yes, the PHY driver is being used:
->=20
-> Qualcomm Atheros AR8035 2188000.ethernet-1:00: attached PHY driver [Qualc=
-omm Atheros AR8035] (mii_bus:phy_addr=3D2188000.ethernet-1:00, irq=3DPOLL)
->=20
-> So that's not the problem.
->=20
-> Adding some debug shows that the phy_device that is being used is
-> the correct one:
->=20
-> Qualcomm Atheros AR8035 2188000.ethernet-1:00: node=3D/soc/aips-bus@21000=
-00/ethernet@2188000/mdio/ethernet-phy@0
->=20
-> and it is correctly parsing the clk-out-frequency property:
->=20
-> Qualcomm Atheros AR8035 2188000.ethernet-1:00: cof=3D0 125000000
->=20
-> When we get to attaching the PHY however:
->=20
-> Qualcomm Atheros AR8035 2188000.ethernet-1:00: clk_25m_mask=3D0004 clk_25=
-m_reg=3D0000
->=20
-> which is just wrong.  That's because:
->=20
->                 if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
->                     at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
->                         priv->clk_25m_reg &=3D ~AT8035_CLK_OUT_MASK;
->                         priv->clk_25m_mask &=3D ~AT8035_CLK_OUT_MASK;
->                 }
->=20
-> is patently untested - those "~" should not be there.  These masks
-> are one-bits-set for the values that comprise the fields, not
-> zero-bits-set.
->=20
-> So, I see a patch series is going to be necessary to fix the cockup(s)
-> in the PHY driver before we can do anything with DT files.
+> > > As I see the others have not comments.) Anyway I see your point and h=
+aving the
+> > > regmap-based interface might be better than the approach I've suggest=
+ed
+> > > in this patchset particularly seeing that our DW i2c IP registers are
+> > > hidden behind a system controller register space.
+> > >
+> > > In order to follow your proposition to create a dedicated regmap and =
+to supply
+> > > it to the DW i2c driver, I have to redevelop not only this patchset, =
+but
+> > > also an adjacent drivers. In particular the changes will concern the
+> > > MFD-based System Controller driver (which will instantiate this DW i2=
+c
+> > > controller device), Clocks Control Unit drivers set, and a few
+> > > others. The whole alteration I described in the RFC:
+> > > https://lkml.org/lkml/2020/3/22/393
+> > > You've been in Cc there, so fill free to send your comments regarding
+> > > the changes I suggested. Though this time I hope the solution will
+> > > satisfy everyone, who had issues with patchsets I've recently sent.
+> > >
+> > > Getting back to your comment in the framework of this patchset. The a=
+pproach
+> > > used for CHT Whiskey Cove i2c isn't fully suitable in our case for
+> > > the reason of the DW I2C controller nature. DW I2C controller is a ge=
+neric
+> > > controller and used on many different platforms, while AFAICS CHT Whi=
+skey Cove
+> > > I2C is the SoC-specific used to access a charger-IC. So in the former=
+ case we
+> > > may have an arbitrary set of i2c-slaves connected to the controller o=
+n
+> > > different platforms, while on the latter one - there is a fixed set o=
+f
+> > > slaves. In addition due to the same reason the DW I2C IP might be
+> > > embedded into different sub-blocks on different platforms, while the =
+CHT
+> > > Whiskey Cove I2C is known to be a part of Intel CHT WC SoC PMIC.
+> > > For instance Baikal-T1 SoC has one DW I2C controller embedded into th=
+e
+> > > System Controller with indirectly accessible registers and two DW I2C
+> > > interfaces with normal memory mapped registers. Due to this in case o=
+f DW I2C
+> > > driver we can't just "suck" the regmap out from a parental MFD or
+> > > anywhere else as it's done in the CHT Whiskey Cove I2C driver, but in=
+stead
+> > > we should somehow supply a regmap pointer to the driver.
+> > >
+> > > Taking into account all of these we can utilize a combined approach
+> > > implemented in ./drivers/i2c/busses/i2c-cht-wc.c and
+> > > drivers/mfd/intel_quark_i2c_gpio.c . I'll add a regmap pointer field =
+to the
+> > > "struct dw_i2c_platform_data" structure, so in case if there is no
+> > > IORESOURCE_MEM resources available (platform_get_resource() fails), w=
+e
+> > > try to get a regmap pointer from the platform data. If there is no va=
+lid
+> > > regmap available, then completely fail the driver probe procedure. Th=
+ough
+> > > due to this alteration I'll have to change the
+> > > dw_i2c_platform_data.i2c_scl_freq field usage a bit. In case if it's
+> > > zero, then call i2c_parse_fw_timings(). This won't hurt ACPI or dt-le=
+ss
+> > > platforms, but will let us cover a case when regmap is set while i2c
+> > > clock frequency is supposed to be taken from the kernel firmware (lik=
+e
+> > > dtb, etc).
 
-I'm glad you found this issues :D I made a patch to fix it last week.
-And it was a reason to send a patch for disabling _all_ fixups :)
+Whiskey Cove case provides an I=C2=B2C controller with specific access. Tha=
+t's it.
+In your case you will need similar glue driver which will utilize
+DesignWare core driver.
 
-Regards,
-Oleksij
+> > > So if you are Ok with this, I'll send a v2 patchset with correspondin=
+g
+> > > alteration implemented.
+> >
+> > I was thinking about something like this:
+> >
+>
+> > 1/ core driver (library + master + slave) is converted to use regmap
+>
+> Yes. I also intended to do this just by altering the dw_readl() and
+> dw_writel() methods to work over regmap IO methods if regmap is
+> available.
+
+Why? Simple always use regmap API calls. Moreover, regmap provides
+update() which may give a leverage in some cases by dropping r-m-w
+code.
+
+Core part take a pointer to regmap when instantiate (probe) a driver
+on the device.
+
+> > 2/ platform and PCI driver may provide regmap MMIO
+>
+> Regmap pointer will be also a part of "struct dw_i2c_dev".
+
+Yes.
+
+> So if PCI
+> code intends the regmap-based access to the controller registers, then
+> it shall just initialize the regmap pointer in the private i2c-designware=
+ data
+> instance of the dw_i2c_dev structure.
+
+Why data is being involved here?
+
+> So, yes, this is also covered by
+> my solution. Though the PCI code will be left untouched, since I can't
+> predict a particular regmap-related use-case of it.
+
+> > 3/ your glue driver will provide different regmap accessors
+>
+> I was thinking of developing a more generic version so any platform
+> with a specific access to the DW I2C register could use it just by supply=
+ing
+> the regmap pointer in the dw_i2c_platform_data structure.
+
+regmap is not a platform data.
+
+> Our DW I2C
+> controller also perfectly fits to the generic i2c-designware-platdrv.c
+> driver, so implementing an additional glue-layer would be too much seeing
+> the difference only in the registers mapping.
+
+Register accessing, mapping as far as I understood is the same.
+However, with regmap layer it just an implementation detail of certain
+glue driver.
+
+> Let me explain the difference of our solutions. In case of implementing
+> the glue layer, as you suggest, I would have to do it in a way like the D=
+W PCIe
+> driver is designed. I would need to move the code of current dw_i2c_plat_=
+probe()
+> function to a dedicated method named like dw_i2c_plat_init(pdev, !regmap!=
+),
+> while former method dw_i2c_plat_probe() would just call
+> dw_i2c_plat_init(pdev, !NULL!). Then I would have to create a dedicated
+> glue-driver - i2c-designware-bt1drv.c, which would be bound to a
+> "baikal,t1-sys-i2c" device, try to find a Baikal-T1 System Controller
+> device node (though this would be just a parent device), then would get
+> it' syscon regmap handler, then would initialize a dedicated regmap handl=
+er to
+> indirectly access the DW I2C controller register, then it would call the
+> dw_i2c_plat_init(pdev, !regmap!) method with new regmap handler passed
+> (though the new regmap passing could be also implemented over the
+> platform_data pointer). Also seeing you already have a platform-specific
+> parts in the generic i2c-designware-platdrv.c driver (like ACPI-based
+> platforms and Microsemi Ocelot SoC), there might raise a necessity to
+> unpin that specifics to a dedicated method, since my glue-layer
+> wouldn't need that checks and initializations. Such alteration won't
+> be that easy to implement and regression errors prone, since I don't have
+> other platforms to test it.
+>
+> In case of my solution the whole glue-layer part would be moved to
+> the MFD-based Baikal-T1 System Controller driver and a generic
+> platform_data-based interface would be implemented, which would just
+> need to alter the registers mapping part of the i2c-designware-platdrv.c
+> driver. Note that that part would need to be fixed in case of any solutio=
+n.
+>
+> So comparing these too approaches, I would select a one, which would
+> need less common code modifications and would provide a generic
+> solution. As I see it would be a platform_data-based design. What do you
+> think?
+
+I think you may look at the existing examples how drivers are
+utilizing regmap layer.
+Along with that look how glue (or let's say quirk in your case)
+drivers are implemented, for example USB or SDHCI comes to my mind.
 
 --=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---w5qomzsamt5uzh2a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl6DewYACgkQ4omh9DUa
-UbNshA/+M69u9hhXoysk7kn7c2ywjtPiC1uN0fqc4VgExPuSbszbRa3BKCQayUWL
-JIyT9R7ZjrCyRNrGwnO5ow3ecZ5zpgcMx2RYbGLFDsf7Skwe5JMBY0BVSX9PUxlD
-GNuMjBe4bDf5q/Ynlj5tSWQnm8/r/86DyAAfIyJFvqlIoJPf/JMtH3OIFSRTLcn+
-z9TEy6z0a0jnrAUzmP/qJYQUHyptpN25OTudTvW3K/e0HWQaS47/geFLQ1K+ONy3
-ZNic2RVT5uEdR1CloL7uuvO1V89BOgaMJw/rCDK+FX1BXdgW0ib1PIDmGB+FEb3w
-KX2WxDLJEGeIgjex/Sf0m6OGnyXpy5lRswHoYdKalHWfHnbSfTuqa0UTjXtXk+r4
-B+ZdRSZ1SFW4Bk0pmZKyZLTKOinJV1iK0TV357ZiS+FNwSVXKD3GFFFNQjLxlGbf
-yiELU9gRTgN5OLuQqYUynOxqxpvLQqJCHtgzpoClRpSIkjjYL+AAUSYCCDwdoxgS
-7DGTVyFAcYHFeJISVnPgCTERLM+z1WgrRgVc0Ikd28nKoEjtCMp79XN4Ku6iv5il
-hj1tVXiQYBcv5hpI1zwPRPjHKcnk2DPkB5ZwqhO2ptpI2W53BjvNNWUoBHFjCCy7
-4I8Dn+Cw1KiBZqZRT8JgQug0torRM7iN4G/fzRMR+WoqYxGvzHE=
-=8dpF
------END PGP SIGNATURE-----
-
---w5qomzsamt5uzh2a--
+With Best Regards,
+Andy Shevchenko
