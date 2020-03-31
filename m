@@ -2,101 +2,190 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90889C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3F7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7104620848
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFF620848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:18:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="inZ6m6SF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730319AbgCaKQI (ORCPT
+        id S1730273AbgCaKSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:16:08 -0400
-Received: from correo.us.es ([193.147.175.20]:33628 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730153AbgCaKQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:16:08 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 04731DA3D1
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:16:06 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id EAFE2100A47
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:16:05 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id E882D100A5A; Tue, 31 Mar 2020 12:16:05 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E261C100A47;
-        Tue, 31 Mar 2020 12:16:03 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Tue, 31 Mar 2020 12:16:03 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
+        Tue, 31 Mar 2020 06:18:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50676 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727655AbgCaKSr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 06:18:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=F/W9yss1Jz9mFb8aYjHkISw9gGu7WYHlzp/SX5ejA/A=; b=inZ6m6SFKNvWDq6GKpNt/PQecz
+        qHNqggptuwLzrChJzpkBYF5ebukuT4Huroqh4A6bDaZrXTC7hq1EmoYK15OT7EBr6/kZQUhuHU57v
+        vtnNat2aO1BA5edVyFZkIep5WpYTrdnna+Xq0VXlz+3YEJc7dDsZEXnrJqM9WJ8SgKMIWdilG+/nO
+        f6v9KezEJZGgqfMvDYJhE7XUHiLZEwIPvLZmdQ+k86VIxtKY6AxqcnW84ZWa5uL4BIEAcHIEy4S2U
+        M6U9CRRLbMZS5BeuRfSjP+teTfc4iiMqf75Wf/3zoz3BBTQl+eT+N3G0j3NsJXKpJey8OyP/FnaAO
+        YE3p6uSw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJDyh-0005ka-8y; Tue, 31 Mar 2020 10:18:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id BE18342EF4E0;
-        Tue, 31 Mar 2020 12:16:03 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 12:16:03 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Subject: Re: [PATCH 5.5 138/170] netfilter: nft_fwd_netdev: allow to redirect
- to ifb via ingress
-Message-ID: <20200331101603.wmsbhgmjc6vf4esk@salvia>
-References: <20200331085423.990189598@linuxfoundation.org>
- <20200331085438.148415210@linuxfoundation.org>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EFBDE30477A;
+        Tue, 31 Mar 2020 12:18:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C8EFE29D84C3B; Tue, 31 Mar 2020 12:18:34 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 12:18:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     CodyYao-oc <CodyYao-oc@zhaoxin.com>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
+        cooperyan@zhaoxin.com
+Subject: Re: [PATCH] x86/perf: Add hardware performance events support for
+ Zhaoxin CPU.
+Message-ID: <20200331101834.GP20730@hirez.programming.kicks-ass.net>
+References: <1585647599-6649-1-git-send-email-CodyYao-oc@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331085438.148415210@linuxfoundation.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <1585647599-6649-1-git-send-email-CodyYao-oc@zhaoxin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:59:12AM +0200, Greg Kroah-Hartman wrote:
-> From: Pablo Neira Ayuso <pablo@netfilter.org>
-> 
-> commit bcfabee1afd99484b6ba067361b8678e28bbc065 upstream.
-> 
-> Set skb->tc_redirected to 1, otherwise the ifb driver drops the packet.
-> Set skb->tc_from_ingress to 1 to reinject the packet back to the ingress
-> path after leaving the ifb egress path.
-> 
-> This patch inconditionally sets on these two skb fields that are
-> meaningful to the ifb driver. The existing forward action is guaranteed
-> to run from ingress path.
-> 
-> Fixes: 39e6dea28adc ("netfilter: nf_tables: add forward expression to the netdev family")
-> Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  net/netfilter/nft_fwd_netdev.c |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> --- a/net/netfilter/nft_fwd_netdev.c
-> +++ b/net/netfilter/nft_fwd_netdev.c
-> @@ -28,6 +28,10 @@ static void nft_fwd_netdev_eval(const st
->  	struct nft_fwd_netdev *priv = nft_expr_priv(expr);
->  	int oif = regs->data[priv->sreg_dev];
->  
-> +	/* These are used by ifb only. */
-> +	pkt->skb->tc_redirected = 1;
-> +	pkt->skb->tc_from_ingress = 1;
+On Tue, Mar 31, 2020 at 05:39:59PM +0800, CodyYao-oc wrote:
+> Zhaoxin CPU has provided facilities for monitoring performance
+> via PMU(Performance Monitor Unit), but the functionality is unused so far.
+> Therefore, add support for zhaoxin pmu to make performance related
+> hardware events available.
 
-This patch also requires:
+This looks like an Intel Architectural PMU v2 or so, is that correct? Do
+you have a link to documentation for your CPU?
 
-2c64605b590e net: Fix CONFIG_NET_CLS_ACT=n and CONFIG_NFT_FWD_NETDEV={y, m} build
+> +static void zhaoxin_pmu_disable_all(void)
+> +{
+> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
+> +}
+> +
+> +static void zhaoxin_pmu_enable_all(int added)
+> +{
+> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, x86_pmu.intel_ctrl);
+> +}
+> +
+> +static inline u64 zhaoxin_pmu_get_status(void)
+> +{
+> +	u64 status;
+> +
+> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, status);
+> +
+> +	return status;
+> +}
+> +
+> +static inline void zhaoxin_pmu_ack_status(u64 ack)
+> +{
+> +	wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, ack);
+> +}
 
-Otherwise build breaks with CONFIG_NET_CLS_ACT=n.
+> +static int zhaoxin_pmu_handle_irq(struct pt_regs *regs)
+> +{
+> +	struct perf_sample_data data;
+> +	struct cpu_hw_events *cpuc;
+> +	int bit;
+> +	u64 status;
+> +	bool is_zxc;
+> +	int handled = 0;
+> +
+> +	cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +	zhaoxin_pmu_disable_all();
+> +	status = zhaoxin_pmu_get_status();
+> +	if (!status)
+> +		goto done;
+> +
+> +	if (boot_cpu_data.x86 == 0x06 &&
+> +		(boot_cpu_data.x86_model == 0x0f ||
+> +			boot_cpu_data.x86_model == 0x19))
+> +		is_zxc = true;
+> +again:
+> +
+> +	/*Clearing status works only if the global control is enable on zxc.*/
+> +	if (is_zxc)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, x86_pmu.intel_ctrl);
+> +
+> +	zhaoxin_pmu_ack_status(status);
+> +
+> +	if (is_zxc)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
 
-Thanks.
+That's an unfortunate errata; perhaps write it like so:
+
+static inline void zxc_pmu_ack_status(u64 status)
+{
+	/*
+	 * ZXC needs global control enabled in order to clear status bits.
+	 */
+	zhaoxin_pmu_enable_all(0);
+	zhaoxin_pmu_ack_status(status);
+	zhaoxin_pmu_disable_all();
+}
+
+	if (is_zxc)
+		zxc_pmu_ack_status(status);
+	else
+		zhaoxin_pmu_ack_status(status);
+
+Alternatively; you can do a whole zxc specific handle_irq() and move the
+get/ack status before disable_all(). If you do that, then factor this:
+
+> +	/*
+> +	 * CondChgd bit 63 doesn't mean any overflow status. Ignore
+> +	 * and clear the bit.
+> +	 */
+> +	if (__test_and_clear_bit(63, (unsigned long *)&status)) {
+> +		if (!status)
+> +			goto done;
+> +	}
+> +
+> +	for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
+> +		struct perf_event *event = cpuc->events[bit];
+> +
+> +		handled++;
+> +
+> +		if (!test_bit(bit, cpuc->active_mask))
+> +			continue;
+> +
+> +		x86_perf_event_update(event);
+> +		perf_sample_data_init(&data, 0, event->hw.last_period);
+> +
+> +		if (!x86_perf_event_set_period(event))
+> +			continue;
+> +
+> +		if (perf_event_overflow(event, &data, regs))
+> +			x86_pmu_stop(event, 0);
+> +	}
+
+bit into it's own function so you don't have to duplicate it. Then the
+two handle_irq() functions only differ in the status handling.
+
+> +
+> +	/*
+> +	 * Repeat if there is more work to be done:
+> +	 */
+> +	status = zhaoxin_pmu_get_status();
+> +	if (status)
+> +		goto again;
+> +
+> +done:
+> +	zhaoxin_pmu_enable_all(0);
+> +	return handled;
+> +}
