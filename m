@@ -2,57 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD55C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E8DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2743206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67ED920675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646050;
-	bh=S092gFVFtOYE7P8NHrfnFQpRTJsmjesAJzX7X3rp8K8=;
+	s=default; t=1585646055;
+	bh=qVjoLHhaWei+kQZu9/OxgcFz2dT0HIX9Y4RCzcxpQQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ke4JX4+P4HY4w0DAMyCgbUHkL1AUCfHBSpmyZLpIY9InRwZdhb5+sFYayht93sn3N
-	 uLkXUAiZ3KQzfk+6xsrLmS64do2DHN+8pNNzwITG6qdb0aQqEniY2lgqTcqxk36uof
-	 pQHwzTJN9tJ0Yi+VWWBWktuAUCcyWo5ZjhPfqdC8=
+	b=KvwA68lb82AQ9JIb66X3NnA1daPEV/eEW5R4akGBwya57ezUdDvFOb++tkB9Y6oeZ
+	 BJ3mDMslzRsq8rZsm+wTRmPmENdzDEBTaYo9LwEoFmr+Vcbh953QnujZn5g/YfhylW
+	 lxUubEcUXgej6cNnHqzLAk8LkWYlogeW0wNCtT7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731812AbgCaJOI (ORCPT
+        id S1731824AbgCaJOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33842 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731796AbgCaJOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:14:06 -0400
+        id S1731056AbgCaJOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:14:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BA852145D;
-        Tue, 31 Mar 2020 09:14:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F9C120675;
+        Tue, 31 Mar 2020 09:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646045;
-        bh=S092gFVFtOYE7P8NHrfnFQpRTJsmjesAJzX7X3rp8K8=;
+        s=default; t=1585646051;
+        bh=qVjoLHhaWei+kQZu9/OxgcFz2dT0HIX9Y4RCzcxpQQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oYDC90zS+6P0C0nG1LwvAI1feSo2DOVVcYe1LQpbLseulF/8uMsXQPxSdBNJ4QtI5
-         Q99roJvpDQcHQY8YLkmfdBlOXZFnviI3bkhC5kQFer4sEoYqnae/tY+kzSAyCKS9MK
-         qydAeOYCeYESd/BuH9b1qG3Nv/apPSguUaIIZmDs=
+        b=BP6SJSXj3LicyYqctvzfnXVvtPRhdw/wcJ2TsjbAPM8wprXbuY1bAJRVZa82aPxAP
+         a4918nsZyp2c/CEp8wZw+wBcLhgnt/YsXfA9nGBx463qH1EYT2Y9u9xzmFeMzuR6R6
+         HmiueiWCEBoSxboOcuFEszv/mWTiSr5d/v64UKzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
-        syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com,
-        syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com,
-        syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 028/155] net_sched: cls_route: remove the right filter from hashtable
-Date:   Tue, 31 Mar 2020 10:57:48 +0200
-Message-Id: <20200331085421.551530550@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 061/155] fsl/fman: detect FMan erratum A050385
+Date:   Tue, 31 Mar 2020 10:58:21 +0200
+Message-Id: <20200331085425.380272661@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -65,45 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit ef299cc3fa1a9e1288665a9fdc8bff55629fd359 ]
+[ Upstream commit b281f7b93b258ce1419043bbd898a29254d5c9c7 ]
 
-route4_change() allocates a new filter and copies values from
-the old one. After the new filter is inserted into the hash
-table, the old filter should be removed and freed, as the final
-step of the update.
+Detect the presence of the A050385 erratum.
 
-However, the current code mistakenly removes the new one. This
-looks apparently wrong to me, and it causes double "free" and
-use-after-free too, as reported by syzbot.
-
-Reported-and-tested-by: syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
-Fixes: 1109c00547fc ("net: sched: RCU cls_route")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/cls_route.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/freescale/fman/Kconfig | 28 +++++++++++++++++++++
+ drivers/net/ethernet/freescale/fman/fman.c  | 18 +++++++++++++
+ drivers/net/ethernet/freescale/fman/fman.h  |  5 ++++
+ 3 files changed, 51 insertions(+)
 
---- a/net/sched/cls_route.c
-+++ b/net/sched/cls_route.c
-@@ -534,8 +534,8 @@ static int route4_change(struct net *net
- 			fp = &b->ht[h];
- 			for (pfp = rtnl_dereference(*fp); pfp;
- 			     fp = &pfp->next, pfp = rtnl_dereference(*fp)) {
--				if (pfp == f) {
--					*fp = f->next;
-+				if (pfp == fold) {
-+					rcu_assign_pointer(*fp, fold->next);
- 					break;
- 				}
- 			}
+diff --git a/drivers/net/ethernet/freescale/fman/Kconfig b/drivers/net/ethernet/freescale/fman/Kconfig
+index 0139cb9042ec7..34150182cc35c 100644
+--- a/drivers/net/ethernet/freescale/fman/Kconfig
++++ b/drivers/net/ethernet/freescale/fman/Kconfig
+@@ -8,3 +8,31 @@ config FSL_FMAN
+ 	help
+ 		Freescale Data-Path Acceleration Architecture Frame Manager
+ 		(FMan) support
++
++config DPAA_ERRATUM_A050385
++	bool
++	depends on ARM64 && FSL_DPAA
++	default y
++	help
++		DPAA FMan erratum A050385 software workaround implementation:
++		align buffers, data start, SG fragment length to avoid FMan DMA
++		splits.
++		FMAN DMA read or writes under heavy traffic load may cause FMAN
++		internal resource leak thus stopping further packet processing.
++		The FMAN internal queue can overflow when FMAN splits single
++		read or write transactions into multiple smaller transactions
++		such that more than 17 AXI transactions are in flight from FMAN
++		to interconnect. When the FMAN internal queue overflows, it can
++		stall further packet processing. The issue can occur with any
++		one of the following three conditions:
++		1. FMAN AXI transaction crosses 4K address boundary (Errata
++		A010022)
++		2. FMAN DMA address for an AXI transaction is not 16 byte
++		aligned, i.e. the last 4 bits of an address are non-zero
++		3. Scatter Gather (SG) frames have more than one SG buffer in
++		the SG list and any one of the buffers, except the last
++		buffer in the SG list has data size that is not a multiple
++		of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
++		With any one of the above three conditions present, there is
++		likelihood of stalled FMAN packet processing, especially under
++		stress with multiple ports injecting line-rate traffic.
+diff --git a/drivers/net/ethernet/freescale/fman/fman.c b/drivers/net/ethernet/freescale/fman/fman.c
+index 210749bf1eac1..4c2fa13a7dd7b 100644
+--- a/drivers/net/ethernet/freescale/fman/fman.c
++++ b/drivers/net/ethernet/freescale/fman/fman.c
+@@ -1,5 +1,6 @@
+ /*
+  * Copyright 2008-2015 Freescale Semiconductor Inc.
++ * Copyright 2020 NXP
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+@@ -566,6 +567,10 @@ struct fman_cfg {
+ 	u32 qmi_def_tnums_thresh;
+ };
+ 
++#ifdef CONFIG_DPAA_ERRATUM_A050385
++static bool fman_has_err_a050385;
++#endif
++
+ static irqreturn_t fman_exceptions(struct fman *fman,
+ 				   enum fman_exceptions exception)
+ {
+@@ -2514,6 +2519,14 @@ struct fman *fman_bind(struct device *fm_dev)
+ }
+ EXPORT_SYMBOL(fman_bind);
+ 
++#ifdef CONFIG_DPAA_ERRATUM_A050385
++bool fman_has_errata_a050385(void)
++{
++	return fman_has_err_a050385;
++}
++EXPORT_SYMBOL(fman_has_errata_a050385);
++#endif
++
+ static irqreturn_t fman_err_irq(int irq, void *handle)
+ {
+ 	struct fman *fman = (struct fman *)handle;
+@@ -2841,6 +2854,11 @@ static struct fman *read_dts_node(struct platform_device *of_dev)
+ 		goto fman_free;
+ 	}
+ 
++#ifdef CONFIG_DPAA_ERRATUM_A050385
++	fman_has_err_a050385 =
++		of_property_read_bool(fm_node, "fsl,erratum-a050385");
++#endif
++
+ 	return fman;
+ 
+ fman_node_put:
+diff --git a/drivers/net/ethernet/freescale/fman/fman.h b/drivers/net/ethernet/freescale/fman/fman.h
+index 935c317fa6964..f2ede1360f03a 100644
+--- a/drivers/net/ethernet/freescale/fman/fman.h
++++ b/drivers/net/ethernet/freescale/fman/fman.h
+@@ -1,5 +1,6 @@
+ /*
+  * Copyright 2008-2015 Freescale Semiconductor Inc.
++ * Copyright 2020 NXP
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+@@ -398,6 +399,10 @@ u16 fman_get_max_frm(void);
+ 
+ int fman_get_rx_extra_headroom(void);
+ 
++#ifdef CONFIG_DPAA_ERRATUM_A050385
++bool fman_has_errata_a050385(void);
++#endif
++
+ struct fman *fman_bind(struct device *dev);
+ 
+ #endif /* __FM_H */
+-- 
+2.20.1
+
 
 
