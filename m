@@ -2,126 +2,283 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAF8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9863C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9142072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752BE20BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCtLxoLn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hmhg7437"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgCaCAN (ORCPT
+        id S1729521AbgCaCKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:00:13 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47177 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729035AbgCaCAM (ORCPT
+        Mon, 30 Mar 2020 22:10:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35872 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbgCaCKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:00:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585620011;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=J7J/WvCRzFDPjN13KVOAH7X96x+em5mLjdDYjxy7JL4=;
-        b=fCtLxoLnOPo/SoS4R7pRoLXAJRwpPrNCzJzCzCaCRRmqLNeX1UIYU3wAIy6wkjJ/Y7HxoB
-        lTUpj3atXnffF9niOvtlpahhnVfOjq3kdq1x6kWJoJk2XswYLNXFkODQM/hDHScGdqgS6w
-        TK0KtMw005Z6Iij8E6LLwnEpunlKm98=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-487-EpzUZZB8O_GoilF-gs7kdA-1; Mon, 30 Mar 2020 22:00:09 -0400
-X-MC-Unique: EpzUZZB8O_GoilF-gs7kdA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 179D58017DF;
-        Tue, 31 Mar 2020 02:00:06 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-247.pek2.redhat.com [10.72.12.247])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 40CA15DA60;
-        Tue, 31 Mar 2020 01:59:52 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 09:59:49 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Kairui Song <kasong@redhat.com>, anthony.yznaga@oracle.com,
-        Jan Setje-Eilers <jan.setjeeilers@oracle.com>,
-        iommu@lists.linux-foundation.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dwmw@amazon.com,
-        benh@amazon.com, Jan Kiszka <jan.kiszka@siemens.com>,
-        alcioa@amazon.com, aggh@amazon.com, aagch@amazon.com,
-        dhr@amazon.com, Laszlo Ersek <lersek@redhat.com>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        brijesh.singh@amd.com,
-        "Lendacky, Thomas" <thomas.lendacky@amd.com>,
-        kexec@lists.infradead.org,
-        "Schoenherr, Jan H." <jschoenh@amazon.de>
-Subject: Re: [PATCH] swiotlb: Allow swiotlb to live at pre-defined address
-Message-ID: <20200331015949.GB81569@dhcp-128-65.nay.redhat.com>
-References: <20200326162922.27085-1-graf@amazon.com>
- <20200328115733.GA67084@dhcp-128-65.nay.redhat.com>
- <CACPcB9d_Pz9SRhSsRzqygRR6waV7r8MnGcCP952svnZtpFaxnQ@mail.gmail.com>
- <20200330134004.GA31026@char.us.oracle.com>
- <51432837-8804-0600-c7a3-8849506f999e@amazon.com>
+        Mon, 30 Mar 2020 22:10:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=iWasv2IidE4pDe81OROR0kw+D5K1ZVDt6FPbLRpCQUY=; b=hmhg7437v7qmz8/o8AFWkksuJ1
+        gcmX0IgWzV9UrU0DC3+8MyRuweV750PjjTSjxJHNEyNKv2C90uoVhh7YkKfFSCqx3GnBHAmMRNPfb
+        rNKD3gcduU29XkUsucDudKuoDDmfEof7MuIBYK7YIqmJnUwM14G80Kvvuqnw8Hjmvo4DUh7+8FvfL
+        P+J0ezJTBSBXN/3+4SWxXsv+w4BnBK9mM4kpKfRuWadbbv49y08TgS2NxLs+Pnpx8rE+6cbgv11Oe
+        KCOX8qNOZXhZ8Ob1L8yhOJR+rCVtxUp1z+t1S2TDfGesh0rTFUMk31Y6ZvZ4RgX2KOOZ1nPEVdcRc
+        G7onbnRg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJ6Lt-0006Ku-L5; Tue, 31 Mar 2020 02:10:06 +0000
+Subject: Re: linux-next: Tree for Mar 27 (kbuild)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        richard -rw- weinberger <richard.weinberger@gmail.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+References: <20200327190740.7385d4ff@canb.auug.org.au>
+ <425b6d83-53da-15bb-8e7a-158f7c44ffad@infradead.org>
+Message-ID: <cca9cab0-09a4-bc2f-9322-54b523d04bcf@infradead.org>
+Date:   Mon, 30 Mar 2020 19:10:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51432837-8804-0600-c7a3-8849506f999e@amazon.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <425b6d83-53da-15bb-8e7a-158f7c44ffad@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 3/27/20 8:52 AM, Randy Dunlap wrote:
+> On 3/27/20 1:07 AM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20200326:
+>>
+> 
+> on i386, UML defconfig build fails with: (mostly get_user() variants)
+> 
 
-[snip]
-> 2) Reuse the SWIOTLB from the previous boot on kexec/kdump
+Hi Yamada-san,
 
-We should only care about kdump
+Al Viro identified these build errors as due to:
+
+Buggered-by: 1a908babcb144 (x86: replace arch macros from compiler with CONFIG_X86_{32,64})
+
+    If the intention is to check i386/x86_64 excluding UML, testing
+    CONFIG_X86_{32,64} is simpler.
+
+Which is not true, since uml/x86 configs bloody well *do* have CONFIG_X86_{32,64}
+defined.  See arch/x86/um/Kconfig; and yes, it does need those, as well as
+arch/x86/Kconfig.cpu.
+
+
+and they are still happening (on UML on i386 defconfig).
+
 
 > 
-> I see little direct relation to SEV here. The only reason SEV makes it more
-> relevant, is that you need to have an SWIOTLB region available with SEV
-> while without you could live with a disabled IOMMU.
-
-
-Here is some comment in arch/x86/kernel/pci-swiotlb.c, it is enforced
-for some reason.
-        /*
-         * If SME is active then swiotlb will be set to 1 so that bounce
-         * buffers are allocated and used for devices that do not support
-         * the addressing range required for the encryption mask.
-         */
-        if (sme_active())
-                swiotlb = 1;
-
+>   CC      kernel/signal.o
+> In file included from ../include/linux/kernel.h:15:0,
+>                  from ../include/asm-generic/bug.h:19,
+>                  from ./arch/um/include/generated/asm/bug.h:1,
+>                  from ../include/linux/bug.h:5,
+>                  from ../include/linux/mmdebug.h:5,
+>                  from ../include/linux/gfp.h:5,
+>                  from ../include/linux/slab.h:15,
+>                  from ../kernel/signal.c:14:
+> ../kernel/signal.c: In function 'print_fatal_signal':
+> ../kernel/signal.c:1250:33: error: 'struct pt_regs' has no member named 'ip'
+>   pr_info("code at %08lx: ", regs->ip);
+>                                  ^
+> ../include/linux/printk.h:310:34: note: in definition of macro 'pr_info'
+>   printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+>                                   ^~~~~~~~~~~
+> In file included from ../arch/um/include/asm/uaccess.h:39:0,
+>                  from ../include/linux/uaccess.h:11,
+>                  from ../include/linux/sched/task.h:11,
+>                  from ../kernel/signal.c:20:
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:196:28: note: in definition of macro 'get_user'
+>   const void __user *__p = (ptr);    \
+>                             ^~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:93:66: note: in definition of macro 'access_ok'
+>  #define access_ok(addr, size) __access_ok((unsigned long)(addr),(size))
+>                                                                   ^~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:158:19: note: in definition of macro '__get_user'
+>   switch (sizeof(*(ptr))) {    \
+>                    ^~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                ^~
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                    ^
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:163:32: note: in definition of macro '__get_user'
+>    (x) = *(__force __typeof__(*(ptr)) *) &__x; \
+>                                 ^~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                ^~
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                    ^
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:170:32: note: in definition of macro '__get_user'
+>    (x) = *(__force __typeof__(*(ptr)) *) &__x; \
+>                                 ^~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                ^~
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                    ^
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:177:32: note: in definition of macro '__get_user'
+>    (x) = *(__force __typeof__(*(ptr)) *) &__x; \
+>                                 ^~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:47: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                ^~
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:209:51: note: in definition of macro '__get_user_fn'
+>  #define __get_user_fn(sz, u, k) __get_user_fn(sz, u, k)
+>                                                    ^
+> ../include/asm-generic/uaccess.h:199:3: note: in expansion of macro '__get_user'
+>    __get_user((x), (__typeof__(*(ptr)) __user *)__p) :\
+>    ^~~~~~~~~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:184:32: note: in definition of macro '__get_user'
+>    (x) = *(__force __typeof__(*(ptr)) *) &__x; \
+>                                 ^~~
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
+> ../kernel/signal.c:1256:45: error: 'struct pt_regs' has no member named 'ip'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>                                              ^
+> ../include/asm-generic/uaccess.h:200:24: note: in definition of macro 'get_user'
+>    ((x) = (__typeof__(*(ptr)))0,-EFAULT);  \
+>                         ^~~
+> ../include/asm-generic/uaccess.h:200:31: warning: left-hand operand of comma expression has no effect [-Wunused-value]
+>    ((x) = (__typeof__(*(ptr)))0,-EFAULT);  \
+>                                ^
+> ../kernel/signal.c:1256:8: note: in expansion of macro 'get_user'
+>     if (get_user(insn, (unsigned char *)(regs->ip + i)))
+>         ^~~~~~~~
 > 
-> However, I can definitely understand how you would want to have a way to
-> tell the new kexec'ed kernel where the old SWIOTLB was, so it can reuse its
-> memory for its own SWIOTLB. That way, you don't have to reserve another 64MB
-> of RAM for kdump.
 > 
-> What I'm curious on is whether we need to be as elaborate. Can't we just
-> pass the old SWIOTLB as free memory to the new kexec'ed kernel and
-> everything else will fall into place? All that would take is a bit of
-> shuffling on the e820 table pass-through to the kexec'ed kernel, no?
 
-Maybe either of the two is fine.  But we may need ensure these swiotlb
-area to be reused explictly in some way.  Say about the crashkernel=X,high case,
-major part is in above 4G region, and a small piece in low memory. Then
-when kernel booting, kernel/driver initialization could use out of the
-low memory, and the remain part for swiotlb could be not big enough and
-finally swiotlb allocation fails. 
 
-Thanks
-Dave
-
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
