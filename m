@@ -2,52 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52952C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A03EC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270DF20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B5A20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646554;
-	bh=a6j/XWE8nTq+3h5O4aoFe2okcRGUNuXiPGmpylvwukc=;
+	s=default; t=1585646557;
+	bh=OAysM2RXWC2WsCwakJq2FQM7u+XDvtE4gRUhwGYw+yU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wjqh3P+/+K8EeTNRyMFIKjXCHjdz5t77yQt64L4qwgMuv3IO5oCaMDgQUvP3XF2MT
-	 txaR1HW7pAfiLxKS5EUUpPJarMsf5nYV9gLgPyJCjOZXf9z6RxTU5AdxP76i+xt18Y
-	 Ucmk2TbTiaSic1R/0wMiw2zGnAxLURIpdizykd5c=
+	b=CWR7/qdpPBy3he8hiERGfWfFebqnXp/9EDWWIQPHPexp5HQsmHyG3d9VUF9HJNJt1
+	 MKsIetPpQYtwVlg2Yq99PYRFo3z+dH8dct8v54+sKNvsyiX+Qjm/QuwVsNBLeo0H8p
+	 ETpnzw5lEx1oy5u1jJge/OUt0Lc4RBM965CIJ7f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbgCaJWd (ORCPT
+        id S1730652AbgCaJHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:22:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:07:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731195AbgCaJHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:07:07 -0400
+        id S1730763AbgCaJGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:06:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 665B820B1F;
-        Tue, 31 Mar 2020 09:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0655B20675;
+        Tue, 31 Mar 2020 09:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645626;
-        bh=a6j/XWE8nTq+3h5O4aoFe2okcRGUNuXiPGmpylvwukc=;
+        s=default; t=1585645609;
+        bh=OAysM2RXWC2WsCwakJq2FQM7u+XDvtE4gRUhwGYw+yU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IV/Wphggwh2/Xvb7K9oYymIhdblZRrO1uXYdEm7qtHx8ULM12wmaIXi662CofVm/s
-         8hm6zq4ckSSYd1t8neE5wB55CVHFUofNZFvmp9wI8WtfcWRzgHiJIrC0rXIIqkwe1d
-         p1g472+rHPjdoMw2Hk9l5BZKKRaz2/WepGVBuz8Q=
+        b=Zd17KOK+B569+OgM59Ir+7HO8lyXMy6ZUCXx7tZ+knpxy6nYd7BXiProEePfUffmd
+         wwyAmxhl6+63qDk6TnTaNSHwBYHv9zG7kjVMBxFeyHzSRa5jnaUDZ1aYRLr1iK/LmL
+         85cDL/F5R31Y3owiAulbpQd5SdYzOCQ4e0GUnXyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 073/170] iommu/vt-d: Silence RCU-list debugging warnings
-Date:   Tue, 31 Mar 2020 10:58:07 +0200
-Message-Id: <20200331085432.115748881@linuxfoundation.org>
+        stable@vger.kernel.org, Shane Francis <bigbeeshane@gmail.com>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 105/170] drm/radeon: fix scatter-gather mapping with user pages
+Date:   Tue, 31 Mar 2020 10:58:39 +0200
+Message-Id: <20200331085435.340112787@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,72 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Shane Francis <bigbeeshane@gmail.com>
 
-[ Upstream commit f5152416528c2295f35dd9c9bd4fb27c4032413d ]
+commit 47f7826c520ecd92ffbffe59ecaa2fe61e42ec70 upstream.
 
-Similar to the commit 02d715b4a818 ("iommu/vt-d: Fix RCU list debugging
-warnings"), there are several other places that call
-list_for_each_entry_rcu() outside of an RCU read side critical section
-but with dmar_global_lock held. Silence those false positives as well.
+Calls to dma_map_sg may return less segments / entries than requested
+if they fall on page bounderies. The old implementation did not
+support this use case.
 
- drivers/iommu/intel-iommu.c:4288 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
-  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1ad/0xb97
+Fixes: be62dbf554c5 ("iommu/amd: Convert AMD iommu driver to the dma-iommu api")
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=206461
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=206895
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/1056
+Signed-off-by: Shane Francis <bigbeeshane@gmail.com>
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200325090741.21957-4-bigbeeshane@gmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
- drivers/iommu/dmar.c:366 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
-  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x125/0xb97
-
- drivers/iommu/intel-iommu.c:5057 RCU-list traversed in non-reader section!!
- 1 lock held by swapper/0/1:
-  #0: ffffffffa71892c8 (dmar_global_lock){++++}, at: intel_iommu_init+0x61a/0xb13
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 3 ++-
- include/linux/dmar.h | 6 ++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/radeon/radeon_ttm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 93f8e646cb0b0..f7a86652a9841 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -371,7 +371,8 @@ dmar_find_dmaru(struct acpi_dmar_hardware_unit *drhd)
- {
- 	struct dmar_drhd_unit *dmaru;
+--- a/drivers/gpu/drm/radeon/radeon_ttm.c
++++ b/drivers/gpu/drm/radeon/radeon_ttm.c
+@@ -528,7 +528,7 @@ static int radeon_ttm_tt_pin_userptr(str
  
--	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list)
-+	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list,
-+				dmar_rcu_check())
- 		if (dmaru->segment == drhd->segment &&
- 		    dmaru->reg_base_addr == drhd->address)
- 			return dmaru;
-diff --git a/include/linux/dmar.h b/include/linux/dmar.h
-index 712be8bc6a7c8..d7bf029df737d 100644
---- a/include/linux/dmar.h
-+++ b/include/linux/dmar.h
-@@ -74,11 +74,13 @@ extern struct list_head dmar_drhd_units;
- 				dmar_rcu_check())
+ 	r = -ENOMEM;
+ 	nents = dma_map_sg(rdev->dev, ttm->sg->sgl, ttm->sg->nents, direction);
+-	if (nents != ttm->sg->nents)
++	if (nents == 0)
+ 		goto release_sg;
  
- #define for_each_active_drhd_unit(drhd)					\
--	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-+	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-+				dmar_rcu_check())			\
- 		if (drhd->ignored) {} else
- 
- #define for_each_active_iommu(i, drhd)					\
--	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
-+	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
-+				dmar_rcu_check())			\
- 		if (i=drhd->iommu, drhd->ignored) {} else
- 
- #define for_each_iommu(i, drhd)						\
--- 
-2.20.1
-
+ 	drm_prime_sg_to_page_addr_arrays(ttm->sg, ttm->pages,
 
 
