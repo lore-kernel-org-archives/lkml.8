@@ -2,119 +2,59 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4C2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28240C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580A520848
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0452A20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbgCaRHM (ORCPT
+        id S1731206AbgCaRHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:07:12 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11982 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726194AbgCaRHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 13:07:11 -0400
-IronPort-SDR: 4gEBLe0ofJ1j45MX/grOzgxBcOdkXfUWzPS5yxv9btCL/PO/nUQ40lmKI+0kkFqNMyxx/hvA0m
- T/4iwUktSN1w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 10:07:10 -0700
-IronPort-SDR: eJGmvU91zumNaIcP/GxrKRiqpkMc5ssOc0AxoMctKppSZ+CQvB2X+WDPcUsMh+WEUyNs04EnPM
- eKQfaElUC6cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="240192256"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 10:07:07 -0700
-Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
- <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
- <20200331100406.GB1204199@kroah.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
-Date:   Tue, 31 Mar 2020 10:07:07 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200331100406.GB1204199@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Received: from shards.monkeyblade.net ([23.128.96.9]:53072 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730149AbgCaRHL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:07:11 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5C1E215CF9D4D;
+        Tue, 31 Mar 2020 10:07:10 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 10:07:09 -0700 (PDT)
+Message-Id: <20200331.100709.2105796491018062899.davem@davemloft.net>
+To:     codrin.ciubotariu@microchip.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nicolas.ferre@microchip.com, antoine.tenart@bootlin.com,
+        andrew@lunn.ch, f.fainelli@gmail.com, cristian.birsan@microchip.com
+Subject: Re: [PATCH] net: macb: Fix handling of fixed-link node
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200331093935.23542-1-codrin.ciubotariu@microchip.com>
+References: <20200331093935.23542-1-codrin.ciubotariu@microchip.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 31 Mar 2020 10:07:10 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Date: Tue, 31 Mar 2020 12:39:35 +0300
 
-On 3/31/2020 3:04 AM, Greg KH wrote:
-> On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
->> Since the current accelerator devices do not have standard PCIe capability
->> enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
->> been added to struct pci_dev.  Currently a PCI quirk must be used for the
->> devices that have such cap until the PCI cap is standardized. Add a helper
->> function to provide the check if a device supports the cmdmem capability.
->>
->> Such capability is expected to be added to PCIe device cap enumeration in
->> the future.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/base/core.c    |   13 +++++++++++++
->>   include/linux/device.h |    2 ++
->>   include/linux/pci.h    |    1 +
->>   3 files changed, 16 insertions(+)
->>
->> diff --git a/drivers/base/core.c b/drivers/base/core.c
->> index dbb0f9130f42..cd9f5b040ed4 100644
->> --- a/drivers/base/core.c
->> +++ b/drivers/base/core.c
->> @@ -27,6 +27,7 @@
->>   #include <linux/netdevice.h>
->>   #include <linux/sched/signal.h>
->>   #include <linux/sysfs.h>
->> +#include <linux/pci.h>
->>   
->>   #include "base.h"
->>   #include "power/power.h"
->> @@ -3790,3 +3791,15 @@ int device_match_any(struct device *dev, const void *unused)
->>   	return 1;
->>   }
->>   EXPORT_SYMBOL_GPL(device_match_any);
->> +
->> +bool device_supports_cmdmem(struct device *dev)
->> +{
->> +	struct pci_dev *pdev;
->> +
->> +	if (!dev_is_pci(dev))
->> +		return false;
->> +
->> +	pdev = to_pci_dev(dev);
->> +	return pdev->cmdmem;
->> +}
->> +EXPORT_SYMBOL_GPL(device_supports_cmdmem);
-> Why would a pci-specific function like this be ok to have in the driver
-> core?  Please keep it in the pci core code instead.
+> fixed-link nodes are treated as PHY nodes by of_mdiobus_child_is_phy().
+> We must check if the interface is a fixed-link before looking up for PHY
+> nodes.
+> 
+> Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+> Tested-by: Cristian Birsan <cristian.birsan@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-The original thought was to introduce a new arch level memory mapping 
-semantic. If you feel this should be PCI exclusive, should we make the 
-ioremap routines for this memory type pci specific as well?
-
-
->
-> thanks,
->
-> greg k-h
+Applied and queued up for -stable, thanks.
