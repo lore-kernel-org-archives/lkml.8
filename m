@@ -2,177 +2,229 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A84C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D87C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99A120787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgNI6YSO"
+	by mail.kernel.org (Postfix) with ESMTP id E7377207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgCaUtj (ORCPT
+        id S1730413AbgCaUwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:49:39 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37638 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbgCaUtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:49:39 -0400
-Received: by mail-wm1-f65.google.com with SMTP id j19so4539598wmi.2;
-        Tue, 31 Mar 2020 13:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X2GGUtuqPV80x5b5ujQqCYnpRIHjyJKm9Pub6eW25UY=;
-        b=KgNI6YSOTCOMSyctOP/WId8uQxhFnY81WYm/UyoylUkWXdRWYswu073xDZ/VJvuYkC
-         ZRmPLPqvJh1uH7Wj9r3B36fh0oPexN2HByev8izzhSzaYLrJewWUi4WXii/9rfydQwOy
-         EfeomR0eDDw+wXcV03aJXHz8NxVp0FR9M99MP9YBmvM8ZpaKsziRrtVKtQ3h4nCOY5wy
-         ml0/Pr5roUkxLdacGfvDDElt+vwG/Vcx+t1U057WMzW4qii9/nfXeP1p9SMai/IbCo78
-         FuzbnZEVQek52TIj32M2AbY0NRhSmjU1NbzO0qxAKiaiOLqmF+F94Z+80Meh2j6uVr3Z
-         c+8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X2GGUtuqPV80x5b5ujQqCYnpRIHjyJKm9Pub6eW25UY=;
-        b=YI7lTGyK9hxgokJSbOqYn3YcyVcw50XEoGUMudcxFO1VbhrmJDA7kgp5jDB5yfaex0
-         +zGd3qK42LSojVtIY0AM4IuIpsPb59NOLxMkdl1BJBhXHO9bNDxbzNvDTShiZiP77DLu
-         D4PQ+M3vzlnbwgVMLWVRuj1jwaRf9wsGRWKLWmhyHRnd6cmXbVrWe4NATMrfjZacuSDj
-         0HTQ1NYvCaBvrPEMp7NwWLnocMEcfeCCG5P8A6v5NX9XLE8n4KtwVR63NhAUZyd3ty6L
-         zqfGXH+ovstPFqWlJCZrS29hTGBscBaOYGILHs2UaH/epypVF9eyNkNsj7bK2sXLHdWO
-         jd0g==
-X-Gm-Message-State: AGi0Pub4nvAHDwxSoZ4p77cxemI27385THufKw4t/VzFKx81ch+uKtUv
-        FSg+yoQFzQfQMh+LSHQPLbs=
-X-Google-Smtp-Source: APiQypKFgpXradD7Y/oeeIl8Qd75lgtfcDe3ZaaJBMJFR1mcRlrBcuch5uNeJOFa1ZvxT9koqqvepg==
-X-Received: by 2002:a1c:80d3:: with SMTP id b202mr733124wmd.8.1585687775099;
-        Tue, 31 Mar 2020 13:49:35 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id r3sm28241814wrm.35.2020.03.31.13.49.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:49:30 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 22:49:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and
- function
-Message-ID: <20200331204929.GC2954599@ulmo>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
- <20200330204359.GB5107@codeaurora.org>
- <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
- <20200331202058.GB25781@codeaurora.org>
+        Tue, 31 Mar 2020 16:52:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27314 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727852AbgCaUwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 16:52:20 -0400
+IronPort-SDR: SftVGfW6sdgGVdl9+vqUlrXYhLVba7ROnFlq6oD+usVQ0jxgakRy1ggMYa+ne996HhphF3LrKu
+ Iq/o/JWcju4g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 13:52:20 -0700
+IronPort-SDR: 9t856pZgKTfWBnjHJFtoepGRlVzP9m2xf7nkagQHk9zegQsKXZAXpn2HoV+pDnKfBkXrh+6lmR
+ UB9OEnTXfnrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,329,1580803200"; 
+   d="scan'208";a="328202815"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 31 Mar 2020 13:52:20 -0700
+Date:   Tue, 31 Mar 2020 13:58:07 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+Message-ID: <20200331135807.4e9976ab@jacob-builder>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D800D67@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+        <3215b83c-81f7-a30f-fe82-a51f29d7b874@redhat.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D800D67@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PuGuTyElPB9bOcsM"
-Content-Disposition: inline
-In-Reply-To: <20200331202058.GB25781@codeaurora.org>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 31 Mar 2020 02:49:21 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
---PuGuTyElPB9bOcsM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 31, 2020 at 01:20:58PM -0700, Guru Das Srinagesh wrote:
-> On Tue, Mar 31, 2020 at 05:24:52PM +0200, Arnd Bergmann wrote:
-> > On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
-> > <gurus@codeaurora.org> wrote:
+> > From: Auger Eric <eric.auger@redhat.com>
+> > Sent: Sunday, March 29, 2020 11:34 PM
+> > 
+> > Hi,
+> > 
+> > On 3/28/20 11:01 AM, Tian, Kevin wrote:  
+> > >> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > >> Sent: Saturday, March 21, 2020 7:28 AM
+> > >>
+> > >> When Shared Virtual Address (SVA) is enabled for a guest OS via
+> > >> vIOMMU, we need to provide invalidation support at IOMMU API
+> > >> and  
+> > driver  
+> > >> level. This patch adds Intel VT-d specific function to implement
+> > >> iommu passdown invalidate API for shared virtual address.
+> > >>
+> > >> The use case is for supporting caching structure invalidation
+> > >> of assigned SVM capable devices. Emulated IOMMU exposes queue  
+>  [...]  
+>  [...]  
+> > to  
+> > >> + * VT-d granularity. Invalidation is typically included in the
+> > >> unmap  
+> > operation  
+> > >> + * as a result of DMA or VFIO unmap. However, for assigned
+> > >> devices  
+> > guest  
+> > >> + * owns the first level page tables. Invalidations of
+> > >> translation caches in  
+> > the  
+>  [...]  
+>  [...]  
+>  [...]  
+> > inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_  
+> > >> NR] = {
+> > >> +	/*
+> > >> +	 * PASID based IOTLB invalidation: PASID selective (per
+> > >> PASID),
+> > >> +	 * page selective (address granularity)
+> > >> +	 */
+> > >> +	{0, 1, 1},
+> > >> +	/* PASID based dev TLBs, only support all PASIDs or
+> > >> single PASID */
+> > >> +	{1, 1, 0},  
 > > >
-> > > On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
-> > > > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeauror=
-a.org> wrote:
-> > > >
-> > > > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *c=
-hip, struct pwm_device *pwm,
-> > > > >
-> > > > >         period_cycles /=3D prescale;
-> > > > >         c =3D (unsigned long long)period_cycles * state->duty_cyc=
-le;
-> > > > > -       do_div(c, state->period);
-> > > > > -       duty_cycles =3D c;
-> > > > > +       duty_cycles =3D div64_u64(c, state->period);
-> > > > >
-> > > >
-> > > > This change looks fine, but I wonder if the code directly above it
-> > > >
-> > > >         c =3D clk_get_rate(imx->clk_per);
-> > > >         c *=3D state->period;
-> > > >         do_div(c, 1000000000);
-> > > >         period_cycles =3D c;
-> > > >
-> > > > might run into an overflow when both the clock rate and the period
-> > > > are large numbers.
+> > > Is this combination correct? when single PASID is being
+> > > specified, it is essentially a page-selective invalidation since
+> > > you need provide Address and Size.  
+> > Isn't it the same when G=1? Still the addr/size is used. Doesn't
+> > it  
+> 
+> I thought addr/size is not used when G=1, but it might be wrong. I'm
+> checking with our vt-d spec owner.
+> 
+
+> > correspond to IOMMU_INV_GRANU_ADDR with
+> > IOMMU_INV_ADDR_FLAGS_PASID flag
+> > unset?
+> > 
+> > so {0, 0, 1}?  
+> 
+I am not sure I got your logic. The three fields correspond to 
+	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective invalidation */
+	IOMMU_INV_GRANU_PASID,	/* PASID-selective invalidation */
+	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation *
+
+For devTLB, we use domain as global since there is no domain. Then I
+came up with {1, 1, 0}, which means we could have global and pasid
+granu invalidation for PASID based devTLB.
+
+If the caller also provide addr and S bit, the flush routine will put
+that into QI descriptor. I know this is a little odd, but from the
+granu translation p.o.v. VT-d spec has no G bit for page selective
+invalidation.
+
+> I have one more open:
+> 
+> How does userspace know which invalidation type/gran is supported?
+> I didn't see such capability reporting in Yi's VFIO vSVA patch set.
+> Do we want the user/kernel assume the same capability set if they are 
+> architectural? However the kernel could also do some optimization
+> e.g. hide devtlb invalidation capability given that the kernel
+> already invalidate devtlb automatically when serving iotlb
+> invalidation...
+> 
+In general, we are trending to use VFIO capability chain to expose iommu
+capabilities.
+
+But for architectural features such as type/granu, we have to assume
+the same capability between host & guest. Granu and types are not
+enumerated on the host IOMMU either.
+
+For devTLB optimization, I agree we need to expose a capability to
+the guest stating that implicit devtlb invalidation is supported.
+Otherwise, if Linux guest runs on other OSes may not support implicit
+devtlb invalidation.
+
+Right Yi?
+
+> Thanks
+> Kevin
+> 
+> > 
+> > Thanks
+> > 
+> > Eric
+> >   
+> > >  
+> > >> +	/* PASID cache */  
 > > >
-> > > Hmm. Seems to me like addressing this would be outside the scope of t=
-his
-> > > patch series.
-> >=20
-> > I think it should be part of the same series, addressing bugs that
-> > were introduced
-> > by the change to 64-bit period. If it's not getting fixed along with
-> > the other regressions,
-> > I fear nobody is going to go back and fix it later.
->=20
-> Makes sense, I agree. Would this be an acceptable fix?
->=20
-> Instead of multiplying c and state->period first and then dividing by
-> 10^9, first divide state->period by 10^9 and then multiply the quotient
-> of that division with c and assign it to period_cycles. Like so:
->=20
-> 	c =3D clk_get_rate(imx->clk_per);
-> 	c *=3D div_u64(state->period, 1000000000);
-> 	period_cycles =3D c;
->=20
-> This should take care of overflow not happening because state->period is
-> converted from nanoseconds to seconds early on and so becomes a small
-> number.
+> > > PASID cache is fully managed by the host. Guest PASID cache
+> > > invalidation is interpreted by vIOMMU for bind and unbind
+> > > operations. I don't think we should accept any PASID cache
+> > > invalidation from userspace or guest. 
+>  [...]  
+> > inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU  
+>  [...]  
+> > >
+> > > btw do we really need both map and table here? Can't we just
+> > > use one table with unsupported granularity marked as a special
+> > > value?
+> > >  
+>  [...]  
+> > >
+> > > -ENOTSUPP?
+> > >  
+>  [...]  
+> > >
+> > > granularity == IOMMU_INV_GRANU_ADDR? otherwise it's unclear
+> > > why IOMMU_INV_GRANU_DOMAIN also needs size check.
+> > >  
+>  [...]  
+> > >>> addr_info.addr),  
+>  [...]  
+>  [...]  
+> > >> +			if (info->ats_enabled) {
+> > >> +				qi_flush_dev_iotlb_pasid(iommu,
+> > >> sid, info-  
+> > >>> pfsid,  
+>  [...]  
+> > >>> pfsid,  
+> > >> +
+> > >> inv_info->addr_info.pasid, info->ats_qdep,
+> > >> +
+> > >> inv_info->addr_info.addr, size,
+> > >> +						granu);  
+>  [...]  
+>  [...]  
+> > >>> pasid_info.pasid);  
+> > >> +  
+> > >
+> > > as earlier comment, we shouldn't allow userspace or guest to
+> > > invalidate PASID cache
+> > >  
+>  [...]  
+> > >  
+> 
 
-Doesn't that mean that anything below a 1 second period will be clamped
-to just 0?
-
-Thierry
-
---PuGuTyElPB9bOcsM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DrNkACgkQ3SOs138+
-s6F2rRAArLSEhXAhgvFqFz7p1Jyl3a2QkW2gk0K5vu5cqJQzOMB/CGTnJlkpte4r
-OPEsS/IrnNJjMNvLMLZQ/92OqmWdK1ve0y8aFlhLAhGn5KdelcOcnf8Id/rxV2YJ
-BV7oMSVS9dZa5+gNJaFARNkYs+5dWAFQoKKvSxpaTMBMMMzN9TgoKZKa0W7xZQmh
-CbJve7ZWx/MsubZTneoudgf3Vi+SYak6kFEHhw/rqE9lFWb5pfKXwyVxpPHqW0uk
-ooJ1g5VkQxKPnaUtz3N2EK4+K4gUlh87myfPiH0k35FCJ9N+ENOIe9vtepJ33+u9
-UFD/GJUtPimSBDHKAcZyc0Gtvw4Cka4dmDeAgIMe+QviRjEd/pvI4MS+s8KCAYKk
-kn4AG2KDeC0w5bufJQnlXuziYw95gUYQ2nrRPFgI0yJMtdwvd+Pch5skoklz6GSZ
-2Q7Ao5wGRoRpV/cXb28lBNOgD4w0R1upufK/7I4lSwTRMBWXzBK57ItEXfeTO7V7
-2HEiAXYXt6oqM27RxedshqKGe9d5gwvdGLIy6NjfnQkJ4QySu13nLTas4yPlz3Lx
-ZTv+Cl8EElQnC7n2erxOjTcCPQaM14MslHRFhk+wtacQ3+Escb2lPndAzD8lQinS
-ncFajYcMWrIYy3l0rK0o6juMpEqV2vxl7Y8x04xvV/vr88q9OKY=
-=Ht11
------END PGP SIGNATURE-----
-
---PuGuTyElPB9bOcsM--
+[Jacob Pan]
