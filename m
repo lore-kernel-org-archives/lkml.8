@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E482BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D66C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2212137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE37720787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645704;
-	bh=cK/T867mmCzZ7jlhvqRs6wFLYHZ3QXTaeW+I16G17lY=;
+	s=default; t=1585645706;
+	bh=mga9ZlB7EBqybPtMS1PRXb7f40tCX4Df5PKMdx1hR/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUF/P3R5OLJa4AVfUQWOWiJiI69QHe8FCBCFqErPz6PhzBQj6uw7vR4elVIpjuFSR
-	 HZsamlR0FWzF6TJGfwleZtgKr2X+BDfQozkdrkJr109QiCGSJjR/UnnDnbnjyibTMo
-	 1Vv6wKYQVNsAs5lcgmEGqOtcViaqZp4aXyyYDBGI=
+	b=qEO6C1c5cXex9H9eYgtoX56hWRuCwtiD/4bj7rsOTURaBRetWgDz8A1DVA64G9YL8
+	 bJR3ZozNgKmn+E5wMLyCGu+Jl+d6zYYUB8kXkI5Ubbr6VF6T6GemZSiyAfLJqT4GlW
+	 92WJMcVA9RgnnlPwQ5UiBHPRVOnZvLAROzVhxfm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731342AbgCaJIW (ORCPT
+        id S1730737AbgCaJIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:08:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50678 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731328AbgCaJIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:08:20 -0400
+        id S1730905AbgCaJIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:08:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B42320787;
-        Tue, 31 Mar 2020 09:08:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B883F2072E;
+        Tue, 31 Mar 2020 09:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645699;
-        bh=cK/T867mmCzZ7jlhvqRs6wFLYHZ3QXTaeW+I16G17lY=;
+        s=default; t=1585645702;
+        bh=mga9ZlB7EBqybPtMS1PRXb7f40tCX4Df5PKMdx1hR/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMTtdgO0wPRLxRz5xYt3Zk6/G38onVQPUCyz1u4HXoKMlCYBvpDEcr+Fsu5JhOfIy
-         o7gcUkE/bQCefVrpAr4GmslA13CgxgbHi21dadv6QL/efvYuT6fbLdq0+5U2FkFin2
-         PoUTPIVp2LkJCWBwtlgmccg0kFNC5tGAllyiBTz0=
+        b=NX7boGC38wc/9Z2Fda4u0fJ8sWDsEzx9418zUUO1D1QJw75DIlQB8TdHWR+QOZ3a4
+         t/UJBdePpD4weksC7sQmt5eGZ9DcHVarrC3EZFX9oNk9EF21++zIN2Z4EmUDfh23So
+         2BxBl8qaIK1FwbFn1d9ni1Iami8F6Sbot7yW1tes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 136/170] netfilter: flowtable: populate addr_type mask
-Date:   Tue, 31 Mar 2020 10:59:10 +0200
-Message-Id: <20200331085437.985463513@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.5 137/170] netfilter: nft_fwd_netdev: validate family and chain type
+Date:   Tue, 31 Mar 2020 10:59:11 +0200
+Message-Id: <20200331085438.071269661@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,31 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Cree <ecree@solarflare.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 15ff197237e76c4dab06b7b518afaa4ebb1c43e0 upstream.
+commit 76a109fac206e158eb3c967af98c178cff738e6a upstream.
 
-nf_flow_rule_match() sets control.addr_type in key, so needs to also set
- the corresponding mask.  An exact match is wanted, so mask is all ones.
+Make sure the forward action is only used from ingress.
 
-Fixes: c29f74e0df7a ("netfilter: nf_flow_table: hardware offload support")
-Signed-off-by: Edward Cree <ecree@solarflare.com>
+Fixes: 39e6dea28adc ("netfilter: nf_tables: add forward expression to the netdev family")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_flow_table_offload.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/nft_fwd_netdev.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/net/netfilter/nf_flow_table_offload.c
-+++ b/net/netfilter/nf_flow_table_offload.c
-@@ -87,6 +87,7 @@ static int nf_flow_rule_match(struct nf_
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-+	mask->control.addr_type = 0xffff;
- 	match->dissector.used_keys |= BIT(key->control.addr_type);
- 	mask->basic.n_proto = 0xffff;
+--- a/net/netfilter/nft_fwd_netdev.c
++++ b/net/netfilter/nft_fwd_netdev.c
+@@ -190,6 +190,13 @@ nla_put_failure:
+ 	return -1;
+ }
+ 
++static int nft_fwd_validate(const struct nft_ctx *ctx,
++			    const struct nft_expr *expr,
++			    const struct nft_data **data)
++{
++	return nft_chain_validate_hooks(ctx->chain, (1 << NF_NETDEV_INGRESS));
++}
++
+ static struct nft_expr_type nft_fwd_netdev_type;
+ static const struct nft_expr_ops nft_fwd_neigh_netdev_ops = {
+ 	.type		= &nft_fwd_netdev_type,
+@@ -197,6 +204,7 @@ static const struct nft_expr_ops nft_fwd
+ 	.eval		= nft_fwd_neigh_eval,
+ 	.init		= nft_fwd_neigh_init,
+ 	.dump		= nft_fwd_neigh_dump,
++	.validate	= nft_fwd_validate,
+ };
+ 
+ static const struct nft_expr_ops nft_fwd_netdev_ops = {
+@@ -205,6 +213,7 @@ static const struct nft_expr_ops nft_fwd
+ 	.eval		= nft_fwd_netdev_eval,
+ 	.init		= nft_fwd_netdev_init,
+ 	.dump		= nft_fwd_netdev_dump,
++	.validate	= nft_fwd_validate,
+ 	.offload	= nft_fwd_netdev_offload,
+ };
  
 
 
