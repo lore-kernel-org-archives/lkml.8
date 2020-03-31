@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16238C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460A1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB55B206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BFA20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbgCaNwf convert rfc822-to-8bit (ORCPT
+        id S1731165AbgCaNwj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:52:35 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:50499 "EHLO
+        Tue, 31 Mar 2020 09:52:39 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55768 "EHLO
         eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731130AbgCaNwd (ORCPT
+        by vger.kernel.org with ESMTP id S1731119AbgCaNwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:52:33 -0400
+        Tue, 31 Mar 2020 09:52:36 -0400
 Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-60-IRQvneShP9uZ8i5akNmOFQ-1; Tue, 31 Mar 2020 14:52:29 +0100
-X-MC-Unique: IRQvneShP9uZ8i5akNmOFQ-1
+ uk-mta-137-Pg8SJePXOGqrq2w1q_kw9A-1; Tue, 31 Mar 2020 14:52:32 +0100
+X-MC-Unique: Pg8SJePXOGqrq2w1q_kw9A-1
 Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
  AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:52:29 +0100
+ Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:52:32 +0100
 Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
  AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 31 Mar 2020 14:52:29 +0100
+ Tue, 31 Mar 2020 14:52:32 +0100
 From:   David Laight <David.Laight@ACULAB.COM>
 To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 02/12] fs/io_uring Don't use the return value from
- import_iovec().
-Thread-Topic: [RFC PATCH 02/12] fs/io_uring Don't use the return value from
- import_iovec().
-Thread-Index: AdYHYUSKSGJaZEFfSFajLxQsesYkOQ==
-Date:   Tue, 31 Mar 2020 13:52:29 +0000
-Message-ID: <87c31730ece341b0bdf29745b9411ab8@AcuMS.aculab.com>
+Subject: [RFC PATCH 01/12] mm:process_vm_access Call import_iovec() instead of
+ rw_copy_check_uvector()
+Thread-Topic: [RFC PATCH 01/12] mm:process_vm_access Call import_iovec()
+ instead of rw_copy_check_uvector()
+Thread-Index: AdYHYRHRKyZYcrMpTcG/7dmy3RJd8w==
+Date:   Tue, 31 Mar 2020 13:52:31 +0000
+Message-ID: <31be238f1c7542ad8e70ecd45d0e9763@AcuMS.aculab.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -55,136 +55,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the only code that relies on import_iovec() returning
-iter.count on success.
-Not using the value actually saves passing it through to functions
-that are also passed the 'iter'.
-This allows a better interface to import_iovec().
+This is the only direct call of rw_copy_check_uvector().
+Removing it lets rw_copy_check_uvector() be inlined into
+import_iovec() and the horrig calling conventions fixed.
 
 Signed-off-by: David Laight <david.laight@aculab.com>
 ---
- fs/io_uring.c | 34 ++++++++++++++--------------------
- 1 file changed, 14 insertions(+), 20 deletions(-)
+ mm/process_vm_access.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 3affd96..d8dc2e2 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2153,12 +2153,11 @@ static ssize_t loop_rw_iter(int rw, struct file *file, struct kiocb *kiocb,
- 	return ret;
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index de41e83..2829e26 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -264,7 +264,7 @@ static ssize_t process_vm_rw(pid_t pid,
+ 	struct iovec iovstack_r[UIO_FASTIOV];
+ 	struct iovec *iov_l = iovstack_l;
+ 	struct iovec *iov_r = iovstack_r;
+-	struct iov_iter iter;
++	struct iov_iter iter_l, iter_r;
+ 	ssize_t rc;
+ 	int dir = vm_write ? WRITE : READ;
+ 
+@@ -272,23 +272,24 @@ static ssize_t process_vm_rw(pid_t pid,
+ 		return -EINVAL;
+ 
+ 	/* Check iovecs */
+-	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter);
++	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter_l);
+ 	if (rc < 0)
+ 		return rc;
+-	if (!iov_iter_count(&iter))
++	if (!iov_iter_count(&iter_l))
+ 		goto free_iovecs;
+ 
+-	rc = rw_copy_check_uvector(CHECK_IOVEC_ONLY, rvec, riovcnt, UIO_FASTIOV,
+-				   iovstack_r, &iov_r);
++	rc = import_iovec(CHECK_IOVEC_ONLY, rvec, riovcnt, UIO_FASTIOV, &iov_r, &iter_r);
+ 	if (rc <= 0)
+ 		goto free_iovecs;
+ 
+-	rc = process_vm_rw_core(pid, &iter, iov_r, riovcnt, flags, vm_write);
++	rc = process_vm_rw_core(pid, &iter_l, iter_r.iov, iter_r.nr_segs,
++				flags, vm_write);
+ 
+ free_iovecs:
+ 	if (iov_r != iovstack_r)
+ 		kfree(iov_r);
+-	kfree(iov_l);
++	if (iov_l != iovstack_l)
++		kfree(iov_l);
+ 
+ 	return rc;
+ }
+@@ -322,30 +323,30 @@ static ssize_t process_vm_rw(pid_t pid,
+ 	struct iovec iovstack_r[UIO_FASTIOV];
+ 	struct iovec *iov_l = iovstack_l;
+ 	struct iovec *iov_r = iovstack_r;
+-	struct iov_iter iter;
++	struct iov_iter iter_l, iter_r;
+ 	ssize_t rc = -EFAULT;
+ 	int dir = vm_write ? WRITE : READ;
+ 
+ 	if (flags != 0)
+ 		return -EINVAL;
+ 
+-	rc = compat_import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter);
++	rc = compat_import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter_l);
+ 	if (rc < 0)
+ 		return rc;
+-	if (!iov_iter_count(&iter))
++	if (!iov_iter_count(&iter_l))
+ 		goto free_iovecs;
+-	rc = compat_rw_copy_check_uvector(CHECK_IOVEC_ONLY, rvec, riovcnt,
+-					  UIO_FASTIOV, iovstack_r,
+-					  &iov_r);
++	rc = compat_import_iovec(0, rvec, riovcnt, UIO_FASTIOV, &iov_r, &iter_r);
+ 	if (rc <= 0)
+ 		goto free_iovecs;
+ 
+-	rc = process_vm_rw_core(pid, &iter, iov_r, riovcnt, flags, vm_write);
++	rc = process_vm_rw_core(pid, &iter_l, iter_r.iov, iter_r.nr_segs,
++				flags, vm_write);
+ 
+ free_iovecs:
+ 	if (iov_r != iovstack_r)
+ 		kfree(iov_r);
+-	kfree(iov_l);
++	if (iov_l != iovstack_l)
++		kfree(iov_l);
+ 	return rc;
  }
  
--static void io_req_map_rw(struct io_kiocb *req, ssize_t io_size,
--			  struct iovec *iovec, struct iovec *fast_iov,
--			  struct iov_iter *iter)
-+static void io_req_map_rw(struct io_kiocb *req, struct iovec *iovec,
-+			  struct iovec *fast_iov, struct iov_iter *iter)
- {
- 	req->io->rw.nr_segs = iter->nr_segs;
--	req->io->rw.size = io_size;
-+	req->io->rw.size = iter->count;
- 	req->io->rw.iov = iovec;
- 	if (!req->io->rw.iov) {
- 		req->io->rw.iov = req->io->rw.fast_iov;
-@@ -2177,9 +2176,8 @@ static int io_alloc_async_ctx(struct io_kiocb *req)
- 	return req->io == NULL;
- }
- 
--static int io_setup_async_rw(struct io_kiocb *req, ssize_t io_size,
--			     struct iovec *iovec, struct iovec *fast_iov,
--			     struct iov_iter *iter)
-+static int io_setup_async_rw(struct io_kiocb *req, struct iovec *iovec,
-+			     struct iovec *fast_iov, struct iov_iter *iter)
- {
- 	if (!io_op_defs[req->opcode].async_ctx)
- 		return 0;
-@@ -2187,7 +2185,7 @@ static int io_setup_async_rw(struct io_kiocb *req, ssize_t io_size,
- 		if (io_alloc_async_ctx(req))
- 			return -ENOMEM;
- 
--		io_req_map_rw(req, io_size, iovec, fast_iov, iter);
-+		io_req_map_rw(req, iovec, fast_iov, iter);
- 	}
- 	return 0;
- }
-@@ -2218,7 +2216,7 @@ static int io_read_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	if (ret < 0)
- 		return ret;
- 
--	io_req_map_rw(req, ret, io->rw.iov, io->rw.fast_iov, &iter);
-+	io_req_map_rw(req, io->rw.iov, io->rw.fast_iov, &iter);
- 	return 0;
- }
- 
-@@ -2229,7 +2227,7 @@ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
- 	struct kiocb *kiocb = &req->rw.kiocb;
- 	struct iov_iter iter;
- 	size_t iov_count;
--	ssize_t io_size, ret;
-+	ssize_t ret;
- 
- 	ret = io_import_iovec(READ, req, &iovec, &iter);
- 	if (ret < 0)
-@@ -2240,9 +2238,8 @@ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
- 		req->rw.kiocb.ki_flags &= ~IOCB_NOWAIT;
- 
- 	req->result = 0;
--	io_size = ret;
- 	if (req->flags & REQ_F_LINK)
--		req->result = io_size;
-+		req->result = iter.count;
- 
- 	/*
- 	 * If the file doesn't support async, mark it as REQ_F_MUST_PUNT so
-@@ -2268,8 +2265,7 @@ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
- 			kiocb_done(kiocb, ret2, nxt, req->in_async);
- 		} else {
- copy_iov:
--			ret = io_setup_async_rw(req, io_size, iovec,
--						inline_vecs, &iter);
-+			ret = io_setup_async_rw(req, iovec, inline_vecs, &iter);
- 			if (ret)
- 				goto out_free;
- 			return -EAGAIN;
-@@ -2307,7 +2303,7 @@ static int io_write_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
- 	if (ret < 0)
- 		return ret;
- 
--	io_req_map_rw(req, ret, io->rw.iov, io->rw.fast_iov, &iter);
-+	io_req_map_rw(req, io->rw.iov, io->rw.fast_iov, &iter);
- 	return 0;
- }
- 
-@@ -2318,7 +2314,7 @@ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
- 	struct kiocb *kiocb = &req->rw.kiocb;
- 	struct iov_iter iter;
- 	size_t iov_count;
--	ssize_t ret, io_size;
-+	ssize_t ret;
- 
- 	ret = io_import_iovec(WRITE, req, &iovec, &iter);
- 	if (ret < 0)
-@@ -2329,9 +2325,8 @@ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
- 		req->rw.kiocb.ki_flags &= ~IOCB_NOWAIT;
- 
- 	req->result = 0;
--	io_size = ret;
- 	if (req->flags & REQ_F_LINK)
--		req->result = io_size;
-+		req->result = iter.count;
- 
- 	/*
- 	 * If the file doesn't support async, mark it as REQ_F_MUST_PUNT so
-@@ -2381,8 +2376,7 @@ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
- 			kiocb_done(kiocb, ret2, nxt, req->in_async);
- 		} else {
- copy_iov:
--			ret = io_setup_async_rw(req, io_size, iovec,
--						inline_vecs, &iter);
-+			ret = io_setup_async_rw(req, iovec, inline_vecs, &iter);
- 			if (ret)
- 				goto out_free;
- 			return -EAGAIN;
 -- 
 1.8.1.2
 
