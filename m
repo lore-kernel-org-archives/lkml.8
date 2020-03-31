@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EA0C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE63C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0011820675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B712072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645974;
-	bh=TBcOzdlkBS4YbY4gK3VVWnQ8aiNxZfo4NGJlloFDJbs=;
+	s=default; t=1585645978;
+	bh=ta5DOwF43UEnXN3tbjlCTwPWCTY1gEg4sstmSM9XOX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yn3w3YHbwVZ2olgL7hN/0AwpJpM641rc69dD6uhkhcy7TVeSaXY56e0F1apLwwYKq
-	 0R1f/wOp1vHmNAUitVlaMIThce52q9qsWbEpjjKr6G8KMamJB3i1jKsvOCalC3Ef5f
-	 NDe8SJssTIepfeIYYVHc65Z3rTeI6KWFvNvQ11Mw=
+	b=avjqhrlpDi+axSrX+D390I8qcvZzOq/fZWvU//Nqk6DV0Kle4AHtVqaxcsEkPoC3m
+	 JA2X9/+CXgx11UGpIgT2dDypPVSFM9z7hN7Yi5kOx5e1GpGDh3f/P9xAvMQvqzAKh6
+	 ZdZVfDjq0WVcFQtF/vebHtv+0xMJFjiaAAqgKFY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgCaJMw (ORCPT
+        id S1731808AbgCaJM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731602AbgCaJLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:11:44 -0400
+        id S1731249AbgCaJMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:12:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D066020B1F;
-        Tue, 31 Mar 2020 09:11:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D94D20675;
+        Tue, 31 Mar 2020 09:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645904;
-        bh=TBcOzdlkBS4YbY4gK3VVWnQ8aiNxZfo4NGJlloFDJbs=;
+        s=default; t=1585645970;
+        bh=ta5DOwF43UEnXN3tbjlCTwPWCTY1gEg4sstmSM9XOX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bbyyn8ek0ijOECeq7TH5xJD3jyAsNrfeTwspiC1F+DwOuyU92R87PvCE3Sxt5UbhV
-         eK6M40D2qOQtDrSXqy7s94piiUz76e+P7hKI8zygY5JLUXgZPJXLS79MztlyvI1rto
-         kgq0jwywUabqGyI/jSTqqkPBWUKdnKcWoFMDgdOA=
+        b=xkC5DM9ad7/WljPkCS4gjyC8MjGBS+MtZIWNm3c64fVA1okr0V9x4l+SeMg9LOAKY
+         1Tf5kpltb2YxLhUw9ATkuhqWeO+yMTV7beskWW/cQp4dGx7+EH/UoYrG/V5g5lOZ89
+         IFLincZOK558HbZx/aS15EKwnyehuZVhxnCPnNFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 031/155] net: stmmac: dwmac-rk: fix error path in rk_gmac_probe
-Date:   Tue, 31 Mar 2020 10:57:51 +0200
-Message-Id: <20200331085421.887539165@linuxfoundation.org>
+Subject: [PATCH 5.4 044/155] net: ip_gre: Separate ERSPAN newlink / changelink callbacks
+Date:   Tue, 31 Mar 2020 10:58:04 +0200
+Message-Id: <20200331085423.374809123@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,31 +59,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emil Renner Berthing <kernel@esmil.dk>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 9de9aa487daff7a5c73434c24269b44ed6a428e6 ]
+[ Upstream commit e1f8f78ffe9854308b9e12a73ebe4e909074fc33 ]
 
-Make sure we clean up devicetree related configuration
-also when clock init fails.
+ERSPAN shares most of the code path with GRE and gretap code. While that
+helps keep the code compact, it is also error prone. Currently a broken
+userspace can turn a gretap tunnel into a de facto ERSPAN one by passing
+IFLA_GRE_ERSPAN_VER. There has been a similar issue in ip6gretap in the
+past.
 
-Fixes: fecd4d7eef8b ("net: stmmac: dwmac-rk: Add integrated PHY support")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+To prevent these problems in future, split the newlink and changelink code
+paths. Split the ERSPAN code out of ipgre_netlink_parms() into a new
+function erspan_netlink_parms(). Extract a piece of common logic from
+ipgre_newlink() and ipgre_changelink() into ipgre_newlink_encap_setup().
+Add erspan_newlink() and erspan_changelink().
+
+Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
+Signed-off-by: Petr Machata <petrm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/ip_gre.c |  103 ++++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 85 insertions(+), 18 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1411,7 +1411,7 @@ static int rk_gmac_probe(struct platform
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -1149,6 +1149,22 @@ static int ipgre_netlink_parms(struct ne
+ 	if (data[IFLA_GRE_FWMARK])
+ 		*fwmark = nla_get_u32(data[IFLA_GRE_FWMARK]);
  
- 	ret = rk_gmac_clk_init(plat_dat);
- 	if (ret)
--		return ret;
-+		goto err_remove_config_dt;
++	return 0;
++}
++
++static int erspan_netlink_parms(struct net_device *dev,
++				struct nlattr *data[],
++				struct nlattr *tb[],
++				struct ip_tunnel_parm *parms,
++				__u32 *fwmark)
++{
++	struct ip_tunnel *t = netdev_priv(dev);
++	int err;
++
++	err = ipgre_netlink_parms(dev, data, tb, parms, fwmark);
++	if (err)
++		return err;
++
+ 	if (data[IFLA_GRE_ERSPAN_VER]) {
+ 		t->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
  
- 	ret = rk_gmac_powerup(plat_dat->bsp_priv);
- 	if (ret)
+@@ -1272,45 +1288,70 @@ static void ipgre_tap_setup(struct net_d
+ 	ip_tunnel_setup(dev, gre_tap_net_id);
+ }
+ 
+-static int ipgre_newlink(struct net *src_net, struct net_device *dev,
+-			 struct nlattr *tb[], struct nlattr *data[],
+-			 struct netlink_ext_ack *extack)
++static int
++ipgre_newlink_encap_setup(struct net_device *dev, struct nlattr *data[])
+ {
+-	struct ip_tunnel_parm p;
+ 	struct ip_tunnel_encap ipencap;
+-	__u32 fwmark = 0;
+-	int err;
+ 
+ 	if (ipgre_netlink_encap_parms(data, &ipencap)) {
+ 		struct ip_tunnel *t = netdev_priv(dev);
+-		err = ip_tunnel_encap_setup(t, &ipencap);
++		int err = ip_tunnel_encap_setup(t, &ipencap);
+ 
+ 		if (err < 0)
+ 			return err;
+ 	}
+ 
++	return 0;
++}
++
++static int ipgre_newlink(struct net *src_net, struct net_device *dev,
++			 struct nlattr *tb[], struct nlattr *data[],
++			 struct netlink_ext_ack *extack)
++{
++	struct ip_tunnel_parm p;
++	__u32 fwmark = 0;
++	int err;
++
++	err = ipgre_newlink_encap_setup(dev, data);
++	if (err)
++		return err;
++
+ 	err = ipgre_netlink_parms(dev, data, tb, &p, &fwmark);
+ 	if (err < 0)
+ 		return err;
+ 	return ip_tunnel_newlink(dev, tb, &p, fwmark);
+ }
+ 
++static int erspan_newlink(struct net *src_net, struct net_device *dev,
++			  struct nlattr *tb[], struct nlattr *data[],
++			  struct netlink_ext_ack *extack)
++{
++	struct ip_tunnel_parm p;
++	__u32 fwmark = 0;
++	int err;
++
++	err = ipgre_newlink_encap_setup(dev, data);
++	if (err)
++		return err;
++
++	err = erspan_netlink_parms(dev, data, tb, &p, &fwmark);
++	if (err)
++		return err;
++	return ip_tunnel_newlink(dev, tb, &p, fwmark);
++}
++
+ static int ipgre_changelink(struct net_device *dev, struct nlattr *tb[],
+ 			    struct nlattr *data[],
+ 			    struct netlink_ext_ack *extack)
+ {
+ 	struct ip_tunnel *t = netdev_priv(dev);
+-	struct ip_tunnel_encap ipencap;
+ 	__u32 fwmark = t->fwmark;
+ 	struct ip_tunnel_parm p;
+ 	int err;
+ 
+-	if (ipgre_netlink_encap_parms(data, &ipencap)) {
+-		err = ip_tunnel_encap_setup(t, &ipencap);
+-
+-		if (err < 0)
+-			return err;
+-	}
++	err = ipgre_newlink_encap_setup(dev, data);
++	if (err)
++		return err;
+ 
+ 	err = ipgre_netlink_parms(dev, data, tb, &p, &fwmark);
+ 	if (err < 0)
+@@ -1323,8 +1364,34 @@ static int ipgre_changelink(struct net_d
+ 	t->parms.i_flags = p.i_flags;
+ 	t->parms.o_flags = p.o_flags;
+ 
+-	if (strcmp(dev->rtnl_link_ops->kind, "erspan"))
+-		ipgre_link_update(dev, !tb[IFLA_MTU]);
++	ipgre_link_update(dev, !tb[IFLA_MTU]);
++
++	return 0;
++}
++
++static int erspan_changelink(struct net_device *dev, struct nlattr *tb[],
++			     struct nlattr *data[],
++			     struct netlink_ext_ack *extack)
++{
++	struct ip_tunnel *t = netdev_priv(dev);
++	__u32 fwmark = t->fwmark;
++	struct ip_tunnel_parm p;
++	int err;
++
++	err = ipgre_newlink_encap_setup(dev, data);
++	if (err)
++		return err;
++
++	err = erspan_netlink_parms(dev, data, tb, &p, &fwmark);
++	if (err < 0)
++		return err;
++
++	err = ip_tunnel_changelink(dev, tb, &p, fwmark);
++	if (err < 0)
++		return err;
++
++	t->parms.i_flags = p.i_flags;
++	t->parms.o_flags = p.o_flags;
+ 
+ 	return 0;
+ }
+@@ -1515,8 +1582,8 @@ static struct rtnl_link_ops erspan_link_
+ 	.priv_size	= sizeof(struct ip_tunnel),
+ 	.setup		= erspan_setup,
+ 	.validate	= erspan_validate,
+-	.newlink	= ipgre_newlink,
+-	.changelink	= ipgre_changelink,
++	.newlink	= erspan_newlink,
++	.changelink	= erspan_changelink,
+ 	.dellink	= ip_tunnel_dellink,
+ 	.get_size	= ipgre_get_size,
+ 	.fill_info	= ipgre_fill_info,
 
 
