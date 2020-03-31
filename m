@@ -2,106 +2,87 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED63C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB28C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52C1217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E6420757
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585660303;
-	bh=uvJBXe/1fKLbNAJZnngR2H1ble9LkRNQIerQekqdres=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=B/I+PkzMULLL5RDdgcUmDxhBcvz0RrHeUXHEqhYrqgQtdcHoL+VcZ5F5bg2aK+kO7
-	 NAqr5GM1DYN1+dxQYAVYflWFvjZY4wbZWoEY7v9vp2ZoIgzspXH6uaihi2ssnuLdB0
-	 RUq7MsGozh+FKb/S7HnshDaInqjoNX5RjxAie2N0=
+	s=default; t=1585660320;
+	bh=C4z6bLsgCUsUXpNs+07nkuMCLbbtGzUm2/UZT5f2VDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tmIZa+/ZT/IWkWXBcBj+d+4MrBvKmiiZT4qbWU5MI/btpvNbWtvZT2teA4LZk6F6K
+	 cOvR4aAF1epyxgfq1WX/Ek8uf/vnRC6nZNRxnVN7VVXFy7wS8J33zh4bbzefOnJ1wz
+	 QiQoXIo5oxJE3lYMpcD6nwW9XzAgZBqyB6DPlBSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbgCaNLm (ORCPT
+        id S1731024AbgCaNL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39954 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 09:11:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730923AbgCaNL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:11:26 -0400
-Received: from localhost (unknown [137.135.114.1])
+        id S1730673AbgCaNL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:11:59 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7390B20757;
-        Tue, 31 Mar 2020 13:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C49A206F5;
+        Tue, 31 Mar 2020 13:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585660285;
-        bh=uvJBXe/1fKLbNAJZnngR2H1ble9LkRNQIerQekqdres=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=q6Svu9YyHjBvh9xXbVSt1ZNKUMV9s4yPtHzhEQDmo2EEY+nFtAu32CJaX1zkYvBWP
-         q6TLa2xLIIY7JuSWZx7WjahgHZfmEp6NocCSvpkW/gz1r9dXp0hzbVCiZbuw7Yai8B
-         PiIbpwruW8khdmwTsUC7wY8ThDHr2zCMv1xcLrkg=
-Date:   Tue, 31 Mar 2020 13:11:24 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Thomas Hebb <tommyhebb@gmail.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, Kailang Yang <kailang@realtek.com>
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] ALSA: hda/realtek - Remove now-unnecessary XPS 13 headphone noise fixups
-In-Reply-To: <b649a00edfde150cf6eebbb4390e15e0c2deb39a.1585584498.git.tommyhebb@gmail.com>
-References: <b649a00edfde150cf6eebbb4390e15e0c2deb39a.1585584498.git.tommyhebb@gmail.com>
-Message-Id: <20200331131125.7390B20757@mail.kernel.org>
+        s=default; t=1585660319;
+        bh=C4z6bLsgCUsUXpNs+07nkuMCLbbtGzUm2/UZT5f2VDA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WDyMaOIuFYL2OPYRlanpB+zCrBj+VAdJdLyumi/WLOjuNjpmicwMmy761XmmzOuUf
+         w4tbemfSc178iooJo7SYmeCJalI49A0bXwz9TscqfPkHfEjkkga+X8QtcIMfvR2iCm
+         zQCjNN2n3yGIWKd8NdX9ZXfk+TOiL/vDYVSyf0O8=
+Date:   Tue, 31 Mar 2020 14:11:54 +0100
+From:   Will Deacon <will@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [RFC PATCH 08/21] Revert "list: Use WRITE_ONCE() when
+ initializing list_head structures"
+Message-ID: <20200331131153.GB30975@willie-the-truck>
+References: <20200324153643.15527-1-will@kernel.org>
+ <20200324153643.15527-9-will@kernel.org>
+ <20200330232505.GD19865@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330232505.GD19865@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Mon, Mar 30, 2020 at 04:25:05PM -0700, Paul E. McKenney wrote:
+> On Tue, Mar 24, 2020 at 03:36:30PM +0000, Will Deacon wrote:
+> > This reverts commit 2f073848c3cc8aff2655ab7c46d8c0de90cf4e50.
+> > 
+> > There is no need to use WRITE_ONCE() to initialise a non-RCU 'list_head'.
+> > 
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> 
+> And attention to lockless uses of list_empty() here, correct?
+> 
+> Depending on the outcome of discussions on 3/21, I should have added in
+> all three cases.
 
-[This is an automated email]
+Yes, patch 3 is where this will get sorted. It looks like we'll have to
+disable KCSAN around the READ_ONCE() over there, but I also need to finish
+wrapping my head around list_empty_careful() because I'm deeply suspicious!
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: 8c69729b4439 ("ALSA: hda - Fix headphone noise after Dell XPS 13 resume back from S3").
-
-The bot has tested the following trees: v5.5.13, v5.4.28, v4.19.113, v4.14.174, v4.9.217, v4.4.217.
-
-v5.5.13: Build OK!
-v5.4.28: Build OK!
-v4.19.113: Build OK!
-v4.14.174: Failed to apply! Possible dependencies:
-    1099f48457d0 ("ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360")
-    28d1d6d2f314 ("ALSA: hda - Add model string for Intel reference board quirk")
-    a26d96c7802e ("ALSA: hda/realtek - Comprehensive model list for ALC259 & co")
-    c0ca5eced222 ("ALSA: hda/realtek - Reduce click noise on Dell Precision 5820 headphone")
-    c1350bff69d1 ("ALSA: hda - Clean up ALC299 init code")
-    da911b1f5e98 ("ALSA: hda/realtek - update ALC225 depop optimize")
-
-v4.9.217: Failed to apply! Possible dependencies:
-    8551914a5e19 ("ALSA: doc: ReSTize alsa-driver-api document")
-    9000d69925ac ("ALSA: doc: ReSTize HD-Audio document")
-    a26d96c7802e ("ALSA: hda/realtek - Comprehensive model list for ALC259 & co")
-    a4caad753f0c ("ALSA: doc: ReSTize HD-Audio-Models document")
-    a79e7df97592 ("ALSA: hda - Update the list of quirk models")
-
-v4.4.217: Failed to apply! Possible dependencies:
-    34d505193bd1 ("cfg80211: basic support for PBSS network type")
-    35eb8f7b1a37 ("cfg80211: Improve Connect/Associate command documentation")
-    38de03d2a289 ("nl80211: add feature for BSS selection support")
-    819bf593767c ("docs-rst: sphinxify 802.11 documentation")
-    8551914a5e19 ("ALSA: doc: ReSTize alsa-driver-api document")
-    9000d69925ac ("ALSA: doc: ReSTize HD-Audio document")
-    a26d96c7802e ("ALSA: hda/realtek - Comprehensive model list for ALC259 & co")
-    a4caad753f0c ("ALSA: doc: ReSTize HD-Audio-Models document")
-    ba6fbacf9c07 ("cfg80211: Add option to specify previous BSSID for Connect command")
-    bf1ecd210541 ("cfg80211: Allow cfg80211_connect_result() errors to be distinguished")
-    e705498945ad ("cfg80211: Add option to report the bss entry in connect result")
-    fa44b7ec9bc4 ("ALSA: hda - Update documentation")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
--- 
-Thanks
-Sasha
+Will
