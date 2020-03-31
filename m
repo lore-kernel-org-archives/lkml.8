@@ -2,104 +2,175 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8ECC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699F1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292EA20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:45:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/uFeqjg"
+	by mail.kernel.org (Postfix) with ESMTP id 373C0208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgCaKpt (ORCPT
+        id S1730430AbgCaKsm convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:45:49 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46793 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730242AbgCaKpt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:45:49 -0400
-Received: by mail-pl1-f196.google.com with SMTP id s23so7968975plq.13;
-        Tue, 31 Mar 2020 03:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MxLEB1TjwZBGmBB/ZQJRbk9MhV3+/5MVrEoEIkaFWEg=;
-        b=l/uFeqjg0Q+0nCWWSVLir1llB/cFAJYfpZ3Zfu9Ci8p5zGEUjrRzWEnsoTaUqcZuZ1
-         fMjYD/uYZQsNy0HLUAO9JATrWl9oFdwsN+4wLi9j7g+wUxBAwdEqB5dI9yiYuz8jJEHr
-         MuDjcS4S0AK6CnWxnS5Kba+w0bmBjfUcom5w+C9gCAk35if4WDTgIeXAuyyJTIE5KFkL
-         cdy3DpXcH/AHshPQtKZDg8Y6N4Ep47NiE/zBOx8XKfEt8lGu9fe26BZxWi4XdSOK/vFX
-         hhySvozVLUQ9dK6RM+i/IGwzIRcE1b1RVi6rDeTbLKFmHZK4eyF8DqnmwLeB4QvMMvWI
-         RBfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MxLEB1TjwZBGmBB/ZQJRbk9MhV3+/5MVrEoEIkaFWEg=;
-        b=UuG4Fz9KNSU4XcOXKH/vIuGcoHJM5ubG/7tV+MZTC3v2eD+mLxWSL1jYkv5w7Xq631
-         9q6oowOgizRfM5EauFb/8ZPFT/MGDLefw3NbCXxgKijmZyVVQxRLC+iNPZqnhIOlovts
-         aWUJ0krxzb6XhkqD29qUqgkEl7rOun7mf91jGk4PxO+AEZkf9Q+8UDxnKPILrPxhWXVv
-         Ki8vETqABbrsO6kMhPEzacFbzz1CioZNe/5P9FeVB2fppI+CjYGOQeRX31A8j4Wt2hRD
-         Egjcp4gnUgzkUHa0t231CWmJKt9o4bd6+aeKeOC7CUEkE+RM/CH3OBrxQPs72NZPlelL
-         RXQg==
-X-Gm-Message-State: AGi0PuaUQdJgD81Rq3Zq54RpJu3pKXZa6XSdGmHhkaRq/2l2q8p11UQ6
-        1cKaZBQdkAE+mG2FBfsBRcg=
-X-Google-Smtp-Source: APiQypK8so6BAq7FULz+XoJNXwOxMoGi2MmMOD07bP1gBNmL+vOeEB4AXL8DdPxsGWzACbpZvKAugw==
-X-Received: by 2002:a17:90a:e003:: with SMTP id u3mr3175902pjy.157.1585651547915;
-        Tue, 31 Mar 2020 03:45:47 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id t1sm11432236pgh.88.2020.03.31.03.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 03:45:47 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-X-Google-Original-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH] clk: sprd: don't gate uart console clock
-Date:   Tue, 31 Mar 2020 18:45:32 +0800
-Message-Id: <20200331104532.12698-1-chunyan.zhang@unisoc.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 31 Mar 2020 06:48:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:52858 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730341AbgCaKsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 06:48:42 -0400
+IronPort-SDR: BEymclEx7Qu6XWtvGKhSyOA4MNOzBwVdR8L+Jr0PatHcYNZnUZqFJdhA621QQrHaPD8Tzabio+
+ U52hAHKVbCNw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 03:48:41 -0700
+IronPort-SDR: /KxE8UaVN606pxVD82pMLbaBTRRjTyTVrnwsMDf2oRUpusKQ2fCmIBiu/rYtDf7mmYPvuWqPzq
+ OXpLLRaayGGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
+   d="scan'208";a="448624636"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga005.fm.intel.com with ESMTP; 31 Mar 2020 03:48:41 -0700
+Received: from fmsmsx102.amr.corp.intel.com (10.18.124.200) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 31 Mar 2020 03:48:41 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ FMSMSX102.amr.corp.intel.com (10.18.124.200) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 31 Mar 2020 03:48:41 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Tue, 31 Mar 2020 18:48:37 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Topic: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+Thread-Index: AQHWAEUdcc1u01skwUmp6uBHREsZ66hh3P+AgACUz4A=
+Date:   Tue, 31 Mar 2020 10:48:36 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A21ACC1@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
+ <20200331075603.GB26583@infradead.org>
+In-Reply-To: <20200331075603.GB26583@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't gate uart1_eb which provides console clock, gating that clock would
-make serial stop working if serial driver didn't enable that explicitly.
+Hi Hellwig,
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- drivers/clk/sprd/sc9863a-clk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks for your review, Hellwig. :-) inline reply.
 
-diff --git a/drivers/clk/sprd/sc9863a-clk.c b/drivers/clk/sprd/sc9863a-clk.c
-index 24f064262814..6c6ac158ef61 100644
---- a/drivers/clk/sprd/sc9863a-clk.c
-+++ b/drivers/clk/sprd/sc9863a-clk.c
-@@ -1671,8 +1671,9 @@ static SPRD_SC_GATE_CLK_FW_NAME(i2c4_eb,	"i2c4-eb",	"ext-26m", 0x0,
- 				0x1000, BIT(12), 0, 0);
- static SPRD_SC_GATE_CLK_FW_NAME(uart0_eb,	"uart0-eb",	"ext-26m", 0x0,
- 				0x1000, BIT(13), 0, 0);
-+/* uart1_eb is for console, don't gate even if unused */
- static SPRD_SC_GATE_CLK_FW_NAME(uart1_eb,	"uart1-eb",	"ext-26m", 0x0,
--				0x1000, BIT(14), 0, 0);
-+				0x1000, BIT(14), CLK_IGNORE_UNUSED, 0);
- static SPRD_SC_GATE_CLK_FW_NAME(uart2_eb,	"uart2-eb",	"ext-26m", 0x0,
- 				0x1000, BIT(15), 0, 0);
- static SPRD_SC_GATE_CLK_FW_NAME(uart3_eb,	"uart3-eb",	"ext-26m", 0x0,
--- 
-2.20.1
+> From: Christoph Hellwig <hch@infradead.org>
+> Sent: Tuesday, March 31, 2020 3:56 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>
+> Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+> 
+> > @@ -2629,6 +2638,46 @@ static long vfio_iommu_type1_ioctl(void
+> *iommu_data,
+> >  		}
+> >  		kfree(gbind_data);
+> >  		return ret;
+> > +	} else if (cmd == VFIO_IOMMU_CACHE_INVALIDATE) {
+> 
+> Please refactor the spaghetti in this ioctl handler to use a switch statement and a
+> helper function per command before growing it even more.
 
+got it. I may get a separate refactor patch before adding my changes.
+
+> 
+> > +		/* Get the version of struct iommu_cache_invalidate_info */
+> > +		if (copy_from_user(&version,
+> > +			(void __user *) (arg + minsz), sizeof(version)))
+> > +			return -EFAULT;
+> > +
+> > +		info_size = iommu_uapi_get_data_size(
+> > +					IOMMU_UAPI_CACHE_INVAL, version);
+> > +
+> > +		cache_info = kzalloc(info_size, GFP_KERNEL);
+> > +		if (!cache_info)
+> > +			return -ENOMEM;
+> > +
+> > +		if (copy_from_user(cache_info,
+> > +			(void __user *) (arg + minsz), info_size)) {
+> 
+> The user might have changed the version while you were allocating and
+> freeing the
+> memory, introducing potentially exploitable racing conditions.
+
+yeah, I know the @version is not welcomed in the thread Jacob is driving.
+I'll adjust the code here once the open in that thread has been solved.
+
+But regardless of the version, I'm not sure if I 100% got your point.
+Could you elaborate a bit? BTW. The code somehow referenced the code
+below. The basic flow is copying partial data from __arg and then copy
+the rest data after figuring out how much left. The difference betwen
+below code and my code is just different way to figure out left data
+size. Since I'm not sure if I got your point. If the racing is true in
+such flow, I guess there are quite a few places need to enhance.
+
+vfio_pci_ioctl(){
+{
+...
+        } else if (cmd == VFIO_DEVICE_SET_IRQS) {
+                struct vfio_irq_set hdr;
+                u8 *data = NULL;
+                int max, ret = 0;
+                size_t data_size = 0;
+
+                minsz = offsetofend(struct vfio_irq_set, count);
+
+                if (copy_from_user(&hdr, (void __user *)arg, minsz))
+                        return -EFAULT;
+
+                max = vfio_pci_get_irq_count(vdev, hdr.index);
+
+                ret = vfio_set_irqs_validate_and_prepare(&hdr, max,
+                                                 VFIO_PCI_NUM_IRQS, &data_size);
+                if (ret)
+                        return ret;
+
+                if (data_size) {
+                        data = memdup_user((void __user *)(arg + minsz),
+                                            data_size);
+                        if (IS_ERR(data))
+                                return PTR_ERR(data);
+                }
+
+                mutex_lock(&vdev->igate);
+
+                ret = vfio_pci_set_irqs_ioctl(vdev, hdr.flags, hdr.index,
+                                              hdr.start, hdr.count, data);
+
+                mutex_unlock(&vdev->igate);
+                kfree(data);
+
+                return ret;
+
+        } else if (cmd == VFIO_DEVICE_RESET) {
+...
+}
+
+Regards,
+Yi Liu
