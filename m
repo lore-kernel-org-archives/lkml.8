@@ -2,99 +2,110 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3F9C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FB5C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B651620838
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C14C20838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585692010;
-	bh=uFEXfr40AqoZXAxCEJwdvVfv+OabBqG3OZjMDRScCaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=AzVHXmfQkR1NGm/aQ028a/79q80+Ai4TfX4q/YVGitcFrjHsWIt7hsIcp2FG5RbS9
-	 MOs/b2F6fSzd1LeNlw93a/L+glzYHGp+p9uqXgClVfrObp2txWjJGeUb9LiANlcA6C
-	 UREePxvIG3LOhl4xLh02EHyTLOF2kEGRxbxHtZEE=
+	s=default; t=1585692056;
+	bh=68y8XV+c+ckwiJ0Ks/NEh1YXjXG1GeqhNoCYKrAzUoM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lx0ZrBb7fzSzLyLyk6NKH1tbVUt9szUFfMQETQcdMZDSJpAukchgz6SmJzcETiepn
+	 chLCyA0tmNK4cEd3NNKlQyRfKTfD7mNgsK8j5DAhO+bnMPIOFGRHZ0W7WaMV3KpQHb
+	 yBeXUJFb9GnzNZFGipQ5IpAggBNnct1tFDxIakek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbgCaWAJ (ORCPT
+        id S1731433AbgCaWAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:00:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgCaWAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:00:09 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C49E2080C;
-        Tue, 31 Mar 2020 22:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585692009;
-        bh=uFEXfr40AqoZXAxCEJwdvVfv+OabBqG3OZjMDRScCaQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=vzrV6sPZ7Ml571IhMEX3RIQ4QoKtnw5U+ou6jXlEpDBlmYIn++dHrH1UzlXqf8US2
-         JRBcYAuOthBeXYNqjpqW2GWHaDbntt4itk83r9fGLcXGv0WxTOlNXY1pidG/SCgPJJ
-         x9vXF1do6BeUn9+xDOyxvX5jIrWCrITmJ/+T+yAg=
-Date:   Tue, 31 Mar 2020 17:00:06 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, gregkh@linuxfoundation.org,
-        arnd@arndb.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
-Message-ID: <20200331220006.GA37376@google.com>
+        Tue, 31 Mar 2020 18:00:55 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34618 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaWAy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 18:00:54 -0400
+Received: by mail-il1-f196.google.com with SMTP id t11so21067366ils.1;
+        Tue, 31 Mar 2020 15:00:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lc33E5Df9rZgd4qmK0wjmDHg2/VwMCkladXOyRxwDEQ=;
+        b=bgXmYjkO/QXHC+uOvMiTFY+STAW8VjaXPbVR42M8rXRfgJyTGV98WTnmjOU10qSwXu
+         Vh67M0cgtS6QLN4igqk7j6k9fXI/bJv9c5mGQUzdUbMH18uRsgcQ0JxUBduX0bJZoXmB
+         0FSCTPaXAmPOnVNCESe3wND20TGui1dP5pRkJmuVeHXkgq0rV7YcH72kmAs5iWLG3U20
+         MrNlBy4PdFxHOXmQRL2bfQfQppmBJQtllF35Cxf1j50nZ+D/GpTpycYBfba3/uh/TB/y
+         jqF09l8NLspnMyN4P/Bg7A1cF8+CXvxUMrWv814pe1oOnl2WDZ+li5ZiIh4gDUWAovIK
+         pAvw==
+X-Gm-Message-State: ANhLgQ3TUlwyn+iGmY4aK4/vcnrdlL90eR/2Rge9hqry+pB4LiQP1TyC
+        +KUvMcN4SBrbtFQdfnKtig==
+X-Google-Smtp-Source: ADFU+vt2obj9Pp0WVbC2XhGR8Zra56tn+jusDQkYJG1LqYScGnHUFR99v3w+nmrFf44+CRhVQro3Zw==
+X-Received: by 2002:a92:1d4b:: with SMTP id d72mr18236810ild.14.1585692053642;
+        Tue, 31 Mar 2020 15:00:53 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id n6sm43408iod.9.2020.03.31.15.00.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 15:00:52 -0700 (PDT)
+Received: (nullmailer pid 19586 invoked by uid 1000);
+        Tue, 31 Mar 2020 22:00:51 -0000
+Date:   Tue, 31 Mar 2020 16:00:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Weijie Gao <weijie.gao@mediatek.com>
+Cc:     linux-mtd@lists.infradead.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Weijie Gao <weijie.gao@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-bindings: add documentation for mt7621-nand driver
+Message-ID: <20200331220051.GA18084@bogus>
+References: <1585678079-5999-1-git-send-email-weijie.gao@mediatek.com>
+ <1585678079-5999-2-git-send-email-weijie.gao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d798a7eb-ceb0-d81e-5422-f9e41058a098@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1585678079-5999-2-git-send-email-weijie.gao@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:59:44AM -0700, Dave Jiang wrote:
-> On 3/31/2020 9:03 AM, Bjorn Helgaas wrote:
-> > On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
-> > > Since the current accelerator devices do not have standard PCIe capability
-> > > enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
-> > > been added to struct pci_dev.  Currently a PCI quirk must be used for the
-> > > devices that have such cap until the PCI cap is standardized. Add a helper
-> > > function to provide the check if a device supports the cmdmem capability.
-> > > 
-> > > Such capability is expected to be added to PCIe device cap enumeration in
-> > > the future.
-> > This needs some sort of thumbnail description of what "synchronous
-> > write notification" and "cmdmem" mean.
+On Wed, 1 Apr 2020 02:07:59 +0800, Weijie Gao wrote:
+> This patch adds documentation for MediaTek MT7621 NAND flash controller
+> driver.
 > 
-> I will add more explanation.
+> Signed-off-by: Weijie Gao <weijie.gao@mediatek.com>
+> ---
+>  .../bindings/mtd/mediatek,mt7621-nfc.yaml     | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mediatek,mt7621-nfc.yaml
 > 
-> > Do you have a pointer to a PCI-SIG ECR or similar?
-> 
-> Deferrable Memory Write (DMWr) ECR
-> 
-> https://members.pcisig.com/wg/PCI-SIG/document/13747
-> 
-> From what I'm told it should be available for public review by EOW.
 
-Please use terminology from the spec instead of things like
-"synchronous write notification".
+My bot found errors running 'make dt_binding_check' on your patch:
 
-AIUI, ENQCMDS is an x86 instruction.  That would have no meaning in
-the PCIe domain.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/mediatek,mt7621-nfc.example.dt.yaml: nand@1e003000: reg: [[503328768, 2048, 503330816, 2048]] is too short
 
-I'm not committing to acking any part of this before the ECR is
-accepted, but if you're adding support for the feature described by
-the ECR, you might as well add support for discovering the DMWr
-capability via Device Capabilities 2 as described in the ECR.
+See https://patchwork.ozlabs.org/patch/1264888
 
-If you have hardware that supports DMWr but doesn't advertise it via
-Device Capabilities 2, you can always have a quirk that works around
-that lack.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
