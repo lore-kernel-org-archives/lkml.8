@@ -2,139 +2,112 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B5EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3929AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE2320757
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F6D920786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585660210;
-	bh=ts/jwCIfi83GogPG5jQKnlmOLa3e5lymvLi0SUUKZxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pe5AY4wieAfs7mWtXngkdILNAtuIoyf9O6hZGJ/xl4Xpy38t0qx4PLzXhql1Entvk
-	 j90XvtzE1CMKwcY6Wf0TXpvHAGRAaDWXLwRnmC97H0zN0HUaM1PtImrCbc/b6YVcfD
-	 CfMIkiGOie7hKHCQGecwE3sy7wK9UHXPvfKjvc10=
+	s=default; t=1585660281;
+	bh=PC5PgxjIj/JTw0FZeDEEoYDhnVcOZuR1qdco51kVJps=;
+	h=Date:From:To:To:To:To:CC:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+	 References:List-ID:From;
+	b=cK0ctl9PeAXGBnP1w1ncWqZFSbVaTONjbC2p4L5ZW9BjVRIfuNuqe3bpC3Pu3MjS8
+	 TBm+ycf1KkSqhoxymJKsfRT2UML57hu9cbTXhTj1IAYidgFzzGS1uf8Fa2eFrsxQCy
+	 9Y2oAT+FwZggRH5m/Dd/UF9bd7q6mKkw7bwX3G+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgCaNKJ (ORCPT
+        id S1730863AbgCaNLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 09:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730473AbgCaNKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:10:09 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        id S1730543AbgCaNLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:11:19 -0400
+Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA38C206F5;
-        Tue, 31 Mar 2020 13:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9346120757;
+        Tue, 31 Mar 2020 13:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585660208;
-        bh=ts/jwCIfi83GogPG5jQKnlmOLa3e5lymvLi0SUUKZxQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z4uoSLgMdWSrhvR+cLyS50YXcM/8YIApUCCqSAdaLXZzv6keHgUATjrrGX6OC9ohA
-         9LHEth9UJklbVgScbX297IS6DdvFPQKRNqNXOepFq61AnlIWxmHQMyFJ1WfYr9XJXI
-         Z1sAyxQN20CP8gTCBEE6NiK+BURMf7PGrqIaP+mc=
-Date:   Tue, 31 Mar 2020 14:10:03 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maddie Stone <maddiestone@google.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 03/21] list: Annotate lockless list primitives with
- data_race()
-Message-ID: <20200331131002.GA30975@willie-the-truck>
-References: <20200324153643.15527-1-will@kernel.org>
- <20200324153643.15527-4-will@kernel.org>
- <CANpmjNPWpkxqZQJJOwmx0oqvzfcxhtqErjCzjRO_y0BQSmre8A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNPWpkxqZQJJOwmx0oqvzfcxhtqErjCzjRO_y0BQSmre8A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1585660278;
+        bh=PC5PgxjIj/JTw0FZeDEEoYDhnVcOZuR1qdco51kVJps=;
+        h=Date:From:To:To:To:To:CC:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+         References:From;
+        b=VibqCQHIODbY15FyJ1W9XHaPdHhcW1yZFUlUu0Y2AgF9hySlf6n+vkb7qW6dSCTfp
+         ZLzFDiYJod1fRWU0gShBs7ti3uAwr/l01EOan6PVY9zo+wBCaS8z53iMZz7WKiaRu5
+         kHXiUpNPqRWPJW+0nkGKwFnM5ixVYFLX8K13jLlw=
+Date:   Tue, 31 Mar 2020 13:11:17 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     "Longpeng(Mike)" <longpeng2@huawei.com>
+To:     Longpeng <longpeng2@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     <kvm@vger.kernel.org>, <arei.gonglei@huawei.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Matthew Wilcox <willy@infradead.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH RESEND v4] mm/hugetlb: fix a addressing exception caused by huge_pte_offset
+In-Reply-To: <20200327235748.2048-1-longpeng2@huawei.com>
+References: <20200327235748.2048-1-longpeng2@huawei.com>
+Message-Id: <20200331131118.9346120757@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:23:30PM +0100, Marco Elver wrote:
-> On Tue, 24 Mar 2020 at 16:37, Will Deacon <will@kernel.org> wrote:
-> > Some list predicates can be used locklessly even with the non-RCU list
-> > implementations, since they effectively boil down to a test against
-> > NULL. For example, checking whether or not a list is empty is safe even
-> > in the presence of a concurrent, tearing write to the list head pointer.
-> > Similarly, checking whether or not an hlist node has been hashed is safe
-> > as well.
-> >
-> > Annotate these lockless list predicates with data_race() and READ_ONCE()
-> > so that KCSAN and the compiler are aware of what's going on. The writer
-> > side can then avoid having to use WRITE_ONCE() in the non-RCU
-> > implementation.
-> >
-> > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Marco Elver <elver@google.com>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > ---
-> >  include/linux/list.h       | 10 +++++-----
-> >  include/linux/list_bl.h    |  5 +++--
-> >  include/linux/list_nulls.h |  6 +++---
-> >  include/linux/llist.h      |  2 +-
-> >  4 files changed, 12 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/include/linux/list.h b/include/linux/list.h
-> > index 4fed5a0f9b77..4d9f5f9ed1a8 100644
-> > --- a/include/linux/list.h
-> > +++ b/include/linux/list.h
-> > @@ -279,7 +279,7 @@ static inline int list_is_last(const struct list_head *list,
-> >   */
-> >  static inline int list_empty(const struct list_head *head)
-> >  {
-> > -       return READ_ONCE(head->next) == head;
-> > +       return data_race(READ_ONCE(head->next) == head);
-> 
-> Double-marking should never be necessary, at least if you want to make
-> KCSAN happy. From what I gather there is an unmarked write somewhere,
-> correct? In that case, KCSAN will still complain because if it sees a
-> race between this read and the other write, then at least one is still
-> plain (the write).
+Hi
 
-Ok, then I should drop the data_race() annotation and stick to READ_ONCE(),
-I think (but see below).
+[This is an automated email]
 
-> Then, my suggestion would be to mark the write with data_race() and
-> just leave this as a READ_ONCE(). Having a data_race() somewhere only
-> makes KCSAN stop reporting the race if the paired access is also
-> marked (be it with data_race() or _ONCE, etc.).
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
-The problem with taking that approach is that it ends up much of the
-list implementation annotated with either WRITE_ONCE() or data_race(),
-meaning that concurrent, racy list operations will no longer be reported
-by KCSAN. I think that's a pretty big deal and I'm strongly against
-annotating the internals of library code such as this because it means
-that buggy callers will largely go undetected.
+The bot has tested the following trees: v5.5.13, v5.4.28, v4.19.113, v4.14.174, v4.9.217, v4.4.217.
 
-The situation we have here is that some calls, e.g. hlist_empty() are
-safe even in the presence of a racy write and I'd like to suppress KCSAN
-reports without annotating the writes at all.
+v5.5.13: Build OK!
+v5.4.28: Build OK!
+v4.19.113: Build OK!
+v4.14.174: Build OK!
+v4.9.217: Failed to apply! Possible dependencies:
+    166f61b9435a ("mm: codgin-style fixes")
+    505a60e22560 ("asm-generic: introduce 5level-fixup.h")
+    82b0f8c39a38 ("mm: join struct fault_env and vm_fault")
+    953c66c2b22a ("mm: THP page cache support for ppc64")
+    c2febafc6773 ("mm: convert generic code to 5-level paging")
+    fd60775aea80 ("mm, thp: avoid unlikely branches for split_huge_pmd")
 
-> Alternatively, if marking the write is impossible, you can surround
-> the access with kcsan_disable_current()/kcsan_enable_current(). Or, as
-> a last resort, just leaving as-is is fine too, because KCSAN's default
-> config (still) has KCSAN_ASSUME_PLAIN_WRITES_ATOMIC selected.
+v4.4.217: Failed to apply! Possible dependencies:
+    01c8f1c44b83 ("mm, dax, gpu: convert vm_insert_mixed to pfn_t")
+    0e749e54244e ("dax: increase granularity of dax_clear_blocks() operations")
+    166f61b9435a ("mm: codgin-style fixes")
+    34c0fd540e79 ("mm, dax, pmem: introduce pfn_t")
+    505a60e22560 ("asm-generic: introduce 5level-fixup.h")
+    52db400fcd50 ("pmem, dax: clean up clear_pmem()")
+    5c6a84a3f455 ("mm/kasan: Switch to using __pa_symbol and lm_alias")
+    82b0f8c39a38 ("mm: join struct fault_env and vm_fault")
+    9973c98ecfda ("dax: add support for fsync/sync")
+    aac453635549 ("mm, oom: introduce oom reaper")
+    ac401cc78242 ("dax: New fault locking")
+    b2e0d1625e19 ("dax: fix lifetime of in-kernel dax mappings with dax_map_atomic()")
+    bae473a423f6 ("mm: introduce fault_env")
+    bc2466e42573 ("dax: Use radix tree entry lock to protect cow faults")
+    c2febafc6773 ("mm: convert generic code to 5-level paging")
+    e4b274915863 ("DAX: move RADIX_DAX_ definitions to dax.c")
+    f9fe48bece3a ("dax: support dirty DAX entries in radix tree")
 
-Hmm, I suppose some bright spark will want to change the default at the some
-point though, no? ;) I'll look at using
-kcsan_disable_current()/kcsan_enable_current(), thanks.
 
-Will
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
