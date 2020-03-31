@@ -2,281 +2,173 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E63DC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3093FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CA8206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7526206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="I3Oappxu"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="U6qvL4Gf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbgCaIFz (ORCPT
+        id S1730118AbgCaIGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:05:55 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32813 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCaIFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:05:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z14so1405680wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 01:05:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LWTU/z3NAWu+BAP5PB/V35RgoUB9Z+L6czFAkvEzUVU=;
-        b=I3OappxuD8cN5KscXbGEhiWdG8dHInQ70yv50Sc9cOu/H7TU1KFnsyqEMMsfePjCFo
-         S2MP10t86Ovtc/6ztyYjTaFXq8wPCOImBIJia1f9zoKlksRGmrNrVErXAD6k+oX+EHcF
-         JobBA4RDYWIC0rUS/Gja114Rw4gMtRo1WVg6/6urNxu1OZFDfLBvGTYDr7BlLTr9Hx00
-         eIczyLtoSIiraiC7b5JaawRG310FNWf46d/uRArknnf9YbEOMvnY6mPqREnotiJIDnZb
-         LcwEJMN0mKSRcVlIWf8upRHKGlECmViZ71BSErFpxwlIwUEXzda9FSpGkSHv2hfnsiPa
-         UR4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LWTU/z3NAWu+BAP5PB/V35RgoUB9Z+L6czFAkvEzUVU=;
-        b=TnMx2AFYom8019jfOtcwVhKE6Y6LO+/IvwS/rkoiFUKha5spINfJb5XTwsM9mqPJoB
-         zJLtB1xkxpJHocowPFphT339j1JcMsoLlwpNttYwyC7VPpDaVs2HuZhk/knUB8Xh9bnY
-         71VMIL6w+AfLqfUo1GCiJpfETRLNJNAO0IK1oSVfywYGrY9EdzcnrDSqL7ArOzZZl0LN
-         mYWKZ9iaoDyM79cfpAwWQBXrndJPf+nK0Ry4geGfYeDp7JC0uKnro1HqIAHDTXLJUGu/
-         KCDz+JId3+i8g45wwZnFDcIxla+VW6aPy+0mCbXkvYssIk9+yF+mPpr7Yq+reUvWV7lb
-         AWcw==
-X-Gm-Message-State: ANhLgQ0NjFYbrOL/O1wcYO3H1rElfph9+sWrN9tjtunwvLnMblPVFH5p
-        v2kY+ZV8ZDmMUVHJnFr4jrQhTA==
-X-Google-Smtp-Source: ADFU+vvD+NmNdXAqcj+henKMJQxgNkfDBkFag7EqmOw1fLxoYbHIRrn1vquJ7O2sKqspyElQKdBjsg==
-X-Received: by 2002:a1c:2203:: with SMTP id i3mr2171659wmi.25.1585641951023;
-        Tue, 31 Mar 2020 01:05:51 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id f14sm2821580wmb.3.2020.03.31.01.05.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 01:05:50 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] drm/mediatek: Move mtk_hdmi_phy driver into
- drivers/phy/mediatek folder
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <20200330141222.17529-1-chunkuang.hu@kernel.org>
- <20200330141222.17529-4-chunkuang.hu@kernel.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <b1c22917-76b4-2de9-3f0a-0d7736dae94f@baylibre.com>
-Date:   Tue, 31 Mar 2020 10:05:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200330141222.17529-4-chunkuang.hu@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 31 Mar 2020 04:06:12 -0400
+Received: from mail-am6eur05on2111.outbound.protection.outlook.com ([40.107.22.111]:55264
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726528AbgCaIGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:06:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G+telTbKqllpyrgoCI4OMEAhccJMZ4axD/+zpqfSUObWOlzDGkWhC/8hDVeOs4E4ZfdsdY2r/0aMdrZlN0oo8p+/2e8Pd24/vp83CMhy56DGAKCbX1GHDh1CqvxYLhj3UVYDt9vP7KLZRtWZjNgieDOgNEkWn+oZ3ORbOIysqdKskVuX+HcO3u2yuWYpUTOij7Y4+0VG65Hu1SX7tjqgQTlm2PsBl8lCuooJkMeZBnibtXeNg4JJjrGtDcy39hZj4LL8gtlATE/zM8YHiJZaVb19sVINnqD+SbmkwrFVISLNzvBsn4j/lTfuJWJDvVeOe345fZwkVg9jTZai2RPKiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wVPoFZXqlypcWl3kUsmEWYRrtohiVVJ5clzuQ44ZtyQ=;
+ b=oe9qADdlqkdIQ9loEHt7LNBo6kZRLvqnAJyv5TZalPFSWsc9ldRelOah8DykNTzkfTAF6ObVlRj60GxYXP4jGCF4291l+IE5ztH39amHWoEmtlupTyHnCTwOSEGxbuYXWwAbZFiSR0zAyPSxxYI8o5fWNY2+kK3Lc6z6zL7gP70tgwDe8aptJeZH1b7VBm8W6bnPpAtT3aANSZz6o3yIUeyOy+c0kGMB3WMp4g7qqzjGeua0CdQm7MLwJB1En4b8X7QQGzOorugn9tkuxCdOLvxIi1s3rRtrKlaZON8flXZRaDQl651EcVykwrQBPKBoKunZXwliDR5XqqMSLt5wpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wVPoFZXqlypcWl3kUsmEWYRrtohiVVJ5clzuQ44ZtyQ=;
+ b=U6qvL4Gfk/9iROlL3ZPtQgLdUlTh2wINxBntf9Pr/T02OkDOpe4GbRuqrWqRqq3w+Xb1bJ3ZDKh+d/CTA0YsE+yB9FNBnQ+4Hi21KzRyNxs/fKmzAJEs44bkA8kJCfwXwVm6gXwYgTIrlp3mFS7VfSIhJD2f+rSeRh4U8G/kF2M=
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (20.179.1.217) by
+ AM6PR05MB4984.eurprd05.prod.outlook.com (20.177.33.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Tue, 31 Mar 2020 08:06:06 +0000
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::44ad:bee7:b765:b9c7]) by AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::44ad:bee7:b765:b9c7%7]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
+ 08:06:06 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+Thread-Topic: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+Thread-Index: AQHWBbntSLyiDNa7b0653TZgcLvty6hfrHgAgADvhoCAAMsVgIAAAkoAgADxpAA=
+Date:   Tue, 31 Mar 2020 08:06:06 +0000
+Message-ID: <159af8d57eff3ed93adff62b88adebd2a17c95b0.camel@toradex.com>
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+         <20200329150854.GA31812@lunn.ch>
+         <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+         <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
+         <20200330174114.GG25745@shell.armlinux.org.uk>
+In-Reply-To: <20200330174114.GG25745@shell.armlinux.org.uk>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.0 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [51.154.7.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 59962960-8ca4-4b8c-986b-08d7d54a5d7f
+x-ms-traffictypediagnostic: AM6PR05MB4984:
+x-microsoft-antispam-prvs: <AM6PR05MB49845E6057CBC01903254FF7F4C80@AM6PR05MB4984.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0359162B6D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(396003)(346002)(376002)(366004)(39850400004)(26005)(6506007)(186003)(53546011)(81156014)(71200400001)(91956017)(66946007)(66446008)(66556008)(66476007)(76116006)(86362001)(64756008)(110136005)(54906003)(4326008)(5660300002)(316002)(6486002)(36756003)(44832011)(478600001)(2906002)(2616005)(8936002)(81166006)(6512007)(7416002)(8676002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WbXcuiH6f3dvQVcQErr6gZ/VEt+qu8eqkVLOwvrOFGcDBaQp7fNP7TRyY0atp/mIBfRVy0M7SX8jgK9yHWgv14mKQWUMeKE00GV0teZC3fr14x5vUAgkABRn+40R17K1Pj4neakUxc3R5Okervv3qBHQCY4stL4uD3R2+EBoERqzn/NmsJspM0OyW7pzpmo3zJwJBqUO8EIhrDr6waltkKlExKt1U4JcVBCUOd6SQy8/EX5YS9IxdB0sjchu+HfXSAXsvzEggSYGuW87G6t1iffvENhqKWdlAtkGYFST6CiCi9dGp2xJMVc+FzWAQcZ+l1AcK7NvqTB2xJ9iJ+a7N03aytcZk5c2k4XbfHgMUxnUDybWkqCJMySYkU/mGkkBGXlPYnQoDW7LRsUIkP3qU37kuuTDO+co6/7QqsS9ySe6Z5MJPjZQ9BeB0Jv3exiP
+x-ms-exchange-antispam-messagedata: m5Z08HAgPB9tdCY2kpjealqL3vHU6oLluGms09qM3MCXGSWVpva4xdBN2NQhZ0VA+5zvdn5LFlgCxrkHwvQDrSffQH+0+CcgxVDgik1rsI39uIW5vGGMieGb8Wfh+kfFoyy0dM02bjU2K8GinfNqRw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <877492ABA595604784012E97A128F92C@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59962960-8ca4-4b8c-986b-08d7d54a5d7f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 08:06:06.8644
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 67FCEtB0LtFnJCdFWi6Prn0FJxN/kK+TF44Pa5pcFCrEjQIR1WmmQbe8aZksfiQHC+TYlHvhS18HfLxY7zYWOwiqpXYEmEbneBZVoRynKMQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4984
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 30/03/2020 16:12, Chun-Kuang Hu wrote:
-> From: CK Hu <ck.hu@mediatek.com>
-> 
-> mtk_hdmi_phy is currently placed inside mediatek drm driver, but it's
-> more suitable to place a phy driver into phy driver folder, so move
-> mtk_hdmi_phy driver into phy driver folder.
-
-Pretty sure the subject should start with "phy: " and have an ack from Kishon.
-
-Neil
-
-> 
-> Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> ---
->  drivers/gpu/drm/mediatek/Kconfig                           | 7 -------
->  drivers/gpu/drm/mediatek/Makefile                          | 6 ------
->  drivers/phy/mediatek/Kconfig                               | 7 +++++++
->  drivers/phy/mediatek/Makefile                              | 7 +++++++
->  .../mediatek/phy-mtk-hdmi-mt2701.c}                        | 2 +-
->  .../mediatek/phy-mtk-hdmi-mt8173.c}                        | 2 +-
->  .../mtk_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi.c}         | 2 +-
->  .../mtk_hdmi_phy.h => phy/mediatek/phy-mtk-hdmi.h}         | 0
->  8 files changed, 17 insertions(+), 16 deletions(-)
->  rename drivers/{gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt2701.c} (99%)
->  rename drivers/{gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi-mt8173.c} (99%)
->  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.c => phy/mediatek/phy-mtk-hdmi.c} (99%)
->  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.h => phy/mediatek/phy-mtk-hdmi.h} (100%)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-> index ff6a1eb4ae83..2427d5bf699d 100644
-> --- a/drivers/gpu/drm/mediatek/Kconfig
-> +++ b/drivers/gpu/drm/mediatek/Kconfig
-> @@ -26,10 +26,3 @@ config DRM_MEDIATEK_HDMI
->  	select PHY_MTK_HDMI
->  	help
->  	  DRM/KMS HDMI driver for Mediatek SoCs
-> -
-> -config PHY_MTK_HDMI
-> -    tristate "MediaTek HDMI-PHY Driver"
-> -    depends on ARCH_MEDIATEK && OF
-> -    select GENERIC_PHY
-> -    help
-> -          Enable this to support HDMI-PHY
-> diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/mediatek/Makefile
-> index fcbef23aa6ce..77b0fd86063d 100644
-> --- a/drivers/gpu/drm/mediatek/Makefile
-> +++ b/drivers/gpu/drm/mediatek/Makefile
-> @@ -22,9 +22,3 @@ mediatek-drm-hdmi-objs := mtk_cec.o \
->  			  mtk_hdmi_ddc.o
->  
->  obj-$(CONFIG_DRM_MEDIATEK_HDMI) += mediatek-drm-hdmi.o
-> -
-> -phy-mtk-hdmi-drv-objs := mtk_hdmi_phy.o \
-> -			 mtk_mt2701_hdmi_phy.o \
-> -			 mtk_mt8173_hdmi_phy.o
-> -
-> -obj-$(CONFIG_PHY_MTK_HDMI) += phy-mtk-hdmi-drv.o
-> diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kconfig
-> index dee757c957f2..10f0ec2d5b54 100644
-> --- a/drivers/phy/mediatek/Kconfig
-> +++ b/drivers/phy/mediatek/Kconfig
-> @@ -35,3 +35,10 @@ config PHY_MTK_XSPHY
->  	  Enable this to support the SuperSpeedPlus XS-PHY transceiver for
->  	  USB3.1 GEN2 controllers on MediaTek chips. The driver supports
->  	  multiple USB2.0, USB3.1 GEN2 ports.
-> +
-> +config PHY_MTK_HDMI
-> +    tristate "MediaTek HDMI-PHY Driver"
-> +    depends on ARCH_MEDIATEK && OF
-> +    select GENERIC_PHY
-> +    help
-> +          Enable this to support HDMI-PHY
-> diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Makefile
-> index 08a8e6a97b1e..cda074c53235 100644
-> --- a/drivers/phy/mediatek/Makefile
-> +++ b/drivers/phy/mediatek/Makefile
-> @@ -6,3 +6,10 @@
->  obj-$(CONFIG_PHY_MTK_TPHY)		+= phy-mtk-tphy.o
->  obj-$(CONFIG_PHY_MTK_UFS)		+= phy-mtk-ufs.o
->  obj-$(CONFIG_PHY_MTK_XSPHY)		+= phy-mtk-xsphy.o
-> +
-> +phy-mtk-hdmi-drv-objs := phy-mtk-hdmi.o \
-> +			 phy-mtk-hdmi-mt2701.o \
-> +			 phy-mtk-hdmi-mt8173.o
-> +
-> +obj-$(CONFIG_PHY_MTK_HDMI) += phy-mtk-hdmi-drv.o
-> +
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> similarity index 99%
-> rename from drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> rename to drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> index 99fe05cd3598..a6cb1dea3d0c 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> +++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> @@ -4,7 +4,7 @@
->   * Author: Chunhui Dai <chunhui.dai@mediatek.com>
->   */
->  
-> -#include "mtk_hdmi_phy.h"
-> +#include "phy-mtk-hdmi.h"
->  
->  #define HDMI_CON0	0x00
->  #define RG_HDMITX_DRV_IBIAS		0
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> similarity index 99%
-> rename from drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> rename to drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> index b55f51675205..3521c4893c53 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> +++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> @@ -4,7 +4,7 @@
->   * Author: Jie Qiu <jie.qiu@mediatek.com>
->   */
->  
-> -#include "mtk_hdmi_phy.h"
-> +#include "phy-mtk-hdmi.h"
->  
->  #define HDMI_CON0		0x00
->  #define RG_HDMITX_PLL_EN		BIT(31)
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/phy/mediatek/phy-mtk-hdmi.c
-> similarity index 99%
-> rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> rename to drivers/phy/mediatek/phy-mtk-hdmi.c
-> index fe022acddbef..8fc83f01a720 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> +++ b/drivers/phy/mediatek/phy-mtk-hdmi.c
-> @@ -4,7 +4,7 @@
->   * Author: Jie Qiu <jie.qiu@mediatek.com>
->   */
->  
-> -#include "mtk_hdmi_phy.h"
-> +#include "phy-mtk-hdmi.h"
->  
->  static int mtk_hdmi_phy_power_on(struct phy *phy);
->  static int mtk_hdmi_phy_power_off(struct phy *phy);
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/phy/mediatek/phy-mtk-hdmi.h
-> similarity index 100%
-> rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> rename to drivers/phy/mediatek/phy-mtk-hdmi.h
-> 
-
+T24gTW9uLCAyMDIwLTAzLTMwIGF0IDE4OjQxICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGlu
+dXggYWRtaW4gd3JvdGU6DQo+IE9uIE1vbiwgTWFyIDMwLCAyMDIwIGF0IDEwOjMzOjAzQU0gLTA3
+MDAsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6DQo+ID4gDQo+ID4gT24gMy8yOS8yMDIwIDEwOjI2
+IFBNLCBPbGVrc2lqIFJlbXBlbCB3cm90ZToNCj4gPiA+IEhpIEFuZHJldywNCj4gPiA+IA0KPiA+
+ID4gT24gU3VuLCBNYXIgMjksIDIwMjAgYXQgMDU6MDg6NTRQTSArMDIwMCwgQW5kcmV3IEx1bm4g
+d3JvdGU6DQo+ID4gPiA+IE9uIFN1biwgTWFyIDI5LCAyMDIwIGF0IDAxOjA0OjU3UE0gKzAyMDAs
+IE9sZWtzaWogUmVtcGVsIHdyb3RlOg0KPiA+ID4gPiANCj4gPiA+ID4gSGkgT2xla3Npag0KPiA+
+ID4gPiANCj4gPiA+ID4gPiArY29uZmlnIERFUFJFQ0FURURfUEhZX0ZJWFVQUw0KPiA+ID4gPiA+
+ICsJYm9vbCAiRW5hYmxlIGRlcHJlY2F0ZWQgUEhZIGZpeHVwcyINCj4gPiA+ID4gPiArCWRlZmF1
+bHQgeQ0KPiA+ID4gPiA+ICsJLS0taGVscC0tLQ0KPiA+ID4gPiA+ICsJICBJbiB0aGUgZWFybHkg
+ZGF5cyBpdCB3YXMgY29tbW9uIHByYWN0aWNlIHRvIGNvbmZpZ3VyZQ0KPiA+ID4gPiA+IFBIWXMg
+YnkgYWRkaW5nIGENCj4gPiA+ID4gPiArCSAgcGh5X3JlZ2lzdGVyX2ZpeHVwKigpIGluIHRoZSBt
+YWNoaW5lIGNvZGUuIFRoaXMNCj4gPiA+ID4gPiBwcmFjdGljZSB0dXJuZWQgb3V0IHRvDQo+ID4g
+PiA+ID4gKwkgIGJlIHBvdGVudGlhbGx5IGRhbmdlcm91cywgYmVjYXVzZToNCj4gPiA+ID4gPiAr
+CSAgLSBpdCBhZmZlY3RzIGFsbCBQSFlzIGluIHRoZSBzeXN0ZW0NCj4gPiA+ID4gPiArCSAgLSB0
+aGVzZSByZWdpc3RlciBjaGFuZ2VzIGFyZSB1c3VhbGx5IG5vdCBwcmVzZXJ2ZWQNCj4gPiA+ID4g
+PiBkdXJpbmcgUEhZIHJlc2V0DQo+ID4gPiA+ID4gKwkgICAgb3Igc3VzcGVuZC9yZXN1bWUgY3lj
+bGUuDQo+ID4gPiA+ID4gKwkgIC0gaXQgY29tcGxpY2F0ZXMgZGVidWdnaW5nLCBzaW5jZSB0aGVz
+ZSBjb25maWd1cmF0aW9uDQo+ID4gPiA+ID4gY2hhbmdlcyB3ZXJlIG5vdA0KPiA+ID4gPiA+ICsJ
+ICAgIGRvbmUgYnkgdGhlIGFjdHVhbCBQSFkgZHJpdmVyLg0KPiA+ID4gPiA+ICsJICBUaGlzIG9w
+dGlvbiBhbGxvd3MgdG8gZGlzYWJsZSBhbGwgZml4dXBzIHdoaWNoIGFyZQ0KPiA+ID4gPiA+IGlk
+ZW50aWZpZWQgYXMNCj4gPiA+ID4gPiArCSAgcG90ZW50aWFsbHkgaGFybWZ1bCBhbmQgZ2l2ZSB0
+aGUgZGV2ZWxvcGVycyBhIGNoYW5jZQ0KPiA+ID4gPiA+IHRvIGltcGxlbWVudCB0aGUNCj4gPiA+
+ID4gPiArCSAgcHJvcGVyIGNvbmZpZ3VyYXRpb24gdmlhIHRoZSBkZXZpY2UgdHJlZSAoZS5nLjog
+cGh5LQ0KPiA+ID4gPiA+IG1vZGUpIGFuZC9vciB0aGUNCj4gPiA+ID4gPiArCSAgcmVsYXRlZCBQ
+SFkgZHJpdmVycy4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoaXMgYXBwZWFycyB0byBiZSBhbiBJTVgg
+b25seSBwcm9ibGVtLiBFdmVyeWJvZHkgZWxzZSBzZWVtcyB0bw0KPiA+ID4gPiBvZiBnb3QNCj4g
+PiA+ID4gdGhpcyByaWdodC4gVGhlcmUgaXMgbm8gbmVlZCB0byBib3RoZXIgZXZlcnlib2R5IHdp
+dGggdGhpcyBuZXcNCj4gPiA+ID4gb3B0aW9uLiBQbGVhc2UgcHV0IHRoaXMgaW4gYXJjaC9hcm0v
+bWFjaC1teHMvS2NvbmZpZyBhbmQgaGF2ZQ0KPiA+ID4gPiBJTVggaW4NCj4gPiA+ID4gdGhlIG5h
+bWUuDQo+ID4gPiANCj4gPiA+IEFjdHVhbGx5LCBhbGwgZml4dXBzIHNlZW1zIHRvIGRvIHdyaW5n
+IHRoaW5nOg0KPiA+ID4gYXJjaC9hcm0vbWFjaC1kYXZpbmNpL2JvYXJkLWRtNjQ0eC1ldm0uYzo5
+MTU6CQlwaHlfcmVnaQ0KPiA+ID4gc3Rlcl9maXh1cF9mb3JfdWlkKExYVDk3MV9QSFlfSUQsIExY
+VDk3MV9QSFlfTUFTSywNCj4gPiA+IA0KPiA+ID4gSW5jcmVhc2VkIE1JSSBkcml2ZSBzdHJlbmd0
+aC4gU2hvdWxkIGJlIHByb2JhYmx5IGVuYWJsZWQgYnkgdGhlDQo+ID4gPiBQSFkNCj4gPiA+IGRy
+aXZlci4NCj4gPiA+IA0KPiA+ID4gYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2cS5jOjE2NzoJ
+CXBoeV9yZWdpc3Rlcl9maXgNCj4gPiA+IHVwX2Zvcl91aWQoUEhZX0lEX0tTWjkwMjEsIE1JQ1JF
+TF9QSFlfSURfTUFTSywNCj4gPiA+IGFyY2gvYXJtL21hY2gtaW14L21hY2gtaW14NnEuYzoxNjk6
+CQlwaHlfcmVnaXN0ZXJfZml4DQo+ID4gPiB1cF9mb3JfdWlkKFBIWV9JRF9LU1o5MDMxLCBNSUNS
+RUxfUEhZX0lEX01BU0ssDQo+ID4gPiBhcmNoL2FybS9tYWNoLWlteC9tYWNoLWlteDZxLmM6MTcx
+OgkJcGh5X3JlZ2lzdGVyX2ZpeA0KPiA+ID4gdXBfZm9yX3VpZChQSFlfSURfQVI4MDMxLCAweGZm
+ZmZmZmVmLA0KPiA+ID4gYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2cS5jOjE3MzoJCXBoeV9y
+ZWdpc3Rlcl9maXgNCj4gPiA+IHVwX2Zvcl91aWQoUEhZX0lEX0FSODAzNSwgMHhmZmZmZmZlZiwN
+Cj4gDQo+IEFzIGZhciBhcyBJJ20gY29uY2VybmVkLCB0aGUgQVI4MDM1IGZpeHVwIGlzIHRoZXJl
+IHdpdGggZ29vZCByZWFzb24uDQo+IEl0J3Mgbm90IGp1c3QgInJhbmRvbSIgYnV0IGlzIHJlcXVp
+cmVkIHRvIG1ha2UgdGhlIEFSODAzNSB1c2FibGUgd2l0aA0KPiB0aGUgaU1YNiBTb0NzLiAgTm90
+IGJlY2F1c2Ugb2YgYSBib2FyZCBsZXZlbCB0aGluZywgYnV0IGJlY2F1c2UgaXQncw0KPiByZXF1
+aXJlZCBmb3IgdGhlIEFSODAzNSB0byBiZSB1c2FibGUgd2l0aCBhbiBpTVg2IFNvQy4NCj4gDQo+
+IFNvLCBoYXZpbmcgaXQgcmVnaXN0ZXJlZCBieSB0aGUgaU1YNiBTb0MgY29kZSBpcyBlbnRpcmVs
+eSBsb2dpY2FsIGFuZA0KPiBjb3JyZWN0Lg0KPiANCj4gVGhhdCdzIGxpa2VseSB0cnVlIG9mIHRo
+ZSBBUjgwMzEgc2l0dWF0aW9uIGFzIHdlbGwuDQo+IA0KPiBJIGNhbid0IHNwZWFrIGZvciBhbnkg
+b2YgdGhlIG90aGVycy4NCg0KSSBjYW4gc3BlYWsgZm9yIHRoZSBLU1o5MDMxL0tTWjkwMjEgZm9y
+IHRob3NlIFBIWXMgdGhlIGZpeHVwIGlzIHNvbGVseQ0KdG8gYWRkIHRoZSBUWEMgZGVsYXkgdGhh
+dCwgYWNjb3JkaW5nIHRvIFJHTUlJIHYxLjMgc3BlYyBzaG91bGQgaGF2ZSBiZWVuDQpkb25lIGJ5
+IGhhcmR3YXJlLCBhbmQgYXMgaS5NWDYgYXMgd2VsbCBhcyB0aG9zZSBQSFlzIGRvIG5vdCBoYXZl
+IGENCnNwZWNpZmljIHJlZ2lzdGVyIHRvIGFkZCB0aGF0IGRlbGF5LCB0aGUgc2tldyBnZXQgc2V0
+IHNvIHRoZSB0aW1pbmcgaXMNCndvcmtpbmcgc29tZWhvdyB3aXRoIHRoZSBpLk1YNiBwcm9jZXNz
+b3IuDQoNCkknbSBmaW5lIHdoZW4geW91IHdhbnQgdG8gcmVtb3ZlIHRob3NlIGZpeHVwcy4gUGxl
+YXNlIENDIG1lIGJlY2F1c2UNCndlJ3JlIHJlbHlpbmcgb24gdGhvc2UgYXQgdGhlIG1vbWVudC4g
+SSB3b3VsZCBqdXN0IHB1dCB0aGVtIGludG8NCmRldmljZXRyZWUuDQoNClBoaWxpcHBlDQo=
