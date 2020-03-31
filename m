@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD80CC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA28C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C53F20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552F72072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645924;
-	bh=NeubGs2Kg9duRgrqga3UHI//e9k9vjc8bZ8Y4TZt8vM=;
+	s=default; t=1585645932;
+	bh=gD6t3oz/Bnkm3v+I+eFaQsz569OQ/YgUwl2kZxVodm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mOPw8uOghTKgMlZtNdonc0/69oEGmHoV8bsNqGfE2lThddnZofjkg1FA0L6kZA39+
-	 29ql2UtAHYkurGCWQDvUQGSysTuEmnnDD2TUd70cbrGAEibsijlG3IyvuAtT9bhd89
-	 tkG8gV3Zo8BO7Wf77vCiuaetv7yDlKKKxs//mwjo=
+	b=Z2jOv5yyennqROXwDwzKhlwJ1jJHroSASM1JUrw+FskBk4kbuBjeDX+GI/0LVDlio
+	 aGmb+eFOasEH28AlHJghN2VFIVdh1ReGoK6JFI9W+LWXawcseY5PE5R3pNjCMpqyXW
+	 9ow4AyGKZiTFW28D7qBhOfsY9Me1b8EifvtDc2jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbgCaJMD (ORCPT
+        id S1731614AbgCaJML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57628 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:12:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731130AbgCaJL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:11:59 -0400
+        id S1730642AbgCaJMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:12:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B47920675;
-        Tue, 31 Mar 2020 09:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A188320772;
+        Tue, 31 Mar 2020 09:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645918;
-        bh=NeubGs2Kg9duRgrqga3UHI//e9k9vjc8bZ8Y4TZt8vM=;
+        s=default; t=1585645926;
+        bh=gD6t3oz/Bnkm3v+I+eFaQsz569OQ/YgUwl2kZxVodm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wnlqZ+dtWUP+SngBzlZhn05yZ8iNKSRpzqENPHX+8O3gg5adOujSzWA2GabUgMbJA
-         uahl9xzxz3A3XDquDK0AiOMmpTp9EvDEwe3hboaMoxsXai2389k10IzzNaADWdOgc2
-         bLxMfCC+Phi1l/Ax5+FFFpmPk1ZnB9dHcChLut/A=
+        b=f4IPg2i3F57UDtJnYaNuN9Kj/Mhg59s4n3YoXWC9+wP4YFjdDaxA8x42x5pEfvktX
+         fo3Sj/8JjvEWv3lDVL7eAB10tfEMjnVTJgUVhRS4a8c8CJJEDTbAW12IIWAKh4urp/
+         IrQ2rdLTemYeL6n+GYfpxwLchbRkxHKzANoiaLHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Florian Westphal <fw@strlen.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 034/155] slcan: not call free_netdev before rtnl_unlock in slcan_open
-Date:   Tue, 31 Mar 2020 10:57:54 +0200
-Message-Id: <20200331085422.232711172@linuxfoundation.org>
+Subject: [PATCH 5.4 035/155] tcp: also NULL skb->dev when copy was needed
+Date:   Tue, 31 Mar 2020 10:57:55 +0200
+Message-Id: <20200331085422.335257079@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Hartkopp <socketcan@hartkopp.net>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 2091a3d42b4f339eaeed11228e0cbe9d4f92f558 ]
+[ Upstream commit 07f8e4d0fddbf2f87e4cefb551278abc38db8cdd ]
 
-As the description before netdev_run_todo, we cannot call free_netdev
-before rtnl_unlock, fix it by reorder the code.
+In rare cases retransmit logic will make a full skb copy, which will not
+trigger the zeroing added in recent change
+b738a185beaa ("tcp: ensure skb->dev is NULL before leaving TCP stack").
 
-This patch is a 1:1 copy of upstream slip.c commit f596c87005f7
-("slip: not call free_netdev before rtnl_unlock in slip_open").
-
-Reported-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Fixes: 75c119afe14f ("tcp: implement rb-tree based retransmit queue")
+Fixes: 28f8bfd1ac94 ("netfilter: Support iif matches in POSTROUTING")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/slcan.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv4/tcp_output.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -625,7 +625,10 @@ err_free_chan:
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
- 	slc_free_netdev(sl->dev);
-+	/* do not call free_netdev before rtnl_unlock */
-+	rtnl_unlock();
- 	free_netdev(sl->dev);
-+	return err;
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -2976,8 +2976,12 @@ int __tcp_retransmit_skb(struct sock *sk
  
- err_exit:
- 	rtnl_unlock();
+ 		tcp_skb_tsorted_save(skb) {
+ 			nskb = __pskb_copy(skb, MAX_TCP_HEADER, GFP_ATOMIC);
+-			err = nskb ? tcp_transmit_skb(sk, nskb, 0, GFP_ATOMIC) :
+-				     -ENOBUFS;
++			if (nskb) {
++				nskb->dev = NULL;
++				err = tcp_transmit_skb(sk, nskb, 0, GFP_ATOMIC);
++			} else {
++				err = -ENOBUFS;
++			}
+ 		} tcp_skb_tsorted_restore(skb);
+ 
+ 		if (!err) {
 
 
