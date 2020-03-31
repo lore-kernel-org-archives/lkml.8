@@ -6,67 +6,68 @@ X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B087C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66430C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D50320784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B5C2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585614320;
-	bh=kGpv+gTotwsEWUxJEDSu0IRGbFxdSuFup9aSkxmXTQU=;
+	s=default; t=1585614326;
+	bh=iw7Z0AIQsg2l4FInJKgHqE43QtRw5KyJL/+lQ4I2eC8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=VQjJYT6q1F5mtiVwY9KH9/DQJh1eq1pdztyGEwz98P98f/9ZzcUWeRAMWCHC33n2k
-	 ye+JWkpumkiNoR/CMRSjy4oO/rtWBruJd/5ME6G+WNgEYOfZdTlIKmlN/GnPBxqraJ
-	 WzlxX7gLzRfnCE4ka65+EhxevlkzqtYosgqs+wRA=
+	b=cCzsd/zytiezYPt2CjosQrKNae6mOWbf9ddP01unZ3J5M2fyHFmCSMKQlJKo84vnK
+	 /TnByridFE7tJymLhrEThFlb0trvOvUyLvGe930xlN2znaDSIundFqwTJKULX1FzVX
+	 cdK3ALLc3a7Uyysn59WZfTGjVXhnN8JOiGekRL8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgCaAZR (ORCPT
+        id S1729866AbgCaAZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        Mon, 30 Mar 2020 20:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbgCaAZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:25:12 -0400
-Subject: Re: [GIT PULL] perf changes for v5.7
+        id S1729648AbgCaAZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 20:25:13 -0400
+Subject: Re: [GIT PULL] scheduler changes for v5.7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1585614312;
-        bh=kGpv+gTotwsEWUxJEDSu0IRGbFxdSuFup9aSkxmXTQU=;
+        bh=iw7Z0AIQsg2l4FInJKgHqE43QtRw5KyJL/+lQ4I2eC8=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=blqlPfCGNUai8wfbuFiMlirQ5P5xRVogeFqRN9eentAw3tvFsNoyY4kxJRujvFuUo
-         daATAiJ+SXtteNb4zQgdWtvF125cRpaCioRmOSVeP/e8X27tbKf8r1p0JAOC2b/2xr
-         Lnic3jxLYgWD4w6ghjuib5WHrLKVUc5ItuLvdbYg=
+        b=WnTQ0KBhIzzVNgKAfAYCTJpvUxYpK3K+9Wmc9sKHmGbLCUoiYRL0D+sCUbriEAKy9
+         ncP0c7aNpv3qdlWOxVx14LOZ6ZPkJBRQzoDYN8Y7ujRtW+xxycCgvKOHT8y9Q7NOj0
+         poRoAv2OuHln6YklhtDAiKjB95jogj5KlX100mvs=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200330170252.GA125774@gmail.com>
-References: <20200330170252.GA125774@gmail.com>
+In-Reply-To: <20200330173159.GA128106@gmail.com>
+References: <20200330173159.GA128106@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200330170252.GA125774@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-for-linus
-X-PR-Tracked-Commit-Id: 629b3df7ecb01fddfdf71cb5d3c563d143117c33
+X-PR-Tracked-Message-Id: <20200330173159.GA128106@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ sched-core-for-linus
+X-PR-Tracked-Commit-Id: 313f16e2e35abb833eab5bdebc6ae30699adca18
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9b82f05f869a823d43ea4186f5f732f2924d3693
-Message-Id: <158561431236.380.6138358059255642016.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 642e53ead6aea8740a219ede509a5d138fd4f780
+Message-Id: <158561431275.380.11330233809755788411.pr-tracker-bot@kernel.org>
 Date:   Tue, 31 Mar 2020 00:25:12 +0000
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Juri Lelli <juri.lelli@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 30 Mar 2020 19:02:52 +0200:
+The pull request you sent on Mon, 30 Mar 2020 19:31:59 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9b82f05f869a823d43ea4186f5f732f2924d3693
+https://git.kernel.org/torvalds/c/642e53ead6aea8740a219ede509a5d138fd4f780
 
 Thank you!
 
