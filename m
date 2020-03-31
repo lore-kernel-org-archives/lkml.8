@@ -2,98 +2,153 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155EAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D49E2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED1F2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:15:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FFfCDXSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgCaFOd (ORCPT
+        id S1726483AbgCaFPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:14:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:21215 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgCaFOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:14:33 -0400
-IronPort-SDR: UlaoPy7Xjg/gIAfF1gLPV0KSEolyij5PYB6hspiukSBz4zC78uSrz3pIv1+LTX0qwyZlWR2o+l
- OcOjOsdQMBbw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 22:14:32 -0700
-IronPort-SDR: pyOGj4JMFVgH9bKXmJht5P4G1rabdEzJO4CIyab0A0KBv4odf4m89mpUPjSkas2aWwI96II+Sg
- RdpHozv1p8Wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="294822776"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 22:14:30 -0700
-Date:   Tue, 31 Mar 2020 13:13:51 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Dirk Mueller <dmueller@suse.com>, kbuild-all@lists.01.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [kbuild-all] ld.lld: error:
- drivers/staging/gdm724x/gdm_usb.o:(.rodata.str1.1): offset is outside the
- section
-Message-ID: <20200331051351.GA13302@intel.com>
-References: <202003311137.1kHCgonh%lkp@intel.com>
+        Tue, 31 Mar 2020 01:15:45 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:50144 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726299AbgCaFPo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 01:15:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585631743; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=dA6bvcGTput8Imgq5d/DRsbXCLiTBtRU6iE8eOYQx5I=; b=FFfCDXSd0Mo09G1/heQ3ETv+g9k4k9lKu3DCXhoxLKzjweIyAOo+2DydAijyzug5HbWC7IwP
+ jCWyIz4llkgk7DOxU//jGPssgrBWNaQAChEHQO8YcZH4TYIV1Aqopi8GuWqIeoorKR9v0jnZ
+ kdQwsEBOuxESB/T/bD2S89I6kfk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e82d1f5.7f8b463fa110-smtp-out-n01;
+ Tue, 31 Mar 2020 05:15:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 13A95C433F2; Tue, 31 Mar 2020 05:15:32 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A93B5C433D2;
+        Tue, 31 Mar 2020 05:15:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A93B5C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     Felipe Balbi <balbi@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
+ <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
+ <20200329171756.GA199755@google.com> <87h7y62r28.fsf@kernel.org>
+ <20200330155038.GC199755@google.com> <87zhbx1q6q.fsf@kernel.org>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
+Date:   Tue, 31 Mar 2020 10:45:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003311137.1kHCgonh%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87zhbx1q6q.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:14:40AM +0800, kbuild test robot wrote:
-> Hi Dirk,
-> 
-> First bad commit (maybe != root cause):
-Sorry Dirk, kindly ignore this, it was explained in early email loop
-regarding another report.
+Hi,
 
-[kbuild-all] ld.lld: error: drivers/staging/rtl8192e/rtllib_wx.o:(.rodata.str1.1): offset is outside the section
+On 3/31/2020 3:05 AM, Felipe Balbi wrote:
+> Hi,
+>
+> Matthias Kaehlcke <mka@chromium.org> writes:
+>>> Matthias Kaehlcke <mka@chromium.org> writes:
+>>>>> Add interconnect support in dwc3-qcom driver to vote for bus
+>>>>> bandwidth.
+>>>>>
+>>>>> This requires for two different paths - from USB master to
+>>>>> DDR slave. The other is from APPS master to USB slave.
+>>>>>
+>>>>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>>>>> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+>>>>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>>>>> ---
+>>>>>   drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
+>>>>>   1 file changed, 126 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>> index 1dfd024..7e85fe6 100644
+>>>>> --- a/drivers/usb/dwc3/dwc3-qcom.c
+>>>>> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>>>>>
+>>>>> ...
+>>>>>
+>>>>> +/* To disable an interconnect, we just set its bandwidth to 0 */
+>>>>> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+>>>>> +{
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+>>>>> +	if (ret)
+>>>>> +		goto err_reenable_memory_path;
+>>>>> +
+>>>>> +	return 0;
+>>>>> +
+>>>>> +	/* Re-enable things in the event of an error */
+>>>>> +err_reenable_memory_path:
+>>>>> +	ret = dwc3_qcom_interconnect_enable(qcom);
+>>>> This overwrites the error that led to the execution of this code path.
+>>>> The function should return original error, not the result of the
+>>>> _interconnect_enable() call.
+>>>>
+>>>> I saw Felipe queued the patch for v5.8. I think the main options to fix this
+>>>> are:
+>>>>
+>>>> - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
+>>>>    anyway once there is a v5.7-rc)
+>>>> - send the fix as a separate patch
+>>>> - Felipe amends the patch in his tree
+>>>>
+>>>> Felipe, what would work best for you?
+>>> Let's go for a v6, which commits should I drop? I can't find anything
+>>> related to $subject in my queue:
+>>>
+>>> $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
+>>> 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>> I thought I saw a "queued for v5.8" message from you, but can't find that back.
+>> I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
+>> series and thought it was for this one. Sorry for the confusion.
+> no worries :-)
+>
+Should I remove the ret from below line and send a new version?
++	ret = dwc3_qcom_interconnect_enable(qcom);
 
-We will update 0-day ci build to avoid this.
-
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   2ce94bc4e056d3e48291aac87a95ebd2a86348ba
-> commit: e33a814e772cdc36436c8c188d8c42d019fda639 scripts/dtc: Remove redundant YYLOC global declaration
-> date:   4 days ago
-> config: arm-allyesconfig (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project b4695351cb4ce1c4450a029a0c226dc8bb5f5d55)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout e33a814e772cdc36436c8c188d8c42d019fda639
->         # save the attached .config to linux build tree
->         COMPILER=clang make.cross ARCH=arm 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    ld.lld: error: drivers/staging/gdm724x/netlink_k.o:(.rodata.str1.1): offset is outside the section
-> >> ld.lld: error: drivers/staging/gdm724x/gdm_usb.o:(.rodata.str1.1): offset is outside the section
->    ld.lld: error: drivers/staging/gdm724x/gdm_lte.o:(.rodata.str1.1): offset is outside the section
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
-
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
