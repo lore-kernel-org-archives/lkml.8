@@ -2,321 +2,146 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E449C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978C4C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34A6320714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BE721973
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="crWryM9q"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="naBdxTbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731496AbgCaWo7 (ORCPT
+        id S1731400AbgCaWst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:44:59 -0400
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:48771 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaWo6 (ORCPT
+        Tue, 31 Mar 2020 18:48:49 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35370 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731259AbgCaWst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:44:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1585694698;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Chq5sFXca5uPXf4ffaxBj2vrDSl/FVyiOW1Nsm4T2fo=;
-  b=crWryM9qL2ctaTRsxllkGp0hcrycByKsL+Kb53nZiezN786qyGJ7G1vQ
-   7rLfzAR33nGaj0EvMzoofacofEuOpnQ/775uZgvLlYTJMTC4U701dZ9uV
-   KsSuWYiQTDHsAyKicMKfVZNyblWvQpk5dFo7GBIvuUUoe3/WOf/1fIQxh
-   s=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: NAsrma9tTEcl7LEQG8wF+MJQy+sbYhN4aIQmAw3bzH5irOH8CuvS5tQcv70dVtPgJ/eOeWFMgK
- 0GVskZU5r8VQSj4fze7AD4mXtBB1OO3nUUzuA6IfIIHfPAZ3UzuYlYJfuQ2D6KMqh29JkyIGU/
- zvPJw9VyuEYO8jQ/K+5iLLbmuWxti+Bdjjdqw40KUOk58Jio/4asewt8lumNae23CVmvIftXjj
- CAM7XEb1/RnahfwT8qG2CssS7ipQ4sgDYuEkc5G2ptWC3xQn5TOqGdCax5jvpkky2k+k5n6r3C
- un8=
-X-SBRS: 2.7
-X-MesageID: 15185279
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.72,329,1580792400"; 
-   d="scan'208";a="15185279"
-Subject: Re: [PATCH v2] x86/smpboot: Remove 486-isms from the modern AP boot
- path
-To:     Brian Gerst <brgerst@gmail.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Josh Boyer <jwboyer@redhat.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        <jailhouse-dev@googlegroups.com>
-References: <20200325101431.12341-1-andrew.cooper3@citrix.com>
- <20200331175810.30204-1-andrew.cooper3@citrix.com>
- <CAMzpN2i6Nf0VDZ82mXyFixN879FC4eZfqe-LzWGkvygcz1gH_Q@mail.gmail.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <c46bcb6d-4256-2d65-9cd9-33e010846de4@citrix.com>
-Date:   Tue, 31 Mar 2020 23:44:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAMzpN2i6Nf0VDZ82mXyFixN879FC4eZfqe-LzWGkvygcz1gH_Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+        Tue, 31 Mar 2020 18:48:49 -0400
+Received: by mail-pj1-f68.google.com with SMTP id g9so1777982pjp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=PzUxe8ko8vz1S1g23peXxZLjPYDb7Lz9ppyXcN8eAuw=;
+        b=naBdxTbYLPllr28JdItkaY0txWH0NLxTtGo3sh2eGsw+cz3uQyPl0Rsi5YuCe3zC3n
+         /LjqrIyB3giSCzTCcFxs5fgLLyqdBLvBw5eADih+f0RBO5P7a/Y1gptbORl9Fw4GpXM/
+         HGix4fz7zBuR/ljJV/EGs+BpM9ME0/2894ssYuRyFcc8JUpk3snOJRGxCEG6mF0aw5/l
+         l0d1UAXbQtMLcJczthPZbiwElkHwkbF6yJMAvN1WTWD8cbLpuB1Yt1geMxMslVzr+c8j
+         Oky0l46dkr+bnWjx6KSXfhPvrD+CN7pXrLHIv3NYoDxCd41QZjC6x7fVv5R8+lVD8nx6
+         QriA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PzUxe8ko8vz1S1g23peXxZLjPYDb7Lz9ppyXcN8eAuw=;
+        b=jOdlFPwSCEJaX0vk2ayqM1FRU1GnYuZuOmo20Wk3srJxFYMvqAj3UmuUbCC/rfz1Sa
+         O8Uk2uqLA7X7nhNrsqPwvFvbTmrj7HIzB6vrE9xaBwtIa2Fb2XdAQZzC61chT4d2AlrY
+         aYkl8lM53jYyO0/hAG0fk07c/J2ZL/e8ccVaaYRkC5R5EuM2D/UTaibRMuKMP9afFar5
+         CwjBPpzncm2k+JRQSSp3u14ewCSdEwYnBJ4tzDJ6wGpDKK4WZUJWu8PXg8bkKA6AR2Tc
+         OuTcz6T/ZQuVlJH5oAktOEotD63MhB101bpCc7eJHSPZ9iUep7VcL85W72/2PHSQyYJR
+         D4aQ==
+X-Gm-Message-State: AGi0PuYgexUZ7nAiNMz27MXpCZ/zdGwJs/JSkcYln02JDWfprehYuCpv
+        rrEyWvcARO0LjtdIVwQwaWuCcoJrSlM=
+X-Google-Smtp-Source: APiQypJkW7S7TSzizhePr+uNfJv4g9bpFLpYHxkuFM8tDqrRgnbYrww+BeK6AofGL9Oa3dGYvTx6Ww==
+X-Received: by 2002:a17:902:8546:: with SMTP id d6mr9102382plo.280.1585694927175;
+        Tue, 31 Mar 2020 15:48:47 -0700 (PDT)
+Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
+        by smtp.gmail.com with ESMTPSA id k14sm158906pfg.15.2020.03.31.15.48.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 31 Mar 2020 15:48:46 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
+        bhelgaas@google.com, kishon@ti.com, paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH v2] PCI: dwc: Warn MEM resource size exceeds max for 32-bits
+Date:   Tue, 31 Mar 2020 15:48:35 -0700
+Message-Id: <1585694915-32005-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/03/2020 23:23, Brian Gerst wrote:
-> On Tue, Mar 31, 2020 at 1:59 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->> Linux has an implementation of the Universal Start-up Algorithm (MP spec,
->> Appendix B.4, Application Processor Startup), which includes unconditionally
->> writing to the Bios Data Area and CMOS registers.
->>
->> The warm reset vector is only necessary in the non-integrated Local APIC case.
->> UV and Jailhouse already have an opt-out for this behaviour, but blindly using
->> the BDA and CMOS on a UEFI or other reduced hardware system isn't clever.
->>
->> We could make this conditional on the integrated-ness of the Local APIC, but
->> 486-era SMP isn't supported.  Drop the logic completely, tidying up the includ
->> list and header files as appropriate.
->>
->> CC: Thomas Gleixner <tglx@linutronix.de>
->> CC: Ingo Molnar <mingo@redhat.com>
->> CC: Borislav Petkov <bp@alien8.de>
->> CC: "H. Peter Anvin" <hpa@zytor.com>
->> CC: x86@kernel.org
->> CC: Jan Kiszka <jan.kiszka@siemens.com>
->> CC: James Morris <jmorris@namei.org>
->> CC: David Howells <dhowells@redhat.com>
->> CC: Andrew Cooper <andrew.cooper3@citrix.com>
->> CC: Matthew Garrett <mjg59@google.com>
->> CC: Josh Boyer <jwboyer@redhat.com>
->> CC: Steve Wahl <steve.wahl@hpe.com>
->> CC: Mike Travis <mike.travis@hpe.com>
->> CC: Dimitri Sivanich <dimitri.sivanich@hpe.com>
->> CC: Arnd Bergmann <arnd@arndb.de>
->> CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
->> CC: Giovanni Gherdovich <ggherdovich@suse.cz>
->> CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->> CC: Len Brown <len.brown@intel.com>
->> CC: Kees Cook <keescook@chromium.org>
->> CC: Martin Molnar <martin.molnar.programming@gmail.com>
->> CC: Pingfan Liu <kernelfans@gmail.com>
->> CC: linux-kernel@vger.kernel.org
->> CC: jailhouse-dev@googlegroups.com
->> Suggested-by: "H. Peter Anvin" <hpa@zytor.com>
->> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
->> ---
->> v2:
->>  * Drop logic entirely, rather than retaining support in 32bit builds.
->> ---
->>  arch/x86/include/asm/apic.h        |  6 -----
->>  arch/x86/include/asm/x86_init.h    |  1 -
->>  arch/x86/kernel/apic/x2apic_uv_x.c |  1 -
->>  arch/x86/kernel/jailhouse.c        |  1 -
->>  arch/x86/kernel/platform-quirks.c  |  1 -
->>  arch/x86/kernel/smpboot.c          | 50 --------------------------------------
->>  6 files changed, 60 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
->> index 19e94af9cc5d..5c33f9374b28 100644
->> --- a/arch/x86/include/asm/apic.h
->> +++ b/arch/x86/include/asm/apic.h
->> @@ -472,12 +472,6 @@ static inline unsigned default_get_apic_id(unsigned long x)
->>                 return (x >> 24) & 0x0F;
->>  }
->>
->> -/*
->> - * Warm reset vector position:
->> - */
->> -#define TRAMPOLINE_PHYS_LOW            0x467
->> -#define TRAMPOLINE_PHYS_HIGH           0x469
->> -
->>  extern void generic_bigsmp_probe(void);
->>
->>  #ifdef CONFIG_X86_LOCAL_APIC
->> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
->> index 96d9cd208610..006a5d7fd7eb 100644
->> --- a/arch/x86/include/asm/x86_init.h
->> +++ b/arch/x86/include/asm/x86_init.h
->> @@ -229,7 +229,6 @@ enum x86_legacy_i8042_state {
->>  struct x86_legacy_features {
->>         enum x86_legacy_i8042_state i8042;
->>         int rtc;
->> -       int warm_reset;
->>         int no_vga;
->>         int reserve_bios_regions;
->>         struct x86_legacy_devices devices;
->> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
->> index ad53b2abc859..5afcfd193592 100644
->> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
->> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
->> @@ -343,7 +343,6 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
->>         } else if (!strcmp(oem_table_id, "UVH")) {
->>                 /* Only UV1 systems: */
->>                 uv_system_type = UV_NON_UNIQUE_APIC;
->> -               x86_platform.legacy.warm_reset = 0;
->>                 __this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
->>                 uv_set_apicid_hibit();
->>                 uv_apic = 1;
->> diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
->> index 6eb8b50ea07e..d628fe92d6af 100644
->> --- a/arch/x86/kernel/jailhouse.c
->> +++ b/arch/x86/kernel/jailhouse.c
->> @@ -210,7 +210,6 @@ static void __init jailhouse_init_platform(void)
->>         x86_platform.calibrate_tsc      = jailhouse_get_tsc;
->>         x86_platform.get_wallclock      = jailhouse_get_wallclock;
->>         x86_platform.legacy.rtc         = 0;
->> -       x86_platform.legacy.warm_reset  = 0;
->>         x86_platform.legacy.i8042       = X86_LEGACY_I8042_PLATFORM_ABSENT;
->>
->>         legacy_pic                      = &null_legacy_pic;
->> diff --git a/arch/x86/kernel/platform-quirks.c b/arch/x86/kernel/platform-quirks.c
->> index b348a672f71d..d922c5e0c678 100644
->> --- a/arch/x86/kernel/platform-quirks.c
->> +++ b/arch/x86/kernel/platform-quirks.c
->> @@ -9,7 +9,6 @@ void __init x86_early_init_platform_quirks(void)
->>  {
->>         x86_platform.legacy.i8042 = X86_LEGACY_I8042_EXPECTED_PRESENT;
->>         x86_platform.legacy.rtc = 1;
->> -       x86_platform.legacy.warm_reset = 1;
->>         x86_platform.legacy.reserve_bios_regions = 0;
->>         x86_platform.legacy.devices.pnpbios = 1;
->>
->> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
->> index fe3ab9632f3b..a9f5b511d0b4 100644
->> --- a/arch/x86/kernel/smpboot.c
->> +++ b/arch/x86/kernel/smpboot.c
->> @@ -72,7 +72,6 @@
->>  #include <asm/fpu/internal.h>
->>  #include <asm/setup.h>
->>  #include <asm/uv/uv.h>
->> -#include <linux/mc146818rtc.h>
->>  #include <asm/i8259.h>
->>  #include <asm/misc.h>
->>  #include <asm/qspinlock.h>
->> @@ -119,34 +118,6 @@ int arch_update_cpu_topology(void)
->>         return retval;
->>  }
->>
->> -static inline void smpboot_setup_warm_reset_vector(unsigned long start_eip)
->> -{
->> -       unsigned long flags;
->> -
->> -       spin_lock_irqsave(&rtc_lock, flags);
->> -       CMOS_WRITE(0xa, 0xf);
->> -       spin_unlock_irqrestore(&rtc_lock, flags);
->> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_HIGH)) =
->> -                                                       start_eip >> 4;
->> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) =
->> -                                                       start_eip & 0xf;
->> -}
->> -
->> -static inline void smpboot_restore_warm_reset_vector(void)
->> -{
->> -       unsigned long flags;
->> -
->> -       /*
->> -        * Paranoid:  Set warm reset code and vector here back
->> -        * to default values.
->> -        */
->> -       spin_lock_irqsave(&rtc_lock, flags);
->> -       CMOS_WRITE(0, 0xf);
->> -       spin_unlock_irqrestore(&rtc_lock, flags);
->> -
->> -       *((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
->> -}
->> -
->>  static void init_freq_invariance(void);
->>
->>  /*
->> @@ -1049,20 +1020,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
->>          * the targeted processor.
->>          */
->>
->> -       if (x86_platform.legacy.warm_reset) {
->> -
->> -               pr_debug("Setting warm reset code and vector.\n");
->> -
->> -               smpboot_setup_warm_reset_vector(start_ip);
->> -               /*
->> -                * Be paranoid about clearing APIC errors.
->> -               */
->> -               if (APIC_INTEGRATED(boot_cpu_apic_version)) {
->> -                       apic_write(APIC_ESR, 0);
->> -                       apic_read(APIC_ESR);
->> -               }
->> -       }
->> -
->>         /*
->>          * AP might wait on cpu_callout_mask in cpu_init() with
->>          * cpu_initialized_mask set if previous attempt to online
->> @@ -1118,13 +1075,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
->>                 }
->>         }
->>
->> -       if (x86_platform.legacy.warm_reset) {
->> -               /*
->> -                * Cleanup possible dangling ends...
->> -                */
->> -               smpboot_restore_warm_reset_vector();
->> -       }
->> -
->>         return boot_error;
->>  }
-> You removed x86_platform.legacy.warm_reset in the original patch, but
-> that is missing in V2.
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-Second hunk?  Or are you referring to something different?
+Output a warning for MEM resource size with non-zero upper 32-bits.
 
-~Andrew
+ATU programming functions limit the size of the translated region to 4GB
+by using a u32 size parameter. Function dw_pcie_prog_outbound_atu() does
+not program the upper 32-bit ATU limit register. These issues may result
+in undefined behavior for resource sizes with non-zero upper 32-bits.
+
+For example, a 128GB address space starting at physical CPU address of
+0x2000000000 with size of 0x2000000000 needs the following values
+programmed into the lower and upper 32-bit limit registers:
+ 0x3fffffff in the upper 32-bit limit register
+ 0xffffffff in the lower 32-bit limit register
+
+Currently, only the lower 32-bit limit register is programmed with a
+value of 0xffffffff but the upper 32-bit limit register is not being
+programmed. As a result, the upper 32-bit limit register remains at its
+default value after reset of 0x0.
+
+This would be a problem for a 128GB PCIe space because the internal
+calculation of the limit address in ATU programming functions in effect
+reduces the size to 4GB. This may also produce undefined behavior since
+the ATU limit address may be lower than the ATU base address.
+
+This limitation also means that multiple ATUs would need to be used to
+map larger regions.
+
+ATU programming functions may be changed to specify a u64 size parameter
+for the translated region. Along with this change, the internal
+calculation of the limit address, the address of the last byte in the
+translated region, needs to change such that both the lower 32-bit and
+upper 32-bit limit registers can be programmed correctly.
+
+Without change, this issue can go unnoticed. A warning may prompt the
+user to look for possible issues.
+
+Changing the ATU programming functions impacts all PCIe drivers that
+depend on dwc which seem to be currently happy with the u32 size limit.
+A solution that allows existing PCIe drivers to phase into the fix on
+their own individual schedules, if they need to, may be desirable.
+
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 395feb8ca051..df5ebe02ffca 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	struct pci_bus *child;
+ 	struct pci_host_bridge *bridge;
+ 	struct resource *cfg_res;
++	resource_size_t mem_size;
+ 	u32 hdr_type;
+ 	int ret;
+ 
+@@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		case IORESOURCE_MEM:
+ 			pp->mem = win->res;
+ 			pp->mem->name = "MEM";
+-			pp->mem_size = resource_size(pp->mem);
++			mem_size = resource_size(pp->mem);
++			if (upper_32_bits(mem_size))
++				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
++			pp->mem_size = mem_size;
+ 			pp->mem_bus_addr = pp->mem->start - win->offset;
+ 			break;
+ 		case 0:
+-- 
+2.7.4
+
