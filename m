@@ -2,348 +2,105 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E2AC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6DFC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A802145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44AA420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585670960;
+	bh=g+2oQeN73eEpy7w1yZdo/plA5ttpFIkMcxGJMp+J8EI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=br7oCMla+XD3OVATNg9AVubRdSXZsJbs4jE62c3cpZHOyoJaWrDeFvmBvazklNzl/
+	 rLIkY3RQzLkViHstMes7XsB67IdHN2aVlkU+70JHT8AzDQ9+CnufXKqCBzl8/DxHD6
+	 XlxHHGKaNCtUCV2Duqn/FMIENCHoXamhcEx7vXNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731232AbgCaQJH (ORCPT
+        id S1731246AbgCaQJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:09:07 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2624 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730562AbgCaQJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:09:07 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 4F75321FF23481335C12;
-        Tue, 31 Mar 2020 17:09:05 +0100 (IST)
-Received: from localhost (10.47.93.255) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 31 Mar
- 2020 17:09:04 +0100
-Date:   Tue, 31 Mar 2020 17:08:55 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 05/15] mm/damon: Adaptively adjust regions
-Message-ID: <20200331170855.0000024f@Huawei.com>
-In-Reply-To: <20200318112722.30143-6-sjpark@amazon.com>
-References: <20200318112722.30143-1-sjpark@amazon.com>
-        <20200318112722.30143-6-sjpark@amazon.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 31 Mar 2020 12:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730149AbgCaQJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:09:18 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA96206CC;
+        Tue, 31 Mar 2020 16:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585670958;
+        bh=g+2oQeN73eEpy7w1yZdo/plA5ttpFIkMcxGJMp+J8EI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XnVGAD3lzsW/4E34B1uA2eyIxvIa7GOt8B0+kyEBgjwDT22t1cnHQuB5Vs1zOl+ud
+         qTJq+rNCXthCe6JvZQWLss5ZQpIHi8Z5SFEE0glMC1UllBOaJsNvHwys5kXf2qOdGX
+         K5SAnY1zIZpQsP6p2nvqEpFRdELJHLRoIzo1ASQw=
+Date:   Tue, 31 Mar 2020 11:09:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v4] PCI: dwc: pci-dra7xx: Fix MSI IRQ handling
+Message-ID: <20200331160914.GA195472@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.93.255]
-X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zhbxv979.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 12:27:12 +0100
-SeongJae Park <sjpark@amazon.com> wrote:
-
-> From: SeongJae Park <sjpark@amazon.de>
+On Mon, Mar 30, 2020 at 11:12:10PM +0200, Thomas Gleixner wrote:
+> Bjorn Helgaas <helgaas@kernel.org> writes:
+> > On Fri, Mar 27, 2020 at 03:24:34PM +0530, Vignesh Raghavendra wrote:
+> >> Due an issue with PCIe wrapper around DWC PCIe IP on dra7xx, driver
+> >> needs to ensure that there are no pending MSI IRQ vector set (i.e
+> >> PCIE_MSI_INTR0_STATUS reads 0 at least once) before exiting IRQ handler.
+> >> Else, the dra7xx PCIe wrapper will not register new MSI IRQs even though
+> >> PCIE_MSI_INTR0_STATUS shows IRQs are pending.
+> >
+> > I'm not an IRQ guy (real IRQ guys CC'd), but I'm wondering if this is
+> > really a symptom of a problem in the generic DWC IRQ handling, not a
+> > problem in dra7xx itself.
+> >
+> > I thought it was sort of standard behavior that a device would not
+> > send a new MSI unless there was a transition from "no status bits set"
+> > to "at least one status bit set".  I'm looking at this text from the
+> > PCIe r5.0 spec, sec 6.7.3.4:
 > 
-> At the beginning of the monitoring, DAMON constructs the initial regions
-> by evenly splitting the memory mapped address space of the process into
-> the user-specified minimal number of regions.  In this initial state,
-> the assumption of the regions (pages in same region have similar access
-> frequencies) is normally not kept and thus the monitoring quality could
-> be low.  To keep the assumption as much as possible, DAMON adaptively
-> merges and splits each region.
+> That's for the device side. But this is the host side and that consists
+> of two components:
 > 
-> For each ``aggregation interval``, it compares the access frequencies of
-> adjacent regions and merges those if the frequency difference is small.
-> Then, after it reports and clears the aggregated access frequency of
-> each region, it splits each region into two regions if the total number
-> of regions is smaller than the half of the user-specified maximum number
-> of regions.
+>      1) The actual PCIe host controller (DWC)
 > 
-> In this way, DAMON provides its best-effort quality and minimal overhead
-> while keeping the bounds users set for their trade-off.
+>      2) Some hardware wrapper around #1 to glue the host controller IP
+>         into the TI SoC.
 > 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-
-A few more edge cases in here, and a suggestion that might be more costly
-but lead to simpler code.
-
-Jonathan
-
-> ---
->  include/linux/damon.h |   6 +-
->  mm/damon.c            | 148 ++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 145 insertions(+), 9 deletions(-)
+> #1 contains a MSI message receiver unit. PCIE_MSI_INTR0_STATUS is part
+> that.
 > 
-> diff --git a/include/linux/damon.h b/include/linux/damon.h
-> index f1945df6e6b4..7562b85b1ec0 100644
-> --- a/include/linux/damon.h
-> +++ b/include/linux/damon.h
-> @@ -42,6 +42,7 @@ struct damon_ctx {
->  	unsigned long sample_interval;
->  	unsigned long aggr_interval;
->  	unsigned long min_nr_regions;
-> +	unsigned long max_nr_regions;
->  
->  	struct timespec64 last_aggregation;
->  
-> @@ -54,8 +55,9 @@ struct damon_ctx {
->  };
->  
->  int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids);
-> -int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-> -		unsigned long aggr_int, unsigned long min_nr_reg);
-> +int damon_set_attrs(struct damon_ctx *ctx,
-> +		unsigned long sample_int, unsigned long aggr_int,
-> +		unsigned long min_nr_reg, unsigned long max_nr_reg);
->  int damon_start(struct damon_ctx *ctx);
->  int damon_stop(struct damon_ctx *ctx);
->  
-> diff --git a/mm/damon.c b/mm/damon.c
-> index 018016793555..23c0de3b502e 100644
-> --- a/mm/damon.c
-> +++ b/mm/damon.c
-> @@ -342,9 +342,12 @@ static int damon_three_regions_of(struct damon_task *t,
->   * regions is wasteful.  That said, because we can deal with small noises,
->   * tracking every mapping is not strictly required but could even incur a high
->   * overhead if the mapping frequently changes or the number of mappings is
-> - * high.  Nonetheless, this may seems very weird.  DAMON's dynamic regions
-> - * adjustment mechanism, which will be implemented with following commit will
-> - * make this more sense.
-> + * high.  The adaptive regions adjustment mechanism will further help to deal
-> + * with the noises by simply identifying the unmapped areas as a region that
-> + * has no access.  Moreover, applying the real mappings that would have many
-> + * unmapped areas inside will make the adaptive mechanism quite complex.  That
-> + * said, too huge unmapped areas inside the monitoring target should be removed
-> + * to not take the time for the adaptive mechanism.
->   *
->   * For the reason, we convert the complex mappings to three distinct regions
->   * that cover every mapped areas of the address space.  Also the two gaps
-> @@ -533,6 +536,121 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
->  	}
->  }
->  
-> +#define sz_damon_region(r) (r->vm_end - r->vm_start)
-> +
-> +/*
-> + * Merge two adjacent regions into one region
-> + */
-> +static void damon_merge_two_regions(struct damon_region *l,
-> +				struct damon_region *r)
-> +{
-> +	l->nr_accesses = (l->nr_accesses * sz_damon_region(l) +
-> +			r->nr_accesses * sz_damon_region(r)) /
-> +			(sz_damon_region(l) + sz_damon_region(r));
-> +	l->vm_end = r->vm_end;
-> +	damon_destroy_region(r);
-> +}
-> +
-> +#define diff_of(a, b) (a > b ? a - b : b - a)
-> +
-> +/*
-> + * Merge adjacent regions having similar access frequencies
-> + *
-> + * t		task that merge operation will make change
-> + * thres	merge regions having '->nr_accesses' diff smaller than this
-> + */
-> +static void damon_merge_regions_of(struct damon_task *t, unsigned int thres)
-> +{
-> +	struct damon_region *r, *prev = NULL, *next;
-> +
-> +	damon_for_each_region_safe(r, next, t) {
-> +		if (!prev || prev->vm_end != r->vm_start ||
-> +		    diff_of(prev->nr_accesses, r->nr_accesses) > thres) {
-> +			prev = r;
-> +			continue;
-> +		}
-> +		damon_merge_two_regions(prev, r);
-> +	}
-> +}
-> +
-> +/*
-> + * Merge adjacent regions having similar access frequencies
-> + *
-> + * threshold	merge regions havind nr_accesses diff larger than this
-> + *
-> + * This function merges monitoring target regions which are adjacent and their
-> + * access frequencies are similar.  This is for minimizing the monitoring
-> + * overhead under the dynamically changeable access pattern.  If a merge was
-> + * unnecessarily made, later 'kdamond_split_regions()' will revert it.
-> + */
-> +static void kdamond_merge_regions(struct damon_ctx *c, unsigned int threshold)
-> +{
-> +	struct damon_task *t;
-> +
-> +	damon_for_each_task(c, t)
-> +		damon_merge_regions_of(t, threshold);
-> +}
-> +
-> +/*
-> + * Split a region into two small regions
-> + *
-> + * r		the region to be split
-> + * sz_r		size of the first sub-region that will be made
-> + */
-> +static void damon_split_region_at(struct damon_ctx *ctx,
-> +		struct damon_region *r, unsigned long sz_r)
-> +{
-> +	struct damon_region *new;
-> +
-> +	new = damon_new_region(ctx, r->vm_start + sz_r, r->vm_end);
-> +	r->vm_end = new->vm_start;
+> If there is a MSI message sent to the host then the bit which is
+> corresponding to the sent message (vector) is set in the status
+> register. If a bit is set in the status register then the host
+> controller raises an interrupt at its output.
+> 
+> Here, if I deciphered the above changelog correctly, comes the wrapper
+> glue #2 into play, which seems to be involved in forwarding the host
+> controller interrupt to the CPU's interrupt controller (GIC) and that
+> forwarding mechanism seems to have some issue.
 
-We may well have a sampling address that is in the wrong region.
-It should have little effect on the stats as will fix on next sample
-but in my view still worth cleaning up.
+Sorry for muddying the waters, and thanks for clarifying it, Thomas.
 
-> +
-> +	damon_insert_region(new, r, damon_next_region(r));
-> +}
-> +
-> +static void damon_split_regions_of(struct damon_ctx *ctx, struct damon_task *t)
-> +{
-> +	struct damon_region *r, *next;
-> +	unsigned long sz_left_region;
-> +
-> +	damon_for_each_region_safe(r, next, t) {
-> +		/*
-> +		 * Randomly select size of left sub-region to be at least
-> +		 * 10 percent and at most 90% of original region
-> +		 */
-> +		sz_left_region = (prandom_u32_state(&ctx->rndseed) % 9 + 1) *
-> +			(r->vm_end - r->vm_start) / 10;
-> +		/* Do not allow blank region */
-> +		if (sz_left_region == 0)
-> +			continue;
-> +		damon_split_region_at(ctx, r, sz_left_region);
-> +	}
-> +}
-> +
-> +/*
-> + * splits every target regions into two randomly-sized regions
-> + *
-> + * This function splits every target regions into two random-sized regions if
-> + * current total number of the regions is smaller than the half of the
-> + * user-specified maximum number of regions.  This is for maximizing the
-> + * monitoring accuracy under the dynamically changeable access patterns.  If a
-> + * split was unnecessarily made, later 'kdamond_merge_regions()' will revert
-> + * it.
-> + */
-> +static void kdamond_split_regions(struct damon_ctx *ctx)
-> +{
-> +	struct damon_task *t;
-> +	unsigned int nr_regions = 0;
-> +
-> +	damon_for_each_task(ctx, t)
-> +		nr_regions += nr_damon_regions(t);
-> +	if (nr_regions > ctx->max_nr_regions / 2)
-> +		return;
-> +
-> +	damon_for_each_task(ctx, t)
-> +		damon_split_regions_of(ctx, t);
-> +}
-> +
->  /*
->   * Check whether current monitoring should be stopped
->   *
-> @@ -571,21 +689,29 @@ static int kdamond_fn(void *data)
->  	struct damon_task *t;
->  	struct damon_region *r, *next;
->  	struct mm_struct *mm;
-> +	unsigned int max_nr_accesses;
->  
->  	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
->  	kdamond_init_regions(ctx);
->  	while (!kdamond_need_stop(ctx)) {
-> +		max_nr_accesses = 0;
->  		damon_for_each_task(ctx, t) {
->  			mm = damon_get_mm(t);
->  			if (!mm)
->  				continue;
-> -			damon_for_each_region(r, t)
-> +			damon_for_each_region(r, t) {
->  				kdamond_check_access(ctx, mm, r);
-> +				max_nr_accesses = max(r->nr_accesses,
-> +						max_nr_accesses);
-> +			}
->  			mmput(mm);
->  		}
->  
-> -		if (kdamond_aggregate_interval_passed(ctx))
-> +		if (kdamond_aggregate_interval_passed(ctx)) {
-> +			kdamond_merge_regions(ctx, max_nr_accesses / 10);
->  			kdamond_reset_aggregated(ctx);
-> +			kdamond_split_regions(ctx);
-> +		}
+This patch is on its way to v5.7, and I guess we'll worry about
+whether the interrupt chip reimplementation is overkill later.
 
-I wonder if it would be simpler to split the sampling address setup and
-mkold from the access check.  We would have to walk regions twice,
-but not have to bother separately dealing with updating some regions
-if they are modified in the above block.
-
-Also, the above has some overhead, so will bias that first sample each
-time the block above runs.  If we do the mkold afterwards it will make
-much less difference.
-
->  
->  		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
->  	}
-> @@ -702,24 +828,32 @@ int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids)
->   * @sample_int:		time interval between samplings
->   * @aggr_int:		time interval between aggregations
->   * @min_nr_reg:		minimal number of regions
-> + * @max_nr_reg:		maximum number of regions
->   *
->   * This function should not be called while the kdamond is running.
->   * Every time interval is in micro-seconds.
->   *
->   * Return: 0 on success, negative error code otherwise.
->   */
-> -int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-> -		unsigned long aggr_int, unsigned long min_nr_reg)
-> +int damon_set_attrs(struct damon_ctx *ctx,
-> +			unsigned long sample_int, unsigned long aggr_int,
-> +			unsigned long min_nr_reg, unsigned long max_nr_reg)
->  {
->  	if (min_nr_reg < 3) {
->  		pr_err("min_nr_regions (%lu) should be bigger than 2\n",
->  				min_nr_reg);
->  		return -EINVAL;
->  	}
-> +	if (min_nr_reg >= ctx->max_nr_regions) {
-> +		pr_err("invalid nr_regions.  min (%lu) >= max (%lu)\n",
-> +				min_nr_reg, max_nr_reg);
-> +		return -EINVAL;
-> +	}
->  
->  	ctx->sample_interval = sample_int;
->  	ctx->aggr_interval = aggr_int;
->  	ctx->min_nr_regions = min_nr_reg;
-> +	ctx->max_nr_regions = max_nr_reg;
->  
->  	return 0;
->  }
-
-
+Bjorn
