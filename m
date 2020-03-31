@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E75C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6491BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFEA2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39BD320787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646306;
-	bh=XhM8fbEbcelh1MZoQlcLIaHd/4GVI1N06+N/RH0R/VY=;
+	s=default; t=1585646312;
+	bh=MuJR827GwbcbpjRRdpPKWhk51Tk5Sf/7WcpNL6TTU6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZSXI0xr+8cL+Sa84Gpor538Jv222DNo/HGTo6NIp6CsjxfxSINtYT8KFf8JnuhbJ2
-	 91IStEnpjxeW6OexDOsZ1HTrhOjCv6306IS0wJYLtlusEIynrxxJ4YfpA/zyX1hAFy
-	 djj0B5N0ZLs1foUiaHXGu/ynzMSSDjzBKzw0FSBo=
+	b=xML513VXF2x4njF+LkkW3nkhvPAAhtqj8Am6wFHLoSpAUqan9x/W2iiaiZwCvySk9
+	 Hizh9H5dttqp7at3ELfsbc8dnlhm+jYj2O9RS7p4jyTRsndwyZqaXMFXt92Z1JryIY
+	 hkKahrefaMy9PunRdlcnlj4UEvcYNtorgHeXDtCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbgCaJS0 (ORCPT
+        id S1731613AbgCaJSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39848 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730031AbgCaJSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:18:22 -0400
+        id S1732106AbgCaJS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:18:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A322072E;
-        Tue, 31 Mar 2020 09:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D81482072E;
+        Tue, 31 Mar 2020 09:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646301;
-        bh=XhM8fbEbcelh1MZoQlcLIaHd/4GVI1N06+N/RH0R/VY=;
+        s=default; t=1585646308;
+        bh=MuJR827GwbcbpjRRdpPKWhk51Tk5Sf/7WcpNL6TTU6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sv5XwZthozphCMju4VXeupv4G43bBJbZFE/GAKZQj8zyyWEnF5tbVn+mKLrQmnLDF
-         Oq9a3dNhDel9vF5BhTjcoUQxvMPx2RGcjOjVr1ztvPK7QgKq8zxsR831OczmOnfRab
-         eYCiBA/HhJWxeVrVmcdt/VjM1N/TXAAH98u56Y0E=
+        b=GGAOBhfLRxsNxtQwISV3Mw/OZaIdoAS+PpPCCKArv5z5kFCBq4v2EDW5NL/bQ5Umt
+         Ek57wYIFmbJu+z9qkIwLFfccmtw43bpXWyRWit/26bOF0katxb+RvHMyHtIaKE8JWq
+         Z12T3mfccOxgjRQ21Jq+F3/pYS9wCueFFeCfESpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 106/155] gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 BYT + AXP288 model
-Date:   Tue, 31 Mar 2020 10:59:06 +0200
-Message-Id: <20200331085430.555211375@linuxfoundation.org>
+        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 108/155] RDMA/core: Ensure security pkey modify is not lost
+Date:   Tue, 31 Mar 2020 10:59:08 +0200
+Message-Id: <20200331085430.743868483@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,64 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-commit 0e91506ba00730f088961a8d39f8693b0f8e3fea upstream.
+commit 2d47fbacf2725a67869f4d3634c2415e7dfab2f4 upstream.
 
-Commit aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option +
-quirk mechanism") was added to deal with spurious wakeups on one specific
-model of the HP x2 10 series. In the mean time I have learned that there
-are at least 3 different HP x2 10 models:
+The following modify sequence (loosely based on ipoib) will lose a pkey
+modifcation:
 
-Bay Trail SoC + AXP288 PMIC
-Cherry Trail SoC + AXP288 PMIC
-Cherry Trail SoC + TI PMIC
+- Modify (pkey index, port)
+- Modify (new pkey index, NO port)
 
-And the original quirk is only correct for (and only matches the)
-Cherry Trail SoC + TI PMIC model.
+After the first modify, the qp_pps list will have saved the pkey and the
+unit on the main list.
 
-The Bay Trail SoC + AXP288 PMIC model has different DMI strings, has
-the external EC interrupt on a different GPIO pin and only needs to ignore
-wakeups on the EC interrupt, the INT0002 device works fine on this model.
+During the second modify, get_new_pps() will fetch the port from qp_pps
+and read the new pkey index from qp_attr->pkey_index.  The state will
+still be zero, or IB_PORT_PKEY_NOT_VALID. Because of the invalid state,
+the new values will never replace the one in the qp pps list, losing the
+new pkey.
 
-This commit adds an extra DMI based quirk for the HP x2 10 BYT + AXP288
-model, ignoring wakeups for ACPI GPIO events on the EC interrupt pin
-on this model. This fixes spurious wakeups from suspend on this model.
+This happens because the following if statements will never correct the
+state because the first term will be false. If the code had been executed,
+it would incorrectly overwrite valid values.
 
-Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200302111225.6641-3-hdegoede@redhat.com
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+  if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
+	  new_pps->main.state = IB_PORT_PKEY_VALID;
+
+  if (!(qp_attr_mask & (IB_QP_PKEY_INDEX | IB_QP_PORT)) && qp_pps) {
+	  new_pps->main.port_num = qp_pps->main.port_num;
+	  new_pps->main.pkey_index = qp_pps->main.pkey_index;
+	  if (qp_pps->main.state != IB_PORT_PKEY_NOT_VALID)
+		  new_pps->main.state = IB_PORT_PKEY_VALID;
+  }
+
+Fix by joining the two if statements with an or test to see if qp_pps is
+non-NULL and in the correct state.
+
+Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
+Link: https://lore.kernel.org/r/20200313124704.14982.55907.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/infiniband/core/security.c |   11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1415,6 +1415,21 @@ static const struct dmi_system_id gpioli
- 			.ignore_wake = "INT33FF:01@0,INT0002:00@2",
- 		},
- 	},
-+	{
-+		/*
-+		 * HP X2 10 models with Bay Trail SoC + AXP288 PMIC use an
-+		 * external embedded-controller connected via I2C + an ACPI GPIO
-+		 * event handler on INT33FC:02 pin 28, causing spurious wakeups.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion x2 Detachable"),
-+			DMI_MATCH(DMI_BOARD_NAME, "815D"),
-+		},
-+		.driver_data = &(struct acpi_gpiolib_dmi_quirk) {
-+			.ignore_wake = "INT33FC:02@28",
-+		},
-+	},
- 	{} /* Terminating entry */
- };
+--- a/drivers/infiniband/core/security.c
++++ b/drivers/infiniband/core/security.c
+@@ -349,16 +349,11 @@ static struct ib_ports_pkeys *get_new_pp
+ 	else if (qp_pps)
+ 		new_pps->main.pkey_index = qp_pps->main.pkey_index;
  
+-	if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
++	if (((qp_attr_mask & IB_QP_PKEY_INDEX) &&
++	     (qp_attr_mask & IB_QP_PORT)) ||
++	    (qp_pps && qp_pps->main.state != IB_PORT_PKEY_NOT_VALID))
+ 		new_pps->main.state = IB_PORT_PKEY_VALID;
+ 
+-	if (!(qp_attr_mask & (IB_QP_PKEY_INDEX | IB_QP_PORT)) && qp_pps) {
+-		new_pps->main.port_num = qp_pps->main.port_num;
+-		new_pps->main.pkey_index = qp_pps->main.pkey_index;
+-		if (qp_pps->main.state != IB_PORT_PKEY_NOT_VALID)
+-			new_pps->main.state = IB_PORT_PKEY_VALID;
+-	}
+-
+ 	if (qp_attr_mask & IB_QP_ALT_PATH) {
+ 		new_pps->alt.port_num = qp_attr->alt_port_num;
+ 		new_pps->alt.pkey_index = qp_attr->alt_pkey_index;
 
 
