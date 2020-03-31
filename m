@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56EEC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C672DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CCF208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6B0208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646144;
-	bh=4QJEQOKZynqx+5osBx7WAdPupqu0Gs4IifljY4vX/rU=;
+	s=default; t=1585646149;
+	bh=LH+pdYh8pTEmK3Nsg+SygCbEU0HB0/r/N8gDmFBvsl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCvVDg9VYs7cGySt9zig6pP6RQAg74PUIAxEl0GGKj+b+yu7oXZGqv+oXUMONq0Hk
-	 Nj65JPoEleSCZsR+8KTmBNXPBJOn1mfmVB3MaX701llyjzpwmmcEdbHbrYKW+USguS
-	 bOD7GChU7KYlSMP9Os+1S8DwjPmuXQnb+e4to21s=
+	b=zruFZSH4ETRF/aJk2gT2fzgtL8k1qFcfpgXWbaty6oflD2CplkVQimBhMRDod3GHH
+	 wHdpUcjKdmeZtd5Px7fM9e0bgj8oCJrQjwPNfNVnuxxb48QcqS3tqd6gL7LgHU7vX8
+	 rDxI628/qlESeXuryPli2i/JVJyoo3s0ksIheEkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731928AbgCaJPm (ORCPT
+        id S1731241AbgCaJPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:15:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36112 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731535AbgCaJPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:15:40 -0400
+        id S1730806AbgCaJPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:15:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A64CE20787;
-        Tue, 31 Mar 2020 09:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0D0120787;
+        Tue, 31 Mar 2020 09:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646140;
-        bh=4QJEQOKZynqx+5osBx7WAdPupqu0Gs4IifljY4vX/rU=;
+        s=default; t=1585646144;
+        bh=LH+pdYh8pTEmK3Nsg+SygCbEU0HB0/r/N8gDmFBvsl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gg9EtJr4ywHBIbMEZonoOaTpzhs/I/IyXYTaAJ2+6soWyknTtcY+O0WjzLpWemkcR
-         oevkOjqHlXxEi1tQ0uewt9z9TX/YyXraCSlpe/YQo/pnV/IHVWAvffgfbY2Crn00qU
-         koPBWdw6G278Xo1QI5VwvNQ+gYpK6rpHn9wtpk/g=
+        b=p+6xJFdGaZtBc7ECxJhDKHPwcSooDq2LcqI8KBjzDVbe/fNs47Ale8qwmLrtGMRSn
+         hpLWTPSME9aPx9/nsHeMznCimjTv9tfB7SF/+rl649X/vHlbNzUuBGVgeArm+oeBXa
+         d/K/Tk0XmIkdHopFbpab5l6uLhiZbUQi46nkv34o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Mueller <dmueller@suse.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 095/155] scripts/dtc: Remove redundant YYLOC global declaration
-Date:   Tue, 31 Mar 2020 10:58:55 +0200
-Message-Id: <20200331085429.266293703@linuxfoundation.org>
+        stable@vger.kernel.org, Bryan Gurney <bgurney@redhat.com>,
+        Bernhard Sulzer <micraft.b@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 096/155] scsi: sd: Fix optimal I/O size for devices that change reported values
+Date:   Tue, 31 Mar 2020 10:58:56 +0200
+Message-Id: <20200331085429.352108536@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,52 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dirk Mueller <dmueller@suse.com>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
+commit ea697a8bf5a4161e59806fab14f6e4a46dc7dcb0 upstream.
 
-gcc 10 will default to -fno-common, which causes this error at link
-time:
+Some USB bridge devices will return a default set of characteristics during
+initialization. And then, once an attached drive has spun up, substitute
+the actual parameters reported by the drive. According to the SCSI spec,
+the device should return a UNIT ATTENTION in case any reported parameters
+change. But in this case the change is made silently after a small window
+where default values are reported.
 
-  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
+Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of
+physical block size") validated the reported optimal I/O size against the
+physical block size to overcome problems with devices reporting nonsensical
+transfer sizes. However, this validation did not account for the fact that
+aforementioned devices will return default values during a brief window
+during spin-up. The subsequent change in reported characteristics would
+invalidate the checking that had previously been performed.
 
-This is because both dtc-lexer as well as dtc-parser define the same
-global symbol yyloc. Before with -fcommon those were merged into one
-defintion. The proper solution would be to to mark this as "extern",
-however that leads to:
+Unset a previously configured optimal I/O size should the sanity checking
+fail on subsequent revalidate attempts.
 
-  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-   26 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-In file included from dtc-lexer.l:24:
-dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-  127 | extern YYLTYPE yylloc;
-      |                ^~~~~~
-cc1: all warnings being treated as errors
-
-which means the declaration is completely redundant and can just be
-dropped.
-
-Signed-off-by: Dirk Mueller <dmueller@suse.com>
-Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-[robh: cherry-pick from upstream]
-Cc: stable@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/33fb522e-4f61-1b76-914f-c9e6a3553c9b@gmail.com
+Cc: Bryan Gurney <bgurney@redhat.com>
+Cc: <stable@vger.kernel.org>
+Reported-by: Bernhard Sulzer <micraft.b@gmail.com>
+Tested-by: Bernhard Sulzer <micraft.b@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/dtc/dtc-lexer.l |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/sd.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/scripts/dtc/dtc-lexer.l
-+++ b/scripts/dtc/dtc-lexer.l
-@@ -23,7 +23,6 @@ LINECOMMENT	"//".*\n
- #include "srcpos.h"
- #include "dtc-parser.tab.h"
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3171,9 +3171,11 @@ static int sd_revalidate_disk(struct gen
+ 	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
+ 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+ 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
+-	} else
++	} else {
++		q->limits.io_opt = 0;
+ 		rw_max = min_not_zero(logical_to_sectors(sdp, dev_max),
+ 				      (sector_t)BLK_DEF_MAX_SECTORS);
++	}
  
--YYLTYPE yylloc;
- extern bool treesource_error;
- 
- /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+ 	/* Do not exceed controller limit */
+ 	rw_max = min(rw_max, queue_max_hw_sectors(q));
 
 
