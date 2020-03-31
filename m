@@ -2,164 +2,92 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3697C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9D6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB3E21841
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783462072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585645923;
+	bh=xy8516SMD+EvkSyeDBZZ3E4unrF2w9SV3kJ/1usvzvA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aZwxRaBKDQhzWovG4LxH0GZ+pecEin3whpO8koiapPHV8rIGw1OO2wagPFaUlsI0S
+	 jRam8FtE5mFdKrmlmoesRX4OrFAXEjT+KKqOJhr9UkL/PD6K6jGpV3hhPsJFG9RZH3
+	 hAVeUmtnpbujj2zSOW5ViMgL5ehcSe3zgAIhQjo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731757AbgCaJL6 (ORCPT
+        id S1731760AbgCaJMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:11:58 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12662 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731592AbgCaJLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:11:52 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B173E165DEDBC9925135;
-        Tue, 31 Mar 2020 17:11:47 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Tue, 31 Mar 2020
- 17:11:38 +0800
-Subject: Re: [PATCH] KVM: arm64: vgic-v3: Clear pending bit in guest memory
- after synchronization
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <kvmarm@lists.cs.columbia.edu>, <eric.auger@redhat.com>,
-        <andre.przywara@arm.com>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
-References: <20200331031245.1562-1-yuzenghui@huawei.com>
- <20200331090709.17d2087d@why>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <fe30a834-fdb0-e1ca-5e4a-0c7863236c5f@huawei.com>
-Date:   Tue, 31 Mar 2020 17:11:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Tue, 31 Mar 2020 05:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731621AbgCaJLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:11:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B47020772;
+        Tue, 31 Mar 2020 09:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585645910;
+        bh=xy8516SMD+EvkSyeDBZZ3E4unrF2w9SV3kJ/1usvzvA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FXxDoXOxd2zPIGlgnvBRAwB8a/QsLEEZ2zyIoD0EHLRe5n/1I3VmIQ/bvzezv1FmK
+         QroCbzxQj5lJwX47pmx2S6mjVvu9FzM98BFWJTTWp4jWUV2YdnP/7yLO7xkJ14RFdt
+         OGtcgwfpmcZxtWoydQLGmwYeTL4PYe+BvEwOvvoE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 033/155] r8169: re-enable MSI on RTL8168c
+Date:   Tue, 31 Mar 2020 10:57:53 +0200
+Message-Id: <20200331085422.107956996@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
+References: <20200331085418.274292403@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200331090709.17d2087d@why>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-On 2020/3/31 16:07, Marc Zyngier wrote:
-> Hi Zenghui,
-> 
-> On Tue, 31 Mar 2020 11:12:45 +0800
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
-> 
->> When LPI support is enabled at redistributor level, VGIC will potentially
->> load the correspond LPI penging table and sync it into the pending_latch.
->> To avoid keeping the 'consumed' pending bits lying around in guest memory
->> (though they're not used), let's clear them after synchronization.
->>
->> The similar work had been done in vgic_v3_lpi_sync_pending_status().
->>
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>   virt/kvm/arm/vgic/vgic-its.c | 23 +++++++++++++++++------
->>   1 file changed, 17 insertions(+), 6 deletions(-)
->>
->> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
->> index d53d34a33e35..905760bfa404 100644
->> --- a/virt/kvm/arm/vgic/vgic-its.c
->> +++ b/virt/kvm/arm/vgic/vgic-its.c
->> @@ -435,6 +435,7 @@ static int its_sync_lpi_pending_table(struct kvm_vcpu *vcpu)
->>   
->>   	for (i = 0; i < nr_irqs; i++) {
->>   		int byte_offset, bit_nr;
->> +		bool status;
->>   
->>   		byte_offset = intids[i] / BITS_PER_BYTE;
->>   		bit_nr = intids[i] % BITS_PER_BYTE;
->> @@ -447,22 +448,32 @@ static int its_sync_lpi_pending_table(struct kvm_vcpu *vcpu)
->>   			ret = kvm_read_guest_lock(vcpu->kvm,
->>   						  pendbase + byte_offset,
->>   						  &pendmask, 1);
->> -			if (ret) {
->> -				kfree(intids);
->> -				return ret;
->> -			}
->> +			if (ret)
->> +				goto out;
->>   			last_byte_offset = byte_offset;
->>   		}
->>   
->> +		status = pendmask & (1 << bit_nr);
->> +
->>   		irq = vgic_get_irq(vcpu->kvm, NULL, intids[i]);
->>   		raw_spin_lock_irqsave(&irq->irq_lock, flags);
->> -		irq->pending_latch = pendmask & (1U << bit_nr);
->> +		irq->pending_latch = status;
->>   		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
->>   		vgic_put_irq(vcpu->kvm, irq);
->> +
->> +		if (status) {
->> +			/* clear consumed data */
->> +			pendmask &= ~(1 << bit_nr);
->> +			ret = kvm_write_guest_lock(vcpu->kvm,
->> +						   pendbase + byte_offset,
->> +						   &pendmask, 1);
->> +			if (ret)
->> +				goto out;
->> +		}
->>   	}
->>   
->> +out:
->>   	kfree(intids);
->> -
->>   	return ret;
->>   }
->>   
-> 
-> I've been thinking about this, and I wonder why we don't simply clear
-> the whole pending table instead of carefully wiping it one bit at a
-> time. My reasoning is that if a LPI isn't mapped, then it cannot be made
-> pending the first place.
+[ Upstream commit f13bc68131b0c0d67a77fb43444e109828a983bf ]
 
-A writing to GICR_CTLR.EnableLPIs can happen in parallel with MAPTI/INT
-command sequence, where the new LPI is mapped to *this* vcpu and made
-pending, wrong? I think commit 7d8b44c54e0c had described it in detail.
+The original change fixed an issue on RTL8168b by mimicking the vendor
+driver behavior to disable MSI on chip versions before RTL8168d.
+This however now caused an issue on a system with RTL8168c, see [0].
+Therefore leave MSI disabled on RTL8168b, but re-enable it on RTL8168c.
 
-But thinking that we cache the pending bit in pending_latch (instead of
-writing the corresponding bit in guest memory) when a LPI is made
-pending, it seems to be safe to clear the whole pending table here.
+[0] https://bugzilla.redhat.com/show_bug.cgi?id=1792839
 
-> 
-> And I think there is a similar issue in vgic_v3_lpi_sync_pending_status().
-> Why sync something back from the pending table when the LPI wasn't
-> mapped yet?
+Fixes: 003bd5b4a7b4 ("r8169: don't use MSI before RTL8168d")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/realtek/r8169_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-vgic_v3_lpi_sync_pending_status() can be called on the ITE restore path:
-vgic_its_restore_ite/vgic_add_lpi/vgic_v3_lpi_sync_pending_status.
-We should rely on it to sync the pending bit from guest memory (which
-was saved on the source side).
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -6812,7 +6812,7 @@ static int rtl_alloc_irq(struct rtl8169_
+ 		RTL_W8(tp, Config2, RTL_R8(tp, Config2) & ~MSIEnable);
+ 		rtl_lock_config_regs(tp);
+ 		/* fall through */
+-	case RTL_GIGA_MAC_VER_07 ... RTL_GIGA_MAC_VER_24:
++	case RTL_GIGA_MAC_VER_07 ... RTL_GIGA_MAC_VER_17:
+ 		flags = PCI_IRQ_LEGACY;
+ 		break;
+ 	default:
 
-> This seems pretty bizarre, as the GITS_TRANSLATER spec says
-> that the write to this register is ignored when:
-> 
-> "- The EventID is mapped to an Interrupt Translation Table and the
-> EventID is within the range specified by MAPD on page 5-107, but the
-> EventID is unmapped."
-> 
-> (with the added bonus in the form of a type: the first instance of
-> "EventID" here should obviously be "DeviceID").
-
-;-)
-
-
-Thanks,
-Zenghui
 
