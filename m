@@ -6,67 +6,99 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8065C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBAEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC66D20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B3320774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgCaAtt (ORCPT
+        id S1729579AbgCaAyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:49:49 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:45078 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgCaAts (ORCPT
+        Mon, 30 Mar 2020 20:54:13 -0400
+Received: from icp-osb-irony-out4.external.iinet.net.au ([203.59.1.220]:54738
+        "EHLO icp-osb-irony-out4.external.iinet.net.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729019AbgCaAyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:49:48 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EC27A15D057FD;
-        Mon, 30 Mar 2020 17:49:46 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 17:49:44 -0700 (PDT)
-Message-Id: <20200330.174944.1829532392145435132.davem@davemloft.net>
-To:     stefano.salsano@uniroma2.it
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        dav.lebrun@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, leon@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, bpf@vger.kernel.org,
-        paolo.lungaroni@cnit.it, ahmed.abdelsalam@gssi.it
-Subject: Re: [net-next] seg6: add support for optional attributes during
- behavior construction
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200331012348.e0b2373bd4a96fecc77686b6@uniroma2.it>
-References: <20200319183641.29608-1-andrea.mayer@uniroma2.it>
-        <20200325.193016.1654692564933635575.davem@davemloft.net>
-        <20200331012348.e0b2373bd4a96fecc77686b6@uniroma2.it>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 30 Mar 2020 20:54:12 -0400
+X-SMTP-MATCH: 0
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2C1BAA4lIJe/+im0XZmHgELHIFwC4I?=
+ =?us-ascii?q?pgUAhEoREj04BAQEJizKFFIo+gXsKAQEBAQEBAQEBGxkBAgQBAYREgjQkNgc?=
+ =?us-ascii?q?OAhABAQEFAQEBAQEFAwFthQpYhhpWKA0CGA4CSRaGESSteIEyGgKKKYEOKow?=
+ =?us-ascii?q?xGnmBB4FHgTaCagGGW4JeBI1bGAyCd4cPRYEAliR3gkaXFR2PQgOMJ6cehX8?=
+ =?us-ascii?q?JKYFYTS4KgyhPGI5Cjj03gTYBAY0mXwEB?=
+X-IPAS-Result: =?us-ascii?q?A2C1BAA4lIJe/+im0XZmHgELHIFwC4IpgUAhEoREj04BA?=
+ =?us-ascii?q?QEJizKFFIo+gXsKAQEBAQEBAQEBGxkBAgQBAYREgjQkNgcOAhABAQEFAQEBA?=
+ =?us-ascii?q?QEFAwFthQpYhhpWKA0CGA4CSRaGESSteIEyGgKKKYEOKowxGnmBB4FHgTaCa?=
+ =?us-ascii?q?gGGW4JeBI1bGAyCd4cPRYEAliR3gkaXFR2PQgOMJ6cehX8JKYFYTS4KgyhPG?=
+ =?us-ascii?q?I5Cjj03gTYBAY0mXwEB?=
+X-IronPort-AV: E=Sophos;i="5.72,326,1580745600"; 
+   d="scan'208";a="238809157"
+Received: from unknown (HELO mickey.themaw.net) ([118.209.166.232])
+  by icp-osb-irony-out4.iinet.net.au with ESMTP; 31 Mar 2020 08:54:08 +0800
+Subject: [PATCH v2 0/4] Fix stat() family ping/pong on expiring autofs mounts
+From:   Ian Kent <raven@themaw.net>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     autofs mailing list <autofs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 31 Mar 2020 08:54:07 +0800
+Message-ID: <158561511964.23197.716188410829525903.stgit@mickey.themaw.net>
+User-Agent: StGit/unknown-version
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 30 Mar 2020 17:49:47 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Salsano <stefano.salsano@uniroma2.it>
-Date: Tue, 31 Mar 2020 01:23:48 +0200
+This patch series is meant to fix a case were a stat() family system
+call is being done at the same time a mount point dentry is being
+expired.
 
-> Of course a new application (e.g. iproute2, pyroute) using a new optional
-> parameter will not work on older kernels, but simply because the new parameter
-> is not supported. It will not work even without our proposed patch.
-> 
-> On the other hand, we think that the solution in the patch is more backward
-> compatible. Without the patch, if we define new attributes, old applications
-> (e.g. iproute2 scripts) will not work on newer kernels, while with the optional
-> attributes approach proposed in the patch they will work with no issues !
+When this happens it results in a ping/pong of returning the stat() of
+the mounted file system and stat() of the autofs file system.
 
-Translation: You want to add backwards compatibility problems because
-otherwise you'll have to add backwards compatibility problems.
+What needs to be done here is ensure a consistent stat() return based
+on the state of the mount at the time.
 
-Sorry, I'm still not convinced.
+There are actually a number of cases and, unavoidably, there remains
+inconsistency because stat family system calls are not meant to trigger
+mounts to avoid mount storms. So they will still return the stat of the
+autofs file system if not mounted and the stat of the mounted file
+system if they are, including if they are being expired at the time of
+the stat() call.
 
-You must find another way to achieve your objective.
+Some of these patches are based on other work that I'm doing as a
+result of our recent discussions on the autofs kernel module. For
+example the removal do_expire_wait() from autofs_d_manage() and
+simplifying the called functions. And the last patch which adds
+comments about cases of the autofs_mountpoint_changed() function.
+In fact, as you though, there's not much left in autofs_d_manage()
+in the endi. 
+
+But I'm not finished with the series yet and I need to get this bug 
+fixed.
+
+Changes since v1.
+- fix several grammatical mistakes.
+
+---
+
+Ian Kent (4):
+      autofs: dont call do_expire_wait() in autofs_d_manage()
+      autofs: remove rcu_walk parameter from autofs_expire_wait()
+      vfs: check for autofs expiring dentry in follow_automount()
+      autofs: add comment about autofs_mountpoint_changed()
+
+
+ fs/autofs/autofs_i.h  |    2 +-
+ fs/autofs/dev-ioctl.c |    2 +-
+ fs/autofs/expire.c    |    5 +---
+ fs/autofs/root.c      |   58 ++++++++++++++++++++++++++++++++-----------------
+ fs/namei.c            |   13 +++++++++--
+ 5 files changed, 52 insertions(+), 28 deletions(-)
+
+--
+Ian
