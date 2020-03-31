@@ -2,89 +2,105 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752AAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D806EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECD02072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646471;
-	bh=QQ6ebnUvoHQNHZ6qn9BQCIRm9XiS9wC5bt9itZPaTN4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9rUSp37qjOmRc7CAeIknneE4zCyUArjuRqKdPyFXIR7/F9RwE+zGXOu9crx1KAiM
-	 2jDsJ4zqA/z7VAzcemk+KOGjYPHft+hSIo49gj3LK6yF5lXTA09OwdCiDDUO9shDMS
-	 9Gq6MnOYtrgGG8L5dB4kG/zPNqtIEVxZMAVbBWNI=
+	by mail.kernel.org (Postfix) with ESMTP id AFB7F20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNuFd67E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbgCaJVK (ORCPT
+        id S1731913AbgCaJVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731305AbgCaJKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:10:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 31 Mar 2020 05:21:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25339 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731773AbgCaJVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:21:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585646474;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GTjY9VYWDP/F7mEWfjv7lXAEg3SDOKfVcGPNXYsvZyU=;
+        b=PNuFd67EDDf3+0MFfSKQBc4e4VMuGXyFlkVqDH4nJh7Fb1l51lGJvRmBE48kZiYGm6lEVj
+        qB9mNDiSI64BsDUbLdGxIK94a6RYG+RPD977ZtSICV8fFYLie0gxgOf0Ugqawl6DCA5kwC
+        meyjqPvJL6evWoVU6bNdi32m6RYRo84=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-197-npjoz2J-OJeG2S4WkAFftw-1; Tue, 31 Mar 2020 05:21:11 -0400
+X-MC-Unique: npjoz2J-OJeG2S4WkAFftw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A945F208E0;
-        Tue, 31 Mar 2020 09:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645818;
-        bh=QQ6ebnUvoHQNHZ6qn9BQCIRm9XiS9wC5bt9itZPaTN4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sylZdlmx1d94gMLS49N20OkiB+898SsgxiHo1Tzpr2l5P0GqQ1Su6SX71g/wIUGwv
-         aG4e1SDR2PgdBt9oL44ZnBDsrivOc6iJl4ek5whE7Dt6V24hqEfThZWAcJgm7LT2AZ
-         wFIAqY0jmaLSwTNT2LK5W4v4rQGcED8GsBZFQxEg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6d2e7f6fa90e27be9d62@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH 5.5 159/170] staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
-Date:   Tue, 31 Mar 2020 10:59:33 +0200
-Message-Id: <20200331085439.782195867@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
-References: <20200331085423.990189598@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C678D8017CC;
+        Tue, 31 Mar 2020 09:21:09 +0000 (UTC)
+Received: from ws.net.home (unknown [10.40.194.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C89919C6A;
+        Tue, 31 Mar 2020 09:21:04 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 11:21:01 +0200
+From:   Karel Zak <kzak@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200331092101.fnipaxqewol2hzd2@ws.net.home>
+References: <1445647.1585576702@warthog.procyon.org.uk>
+ <CAJfpegvZ_qtdGcP4bNQyYt1BbgF9HdaDRsmD43a-Muxgki+wTw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegvZ_qtdGcP4bNQyYt1BbgF9HdaDRsmD43a-Muxgki+wTw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+On Mon, Mar 30, 2020 at 10:28:56PM +0200, Miklos Szeredi wrote:
+> All this could be solved with a string key/value representation of the
+> same data, with minimal performance loss on encoding/parsing.  The
+> proposed fs interface[1] is one example of that, but I could also
+> imagine a syscall based one too.
 
-commit a1f165a6b738f0c9d744bad4af7a53909278f5fc upstream.
+Yes, key/value is possible solution. The question is if we really 
+need to add extra /sys-like filesystem to get key/value ;-) I can 
+imagine key/value from FD based interface without open/read/close for
+each attribute,
 
-We should cancel hw->usb_work before kfree(hw).
+    fd = open("/mnt", O_PATH);
+    fsinfo(fd, "propagation", buf, sizeof(buf));
+    fsinfo(fd, "fstype", buf, sizeof(buf));
+    close(fd);
 
-Reported-by: syzbot+6d2e7f6fa90e27be9d62@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1585120006-30042-1-git-send-email-hqjagain@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+why I need /mountfs/<id>/propagation and /mountfs/<id>/fstype to get
+the same? It sounds like over-engineering without any extra bonus.
 
----
- drivers/staging/wlan-ng/prism2usb.c |    1 +
- 1 file changed, 1 insertion(+)
+Anyway, if we have FD based interfaces like fsopen(), fsmount(),
+open_tree() and move_mount() then it sounds strange that you cannot
+use the FD to ask kernel for the mount node attributes and you need 
+to open and read another /sys-like files. 
 
---- a/drivers/staging/wlan-ng/prism2usb.c
-+++ b/drivers/staging/wlan-ng/prism2usb.c
-@@ -180,6 +180,7 @@ static void prism2sta_disconnect_usb(str
- 
- 		cancel_work_sync(&hw->link_bh);
- 		cancel_work_sync(&hw->commsqual_bh);
-+		cancel_work_sync(&hw->usb_work);
- 
- 		/* Now we complete any outstanding commands
- 		 * and tell everyone who is waiting for their
+IMHO it would be nice that after open(/mnt, O_PATH) I can do whatever
+with the mount point (umount, move, reconfigure, query, etc.). Please,
+try to keep it simple and consistent ;-)
 
+    Karel
+
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
 
