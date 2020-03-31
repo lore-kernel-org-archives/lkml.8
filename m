@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A32C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D981C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF35B208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73FB2208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645499;
-	bh=TBcOzdlkBS4YbY4gK3VVWnQ8aiNxZfo4NGJlloFDJbs=;
+	s=default; t=1585645500;
+	bh=wx3fU5kf1GTuk5yaEKKJV+I0NEdDEdfUh2fN2C8mgCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=doV/rptfE1btOED5nUXDwHepTJf9FuJ0LMUhYJTe9BdUsqRaXs3t4KGZ395NNN/54
-	 G/o7Y96fpCMeMd67Jatpi9+WzI5fOlxXjTN2zCO/XKFz5PPmGhXfbz7vzWRJahSJA2
-	 oijxMLK2GWsV/xAKP1XouB+YySR1OfuaM5let3LQ=
+	b=fqP6Nlr0LtzwxdEETLTwE9nhcANTW5+M0d3APTxHMcHHCJxXWabCa7a+70LHhGhdo
+	 68ikxf0xC0GA+DCSLsIVklC/doKiVuSLdodycfM9NjvXo30EEBrUmy2sStuiq0qzQA
+	 PFinxrnqc7RkSldr//aHlYt08tWv6DhoVYN5jdIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgCaJE5 (ORCPT
+        id S1731007AbgCaJE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:04:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730549AbgCaJEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:04:55 -0400
+        id S1731019AbgCaJE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:04:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A208520787;
-        Tue, 31 Mar 2020 09:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B42820787;
+        Tue, 31 Mar 2020 09:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645495;
-        bh=TBcOzdlkBS4YbY4gK3VVWnQ8aiNxZfo4NGJlloFDJbs=;
+        s=default; t=1585645497;
+        bh=wx3fU5kf1GTuk5yaEKKJV+I0NEdDEdfUh2fN2C8mgCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NdfPgfSJBPuG82tbzWBrvz0OIeL95iPN+5G9K71EtSfyj47CFapdPCP8GIdJ4m9Wk
-         0tT5zMoZ2AYjf7ASTDqlPVXGMHGuT/IfsceiKI6B41vBx+mvstbxd7lPGTr0bpGe0u
-         MpA+JpM5AM9Gj2SSAkdJtfoi9XphnN0ul7gxJy4M=
+        b=U1XHMwBvbuVJiTg/r/TgpYeYTCxlFASeN5yGpFjnLa/naOgScAynic0K7/WxACMyx
+         TqgrhHuhct4aU8gtlyqf1nDD873C3kAy2KDiLkPVlmANfDHrGO6UxDOzGvP0CHh1iv
+         Tkhx5/vN24lcsceA2V8xffLlDzlv2eyVCxNkDIZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 032/170] net: stmmac: dwmac-rk: fix error path in rk_gmac_probe
-Date:   Tue, 31 Mar 2020 10:57:26 +0200
-Message-Id: <20200331085427.470541620@linuxfoundation.org>
+Subject: [PATCH 5.5 033/170] NFC: fdp: Fix a signedness bug in fdp_nci_send_patch()
+Date:   Tue, 31 Mar 2020 10:57:27 +0200
+Message-Id: <20200331085427.574778203@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,31 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emil Renner Berthing <kernel@esmil.dk>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 9de9aa487daff7a5c73434c24269b44ed6a428e6 ]
+[ Upstream commit 0dcdf9f64028ec3b75db6b691560f8286f3898bf ]
 
-Make sure we clean up devicetree related configuration
-also when clock init fails.
+The nci_conn_max_data_pkt_payload_size() function sometimes returns
+-EPROTO so "max_size" needs to be signed for the error handling to
+work.  We can make "payload_size" an int as well.
 
-Fixes: fecd4d7eef8b ("net: stmmac: dwmac-rk: Add integrated PHY support")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Fixes: a06347c04c13 ("NFC: Add Intel Fields Peak NFC solution driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/fdp/fdp.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1411,7 +1411,7 @@ static int rk_gmac_probe(struct platform
+--- a/drivers/nfc/fdp/fdp.c
++++ b/drivers/nfc/fdp/fdp.c
+@@ -184,7 +184,7 @@ static int fdp_nci_send_patch(struct nci
+ 	const struct firmware *fw;
+ 	struct sk_buff *skb;
+ 	unsigned long len;
+-	u8 max_size, payload_size;
++	int max_size, payload_size;
+ 	int rc = 0;
  
- 	ret = rk_gmac_clk_init(plat_dat);
- 	if (ret)
--		return ret;
-+		goto err_remove_config_dt;
+ 	if ((type == NCI_PATCH_TYPE_OTP && !info->otp_patch) ||
+@@ -207,8 +207,7 @@ static int fdp_nci_send_patch(struct nci
  
- 	ret = rk_gmac_powerup(plat_dat->bsp_priv);
- 	if (ret)
+ 	while (len) {
+ 
+-		payload_size = min_t(unsigned long, (unsigned long) max_size,
+-				     len);
++		payload_size = min_t(unsigned long, max_size, len);
+ 
+ 		skb = nci_skb_alloc(ndev, (NCI_CTRL_HDR_SIZE + payload_size),
+ 				    GFP_KERNEL);
 
 
