@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DBEC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199CFC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74CF206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3167206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:57:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mqTmWpLR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rvUYpuvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgCaH4x (ORCPT
+        id S1730310AbgCaH5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:56:53 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:50210 "EHLO
+        Tue, 31 Mar 2020 03:57:03 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:22357 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730131AbgCaH4x (ORCPT
+        by vger.kernel.org with ESMTP id S1729425AbgCaH5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:56:53 -0400
+        Tue, 31 Mar 2020 03:57:02 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585641412; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1585641422; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=jgvxUaNnnaWHqq0izF2zyxOsOupTAxhxGBrh7lVSzvQ=; b=mqTmWpLR/Jvta/ZadqP3g8wyZXRaX+byCqL4w3yS5sgU7o6v5K/LuPJ0cZ+HRHWQ3loLtxmT
- 5UcYLz8W02GcEb8d5+zKJJ6wsbMaXjA7h2wLUobi9ID6iayT2ruz3lfkvIAyJUZj3ScPdI3u
- 5hVxO5BCoACq4PUy0g10AhHBpoE=
+ bh=VT9/ErTi2g1chyk6bUNJTnT/qqr1194jK5RfTnp8tS4=; b=rvUYpuvvq/A2z/VTfnSHylJ/F5ApaTMN8dhCoU98IC6jZ3m8N95WEOUOL1IRF2B8fX9KB1vV
+ zODrLPgF9+ufnAWmHZGZOL0AFZ3dktDy4GsdS3jKznb0NJEW1AtX923YGMVWfDapatBrlhgd
+ 5LWIg3STUmC6jpMPjO7waTO9Suo=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e82f7b9.7f72ad53a570-smtp-out-n01;
- Tue, 31 Mar 2020 07:56:41 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e82f7c9.7f3e5fc79420-smtp-out-n03;
+ Tue, 31 Mar 2020 07:56:57 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AFC1FC4478F; Tue, 31 Mar 2020 07:56:40 +0000 (UTC)
+        id 21CD4C4478F; Tue, 31 Mar 2020 07:56:57 +0000 (UTC)
 Received: from hyd-lnxbld559.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5862FC4478C;
-        Tue, 31 Mar 2020 07:56:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5862FC4478C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39EB0C44795;
+        Tue, 31 Mar 2020 07:56:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39EB0C44795
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
 From:   Sharat Masetty <smasetty@codeaurora.org>
@@ -51,9 +51,9 @@ Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
         mka@chromium.org, sibis@codeaurora.org, saravanak@google.com,
         viresh.kumar@linaro.org, Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH 2/5] arm64: dts: qcom: sc7180: Add GPU DDR BW opp table
-Date:   Tue, 31 Mar 2020 13:25:50 +0530
-Message-Id: <1585641353-23229-3-git-send-email-smasetty@codeaurora.org>
+Subject: [PATCH 5/5] dt-bindings: drm/msm/gpu: Document OPP phandle list for the GPU
+Date:   Tue, 31 Mar 2020 13:25:53 +0530
+Message-Id: <1585641353-23229-6-git-send-email-smasetty@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
 References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
@@ -62,76 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new opp table listing the GPU DDR bandwidth opps. Also
-adds a required_opp binding to the GPUs main OPP table which holds a
-phandle to a bandwidth opp in the new table. This enables linking the
-GPU power level opp to the DDR bandwidth opp and helps with scaling
-DDR along with GPU frequency.
+Update the documentation for listing the multiple optional GPU and the
+DDR OPP tables to help enable DDR scaling.
 
 Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 50 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/display/msm/gpu.txt        | 63 +++++++++++++++++++++-
+ 1 file changed, 61 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 51630dd..74b023b 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1715,7 +1715,8 @@
- 			reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
- 			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
- 			iommus = <&adreno_smmu 0>;
--			operating-points-v2 = <&gpu_opp_table>;
-+			operating-points-v2 = <&gpu_opp_table>,
-+						<&gpu_ddr_bw_opp_table>;
- 			qcom,gmu = <&gmu>;
+diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+index 70025cb..ff3ae1b 100644
+--- a/Documentation/devicetree/bindings/display/msm/gpu.txt
++++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+@@ -21,7 +21,10 @@ Required properties:
+   following devices should not list clocks:
+    - qcom,adreno-630.2
+ - iommus: optional phandle to an adreno iommu instance
+-- operating-points-v2: optional phandle to the OPP operating points
++- operating-points-v2: optional phandles to the OPP operating point tables
++  one for the GPU OPPs and the other for the GPU->DDR OPPs. Note that if
++  multiple OPP tables are specified, the GPU OPP table(considered primary)
++  should be the first in the phandle list.
+ - interconnects: optional phandle to an interconnect provider.  See
+   ../interconnect/interconnect.txt for details.
+ - qcom,gmu: For GMU attached devices a phandle to the GMU device that will
+@@ -75,7 +78,7 @@ Example a6xx (with GMU):
 
- 			interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
-@@ -1726,40 +1727,87 @@
- 				opp-800000000 {
- 					opp-hz = /bits/ 64 <800000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					required-opps = <&gpu_ddr_bw_opp9>;
- 				};
+ 		iommus = <&adreno_smmu 0>;
 
- 				opp-650000000 {
- 					opp-hz = /bits/ 64 <650000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					required-opps = <&gpu_ddr_bw_opp8>;
- 				};
+-		operating-points-v2 = <&gpu_opp_table>;
++		operating-points-v2 = <&gpu_opp_table>, <&gpu_ddr_bw_opp_table>;
 
- 				opp-565000000 {
- 					opp-hz = /bits/ 64 <565000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					required-opps = <&gpu_ddr_bw_opp6>;
- 				};
+ 		interconnects = <&rsc_hlos MASTER_GFX3D &rsc_hlos SLAVE_EBI1>;
 
- 				opp-430000000 {
- 					opp-hz = /bits/ 64 <430000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					required-opps = <&gpu_ddr_bw_opp6>;
- 				};
-
- 				opp-355000000 {
- 					opp-hz = /bits/ 64 <355000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					required-opps = <&gpu_ddr_bw_opp4>;
- 				};
-
- 				opp-267000000 {
- 					opp-hz = /bits/ 64 <267000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					required-opps = <&gpu_ddr_bw_opp4>;
- 				};
-
- 				opp-180000000 {
- 					opp-hz = /bits/ 64 <180000000>;
- 					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+					required-opps = <&gpu_ddr_bw_opp2>;
- 				};
- 			};
+@@ -85,5 +88,61 @@ Example a6xx (with GMU):
+ 			memory-region = <&zap_shader_region>;
+ 			firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn"
  		};
-
++
++		gpu_opp_table: opp-table {
++			compatible = "operating-points-v2";
++
++			opp-430000000 {
++				opp-hz = /bits/ 64 <430000000>;
++				opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
++				required-opps = <&gpu_ddr_bw_opp6>;
++			};
++
++			opp-355000000 {
++				opp-hz = /bits/ 64 <355000000>;
++				opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
++				required-opps = <&gpu_ddr_bw_opp4>;
++			};
++
++			opp-267000000 {
++				opp-hz = /bits/ 64 <267000000>;
++				opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
++				required-opps = <&gpu_ddr_bw_opp4>;
++			};
++
++			opp-180000000 {
++				opp-hz = /bits/ 64 <180000000>;
++				opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
++				required-opps = <&gpu_ddr_bw_opp2>;
++			};
++		};
++
 +		gpu_ddr_bw_opp_table: gpu-ddr-bw-opp-table {
 +			compatible = "operating-points-v2";
 +
@@ -158,22 +154,8 @@ index 51630dd..74b023b 100644
 +			gpu_ddr_bw_opp6: opp-1353000000  {
 +				opp-peak-kBps =/bits/ 32 <5412000>;
 +			};
-+
-+			gpu_ddr_bw_opp7: opp-1555000000  {
-+				opp-peak-kBps =/bits/ 32 <6220000>;
-+			};
-+
-+			gpu_ddr_bw_opp8: opp-1804000000  {
-+				opp-peak-kBps =/bits/ 32 <7216000>;
-+			};
-+
-+			gpu_ddr_bw_opp9: opp-2133000000  {
-+				opp-peak-kBps =/bits/ 32 <8532000>;
-+			};
 +		};
-+
- 		adreno_smmu: iommu@5040000 {
- 			compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
- 			reg = <0 0x05040000 0 0x10000>;
+ 	};
+ };
 --
 2.7.4
