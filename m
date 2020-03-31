@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E04AC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0115C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 112B120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A233720658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646421;
-	bh=FicCXVrC/nCMsgbkC5DjAjRJKwvdTxrQwIoRiKc+enc=;
+	s=default; t=1585646432;
+	bh=5CvfJwbTSTp25ip8k7Gp6TZBaCo86dX6oC/nzpg0hSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tmO75V+XWr+/JdJgN3UMEGa6ZZng9KVZAFOu6IUPNdBI48Ze8IGUNRTt+Q897nInA
-	 C+5tOEbReHn2NnmY6DIkxCS6G7sy0Z1AD8kqKWQlbNbId8tuNJ4iO0bYasdS+HdWAq
-	 ttEyfADOxqucoWhgsvvqj0HUbeZbQhXrJI78lVrU=
+	b=YxI/Qia5EsS1pYNXp9No+y7r1AS/cQZJDlt9U3bdLU6IEypfSlIohLlyR4SdPDqwX
+	 Ewfd86dlkxVb8Wbar0tPM74kCd8P9x10P1t96lJqH2pyg1cPoiBeebP6/4MGVAPmgs
+	 nN0w+/RQzMZF70AIf7bGarsy6K3piXaTSKe7FIr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbgCaJPH (ORCPT
+        id S1731796AbgCaJON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:15:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35162 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731249AbgCaJPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:15:04 -0400
+        id S1731761AbgCaJOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:14:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DA1C20772;
-        Tue, 31 Mar 2020 09:15:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F5342072E;
+        Tue, 31 Mar 2020 09:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646103;
-        bh=FicCXVrC/nCMsgbkC5DjAjRJKwvdTxrQwIoRiKc+enc=;
+        s=default; t=1585646048;
+        bh=5CvfJwbTSTp25ip8k7Gp6TZBaCo86dX6oC/nzpg0hSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3UOyjnXola1bF/ooFsYeppPW3Zej2xhTBKe1XL2Ol78RIK6aDzVbt1uU/HAorxA/
-         vwlej9Jo3ipsIkwH2EO5sEehT+4NlvAPO4i/C/3LWuJyqXwAA+ZlO5KrI14udtuAmH
-         207zavivfbWmkuMu45OeKF3sZdUCzbyvBk2MubCU=
+        b=uvLNmILL1B36jybZBjJ4w+A2BWXb8G5pZyMO/ErwhPERrxvPt3ik3hMXq/DBmNL4/
+         QoS6o/5lKirAicvdvx0L0YntvN3aJfQKLBlTpyyKHSrcGcACrpFCqdBVv9JjBLNHps
+         8KBaQlu8G5EtFXlsN/WXJtNWnKY1r7GlzcixkS3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 085/155] RDMA/mad: Do not crash if the rdma device does not have a umad interface
-Date:   Tue, 31 Mar 2020 10:58:45 +0200
-Message-Id: <20200331085427.797159123@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 019/155] net: dsa: tag_8021q: replace dsa_8021q_remove_header with __skb_vlan_pop
+Date:   Tue, 31 Mar 2020 10:57:39 +0200
+Message-Id: <20200331085420.536558279@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,123 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-commit 5bdfa854013ce4193de0d097931fd841382c76a7 upstream.
+[ Upstream commit e80f40cbe4dd51371818e967d40da8fe305db5e4 ]
 
-Non-IB devices do not have a umad interface and the client_data will be
-left set to NULL. In this case calling get_nl_info() will try to kref a
-NULL cdev causing a crash:
+Not only did this wheel did not need reinventing, but there is also
+an issue with it: It doesn't remove the VLAN header in a way that
+preserves the L2 payload checksum when that is being provided by the DSA
+master hw.  It should recalculate checksum both for the push, before
+removing the header, and for the pull afterwards. But the current
+implementation is quite dizzying, with pulls followed immediately
+afterwards by pushes, the memmove is done before the push, etc.  This
+makes a DSA master with RX checksumming offload to print stack traces
+with the infamous 'hw csum failure' message.
 
-  general protection fault, probably for non-canonical address 0xdffffc00000000ba: 0000 [#1] PREEMPT SMP KASAN
-  KASAN: null-ptr-deref in range [0x00000000000005d0-0x00000000000005d7]
-  CPU: 0 PID: 20851 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  RIP: 0010:kobject_get+0x35/0x150 lib/kobject.c:640
-  Code: 53 e8 3f b0 8b f9 4d 85 e4 0f 84 a2 00 00 00 e8 31 b0 8b f9 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f  b6 04 02 48 89 fa
-+83 e2 07 38 d0 7f 08 84 c0 0f 85 eb 00 00 00
-  RSP: 0018:ffffc9000946f1a0 EFLAGS: 00010203
-  RAX: dffffc0000000000 RBX: ffffffff85bdbbb0 RCX: ffffc9000bf22000
-  RDX: 00000000000000ba RSI: ffffffff87e9d78f RDI: 00000000000005d4
-  RBP: ffffc9000946f1b8 R08: ffff8880581a6440 R09: ffff8880581a6cd0
-  R10: fffffbfff154b838 R11: ffffffff8aa5c1c7 R12: 0000000000000598
-  R13: 0000000000000000 R14: ffffc9000946f278 R15: ffff88805cb0c4d0
-  FS:  00007faa9e8af700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000001b30121000 CR3: 000000004515d000 CR4: 00000000001406f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   get_device+0x25/0x40 drivers/base/core.c:2574
-   __ib_get_client_nl_info+0x205/0x2e0 drivers/infiniband/core/device.c:1861
-   ib_get_client_nl_info+0x35/0x180 drivers/infiniband/core/device.c:1881
-   nldev_get_chardev+0x575/0xac0 drivers/infiniband/core/nldev.c:1621
-   rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
-   rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
-   rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
-   netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-   netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
-   netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
-   sock_sendmsg_nosec net/socket.c:652 [inline]
-   sock_sendmsg+0xd7/0x130 net/socket.c:672
-   ____sys_sendmsg+0x753/0x880 net/socket.c:2343
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-   __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
-   __do_sys_sendmsg net/socket.c:2439 [inline]
-   __se_sys_sendmsg net/socket.c:2437 [inline]
-   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+So remove the dsa_8021q_remove_header function and replace it with
+something that actually works with inet checksumming.
 
-Cc: stable@kernel.org
-Fixes: 8f71bb0030b8 ("RDMA: Report available cdevs through RDMA_NLDEV_CMD_GET_CHARDEV")
-Link: https://lore.kernel.org/r/20200310075339.238090-1-leon@kernel.org
-Reported-by: syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: d461933638ae ("net: dsa: tag_8021q: Create helper function for removing VLAN header")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/infiniband/core/user_mad.c |   33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ include/linux/dsa/8021q.h |    7 -------
+ net/dsa/tag_8021q.c       |   43 -------------------------------------------
+ net/dsa/tag_sja1105.c     |   19 +++++++++----------
+ 3 files changed, 9 insertions(+), 60 deletions(-)
 
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -1129,17 +1129,30 @@ static const struct file_operations umad
- 	.llseek	 = no_llseek,
- };
+--- a/include/linux/dsa/8021q.h
++++ b/include/linux/dsa/8021q.h
+@@ -28,8 +28,6 @@ int dsa_8021q_rx_switch_id(u16 vid);
  
-+static struct ib_umad_port *get_port(struct ib_device *ibdev,
-+				     struct ib_umad_device *umad_dev,
-+				     unsigned int port)
-+{
-+	if (!umad_dev)
-+		return ERR_PTR(-EOPNOTSUPP);
-+	if (!rdma_is_port_valid(ibdev, port))
-+		return ERR_PTR(-EINVAL);
-+	if (!rdma_cap_ib_mad(ibdev, port))
-+		return ERR_PTR(-EOPNOTSUPP);
-+
-+	return &umad_dev->ports[port - rdma_start_port(ibdev)];
-+}
-+
- static int ib_umad_get_nl_info(struct ib_device *ibdev, void *client_data,
- 			       struct ib_client_nl_info *res)
- {
--	struct ib_umad_device *umad_dev = client_data;
-+	struct ib_umad_port *port = get_port(ibdev, client_data, res->port);
+ int dsa_8021q_rx_source_port(u16 vid);
  
--	if (!rdma_is_port_valid(ibdev, res->port))
--		return -EINVAL;
-+	if (IS_ERR(port))
-+		return PTR_ERR(port);
- 
- 	res->abi = IB_USER_MAD_ABI_VERSION;
--	res->cdev = &umad_dev->ports[res->port - rdma_start_port(ibdev)].dev;
+-struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb);
 -
-+	res->cdev = &port->dev;
+ #else
+ 
+ int dsa_port_setup_8021q_tagging(struct dsa_switch *ds, int index,
+@@ -64,11 +62,6 @@ int dsa_8021q_rx_source_port(u16 vid)
  	return 0;
  }
  
-@@ -1154,15 +1167,13 @@ MODULE_ALIAS_RDMA_CLIENT("umad");
- static int ib_issm_get_nl_info(struct ib_device *ibdev, void *client_data,
- 			       struct ib_client_nl_info *res)
- {
--	struct ib_umad_device *umad_dev =
--		ib_get_client_data(ibdev, &umad_client);
-+	struct ib_umad_port *port = get_port(ibdev, client_data, res->port);
- 
--	if (!rdma_is_port_valid(ibdev, res->port))
--		return -EINVAL;
-+	if (IS_ERR(port))
-+		return PTR_ERR(port);
- 
- 	res->abi = IB_USER_MAD_ABI_VERSION;
--	res->cdev = &umad_dev->ports[res->port - rdma_start_port(ibdev)].sm_dev;
+-struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
+-{
+-	return NULL;
+-}
 -
-+	res->cdev = &port->sm_dev;
- 	return 0;
- }
+ #endif /* IS_ENABLED(CONFIG_NET_DSA_TAG_8021Q) */
  
+ #endif /* _NET_DSA_8021Q_H */
+--- a/net/dsa/tag_8021q.c
++++ b/net/dsa/tag_8021q.c
+@@ -299,49 +299,6 @@ struct sk_buff *dsa_8021q_xmit(struct sk
+ }
+ EXPORT_SYMBOL_GPL(dsa_8021q_xmit);
+ 
+-/* In the DSA packet_type handler, skb->data points in the middle of the VLAN
+- * tag, after tpid and before tci. This is because so far, ETH_HLEN
+- * (DMAC, SMAC, EtherType) bytes were pulled.
+- * There are 2 bytes of VLAN tag left in skb->data, and upper
+- * layers expect the 'real' EtherType to be consumed as well.
+- * Coincidentally, a VLAN header is also of the same size as
+- * the number of bytes that need to be pulled.
+- *
+- * skb_mac_header                                      skb->data
+- * |                                                       |
+- * v                                                       v
+- * |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+- * +-----------------------+-----------------------+-------+-------+-------+
+- * |    Destination MAC    |      Source MAC       |  TPID |  TCI  | EType |
+- * +-----------------------+-----------------------+-------+-------+-------+
+- * ^                                               |               |
+- * |<--VLAN_HLEN-->to                              <---VLAN_HLEN--->
+- * from            |
+- *       >>>>>>>   v
+- *       >>>>>>>   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+- *       >>>>>>>   +-----------------------+-----------------------+-------+
+- *       >>>>>>>   |    Destination MAC    |      Source MAC       | EType |
+- *                 +-----------------------+-----------------------+-------+
+- *                 ^                                                       ^
+- * (now part of    |                                                       |
+- *  skb->head)     skb_mac_header                                  skb->data
+- */
+-struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
+-{
+-	u8 *from = skb_mac_header(skb);
+-	u8 *dest = from + VLAN_HLEN;
+-
+-	memmove(dest, from, ETH_HLEN - VLAN_HLEN);
+-	skb_pull(skb, VLAN_HLEN);
+-	skb_push(skb, ETH_HLEN);
+-	skb_reset_mac_header(skb);
+-	skb_reset_mac_len(skb);
+-	skb_pull_rcsum(skb, ETH_HLEN);
+-
+-	return skb;
+-}
+-EXPORT_SYMBOL_GPL(dsa_8021q_remove_header);
+-
+ static const struct dsa_device_ops dsa_8021q_netdev_ops = {
+ 	.name		= "8021q",
+ 	.proto		= DSA_TAG_PROTO_8021Q,
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -238,14 +238,14 @@ static struct sk_buff *sja1105_rcv(struc
+ {
+ 	struct sja1105_meta meta = {0};
+ 	int source_port, switch_id;
+-	struct vlan_ethhdr *hdr;
++	struct ethhdr *hdr;
+ 	u16 tpid, vid, tci;
+ 	bool is_link_local;
+ 	bool is_tagged;
+ 	bool is_meta;
+ 
+-	hdr = vlan_eth_hdr(skb);
+-	tpid = ntohs(hdr->h_vlan_proto);
++	hdr = eth_hdr(skb);
++	tpid = ntohs(hdr->h_proto);
+ 	is_tagged = (tpid == ETH_P_SJA1105);
+ 	is_link_local = sja1105_is_link_local(skb);
+ 	is_meta = sja1105_is_meta_frame(skb);
+@@ -254,7 +254,12 @@ static struct sk_buff *sja1105_rcv(struc
+ 
+ 	if (is_tagged) {
+ 		/* Normal traffic path. */
+-		tci = ntohs(hdr->h_vlan_TCI);
++		skb_push_rcsum(skb, ETH_HLEN);
++		__skb_vlan_pop(skb, &tci);
++		skb_pull_rcsum(skb, ETH_HLEN);
++		skb_reset_network_header(skb);
++		skb_reset_transport_header(skb);
++
+ 		vid = tci & VLAN_VID_MASK;
+ 		source_port = dsa_8021q_rx_source_port(vid);
+ 		switch_id = dsa_8021q_rx_switch_id(vid);
+@@ -283,12 +288,6 @@ static struct sk_buff *sja1105_rcv(struc
+ 		return NULL;
+ 	}
+ 
+-	/* Delete/overwrite fake VLAN header, DSA expects to not find
+-	 * it there, see dsa_switch_rcv: skb_push(skb, ETH_HLEN).
+-	 */
+-	if (is_tagged)
+-		skb = dsa_8021q_remove_header(skb);
+-
+ 	return sja1105_rcv_meta_state_machine(skb, &meta, is_link_local,
+ 					      is_meta);
+ }
 
 
