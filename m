@@ -2,302 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5DFC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC66CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9000206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="SOXcyaVY"
+	by mail.kernel.org (Postfix) with ESMTP id 7BD0320748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585640514;
+	bh=5iFie0hFJZbTkxQfX1zpVUAdSViyONJlf5tfYCSCM90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pJebWMmmOKpBMS11vyJvQNIsiGbelwjlOe363FbhhRApnRpnxDrCcc+S/m46Vq5Qk
+	 MpDy9ay3TXWNFMc+g8wRRD2JeC8wuQoDM42DfCeiDrYJru2ECeCbLHRNLwjAum1Kbp
+	 47tDbbMPgLuEfauMYKAiS2fmaKafE3Mwvvsf8/FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730057AbgCaHkk (ORCPT
+        id S1730028AbgCaHlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:40:40 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:33383 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCaHkk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:40:40 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        Tue, 31 Mar 2020 03:41:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726595AbgCaHlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:41:53 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 7CC1E22EE3;
-        Tue, 31 Mar 2020 09:40:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585640434;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mviIisaY+natZUJ2Z168wGqsXylmvuvr2v6d2rj4s3E=;
-        b=SOXcyaVY+Xh1wNUH5QfHmaec2ziYF4dLWLvGyJL95daw/h6eKFaCWpOIFTEW8H93ID6Qnh
-        y756CM/zRC6dngc+sUgBXs/wyn4mOK8MCbT3stSE0gEjxEDC6ttFmj2u/XkqH7FgOiiJqV
-        6Q1uQMqY7aUaYn+pGQPt1Aow6EJGC58=
+        by mail.kernel.org (Postfix) with ESMTPSA id 6109D206DB;
+        Tue, 31 Mar 2020 07:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585640512;
+        bh=5iFie0hFJZbTkxQfX1zpVUAdSViyONJlf5tfYCSCM90=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WpA59XPGa8R71SOKM3cUhV4bJJb6J9lAvZeIUmwwwW1bWXp1YARIYTGnL7YmXDF+d
+         LDzhBrS/g+v7WummotEcUhWcRN9ycSGlBv/AXQe5fUH+nj/6AU4bvJUiPKP5jPtIzu
+         X5mg8Tvnns1q6E42t+LvvlanLibgc3PoXVRqJpD8=
+Date:   Tue, 31 Mar 2020 08:41:47 +0100
+From:   Will Deacon <will@kernel.org>
+To:     tingwei@codeaurora.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: hw_breakpoint: don't clear debug registers in
+ halt mode
+Message-ID: <20200331074147.GA25612@willie-the-truck>
+References: <20200328083209.21793-1-tingwei@codeaurora.org>
+ <20200330123946.GH1309@C02TD0UTHF1T.local>
+ <20200330134218.GB10633@willie-the-truck>
+ <2f4d076b2b21de3908f0821126d0c61e@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Mar 2020 09:40:33 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 04/18] dt-bindings: mfd: Add bindings for sl28cpld
-In-Reply-To: <20200330223535.GA31402@bogus>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-5-michael@walle.cc> <20200330223535.GA31402@bogus>
-Message-ID: <538e5e51e59594a39064841509395fdb@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 7CC1E22EE3
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.0:email,0.0.0.1:email];
-         RCPT_COUNT_TWELVE(0.00)[21];
-         NEURAL_HAM(-0.00)[-0.835];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,kernel.org,nxp.com,linutronix.de,lakedaemon.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2f4d076b2b21de3908f0821126d0c61e@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-31 00:35, schrieb Rob Herring:
-> On Tue, Mar 17, 2020 at 09:50:03PM +0100, Michael Walle wrote:
->> This adds device tree bindings for the board management controller 
->> found
->> on the Kontron SMARC-sAL28 board.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  .../bindings/mfd/kontron,sl28cpld.yaml        | 143 
->> ++++++++++++++++++
->>  1 file changed, 143 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml 
->> b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> new file mode 100644
->> index 000000000000..3b9cca49d2d6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> @@ -0,0 +1,143 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Kontron's sl28cpld board management controller
->> +
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  The board management controller may contain different IP blocks 
->> like
->> +  watchdog, fan monitoring, PWM controller, interrupt controller and 
->> a
->> +  GPIO controller.
->> +
->> +properties:
->> +  compatible:
->> +    const: kontron,sl28cpld
->> +
->> +  reg:
->> +    description:
->> +      I2C device address.
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +patternProperties:
->> +  "^gp(io|i|o)(@[0-9]+)?$":
+On Tue, Mar 31, 2020 at 10:39:42AM +0800, tingwei@codeaurora.org wrote:
+> 在 2020-03-30 21:42，Will Deacon 写道：
+> > On Mon, Mar 30, 2020 at 01:39:46PM +0100, Mark Rutland wrote:
+> > > On Sat, Mar 28, 2020 at 04:32:09PM +0800, Tingwei Zhang wrote:
+> > > > If external debugger sets a breakpoint for one Kernel function
+> > > > when device is in bootloader mode and loads Kernel, this breakpoint
+> > > > will be wiped out in hw_breakpoint_reset(). To fix this, check
+> > > > MDSCR_EL1.HDE in hw_breakpoint_reset(). When MDSCR_EL1.HDE is
+> > > > 0b1, halting debug is enabled. Don't reset debug registers in this
+> > case.
+> > > 
+> > > I don't think this is sufficient, because the kernel can still
+> > > subsequently mess with breakpoints, and the HW debugger might not be
+> > > attached at this point in time anyhow.
+> > > 
+> > > I reckon this should hang off the existing "nodebumon" command line
+> > > option, and we shouldn't use HW breakpoints at all when that is
+> > > passed.
+> > > Then you can pass that to prevent the kernel stomping on the external
+> > > debugger.
+> > > 
+> > > Will, thoughts?
+> > 
+> > I was going to suggest the same thing, although we will also need to
+> > take
+> > care to reset the registers if "nodebugmon" is toggled at runtime via
+> > the
+> > "debug_enabled" file in debugfs.
+> > 
+> Thanks for the suggestion, Mark and Will. It's a great idea to use
+> "nodebugmon". When "nodebugmon" is set, Kernel won't change HW breakpoints.
 > 
-> Just 'gpio'. We don't need that level of distinguishing in node names.
+> For reset the registers after "debug_enabled" is toggled, I'm thinking if
+> we are adding unnecessary complexity here.If we take that approach, we will
+> hook "debug_enabled" interface and use smp_call_function_single() to call
+> hw_breakpoint_reset() on each CPU. Wait for all CPUs' execution done and
+> change "debug_enabled". External debugger would clear the breakpoints when
+> it detaches the device and restores its breakpoints when attaches the
+> device.
+> Assume debug_enabled is changed to one after external debugger detaches the
+> device. Debugger would already clear the breakpoint registers. If debgger is
+> still attached, there's nothing Kernel can do to stop it restores/programs
+> the breakpoint registers.
 > 
->> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
->> +
->> +  "^hwmon(@[0-9]+)?$":
->> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
->> +
->> +  "^pwm(@[0-9]+)?$":
->> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
->> +
->> +  "^watchdog(@[0-9]+)?$":
->> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
-> 
-> The patches for these files need to come first or validating this file
-> fails. Really, you can just make all five files 1 patch.
-> 
->> +
->> +required:
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - compatible
->> +  - reg
->> +  - "#interrupt-cells"
->> +  - interrupt-controller
->> +
->> +oneOf:
->> +  - required:
->> +    - interrupts
->> +  - required:
->> +    - interrupts-extended
-> 
-> Don't need to do this. Just make 'interrupts' required and you'll get
-> interrupts-extended for free.
-> 
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    i2c {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        sl28cpld@4a {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            compatible = "kontron,sl28cpld";
->> +            reg = <0x4a>;
->> +            interrupts-extended = <&gpio2 6 IRQ_TYPE_EDGE_FALLING>;
->> +
->> +            #interrupt-cells = <2>;
->> +            interrupt-controller;
->> +
->> +            gpio@0 {
->> +                compatible = "kontron,sl28cpld-gpio";
->> +                reg = <0>;
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +            };
->> +
->> +            gpio@1 {
->> +                compatible = "kontron,sl28cpld-gpio";
->> +                reg = <1>;
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +            };
->> +
->> +            gpo {
->> +                compatible = "kontron,sl28cpld-gpo";
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +                gpio-line-names = "a", "b", "c";
->> +            };
->> +
->> +            gpi {
->> +                compatible = "kontron,sl28cpld-gpi";
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +            };
->> +
->> +            hwmon {
->> +                compatible = "kontron,sl28cpld-fan";
->> +            };
->> +
->> +            pwm@0 {
-> 
-> You already used the '0' address. You can't have 2 things at the
-> same address. There's only one number space at a given level.
+> What do you think of this?
 
-There was a reason for having duplicate unit-addresses. See here
-for my reasoning:
-https://lore.kernel.org/linux-devicetree/e55d59a68f497c8f2eb406d40ae878b9@walle.cc/
+It's all a bit of a mess. Looking at it some more, why can't the external
+debugger simply trap access to the debug registers using EDSCR.TDA? That
+way, we don't have to change anything in the kernel.
 
-But I've already noticed that it shouldn't be done it this way. The
-DT check is already complaining.
-
-
-> All these child devices don't have any DT resources, so you don't 
-> really
-> need them. The parent node could be a gpio and pwm provider and that's
-> all you need in DT. Aside from DT resources, the only other reason
-> to have all these child nodes are if the child blocks are going to get
-> assembled in different combinations across a variety of h/w.
-
-What do you mean by DT resources? There is a new patch series in 
-preparation
-where for example the watchdog has a new property
-"kontron,assert-wdt-timeout-pin". Which IMHO should be go under the 
-watchdog
-node.
-Besides from that, there are actually three interrupt controllers, ie. 
-the
-two full featured gpio controllers and one interrupt controller. Do you 
-think
-it makes sense to combine that into the parent node eg. merging 
-different
-thinks like an interrupt controller and the gpio controllers into a 
-single
-interrupt mapping in the parent node.
-See also:
-https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
-
-Also please keep in mind, that these are only the current available 
-building
-blocks of a sl28cpld. They are likely to be extended for other 
-functionalities.
-So while it might be possible to merge the current nodes into the parent 
-I don't
-know it that is possible for future blocks.
-
--michael
+Will
