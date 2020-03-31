@@ -4,252 +4,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516D3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFF8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFBC20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C68E20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M39JwB2Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4R7Th8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgCaC6s (ORCPT
+        id S1730296AbgCaC7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:58:48 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:28129 "EHLO
+        Mon, 30 Mar 2020 22:59:13 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:20008 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730110AbgCaC6r (ORCPT
+        by vger.kernel.org with ESMTP id S1730278AbgCaC7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:58:47 -0400
+        Mon, 30 Mar 2020 22:59:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585623526;
+        s=mimecast20190719; t=1585623552;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dz8yfm6YoIEZSS90vWaOemwtCLIP3utYWGs7hWal1uY=;
-        b=M39JwB2Zctfr5rvF3eMzoKAD2lIvtHMhEGHxKYELdCRxbOom29XoK6spV7trFApXdPkScc
-        jcCTSX6PffERwrGcVE7fHBScLGVqiRG0C0MQg8AWY4Jczu4sfrIFatr0GUVVpw8dOnsO2V
-        8oeObsvl2SSfsRROUOcpZIo3kF2fpPc=
+        bh=jPbiSea3iKmgsPhW5d6VdEOeNmJ89GIMDsuQYNvPcfk=;
+        b=Z4R7Th8xzYuwBVNhPCwjK5yzxrDjv7tjy52oSIfbQTfVnnVv4x5qqMvVSxIcJTraxDWS8T
+        rCtdkFZUrzyARBPtt4Zz7Hbt01RWmvY68KNEjlwZvKklUqEwJcmhiiHlQdybkXkvQoBCWI
+        mt+TaLzaeZcn5dYGx9tfxPabfecjaqA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-36leZYvlNgWHijUPfTPTAQ-1; Mon, 30 Mar 2020 22:58:42 -0400
-X-MC-Unique: 36leZYvlNgWHijUPfTPTAQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-416-wAoZLjByNXaQepDoMefmhw-1; Mon, 30 Mar 2020 22:59:08 -0400
+X-MC-Unique: wAoZLjByNXaQepDoMefmhw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D6C518CA240;
-        Tue, 31 Mar 2020 02:58:41 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F5B85D9E2;
-        Tue, 31 Mar 2020 02:58:32 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 10:58:28 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        linux-scsi@vger.kernel.org, Salman Qazi <sqazi@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] scsi: core: Fix stall if two threads request budget
- at the same time
-Message-ID: <20200331025828.GB20230@ming.t460p>
-References: <20200330144907.13011-1-dianders@chromium.org>
- <20200330074856.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
- <20200331014109.GA20230@ming.t460p>
- <CAD=FV=V-6kFD2Nso+8YGpx5atDpkegBH+7JH9YZ70gPAs84FOw@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72666800D5B;
+        Tue, 31 Mar 2020 02:59:06 +0000 (UTC)
+Received: from [10.72.12.115] (ovpn-12-115.pek2.redhat.com [10.72.12.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 31DCA19C58;
+        Tue, 31 Mar 2020 02:59:02 +0000 (UTC)
+Subject: Re: [RFC PATCH] tun: Don't put_page() for all negative return values
+ from XDP program
+To:     Will Deacon <will@kernel.org>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        kernel-team@android.com, "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Dumazet <edumazet@google.com>
+References: <20200330161234.12777-1-will@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <fd4d792f-32df-953a-a076-c09ed5dea573@redhat.com>
+Date:   Tue, 31 Mar 2020 10:59:01 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=V-6kFD2Nso+8YGpx5atDpkegBH+7JH9YZ70gPAs84FOw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200330161234.12777-1-will@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:15:54PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Mon, Mar 30, 2020 at 6:41 PM Ming Lei <ming.lei@redhat.com> wrote:
-> >
-> > On Mon, Mar 30, 2020 at 07:49:06AM -0700, Douglas Anderson wrote:
-> > > It is possible for two threads to be running
-> > > blk_mq_do_dispatch_sched() at the same time with the same "hctx".
-> > > This is because there can be more than one caller to
-> > > __blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() doesn't
-> > > prevent more than one thread from entering.
-> > >
-> > > If more than one thread is running blk_mq_do_dispatch_sched() at the
-> > > same time with the same "hctx", they may have contention acquiring
-> > > budget.  The blk_mq_get_dispatch_budget() can eventually translate
-> > > into scsi_mq_get_budget().  If the device's "queue_depth" is 1 (not
-> > > uncommon) then only one of the two threads will be the one to
-> > > increment "device_busy" to 1 and get the budget.
-> > >
-> > > The losing thread will break out of blk_mq_do_dispatch_sched() and
-> > > will stop dispatching requests.  The assumption is that when more
-> > > budget is available later (when existing transactions finish) the
-> > > queue will be kicked again, perhaps in scsi_end_request().
-> > >
-> > > The winning thread now has budget and can go on to call
-> > > dispatch_request().  If dispatch_request() returns NULL here then we
-> > > have a potential problem.  Specifically we'll now call
-> >
-> > I guess this problem should be BFQ specific. Now there is definitely
-> > requests in BFQ queue wrt. this hctx. However, looks this request is
-> > only available from another loser thread, and it won't be retrieved in
-> > the winning thread via e->type->ops.dispatch_request().
-> >
-> > Just wondering why BFQ is implemented in this way?
-> 
-> Paolo can maybe comment why.
-> 
-> ...but even if BFQ wanted to try to change this, I think it's
-> impossible to fully close the race.  There is no locking between the
-> call to has_work() and dispatch_request() and there can be two (or
-> more) threads running the code at the same time.  Without some type of
-> locking I think it will always be possible for dispatch_request() to
-> return NULL.  Are we OK with code that works most of the time but
-> still has a race?  ...or did I misunderstand how this all works?
 
-Wrt. dispatching requests from hctx->dispatch, there is really one
-race given scsi's run queue from scsi_end_request() may not see
-that request. Looks that is what the patch 1 is addressing.
+On 2020/3/31 =E4=B8=8A=E5=8D=8812:12, Will Deacon wrote:
+> When an XDP program is installed, tun_build_skb() grabs a reference to
+> the current page fragment page if the program returns XDP_REDIRECT or
+> XDP_TX. However, since tun_xdp_act() passes through negative return
+> values from the XDP program, it is possible to trigger the error path b=
+y
+> mistake and accidentally drop a reference to the fragments page without
+> taking one, leading to a spurious free. This is believed to be the caus=
+e
+> of some KASAN use-after-free reports from syzbot [1], although without =
+a
+> reproducer it is not possible to confirm whether this patch fixes the
+> problem.
+>
+> Ensure that we only drop a reference to the fragments page if the XDP
+> transmit or redirect operations actually fail.
+>
+> [1] https://syzkaller.appspot.com/bug?id=3De76a6af1be4acd727ff6bbca6698=
+33f98cbf5d95
 
-However, for this issue, there isn't race, given when we get budget,
-the request isn't dequeued from BFQ yet. If budget is assigned
-successfully, either the request is dispatched to LLD successfully,
-or STS_RESOURCE is triggered, or running out of driver tag, run queue
-is guaranteed to be started for handling another dispatch path 
-which running out of budget.
 
-That is why I raise the question why BFQ dispatches request in this way.
+I think the patch fixes the issue reported. Since I can see the warn of=20
+bad page state in put_page().
 
-> 
-> 
-> > > blk_mq_put_dispatch_budget() which translates into
-> > > scsi_mq_put_budget().  That will mark the device as no longer busy but
-> > > doesn't do anything to kick the queue.  This violates the assumption
-> > > that the queue would be kicked when more budget was available.
-> > >
-> > > Pictorially:
-> > >
-> > > Thread A                          Thread B
-> > > ================================= ==================================
-> > > blk_mq_get_dispatch_budget() => 1
-> > > dispatch_request() => NULL
-> > >                                   blk_mq_get_dispatch_budget() => 0
-> > >                                   // because Thread A marked
-> > >                                   // "device_busy" in scsi_device
-> > > blk_mq_put_dispatch_budget()
-> > >
-> > > The above case was observed in reboot tests and caused a task to hang
-> > > forever waiting for IO to complete.  Traces showed that in fact two
-> > > tasks were running blk_mq_do_dispatch_sched() at the same time with
-> > > the same "hctx".  The task that got the budget did in fact see
-> > > dispatch_request() return NULL.  Both tasks returned and the system
-> > > went on for several minutes (until the hung task delay kicked in)
-> > > without the given "hctx" showing up again in traces.
-> > >
-> > > Let's attempt to fix this problem by detecting budget contention.  If
-> > > we're in the SCSI code's put_budget() function and we saw that someone
-> > > else might have wanted the budget we got then we'll kick the queue.
-> > >
-> > > The mechanism of kicking due to budget contention has the potential to
-> > > overcompensate and kick the queue more than strictly necessary, but it
-> > > shouldn't hurt.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > >
-> > >  drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
-> > >  drivers/scsi/scsi_scan.c   |  1 +
-> > >  include/scsi/scsi_device.h |  2 ++
-> > >  3 files changed, 27 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> > > index 610ee41fa54c..0530da909995 100644
-> > > --- a/drivers/scsi/scsi_lib.c
-> > > +++ b/drivers/scsi/scsi_lib.c
-> > > @@ -344,6 +344,21 @@ static void scsi_dec_host_busy(struct Scsi_Host *shost, struct scsi_cmnd *cmd)
-> > >       rcu_read_unlock();
-> > >  }
-> > >
-> > > +static void scsi_device_dec_busy(struct scsi_device *sdev)
-> > > +{
-> > > +     bool was_contention;
-> > > +     unsigned long flags;
-> > > +
-> > > +     spin_lock_irqsave(&sdev->budget_lock, flags);
-> > > +     atomic_dec(&sdev->device_busy);
-> > > +     was_contention = sdev->budget_contention;
-> > > +     sdev->budget_contention = false;
-> > > +     spin_unlock_irqrestore(&sdev->budget_lock, flags);
-> > > +
-> > > +     if (was_contention)
-> > > +             blk_mq_run_hw_queues(sdev->request_queue, true);
-> > > +}
-> > > +
-> > >  void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd)
-> > >  {
-> > >       struct Scsi_Host *shost = sdev->host;
-> > > @@ -354,7 +369,7 @@ void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd)
-> > >       if (starget->can_queue > 0)
-> > >               atomic_dec(&starget->target_busy);
-> > >
-> > > -     atomic_dec(&sdev->device_busy);
-> > > +     scsi_device_dec_busy(sdev);
-> > >  }
-> > >
-> > >  static void scsi_kick_queue(struct request_queue *q)
-> > > @@ -1624,16 +1639,22 @@ static void scsi_mq_put_budget(struct blk_mq_hw_ctx *hctx)
-> > >       struct request_queue *q = hctx->queue;
-> > >       struct scsi_device *sdev = q->queuedata;
-> > >
-> > > -     atomic_dec(&sdev->device_busy);
-> > > +     scsi_device_dec_busy(sdev);
-> > >  }
-> > >
-> > >  static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
-> > >  {
-> > >       struct request_queue *q = hctx->queue;
-> > >       struct scsi_device *sdev = q->queuedata;
-> > > +     unsigned long flags;
-> > >
-> > > -     if (scsi_dev_queue_ready(q, sdev))
-> > > +     spin_lock_irqsave(&sdev->budget_lock, flags);
-> > > +     if (scsi_dev_queue_ready(q, sdev)) {
-> > > +             spin_unlock_irqrestore(&sdev->budget_lock, flags);
-> > >               return true;
-> > > +     }
-> > > +     sdev->budget_contention = true;
-> > > +     spin_unlock_irqrestore(&sdev->budget_lock, flags);
-> >
-> > No, it really hurts performance by adding one per-sdev spinlock in fast path,
-> > and we actually tried to kill the atomic variable of 'sdev->device_busy'
-> > for high performance HBA.
-> 
-> It might be slow, but correctness trumps speed, right?  I tried to do
 
-Correctness doesn't have to cause performance regression, does it?
+>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Jason Wang <jasowang@redhat.com>
+> CC: Eric Dumazet <edumazet@google.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>
+> Sending as RFC because I've not been able to confirm that this fixes an=
+ything.
+>
+>   drivers/net/tun.c | 10 ++++++----
+>   1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index 650c937ed56b..9de9b7d8aedd 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(struct tun_=
+struct *tun,
+>   			alloc_frag->offset +=3D buflen;
+>   		}
+>   		err =3D tun_xdp_act(tun, xdp_prog, &xdp, act);
+> -		if (err < 0)
+> -			goto err_xdp;
+> +		if (err < 0) {
+> +			if (act =3D=3D XDP_REDIRECT || act =3D=3D XDP_TX)
+> +				put_page(alloc_frag->page);
+> +			goto out;
+> +		}
+> +
+>   		if (err =3D=3D XDP_REDIRECT)
+>   			xdp_do_flush();
+>   		if (err !=3D XDP_PASS)
+> @@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(struct tun_s=
+truct *tun,
+>  =20
+>   	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
+>  =20
+> -err_xdp:
+> -	put_page(alloc_frag->page);
+>   out:
+>   	rcu_read_unlock();
+>   	local_bh_enable();
 
-> this with a 2nd atomic and without the spinlock but I kept having a
-> hole one way or the other.  I ended up just trying to keep the
-> spinlock section as small as possible.
-> 
-> If you know of a way to get rid of the spinlock that still makes the
-> code correct, I'd be super interested!  :-)  I certainly won't claim
-> that it's impossible to do, only that I didn't manage to come up with
-> a way.
 
-As I mentioned, if BFQ doesn't dispatch request in this special way,
-there isn't such race.
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-Thanks,
-Ming
+Thanks
+
 
