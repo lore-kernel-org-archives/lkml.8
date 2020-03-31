@@ -2,52 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA09C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AC8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097E020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92ED20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645635;
-	bh=LO6+gl4fRQ+CxZBnI0a3blprYN0P7Vg0OaMiOyCbBWc=;
+	s=default; t=1585645637;
+	bh=zHxf+uGEgqh8WSxt3UwJ9PZzI3+QF9J16NeIV/VzbHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYR3qnH9P5g+yYRMbK+1XJ+09iv8sDgKKNHE2PRqR5EngwmFzpDSsBMFhIxLNPdcg
-	 Nn3H4Ih5DEFK/VzmfCdIPaLzZd5kC58tTirC318h6NMsJHE6pPkIFCyUVFdwCrJkBU
-	 B37ZXvQgB9f4W/aSo9ogVoiP3/6aLbvPo95UzpBI=
+	b=ZLgnMQ6ltAwbHpdL6vq61pVYi22qEXlDSWADz4d2gUQXrZS1/cTiIFGBCM8lyjUuv
+	 OpdMwtkVM61cz+DxFx4W9mICUUG2Y4L0dX9cKWkU7jOVn8nzG0GTcmioyqEWSh4uMR
+	 Cwqs6j7EeubtiXqwm1/fFr0IuFqtoPfqxixrYvx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731211AbgCaJHN (ORCPT
+        id S1731220AbgCaJHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48712 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730732AbgCaJHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:07:05 -0400
+        id S1730885AbgCaJHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:07:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFC6620675;
-        Tue, 31 Mar 2020 09:07:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64FE620675;
+        Tue, 31 Mar 2020 09:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645624;
-        bh=LO6+gl4fRQ+CxZBnI0a3blprYN0P7Vg0OaMiOyCbBWc=;
+        s=default; t=1585645630;
+        bh=zHxf+uGEgqh8WSxt3UwJ9PZzI3+QF9J16NeIV/VzbHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BxZTUOZGq6NG3CwqJUOmfhWwsnshlzOQ1F06w+fx2DIybiGEK6OGfP8AmxX0BQG04
-         Vb1XTsP/+LoT+U1fYop7So8A7X1VNS48Ka5greZrLJ6W6dAdGT87fysMM8FKj5Czef
-         rlFotbeT42p1KtRUBvoUwwPpMfAj5W9TqyIAgwlw=
+        b=nXaA763475eKJZWQCtgNVWdW36GANosbIosJnDTHiSxh+ZPqil3+QIjpYrWVT4bJF
+         x8AQmj3BEjHo55TjKsCPJIYTTjAoG2j0mg+CpLMk/6c7K3BlXoMe9zzoLm7JjKXt8b
+         a2bDWALbq63cEIs42QzUyneOSkpxKp51hbyIABaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jouni Malinen <j@w1.fi>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.5 109/170] mac80211: drop data frames without key on encrypted links
-Date:   Tue, 31 Mar 2020 10:58:43 +0200
-Message-Id: <20200331085435.762508847@linuxfoundation.org>
+        stable@vger.kernel.org, Juliet Kim <julietk@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 074/170] ibmvnic: Do not process device remove during device reset
+Date:   Tue, 31 Mar 2020 10:58:08 +0200
+Message-Id: <20200331085432.209416242@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,156 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Juliet Kim <julietk@linux.vnet.ibm.com>
 
-commit a0761a301746ec2d92d7fcb82af69c0a6a4339aa upstream.
+[ Upstream commit 7d7195a026bac47ac9943f11f84b7546276209dd ]
 
-If we know that we have an encrypted link (based on having had
-a key configured for TX in the past) then drop all data frames
-in the key selection handler if there's no key anymore.
+The ibmvnic driver does not check the device state when the device
+is removed. If the device is removed while a device reset is being
+processed, the remove may free structures needed by the reset,
+causing an oops.
 
-This fixes an issue with mac80211 internal TXQs - there we can
-buffer frames for an encrypted link, but then if the key is no
-longer there when they're dequeued, the frames are sent without
-encryption. This happens if a station is disconnected while the
-frames are still on the TXQ.
+Fix this by checking the device state before processing device remove.
 
-Detecting that a link should be encrypted based on a first key
-having been configured for TX is fine as there are no use cases
-for a connection going from with encryption to no encryption.
-With extended key IDs, however, there is a case of having a key
-configured for only decryption, so we can't just trigger this
-behaviour on a key being configured.
-
-Cc: stable@vger.kernel.org
-Reported-by: Jouni Malinen <j@w1.fi>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200326150855.6865c7f28a14.I9fb1d911b064262d33e33dfba730cdeef83926ca@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Juliet Kim <julietk@linux.vnet.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/debugfs_sta.c |    3 ++-
- net/mac80211/key.c         |   20 ++++++++++++--------
- net/mac80211/sta_info.h    |    1 +
- net/mac80211/tx.c          |   12 +++++++++---
- 4 files changed, 24 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 24 ++++++++++++++++++++++--
+ drivers/net/ethernet/ibm/ibmvnic.h |  6 +++++-
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
---- a/net/mac80211/debugfs_sta.c
-+++ b/net/mac80211/debugfs_sta.c
-@@ -5,7 +5,7 @@
-  * Copyright 2007	Johannes Berg <johannes@sipsolutions.net>
-  * Copyright 2013-2014  Intel Mobile Communications GmbH
-  * Copyright(c) 2016 Intel Deutschland GmbH
-- * Copyright (C) 2018 - 2019 Intel Corporation
-+ * Copyright (C) 2018 - 2020 Intel Corporation
-  */
- 
- #include <linux/debugfs.h>
-@@ -78,6 +78,7 @@ static const char * const sta_flag_names
- 	FLAG(MPSP_OWNER),
- 	FLAG(MPSP_RECIPIENT),
- 	FLAG(PS_DELIVER),
-+	FLAG(USES_ENCRYPTION),
- #undef FLAG
- };
- 
---- a/net/mac80211/key.c
-+++ b/net/mac80211/key.c
-@@ -6,7 +6,7 @@
-  * Copyright 2007-2008	Johannes Berg <johannes@sipsolutions.net>
-  * Copyright 2013-2014  Intel Mobile Communications GmbH
-  * Copyright 2015-2017	Intel Deutschland GmbH
-- * Copyright 2018-2019  Intel Corporation
-+ * Copyright 2018-2020  Intel Corporation
-  */
- 
- #include <linux/if_ether.h>
-@@ -262,22 +262,29 @@ static void ieee80211_key_disable_hw_acc
- 			  sta ? sta->sta.addr : bcast_addr, ret);
- }
- 
--int ieee80211_set_tx_key(struct ieee80211_key *key)
-+static int _ieee80211_set_tx_key(struct ieee80211_key *key, bool force)
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 830791ab4619c..3c7295056c85d 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -2142,6 +2142,8 @@ static void __ibmvnic_reset(struct work_struct *work)
  {
- 	struct sta_info *sta = key->sta;
- 	struct ieee80211_local *local = key->local;
+ 	struct ibmvnic_rwi *rwi;
+ 	struct ibmvnic_adapter *adapter;
++	bool saved_state = false;
++	unsigned long flags;
+ 	u32 reset_state;
+ 	int rc = 0;
  
- 	assert_key_lock(local);
- 
-+	set_sta_flag(sta, WLAN_STA_USES_ENCRYPTION);
-+
- 	sta->ptk_idx = key->conf.keyidx;
- 
--	if (!ieee80211_hw_check(&local->hw, AMPDU_KEYBORDER_SUPPORT))
-+	if (force || !ieee80211_hw_check(&local->hw, AMPDU_KEYBORDER_SUPPORT))
- 		clear_sta_flag(sta, WLAN_STA_BLOCK_BA);
- 	ieee80211_check_fast_xmit(sta);
- 
- 	return 0;
- }
- 
-+int ieee80211_set_tx_key(struct ieee80211_key *key)
-+{
-+	return _ieee80211_set_tx_key(key, false);
-+}
-+
- static void ieee80211_pairwise_rekey(struct ieee80211_key *old,
- 				     struct ieee80211_key *new)
- {
-@@ -441,11 +448,8 @@ static int ieee80211_key_replace(struct
- 		if (pairwise) {
- 			rcu_assign_pointer(sta->ptk[idx], new);
- 			if (new &&
--			    !(new->conf.flags & IEEE80211_KEY_FLAG_NO_AUTO_TX)) {
--				sta->ptk_idx = idx;
--				clear_sta_flag(sta, WLAN_STA_BLOCK_BA);
--				ieee80211_check_fast_xmit(sta);
--			}
-+			    !(new->conf.flags & IEEE80211_KEY_FLAG_NO_AUTO_TX))
-+				_ieee80211_set_tx_key(new, true);
- 		} else {
- 			rcu_assign_pointer(sta->gtk[idx], new);
- 		}
---- a/net/mac80211/sta_info.h
-+++ b/net/mac80211/sta_info.h
-@@ -98,6 +98,7 @@ enum ieee80211_sta_info_flags {
- 	WLAN_STA_MPSP_OWNER,
- 	WLAN_STA_MPSP_RECIPIENT,
- 	WLAN_STA_PS_DELIVER,
-+	WLAN_STA_USES_ENCRYPTION,
- 
- 	NUM_WLAN_STA_FLAGS,
- };
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -590,10 +590,13 @@ ieee80211_tx_h_select_key(struct ieee802
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(tx->skb);
- 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)tx->skb->data;
- 
--	if (unlikely(info->flags & IEEE80211_TX_INTFL_DONT_ENCRYPT))
-+	if (unlikely(info->flags & IEEE80211_TX_INTFL_DONT_ENCRYPT)) {
- 		tx->key = NULL;
--	else if (tx->sta &&
--		 (key = rcu_dereference(tx->sta->ptk[tx->sta->ptk_idx])))
-+		return TX_CONTINUE;
-+	}
-+
-+	if (tx->sta &&
-+	    (key = rcu_dereference(tx->sta->ptk[tx->sta->ptk_idx])))
- 		tx->key = key;
- 	else if (ieee80211_is_group_privacy_action(tx->skb) &&
- 		(key = rcu_dereference(tx->sdata->default_multicast_key)))
-@@ -654,6 +657,9 @@ ieee80211_tx_h_select_key(struct ieee802
- 		if (!skip_hw && tx->key &&
- 		    tx->key->flags & KEY_FLAG_UPLOADED_TO_HARDWARE)
- 			info->control.hw_key = &tx->key->conf;
-+	} else if (!ieee80211_is_mgmt(hdr->frame_control) && tx->sta &&
-+		   test_sta_flag(tx->sta, WLAN_STA_USES_ENCRYPTION)) {
-+		return TX_DROP;
+@@ -2153,17 +2155,25 @@ static void __ibmvnic_reset(struct work_struct *work)
+ 		return;
  	}
  
- 	return TX_CONTINUE;
+-	reset_state = adapter->state;
+-
+ 	rwi = get_next_rwi(adapter);
+ 	while (rwi) {
++		spin_lock_irqsave(&adapter->state_lock, flags);
++
+ 		if (adapter->state == VNIC_REMOVING ||
+ 		    adapter->state == VNIC_REMOVED) {
++			spin_unlock_irqrestore(&adapter->state_lock, flags);
+ 			kfree(rwi);
+ 			rc = EBUSY;
+ 			break;
+ 		}
+ 
++		if (!saved_state) {
++			reset_state = adapter->state;
++			adapter->state = VNIC_RESETTING;
++			saved_state = true;
++		}
++		spin_unlock_irqrestore(&adapter->state_lock, flags);
++
+ 		if (rwi->reset_reason == VNIC_RESET_CHANGE_PARAM) {
+ 			/* CHANGE_PARAM requestor holds rtnl_lock */
+ 			rc = do_change_param_reset(adapter, rwi, reset_state);
+@@ -5091,6 +5101,7 @@ static int ibmvnic_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 			  __ibmvnic_delayed_reset);
+ 	INIT_LIST_HEAD(&adapter->rwi_list);
+ 	spin_lock_init(&adapter->rwi_lock);
++	spin_lock_init(&adapter->state_lock);
+ 	mutex_init(&adapter->fw_lock);
+ 	init_completion(&adapter->init_done);
+ 	init_completion(&adapter->fw_done);
+@@ -5163,8 +5174,17 @@ static int ibmvnic_remove(struct vio_dev *dev)
+ {
+ 	struct net_device *netdev = dev_get_drvdata(&dev->dev);
+ 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
++	unsigned long flags;
++
++	spin_lock_irqsave(&adapter->state_lock, flags);
++	if (adapter->state == VNIC_RESETTING) {
++		spin_unlock_irqrestore(&adapter->state_lock, flags);
++		return -EBUSY;
++	}
+ 
+ 	adapter->state = VNIC_REMOVING;
++	spin_unlock_irqrestore(&adapter->state_lock, flags);
++
+ 	rtnl_lock();
+ 	unregister_netdevice(netdev);
+ 
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.h b/drivers/net/ethernet/ibm/ibmvnic.h
+index 60eccaf91b122..f8416e1d4cf09 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.h
++++ b/drivers/net/ethernet/ibm/ibmvnic.h
+@@ -941,7 +941,8 @@ enum vnic_state {VNIC_PROBING = 1,
+ 		 VNIC_CLOSING,
+ 		 VNIC_CLOSED,
+ 		 VNIC_REMOVING,
+-		 VNIC_REMOVED};
++		 VNIC_REMOVED,
++		 VNIC_RESETTING};
+ 
+ enum ibmvnic_reset_reason {VNIC_RESET_FAILOVER = 1,
+ 			   VNIC_RESET_MOBILITY,
+@@ -1090,4 +1091,7 @@ struct ibmvnic_adapter {
+ 
+ 	struct ibmvnic_tunables desired;
+ 	struct ibmvnic_tunables fallback;
++
++	/* Used for serializatin of state field */
++	spinlock_t state_lock;
+ };
+-- 
+2.20.1
+
 
 
