@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74E9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0C3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB09F20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FEE820772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645862;
-	bh=QBRWgqCrNTqkqSiXzSZqGwRGdI6o65xRYc1R9QeALGM=;
+	s=default; t=1585645865;
+	bh=Z2eQWQQd09Y24ml54/ptlmTqM1M5MaTLo8/U7dsFmKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n56q7PFz1QWHficNq9TpZAg1Uyx7SxMIlHlrkzluDcBUsCHIiV8tckqVw892cPXMt
-	 eq9Boat4QDdB7Ivybms6nP8Q7RJIFEc7FGLKF/3UTht7PwCPuYujH06kusBCh0BW+h
-	 VI704Xv3jMvnMog6XY3NtQvOlluHHXMuZZTAhzGs=
+	b=toeQIsTWVJ7iAk+p7WGJODRutMyY1zOMwx0oaeEJpQ8QOWgT98paUIpSc3waX4DWZ
+	 qQdDLNRaS8Xkn6P0MkecEegFIO+w7VpRPFFgMlTaVhSir+6QowsIliY6QyokcDGDX6
+	 R2ol0UKretnrqbuLspoc00zP+yuw2sJ4z8AF8++c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbgCaJLB (ORCPT
+        id S1731661AbgCaJLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:11:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:11:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731642AbgCaJKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:10:54 -0400
+        id S1731646AbgCaJK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:10:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1D6120787;
-        Tue, 31 Mar 2020 09:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55FCC20675;
+        Tue, 31 Mar 2020 09:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645854;
-        bh=QBRWgqCrNTqkqSiXzSZqGwRGdI6o65xRYc1R9QeALGM=;
+        s=default; t=1585645857;
+        bh=Z2eQWQQd09Y24ml54/ptlmTqM1M5MaTLo8/U7dsFmKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Yen5+R9wykkufjX6Fmmisstmh1HrxhyclnRV0QgJJCTYmgwIav+GhV1/9tg+cD0r
-         k+z4hhy8nQkRdlWVQjz612bcP24fY8EEGKJ53TuPJ2PXaUO0FYag+9j26fiNOZozvd
-         WwiINhGtYwJX5cnvyzkz7z4bCPiSxeuDF9w9HNPY=
+        b=1u7KMtgsJdyjQzIV2QqJPGeSjrO0GTi7bosplU+PqykaP1WP+679Lp7ShqrejcJVl
+         t55QGItixsI7NrrZmqNfXmgPxQ/4ys0tYR+tC/m10LFtmCYB+O8p3Esnl8PRCOJebY
+         5RSJLsO1wMY6TvJi1PBb7/QMb1vTi0xWWV8M/Vk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bruno Meneguele <bmeneg@redhat.com>,
+        stable@vger.kernel.org, Zh-yuan Ye <ye.zh-yuan@socionext.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 015/155] net/bpfilter: fix dprintf usage for /dev/kmsg
-Date:   Tue, 31 Mar 2020 10:57:35 +0200
-Message-Id: <20200331085420.091785566@linuxfoundation.org>
+Subject: [PATCH 5.4 016/155] net: cbs: Fix software cbs to consider packet sending time
+Date:   Tue, 31 Mar 2020 10:57:36 +0200
+Message-Id: <20200331085420.200939990@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,73 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruno Meneguele <bmeneg@redhat.com>
+From: Zh-yuan Ye <ye.zh-yuan@socionext.com>
 
-[ Upstream commit 13d0f7b814d9b4c67e60d8c2820c86ea181e7d99 ]
+[ Upstream commit 961d0e5b32946703125964f9f5b6321d60f4d706 ]
 
-The bpfilter UMH code was recently changed to log its informative messages to
-/dev/kmsg, however this interface doesn't support SEEK_CUR yet, used by
-dprintf(). As result dprintf() returns -EINVAL and doesn't log anything.
+Currently the software CBS does not consider the packet sending time
+when depleting the credits. It caused the throughput to be
+Idleslope[kbps] * (Port transmit rate[kbps] / |Sendslope[kbps]|) where
+Idleslope * (Port transmit rate / (Idleslope + |Sendslope|)) = Idleslope
+is expected. In order to fix the issue above, this patch takes the time
+when the packet sending completes into account by moving the anchor time
+variable "last" ahead to the send completion time upon transmission and
+adding wait when the next dequeue request comes before the send
+completion time of the previous packet.
 
-However there already had some discussions about supporting SEEK_CUR into
-/dev/kmsg interface in the past it wasn't concluded. Since the only user of
-that from userspace perspective inside the kernel is the bpfilter UMH
-(userspace) module it's better to correct it here instead waiting a conclusion
-on the interface.
+changelog:
+V2->V3:
+ - remove unnecessary whitespace cleanup
+ - add the checks if port_rate is 0 before division
 
-Fixes: 36c4357c63f3 ("net: bpfilter: print umh messages to /dev/kmsg")
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+V1->V2:
+ - combine variable "send_completed" into "last"
+ - add the comment for estimate of the packet sending
+
+Fixes: 585d763af09c ("net/sched: Introduce Credit Based Shaper (CBS) qdisc")
+Signed-off-by: Zh-yuan Ye <ye.zh-yuan@socionext.com>
+Reviewed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bpfilter/main.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ net/sched/sch_cbs.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/net/bpfilter/main.c
-+++ b/net/bpfilter/main.c
-@@ -10,7 +10,7 @@
- #include <asm/unistd.h>
- #include "msgfmt.h"
+--- a/net/sched/sch_cbs.c
++++ b/net/sched/sch_cbs.c
+@@ -181,6 +181,11 @@ static struct sk_buff *cbs_dequeue_soft(
+ 	s64 credits;
+ 	int len;
  
--int debug_fd;
-+FILE *debug_f;
++	/* The previous packet is still being sent */
++	if (now < q->last) {
++		qdisc_watchdog_schedule_ns(&q->watchdog, q->last);
++		return NULL;
++	}
+ 	if (q->credits < 0) {
+ 		credits = timediff_to_credits(now - q->last, q->idleslope);
  
- static int handle_get_cmd(struct mbox_request *cmd)
- {
-@@ -35,9 +35,10 @@ static void loop(void)
- 		struct mbox_reply reply;
- 		int n;
+@@ -212,7 +217,12 @@ static struct sk_buff *cbs_dequeue_soft(
+ 	credits += q->credits;
  
-+		fprintf(debug_f, "testing the buffer\n");
- 		n = read(0, &req, sizeof(req));
- 		if (n != sizeof(req)) {
--			dprintf(debug_fd, "invalid request %d\n", n);
-+			fprintf(debug_f, "invalid request %d\n", n);
- 			return;
- 		}
+ 	q->credits = max_t(s64, credits, q->locredit);
+-	q->last = now;
++	/* Estimate of the transmission of the last byte of the packet in ns */
++	if (unlikely(atomic64_read(&q->port_rate) == 0))
++		q->last = now;
++	else
++		q->last = now + div64_s64(len * NSEC_PER_SEC,
++					  atomic64_read(&q->port_rate));
  
-@@ -47,7 +48,7 @@ static void loop(void)
- 
- 		n = write(1, &reply, sizeof(reply));
- 		if (n != sizeof(reply)) {
--			dprintf(debug_fd, "reply failed %d\n", n);
-+			fprintf(debug_f, "reply failed %d\n", n);
- 			return;
- 		}
- 	}
-@@ -55,9 +56,10 @@ static void loop(void)
- 
- int main(void)
- {
--	debug_fd = open("/dev/kmsg", 00000002);
--	dprintf(debug_fd, "Started bpfilter\n");
-+	debug_f = fopen("/dev/kmsg", "w");
-+	setvbuf(debug_f, 0, _IOLBF, 0);
-+	fprintf(debug_f, "Started bpfilter\n");
- 	loop();
--	close(debug_fd);
-+	fclose(debug_f);
- 	return 0;
+ 	return skb;
  }
 
 
