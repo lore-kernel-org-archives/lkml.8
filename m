@@ -2,148 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A128DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9822C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76096208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:11:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxPeOb4v"
+	by mail.kernel.org (Postfix) with ESMTP id C2FAA212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585681914;
+	bh=QZgMPYXMhvs+dSRPByWsoxSmYBKfYHN9ck8j3d4jbFk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xHZH4v+PskC5p2avPQvxbrpOYlYSDwEzWoJUBd0Ox75nYrdwRnx2gEh9hr071rui0
+	 FTUUl0SBfYFEUzN8FR3mhTkc97Cf9dCyANzH+2JA2WSks51Ibkngf9kW/JA66pG6G5
+	 YTllTzMHwDyDLiEKeAstEhBgPEgt9IQnpvsb767g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgCaTLe (ORCPT
+        id S1728533AbgCaTLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:11:34 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:39349 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgCaTLe (ORCPT
+        Tue, 31 Mar 2020 15:11:53 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40723 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgCaTLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:11:34 -0400
-Received: by mail-qv1-f66.google.com with SMTP id v38so11484280qvf.6
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:11:32 -0700 (PDT)
+        Tue, 31 Mar 2020 15:11:53 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 19so23172184ljj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fL1biNgvoH1+FNfduS3c9QcNL+uWGrLrkoUh0P6kv3s=;
-        b=KxPeOb4vsLrL/Ib1OXVvbRQixMZLVGzA0MwoEHW3RMKlkRN+ZJpoyngZ8bR37OtflI
-         27dKQWRQV+ICqNW7evb8u9sa2cf03v1tOX/plHw1p4wHxvNWVwgryEkLIPge2lFzPhM5
-         XYF9tSqj9vE0gyxZUrbO7ZkNGLbqIkUAweuOYd+lGmbnDtinWTPwWgUS5Yr9wZAzxGBG
-         DEkvZVjIshfwSqPaJ4V+hlPzNy9HZIz7Y5Vim6AJ/mE4sZrLZQhhPfOT3mddNJoJNiUz
-         FyZ+UjY/qZhcnIx8W4T60YCNSVsJIDo0f/1Nv70rWWsbwFDFUMIVBvko/XIeuELfUCtx
-         TP0Q==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mIpylwyiRjL29X7CX/c0xTRukBTeFJKPllq5utn9uOA=;
+        b=AVaJMvho7ivjU0W8YZXIako+kNuDi5IZTa6u4Z20f/RS7jqAfm1xIKfpAML9PM7jsN
+         w3kbrs6fLUkUcc8HXpMvVoYyscn/QPwusQDlQEiGgm1JaCUTjN0vZ+WFP0ZBr+d/VzYy
+         V9WQeuiPPS96Zvrebk9xM/jA0dki669UGlUx4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fL1biNgvoH1+FNfduS3c9QcNL+uWGrLrkoUh0P6kv3s=;
-        b=nKjxGeboq8+h+zBfRU3fopwv1fUZ9UzfmCsYHUJNb2t+/znOyVzA7AJzsxrwDg0Jls
-         gdZevOVY138GuOOs7/bXh9Sd51i7NqzHMHobeTdgWwV4FOQwL4/fSQ3qGy0pyRbt4H1G
-         talLpAEcfm/advXD9cf2bzZgMJBkIYWRipWxYO5EOaPvsoMEi/2C0DYSAd+34+Z/03CJ
-         UGsm1tTNbp7d8CeOlfGzulKbQoj629Hd78noy+VFfcj204xUR+pPxPMR+2HvwbuuFvar
-         shM4wDKUz1Qa66rMXOiByhWJUh57iUjk++4VfaLUQSaZOo9zApvUnRZ0JG0fVOZiwuAf
-         Zb6g==
-X-Gm-Message-State: ANhLgQ34U8Br2DRe6+R/ZCJ0MwH3RIk8gjxpXXcVLXyMyjdvtPdrfivN
-        8Tlq6m/7GltLutH6gJqOTc07wy+3
-X-Google-Smtp-Source: ADFU+vtH+2Z6C2+SUGSYr0exEi3nCIg9rG5ijeremf/R0Z5iKiaVoL1bfZcNbomev8N55Z9RLQcuNg==
-X-Received: by 2002:a0c:ed4c:: with SMTP id v12mr18664053qvq.120.1585681891579;
-        Tue, 31 Mar 2020 12:11:31 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id m67sm13049108qke.101.2020.03.31.12.11.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 12:11:30 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 03C44409A3; Tue, 31 Mar 2020 16:11:28 -0300 (-03)
-Date:   Tue, 31 Mar 2020 16:11:28 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf/script: allow --symbol to accept hexadecimal
- addresses
-Message-ID: <20200331191128.GL9917@kernel.org>
-References: <20200325220802.15039-1-irogers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mIpylwyiRjL29X7CX/c0xTRukBTeFJKPllq5utn9uOA=;
+        b=AwP3asI1r1Koe3GAQP5tX4YURCXkzz+STheabRCZJn8AiiBNYCVqgLgHUs7I7QQ/+2
+         4GAnHN8Af6nbsGemk0yE/ROSsTZwZC6bzuZl0ssTiK3UeHBrozIrlvJw5AvoC4o7i+/L
+         waCIP1YEFNbNxSvpzg5jMlhQ68GG6laDOGrBPgi8Hwery57twBDnDlerZ2rqIpTMeWZe
+         wWVi46TMr7z/369U7kb5bxUY2uZi0Ha84fJnlwWWUk4OD4Vj20Im4ppj94jz8in4sW3O
+         iC6yDzj53FAmR1rMwBiDs44Sgb1QKRyllQsFy7sAUhATeceI4ZrP9B6rbbpmLFYGTS7o
+         kgXQ==
+X-Gm-Message-State: AGi0PuaU1hhb4Ez8qfW+H4NyNuJdl7Az8EIfC6b2B2GQ7KE/+qWvlJzr
+        WAxDHrpxtV4QGzmgR66slP8Q1lzWvZA=
+X-Google-Smtp-Source: APiQypIQ0LCa1iv24BaMrTEoEgaUtiNV+ofVLA6xExw3EvXFl5p/wFTTGoT0eTJb0t5og7VE75Rycw==
+X-Received: by 2002:a2e:96c4:: with SMTP id d4mr3294611ljj.19.1585681907106;
+        Tue, 31 Mar 2020 12:11:47 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id b1sm5624292lfb.22.2020.03.31.12.11.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 12:11:46 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id v4so18246362lfo.12
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:11:46 -0700 (PDT)
+X-Received: by 2002:ac2:46d3:: with SMTP id p19mr6607736lfo.125.1585681905605;
+ Tue, 31 Mar 2020 12:11:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325220802.15039-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200331100353.GA37509@gmail.com>
+In-Reply-To: <20200331100353.GA37509@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 31 Mar 2020 12:11:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wim0vZMxgxmu=eW4pCqExbcJqswEvK=VYuyqkB-40koTg@mail.gmail.com>
+Message-ID: <CAHk-=wim0vZMxgxmu=eW4pCqExbcJqswEvK=VYuyqkB-40koTg@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/vmware changes for v5.7
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Mar 25, 2020 at 03:08:02PM -0700, Ian Rogers escreveu:
-> From: Stephane Eranian <eranian@google.com>
-> 
-> This patch extends the perf script --symbols option to filter
-> on hexadecimal addresses in addition to symbol names. This makes
-> it easier to handle cases where symbols are aliased.
-> 
-> With this patch, it is possible to mix and match symbols and hexadecimal
-> addresses using the --symbols option.
-> 
-> $ perf script --symbols=noploop,0x4007a0
+All of this series from Ingo pulled.
 
-Applied, can you please send a followup patch to the man page stating
-that this is supported?
+Looks fine so far, my only reaction is that "Ho humm, now Ingo is the
+main -tip user who doesn't sign his pull requests". Both Thomas and
+Borislav have started doing so.
+
+Ingo? It shouldn't be that much extra work, it's an added "git tag
+-s". You can even automate it, and just make the tag-name be the
+branch name plus a date/time thing, and it will probably fit in
+whatever scripting you do now.
+
+Yeah, it does result in that password prompt, so it's not _entirely_
+invisible, although that might be minimized with pgp-agent.
+
+I know you have a key, since I have it in my chain. Of course, the key
+I have for you is from 2011, maybe you've lost it.
+
+I'd love to be at the point where all the major pulls I do are signed.
+
+But no, this still isn't a requirement for kernel.org users, more of a
+"please consider it".
 
 Thanks,
+                Linus
 
-- Arnaldo
- 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> ---
->  tools/perf/util/event.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index c5447ff516a2..c978a73fe475 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -599,10 +599,23 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
->  		al->sym = map__find_symbol(al->map, al->addr);
->  	}
->  
-> -	if (symbol_conf.sym_list &&
-> -		(!al->sym || !strlist__has_entry(symbol_conf.sym_list,
-> -						al->sym->name))) {
-> -		al->filtered |= (1 << HIST_FILTER__SYMBOL);
-> +	if (symbol_conf.sym_list) {
-> +		int ret = 0;
-> +		char al_addr_str[32];
-> +		size_t sz = sizeof(al_addr_str);
-> +
-> +		if (al->sym) {
-> +			ret = strlist__has_entry(symbol_conf.sym_list,
-> +						al->sym->name);
-> +		}
-> +		if (!(ret && al->sym)) {
-> +			snprintf(al_addr_str, sz, "0x%"PRIx64,
-> +				al->map->unmap_ip(al->map, al->sym->start));
-> +			ret = strlist__has_entry(symbol_conf.sym_list,
-> +						al_addr_str);
-> +		}
-> +		if (!ret)
-> +			al->filtered |= (1 << HIST_FILTER__SYMBOL);
->  	}
->  
->  	return 0;
-> -- 
-> 2.25.1.696.g5e7596f4ac-goog
-> 
-
--- 
-
-- Arnaldo
+On Tue, Mar 31, 2020 at 3:03 AM Ingo Molnar <mingo@kernel.org> wrote:
+>
+> Linus,
+>
+> Please pull the latest x86-vmware-for-linus git tree from:
+...
