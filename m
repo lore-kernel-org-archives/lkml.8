@@ -2,133 +2,167 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F3BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C65D5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D8D20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8F020784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efL3HT8p"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U2kQIH6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgCaSiL (ORCPT
+        id S1727771AbgCaSiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:38:11 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46280 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgCaSiK (ORCPT
+        Tue, 31 Mar 2020 14:38:15 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57965 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726194AbgCaSiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:38:10 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r7so15405323ljg.13;
-        Tue, 31 Mar 2020 11:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d/jwDOe+5jnEC+le3jpCg1Ia6gNwhPXykp3nmWWhaOs=;
-        b=efL3HT8pfTGSmpyjNAyFLdEXEf+iJsj0as5yEpNO7JudauMQa/KZj6D7xFxcKKnjhV
-         iPsBeft+PnbfJC+Vp6nLBwnlZ5tKQ+8ZBNF9YgWR7+3eFhLFJVkmXf+5gj2SEd4dqa3s
-         lkgGvPRBtmheVxe7N6FgijtF4pjZ9WlVZMf8zzO5uaB3URHQiV8pFOwzP1Rvzbdv9Tr9
-         Pd3REBTMmX+KxQgz/+GobUY/Nl/bjrmfSreT2c2ZkyqAMIIyNTUESippgbxRjAskm82a
-         cb7RqxivclSsiqz92iezds6lQlwNzWvgnITilpL2P9XR8heTGadXxSI7dCJihYX/6iMf
-         HvyA==
+        Tue, 31 Mar 2020 14:38:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585679892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DCBEU8xfWPGRP7T0kzGMhyTHNf5Ar1K3myE5Isk/Yus=;
+        b=U2kQIH6QuSGzblMF5xFeKHOCx77Fb/0U+bkfuDRh1d9gVnBJHrr5SoWBrJJzf1pL/X/Qf0
+        14VnvSAJ8bQBJr4yf1U7f/v9I8TZbpooa7lIl6Nhq1M22GSaqVcHaz9We7X52Vq0hcvCVK
+        GSq9vDvVMlKEJfhWPET6EkwR/GkVM4E=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-396-t4dFhyDKO5-xkEsKZKbklg-1; Tue, 31 Mar 2020 14:38:01 -0400
+X-MC-Unique: t4dFhyDKO5-xkEsKZKbklg-1
+Received: by mail-wr1-f69.google.com with SMTP id c8so11455468wru.20
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:38:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/jwDOe+5jnEC+le3jpCg1Ia6gNwhPXykp3nmWWhaOs=;
-        b=Il+9K3N2EH3lr64ps1nFPg4bqyNfRoi6lOSP6Vg+jrvv1S/9c+T4RgONi48CnhAlCi
-         4h9+fD67Xw2n9LVkVtmntwPWgTYjqeOjDGbzobUCo+LjnO6Yr4hpiKfbn3H+T2Dh6upV
-         9mfQcFWHZaNjXqivkydT9pfhfIOQBPdVRqpOYRhf2AADsNU9USx0xo51tXLV04OhdLDg
-         b0uMqB9IgJi1Q6Q6c7DFjnbYRy1FGkmAtpZfSWN4CRhDzCaix1K0p3IPcE0z5cNxJ6KZ
-         SDoLluUi9RS3ybfuDbj5dtrG0Xn8zViJvoq4wqIg1Day9YPILJ4HhRn4EEGkC+XZj9xW
-         Hlqw==
-X-Gm-Message-State: AGi0PuYOqDW7bRTOoKDcudl4f2tIcXLcgt9tOZa97CVNuNl4CiA9f9E6
-        Jy//MEwFFQ5nd8b0JPuBg4VeUTIbC8nJxWEdj1E=
-X-Google-Smtp-Source: APiQypKLpnll7mCTK5hJByNZ+I2zToNbaBev7/ujZB1Z7zORv+AAXOLY5C1GQuLB78hus+630w3uQzds8XU6gpqabLM=
-X-Received: by 2002:a2e:3c0a:: with SMTP id j10mr10921764lja.205.1585679888664;
- Tue, 31 Mar 2020 11:38:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DCBEU8xfWPGRP7T0kzGMhyTHNf5Ar1K3myE5Isk/Yus=;
+        b=PpjqidbUBAMDq+rW+NjDF4w++crPYn+NaoQFJFn/RDZx/rZEdJNwnpZ8j76WCXkzdz
+         JC8g/ee5cIW9FkhyoQtTrUbb7RS0cMwryKLS6XBqPahUZC+wSMWjvbDsZERCyuZZRo47
+         hIZBUeMxRyLSeD5vywS28Ot0rpGxsxsRnU0U2CLqZjwcHkLtZ75y4tf1+JO9qXTn8veV
+         20xY2uZqqHURbDJqnLb17isrz63Qd1WY4h8zcVbQm8dloOm8Hj+Qg7b6re8I8Q3pzA0a
+         eLsJ5pBIIJkIX0mBKvWip0TZvs4MTQmanZlgsB3NzGdbUWrn6Fp4f6XIaAJn+rp9SARl
+         5YXw==
+X-Gm-Message-State: ANhLgQ3EYMNWs+Lno+LNKbiPF8bLglFQVzY8iKlDp+HbfbC7tjRFnptA
+        lgxAjynARlgtF2dvRXwIKLTfZeqYgtrJg9OKujFW1vXv5pffHu3Bm59oaEI2mTX3N6cZL1TM5rT
+        Mow0DVNrpLZ6b78k0947Kd2pn
+X-Received: by 2002:a5d:470b:: with SMTP id y11mr21278434wrq.282.1585679879820;
+        Tue, 31 Mar 2020 11:37:59 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vv7BkgR0ghsMi1Xgc6DnC2NK7tqfIaM77t9wkjqEFGZ1NVpf3iEEFN2O7dAkJUYQEvEgprBcw==
+X-Received: by 2002:a5d:470b:: with SMTP id y11mr21278415wrq.282.1585679879621;
+        Tue, 31 Mar 2020 11:37:59 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id l17sm28536847wrm.57.2020.03.31.11.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 11:37:58 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 14:37:56 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>
+Subject: Re: mmotm 2020-03-30-18-46 uploaded (VDPA + vhost)
+Message-ID: <20200331143437-mutt-send-email-mst@kernel.org>
+References: <20200331014748.ajL0G62jF%akpm@linux-foundation.org>
+ <969cacf1-d420-223d-7cc7-5b1b2405ec2a@infradead.org>
 MIME-Version: 1.0
-References: <20191120220559.18914-1-c-robey@ti.com> <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
- <20191212170452.GV35479@atomide.com>
-In-Reply-To: <20191212170452.GV35479@atomide.com>
-From:   Drew Fustini <pdp7pdp7@gmail.com>
-Date:   Tue, 31 Mar 2020 20:38:38 +0200
-Message-ID: <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Caleb Robey <c-robey@ti.com>, linux-omap@vger.kernel.org,
-        Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Drew Fustini <drew@beagleboard.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <969cacf1-d420-223d-7cc7-5b1b2405ec2a@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 6:06 PM Tony Lindgren <tony@atomide.com> wrote:
-> > On 21/11/2019 00:05, Caleb Robey wrote:
-> > > From: Jason Kridner <jdk@ti.com>
-> > >
-> > > BeagleBoard.org BeagleBone AI is an open source hardware single
-> > > board computer based on the Texas Instruments AM5729 SoC featuring
-> > > dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-> > > signal processor (DSP), quad-core embedded vision engine (EVE),
-> > > Arm Cortex-M4 processors, dual programmable realtime unit
-> > > industrial control subsystems and more. The board features 1GB
-> > > DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-> > > 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-> > > headers.
-> > >
-> > > For more information, refer to:
-> > > https://beaglebone.ai
-> > >
-> > > This patch introduces the BeagleBone AI device tree.
-> > >
-> > > Note that the device use the "ti,tpd12s016" component which is
-> > > software compatible with "ti,tpd12s015". Thus we only use the
-> > > latter driver.
-> >
-> > Ah. thanks. I see my comments resolved here.
-> > no more comments to net part from my side.
->
-> Just FYI, Jason had one pending comment on the earlier version
-> about the compatible property to use.
->
-> So I'm assuming there will be a new version posted, tagging
-> this one as read.
+On Tue, Mar 31, 2020 at 11:27:54AM -0700, Randy Dunlap wrote:
+> On 3/30/20 6:47 PM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2020-03-30-18-46 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.
+> > 
+> > This tree is partially included in linux-next.  To see which patches are
+> > included in linux-next, consult the `series' file.  Only the patches
+> > within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+> > linux-next.
+> > 
+> > 
+> > A full copy of the full kernel tree with the linux-next and mmotm patches
+> > already applied is available through git within an hour of the mmotm
+> > release.  Individual mmotm releases are tagged.  The master branch always
+> > points to the latest release, so it's constantly rebasing.
+> > 
+> > 	https://github.com/hnaz/linux-mm
+> 
+> on i386:
+> 
+> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_init':
+> vdpa.c:(.init.text+0x52): undefined reference to `__vdpa_register_driver'
+> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_exit':
+> vdpa.c:(.exit.text+0x14): undefined reference to `vdpa_unregister_driver'
+> 
+> 
+> 
+> drivers/virtio/vdpa/ is not being built. (confusing!)
+> 
+> CONFIG_VIRTIO=m
+> # CONFIG_VIRTIO_MENU is not set
+> CONFIG_VDPA=y
 
-It came to my attention today when talking with Jason Kridner and
-Robert Nelson that we did not get the BeagleBone AI device tree
-upstream yet.
+Hmm. OK. Can't figure it out. CONFIG_VDPA is set why isn't
+drivers/virtio/vdpa/ built?
+we have:
 
-I am having trouble identifying what the pending comment was from the
-original patch series.
 
-Was it related to this compatible string?
+obj-$(CONFIG_VDPA) += vdpa/
 
-> +       compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
+and under that:
 
-thanks,
-drew
+obj-$(CONFIG_VDPA) += vdpa.o
 
---
-Drew Fustini
-BeagleBoard.org Foundation
-https://beagleboard.org/about
+
+> CONFIG_VDPA_MENU=y
+> # CONFIG_VDPA_SIM is not set
+> CONFIG_VHOST_IOTLB=y
+> CONFIG_VHOST_RING=m
+> CONFIG_VHOST=y
+> CONFIG_VHOST_SCSI=m
+> CONFIG_VHOST_VDPA=y
+> 
+> Full randconfig file is attached.
+> 
+> (This same build failure happens with today's linux-next, Mar. 31.)
+> 
+> @Yamada-san:  Is this a kbuild problem (or feature)?
+> 
+> -- 
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+
