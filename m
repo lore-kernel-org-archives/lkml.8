@@ -2,122 +2,148 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD4BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43B0C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D5D20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D9720781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODsZ4sF4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n3k/+bcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgCaFpe (ORCPT
+        id S1726492AbgCaFta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:45:34 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50809 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgCaFpd (ORCPT
+        Tue, 31 Mar 2020 01:49:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54527 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgCaFta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:45:33 -0400
-Received: by mail-pj1-f65.google.com with SMTP id v13so616056pjb.0;
-        Mon, 30 Mar 2020 22:45:32 -0700 (PDT)
+        Tue, 31 Mar 2020 01:49:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c81so1097294wmd.4;
+        Mon, 30 Mar 2020 22:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oL8fdk5mmpy0zmnky2aGWkiNBKFYGLoSDb7pzpaDNLo=;
-        b=ODsZ4sF438MvrtLkHMrrZgBbY43hri6jMW/Sdhh9vmrxK+6Pg2qTC8+ZQxpdjjmWJk
-         Fbp79/MAAJvo8TMXZaprKXWvUuDslgw4oNDC0pUVt7P5PBvVd9QPunjtzoThaj/O0Hhp
-         fU2onB+CbGECL4WJ7NPn8Wkmmo2v8wbnt+BIYlG3YMK235kU6Tn741s0jCckLEUhoKRb
-         mLnIBMjAjoIo2PYL/7t7sxeQhGU5kMb8/Nq2aXNrKXdAUfSayT3X5GccNWG7RMBDrM/n
-         LIir+CwLhewCdyq5zJZ8RGkF5MP5vcm1d2FMoq5AThqHGVCjFLpUn7s6rM1OhL/ZlyEu
-         jY+Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=akp0u+2EZyjkXRTktFBRie6W2QUhVt5xzpZQY3EmKZ4=;
+        b=n3k/+bcR5fXnorrLNk9E9DgQ9LST30+ImuiExFAaJZBkpD65aZaGCJMrZVSaa/6hrR
+         jm91dr/6lOj2gyRE8dKFzd1Xn0Ti0ROG+3FdmgvIYCY0m1l11//MUz4ucSM6WySg7TsV
+         kqkNfR9RE/IPcsMEXzB4BCnlvW7+ZpjMZRT1yrfQ1qMi2Se7hwtR9YFxizmjQHtfVvop
+         lwNQSoDSVjnALkt29L5ylyHnLukf9jvMRKPfkgUoF4ArfDZ9E7pHTF6NcnSCEjspwn0l
+         ftYf/oBaVvX6yDJAy0yuB0Kq3q3jBuEyv6Q7F2O7OQdsxr7jgLLB+bKilbcOZ+KdwWTq
+         ZbEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oL8fdk5mmpy0zmnky2aGWkiNBKFYGLoSDb7pzpaDNLo=;
-        b=Vi97JUWb0U6lekvPph5PsM7PbU4sTXXhnZWUP7OluqvUxseoYo/5WxVkfPaEpe/Mec
-         +fpwCdPYGriPx3QM8ZuXSxqJJcM1Ddxq72q17iFDbblL2dLFZ5i8oo5sJLitwOjPNkjd
-         JA9TOW0V75If/vs47F5Og0LB3vlYV2g4q8jezqCYw001M6es87iz3qywWrWTQ5Tjai1X
-         Pmd5+copYMcFhacZTs+pFG9F2t43brbetXOnHNuMpYfkIN6H6qL02IuJ0wN0UiAaHxrS
-         iXyErVlopzA3sNebPuAsolk0zBVTeDUSQpJGsjxp6/h4LNHWLGqA/CQGhxCraBPIXpa+
-         Fp0g==
-X-Gm-Message-State: AGi0Pua1Y7/tRWP1msr3ux7Af3W/oKz/GGKNhTBEBcy7zBL9x7dYAWA8
-        1RS4xnxLIGAaZdmG1OFzXK9Kh4UW
-X-Google-Smtp-Source: APiQypLLeEdSNbs4zQs0IqSLAtMS4fvatpo1+pwvHzXfxKmH0M08lHhvQxuld+WQiQZFjAs/J1EjIA==
-X-Received: by 2002:a17:90a:a111:: with SMTP id s17mr1974434pjp.129.1585633532000;
-        Mon, 30 Mar 2020 22:45:32 -0700 (PDT)
-Received: from [192.168.1.18] (i223-218-245-204.s42.a013.ap.plala.or.jp. [223.218.245.204])
-        by smtp.googlemail.com with ESMTPSA id i14sm10912717pgh.47.2020.03.30.22.45.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 22:45:31 -0700 (PDT)
-Subject: Re: [PATCH net] veth: xdp: use head instead of hard_start
-To:     maowenan <maowenan@huawei.com>,
-        Jesper Dangaard Brouer <jbrouer@redhat.com>
-Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        jwi@linux.ibm.com, jianglidong3@jd.com, edumazet@google.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200330102631.31286-1-maowenan@huawei.com>
- <20200330133442.132bde0c@carbon>
- <3053de4c-cee6-f6fc-efc2-09c6250f3ef2@gmail.com>
- <e7cf1271-2953-a5aa-ab25-c4b4a3843ee1@huawei.com>
-From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
-Message-ID: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
-Date:   Tue, 31 Mar 2020 14:45:26 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=akp0u+2EZyjkXRTktFBRie6W2QUhVt5xzpZQY3EmKZ4=;
+        b=idMkB8KgVnCCeBdKndc89dN6/Nm28FUE2/NSIryAqVCVMWhPHGT9lHf++Hs3p1SfkM
+         zuQupnlNbAwNXuU+9fmWweFpBFu+u6vJZnAlhnuJJqB8hzcXzMUaMJW07xjg6o5KZprF
+         nAh2SxwycwST3zAlELslC+Ulq13l4BZt9YPD5RMfCimfRKTZu/crwYJ5jszZiXWdxJDp
+         eQJv+OFmIx4yxtzMh2JrndWKqdeggaJpiY6eSkeRgiBVdxmg1L4VU0Wu2yL9Y8ygihzL
+         lYSYON5yDlvPiNX0jQaqgQvnhbrChjMzDdfnEvuj7Bmi2hJmaLx+YYwenAFBQy0kPM/C
+         fxpg==
+X-Gm-Message-State: ANhLgQ06vlCVG0QFDeqlRbg2g+0JmVeNA3411aeFPNMcm2YpHjo7XDTO
+        nDDsrNs2dTVoXkP4K/wRY7kuGgRQn7O9foYjtGM=
+X-Google-Smtp-Source: ADFU+vsPPBv4f6I083Yyts7nUfgkFzoUhNZuiaOjBTjlUJOP4wyhd8d9kI7/WifpTUwypco1pr5vwCTfHvkL8Ae5PQc=
+X-Received: by 2002:a1c:b642:: with SMTP id g63mr1552422wmf.108.1585633768060;
+ Mon, 30 Mar 2020 22:49:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e7cf1271-2953-a5aa-ab25-c4b4a3843ee1@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200311170120.12641-1-jeyu@kernel.org>
+In-Reply-To: <20200311170120.12641-1-jeyu@kernel.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 30 Mar 2020 22:49:17 -0700
+Message-ID: <CANcMJZDhSUV8CU_ixOSxstVVBMW3rVrrQVYMmy1fz=OdhxA_GQ@mail.gmail.com>
+Subject: Re: [PATCH v2] modpost: move the namespace field in Module.symvers last
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/31 12:56, maowenan wrote:
-> On 2020/3/31 7:35, Toshiaki Makita wrote:
->> Hi Mao & Jesper
->> (Resending with plain text...)
->>
->> On 2020/03/30 20:34, Jesper Dangaard Brouer wrote:
->>> On Mon, 30 Mar 2020 18:26:31 +0800
->>> Mao Wenan <maowenan@huawei.com> wrote:
->>>
->>>> xdp.data_hard_start is mapped to the first
->>>> address of xdp_frame, but the pointer hard_start
->>>> is the offset(sizeof(struct xdp_frame)) of xdp_frame,
->>>> it should use head instead of hard_start to
->>>> set xdp.data_hard_start. Otherwise, if BPF program
->>>> calls helper_function such as bpf_xdp_adjust_head, it
->>>> will be confused for xdp_frame_end.
->>>
->>> I have noticed this[1] and have a patch in my current patchset for
->>> fixing this.  IMHO is is not so important fix right now, as the effect
->>> is that you currently only lose 32 bytes of headroom.
->>>
-> I consider that it is needed because bpf_xdp_adjust_head() just a common helper function,
-> veth as one driver application should keep the same as 32 bytes of headroom as other driver.
-> And convert_to_xdp_frame set() also store info in top of packet, and set:
-> 	xdp_frame = xdp->data_hard_start;
-> 
->>> [1] https://lore.kernel.org/netdev/158446621887.702578.17234304084556809684.stgit@firesoul/
->>
->> You are right, the subtraction is not necessary here.
-> I guess you mean that previous subtraction is not necessary ? this line : void *head = hard_start - sizeof(struct xdp_frame); ?
+On Wed, Mar 11, 2020 at 10:03 AM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> In order to preserve backwards compatability with kmod tools, we have to
+> move the namespace field in Module.symvers last, as the depmod -e -E
+> option looks at the first three fields in Module.symvers to check symbol
+> versions (and it's expected they stay in the original order of crc,
+> symbol, module).
+>
+> In addition, update an ancient comment above read_dump() in modpost that
+> suggested that the export type field in Module.symvers was optional. I
+> suspect that there were historical reasons behind that comment that are
+> no longer accurate. We have been unconditionally printing the export
+> type since 2.6.18 (commit bd5cbcedf44), which is over a decade ago now.
+>
+> Fix up read_dump() to treat each field as non-optional. I suspect the
+> original read_dump() code treated the export field as optional in order
+> to support pre <= 2.6.18 Module.symvers (which did not have the export
+> type field). Note that although symbol namespaces are optional, the
+> field will not be omitted from Module.symvers if a symbol does not have
+> a namespace. In this case, the field will simply be empty and the next
+> delimiter or end of line will follow.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+> Tested-by: Matthias Maennich <maennich@google.com>
+> Reviewed-by: Matthias Maennich <maennich@google.com>
+> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> Signed-off-by: Jessica Yu <jeyu@kernel.org>
+> ---
+> v2:
+>
+>   - Explain the changes to read_dump() and the comment (and provide
+>     historical context) in the commit message. (Lucas De Marchi)
+>
+>  Documentation/kbuild/modules.rst |  4 ++--
+>  scripts/export_report.pl         |  2 +-
+>  scripts/mod/modpost.c            | 24 ++++++++++++------------
+>  3 files changed, 15 insertions(+), 15 deletions(-)
+>
+> diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
+> index 69fa48ee93d6..e0b45a257f21 100644
+> --- a/Documentation/kbuild/modules.rst
+> +++ b/Documentation/kbuild/modules.rst
+> @@ -470,9 +470,9 @@ build.
+>
+>         The syntax of the Module.symvers file is::
+>
+> -       <CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
+> +       <CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
+>
+> -       0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
+> +       0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
+>
+>         The fields are separated by tabs and values may be empty (e.g.
+>         if no namespace is defined for an exported symbol).
 
-No I just mean subtraction of headroom is not necessary, and I noticed this 
-description was confusing. Sorry about that.
-You can use "head" for data_hard_start.
+Despite the documentation here claiming the namespace field can be
+empty, I'm seeing some trouble with this patch when building external
+modules:
+  FATAL: parse error in symbol dump file
 
-Toshiaki Makita
+I've confirmed reverting it make things work again, but its not clear
+to me quite yet why.
+
+The only difference I can find is that the Module.symvers in the
+external module project doesn't seem to have a tab at the end of each
+line (where as Module.symvers for the kernel - which doesn't seem to
+have any namespace names - does).
+
+Is there something I need to tweak on the external Kbuild to get
+Module.symvers to be generated properly (with the empty tab at the
+end) for this new change?
+Or does the parser need to be a bit more flexible?
+
+thanks
+-john
