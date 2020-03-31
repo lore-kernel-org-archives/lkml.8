@@ -2,68 +2,75 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B771AC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDABC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8895920787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585695615;
-	bh=rQveBukJRrxsN9RgjHZvRoDCoJiJ5F6f61zIAiKMSBg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wK1f5zCFS+4yugXKlW4gG39PsHIgAQI97Bxru8ksu9HBhmod99puWCymu71Y2z+9Y
-	 0hVfLYcQ/b/lducC8gPSYEzsoofzpRvm/YdKq8V9cw6N0ZOU0x90Oiz/I/IIp1hYhH
-	 R5YoDF+0VpEq+DDQ7ayPMCuz/dYdNciF1jTxZBhc=
+	by mail.kernel.org (Postfix) with ESMTP id 8890020842
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbgCaXAO (ORCPT
+        id S1731473AbgCaXBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 19:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729647AbgCaXAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 19:00:14 -0400
-Subject: Re: [GIT PULL] Security subsystem updates for 5.7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585695614;
-        bh=rQveBukJRrxsN9RgjHZvRoDCoJiJ5F6f61zIAiKMSBg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=boPcL6j7jGTZgSINfKeYDbk8q1u99R3qHoc5c9hpLuSSve7llzFyBxZ8NvVlph4Yn
-         QvPBN14b7CExM8b7/tpSld/k7wfMhRItxCK4Ii7naAKU2pS4TvDMTDVkPokDye2j8C
-         oian9FO/tO61EFYSO7AI6GUfoOy4cNVP1X1fuyRs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <alpine.LRH.2.21.2004010936310.15848@namei.org>
-References: <alpine.LRH.2.21.2004010936310.15848@namei.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <alpine.LRH.2.21.2004010936310.15848@namei.org>
-X-PR-Tracked-Remote: git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security
- next-general
-X-PR-Tracked-Commit-Id: 3e27a33932df104f4f9ff811467b0b4ccebde773
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a16298439bd5469d89ec0e575e1c26e7b9a8178a
-Message-Id: <158569561414.19383.16918938223645880841.pr-tracker-bot@kernel.org>
-Date:   Tue, 31 Mar 2020 23:00:14 +0000
-To:     James Morris <jmorris@namei.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+        Tue, 31 Mar 2020 19:01:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33784 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730589AbgCaXBy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 19:01:54 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJPtG-00016q-8p; Wed, 01 Apr 2020 01:01:50 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id BE3C5103A01; Wed,  1 Apr 2020 01:01:49 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clocksource: Add debugfs support
+In-Reply-To: <20200331222917.GG2954599@ulmo>
+References: <20200331214045.2957710-1-thierry.reding@gmail.com> <87lfnguqky.fsf@nanos.tec.linutronix.de> <20200331222917.GG2954599@ulmo>
+Date:   Wed, 01 Apr 2020 01:01:49 +0200
+Message-ID: <87d08suo0y.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 1 Apr 2020 09:38:36 +1100 (AEDT):
+Thierry Reding <thierry.reding@gmail.com> writes:
+> On Wed, Apr 01, 2020 at 12:06:37AM +0200, Thomas Gleixner wrote:
+>> It does not provide any information about the clocksource, it provides
+>> an interface to read the counter - nothing else.
+>
+> The counter is part of the information about a clocksource, isn't it?
 
-> git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security next-general
+Sorry to be pedantic, but no. Information about a clocksource is the
+name, the type, the frequency, bitwidth etc.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a16298439bd5469d89ec0e575e1c26e7b9a8178a
+The counter file is not providing information about the
+clocksource. It's exposing an accessor to the clocksource itself.
 
-Thank you!
+> I can also add some information about what I intend to use this for,
+> though it'll be a bit boring because I really only want this as a way
+> of testing that I'm reading from the right registers and that these
+> counters are running. A debugfs interface seemed like a better and more
+> widely useful way to achieve that than implementing some one-off hack to
+> poll those registers.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+But how much value has this interface beyond the 'hack a driver for a
+new clocksource' experience?
+
+To me none, but that might be my personal skewed view.
+
+Thanks,
+
+        tglx
