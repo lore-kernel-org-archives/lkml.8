@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B94C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755C8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2428220B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDF5208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645575;
-	bh=ak4VYsc2RhUTFLegpCsyCujyDrbynZWMkcvyWrt0MxE=;
+	s=default; t=1585645578;
+	bh=CY/wbAodfT00hdTU5A7Rz1+tsKBLLbSu1NJDFYyHIy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zJl4iKOc8OkGzvNDTuXS1lLQUjNH9czntEXqQl0k53pnXOEOCI65R6ec8NlT/9aKz
-	 Kot/lRm4fCdzmlUCcODL+RiM/+30B71FcilbYfeagCUQkn7+CoQZSxhXOlCUu0VOBE
-	 BGAklA5df56dxrZiWosGYiKIo8RTOpPHf3YTqEOg=
+	b=EIFpIuh+XZZ/gkJkzTISaM9k4rl7QP7QHsFAl8RI+YPye9ux/7/8dVuWDRwfSbELt
+	 lMAzbEmqmn07rYXsnHz6O6egapJHB0BdUSDZ/zmm3Jt1Z9KauMpg6VadZY8/jE/wV5
+	 LlC9To+JZFBr2kSOa1MrQgKER9VtVNvY6idH6Kho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbgCaJGN (ORCPT
+        id S1730513AbgCaJGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:06:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47410 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730506AbgCaJGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:06:06 -0400
+        id S1731110AbgCaJGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:06:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E28208E0;
-        Tue, 31 Mar 2020 09:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC84C20787;
+        Tue, 31 Mar 2020 09:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645565;
-        bh=ak4VYsc2RhUTFLegpCsyCujyDrbynZWMkcvyWrt0MxE=;
+        s=default; t=1585645568;
+        bh=CY/wbAodfT00hdTU5A7Rz1+tsKBLLbSu1NJDFYyHIy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fWOMDqzsjMXO2b3JvzGYVAlfa1zEdfh4/RmCjl+PLM35D+YHxbqLNFERMn8JP1Ohw
-         2lhCzW+tZmRLmodhNL6wloSKU3EI6i8TBcUDuQfOz01OAstzDZfLtWd80ZDgzBsZAW
-         ku0ZSnEcWTPP4wSU5cMkDWG+k8P4ycjjYGUTSRvk=
+        b=FkH6Rcw2MUV99AvSWg6ncCRUrE0xgka55sihZufwHL7w2pIAPIqyyj8xnGv+4kwUW
+         ed1dYstZM8jlpcSjYrfG7cnHJFWa9jxGemOk2l0rfZMjf/+wV/LonI/s2824myKJ4I
+         yLC0wnQEHB05WkOCdtecqJW5/b4lXMgmE/vyJzeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>
-Subject: [PATCH 5.5 092/170] ceph: check POOL_FLAG_FULL/NEARFULL in addition to OSDMAP_FULL/NEARFULL
-Date:   Tue, 31 Mar 2020 10:58:26 +0200
-Message-Id: <20200331085434.031667271@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.5 093/170] ceph: fix memory leak in ceph_cleanup_snapid_map()
+Date:   Tue, 31 Mar 2020 10:58:27 +0200
+Message-Id: <20200331085434.134918164@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,134 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Luis Henriques <lhenriques@suse.com>
 
-commit 7614209736fbc4927584d4387faade4f31444fce upstream.
+commit c8d6ee01449cd0d2f30410681cccb616a88f50b1 upstream.
 
-CEPH_OSDMAP_FULL/NEARFULL aren't set since mimic, so we need to consult
-per-pool flags as well.  Unfortunately the backwards compatibility here
-is lacking:
+kmemleak reports the following memory leak:
 
-- the change that deprecated OSDMAP_FULL/NEARFULL went into mimic, but
-  was guarded by require_osd_release >= RELEASE_LUMINOUS
-- it was subsequently backported to luminous in v12.2.2, but that makes
-  no difference to clients that only check OSDMAP_FULL/NEARFULL because
-  require_osd_release is not client-facing -- it is for OSDs
+unreferenced object 0xffff88821feac8a0 (size 96):
+  comm "kworker/1:0", pid 17, jiffies 4294896362 (age 20.512s)
+  hex dump (first 32 bytes):
+    a0 c8 ea 1f 82 88 ff ff 00 c9 ea 1f 82 88 ff ff  ................
+    00 00 00 00 00 00 00 00 00 01 00 00 00 00 ad de  ................
+  backtrace:
+    [<00000000b3ea77fb>] ceph_get_snapid_map+0x75/0x2a0
+    [<00000000d4060942>] fill_inode+0xb26/0x1010
+    [<0000000049da6206>] ceph_readdir_prepopulate+0x389/0xc40
+    [<00000000e2fe2549>] dispatch+0x11ab/0x1521
+    [<000000007700b894>] ceph_con_workfn+0xf3d/0x3240
+    [<0000000039138a41>] process_one_work+0x24d/0x590
+    [<00000000eb751f34>] worker_thread+0x4a/0x3d0
+    [<000000007e8f0d42>] kthread+0xfb/0x130
+    [<00000000d49bd1fa>] ret_from_fork+0x3a/0x50
 
-Since all kernels are affected, the best we can do here is just start
-checking both map flags and pool flags and send that to stable.
-
-These checks are best effort, so take osdc->lock and look up pool flags
-just once.  Remove the FIXME, since filesystem quotas are checked above
-and RADOS quotas are reflected in POOL_FLAG_FULL: when the pool reaches
-its quota, both POOL_FLAG_FULL and POOL_FLAG_FULL_QUOTA are set.
+A kfree is missing while looping the 'to_free' list of ceph_snapid_map
+objects.
 
 Cc: stable@vger.kernel.org
-Reported-by: Yanhu Cao <gmayyyha@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: 75c9627efb72 ("ceph: map snapid to anonymous bdev ID")
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Acked-by: Sage Weil <sage@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/file.c              |   14 +++++++++++---
- include/linux/ceph/osdmap.h |    4 ++++
- include/linux/ceph/rados.h  |    6 ++++--
- net/ceph/osdmap.c           |    9 +++++++++
- 4 files changed, 28 insertions(+), 5 deletions(-)
+ fs/ceph/snap.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1415,10 +1415,13 @@ static ssize_t ceph_write_iter(struct ki
- 	struct inode *inode = file_inode(file);
- 	struct ceph_inode_info *ci = ceph_inode(inode);
- 	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
-+	struct ceph_osd_client *osdc = &fsc->client->osdc;
- 	struct ceph_cap_flush *prealloc_cf;
- 	ssize_t count, written = 0;
- 	int err, want, got;
- 	bool direct_lock = false;
-+	u32 map_flags;
-+	u64 pool_flags;
- 	loff_t pos;
- 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
- 
-@@ -1481,8 +1484,12 @@ retry_snap:
- 			goto out;
+--- a/fs/ceph/snap.c
++++ b/fs/ceph/snap.c
+@@ -1155,5 +1155,6 @@ void ceph_cleanup_snapid_map(struct ceph
+ 			pr_err("snapid map %llx -> %x still in use\n",
+ 			       sm->snap, sm->dev);
+ 		}
++		kfree(sm);
  	}
- 
--	/* FIXME: not complete since it doesn't account for being at quota */
--	if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
-+	down_read(&osdc->lock);
-+	map_flags = osdc->osdmap->flags;
-+	pool_flags = ceph_pg_pool_flags(osdc->osdmap, ci->i_layout.pool_id);
-+	up_read(&osdc->lock);
-+	if ((map_flags & CEPH_OSDMAP_FULL) ||
-+	    (pool_flags & CEPH_POOL_FLAG_FULL)) {
- 		err = -ENOSPC;
- 		goto out;
- 	}
-@@ -1575,7 +1582,8 @@ retry_snap:
- 	}
- 
- 	if (written >= 0) {
--		if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
-+		if ((map_flags & CEPH_OSDMAP_NEARFULL) ||
-+		    (pool_flags & CEPH_POOL_FLAG_NEARFULL))
- 			iocb->ki_flags |= IOCB_DSYNC;
- 		written = generic_write_sync(iocb, written);
- 	}
---- a/include/linux/ceph/osdmap.h
-+++ b/include/linux/ceph/osdmap.h
-@@ -37,6 +37,9 @@ int ceph_spg_compare(const struct ceph_s
- #define CEPH_POOL_FLAG_HASHPSPOOL	(1ULL << 0) /* hash pg seed and pool id
- 						       together */
- #define CEPH_POOL_FLAG_FULL		(1ULL << 1) /* pool is full */
-+#define CEPH_POOL_FLAG_FULL_QUOTA	(1ULL << 10) /* pool ran out of quota,
-+							will set FULL too */
-+#define CEPH_POOL_FLAG_NEARFULL		(1ULL << 11) /* pool is nearfull */
- 
- struct ceph_pg_pool_info {
- 	struct rb_node node;
-@@ -304,5 +307,6 @@ extern struct ceph_pg_pool_info *ceph_pg
- 
- extern const char *ceph_pg_pool_name_by_id(struct ceph_osdmap *map, u64 id);
- extern int ceph_pg_poolid_by_name(struct ceph_osdmap *map, const char *name);
-+u64 ceph_pg_pool_flags(struct ceph_osdmap *map, u64 id);
- 
- #endif
---- a/include/linux/ceph/rados.h
-+++ b/include/linux/ceph/rados.h
-@@ -143,8 +143,10 @@ extern const char *ceph_osd_state_name(i
- /*
-  * osd map flag bits
-  */
--#define CEPH_OSDMAP_NEARFULL (1<<0)  /* sync writes (near ENOSPC) */
--#define CEPH_OSDMAP_FULL     (1<<1)  /* no data writes (ENOSPC) */
-+#define CEPH_OSDMAP_NEARFULL (1<<0)  /* sync writes (near ENOSPC),
-+					not set since ~luminous */
-+#define CEPH_OSDMAP_FULL     (1<<1)  /* no data writes (ENOSPC),
-+					not set since ~luminous */
- #define CEPH_OSDMAP_PAUSERD  (1<<2)  /* pause all reads */
- #define CEPH_OSDMAP_PAUSEWR  (1<<3)  /* pause all writes */
- #define CEPH_OSDMAP_PAUSEREC (1<<4)  /* pause recovery */
---- a/net/ceph/osdmap.c
-+++ b/net/ceph/osdmap.c
-@@ -710,6 +710,15 @@ int ceph_pg_poolid_by_name(struct ceph_o
  }
- EXPORT_SYMBOL(ceph_pg_poolid_by_name);
- 
-+u64 ceph_pg_pool_flags(struct ceph_osdmap *map, u64 id)
-+{
-+	struct ceph_pg_pool_info *pi;
-+
-+	pi = __lookup_pg_pool(&map->pg_pools, id);
-+	return pi ? pi->flags : 0;
-+}
-+EXPORT_SYMBOL(ceph_pg_pool_flags);
-+
- static void __remove_pg_pool(struct rb_root *root, struct ceph_pg_pool_info *pi)
- {
- 	rb_erase(&pi->node, root);
 
 
