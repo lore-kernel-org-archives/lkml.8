@@ -2,68 +2,158 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7209C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51757C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFDA220732
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26EC52072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:01:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kh8bl44h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgCaDA7 (ORCPT
+        id S1730386AbgCaDBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 23:00:59 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:45952 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729372AbgCaDA7 (ORCPT
+        Mon, 30 Mar 2020 23:01:11 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33903 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729372AbgCaDBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 23:00:59 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BFB1B15D1720D;
-        Mon, 30 Mar 2020 20:00:57 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 20:00:56 -0700 (PDT)
-Message-Id: <20200330.200056.456632783811662995.davem@davemloft.net>
-To:     matthias.schiffer@ew.tq-group.com
-Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/4] net: dsa: mv88e6xxx: account for PHY base
- address offset in dual chip mode
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200330135345.4361-2-matthias.schiffer@ew.tq-group.com>
-References: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
-        <20200330135345.4361-2-matthias.schiffer@ew.tq-group.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 30 Mar 2020 20:00:58 -0700 (PDT)
+        Mon, 30 Mar 2020 23:01:10 -0400
+Received: by mail-il1-f196.google.com with SMTP id t11so18045148ils.1;
+        Mon, 30 Mar 2020 20:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=cnHGhaVmF2sZ2zdyMkAgybYPXWimI0xp+Owp3zivaQI=;
+        b=Kh8bl44hOUrGrVDvAEQwboGhE8JT4Lq45vBR91/9ebcXk415gUb63f7QzHacwzKxXA
+         NZvpRYm0/zAZOUogKxv1bHGANo2lzr51qC/d15pVYWM5EbSAM4fIEVYTEf1pAFA1s0Qp
+         SEx0j3JrVkOqoqNHnwpnOPm6ediSY0d2mt1WnKjYKyDJFSqeCaMc6siPCPj/0jcSC3BR
+         DCL12V+XP7heHLbCUrsICt/NaNuac84ai9S36vjw0zGQBASd93jaNWBCXvxRiRlHZtLn
+         ZK/dN7If6SwjNaV+GAFDcAybagpOH0JNc/ArpN2qUZIx+fhqlMQMGTOuMJ1px+rauEOw
+         pHyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=cnHGhaVmF2sZ2zdyMkAgybYPXWimI0xp+Owp3zivaQI=;
+        b=FSbHOWdAkpDFXmOgitXcDqMo1HpVdgtnc63lF/u1T0vu54laVbbcO/gLg6On50+psb
+         0S+NQ91TzXkDTuPKE07hjWFqAtNj2q6NyFi6frQCNkkQ8mWssPPrXHH6zXdBELk1Xsx0
+         AJB91g2Eep9xUZ3t/7wxS82BYbPaC8NQoKqS3gqTsNvaA+e5nukh37Os431lyrx0EnzS
+         sCkEhd3LAC1UIPu9zF9ofrvIx+M9pzap8kubNnAKB9cEos9t0FwImKblXhywBp/8eUkx
+         bfM8IPXD7k4LTCI3gXsasERAY4CznGpUnkA4SuTR/u16hTjSZ5vUGyOL+IDdEkNSl66E
+         zaPA==
+X-Gm-Message-State: ANhLgQ1YNYjhnuVzTVdTI980WV6pnOLG4TDCMJ2157rBlAp3JOFsA3/k
+        oLMlMCTAEOs+VIw52Qn6kXeQLKYBA/Yp5leOuc4=
+X-Google-Smtp-Source: ADFU+vuGuZE7rZTqrboHL4BoLb0D+bPlHXVLsiF86m6TGldaTLI2ztokC5N2VOTQYpOgA2Q7/5qpT9b+kZdqELV4Hcg=
+X-Received: by 2002:a92:49da:: with SMTP id k87mr11067344ilg.149.1585623669293;
+ Mon, 30 Mar 2020 20:01:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200330214721.GA128269@google.com> <bba72560-85cc-b59b-b0e8-bfc7c7408736@nvidia.com>
+In-Reply-To: <bba72560-85cc-b59b-b0e8-bfc7c7408736@nvidia.com>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Mon, 30 Mar 2020 22:00:57 -0500
+Message-ID: <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        Andrew Murray <andrew.murray@arm.com>, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        ARM <linux-arm-kernel@lists.infradead.org>, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Date: Mon, 30 Mar 2020 15:53:43 +0200
+On Mon, Mar 30, 2020 at 9:55 PM Vidya Sagar <vidyas@nvidia.com> wrote:
+>
+>
+>
+> On 3/31/2020 3:17 AM, Bjorn Helgaas wrote:
+> > External email: Use caution opening links or attachments
+> >
+> >
+> > On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
+> >> Add support for the endpoint mode of Synopsys DesignWare core based
+> >> dual mode PCIe controllers present in Tegra194 SoC.
+> >>
+> >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> >> Acked-by: Thierry Reding <treding@nvidia.com>
+> >> ---
+> >> V5:
+> >> * Added Acked-by: Thierry Reding <treding@nvidia.com>
+> >> * Removed unwanted header file inclusion
+> >>
+> >> V4:
+> >> * Addressed Lorenzo's review comments
+> >> * Started using threaded irqs instead of kthreads
+> >>
+> >> V3:
+> >> * Addressed Thierry's review comments
+> >>
+> >> V2:
+> >> * Addressed Bjorn's review comments
+> >> * Made changes as part of addressing review comments for other patches
+> >>
+> >>   drivers/pci/controller/dwc/Kconfig         |  30 +-
+> >>   drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
+> >>   2 files changed, 691 insertions(+), 18 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> >> index 0830dfcfa43a..169cde58dd92 100644
+> >> --- a/drivers/pci/controller/dwc/Kconfig
+> >> +++ b/drivers/pci/controller/dwc/Kconfig
+> >> @@ -248,14 +248,38 @@ config PCI_MESON
+> >>          implement the driver.
+> >>
+> >>   config PCIE_TEGRA194
+> >> -     tristate "NVIDIA Tegra194 (and later) PCIe controller"
+> >> +     tristate
+> >> +
+> >> +config PCIE_TEGRA194_HOST
+> >> +     tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
+> >>        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> >>        depends on PCI_MSI_IRQ_DOMAIN
+> >>        select PCIE_DW_HOST
+> >>        select PHY_TEGRA194_P2U
+> >> +     select PCIE_TEGRA194
+> >> +     default y
+> >
+> > Sorry I missed this before, but why is this "default y"?  From
+> > Documentation/kbuild/kconfig-language.rst:
+> >
+> >    The default value deliberately defaults to 'n' in order to avoid
+> >    bloating the build. With few exceptions, new config options should
+> >    not change this. The intent is for "make oldconfig" to add as little
+> >    as possible to the config from release to release.
+> >
+> > I do see that several other things in other drivers/pci/ Kconfig files
+> > are also "default y", and we should probably change some of them.  But
+> > I don't want to add even more unless there's a good reason.
+> >
+> > I'm not looking for more reactions like these:
+> >
+> > https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
+> > https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
+> >
+> > Can you please update this patch to either remove the "default y" or
+> > add the rationale for keeping it?
+> I'm fine with removing 'default y' line.
+> Should I send a patch only with this change?
 
-> diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
-> index e5430cf2ad71..88c148a62366 100644
-> --- a/drivers/net/dsa/mv88e6xxx/chip.h
-> +++ b/drivers/net/dsa/mv88e6xxx/chip.h
-> @@ -257,6 +257,7 @@ struct mv88e6xxx_chip {
->  	const struct mv88e6xxx_bus_ops *smi_ops;
->  	struct mii_bus *bus;
->  	int sw_addr;
-> +	unsigned int phy_base_addr;
+I think it's probably just as easy for Lorenzo to delete that line on
+his branch.  If not, I'll cherry-pick the patches on that branch and
+do it locally.
 
-Please preserve the reverse christmas tree ordering here.
-
-And this submission was quite late and net-next is closing now so
-please resubmit this after the merge window and net-next opens again.
-
-Thanks.
+Bjorn
