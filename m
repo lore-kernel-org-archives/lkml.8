@@ -2,56 +2,51 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F62BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9527C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7FC20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939CC208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645331;
-	bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
+	s=default; t=1585645338;
+	bh=IkO+1iX+k6BkIxwiD7WmKCD2GvYK8M10BOXGLCCFSd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KFjtbM34o6X0ewGOireOGvwGTc63k90eADv+LQI64QMESXGTBayhYQGaa6LcH3G5A
-	 UE19natdVToM69QyvtC1UZ4n5yAYMupG+Dqj3FPX76dUSdlXyXt6bCVlkzkks0P+Sn
-	 dWry3AJO9HrEGtwu0+GY5PzWZ8rVHK5zMeaplRyo=
+	b=SQYWlBcy8NsQsaUgXMuZjzgPhAd5Pv4QiIapUWaEJCfXQ+HbiNFc7BltFs0eljkSn
+	 NBQY6p7gf/YxiYnY7E0igg7PmDtNEEATVwctEtGavxgA8Kwzxdc+9IMX0TGMwDVoXZ
+	 ZVgrPsrZD6hCZ1BVwAvLJYYMfplsimOKyBtprqsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbgCaJCK (ORCPT
+        id S1730685AbgCaJCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbgCaJCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:02:08 -0400
+        id S1730400AbgCaJCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:02:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45AA1214DB;
-        Tue, 31 Mar 2020 09:02:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50256208E0;
+        Tue, 31 Mar 2020 09:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645327;
-        bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
+        s=default; t=1585645331;
+        bh=IkO+1iX+k6BkIxwiD7WmKCD2GvYK8M10BOXGLCCFSd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R1y64ag5Z8R5SdgOe3Q/Sr4We1yrosBNCrw75/DwmUdT77o7gK6WRjzWQaEv8jCFY
-         oAtdbjz19Gfjwb9S0ykwi/n5razKDUp8UckuOrW3xC2o4n9+MwgVEiaXCoUAyKQ8Mp
-         ccGp9QLgHzqHxfdD5eqJ7o5m/9EJTr/nMyAm2M5E=
+        b=pN2iOIeyRopDGuPssSy7q2z+9OFr9zwPQIa+SIzfuT5icgfHzKzoX22b4c1qMQLvx
+         3eLXu9wUPSu8rhzzi1evz5z6+moKGLFWmW0cFMgBYnFBdwtfbdtqWKcNu3Yc6iKFwJ
+         eWFNfiBALe3e+/0VahPYECFrOeuXfPTgdNp7wM4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 002/170] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
-Date:   Tue, 31 Mar 2020 10:56:56 +0200
-Message-Id: <20200331085424.318600914@linuxfoundation.org>
+        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 020/170] net: dsa: tag_8021q: replace dsa_8021q_remove_header with __skb_vlan_pop
+Date:   Tue, 31 Mar 2020 10:57:14 +0200
+Message-Id: <20200331085426.201808009@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -64,51 +59,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit 43cc64e5221cc6741252b64bc4531dd1eefb733d ]
+[ Upstream commit e80f40cbe4dd51371818e967d40da8fe305db5e4 ]
 
-The busy timeout that is computed for each erase/trim/discard operation,
-can become quite long and may thus exceed the host->max_busy_timeout. If
-that becomes the case, mmc_do_erase() converts from using an R1B response
-to an R1 response, as to prevent the host from doing HW busy detection.
+Not only did this wheel did not need reinventing, but there is also
+an issue with it: It doesn't remove the VLAN header in a way that
+preserves the L2 payload checksum when that is being provided by the DSA
+master hw.  It should recalculate checksum both for the push, before
+removing the header, and for the pull afterwards. But the current
+implementation is quite dizzying, with pulls followed immediately
+afterwards by pushes, the memmove is done before the push, etc.  This
+makes a DSA master with RX checksumming offload to print stack traces
+with the infamous 'hw csum failure' message.
 
-However, it has turned out that some hosts requires an R1B response no
-matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
-that, if the R1B gets enforced, the host becomes fully responsible of
-managing the needed busy timeout, in one way or the other.
+So remove the dsa_8021q_remove_header function and replace it with
+something that actually works with inet checksumming.
 
-Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Tested-by: Faiz Abbas <faiz_abbas@ti.com>
-Tested-By: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d461933638ae ("net: dsa: tag_8021q: Create helper function for removing VLAN header")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mmc/core/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/dsa/8021q.h |    7 -------
+ net/dsa/tag_8021q.c       |   43 -------------------------------------------
+ net/dsa/tag_sja1105.c     |   19 +++++++++----------
+ 3 files changed, 9 insertions(+), 60 deletions(-)
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index abf8f5eb0a1c8..26644b7ec13e3 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1732,8 +1732,11 @@ static int mmc_do_erase(struct mmc_card *card, unsigned int from,
- 	 * the erase operation does not exceed the max_busy_timeout, we should
- 	 * use R1B response. Or we need to prevent the host from doing hw busy
- 	 * detection, which is done by converting to a R1 response instead.
-+	 * Note, some hosts requires R1B, which also means they are on their own
-+	 * when it comes to deal with the busy timeout.
- 	 */
--	if (card->host->max_busy_timeout &&
-+	if (!(card->host->caps & MMC_CAP_NEED_RSP_BUSY) &&
-+	    card->host->max_busy_timeout &&
- 	    busy_timeout > card->host->max_busy_timeout) {
- 		cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
- 	} else {
--- 
-2.20.1
-
+--- a/include/linux/dsa/8021q.h
++++ b/include/linux/dsa/8021q.h
+@@ -28,8 +28,6 @@ int dsa_8021q_rx_switch_id(u16 vid);
+ 
+ int dsa_8021q_rx_source_port(u16 vid);
+ 
+-struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb);
+-
+ #else
+ 
+ int dsa_port_setup_8021q_tagging(struct dsa_switch *ds, int index,
+@@ -64,11 +62,6 @@ int dsa_8021q_rx_source_port(u16 vid)
+ 	return 0;
+ }
+ 
+-struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
+-{
+-	return NULL;
+-}
+-
+ #endif /* IS_ENABLED(CONFIG_NET_DSA_TAG_8021Q) */
+ 
+ #endif /* _NET_DSA_8021Q_H */
+--- a/net/dsa/tag_8021q.c
++++ b/net/dsa/tag_8021q.c
+@@ -298,47 +298,4 @@ struct sk_buff *dsa_8021q_xmit(struct sk
+ }
+ EXPORT_SYMBOL_GPL(dsa_8021q_xmit);
+ 
+-/* In the DSA packet_type handler, skb->data points in the middle of the VLAN
+- * tag, after tpid and before tci. This is because so far, ETH_HLEN
+- * (DMAC, SMAC, EtherType) bytes were pulled.
+- * There are 2 bytes of VLAN tag left in skb->data, and upper
+- * layers expect the 'real' EtherType to be consumed as well.
+- * Coincidentally, a VLAN header is also of the same size as
+- * the number of bytes that need to be pulled.
+- *
+- * skb_mac_header                                      skb->data
+- * |                                                       |
+- * v                                                       v
+- * |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+- * +-----------------------+-----------------------+-------+-------+-------+
+- * |    Destination MAC    |      Source MAC       |  TPID |  TCI  | EType |
+- * +-----------------------+-----------------------+-------+-------+-------+
+- * ^                                               |               |
+- * |<--VLAN_HLEN-->to                              <---VLAN_HLEN--->
+- * from            |
+- *       >>>>>>>   v
+- *       >>>>>>>   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+- *       >>>>>>>   +-----------------------+-----------------------+-------+
+- *       >>>>>>>   |    Destination MAC    |      Source MAC       | EType |
+- *                 +-----------------------+-----------------------+-------+
+- *                 ^                                                       ^
+- * (now part of    |                                                       |
+- *  skb->head)     skb_mac_header                                  skb->data
+- */
+-struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
+-{
+-	u8 *from = skb_mac_header(skb);
+-	u8 *dest = from + VLAN_HLEN;
+-
+-	memmove(dest, from, ETH_HLEN - VLAN_HLEN);
+-	skb_pull(skb, VLAN_HLEN);
+-	skb_push(skb, ETH_HLEN);
+-	skb_reset_mac_header(skb);
+-	skb_reset_mac_len(skb);
+-	skb_pull_rcsum(skb, ETH_HLEN);
+-
+-	return skb;
+-}
+-EXPORT_SYMBOL_GPL(dsa_8021q_remove_header);
+-
+ MODULE_LICENSE("GPL v2");
+--- a/net/dsa/tag_sja1105.c
++++ b/net/dsa/tag_sja1105.c
+@@ -238,14 +238,14 @@ static struct sk_buff *sja1105_rcv(struc
+ {
+ 	struct sja1105_meta meta = {0};
+ 	int source_port, switch_id;
+-	struct vlan_ethhdr *hdr;
++	struct ethhdr *hdr;
+ 	u16 tpid, vid, tci;
+ 	bool is_link_local;
+ 	bool is_tagged;
+ 	bool is_meta;
+ 
+-	hdr = vlan_eth_hdr(skb);
+-	tpid = ntohs(hdr->h_vlan_proto);
++	hdr = eth_hdr(skb);
++	tpid = ntohs(hdr->h_proto);
+ 	is_tagged = (tpid == ETH_P_SJA1105);
+ 	is_link_local = sja1105_is_link_local(skb);
+ 	is_meta = sja1105_is_meta_frame(skb);
+@@ -254,7 +254,12 @@ static struct sk_buff *sja1105_rcv(struc
+ 
+ 	if (is_tagged) {
+ 		/* Normal traffic path. */
+-		tci = ntohs(hdr->h_vlan_TCI);
++		skb_push_rcsum(skb, ETH_HLEN);
++		__skb_vlan_pop(skb, &tci);
++		skb_pull_rcsum(skb, ETH_HLEN);
++		skb_reset_network_header(skb);
++		skb_reset_transport_header(skb);
++
+ 		vid = tci & VLAN_VID_MASK;
+ 		source_port = dsa_8021q_rx_source_port(vid);
+ 		switch_id = dsa_8021q_rx_switch_id(vid);
+@@ -283,12 +288,6 @@ static struct sk_buff *sja1105_rcv(struc
+ 		return NULL;
+ 	}
+ 
+-	/* Delete/overwrite fake VLAN header, DSA expects to not find
+-	 * it there, see dsa_switch_rcv: skb_push(skb, ETH_HLEN).
+-	 */
+-	if (is_tagged)
+-		skb = dsa_8021q_remove_header(skb);
+-
+ 	return sja1105_rcv_meta_state_machine(skb, &meta, is_link_local,
+ 					      is_meta);
+ }
 
 
