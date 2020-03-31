@@ -2,399 +2,260 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6FDC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F6EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8827220772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:24:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XGCBHfJq"
+	by mail.kernel.org (Postfix) with ESMTP id D40E220772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbgCaNYs (ORCPT
+        id S1730926AbgCaNZe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:24:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26522 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730720AbgCaNYs (ORCPT
+        Tue, 31 Mar 2020 09:25:34 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37792 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730442AbgCaNZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:24:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585661087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jw0nVbBv0FETBp7dw512h5tWtdfOySkR2Wz/CAg+zzM=;
-        b=XGCBHfJq0zwxhZKEEAqdtNiNLxP5MZyux571qFzD5ZkDeyTMo4yHMqokB0c4dingGlaLu4
-        X0uVraBWcrKC5CHEsKvqpN9itv9wcnKFQDLm019jMb1xYHtXzGzIATX7LCOb7blPiZQ8Vy
-        2bwDx6+LCZuktWlQVnoUGl/UsdbIywM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-EiNh4nOdM5q6ynQlsGnfXg-1; Tue, 31 Mar 2020 09:24:43 -0400
-X-MC-Unique: EiNh4nOdM5q6ynQlsGnfXg-1
-Received: by mail-wm1-f69.google.com with SMTP id g9so721538wmh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 06:24:43 -0700 (PDT)
+        Tue, 31 Mar 2020 09:25:34 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g23so21972328otq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 06:25:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Jw0nVbBv0FETBp7dw512h5tWtdfOySkR2Wz/CAg+zzM=;
-        b=c/kb/YCZGbRZLEAnhSzfTLg9p+XMRjaZx+lUjsqbQ0Pp03HQKppc3N8ELbXhftDSxt
-         ByJuyno2JYzyFcfSby38nhx+ikXMuWdegug6TOZrSBkZwq+i/xvqk5VTudRQ0xCMS35b
-         fhZ4iwN14+J6l4Xb4froTNE7BaW50Lu03g09PcvTS1v9oRD7JlwMj3Rc/uhNgjA/VxdB
-         fKjEJpzZgGA5JDJYUEnSH0pVOfVj4a/JlD4CEO8g9tF0iZZzJGr5CXtjNEtq8sqET8Zn
-         4Mr/+Qif8NSr0MuE3jnmjLUKFf5jnfM5Vz5y1MDdWJpK2YTU95O3P1jh7XyDrP6yl4HV
-         4Vvw==
-X-Gm-Message-State: ANhLgQ1J4XWaH7fOKBZWFD4EoZoEB8ZibTRH3iVS3bSYbz6SFSfOeVrQ
-        297bXW+BEFjJoApR5vNNVtnjK8hZjI0tS5YRkceTWC1xufoAn858nZN9hDKe+8kxqXiQibGQSwE
-        +R750QrZN8k8SNI2whCdvDUi1
-X-Received: by 2002:a7b:c252:: with SMTP id b18mr3403582wmj.2.1585661082432;
-        Tue, 31 Mar 2020 06:24:42 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vueGTo4Ef5rfIWPa4rYbmXOXg2dHEafCnE+5sFNPgsm8xhuhqsFd64QYZSAHkmDonQf6kjs/g==
-X-Received: by 2002:a7b:c252:: with SMTP id b18mr3403562wmj.2.1585661082107;
-        Tue, 31 Mar 2020 06:24:42 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id b199sm4202969wme.23.2020.03.31.06.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 06:24:40 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:24:37 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Hui Zhu <teawater@gmail.com>, jasowang@redhat.com,
-        akpm@linux-foundation.org, pagupta@redhat.com,
-        mojha@codeaurora.org, namit@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Hui Zhu <teawaterz@linux.alibaba.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER
- to handle THP spilt issue
-Message-ID: <20200331091718-mutt-send-email-mst@kernel.org>
-References: <20200326031817-mutt-send-email-mst@kernel.org>
- <C4C6BAF7-C040-403D-997C-48C7AB5A7D6B@redhat.com>
- <20200326054554-mutt-send-email-mst@kernel.org>
- <f26dc94a-7296-90c9-56cd-4586b78bc03d@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XGyKuM7pLO0meZP23Om4xZ9WDxe8z5tqirUELAeA9HE=;
+        b=L5iA+AU96X/IddS4TS1JX/5r7hJLggSsZvF8FTbxA3K/sFesyT7Yrilx8t9XnGfZxl
+         1dbKN2F0AdiJPjx3geqa2sdc0KC4uhPSUQEiXMl2BvbXWL0IDj6wl9ekIFDOabdp6MqP
+         TOTsHIygsp4xYRwr6Dfhuxy0SfKkw8Ihd/M/7jVf+JUi4Csqy4n/cMkmkyktBkm54TYw
+         aOX5HHT5cCu580V4XAFm1DP00/A6jLdUtsR5/aDvHVCvO0J4dQNEb3IDeIbM59uAP+Wn
+         yOeRphgglK5+vISEeLR7pro0XeBwTU88tsMrSExItD/luEC/SFxvPQY1UF4MZ8jX6X2B
+         so3Q==
+X-Gm-Message-State: ANhLgQ0xNh9SfqOMbU221M/2POJxN0OQXyPHhp078G9swT5WGW0O2GAZ
+        KepuKDhADNp/oOxX55qVeZO8JZGLX7BbgeDVo48=
+X-Google-Smtp-Source: ADFU+vsv5dzMKVCHS+yQWZ+D38OtHEpnqweDoDNLY1ZJ7s1k7jb/zTnDPhJUwt3g/NBC8q9N8hSzvtYNSXQlojIDg5U=
+X-Received: by 2002:a05:6830:15c2:: with SMTP id j2mr12236793otr.107.1585661133086;
+ Tue, 31 Mar 2020 06:25:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f26dc94a-7296-90c9-56cd-4586b78bc03d@redhat.com>
+References: <20200313174701.148376-1-bigeasy@linutronix.de> <20200313174701.148376-7-bigeasy@linutronix.de>
+In-Reply-To: <20200313174701.148376-7-bigeasy@linutronix.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 31 Mar 2020 15:25:21 +0200
+Message-ID: <CAMuHMdU6s1F=DnaguZXrV4sWzEO-EqTaGQ=N7zyhgGq1M+Q1Ug@mail.gmail.com>
+Subject: Re: [PATCH 6/9] lockdep: Introduce wait-type checks
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:35:24PM +0200, David Hildenbrand wrote:
-> On 26.03.20 10:49, Michael S. Tsirkin wrote:
-> > On Thu, Mar 26, 2020 at 08:54:04AM +0100, David Hildenbrand wrote:
-> >>
-> >>
-> >>> Am 26.03.2020 um 08:21 schrieb Michael S. Tsirkin <mst@redhat.com>:
-> >>>
-> >>> ﻿On Thu, Mar 12, 2020 at 09:51:25AM +0100, David Hildenbrand wrote:
-> >>>>> On 12.03.20 09:47, Michael S. Tsirkin wrote:
-> >>>>> On Thu, Mar 12, 2020 at 09:37:32AM +0100, David Hildenbrand wrote:
-> >>>>>> 2. You are essentially stealing THPs in the guest. So the fastest
-> >>>>>> mapping (THP in guest and host) is gone. The guest won't be able to make
-> >>>>>> use of THP where it previously was able to. I can imagine this implies a
-> >>>>>> performance degradation for some workloads. This needs a proper
-> >>>>>> performance evaluation.
-> >>>>>
-> >>>>> I think the problem is more with the alloc_pages API.
-> >>>>> That gives you exactly the given order, and if there's
-> >>>>> a larger chunk available, it will split it up.
-> >>>>>
-> >>>>> But for balloon - I suspect lots of other users,
-> >>>>> we do not want to stress the system but if a large
-> >>>>> chunk is available anyway, then we could handle
-> >>>>> that more optimally by getting it all in one go.
-> >>>>>
-> >>>>>
-> >>>>> So if we want to address this, IMHO this calls for a new API.
-> >>>>> Along the lines of
-> >>>>>
-> >>>>>    struct page *alloc_page_range(gfp_t gfp, unsigned int min_order,
-> >>>>>                    unsigned int max_order, unsigned int *order)
-> >>>>>
-> >>>>> the idea would then be to return at a number of pages in the given
-> >>>>> range.
-> >>>>>
-> >>>>> What do you think? Want to try implementing that?
-> >>>>
-> >>>> You can just start with the highest order and decrement the order until
-> >>>> your allocation succeeds using alloc_pages(), which would be enough for
-> >>>> a first version. At least I don't see the immediate need for a new
-> >>>> kernel API.
-> >>>
-> >>> OK I remember now.  The problem is with reclaim. Unless reclaim is
-> >>> completely disabled, any of these calls can sleep. After it wakes up,
-> >>> we would like to get the larger order that has become available
-> >>> meanwhile.
-> >>>
-> >>
-> >> Yes, but that‘s a pure optimization IMHO.
-> >> So I think we should do a trivial implementation first and then see what we gain from a new allocator API. Then we might also be able to justify it using real numbers.
-> >>
-> > 
-> > Well how do you propose implement the necessary semantics?
-> > I think we are both agreed that alloc_page_range is more or
-> > less what's necessary anyway - so how would you approximate it
-> > on top of existing APIs?
-> 
-> Looking at drivers/misc/vmw_balloon.c:vmballoon_inflate(), it first
-> tries to allocate huge pages using
-> 
-> 	alloc_pages(__GFP_HIGHMEM|__GFP_NOWARN| __GFP_NOMEMALLOC, 
->                     VMW_BALLOON_2M_ORDER)
-> 
-> And then falls back to 4k allocations (balloon_page_alloc()) in case
-> allocation fails.
-> 
-> I'm roughly thinking of something like the following, but with an
-> optimized reporting interface/bigger pfn array so we can report >
-> 1MB at a time. Also, it might make sense to remember the order that
-> succeeded across some fill_balloon() calls.
-> 
-> Don't even expect it to compile ...
-> 
-> 
-> 
-> >From 4305f989672ccca4be9293e6d4167e929f3e299b Mon Sep 17 00:00:00 2001
-> From: David Hildenbrand <david@redhat.com>
-> Date: Tue, 31 Mar 2020 12:28:07 +0200
-> Subject: [PATCH RFC] tmp
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/virtio/virtio_balloon.c    | 38 ++++++++++++++++++--------
->  include/linux/balloon_compaction.h |  7 ++++-
->  mm/balloon_compaction.c            | 43 +++++++++++++++++++++++-------
->  3 files changed, 67 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 8511d258dbb4..0660b1b988f0 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -187,7 +187,7 @@ int virtballoon_free_page_report(struct page_reporting_dev_info *pr_dev_info,
->  }
->  
->  static void set_page_pfns(struct virtio_balloon *vb,
-> -			  __virtio32 pfns[], struct page *page)
-> +			  __virtio32 pfns[], struct page *page, int order)
->  {
->  	unsigned int i;
->  
-> @@ -197,7 +197,7 @@ static void set_page_pfns(struct virtio_balloon *vb,
->  	 * Set balloon pfns pointing at this page.
->  	 * Note that the first pfn points at start of the page.
->  	 */
-> -	for (i = 0; i < VIRTIO_BALLOON_PAGES_PER_PAGE; i++)
-> +	for (i = 0; i < VIRTIO_BALLOON_PAGES_PER_PAGE * (1 << order); i++)
->  		pfns[i] = cpu_to_virtio32(vb->vdev,
->  					  page_to_balloon_pfn(page) + i);
->  }
-> @@ -205,6 +205,7 @@ static void set_page_pfns(struct virtio_balloon *vb,
->  static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
->  {
->  	unsigned num_allocated_pages;
-> +	int order = MAX_ORDER - 1;
->  	unsigned num_pfns;
->  	struct page *page;
->  	LIST_HEAD(pages);
-> @@ -212,9 +213,20 @@ static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
->  	/* We can only do one array worth at a time. */
->  	num = min(num, ARRAY_SIZE(vb->pfns));
->  
-> +	/*
-> +	 * Note: we will currently never allocate more than 1MB due to the
-> +	 * pfn array size, so we will not allocate MAX_ORDER - 1 ...
-> +	 */
-> +
->  	for (num_pfns = 0; num_pfns < num;
-> -	     num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE) {
-> -		struct page *page = balloon_page_alloc();
-> +	     num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE * (1 << order)) {
-> +		const unsigned long remaining = num - num_pfns;
-> +
-> +		order = MIN(order,
-> +			    get_order(remaining << VIRTIO_BALLOON_PFN_SHIFT));
-> +		if ((1 << order) * VIRTIO_BALLOON_PAGES_PER_PAGE > remaining)
-> +			order--;
-> +		page = balloon_pages_alloc(order);
->  
->  		if (!page) {
->  			dev_info_ratelimited(&vb->vdev->dev,
-> @@ -225,6 +237,8 @@ static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
->  			break;
->  		}
->  
-> +		/* Continue with the actual order that succeeded. */
-> +		order = page_private(page);
->  		balloon_page_push(&pages, page);
->  	}
->  
-> @@ -233,14 +247,16 @@ static unsigned fill_balloon(struct virtio_balloon *vb, size_t num)
->  	vb->num_pfns = 0;
->  
->  	while ((page = balloon_page_pop(&pages))) {
-> +		order = page_order(page);
-> +		/* enqueuing will split the page and clear the order */
->  		balloon_page_enqueue(&vb->vb_dev_info, page);
->  
-> -		set_page_pfns(vb, vb->pfns + vb->num_pfns, page);
-> -		vb->num_pages += VIRTIO_BALLOON_PAGES_PER_PAGE;
-> +		set_page_pfns(vb, vb->pfns + vb->num_pfns, page, order);
-> +		vb->num_pages += VIRTIO_BALLOON_PAGES_PER_PAGE * (1 << order);
->  		if (!virtio_has_feature(vb->vdev,
->  					VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-> -			adjust_managed_page_count(page, -1);
-> -		vb->num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE;
-> +			adjust_managed_page_count(page, -1 * (1 << order));
-> +		vb->num_pfns += VIRTIO_BALLOON_PAGES_PER_PAGE * (1 << order);
->  	}
->  
->  	num_allocated_pages = vb->num_pfns;
-> @@ -284,7 +300,7 @@ static unsigned leak_balloon(struct virtio_balloon *vb, size_t num)
->  		page = balloon_page_dequeue(vb_dev_info);
->  		if (!page)
->  			break;
-> -		set_page_pfns(vb, vb->pfns + vb->num_pfns, page);
-> +		set_page_pfns(vb, vb->pfns + vb->num_pfns, page, 0);
->  		list_add(&page->lru, &pages);
->  		vb->num_pages -= VIRTIO_BALLOON_PAGES_PER_PAGE;
->  	}
-> @@ -786,7 +802,7 @@ static int virtballoon_migratepage(struct balloon_dev_info *vb_dev_info,
->  	__count_vm_event(BALLOON_MIGRATE);
->  	spin_unlock_irqrestore(&vb_dev_info->pages_lock, flags);
->  	vb->num_pfns = VIRTIO_BALLOON_PAGES_PER_PAGE;
-> -	set_page_pfns(vb, vb->pfns, newpage);
-> +	set_page_pfns(vb, vb->pfns, newpage, 0);
->  	tell_host(vb, vb->inflate_vq);
->  
->  	/* balloon's page migration 2nd step -- deflate "page" */
-> @@ -794,7 +810,7 @@ static int virtballoon_migratepage(struct balloon_dev_info *vb_dev_info,
->  	balloon_page_delete(page);
->  	spin_unlock_irqrestore(&vb_dev_info->pages_lock, flags);
->  	vb->num_pfns = VIRTIO_BALLOON_PAGES_PER_PAGE;
-> -	set_page_pfns(vb, vb->pfns, page);
-> +	set_page_pfns(vb, vb->pfns, page, 0);
->  	tell_host(vb, vb->deflate_vq);
->  
->  	mutex_unlock(&vb->balloon_lock);
-> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
-> index 338aa27e4773..ed93fe5704d1 100644
-> --- a/include/linux/balloon_compaction.h
-> +++ b/include/linux/balloon_compaction.h
-> @@ -60,7 +60,7 @@ struct balloon_dev_info {
->  	struct inode *inode;
->  };
->  
-> -extern struct page *balloon_page_alloc(void);
-> +extern struct page *balloon_pages_alloc(int order);
->  extern void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
->  				 struct page *page);
->  extern struct page *balloon_page_dequeue(struct balloon_dev_info *b_dev_info);
-> @@ -78,6 +78,11 @@ static inline void balloon_devinfo_init(struct balloon_dev_info *balloon)
->  	balloon->inode = NULL;
->  }
->  
-> +static inline struct page *balloon_page_alloc(void)
-> +{
-> +	return balloon_pages_alloc(0);
-> +}
-> +
->  #ifdef CONFIG_BALLOON_COMPACTION
->  extern const struct address_space_operations balloon_aops;
->  extern bool balloon_page_isolate(struct page *page,
-> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-> index 26de020aae7b..067810b32813 100644
-> --- a/mm/balloon_compaction.c
-> +++ b/mm/balloon_compaction.c
-> @@ -112,23 +112,35 @@ size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
->  EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->  
->  /*
-> - * balloon_page_alloc - allocates a new page for insertion into the balloon
-> - *			page list.
-> + * balloon_pages_alloc - allocates a new page (of at most the given order)
-> + * 			 for insertion into the balloon page list.
->   *
->   * Driver must call this function to properly allocate a new balloon page.
->   * Driver must call balloon_page_enqueue before definitively removing the page
->   * from the guest system.
->   *
-> + * Will fall back to smaller orders if allocation fails. The order of the
-> + * allocated page is stored in page->private.
-> + *
->   * Return: struct page for the allocated page or NULL on allocation failure.
->   */
-> -struct page *balloon_page_alloc(void)
-> +struct page *balloon_pages_alloc(int order)
->  {
-> -	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
-> -				       __GFP_NOMEMALLOC | __GFP_NORETRY |
-> -				       __GFP_NOWARN);
-> -	return page;
-> +	struct page *page;
-> +
-> +	while (order >= 0) {
-> +		page = alloc_pages(balloon_mapping_gfp_mask() |
-> +				   __GFP_NOMEMALLOC | __GFP_NORETRY |
-> +				   __GFP_NOWARN, order);
-> +		if (page) {
-> +			set_page_private(page, order);
-> +			return page;
-> +		}
-> +		order--;
-> +	}
-> +	return NULL;
->  }
-> -EXPORT_SYMBOL_GPL(balloon_page_alloc);
-> +EXPORT_SYMBOL_GPL(balloon_pages_alloc);
->  
->  /*
->   * balloon_page_enqueue - inserts a new page into the balloon page list.
+Hi all,
+
+On Fri, Mar 13, 2020 at 6:48 PM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+>
+> Extend lockdep to validate lock wait-type context.
+>
+> The current wait-types are:
+>
+>         LD_WAIT_FREE,           /* wait free, rcu etc.. */
+>         LD_WAIT_SPIN,           /* spin loops, raw_spinlock_t etc.. */
+>         LD_WAIT_CONFIG,         /* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
+>         LD_WAIT_SLEEP,          /* sleeping locks, mutex_t etc.. */
+>
+> Where lockdep validates that the current lock (the one being acquired)
+> fits in the current wait-context (as generated by the held stack).
+>
+> This ensures that there is no attempt to acquire mutexes while holding
+> spinlocks, to acquire spinlocks while holding raw_spinlocks and so on. In
+> other words, its a more fancy might_sleep().
+>
+> Obviously RCU made the entire ordeal more complex than a simple single
+> value test because RCU can be acquired in (pretty much) any context and
+> while it presents a context to nested locks it is not the same as it
+> got acquired in.
+>
+> Therefore its necessary to split the wait_type into two values, one
+> representing the acquire (outer) and one representing the nested context
+> (inner). For most 'normal' locks these two are the same.
+>
+> [ To make static initialization easier we have the rule that:
+>   .outer == INV means .outer == .inner; because INV == 0. ]
+>
+> It further means that its required to find the minimal .inner of the held
+> stack to compare against the outer of the new lock; because while 'normal'
+> RCU presents a CONFIG type to nested locks, if it is taken while already
+> holding a SPIN type it obviously doesn't relax the rules.
+>
+> Below is an example output generated by the trivial test code:
+>
+>   raw_spin_lock(&foo);
+>   spin_lock(&bar);
+>   spin_unlock(&bar);
+>   raw_spin_unlock(&foo);
+>
+>  [ BUG: Invalid wait context ]
+>  -----------------------------
+>  swapper/0/1 is trying to lock:
+>  ffffc90000013f20 (&bar){....}-{3:3}, at: kernel_init+0xdb/0x187
+>  other info that might help us debug this:
+>  1 lock held by swapper/0/1:
+>   #0: ffffc90000013ee0 (&foo){+.+.}-{2:2}, at: kernel_init+0xd1/0x187
+>
+> The way to read it is to look at the new -{n,m} part in the lock
+> description; -{3:3} for the attempted lock, and try and match that up to
+> the held locks, which in this case is the one: -{2,2}.
+>
+> This tells that the acquiring lock requires a more relaxed environment than
+> presented by the lock stack.
+>
+> Currently only the normal locks and RCU are converted, the rest of the
+> lockdep users defaults to .inner = INV which is ignored. More conversions
+> can be done when desired.
+>
+> The check for spinlock_t nesting is not enabled by default. It's a separate
+> config option for now as there are known problems which are currently
+> addressed. The config option allows to identify these problems and to
+> verify that the solutions found are indeed solving them.
+>
+> The config switch will be removed and the checks will permanently enabled
+> once the vast majority of issues has been addressed.
+>
+> [ bigeasy: Move LD_WAIT_FREE,… out of CONFIG_LOCKDEP to avoid compile
+>            failure with CONFIG_DEBUG_SPINLOCK + !CONFIG_LOCKDEP]
+> [ tglx: Add the config option ]
+>
+> Requested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+On arm64 (e.g. R-Car H3 ES2.0):
+
++=============================
++[ BUG: Invalid wait context ]
++5.6.0-salvator-x-09423-gb29514ba13a9c459-dirty #679 Not tainted
++-----------------------------
++swapper/5/0 is trying to lock:
++ffffff86ff76f398 (&pool->lock){..-.}-{3:3}, at: __queue_work+0x134/0x430
++other info that might help us debug this:
++1 lock held by swapper/5/0:
++ #0: ffffffc01103a4a0 (rcu_read_lock){....}-{1:3}, at:
+rcu_lock_acquire.constprop.59+0x0/0x38
++stack backtrace:
++CPU: 5 PID: 0 Comm: swapper/5 Not tainted
+5.6.0-salvator-x-09423-gb29514ba13a9c459-dirty #679
++Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
++Call trace:
++ dump_backtrace+0x0/0x180
++ show_stack+0x14/0x1c
++ dump_stack+0xdc/0x12c
++ __lock_acquire+0x37c/0xf9c
++ lock_acquire+0x258/0x288
++ _raw_spin_lock+0x34/0x48
++ __queue_work+0x134/0x430
++ queue_work_on+0x48/0x8c
++ timers_update_nohz+0x24/0x2c
++ tick_nohz_activate.isra.15.part.16+0x5c/0x80
++ tick_setup_sched_timer+0xe0/0xf0
++ hrtimer_run_queues+0x88/0xf8
++ run_local_timers+0x20/0x58
++ update_process_times+0x24/0x50
++ tick_periodic+0xd8/0xe8
++ tick_handle_periodic+0x30/0x98
++ arch_timer_handler_phys+0x28/0x3c
++ handle_percpu_devid_irq+0x64/0x110
++ generic_handle_irq+0x20/0x34
++ __handle_domain_irq+0x94/0x98
++ gic_handle_irq+0x78/0xbc
++ el1_irq+0xf4/0x1c0
++ arch_cpu_idle+0x38/0x54
++ default_idle_call+0x2c/0x30
++ do_idle+0x13c/0x244
++ cpu_startup_entry+0x20/0x24
++ secondary_start_kernel+0x1c4/0x1d8
+
+On arm32 (e.g SH-Mobile AG5, using Cortex-A9 TWD):
+
++=============================
++[ BUG: Invalid wait context ]
++5.6.0-kzm9g-09424-g2698719b4c4f35db-dirty #253 Not tainted
++-----------------------------
++swapper/0/0 is trying to lock:
++dfbc5250 (&pool->lock){..-.}-{3:3}, at: __queue_work+0x14c/0x4d0
++other info that might help us debug this:
++1 lock held by swapper/0/0:
++ #0: c0a17074 (rcu_read_lock){....}-{1:3}, at:
+rcu_lock_acquire.constprop.33+0x0/0x38
++stack backtrace:
++CPU: 0 PID: 0 Comm: swapper/0 Not tainted
+5.6.0-kzm9g-09424-g2698719b4c4f35db-dirty #253
++Hardware name: Generic SH73A0 (Flattened Device Tree)
++[<c010f948>] (unwind_backtrace) from [<c010bbf0>] (show_stack+0x10/0x14)
++[<c010bbf0>] (show_stack) from [<c05c3e84>] (dump_stack+0xa8/0xe0)
++[<c05c3e84>] (dump_stack) from [<c017036c>] (__lock_acquire+0x398/0x1568)
++[<c017036c>] (__lock_acquire) from [<c0171e90>] (lock_acquire+0x274/0x2ac)
++[<c0171e90>] (lock_acquire) from [<c05dfb90>] (_raw_spin_lock+0x40/0x50)
++[<c05dfb90>] (_raw_spin_lock) from [<c013adc8>] (__queue_work+0x14c/0x4d0)
++[<c013adc8>] (__queue_work) from [<c013b194>] (queue_work_on+0x48/0x6c)
++[<c013b194>] (queue_work_on) from [<c01a89e8>]
+(tick_setup_sched_timer+0x148/0x188)
++[<c01a89e8>] (tick_setup_sched_timer) from [<c0197ad8>]
+(hrtimer_run_queues+0x74/0x114)
++[<c0197ad8>] (hrtimer_run_queues) from [<c0195e38>]
+(run_local_timers+0x14/0x54)
++[<c0195e38>] (run_local_timers) from [<c0195e9c>]
+(update_process_times+0x24/0x54)
++[<c0195e9c>] (update_process_times) from [<c01a5520>]
+(tick_handle_periodic+0x28/0xa0)
++[<c01a5520>] (tick_handle_periodic) from [<c010eaf8>] (twd_handler+0x2c/0x38)
++[<c010eaf8>] (twd_handler) from [<c01829c0>]
+(handle_percpu_devid_irq+0x58/0xfc)
++[<c01829c0>] (handle_percpu_devid_irq) from [<c017ccc4>]
+(generic_handle_irq+0x28/0x38)
++[<c017ccc4>] (generic_handle_irq) from [<c017d2fc>]
+(__handle_domain_irq+0x90/0xa0)
++[<c017d2fc>] (__handle_domain_irq) from [<c0392d70>] (gic_handle_irq+0x58/0x90)
++[<c0392d70>] (gic_handle_irq) from [<c0101ab0>] (__irq_svc+0x70/0x98)
++Exception stack(0xc0a01f40 to 0xc0a01f88)
++1f40: 00000001 00000006 c0a0bac0 00000000 00000001 ffffe000 c0a08ea8 c0a94532
++1f60: c0a08eec 00000001 c09278e0 00000000 ffffe000 c0a01f90 c0108448 c010844c
++1f80: 60000013 ffffffff
++[<c0101ab0>] (__irq_svc) from [<c010844c>] (arch_cpu_idle+0x20/0x3c)
++[<c010844c>] (arch_cpu_idle) from [<c0152350>] (do_idle+0xe8/0x13c)
++[<c0152350>] (do_idle) from [<c0152718>] (cpu_startup_entry+0x18/0x1c)
++[<c0152718>] (cpu_startup_entry) from [<c0900d54>] (start_kernel+0x3f0/0x49c)
++[<c0900d54>] (start_kernel) from [<00000000>] (0x0)
+
+I also see it on other arm32 platforms using Renesas-specific timers,
+but I'll ignore those until the issues with "standard" ARM timers have
+been resolved ;-)
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
-I think this will try to invoke direct reclaim from the first iteration
-to free up the max order.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> @@ -146,10 +158,23 @@ EXPORT_SYMBOL_GPL(balloon_page_alloc);
->  void balloon_page_enqueue(struct balloon_dev_info *b_dev_info,
->  			  struct page *page)
->  {
-> +	const int order = page_private(page);
->  	unsigned long flags;
-> +	int i;
-> +
-> +	/*
-> +	 * We can only migrate single pages - and even if we could migrate
-> +	 * bigger ones, we would want to split them on demand instead of
-> +	 * trying to move around big chunks.
-> +	 */
-> +	if (order > 0)
-> +		split_page(page, order);
-> +	set_page_private(page, order);
->  
->  	spin_lock_irqsave(&b_dev_info->pages_lock, flags);
-> -	balloon_page_enqueue_one(b_dev_info, page);
-> +	for (i = 0; i < (1 << order); i++)
-> +		balloon_page_enqueue_one(b_dev_info, page + i);
-> +
->  	spin_unlock_irqrestore(&b_dev_info->pages_lock, flags);
->  }
->  EXPORT_SYMBOL_GPL(balloon_page_enqueue);
-> -- 
-> 2.25.1
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
