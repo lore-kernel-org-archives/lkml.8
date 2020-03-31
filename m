@@ -2,194 +2,164 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EA9C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A34BC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167DE20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA140207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="LjgXcRCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbgCaLHL (ORCPT
+        id S1730575AbgCaLIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:07:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:51162 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730377AbgCaLHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:07:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AFBF1FB;
-        Tue, 31 Mar 2020 04:07:10 -0700 (PDT)
-Received: from [10.57.60.204] (unknown [10.57.60.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77EEE3F52E;
-        Tue, 31 Mar 2020 04:07:08 -0700 (PDT)
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: rk3399-roc-pc: Fix MMC
- numbering for LED triggers
-To:     Chen-Yu Tsai <wens@kernel.org>, Johan Jonker <jbx6244@gmail.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org
-References: <20200327030414.5903-2-wens@kernel.org>
- <684a08e6-7dfe-4cb1-2ae5-c1fb4128976b@gmail.com>
- <CAGb2v65ayZwN14S-Pzu2ip1K=fgzTbNB=ZzUcpou-jtv8m6vBA@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ccf35a92-7005-9c6d-a8a2-c17b714a60bc@arm.com>
-Date:   Tue, 31 Mar 2020 12:07:07 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        Tue, 31 Mar 2020 07:08:11 -0400
+Received: from www381.your-server.de ([78.46.137.84]:60258 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730377AbgCaLIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 07:08:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dO+HmymDbjQQciYegqXjO3hF6Swgv/jmvaAxnl+cdp0=; b=LjgXcRCT0WS9V0AIUNR9YYxjkX
+        ULBbNCUOSshQS9sZ9bd9NTlaXNzpHiuX+NqOgKBcXTVxh4PouWS7VRx7/J+SCZwhW/B2Wp2oYy6Z9
+        Ce9UQlll1XUtETgtwhZ7yDaGnDUTMZmpVbBJzeiTGdPZTuC54sYKzwMylNHsh7q0MnUWqUQtgrzq7
+        KpJLwnkSrCD2U4jD/QKk/du6wGEj5AjdUd2zX+1GtkgkIxoPUwySCpkrKTwmZgIirZZXarTpava/k
+        Ar/jVU0tZHB3ZMYc/JHkx3azzc1foeO5LiMadvNX+NrDYBv02i8iI5d8l5mZP2bloobbQLMkJP9WW
+        fXP3BjTA==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jJEkU-0004xI-0l; Tue, 31 Mar 2020 13:08:02 +0200
+Received: from [82.135.70.63] (helo=[192.168.178.20])
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jJEkT-000R1n-JG; Tue, 31 Mar 2020 13:08:01 +0200
+Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
+ DEFINE_SIMPLE_ATTRIBUTE
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "rohitsarkar5398@gmail.com" <rohitsarkar5398@gmail.com>
+Cc:     "stefan.popa@analog.com" <stefan.popa@analog.com>,
+        "zhongjiang@huawei.com" <zhongjiang@huawei.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
+ <20200329103818.2fce9529@archlinux>
+ <aee10d6bfc5f2fef85d90245304f3e0f368f94ec.camel@analog.com>
+ <BN6PR03MB33472A88BA78392686737F9099C80@BN6PR03MB3347.namprd03.prod.outlook.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <74033597-c348-03df-d52f-748bf52c1a12@metafoo.de>
+Date:   Tue, 31 Mar 2020 13:08:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CAGb2v65ayZwN14S-Pzu2ip1K=fgzTbNB=ZzUcpou-jtv8m6vBA@mail.gmail.com>
+In-Reply-To: <BN6PR03MB33472A88BA78392686737F9099C80@BN6PR03MB3347.namprd03.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25767/Mon Mar 30 15:08:30 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ +cc LED binding maintainers]
+On 3/31/20 12:58 PM, Sa, Nuno wrote:
+> Hi Rohit,
+>
+>> From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org> On
+>> Behalf Of Ardelean, Alexandru
+>> Sent: Montag, 30. März 2020 11:20
+>> To: jic23@kernel.org; rohitsarkar5398@gmail.com
+>> Cc: stefan.popa@analog.com; zhongjiang@huawei.com; linux-
+>> iio@vger.kernel.org; Bogdan, Dragos <Dragos.Bogdan@analog.com>;
+>> pmeerw@pmeerw.net; knaack.h@gmx.de; Hennerich, Michael
+>> <Michael.Hennerich@analog.com>; linux-kernel@vger.kernel.org;
+>> lars@metafoo.de
+>> Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
+>> DEFINE_SIMPLE_ATTRIBUTE
+>>
+>> On Sun, 2020-03-29 at 10:38 +0100, Jonathan Cameron wrote:
+>>> On Sat, 28 Mar 2020 12:04:53 +0530
+>>> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+>>>
+>>>> The debugfs_create_file_unsafe method does not protect the fops given to
+>>>> it from file removal. It must be used with DEFINE_DEBUGFS_ATTRIBUTE
+>>>> which makes the fops aware of the file lifetime.
+>>>>
+>>>> Further using DEFINE_DEBUGFS_ATTRIBUTE along with
+>>>> debugfs_create_file_unsafe significantly reduces the overhead introduced
+>> by
+>>>> debugfs_create_file which creates a lifetime managing proxy around each
+>>>> fops handed in. Refer [1] for more on this.
+>>>>
+>>>> Fixes the following warnings reported by coccinelle:
+>>>> drivers/iio/imu//adis16460.c:126:0-23: WARNING:
+>> adis16460_flash_count_fops
+>>>> should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+>>>> drivers/iio/imu//adis16460.c:108:0-23: WARNING:
+>> adis16460_product_id_fops
+>>>> should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+>>>> drivers/iio/imu//adis16460.c:90:0-23: WARNING:
+>> adis16460_serial_number_fops
+>>>> should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+>>>> drivers/iio/imu//adis16400.c:278:0-23: WARNING:
+>> adis16400_flash_count_fops
+>>>> should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+>>>> drivers/iio/imu//adis16400.c:261:0-23: WARNING:
+>> adis16400_product_id_fops
+>>>> should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+>>>>
+>>>> [1]: https://lists.gt.net/linux/kernel/2369498
+>>>>
+>>>> Rohit Sarkar (2):
+>>>>    iio: imu: adis16400: use DEFINE_DEBUGFS_ATTRIBUTE instead of
+>>>>      DEFINE_SIMPLE_ATTRIBUTE
+>>>>    iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE instead of
+>>>>      DEFINE_SIMPLE_ATTRIBUTE
+>>>>
+>>>>   drivers/iio/imu/adis16400.c | 4 ++--
+>>>>   drivers/iio/imu/adis16460.c | 6 +++---
+>>>>   2 files changed, 5 insertions(+), 5 deletions(-)
+>>>>
+>>> Hi Rohit,
+>>>
+>>> You've opened a can of worms with this one.  There as a previous series
+>>> posted doing exactly this change back in 2019 by Zhong Jiang (cc'd)
+>>>
+>>> At the time I did a bit of looking into why this had been universally taken
+>>> up cross tree and turned out there are some potential issues.
+>>>
+>>> Alexandru added it to the list of things to test, but I guess it got
+>>> buried under other work and is still outstanding.
+>>>
+>> yep
+>> my bad;
+>> will try to make room these days for that old one
+>>
+>>
+> I don't have the exact parts that this patch is touching but I have other parts where this patch
+> applies and should be same. So, the idea to test this is to read the files in debugfs? Maybe also
+> some unbind + binding?
+>
+> I will try to test this still today...
 
-On 2020-03-29 5:36 pm, Chen-Yu Tsai wrote:
-> On Fri, Mar 27, 2020 at 5:58 PM Johan Jonker <jbx6244@gmail.com> wrote:
->>
->> Hi Chen-Yu Tsai,
->>
->> The led node names need some changes.
->> 'linux,default-trigger' value does not fit.
->>
->>  From leds-gpio.yaml:
->>
->> patternProperties:
->>    # The first form is preferred, but fall back to just 'led' anywhere in the
->>    # node name to at least catch some child nodes.
->>    "(^led-[0-9a-f]$|led)":
->>      type: object
->>
->> Rename led nodenames to 'led-0' form
->>
->> Also include all mail lists found with:
->> ./scripts/get_maintainer.pl --nogit-fallback --nogit
->>
->> devicetree@vger.kernel.org
-> 
-> Oops...
-> 
->> If you like change the rest of dts with leds as well...
->>
->>    DTC     arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml
->>    CHECK   arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml
->> arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml: leds:
->> yellow-led:linux,default-trigger:0: 'mmc0' is not one of ['backlight',
->> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
->> arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dt.yaml: leds:
->> diy-led:linux,default-trigger:0: 'mmc1' is not one of ['backlight',
->> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
->>    DTC     arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml
->>    CHECK   arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml
->> arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
->> diy-led:linux,default-trigger:0: 'mmc2' is not one of ['backlight',
->> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
->> arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dt.yaml: leds:
->> yellow-led:linux,default-trigger:0: 'mmc1' is not one of ['backlight',
->> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
-> 
-> Maybe we should just get rid of linux,default-trigger then?
+The stress test is to open the debugfs file, then unbind the device and 
+then read from the still open debugfs file.
 
-In this particular case, I'd say it's probably time to reevaluate the 
-rather out-of-date binding. The apparent intent of the 
-"linux,default-trigger" property seems to be to describe any trigger 
-supported by Linux, so either the binding wants to be kept in sync with 
-all the triggers Linux actually supports, or perhaps it should just be 
-redefined as a free-form string. FWIW I'd be slightly inclined towards 
-the latter, since the schema validator can't know whether the given 
-trigger actually corresponds to the correct thing for whatever the LED 
-is physically labelled on the board/case, nor whether the version(s) of 
-Linux that people intend to use actually support that trigger (since it 
-doesn't have to be the version contemporary with the schema definition), 
-so strict validation of this particular property seems to be of limited 
-value.
-
-Robin.
-
-> 
-> Heiko?
-> 
-> ChenYu
-> 
->> make -k ARCH=arm64 dtbs_check
->> DT_SCHEMA_FILES=Documentation/devicetree/bindings/leds/leds-gpio.yaml
->>
->>> From: Chen-Yu Tsai <wens@csie.org>
->>>
->>> With SDIO now enabled, the numbering of the existing MMC host controllers
->>> gets incremented by 1, as the SDIO host is the first one.
->>>
->>> Increment the numbering of the MMC LED triggers to match.
->>>
->>> Fixes: cf3c5397835f ("arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine")
->>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->>> ---
->>>   arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts | 8 ++++++++
->>>   arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi          | 4 ++--
->>>   2 files changed, 10 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
->>> index 2acb3d500fb9..f0686fc276be 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
->>> @@ -38,6 +38,10 @@ vcc3v3_pcie: vcc3v3-pcie {
->>>        };
->>>   };
->>>
->>> +&diy_led {
->>> +     linux,default-trigger = "mmc2";
->>> +};
->>> +
->>>   &pcie_phy {
->>>        status = "okay";
->>>   };
->>> @@ -91,3 +95,7 @@ &uart0 {
->>>        pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
->>>        status = "okay";
->>>   };
->>> +
->>> +&yellow_led {
->>> +     linux,default-trigger = "mmc1";
->>> +};
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->>> index 9f225e9c3d54..bc060ac7972d 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
->>> @@ -70,14 +70,14 @@ work-led {
->>>                        linux,default-trigger = "heartbeat";
->>>                };
->>>
->>> -             diy-led {
->>> +             diy_led: diy-led {
->>>                        label = "red:diy";
->>>                        gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
->>>                        default-state = "off";
->>>                        linux,default-trigger = "mmc1";
->>>                };
->>>
->>> -             yellow-led {
->>> +             yellow_led: yellow-led {
->>>                        label = "yellow:yellow-led";
->>>                        gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
->>>                        default-state = "off";
->>> --
->>> 2.25.1
->>
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+- Lars
