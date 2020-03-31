@@ -2,127 +2,167 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C58FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66134C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0075208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A55020848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645426;
-	bh=lpmok3Bil27XaA6+FP/m2mDasVztqUgL3V0nTC4ZTYY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=2df42NXRsuKagLqtKqgxGp32VFdeBqJ3i7NQWpHBARWrA36IofVO2ySO1wB7uYauh
-	 QrTaXjZsqhDllZIFDzbF0CcyfK6llC70RnBSiQTThZFYv7UkXpHEwO5neS6tNvTe4M
-	 yj4IV9FujLJGxX/1aHOS+2voPSBKR6YQSV9Wf8zE=
+	s=default; t=1585645428;
+	bh=wK2V//ipX04GClahuF3eGxYEeP8OuhNS+fo3Fgr+2yw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cmaNWnDL8E+hUFP5sDj6fAiSLVuPWZB6jz4NlpQubtjGks+bWUKQokEMuATJecKds
+	 stg6DxFFL14KhTu8xnGVitAIBfo14EU7F6mx5oP2Lgp3g3rMwO/C41gL6niGL7Almb
+	 WyzmXoQRXgmbX/4cCLNgcjNnHVHNg9GXljDCTjLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgCaJDo (ORCPT
+        id S1730869AbgCaJDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:03:44 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:42453 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730515AbgCaJDk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:03:40 -0400
-Received: by mail-wr1-f54.google.com with SMTP id h15so24863482wrx.9
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 02:03:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Q9/XO8fYcNvTTJyLWlGUfxMTl5XPLuqywJPuPYMMlNc=;
-        b=VyxRAN1K3gGDI7rkxa6zHWAtYASTkrFHG+miBSQb4pmUNoUwt5iodVWgoYBhejxjXE
-         9lyGYHplFCDU05KW8LAxfslzYnb988kvrgya6GGf2E8xL0kyylO7mUOMLTAx+ZNZGWcN
-         5QIKHuXcKrINePtPaadGZy2CISDv2LRuABATQiegVCrg37HEOfAEavpQd4VJ6sbZZP53
-         0+WQAFUklFgczW7bzjMsZMmQAqNpwzsj0K6JxAlzVMF4kHWiTSuR24HyEm+ug/pE2u4m
-         GwW7uDiAO2j68L98AYZ6CMKcz3B8q+Wwbq7iF1qp2WiS1WHH/AIIAwUsXygT46BSXX2s
-         Tx1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=Q9/XO8fYcNvTTJyLWlGUfxMTl5XPLuqywJPuPYMMlNc=;
-        b=BjE6Hrm+2RmE7CLTr4HMlHNrtSYJ7hWSng5l4rvR9w4Swen1oeobH0X6X8UVTY4YQs
-         LIRl79BeZ71LBnEaFYF38l21g0mXIVdPLgQ/19+5RooC/1zVTYHynMybplB0FPGuASo/
-         dHRNvIm5Xirmcf5gzhSFmNmyc5wL+8w+R+7tVy3XFPI8MM2rsHWV92HXS5KAwPHuksqO
-         9gtsLOY/NI8KHVE7vdI317ABeQLabsWZP66CrsDjFyHmudxt14MQHubA061bQTfu6wUU
-         DxR3AYBIZGcCZKCz4mBqpaXeTgwe9Cv4hogj5MUgeHVn4UK+DLpfcwl+w9anaZPmB6z8
-         2Xgg==
-X-Gm-Message-State: ANhLgQ04Ah/YgJTySjPziHE3og4HfmQRdrZJmHGuICmz6AwtN1tWlTpL
-        KLogSPj1/S7J9dHEkm1jMU0=
-X-Google-Smtp-Source: ADFU+vuH5tyUSehNA7LHz3MMoXcvWLVtaxH6+r3Ul34UI8JIFyFP/C1PFyJWMFYRYXOVVaQRPpTY5w==
-X-Received: by 2002:adf:e8cc:: with SMTP id k12mr19936392wrn.144.1585645418833;
-        Tue, 31 Mar 2020 02:03:38 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id y200sm3061785wmc.20.2020.03.31.02.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 02:03:38 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 11:03:36 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/mm changes for v5.7
-Message-ID: <20200331090336.GA5237@gmail.com>
+        Tue, 31 Mar 2020 05:03:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730853AbgCaJDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACC2E20B80;
+        Tue, 31 Mar 2020 09:03:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585645422;
+        bh=wK2V//ipX04GClahuF3eGxYEeP8OuhNS+fo3Fgr+2yw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OEyCm89Mw9J54XSahVJ8WSn3lbR+/MZ/31f7/GMHcXhqukBPOJbHFO9OTwjfu6NFD
+         HaxqCJ6n3tVCr4pcEncDIGhN2We5HLcXueowCO1aLOi+qJHRwP4cuMnQfmF6Mr2A9p
+         wWmYrFKmnMnD1QqiG1Yq1iIh2kHMWZCnBd61fSis=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 048/170] net: ena: fix request of incorrect number of IRQ vectors
+Date:   Tue, 31 Mar 2020 10:57:42 +0200
+Message-Id: <20200331085429.519147945@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
+References: <20200331085423.990189598@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-Please pull the latest x86-mm-for-linus git tree from:
+[ Upstream commit e02ae6ed51be3d28923bfd318ae57000f5643da5 ]
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-for-linus
+Bug:
+In short the main issue is caused by the fact that the number of queues
+is changed using ethtool after ena_probe() has been called and before
+ena_up() was executed. Here is the full scenario in detail:
 
-   # HEAD: aa61ee7b9ee3cb84c0d3a842b0d17937bf024c46 x86/mm: Remove the now redundant N_MEMORY check
+* ena_probe() is called when the driver is loaded, the driver is not up
+  yet at the end of ena_probe().
+* The number of queues is changed -> io_queue_count is changed as well -
+  ena_up() is not called since the "dev_was_up" boolean in
+  ena_update_queue_count() is false.
+* ena_up() is called by the kernel (it's called asynchronously some
+  time after ena_probe()). ena_setup_io_intr() is called by ena_up() and
+  it uses io_queue_count to get the suitable irq lines for each msix
+  vector. The function ena_request_io_irq() is called right after that
+  and it uses msix_vecs - This value only changes during ena_probe() and
+  ena_restore() - to request the irq vectors. This results in "Failed to
+  request I/O IRQ" error for i > io_queue_count.
 
-A handful of changes:
+Numeric example:
+* After ena_probe() io_queue_count = 8, msix_vecs = 9.
+* The number of queues changes to 4 -> io_queue_count = 4, msix_vecs = 9.
+* ena_up() is executed for the first time:
+  ** ena_setup_io_intr() inits the vectors only up to io_queue_count.
+  ** ena_request_io_irq() calls request_irq() and fails for i = 5.
 
- - two memory encryption related fixes
+How to reproduce:
+simply run the following commands:
+    sudo rmmod ena && sudo insmod ena.ko;
+    sudo ethtool -L eth1 combined 3;
 
- - don't display the kernel's virtual memory layout plaintext on 32-bit kernels either
+Fix:
+Use ENA_MAX_MSIX_VEC(adapter->num_io_queues + adapter->xdp_num_queues)
+instead of adapter->msix_vecs. We need to take XDP queues into
+consideration as they need to have msix vectors assigned to them as well.
+Note that the XDP cannot be attached before the driver is up and running
+but in XDP mode the issue might occur when the number of queues changes
+right after a reset trigger.
+The ENA_MAX_MSIX_VEC simply adds one to the argument since the first msix
+vector is reserved for management queue.
 
- - two simplifications
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/amazon/ena/ena_netdev.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -1444,6 +1444,7 @@ static int ena_request_mgmnt_irq(struct
+ 
+ static int ena_request_io_irq(struct ena_adapter *adapter)
+ {
++	u32 io_queue_count = adapter->num_io_queues;
+ 	unsigned long flags = 0;
+ 	struct ena_irq *irq;
+ 	int rc = 0, i, k;
+@@ -1454,7 +1455,7 @@ static int ena_request_io_irq(struct ena
+ 		return -EINVAL;
+ 	}
+ 
+-	for (i = ENA_IO_IRQ_FIRST_IDX; i < adapter->msix_vecs; i++) {
++	for (i = ENA_IO_IRQ_FIRST_IDX; i < ENA_MAX_MSIX_VEC(io_queue_count); i++) {
+ 		irq = &adapter->irq_tbl[i];
+ 		rc = request_irq(irq->vector, irq->handler, flags, irq->name,
+ 				 irq->data);
+@@ -1495,6 +1496,7 @@ static void ena_free_mgmnt_irq(struct en
+ 
+ static void ena_free_io_irq(struct ena_adapter *adapter)
+ {
++	u32 io_queue_count = adapter->num_io_queues;
+ 	struct ena_irq *irq;
+ 	int i;
+ 
+@@ -1505,7 +1507,7 @@ static void ena_free_io_irq(struct ena_a
+ 	}
+ #endif /* CONFIG_RFS_ACCEL */
+ 
+-	for (i = ENA_IO_IRQ_FIRST_IDX; i < adapter->msix_vecs; i++) {
++	for (i = ENA_IO_IRQ_FIRST_IDX; i < ENA_MAX_MSIX_VEC(io_queue_count); i++) {
+ 		irq = &adapter->irq_tbl[i];
+ 		irq_set_affinity_hint(irq->vector, NULL);
+ 		free_irq(irq->vector, irq->data);
+@@ -1520,12 +1522,13 @@ static void ena_disable_msix(struct ena_
+ 
+ static void ena_disable_io_intr_sync(struct ena_adapter *adapter)
+ {
++	u32 io_queue_count = adapter->num_io_queues;
+ 	int i;
+ 
+ 	if (!netif_running(adapter->netdev))
+ 		return;
+ 
+-	for (i = ENA_IO_IRQ_FIRST_IDX; i < adapter->msix_vecs; i++)
++	for (i = ENA_IO_IRQ_FIRST_IDX; i < ENA_MAX_MSIX_VEC(io_queue_count); i++)
+ 		synchronize_irq(adapter->irq_tbl[i].vector);
+ }
+ 
 
 
-  out-of-topic modifications in x86-mm-for-linus:
-  -------------------------------------------------
-  kernel/dma/mapping.c               # 17c4a2ae15a7: dma-mapping: Fix dma_pgprot(
-
- Thanks,
-
-	Ingo
-
------------------->
-Arvind Sankar (1):
-      x86/mm/init/32: Stop printing the virtual memory layout
-
-Baoquan He (1):
-      x86/mm: Remove the now redundant N_MEMORY check
-
-Sebastian Andrzej Siewior (1):
-      x86/mm/kmmio: Use this_cpu_ptr() instead get_cpu_var() for kmmio_ctx
-
-Thomas Hellstrom (2):
-      x86: Don't let pgprot_modify() change the page encryption bit
-      dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
-
-
- arch/x86/include/asm/pgtable.h       |  7 +++++--
- arch/x86/include/asm/pgtable_types.h |  2 +-
- arch/x86/mm/init_32.c                | 38 ------------------------------------
- arch/x86/mm/init_64.c                |  3 +--
- arch/x86/mm/kmmio.c                  | 10 +++-------
- kernel/dma/mapping.c                 |  2 ++
- 6 files changed, 12 insertions(+), 50 deletions(-)
