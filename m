@@ -2,51 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0115C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E0FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A233720658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA9920658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646432;
-	bh=5CvfJwbTSTp25ip8k7Gp6TZBaCo86dX6oC/nzpg0hSw=;
+	s=default; t=1585646439;
+	bh=aajlEBPgsF9TWsTs1qzScjchYnUPHpC5ectjpFA3GQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YxI/Qia5EsS1pYNXp9No+y7r1AS/cQZJDlt9U3bdLU6IEypfSlIohLlyR4SdPDqwX
-	 Ewfd86dlkxVb8Wbar0tPM74kCd8P9x10P1t96lJqH2pyg1cPoiBeebP6/4MGVAPmgs
-	 nN0w+/RQzMZF70AIf7bGarsy6K3piXaTSKe7FIr8=
+	b=DRvJK2QA/MQh81z4mzDYic/h6mMPahOqLERA2KuVSaf8CfUOLL9YwfApGFxC+v3t5
+	 clb4gDfQIw9RRSI4ID8kfk4opLuAh/7sWQnzWqB1C/MUEs0Jtf82P4WrmsHadQ2qCt
+	 hFVu/C83I8yYv1qfp9ATA4rhW0JAMvDWN97GMXG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731796AbgCaJON (ORCPT
+        id S1731077AbgCaJNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:14:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33916 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731761AbgCaJOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:14:10 -0400
+        id S1730385AbgCaJNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F5342072E;
-        Tue, 31 Mar 2020 09:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 882222072E;
+        Tue, 31 Mar 2020 09:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646048;
-        bh=5CvfJwbTSTp25ip8k7Gp6TZBaCo86dX6oC/nzpg0hSw=;
+        s=default; t=1585646016;
+        bh=aajlEBPgsF9TWsTs1qzScjchYnUPHpC5ectjpFA3GQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uvLNmILL1B36jybZBjJ4w+A2BWXb8G5pZyMO/ErwhPERrxvPt3ik3hMXq/DBmNL4/
-         QoS6o/5lKirAicvdvx0L0YntvN3aJfQKLBlTpyyKHSrcGcACrpFCqdBVv9JjBLNHps
-         8KBaQlu8G5EtFXlsN/WXJtNWnKY1r7GlzcixkS3I=
+        b=Spe4zpPvTB9DHAb8oh1OT31ul677tt4+31g1/X718IXOEU77MrOUA3IcxzZT/XBBp
+         Z4T12+EY8RahL6NCaCBTvIVjheRchenb+gXTrUTMilxy7z6uZbIazoRHU+FBhI6A1K
+         uEKRTHJ0vil5QlzSGLkQIiTR3Afefk+OnM+bySpg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 019/155] net: dsa: tag_8021q: replace dsa_8021q_remove_header with __skb_vlan_pop
-Date:   Tue, 31 Mar 2020 10:57:39 +0200
-Message-Id: <20200331085420.536558279@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Gilbert <floppym@gentoo.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 056/155] cpupower: avoid multiple definition with gcc -fno-common
+Date:   Tue, 31 Mar 2020 10:58:16 +0200
+Message-Id: <20200331085424.859303320@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,154 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Mike Gilbert <floppym@gentoo.org>
 
-[ Upstream commit e80f40cbe4dd51371818e967d40da8fe305db5e4 ]
+[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
 
-Not only did this wheel did not need reinventing, but there is also
-an issue with it: It doesn't remove the VLAN header in a way that
-preserves the L2 payload checksum when that is being provided by the DSA
-master hw.  It should recalculate checksum both for the push, before
-removing the header, and for the pull afterwards. But the current
-implementation is quite dizzying, with pulls followed immediately
-afterwards by pushes, the memmove is done before the push, etc.  This
-makes a DSA master with RX checksumming offload to print stack traces
-with the infamous 'hw csum failure' message.
+Building cpupower with -fno-common in CFLAGS results in errors due to
+multiple definitions of the 'cpu_count' and 'start_time' variables.
 
-So remove the dsa_8021q_remove_header function and replace it with
-something that actually works with inet checksumming.
+./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+multiple definition of `cpu_count';
+./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+first defined here
+...
+./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
+multiple definition of `start_time';
+./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
+first defined here
 
-Fixes: d461933638ae ("net: dsa: tag_8021q: Create helper function for removing VLAN header")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The -fno-common option will be enabled by default in GCC 10.
+
+Bug: https://bugs.gentoo.org/707462
+Signed-off-by: Mike Gilbert <floppym@gentoo.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/dsa/8021q.h |    7 -------
- net/dsa/tag_8021q.c       |   43 -------------------------------------------
- net/dsa/tag_sja1105.c     |   19 +++++++++----------
- 3 files changed, 9 insertions(+), 60 deletions(-)
+ tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
 
---- a/include/linux/dsa/8021q.h
-+++ b/include/linux/dsa/8021q.h
-@@ -28,8 +28,6 @@ int dsa_8021q_rx_switch_id(u16 vid);
+diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+index 3f893b99b337c..555cb338a71a4 100644
+--- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+@@ -82,7 +82,7 @@ static struct pci_access *pci_acc;
+ static struct pci_dev *amd_fam14h_pci_dev;
+ static int nbp1_entered;
  
- int dsa_8021q_rx_source_port(u16 vid);
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
  
--struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb);
--
- #else
+ #ifdef DEBUG
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+index f634aeb65c5f6..7fb4f7a291ad5 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+@@ -19,7 +19,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
  
- int dsa_port_setup_8021q_tagging(struct dsa_switch *ds, int index,
-@@ -64,11 +62,6 @@ int dsa_8021q_rx_source_port(u16 vid)
- 	return 0;
- }
+ static unsigned long long **previous_count;
+ static unsigned long long **current_count;
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
  
--struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
--{
--	return NULL;
--}
--
- #endif /* IS_ENABLED(CONFIG_NET_DSA_TAG_8021Q) */
+ static int cpuidle_get_count_percent(unsigned int id, double *percent,
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+index d3c3e6e7aa26c..3d54fd4336261 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+@@ -27,6 +27,8 @@ struct cpuidle_monitor *all_monitors[] = {
+ 0
+ };
  
- #endif /* _NET_DSA_8021Q_H */
---- a/net/dsa/tag_8021q.c
-+++ b/net/dsa/tag_8021q.c
-@@ -299,49 +299,6 @@ struct sk_buff *dsa_8021q_xmit(struct sk
- }
- EXPORT_SYMBOL_GPL(dsa_8021q_xmit);
- 
--/* In the DSA packet_type handler, skb->data points in the middle of the VLAN
-- * tag, after tpid and before tci. This is because so far, ETH_HLEN
-- * (DMAC, SMAC, EtherType) bytes were pulled.
-- * There are 2 bytes of VLAN tag left in skb->data, and upper
-- * layers expect the 'real' EtherType to be consumed as well.
-- * Coincidentally, a VLAN header is also of the same size as
-- * the number of bytes that need to be pulled.
-- *
-- * skb_mac_header                                      skb->data
-- * |                                                       |
-- * v                                                       v
-- * |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-- * +-----------------------+-----------------------+-------+-------+-------+
-- * |    Destination MAC    |      Source MAC       |  TPID |  TCI  | EType |
-- * +-----------------------+-----------------------+-------+-------+-------+
-- * ^                                               |               |
-- * |<--VLAN_HLEN-->to                              <---VLAN_HLEN--->
-- * from            |
-- *       >>>>>>>   v
-- *       >>>>>>>   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-- *       >>>>>>>   +-----------------------+-----------------------+-------+
-- *       >>>>>>>   |    Destination MAC    |      Source MAC       | EType |
-- *                 +-----------------------+-----------------------+-------+
-- *                 ^                                                       ^
-- * (now part of    |                                                       |
-- *  skb->head)     skb_mac_header                                  skb->data
-- */
--struct sk_buff *dsa_8021q_remove_header(struct sk_buff *skb)
--{
--	u8 *from = skb_mac_header(skb);
--	u8 *dest = from + VLAN_HLEN;
--
--	memmove(dest, from, ETH_HLEN - VLAN_HLEN);
--	skb_pull(skb, VLAN_HLEN);
--	skb_push(skb, ETH_HLEN);
--	skb_reset_mac_header(skb);
--	skb_reset_mac_len(skb);
--	skb_pull_rcsum(skb, ETH_HLEN);
--
--	return skb;
--}
--EXPORT_SYMBOL_GPL(dsa_8021q_remove_header);
--
- static const struct dsa_device_ops dsa_8021q_netdev_ops = {
- 	.name		= "8021q",
- 	.proto		= DSA_TAG_PROTO_8021Q,
---- a/net/dsa/tag_sja1105.c
-+++ b/net/dsa/tag_sja1105.c
-@@ -238,14 +238,14 @@ static struct sk_buff *sja1105_rcv(struc
- {
- 	struct sja1105_meta meta = {0};
- 	int source_port, switch_id;
--	struct vlan_ethhdr *hdr;
-+	struct ethhdr *hdr;
- 	u16 tpid, vid, tci;
- 	bool is_link_local;
- 	bool is_tagged;
- 	bool is_meta;
- 
--	hdr = vlan_eth_hdr(skb);
--	tpid = ntohs(hdr->h_vlan_proto);
-+	hdr = eth_hdr(skb);
-+	tpid = ntohs(hdr->h_proto);
- 	is_tagged = (tpid == ETH_P_SJA1105);
- 	is_link_local = sja1105_is_link_local(skb);
- 	is_meta = sja1105_is_meta_frame(skb);
-@@ -254,7 +254,12 @@ static struct sk_buff *sja1105_rcv(struc
- 
- 	if (is_tagged) {
- 		/* Normal traffic path. */
--		tci = ntohs(hdr->h_vlan_TCI);
-+		skb_push_rcsum(skb, ETH_HLEN);
-+		__skb_vlan_pop(skb, &tci);
-+		skb_pull_rcsum(skb, ETH_HLEN);
-+		skb_reset_network_header(skb);
-+		skb_reset_transport_header(skb);
++int cpu_count;
 +
- 		vid = tci & VLAN_VID_MASK;
- 		source_port = dsa_8021q_rx_source_port(vid);
- 		switch_id = dsa_8021q_rx_switch_id(vid);
-@@ -283,12 +288,6 @@ static struct sk_buff *sja1105_rcv(struc
- 		return NULL;
- 	}
+ static struct cpuidle_monitor *monitors[MONITORS_MAX];
+ static unsigned int avail_monitors;
  
--	/* Delete/overwrite fake VLAN header, DSA expects to not find
--	 * it there, see dsa_switch_rcv: skb_push(skb, ETH_HLEN).
--	 */
--	if (is_tagged)
--		skb = dsa_8021q_remove_header(skb);
--
- 	return sja1105_rcv_meta_state_machine(skb, &meta, is_link_local,
- 					      is_meta);
- }
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+index a2d901d3bfaf9..eafef38f1982e 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+@@ -25,7 +25,7 @@
+ #endif
+ #define CSTATE_DESC_LEN 60
+ 
+-int cpu_count;
++extern int cpu_count;
+ 
+ /* Hard to define the right names ...: */
+ enum power_range_e {
+-- 
+2.20.1
+
 
 
