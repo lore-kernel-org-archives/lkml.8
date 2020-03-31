@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1DDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2495AC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C6220838
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CAA2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nj0/EDIR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xh8cN3+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbgCaVp2 (ORCPT
+        id S1731448AbgCaVpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:45:28 -0400
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:32817 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731379AbgCaVpZ (ORCPT
+        Tue, 31 Mar 2020 17:45:30 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36887 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgCaVp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:45:25 -0400
-Received: by mail-lj1-f182.google.com with SMTP id f20so23657453ljm.0;
-        Tue, 31 Mar 2020 14:45:23 -0700 (PDT)
+        Tue, 31 Mar 2020 17:45:27 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t11so6227779lfe.4;
+        Tue, 31 Mar 2020 14:45:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7qtvvgY+oQwzC6C15g6s473c+gdmOvol2/yXCpXgmnQ=;
-        b=Nj0/EDIRyrx8JkqEovY/FEMtWJE9Hc9FEuajpCkoFySM7sGSNwtAEsSwUN08Vb7lVz
-         jQajjFJEYPx+Ql0aBfeSi3zxXHdKA92GIq4xC+N7gLFmDPmInjRe9E+qfwsLa6r0DBMK
-         wxJenlQ/wZo++raTYn+cqG2jIorFBuQyfQI/TTiRtHCR0o9h2kxIRzG958w17tlF1umt
-         O4bMcoZwNarRxTyCdF993Y0DkPmfZ/QX141d40XSWA3+MVrRqhi397H5pUQyTUeyheGt
-         ouqXqNhOixIfVUFb8M6b0BrmxDQZFUk9bv43vJfW/OJRJULNWtPzMl0o2UOQAlouF+ZX
-         Jo5g==
+        bh=h9tkgMFNzJvbwS5Mj8KGdhRxtWizvU/2l3mcyErW424=;
+        b=Xh8cN3+XZY5WG2wr8G+lXgRlETe2/mQEjF7Fy2E6IeSD7WXA1RH0PeQL81wTvbAT9F
+         PGg1eBZ+/guSTJQ+fEKEQr8f2iI6i20maYi5eQaqwR/+1ELtYa7xzwDzZ7BxRnBQofss
+         53MLLCcUp9pVG4yl4CbqHD+Jttp8bsrYi3yJnnzmXvgPi166zulUFlhrlMRYbqiY9mmN
+         MMbGyQLA5mKXIEJC81AfLySBVGgyb+EaKauDCQU5sFhiCFER28C5WW8HhSLtAeO3K1Sy
+         ChbDFx7DbGggIaDyxJY6uyOgRA2aQZIlYLcYQV5UMOgYsvzCyaIq+PXtf0WS2YsILCop
+         Q+hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7qtvvgY+oQwzC6C15g6s473c+gdmOvol2/yXCpXgmnQ=;
-        b=AWEUQUuxlM0JL6hiXPGS9LFFx6zdyJ1l7gBdUetofvw2aDHsC/ogCsLU7EVlMH8knt
-         2cIQwmXvGkVGHRAcHM04H/W0ppMM9VtqxHA+I6mErQILEqiWp6sC5K8rGEaYSOcEJWlt
-         5KHb+pzlgg3o583T9lqB/HfSShBvCwxVWkKPrQtBXwwpuRYDZwCRe4hAghXD99IXhBh+
-         q1i0jk6UJ6buMizGd3jGfgfiOu1HXED5TR+xIiHTBIh5+uSEo1BH37p2AhYqFASZsKvj
-         zrqXJTJXeHHYrCRGLftTBzEH6okcgTUWdewW2fi9tHuowd0ynfGkZ8e/begkaNLWVf9P
-         mu6g==
-X-Gm-Message-State: AGi0Puawuy4QP32AGV5Xd+y2NCXbKL2vbA58HQ2VZDQhYpp39BEoC7LC
-        SfEuyHUIqfXm6KPiy25/P+o=
-X-Google-Smtp-Source: APiQypIDhnA8je37wjidai8ApC2JmlSUU7udaOUaZxlmJgc024zMS1RvsBpUGLoqtxyLQwL7Kpk9KQ==
-X-Received: by 2002:a2e:9655:: with SMTP id z21mr11886862ljh.122.1585691122805;
-        Tue, 31 Mar 2020 14:45:22 -0700 (PDT)
+        bh=h9tkgMFNzJvbwS5Mj8KGdhRxtWizvU/2l3mcyErW424=;
+        b=XdOzd5ETxJTkqi+3sZC3Tluh620qs+lJL1GPtpG1I2X7JAFxK9YSYvIQVGwagxDk2Q
+         OLx/YuBGPF+ehrh3W44plcEdKv0qFXElw8D53ywLHTzr96FyBni530sIjPBoefcERE0b
+         HcQEmRKC23pkurJxn24QlewVKKhQ39dh3Q/F4sUaultBEudIVeH6LicjEXcsW3J06+IP
+         +TX6+66HVrpMmm9r/D9U4xQGR9/tkU+2xJxZ1cwhWdmMw9xuxGn4NV9H2Z2TW4Wf1ca3
+         hHza8x7cgNOvOXSH9prQfpN9905JGLwvtswsch/M5cFKajxQExQjsqquxqyeNggB80ha
+         WTGQ==
+X-Gm-Message-State: AGi0PuZEHqPs7nfIfMNghAxaxevUAdplo9sdA0bteWPvSot9krR3Caz1
+        yF1aK44UM2rI4TiIfQChKTs=
+X-Google-Smtp-Source: APiQypJExWUnJfLTFyIbIrWjEXonMgSSwHZPYby9YmUEkVKAnJxvmdIYLHG8UujLkDzwCr5YaFXGWQ==
+X-Received: by 2002:a19:be94:: with SMTP id o142mr12615936lff.13.1585691125114;
+        Tue, 31 Mar 2020 14:45:25 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id a4sm3757826ljb.27.2020.03.31.14.45.21
+        by smtp.gmail.com with ESMTPSA id a4sm3757826ljb.27.2020.03.31.14.45.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 14:45:22 -0700 (PDT)
+        Tue, 31 Mar 2020 14:45:24 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -70,9 +70,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Matt Merhar <mattmerhar@protonmail.com>
 Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/6] dt-bindings: Add vendor prefix for Acer Inc.
-Date:   Wed,  1 Apr 2020 00:43:24 +0300
-Message-Id: <20200331214327.6496-4-digetx@gmail.com>
+Subject: [PATCH v1 5/6] dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
+Date:   Wed,  1 Apr 2020 00:43:26 +0300
+Message-Id: <20200331214327.6496-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200331214327.6496-1-digetx@gmail.com>
 References: <20200331214327.6496-1-digetx@gmail.com>
@@ -83,29 +83,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acer is a hardware and electronics corporation, specializing in advanced
-electronics technology. Acer's products include desktop PCs, laptop PCs,
-tablets, servers, displays, storage devices, virtual reality devices,
-smartphones and peripherals. Their web site is http://www.acer.com/.
+Add a binding for the Tegra30-based ASUS Google Nexus 7 tablet device.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/tegra.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index cd97efc34667..d15fcc922f67 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -27,6 +27,8 @@ patternProperties:
-     description: Abilis Systems
-   "^abracon,.*":
-     description: Abracon Corporation
-+  "^acer,.*":
-+    description: Acer Inc.
-   "^acme,.*":
-     description: Acme Systems srl
-   "^actions,.*":
+diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
+index 7fd0b66c69b2..fb3bbf7a5fb4 100644
+--- a/Documentation/devicetree/bindings/arm/tegra.yaml
++++ b/Documentation/devicetree/bindings/arm/tegra.yaml
+@@ -62,6 +62,13 @@ properties:
+               - toradex,colibri_t30-eval-v3
+           - const: toradex,colibri_t30
+           - const: nvidia,tegra30
++      - items:
++          - const: asus,grouper
++          - const: nvidia,tegra30
++      - items:
++          - const: asus,tilapia
++          - const: asus,grouper
++          - const: nvidia,tegra30
+       - items:
+           - enum:
+               - nvidia,dalmore
 -- 
 2.25.1
 
