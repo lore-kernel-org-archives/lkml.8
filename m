@@ -2,163 +2,213 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAE0C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7D6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933F5207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B84E20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CrcLjf5X"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="bmi90RGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgCaAeS (ORCPT
+        id S1729612AbgCaAi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:34:18 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10780 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbgCaAeS (ORCPT
+        Mon, 30 Mar 2020 20:38:27 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41704 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729461AbgCaAi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:34:18 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e828fd80000>; Mon, 30 Mar 2020 17:33:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 30 Mar 2020 17:34:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 30 Mar 2020 17:34:16 -0700
-Received: from [10.2.57.122] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 31 Mar
- 2020 00:34:15 +0000
-Subject: Re: [PATCH 3/3] kernel/hung_task convert hung_task_panic boot
- parameter to sysctl
-To:     Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
-CC:     Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-mm@kvack.org>,
-        Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-4-vbabka@suse.cz> <202003301042.97F3B00@keescook>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <13ae67d8-4b31-db20-7ba4-1602906a291e@nvidia.com>
-Date:   Mon, 30 Mar 2020 17:34:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 20:38:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id v1so23086841edq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 17:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=gErK/ycbJv6uqf+b3FCQW59lfsmjwCyYyXfDMASF3Kk=;
+        b=bmi90RGsEkcS9xmzCDYV77nBmN8IBmwM/+Y8QthDzbikrqfYed/KIeivKZhM+fHGGi
+         YoMt9bctZEnfzv14hxqz0MZVnzUpH+tnNKrA30nZGmkyyGd4eO3VCRUeywUBJVdugXBR
+         BRffgH77n9eYL2YuB4X8DOm094puYLo4d/KeNs3sO9aJHnmOvd71uy++X49H3idJKolm
+         dhCBThw6rj0AfycOdLL/OHv1zNKF2RNjyvY6WbxZuW22Ex266CtkHAoL6DnSlfdejJop
+         wWAW4DlTqm2QDjzkmUP3GvKIFSE2vr51sN/eTIx6TlrmJvLbrTQPREqIl/Ya6BkosqF1
+         OXJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=gErK/ycbJv6uqf+b3FCQW59lfsmjwCyYyXfDMASF3Kk=;
+        b=US3r5F5Ba5RMlcLlFrUVY+fL8qSS+j3F7FRLDcJjdZQnrTECDt44kESxfHSEk0RwmU
+         YsU1GMbudlB+nB6mTMo0vGNH9fTX4yWKdn85kPMel4M7W9EHkr4vtT2J8jaY49eQF05g
+         0eDH8LMs+EATkmtrKbE/LVHDcg3NX/Q3tiwRi2WTMlFJjAAMKLkJxfwAhRoW2Wb1QGLm
+         7+fU8BbtSmtPAu8aJ+XsBPXTNryhyHPcC6jmsucMIVgvjsS7gmqfo4eZDVVrlrBy8n9h
+         ZipFuFHcWnqXTQ6QM8pur4jQOMs9STXtV4oFtrAL4FHVPkBier1SU9w37uUFRaUONbpk
+         Fztg==
+X-Gm-Message-State: ANhLgQ3JACzD9QveaLUEjGuZpySoExFWkn6GSQxvelOZiiKoWeFdEnZ4
+        uKEHgaD+dtgrcXPAzgFeggRTu/V1vU2ZQv2AgWq1x+RHYg==
+X-Google-Smtp-Source: ADFU+vvbmDfTAgpqjM3WtkbVSAeOOdDuxDWDFm6MYhl+NVQcodlPN0Tw+SISf0OLn2BcCUowitkP+UC1bMW5+D2ypsU=
+X-Received: by 2002:aa7:db56:: with SMTP id n22mr13804870edt.269.1585615105547;
+ Mon, 30 Mar 2020 17:38:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202003301042.97F3B00@keescook>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585614808; bh=obsV1UARPS0bhJ0G+nqxDoZVF3Y4NftMC1+6ch1S31A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CrcLjf5XXnta60pIlUd4E7H1NdfGknlCWJRtYGrj8ldZ6gZlN5X338rTi3VfumCcp
-         v6TI7Cvuuv3N2tEDq2EX0Uei3cRAnqrwrtie5e8B6JFM3kYzc4MCv+XmGseiFHfsLy
-         3AvrSXk5ILdH3+4NLwFMo41stsmpqcyBTuyFbTaFWnJz++1GMdPNlWUje9jzy6iN4E
-         f6XKURucBI7rkG5Kp0lkEMoycC5oPK8Hj1noLpXGzMC28Hes2UJQjT5lhz5eyVDsLt
-         zo5bXMyelp6WwkT76rCvwsumjM3iy5J2Now7sp2ZdnHYo7KoaLP/N3hYZOKSOn9hD/
-         BSozNoXu4MhRg==
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 30 Mar 2020 20:38:17 -0400
+Message-ID: <CAHC9VhQoqpqiFncTP1w0+--hGTwcm57LXgrXVsGnNqcRSof1WA@mail.gmail.com>
+Subject: [GIT PULL] SELinux patches for v5.7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 10:43 AM, Kees Cook wrote:
-...
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 81ff626fc700..e0b8840404a1 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -1457,7 +1457,7 @@
->>   			[KNL] Should the hung task detector generate panics.
->>   			Format: <integer>
->>   
->> -			A nonzero value instructs the kernel to panic when a
->> +			A value of 1 instructs the kernel to panic when a
->>   			hung task is detected. The default value is controlled
->>   			by the CONFIG_BOOTPARAM_HUNG_TASK_PANIC build-time
->>   			option. The value selected by this boot parameter can
->> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
->> index 97eb0b552bf8..77b1b844b02b 100644
->> --- a/fs/proc/proc_sysctl.c
->> +++ b/fs/proc/proc_sysctl.c
->> @@ -1743,6 +1743,7 @@ struct sysctl_alias {
->>    */
->>   static const struct sysctl_alias sysctl_aliases[] = {
->>   	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+Hi Linus,
 
+We've got twenty SELinux patches for the v5.7 merge window, the
+highlights are below.  Beyond the highlights there a couple of things
+I want to call out in this pull request: a merge conflict, and a
+maintainer screw-up.
 
-Hi Vlastimil,
+The merge conflict is in security/selinux/hooks.c and is against a
+binder fs name fix we sent during the v5.6-rcX cycle; the fixup is
+trivial but if you need me to fix it, let me know.  The maintainer
+screw-up deals with the second patch from the top of the pull request,
+the NFS fix.  The screw-up isn't the fact that this is a NFS patch, we
+talked to the NFS guys and they are okay with it.  The issue is that
+the commit date is today - during the merge window - which doesn't
+reflect the testing the patch received.  The reality is that I merged
+this patch back on March 12th, and it has been part of our testing
+ever since, but when putting this pull request together I noticed that
+I had dropped the subject line from the patch when I was merging it.
+Not wanting a malformed commit, I popped the top two patches from the
+stack and restored the missing subject line; this had the unfortunate
+side effect of making it look like the two top patches were just
+merged today - my apologies.
 
-Maybe best to delete the above line? Because:
+Regardless, here are the highlights:
 
-     a) it was added as an example, and now that you have a real use case in this patch,
-        the example is no longer required, and
+- Deprecate setting /sys/fs/selinux/checkreqprot to 1.  This flag was
+originally created to deal with legacy userspace and the
+READ_IMPLIES_EXEC personality flag.  We changed the default from 1 to
+0 back in Linux v4.4 and now we are taking the next step of
+deprecating it, at some point in the future we will take the final
+step of rejecting 1.
+- Allow kernfs symlinks to inherit the SELinux label of the parent
+directory.  In order to preserve backwards compatibility this is
+protected by the genfs_seclabel_symlinks SELinux policy capability.
+- Optimize how we store filename transitions in the kernel, resulting
+in some significant improvements to policy load times.
+- Do a better job calculating our internal hash table sizes which
+resulted in additional policy load improvements and likely general
+SELinux performance improvements as well.
+- Remove the unused initial SIDs (labels) and improve how we handle
+initial SIDs.
+- Enable per-file labeling for the bpf filesystem.
+- Ensure that we properly label NFS v4.2 filesystems to avoid a
+temporary unlabeled condition.
+- Add some missing XFS quota command types to the SELinux quota access cont=
+rols.
+- Fix a problem where we were not updating the seq_file position index
+correctly in selinuxfs.
+- We consolidate some duplicated code into helper functions.
+- A number of list to array conversions.
+- Update Stephen Smalley's email address in MAINTAINERS.
 
-     b) numa_zonelist_order is deprecated, as a boot param. Adding support to it in this
-        brand-new mechanism seems to be going a bit in the opposite direction of deprecation.
+Thanks,
+-Paul
+--
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9=
+:
 
-And, I don't think you really want all the sysctls to be enabled as boot params, right? Your
-comment right above sysctl_aliases[] (shown in patch 2) sort of indicates that only some items
-are meant to be both sysctl's and boot params. And that makes sense.
+ Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-In fact, the sysctl_aliases[] is (or could be) effectively the whitelist that Luis Chamberlain
-was requesting in another thread. A whitelist makes good sense, for the reasons Luis listed.
-As such, keeping it limited to items that we want, seems like the way to go, IMHO.
+are available in the Git repository at:
 
+ git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+   tags/selinux-pr-20200330
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+for you to fetch changes up to c753924b628551564b6eea3c9896e4a95aa25ed9:
 
+ selinux: clean up indentation issue with assignment statement
+   (2020-03-30 19:57:07 -0400)
 
->> +	{"hung_task_panic",		"kernel.hung_task_panic" },
->>   	{ }
->>   };
->>   
->> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
->> index 14a625c16cb3..b22b5eeab3cb 100644
->> --- a/kernel/hung_task.c
->> +++ b/kernel/hung_task.c
->> @@ -63,16 +63,6 @@ static struct task_struct *watchdog_task;
->>   unsigned int __read_mostly sysctl_hung_task_panic =
->>   				CONFIG_BOOTPARAM_HUNG_TASK_PANIC_VALUE;
->>   
->> -static int __init hung_task_panic_setup(char *str)
->> -{
->> -	int rc = kstrtouint(str, 0, &sysctl_hung_task_panic);
->> -
->> -	if (rc)
->> -		return rc;
->> -	return 1;
->> -}
->> -__setup("hung_task_panic=", hung_task_panic_setup);
->> -
->>   static int
->>   hung_task_panic(struct notifier_block *this, unsigned long event, void *ptr)
->>   {
->> -- 
->> 2.25.1
->>
-> 
+----------------------------------------------------------------
+selinux/stable-5.7 PR 20200330
+
+----------------------------------------------------------------
+Christian G=C3=B6ttsche (1):
+     selinux: allow kernfs symlinks to inherit parent directory context
+
+Colin Ian King (1):
+     selinux: clean up indentation issue with assignment statement
+
+Connor O'Brien (1):
+     security: selinux: allow per-file labeling for bpffs
+
+Ondrej Mosnacek (10):
+     selinux: move status variables out of selinux_ss
+     selinux: simplify evaluate_cond_node()
+     selinux: convert cond_list to array
+     selinux: convert cond_av_list to array
+     selinux: convert cond_expr to array
+     selinux: generalize evaluate_cond_node()
+     selinux: factor out loop body from filename_trans_read()
+     selinux: optimize storage of filename transitions
+     selinux: reduce the use of hard-coded hash sizes
+     selinux: clean up error path in policydb_init()
+
+Paul Moore (1):
+     selinux: avtab_init() and cond_policydb_init() return void
+
+Richard Haines (1):
+     selinux: Add xfs quota command types
+
+Scott Mayhew (1):
+     NFS: Ensure security label is set for root inode
+
+Stephen Smalley (3):
+     Documentation,selinux: deprecate setting checkreqprot to 1
+     selinux: remove unused initial SIDs and improve handling
+     MAINTAINERS: Update my email address
+
+Vasily Averin (1):
+     selinux: sel_avc_get_stat_idx should increase position index
+
+.../ABI/obsolete/sysfs-selinux-checkreqprot        |  23 ++
+Documentation/admin-guide/kernel-parameters.txt    |   1 +
+MAINTAINERS                                        |   3 +-
+fs/nfs/getroot.c                                   |  39 ++-
+fs/nfs/nfs4proc.c                                  |  12 +-
+fs/nfs/super.c                                     |  25 --
+include/linux/nfs_xdr.h                            |   1 +
+scripts/selinux/genheaders/genheaders.c            |  11 +-
+security/selinux/Kconfig                           |   3 +
+security/selinux/Makefile                          |   4 +-
+security/selinux/hooks.c                           |  18 +-
+security/selinux/include/conditional.h             |   8 +-
+security/selinux/include/initial_sid_to_string.h   |  57 ++--
+security/selinux/include/security.h                |  12 +
+security/selinux/selinuxfs.c                       |  19 +-
+security/selinux/ss/avtab.c                        |   3 +-
+security/selinux/ss/avtab.h                        |   2 +-
+security/selinux/ss/conditional.c                  | 259 +++++-------
+security/selinux/ss/conditional.h                  |  29 +-
+security/selinux/ss/hashtab.c                      |  28 +-
+security/selinux/ss/hashtab.h                      |   2 +-
+security/selinux/ss/policydb.c                     | 326 ++++++++---------
+security/selinux/ss/policydb.h                     |  13 +-
+security/selinux/ss/services.c                     |  79 +++--
+security/selinux/ss/services.h                     |   2 -
+security/selinux/{ss =3D> }/status.c                 |  32 +-
+26 files changed, 521 insertions(+), 490 deletions(-)
+create mode 100644 Documentation/ABI/obsolete/sysfs-selinux-checkreqprot
+rename security/selinux/{ss =3D> }/status.c (81%)
+
+--=20
+paul moore
+www.paul-moore.com
