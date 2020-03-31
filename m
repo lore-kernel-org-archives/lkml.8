@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5C5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAF3C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4A620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E4320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646362;
-	bh=vhGI45rn2Ty8tXWcSB2nbLy+mTD6PsHxSUVxyGrjF3c=;
+	s=default; t=1585646365;
+	bh=eaZtXvrvNclIweD2DXp8T7YbxLOfq85xDuyOa6hnfmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jz05GXWxq87nq+aB092KAgZvU2b52+DUfiS9Xe+xa6lv9auxhLUDBFcnfu8Te5d1K
-	 9BFQhmBJtrUOm8k9gbk55J8MBbhcR2lotpbmhVF9KzTaFwtlxNITZcOUXtGUHDJMjf
-	 XENd459hf65+f9Ey7EUzMbmmwjxVbcm435AR2Ikc=
+	b=F9XpL/XTDGQLQfwSuyNpCj6ruGDPtuYbTE/Zx1zE7hzkC0RtRaTWLHe7wey0MCKZh
+	 oRoy/YjB2sNsPGgyk92oBOnJBcv8QTcBFnZQ0+GMC7supzyply58hHH6Uo3NrPtKbO
+	 jZvXCKqVIIzeyWK4QCk0Gwa0E1deT9NxETIB03/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732222AbgCaJTU (ORCPT
+        id S1732231AbgCaJTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41388 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:19:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbgCaJTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:19:18 -0400
+        id S1732223AbgCaJTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:19:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 435F820658;
-        Tue, 31 Mar 2020 09:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7D2220675;
+        Tue, 31 Mar 2020 09:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646357;
-        bh=vhGI45rn2Ty8tXWcSB2nbLy+mTD6PsHxSUVxyGrjF3c=;
+        s=default; t=1585646360;
+        bh=eaZtXvrvNclIweD2DXp8T7YbxLOfq85xDuyOa6hnfmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RRYVZLKB2Hddd4Dn5oO+0yQlVdvRb95kZbQccQRHXFBhQ1pS7tQ5yuRY78DIQetBm
-         IfLYFZ993V4IGVOybGWTqfBKheja8mA49TEZb4LvdkMY1FP140snL8Ow5IS8Hm1BSw
-         6PJKxizZ1yhfMiWwcBMXaWlwTDQhkk9psZKACyFQ=
+        b=twSrNhmBsKJnbHKSid9i5/GSuVTKfVVS6RvGx27eg0nFZ3eq5Fk4EWF12iMU1w6rW
+         L5Bm/i6hVNUaXv/4anBBEy8vhAg05Gox9nbgPdhV4a17opJ/abdMpF6ljZmfNhNkHU
+         bzBLIsKJORxJjZLvvd+VN2Ir0f9o8nac3EEn2bc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 151/155] media: ov519: add missing endpoint sanity checks
-Date:   Tue, 31 Mar 2020 10:59:51 +0200
-Message-Id: <20200331085435.008066178@linuxfoundation.org>
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.4 142/155] usb: musb: fix crash with highmen PIO and usbmon
+Date:   Tue, 31 Mar 2020 10:59:42 +0200
+Message-Id: <20200331085434.085600075@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,55 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Mans Rullgard <mans@mansr.com>
 
-commit 998912346c0da53a6dbb71fab3a138586b596b30 upstream.
+commit 52974d94a206ce428d9d9b6eaa208238024be82a upstream.
 
-Make sure to check that we have at least one endpoint before accessing
-the endpoint array to avoid dereferencing a NULL-pointer on stream
-start.
+When handling a PIO bulk transfer with highmem buffer, a temporary
+mapping is assigned to urb->transfer_buffer.  After the transfer is
+complete, an invalid address is left behind in this pointer.  This is
+not ordinarily a problem since nothing touches that buffer before the
+urb is released.  However, when usbmon is active, usbmon_urb_complete()
+calls (indirectly) mon_bin_get_data() which does access the transfer
+buffer if it is set.  To prevent an invalid memory access here, reset
+urb->transfer_buffer to NULL when finished (musb_host_rx()), or do not
+set it at all (musb_host_tx()).
 
-Note that these sanity checks are not redundant as the driver is mixing
-looking up altsettings by index and by number, which need not coincide.
-
-Fixes: 1876bb923c98 ("V4L/DVB (12079): gspca_ov519: add support for the ov511 bridge")
-Fixes: b282d87332f5 ("V4L/DVB (12080): gspca_ov519: Fix ov518+ with OV7620AE (Trust spacecam 320)")
-Cc: stable <stable@vger.kernel.org>     # 2.6.31
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200316211136.2274-8-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/ov519.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/usb/musb/musb_host.c |   17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
---- a/drivers/media/usb/gspca/ov519.c
-+++ b/drivers/media/usb/gspca/ov519.c
-@@ -3477,6 +3477,11 @@ static void ov511_mode_init_regs(struct
- 		return;
- 	}
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -1462,10 +1462,7 @@ done:
+ 	 * We need to map sg if the transfer_buffer is
+ 	 * NULL.
+ 	 */
+-	if (!urb->transfer_buffer)
+-		qh->use_sg = true;
+-
+-	if (qh->use_sg) {
++	if (!urb->transfer_buffer) {
+ 		/* sg_miter_start is already done in musb_ep_program */
+ 		if (!sg_miter_next(&qh->sg_miter)) {
+ 			dev_err(musb->controller, "error: sg list empty\n");
+@@ -1473,9 +1470,8 @@ done:
+ 			status = -EINVAL;
+ 			goto done;
+ 		}
+-		urb->transfer_buffer = qh->sg_miter.addr;
+ 		length = min_t(u32, length, qh->sg_miter.length);
+-		musb_write_fifo(hw_ep, length, urb->transfer_buffer);
++		musb_write_fifo(hw_ep, length, qh->sg_miter.addr);
+ 		qh->sg_miter.consumed = length;
+ 		sg_miter_stop(&qh->sg_miter);
+ 	} else {
+@@ -1484,11 +1480,6 @@ done:
  
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	reg_w(sd, R51x_FIFO_PSIZE, packet_size >> 5);
+ 	qh->segsize = length;
  
-@@ -3603,6 +3608,11 @@ static void ov518_mode_init_regs(struct
- 		return;
- 	}
+-	if (qh->use_sg) {
+-		if (offset + length >= urb->transfer_buffer_length)
+-			qh->use_sg = false;
+-	}
+-
+ 	musb_ep_select(mbase, epnum);
+ 	musb_writew(epio, MUSB_TXCSR,
+ 			MUSB_TXCSR_H_WZC_BITS | MUSB_TXCSR_TXPKTRDY);
+@@ -2003,8 +1994,10 @@ finish:
+ 	urb->actual_length += xfer_len;
+ 	qh->offset += xfer_len;
+ 	if (done) {
+-		if (qh->use_sg)
++		if (qh->use_sg) {
+ 			qh->use_sg = false;
++			urb->transfer_buffer = NULL;
++		}
  
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	ov518_reg_w32(sd, R51x_FIFO_PSIZE, packet_size & ~7, 2);
- 
+ 		if (urb->status == -EINPROGRESS)
+ 			urb->status = status;
 
 
