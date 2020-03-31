@@ -2,90 +2,115 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F40DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D00FC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D599F206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A98206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HK2UfQWU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="viJtbtjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbgCaNGo (ORCPT
+        id S1730796AbgCaNJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:06:44 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22395 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730473AbgCaNGo (ORCPT
+        Tue, 31 Mar 2020 09:09:49 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60992 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730473AbgCaNJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:06:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585660003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=TEnvRQUG2NaO2WXEs+JHaZkj1OJo/2Aq4DgDrJCFUmo=;
-        b=HK2UfQWUnVIv+vPfMYr3+in6ht+/OBsPo4JrJKLCmKBqQzZIevCzqTRSNZKMEjQ6nMZwli
-        hmipU17TQXODFbPOQKeWn9bszTvIiPxVvNcVDfBfVdg6VR+trQUiiodfo930EpTaXOv2cW
-        hkCjDAOl8zMcpqthBbNasfmgej6iluA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-eoYx2jAsPdKOexGShbHIyg-1; Tue, 31 Mar 2020 09:06:41 -0400
-X-MC-Unique: eoYx2jAsPdKOexGShbHIyg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 430DA80573C;
-        Tue, 31 Mar 2020 13:06:40 +0000 (UTC)
-Received: from localhost (ovpn-116-139.gru2.redhat.com [10.97.116.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 87C7F94B5C;
-        Tue, 31 Mar 2020 13:06:36 +0000 (UTC)
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Tue, 31 Mar 2020 09:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1585660186; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MnwtTc/EcdatrYJ8xwpC2XqSDdEDN2As8dDKoKSgRsY=;
+        b=viJtbtjDgLg/oVj83f6PuXcpO19M2ildvSP0Bd4WrZNicQgd24xrsOLQouZkLa+AoD1aSW
+        kT1G4jj3UXQ0vO+XMtD5HJLk7qGBT4mLhaP7QYufe4teGm/pxJTg9v5PHKclz+kZNqIbcd
+        DSq8s2JHVAWDNEhScJaAfpMsFpH+z+4=
+Date:   Tue, 31 Mar 2020 15:09:33 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        =?iso-8859-2?b?UGF3ZbM=?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net, micron10@gmail.com, ast@kernel.org,
-        Bruno Meneguele <bmeneg@redhat.com>
-Subject: [PATCH] net/bpfilter: remove superfluous testing message
-Date:   Tue, 31 Mar 2020 10:06:30 -0300
-Message-Id: <20200331130630.633400-1-bmeneg@redhat.com>
+Message-Id: <X7728Q.UX8A28S31JO92@crapouillou.net>
+In-Reply-To: <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
+References: <20200312153411.13535-1-paul@crapouillou.net>
+        <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
+        <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
+        <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
+        <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A testing message was brought by 13d0f7b814d9 ("net/bpfilter: fix dprintf
-usage for /dev/kmsg") but should've been deleted before patch submission.
-Although it doesn't cause any harm to the code or functionality itself, i=
-t's
-totally unpleasant to have it displayed on every loop iteration with no r=
-eal
-use case. Thus remove it unconditionally.
+Cc: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
 
-Fixes: 13d0f7b814d9 ("net/bpfilter: fix dprintf usage for /dev/kmsg")
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
----
- net/bpfilter/main.c | 1 -
- 1 file changed, 1 deletion(-)
+Hi Marek,
 
-diff --git a/net/bpfilter/main.c b/net/bpfilter/main.c
-index efea4874743e..05e1cfc1e5cd 100644
---- a/net/bpfilter/main.c
-+++ b/net/bpfilter/main.c
-@@ -35,7 +35,6 @@ static void loop(void)
- 		struct mbox_reply reply;
- 		int n;
-=20
--		fprintf(debug_f, "testing the buffer\n");
- 		n =3D read(0, &req, sizeof(req));
- 		if (n !=3D sizeof(req)) {
- 			fprintf(debug_f, "invalid request %d\n", n);
---=20
-2.25.1
+Le mar. 31 mars 2020 =C3=A0 7:36, Marek Szyprowski=20
+<m.szyprowski@samsung.com> a =C3=A9crit :
+> Hi Paul,
+>=20
+> On 2020-03-18 15:25, Paul Cercueil wrote:
+>>>>   +    };
+>>>>   +
+>>>>   +    tsp_reg: regulator-1 {
+>>>>   +        compatible =3D "regulator-fixed";
+>>>>   +        regulator-name =3D "TSP_FIXED_VOLTAGES";
+>>>>   +        regulator-min-microvolt =3D <3300000>;
+>>>>   +        regulator-max-microvolt =3D <3300000>;
+>>>>   +        gpio =3D <&gpl0 3 GPIO_ACTIVE_HIGH>;
+>>>>   +        startup-delay-us =3D <70000>;
+>>>>   +        enable-active-high;
+>>>>   +        regulator-boot-on;
+>>>>   +        regulator-always-on;
+>>>=20
+>>>  always-on and boot-on should not be needed. You have a consumer=20
+>>> for this
+>>>  regulator.
+>>=20
+>>  About this: the touchscreen driver does not use a regulator, so I
+>>  believe that's why these properties were here.
+>>=20
+>>  I sent patches upstream to address the issue:
+>>  https://lkml.org/lkml/2020/3/15/94
+>>=20
+>>  I believe this means I cannot merge the i9100 devicetree until it is
+>>  acked.
+>=20
+> One more information - similar change has been already posted, but it
+> looks it got lost then: https://patchwork.kernel.org/patch/10550903/
+
+I was aware of this patch, but didn't know it was sent upstream.
+
+This other patch uses two regulators, vdd/avdd but doesn't give any=20
+reason why.
+
+Pawe=C5=82, is that really needed?
+
+-Paul
+
+
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+>=20
+
 
