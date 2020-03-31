@@ -2,29 +2,30 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1EBC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D26C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA6C20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D0B20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbgCaOaK (ORCPT
+        id S1731168AbgCaOaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:30:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12588 "EHLO huawei.com"
+        Tue, 31 Mar 2020 10:30:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12589 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731121AbgCaOaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730896AbgCaOaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 10:30:07 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1949D6527546DAA3FCF5;
+        by Forcepoint Email with ESMTP id 2AAA3FA5DC822BD68937;
         Tue, 31 Mar 2020 22:29:58 +0800 (CST)
 Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 31 Mar 2020 22:29:49 +0800
+ 14.3.487.0; Tue, 31 Mar 2020 22:29:52 +0800
 From:   Zhenyu Ye <yezhenyu2@huawei.com>
 To:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
         <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
@@ -39,9 +40,9 @@ CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
         <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
         <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
         <kuhn.chenqun@huawei.com>
-Subject: [RFC PATCH v5 3/8] arm64: Add tlbi_user_level TLB invalidation helper
-Date:   Tue, 31 Mar 2020 22:29:22 +0800
-Message-ID: <20200331142927.1237-4-yezhenyu2@huawei.com>
+Subject: [RFC PATCH v5 5/8] mm: tlb: Pass struct mmu_gather to flush_pud_tlb_range
+Date:   Tue, 31 Mar 2020 22:29:24 +0800
+Message-ID: <20200331142927.1237-6-yezhenyu2@huawei.com>
 X-Mailer: git-send-email 2.22.0.windows.1
 In-Reply-To: <20200331142927.1237-1-yezhenyu2@huawei.com>
 References: <20200331142927.1237-1-yezhenyu2@huawei.com>
@@ -55,64 +56,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a level-hinted parameter to __tlbi_user, which only gets used
-if ARMv8.4-TTL gets detected.
-
-ARMv8.4-TTL provides the TTL field in tlbi instruction to indicate
-the level of translation table walk holding the leaf entry for the
-address that is being invalidated.
-
-This patch set the default level value to 0.
+Preparations to support for passing struct mmu_gather to
+flush_tlb_range.  See in future patches.
 
 Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
 ---
- arch/arm64/include/asm/tlbflush.h | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ include/asm-generic/pgtable.h | 4 ++--
+ mm/pgtable-generic.c          | 8 +++++++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 5f9f189bc6d2..892f33235dc7 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -89,6 +89,12 @@
- 		__tlbi(op,  arg);					\
- 	} while (0)
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index 32d4661e5a56..1c67a744877e 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1161,10 +1161,10 @@ static inline int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+  * e.g. see arch/arc: flush_pmd_tlb_range
+  */
+ #define flush_pmd_tlb_range(tlb, vma, addr, end)	flush_tlb_range(vma, addr, end)
+-#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
++#define flush_pud_tlb_range(tlb, vma, addr, end)	flush_tlb_range(vma, addr, end)
+ #else
+ #define flush_pmd_tlb_range(tlb, vma, addr, end)	BUILD_BUG()
+-#define flush_pud_tlb_range(vma, addr, end)	BUILD_BUG()
++#define flush_pud_tlb_range(tlb, vma, addr, end)	BUILD_BUG()
+ #endif
+ #endif
  
-+#define __tlbi_user_level(op, arg, level) do {				\
-+	if (arm64_kernel_unmapped_at_el0())				\
-+		__tlbi_level(op, (arg | USER_ASID_FLAG), level);	\
-+} while (0)
-+
-+
- /*
-  *	TLB Invalidation
-  *	================
-@@ -190,8 +196,8 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
- 	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
+diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+index 96c9cf77bfb5..9ab9d8f698ea 100644
+--- a/mm/pgtable-generic.c
++++ b/mm/pgtable-generic.c
+@@ -166,11 +166,17 @@ pud_t pudp_huge_clear_flush(struct vm_area_struct *vma, unsigned long address,
+ 			    pud_t *pudp)
+ {
+ 	pud_t pud;
++	struct mmu_gather tlb;
++	unsigned long tlb_start = address;
++	unsigned long tlb_end = address + HPAGE_PUD_SIZE;
  
- 	dsb(ishst);
--	__tlbi(vale1is, addr);
--	__tlbi_user(vale1is, addr);
-+	__tlbi_level(vale1is, addr, 0);
-+	__tlbi_user_level(vale1is, addr, 0);
+ 	VM_BUG_ON(address & ~HPAGE_PUD_MASK);
+ 	VM_BUG_ON(!pud_trans_huge(*pudp) && !pud_devmap(*pudp));
+ 	pud = pudp_huge_get_and_clear(vma->vm_mm, address, pudp);
+-	flush_pud_tlb_range(vma, address, address + HPAGE_PUD_SIZE);
++	tlb_gather_mmu(&tlb, vma->vm_mm, tlb_start, tlb_end);
++	tlb.cleared_puds = 1;
++	flush_pud_tlb_range(&tlb, vma, tlb_start, tlb_end);
++	tlb_finish_mmu(&tlb, tlb_start, tlb_end);
+ 	return pud;
  }
- 
- static inline void flush_tlb_page(struct vm_area_struct *vma,
-@@ -231,11 +237,11 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 	dsb(ishst);
- 	for (addr = start; addr < end; addr += stride) {
- 		if (last_level) {
--			__tlbi(vale1is, addr);
--			__tlbi_user(vale1is, addr);
-+			__tlbi_level(vale1is, addr, 0);
-+			__tlbi_user_level(vale1is, addr, 0);
- 		} else {
--			__tlbi(vae1is, addr);
--			__tlbi_user(vae1is, addr);
-+			__tlbi_level(vae1is, addr, 0);
-+			__tlbi_user_level(vae1is, addr, 0);
- 		}
- 	}
- 	dsb(ish);
+ #endif
 -- 
 2.19.1
 
