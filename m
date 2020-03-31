@@ -2,102 +2,127 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97C9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603F7C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6BE20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DB820774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CWOYYkMN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QvgAjlHU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgCaAGu (ORCPT
+        id S1729254AbgCaANn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:06:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47438 "EHLO
+        Mon, 30 Mar 2020 20:13:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47524 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgCaAGu (ORCPT
+        with ESMTP id S1729019AbgCaANn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:06:50 -0400
+        Mon, 30 Mar 2020 20:13:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VV89E7/0ITfr47FqhbuzNIICqyct8AhRAZZh1V1ewNo=; b=CWOYYkMN6YxBiPtv3S5YzHn5ld
-        hLNYvpbJBQUngQwAPYD4s2QHupCqMSm+dVq6HNhcMG4eVRibSXgDRSS0u0PhAWyZ4kE9sAx0I2GCl
-        q/6vwf9dZkFEwIHHsEiTehoHe+xHFmI7H2LY8bwoLjA/Y3EQB0fzOuXu5nbrQMtx2+Q3YGP+x29fQ
-        yU0r62kHalK9xz9UcZzNVmG0tcwNfvyImddvgQ4sRbKKOoJTGgmBF7DircAYuDCPlJFFtNi8yVtut
-        /Om7vcvM5DgEgOfXIildUIX2xwBa3U7k0zRFlNJko28n20u0Rb5hZzC9xqNPt5vLsXMNHp1eUTjMH
-        Xe3iBOdw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJ4Qb-0004SG-Lo; Tue, 31 Mar 2020 00:06:49 +0000
-Date:   Mon, 30 Mar 2020 17:06:49 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
- than XA_ZERO_ENTRY
-Message-ID: <20200331000649.GG22483@bombadil.infradead.org>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-7-richard.weiyang@gmail.com>
- <20200330125006.GZ22483@bombadil.infradead.org>
- <20200330134519.ykdtqwqxjazqy3jm@master>
- <20200330134903.GB22483@bombadil.infradead.org>
- <20200330141350.ey77odenrbvixotb@master>
- <20200330142708.GC22483@bombadil.infradead.org>
- <20200330222013.34nkqen2agujhd6j@master>
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=JaNBaI5ODzz69YpdR1NiBrpIIhmZrZWZTY/GzTI2SZ8=; b=QvgAjlHUZLNqHLlge9mPQDRDdM
+        Rdx+MrTe21Qfde+XLC3tOHLNbT8nMXjm2ihtELQu+BFFfXtQprBT4BTZpP+BZX4je/ml17Dbq955F
+        ot140aLMKprbxjaS8YeBrDmU3ASohYTC4mzQImgnz8I1GZCWXYINstbmO9X/QAiP3TjCAo7SxRSKx
+        XRHlDOXGPtA2wkvE4GO5Dpt2aLvFJyulPktstU51ELxwzveounNRDJ89n8duNNRqP7Ed/T/krx6KJ
+        aO8qWBsUgH3n+YWUjArkoyPBS0QdA4BLBFWevVtccOFxuvRrlyDVEDAdFrR/aQm7hgxXDzq2Dcje0
+        FimSI88A==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJ4XF-0005xW-1J; Tue, 31 Mar 2020 00:13:41 +0000
+Subject: Re: ACPI Video Driver creates backlight on desktop board
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <75866748-f574-ae50-6183-ef6892c935c5@molgen.mpg.de>
+ <63956e11-46f2-72f4-c722-8fee2cbfbfa1@redhat.com>
+ <9a934fe8-9279-094c-e589-9e439c000b04@infradead.org>
+ <3981bf9d-e721-628e-b88a-c75614a5cc64@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1c36df4c-75a4-079d-9469-4a1cb18b3c23@infradead.org>
+Date:   Mon, 30 Mar 2020 17:13:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330222013.34nkqen2agujhd6j@master>
+In-Reply-To: <3981bf9d-e721-628e-b88a-c75614a5cc64@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:20:13PM +0000, Wei Yang wrote:
-> On Mon, Mar 30, 2020 at 07:27:08AM -0700, Matthew Wilcox wrote:
-> >On Mon, Mar 30, 2020 at 02:13:50PM +0000, Wei Yang wrote:
-> >> On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
-> >> >On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
-> >> >> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
-> >> >> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
-> >> >> >> As the comment mentioned, we reserved several ranges of internal node
-> >> >> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
-> >> >> >> XA_ZERO_ENTRY is a normal node.
-> >> >> >> 
-> >> >> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
-> >> >> >
-> >> >> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
-> >> >> >is not guaranteed to be the largest reserved entry.
-> >> >> 
-> >> >> Then why we choose 4096?
-> >> >
-> >> >Because 4096 is the smallest page size supported by Linux, so we're
-> >> >guaranteed that anything less than 4096 is not a valid pointer.
-> >> 
+On 3/30/20 2:32 PM, Hans de Goede wrote:
+> Hi,
 > 
-> So you want to say, the 4096 makes sure XArray will not store an address in
-> first page? If this is the case, I have two suggestions:
+> On 3/30/20 11:25 PM, Randy Dunlap wrote:
+>> On 3/30/20 1:51 PM, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 3/29/20 11:36 AM, Paul Menzel wrote:
+>>>> Dear Linux folks,
+>>>>
+>>>>
+>>>> On the MSI desktop board [1]
+>>>>
+>>>>       [    0.000000] DMI: Micro-Star International Co., Ltd. MS-7A37/B350M MORTAR (MS-7A37), BIOS 1.MR 12/02/2019
+>>>>
+>>>> with an AMD Ryzen 3 2200G with Radeon Vega Graphics, the ACPI Video Driver `video` is loaded and creates a backlight device.
+>>>>
+>>>>       $ readlink -f /sys/class/backlight/acpi_video0
+>>>>       /sys/devices/pci0000:00/0000:00:08.1/0000:26:00.0/backlight/acpi_video0
+>>>>
+>>>> I wonder what the driver is used for as the AMDGPU driver exists for the graphics device.
+>>>
+>>> Backlight on x86 hw is a bit of a mess, there is an ACPI standard for accessing it
+>>> and with older (Windows XP era) laptops that is the interface which usually works,
+>>> then there are a bunch of vendor specific SMBIOS or WMI backlight interfaces and
+>>> then there is the option of directly accessing the hardware as the amdgpu driver
+>>> is doing.
+>>>
+>>> We have a bunch of heuristics to avoid the acpi_video driver registering a
+>>> backlight interface when it should not, either because the direct hw access
+>>> should be used instead; or because there simply is no builtin LCD panel and thus
+>>> no backlight to control.
+>>>
+>>> These heuristics are failing on your board.
+>>>
+>>>> If it’s useful, is there a way to prevent the backlight interface from getting created?
+>>>
+>>> You can pass "acpi_backlight=ignore" on the kernel commandline to disable the
+>>
+>> Hi Hans,
+>> Should that be "acpi_backlight=none"?  I don't see 'ignore' allowed here:
+>>
+>> static void acpi_video_parse_cmdline(void)
+>> {
+>>     if (!strcmp("vendor", acpi_video_backlight_string))
+>>         acpi_backlight_cmdline = acpi_backlight_vendor;
+>>     if (!strcmp("video", acpi_video_backlight_string))
+>>         acpi_backlight_cmdline = acpi_backlight_video;
+>>     if (!strcmp("native", acpi_video_backlight_string))
+>>         acpi_backlight_cmdline = acpi_backlight_native;
+>>     if (!strcmp("none", acpi_video_backlight_string))
+>>         acpi_backlight_cmdline = acpi_backlight_none;
+>> }
 > 
->   * use PAGE_SIZE would be more verbose?
-
-But also incorrect, because it'll be different on different architectures.
-It's 4096.  That's all.
-
->   * a node is an internal entry, do we need to compare with xa_mk_internal()
->     instead?
-
-No.  4096 is better because it's a number which is easily expressible in
-many CPU instruction sets.  4094 is much less likely to be an easy number
-to encode.
-
-> >(it is slightly out of date; the XArray actually supports storing unaligned
-> >pointers now, but that's not relevant to this discussion)
+> Yes you are right that should be "acpi_backlight=none".
 > 
-> Ok, maybe this document need to update.
+>> and Documentation/admin-guide/kernel-parameters.txt could stand to be updated
+>> with a few of those options.
+> 
+> Ack, I've put this on my (much too long) TODO list. Feel free to
+> beat me to it.
 
-Did you want to send a patch?
+Sure, I'll send a patch shortly.
+
+-- 
+~Randy
+
