@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E010C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335E7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E093720772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E2E20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645837;
-	bh=b6ZWle7ZBOYu+g9UPnLlqZP56bPCcSFMuarMPcHu99w=;
+	s=default; t=1585645844;
+	bh=sSejE0Y20tuTnnghbdOPuBx3OjhIeYEeGSRJ41osggI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ju/7Q3ZmtYFYKDAwGPaT3rL96Bkm+6EsOgUhIveXvXLcW60YCWfnoW/n5wkADNIHb
-	 WNnIpDkIL7JyCy0NC1Z2MOvWVL2P9gUH5PZ2qGDrzehH7bZVEG6QeM/ufVcAEoFXiP
-	 f2Vm2pmMTNSGY3toVsTSy9rVJFTTy2r35EbzksOM=
+	b=WRrbF0AHxhFyTCPsjmBdSL4pa1HeKHv3aT2F0QcKDZglgzMDrCsEwWzTiKPoixHJQ
+	 zUus1OxEqpOkfi02q++zBtU3KIP5eshc2wjWQH26acOT5XRwwzSDMaBQxPWsQuLMjY
+	 K4lJRizFzRgRTdAAzJIh+Yf8qrtzTrhWIWTMu6Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731606AbgCaJKf (ORCPT
+        id S1731359AbgCaJKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54310 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730673AbgCaJK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:10:29 -0400
+        id S1731611AbgCaJKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:10:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 397D820772;
-        Tue, 31 Mar 2020 09:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4E9620772;
+        Tue, 31 Mar 2020 09:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645828;
-        bh=b6ZWle7ZBOYu+g9UPnLlqZP56bPCcSFMuarMPcHu99w=;
+        s=default; t=1585645838;
+        bh=sSejE0Y20tuTnnghbdOPuBx3OjhIeYEeGSRJ41osggI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i2AzQDw9PIyQBe+tnj0FvuPeeEuquV07YH+KrhIGga1wriKyBK0lF1jeOM4Yqq4XY
-         imwCAOrn+MTjdFXH4diKX0/4oAiTuuwZ37iVo4BsDnM1N5yYea0ZBS9ob64FcnazAj
-         gYDpzdumOJvDHA7RQZueLA0DotI6n+57oi0yguy0=
+        b=gMm7EVZlZ+tW6dWxoaT8ZfEmp/IFRMRZBhiX2vz6oEzGl91rmuJ6c4wSsOSAiQuvL
+         KelNiUqngLojLyzSs1gAmUzeU4LEp/tZL6aMFPtwIC7BOeFMSus5Yznx5W75fQ4x2J
+         QUQdXhcU/hA+9emnhM1LVnsYj5H5md29D0Pd5nc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 5.5 162/170] staging: wfx: fix init/remove vs IRQ race
-Date:   Tue, 31 Mar 2020 10:59:36 +0200
-Message-Id: <20200331085439.998160230@linuxfoundation.org>
+        syzbot+fcf5dd39282ceb27108d@syzkaller.appspotmail.com,
+        Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 010/155] hsr: fix general protection fault in hsr_addr_is_self()
+Date:   Tue, 31 Mar 2020 10:57:30 +0200
+Message-Id: <20200331085419.539064052@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
-References: <20200331085423.990189598@linuxfoundation.org>
+In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
+References: <20200331085418.274292403@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,178 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Taehee Yoo <ap420073@gmail.com>
 
-commit 4033714d6cbe04893aa0708d1fcaa45dd8eb3f53 upstream.
+[ Upstream commit 3a303cfdd28d5f930a307c82e8a9d996394d5ebd ]
 
-Current code races in init/exit with interrupt handlers. This is noticed
-by the warning below. Fix it by using devres for ordering allocations and
-IRQ de/registration.
+The port->hsr is used in the hsr_handle_frame(), which is a
+callback of rx_handler.
+hsr master and slaves are initialized in hsr_add_port().
+This function initializes several pointers, which includes port->hsr after
+registering rx_handler.
+So, in the rx_handler routine, un-initialized pointer would be used.
+In order to fix this, pointers should be initialized before
+registering rx_handler.
 
-WARNING: CPU: 0 PID: 827 at drivers/staging/wfx/bus_spi.c:142 wfx_spi_irq_handler+0x5c/0x64 [wfx]
-race condition in driver init/deinit
+Test commands:
+    ip netns del left
+    ip netns del right
+    modprobe -rv veth
+    modprobe -rv hsr
+    killall ping
+    modprobe hsr
+    ip netns add left
+    ip netns add right
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link add veth4 type veth peer name veth5
+    ip link set veth1 netns left
+    ip link set veth3 netns right
+    ip link set veth4 netns left
+    ip link set veth5 netns right
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link set veth0 address fc:00:00:00:00:01
+    ip link set veth2 address fc:00:00:00:00:02
+    ip netns exec left ip link set veth1 up
+    ip netns exec left ip link set veth4 up
+    ip netns exec right ip link set veth3 up
+    ip netns exec right ip link set veth5 up
+    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+    ip a a 192.168.100.1/24 dev hsr0
+    ip link set hsr0 up
+    ip netns exec left ip link add hsr1 type hsr slave1 veth1 slave2 veth4
+    ip netns exec left ip a a 192.168.100.2/24 dev hsr1
+    ip netns exec left ip link set hsr1 up
+    ip netns exec left ip n a 192.168.100.1 dev hsr1 lladdr \
+	    fc:00:00:00:00:01 nud permanent
+    ip netns exec left ip n r 192.168.100.1 dev hsr1 lladdr \
+	    fc:00:00:00:00:01 nud permanent
+    for i in {1..100}
+    do
+        ip netns exec left ping 192.168.100.1 &
+    done
+    ip netns exec left hping3 192.168.100.1 -2 --flood &
+    ip netns exec right ip link add hsr2 type hsr slave1 veth3 slave2 veth5
+    ip netns exec right ip a a 192.168.100.3/24 dev hsr2
+    ip netns exec right ip link set hsr2 up
+    ip netns exec right ip n a 192.168.100.1 dev hsr2 lladdr \
+	    fc:00:00:00:00:02 nud permanent
+    ip netns exec right ip n r 192.168.100.1 dev hsr2 lladdr \
+	    fc:00:00:00:00:02 nud permanent
+    for i in {1..100}
+    do
+        ip netns exec right ping 192.168.100.1 &
+    done
+    ip netns exec right hping3 192.168.100.1 -2 --flood &
+    while :
+    do
+        ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+	ip a a 192.168.100.1/24 dev hsr0
+	ip link set hsr0 up
+	ip link del hsr0
+    done
 
-Cc: stable@vger.kernel.org
-Fixes: 0096214a59a7 ("staging: wfx: add support for I/O access")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Reviewed-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/f0c66cbb3110c2736cd4357c753fba8c14ee3aee.1581416843.git.mirq-linux@rere.qmqm.pl
+Splat looks like:
+[  120.954938][    C0] general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1]I
+[  120.957761][    C0] KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+[  120.959064][    C0] CPU: 0 PID: 1511 Comm: hping3 Not tainted 5.6.0-rc5+ #460
+[  120.960054][    C0] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  120.962261][    C0] RIP: 0010:hsr_addr_is_self+0x65/0x2a0 [hsr]
+[  120.963149][    C0] Code: 44 24 18 70 73 2f c0 48 c1 eb 03 48 8d 04 13 c7 00 f1 f1 f1 f1 c7 40 04 00 f2 f2 f2 4
+[  120.966277][    C0] RSP: 0018:ffff8880d9c09af0 EFLAGS: 00010206
+[  120.967293][    C0] RAX: 0000000000000006 RBX: 1ffff1101b38135f RCX: 0000000000000000
+[  120.968516][    C0] RDX: dffffc0000000000 RSI: ffff8880d17cb208 RDI: 0000000000000000
+[  120.969718][    C0] RBP: 0000000000000030 R08: ffffed101b3c0e3c R09: 0000000000000001
+[  120.972203][    C0] R10: 0000000000000001 R11: ffffed101b3c0e3b R12: 0000000000000000
+[  120.973379][    C0] R13: ffff8880aaf80100 R14: ffff8880aaf800f2 R15: ffff8880aaf80040
+[  120.974410][    C0] FS:  00007f58e693f740(0000) GS:ffff8880d9c00000(0000) knlGS:0000000000000000
+[  120.979794][    C0] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  120.980773][    C0] CR2: 00007ffcb8b38f29 CR3: 00000000afe8e001 CR4: 00000000000606f0
+[  120.981945][    C0] Call Trace:
+[  120.982411][    C0]  <IRQ>
+[  120.982848][    C0]  ? hsr_add_node+0x8c0/0x8c0 [hsr]
+[  120.983522][    C0]  ? rcu_read_lock_held+0x90/0xa0
+[  120.984159][    C0]  ? rcu_read_lock_sched_held+0xc0/0xc0
+[  120.984944][    C0]  hsr_handle_frame+0x1db/0x4e0 [hsr]
+[  120.985597][    C0]  ? hsr_nl_nodedown+0x2b0/0x2b0 [hsr]
+[  120.986289][    C0]  __netif_receive_skb_core+0x6bf/0x3170
+[  120.992513][    C0]  ? check_chain_key+0x236/0x5d0
+[  120.993223][    C0]  ? do_xdp_generic+0x1460/0x1460
+[  120.993875][    C0]  ? register_lock_class+0x14d0/0x14d0
+[  120.994609][    C0]  ? __netif_receive_skb_one_core+0x8d/0x160
+[  120.995377][    C0]  __netif_receive_skb_one_core+0x8d/0x160
+[  120.996204][    C0]  ? __netif_receive_skb_core+0x3170/0x3170
+[ ... ]
+
+Reported-by: syzbot+fcf5dd39282ceb27108d@syzkaller.appspotmail.com
+Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/wfx/bus_sdio.c |   15 ++++++---------
- drivers/staging/wfx/bus_spi.c  |   27 ++++++++++++++-------------
- drivers/staging/wfx/main.c     |   21 +++++++++++++--------
- drivers/staging/wfx/main.h     |    1 -
- 4 files changed, 33 insertions(+), 31 deletions(-)
+ net/hsr/hsr_slave.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/staging/wfx/bus_sdio.c
-+++ b/drivers/staging/wfx/bus_sdio.c
-@@ -200,25 +200,23 @@ static int wfx_sdio_probe(struct sdio_fu
- 	if (ret)
- 		goto err0;
+--- a/net/hsr/hsr_slave.c
++++ b/net/hsr/hsr_slave.c
+@@ -145,16 +145,16 @@ int hsr_add_port(struct hsr_priv *hsr, s
+ 	if (!port)
+ 		return -ENOMEM;
  
--	ret = wfx_sdio_irq_subscribe(bus);
--	if (ret)
--		goto err1;
--
- 	bus->core = wfx_init_common(&func->dev, &wfx_sdio_pdata,
- 				    &wfx_sdio_hwbus_ops, bus);
- 	if (!bus->core) {
- 		ret = -EIO;
--		goto err2;
-+		goto err1;
++	port->hsr = hsr;
++	port->dev = dev;
++	port->type = type;
++
+ 	if (type != HSR_PT_MASTER) {
+ 		res = hsr_portdev_setup(dev, port);
+ 		if (res)
+ 			goto fail_dev_setup;
  	}
  
-+	ret = wfx_sdio_irq_subscribe(bus);
-+	if (ret)
-+		goto err1;
-+
- 	ret = wfx_probe(bus->core);
- 	if (ret)
--		goto err3;
-+		goto err2;
- 
- 	return 0;
- 
--err3:
--	wfx_free_common(bus->core);
- err2:
- 	wfx_sdio_irq_unsubscribe(bus);
- err1:
-@@ -234,7 +232,6 @@ static void wfx_sdio_remove(struct sdio_
- 	struct wfx_sdio_priv *bus = sdio_get_drvdata(func);
- 
- 	wfx_release(bus->core);
--	wfx_free_common(bus->core);
- 	wfx_sdio_irq_unsubscribe(bus);
- 	sdio_claim_host(func);
- 	sdio_disable_func(func);
---- a/drivers/staging/wfx/bus_spi.c
-+++ b/drivers/staging/wfx/bus_spi.c
-@@ -154,6 +154,11 @@ static void wfx_spi_request_rx(struct wo
- 	wfx_bh_request_rx(bus->core);
- }
- 
-+static void wfx_flush_irq_work(void *w)
-+{
-+	flush_work(w);
-+}
-+
- static size_t wfx_spi_align_size(void *priv, size_t size)
- {
- 	// Most of SPI controllers avoid DMA if buffer size is not 32bit aligned
-@@ -209,22 +214,23 @@ static int wfx_spi_probe(struct spi_devi
- 		udelay(2000);
- 	}
- 
--	ret = devm_request_irq(&func->dev, func->irq, wfx_spi_irq_handler,
--			       IRQF_TRIGGER_RISING, "wfx", bus);
--	if (ret)
--		return ret;
+-	port->hsr = hsr;
+-	port->dev = dev;
+-	port->type = type;
 -
- 	INIT_WORK(&bus->request_rx, wfx_spi_request_rx);
- 	bus->core = wfx_init_common(&func->dev, &wfx_spi_pdata,
- 				    &wfx_spi_hwbus_ops, bus);
- 	if (!bus->core)
- 		return -EIO;
+ 	list_add_tail_rcu(&port->port_list, &hsr->ports);
+ 	synchronize_rcu();
  
--	ret = wfx_probe(bus->core);
-+	ret = devm_add_action_or_reset(&func->dev, wfx_flush_irq_work,
-+				       &bus->request_rx);
- 	if (ret)
--		wfx_free_common(bus->core);
-+		return ret;
-+
-+	ret = devm_request_irq(&func->dev, func->irq, wfx_spi_irq_handler,
-+			       IRQF_TRIGGER_RISING, "wfx", bus);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return wfx_probe(bus->core);
- }
- 
- /* Disconnect Function to be called by SPI stack when device is disconnected */
-@@ -233,11 +239,6 @@ static int wfx_spi_disconnect(struct spi
- 	struct wfx_spi_priv *bus = spi_get_drvdata(func);
- 
- 	wfx_release(bus->core);
--	wfx_free_common(bus->core);
--	// A few IRQ will be sent during device release. Hopefully, no IRQ
--	// should happen after wdev/wvif are released.
--	devm_free_irq(&func->dev, func->irq, bus);
--	flush_work(&bus->request_rx);
- 	return 0;
- }
- 
---- a/drivers/staging/wfx/main.c
-+++ b/drivers/staging/wfx/main.c
-@@ -261,6 +261,16 @@ static int wfx_send_pdata_pds(struct wfx
- 	return ret;
- }
- 
-+static void wfx_free_common(void *data)
-+{
-+	struct wfx_dev *wdev = data;
-+
-+	mutex_destroy(&wdev->rx_stats_lock);
-+	mutex_destroy(&wdev->conf_mutex);
-+	wfx_tx_queues_deinit(wdev);
-+	ieee80211_free_hw(wdev->hw);
-+}
-+
- struct wfx_dev *wfx_init_common(struct device *dev,
- 				const struct wfx_platform_data *pdata,
- 				const struct hwbus_ops *hwbus_ops,
-@@ -326,15 +336,10 @@ struct wfx_dev *wfx_init_common(struct d
- 	wfx_init_hif_cmd(&wdev->hif_cmd);
- 	wfx_tx_queues_init(wdev);
- 
--	return wdev;
--}
-+	if (devm_add_action_or_reset(dev, wfx_free_common, wdev))
-+		return NULL;
- 
--void wfx_free_common(struct wfx_dev *wdev)
--{
--	mutex_destroy(&wdev->rx_stats_lock);
--	mutex_destroy(&wdev->conf_mutex);
--	wfx_tx_queues_deinit(wdev);
--	ieee80211_free_hw(wdev->hw);
-+	return wdev;
- }
- 
- int wfx_probe(struct wfx_dev *wdev)
---- a/drivers/staging/wfx/main.h
-+++ b/drivers/staging/wfx/main.h
-@@ -34,7 +34,6 @@ struct wfx_dev *wfx_init_common(struct d
- 				const struct wfx_platform_data *pdata,
- 				const struct hwbus_ops *hwbus_ops,
- 				void *hwbus_priv);
--void wfx_free_common(struct wfx_dev *wdev);
- 
- int wfx_probe(struct wfx_dev *wdev);
- void wfx_release(struct wfx_dev *wdev);
 
 
