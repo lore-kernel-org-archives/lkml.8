@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880BEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B866C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57BB720B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E879D20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645300;
-	bh=/2QCD0+YgDM7AxEBlkjagHGL94R+lRcfpdpM227IqLA=;
+	s=default; t=1585645307;
+	bh=1B1aebWkCEYVkaxkqB7iz+P4KZW79djIflH1OP/2ues=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQmszP54tPSNF8ZP8ALzoPoF+1DcCEn5q+U3NUE857ThroJB+v8uQ/xdrM0vD8P+4
-	 yg4IP2OxXrxx4da0ceWQjR/xtb3suMGx2NhAPpFrAjexnbyqeFx/21NE6+oNjq3Bdp
-	 pW+EYBnJSTQvH2oE51XHic+aukKx18jKFj1WA3T0=
+	b=lRUYeaATgFIfoBjhOHxiXThYrM42ZMNKHuBG1b5BbOIMc6av6s+d9doTYPmQTKpIj
+	 HUpt0gh0JcSUZhQVxKwc1Ln+LyTYfeMO1ut+cDsgqTpLGUqAcHl6UEvf/g3YQO4o8j
+	 jPrw3IMEA090KCYhOp7MzsTN74N5ey42PaNE0jNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgCaJBj (ORCPT
+        id S1730608AbgCaJBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40852 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730294AbgCaJBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:01:36 -0400
+        id S1730376AbgCaJBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:01:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 397A820848;
-        Tue, 31 Mar 2020 09:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 755A320848;
+        Tue, 31 Mar 2020 09:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645295;
-        bh=/2QCD0+YgDM7AxEBlkjagHGL94R+lRcfpdpM227IqLA=;
+        s=default; t=1585645302;
+        bh=1B1aebWkCEYVkaxkqB7iz+P4KZW79djIflH1OP/2ues=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IpFm+mTQTvkhDiSpQbqWsRLMLr41fdSBNsoCzxU85dNp2BTDgvZIbG+T4GYA7PRAN
-         omrlgqBZPFTYsn+7N/DY5kyAxQtWnrOZHY/i1wiD7pp5w6/nEOKvM1qOL5XIjuxesl
-         qROTF27haODC+xIQ9bei8JdfZL/Sml6Qz7F6rYXw=
+        b=BQ531U7/PYC2oN4nQjDhWG6iwva450bIEzB0/Jdj+dyOJQ5o4vLjwvM/w0qZwXMMp
+         b1y8equ1Q/nWfmJcBAdg+Ftjfzmu2Y3xnbasdkyILwxjKebZCra+bJi6HYAG9il2T8
+         wx8N7jah4A7cprD0XxcrRJraFLj1efM85/zgeM08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Haishuang Yan <yanhaishuang@cmss.chinamobile.com>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com
-Subject: [PATCH 5.5 010/170] geneve: move debug check after netdev unregister
-Date:   Tue, 31 Mar 2020 10:57:04 +0200
-Message-Id: <20200331085425.244338540@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 012/170] ipv4: fix a RCU-list lock in inet_dump_fib()
+Date:   Tue, 31 Mar 2020 10:57:06 +0200
+Message-Id: <20200331085425.441188487@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -62,46 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 0fda7600c2e174fe27e9cf02e78e345226e441fa ]
+[ Upstream commit dddeb30bfc43926620f954266fd12c65a7206f07 ]
 
-The debug check must be done after unregister_netdevice_many() call --
-the list_del() for this is done inside .ndo_stop.
+There is a place,
 
-Fixes: 2843a25348f8 ("geneve: speedup geneve tunnels dismantle")
-Reported-and-tested-by: <syzbot+68a8ed58e3d17c700de5@syzkaller.appspotmail.com>
-Cc: Haishuang Yan <yanhaishuang@cmss.chinamobile.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
+inet_dump_fib()
+  fib_table_dump
+    fn_trie_dump_leaf()
+      hlist_for_each_entry_rcu()
+
+without rcu_read_lock() will trigger a warning,
+
+ WARNING: suspicious RCU usage
+ -----------------------------
+ net/ipv4/fib_trie.c:2216 RCU-list traversed in non-reader section!!
+
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by ip/1923:
+  #0: ffffffff8ce76e40 (rtnl_mutex){+.+.}, at: netlink_dump+0xd6/0x840
+
+ Call Trace:
+  dump_stack+0xa1/0xea
+  lockdep_rcu_suspicious+0x103/0x10d
+  fn_trie_dump_leaf+0x581/0x590
+  fib_table_dump+0x15f/0x220
+  inet_dump_fib+0x4ad/0x5d0
+  netlink_dump+0x350/0x840
+  __netlink_dump_start+0x315/0x3e0
+  rtnetlink_rcv_msg+0x4d1/0x720
+  netlink_rcv_skb+0xf0/0x220
+  rtnetlink_rcv+0x15/0x20
+  netlink_unicast+0x306/0x460
+  netlink_sendmsg+0x44b/0x770
+  __sys_sendto+0x259/0x270
+  __x64_sys_sendto+0x80/0xa0
+  do_syscall_64+0x69/0xf4
+  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fixes: 18a8021a7be3 ("net/ipv4: Plumb support for filtering route dumps")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/geneve.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/ipv4/fib_frontend.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1845,8 +1845,6 @@ static void geneve_destroy_tunnels(struc
- 		if (!net_eq(dev_net(geneve->dev), net))
- 			unregister_netdevice_queue(geneve->dev, head);
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -997,7 +997,9 @@ static int inet_dump_fib(struct sk_buff
+ 			return -ENOENT;
+ 		}
+ 
++		rcu_read_lock();
+ 		err = fib_table_dump(tb, skb, cb, &filter);
++		rcu_read_unlock();
+ 		return skb->len ? : err;
  	}
--
--	WARN_ON_ONCE(!list_empty(&gn->sock_list));
- }
  
- static void __net_exit geneve_exit_batch_net(struct list_head *net_list)
-@@ -1861,6 +1859,12 @@ static void __net_exit geneve_exit_batch
- 	/* unregister the devices gathered above */
- 	unregister_netdevice_many(&list);
- 	rtnl_unlock();
-+
-+	list_for_each_entry(net, net_list, exit_list) {
-+		const struct geneve_net *gn = net_generic(net, geneve_net_id);
-+
-+		WARN_ON_ONCE(!list_empty(&gn->sock_list));
-+	}
- }
- 
- static struct pernet_operations geneve_net_ops = {
 
 
