@@ -2,141 +2,116 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A265C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D9BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2D720838
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E54820848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:40:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c98iSUIA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HS3MXxUz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgCaLdu (ORCPT
+        id S1730580AbgCaLkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:33:50 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:23711 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730343AbgCaLdt (ORCPT
+        Tue, 31 Mar 2020 07:40:10 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34490 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730343AbgCaLkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:33:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585654429; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=vd/RakK25qqtVWxb095aqA3ryPJv6ilQzlxzlSwno2k=;
- b=c98iSUIAo6BeOF7//N9JYdKRSqc4jFLVPVLqyphBtEbRzCTyeWzL2TaKjPIrjL7sEAZQhmog
- tTpnMtmiL+o/9uZrNpn6XNwLLdUIOhy/OA0B7EfVLnN9kQPxdYraIQt4bXYZ9dFRWIaA9maq
- RrhAGQ7bTbDNc3wpJ1rA5pXV59A=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e832a93.7fa599f2e1f0-smtp-out-n02;
- Tue, 31 Mar 2020 11:33:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E951BC43636; Tue, 31 Mar 2020 11:33:38 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4AFA7C433F2;
-        Tue, 31 Mar 2020 11:33:38 +0000 (UTC)
+        Tue, 31 Mar 2020 07:40:10 -0400
+Received: by mail-io1-f66.google.com with SMTP id h131so21322731iof.1;
+        Tue, 31 Mar 2020 04:40:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GvfMZgwwya4ZSH2OS8e5IKouh92EbNGvwaXpIPfmMZU=;
+        b=HS3MXxUze51pqFaHc52OMaPkf+JHkR9fOcDmckzaIhHmhnG6RnivzmAx7X/1bSOW7W
+         TXGjPqGU+CeKwCa9KP9JhXaNOngahNLeHUdjTKYEU+t+gQ8IdNiGf5ode1Wy7nMe5uF+
+         41LboL1lOLWLZqPTsVX6AxSFLxYY8AtfPQla33L1MOLcI9Yv5U+riazFwhaoZvE45dCY
+         ICXrPXX0mpGK+r4dPIh9Y2i4onsrVUIY9vTsvhTpaWbI6ciOnL1jF6Wrme2dCsW2THEp
+         a4cf57cgiJpybFo/ihMtVg7qOU2gMZZT696Dm5dBxbpX7tz+BBsLUkJpcdjI0d1Hjog9
+         qpiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GvfMZgwwya4ZSH2OS8e5IKouh92EbNGvwaXpIPfmMZU=;
+        b=QiUYWDgq/me77eGel8HsZRzStH2GROMyprkFl8brXHIwWmwmJAuscFzaMzXU2LqbyN
+         MyDpLP2bEK+scIAK9h9C+OxPXB/m+XSlgHLCsNYcEqjRgBEymoKs3+SrMkssKs/Qw2zA
+         +4ETx9cx2us1hBR741WYBGVxpmF5sJP/dSTm3LpEcb/PzzFOHwxHiuAtxV3FZZMhMTt9
+         9mzIyBYw6oi7lffCzUMBNFeiwS7ZPkjKsGr3pMvJ4xblb2aUlrOAgXQ0Tr7HEGvIVhLt
+         ze8PWy1ndkdb95U8QCFtX/NuvjWn3NlfqkpVS8GGgybDEsbvQcc34DyCbbUiqsmsgYoY
+         S8bA==
+X-Gm-Message-State: ANhLgQ2fX+z5yGsWml7LbAQSq5NXTw7TxZfiU82KX05BdtBuEt3tE+AL
+        9+W8/KClkCi7JicdCK2MXsuMPT2IWVgEO2dvFuw=
+X-Google-Smtp-Source: ADFU+vsF87hpVW35ufXfPeeeySR9ePWlx1H9GQn0Al/KxFVH01m9lLLgTtl4tDNU9Fb00y4+Wa1QAd+Wi9lSCqiwRDo=
+X-Received: by 2002:a5d:984b:: with SMTP id p11mr1163615ios.175.1585654808716;
+ Tue, 31 Mar 2020 04:40:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 31 Mar 2020 19:33:38 +0800
-From:   tingwei@codeaurora.org
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: hw_breakpoint: don't clear debug registers in halt
- mode
-In-Reply-To: <20200331074147.GA25612@willie-the-truck>
-References: <20200328083209.21793-1-tingwei@codeaurora.org>
- <20200330123946.GH1309@C02TD0UTHF1T.local>
- <20200330134218.GB10633@willie-the-truck>
- <2f4d076b2b21de3908f0821126d0c61e@codeaurora.org>
- <20200331074147.GA25612@willie-the-truck>
-Message-ID: <518d9ca9652c23bfc0e1831306144418@codeaurora.org>
-X-Sender: tingwei@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <1585625296-31013-1-git-send-email-hqjagain@gmail.com> <87bloc23d1.fsf@kamboji.qca.qualcomm.com>
+In-Reply-To: <87bloc23d1.fsf@kamboji.qca.qualcomm.com>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Tue, 31 Mar 2020 19:39:51 +0800
+Message-ID: <CAJRQjodOEoP-H7x_XjB5MxCFfgLeb1Bt=XfDT_rhLcBdyt=mQg@mail.gmail.com>
+Subject: Re: [PATCH] ath9k: fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     ath9k-devel@qca.qualcomm.com,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020-03-31 15:41，Will Deacon 写道：
-> On Tue, Mar 31, 2020 at 10:39:42AM +0800, tingwei@codeaurora.org wrote:
->> 在 2020-03-30 21:42，Will Deacon 写道：
->> > On Mon, Mar 30, 2020 at 01:39:46PM +0100, Mark Rutland wrote:
->> > > On Sat, Mar 28, 2020 at 04:32:09PM +0800, Tingwei Zhang wrote:
->> > > > If external debugger sets a breakpoint for one Kernel function
->> > > > when device is in bootloader mode and loads Kernel, this breakpoint
->> > > > will be wiped out in hw_breakpoint_reset(). To fix this, check
->> > > > MDSCR_EL1.HDE in hw_breakpoint_reset(). When MDSCR_EL1.HDE is
->> > > > 0b1, halting debug is enabled. Don't reset debug registers in this
->> > case.
->> > >
->> > > I don't think this is sufficient, because the kernel can still
->> > > subsequently mess with breakpoints, and the HW debugger might not be
->> > > attached at this point in time anyhow.
->> > >
->> > > I reckon this should hang off the existing "nodebumon" command line
->> > > option, and we shouldn't use HW breakpoints at all when that is
->> > > passed.
->> > > Then you can pass that to prevent the kernel stomping on the external
->> > > debugger.
->> > >
->> > > Will, thoughts?
->> >
->> > I was going to suggest the same thing, although we will also need to
->> > take
->> > care to reset the registers if "nodebugmon" is toggled at runtime via
->> > the
->> > "debug_enabled" file in debugfs.
->> >
->> Thanks for the suggestion, Mark and Will. It's a great idea to use
->> "nodebugmon". When "nodebugmon" is set, Kernel won't change HW
->> breakpoints.
->> 
->> For reset the registers after "debug_enabled" is toggled, I'm thinking 
->> if
->> we are adding unnecessary complexity here.If we take that approach, we
->> will
->> hook "debug_enabled" interface and use smp_call_function_single() to 
->> call
->> hw_breakpoint_reset() on each CPU. Wait for all CPUs' execution done 
->> and
->> change "debug_enabled". External debugger would clear the breakpoints 
->> when
->> it detaches the device and restores its breakpoints when attaches the
->> device.
->> Assume debug_enabled is changed to one after external debugger 
->> detaches
->> the
->> device. Debugger would already clear the breakpoint registers. If 
->> debgger
->> is
->> still attached, there's nothing Kernel can do to stop it 
->> restores/programs
->> the breakpoint registers.
->> 
->> What do you think of this?
-> 
-> It's all a bit of a mess. Looking at it some more, why can't the 
-> external
-> debugger simply trap access to the debug registers using EDSCR.TDA? 
-> That
-> way, we don't have to change anything in the kernel.
-> 
-> Will
-
-External debugger has the function to trap access to debug registers 
-now.
-What do we expect debugger to do after core is stopped? Skip that msr
-instruction and continue to run?
-
-Tingwei
+On Tue, Mar 31, 2020 at 7:03 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Qiujun Huang <hqjagain@gmail.com> writes:
+>
+> > Add barrier to accessing the stack array skb_pool.
+> >
+> > Reported-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
+> > Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> > ---
+> >  drivers/net/wireless/ath/ath9k/hif_usb.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
+> > index dd0c323..c4a2b72 100644
+> > --- a/drivers/net/wireless/ath/ath9k/hif_usb.c
+> > +++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+> > @@ -612,6 +612,11 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
+> >                       hif_dev->remain_skb = nskb;
+> >                       spin_unlock(&hif_dev->rx_lock);
+> >               } else {
+> > +                     if (pool_index == MAX_PKT_NUM_IN_TRANSFER) {
+> > +                             dev_err(&hif_dev->udev->dev,
+> > +                                     "ath9k_htc: over RX MAX_PKT_NUM\n");
+> > +                             goto err;
+the  barrier ensure pool_index <= MAX_PKT_NUM_IN_TRANSFER
+> > +                     }
+>
+> What about 'pool_index >= MAX_PKT_NUM_IN_TRANSFER' just to be on the
+> safe side? Ah, but then error handling won't work:
+It looks ok?
+it can handle the case: pool_index == MAX_PKT_NUM_IN_TRANSFER
+>
+> err:
+>         for (i = 0; i < pool_index; i++) {
+>                 RX_STAT_ADD(skb_completed_bytes, skb_pool[i]->len);
+>                 ath9k_htc_rx_msg(hif_dev->htc_handle, skb_pool[i],
+>                                  skb_pool[i]->len, USB_WLAN_RX_PIPE);
+>                 RX_STAT_INC(skb_completed);
+>         }
+>
+> Maybe that should use 'min(pool_index, MAX_PKT_NUM_IN_TRANSFER - 1)' or
+> something? Or maybe it's just overengineerin, dunno.
+>
+> --
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
