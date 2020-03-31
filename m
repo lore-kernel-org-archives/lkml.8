@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE94C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40167C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06AB020772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FD920675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646595;
-	bh=Zf31paX7k2ZkrtIcuW+qjbnpvFLPskIxAlURiEL6dX4=;
+	s=default; t=1585646600;
+	bh=PFJ61hZlXewm98PbidinrVr4O2dRVdQs+bRrFd1QcbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e7zj6/jK9ZmBuZYyO/vylB/ZDRnGhdSwXH+x9jRzVk3gx2yG58afMuhhPJxVuXjVZ
-	 l7TASqnQHt+eoPo6SuwipnemusI4S4cdrDkz/5qKc7KVeadzbK40+DwGdcTpHbi9yg
-	 qbYivc1wqTR/Dyw3CV0HX9KzXDrxzkxhYvJ8cST0=
+	b=KFkw1Ir92rHUYugAVNDmkSa936Li8YhW/h1BPEBagCOxbDIl9CVZy2daC3+nxDpC5
+	 UUF5Lo+g1Vf3+1Du/8eVWIpquhdLDnvNQGvmQjF4nnfmqw4GQGuhO7OvCajwqoClVX
+	 id9dzTpcpgXpJc3NCFG82BfTRIAZC+kUpWxeBxCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730854AbgCaJDn (ORCPT
+        id S1730491AbgCaJDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43426 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730616AbgCaJDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:03:40 -0400
+        id S1730597AbgCaJDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A6220787;
-        Tue, 31 Mar 2020 09:03:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB005208E0;
+        Tue, 31 Mar 2020 09:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645419;
-        bh=Zf31paX7k2ZkrtIcuW+qjbnpvFLPskIxAlURiEL6dX4=;
+        s=default; t=1585645404;
+        bh=PFJ61hZlXewm98PbidinrVr4O2dRVdQs+bRrFd1QcbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgkYENoCXgtCMTaClTb9z/G6PHFkGIvhRSpJgoheJYb11J7vo64W1cYIZpi+2KzBy
-         rbSu4PDifiifQfyrDEUUwdKMiUD+p2QuaL/ZVL8y20Z5nCoT8tKrZ4l2SYeti0TcHe
-         uCoMCYuKAKt7wjId3hf4CXROwvoxozXfkMdVSSzE=
+        b=gk+DrDXlxd3iXOvwPAD3AOGWpRvcJ3J7ipBtR1h9yvByQ6sXESMNsu7nCfBhRvvj4
+         o60SvuyyOFu7u3J2yRvqf+FgYOYqD8JjTHGB/qWQrB1J1KFYobiy37eiVcYRsWNTlj
+         FYNIt8S17+JFJOPEI6kPjzZvbnerJrPDJYAgIePE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
+        stable@vger.kernel.org, Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 047/170] net: ena: fix incorrect setting of the number of msix vectors
-Date:   Tue, 31 Mar 2020 10:57:41 +0200
-Message-Id: <20200331085429.420618706@linuxfoundation.org>
+Subject: [PATCH 5.5 043/170] bnxt_en: fix memory leaks in bnxt_dcbnl_ieee_getets()
+Date:   Tue, 31 Mar 2020 10:57:37 +0200
+Message-Id: <20200331085429.012819417@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,54 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Edwin Peer <edwin.peer@broadcom.com>
 
-[ Upstream commit ce1f352162828ba07470328828a32f47aa759020 ]
+[ Upstream commit 62d4073e86e62e316bea2c53e77db10418fd5dd7 ]
 
-Overview:
-We don't frequently change the msix vectors throughout the life cycle of
-the driver. We do so in two functions: ena_probe() and ena_restore().
-ena_probe() is only called when the driver is loaded. ena_restore() on the
-other hand is called during device reset / resume operations.
+The allocated ieee_ets structure goes out of scope without being freed,
+leaking memory. Appropriate result codes should be returned so that
+callers do not rely on invalid data passed by reference.
 
-We use num_io_queues for calculating and allocating the number of msix
-vectors. At ena_probe() this value is equal to max_num_io_queues and thus
-this is not an issue, however ena_restore() might be called after the
-number of io queues has changed.
+Also cache the ETS config retrieved from the device so that it doesn't
+need to be freed. The balance of the code was clearly written with the
+intent of having the results of querying the hardware cached in the
+device structure. The commensurate store was evidently missed though.
 
-A possible bug scenario is as follows:
-
-* Change number of queues from 8 to 4.
-  (num_io_queues = 4, max_num_io_queues = 8, msix_vecs = 9,)
-* Trigger reset occurs -> ena_restore is called.
-  (num_io_queues = 4, max_num_io_queues =8 , msix_vecs = 5)
-* Change number of queues from 4 to 6.
-  (num_io_queues = 6, max_num_io_queues = 8, msix_vecs = 5)
-* The driver will reset due to failure of check_for_rx_interrupt_queue()
-
-Fix:
-This can be easily fixed by always using max_num_io_queues to init the
-msix_vecs, since this number won't change as opposed to num_io_queues.
-
-Fixes: 4d19266022ec ("net: ena: multiple queue creation related cleanups")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Fixes: 7df4ae9fe855 ("bnxt_en: Implement DCBNL to support host-based DCBX.")
+Signed-off-by: Edwin Peer <edwin.peer@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -1346,7 +1346,7 @@ static int ena_enable_msix(struct ena_ad
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
+@@ -479,24 +479,26 @@ static int bnxt_dcbnl_ieee_getets(struct
+ {
+ 	struct bnxt *bp = netdev_priv(dev);
+ 	struct ieee_ets *my_ets = bp->ieee_ets;
++	int rc;
+ 
+ 	ets->ets_cap = bp->max_tc;
+ 
+ 	if (!my_ets) {
+-		int rc;
+-
+ 		if (bp->dcbx_cap & DCB_CAP_DCBX_HOST)
+ 			return 0;
+ 
+ 		my_ets = kzalloc(sizeof(*my_ets), GFP_KERNEL);
+ 		if (!my_ets)
+-			return 0;
++			return -ENOMEM;
+ 		rc = bnxt_hwrm_queue_cos2bw_qcfg(bp, my_ets);
+ 		if (rc)
+-			return 0;
++			goto error;
+ 		rc = bnxt_hwrm_queue_pri2cos_qcfg(bp, my_ets);
+ 		if (rc)
+-			return 0;
++			goto error;
++
++		/* cache result */
++		bp->ieee_ets = my_ets;
  	}
  
- 	/* Reserved the max msix vectors we might need */
--	msix_vecs = ENA_MAX_MSIX_VEC(adapter->num_io_queues);
-+	msix_vecs = ENA_MAX_MSIX_VEC(adapter->max_num_io_queues);
- 	netif_dbg(adapter, probe, adapter->netdev,
- 		  "trying to enable MSI-X, vectors %d\n", msix_vecs);
+ 	ets->cbs = my_ets->cbs;
+@@ -505,6 +507,9 @@ static int bnxt_dcbnl_ieee_getets(struct
+ 	memcpy(ets->tc_tsa, my_ets->tc_tsa, sizeof(ets->tc_tsa));
+ 	memcpy(ets->prio_tc, my_ets->prio_tc, sizeof(ets->prio_tc));
+ 	return 0;
++error:
++	kfree(my_ets);
++	return rc;
+ }
  
+ static int bnxt_dcbnl_ieee_setets(struct net_device *dev, struct ieee_ets *ets)
 
 
