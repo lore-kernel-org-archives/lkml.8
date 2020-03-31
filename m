@@ -2,96 +2,84 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEA6C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35DDC10F26
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1909F207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8931020B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ht5AFNuS"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="vDkn68gX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgCaI2K (ORCPT
+        id S1730185AbgCaI2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:28:10 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:33417 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729819AbgCaI2J (ORCPT
+        Tue, 31 Mar 2020 04:28:16 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:10921 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730106AbgCaI2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:28:09 -0400
-Received: by mail-pj1-f65.google.com with SMTP id jz1so814570pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 01:28:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vvuaHKk+HlpvQjDOfBcZlMXDUHafhx6H0xOVhNlX8Y8=;
-        b=ht5AFNuS5603oSD/oK4BFIR4Iy+szv9JbbLkUO4Hgtys8CjCnV8i2B+dqAayfRbP4e
-         N1QWHs5BZlEiqd7xn/+CJH2IGbjiJXBaBuZViJ1nacDb6+SGKwN2yqhE5DTmeNFlN91n
-         8p9Y/3QjvgIpCGGc3tTllvnrb9Wz0fJ3ZTJ2rqqQIF5erYT2PVeGlIwlIZItp5dW29fR
-         PtyfdMJ17JjgkBJoSWggJEuGq1r4N2B1Hy5F8yHFP9CHAWCFV5ZVB+/Tj0nBuPXrgy0G
-         XFeeEkK+YsTQE8SsA4Krv9gmL2E3Y688pJDnvCRDQUg0eRX66Cml59Yx40VsO6pkRyM6
-         ufww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vvuaHKk+HlpvQjDOfBcZlMXDUHafhx6H0xOVhNlX8Y8=;
-        b=rDyEh3cGUd6qI6prOI0XL5793Qzk3E2pN/YIDV8fJeTlapp7kkf2UQYUtPMBrh1Wfo
-         IU1ikfd3MEnPx+UFly7ror0YRNo0WRQ3m9lU9imOexvBWQ1q+YCKPOXP4+4KtwrsbaGF
-         7tPMr1FXvCDDXKDFzz2ZwzylbA/ANwppxeQlHi2egzxlLpAhO/9j9hI5XzHOqtNK5ie6
-         DibgbUaoFLgaErW4CkNZzdnARTvmjZ93eXUpYbC1hCe6BvcTdUqVJGdqbZaA/mPGyDYQ
-         o4pXNz4T6L81YvWvaIkq5B63QHtc9yZgQeD5B4QFSHZwl2O0aG1jmb9ZGL7HNYOzJkjG
-         4+bg==
-X-Gm-Message-State: AGi0Pua6j6H10lvTnh4GsX60lFMc3PRb5uOIfXfbO6ZPdQu4KxD9/ss5
-        ay2Nj8YMCd9hfocLA0GB4G0=
-X-Google-Smtp-Source: APiQypJuZqMrbnsNW0kwXp/mvKJzQNU9CO7+4pJ9P+iZCSECFrIhVV1gqRp9kWZMdp6CvBAblav/Yg==
-X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr2487666pjb.143.1585643288402;
-        Tue, 31 Mar 2020 01:28:08 -0700 (PDT)
-Received: from localhost.localdomain.info ([103.220.76.84])
-        by smtp.gmail.com with ESMTPSA id l62sm11095775pgd.82.2020.03.31.01.28.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Mar 2020 01:28:08 -0700 (PDT)
-From:   li haoran <lhr01130208@gmail.com>
-To:     mingo@redhat.com
-Cc:     pertez@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, Li Haoran <lhr01130208@gmail.com>
-Subject: [PATCH] sched/fair: Fix a comment typo
-Date:   Tue, 31 Mar 2020 04:28:02 -0400
-Message-Id: <1585643282-1521-1-git-send-email-lhr01130208@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 31 Mar 2020 04:28:14 -0400
+X-UUID: 19d6c108d34f40ab864139469fd91c52-20200331
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=5o+60Ykpu4QaOR8sM8BtdowpYIMKFLDI/axtPlIoxEU=;
+        b=vDkn68gXSEj0djHm+u5Qh7q/2wO0ACEIP4iBaScwqfEYARDgDuIPFivoNBJgKYhqfp9/m3puOeptMuc+RIi6RIXceTCr+ch6oTUQghha+E37vVe/WT89mEQRZglhypJvCBHRwqQrhSotHNwiqga5wYNwusao6b3XkwXDrmIjnO0=;
+X-UUID: 19d6c108d34f40ab864139469fd91c52-20200331
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 991516779; Tue, 31 Mar 2020 16:27:55 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 31 Mar
+ 2020 16:27:54 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Tue, 31 Mar 2020 16:27:52 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v4 0/4] Config mipi tx current and impedance
+Date:   Tue, 31 Mar 2020 16:27:21 +0800
+Message-ID: <20200331082725.81048-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 765C563F980AD3CE409FCDB0899B9382D2D47E9FF25AA5CE15BD52FF03A4E3272000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li Haoran <lhr01130208@gmail.com>
-
-Fix a comment typo in check_preempt_wakeup()
-
-Signed-off-by: Li Haoran <lhr01130208@gmail.com>
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d7fb20adabeb..7e9831831635 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6870,7 +6870,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
- 
- 	/*
- 	 * This is possible from callers such as attach_tasks(), in which we
--	 * unconditionally check_prempt_curr() after an enqueue (which may have
-+	 * unconditionally check_preempt_curr() after an enqueue (which may have
- 	 * lead to a throttle).  This both saves work and prevents false
- 	 * next-buddy nomination below.
- 	 */
--- 
-2.17.2 (Apple Git-113)
+Q2hhbmdlcyBzaW5jZSB2MzoNCiAtIHJlZmluZSBkcml2ZS1zdHJlbmd0aC1taWNyb2FtcCBhcyBm
+cm9tIDMwMDAgdG8gNjAwMC4NCg0KQ2hhbmdlcyBzaW5jZSB2MjoNCiAtIGZpeCB0aGUgdGl0bGUg
+b2YgY29tbWl0IG1lc3NhZ2UuDQogLSByZW5hbWUgbWlwaXR4LWN1cnJlbnQtZHJpdmUgdG8gZHJp
+dmUtc3RyZW5ndGgtbWljcm9hbXANCg0KQ2hhbmdlcyBzaW5jZSB2MToNCiAtIGZpeCBjb2Rpbmcg
+c3R5bGUuDQogLSBjaGFuZ2UgbXRrX21pcGlfdHhfY29uZmlnX2NhbGlicmF0aW9uX2RhdGEoKSB0
+byB2b2lkDQoNCkppdGFvIFNoaSAoNCk6DQogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBtZWRpYXRl
+azogYWRkIHByb3BlcnR5IHRvIGNvbnRyb2wgbWlwaSB0eCBkcml2ZQ0KICAgIGN1cnJlbnQNCiAg
+ZHQtYmluZGluZ3M6IGRpc3BsYXk6IG1lZGlhdGVrOiBnZXQgbWlwaXR4IGNhbGlicmF0aW9uIGRh
+dGEgZnJvbSBudm1lbQ0KICBkcm0vbWVkaWF0ZWs6IGFkZCB0aGUgbWlwaXR4IGRyaXZpbmcgY29u
+dHJvbA0KICBkcm0vbWVkaWF0ZWs6IGNvbmZpZyBtaXBpdHggaW1wZWRhbmNlIHdpdGggY2FsaWJy
+YXRpb24gZGF0YQ0KDQogLi4uL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dCAgICAg
+ICAgIHwgMTAgKysrDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMgICAg
+ICAgIHwgMTQgKysrKw0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5oICAg
+ICAgICB8ICAxICsNCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX210ODE4M19taXBpX3R4
+LmMgfCA2NCArKysrKysrKysrKysrKysrKysrDQogNCBmaWxlcyBjaGFuZ2VkLCA4OSBpbnNlcnRp
+b25zKCspDQoNCi0tIA0KMi4yMS4wDQo=
 
