@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C30C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49141C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBADA2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C284208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645720;
-	bh=Tj/iq0FRyUK/KJfzZTg+0+d4QNo001tjbb7+70vHkUY=;
+	s=default; t=1585645727;
+	bh=1V9krcCmZuB1V+rTsau6j1FmzkI174XQlHz6yYPQc34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eL9xvUC5RSfbrFQcFr6bkGceCi/f9fYu//Ccwk1c++GIElAgXRbDgYXvu+x4nkuZw
-	 fTRDQt4FOMr11SB/giG6OjIx45oJW/EM1KE9zW/T4+zry2ybXcfpG36G7p7eZBEdlU
-	 G5vpmlxCd4BDRUcHa9gN3PDGh2f8veuG050HdZ/U=
+	b=bLs7G0ttUWlFeI8OOoEFLEcOE77+ExJL8q6awmLuRqeGpmbvs97K0S6jW8F1wiNcG
+	 Y/3lsMl4/sBeYCjfQWzkd2bwQQfBzgLAr0cW4nOhdomzXBWGh7/6W1I+BoO3MKymUf
+	 sf9vOT6wrMA9HLPmfO9kNTMMrwMc4+vEBriM0h0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbgCaJIj (ORCPT
+        id S1731198AbgCaJIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:08:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51120 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730570AbgCaJIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:08:35 -0400
+        id S1730793AbgCaJIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B726F2072E;
-        Tue, 31 Mar 2020 09:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9E2620787;
+        Tue, 31 Mar 2020 09:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645714;
-        bh=Tj/iq0FRyUK/KJfzZTg+0+d4QNo001tjbb7+70vHkUY=;
+        s=default; t=1585645722;
+        bh=1V9krcCmZuB1V+rTsau6j1FmzkI174XQlHz6yYPQc34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PsYS3PkFWv94gHxV+WZM2er/Dau1subeq7z3JvE54vSQ5ync4DsDzbaFmZygTMCDm
-         XGf//FPjQB77Ku4ImrMEcIW3x1OPxdHNrJQJ3DwNPITtNHExT8Cx/CCDnnPfKS7eS6
-         /PhB2xmcUMLfOLFpx38or0Zkrzc17WgvWzQOoLzc=
+        b=WivyVJA8Qi19knp4hHi2iwJgP+C0YVcrTxcQfXcjlM5yTTiUARYpPBgKPAPDA793J
+         kdp9GNfvz7iING/FaHalqGJXf2uPlmpKP/Qox63Tzyar/VbpZCPWFlPY4ZcUJDWYTx
+         4+YxnxJbKS12U3UjfPouioiQD1LSZJp+QmxGBnhA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
-        Luke Nelson <luke.r.nels@gmail.com>,
+        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.5 140/170] bpf, x32: Fix bug with JMP32 JSET BPF_X checking upper bits
-Date:   Tue, 31 Mar 2020 10:59:14 +0200
-Message-Id: <20200331085438.307159701@linuxfoundation.org>
+Subject: [PATCH 5.5 143/170] bpf, sockmap: Remove bucket->lock from sock_{hash|map}_free
+Date:   Tue, 31 Mar 2020 10:59:17 +0200
+Message-Id: <20200331085438.574570462@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,85 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luke Nelson <lukenels@cs.washington.edu>
+From: John Fastabend <john.fastabend@gmail.com>
 
-commit 80f1f85036355e5581ec0b99913410345ad3491b upstream.
+commit 90db6d772f749e38171d04619a5e3cd8804a6d02 upstream.
 
-The current x32 BPF JIT is incorrect for JMP32 JSET BPF_X when the upper
-32 bits of operand registers are non-zero in certain situations.
+The bucket->lock is not needed in the sock_hash_free and sock_map_free
+calls, in fact it is causing a splat due to being inside rcu block.
 
-The problem is in the following code:
+| BUG: sleeping function called from invalid context at net/core/sock.c:2935
+| in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 62, name: kworker/0:1
+| 3 locks held by kworker/0:1/62:
+|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
+|  #2: ffff8881381f6df8 (&stab->lock){+...}, at: sock_map_free+0x26/0x180
+| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04008-g7b083332376e #454
+| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
+| Workqueue: events bpf_map_free_deferred
+| Call Trace:
+|  dump_stack+0x71/0xa0
+|  ___might_sleep.cold+0xa6/0xb6
+|  lock_sock_nested+0x28/0x90
+|  sock_map_free+0x5f/0x180
+|  bpf_map_free_deferred+0x58/0x80
+|  process_one_work+0x260/0x5e0
+|  worker_thread+0x4d/0x3e0
+|  kthread+0x108/0x140
+|  ? process_one_work+0x5e0/0x5e0
+|  ? kthread_park+0x90/0x90
+|  ret_from_fork+0x3a/0x50
 
-  case BPF_JMP | BPF_JSET | BPF_X:
-  case BPF_JMP32 | BPF_JSET | BPF_X:
-  ...
+The reason we have stab->lock and bucket->locks in sockmap code is to
+handle checking EEXIST in update/delete cases. We need to be careful during
+an update operation that we check for EEXIST and we need to ensure that the
+psock object is not in some partial state of removal/insertion while we do
+this. So both map_update_common and sock_map_delete need to guard from being
+run together potentially deleting an entry we are checking, etc. But by the
+time we get to the tear-down code in sock_{ma[|hash}_free we have already
+disconnected the map and we just did synchronize_rcu() in the line above so
+no updates/deletes should be in flight. Because of this we can drop the
+bucket locks from the map free'ing code, noting no update/deletes can be
+in-flight.
 
-  /* and dreg_lo,sreg_lo */
-  EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
-  /* and dreg_hi,sreg_hi */
-  EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
-  /* or dreg_lo,dreg_hi */
-  EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
-
-This code checks the upper bits of the operand registers regardless if
-the BPF instruction is BPF_JMP32 or BPF_JMP64. Registers dreg_hi and
-dreg_lo are not loaded from the stack for BPF_JMP32, however, they can
-still be polluted with values from previous instructions.
-
-The following BPF program demonstrates the bug. The jset64 instruction
-loads the temporary registers and performs the jump, since ((u64)r7 &
-(u64)r8) is non-zero. The jset32 should _not_ be taken, as the lower
-32 bits are all zero, however, the current JIT will take the branch due
-the pollution of temporary registers from the earlier jset64.
-
-  mov64    r0, 0
-  ld64     r7, 0x8000000000000000
-  ld64     r8, 0x8000000000000000
-  jset64   r7, r8, 1
-  exit
-  jset32   r7, r8, 1
-  mov64    r0, 2
-  exit
-
-The expected return value of this program is 2; under the buggy x32 JIT
-it returns 0. The fix is to skip using the upper 32 bits for jset32 and
-compare the upper 32 bits for jset64 only.
-
-All tests in test_bpf.ko and selftests/bpf/test_verifier continue to
-pass with this change.
-
-We found this bug using our automated verification tool, Serval.
-
-Fixes: 69f827eb6e14 ("x32: bpf: implement jitting of JMP32")
-Co-developed-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Xi Wang <xi.wang@gmail.com>
-Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Reported-by: Jakub Sitnicki <jakub@cloudflare.com>
+Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200305234416.31597-1-luke.r.nels@gmail.com
+Link: https://lore.kernel.org/bpf/158385850787.30597.8346421465837046618.stgit@john-Precision-5820-Tower
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/net/bpf_jit_comp32.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ net/core/sock_map.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/arch/x86/net/bpf_jit_comp32.c
-+++ b/arch/x86/net/bpf_jit_comp32.c
-@@ -2039,10 +2039,12 @@ static int do_jit(struct bpf_prog *bpf_p
- 			}
- 			/* and dreg_lo,sreg_lo */
- 			EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
--			/* and dreg_hi,sreg_hi */
--			EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
--			/* or dreg_lo,dreg_hi */
--			EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
-+			if (is_jmp64) {
-+				/* and dreg_hi,sreg_hi */
-+				EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
-+				/* or dreg_lo,dreg_hi */
-+				EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
-+			}
- 			goto emit_cond_jmp;
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -233,8 +233,11 @@ static void sock_map_free(struct bpf_map
+ 	struct bpf_stab *stab = container_of(map, struct bpf_stab, map);
+ 	int i;
+ 
++	/* After the sync no updates or deletes will be in-flight so it
++	 * is safe to walk map and remove entries without risking a race
++	 * in EEXIST update case.
++	 */
+ 	synchronize_rcu();
+-	raw_spin_lock_bh(&stab->lock);
+ 	for (i = 0; i < stab->map.max_entries; i++) {
+ 		struct sock **psk = &stab->sks[i];
+ 		struct sock *sk;
+@@ -248,7 +251,6 @@ static void sock_map_free(struct bpf_map
+ 			release_sock(sk);
  		}
- 		case BPF_JMP | BPF_JSET | BPF_K:
+ 	}
+-	raw_spin_unlock_bh(&stab->lock);
+ 
+ 	/* wait for psock readers accessing its map link */
+ 	synchronize_rcu();
+@@ -863,10 +865,13 @@ static void sock_hash_free(struct bpf_ma
+ 	struct hlist_node *node;
+ 	int i;
+ 
++	/* After the sync no updates or deletes will be in-flight so it
++	 * is safe to walk map and remove entries without risking a race
++	 * in EEXIST update case.
++	 */
+ 	synchronize_rcu();
+ 	for (i = 0; i < htab->buckets_num; i++) {
+ 		bucket = sock_hash_select_bucket(htab, i);
+-		raw_spin_lock_bh(&bucket->lock);
+ 		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
+ 			hlist_del_rcu(&elem->node);
+ 			lock_sock(elem->sk);
+@@ -875,7 +880,6 @@ static void sock_hash_free(struct bpf_ma
+ 			rcu_read_unlock();
+ 			release_sock(elem->sk);
+ 		}
+-		raw_spin_unlock_bh(&bucket->lock);
+ 	}
+ 
+ 	/* wait for psock readers accessing its map link */
 
 
