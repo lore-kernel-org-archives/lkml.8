@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EFDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABE7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA47320787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB58320675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645757;
-	bh=Ne9+LlSQFMWHN1DGAzP8M7ivWUlamrWM9ZR/Ae2AiRA=;
+	s=default; t=1585645763;
+	bh=QQ8uxzE0m3Qe632C1J+UGb4+Do/hmYs1d9rsBwK0nvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qko5gf4hS+C8IXJ2E2dCoGbfpDtgRDBSSZK2uekp2GBQ2VEVyfnRx+mw71/iUJbZb
-	 8eAzOuQswx584jtyNzsaJ797WljruXm+/Zzkfpqt50xQ4xtn9heqgGPCnl4l+09gUM
-	 jZGUjOl6qpvut5lhuDOFdGWbjFXwME8yqbHf7dJg=
+	b=mdEukYKucoOg4b8RYjOIZd460K1z/9zEaeAovJ393Qi8o1kDB4UYnSFlEASRvLLhh
+	 Z3sNLVOailq/2EsJtWX/rnFpcGVsTd46b0FEl7uW04niZsZgHSMjjLnp3lUAKcDtAl
+	 bHG1K8ENaYp4Ctp6pHGSjcR8nhcVI3uS0CQlWBuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbgCaJJP (ORCPT
+        id S1731453AbgCaJJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731202AbgCaJJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:09:12 -0400
+        id S1730948AbgCaJJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:09:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 601AF20675;
-        Tue, 31 Mar 2020 09:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 058BA214D8;
+        Tue, 31 Mar 2020 09:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645751;
-        bh=Ne9+LlSQFMWHN1DGAzP8M7ivWUlamrWM9ZR/Ae2AiRA=;
+        s=default; t=1585645759;
+        bh=QQ8uxzE0m3Qe632C1J+UGb4+Do/hmYs1d9rsBwK0nvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZl/TOb0Ohz9+cv7C7LtfXVOZV8lr1z0PMoJuKiJP6/DyKDyIwXP7RUu2pxXZ8L0q
-         4SV6hhkTBUPb4YMMfbmg2mvy/45dUFq04/BAiNn2BPjRQdSgVLjTmlfB0Vvw3Ie80t
-         u6UAoc2nV58O+N/UlWnfUyg4WHdWHalgcV8C2THg=
+        b=Jcex5ILPUNbNJYsZIcNZoFz/k0uw2Zln/ieQ8ZgrbOTR7JRLGja3QYt528Ku3Ycrj
+         VtY4S4zPHRxyEuoYZEYcjy0hsdZ0bFzGqSn8C+LlRhys+QFx6CIugfG1TBkN8CcoWL
+         rKszGxwQl0F6b1ij8k9JIMMUz0xh5/TxVtIUC/lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Mallet <anthony.mallet@laas.fr>,
-        Oliver Neukum <oneukum@suse.com>,
-        Matthias Reichl <hias@horus.com>
-Subject: [PATCH 5.5 152/170] USB: cdc-acm: restore capability check order
-Date:   Tue, 31 Mar 2020 10:59:26 +0200
-Message-Id: <20200331085439.279687524@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.5 115/170] gpiolib: acpi: Correct comment for HP x2 10 honor_wakeup quirk
+Date:   Tue, 31 Mar 2020 10:58:49 +0200
+Message-Id: <20200331085436.389224130@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,56 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 62d65bdd9d05158aa2547f8ef72375535f3bc6e3 upstream.
+commit efaa87fa0947d525cf7c075316adde4e3ac7720b upstream.
 
-commit b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
-introduced a regression by changing the order of capability and close
-settings change checks. When running with CAP_SYS_ADMIN setting the
-close settings to the values already set resulted in -EOPNOTSUPP.
+Commit aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option +
+quirk mechanism") added a quirk for some models of the HP x2 10 series.
 
-Fix this by changing the check order back to how it was before.
+There are 2 issues with the comment describing the quirk:
+1) The comment claims the DMI quirk applies to all Cherry Trail based HP x2
+   10 models. In the mean time I have learned that there are at least 3
+   models of the HP x2 10 models:
 
-Fixes: b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
-Cc: Anthony Mallet <anthony.mallet@laas.fr>
-Cc: stable <stable@vger.kernel.org>
-Cc: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Link: https://lore.kernel.org/r/20200327150350.3657-1-hias@horus.com
+   Bay Trail SoC + AXP288 PMIC
+   Cherry Trail SoC + AXP288 PMIC
+   Cherry Trail SoC + TI PMIC
+
+   And this quirk's DMI matches only match the Cherry Trail SoC + TI PMIC
+   SoC, which is good because we want a slightly different quirk for the
+   others. This commit updates the comment to make it clear that the quirk
+   is only for the Cherry Trail SoC + TI PMIC models.
+
+2) The comment says that it is ok to disable wakeup on all ACPI GPIO event
+   handlers, because there is only the one for the embedded-controller
+   events. This is not true, there also is a handler for the special
+   INT0002 device which is related to USB wakeups. We need to also disable
+   wakeups on that one because the device turns of the USB-keyboard built
+   into the dock when closing the lid. The XHCI controller takes a while
+   to notice this, so it only notices it when already suspended, causing
+   a spurious wakeup because of this. So disabling wakeup on all handlers
+   is the right thing to do, but not because there only is the one handler
+   for the EC events. This commit updates the comment to correctly reflect
+   this.
+
+Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200302111225.6641-1-hdegoede@redhat.com
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/cdc-acm.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/gpio/gpiolib-acpi.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -923,16 +923,16 @@ static int set_serial_info(struct tty_st
- 
- 	mutex_lock(&acm->port.mutex);
- 
--	if ((ss->close_delay != old_close_delay) ||
--            (ss->closing_wait != old_closing_wait)) {
--		if (!capable(CAP_SYS_ADMIN))
-+	if (!capable(CAP_SYS_ADMIN)) {
-+		if ((ss->close_delay != old_close_delay) ||
-+		    (ss->closing_wait != old_closing_wait))
- 			retval = -EPERM;
--		else {
--			acm->port.close_delay  = close_delay;
--			acm->port.closing_wait = closing_wait;
--		}
--	} else
--		retval = -EOPNOTSUPP;
-+		else
-+			retval = -EOPNOTSUPP;
-+	} else {
-+		acm->port.close_delay  = close_delay;
-+		acm->port.closing_wait = closing_wait;
-+	}
- 
- 	mutex_unlock(&acm->port.mutex);
- 	return retval;
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -1345,12 +1345,14 @@ static const struct dmi_system_id gpioli
+ 	},
+ 	{
+ 		/*
+-		 * Various HP X2 10 Cherry Trail models use an external
+-		 * embedded-controller connected via I2C + an ACPI GPIO
+-		 * event handler. The embedded controller generates various
+-		 * spurious wakeup events when suspended. So disable wakeup
+-		 * for its handler (it uses the only ACPI GPIO event handler).
+-		 * This breaks wakeup when opening the lid, the user needs
++		 * HP X2 10 models with Cherry Trail SoC + TI PMIC use an
++		 * external embedded-controller connected via I2C + an ACPI GPIO
++		 * event handler on INT33FF:01 pin 0, causing spurious wakeups.
++		 * When suspending by closing the LID, the power to the USB
++		 * keyboard is turned off, causing INT0002 ACPI events to
++		 * trigger once the XHCI controller notices the keyboard is
++		 * gone. So INT0002 events cause spurious wakeups too. Ignoring
++		 * EC wakes breaks wakeup when opening the lid, the user needs
+ 		 * to press the power-button to wakeup the system. The
+ 		 * alternative is suspend simply not working, which is worse.
+ 		 */
 
 
