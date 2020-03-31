@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABB4C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8F5C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B6620772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B664F208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646036;
-	bh=DgDqi8cEBElxJzK0lL7sf2xDwK9UfCXAY8lCEVZWOWI=;
+	s=default; t=1585646039;
+	bh=CDK92CjtltPfetDZtqbXhiCGOui1J5dMDllimrK+Xuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RacR6wnBmsJbrwpsVlaVNgskpqhccGJtLVkXc6PfmNB80+HAQwbMYq2A501HDKMtf
-	 UypRgnzdes1es/qbPEEwxIG+5r3mdmN4pgixtctMab2JswsdJM/MAj+sJ7MCsCxgly
-	 +UJGfQ+/Dd5QiEP2laJrqbmJXz2LcxAc4EjYXm/o=
+	b=2RPd8yynG6ZEMi7bJR3g4pizNmr/0Q3G59AMvGeDcC69lnHqNF+lEZ2W7BisTz8dQ
+	 dCrjIlfylrP/gGoHBWZg43Kf4UXu35jVs02RGDg9it3UVxo/j64aHyelRFuN/pYwvu
+	 3stkHx4pJItgijOnb0iImWuSqN/TL+xRCLKkE0n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbgCaJNz (ORCPT
+        id S1731778AbgCaJN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33466 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731737AbgCaJNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:52 -0400
+        id S1726299AbgCaJN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DEA820772;
-        Tue, 31 Mar 2020 09:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2ED12072E;
+        Tue, 31 Mar 2020 09:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646032;
-        bh=DgDqi8cEBElxJzK0lL7sf2xDwK9UfCXAY8lCEVZWOWI=;
+        s=default; t=1585646036;
+        bh=CDK92CjtltPfetDZtqbXhiCGOui1J5dMDllimrK+Xuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6PoSbW5Dtlt1WcSlVAJUSJTixYp/5DQjheQJ6lPbeeCtdnyz6u5IuOSAO+IHDT+o
-         urOYoaenXeBL6QiP04c+5Bvqc+0RZpCCuBLi7WMk1FysvOA0WJ+vY+5N6/WXWUqIMG
-         tuMaIlgBxFcNQozjUpgIjM010ElIrmoyMqgN3vdY=
+        b=Vd6eAGTGIuozNdjQqmfgeXI/gVZFIEM4111pO9wr7oTXOvfV4I9iDjwH+ga3A5P8h
+         6O9cKs8OG1a/dMWCNPHulLUzfgLQ3ydAX+orF6kIZYFBpwziYJAhmub7hvdj7C9qjE
+         d/h7BfKZy1KRrxcJUm8TgzT1mqjmBIaZA++i7fvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        stable@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
         Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 024/155] net: phy: mdio-bcm-unimac: Fix clock handling
-Date:   Tue, 31 Mar 2020 10:57:44 +0200
-Message-Id: <20200331085421.099034328@linuxfoundation.org>
+Subject: [PATCH 5.4 025/155] net: phy: mdio-mux-bcm-iproc: check clk_prepare_enable() return value
+Date:   Tue, 31 Mar 2020 10:57:45 +0200
+Message-Id: <20200331085421.203011207@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,41 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit c312c7818b86b663d32ec5d4b512abf06b23899a ]
+[ Upstream commit 872307abbd0d9afd72171929806c2fa33dc34179 ]
 
-The DT binding for this PHY describes an *optional* clock property.
-Due to a bug in the error handling logic, we are actually ignoring this
-clock *all* of the time so far.
+Check clk_prepare_enable() return value.
 
-Fix this by using devm_clk_get_optional() to handle this clock properly.
-
-Fixes: b78ac6ecd1b6b ("net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Fixes: 2c7230446bc9 ("net: phy: Add pm support to Broadcom iProc mdio mux driver")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/mdio-bcm-unimac.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/phy/mdio-mux-bcm-iproc.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -242,11 +242,9 @@ static int unimac_mdio_probe(struct plat
- 		return -ENOMEM;
- 	}
+--- a/drivers/net/phy/mdio-mux-bcm-iproc.c
++++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
+@@ -288,8 +288,13 @@ static int mdio_mux_iproc_suspend(struct
+ static int mdio_mux_iproc_resume(struct device *dev)
+ {
+ 	struct iproc_mdiomux_desc *md = dev_get_drvdata(dev);
++	int rc;
  
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
-+	priv->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
--	else
--		priv->clk = NULL;
+-	clk_prepare_enable(md->core_clk);
++	rc = clk_prepare_enable(md->core_clk);
++	if (rc) {
++		dev_err(md->dev, "failed to enable core clk\n");
++		return rc;
++	}
+ 	mdio_mux_iproc_config(md);
  
- 	ret = clk_prepare_enable(priv->clk);
- 	if (ret)
+ 	return 0;
 
 
