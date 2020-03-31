@@ -2,86 +2,172 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CB8C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E95C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C276F20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585691392;
-	bh=8n+Kh8XT0EZrnbYjJxYejv0op0bqH3mHIBCHS4nu/c0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WaEGHa1pJr9x9QByc1t4te4efDe6jdLRTaEBoh6odGmS+qVTkWaqMOB8+oZ5Ig/dr
-	 6qO0xFZIz2G86MK1gQJU+pmkyHfyVE6DvLdTPn+5tb+t77cn4F5lQqGcJjLlKko4mp
-	 yr1Qp/9geUsA2Awvk3HXKaUKUzBaA0LW4tzagVjY=
+	by mail.kernel.org (Postfix) with ESMTP id 5B3CE20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731583AbgCaVtv (ORCPT
+        id S1731624AbgCaVt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:49:51 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36634 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731565AbgCaVtv (ORCPT
+        Tue, 31 Mar 2020 17:49:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731598AbgCaVt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:49:51 -0400
-Received: by mail-il1-f193.google.com with SMTP id p13so20986757ilp.3;
-        Tue, 31 Mar 2020 14:49:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XGaSzuYBrzwb5Afzco535xjNeNm7VCR01D0e+KSHlBU=;
-        b=gTneFJeCBSFloAJlZJlDtxRj3bW2AXRuMrV3hivTuEN9jFL7o6GuUnif9YkRGLcnCr
-         MFg8p3WXk4SPgjTDrjS0fbF75kqSieyGZxiydG+qbAJjqrvCFdQXMSI/f5URBcin3WZh
-         EzewSDfAU9ucpnjdvdELKuRocahNElwIFzWJSNSmrSQzXDwnWAjqySx29PSRk/rERJiD
-         Wti2YWUpbZwma02otcv2FI1GeB4Ryll0zJNs6vDyirwfe4XVj/RQRi5ezxg+wCvCXdQl
-         LsZAiLFvocwd8bsf86/icukiromC00VI6UKUNOH7qKstS0bfcs7J6M0P2agxgPCjeWEs
-         5HSg==
-X-Gm-Message-State: ANhLgQ0jmoIIjVVI/FZvGrELP4/31RZsP70ltRzXW+0XjB4lZrZ6w4ag
-        Zm0GTpUg5w3wUnZp7eEhVMTNZoarkw==
-X-Google-Smtp-Source: ADFU+vtLiLqlrFPVsFsHqZpYWIdxcsfYWlyNB3SkdVLs9VJv60/GvpmZRG/1ep91VBksmL/cQASE2g==
-X-Received: by 2002:a92:d582:: with SMTP id a2mr16558293iln.37.1585691389269;
-        Tue, 31 Mar 2020 14:49:49 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l25sm34133ild.61.2020.03.31.14.49.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 14:49:48 -0700 (PDT)
-Received: (nullmailer pid 486 invoked by uid 1000);
-        Tue, 31 Mar 2020 21:49:47 -0000
-Date:   Tue, 31 Mar 2020 15:49:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     alexandru.tachici@analog.com
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, linux@roeck-us.net,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: hwmon: Add bindings for ADM1266
-Message-ID: <20200331214947.GA446@bogus>
-References: <20200325130605.2420-1-alexandru.tachici@analog.com>
- <20200325130605.2420-3-alexandru.tachici@analog.com>
+        Tue, 31 Mar 2020 17:49:56 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VLWq3M131931;
+        Tue, 31 Mar 2020 17:49:54 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3022qykyn0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 17:49:54 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02VLj9ci008838;
+        Tue, 31 Mar 2020 21:49:53 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03wdc.us.ibm.com with ESMTP id 301x76m4tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 21:49:53 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VLnqJU56230190
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 21:49:52 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8658E6A057;
+        Tue, 31 Mar 2020 21:49:52 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EEF226A054;
+        Tue, 31 Mar 2020 21:49:50 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 21:49:50 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     linux-integrity@vger.kernel.org, jarkko.sakkinen@linux.intel.com,
+        linux-acpi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v3] acpi: Extend TPM2 ACPI table with missing log fields
+Date:   Tue, 31 Mar 2020 17:49:49 -0400
+Message-Id: <20200331214949.883781-1-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325130605.2420-3-alexandru.tachici@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ suspectscore=0 adultscore=0 clxscore=1015 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 15:06:05 +0200, <alexandru.tachici@analog.com> wrote:
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
-> 
-> Add bindings for the Analog Devices ADM1266 sequencer.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/hwmon/adi,adm1266.yaml           | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> 
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Recent extensions of the TPM2 ACPI table added 3 more fields
+including 12 bytes of start method specific parameters and Log Area
+Minimum Length (u32) and Log Area Start Address (u64). So, we extend
+the existing structure with these fields to allow non-UEFI systems
+to access the TPM2's log.
+
+The specification that has the new fields is the following:
+  TCG ACPI Specification
+  Family "1.2" and "2.0"
+  Version 1.2, Revision 8
+
+Adapt all existing table size calculations to use
+offsetof(struct acpi_table_tpm2, start_method_specific)
+[where start_method_specific is a newly added field]
+rather than sizeof(struct acpi_table_tpm2) so that the addition
+of the new fields does not affect current systems that may not
+have them.
+
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Cc: linux-acpi@vger.kernel.org
+---
+ drivers/char/tpm/tpm_crb.c | 13 ++++++++++---
+ drivers/char/tpm/tpm_tis.c |  4 +++-
+ include/acpi/actbl3.h      |  5 +++--
+ 3 files changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index a9dcf31eadd2..0565aa5482f9 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -669,7 +669,9 @@ static int crb_acpi_add(struct acpi_device *device)
+ 
+ 	status = acpi_get_table(ACPI_SIG_TPM2, 1,
+ 				(struct acpi_table_header **) &buf);
+-	if (ACPI_FAILURE(status) || buf->header.length < sizeof(*buf)) {
++	if (ACPI_FAILURE(status) || buf->header.length <
++			offsetof(struct acpi_table_tpm2,
++				 start_method_specific)) {
+ 		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
+ 		return -EINVAL;
+ 	}
+@@ -684,14 +686,19 @@ static int crb_acpi_add(struct acpi_device *device)
+ 		return -ENOMEM;
+ 
+ 	if (sm == ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC) {
+-		if (buf->header.length < (sizeof(*buf) + sizeof(*crb_smc))) {
++		if (buf->header.length <
++			(offsetof(struct acpi_table_tpm2,
++				  start_method_specific) +
++			 sizeof(*crb_smc))) {
+ 			dev_err(dev,
+ 				FW_BUG "TPM2 ACPI table has wrong size %u for start method type %d\n",
+ 				buf->header.length,
+ 				ACPI_TPM2_COMMAND_BUFFER_WITH_ARM_SMC);
+ 			return -EINVAL;
+ 		}
+-		crb_smc = ACPI_ADD_PTR(struct tpm2_crb_smc, buf, sizeof(*buf));
++		crb_smc = ACPI_ADD_PTR(struct tpm2_crb_smc, buf,
++			   offsetof(struct acpi_table_tpm2,
++				    start_method_specific));
+ 		priv->smc_func_id = crb_smc->smc_func_id;
+ 	}
+ 
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index e7df342a317d..a80f36860bac 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -111,7 +111,9 @@ static int check_acpi_tpm2(struct device *dev)
+ 	 */
+ 	st =
+ 	    acpi_get_table(ACPI_SIG_TPM2, 1, (struct acpi_table_header **)&tbl);
+-	if (ACPI_FAILURE(st) || tbl->header.length < sizeof(*tbl)) {
++	if (ACPI_FAILURE(st) || tbl->header.length <
++			offsetof(struct acpi_table_tpm2,
++				 start_method_specific)) {
+ 		dev_err(dev, FW_BUG "failed to get TPM2 ACPI table\n");
+ 		return -EINVAL;
+ 	}
+diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
+index 2bf3baf819bb..b6118c67af0c 100644
+--- a/include/acpi/actbl3.h
++++ b/include/acpi/actbl3.h
+@@ -411,8 +411,9 @@ struct acpi_table_tpm2 {
+ 	u16 reserved;
+ 	u64 control_address;
+ 	u32 start_method;
+-
+-	/* Platform-specific data follows */
++	u8  start_method_specific[12];
++	u32 log_area_minimum_length;		/* optional */
++	u64 log_area_start_address;		/* optional */
+ };
+ 
+ /* Values for start_method above */
+-- 
+2.14.5
+
