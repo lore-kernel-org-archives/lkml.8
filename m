@@ -2,105 +2,156 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBBFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F95C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE0B2078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CCB2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9eW+kYr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJB3JmEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730887AbgCaOuO (ORCPT
+        id S1730657AbgCaOv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:50:14 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40009 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730528AbgCaOuO (ORCPT
+        Tue, 31 Mar 2020 10:51:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49458 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730149AbgCaOv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:50:14 -0400
-Received: by mail-wr1-f65.google.com with SMTP id u10so26345160wro.7
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 07:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=LThkFwSkZqTw2d4yYtrBRfrpjqvh2S44Ii+brKsEaNw=;
-        b=j9eW+kYrODFdfrvu7dy3d7qBefcQklepGBvj9jeR8ukot9h5lwypuGf5uufqC6HRgI
-         kOxYY0Gl1d+rsvs3jI2joeQ/K9fw0zLrpKP2ZfW17KXY4+WUk/JSZ8KAUVAnIoYijiSG
-         72xe3HjDiRAGweyGBeu0koQ6R6h53GPsoakP+UZ63E0oG2b3gbice2QixK1CP37bWFvF
-         nFymoKBWxsY3etNsmAtN0CcDfZOj9AnypWpwdsYX9DdcJZicqd8a+AG3qJ4Xlh7CtbZV
-         wpoAEOJD53gMflO5aGS6pi7iX1qHirLV9b3hK64AZ+M80o5vpoCHeuC7oIDhoy097U7j
-         YpTw==
+        Tue, 31 Mar 2020 10:51:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585666317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BDECw4Jp5diyRW+zp7XYY468nsqeU3iwo9Wu7xQsHVE=;
+        b=NJB3JmEr+1RjW41SBCtJFHsiSGW8hNslv6Y2vJGOfDGCtKGbfggm+BkvUndgDqbYJD47tQ
+        rntAFyzAiZ8tti6eifzqDJ6a6+CkH4HX4TSarz2y9lrP38hrsGcrM2obXKlV5s1JGtqFar
+        hewcHu2Th1/53YDe0VOxIaWfYaFOXD0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-SO6u2TKEOsqynqWq63w3nQ-1; Tue, 31 Mar 2020 10:51:56 -0400
+X-MC-Unique: SO6u2TKEOsqynqWq63w3nQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 2so1174914wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 07:51:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=LThkFwSkZqTw2d4yYtrBRfrpjqvh2S44Ii+brKsEaNw=;
-        b=mykSTOPSQkzzhEoxKWr9vscXt+fDl6f5C1UND2hLsVGojIMTCqmIbTZmAUTcM4jste
-         PNLXiETeU1POrTzGKNZd56mxysB9tVry/GhdNg0vqFVPQPPWolJ9jeRxQ2guY+6vYXWr
-         Xb5BTZ03sNWNlx2Rfh1rZHramN9zzIOOLBpBjneM7bJ3pDQMnEfYc9yCmAegb/DrLqVo
-         gc8CTwVcy4IZOlF6ERXQEkHN1+dU3DbvfCh1GqQmMXw1cmzwkyHQ5vU8obv9zi+OPhsk
-         sDzwF9AheSkekZchCElwhiQh4YWCKGmNB9rNevcpyjbkMVjw0MdRX0J/yX05HrpgvNpC
-         7MWg==
-X-Gm-Message-State: ANhLgQ1CCpcqlyWXrpmNj6Rw497mTcoLjmxX3HOaYm5qjoDzYAmopjoi
-        dRpoLcm+QBOuSyeaIzuHz/c=
-X-Google-Smtp-Source: ADFU+vsr3d8+VMK/1DccKZdQKSpk3+U3Tn2Yv0QuaeVmGVHxKuIWc8675z3Jx+k42MOjeg8U4DKKKQ==
-X-Received: by 2002:adf:ecc3:: with SMTP id s3mr20158772wro.32.1585666212208;
-        Tue, 31 Mar 2020 07:50:12 -0700 (PDT)
-Received: from [192.168.10.4] ([185.199.97.5])
-        by smtp.gmail.com with ESMTPSA id d6sm26595939wrw.10.2020.03.31.07.50.11
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BDECw4Jp5diyRW+zp7XYY468nsqeU3iwo9Wu7xQsHVE=;
+        b=QhZF1ecTSyzC9s16G/I16GEYmOGfIYqa711rHfW1RH5T8jdFlc3NuEVdRQ/i5l87WW
+         mJtYmzb8t92+lTv8d6cnWFGF8FONZWv3f6HwUgVZn2D88v0n9Q0JX78O5pvgY0z1km0D
+         WJ/J8s1LRnLSB5csGNBNNkFhhTCIVi0nbHdqnPPBSlQ8xY5Q7xLq8Lmjv0bupUAucOrY
+         XOvSZ2437R2XBlPMMNIb7eVSpqRZ9PVlGFfx7gZUhR67zQo9gekjik/vHA+aHGwtwpBA
+         shQNeWN3er7PK+3zbI4h20vusHDjJkqwTGfnuPHh/ymJuszV8ARute89Rn0d1GAB2nyj
+         8b2g==
+X-Gm-Message-State: ANhLgQ0ZwoppMU5IGGlm5fTeEEtbE9OyzX78aDXQfQfy8lvpOpvnVf58
+        LfAmGT1jVLxvWv6XMoMKvLftiILoxX7oj9BXD15v1EdZ8Zv52fPqNa6ARGGI2cw2T+eYh/Vw4hs
+        vPV9XRqMuTjSsjmIYQ4nRAeSc
+X-Received: by 2002:adf:de01:: with SMTP id b1mr19917334wrm.376.1585666315008;
+        Tue, 31 Mar 2020 07:51:55 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vupXM5pQZMzUDS/XKpSKnf+xfUggsYlgWDrPztm8ckKXsUeZM/TnUcNGpHowo5uD4xx1p4Ydw==
+X-Received: by 2002:adf:de01:: with SMTP id b1mr19917312wrm.376.1585666314721;
+        Tue, 31 Mar 2020 07:51:54 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b55d:5ed2:8a41:41ea? ([2001:b07:6468:f312:b55d:5ed2:8a41:41ea])
+        by smtp.gmail.com with ESMTPSA id a13sm19618574wrt.64.2020.03.31.07.51.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 07:50:11 -0700 (PDT)
-Subject: Re: [Xen-devel] [PATCH] drm/xen: fix passing zero to 'PTR_ERR'
- warning
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        oleksandr_andrushchenko@epam.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <1585562347-30214-1-git-send-email-dingxiang@cmss.chinamobile.com>
-From:   Oleksandr Andrushchenko <andr2000@gmail.com>
-Message-ID: <b4d43b05-8b30-749c-0b60-87b4cdd7b1dd@gmail.com>
-Date:   Tue, 31 Mar 2020 17:50:10 +0300
+        Tue, 31 Mar 2020 07:51:54 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: Fix BUILD_BUG() in __cpuid_entry_get_reg() w/
+ CONFIG_UBSAN=y
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+References: <20200325191259.23559-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d2f9a3a5-5ade-c810-4c61-cf8e9c92c93d@redhat.com>
+Date:   Tue, 31 Mar 2020 16:51:53 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1585562347-30214-1-git-send-email-dingxiang@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200325191259.23559-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/30/20 12:59, Ding Xiang wrote:
-> Fix a static code checker warning:
->      drivers/gpu/drm/xen/xen_drm_front.c:404 xen_drm_drv_dumb_create()
->      warn: passing zero to 'PTR_ERR'
->
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+On 25/03/20 20:12, Sean Christopherson wrote:
+> Take the target reg in __cpuid_entry_get_reg() instead of a pointer to a
+> struct cpuid_reg.  When building with -fsanitize=alignment (enabled by
+> CONFIG_UBSAN=y), some versions of gcc get tripped up on the pointer and
+> trigger the BUILD_BUG().
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Fixes: d8577a4c238f8 ("KVM: x86: Do host CPUID at load time to mask KVM cpu caps")
+> Fixes: 4c61534aaae2a ("KVM: x86: Introduce cpuid_entry_{get,has}() accessors")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->   drivers/gpu/drm/xen/xen_drm_front.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
-> index 4be49c1..3741420 100644
-> --- a/drivers/gpu/drm/xen/xen_drm_front.c
-> +++ b/drivers/gpu/drm/xen/xen_drm_front.c
-> @@ -401,7 +401,7 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
->   
->   	obj = xen_drm_front_gem_create(dev, args->size);
->   	if (IS_ERR_OR_NULL(obj)) {
-> -		ret = PTR_ERR(obj);
-> +		ret = PTR_ERR_OR_ZERO(obj);
->   		goto fail;
->   	}
->   
+>  arch/x86/kvm/cpuid.c | 2 +-
+>  arch/x86/kvm/cpuid.h | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index 08280d8a2ac9..16d3ae432420 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -269,7 +269,7 @@ static __always_inline void kvm_cpu_cap_mask(enum cpuid_leafs leaf, u32 mask)
+>  	cpuid_count(cpuid.function, cpuid.index,
+>  		    &entry.eax, &entry.ebx, &entry.ecx, &entry.edx);
+>  
+> -	kvm_cpu_caps[leaf] &= *__cpuid_entry_get_reg(&entry, &cpuid);
+> +	kvm_cpu_caps[leaf] &= *__cpuid_entry_get_reg(&entry, cpuid.reg);
+>  }
+>  
+>  void kvm_set_cpu_caps(void)
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 23b4cd1ad986..63a70f6a3df3 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -99,9 +99,9 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned int x86_featu
+>  }
+>  
+>  static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+> -						  const struct cpuid_reg *cpuid)
+> +						  u32 reg)
+>  {
+> -	switch (cpuid->reg) {
+> +	switch (reg) {
+>  	case CPUID_EAX:
+>  		return &entry->eax;
+>  	case CPUID_EBX:
+> @@ -121,7 +121,7 @@ static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+>  {
+>  	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+>  
+> -	return __cpuid_entry_get_reg(entry, &cpuid);
+> +	return __cpuid_entry_get_reg(entry, cpuid.reg);
+>  }
+>  
+>  static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
+> @@ -189,7 +189,7 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu,
+>  	if (!entry)
+>  		return NULL;
+>  
+> -	return __cpuid_entry_get_reg(entry, &cpuid);
+> +	return __cpuid_entry_get_reg(entry, cpuid.reg);
+>  }
+>  
+>  static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu,
+> 
+
+Queued, thanks.
+
+Paolo
+
