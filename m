@@ -2,112 +2,139 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 786ACC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15BAC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8D12072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766412072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZIHIB8he"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbufxDdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgCaC2A (ORCPT
+        id S1729754AbgCaC2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:28:00 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:50130 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729221AbgCaC2A (ORCPT
+        Mon, 30 Mar 2020 22:28:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42846 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729591AbgCaC2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:28:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585621678;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q2t+J3lF5AuQxznbMUm1nciYFyVRK4OogfDMwj7plOg=;
-        b=ZIHIB8heW+xBsxMoCvlRqaqH/EyLjpknxUY1Yx/RoNlj9nzGd0P1xF7mOWIu76iAXbHPaT
-        q4Ko1hteb3ZMNJiT59618uyKBCBAeMH4yWTD+GosS4r301WBslzxTJrsrhIYjotqLP8whY
-        FYPWYmzhTRKzciKml2tkRydQ+CLpbUk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-5evQtK8jNxSPzYKNQlUjZA-1; Mon, 30 Mar 2020 22:27:56 -0400
-X-MC-Unique: 5evQtK8jNxSPzYKNQlUjZA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EEA66800D5B;
-        Tue, 31 Mar 2020 02:27:54 +0000 (UTC)
-Received: from [10.72.12.115] (ovpn-12-115.pek2.redhat.com [10.72.12.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 402E01001B3F;
-        Tue, 31 Mar 2020 02:27:49 +0000 (UTC)
-Subject: Re: linux-next: Tree for Mar 30 (vhost)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM <kvm@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>
-References: <20200330204307.669bbb4d@canb.auug.org.au>
- <347c851a-b9f6-0046-f6c8-1db0b42be213@infradead.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <649927d4-9851-c369-2ad2-bf25527b057a@redhat.com>
-Date:   Tue, 31 Mar 2020 10:27:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 30 Mar 2020 22:28:38 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t9so17079426qto.9;
+        Mon, 30 Mar 2020 19:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Eswrbi+TW9i4zBrNR421oAkiEgU39P/E20ccg2jKp0=;
+        b=XbufxDdyKxF6IxecIKX1ZwR3v13NTl1c0irTPT13iVOAemS1d4QQGPNdE8aX5ZJR7a
+         PRYP7DhKw5BCgxY7SGSzYWNZgaGcWWSc6YGqUcJQu60Lfm4Q4OSUxTA+2thEsMP1fxNR
+         VJwh3EmB3AOXnRQbyYLd1sv5QNoWFYPHe3e7QaLHgo50B+O0+HGrMpsHrGHsmsEZZO9I
+         kg+3wYBZar0w5tO557g0O7FJMVrKJPzT9zL6YdvW2GEVYbw5IdwhUXKbWcQbdUPqfswu
+         eBRpuqpc4K2baE54CChc6Yg8aq9BWGgIZ1HFGX7tAWIF3k1mIqsNGhpbsGFO+pMH5Jui
+         8/8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Eswrbi+TW9i4zBrNR421oAkiEgU39P/E20ccg2jKp0=;
+        b=ryP/w4jlxmrFVdcf4c7mKVfT4bIp+qu+sFDAiTybFm2uWVfVbS5ns/dlfi9SeT3GcN
+         Xp9LsWDxXN6Hnj4dDWrUzX7wKWjni6XcjvnH7YvoJNJ9aNxzOixtLVhNx+LvRrHZ/lcC
+         jrJr8Iv5R6AEFNFH8aqS6/S3bCH4hQscv85OinnLCkF1TM66oIVdzQD/ThjCWu6vCIJB
+         E+7q/9SMB9ERSVVBvdhk1SUFzIrhC+sZKlZr8rGikB+ZpIFeSmMr8pc5ShFiPtwUBEEA
+         /0XLvUj5lFb8JsVhWMfK/SaOPsAbCWUHTswVLGD79N4v1CoWw4AXcVZhoUJ2L5u0w1Br
+         +IJw==
+X-Gm-Message-State: ANhLgQ1tDwsrbIgZ/zV5ntzZt+m7TXgtVxsdR59Qoyed11l6G5xsBcID
+        OO/9ZAGaKR4BmF73RCMlHtmXypkHoglsSdEvIHw=
+X-Google-Smtp-Source: ADFU+vsVu3tV6CH4YdMfKECtdWJWGuZrgZY25WwzSudJxQGrid6FAxBQVVLlDNJ6nM/kHaMida9sj9zwiJxjuWI1mgI=
+X-Received: by 2002:ac8:6f4e:: with SMTP id n14mr2947163qtv.121.1585621716954;
+ Mon, 30 Mar 2020 19:28:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <347c851a-b9f6-0046-f6c8-1db0b42be213@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+References: <cover.1583725533.git.shengjiu.wang@nxp.com> <24f69c50925b93afd7a706bd888ee25d27247c78.1583725533.git.shengjiu.wang@nxp.com>
+ <20200309211943.GB11333@Asurada-Nvidia.nvidia.com> <20200320173213.GA9093@bogus>
+ <20200323212038.GA7527@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20200323212038.GA7527@Asurada-Nvidia.nvidia.com>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Tue, 31 Mar 2020 10:28:25 +0800
+Message-ID: <CAA+D8APu0JYqnUvY+fCYTcZ9U1BCv-zU8J4Zt-5doZcNkgaXFQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/7] ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi
 
-On 2020/3/31 =E4=B8=8A=E5=8D=881:22, Randy Dunlap wrote:
-> On 3/30/20 2:43 AM, Stephen Rothwell wrote:
->> Hi all,
->>
->> The merge window has opened, so please do not add any material for the
->> next release into your linux-next included trees/branches until after
->> the merge window closes.
->>
->> Changes since 20200327:
->>
->> The vhost tree gained a conflict against the kvm-arm tree.
->>
-> (note: today's linux-next is on 5.6-rc7.)
+On Tue, Mar 24, 2020 at 5:22 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 >
-> on x86_64:
+> On Fri, Mar 20, 2020 at 11:32:13AM -0600, Rob Herring wrote:
+> > On Mon, Mar 09, 2020 at 02:19:44PM -0700, Nicolin Chen wrote:
+> > > On Mon, Mar 09, 2020 at 11:58:28AM +0800, Shengjiu Wang wrote:
+> > > > In order to support new EASRC and simplify the code structure,
+> > > > We decide to share the common structure between them. This bring
+> > > > a problem that EASRC accept format directly from devicetree, but
+> > > > ASRC accept width from devicetree.
+> > > >
+> > > > In order to align with new ESARC, we add new property fsl,asrc-format.
+> > > > The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> > > > can accept format from devicetree, don't need to convert it to
+> > > > format through width.
+> > > >
+> > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 5 +++++
+> > > >  1 file changed, 5 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > > index cb9a25165503..780455cf7f71 100644
+> > > > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > > @@ -51,6 +51,11 @@ Optional properties:
+> > > >                     will be in use as default. Otherwise, the big endian
+> > > >                     mode will be in use for all the device registers.
+> > > >
+> > > > +   - fsl,asrc-format     : Defines a mutual sample format used by DPCM Back
+> > > > +                   Ends, which can replace the fsl,asrc-width.
+> > > > +                   The value is SNDRV_PCM_FORMAT_S16_LE, or
+> > > > +                   SNDRV_PCM_FORMAT_S24_LE
+> > >
+> > > I am still holding the concern at the DT binding of this format,
+> > > as it uses values from ASoC header file instead of a dt-binding
+> > > header file -- not sure if we can do this. Let's wait for Rob's
+> > > comments.
+> >
+> > I assume those are an ABI as well, so it's okay to copy them unless we
 >
-> # CONFIG_EVENTFD is not set
+> They are defined under include/uapi. So I think we can use them?
 >
-> ../drivers/vhost/vhost.c: In function 'vhost_vring_ioctl':
-> ../drivers/vhost/vhost.c:1577:33: error: implicit declaration of functi=
-on 'eventfd_fget'; did you mean 'eventfd_signal'? [-Werror=3Dimplicit-fun=
-ction-declaration]
->     eventfp =3D f.fd =3D=3D -1 ? NULL : eventfd_fget(f.fd);
->                                   ^~~~~~~~~~~~
->                                   eventfd_signal
-> ../drivers/vhost/vhost.c:1577:31: warning: pointer/integer type mismatc=
-h in conditional expression
->     eventfp =3D f.fd =3D=3D -1 ? NULL : eventfd_fget(f.fd);
-
-
-Will fix.
-
-VHOST should depend on EVENTFD now.
-
-Thanks
-
-
->                                 ^
+> > already have some format definitions for DT. But it does need to be copy
+> > in a header under include/dt-bindings/.
 >
+> Shengjiu is actually quoting those integral values, rather than
+> those macros, so actually no need copy to include/dt-bindings,
+> yet whoever adds this format property to a new DT would need to
+> look up the value in a header file under include/uapi. I's just
+> wondering if that's okay.
+>
+> Thanks
+Shall I keep this change or drop this change?
 
+best regards
+wang shengjiu
