@@ -2,227 +2,129 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F30C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA4C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CB120BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A889120CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585675443;
-	bh=sij6sZdHjrlJxBbn/We2enRGZ1HI64tlL2sxfrwjRH4=;
+	s=default; t=1585675504;
+	bh=fqj8rZSX2LtQTT5i1PXswN5RpOtslvLeE1KpZGlhvQM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mU8wT7xGBg9rBJUNYke2dli9wRJbSIUONO1kyCXTH3v/DwR00vySrmTDPysjQ0IRl
-	 v3lyMcFFc4SsSYLQgGCBVBTYUPLIpAA7EypPAQqK7FNhc0MBnFJK92FRrX/cHUlr8P
-	 CETTW3f29tSL2hQF+Bmhu0opgjLoXkk71JiYji7E=
+	b=ynqpwhkuxjAKGOMbY2Bz+/Pw9WoVHY8pD3LXFxNMFKVC98n96uH31lVb7cSkfMNXG
+	 0PE2ZdrYT0NyRFPefAxsg9NAR1gBjNgM5LxphGBehdAQVq7AfhO7OlFevgAP/dm6DC
+	 pucDfuuUdxInLtLd6p55fOHL7ojBlKvDhBrO53tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgCaRYC (ORCPT
+        id S1726271AbgCaRZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:24:02 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41751 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgCaRYC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:24:02 -0400
-Received: by mail-io1-f66.google.com with SMTP id b12so6358924ion.8;
-        Tue, 31 Mar 2020 10:23:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cVWsnQ0VONc6v7HfiFPWgR2S4ya+hTSxwz6XaXmpXss=;
-        b=Rkp/g0E/47cQLejUa+qzvwvCqzCZvCHHLEecBVeLGnkjjpqjY3z8kvbkFMgVpjDCvA
-         58JljF7sUa4h1wKrAEQ8S2QmQrO55U/7A28lzDqYcg+M9lda/C/HgjZYf2pUOEvJdnAH
-         eMjApo02mb6+Hdd2hL9E2zKHwETgMaZM37H23+1m/KBRX5giXjF9dfJK8lBetW3in8fV
-         VxKYW/juYDCwGIUGx5ckgAugJJTKI/NJHX5xiOInXSS1MBuOFcebluHo2heLLaPxnv2W
-         0w3n3Qb92cXnazDw8zEoNnSABw+S8mecSreUT+KwvuOe50hrMZhbDaB4JRRiiUFwLsu+
-         qHtA==
-X-Gm-Message-State: ANhLgQ3TPmcV/SFqRmqwrVVphMvNWfhcp26KlNNsjcUTEYf/0cAIGuyj
-        /DxZLFaFCCILJ/aFSDuKow==
-X-Google-Smtp-Source: ADFU+vsAbWO1axaYoXWeW6Y3V8OsG3c2p6U8F18DLUHtvG4ZeBvb48x4rCJ793KU54E9bszHHfmKYQ==
-X-Received: by 2002:a02:634e:: with SMTP id j75mr16757788jac.23.1585675439237;
-        Tue, 31 Mar 2020 10:23:59 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id s25sm6100141ilb.37.2020.03.31.10.23.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:23:57 -0700 (PDT)
-Received: (nullmailer pid 15410 invoked by uid 1000);
-        Tue, 31 Mar 2020 17:23:56 -0000
-Date:   Tue, 31 Mar 2020 11:23:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com
-Subject: Re: [PATCH 4/5] dt-bindings: documentation: add clock bindings
- information for Agilex
-Message-ID: <20200331172356.GA17436@bogus>
-References: <20200320170212.21523-1-dinguyen@kernel.org>
- <20200320170212.21523-5-dinguyen@kernel.org>
+        Tue, 31 Mar 2020 13:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgCaRZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:25:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E155220BED;
+        Tue, 31 Mar 2020 17:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585675502;
+        bh=fqj8rZSX2LtQTT5i1PXswN5RpOtslvLeE1KpZGlhvQM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jPP8VZGjkyxMKz4ildZObA4mn4wDlnaD5j4vTqunlzN8MIGSm/1Lxg2dEVO2atzFa
+         fjT36a9OMrjYr4JUd+iMVVUv7jlNkyp3Mhc3UL7VHzY2Mgto/Y+jGVnQBmMOnRCd2t
+         RubqfH2yZZxjid30NVtJAyK985MthNBuhydR2U9w=
+Date:   Tue, 31 Mar 2020 19:24:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
+Message-ID: <20200331172459.GA1841577@kroah.com>
+References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+ <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
+ <20200331100406.GB1204199@kroah.com>
+ <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320170212.21523-5-dinguyen@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 12:02:10PM -0500, Dinh Nguyen wrote:
-> Document the Agilex clock bindings, and add the clock header file. The
-> clock header is an enumeration of all the different clocks on the Agilex
-> platform.
+On Tue, Mar 31, 2020 at 10:07:07AM -0700, Dave Jiang wrote:
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
-> v4: really fix build error(comment formatting was wrong)
-> v3: address comments from Stephen Boyd
->     fix build error(tab removed in line 37)
->     renamed to intel,agilex.yaml
-> v2: convert original document to YAML
-> ---
->  .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
->  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
->  2 files changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
->  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+> On 3/31/2020 3:04 AM, Greg KH wrote:
+> > On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
+> > > Since the current accelerator devices do not have standard PCIe capability
+> > > enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
+> > > been added to struct pci_dev.  Currently a PCI quirk must be used for the
+> > > devices that have such cap until the PCI cap is standardized. Add a helper
+> > > function to provide the check if a device supports the cmdmem capability.
+> > > 
+> > > Such capability is expected to be added to PCIe device cap enumeration in
+> > > the future.
+> > > 
+> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > > ---
+> > >   drivers/base/core.c    |   13 +++++++++++++
+> > >   include/linux/device.h |    2 ++
+> > >   include/linux/pci.h    |    1 +
+> > >   3 files changed, 16 insertions(+)
+> > > 
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index dbb0f9130f42..cd9f5b040ed4 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -27,6 +27,7 @@
+> > >   #include <linux/netdevice.h>
+> > >   #include <linux/sched/signal.h>
+> > >   #include <linux/sysfs.h>
+> > > +#include <linux/pci.h>
+> > >   #include "base.h"
+> > >   #include "power/power.h"
+> > > @@ -3790,3 +3791,15 @@ int device_match_any(struct device *dev, const void *unused)
+> > >   	return 1;
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(device_match_any);
+> > > +
+> > > +bool device_supports_cmdmem(struct device *dev)
+> > > +{
+> > > +	struct pci_dev *pdev;
+> > > +
+> > > +	if (!dev_is_pci(dev))
+> > > +		return false;
+> > > +
+> > > +	pdev = to_pci_dev(dev);
+> > > +	return pdev->cmdmem;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(device_supports_cmdmem);
+> > Why would a pci-specific function like this be ok to have in the driver
+> > core?  Please keep it in the pci core code instead.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/intel,agilex.yaml b/Documentation/devicetree/bindings/clock/intel,agilex.yaml
-> new file mode 100644
-> index 000000000000..5cf2ee5d6fcc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/intel,agilex.yaml
-> @@ -0,0 +1,36 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> The original thought was to introduce a new arch level memory mapping
+> semantic.
 
-Dual license new bindings please:
+Please do not.  Also, that's not what you are doing here from what I can
+tell.
 
-(GPL-2.0-only OR BSD-2-Clause)
+> If you feel this should be PCI exclusive, should we make the ioremap
+> routines for this memory type pci specific as well?
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/intel,agilex.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel SoCFPGA Agilex platform clock controller binding
-> +
-> +maintainers:
-> +  - Dinh Nguyen <dinguyen@kernel.org>
-> +
-> +description:
-> +  The Intel Agilex Clock controller is an integrated clock controller, which
-> +  generates and supplies to all modules.
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,agilex-clkmgr
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
+Why wouldn't it be?  Is this needed anywhere else?
 
-Add:
+thanks,
 
-additionalProperties: false
-
-> +
-> +examples:
-> +  # Clock controller node:
-> +  - |
-> +    clkmgr: clock-controller@ffd10000 {
-> +      compatible = "intel,agilex-clkmgr";
-> +      reg = <0xffd10000 0x1000>;
-> +      #clock-cells = <1>;
-
-No clock inputs?
-
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/agilex-clock.h b/include/dt-bindings/clock/agilex-clock.h
-> new file mode 100644
-> index 000000000000..f19cf8ccbdd2
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/agilex-clock.h
-> @@ -0,0 +1,70 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019, Intel Corporation
-> + */
-> +
-> +#ifndef __AGILEX_CLOCK_H
-> +#define __AGILEX_CLOCK_H
-> +
-> +/* fixed rate clocks */
-> +#define AGILEX_OSC1			0
-> +#define AGILEX_CB_INTOSC_HS_DIV2_CLK	1
-> +#define AGILEX_CB_INTOSC_LS_CLK		2
-> +#define AGILEX_L4_SYS_FREE_CLK		3
-> +#define AGILEX_F2S_FREE_CLK		4
-> +
-> +/* PLL clocks */
-> +#define AGILEX_MAIN_PLL_CLK		5
-> +#define AGILEX_MAIN_PLL_C0_CLK		6
-> +#define AGILEX_MAIN_PLL_C1_CLK		7
-> +#define AGILEX_MAIN_PLL_C2_CLK		8
-> +#define AGILEX_MAIN_PLL_C3_CLK		9
-> +#define AGILEX_PERIPH_PLL_CLK		10
-> +#define AGILEX_PERIPH_PLL_C0_CLK	11
-> +#define AGILEX_PERIPH_PLL_C1_CLK	12
-> +#define AGILEX_PERIPH_PLL_C2_CLK	13
-> +#define AGILEX_PERIPH_PLL_C3_CLK	14
-> +#define AGILEX_MPU_FREE_CLK		15
-> +#define AGILEX_MPU_CCU_CLK		16
-> +#define AGILEX_BOOT_CLK			17
-> +
-> +/* fixed factor clocks */
-> +#define AGILEX_L3_MAIN_FREE_CLK		18
-> +#define AGILEX_NOC_FREE_CLK		19
-> +#define AGILEX_S2F_USR0_CLK		20
-> +#define AGILEX_NOC_CLK			21
-> +#define AGILEX_EMAC_A_FREE_CLK		22
-> +#define AGILEX_EMAC_B_FREE_CLK		23
-> +#define AGILEX_EMAC_PTP_FREE_CLK	24
-> +#define AGILEX_GPIO_DB_FREE_CLK		25
-> +#define AGILEX_SDMMC_FREE_CLK		26
-> +#define AGILEX_S2F_USER0_FREE_CLK	27
-> +#define AGILEX_S2F_USER1_FREE_CLK	28
-> +#define AGILEX_PSI_REF_FREE_CLK		29
-> +
-> +/* Gate clocks */
-> +#define AGILEX_MPU_CLK			30
-> +#define AGILEX_MPU_L2RAM_CLK		31
-> +#define AGILEX_MPU_PERIPH_CLK		32
-> +#define AGILEX_L4_MAIN_CLK		33
-> +#define AGILEX_L4_MP_CLK		34
-> +#define AGILEX_L4_SP_CLK		35
-> +#define AGILEX_CS_AT_CLK		36
-> +#define AGILEX_CS_TRACE_CLK		37
-> +#define AGILEX_CS_PDBG_CLK		38
-> +#define AGILEX_CS_TIMER_CLK		39
-> +#define AGILEX_S2F_USER0_CLK		40
-> +#define AGILEX_EMAC0_CLK		41
-> +#define AGILEX_EMAC1_CLK		43
-> +#define AGILEX_EMAC2_CLK		44
-> +#define AGILEX_EMAC_PTP_CLK		45
-> +#define AGILEX_GPIO_DB_CLK		46
-> +#define AGILEX_NAND_CLK			47
-> +#define AGILEX_PSI_REF_CLK		48
-> +#define AGILEX_S2F_USER1_CLK		49
-> +#define AGILEX_SDMMC_CLK		50
-> +#define AGILEX_SPI_M_CLK		51
-> +#define AGILEX_USB_CLK			52
-> +#define AGILEX_NUM_CLKS			53
-> +
-> +#endif	/* __AGILEX_CLOCK_H */
-> -- 
-> 2.25.1
-> 
+greg k-h
