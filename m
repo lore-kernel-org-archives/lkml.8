@@ -2,163 +2,130 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86E1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28674C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747D1207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585642036;
-	bh=pR3KtS9JqxSwtoxlI+XX4Uem3z/HcC5CN+Wr9J/Rekc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZX6Jm2e2J+nQfI2nVDlwFjzZ/pAaX+dnpfAg7xDn+RLi2lKQdGxbR+ml4OlL7KNpp
-	 TTJQ5ooxj173iYbc3MDULirB+OvohveEt6KD7li27MAuyXBSOQ7yDhlRlaWmil/mjP
-	 ZvEmwehtjnpNzQc9zfGKDLDUxMTT+JMy3rckc5nk=
+	by mail.kernel.org (Postfix) with ESMTP id ED9D620B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:11:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GW8YMfVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbgCaIHP (ORCPT
+        id S1730108AbgCaILR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgCaIHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:07:15 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 31 Mar 2020 04:11:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21818 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729624AbgCaILQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:11:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585642275;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yzpvZIJ+CRLVofZ/PwFWXaCWdz97NICG/y5tEVt3YUQ=;
+        b=GW8YMfVu1PTt52/GGYDBaWEgDGB8wL7VX5DNxcbm3nU+2KtaR3q6KJhjdS43q6NnkMX3q4
+        Xf2rJPkJ26e6gaUM4V8tCtrwv7ww3l4B5R8jF6MZ2gapXhxTPyJ3KWPMIcv/plyRgGOdVK
+        40J/DrUoPCC4J9DrBGJZdhhKew5BOA8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-ZYcL_ET-MAaE6ZBAqMMkRw-1; Tue, 31 Mar 2020 04:11:11 -0400
+X-MC-Unique: ZYcL_ET-MAaE6ZBAqMMkRw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7D09206F6;
-        Tue, 31 Mar 2020 08:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585642033;
-        bh=pR3KtS9JqxSwtoxlI+XX4Uem3z/HcC5CN+Wr9J/Rekc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UpShdRnjDu/kmIuKs89/r7lQiwaTpOxhwEmaJs7lpMZHTQnNgqbdTu6hLdxMd5cSf
-         rUrj1KwPVPB8loOZlZxt13HURDwSwcZL+jZ6qisDn4NvI4BpFecTIzKjtbRk+Fp4xi
-         ojOj2Y/dah/9X7NNozyrA7rzRnLRfZzniOmHE+W8=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jJBvT-00H774-TH; Tue, 31 Mar 2020 09:07:12 +0100
-Date:   Tue, 31 Mar 2020 09:07:09 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     <kvmarm@lists.cs.columbia.edu>, <eric.auger@redhat.com>,
-        <andre.przywara@arm.com>, <james.morse@arm.com>,
-        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
-Subject: Re: [PATCH] KVM: arm64: vgic-v3: Clear pending bit in guest memory
- after synchronization
-Message-ID: <20200331090709.17d2087d@why>
-In-Reply-To: <20200331031245.1562-1-yuzenghui@huawei.com>
-References: <20200331031245.1562-1-yuzenghui@huawei.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5D5E8017CC;
+        Tue, 31 Mar 2020 08:11:09 +0000 (UTC)
+Received: from [10.72.12.115] (ovpn-12-115.pek2.redhat.com [10.72.12.115])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BAE2619C58;
+        Tue, 31 Mar 2020 08:11:04 +0000 (UTC)
+Subject: Re: [PATCH -next] virtio: vdpa: remove unused variables 'ifcvf' and
+ 'ifcvf_lm'
+To:     YueHaibing <yuehaibing@huawei.com>, mst@redhat.com,
+        tiwei.bie@intel.com, lingshan.zhu@intel.com, xiao.w.wang@intel.com
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <20200331080259.33056-1-yuehaibing@huawei.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a69f59a7-f0cc-6b8b-6c3d-61ef72b3ec38@redhat.com>
+Date:   Tue, 31 Mar 2020 16:11:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com, andre.przywara@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200331080259.33056-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
 
-On Tue, 31 Mar 2020 11:12:45 +0800
-Zenghui Yu <yuzenghui@huawei.com> wrote:
+On 2020/3/31 =E4=B8=8B=E5=8D=884:02, YueHaibing wrote:
+> drivers/virtio/vdpa/ifcvf/ifcvf_main.c:34:24:
+>   warning: variable =E2=80=98ifcvf=E2=80=99 set but not used [-Wunused-=
+but-set-variable]
+> drivers/virtio/vdpa/ifcvf/ifcvf_base.c:304:31:
+>   warning: variable =E2=80=98ifcvf_lm=E2=80=99 set but not used [-Wunus=
+ed-but-set-variable]
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-> When LPI support is enabled at redistributor level, VGIC will potentially
-> load the correspond LPI penging table and sync it into the pending_latch.
-> To avoid keeping the 'consumed' pending bits lying around in guest memory
-> (though they're not used), let's clear them after synchronization.
-> 
-> The similar work had been done in vgic_v3_lpi_sync_pending_status().
-> 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+Thanks
+
+
 > ---
->  virt/kvm/arm/vgic/vgic-its.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-> index d53d34a33e35..905760bfa404 100644
-> --- a/virt/kvm/arm/vgic/vgic-its.c
-> +++ b/virt/kvm/arm/vgic/vgic-its.c
-> @@ -435,6 +435,7 @@ static int its_sync_lpi_pending_table(struct kvm_vcpu *vcpu)
->  
->  	for (i = 0; i < nr_irqs; i++) {
->  		int byte_offset, bit_nr;
-> +		bool status;
->  
->  		byte_offset = intids[i] / BITS_PER_BYTE;
->  		bit_nr = intids[i] % BITS_PER_BYTE;
-> @@ -447,22 +448,32 @@ static int its_sync_lpi_pending_table(struct kvm_vcpu *vcpu)
->  			ret = kvm_read_guest_lock(vcpu->kvm,
->  						  pendbase + byte_offset,
->  						  &pendmask, 1);
-> -			if (ret) {
-> -				kfree(intids);
-> -				return ret;
-> -			}
-> +			if (ret)
-> +				goto out;
->  			last_byte_offset = byte_offset;
->  		}
->  
-> +		status = pendmask & (1 << bit_nr);
-> +
->  		irq = vgic_get_irq(vcpu->kvm, NULL, intids[i]);
->  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
-> -		irq->pending_latch = pendmask & (1U << bit_nr);
-> +		irq->pending_latch = status;
->  		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
->  		vgic_put_irq(vcpu->kvm, irq);
-> +
-> +		if (status) {
-> +			/* clear consumed data */
-> +			pendmask &= ~(1 << bit_nr);
-> +			ret = kvm_write_guest_lock(vcpu->kvm,
-> +						   pendbase + byte_offset,
-> +						   &pendmask, 1);
-> +			if (ret)
-> +				goto out;
-> +		}
->  	}
->  
-> +out:
->  	kfree(intids);
-> -
->  	return ret;
->  }
->  
+>   drivers/virtio/vdpa/ifcvf/ifcvf_base.c | 2 --
+>   drivers/virtio/vdpa/ifcvf/ifcvf_main.c | 2 --
+>   2 files changed, 4 deletions(-)
+>
+> diff --git a/drivers/virtio/vdpa/ifcvf/ifcvf_base.c b/drivers/virtio/vd=
+pa/ifcvf/ifcvf_base.c
+> index b61b06ea26d3..e24371d644b5 100644
+> --- a/drivers/virtio/vdpa/ifcvf/ifcvf_base.c
+> +++ b/drivers/virtio/vdpa/ifcvf/ifcvf_base.c
+> @@ -301,12 +301,10 @@ int ifcvf_set_vq_state(struct ifcvf_hw *hw, u16 q=
+id, u64 num)
+>  =20
+>   static int ifcvf_hw_enable(struct ifcvf_hw *hw)
+>   {
+> -	struct ifcvf_lm_cfg __iomem *ifcvf_lm;
+>   	struct virtio_pci_common_cfg __iomem *cfg;
+>   	struct ifcvf_adapter *ifcvf;
+>   	u32 i;
+>  =20
+> -	ifcvf_lm =3D (struct ifcvf_lm_cfg __iomem *)hw->lm_cfg;
+>   	ifcvf =3D vf_to_adapter(hw);
+>   	cfg =3D hw->common_cfg;
+>   	ifc_iowrite16(IFCVF_MSI_CONFIG_OFF, &cfg->msix_config);
+> diff --git a/drivers/virtio/vdpa/ifcvf/ifcvf_main.c b/drivers/virtio/vd=
+pa/ifcvf/ifcvf_main.c
+> index 8d54dc5b08d2..28d9e5de5675 100644
+> --- a/drivers/virtio/vdpa/ifcvf/ifcvf_main.c
+> +++ b/drivers/virtio/vdpa/ifcvf/ifcvf_main.c
+> @@ -31,11 +31,9 @@ static irqreturn_t ifcvf_intr_handler(int irq, void =
+*arg)
+>   static int ifcvf_start_datapath(void *private)
+>   {
+>   	struct ifcvf_hw *vf =3D ifcvf_private_to_vf(private);
+> -	struct ifcvf_adapter *ifcvf;
+>   	u8 status;
+>   	int ret;
+>  =20
+> -	ifcvf =3D vf_to_adapter(vf);
+>   	vf->nr_vring =3D IFCVF_MAX_QUEUE_PAIRS * 2;
+>   	ret =3D ifcvf_start_hw(vf);
+>   	if (ret < 0) {
 
-I've been thinking about this, and I wonder why we don't simply clear
-the whole pending table instead of carefully wiping it one bit at a
-time. My reasoning is that if a LPI isn't mapped, then it cannot be made
-pending the first place.
-
-And I think there is a similar issue in vgic_v3_lpi_sync_pending_status().
-Why sync something back from the pending table when the LPI wasn't
-mapped yet? This seems pretty bizarre, as the GITS_TRANSLATER spec says
-that the write to this register is ignored when:
-
-"- The EventID is mapped to an Interrupt Translation Table and the
-EventID is within the range specified by MAPD on page 5-107, but the
-EventID is unmapped."
-
-(with the added bonus in the form of a type: the first instance of
-"EventID" here should obviously be "DeviceID").
-
-What do you think?
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
