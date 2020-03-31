@@ -2,107 +2,112 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A30C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BC2C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0745B206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C21020784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IqQ2rkbQ"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="o1MvH1FR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GIJAXGMD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731205AbgCaQoP (ORCPT
+        id S1731266AbgCaQo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:44:15 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63807 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730442AbgCaQoP (ORCPT
+        Tue, 31 Mar 2020 12:44:58 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:50099 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730442AbgCaQo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:44:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585673054; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=uOkXbeZcr2DV9rCBPPxEDbCuvkJ222eXEUFzpRLZi3A=; b=IqQ2rkbQTlc2P7VdM0Xod1TFQCP756XH6bHa2lQPZmLLG3DJ+moL0kBMjMzs7wwOk5rKzWvx
- PbhdSBEvKGgPCthlRFhuSLrV/pnRjlpTOevhnhwZ3ZspJ0zuSE/TL/5tprZXakqBRhBfe7iV
- icZjAWAb/VcIiJKBYUfaiC098t8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e837354.7f0028b137d8-smtp-out-n01;
- Tue, 31 Mar 2020 16:44:04 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D83FC4478C; Tue, 31 Mar 2020 16:44:03 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0708C433F2;
-        Tue, 31 Mar 2020 16:44:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0708C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 31 Mar 2020 10:43:59 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        sibis@codeaurora.org, saravanak@google.com, viresh.kumar@linaro.org
-Subject: Re: [PATCH 4/5] drm: msm: a6xx: Fix off by one error when setting
- GPU freq
-Message-ID: <20200331164359.GA11573@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        sibis@codeaurora.org, saravanak@google.com, viresh.kumar@linaro.org
-References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
- <1585641353-23229-5-git-send-email-smasetty@codeaurora.org>
+        Tue, 31 Mar 2020 12:44:58 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5F0C65C0397;
+        Tue, 31 Mar 2020 12:44:56 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 31 Mar 2020 12:44:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=+z62aXHMVsie2rw1NjMsXR8IK32
+        XeBZupuwxskbGWNs=; b=o1MvH1FRka3xxtt7Ii4J+i1hu2dcGz49gu7MzvYv95p
+        VfcvbTN7YBY4OpH8nBYV01ehBIAeHN9dX2X/CF1uqATT9ZiyVOZPtB4oOMKCE7z8
+        3d79qbzGBTCkt8oJC1Zo6TJsEVnKB9K2EEMEEtzRKN3FwU/nWgdwQm6zjvzUUBvn
+        KTs6avEcKXfQ79OujszLfiOJqR4lzeA2k+YgwhcURPW/tL7yHLIV9q6yDM1ZLi14
+        s3dmOXJwSX+90Li7f0JfRp4c6cvN9yAV5g8FILEglnMnxqLy9wCkVvwAd3BQkIG/
+        Mu5NraLlM9jPym5+xTdTnHK++OQ8OztfV4wQurbMs/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=+z62aX
+        HMVsie2rw1NjMsXR8IK32XeBZupuwxskbGWNs=; b=GIJAXGMDUuSeNVgfvqFpp1
+        q0edvoFTTvQeUopS4kZ9O0FoNbXxejivoUHh5qMf00hJ2mK8dlk63rE8zAixwgr8
+        yiHQEEyjCOFTHsu5VBa3+BLJbeRFsZn3xxCfVVjtHJdSz7Lq7Dy2C14Bgnq0eB0d
+        6HH+AQdbyDktiL/4I1P3zRz+dUJ1WhPjCwfUrQSz83wG72PpH5aW1JlvWtJqOksE
+        araVxLRSZ6vJ/uLO85wXMxabLpY8whGNha3AsnZNS2ehEOUCwthzo46C9LlJLhhf
+        HTHyon/EJ+XfwcZbjBfKxAoYNYZZb21ctm8IdMxLuWLj2m8P5IfVPjKFYtDcOmvA
+        ==
+X-ME-Sender: <xms:h3ODXodfBpnj1wWm2AbuvT_Uz9Q5mmjGnWL_v8oloOPLHI2Su6lC3w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtddtgdejudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledruddtje
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgv
+    gheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:h3ODXvUMoo10qGjVc_wPa8AgmIb_lHEvHzxD6PZzpQn7fPOW0j9LAQ>
+    <xmx:h3ODXgysMJ0GdSqQG131oaEF7zpY5J3O3XictecMRyQMQ4ZZPqsLUw>
+    <xmx:h3ODXljqCanyc1eQC8-Eqzjn95ObvwNmQSNwuEKzE8_tQisaSLjpWw>
+    <xmx:iHODXvk_gqzekwhUO4e8rqC2uT8M6O7U6Gc1IXllCQDzk2htFvWL7g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 31489306CBA9;
+        Tue, 31 Mar 2020 12:44:55 -0400 (EDT)
+Date:   Tue, 31 Mar 2020 18:44:48 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jian Yang <jianyang@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: linux-next: manual merge of the net-next tree with the spdx tree
+Message-ID: <20200331164448.GB1821785@kroah.com>
+References: <20200331112334.213ea512@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585641353-23229-5-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200331112334.213ea512@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:25:52PM +0530, Sharat Masetty wrote:
-> This patch fixes an error in the for loop, thereby allowing search on
-> the full list of possible GPU power levels.
+On Tue, Mar 31, 2020 at 11:23:34AM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> Today's linux-next merge of the net-next tree got a conflict in:
+> 
+>   tools/testing/selftests/networking/timestamping/.gitignore
+> 
+> between commit:
+> 
+>   d198b34f3855 (".gitignore: add SPDX License Identifier")
+> 
+> from the spdx tree and commit:
+> 
+>   5ef5c90e3cb3 ("selftests: move timestamping selftests to net folder")
+> 
+> from the net-next tree.
+> 
+> I fixed it up (I just deleted the file) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-Oh fun. This qualifies for drm-fixes. Can you pull this out of the stack and CC
-stable?
+That merge is fine, thanks,
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 489d9b6..81b8559 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -176,7 +176,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
->  	if (freq == gmu->freq)
->  		return;
-> 
-> -	for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
-> +	for (perf_index = 0; perf_index < gmu->nr_gpu_freqs; perf_index++)
->  		if (freq == gmu->gpu_freqs[perf_index])
->  			break;
-> 
-> --
-> 2.7.4
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+greg k-h
