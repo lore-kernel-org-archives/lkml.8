@@ -2,203 +2,73 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C7DC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14123C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9A720748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:08:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VSjVD2wV"
+	by mail.kernel.org (Postfix) with ESMTP id E379520748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgCaGIy (ORCPT
+        id S1727464AbgCaGJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:08:54 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36403 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgCaGIy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:08:54 -0400
-Received: by mail-pj1-f65.google.com with SMTP id nu11so630896pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 23:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OpQKiggADNEam9j1IF1ZgKCFxLfApWFsR5KbZ1C+nBs=;
-        b=VSjVD2wV10lTVvj6HTTeoet5y8V8krcWRYwc6hXafNeAUq7SCc7y3tr4WGyeTC6oLL
-         I6oY0/HFBEB7zPN9e+C0wNSVibWi0OnZfTqxetkck/B5JXkZDu3Y0m5TZ13hwXEkKhYu
-         2mmIP6hkPsm/n8XrJjFOvbxyV3SntlQopq02k/DxfOJLxdPvdvOq3wrVCjUFVPLujD8c
-         cbwGVYlq2JJlU6Na9rsppS7NDQpBIrzzZmnHUkPJq5LuSnftQNIg/yT8GrH30NSce0M4
-         Y16tU+hFSRAs1vl/R0DuGyWjcnjsQvgPlkvNZSCM4OBMc+DoXpLbfNsW5TsRc2F9pefO
-         5djg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OpQKiggADNEam9j1IF1ZgKCFxLfApWFsR5KbZ1C+nBs=;
-        b=q8E9bJ4VbW7GlYPMYLGc/1TZVxdL7WSEth04iKAvalLXOckj2JHncN5MddzT2cjoEr
-         JN0jHqNrtWsI8nU8YJyP6XDxEFStBqK3sCpBqfCoOxZ3krc440Ng9GjD0DvNH4QJaEAY
-         JULIe0ieiCMTIds5StY63Q3ZmzUgtrxJcPUwJP1N9goNpywktwu5ljbSNnM4DKOkkaAX
-         Z6jlWz1crVeFtVu+jrr6CTTuumdAIBJcuTxdPvFmd7F7hxjqrXP3IVsBczdVC3h5xk8o
-         5CgbQol3hRoI64aYaTTb3VL0sXoz47ux1QR2kunIuj692XFsXak21KQEuhCjQxDbZGPa
-         zGaA==
-X-Gm-Message-State: AGi0PuaatSjKVDvYsgzRUCqYq7KVJKQgenw05rS3nzqWgvs6umOl7N/T
-        3OfM9xElx1pVFFnEhcTHL5kcGQ==
-X-Google-Smtp-Source: APiQypI37mArLqJb3kpr8kgCNB7T0c03vWdQcOiyYbzHcdpgd5de0iK7DZWllc8CctrFEMVI2AM7AA==
-X-Received: by 2002:a17:90b:3556:: with SMTP id lt22mr2010864pjb.138.1585634932111;
-        Mon, 30 Mar 2020 23:08:52 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m2sm1015301pjl.21.2020.03.30.23.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 23:08:51 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 23:08:49 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 1/4] clk: qcom: gdsc: Handle GDSC regulator supplies
-Message-ID: <20200331060849.GC246874@minitux>
-References: <20200319053902.3415984-1-bjorn.andersson@linaro.org>
- <20200319053902.3415984-2-bjorn.andersson@linaro.org>
- <5dbd8e67-cc9f-631b-0b4f-b45389be83cd@codeaurora.org>
+        Tue, 31 Mar 2020 02:09:32 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12151 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726327AbgCaGJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 02:09:32 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B858550253D4B86CF4E7;
+        Tue, 31 Mar 2020 14:09:29 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 31 Mar 2020
+ 14:09:20 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <mst@redhat.com>, <jasowang@redhat.com>, <yuehaibing@huawei.com>
+CC:     <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 -next] vdpasim: Return status in vdpasim_get_status
+Date:   Tue, 31 Mar 2020 14:08:58 +0800
+Message-ID: <20200331060858.32520-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200331033501.31272-1-yuehaibing@huawei.com>
+References: <20200331033501.31272-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5dbd8e67-cc9f-631b-0b4f-b45389be83cd@codeaurora.org>
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 30 Mar 22:35 PDT 2020, Taniya Das wrote:
+vdpasim->status should acquired under spin lock.
 
-> Hi Stephen,
-> 
-> I think the upstream design always wanted the client/consumer to enable the
-> GPU Rail and then turn ON the GDSC?
-> 
-> Why are we going ahead with adding the support of regulator in the GDSC
-> driver?
-> 
+Fixes: 870448c31775 ("vdpasim: vDPA device simulator")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+---
+v2: Fix patch title typo
+---
+ drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As I (partially) describe below the mdss driver on 8996 doesn't probe
-because the GDSC fails to enable, because the upstream supply is not
-enabled, so the mdss driver can't turn on the regulator needed by the
-GDSC.
+diff --git a/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c b/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
+index 6e8a0cf2fdeb..72863d01a12a 100644
+--- a/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
+@@ -488,7 +488,7 @@ static u8 vdpasim_get_status(struct vdpa_device *vdpa)
+ 	status = vdpasim->status;
+ 	spin_unlock(&vdpasim->lock);
+ 
+-	return vdpasim->status;
++	return status;
+ }
+ 
+ static void vdpasim_set_status(struct vdpa_device *vdpa, u8 status)
+-- 
+2.17.1
 
-I don't see any other way to handle this than extending the gdsc
-implementation, hence my proposal to change the design.
-Suggestions/feedback are welcome though.
 
-Regards,
-Bjorn
-
-> On 3/19/2020 11:08 AM, Bjorn Andersson wrote:
-> > Certain GDSCs, such as the GPU_GX on MSM8996, requires that the upstream
-> > regulator supply is powered in order to be turned on.
-> > 
-> > It's not guaranteed that the bootloader will leave these supplies on and
-> > the driver core will attempt to enable any GDSCs before allowing the
-> > individual drivers to probe defer on the PMIC regulator driver not yet
-> > being present.
-> > 
-> > So the gdsc driver needs to be made aware of supplying regulators and
-> > probe defer on their absence, and it needs to enable and disable the
-> > regulator accordingly.
-> > 
-> > Voltage adjustments of the supplying regulator are deferred to the
-> > client drivers themselves.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >   drivers/clk/qcom/gdsc.c | 24 ++++++++++++++++++++++++
-> >   drivers/clk/qcom/gdsc.h |  4 ++++
-> >   2 files changed, 28 insertions(+)
-> > 
-> > diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-> > index a250f59708d8..3528789cc9d0 100644
-> > --- a/drivers/clk/qcom/gdsc.c
-> > +++ b/drivers/clk/qcom/gdsc.c
-> > @@ -13,6 +13,7 @@
-> >   #include <linux/regmap.h>
-> >   #include <linux/reset-controller.h>
-> >   #include <linux/slab.h>
-> > +#include <linux/regulator/consumer.h>
-> >   #include "gdsc.h"
-> >   #define PWR_ON_MASK		BIT(31)
-> > @@ -112,6 +113,12 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
-> >   	int ret;
-> >   	u32 val = (status == GDSC_ON) ? 0 : SW_COLLAPSE_MASK;
-> > +	if (status == GDSC_ON && sc->rsupply) {
-> > +		ret = regulator_enable(sc->rsupply);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> >   	ret = regmap_update_bits(sc->regmap, sc->gdscr, SW_COLLAPSE_MASK, val);
-> >   	if (ret)
-> >   		return ret;
-> > @@ -143,6 +150,13 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
-> >   	ret = gdsc_poll_status(sc, status);
-> >   	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
-> > +
-> > +	if (!ret && status == GDSC_OFF && sc->rsupply) {
-> > +		ret = regulator_disable(sc->rsupply);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> >   	return ret;
-> >   }
-> > @@ -371,6 +385,16 @@ int gdsc_register(struct gdsc_desc *desc,
-> >   	if (!data->domains)
-> >   		return -ENOMEM;
-> > +	/* Resolve any regulator supplies */
-> > +	for (i = 0; i < num; i++) {
-> > +		if (!scs[i] || !scs[i]->supply)
-> > +			continue;
-> > +
-> > +		scs[i]->rsupply = devm_regulator_get(dev, scs[i]->supply);
-> > +		if (IS_ERR(scs[i]->rsupply))
-> > +			return PTR_ERR(scs[i]->rsupply);
-> > +	}
-> > +
-> >   	data->num_domains = num;
-> >   	for (i = 0; i < num; i++) {
-> >   		if (!scs[i])
-> > diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-> > index 64cdc8cf0d4d..c36fc26dcdff 100644
-> > --- a/drivers/clk/qcom/gdsc.h
-> > +++ b/drivers/clk/qcom/gdsc.h
-> > @@ -10,6 +10,7 @@
-> >   #include <linux/pm_domain.h>
-> >   struct regmap;
-> > +struct regulator;
-> >   struct reset_controller_dev;
-> >   /**
-> > @@ -52,6 +53,9 @@ struct gdsc {
-> >   	struct reset_controller_dev	*rcdev;
-> >   	unsigned int			*resets;
-> >   	unsigned int			reset_count;
-> > +
-> > +	const char 			*supply;
-> > +	struct regulator		*rsupply;
-> >   };
-> >   struct gdsc_desc {
-> > 
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation.
-> 
-> --
