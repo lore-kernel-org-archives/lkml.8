@@ -2,133 +2,150 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79ACC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E44C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F032072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBB2208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:07:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q9JhTg7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgCaEFz (ORCPT
+        id S1726387AbgCaEHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 00:05:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39366 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgCaEFz (ORCPT
+        Tue, 31 Mar 2020 00:07:46 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:37882 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725535AbgCaEHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 00:05:55 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 614BC29497A
-Message-ID: <246bf7c71620021258355c2fc32dd38ac6b0cc45.camel@collabora.com>
-Subject: Re: [PATCH v5 4/5] drm: imx: Add i.MX 6 MIPI DSI host platform
- driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        linux-rockchip@lists.infradead.org,
-        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Tue, 31 Mar 2020 00:07:45 -0400
+X-UUID: c03ae8fac2664b669459ee8407f0f7a7-20200331
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=vbBy5C/DaSBU2FKJVnVr9W82i4fyWHiz2DGgjDIySMQ=;
+        b=q9JhTg7ior4RP4PEnRTti3LPzb+oPSfd2RnzJkYW24KF5cry6wuTvyMZuvRNkU1Y0cScE3fYwU/OR+ACe1bzQlEb+KNSglpc6QNyBKH2l+kFuGKU0Pv+OVCJc3HVBQt6zocadpvZyPwJ3+/AfKjAPbQSlNEzwGp31+B4+RW5wR8=;
+X-UUID: c03ae8fac2664b669459ee8407f0f7a7-20200331
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1461013669; Tue, 31 Mar 2020 12:07:41 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 31 Mar 2020 12:07:34 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 31 Mar 2020 12:07:39 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Ran Bi <ran.bi@mediatek.com>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 31 Mar 2020 01:05:39 -0300
-In-Reply-To: <877dz134xf.fsf@collabora.com>
-References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
-         <20200330113542.181752-5-adrian.ratiu@collabora.com>
-         <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
-         <4a9d2d6e5cecbe296c14119d27a8793a7dbed7b2.camel@collabora.com>
-         <877dz134xf.fsf@collabora.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v11 1/5] mfd: mt6397: modify suspend/resume behavior
+Date:   Tue, 31 Mar 2020 12:07:33 +0800
+Message-ID: <1585627657-3265-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-31 at 00:31 +0300, Adrian Ratiu wrote:
-> On Mon, 30 Mar 2020, Ezequiel Garcia <ezequiel@collabora.com> 
-> wrote:
-> > Hello Fabio, Adrian: 
-> > 
-> > On Mon, 2020-03-30 at 08:49 -0300, Fabio Estevam wrote: 
-> > > Hi Adrian,  On Mon, Mar 30, 2020 at 8:34 AM Adrian Ratiu 
-> > > <adrian.ratiu@collabora.com> wrote: 
-> > > > This adds support for the Synopsis DesignWare MIPI DSI v1.01 
-> > > > host controller which is embedded in i.MX 6 SoCs.   Based on 
-> > > > following patches, but updated/extended to work with existing 
-> > > > support found in the kernel:  - drm: imx: Support Synopsys 
-> > > > DesignWare MIPI DSI host controller 
-> > > >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com> 
-> > > >  - ARM: dtsi: imx6qdl: Add support for MIPI DSI host 
-> > > > controller 
-> > > >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com> 
-> > >  This one looks like a devicetree patch, but this patch does 
-> > > not touch devicetree.  
-> > > > +       ret = clk_prepare_enable(dsi->pllref_clk); +       if 
-> > > > (ret) { +               dev_err(dev, "%s: Failed to enable 
-> > > > pllref_clk\n", __func__); +               return ret; + 
-> > > > } + +       dsi->mux_sel = 
-> > > > syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr"); + 
-> > > > if (IS_ERR(dsi->mux_sel)) { +               ret = 
-> > > > PTR_ERR(dsi->mux_sel); +               dev_err(dev, "%s: 
-> > > > Failed to get GPR regmap: %d\n", + 
-> > > > __func__, ret); +               return ret; 
-> > >  You should disable the dsi->pllref_clk clock prior to 
-> > > returning the error.  
-> > 
-> > Another approach could be moving the clock on and off to to 
-> > component_ops.{bind,unbind} (as rockhip driver does). 
-> > 
-> > What exactly is the PLL clock needed for? Would it make sense to 
-> > move it some of the PHY power on/off? (Maybe not, but it's 
-> > worthing checking). 
-> > 
-> > Also, it seems the other IP blocks have this PLL clock, so maybe 
-> > it could be moved to the dw_mipi_dsi core? This could be 
-> > something for a follow-up, to avoid creeping this series.
-> 
-> Hi Ezequiel,
-> 
-> pll is the video reference clock which drives the data lanes and 
-> yes all drivers have it as it's a basic requirement, so moving it 
-> to the common bridge is indeed a good idea, however this kind of 
-> driver refactoring is out of scope for this specific patch series, 
-> because, for now, I'd like to get the regmap and the imx6 driver 
-> in, once that is done we can think how to further abstract away 
-> common logic and slim down the existing drivers further.
-> 
-> Basically I just want to avoid feature creep as I expect v6 to be 
-> ~ 8 patches big and the series is already over 1200 lines.
-> 
-
-Oh, absolutely: if there's one thing I try to avoid is
-feature creep -- together with bikeshedding!
-
-Do note however, that you could move the PLL clock handling
-to component_ops.{bind,unbind} and maybe simplify the error
-handling.
-
-(BTW, great work!)
-
-Cheers,
-Ezequiel
-
-
+U29tZSBwbWljcyBkb24ndCBuZWVkIGJhY2t1cCBpbnRlcnJ1cHQgc2V0dGluZ3MsIHNvIHdlIGNo
+YW5nZSB0byB1c2UNCnBtIG5vdGlmaWVyIGZvciB0aGUgcG1pY3Mgd2hpY2ggYXJlIG5lY2Vzc2Fy
+eSB0byBzdG9yZSBzZXR0aW5ncy4NCg0KU2lnbmVkLW9mZi1ieTogSHNpbi1Ic2l1bmcgV2FuZyA8
+aHNpbi1oc2l1bmcud2FuZ0BtZWRpYXRlay5jb20+DQpBY2tlZC1mb3ItTUZELWJ5OiBMZWUgSm9u
+ZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPg0KLS0tDQogZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUu
+YyAgICAgICB8IDMwIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIGRyaXZlcnMvbWZk
+L210NjM5Ny1pcnEuYyAgICAgICAgfCAzMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysNCiBpbmNsdWRlL2xpbnV4L21mZC9tdDYzOTcvY29yZS5oIHwgIDIgKysNCiAzIGZpbGVzIGNo
+YW5nZWQsIDM1IGluc2VydGlvbnMoKyksIDMwIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYyBiL2RyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMNCmlu
+ZGV4IDA0MzdjODUuLmQyZTcwZDggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL21mZC9tdDYzOTctY29y
+ZS5jDQorKysgYi9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jDQpAQCAtMTAwLDM1ICsxMDAsNiBA
+QCBzdGF0aWMgY29uc3Qgc3RydWN0IG1mZF9jZWxsIG10NjM5N19kZXZzW10gPSB7DQogCX0NCiB9
+Ow0KIA0KLSNpZmRlZiBDT05GSUdfUE1fU0xFRVANCi1zdGF0aWMgaW50IG10NjM5N19pcnFfc3Vz
+cGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQotew0KLQlzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAg
+PSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCi0NCi0JcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ21hcCwg
+Y2hpcC0+aW50X2NvblswXSwgY2hpcC0+d2FrZV9tYXNrWzBdKTsNCi0JcmVnbWFwX3dyaXRlKGNo
+aXAtPnJlZ21hcCwgY2hpcC0+aW50X2NvblsxXSwgY2hpcC0+d2FrZV9tYXNrWzFdKTsNCi0NCi0J
+ZW5hYmxlX2lycV93YWtlKGNoaXAtPmlycSk7DQotDQotCXJldHVybiAwOw0KLX0NCi0NCi1zdGF0
+aWMgaW50IG10NjM5N19pcnFfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCi17DQotCXN0cnVj
+dCBtdDYzOTdfY2hpcCAqY2hpcCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KLQ0KLQlyZWdtYXBf
+d3JpdGUoY2hpcC0+cmVnbWFwLCBjaGlwLT5pbnRfY29uWzBdLCBjaGlwLT5pcnFfbWFza3NfY3Vy
+WzBdKTsNCi0JcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ21hcCwgY2hpcC0+aW50X2NvblsxXSwgY2hp
+cC0+aXJxX21hc2tzX2N1clsxXSk7DQotDQotCWRpc2FibGVfaXJxX3dha2UoY2hpcC0+aXJxKTsN
+Ci0NCi0JcmV0dXJuIDA7DQotfQ0KLSNlbmRpZg0KLQ0KLXN0YXRpYyBTSU1QTEVfREVWX1BNX09Q
+UyhtdDYzOTdfcG1fb3BzLCBtdDYzOTdfaXJxX3N1c3BlbmQsDQotCQkJbXQ2Mzk3X2lycV9yZXN1
+bWUpOw0KLQ0KIHN0cnVjdCBjaGlwX2RhdGEgew0KIAl1MzIgY2lkX2FkZHI7DQogCXUzMiBjaWRf
+c2hpZnQ7DQpAQCAtMjM4LDcgKzIwOSw2IEBAIHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
+IG10NjM5N19kcml2ZXIgPSB7DQogCS5kcml2ZXIgPSB7DQogCQkubmFtZSA9ICJtdDYzOTciLA0K
+IAkJLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0Y2hfcHRyKG10NjM5N19vZl9tYXRjaCksDQotCQku
+cG0gPSAmbXQ2Mzk3X3BtX29wcywNCiAJfSwNCiAJLmlkX3RhYmxlID0gbXQ2Mzk3X2lkLA0KIH07
+DQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvbXQ2Mzk3LWlycS5jIGIvZHJpdmVycy9tZmQvbXQ2
+Mzk3LWlycS5jDQppbmRleCBiMmQzY2UxLi42NjllOTNkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9t
+ZmQvbXQ2Mzk3LWlycS5jDQorKysgYi9kcml2ZXJzL21mZC9tdDYzOTctaXJxLmMNCkBAIC05LDYg
+KzksNyBAQA0KICNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4NCiAjaW5jbHVkZSA8bGludXgvcGxh
+dGZvcm1fZGV2aWNlLmg+DQogI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KKyNpbmNsdWRlIDxs
+aW51eC9zdXNwZW5kLmg+DQogI2luY2x1ZGUgPGxpbnV4L21mZC9tdDYzMjMvY29yZS5oPg0KICNp
+bmNsdWRlIDxsaW51eC9tZmQvbXQ2MzIzL3JlZ2lzdGVycy5oPg0KICNpbmNsdWRlIDxsaW51eC9t
+ZmQvbXQ2Mzk3L2NvcmUuaD4NCkBAIC0xMjgsNiArMTI5LDM2IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgaXJxX2RvbWFpbl9vcHMgbXQ2Mzk3X2lycV9kb21haW5fb3BzID0gew0KIAkubWFwID0gbXQ2
+Mzk3X2lycV9kb21haW5fbWFwLA0KIH07DQogDQorc3RhdGljIGludCBtdDYzOTdfaXJxX3BtX25v
+dGlmaWVyKHN0cnVjdCBub3RpZmllcl9ibG9jayAqbm90aWZpZXIsDQorCQkJCSAgdW5zaWduZWQg
+bG9uZyBwbV9ldmVudCwgdm9pZCAqdW51c2VkKQ0KK3sNCisJc3RydWN0IG10NjM5N19jaGlwICpj
+aGlwID0NCisJCWNvbnRhaW5lcl9vZihub3RpZmllciwgc3RydWN0IG10NjM5N19jaGlwLCBwbV9u
+Yik7DQorDQorCXN3aXRjaCAocG1fZXZlbnQpIHsNCisJY2FzZSBQTV9TVVNQRU5EX1BSRVBBUkU6
+DQorCQlyZWdtYXBfd3JpdGUoY2hpcC0+cmVnbWFwLA0KKwkJCSAgICAgY2hpcC0+aW50X2Nvblsw
+XSwgY2hpcC0+d2FrZV9tYXNrWzBdKTsNCisJCXJlZ21hcF93cml0ZShjaGlwLT5yZWdtYXAsDQor
+CQkJICAgICBjaGlwLT5pbnRfY29uWzFdLCBjaGlwLT53YWtlX21hc2tbMV0pOw0KKwkJZW5hYmxl
+X2lycV93YWtlKGNoaXAtPmlycSk7DQorCQlicmVhazsNCisNCisJY2FzZSBQTV9QT1NUX1NVU1BF
+TkQ6DQorCQlyZWdtYXBfd3JpdGUoY2hpcC0+cmVnbWFwLA0KKwkJCSAgICAgY2hpcC0+aW50X2Nv
+blswXSwgY2hpcC0+aXJxX21hc2tzX2N1clswXSk7DQorCQlyZWdtYXBfd3JpdGUoY2hpcC0+cmVn
+bWFwLA0KKwkJCSAgICAgY2hpcC0+aW50X2NvblsxXSwgY2hpcC0+aXJxX21hc2tzX2N1clsxXSk7
+DQorCQlkaXNhYmxlX2lycV93YWtlKGNoaXAtPmlycSk7DQorCQlicmVhazsNCisNCisJZGVmYXVs
+dDoNCisJCWJyZWFrOw0KKwl9DQorDQorCXJldHVybiBOT1RJRllfRE9ORTsNCit9DQorDQogaW50
+IG10NjM5N19pcnFfaW5pdChzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXApDQogew0KIAlpbnQgcmV0
+Ow0KQEAgLTE1OSw2ICsxOTAsNyBAQCBpbnQgbXQ2Mzk3X2lycV9pbml0KHN0cnVjdCBtdDYzOTdf
+Y2hpcCAqY2hpcCkNCiAJcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ21hcCwgY2hpcC0+aW50X2Nvblsw
+XSwgMHgwKTsNCiAJcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ21hcCwgY2hpcC0+aW50X2NvblsxXSwg
+MHgwKTsNCiANCisJY2hpcC0+cG1fbmIubm90aWZpZXJfY2FsbCA9IG10NjM5N19pcnFfcG1fbm90
+aWZpZXI7DQogCWNoaXAtPmlycV9kb21haW4gPSBpcnFfZG9tYWluX2FkZF9saW5lYXIoY2hpcC0+
+ZGV2LT5vZl9ub2RlLA0KIAkJCQkJCSBNVDYzOTdfSVJRX05SLA0KIAkJCQkJCSAmbXQ2Mzk3X2ly
+cV9kb21haW5fb3BzLA0KQEAgLTE3Nyw1ICsyMDksNiBAQCBpbnQgbXQ2Mzk3X2lycV9pbml0KHN0
+cnVjdCBtdDYzOTdfY2hpcCAqY2hpcCkNCiAJCXJldHVybiByZXQ7DQogCX0NCiANCisJcmVnaXN0
+ZXJfcG1fbm90aWZpZXIoJmNoaXAtPnBtX25iKTsNCiAJcmV0dXJuIDA7DQogfQ0KZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvbGludXgvbWZkL210NjM5Ny9jb3JlLmggYi9pbmNsdWRlL2xpbnV4L21mZC9t
+dDYzOTcvY29yZS5oDQppbmRleCBmYzg4ZDMxLi5iODFkMzMzIDEwMDY0NA0KLS0tIGEvaW5jbHVk
+ZS9saW51eC9tZmQvbXQ2Mzk3L2NvcmUuaA0KKysrIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3
+L2NvcmUuaA0KQEAgLTgsNiArOCw3IEBADQogI2RlZmluZSBfX01GRF9NVDYzOTdfQ09SRV9IX18N
+CiANCiAjaW5jbHVkZSA8bGludXgvbXV0ZXguaD4NCisjaW5jbHVkZSA8bGludXgvbm90aWZpZXIu
+aD4NCiANCiBlbnVtIGNoaXBfaWQgew0KIAlNVDYzMjNfQ0hJUF9JRCA9IDB4MjMsDQpAQCAtNTQs
+NiArNTUsNyBAQCBlbnVtIG10NjM5N19pcnFfbnVtYmVycyB7DQogc3RydWN0IG10NjM5N19jaGlw
+IHsNCiAJc3RydWN0IGRldmljZSAqZGV2Ow0KIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7DQorCXN0
+cnVjdCBub3RpZmllcl9ibG9jayBwbV9uYjsNCiAJaW50IGlycTsNCiAJc3RydWN0IGlycV9kb21h
+aW4gKmlycV9kb21haW47DQogCXN0cnVjdCBtdXRleCBpcnFsb2NrOw0KLS0gDQoyLjYuNA0K
 
