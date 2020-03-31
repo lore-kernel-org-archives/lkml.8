@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E452C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B94C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2526A20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2428220B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645571;
-	bh=FicCXVrC/nCMsgbkC5DjAjRJKwvdTxrQwIoRiKc+enc=;
+	s=default; t=1585645575;
+	bh=ak4VYsc2RhUTFLegpCsyCujyDrbynZWMkcvyWrt0MxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pppIRa5b3yO7KMjmY3dnw97H37Rg743V9ptlmKOJ38PS0FZpX3pHh4xEHGRpe8IAy
-	 NqMwyYS1u1Pk6CiSegZAAMBDAMxN+XgysexLAfE9dMMnDIhS6SDTR7KYX+QYX8nCoi
-	 gOCupmFXHRcIklr51Y8tY4aKa2Fzwk1NW5pZpB7A=
+	b=zJl4iKOc8OkGzvNDTuXS1lLQUjNH9czntEXqQl0k53pnXOEOCI65R6ec8NlT/9aKz
+	 Kot/lRm4fCdzmlUCcODL+RiM/+30B71FcilbYfeagCUQkn7+CoQZSxhXOlCUu0VOBE
+	 BGAklA5df56dxrZiWosGYiKIo8RTOpPHf3YTqEOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbgCaJGJ (ORCPT
+        id S1731008AbgCaJGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:06:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47320 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:06:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731103AbgCaJGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:06:02 -0400
+        id S1730506AbgCaJGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:06:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CF7720787;
-        Tue, 31 Mar 2020 09:06:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E28208E0;
+        Tue, 31 Mar 2020 09:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645561;
-        bh=FicCXVrC/nCMsgbkC5DjAjRJKwvdTxrQwIoRiKc+enc=;
+        s=default; t=1585645565;
+        bh=ak4VYsc2RhUTFLegpCsyCujyDrbynZWMkcvyWrt0MxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dYZKQ3tZtRgphpCZlETGn85HG+GkAoduilfo4x6bEv1h1Vvu2/w6wjCiXo5WWFt3F
-         288n/QfydN1zLoXyhTOH8d3kDRnmUqW178c/nFds839W9T1oBjCCx3Z3FuU9RGO5y5
-         1ojw/P9OvzcbgxNArCTt3T5SUp7jhGl6RYL7D4Zw=
+        b=fWOMDqzsjMXO2b3JvzGYVAlfa1zEdfh4/RmCjl+PLM35D+YHxbqLNFERMn8JP1Ohw
+         2lhCzW+tZmRLmodhNL6wloSKU3EI6i8TBcUDuQfOz01OAstzDZfLtWd80ZDgzBsZAW
+         ku0ZSnEcWTPP4wSU5cMkDWG+k8P4ycjjYGUTSRvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 091/170] RDMA/mad: Do not crash if the rdma device does not have a umad interface
-Date:   Tue, 31 Mar 2020 10:58:25 +0200
-Message-Id: <20200331085433.928854272@linuxfoundation.org>
+        stable@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>
+Subject: [PATCH 5.5 092/170] ceph: check POOL_FLAG_FULL/NEARFULL in addition to OSDMAP_FULL/NEARFULL
+Date:   Tue, 31 Mar 2020 10:58:26 +0200
+Message-Id: <20200331085434.031667271@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -61,123 +60,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 5bdfa854013ce4193de0d097931fd841382c76a7 upstream.
+commit 7614209736fbc4927584d4387faade4f31444fce upstream.
 
-Non-IB devices do not have a umad interface and the client_data will be
-left set to NULL. In this case calling get_nl_info() will try to kref a
-NULL cdev causing a crash:
+CEPH_OSDMAP_FULL/NEARFULL aren't set since mimic, so we need to consult
+per-pool flags as well.  Unfortunately the backwards compatibility here
+is lacking:
 
-  general protection fault, probably for non-canonical address 0xdffffc00000000ba: 0000 [#1] PREEMPT SMP KASAN
-  KASAN: null-ptr-deref in range [0x00000000000005d0-0x00000000000005d7]
-  CPU: 0 PID: 20851 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  RIP: 0010:kobject_get+0x35/0x150 lib/kobject.c:640
-  Code: 53 e8 3f b0 8b f9 4d 85 e4 0f 84 a2 00 00 00 e8 31 b0 8b f9 49 8d 7c 24 3c 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f  b6 04 02 48 89 fa
-+83 e2 07 38 d0 7f 08 84 c0 0f 85 eb 00 00 00
-  RSP: 0018:ffffc9000946f1a0 EFLAGS: 00010203
-  RAX: dffffc0000000000 RBX: ffffffff85bdbbb0 RCX: ffffc9000bf22000
-  RDX: 00000000000000ba RSI: ffffffff87e9d78f RDI: 00000000000005d4
-  RBP: ffffc9000946f1b8 R08: ffff8880581a6440 R09: ffff8880581a6cd0
-  R10: fffffbfff154b838 R11: ffffffff8aa5c1c7 R12: 0000000000000598
-  R13: 0000000000000000 R14: ffffc9000946f278 R15: ffff88805cb0c4d0
-  FS:  00007faa9e8af700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000001b30121000 CR3: 000000004515d000 CR4: 00000000001406f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   get_device+0x25/0x40 drivers/base/core.c:2574
-   __ib_get_client_nl_info+0x205/0x2e0 drivers/infiniband/core/device.c:1861
-   ib_get_client_nl_info+0x35/0x180 drivers/infiniband/core/device.c:1881
-   nldev_get_chardev+0x575/0xac0 drivers/infiniband/core/nldev.c:1621
-   rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
-   rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
-   rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
-   netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-   netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
-   netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
-   sock_sendmsg_nosec net/socket.c:652 [inline]
-   sock_sendmsg+0xd7/0x130 net/socket.c:672
-   ____sys_sendmsg+0x753/0x880 net/socket.c:2343
-   ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-   __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
-   __do_sys_sendmsg net/socket.c:2439 [inline]
-   __se_sys_sendmsg net/socket.c:2437 [inline]
-   __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
-   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+- the change that deprecated OSDMAP_FULL/NEARFULL went into mimic, but
+  was guarded by require_osd_release >= RELEASE_LUMINOUS
+- it was subsequently backported to luminous in v12.2.2, but that makes
+  no difference to clients that only check OSDMAP_FULL/NEARFULL because
+  require_osd_release is not client-facing -- it is for OSDs
 
-Cc: stable@kernel.org
-Fixes: 8f71bb0030b8 ("RDMA: Report available cdevs through RDMA_NLDEV_CMD_GET_CHARDEV")
-Link: https://lore.kernel.org/r/20200310075339.238090-1-leon@kernel.org
-Reported-by: syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Since all kernels are affected, the best we can do here is just start
+checking both map flags and pool flags and send that to stable.
+
+These checks are best effort, so take osdc->lock and look up pool flags
+just once.  Remove the FIXME, since filesystem quotas are checked above
+and RADOS quotas are reflected in POOL_FLAG_FULL: when the pool reaches
+its quota, both POOL_FLAG_FULL and POOL_FLAG_FULL_QUOTA are set.
+
+Cc: stable@vger.kernel.org
+Reported-by: Yanhu Cao <gmayyyha@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Sage Weil <sage@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/user_mad.c |   33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ fs/ceph/file.c              |   14 +++++++++++---
+ include/linux/ceph/osdmap.h |    4 ++++
+ include/linux/ceph/rados.h  |    6 ++++--
+ net/ceph/osdmap.c           |    9 +++++++++
+ 4 files changed, 28 insertions(+), 5 deletions(-)
 
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -1129,17 +1129,30 @@ static const struct file_operations umad
- 	.llseek	 = no_llseek,
- };
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1415,10 +1415,13 @@ static ssize_t ceph_write_iter(struct ki
+ 	struct inode *inode = file_inode(file);
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
++	struct ceph_osd_client *osdc = &fsc->client->osdc;
+ 	struct ceph_cap_flush *prealloc_cf;
+ 	ssize_t count, written = 0;
+ 	int err, want, got;
+ 	bool direct_lock = false;
++	u32 map_flags;
++	u64 pool_flags;
+ 	loff_t pos;
+ 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
  
-+static struct ib_umad_port *get_port(struct ib_device *ibdev,
-+				     struct ib_umad_device *umad_dev,
-+				     unsigned int port)
+@@ -1481,8 +1484,12 @@ retry_snap:
+ 			goto out;
+ 	}
+ 
+-	/* FIXME: not complete since it doesn't account for being at quota */
+-	if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
++	down_read(&osdc->lock);
++	map_flags = osdc->osdmap->flags;
++	pool_flags = ceph_pg_pool_flags(osdc->osdmap, ci->i_layout.pool_id);
++	up_read(&osdc->lock);
++	if ((map_flags & CEPH_OSDMAP_FULL) ||
++	    (pool_flags & CEPH_POOL_FLAG_FULL)) {
+ 		err = -ENOSPC;
+ 		goto out;
+ 	}
+@@ -1575,7 +1582,8 @@ retry_snap:
+ 	}
+ 
+ 	if (written >= 0) {
+-		if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
++		if ((map_flags & CEPH_OSDMAP_NEARFULL) ||
++		    (pool_flags & CEPH_POOL_FLAG_NEARFULL))
+ 			iocb->ki_flags |= IOCB_DSYNC;
+ 		written = generic_write_sync(iocb, written);
+ 	}
+--- a/include/linux/ceph/osdmap.h
++++ b/include/linux/ceph/osdmap.h
+@@ -37,6 +37,9 @@ int ceph_spg_compare(const struct ceph_s
+ #define CEPH_POOL_FLAG_HASHPSPOOL	(1ULL << 0) /* hash pg seed and pool id
+ 						       together */
+ #define CEPH_POOL_FLAG_FULL		(1ULL << 1) /* pool is full */
++#define CEPH_POOL_FLAG_FULL_QUOTA	(1ULL << 10) /* pool ran out of quota,
++							will set FULL too */
++#define CEPH_POOL_FLAG_NEARFULL		(1ULL << 11) /* pool is nearfull */
+ 
+ struct ceph_pg_pool_info {
+ 	struct rb_node node;
+@@ -304,5 +307,6 @@ extern struct ceph_pg_pool_info *ceph_pg
+ 
+ extern const char *ceph_pg_pool_name_by_id(struct ceph_osdmap *map, u64 id);
+ extern int ceph_pg_poolid_by_name(struct ceph_osdmap *map, const char *name);
++u64 ceph_pg_pool_flags(struct ceph_osdmap *map, u64 id);
+ 
+ #endif
+--- a/include/linux/ceph/rados.h
++++ b/include/linux/ceph/rados.h
+@@ -143,8 +143,10 @@ extern const char *ceph_osd_state_name(i
+ /*
+  * osd map flag bits
+  */
+-#define CEPH_OSDMAP_NEARFULL (1<<0)  /* sync writes (near ENOSPC) */
+-#define CEPH_OSDMAP_FULL     (1<<1)  /* no data writes (ENOSPC) */
++#define CEPH_OSDMAP_NEARFULL (1<<0)  /* sync writes (near ENOSPC),
++					not set since ~luminous */
++#define CEPH_OSDMAP_FULL     (1<<1)  /* no data writes (ENOSPC),
++					not set since ~luminous */
+ #define CEPH_OSDMAP_PAUSERD  (1<<2)  /* pause all reads */
+ #define CEPH_OSDMAP_PAUSEWR  (1<<3)  /* pause all writes */
+ #define CEPH_OSDMAP_PAUSEREC (1<<4)  /* pause recovery */
+--- a/net/ceph/osdmap.c
++++ b/net/ceph/osdmap.c
+@@ -710,6 +710,15 @@ int ceph_pg_poolid_by_name(struct ceph_o
+ }
+ EXPORT_SYMBOL(ceph_pg_poolid_by_name);
+ 
++u64 ceph_pg_pool_flags(struct ceph_osdmap *map, u64 id)
 +{
-+	if (!umad_dev)
-+		return ERR_PTR(-EOPNOTSUPP);
-+	if (!rdma_is_port_valid(ibdev, port))
-+		return ERR_PTR(-EINVAL);
-+	if (!rdma_cap_ib_mad(ibdev, port))
-+		return ERR_PTR(-EOPNOTSUPP);
++	struct ceph_pg_pool_info *pi;
 +
-+	return &umad_dev->ports[port - rdma_start_port(ibdev)];
++	pi = __lookup_pg_pool(&map->pg_pools, id);
++	return pi ? pi->flags : 0;
 +}
++EXPORT_SYMBOL(ceph_pg_pool_flags);
 +
- static int ib_umad_get_nl_info(struct ib_device *ibdev, void *client_data,
- 			       struct ib_client_nl_info *res)
+ static void __remove_pg_pool(struct rb_root *root, struct ceph_pg_pool_info *pi)
  {
--	struct ib_umad_device *umad_dev = client_data;
-+	struct ib_umad_port *port = get_port(ibdev, client_data, res->port);
- 
--	if (!rdma_is_port_valid(ibdev, res->port))
--		return -EINVAL;
-+	if (IS_ERR(port))
-+		return PTR_ERR(port);
- 
- 	res->abi = IB_USER_MAD_ABI_VERSION;
--	res->cdev = &umad_dev->ports[res->port - rdma_start_port(ibdev)].dev;
--
-+	res->cdev = &port->dev;
- 	return 0;
- }
- 
-@@ -1154,15 +1167,13 @@ MODULE_ALIAS_RDMA_CLIENT("umad");
- static int ib_issm_get_nl_info(struct ib_device *ibdev, void *client_data,
- 			       struct ib_client_nl_info *res)
- {
--	struct ib_umad_device *umad_dev =
--		ib_get_client_data(ibdev, &umad_client);
-+	struct ib_umad_port *port = get_port(ibdev, client_data, res->port);
- 
--	if (!rdma_is_port_valid(ibdev, res->port))
--		return -EINVAL;
-+	if (IS_ERR(port))
-+		return PTR_ERR(port);
- 
- 	res->abi = IB_USER_MAD_ABI_VERSION;
--	res->cdev = &umad_dev->ports[res->port - rdma_start_port(ibdev)].sm_dev;
--
-+	res->cdev = &port->sm_dev;
- 	return 0;
- }
- 
+ 	rb_erase(&pi->node, root);
 
 
