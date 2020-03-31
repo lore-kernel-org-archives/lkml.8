@@ -2,146 +2,124 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EFFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2385C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099FC20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C881208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDDWt6RW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQFIT72E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbgCaTwH (ORCPT
+        id S1730548AbgCaTwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:52:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53580 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726548AbgCaTwG (ORCPT
+        Tue, 31 Mar 2020 15:52:46 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:35478 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgCaTwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:52:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585684325;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=b2UFMAgHLjerJ9NMZry/HpffFH2cpApwyp5N9quNxNg=;
-        b=CDDWt6RWzfSB4DIBsO6ACKKbFLW1vpjC8BdQF0LCkAqXCVm5j+MxsHFLdXKsxWxGGMwaqD
-        erqlL7wCLJs9/7rVpIZJ2B7i74i8r44SxqaoINpsh8hsMdhV/TTVLozTRNDlj66PX6uPQ9
-        Bw02i9q+Zd/imMurinvZv310W/LYLCg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-HYaL1xoYNwq77W_4oMSZkQ-1; Tue, 31 Mar 2020 15:51:16 -0400
-X-MC-Unique: HYaL1xoYNwq77W_4oMSZkQ-1
-Received: by mail-wr1-f70.google.com with SMTP id k11so445846wrm.19
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:51:15 -0700 (PDT)
+        Tue, 31 Mar 2020 15:52:46 -0400
+Received: by mail-qv1-f68.google.com with SMTP id q73so11565577qvq.2;
+        Tue, 31 Mar 2020 12:52:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=koHaz81lhgaXvonX4hggctipHiIr1mGPAtaGs6zrD+k=;
+        b=rQFIT72Et7kZxvV9ZT3qf2ai3odXDA+Rw5lBTGYKfT+zcq9+3mmWUQQTnApBLrQlp9
+         uwfmGPNZNgHrsCE3XwLFl7juRRAwwKRPBWstIv+zzDOY5AK1CaG+jDkC1ILk3+hkvVWx
+         hxgi8aDjdtkbyXlNU5Osjy9hzHjlvYn3flsqGLZ68rJKu6Lc63ucjDBiCJOZqQF0+5rk
+         8CtxZD+4608C2N/bQjEpmxHSq3UZ9zYW1hNjAzNsxoNe7Pio9EYKlcXQ2Voh+9gGXkeN
+         cMe1cLQke6eieaREOjSACS6aRhLYoLetGBF201SPbq8FJr0NLJS/jE8mAJm+X+XXFzXX
+         VIRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=b2UFMAgHLjerJ9NMZry/HpffFH2cpApwyp5N9quNxNg=;
-        b=IL4gY+CSBCIVwLIGfTNi4dUeg1jIjVzI5vynuoB4MtFgh5n1sWNNPuWt4x1kkRwGIy
-         uDSoMj1jYbq2k8MyucNCIIlHgOCYpmJcpijcOJqU5pHW6oi7LSKAMSA148ro2HchjfID
-         lcj0UG9FNyWMSN0eMa+Wk3XUCI+KyLz3ioHKXarhu2bkmIgI6VUzVwSrHgc8N0rr7vso
-         YvD2VKzW1cSguIcZ+WiELkoF000VoPOHYIBzV+7E2xeOx9j2vX4OfOGvXqoTlFd3WN8O
-         oK5no+NKQn8Oa4J2VnnUoCrbp8mQt2FAS/10NeQ5B8VDE7FcN8KYsYaeTEY8BsHDN3BR
-         Y1Jg==
-X-Gm-Message-State: ANhLgQ1n/CKBwmJ6Kz3AHP8rE5IK1elc410blfLTR62WyXy2JIUDzBqQ
-        HMaVWBHrqlEok18OPbgd69tZnrZFWty9S6nxHOBefeGy3yfSjp9h2Z2wgf4CDVuh781B3CyDkIk
-        baa2foCRjnxHbVskSlUCe63NC
-X-Received: by 2002:adf:90c6:: with SMTP id i64mr21178493wri.88.1585684273178;
-        Tue, 31 Mar 2020 12:51:13 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsBF9cECw6xLYUjwBS31gILdZtjJFvdt8FOUuQyT0OA1wSrJbotTajrFFZAFpWOR4/ADVtrdQ==
-X-Received: by 2002:adf:90c6:: with SMTP id i64mr21178477wri.88.1585684272926;
-        Tue, 31 Mar 2020 12:51:12 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id y15sm1290983wrh.50.2020.03.31.12.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 12:51:12 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 15:51:09 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: Re: [PATCH v3 0/8] vhost: Reset batched descriptors on
- SET_VRING_BASE call
-Message-ID: <20200331155049-mutt-send-email-mst@kernel.org>
-References: <20200331192804.6019-1-eperezma@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=koHaz81lhgaXvonX4hggctipHiIr1mGPAtaGs6zrD+k=;
+        b=T7AKpf+X7ZRxbvQKkgVvBcf/0+mk4mDWtE38tKPExmIrfsJNQaET6T9MR8aSKkXS3P
+         22aIYHNELXlFrqvwdLdvkGK1+cxWccNH4sZYERR31kpOPyURTUZ/HVX/wQ1WE9oBYJ8D
+         njxUaG1779LMmFvomS6tRGtgBbXXHAyrsIUnl2CmMfajEtz+R4NP0xEzKmAV9kNzy0wR
+         5fFIPsmihkNFhbN40mtkp2BUSdDl/rDzx5qrPhhAWXo+cF7l4FBMgP8CGbLYyRAoMNPY
+         yA1ga/ZZBfBbpWGmf2GaQqlxRhf131zOC2/CeEEYoSGRmn+I+a5DFarAn0kMn2001Wub
+         9MfQ==
+X-Gm-Message-State: ANhLgQ1nQPhHJmCS0uDP9dMdZlqmwgXw/d2vzpj3TUnOCDjShT7ScX45
+        7qJmsUDTXcoP1FnNRI8xxR9m2CisWfJZ1ybCLIG9+el0hqo=
+X-Google-Smtp-Source: ADFU+vt1v6vuUyeI2qgZMpH4ZL3/iH3gkayh1/w7Q3qPbXyl/kgZ71PnSOlm8lwdtt/9c6lhZHQ7qRgfHri9Ixre7Cs=
+X-Received: by 2002:ad4:4182:: with SMTP id e2mr17704518qvp.247.1585684365293;
+ Tue, 31 Mar 2020 12:52:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200331192804.6019-1-eperezma@redhat.com>
+References: <20200331164719.15930-1-slava@bacher09.org> <CAEf4BzadnfAwfa1D0jZb=01Ou783GpK_U7PAYeEJca-L9kdnVA@mail.gmail.com>
+In-Reply-To: <CAEf4BzadnfAwfa1D0jZb=01Ou783GpK_U7PAYeEJca-L9kdnVA@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 31 Mar 2020 12:52:34 -0700
+Message-ID: <CAEf4BzaAZ5Qop0z8r+SBNQyPtt0+EpKy9Q0EkcSDkTZw54Bnaw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: disable DEBUG_INFO_SPLIT when BTF is on
+To:     Slava Bacherikov <slava@bacher09.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:27:56PM +0200, Eugenio Pérez wrote:
-> Vhost did not reset properly the batched descriptors on SET_VRING_BASE
-> event. Because of that, is possible to return an invalid descriptor to
-> the guest.
-> 
-> This series ammend this, resetting them every time backend changes, and
-> creates a test to assert correct behavior. To do that, they need to
-> expose a new function in virtio_ring, virtqueue_reset_free_head, only
-> on test code.
-> 
-> Another useful thing would be to check if mutex is properly get in
-> vq private_data accessors. Not sure if mutex debug code allow that,
-> similar to C++ unique lock::owns_lock. Not acquiring in the function
-> because caller code holds the mutex in order to perform more actions.
+On Tue, Mar 31, 2020 at 12:45 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Tue, Mar 31, 2020 at 9:57 AM Slava Bacherikov <slava@bacher09.org> wrote:
+> >
+> > Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
+> > enabled will produce invalid btf file, since gen_btf function in
+> > link-vmlinux.sh script doesn't handle *.dwo files.
+> >
+> > Signed-off-by: Slava Bacherikov <slava@bacher09.org>
+> > ---
+> >  lib/Kconfig.debug | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index f61d834e02fe..a9429ef5eec8 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -223,6 +223,7 @@ config DEBUG_INFO_DWARF4
+> >  config DEBUG_INFO_BTF
+> >         bool "Generate BTF typeinfo"
+> >         depends on DEBUG_INFO
+> > +       depends on !DEBUG_INFO_SPLIT
+>
+> Thanks for following up! This looks good, but I think there are more
+> DWARF-related configs that should be banned. See [0] and [1]. If you
+> don't mind, let's use your patch to disable all of them in one go. So
+> can you please update and disable DEBUG_INFO_REDUCED and
+> GCC_PLUGIN_RANDSTRUCT? Thanks!
+>
+>   [0] https://lore.kernel.org/bpf/202003311110.2B08091E@keescook
+>   [1] https://lore.kernel.org/bpf/a2b1a025-6a70-c3a5-fc19-155f0266946a@fb.com
+>
 
-I pushed vhost branch with patch 1, pls send patches on top of that!
+I guess at this point it should go against bpf tree, so please update
+header to [PATCH v2 bpf]. Please also add Reported-by and Fixes tag:
 
-> v3:
-> * Rename accesors functions.
-> * Make scsi and test use the accesors too.
-> 
-> v2:
-> * Squashed commits.
-> * Create vq private_data accesors (mst).
-> 
-> This is meant to be applied on top of
-> c4f1c41a6094582903c75c0dcfacb453c959d457 in
-> git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git.
-> 
-> Eugenio Pérez (5):
->   vhost: Create accessors for virtqueues private_data
->   tools/virtio: Add --batch option
->   tools/virtio: Add --batch=random option
->   tools/virtio: Add --reset=random
->   tools/virtio: Make --reset reset ring idx
-> 
-> Michael S. Tsirkin (3):
->   vhost: option to fetch descriptors through an independent struct
->   vhost: use batched version by default
->   vhost: batching fetches
-> 
->  drivers/vhost/net.c          |  28 ++--
->  drivers/vhost/scsi.c         |  14 +-
->  drivers/vhost/test.c         |  69 ++++++++-
->  drivers/vhost/test.h         |   1 +
->  drivers/vhost/vhost.c        | 271 +++++++++++++++++++++++------------
->  drivers/vhost/vhost.h        |  44 +++++-
->  drivers/vhost/vsock.c        |  14 +-
->  drivers/virtio/virtio_ring.c |  29 ++++
->  tools/virtio/linux/virtio.h  |   2 +
->  tools/virtio/virtio_test.c   | 123 ++++++++++++++--
->  10 files changed, 456 insertions(+), 139 deletions(-)
-> 
-> -- 
-> 2.18.1
+Reported-by: Jann Horn <jannh@google.com>
+Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
+Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info
+for vmlinux")
 
+Thanks!
+
+>
+> >         help
+> >           Generate deduplicated BTF type information from DWARF debug info.
+> >           Turning this on expects presence of pahole tool, which will convert
+> > --
+> > 2.24.1
+> >
