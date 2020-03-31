@@ -2,137 +2,112 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319FFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD10C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F031F206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F099B206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:48:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vB974iQR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VoE/pOwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbgCaQrW (ORCPT
+        id S1731149AbgCaQso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:47:22 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39662 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730442AbgCaQrW (ORCPT
+        Tue, 31 Mar 2020 12:48:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59426 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730413AbgCaQsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:47:22 -0400
-Received: by mail-il1-f194.google.com with SMTP id r5so20085539ilq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OT4pMSpiK/UC4Mr+9RHkJgxu5bDQsWsl1DR3uPPrhxA=;
-        b=vB974iQR0mwNOw4ta4Za0CbIwf55mbOkr3ld8d5uyxVx1ETSjNjcsojv8CjlVRaW0d
-         Gd/6PSilrRsC9ppGDDcw3+4Wr9f78Gl5i/HuB5ClEaIwfsiLc0DOhy1esQP7pRmCVUOt
-         KcRcAjZef+0tqaMXcKR19EGP2qhCF8eA3tPvD+EPk/xj0paOd7wC/YpE0UpQYsIjCy93
-         PWlotFT+sOebVgEqUSVEBl+mmTCf1bhkEroEw78q49EACEqSBmSD/ukqYYnN6/alzi8T
-         6pN4oM265p982ZorEQpqMrPEDrvnZQcjt2JOsabPyT3MKYdflD5v/QaIYEgkaNBAkzi9
-         ydPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OT4pMSpiK/UC4Mr+9RHkJgxu5bDQsWsl1DR3uPPrhxA=;
-        b=COQyGOhNmFLx2uFxmWnnOCt2edU7KEJyYehWzy7nD76puQWH41LCEHv+Xx7R02KB55
-         b+7AGNPF7eFMPKUvEAu89AgNO0tByFl88RLUhBBwI3TnA6elrUlZkojMzNyxb1fpQpGf
-         gNnVFegg0+ipCoiXG1v9PK8uIuTq56fDCsogPxyojJmVl5Dje8Nrv8T+Zwo06nuhsFGX
-         SjamKnyDHLg/N3v8CNtAl5EdEwFnnlONUN9CEbsFPOqsA0q3k/j/imgraNIHtgy0fYP4
-         wdDsXS+H/e0VwLDCWRdtNV1hzMb2iXqpFMlTdaMLzujNR94/2hmaJ/L1r1LFRMTvDT/H
-         HERw==
-X-Gm-Message-State: ANhLgQ0M/rIqHTODA94aDrcqg2hxHJqQE8BJ5UGoogOvgO20rdWt63gW
-        ZSn2fmeFrK+FbjrRyGBTcHmVeclzQ0lMtHQLzw8IqQ==
-X-Google-Smtp-Source: ADFU+vuv2z+RvUoyFBKFpaGQ6uQeCth3Kdb+5ldsc6qBNaQajNgyTri0JxfBs2MSQ304FwNf6wkpiR9u0IqgVt7aBz4=
-X-Received: by 2002:a92:8352:: with SMTP id f79mr16835440ild.58.1585673239840;
- Tue, 31 Mar 2020 09:47:19 -0700 (PDT)
+        Tue, 31 Mar 2020 12:48:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=iBIZjEbhUqZOtk5V18poldKYJqWr17L3xpH+eAdVvpQ=; b=VoE/pOwTmbEoLZztds+Z6FQ5Oo
+        uqKJwve38PohsGjqmKA7k0xNE+sgE/Tq3j+draqv3XUq/XZ7bZl7K18U+4GiyNjDi5zTQ+quHOrTB
+        5oddyo7yRn8muBXIkO5DRQ3juwcUS7bRtAKmlrQmEy6+ZYvnyLvgSJzjBfHm9PZx7T1rV6Klxm6ve
+        imTPF+rxbLbqtqtxPCR4DLJxiDGD1jUab3iHF6eH6rCWrf6eF4QGt197Oxh9u5cTtKCdcg9mJfKWP
+        /OTD5pQmIqLUpba7IMtZBp6X9jl9au+9LHyd86/hCnvw9AH7dyValneKa8S46/t3cQlgD54BvPoUU
+        yxFbkeKA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJK4B-0001WE-2W; Tue, 31 Mar 2020 16:48:43 +0000
+Subject: Re: mmotm 2020-03-30-18-46 uploaded (freesync)
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+References: <20200331014748.ajL0G62jF%akpm@linux-foundation.org>
+ <a266d6a4-6d48-aadc-afd7-af0eb7c2d9db@infradead.org>
+ <20200331073938.GA54733@ubuntu-m2-xlarge-x86>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <710856c8-b1d9-d03d-457c-99e55a2ff274@infradead.org>
+Date:   Tue, 31 Mar 2020 09:48:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org>
- <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
- <20200330221245.GA17782@xps15> <20200330224554.GD215915@minitux>
-In-Reply-To: <20200330224554.GD215915@minitux>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 31 Mar 2020 10:47:08 -0600
-Message-ID: <CANLsYkxEA66kGZh1rToSn79fpgPHqEjMZsSw74Rx3OLwG2k35w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, psodagud@codeaurora.org,
-        tsoni@codeaurora.org, Siddharth Gupta <sidgup@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200331073938.GA54733@ubuntu-m2-xlarge-x86>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 at 16:45, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Mon 30 Mar 15:12 PDT 2020, Mathieu Poirier wrote:
-> [..]
-> > > +   struct rproc *rproc;
-> > > +
-> > > +   rproc = container_of(inode->i_cdev, struct rproc, char_dev);
-> > > +   if (!rproc)
-> > > +           return -EINVAL;
-> > > +
-> > > +   rproc_shutdown(rproc);
-> >
-> > The scenario I see here is that a userspace program will call
-> > open(/dev/rproc_xyz, SOME_OPTION) when it is launched.  The file stays open
-> > until either the application shuts down, in which case it calls close() or it
-> > crashes.  In that case the system will automatically close all file descriptors
-> > that were open by the application, which will also call rproc_shutdown().
-> >
-> > To me the same functionality can be achieved with the current functionality
-> > provided by sysfs.
-> >
-> > When the application starts it needs to read
-> > "/sys/class/remoteproc/remoteprocX/state".  If the state is "offline" then
-> > "start" should be written to "/sys/.../state".  If the state is "running" the
-> > application just crashed and got restarted.  In which case it needs to stop the
-> > remote processor and start it again.
-> >
->
-> A case when this would be useful is the Qualcomm modem, which relies on
-> disk access through a "remote file system service" [1].
->
-> Today we register the service (a few layers ontop of rpmsg/GLINK) then
-> find the modem remoteproc and write "start" into the state sysfs file.
->
-> When we get a signal for termination we write "stop" into state to stop
-> the remoteproc before exiting.
->
-> There is however no way for us to indicate to the modem that rmtfs just
-> died, e.g. a kill -9 on the process will result in the modem continue
-> and the next IO request will fail which in most cases will be fatal.
+On 3/31/20 12:39 AM, Nathan Chancellor wrote:
+> On Mon, Mar 30, 2020 at 11:18:26PM -0700, Randy Dunlap wrote:
+>> On 3/30/20 6:47 PM, akpm@linux-foundation.org wrote:
+>>> The mm-of-the-moment snapshot 2020-03-30-18-46 has been uploaded to
+>>>
+>>>    http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> mmotm-readme.txt says
+>>>
+>>> README for mm-of-the-moment:
+>>>
+>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>> more than once a week.
+>>>
+>>> You will need quilt to apply these patches to the latest Linus release (5.x
+>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+>>> http://ozlabs.org/~akpm/mmotm/series
+>>>
+>>
+>> on i386:
+>>
+>> ld: drivers/gpu/drm/amd/display/modules/freesync/freesync.o: in function `mod_freesync_build_vrr_params':
+>> freesync.c:(.text+0x790): undefined reference to `__udivdi3'
+>>
+>>
+>> Full randconfig file is attached.
+>>
+>> -- 
+>> ~Randy
+>> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Hi Randy,
+> 
+> I am guessing this should fix it since I ran into this on arm
+> allyesconfig:
+> 
+> https://lore.kernel.org/lkml/20200330221614.7661-1-natechancellor@gmail.com/
 
-The modem will crash when attempting an IO while rmtfs is down?
+works for me. Thanks.
 
->
-> So instead having rmtfs holding /dev/rproc_foo open would upon its
-> termination cause the modem to be stopped automatically, and as the
-> system respawns rmtfs the modem would be started anew and the two sides
-> would be synced up again.
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-I have a better idea of what is going on now - thanks for writing this up.
 
-I would make this feature a kernel configurable option as some people
-may not want it.  I also think having "/dev/remoteprocX" is fine, so
-no need to change anything currently visible in sysfs.
+> FWIW, not an mmotm issue since the patch comes from the AMD tree.
 
-Mathieu
+Right.
 
->
-> [1] https://github.com/andersson/rmtfs
->
-> Regards,
-> Bjorn
+-- 
+~Randy
