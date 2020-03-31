@@ -2,53 +2,56 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADF2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE87C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020FB20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A54320772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645869;
-	bh=Ir31/0y8fSK9qMMblVvVjGAsuQJhSa9cPlV8ZpRPg5k=;
+	s=default; t=1585645875;
+	bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wLvPcEAfnbV/jYyd81a8MCYonFDt78hgNQ37Wed6KyUYkKCZiiEpDS+N74rTnwreK
-	 ay8D0Yb3xpiQhUyUQxKMLQ9izBo6fYDecEAWh/1XRgHH2vdmojnRzJJ2P14MeN2bma
-	 8OInKxMsh2CuLu0JBq1mXKDGVjq9xPxIlf1lJAHo=
+	b=2guWI5WcdZjS3lnR0hLLwqEAfQrE7XPzYw7gREA5piRsGoGB+KLG0U4l0YMqheiDV
+	 BZHdjkcjPDvIhKkcL+nQmxZzvhWnD69ry9QYTkFgc6QRvm5rcxCQ1SvjYXGXN6cKzR
+	 Q7bnW+C1r/G61BOMe1SVrvuGYTT8eAjNg5rM6ipY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731671AbgCaJLG (ORCPT
+        id S1731682AbgCaJLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:11:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731655AbgCaJLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:11:00 -0400
+        id S1731535AbgCaJLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:11:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04A112072E;
-        Tue, 31 Mar 2020 09:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8CD62072E;
+        Tue, 31 Mar 2020 09:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645860;
-        bh=Ir31/0y8fSK9qMMblVvVjGAsuQJhSa9cPlV8ZpRPg5k=;
+        s=default; t=1585645867;
+        bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqgzl7u9/8Y7nafs38pS6JC7XrMXCi6qFl6tjv9Utg2c1pJJkDhW85oYPYN1UXGe5
-         n2W/dCEhe7a/oKcEC4zAzxwHhBVzSOmG56SVkDu8M5SlTOJdHbpumOQrTJiDCJfO5b
-         ThfozFnlkJUgxq7ipmul/h6em59aVQPjI2iiOMJw=
+        b=bHMsBeR7XyKd1AsVDsQaKHpSRR0QyL41AOXkik09kC3w9yFglFCE+PdXkS/ER4Q2V
+         GJPKWZdLv0Mx336neaoFqiZYBS9gr3A4P59Nq3BTMS+ibL3Ft0FHp87IoOWztZw8uO
+         mrL3qFP6wVsuoJJ0+IaJc83ybS/96pF9Nvu7aMSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Bizon <mbizon@freebox.fr>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 017/155] net: dsa: Fix duplicate frames flooded by learning
-Date:   Tue, 31 Mar 2020 10:57:37 +0200
-Message-Id: <20200331085420.308929573@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 002/155] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
+Date:   Tue, 31 Mar 2020 10:57:22 +0200
+Message-Id: <20200331085418.501750932@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,34 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ]
+[ Upstream commit 43cc64e5221cc6741252b64bc4531dd1eefb733d ]
 
-When both the switch and the bridge are learning about new addresses,
-switch ports attached to the bridge would see duplicate ARP frames
-because both entities would attempt to send them.
+The busy timeout that is computed for each erase/trim/discard operation,
+can become quite long and may thus exceed the host->max_busy_timeout. If
+that becomes the case, mmc_do_erase() converts from using an R1B response
+to an R1 response, as to prevent the host from doing HW busy detection.
 
-Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
-Reported-by: Maxime Bizon <mbizon@freebox.fr>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+However, it has turned out that some hosts requires an R1B response no
+matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
+that, if the R1B gets enforced, the host becomes fully responsible of
+managing the needed busy timeout, in one way or the other.
+
+Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Tested-by: Faiz Abbas <faiz_abbas@ti.com>
+Tested-By: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/dsa/tag_brcm.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mmc/core/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/dsa/tag_brcm.c
-+++ b/net/dsa/tag_brcm.c
-@@ -140,6 +140,8 @@ static struct sk_buff *brcm_tag_rcv_ll(s
- 	/* Remove Broadcom tag and update checksum */
- 	skb_pull_rcsum(skb, BRCM_TAG_LEN);
- 
-+	skb->offload_fwd_mark = 1;
-+
- 	return skb;
- }
- #endif
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index abf8f5eb0a1c8..26644b7ec13e3 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -1732,8 +1732,11 @@ static int mmc_do_erase(struct mmc_card *card, unsigned int from,
+ 	 * the erase operation does not exceed the max_busy_timeout, we should
+ 	 * use R1B response. Or we need to prevent the host from doing hw busy
+ 	 * detection, which is done by converting to a R1 response instead.
++	 * Note, some hosts requires R1B, which also means they are on their own
++	 * when it comes to deal with the busy timeout.
+ 	 */
+-	if (card->host->max_busy_timeout &&
++	if (!(card->host->caps & MMC_CAP_NEED_RSP_BUSY) &&
++	    card->host->max_busy_timeout &&
+ 	    busy_timeout > card->host->max_busy_timeout) {
+ 		cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+ 	} else {
+-- 
+2.20.1
+
 
 
