@@ -2,288 +2,115 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D65C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBFCC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6663A20781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 034AE2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QPs5ozvI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pRCkdy9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbgCaHg4 (ORCPT
+        id S1729982AbgCaHiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:36:56 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:37135 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgCaHgz (ORCPT
+        Tue, 31 Mar 2020 03:38:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35430 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgCaHiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:36:55 -0400
-Received: by mail-vk1-f193.google.com with SMTP id o124so5441824vkc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:36:54 -0700 (PDT)
+        Tue, 31 Mar 2020 03:38:50 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u68so9955026pfb.2;
+        Tue, 31 Mar 2020 00:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S6Q9hQ2oX9Ox06YI7dtd+yeRUlkspby1i/hG2sHJOwk=;
-        b=QPs5ozvIbF42Ytw0UwR9mtN42EIVg+Uhckg5kKc+/HZlfqR2lrKjQMDMC0u16BYIRJ
-         lGDVlYNa6YxP1XX2KmFecCHQO+1hdmrptQMWezPbNv8ZGok0DAVsLxwy3rE+1DjsWUgW
-         j8mmb1/Dd5UoAKKQMzm6uy6q2u1RWfpt2inKE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=clEoM1P33ahnu51wVt18VYbNSvCb4pxLGx0VQ1g+QU0=;
+        b=pRCkdy9DweqMPvvEEk43IP8ZmbYGUUIqCEfMRIdUbthVHHA9bdtowzHwyFGfBxtLNP
+         IDJpl5RONrulwcrwj7K49EC35SZDg8qZ/elPFdxdz84Hz4/RTDEFPyva1VFC/p6T2jSs
+         X8oNWrC0YNuYSqYDC5F9eeTEYa/HUdg9+xgtBfFdGjKETd2Q4Yp0sePcZgPwSXAN6wSs
+         u+JpmJcrXf9m/EPCt81lWdSm2vMW2EkLpF4EJNwuA+AUFvd6oAgR3EfM7W1qxwYTwMXg
+         NH1DJLYXn7yua5hxm70FO9lUEuDEjYtw3VWx5b7CN4ZCh8QjwQ0WVcXk505P+dd+y41U
+         X7/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S6Q9hQ2oX9Ox06YI7dtd+yeRUlkspby1i/hG2sHJOwk=;
-        b=mMM1QQJraaNv6PELifu9veHoxrS+T6xVi3q+2PyXPYzFvD7YQcRILnwammAYmtSZ47
-         ptW+ybgELgZBX8DbsygcICV7mSEK1EDJ9a6+j0PUTUZXMB8fJFIUMRQzl207By5lsmN/
-         lJy7k1D62J/+ELDLH9ETILtY/ImioIHw5I1LEKnORmcNdaNilUfBTBUcgHUcU3j/Kgg2
-         V4VDe7EMJh0ZFiJ0DHwJQjTFOkbFmmfxzO+2rYVWYSz3dHMTOCIPvTrymSWoIlC6xuEz
-         ri3MEBGUk4aEriO5zXVbPveYi9DEVSFbSGk7SG423Dza5l3kn0u5/GxiEW0/rpSmWyML
-         SaLg==
-X-Gm-Message-State: AGi0PubXIY+JEi2PUFh23lUYbAZz0G7O1jPQJp8iOBvpLQW+qxyPpkxj
-        LRTyoj+nRjdoVFaK5fYr3fhzp1oFLZEsSeWWR89lBg==
-X-Google-Smtp-Source: APiQypLerFdT3MKzpJXcwDaQOekBA6oEi5+6wAfkecHdEyHJfLkPPjYL+dMfVJRSqp0BLWf6eFEaeWcDO7a0xb6AIq0=
-X-Received: by 2002:a05:6122:2d0:: with SMTP id k16mr10595740vki.54.1585640214209;
- Tue, 31 Mar 2020 00:36:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1585627657-3265-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1585627657-3265-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 31 Mar 2020 15:36:43 +0800
-Message-ID: <CANMq1KBqeUHj0gKcknPDvgzRzGMt26pq-_rt_ZM89phCHO9jqQ@mail.gmail.com>
-Subject: Re: [PATCH v11 3/5] mfd: Add support for the MediaTek MT6358 PMIC
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-rtc@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=clEoM1P33ahnu51wVt18VYbNSvCb4pxLGx0VQ1g+QU0=;
+        b=kHHhvPd4yG2zJjyvUBxHYH3kt5EmfyXlowb1fUc5I7We7RWpzKacwNiuqBIicOjwJa
+         EGDvV9togH6933f8p5Nl7MZ+8wXerqF5iRzayZsmZWfHHySz5tN8/z42EQP34m8hsIkD
+         za4A+NxwMQnoPnbwuZL2gCyXL6Kv3ihkSaKv195AQ1jXtxRby5SIW8fN0weXfV7u+z1P
+         MDp0ZCd9A6kZJMQXH2ZPWDmR0HI/JXuP13ZJPkj19iQAqKZsDv5XgpxfZvaPZxy9GrF5
+         TsQXuPQfGeEIY017TcKCIm09Y6uvGv97WkTVVwARdMbcIuD+OGJXuVqu+FYLy1+29ZCW
+         f1kg==
+X-Gm-Message-State: ANhLgQ22l/faUpRABYVHe+Ag60MZEE0B4Gnqat1c7Ra4tHW/71pVF85V
+        mstZgbuJPMIrdck2TS+moCU=
+X-Google-Smtp-Source: ADFU+vuhhva7xOwu7yBEwCmP/xzU/kqUaZ8k0h4Bh/gTzbtxJDk0jInPIVmzOVXc6R7o4XzoUi4Gdw==
+X-Received: by 2002:a62:2c87:: with SMTP id s129mr17384827pfs.263.1585640329211;
+        Tue, 31 Mar 2020 00:38:49 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([131.107.147.210])
+        by smtp.googlemail.com with ESMTPSA id q80sm9203632pfc.17.2020.03.31.00.38.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Mar 2020 00:38:48 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when panic_on_oops is set
+Date:   Tue, 31 Mar 2020 00:38:32 -0700
+Message-Id: <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
+In-Reply-To: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
+References: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:07 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
->
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
->
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
->
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-This is missing a few comments from Lee Jones on v10, actually, repeated below:
-https://patchwork.kernel.org/patch/11431239/#23244041
+When oops happens with panic_on_oops unset, the oops
+thread is killed by die() and system continues to run.
+In such case, guest should not report crash register
+data to host since system still runs. Fix it.
 
-> ---
->  drivers/mfd/Makefile                 |   2 +-
->  drivers/mfd/mt6358-irq.c             | 236 +++++++++++++++++++++++++++++
->  drivers/mfd/mt6397-core.c            |  55 ++++++-
->  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
->  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |   3 +
->  6 files changed, 731 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
->
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index b83f172..9af1414 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -238,7 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
-> -mt6397-objs    := mt6397-core.o mt6397-irq.o
-> +mt6397-objs                    := mt6397-core.o mt6397-irq.o mt6358-irq.o
->  obj-$(CONFIG_MFD_MT6397)       += mt6397.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)     += intel_soc_pmic_mrfld.o
->
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> new file mode 100644
-> index 0000000..022e5f5
-> --- /dev/null
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2019 MediaTek Inc.
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+Change since v3:
+	Fix compile error
+---
+ drivers/hv/vmbus_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-2020
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 172ceae69abb..4bc02aea2098 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -31,6 +31,7 @@
+ #include <linux/kdebug.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
++#include <linux/kernel.h>
+ #include <linux/syscore_ops.h>
+ #include <clocksource/hyperv_timer.h>
+ #include "hyperv_vmbus.h"
+@@ -91,7 +92,7 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+ 	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+ 	 * the notification here.
+ 	 */
+-	if (hyperv_report_reg())
++	if (hyperv_report_reg() && panic_on_oops)
+ 		hyperv_report_panic(regs, val);
+ 	return NOTIFY_DONE;
+ }
+-- 
+2.14.5
 
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/mt6358/core.h>
-> +#include <linux/mfd/mt6358/registers.h>
-> +#include <linux/mfd/mt6397/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +static struct irq_top_t mt6358_ints[] = {
-> +       MT6358_TOP_GEN(BUCK),
-> +       MT6358_TOP_GEN(LDO),
-> +       MT6358_TOP_GEN(PSC),
-> +       MT6358_TOP_GEN(SCK),
-> +       MT6358_TOP_GEN(BM),
-> +       MT6358_TOP_GEN(HK),
-> +       MT6358_TOP_GEN(AUD),
-> +       MT6358_TOP_GEN(MISC),
-> +};
-> +
-> +static void pmic_irq_enable(struct irq_data *data)
-> +{
-> +       unsigned int hwirq = irqd_to_hwirq(data);
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       irqd->enable_hwirq[hwirq] = true;
-> +}
-> +
-> +static void pmic_irq_disable(struct irq_data *data)
-> +{
-> +       unsigned int hwirq = irqd_to_hwirq(data);
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       irqd->enable_hwirq[hwirq] = false;
-> +}
-> +
-> +static void pmic_irq_lock(struct irq_data *data)
-> +{
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +
-> +       mutex_lock(&chip->irqlock);
-> +}
-> +
-> +static void pmic_irq_sync_unlock(struct irq_data *data)
-> +{
-> +       unsigned int i, top_gp, gp_offset, en_reg, int_regs, shift;
-> +       struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +       struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +       for (i = 0; i < irqd->num_pmic_irqs; i++) {
-> +               if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
-> +                       continue;
-> +
-> +               /* Find out the IRQ group */
-> +               top_gp = 0;
-> +               while ((top_gp + 1) < irqd->num_top &&
-> +                      i >= mt6358_ints[top_gp + 1].hwirq_base)
-> +                       top_gp++;
-> +
-> +               /* Find the irq registers */
-
-From Lee Jones: 'Nit: "IRQ"'
-
-> +               gp_offset = i - mt6358_ints[top_gp].hwirq_base;
-> +               int_regs = gp_offset / MT6358_REG_WIDTH;
-> +               shift = gp_offset % MT6358_REG_WIDTH;
-> +               en_reg = mt6358_ints[top_gp].en_reg +
-> +                        (mt6358_ints[top_gp].en_reg_shift * int_regs);
-> +
-[...]
-> +static const struct irq_domain_ops mt6358_irq_domain_ops = {
-> +       .map = pmic_irq_domain_map,
-> +       .xlate = irq_domain_xlate_twocell,
-> +};
-> +
-> +int mt6358_irq_init(struct mt6397_chip *chip)
-> +{
-> +       int i, j, ret;
-> +       struct pmic_irq_data *irqd;
-> +
-> +       irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
-
-From Lee Jones: 'sizeof(*irqd)'
-
-> +                           GFP_KERNEL);
-> +       if (!irqd)
-> +               return -ENOMEM;
-> +
-> +       chip->irq_data = irqd;
-> +
-[...]
-> @@ -154,19 +184,33 @@ static int mt6397_probe(struct platform_device *pdev)
->         if (pmic->irq <= 0)
->                 return pmic->irq;
->
-> -       ret = mt6397_irq_init(pmic);
-> -       if (ret)
-> -               return ret;
-> -
->         switch (pmic->chip_id) {
->         case MT6323_CHIP_ID:
-> +               ret = mt6397_irq_init(pmic);
-> +               if (ret)
-> +                       return ret;
-> +
->                 ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
->                                            mt6323_devs, ARRAY_SIZE(mt6323_devs),
->                                            NULL, 0, pmic->irq_domain);
->                 break;
->
-> +       case MT6358_CHIP_ID:
-> +               ret = mt6358_irq_init(pmic);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
-> +                                          mt6358_devs, ARRAY_SIZE(mt6358_devs),
-> +                                          NULL, 0, pmic->irq_domain);
-> +               break;
-
-From Lee Jones: "In a subsequent patch you can choose the correct
-mtXXXX_devs structure to pass and call devm_mfd_add_devices() only
-once below the switch()."
-
-Can you look into that as a follow-up patch?
-
-
-> +
->         case MT6391_CHIP_ID:
->         case MT6397_CHIP_ID:
-> +               ret = mt6397_irq_init(pmic);
-> +               if (ret)
-> +                       return ret;
-> +
->                 ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
->                                            mt6397_devs, ARRAY_SIZE(mt6397_devs),
->                                            NULL, 0, pmic->irq_domain);
-
-[snip]
