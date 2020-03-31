@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036ACC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6227DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB48820772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F62920772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbgCaKxm (ORCPT
+        id S1730956AbgCaKxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:53:42 -0400
+        Tue, 31 Mar 2020 06:53:44 -0400
 Received: from esa4.mentor.iphmx.com ([68.232.137.252]:43597 "EHLO
         esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730467AbgCaKxj (ORCPT
+        with ESMTP id S1730946AbgCaKxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:53:39 -0400
-IronPort-SDR: hq2UmAM7kKSh/xD+P5jn7wn0uGFfS6hZtWvlLXqb80z3UHAjQFLZwX9855XHquljJtLdoo0sz9
- Df0cfII8XGpOdTveYgTzz6oHLqxFoVxfzDBi9fw7mCHy+PivtGvyV8QN3OuPm6DbtSEPgDHlV5
- 0ST15N7GOeYIzXKg/GN7A8PcQ0KHMlYkA56SrhlcGZJMvud2XiW6hMknU4wy9ddpYL63iNtR5Z
- 8QQg6ip0JrLbMU/Dkw09b3Ct6XSVnDP/8yWPUvWg0g1M4PGr0rZsVni3sT1rjJVfGKuQ+Qyjf/
- HTQ=
+        Tue, 31 Mar 2020 06:53:42 -0400
+IronPort-SDR: cs4m7RbYzpTVVfnPAxKfUQDAlJkAHFQqqDTBIwGhOVCG4Fee/1Ne8/A3JMfF/HAbr6970xsfwc
+ XHeQli4H6kpmY1dU5YNab0ITiyd64IOolSo90slStPlnd3Fy5RGds//9sevPKF0qpd8Ji5oYQ5
+ mMBgFD5mxTFVxLfbtr2QN2FA3DsjLap1PC8bCCaSutAhcQLWVgwp0hHjmO43mzt5VWSK6USztx
+ wm53Jne3+hRBOKvgtHpQB+JHOu5Lt7ZNiIOuWMLStyH1CdwDodW6Tk2kPo1MYs/d/KdzEtyQbk
+ qzQ=
 X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="47330835"
+   d="scan'208";a="47330838"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 31 Mar 2020 02:53:38 -0800
-IronPort-SDR: SbzT8s12pWv5BIzZSrYhyzCDiWMDVcEFPundOFCJe+WRDSugp6UBpNsoZiQ4gsAVNEBMQvPlX6
- q3AsAqjLK0Ik/luGaxpV6VF+hMYjIlw9DYm0LNjgW879wqe/l29zrHyctRuGwSJD7V8URgLRGi
- sJMbJonAf16pci29vkgRlN9VKQJuncwrKIV/IeXzdPK+i/k/h08JT1BvnNruVxDU2MKRzY0e5W
- +X8GP/xSP2mqRHR71Fea2cfUqs0NtXORDUJCz1S0gX0fNZa2fzRA5T9pfgDj1gSRCnU9nWawk9
- rPo=
+  by esa4.mentor.iphmx.com with ESMTP; 31 Mar 2020 02:53:42 -0800
+IronPort-SDR: +bMCQJJLPyqQABm5RnUXGfLNY9Hj6Vn8Rgt5hxaSnEmP2wMyR4frc0uc8Wfk1nE2wYwkH6W45y
+ fNH8eckyDYA9xgoBi4n6uLU295Nhxjux1peD7SqJ1zzLtEgT0uw4dclDHtd37lVAF90JgjIY1G
+ gBrmKAdZKB92z+RZwDsnCfiRoHSHCmxf3SvzttomhG5/ijL6MFc1YwoOlLv8pHd//T+LluRGQn
+ W2+UWOTbenVP8qVFClPHDRak+gYf3DIx8Jwahvj+ubFfOll8kuGThmToKU0Z/3oJhVH26Waxd0
+ 7Hw=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -41,9 +41,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v10 43/55] dt-bindings: input: atmel: support to set max bytes transferred
-Date:   Tue, 31 Mar 2020 03:50:39 -0700
-Message-ID: <20200331105051.58896-44-jiada_wang@mentor.com>
+Subject: [PATCH v10 44/55] Input: atmel_mxt_ts: return error from mxt_process_messages_until_invalid()
+Date:   Tue, 31 Mar 2020 03:50:40 -0700
+Message-ID: <20200331105051.58896-45-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200331105051.58896-1-jiada_wang@mentor.com>
 References: <20200331105051.58896-1-jiada_wang@mentor.com>
@@ -54,32 +54,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to set max bytes transferred in an i2c transaction
+From: Dean Jenkins <Dean_Jenkins@mentor.com>
 
+mxt_process_messages_until_invalid() failed to propagate the error
+code from mxt_read_and_process_messages() so return the error code.
+
+Signed-off-by: Dean Jenkins <Dean_Jenkins@mentor.com>
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-index 126266891cdc..37a798cab0dd 100644
---- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-+++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-@@ -45,6 +45,8 @@ Optional properties for main touchpad device:
- 
- - atmel,input_name: Override name of input device from the default.
- 
-+- atmel,mtu: Maximum number of bytes that can read/transferred in an i2c transaction
-+
- Example:
- 
- 	touch@4b {
-@@ -52,4 +54,5 @@ Example:
- 		reg = <0x4b>;
- 		interrupt-parent = <&gpio>;
- 		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
-+		atmel,mtu = <200>
- 	};
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 384b53717139..bbec5a8e0bb6 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -1561,6 +1561,8 @@ static int mxt_process_messages_until_invalid(struct mxt_data *data)
+ 	/* Read messages until we force an invalid */
+ 	do {
+ 		read = mxt_read_and_process_messages(data, count);
++		if (read < 0)
++			return read;
+ 		if (read < count)
+ 			return 0;
+ 	} while (--tries);
 -- 
 2.17.1
 
