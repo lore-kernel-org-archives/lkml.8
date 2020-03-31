@@ -2,105 +2,151 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D806EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAE9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB7F20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PNuFd67E"
+	by mail.kernel.org (Postfix) with ESMTP id D6C7320658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585646486;
+	bh=sK3YWrsln2c5DjXqe0JsNqeS0055gUJoHOjeSG4dO8U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T3TMDRBMWq/z7kKn7YiB6wVq3DyeQaj+NkmbZDL37J5/ZFeiYPJQHIv3n/Ltjn595
+	 LOefBG8PASgF8RoEIqMApjmVX+ia2M6f4OKoSZVV+AM+OrUPwQo15iFl/qYLpNkuV0
+	 aZja9GeMHK+GSFtEVZMPvG+0DbvZ4WzzICpVIbwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbgCaJVS (ORCPT
+        id S1731907AbgCaJVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:21:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25339 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731773AbgCaJVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:21:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585646474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GTjY9VYWDP/F7mEWfjv7lXAEg3SDOKfVcGPNXYsvZyU=;
-        b=PNuFd67EDDf3+0MFfSKQBc4e4VMuGXyFlkVqDH4nJh7Fb1l51lGJvRmBE48kZiYGm6lEVj
-        qB9mNDiSI64BsDUbLdGxIK94a6RYG+RPD977ZtSICV8fFYLie0gxgOf0Ugqawl6DCA5kwC
-        meyjqPvJL6evWoVU6bNdi32m6RYRo84=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-197-npjoz2J-OJeG2S4WkAFftw-1; Tue, 31 Mar 2020 05:21:11 -0400
-X-MC-Unique: npjoz2J-OJeG2S4WkAFftw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 31 Mar 2020 05:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730548AbgCaJJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:09:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C678D8017CC;
-        Tue, 31 Mar 2020 09:21:09 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.194.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C89919C6A;
-        Tue, 31 Mar 2020 09:21:04 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 11:21:01 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200331092101.fnipaxqewol2hzd2@ws.net.home>
-References: <1445647.1585576702@warthog.procyon.org.uk>
- <CAJfpegvZ_qtdGcP4bNQyYt1BbgF9HdaDRsmD43a-Muxgki+wTw@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 48FBD20675;
+        Tue, 31 Mar 2020 09:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585645780;
+        bh=sK3YWrsln2c5DjXqe0JsNqeS0055gUJoHOjeSG4dO8U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o+z/efKm6rATIVkKSqh7vesmVvMTesmwqYXKo7sZW1CZ9sAMSYGAK9tohLxUSP/IC
+         7akxJjbyuQAP7TUvErjPQLXTI2ivGz4PZM6L8F9O8nRN2Xqi/TBf8/We0dpPWGhT+g
+         724xkYqYEwtjKikxJGwvTbwbpV8cEXQfxTSamiuQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 5.5 163/170] staging: wfx: annotate nested gc_list vs tx queue locking
+Date:   Tue, 31 Mar 2020 10:59:37 +0200
+Message-Id: <20200331085440.081276284@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
+References: <20200331085423.990189598@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegvZ_qtdGcP4bNQyYt1BbgF9HdaDRsmD43a-Muxgki+wTw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:28:56PM +0200, Miklos Szeredi wrote:
-> All this could be solved with a string key/value representation of the
-> same data, with minimal performance loss on encoding/parsing.  The
-> proposed fs interface[1] is one example of that, but I could also
-> imagine a syscall based one too.
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-Yes, key/value is possible solution. The question is if we really 
-need to add extra /sys-like filesystem to get key/value ;-) I can 
-imagine key/value from FD based interface without open/read/close for
-each attribute,
+commit e2525a95cc0887c7dc0549cb5d0ac3e796e1d54c upstream.
 
-    fd = open("/mnt", O_PATH);
-    fsinfo(fd, "propagation", buf, sizeof(buf));
-    fsinfo(fd, "fstype", buf, sizeof(buf));
-    close(fd);
+Lockdep is complaining about recursive locking, because it can't make
+a difference between locked skb_queues. Annotate nested locks and avoid
+double bh_disable/enable.
 
-why I need /mountfs/<id>/propagation and /mountfs/<id>/fstype to get
-the same? It sounds like over-engineering without any extra bonus.
+[...]
+insmod/815 is trying to acquire lock:
+cb7d6418 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xfc/0x198 [wfx]
 
-Anyway, if we have FD based interfaces like fsopen(), fsmount(),
-open_tree() and move_mount() then it sounds strange that you cannot
-use the FD to ask kernel for the mount node attributes and you need 
-to open and read another /sys-like files. 
+but task is already holding lock:
+cb7d61f4 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xa0/0x198 [wfx]
 
-IMHO it would be nice that after open(/mnt, O_PATH) I can do whatever
-with the mount point (umount, move, reconfigure, query, etc.). Please,
-try to keep it simple and consistent ;-)
+[...]
+Possible unsafe locking scenario:
 
-    Karel
+      CPU0
+      ----
+ lock(&(&list->lock)->rlock);
+ lock(&(&list->lock)->rlock);
 
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+Cc: stable@vger.kernel.org
+Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/5e30397af95854b4a7deea073b730c00229f42ba.1581416843.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/staging/wfx/queue.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/drivers/staging/wfx/queue.c
++++ b/drivers/staging/wfx/queue.c
+@@ -132,12 +132,12 @@ static void wfx_tx_queue_clear(struct wf
+ 	spin_lock_bh(&queue->queue.lock);
+ 	while ((item = __skb_dequeue(&queue->queue)) != NULL)
+ 		skb_queue_head(gc_list, item);
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	for (i = 0; i < ARRAY_SIZE(stats->link_map_cache); ++i) {
+ 		stats->link_map_cache[i] -= queue->link_map_cache[i];
+ 		queue->link_map_cache[i] = 0;
+ 	}
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	spin_unlock_bh(&queue->queue.lock);
+ }
+ 
+@@ -213,9 +213,9 @@ void wfx_tx_queue_put(struct wfx_dev *wd
+ 
+ 	++queue->link_map_cache[tx_priv->link_id];
+ 
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	++stats->link_map_cache[tx_priv->link_id];
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	spin_unlock_bh(&queue->queue.lock);
+ }
+ 
+@@ -244,11 +244,11 @@ static struct sk_buff *wfx_tx_queue_get(
+ 		__skb_unlink(skb, &queue->queue);
+ 		--queue->link_map_cache[tx_priv->link_id];
+ 
+-		spin_lock_bh(&stats->pending.lock);
++		spin_lock_nested(&stats->pending.lock, 1);
+ 		__skb_queue_tail(&stats->pending, skb);
+ 		if (!--stats->link_map_cache[tx_priv->link_id])
+ 			wakeup_stats = true;
+-		spin_unlock_bh(&stats->pending.lock);
++		spin_unlock(&stats->pending.lock);
+ 	}
+ 	spin_unlock_bh(&queue->queue.lock);
+ 	if (wakeup_stats)
+@@ -266,10 +266,10 @@ int wfx_pending_requeue(struct wfx_dev *
+ 	spin_lock_bh(&queue->queue.lock);
+ 	++queue->link_map_cache[tx_priv->link_id];
+ 
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	++stats->link_map_cache[tx_priv->link_id];
+ 	__skb_unlink(skb, &stats->pending);
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	__skb_queue_tail(&queue->queue, skb);
+ 	spin_unlock_bh(&queue->queue.lock);
+ 	return 0;
+
 
