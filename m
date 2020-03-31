@@ -2,181 +2,134 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B21FC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15A2C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:56:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A4B20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A496420784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ordyPWYp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sPjiUuqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730915AbgCaNzf (ORCPT
+        id S1730932AbgCaN44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:55:35 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53392 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730420AbgCaNze (ORCPT
+        Tue, 31 Mar 2020 09:56:56 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15202 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730216AbgCaN44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:55:34 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200331135533euoutp01ade0505e123870c1dcb88a58fa933a08~BaAlXbCIC1924719247euoutp01d
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 13:55:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200331135533euoutp01ade0505e123870c1dcb88a58fa933a08~BaAlXbCIC1924719247euoutp01d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585662933;
-        bh=eLAV6rJTvPK37Qjgr9MT4qBTJmPhi+qYspTzF9BjccM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ordyPWYpv8IaNOgwBviRSrViyperps4qnBK8UvIedLJv9UdwQqHmUnJ7Ih5D0DXG0
-         2GKxTE7lECSi0FvVeUts1a69dwHh54jQkzwY3mTym0HZnFsFmi+qRY8v1m9N9XClnh
-         CqhVFC0qWX2SkEkNJuP3y+FOBcbD3vbFXimP7Vv0=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200331135532eucas1p21abe4721e7f75c524f78346b0532676b~BaAlLOw402654426544eucas1p2Q;
-        Tue, 31 Mar 2020 13:55:32 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6F.72.60698.4DB438E5; Tue, 31
-        Mar 2020 14:55:32 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200331135532eucas1p1e64e7b122de756d54bc28abaea41dd08~BaAkuujy62016720167eucas1p17;
-        Tue, 31 Mar 2020 13:55:32 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200331135532eusmtrp1d9784225ee78473c7434897f705a0418~BaAkuEui92490124901eusmtrp1u;
-        Tue, 31 Mar 2020 13:55:32 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-01-5e834bd4789f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id AB.0E.08375.4DB438E5; Tue, 31
-        Mar 2020 14:55:32 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200331135531eusmtip2152bcfe35dd0ab3049509c085051f934~BaAkEdcUv2932629326eusmtip2U;
-        Tue, 31 Mar 2020 13:55:31 +0000 (GMT)
-Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
-        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
-Date:   Tue, 31 Mar 2020 15:55:28 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.6.0
+        Tue, 31 Mar 2020 09:56:56 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e834c1a0000>; Tue, 31 Mar 2020 06:56:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 31 Mar 2020 06:56:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 31 Mar 2020 06:56:55 -0700
+Received: from [10.26.72.141] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 31 Mar
+ 2020 13:56:54 +0000
+Subject: Re: [PATCH V2 1/3] soc/tegra: fuse: Add custom SoC attributes
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200331103341.19571-1-jonathanh@nvidia.com>
+ <4f1fabbb-a0a3-6f7d-f62c-2bd545f2644a@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <bd1b2056-dc72-323b-bda5-d99df3a139a6@nvidia.com>
+Date:   Tue, 31 Mar 2020 14:56:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <X7728Q.UX8A28S31JO92@crapouillou.net>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGczvTmaFaHArKCRrRGoiQCBLETBQVEh9qfNAXjRK2ChMgsjQd
-        Vn0QrKA2KASJloLFSImILFqBCBFURBBRKgXZAhoDpizBGtkEl9hxRHn7zjn/Wf6bS2Gyp2I3
-        Ki4xmVUnKuPlhARvaF8y7+g7rAnfqV0OYErbusVM3tg0xpjN90nGNNYvZnqbSghGZ24RMeUD
-        PSImr8yCM986rmJMdnMbyRQai8igNYoqQxVS3LNcJBSN+lFSYaq8TCgeGs8pZk2bjxIhksBo
-        Nj4ulVX77o+UxN59n4updHT6A/McnolMUi2iKKB3Qc6XbVokoWR0BYI378ZxLXKwB3MI6h4z
-        QmEWQe+FOXKlodqGC/k7CCayfiIhsCEwmMsQL3KmFfDEGsUPcqG3g3GymeA1GL0kgqGhQcQX
-        CNoPtDNagmcpvR9GS6fFPOO0BxjqS0U8r6dDoed5nljQOEFnkXCdA+0Pn/O7SZ4x2h009cWY
-        wK4wPM73SuyH9pMw9ar8zwKgD8KkrvMvO8NURx0p8CboupaLCw0aBB+7q0khyLV7Pq9Dgmov
-        jHQvE7w1jPaC2iZf4SmCYWYIBHSEwRkn4QZHKGi4gQlpKVzKkQkzPEHfUfNv67O3FiwfyfWr
-        nOlXudGvcqP/v/YWwiuRK5vCJcSwnH8im+bDKRO4lMQYn6ikBBOy/6uuXx3zj1DLj1OtiKaQ
-        fK00PVATLhMrU7mMhFYEFCZ3kRJHMsNl0mhlxhlWnRShTolnuVa0kcLlrlL/25NhMjpGmcye
-        ZlkVq16piigHt0zkk9UZnL81QronvSHixbEtr5v1aaEq92lrcAgetMj1WF+GZRuC5ZFGjb5F
-        M7bhrK3kpC1JHTMsCrLuK144pAuosYyUBRwwL1gyvitPVHzIW1R5ehsietnar7sD2YrCKcbV
-        w8M0P3HlUxJR2njzON7XfN1WUOtFDJRPZ1vb3dbJcS5W6eeNqTnlb1PUR6pTAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xe7pXvJvjDDbMEbOYf+Qcq0X/49fM
-        FufPb2C32PT4GqvF5V1z2CxmnN/HZLH0+kUmi/7Fl1gsfhzvY7Zo3XuE3WLKkpnsDtwea+at
-        YfRYfamdzWPnrLvsHptWdbJ5bF5S7/F5k1wAW5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJ
-        pZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexsp7PcwFMwQqNp7/wtLAuIm3i5GDQ0LARGLte5Yu
-        Ri4OIYGljBLb519k7WLkBIrLSJyc1gBlC0v8udbFBlH0llFi+t7rTCDNwgIeEvufJ4PUiAho
-        SCx5uReshlngJ5PExOsL2UASQgIvmCS6JiSA2GwChhJdb7vA4rwCdhJ3578GW8AioCoxb+t8
-        JhBbVCBG4ueeLhaIGkGJkzOfgNmcAsYS7yacYwexmQXMJOZtfsgMYctLNG+dDWWLS9x6Mp9p
-        AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnpucWGesWJucWleel6yfm5mxiBMbrt2M/NOxgv
-        bQw+xCjAwajEw1th0xwnxJpYVlyZe4hRgoNZSYSXzb8hTog3JbGyKrUoP76oNCe1+BCjKdBz
-        E5mlRJPzgekjryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFMHxMHp1QDo67k
-        l6UaJeIpHScUDq2cYOBdm6H4nvk0y8YojajzxYIH/CJf7Xu4saHu67eoJsHQb+3Tz9xrjGS2
-        FbyV3Fxw48FC/pO5W61nvdjx1ZHd67xLEvO5o+zxt61MyrseBPBxbrGt0WlWeij3Q0/knP3y
-        zc0/+35HLP9gKXO8nvWp/2KzlvdXF/ivUmIpzkg01GIuKk4EAGng0CvnAgAA
-X-CMS-MailID: 20200331135532eucas1p1e64e7b122de756d54bc28abaea41dd08
-X-Msg-Generator: CA
+In-Reply-To: <4f1fabbb-a0a3-6f7d-f62c-2bd545f2644a@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200318142549eucas1p1793027850923ebad20b4691cba676671
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200318142549eucas1p1793027850923ebad20b4691cba676671
-References: <20200312153411.13535-1-paul@crapouillou.net>
-        <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
-        <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
-        <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
-        <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
-        <X7728Q.UX8A28S31JO92@crapouillou.net>
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585663002; bh=kzFsughcFE0TQtZJTETz31yFA7yQ/27hpX9Njq52hy4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=sPjiUuqtZqe15GRCaVr4cakBP79Sk4wSsuTCV/lRiRgi5KAWuC5kqsP07t9m4tb/6
+         sYGavEv9r2w0ELFTdKP6NvZctxnbv/JNw3Dzz55+8BuU2pIX6bwGiwMI7tStP7AG6u
+         5oO770HUDDg08SzpWaTjMjK33JCUqLdTIISb2EQovO1BIfxvjfv2IGZp+vNFMA4BwQ
+         1ewKo4q7A+v2BpC2ZmKHyOM6jZv4RI+nEImbzGwsm9VT3DPUa0UaQkEROHWvStLmYu
+         uHPrSri7LQXplOythTWIry/Rk/uekzCcZhJOOvepeYX1GWtXnff3JD19G7a7jT0kGr
+         MwiAGvtxUjdnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
 
-On 2020-03-31 15:09, Paul Cercueil wrote:
-> Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
->
-> Hi Marek,
->
-> Le mar. 31 mars 2020 à 7:36, Marek Szyprowski 
-> <m.szyprowski@samsung.com> a écrit :
->> Hi Paul,
+On 31/03/2020 14:39, Dmitry Osipenko wrote:
+> 31.03.2020 13:33, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> Add a custom SoC attribute for Tegra to expose the HIDREV register
+>> fields to userspace via the sysfs. This register provides additional
+>> details about the type of device (eg, silicon, FPGA, etc) as well as
+>> revision. Exposing this information is useful for identifying the
+>> exact device revision and device type.
 >>
->> On 2020-03-18 15:25, Paul Cercueil wrote:
->>>>>   +    };
->>>>>   +
->>>>>   +    tsp_reg: regulator-1 {
->>>>>   +        compatible = "regulator-fixed";
->>>>>   +        regulator-name = "TSP_FIXED_VOLTAGES";
->>>>>   +        regulator-min-microvolt = <3300000>;
->>>>>   +        regulator-max-microvolt = <3300000>;
->>>>>   +        gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
->>>>>   +        startup-delay-us = <70000>;
->>>>>   +        enable-active-high;
->>>>>   +        regulator-boot-on;
->>>>>   +        regulator-always-on;
->>>>
->>>>  always-on and boot-on should not be needed. You have a consumer 
->>>> for this
->>>>  regulator.
->>>
->>>  About this: the touchscreen driver does not use a regulator, so I
->>>  believe that's why these properties were here.
->>>
->>>  I sent patches upstream to address the issue:
->>>  https://protect2.fireeye.com/url?k=e8aedc29-b53072b3-e8af5766-0cc47a336fae-759579fd576d8382&u=https://lkml.org/lkml/2020/3/15/94 
->>>
->>>
->>>  I believe this means I cannot merge the i9100 devicetree until it is
->>>  acked.
+>> For Tegra devices up until Tegra186, the majorrev and minorrev fields of
+>> the HIDREV register are used to determine the device revision and device
+>> type. For Tegra194, the majorrev and minorrev fields only determine the
+>> revision. Starting with Tegra194, there is an additional field,
+>> pre_si_platform (which occupies bits 20-23), that now determines device
+>> type. Therefore, for all Tegra devices, add a custom SoC attribute for
+>> the majorrev and minorrev fields and for Tegra194 add an additional
+>> attribute for the pre_si_platform field.
 >>
->> One more information - similar change has been already posted, but it
->> looks it got lost then: https://patchwork.kernel.org/patch/10550903/
->
-> I was aware of this patch, but didn't know it was sent upstream.
->
-> This other patch uses two regulators, vdd/avdd but doesn't give any 
-> reason why.
->
-I've checked the UniversalC210 schematic, which uses the same 
-touchscreen chip. There are 2 supplies to the touchscreen chip: 2.8V VDD 
-and 3.3V AVDD. Both are enabled by the same GPIO pin though. There is 
-however no reset GPIO pin there.
+>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+>> ---
+>>  drivers/soc/tegra/fuse/fuse-tegra.c    | 51 ++++++++++++++++++++++++++
+>>  drivers/soc/tegra/fuse/fuse-tegra20.c  |  1 +
+>>  drivers/soc/tegra/fuse/fuse-tegra30.c  |  6 +++
+>>  drivers/soc/tegra/fuse/fuse.h          |  8 ++++
+>>  drivers/soc/tegra/fuse/tegra-apbmisc.c | 10 +++++
+>>  5 files changed, 76 insertions(+)
+>>
+>> diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fus=
+e/fuse-tegra.c
+>> index 802717b9f6a3..639734dca5df 100644
+>> --- a/drivers/soc/tegra/fuse/fuse-tegra.c
+>> +++ b/drivers/soc/tegra/fuse/fuse-tegra.c
+>> @@ -300,6 +300,56 @@ static void tegra_enable_fuse_clk(void __iomem *bas=
+e)
+>>  	writel(reg, base + 0x14);
+>>  }
+>> =20
+>> +static ssize_t tegra_soc_majorrev_show(struct device *dev,
+>> +				       struct device_attribute *attr,
+>> +				       char *buf)
+>> +{
+>> +	return sprintf(buf, "%d\n", tegra_get_major_rev());
+>> +}
+>> +
+>> +static DEVICE_ATTR(majorrev, S_IRUGO, tegra_soc_majorrev_show,  NULL);
+>> +
+>> +static ssize_t tegra_soc_minorrev_show(struct device *dev,
+>> +				       struct device_attribute *attr,
+>> +				       char *buf)
+>> +{
+>> +	return sprintf(buf, "%d\n", tegra_get_minor_rev());
+>> +}
+>> +
+>> +static DEVICE_ATTR(minorrev, S_IRUGO, tegra_soc_minorrev_show,  NULL);
+>=20
+> Checkpatch should give a warning about that permission isn't in octal
+> format, please don't ignore it.
 
-> Paweł, is that really needed?
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Indeed. Will fix. I thought I had ran this previously, obviously not.
 
+Jon
+
+--=20
+nvpublic
