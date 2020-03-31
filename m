@@ -2,249 +2,195 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1F1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F4AC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD0220838
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C2320838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DRSA5KKU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RZOoQka7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730818AbgCaOHT (ORCPT
+        id S1731029AbgCaOIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:07:19 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32002 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730466AbgCaOHT (ORCPT
+        Tue, 31 Mar 2020 10:08:31 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:41646 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730919AbgCaOIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:07:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585663637;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mtErzcoM7afpPuWAmYNyKjwkbHkmP1wrlJah8ZVehyM=;
-        b=DRSA5KKUANWeyTGeCIbc+qzl2iZezBNpApO0QCc6GzHGyyO3/il1pVRdrncxWSCwyYPFEN
-        bVEHvFmJf1SrRpcZ8UdtwjIZ8tMc9lPwOXenOzDXda9OLSMvVtFV7RjUv9lTPrtErM2wh5
-        2EAaN5OvQYTUSM0CZJsIcsqMj/SaeXM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-qMhrPfx9NACyUFVIxY4WQw-1; Tue, 31 Mar 2020 10:07:15 -0400
-X-MC-Unique: qMhrPfx9NACyUFVIxY4WQw-1
-Received: by mail-wm1-f71.google.com with SMTP id z24so196348wml.9
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 07:07:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mtErzcoM7afpPuWAmYNyKjwkbHkmP1wrlJah8ZVehyM=;
-        b=KIyf3RavoDw0PEDWbGpVBk1LfFlj5RRNFc2ITKF5ky+Eqfve+lElAqWLHqlPxh/IJl
-         DyYrkYA2hWyWTI+S5J2Z7A2JU/m+hy2xCcbj6UKUp3KpDcv7B4Tt+YjveiWQWMlU4fDA
-         szYxaMZ8/a//TPddfeOMxI36pktbYk0/Up6vPa4OvtA73ZECM8peQjkPKXQtMdryVlwI
-         OzJDgJ5tdVXuGz0r6MLul5Mog77GrxpegSBoLgo1WFekqVHQHzalXWa/bLWbrLgiedNM
-         eRv9fEYYesawpZidppIFgUF6rz3iDiN8PG/UhyottMEgmVjNTRwTFb3OE4Qhdn3TkUUd
-         gbOA==
-X-Gm-Message-State: ANhLgQ28Z3uXBNDC9FfFzDoqyjQcm+121EthHG9+T9I81IHZW48CuQu6
-        2I5UpRaogDl0ysT121mNVi9YRg6SUr7uZEy4tRj2DoHYYP5kPqD6hNgvV5I6M5xlAHCoKxkDbp9
-        o6jNX/LyOznBhnfVyYAqU3fbC
-X-Received: by 2002:a1c:c246:: with SMTP id s67mr3712850wmf.160.1585663634566;
-        Tue, 31 Mar 2020 07:07:14 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvunAjTTWpk3eEB7o8y8hawt8FeOLm0WnVg1qsVj8zmmbE1v+hESAXRtWS1ID2NUECm449Ccw==
-X-Received: by 2002:a1c:c246:: with SMTP id s67mr3712744wmf.160.1585663633292;
-        Tue, 31 Mar 2020 07:07:13 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id w9sm29228802wrk.18.2020.03.31.07.07.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 07:07:09 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 10:07:02 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Hui Zhu <teawater@gmail.com>, jasowang@redhat.com,
-        akpm@linux-foundation.org, pagupta@redhat.com,
-        mojha@codeaurora.org, namit@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Hui Zhu <teawaterz@linux.alibaba.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER
- to handle THP spilt issue
-Message-ID: <20200331100359-mutt-send-email-mst@kernel.org>
-References: <20200326031817-mutt-send-email-mst@kernel.org>
- <C4C6BAF7-C040-403D-997C-48C7AB5A7D6B@redhat.com>
- <20200326054554-mutt-send-email-mst@kernel.org>
- <f26dc94a-7296-90c9-56cd-4586b78bc03d@redhat.com>
- <20200331091718-mutt-send-email-mst@kernel.org>
- <02a393ce-c4b4-ede9-7671-76fa4c19097a@redhat.com>
- <20200331093300-mutt-send-email-mst@kernel.org>
- <b69796e0-fa41-a219-c3e5-a11e9f5f18bf@redhat.com>
+        Tue, 31 Mar 2020 10:08:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lnFeysFtcRPhC/sTyWfEszSCpKMDIewp19ccyBmKsdA=; b=RZOoQka7jEA84B6SJiEmjaPtj
+        D6aoIqSlNCoCKBfIuscCJZpPhpNmoQMrqTNzwDSqzSZIlAyC/sSHaCtU82LFQGLTi8Zfdw24PLXCU
+        YZpWF61vVHZ3gUq0Oik2MqZoPUUYPnmI8Gt81Sb5y02FwziyVxxdQ5+cGgL15hHVNhQVg7LaLKptx
+        g3UowzFw3YsBdyxGjPuHV4vi2CV10DhKr+t3dcLlacReivnjqyBxEGvfCb5Ba+2Nlh6LJSVuZMDM0
+        OO0QtZ+WBQJuI0ri804Yl4fnL3wF/SPi68gRtFrNQEp9OX+i1sNwRO/ecFs57DfOmUWJSTs5ZkXdu
+        PmCWH+o7Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60398)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jJHYy-0000Bx-Mp; Tue, 31 Mar 2020 15:08:20 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jJHYp-0008Aa-Eb; Tue, 31 Mar 2020 15:08:11 +0100
+Date:   Tue, 31 Mar 2020 15:08:11 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        mkl@pengutronix.de
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+Message-ID: <20200331140811.GN25745@shell.armlinux.org.uk>
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+ <20200329150854.GA31812@lunn.ch>
+ <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+ <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
+ <20200330174114.GG25745@shell.armlinux.org.uk>
+ <20200331134520.GA5756@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b69796e0-fa41-a219-c3e5-a11e9f5f18bf@redhat.com>
+In-Reply-To: <20200331134520.GA5756@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 04:03:18PM +0200, David Hildenbrand wrote:
-> On 31.03.20 15:37, Michael S. Tsirkin wrote:
-> > On Tue, Mar 31, 2020 at 03:32:05PM +0200, David Hildenbrand wrote:
-> >> On 31.03.20 15:24, Michael S. Tsirkin wrote:
-> >>> On Tue, Mar 31, 2020 at 12:35:24PM +0200, David Hildenbrand wrote:
-> >>>> On 26.03.20 10:49, Michael S. Tsirkin wrote:
-> >>>>> On Thu, Mar 26, 2020 at 08:54:04AM +0100, David Hildenbrand wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>> Am 26.03.2020 um 08:21 schrieb Michael S. Tsirkin <mst@redhat.com>:
-> >>>>>>>
-> >>>>>>> ﻿On Thu, Mar 12, 2020 at 09:51:25AM +0100, David Hildenbrand wrote:
-> >>>>>>>>> On 12.03.20 09:47, Michael S. Tsirkin wrote:
-> >>>>>>>>> On Thu, Mar 12, 2020 at 09:37:32AM +0100, David Hildenbrand wrote:
-> >>>>>>>>>> 2. You are essentially stealing THPs in the guest. So the fastest
-> >>>>>>>>>> mapping (THP in guest and host) is gone. The guest won't be able to make
-> >>>>>>>>>> use of THP where it previously was able to. I can imagine this implies a
-> >>>>>>>>>> performance degradation for some workloads. This needs a proper
-> >>>>>>>>>> performance evaluation.
-> >>>>>>>>>
-> >>>>>>>>> I think the problem is more with the alloc_pages API.
-> >>>>>>>>> That gives you exactly the given order, and if there's
-> >>>>>>>>> a larger chunk available, it will split it up.
-> >>>>>>>>>
-> >>>>>>>>> But for balloon - I suspect lots of other users,
-> >>>>>>>>> we do not want to stress the system but if a large
-> >>>>>>>>> chunk is available anyway, then we could handle
-> >>>>>>>>> that more optimally by getting it all in one go.
-> >>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> So if we want to address this, IMHO this calls for a new API.
-> >>>>>>>>> Along the lines of
-> >>>>>>>>>
-> >>>>>>>>>    struct page *alloc_page_range(gfp_t gfp, unsigned int min_order,
-> >>>>>>>>>                    unsigned int max_order, unsigned int *order)
-> >>>>>>>>>
-> >>>>>>>>> the idea would then be to return at a number of pages in the given
-> >>>>>>>>> range.
-> >>>>>>>>>
-> >>>>>>>>> What do you think? Want to try implementing that?
-> >>>>>>>>
-> >>>>>>>> You can just start with the highest order and decrement the order until
-> >>>>>>>> your allocation succeeds using alloc_pages(), which would be enough for
-> >>>>>>>> a first version. At least I don't see the immediate need for a new
-> >>>>>>>> kernel API.
-> >>>>>>>
-> >>>>>>> OK I remember now.  The problem is with reclaim. Unless reclaim is
-> >>>>>>> completely disabled, any of these calls can sleep. After it wakes up,
-> >>>>>>> we would like to get the larger order that has become available
-> >>>>>>> meanwhile.
-> >>>>>>>
-> >>>>>>
-> >>>>>> Yes, but that‘s a pure optimization IMHO.
-> >>>>>> So I think we should do a trivial implementation first and then see what we gain from a new allocator API. Then we might also be able to justify it using real numbers.
-> >>>>>>
-> >>>>>
-> >>>>> Well how do you propose implement the necessary semantics?
-> >>>>> I think we are both agreed that alloc_page_range is more or
-> >>>>> less what's necessary anyway - so how would you approximate it
-> >>>>> on top of existing APIs?
-> >>>> diff --git a/include/linux/balloon_compaction.h b/include/linux/balloon_compaction.h
-> > 
-> > .....
-> > 
-> > 
-> >>>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-> >>>> index 26de020aae7b..067810b32813 100644
-> >>>> --- a/mm/balloon_compaction.c
-> >>>> +++ b/mm/balloon_compaction.c
-> >>>> @@ -112,23 +112,35 @@ size_t balloon_page_list_dequeue(struct balloon_dev_info *b_dev_info,
-> >>>>  EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
-> >>>>  
-> >>>>  /*
-> >>>> - * balloon_page_alloc - allocates a new page for insertion into the balloon
-> >>>> - *			page list.
-> >>>> + * balloon_pages_alloc - allocates a new page (of at most the given order)
-> >>>> + * 			 for insertion into the balloon page list.
-> >>>>   *
-> >>>>   * Driver must call this function to properly allocate a new balloon page.
-> >>>>   * Driver must call balloon_page_enqueue before definitively removing the page
-> >>>>   * from the guest system.
-> >>>>   *
-> >>>> + * Will fall back to smaller orders if allocation fails. The order of the
-> >>>> + * allocated page is stored in page->private.
-> >>>> + *
-> >>>>   * Return: struct page for the allocated page or NULL on allocation failure.
-> >>>>   */
-> >>>> -struct page *balloon_page_alloc(void)
-> >>>> +struct page *balloon_pages_alloc(int order)
-> >>>>  {
-> >>>> -	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
-> >>>> -				       __GFP_NOMEMALLOC | __GFP_NORETRY |
-> >>>> -				       __GFP_NOWARN);
-> >>>> -	return page;
-> >>>> +	struct page *page;
-> >>>> +
-> >>>> +	while (order >= 0) {
-> >>>> +		page = alloc_pages(balloon_mapping_gfp_mask() |
-> >>>> +				   __GFP_NOMEMALLOC | __GFP_NORETRY |
-> >>>> +				   __GFP_NOWARN, order);
-> >>>> +		if (page) {
-> >>>> +			set_page_private(page, order);
-> >>>> +			return page;
-> >>>> +		}
-> >>>> +		order--;
-> >>>> +	}
-> >>>> +	return NULL;
-> >>>>  }
-> >>>> -EXPORT_SYMBOL_GPL(balloon_page_alloc);
-> >>>> +EXPORT_SYMBOL_GPL(balloon_pages_alloc);
-> >>>>  
-> >>>>  /*
-> >>>>   * balloon_page_enqueue - inserts a new page into the balloon page list.
-> >>>
-> >>>
-> >>> I think this will try to invoke direct reclaim from the first iteration
-> >>> to free up the max order.
-> >>
-> >> %__GFP_NORETRY: The VM implementation will try only very lightweight
-> >> memory direct reclaim to get some memory under memory pressure (thus it
-> >> can sleep). It will avoid disruptive actions like OOM killer.
-> >>
-> >> Certainly good enough for a first version I would say, no?
-> > 
-> > Frankly how well that behaves would depend a lot on the workload.
-> > Can regress just as well.
-> > 
-> > For the 1st version I'd prefer something that is the least disruptive,
-> > and that IMHO means we only trigger reclaim at all in the same configuration
-> > as now - when we can't satisfy the lowest order allocation.
+On Tue, Mar 31, 2020 at 03:45:20PM +0200, Oleksij Rempel wrote:
+> Hi Russell,
 > 
-> Agreed.
-> 
+> On Mon, Mar 30, 2020 at 06:41:14PM +0100, Russell King - ARM Linux admin wrote:
+> > On Mon, Mar 30, 2020 at 10:33:03AM -0700, Florian Fainelli wrote:
+> > > 
+> > > 
+> > > On 3/29/2020 10:26 PM, Oleksij Rempel wrote:
+> > > > Hi Andrew,
+> > > > 
+> > > > On Sun, Mar 29, 2020 at 05:08:54PM +0200, Andrew Lunn wrote:
+> > > >> On Sun, Mar 29, 2020 at 01:04:57PM +0200, Oleksij Rempel wrote:
+> > > >>
+> > > >> Hi Oleksij
+> > > >>
+> > > >>> +config DEPRECATED_PHY_FIXUPS
+> > > >>> +	bool "Enable deprecated PHY fixups"
+> > > >>> +	default y
+> > > >>> +	---help---
+> > > >>> +	  In the early days it was common practice to configure PHYs by adding a
+> > > >>> +	  phy_register_fixup*() in the machine code. This practice turned out to
+> > > >>> +	  be potentially dangerous, because:
+> > > >>> +	  - it affects all PHYs in the system
+> > > >>> +	  - these register changes are usually not preserved during PHY reset
+> > > >>> +	    or suspend/resume cycle.
+> > > >>> +	  - it complicates debugging, since these configuration changes were not
+> > > >>> +	    done by the actual PHY driver.
+> > > >>> +	  This option allows to disable all fixups which are identified as
+> > > >>> +	  potentially harmful and give the developers a chance to implement the
+> > > >>> +	  proper configuration via the device tree (e.g.: phy-mode) and/or the
+> > > >>> +	  related PHY drivers.
+> > > >>
+> > > >> This appears to be an IMX only problem. Everybody else seems to of got
+> > > >> this right. There is no need to bother everybody with this new
+> > > >> option. Please put this in arch/arm/mach-mxs/Kconfig and have IMX in
+> > > >> the name.
+> > > > 
+> > > > Actually, all fixups seems to do wring thing:
+> > > > arch/arm/mach-davinci/board-dm644x-evm.c:915:		phy_register_fixup_for_uid(LXT971_PHY_ID, LXT971_PHY_MASK,
+> > > > 
+> > > > Increased MII drive strength. Should be probably enabled by the PHY
+> > > > driver.
+> > > > 
+> > > > arch/arm/mach-imx/mach-imx6q.c:167:		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
+> > > > arch/arm/mach-imx/mach-imx6q.c:169:		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+> > > > arch/arm/mach-imx/mach-imx6q.c:171:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+> > > > arch/arm/mach-imx/mach-imx6q.c:173:		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
 > > 
-> > Anything else would be a huge amount of testing with all kind of
-> > workloads.
+> > As far as I'm concerned, the AR8035 fixup is there with good reason.
+> > It's not just "random" but is required to make the AR8035 usable with
+> > the iMX6 SoCs.  Not because of a board level thing, but because it's
+> > required for the AR8035 to be usable with an iMX6 SoC.
 > > 
+> > So, having it registered by the iMX6 SoC code is entirely logical and
+> > correct.
+> > 
+> > That's likely true of the AR8031 situation as well.
+> > 
+> > I can't speak for any of the others.
 > 
-> So doing a "& ~__GFP_RECLAIM" in case order > 0? (as done in
-> GFP_TRANSHUGE_LIGHT)
-
-That will improve the situation when reclaim is not needed, but leave
-the problem in place for when it's needed: if reclaim does trigger, we
-can get a huge free page and immediately break it up.
-
-So it's ok as a first step but it will make the second step harder as
-we'll need to test with reclaim :).
-
-
-> -- 
-> Thanks,
+> OK, let's analyze it step by step:
+> --------------------------------------------------------------------------------
+> arch/arm/mach-imx/mach-imx6q.c
 > 
-> David / dhildenb
+> The AR8035 fixup is doing following configurations:
+> - disable SmartEEE with following description:
+>   /* Ar803x phy SmartEEE feature cause link status generates glitch,
+>    * which cause ethernet link down/up issue, so disable SmartEEE
+> 
+> - enable clock output from PHY, configures it to 125Mhz and configures
+>   clock skew. See the comment provided in the source code:
+>   * Enable 125MHz clock from CLK_25M on the AR8031.  This
+>   * is fed in to the IMX6 on the ENET_REF_CLK (V22) pad.
+>   * Also, introduce a tx clock delay.
+>   *
+>   * This is the same as is the AR8031 fixup.
+> 
+> - powers on the PHY. Probably to make sure the clock output will run
+>   before FEC is probed to avoid clock glitches.
+> 
+> The AR8031 fixup only enables clock output of PHY, configures it to
+> 125Mhz, and configures clock skew. The PHY not powered and although it
+> supports SmartEEE, it's not disabled. Let's assume the fixup author did
+> the correct configuration and SmartEEE is working without problems.
 
+I'm not arguing as a random third party.  I am the fixup author.
+
+SmartEEE on the Atheros PHYs is enabled by default in the hardware,
+and is a non-IEEE 802.3 approved hack to try to provide lower power
+utilisation.  However, it has been observed to cause ethernet
+corruption on SolidRun boards when connected to _some_ switches.
+It appears that the combination of Atheros SmartEEE and some switches
+introduces this problem.  This has been looked at by _three_ different
+people.
+
+The way SmartEEE works is very different from IEEE 802.3 EEE. The EEE
+is terminated at the PHY, and the Ethernet controller is supposed to
+know nothing about it.  If the link is in low power mode, then if the
+MAC wants to start transmitting, the PHY has to buffer the packet,
+wake the link up, and then pass the packet on.  There are configurable
+delays in the AR8035, and we've tried adjusting those with no success.
+
+This has nothing to do with anything at board level as far as anyone
+can work out.
+
+So, it seems entirely reasonable that the same problem would afflict
+other iMX6 designs using the AR8035.  Indeed, it already does - the
+SolidRun platforms have been through several different design
+iterations, including different board layouts, and they _all_ exhibit
+the same issue wrt SmartEEE using any of the iMX6 SoCs.
+
+There is no published information from the manufacturer that suggests
+that this is an Errata - if there were, then SolidRun being one of
+their customers would have had that information.
+
+Didn't bother to read the rest of the email, too long.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
