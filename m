@@ -2,210 +2,162 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE5AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836EDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 885D020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585671773;
-	bh=3yY7k+b2+9JS9T5W0aaeOiyvqPvzzbRIS7q6iXihTjg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k4ChBevGpC2g9eOnQXpD6rRU83SA/wXIkKNNGhcliXx/RFd8i/XS/uo9C4L4BitOw
-	 v6NVpS2y4DJWpNue6a3oXCdfQS1yIQsS8+U2VjS7UPAB4bFNYL2N6GHf/5ZxKG63cj
-	 xIrgEXlBrvzMw2KQvH3v/JiENXSW7R80ifcbJjRI=
+	by mail.kernel.org (Postfix) with ESMTP id 6031220786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbgCaQWw (ORCPT
+        id S1731014AbgCaQXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:22:52 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46644 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgCaQWw (ORCPT
+        Tue, 31 Mar 2020 12:23:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730011AbgCaQXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:22:52 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q5so17795706lfb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H0krxhczgA496JeTGfWjPTKYIgHf9GcW9MVmaaVn2GY=;
-        b=PZypqVAapY01bjsOjN2q6EITWh5onkx6m6fo+GxMpFeF0I2LpJsrttwKpFnc3LNNpF
-         Z7cVt2tso8YtHq2cdzfIN1dqfk9kwXhDrdPuiPurGi7aarOS9FqdvqSAOYvfmqO4qLPW
-         3t9xxwV4L0CiXkuJQnpt5bW/75tf/vMt5o4uw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H0krxhczgA496JeTGfWjPTKYIgHf9GcW9MVmaaVn2GY=;
-        b=LzCGyogYZ1HNc/zZeZWHPLIVxoeGKBdhDTfugghz9EQ9AQrzkmfCq7V5kEOwiSKMQN
-         fV+6Sak5CodsIenwgYAIxSm4rKQay0rHmCIjcCiXMn1v/x7TSwQKGYOafBiXTPnHscbi
-         SQudMwlRnepG22y5uWXdWSXG7Q1/rTMtIXNwduufukdiUq3Gs2U9bijOFZ+leC9xRQVg
-         C+te2cGOCPYSxjL82cybNiR/wWK4coJPt5gkYuJR41gFhzLOmOIWhUWwJKDj5T7K/3jR
-         Opr58+Dj4BL5aihjBJwpTF6aNYAtxOLScgCmBLeNOgcg/90xqiDAfx9FS2ewnKXXzZsu
-         fzng==
-X-Gm-Message-State: AGi0PuYyhiLkS6hHNbLAlKYC74paThinWeDRhp8et8L2S5npNflPnK4b
-        WQOOrXIUxdyzGjETLaGoZJ9Om/vfW8A=
-X-Google-Smtp-Source: APiQypLQjCA9PjL0ti++FVdU0ziGRsJenRZeVQDfPdts+g8LFpxUAQxvlizfBk5lccPIrw/SsskNjw==
-X-Received: by 2002:a05:6512:73:: with SMTP id i19mr11412106lfo.197.1585671768218;
-        Tue, 31 Mar 2020 09:22:48 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id n23sm8811154lji.59.2020.03.31.09.22.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:22:47 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id j17so17798296lfe.7
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:22:47 -0700 (PDT)
-X-Received: by 2002:ac2:46d3:: with SMTP id p19mr6164735lfo.125.1585671766812;
- Tue, 31 Mar 2020 09:22:46 -0700 (PDT)
+        Tue, 31 Mar 2020 12:23:12 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VG3JNc057648
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:23:11 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30206ye905-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:23:11 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <maier@linux.ibm.com>;
+        Tue, 31 Mar 2020 17:22:57 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 31 Mar 2020 17:22:54 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VGN5Vp55574590
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 16:23:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F341FA4054;
+        Tue, 31 Mar 2020 16:23:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86E80A405B;
+        Tue, 31 Mar 2020 16:23:04 +0000 (GMT)
+Received: from oc4120165700.ibm.com (unknown [9.145.128.27])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 16:23:04 +0000 (GMT)
+Subject: Re: [RFC PATCH v1 27/50] drivers/s390/scsi/zcsp_fc.c: Use
+ prandom_u32_max() for backoff
+To:     Benjamin Block <bblock@linux.ibm.com>,
+        George Spelvin <lkml@sdf.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org
+References: <202003281643.02SGhHN7015213@sdf.org>
+ <20200331161321.GB17507@t480-pf1aa2c2>
+From:   Steffen Maier <maier@linux.ibm.com>
+Date:   Tue, 31 Mar 2020 18:23:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200330120315.GA10196@alpha.franken.de>
-In-Reply-To: <20200330120315.GA10196@alpha.franken.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 31 Mar 2020 09:22:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg3wXH2JNxkQi+eLZkpuxqV+wPiHhw_Jf7ViH33Sw7PHA@mail.gmail.com>
-Message-ID: <CAHk-=wg3wXH2JNxkQi+eLZkpuxqV+wPiHhw_Jf7ViH33Sw7PHA@mail.gmail.com>
-Subject: Re: [GIT PULL] MIPS changes for v5.7-rc1
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200331161321.GB17507@t480-pf1aa2c2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20033116-4275-0000-0000-000003B706AB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033116-4276-0000-0000-000038CC5709
+Message-Id: <bf41ae18-aba4-5315-e22b-67a6873eb459@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_05:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003310141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 5:03 AM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> I probably messed up my tree, when merging mips_fixes_5_6_1. My way
-> to solve this was to merge v5.6 into mips-next to get a pull request with
-> just the changes from mips-next. I hope this is still ok for you.
+On 3/31/20 6:13 PM, Benjamin Block wrote:
+> On Fri, Nov 29, 2019 at 03:39:41PM -0500, George Spelvin wrote:
+>> We don't need crypto-grade random numbers for randomized backoffs.
+>>
+>> (We could skip the if() if we wanted to rely on the undocumented fact
+>> that prandom_u32_max(0) always returns 0.  That would be a net time
+>> saving it port_scan_backoff == 0 is rare; if it's common, the if()
+>> is false often enough to pay for itself. Not sure which applies here.)
+>>
+>> Signed-off-by: George Spelvin <lkml@sdf.org>
+>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Cc: linux-s390@vger.kernel.org
+>> ---
+>>   drivers/s390/scsi/zfcp_fc.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Hello George,
+> 
+> it would be nice, if you could address the mails to the
+> driver-maintainers (`scripts/get_maintainer.pl drivers/s390/scsi/zfcp_fc.c`
+> will tell you that this is me and Steffen); I'd certainly have noticed
+> it earlier then :-).
+> 
+>>
+>> diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+>> index b018b61bd168e..d24cafe02708f 100644
+>> --- a/drivers/s390/scsi/zfcp_fc.c
+>> +++ b/drivers/s390/scsi/zfcp_fc.c
+>> @@ -48,7 +48,7 @@ unsigned int zfcp_fc_port_scan_backoff(void)
+>>   {
+>>   	if (!port_scan_backoff)
+>>   		return 0;
+>> -	return get_random_int() % port_scan_backoff;
+>> +	return prandom_u32_max(port_scan_backoff);
 
-Please don't do this.
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
 
-If you need to do a merge in order to get the right diffstat, do it as
-a local _test_ merge, and get the diffstat from that.
+> 
+> I think the change is fine. You are right, we don't need a crypto nonce
+> here.
+> 
+> I think I'd let the zero-check stand as is, because the internal
+> behaviour of prandom_u32_max() is, as you say, undocumented. This is not
+> a performance critical code-path for us anyway.
 
-So what  happened is that you merged in mips_fixes-5.6-1 into the
-branch, and that part is fine. That merge makes sense in the context
-of mips development, and the merge even has a proper commit message,
-not just the "Merge xyz" messages that I hate.
+yes, let's keep the extra check as it's intentional and documented user 
+interface for zfcp, so better be explicit
 
-So far so good.
+> 
+>>   }
+>>   
+>>   static void zfcp_fc_port_scan_time(struct zfcp_adapter *adapter)
+>> -- 
+>> 2.26.0
+>>
+> 
+> Steffen, do you have any objections? Otherwise I can queue this up -
+> minus the somewhat mangled subject - for when we send something next time.
+> 
 
-HOWEVER.
 
-Now, _because_ you merged that other branch, your MIPS development
-branch has two different base commits - the base for the original
-development, and the base for the mips fixes.
+-- 
+Mit freundlichen Gruessen / Kind regards
+Steffen Maier
 
-And again, this is all fine. There's absolutely nothing wrong with
-having multiple bases. It happens normally any time you don't have
-entirely linear development. No problem.
+Linux on IBM Z Development
 
-But the one thing that having multiple base points of development
-means is that now you can't trivially do a diff for what has changed.
-A diff is by definition an operation that takes a beginning point and
-an end point, and shows the difference between those _two_ points.
+https://www.ibm.com/privacy/us/en/
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschaeftsfuehrung: Dirk Wittkopp
+Sitz der Gesellschaft: Boeblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
 
-But with two bases for development thanks to that fixes branch merge,
-you don't have two points. You have _three_ points - you have your two
-beginning points, and the end point of your branch, and as a result,
-you can't trivially generate a diff of "this is what my branch has
-done.
-
-Your solution for this is technically correct: the way to get a "what
-have I changed" is to do a merge, in order to get the required two
-points: after doing a merge, you can now basically just say "ok, now I
-can diff the state before merging my work, and after merging my work,
-and I now have the two required points to do a diff with".
-
-BUT!
-
-By all means do the merge, but don't _send_ me the merge. Do it as a
-temporary branch in your own repository that you then just throw away.
-The only reason for the merge was to generate the diff, there's no
-reason to then expose it in the git history.
-
-See what I'm saying? The merge is the correct thing to do, but it
-doesn't make sense to anybody else than you as that "this is what I've
-done" final thing, so you shouldn't then ask me to pull the merge.
-
-Now, why do I hate these kinds of merges?
-
- (a) a lot of people end up merging my tip-of-tree during the merge
-window, which is absolutely horrible and causes actual technical
-problems (in that they now get whatever buggy state my tree may be in
-during that unstable time).
-
-You did *not* make that mistake. You merged v5.6, which is good.
-That's the supposedly stable state (ok, we have a nasty wireless
-driver bug in it, but that's not your fault, and you did the best
-thing you could do if you have to do a merge in the first place).
-
- (b) the back-merges inevitably have completely sucky merge messages
-
-This is fundamental. They have sucky merge messages, because they have
-no actual real reason, so you _cannot_ document the reason. The best
-you can do is "to get a clean diff" (which is _not_ a development
-reason) or "to fix up conflicts" (which is a *negative* reason, since
-I want to see them).
-
-So your merge message has "Merge tag 'v5.6' into mips-next"
-
-That's not useful. And as mentioned, it _cannot_ be useful. It's about
-as good as it ever gets in these situations. But it's not great, and
-it's not great for the reason I already mentioned: there simply
-_isn't_ a good reason for the merge. It only makes sense in your local
-context, not in the context of development activity.
-
- (c) it makes it harder to figure out the development line.
-
-This is to me the big reason not to do back-merges. It makes the
-commit graph ugly and harder to follow. It very much shows up in
-"gitk" when you start looking visually at development, and it makes
-our development history even harder to visualize than it should
-normally be. It can also make for nastier bisection because now your
-development is more intertwined with upstream development, but
-_usually_ that ends up not being a huge deal.
-
-Anyway, because you merged a real tagged release, many of the
-fundamental problems with back-merges are much less of an issue.
-Merging a tagged release makes all of (a)-(c) better. So this isn't a
-disaster by any means, but this is still a "please don't do this".
-
-Now, I have two choices:
-
- - I can merge your merge
-
- - I can just merge your commit _before_ you did the merge (because
-you didn't do anything else after doing the merge).
-
-In this case, I've taken your merge. It's not the worst kind of merge
-because it took that tagged release, and by taking your merge I also
-end up getting your tag (and thus your signature) in my merge commit.
-So in this case, I have two non-optimal choices, and I'll just take
-the one with your signature.
-
-But I would have been much happier, and not have had to write this
-message (for the n'th time) if you simply hadn't done this.
-
-Yes, by all means do the merge locally into a "test-merge" branch. If
-you do it into a test branch, you can just merge my random state of
-the day (because it doesn't _matter_ - it's just for your own
-testing), and that way you can also see if there are conflicts and
-report them as part of the pull request. And you get the diff I would
-get, and see the whole "this is what my branch really ends up
-changing".
-
-But then throw that test branch away, and tag and send me the
-pre-merge state - your real development.
-
-So for next time, please keep this in mind.
-
-                     Linus
