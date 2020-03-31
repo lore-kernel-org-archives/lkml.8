@@ -5,68 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5406C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7318C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A42320787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E182166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1B9naPE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWJsx9HO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbgCaUrR (ORCPT
+        id S1731346AbgCaUrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:47:17 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34818 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730829AbgCaUrR (ORCPT
+        Tue, 31 Mar 2020 16:47:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52537 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730907AbgCaUrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:47:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d5so27885773wrn.2;
-        Tue, 31 Mar 2020 13:47:15 -0700 (PDT)
+        Tue, 31 Mar 2020 16:47:18 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t8so701239wmi.2;
+        Tue, 31 Mar 2020 13:47:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4AdEViMXBRjDxwOLzH210LJAZ7Il4kdlQLv6bFidnE8=;
-        b=E1B9naPE51Rj83Qxr+cgWNDj6fpddYFOWLp5D8koXxFkaUSk2bhToLFxd21a1Ba6az
-         VrcwzvoRuKk2EYnYfF1vEbrAOQzKCKQyBOiuXLb3u/Mv7vglD04NHhxpMJP8RdPWEoFH
-         bvXNazG1v+mpHjB+Pdqs65M91FT8Lo88jeK/wwgOa9ASQx/iViOd9jX2NrNedyIwajKz
-         Rr5NINH8nnmiQ26uwXG2UWz/NDBlpg3h10jjWWBJSyCrnPo0cPw+tRL9DMNWslBuqbyB
-         lIS5l3s4jX5iK75m6J1LZyMssO7COL4Htr4+kHngklccNH3wc3DliVF8nmCs1L9knxTr
-         +dIw==
+        bh=2hiN4D4ziicIicURcM9kTX3QBwWjTWrbPU8zupmJf9M=;
+        b=AWJsx9HO8fDO/PUITUpmkPpwyy0/OjUtIsVKTIIUWVAhzn3qnZlEGSb7AOXluG+VhY
+         ogjZMfEZcABmqsfZuTlBf/YihQemiKzjEWRhLTUSyjswFUFaGQ4FIlUpvhRz7m6M2Hdj
+         OuHLE9JGD0LkCg9veJzqbsGNfMN3fK2o7lgMrtdzFpB6m2+Wyn/WWJ4R1qhowfUHthbv
+         36qt1dbziy2Br4WXblOpwz7hO+Xd+ePco1+NSHNHivS6DHMpbW/+2JmT7D84Wt99Onp2
+         bCVcJ6maHqb5mfOnIr3dcc0byJaT6nxq1yNabJOKm8KDB/jZfT+TclmS0lhANvyk5cSE
+         b/9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4AdEViMXBRjDxwOLzH210LJAZ7Il4kdlQLv6bFidnE8=;
-        b=RWk1xdbHrsvhU0GgattA0tHWcaYW/Zk9rJMQQlXl8dGJkmFVJBiuSvttvRQn11N27Y
-         WzWcwu7Yai+b/C82oEBhh9Eg2H76Km/v7S+4TTxVlfEBO2Yk9x5+1xl1IBiuz7ltA5Jg
-         2wPlHCxTS3HWdglw8UgTB4JwlzrPV17EsIOxRxsl0XZgHlpeTbMwDSQXFWv594YxzjOh
-         qG1GXYQrrgOEYTKzYVVKBgRdsMysk4pJKrV0ZxroX6oSiCn9Ex0qn+j4mwQZU41IAuWx
-         TDMHavzAUtECjEnQBozaf+IXGETmBwlOdYxfZ6eKaELPr+9IRvLY717jK2YokYMhl1Aq
-         Nwqg==
-X-Gm-Message-State: AGi0PubyuRQqWyg9eZT+oQQduDGnA8MY5rnO4S8ohCdAFylTO7cwVZ2J
-        QzbHFyZcdVs7K/e5jdyi+xn/PRCqjA==
-X-Google-Smtp-Source: APiQypJJ8slhMDWYWjJBrx+erJOUIfKMzZFXp90keTB4tBk6rVakx4kL5Rfgj/8CcUhW5drk/hSJ4w==
-X-Received: by 2002:adf:f0d0:: with SMTP id x16mr595410wro.246.1585687634658;
-        Tue, 31 Mar 2020 13:47:14 -0700 (PDT)
+        bh=2hiN4D4ziicIicURcM9kTX3QBwWjTWrbPU8zupmJf9M=;
+        b=Whej8vS6SVe1qdlp2MvQ6WobVTE0DVZhRPB5JF8mQZ66KIQADt4raXsbqOeW+T5NyW
+         Gak2s5oDmhxi3C6BmTIK9DJyqMO2TPfpUfPiICyq3jPFPbw0PYAan/G/AsO3qz3U02DJ
+         aN6Mryep9Z+QKsno0x1udNf8FSj2zYI51Ehv9yfFOvHzlnoSiTX/1siOXjgHqC/5F7BB
+         w6ux+c4Y7ujD0BSH5W2DWVMT05qmvKf4qMWeYUxBSORFvIO4QkRXEaz8qT1iA206mclc
+         oOPPMju89g96j0g9kuSVM8ojmN6jU1IUk6auXu/3uG6nl2yS3RdakRJFQrCO0GE7jO23
+         t7oA==
+X-Gm-Message-State: AGi0PuZtEoNHa34HFuCB/h5uwYX0983ef75buy5EaTXeS4zXEF8xzh49
+        VHXHDDD4fdtb618g/ySbsFS4lPdlvQ/3
+X-Google-Smtp-Source: APiQypLbF6eRP1OB6LA75P3wQ/qMBBh/heQWRkOJzqJSLu+MvZEehQAfOeM2P7JEQ4dJD0c1WCvARA==
+X-Received: by 2002:a1c:cc11:: with SMTP id h17mr692873wmb.39.1585687635703;
+        Tue, 31 Mar 2020 13:47:15 -0700 (PDT)
 Received: from ninjahost.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
-        by smtp.gmail.com with ESMTPSA id o9sm28335491wrx.48.2020.03.31.13.47.13
+        by smtp.gmail.com with ESMTPSA id o9sm28335491wrx.48.2020.03.31.13.47.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:47:14 -0700 (PDT)
+        Tue, 31 Mar 2020 13:47:15 -0700 (PDT)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     boqun.feng@gmail.com, Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-fsdevel@vger.kernel.org (open list:PROC SYSCTL)
-Subject: [PATCH 4/7] sysctl: Add missing annotation for start_unregistering()
-Date:   Tue, 31 Mar 2020 21:46:40 +0100
-Message-Id: <20200331204643.11262-5-jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
+Subject: [PATCH 5/7] btrfs: Add missing annotation for btrfs_lock_cluster()
+Date:   Tue, 31 Mar 2020 21:46:41 +0100
+Message-Id: <20200331204643.11262-6-jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200331204643.11262-1-jbi.octave@gmail.com>
 References: <0/7>
@@ -78,31 +77,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at start_unregistering()
+Sparse reports a warning at btrfs_lock_cluster()
 
-warning: context imbalance in start_unregistering()
-	- unexpected unlock
+warning: context imbalance in btrfs_lock_cluster()
+	- wrong count
 
-The root cause is the missing annotation at start_unregistering()
-Add the missing __must_hold(&sysctl_lock) annotation.
+The root cause is the missing annotation at btrfs_lock_cluster()
+Add the missing __acquires(&cluster->refill_lock) annotation.
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- fs/proc/proc_sysctl.c | 1 +
+ fs/btrfs/extent-tree.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index c75bb4632ed1..d1b5e2b35564 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -307,6 +307,7 @@ static void proc_sys_prune_dcache(struct ctl_table_header *head)
- 
- /* called under sysctl_lock, will reacquire if has to wait */
- static void start_unregistering(struct ctl_table_header *p)
-+	__must_hold(&sysctl_lock)
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 0163fdd59f8f..9057a5ca6678 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -3395,6 +3395,7 @@ static struct btrfs_block_group *btrfs_lock_cluster(
+ 		   struct btrfs_block_group *block_group,
+ 		   struct btrfs_free_cluster *cluster,
+ 		   int delalloc)
++	__acquires(&cluster->refill_lock)
  {
- 	/*
- 	 * if p->used is 0, nobody will ever touch that entry again;
+ 	struct btrfs_block_group *used_bg = NULL;
+ 
 -- 
 2.24.1
 
