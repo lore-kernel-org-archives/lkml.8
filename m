@@ -2,341 +2,124 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E6DC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14E2C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B500520784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC2F206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731148AbgCaNwe convert rfc822-to-8bit (ORCPT
+        id S1730921AbgCaNxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:52:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:47400 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731119AbgCaNwc (ORCPT
+        Tue, 31 Mar 2020 09:53:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25372 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730420AbgCaNxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:52:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-143-aaKZBYIcPiSJ7fCHXFRLoQ-2; Tue, 31 Mar 2020 14:52:28 +0100
-X-MC-Unique: aaKZBYIcPiSJ7fCHXFRLoQ-2
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:52:25 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 31 Mar 2020 14:52:25 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: [RFC PATCH 10/12] net/socket: Use iovec_import() instead of
- import_iovec().
-Thread-Topic: [RFC PATCH 10/12] net/socket: Use iovec_import() instead of
- import_iovec().
-Thread-Index: AdYHY26Pn/zazxI4TBqBFviolCOniA==
-Date:   Tue, 31 Mar 2020 13:52:25 +0000
-Message-ID: <b433aca086ad4a7ba36f7559e3ccc458@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 31 Mar 2020 09:53:37 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VDX0hF068094;
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3044cgcm3k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02VDZGeG076868;
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3044cgcm38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02VDotVT028130;
+        Tue, 31 Mar 2020 13:52:24 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02wdc.us.ibm.com with ESMTP id 301x76s7mp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 13:52:24 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VDqMbQ54919466
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 13:52:22 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BDFB7805F;
+        Tue, 31 Mar 2020 13:52:22 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41F3B7805C;
+        Tue, 31 Mar 2020 13:52:16 +0000 (GMT)
+Received: from [9.85.129.243] (unknown [9.85.129.243])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 13:52:15 +0000 (GMT)
+Subject: Re: [PATCH v4 3/7] tpm: tpm_tis: rewrite "tpm_tis_req_canceled()"
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-4-amirmizi6@gmail.com>
+ <20200331121352.GA9284@linux.intel.com>
+From:   Ken Goldman <kgold@linux.ibm.com>
+Message-ID: <774fa2af-e4a6-4577-f1f7-c786e3b5210c@linux.ibm.com>
+Date:   Tue, 31 Mar 2020 09:52:15 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200331121352.GA9284@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_04:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ clxscore=1011 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/31/2020 8:13 AM, Jarkko Sakkinen wrote:
+> On Tue, Mar 31, 2020 at 02:32:03PM +0300, amirmizi6@gmail.com wrote:
+>> From: Amir Mizinski <amirmizi6@gmail.com>
+>>
+>> Using this function while read/write data resulted in aborted operation.
+>> After investigating according to TCG TPM Profile (PTP) Specifications,
+>> i found cancel should happen only if TPM_STS.commandReady bit is lit and
+>> couldn't find a case when the current condition is valid.
+>> Also only cmdReady bit need to be compared instead of the full lower status
+>> register byte.
+>>
+>> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> We don't care about spec's. We care about hardware and not all hardware
+> follows specifications.
+> 
+> Please fix the exact thing you want to fix (and please provide a fixes
+> tag).
 
-Signed-off-by: David Laight <david.laight@aculab.com>
----
- include/linux/socket.h | 14 +++++-----
- include/net/compat.h   |  4 +--
- net/compat.c           | 21 +++++++-------
- net/socket.c           | 74 ++++++++++++++++++++++----------------------------
- 4 files changed, 51 insertions(+), 62 deletions(-)
+I edit the TPM main spec, not the PTP.  As I discover TPMs that don't 
+meet the spec, or where the spec has changed over time, I add 
+informative comments to guide developers.
 
-diff --git a/include/linux/socket.h b/include/linux/socket.h
-index 15f3412..458bcf4 100644
---- a/include/linux/socket.h
-+++ b/include/linux/socket.h
-@@ -384,13 +384,13 @@ extern long __sys_recvmsg_sock(struct socket *sock, struct msghdr *msg,
- 			       struct user_msghdr __user *umsg,
- 			       struct sockaddr __user *uaddr,
- 			       unsigned int flags);
--extern int sendmsg_copy_msghdr(struct msghdr *msg,
--			       struct user_msghdr __user *umsg, unsigned flags,
--			       struct iovec **iov);
--extern int recvmsg_copy_msghdr(struct msghdr *msg,
--			       struct user_msghdr __user *umsg, unsigned flags,
--			       struct sockaddr __user **uaddr,
--			       struct iovec **iov);
-+struct iovec *sendmsg_copy_msghdr(struct msghdr *msg,
-+				  struct user_msghdr __user *umsg, unsigned flags,
-+				  struct iovec_cache *cache);
-+struct iovec *recvmsg_copy_msghdr(struct msghdr *msg,
-+				  struct user_msghdr __user *umsg, unsigned flags,
-+				  struct sockaddr __user **uaddr,
-+				  struct iovec_cache *cache);
- 
- /* helpers which do the actual work for syscalls */
- extern int __sys_recvfrom(int fd, void __user *ubuf, size_t size,
-diff --git a/include/net/compat.h b/include/net/compat.h
-index f277653..00094fb 100644
---- a/include/net/compat.h
-+++ b/include/net/compat.h
-@@ -38,8 +38,8 @@ struct compat_cmsghdr {
- #define compat_mmsghdr	mmsghdr
- #endif /* defined(CONFIG_COMPAT) */
- 
--int get_compat_msghdr(struct msghdr *, struct compat_msghdr __user *,
--		      struct sockaddr __user **, struct iovec **);
-+struct iovec *get_compat_msghdr(struct msghdr *, struct compat_msghdr __user *,
-+				struct sockaddr __user **, struct iovec_cache *);
- struct sock_fprog __user *get_compat_bpf_fprog(char __user *optval);
- int put_cmsg_compat(struct msghdr*, int, int, int, void *);
- 
-diff --git a/net/compat.c b/net/compat.c
-index 47d99c7..96bf01f 100644
---- a/net/compat.c
-+++ b/net/compat.c
-@@ -33,16 +33,16 @@
- #include <linux/uaccess.h>
- #include <net/compat.h>
- 
--int get_compat_msghdr(struct msghdr *kmsg,
--		      struct compat_msghdr __user *umsg,
--		      struct sockaddr __user **save_addr,
--		      struct iovec **iov)
-+struct iovec *get_compat_msghdr(struct msghdr *kmsg,
-+				struct compat_msghdr __user *umsg,
-+				struct sockaddr __user **save_addr,
-+				struct iovec_cache *cache)
- {
- 	struct compat_msghdr msg;
- 	ssize_t err;
- 
- 	if (copy_from_user(&msg, umsg, sizeof(*umsg)))
--		return -EFAULT;
-+		return ERR_PTR(-EFAULT);
- 
- 	kmsg->msg_flags = msg.msg_flags;
- 	kmsg->msg_namelen = msg.msg_namelen;
-@@ -51,7 +51,7 @@ int get_compat_msghdr(struct msghdr *kmsg,
- 		kmsg->msg_namelen = 0;
- 
- 	if (kmsg->msg_namelen < 0)
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
- 	if (kmsg->msg_namelen > sizeof(struct sockaddr_storage))
- 		kmsg->msg_namelen = sizeof(struct sockaddr_storage);
-@@ -68,7 +68,7 @@ int get_compat_msghdr(struct msghdr *kmsg,
- 						  kmsg->msg_namelen,
- 						  kmsg->msg_name);
- 			if (err < 0)
--				return err;
-+				return ERR_PTR(err);
- 		}
- 	} else {
- 		kmsg->msg_name = NULL;
-@@ -76,14 +76,13 @@ int get_compat_msghdr(struct msghdr *kmsg,
- 	}
- 
- 	if (msg.msg_iovlen > UIO_MAXIOV)
--		return -EMSGSIZE;
-+		return ERR_PTR(-EMSGSIZE);
- 
- 	kmsg->msg_iocb = NULL;
- 
--	err = compat_import_iovec(save_addr ? READ : WRITE,
-+	return compat_iovec_import(save_addr ? READ : WRITE,
- 				   compat_ptr(msg.msg_iov), msg.msg_iovlen,
--				   UIO_FASTIOV, iov, &kmsg->msg_iter);
--	return err < 0 ? err : 0;
-+				   cache, &kmsg->msg_iter);
- }
- 
- /* Bleech... */
-diff --git a/net/socket.c b/net/socket.c
-index 2eecf15..7431cf4 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -2228,16 +2228,16 @@ struct used_address {
- 	unsigned int name_len;
- };
- 
--static int copy_msghdr_from_user(struct msghdr *kmsg,
--				 struct user_msghdr __user *umsg,
--				 struct sockaddr __user **save_addr,
--				 struct iovec **iov)
-+static struct iovec *copy_msghdr_from_user(struct msghdr *kmsg,
-+					   struct user_msghdr __user *umsg,
-+					   struct sockaddr __user **save_addr,
-+					   struct iovec_cache *cache)
- {
- 	struct user_msghdr msg;
- 	ssize_t err;
- 
- 	if (copy_from_user(&msg, umsg, sizeof(*umsg)))
--		return -EFAULT;
-+		return ERR_PTR(-EFAULT);
- 
- 	kmsg->msg_control = (void __force *)msg.msg_control;
- 	kmsg->msg_controllen = msg.msg_controllen;
-@@ -2248,7 +2248,7 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
- 		kmsg->msg_namelen = 0;
- 
- 	if (kmsg->msg_namelen < 0)
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 
- 	if (kmsg->msg_namelen > sizeof(struct sockaddr_storage))
- 		kmsg->msg_namelen = sizeof(struct sockaddr_storage);
-@@ -2262,7 +2262,7 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
- 						  kmsg->msg_namelen,
- 						  kmsg->msg_name);
- 			if (err < 0)
--				return err;
-+				return ERR_PTR(err);
- 		}
- 	} else {
- 		kmsg->msg_name = NULL;
-@@ -2270,14 +2270,13 @@ static int copy_msghdr_from_user(struct msghdr *kmsg,
- 	}
- 
- 	if (msg.msg_iovlen > UIO_MAXIOV)
--		return -EMSGSIZE;
-+		return ERR_PTR(-EMSGSIZE);
- 
- 	kmsg->msg_iocb = NULL;
- 
--	err = import_iovec(save_addr ? READ : WRITE,
-+	return iovec_import(save_addr ? READ : WRITE,
- 			    msg.msg_iov, msg.msg_iovlen,
--			    UIO_FASTIOV, iov, &kmsg->msg_iter);
--	return err < 0 ? err : 0;
-+			    cache, &kmsg->msg_iter);
- }
- 
- static int ____sys_sendmsg(struct socket *sock, struct msghdr *msg_sys,
-@@ -2361,24 +2360,18 @@ static int ____sys_sendmsg(struct socket *sock, struct msghdr *msg_sys,
- 	return err;
- }
- 
--int sendmsg_copy_msghdr(struct msghdr *msg,
--			struct user_msghdr __user *umsg, unsigned flags,
--			struct iovec **iov)
-+struct iovec *sendmsg_copy_msghdr(struct msghdr *msg,
-+				  struct user_msghdr __user *umsg,
-+				  unsigned flags, struct iovec_cache *cache)
- {
--	int err;
--
- 	if (flags & MSG_CMSG_COMPAT) {
- 		struct compat_msghdr __user *msg_compat;
- 
- 		msg_compat = (struct compat_msghdr __user *) umsg;
--		err = get_compat_msghdr(msg, msg_compat, NULL, iov);
-+		return get_compat_msghdr(msg, msg_compat, NULL, cache);
- 	} else {
--		err = copy_msghdr_from_user(msg, umsg, NULL, iov);
-+		return copy_msghdr_from_user(msg, umsg, NULL, cache);
- 	}
--	if (err < 0)
--		return err;
--
--	return 0;
- }
- 
- static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
-@@ -2386,15 +2379,16 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
- 			 struct used_address *used_address,
- 			 unsigned int allowed_msghdr_flags)
- {
-+	struct iovec_cache cache;
-+	struct iovec *iov;
- 	struct sockaddr_storage address;
--	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
- 	ssize_t err;
- 
- 	msg_sys->msg_name = &address;
- 
--	err = sendmsg_copy_msghdr(msg_sys, msg, flags, &iov);
--	if (err < 0)
--		return err;
-+	iov = sendmsg_copy_msghdr(msg_sys, msg, flags, &cache);
-+	if (IS_ERR(iov))
-+		return PTR_ERR(iov);
- 
- 	err = ____sys_sendmsg(sock, msg_sys, flags, used_address,
- 				allowed_msghdr_flags);
-@@ -2518,25 +2512,20 @@ int __sys_sendmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
- 	return __sys_sendmmsg(fd, mmsg, vlen, flags, true);
- }
- 
--int recvmsg_copy_msghdr(struct msghdr *msg,
--			struct user_msghdr __user *umsg, unsigned flags,
--			struct sockaddr __user **uaddr,
--			struct iovec **iov)
-+struct iovec *recvmsg_copy_msghdr(struct msghdr *msg,
-+				  struct user_msghdr __user *umsg,
-+				  unsigned flags,
-+				  struct sockaddr __user **uaddr,
-+				  struct iovec_cache *cache)
- {
--	ssize_t err;
--
- 	if (MSG_CMSG_COMPAT & flags) {
- 		struct compat_msghdr __user *msg_compat;
- 
- 		msg_compat = (struct compat_msghdr __user *) umsg;
--		err = get_compat_msghdr(msg, msg_compat, uaddr, iov);
-+		return get_compat_msghdr(msg, msg_compat, uaddr, cache);
- 	} else {
--		err = copy_msghdr_from_user(msg, umsg, uaddr, iov);
-+		return copy_msghdr_from_user(msg, umsg, uaddr, cache);
- 	}
--	if (err < 0)
--		return err;
--
--	return 0;
- }
- 
- static int ____sys_recvmsg(struct socket *sock, struct msghdr *msg_sys,
-@@ -2598,14 +2587,15 @@ static int ____sys_recvmsg(struct socket *sock, struct msghdr *msg_sys,
- static int ___sys_recvmsg(struct socket *sock, struct user_msghdr __user *msg,
- 			 struct msghdr *msg_sys, unsigned int flags, int nosec)
- {
--	struct iovec iovstack[UIO_FASTIOV], *iov = iovstack;
-+	struct iovec_cache cache;
-+	struct iovec *iov;
- 	/* user mode address pointers */
- 	struct sockaddr __user *uaddr;
- 	ssize_t err;
- 
--	err = recvmsg_copy_msghdr(msg_sys, msg, flags, &uaddr, &iov);
--	if (err < 0)
--		return err;
-+	iov = recvmsg_copy_msghdr(msg_sys, msg, flags, &uaddr, &cache);
-+	if (IS_ERR(iov))
-+		return PTR_ERR(iov);
- 
- 	err = ____sys_recvmsg(sock, msg_sys, msg, uaddr, flags, nosec);
- 	kfree(iov);
--- 
-1.8.1.2
+If you know of TPM hardware that does not meet the PTP specification, 
+let me know the specifics.  I can bring it to the PTP work group and try 
+to get comments added.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+I do not need to know the TPM vendor.  That information would not go 
+into the specification anyway.
+
 
