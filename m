@@ -2,114 +2,157 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC66CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A982DC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD0320748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585640514;
-	bh=5iFie0hFJZbTkxQfX1zpVUAdSViyONJlf5tfYCSCM90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pJebWMmmOKpBMS11vyJvQNIsiGbelwjlOe363FbhhRApnRpnxDrCcc+S/m46Vq5Qk
-	 MpDy9ay3TXWNFMc+g8wRRD2JeC8wuQoDM42DfCeiDrYJru2ECeCbLHRNLwjAum1Kbp
-	 47tDbbMPgLuEfauMYKAiS2fmaKafE3Mwvvsf8/FQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8089C20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:42:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgCaHlx (ORCPT
+        id S1730036AbgCaHmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:41:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57196 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 03:42:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54868 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbgCaHlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:41:53 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6109D206DB;
-        Tue, 31 Mar 2020 07:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585640512;
-        bh=5iFie0hFJZbTkxQfX1zpVUAdSViyONJlf5tfYCSCM90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WpA59XPGa8R71SOKM3cUhV4bJJb6J9lAvZeIUmwwwW1bWXp1YARIYTGnL7YmXDF+d
-         LDzhBrS/g+v7WummotEcUhWcRN9ycSGlBv/AXQe5fUH+nj/6AU4bvJUiPKP5jPtIzu
-         X5mg8Tvnns1q6E42t+LvvlanLibgc3PoXVRqJpD8=
-Date:   Tue, 31 Mar 2020 08:41:47 +0100
-From:   Will Deacon <will@kernel.org>
-To:     tingwei@codeaurora.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: hw_breakpoint: don't clear debug registers in
- halt mode
-Message-ID: <20200331074147.GA25612@willie-the-truck>
-References: <20200328083209.21793-1-tingwei@codeaurora.org>
- <20200330123946.GH1309@C02TD0UTHF1T.local>
- <20200330134218.GB10633@willie-the-truck>
- <2f4d076b2b21de3908f0821126d0c61e@codeaurora.org>
+        id S1726595AbgCaHmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:42:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A0A9FAF5C;
+        Tue, 31 Mar 2020 07:42:47 +0000 (UTC)
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters from
+ kernel command line
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-2-vbabka@suse.cz>
+ <20200330224422.GX11244@42.do-not-panic.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
+Date:   Tue, 31 Mar 2020 09:42:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200330224422.GX11244@42.do-not-panic.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2f4d076b2b21de3908f0821126d0c61e@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:39:42AM +0800, tingwei@codeaurora.org wrote:
-> 在 2020-03-30 21:42，Will Deacon 写道：
-> > On Mon, Mar 30, 2020 at 01:39:46PM +0100, Mark Rutland wrote:
-> > > On Sat, Mar 28, 2020 at 04:32:09PM +0800, Tingwei Zhang wrote:
-> > > > If external debugger sets a breakpoint for one Kernel function
-> > > > when device is in bootloader mode and loads Kernel, this breakpoint
-> > > > will be wiped out in hw_breakpoint_reset(). To fix this, check
-> > > > MDSCR_EL1.HDE in hw_breakpoint_reset(). When MDSCR_EL1.HDE is
-> > > > 0b1, halting debug is enabled. Don't reset debug registers in this
-> > case.
-> > > 
-> > > I don't think this is sufficient, because the kernel can still
-> > > subsequently mess with breakpoints, and the HW debugger might not be
-> > > attached at this point in time anyhow.
-> > > 
-> > > I reckon this should hang off the existing "nodebumon" command line
-> > > option, and we shouldn't use HW breakpoints at all when that is
-> > > passed.
-> > > Then you can pass that to prevent the kernel stomping on the external
-> > > debugger.
-> > > 
-> > > Will, thoughts?
-> > 
-> > I was going to suggest the same thing, although we will also need to
-> > take
-> > care to reset the registers if "nodebugmon" is toggled at runtime via
-> > the
-> > "debug_enabled" file in debugfs.
-> > 
-> Thanks for the suggestion, Mark and Will. It's a great idea to use
-> "nodebugmon". When "nodebugmon" is set, Kernel won't change HW breakpoints.
+On 3/31/20 12:44 AM, Luis Chamberlain wrote:
+> Sorry to be late to the apocalypse review party for this, feedback below.
 > 
-> For reset the registers after "debug_enabled" is toggled, I'm thinking if
-> we are adding unnecessary complexity here.If we take that approach, we will
-> hook "debug_enabled" interface and use smp_call_function_single() to call
-> hw_breakpoint_reset() on each CPU. Wait for all CPUs' execution done and
-> change "debug_enabled". External debugger would clear the breakpoints when
-> it detaches the device and restores its breakpoints when attaches the
-> device.
-> Assume debug_enabled is changed to one after external debugger detaches the
-> device. Debugger would already clear the breakpoint registers. If debgger is
-> still attached, there's nothing Kernel can do to stop it restores/programs
-> the breakpoint registers.
+> On Mon, Mar 30, 2020 at 01:55:33PM +0200, Vlastimil Babka wrote:
+>> A recently proposed patch to add vm_swappiness command line parameter in
+>> addition to existing sysctl [1] made me wonder why we don't have a general
+>> support for passing sysctl parameters via command line. Googling found only
+>> somebody else wondering the same [2], but I haven't found any prior discussion
+>> with reasons why not to do this.
+>> 
+>> Settings the vm_swappiness issue aside (the underlying issue might be solved in
+>> a different way), quick search of kernel-parameters.txt shows there are already
+>> some that exist as both sysctl and kernel parameter - hung_task_panic,
+>> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
+>> would remove the need to add more of those one-offs and might be handy in
+>> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
+>> 
+>> Hence, this patch adds a new parse_args() pass that looks for parameters
+>> prefixed by 'sysctl.' and tries to interpret them as writes to the
+>> corresponding sys/ files using an temporary in-kernel procfs mount. This
+>> mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
+>> registered sysctl tables.
 > 
-> What do you think of this?
+> "even though we don't handle modular sysctls" might be safer to add.
 
-It's all a bit of a mess. Looking at it some more, why can't the external
-debugger simply trap access to the debug registers using EDSCR.TDA? That
-way, we don't have to change anything in the kernel.
+OK
 
-Will
+>> Errors due to e.g. invalid parameter name or value
+>> are reported in the kernel log.
+>> 
+>> The processing is hooked right before the init process is loaded, as some
+>> handlers might be more complicated than simple setters and might need some
+>> subsystems to be initialized. At the moment the init process can be started and
+>> eventually execute a process writing to /proc/sys/ then it should be also fine
+>> to do that from the kernel.
+> 
+> This is wonderful when we think about existing sysctls which have
+> corresponding silly boot params that do the same thing. However, shoving
+> a boot param capability down every possible built-in sysctl brings
+> forward support considerations we should take serious, as this would
+> add a new user interface and we'll have to support it.
+
+Hmm, if I boot with an initramfs with init process that does mount /proc and set
+some sysctl there as the very first thing, then this will be almost the same
+moment as my patch does it. There is no further kernel initialization in
+between. So with your logic we already do support all non-modular sysctls to be
+set so early.
+
+> Simply put, not all sysctls should be born to be boot params. I suggest
+> we white-list which ones we can process, so that only sysctls we *do*
+> review and agree are good candidates get allowed to also be boot params.
+
+By above, the nuber of sysctls that will be problematic with this boot param
+mechanism, but work properly when set from init process immediately, should be
+near zero, and I would expect truly zero. As such, whitelist approach seems
+excessive to me and it would take a lot of effort to build it, and it will be a
+lottery which sysctl would work as boot param on which kernel version. Sounds
+like a lot of trouble for little benefit to me.
+
+> Calling a proc hanlder early might seem functional, but if the subsystem
+> defers evaluation of a setting later, then any boot param set would be
+> lifted anyway.
+
+I'm not sure I understand, can you show me some example please?
+
+> I think each syscl would need to be reviewed for this to
+> be supported in a way that doesn't create odd unexpected system settings
+> which we later have to support forever.
+
+We would already do per the initramfs argument.
+
+> Should we not do this, we'll have to live with the consequences of
+> supporting the full swoop of sysctls are boot params, whatever
+> consequences those may be.
+
+Of course when the first user tries to set some particular sysctl as boot param
+and finds and reports it doesn't work as intended, then it can be fixed or
+blacklisted and it can't break anyone else?
+
+>> Sysctls registered later on module load time are not set by this mechanism -
+>> it's expected that in such scenarios, setting sysctl values from userspace is
+>> practical enough.
+> 
+> I'm just not sure if its worth supporting these, for modules we have
+> module params, but those with more creative userspace might have a
+> better idea as to why we'd want to support this. I just can't see it
+> yet.
+
+Sure, I can defer that part for later now.
+
+>> [1] https://lore.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
+>> [2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
+>> [3] https://lore.kernel.org/r/87bloj2skm.fsf@x220.int.ebiederm.org/
+>> 
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+>> ---
+
+> 
+
