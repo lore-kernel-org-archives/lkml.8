@@ -2,179 +2,111 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C63AC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECE6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD712206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B982D206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:17:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wwO3l67s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgCaAO0 (ORCPT
+        id S1729223AbgCaAQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:14:26 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:33702 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgCaAO0 (ORCPT
+        Mon, 30 Mar 2020 20:16:59 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:24211 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729019AbgCaAQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:14:26 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 02V0DJbF013894
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 30 Mar 2020 19:13:23 -0500
-Message-ID: <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
- ID/string properties
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Rob Herring <robh@kernel.org>, rentao.bupt@gmail.com
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Date:   Tue, 31 Mar 2020 11:13:17 +1100
-In-Reply-To: <20200330192347.GA6388@bogus>
-References: <20200315191632.12536-1-rentao.bupt@gmail.com>
-         <20200315191632.12536-7-rentao.bupt@gmail.com>
-         <20200330192347.GA6388@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 30 Mar 2020 20:16:59 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id E1516400CE90D
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 19:16:57 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id J4aPji2xEAGTXJ4aPj62h2; Mon, 30 Mar 2020 19:16:57 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=6j0N9LbHibVSnYloCANn6lCCp2LfdYmLR5aYJzfpMLI=; b=wwO3l67seXH4CQYrZYqAPWIK5o
+        D/g3Xz1dTJfPpDDIUZHGTtDozF5hrSoj+pOlHIooKjQaMzfI8X294ZeKwwFf6Qi2XmqZC2zrJCoOf
+        VXgUtkIQD7B9HDWvuVHSMCGOj2K754YA5Vbtc80B7xnL8gSzMOsbx6/jCBICF1TYFx0oKB8Y/qrnL
+        +lkAagQgNqUCo8yzuGBk1kY/qIwIlVNYCWhshilbd4Rqm+jD3uyL4dldnPywDz1mu722HS95IOYI0
+        mlDc7V/kHl/zjAI0iSWJU9kKGD99owH0frwSaX4gsGiVjZOz6EMmyN9TOcTpuIRQKkr14EQfdJ0zv
+        LxYD7TEA==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:34772 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jJ4aO-000zm9-FS; Mon, 30 Mar 2020 19:16:56 -0500
+Date:   Mon, 30 Mar 2020 19:20:40 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] objtool: check: Fix NULL pointer dereference
+Message-ID: <20200331002040.GA11302@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jJ4aO-000zm9-FS
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:34772
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-30 at 13:23 -0600, Rob Herring wrote:
-> On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> > 
-> > Update device tree binding document for aspeed vhub's device IDs and
-> > string properties.
-> > 
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > ---
-> >  No change in v2:
-> >    - the patch is added into the series since v2.
-> > 
-> >  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
-> >  1 file changed, 68 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > index 06399ba0d9e4..5b2e8d867219 100644
-> > --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > @@ -52,6 +52,59 @@ properties:
-> >          minimum: 1
-> >          maximum: 21
-> >  
-> > +  vhub-vendor-id:
-> > +    description: vhub Vendor ID
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - maximum: 65535
-> > +
-> > +  vhub-product-id:
-> > +    description: vhub Product ID
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - maximum: 65535
-> 
-> There's already standard 'vendor-id' and 'device-id' properties. Use 
-> those.
+In case func is null, there is a null pointer dereference at 2029:
 
-So yes and no... I don't fundamentally object but keep in mind that
-traditionally, the properties are about matching with a physical
-hardware.
+2029                 WARN("%s uses BP as a scratch register",
+2030                      func->name);
 
-In this case however, we are describing a virtual piece of HW and so
-those IDs are going to be picked up to be exposed as the USB
-vendor/device of the vhub on the USB bus.
+Fix this by null-checking func.
 
-Not necessarily an issue but it's more "configuration" than "matching"
-and as such, it might make sense to expose that with a prefix, though I
-would prefer something like usb-vendor-id or usb,vendor-id...
+Addresses-Coverity-ID: 1492002 ("Dereference after null check")
+Fixes: c705cecc8431 ("objtool: Track original function across branches")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ tools/objtool/check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > +
-> > +  vhub-device-revision:
-> 
-> Specific to USB, not vhub.
-
-Same as the above.
-
-> > +    description: vhub Device Revision in binary-coded decimal
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - maximum: 65535
-> > +
-> > +  vhub-strings:
-> > +    type: object
-> > +
-> > +    properties:
-> > +      '#address-cells':
-> > +        const: 1
-> > +
-> > +      '#size-cells':
-> > +        const: 0
-> > +
-> > +    patternProperties:
-> > +      '^string@[0-9a-f]+$':
-> > +        type: object
-> > +        description: string descriptors of the specific language
-> > +
-> > +        properties:
-> > +          reg:
-> > +            maxItems: 1
-> > +            description: 16-bit Language Identifier defined by USB-IF
-> > +
-> > +          manufacturer:
-> > +            description: vhub manufacturer
-> > +            allOf:
-> > +              - $ref: /schemas/types.yaml#/definitions/string
-> > +
-> > +          product:
-> > +            description: vhub product name
-> > +            allOf:
-> > +              - $ref: /schemas/types.yaml#/definitions/string
-> > +
-> > +          serial-number:
-> > +            description: vhub device serial number
-> > +            allOf:
-> > +              - $ref: /schemas/types.yaml#/definitions/string
-> 
-> For all of this, it's USB specific, not vhub specific. I'm not sure this 
-> is the right approach. It might be better to just define properties 
-> which are just raw USB descriptors rather than inventing some DT format 
-> that then has to be converted into USB descriptors.
-
-Raw blob in the DT is rather annoying and leads to hard to parse stuff
-for both humans and scripts. The main strenght of the DT is it's easy
-to read and manipulate.
-
-Also not the entire descriptor is configurable this way.
-
-That said, it could be that using  the DT for the above is overkill and
-instead, we should consider a configfs like the rest of USB gadget.
-Though it isn't obvious how to do that, the current gadget stuff
-doesn't really "fit" what we need here.
-
-Maybe we could expose the port as UDCs but not actually expose them on
-the bus until the hub is "activated" via a special configfs entry...
-
-Cheers,
-Ben.
-
-> os the 
-> Rob
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index e3bb76358148..182cc48fa892 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2025,7 +2025,7 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
+ 		return 1;
+ 	}
+ 
+-	if (state->bp_scratch) {
++	if (func && state->bp_scratch) {
+ 		WARN("%s uses BP as a scratch register",
+ 		     func->name);
+ 		return 1;
+-- 
+2.26.0
 
