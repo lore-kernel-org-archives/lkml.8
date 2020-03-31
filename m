@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56812C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743ABC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFD620675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B65420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645943;
-	bh=+SWvVj50SI0AtMxhq+kMQlX5o5yQc3CcDBwhaRxOaBE=;
+	s=default; t=1585645946;
+	bh=AOlABSJEi1QNjc0Zau+Hv0wo2EflZ+cMwmH7/g9BMtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UyV51fgWX5VtrevdCM+jR5nNTZ1ApQJ6CZM7RRG0C9ahWBDcbLNvyyhY0pkOawI8+
-	 iN5alot3ajJBzqgYvRXcHagI/Tgp08Z3mCp1KyTO0RueN1OdLHPDeyRzmaCJNsmY02
-	 p2D/sNWHa6hpUrMLYNeqI//AOsvN7n1GTPdUEhl4=
+	b=X9wZDYcxaK9Swuq4hpg2vNQWH17kMtWCFrdpCUwdqcitryUWJ7vTTIGZp0vvF/O2n
+	 x5TW7nYfd/3wVmasWxGYMKBkh1LjEyNuttTQSeKeSMd0nXpyGrbcgBPRDX+C2xxpHO
+	 Hse3JBPhyoHjzlLTBBr80d/ud3J917H/fTpeBZjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731684AbgCaJMV (ORCPT
+        id S1731794AbgCaJMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58550 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:12:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731784AbgCaJMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:12:18 -0400
+        id S1731412AbgCaJMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:12:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFF5920675;
-        Tue, 31 Mar 2020 09:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6456220675;
+        Tue, 31 Mar 2020 09:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645938;
-        bh=+SWvVj50SI0AtMxhq+kMQlX5o5yQc3CcDBwhaRxOaBE=;
+        s=default; t=1585645940;
+        bh=AOlABSJEi1QNjc0Zau+Hv0wo2EflZ+cMwmH7/g9BMtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfMeAJzxcWRa4wCP/Us69ORqmjd7exezEnU7CUuetde+vl32oSDNBbeeBPN/T1YGK
-         Zu/D2JC1nUCjlE+JGohwwfvvt+OM6NxoMK48175gTFMFFnS//kw9BEX98Yl85nwJOQ
-         8+sfcmUZap1Oe5AVuf4yD6oLyppESB5hQOHP0nYU=
+        b=QdKXVS9LVYTFeLgJqnhYhXOF8DclNnrpdP/Zmgn/AsnV3AzLdg4Kmv+HWSZnB4nNi
+         GUq1mLjwGemyeSN6kdsle7E+Ctee2WAfmXafgxPX6par5plXhzgUv9OhwhqK+e9zSc
+         bYcfF1SuZFJgr84JSkFA0p91H5AxkWG7nESTZwyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 021/155] net: mvneta: Fix the case where the last poll did not process all rx
-Date:   Tue, 31 Mar 2020 10:57:41 +0200
-Message-Id: <20200331085420.763973822@linuxfoundation.org>
+Subject: [PATCH 5.4 039/155] bnxt_en: Fix Priority Bytes and Packets counters in ethtool -S.
+Date:   Tue, 31 Mar 2020 10:57:59 +0200
+Message-Id: <20200331085422.786023767@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,36 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 065fd83e1be2e1ba0d446a257fd86a3cc7bddb51 ]
+[ Upstream commit a24ec3220f369aa0b94c863b6b310685a727151c ]
 
-For the case where the last mvneta_poll did not process all
-RX packets, we need to xor the pp->cause_rx_tx or port->cause_rx_tx
-before claculating the rx_queue.
+There is an indexing bug in determining these ethtool priority
+counters.  Instead of using the queue ID to index, we need to
+normalize by modulo 10 to get the index.  This index is then used
+to obtain the proper CoS queue counter.  Rename bp->pri2cos to
+bp->pri2cos_idx to make this more clear.
 
-Fixes: 2dcf75e2793c ("net: mvneta: Associate RX queues with each CPU")
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Fixes: e37fed790335 ("bnxt_en: Add ethtool -S priority counters.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   10 +++++++++-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h         |    2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c |    8 ++++----
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -2804,11 +2804,10 @@ static int mvneta_poll(struct napi_struc
- 	/* For the case where the last mvneta_poll did not process all
- 	 * RX packets
- 	 */
--	rx_queue = fls(((cause_rx_tx >> 8) & 0xff));
--
- 	cause_rx_tx |= pp->neta_armada3700 ? pp->cause_rx_tx :
- 		port->cause_rx_tx;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -7387,14 +7387,22 @@ static int bnxt_hwrm_port_qstats_ext(str
+ 		pri2cos = &resp2->pri0_cos_queue_id;
+ 		for (i = 0; i < 8; i++) {
+ 			u8 queue_id = pri2cos[i];
++			u8 queue_idx;
  
-+	rx_queue = fls(((cause_rx_tx >> 8) & 0xff));
- 	if (rx_queue) {
- 		rx_queue = rx_queue - 1;
- 		if (pp->bm_priv)
++			/* Per port queue IDs start from 0, 10, 20, etc */
++			queue_idx = queue_id % 10;
++			if (queue_idx > BNXT_MAX_QUEUE) {
++				bp->pri2cos_valid = false;
++				goto qstats_done;
++			}
+ 			for (j = 0; j < bp->max_q; j++) {
+ 				if (bp->q_ids[j] == queue_id)
+-					bp->pri2cos[i] = j;
++					bp->pri2cos_idx[i] = queue_idx;
+ 			}
+ 		}
+ 		bp->pri2cos_valid = 1;
+ 	}
++qstats_done:
+ 	mutex_unlock(&bp->hwrm_cmd_lock);
+ 	return rc;
+ }
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -1688,7 +1688,7 @@ struct bnxt {
+ 	u16			fw_rx_stats_ext_size;
+ 	u16			fw_tx_stats_ext_size;
+ 	u16			hw_ring_stats_size;
+-	u8			pri2cos[8];
++	u8			pri2cos_idx[8];
+ 	u8			pri2cos_valid;
+ 
+ 	u16			hwrm_max_req_len;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -589,25 +589,25 @@ skip_ring_stats:
+ 		if (bp->pri2cos_valid) {
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_rx_bytes_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
+ 
+ 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
+ 			}
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_rx_pkts_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
+ 
+ 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
+ 			}
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_tx_bytes_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
+ 
+ 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
+ 			}
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_tx_pkts_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
+ 
+ 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
+ 			}
 
 
