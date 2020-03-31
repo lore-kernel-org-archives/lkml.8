@@ -2,52 +2,62 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7C7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231D4C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468DB20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB5620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646187;
-	bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
+	s=default; t=1585646191;
+	bh=rKdoUIalX+QoPh7TMy6wFd/Kw88at2WzRdyb7dObhfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1y62IqHKxwFMm4U25rT6TYdlz+KTsHcRn/LhgvM8gpbDqSEDr5RSRJuoSTOlzLrH
-	 C7nZAtJYLjAucBnvlossrVmKw2bkkQdhmP/IP6fHhto7qabUDH5jOT6PNqoNBT4/GR
-	 0YM9r9rtYUFdQd5aHQFcSb69n0oExRPIjjRldBb8=
+	b=NE4qpJyTBuKPlIsDMbAQhc+ykTnXYpMhuFYpS6hvOEMHlgJ+3rpLOXUjJNqXdqnOO
+	 cTaXgiX894iZMscUNIQBq7PfBgNVNxfSwaXmFa+cSJjJ2GMRpDIrVtlVGbNPttRfYi
+	 VyokK0jd4/oLZpi4UJs5wy0SgaQ4XsjD0I5cRDlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731309AbgCaJQ0 (ORCPT
+        id S1731972AbgCaJQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:16:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:16:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731957AbgCaJQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:21 -0400
+        id S1731767AbgCaJQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:16:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 173EB20675;
-        Tue, 31 Mar 2020 09:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D742072E;
+        Tue, 31 Mar 2020 09:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646181;
-        bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
+        s=default; t=1585646184;
+        bh=rKdoUIalX+QoPh7TMy6wFd/Kw88at2WzRdyb7dObhfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tV0M5VxG3bWdIqW0KjSCvNChdrW30zpeSid8KQ68gDVw7+qfai7nJ0nIkUUvgn2ET
-         1P2NU8OhIbG9jXB5iqqc3eW+2/GpBTIvj1EJDhJN7CroHuO2rwNL1MoHW+1L3SsgFE
-         yiPvRZBSO0pQK2CczbtTAohI+RXbNsi7+U3n3tU0=
+        b=fo8norwDqz2XqhKnb84VXu6qp70xk71DRQHbLDlt+eRBot9vRj20WVoFrggVFwj/b
+         tihjbWAclGe6Tb9Q7l8V150h+AOPWCyJGZ8dhAju9udkwDXmh3k9HMBf9YkxzTkECn
+         jHYSYCEitPos0lk8DQgPl+ZcKZiofvhmyLGPgrXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/155] arm64: dts: ls1043a: FMan erratum A050385
-Date:   Tue, 31 Mar 2020 10:58:20 +0200
-Message-Id: <20200331085425.273996489@linuxfoundation.org>
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 102/155] mm/sparse: fix kernel crash with pfn_section_valid check
+Date:   Tue, 31 Mar 2020 10:59:02 +0200
+Message-Id: <20200331085429.945611537@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,36 +70,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit b54d3900862374e1bb2846e6b39d79c896c0b200 ]
+commit b943f045a9af9fd02f923e43fe8d7517e9961701 upstream.
 
-The LS1043A SoC is affected by the A050385 erratum stating that
-FMAN DMA read or writes under heavy traffic load may cause FMAN
-internal resource leak thus stopping further packet processing.
+Fix the crash like this:
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    BUG: Kernel NULL pointer dereference on read at 0x00000000
+    Faulting instruction address: 0xc000000000c3447c
+    Oops: Kernel access of bad area, sig: 11 [#1]
+    LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+    CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
+    ...
+    NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
+    LR [c000000000088354] vmemmap_free+0x144/0x320
+    Call Trace:
+       section_deactivate+0x220/0x240
+       __remove_pages+0x118/0x170
+       arch_remove_memory+0x3c/0x150
+       memunmap_pages+0x1cc/0x2f0
+       devm_action_release+0x30/0x50
+       release_nodes+0x2f8/0x3e0
+       device_release_driver_internal+0x168/0x270
+       unbind_store+0x130/0x170
+       drv_attr_store+0x44/0x60
+       sysfs_kf_write+0x68/0x80
+       kernfs_fop_write+0x100/0x290
+       __vfs_write+0x3c/0x70
+       vfs_write+0xcc/0x240
+       ksys_write+0x7c/0x140
+       system_call+0x5c/0x68
+
+The crash is due to NULL dereference at
+
+	test_bit(idx, ms->usage->subsection_map);
+
+due to ms->usage = NULL in pfn_section_valid()
+
+With commit d41e2f3bd546 ("mm/hotplug: fix hot remove failure in
+SPARSEMEM|!VMEMMAP case") section_mem_map is set to NULL after
+depopulate_section_mem().  This was done so that pfn_page() can work
+correctly with kernel config that disables SPARSEMEM_VMEMMAP.  With that
+config pfn_to_page does
+
+	__section_mem_map_addr(__sec) + __pfn;
+
+where
+
+  static inline struct page *__section_mem_map_addr(struct mem_section *section)
+  {
+	unsigned long map = section->section_mem_map;
+	map &= SECTION_MAP_MASK;
+	return (struct page *)map;
+  }
+
+Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is
+used to check the pfn validity (pfn_valid()).  Since section_deactivate
+release mem_section->usage if a section is fully deactivated,
+pfn_valid() check after a subsection_deactivate cause a kernel crash.
+
+  static inline int pfn_valid(unsigned long pfn)
+  {
+  ...
+	return early_section(ms) || pfn_section_valid(ms, pfn);
+  }
+
+where
+
+  static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+  {
+	int idx = subsection_map_index(pfn);
+
+	return test_bit(idx, ms->usage->subsection_map);
+  }
+
+Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is
+freed.  For architectures like ppc64 where large pages are used for
+vmmemap mapping (16MB), a specific vmemmap mapping can cover multiple
+sections.  Hence before a vmemmap mapping page can be freed, the kernel
+needs to make sure there are no valid sections within that mapping.
+Clearing the section valid bit before depopulate_section_memap enables
+this.
+
+[aneesh.kumar@linux.ibm.com: add comment]
+  Link: http://lkml.kernel.org/r/20200326133235.343616-1-aneesh.kumar@linux.ibm.comLink: http://lkml.kernel.org/r/20200325031914.107660-1-aneesh.kumar@linux.ibm.com
+Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ mm/sparse.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-index 6082ae0221364..d237162a87446 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-@@ -20,6 +20,8 @@
- };
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -789,6 +789,12 @@ static void section_deactivate(unsigned
+ 			ms->usage = NULL;
+ 		}
+ 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
++		/*
++		 * Mark the section invalid so that valid_section()
++		 * return false. This prevents code from dereferencing
++		 * ms->usage array.
++		 */
++		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+ 	}
  
- &fman0 {
-+	fsl,erratum-a050385;
-+
- 	/* these aliases provide the FMan ports mapping */
- 	enet0: ethernet@e0000 {
- 	};
--- 
-2.20.1
-
+ 	if (section_is_early && memmap)
 
 
