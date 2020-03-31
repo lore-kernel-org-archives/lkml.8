@@ -2,153 +2,163 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1325C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86E1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91861214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 747D1207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:07:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585642036;
+	bh=pR3KtS9JqxSwtoxlI+XX4Uem3z/HcC5CN+Wr9J/Rekc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZX6Jm2e2J+nQfI2nVDlwFjzZ/pAaX+dnpfAg7xDn+RLi2lKQdGxbR+ml4OlL7KNpp
+	 TTJQ5ooxj173iYbc3MDULirB+OvohveEt6KD7li27MAuyXBSOQ7yDhlRlaWmil/mjP
+	 ZvEmwehtjnpNzQc9zfGKDLDUxMTT+JMy3rckc5nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbgCaIGy (ORCPT
+        id S1730175AbgCaIHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:06:54 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:63129 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCaIGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:06:54 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 4C28F24000A;
-        Tue, 31 Mar 2020 08:06:48 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 10:06:48 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v11 4/5] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-Message-ID: <20200331080648.GH846876@piout.net>
-References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Tue, 31 Mar 2020 04:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726528AbgCaIHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:07:15 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7D09206F6;
+        Tue, 31 Mar 2020 08:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585642033;
+        bh=pR3KtS9JqxSwtoxlI+XX4Uem3z/HcC5CN+Wr9J/Rekc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UpShdRnjDu/kmIuKs89/r7lQiwaTpOxhwEmaJs7lpMZHTQnNgqbdTu6hLdxMd5cSf
+         rUrj1KwPVPB8loOZlZxt13HURDwSwcZL+jZ6qisDn4NvI4BpFecTIzKjtbRk+Fp4xi
+         ojOj2Y/dah/9X7NNozyrA7rzRnLRfZzniOmHE+W8=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jJBvT-00H774-TH; Tue, 31 Mar 2020 09:07:12 +0100
+Date:   Tue, 31 Mar 2020 09:07:09 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <kvmarm@lists.cs.columbia.edu>, <eric.auger@redhat.com>,
+        <andre.przywara@arm.com>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wanghaibin.wang@huawei.com>
+Subject: Re: [PATCH] KVM: arm64: vgic-v3: Clear pending bit in guest memory
+ after synchronization
+Message-ID: <20200331090709.17d2087d@why>
+In-Reply-To: <20200331031245.1562-1-yuzenghui@huawei.com>
+References: <20200331031245.1562-1-yuzenghui@huawei.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, kvmarm@lists.cs.columbia.edu, eric.auger@redhat.com, andre.przywara@arm.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/03/2020 12:07:36+0800, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
+Hi Zenghui,
+
+On Tue, 31 Mar 2020 11:12:45 +0800
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+
+> When LPI support is enabled at redistributor level, VGIC will potentially
+> load the correspond LPI penging table and sync it into the pending_latch.
+> To avoid keeping the 'consumed' pending bits lying around in guest memory
+> (though they're not used), let's clear them after synchronization.
 > 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> driver which only needed by armv7 CPU without ATF.
+> The similar work had been done in vgic_v3_lpi_sync_pending_status().
 > 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 > ---
->  drivers/power/reset/mt6323-poweroff.c |  2 +-
->  drivers/rtc/rtc-mt6397.c              | 23 +++++++++++++++++++----
->  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
->  3 files changed, 28 insertions(+), 6 deletions(-)
+>  virt/kvm/arm/vgic/vgic-its.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-> index 1caf43d..0532803 100644
-> --- a/drivers/power/reset/mt6323-poweroff.c
-> +++ b/drivers/power/reset/mt6323-poweroff.c
-> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
->  	int ret;
+> diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+> index d53d34a33e35..905760bfa404 100644
+> --- a/virt/kvm/arm/vgic/vgic-its.c
+> +++ b/virt/kvm/arm/vgic/vgic-its.c
+> @@ -435,6 +435,7 @@ static int its_sync_lpi_pending_table(struct kvm_vcpu *vcpu)
 >  
->  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
+>  	for (i = 0; i < nr_irqs; i++) {
+>  		int byte_offset, bit_nr;
+> +		bool status;
 >  
->  	ret = regmap_read_poll_timeout(pwrc->regmap,
->  					pwrc->base + RTC_BBPU, val,
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index cda238d..7f3dfd2 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,6 +9,7 @@
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
-> @@ -20,7 +21,7 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  	int ret;
->  	u32 data;
+>  		byte_offset = intids[i] / BITS_PER_BYTE;
+>  		bit_nr = intids[i] % BITS_PER_BYTE;
+> @@ -447,22 +448,32 @@ static int its_sync_lpi_pending_table(struct kvm_vcpu *vcpu)
+>  			ret = kvm_read_guest_lock(vcpu->kvm,
+>  						  pendbase + byte_offset,
+>  						  &pendmask, 1);
+> -			if (ret) {
+> -				kfree(intids);
+> -				return ret;
+> -			}
+> +			if (ret)
+> +				goto out;
+>  			last_byte_offset = byte_offset;
+>  		}
 >  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -269,6 +270,8 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> +	rtc->data = of_device_get_match_data(&pdev->dev);
+> +		status = pendmask & (1 << bit_nr);
 > +
->  	rtc->irq = platform_get_irq(pdev, 0);
->  	if (rtc->irq < 0)
->  		return rtc->irq;
-> @@ -325,10 +328,22 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
+>  		irq = vgic_get_irq(vcpu->kvm, NULL, intids[i]);
+>  		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+> -		irq->pending_latch = pendmask & (1U << bit_nr);
+> +		irq->pending_latch = status;
+>  		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
+>  		vgic_put_irq(vcpu->kvm, irq);
+> +
+> +		if (status) {
+> +			/* clear consumed data */
+> +			pendmask &= ~(1 << bit_nr);
+> +			ret = kvm_write_guest_lock(vcpu->kvm,
+> +						   pendbase + byte_offset,
+> +						   &pendmask, 1);
+> +			if (ret)
+> +				goto out;
+> +		}
+>  	}
 >  
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> -	{ .compatible = "mediatek,mt6323-rtc", },
-> -	{ .compatible = "mediatek,mt6397-rtc", },
-> -	{ }
-> +	{ .compatible = "mediatek,mt6323-rtc",
-> +		.data = &mt6397_rtc_data, },
-> +	{ .compatible = "mediatek,mt6358-rtc",
-> +		.data = &mt6358_rtc_data, },
-> +	{ .compatible = "mediatek,mt6397-rtc",
-> +		.data = &mt6397_rtc_data, },
+> +out:
+>  	kfree(intids);
+> -
+>  	return ret;
+>  }
+>  
 
-This is weirdly indented.
+I've been thinking about this, and I wonder why we don't simply clear
+the whole pending table instead of carefully wiping it one bit at a
+time. My reasoning is that if a LPI isn't mapped, then it cannot be made
+pending the first place.
 
-Else,
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+And I think there is a similar issue in vgic_v3_lpi_sync_pending_status().
+Why sync something back from the pending table when the LPI wasn't
+mapped yet? This seems pretty bizarre, as the GITS_TRANSLATER spec says
+that the write to this register is ignored when:
 
+"- The EventID is mapped to an Interrupt Translation Table and the
+EventID is within the range specified by MAPD on page 5-107, but the
+EventID is unmapped."
 
+(with the added bonus in the form of a type: the first instance of
+"EventID" here should obviously be "DeviceID").
+
+What do you think?
+
+	M.
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Jazz is not dead. It just smells funny...
