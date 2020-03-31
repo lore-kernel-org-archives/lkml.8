@@ -2,87 +2,117 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEA7C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9445C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E46E2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585683187;
-	bh=tMedG35WwRtk7PjEq+x762pVod6GpukC/H/linMNbJA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Z/sQWxUzNo1LRPti9++SSIcumZwGtqHVPu6Guqhd3MMYohee/GYC1JP29by+HVIhW
-	 u002cqR+0nCCpwa5/nguOmPhyI9xYy6ViXg/kTmzlFaidzOf3XI9FCgeVYpCyaC9Bx
-	 gBQwRRxvmhvxYfYS/e9M52GueTzFKgfu7q9H/7vA=
+	by mail.kernel.org (Postfix) with ESMTP id 7D8F22080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G61Kd4ZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbgCaTdG (ORCPT
+        id S1728965AbgCaTdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbgCaTdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:33:06 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A8B6206DB;
-        Tue, 31 Mar 2020 19:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585683185;
-        bh=tMedG35WwRtk7PjEq+x762pVod6GpukC/H/linMNbJA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=MHs+EKmn8cNMJWJdHC8ylRr1JniFlPy/5vf3k/56akUEJp7kYeKq5oCQ8/lUNWWMt
-         I+86t13Dx8uxI8TjgfysTGW41B/A3WS9eQlKKHuu9J9fkaEiF9OSVLMW9e9csmYE2h
-         K6RLqXYosEpgF0evEUmrUvrhWa/8RP5MuVQ00550=
-Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200331085308.098696461@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <0c4aaa5f-0f85-4b00-e938-4f34c55e3711@kernel.org>
-Date:   Tue, 31 Mar 2020 13:32:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 31 Mar 2020 15:33:16 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34823 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgCaTdP (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 15:33:15 -0400
+Received: by mail-qt1-f193.google.com with SMTP id e14so19498077qts.2
+        for <Linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UY9X0MKS0KRbxCZiJKr9L0SAunbkTQb1LGpb32vbozs=;
+        b=G61Kd4ZB1RUNmQrEWfEEnBIoCKAusRPGlVHEg0DXRuTXhos3pSPF21PMcJy72vHEhw
+         wh/wqr/Pm6GGa3uYKAZxi/TJZOd8Af+AD5bHIbXXnaJC78GGjMSn8bEivg403lGkD0sW
+         S1fWsZe2fgLLtHcChBl1QcbpDyP6LvpObfdVZsJFES8JV4hfGcgJ6+E/UJS/BeOQgnq7
+         NaW0UN5n9M1XW6pJXlOFSp0WRSrvPzUvVpNYCEuHPAQ6aunFmtpTD5xiWjeAd9tAiIzp
+         YpJovUPofl3KGv8lR4e6WtLxqcJv3+bx2UQP/fFTp4jAO9i9uYaA8Ss92TpXIPb7ovCs
+         bmfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UY9X0MKS0KRbxCZiJKr9L0SAunbkTQb1LGpb32vbozs=;
+        b=QBoouzwaFAzOBuOqX5yMWfVqpMJn8rICToD+hfQGyFit060hHuEwBgyIJhidond99O
+         yww50GfD6/uhDOoEKpuMAbD4pm5+CWU2TgqVS1wV8RZqF3YYx7jILMqzTCmzxzVFC4w+
+         ImATP95I+PIaolBh7eDB/YByMXzBmU7DBGvqTCoFAT7nRKMGUW3VV/YLSJjVvm1Iq3YO
+         A7LNB6FMUYvAKDnbXzI+q3t/5ZivvbdrroLmZWt8sew+Rwnw2HyWB+RBw5cpHkHri7ki
+         7Z9LixK7KYiQ4dxs+jWP3uJhHa9+U6wIIWmfq9jCe8EK1BpmRSN5H62WP3E3Dj/2h8aP
+         cmDw==
+X-Gm-Message-State: ANhLgQ24FPbAygQSZupSL7UvpcK6tYBHw3dI448igWjfDEd1xwxsQTHw
+        rOquQI5ith1cWdit5bLBf2w=
+X-Google-Smtp-Source: ADFU+vtg1YapJq5vkHadcUIc/g/tecV2BNECymNBXHjDHZqqCuKoP/k74MgJwwmqNJlXit8Pp7mTZg==
+X-Received: by 2002:ac8:7b2f:: with SMTP id l15mr6690666qtu.320.1585683193906;
+        Tue, 31 Mar 2020 12:33:13 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id o11sm14211328qtb.24.2020.03.31.12.33.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 12:33:13 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E4FC7409A3; Tue, 31 Mar 2020 16:33:10 -0300 (-03)
+Date:   Tue, 31 Mar 2020 16:33:10 -0300
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf/x86/pmu-events: Use CPU_CLK_UNHALTED.THREAD in
+ Kernel_Utilization metric
+Message-ID: <20200331193310.GO9917@kernel.org>
+References: <20200309013125.7559-1-yao.jin@linux.intel.com>
+ <3e2ee47f-d351-64c3-b547-993a2b65f871@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e2ee47f-d351-64c3-b547-993a2b65f871@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 2:59 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.1 release.
-> There are 23 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Em Tue, Mar 31, 2020 at 03:30:25PM -0400, Liang, Kan escreveu:
 > 
-> Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
-> Anything received after that time might be too late.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
+> On 3/8/2020 9:31 PM, Jin Yao wrote:
+> > The kernel utilization metric does multiplexing currently and is somewhat
+> > unreliable. The problem is that it uses two instances of the fixed counter,
+> > and the kernel has to multipleplex which causes errors. So should use
+> > CPU_CLK_UNHALTED.THREAD instead.
+> > 
+> > Before:
+> > 
+> >    # perf stat -M Kernel_Utilization -- sleep 1
+> > 
+> >    Performance counter stats for 'sleep 1':
+> > 
+> >            1,419,425      cpu_clk_unhalted.ref_tsc:k
+> >        <not counted>      cpu_clk_unhalted.ref_tsc	(0.00%)
+> > 
+> > After:
+> > 
+> >    # perf stat -M Kernel_Utilization -- sleep 1
+> > 
+> >    Performance counter stats for 'sleep 1':
+> > 
+> >              746,688      cpu_clk_unhalted.thread:k #      0.7 Kernel_Utilization
+> >            1,088,348      cpu_clk_unhalted.thread
+> > 
+> > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 > 
-> thanks,
 > 
-> greg k-h
-> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Compiled and booted on my test system. No dmesg regressions.
+Thanks, applied.
 
-thanks,
--- Shuah
+- Arnaldo
