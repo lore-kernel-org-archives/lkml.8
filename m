@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CD9C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E032C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F7C20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012EF212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645262;
-	bh=M2XYznMyPl5ilmTJqLhupO6Wszm9njVFjh1r0tDOHOI=;
+	s=default; t=1585645267;
+	bh=i54h0PpoMrZjEXGvANY6FaJbACna+TsoRHILdEn6CI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BaUlc/YWiASH2BbV7Qm0J+4WL2SGf2t8GvDZNag1doPrgRBeW6F+NQ0gJvdA1FDdh
-	 /HgZXM9O/H/wJjL74/GPjNmip7Aiqo/BRfM/QBxzaiibKUZbBo2kvqvQbv55L9n7Gt
-	 49oE2bcWd5V3CQJG43tW+zOmMpgR06Jb+/4fCsug=
+	b=XVS3L1SuA9jIgb51o/cwAxauHjnnO+MO2/8EX+u+qWHfyvL9vdJqzcoJiGzl6djtZ
+	 RRzERGbsg0tcX8NBv0a5GA70VgV1T4hEMRpPKrT1ex2L0mJXzTCeBlhHSxZ5nBFdGq
+	 uUiGiADheeCxH+DyDZMX2vl7sMCj8z/WFslnFWJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730495AbgCaJBB (ORCPT
+        id S1730292AbgCaJBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39920 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbgCaJA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:00:56 -0400
+        id S1730490AbgCaJBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:01:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF6C20B1F;
-        Tue, 31 Mar 2020 09:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 099D720848;
+        Tue, 31 Mar 2020 09:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645255;
-        bh=M2XYznMyPl5ilmTJqLhupO6Wszm9njVFjh1r0tDOHOI=;
+        s=default; t=1585645259;
+        bh=i54h0PpoMrZjEXGvANY6FaJbACna+TsoRHILdEn6CI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PwWhWQmTYj+IlrOgx2+RFt0/60tJG9ACvVRD5/EI9pntZfwZztHYQX5NG6REr9cxF
-         nU2IW9bsfO9ZB9tP96TT4FRF/2mQTUZX9VKyQR9J6SVJ7cgG91TGCR7bs9kwI79CVj
-         r2Uq7dCx7KsaI2fhyy40QnOJUiWzKOXAqphd7sOk=
+        b=kac2VdeIeEEZNknqs026yMb/tXtTTYrfDn0lu0G/tY7gB741yRzcZiJL2mXHytMVU
+         isKBhUr631iIjJq9/DHOMTmI7KKemYF+4p5gxqURHhdA71rfWj/Uc3FEMyNUr4alk6
+         3eD4BHXHJfvnK2GtiHKLHCz8pI0AGDBoOfOyUUoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.6 22/23] media: xirlink_cit: add missing descriptor sanity checks
-Date:   Tue, 31 Mar 2020 10:59:34 +0200
-Message-Id: <20200331085317.512897637@linuxfoundation.org>
+Subject: [PATCH 5.6 23/23] media: v4l2-core: fix a use-after-free bug of sd->devnode
+Date:   Tue, 31 Mar 2020 10:59:35 +0200
+Message-Id: <20200331085317.704628095@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -61,82 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-commit a246b4d547708f33ff4d4b9a7a5dbac741dc89d8 upstream.
+commit 6990570f7e0a6078e11b9c5dc13f4b6e3f49a398 upstream.
 
-Make sure to check that we have two alternate settings and at least one
-endpoint before accessing the second altsetting structure and
-dereferencing the endpoint arrays.
+sd->devnode is released after calling
+v4l2_subdev_release. Therefore it should be set
+to NULL so that the subdev won't hold a pointer
+to a released object. This fixes a reference
+after free bug in function
+v4l2_device_unregister_subdev
 
-This specifically avoids dereferencing NULL-pointers or corrupting
-memory when a device does not have the expected descriptors.
+Fixes: 0e43734d4c46e ("media: v4l2-subdev: add release() internal op")
 
-Note that the sanity check in cit_get_packet_size() is not redundant as
-the driver is mixing looking up altsettings by index and by number,
-which may not coincide.
-
-Fixes: 659fefa0eb17 ("V4L/DVB: gspca_xirlink_cit: Add support for camera with a bcd version of 0.01")
-Fixes: 59f8b0bf3c12 ("V4L/DVB: gspca_xirlink_cit: support bandwidth changing for devices with 1 alt setting")
-Cc: stable <stable@vger.kernel.org>     # 2.6.37
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
 Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/xirlink_cit.c |   18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/media/v4l2-core/v4l2-device.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/usb/gspca/xirlink_cit.c
-+++ b/drivers/media/usb/gspca/xirlink_cit.c
-@@ -1442,6 +1442,9 @@ static int cit_get_packet_size(struct gs
- 		return -EIO;
- 	}
+--- a/drivers/media/v4l2-core/v4l2-device.c
++++ b/drivers/media/v4l2-core/v4l2-device.c
+@@ -179,6 +179,7 @@ static void v4l2_subdev_release(struct v
  
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	return le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
+ 	if (sd->internal_ops && sd->internal_ops->release)
+ 		sd->internal_ops->release(sd);
++	sd->devnode = NULL;
+ 	module_put(owner);
  }
  
-@@ -2626,6 +2629,7 @@ static int sd_start(struct gspca_dev *gs
- 
- static int sd_isoc_init(struct gspca_dev *gspca_dev)
- {
-+	struct usb_interface_cache *intfc;
- 	struct usb_host_interface *alt;
- 	int max_packet_size;
- 
-@@ -2641,8 +2645,17 @@ static int sd_isoc_init(struct gspca_dev
- 		break;
- 	}
- 
-+	intfc = gspca_dev->dev->actconfig->intf_cache[0];
-+
-+	if (intfc->num_altsetting < 2)
-+		return -ENODEV;
-+
-+	alt = &intfc->altsetting[1];
-+
-+	if (alt->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	/* Start isoc bandwidth "negotiation" at max isoc bandwidth */
--	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	alt->endpoint[0].desc.wMaxPacketSize = cpu_to_le16(max_packet_size);
- 
- 	return 0;
-@@ -2665,6 +2678,9 @@ static int sd_isoc_nego(struct gspca_dev
- 		break;
- 	}
- 
-+	/*
-+	 * Existence of altsetting and endpoint was verified in sd_isoc_init()
-+	 */
- 	alt = &gspca_dev->dev->actconfig->intf_cache[0]->altsetting[1];
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	if (packet_size <= min_packet_size)
 
 
