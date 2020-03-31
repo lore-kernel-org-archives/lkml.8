@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0B7C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E12C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF0D20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 196B92072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646260;
-	bh=a8XezzxjN5S1JRqUr8SNZof8KPX+QNGlFFUWtVuxuEw=;
+	s=default; t=1585646264;
+	bh=bZoCsEb7wD0uIXnpD9U+XVKOmILOUBspGxL7skoOLsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgHk/O3pWHiZlUfXcXFS+5ISlz7YqOlMEPCFRlNymJ8LuLlEld3Hx4vVqkYyQceYZ
-	 rhNV+yGL+0bdB39VsJcbZkE7LB9qfJr4eKyNxIr3QcUMwBzo3YESoQo/yYQneYIBMl
-	 tagsSS+eBs4bCd4f7kncygCI02bRA6eAMFLvay08=
+	b=uCr/x0JjeSJg009YvertgZOOQRLAvVTyA8+MbIiXtyRRxJHT8eOOp5+hizVi+/jEG
+	 bX8G1kzHMh4NAVzkyeQbOfHusPn5IiXzrnXrwKjLvhDeZQIhfgYHix13NFbh/3iSku
+	 eVZRoBw+8D5qyMYLfICKbymEFTVTF3+qXKx59xuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbgCaJRj (ORCPT
+        id S1732040AbgCaJRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38774 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730666AbgCaJRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:37 -0400
+        id S1731263AbgCaJRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F29C020675;
-        Tue, 31 Mar 2020 09:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2462C208E0;
+        Tue, 31 Mar 2020 09:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646257;
-        bh=a8XezzxjN5S1JRqUr8SNZof8KPX+QNGlFFUWtVuxuEw=;
+        s=default; t=1585646241;
+        bh=bZoCsEb7wD0uIXnpD9U+XVKOmILOUBspGxL7skoOLsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qzLbza3XmoJR1JGQbTyQ55g5BAV9flVHVL8fzaupq9XGU1kpE/J/5uVjXsoRjiy+s
-         C3jSjElRyUjQKou6qCP7P2hSyGPUP3Wi3on0sfPi4d7YKx05ClQ71/CmMMEep3pzQ2
-         RsUWGc2IbHN8l4oaDEhUO1enDV7HSHIpCSj6pCpI=
+        b=P89Eqxl2fdukausmtFKsn/UkQ+KcGV4oItSTuOSLqYzBVzmWPSDnlqihNyBoEwK2v
+         4xsejXMdDZ8qibUstHdWnPG5KjhBLqaIsKLgoDCZpzl5rVlMQvfxpsiRkcCsIni/px
+         09aNVWKP1V03HqNUlqaAIkO0MhhA+PNFg0GI2LTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 104/155] gpiolib: acpi: Correct comment for HP x2 10 honor_wakeup quirk
-Date:   Tue, 31 Mar 2020 10:59:04 +0200
-Message-Id: <20200331085430.163215528@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Ajay Gupta <ajayg@nvidia.com>, Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.4 127/155] i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
+Date:   Tue, 31 Mar 2020 10:59:27 +0200
+Message-Id: <20200331085432.566364288@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,72 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit efaa87fa0947d525cf7c075316adde4e3ac7720b upstream.
+commit d944b27df121e2ee854a6c2fad13d6c6300792d4 upstream.
 
-Commit aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option +
-quirk mechanism") added a quirk for some models of the HP x2 10 series.
+Nvidia card may come with a "phantom" UCSI device, and its driver gets
+stuck in probe routine, prevents any system PM operations like suspend.
 
-There are 2 issues with the comment describing the quirk:
-1) The comment claims the DMI quirk applies to all Cherry Trail based HP x2
-   10 models. In the mean time I have learned that there are at least 3
-   models of the HP x2 10 models:
+There's an unaccounted case that the target time can equal to jiffies in
+gpu_i2c_check_status(), let's solve that by using readl_poll_timeout()
+instead of jiffies comparison functions.
 
-   Bay Trail SoC + AXP288 PMIC
-   Cherry Trail SoC + AXP288 PMIC
-   Cherry Trail SoC + TI PMIC
-
-   And this quirk's DMI matches only match the Cherry Trail SoC + TI PMIC
-   SoC, which is good because we want a slightly different quirk for the
-   others. This commit updates the comment to make it clear that the quirk
-   is only for the Cherry Trail SoC + TI PMIC models.
-
-2) The comment says that it is ok to disable wakeup on all ACPI GPIO event
-   handlers, because there is only the one for the embedded-controller
-   events. This is not true, there also is a handler for the special
-   INT0002 device which is related to USB wakeups. We need to also disable
-   wakeups on that one because the device turns of the USB-keyboard built
-   into the dock when closing the lid. The XHCI controller takes a while
-   to notice this, so it only notices it when already suspended, causing
-   a spurious wakeup because of this. So disabling wakeup on all handlers
-   is the right thing to do, but not because there only is the one handler
-   for the EC events. This commit updates the comment to correctly reflect
-   this.
-
-Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200302111225.6641-1-hdegoede@redhat.com
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Ajay Gupta <ajayg@nvidia.com>
+Tested-by: Ajay Gupta <ajayg@nvidia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/i2c/busses/i2c-nvidia-gpu.c |   18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1338,12 +1338,14 @@ static const struct dmi_system_id gpioli
- 	},
- 	{
- 		/*
--		 * Various HP X2 10 Cherry Trail models use an external
--		 * embedded-controller connected via I2C + an ACPI GPIO
--		 * event handler. The embedded controller generates various
--		 * spurious wakeup events when suspended. So disable wakeup
--		 * for its handler (it uses the only ACPI GPIO event handler).
--		 * This breaks wakeup when opening the lid, the user needs
-+		 * HP X2 10 models with Cherry Trail SoC + TI PMIC use an
-+		 * external embedded-controller connected via I2C + an ACPI GPIO
-+		 * event handler on INT33FF:01 pin 0, causing spurious wakeups.
-+		 * When suspending by closing the LID, the power to the USB
-+		 * keyboard is turned off, causing INT0002 ACPI events to
-+		 * trigger once the XHCI controller notices the keyboard is
-+		 * gone. So INT0002 events cause spurious wakeups too. Ignoring
-+		 * EC wakes breaks wakeup when opening the lid, the user needs
- 		 * to press the power-button to wakeup the system. The
- 		 * alternative is suspend simply not working, which is worse.
- 		 */
+--- a/drivers/i2c/busses/i2c-nvidia-gpu.c
++++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
+@@ -8,6 +8,7 @@
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
++#include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+@@ -75,20 +76,15 @@ static void gpu_enable_i2c_bus(struct gp
+ 
+ static int gpu_i2c_check_status(struct gpu_i2c_dev *i2cd)
+ {
+-	unsigned long target = jiffies + msecs_to_jiffies(1000);
+ 	u32 val;
++	int ret;
+ 
+-	do {
+-		val = readl(i2cd->regs + I2C_MST_CNTL);
+-		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER))
+-			break;
+-		if ((val & I2C_MST_CNTL_STATUS) !=
+-				I2C_MST_CNTL_STATUS_BUS_BUSY)
+-			break;
+-		usleep_range(500, 600);
+-	} while (time_is_after_jiffies(target));
++	ret = readl_poll_timeout(i2cd->regs + I2C_MST_CNTL, val,
++				 !(val & I2C_MST_CNTL_CYCLE_TRIGGER) ||
++				 (val & I2C_MST_CNTL_STATUS) != I2C_MST_CNTL_STATUS_BUS_BUSY,
++				 500, 1000 * USEC_PER_MSEC);
+ 
+-	if (time_is_before_jiffies(target)) {
++	if (ret) {
+ 		dev_err(i2cd->dev, "i2c timeout error %x\n", val);
+ 		return -ETIMEDOUT;
+ 	}
 
 
