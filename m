@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2942C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954C6C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C026921473
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E9B208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646226;
-	bh=ui8NRiDhjZ8EF755sTN4bwzFlznjwaQN2YsTsv/7BqQ=;
+	s=default; t=1585646229;
+	bh=mJQ0BF9iUHKFsG4Vqthf273UpMIufUGa1gqjsyWZtUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UogWpXllsVnLhQkQO3dV2Y/huQTJapt3zuFQ4+1lTcRRLDAthyZ5cPdrKD8sMxrYh
-	 aqFsPGCbFDItoJq37N405dj3ZlOxTnBp/UVljhzSGMyTw9L+NYsRAfTFYhJcSpCVHf
-	 CF4yWfyA/uglqW/HeIqcSNkevunCMGUJRbhZbm5Y=
+	b=0oO3q+/eKtymZaDAVPmveh1GQsS4Nsrf7+SRuxnqjd/qaRyncK2fkYv/GTKR/lE1g
+	 EexlOK6PQsOqEVFAAroUm06E0BD4klIQOF0YU8OQMWhjwmPYhrqjtdC/wVPp1TL1nk
+	 jnUBjXicFkZ+FH4kR/TgP+csCn6v/yzuo8H+0ue8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732007AbgCaJRE (ORCPT
+        id S1732015AbgCaJRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731988AbgCaJRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:01 -0400
+        id S1731070AbgCaJRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D77A2072E;
-        Tue, 31 Mar 2020 09:16:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F5AC2072E;
+        Tue, 31 Mar 2020 09:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646220;
-        bh=ui8NRiDhjZ8EF755sTN4bwzFlznjwaQN2YsTsv/7BqQ=;
+        s=default; t=1585646224;
+        bh=mJQ0BF9iUHKFsG4Vqthf273UpMIufUGa1gqjsyWZtUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MG/tjyWASftjQujjrzE9zlKVLFPLO1mbKedheuHQxgBC9aGXE7zlCA+iW+Yy+zsxb
-         +zcWPDYS5IKT8qfduqSJ5wZG8HrY0Qzj2D+iB0dt2bzafflCN7gqfVYLB3aavmns4i
-         aF++h1tXSUD+aucgylCV6bgEWVgpeXDKlSwdfgiU=
+        b=KBUk9ToLa7rtKLGVmvEfVmGCWJ2vEZAu2gLdfwQIAGl1frGZ4qqFKGch6bICZVKY+
+         yfhhWj8eKMa3f92JxILOW+oZzHiEl0XVOyI2OOZ92XCLcmvM1aEjRDAffZhdcZy1/6
+         ir3MBxMzccWgsUcL6qTpfeLJLV/adEFNHc6rOmlg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Bharata B Rao <bharata@linux.ibm.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 103/155] mm: fork: fix kernel_stack memcg stats for various stack implementations
-Date:   Tue, 31 Mar 2020 10:59:03 +0200
-Message-Id: <20200331085430.057608854@linuxfoundation.org>
+Subject: [PATCH 5.4 121/155] afs: Fix unpinned address list during probing
+Date:   Tue, 31 Mar 2020 10:59:21 +0200
+Message-Id: <20200331085431.974258624@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -64,166 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
+From: David Howells <dhowells@redhat.com>
 
-commit 8380ce479010f2f779587b462a9b4681934297c3 upstream.
+commit 9efcc4a129363187c9bf15338692f107c5c9b6f0 upstream.
 
-Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio the
-space for task stacks can be allocated using __vmalloc_node_range(),
-alloc_pages_node() and kmem_cache_alloc_node().
+When it's probing all of a fileserver's interfaces to find which one is
+best to use, afs_do_probe_fileserver() takes a lock on the server record
+and notes the pointer to the address list.
 
-In the first and the second cases page->mem_cgroup pointer is set, but
-in the third it's not: memcg membership of a slab page should be
-determined using the memcg_from_slab_page() function, which looks at
-page->slab_cache->memcg_params.memcg .  In this case, using
-mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
-page->mem_cgroup pointer is NULL even for pages charged to a non-root
-memory cgroup.
+It doesn't, however, pin the address list, so as soon as it drops the
+lock, there's nothing to stop the address list from being freed under
+us.
 
-It can lead to kernel_stack per-memcg counters permanently showing 0 on
-some architectures (depending on the configuration).
+Fix this by taking a ref on the address list inside the locked section
+and dropping it at the end of the function.
 
-In order to fix it, let's introduce a mod_memcg_obj_state() helper,
-which takes a pointer to a kernel object as a first argument, uses
-mem_cgroup_from_obj() to get a RCU-protected memcg pointer and calls
-mod_memcg_state().  It allows to handle all possible configurations
-(CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE values) without
-spilling any memcg/kmem specifics into fork.c .
-
-Note: This is a special version of the patch created for stable
-backports.  It contains code from the following two patches:
-  - mm: memcg/slab: introduce mem_cgroup_from_obj()
-  - mm: fork: fix kernel_stack memcg stats for various stack implementations
-
-[guro@fb.com: introduce mem_cgroup_from_obj()]
-  Link: http://lkml.kernel.org/r/20200324004221.GA36662@carbon.dhcp.thefacebook.com
-Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Bharata B Rao <bharata@linux.ibm.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200303233550.251375-1-guro@fb.com
+Fixes: 3bf0fb6f33dd ("afs: Probe multiple fileservers simultaneously")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/memcontrol.h |   12 ++++++++++++
- kernel/fork.c              |    4 ++--
- mm/memcontrol.c            |   38 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 52 insertions(+), 2 deletions(-)
+ fs/afs/fs_probe.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -705,6 +705,7 @@ static inline unsigned long lruvec_page_
- void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 			int val);
- void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
-+void mod_memcg_obj_state(void *p, int idx, int val);
+--- a/fs/afs/fs_probe.c
++++ b/fs/afs/fs_probe.c
+@@ -145,6 +145,7 @@ static int afs_do_probe_fileserver(struc
+ 	read_lock(&server->fs_lock);
+ 	ac.alist = rcu_dereference_protected(server->addresses,
+ 					     lockdep_is_held(&server->fs_lock));
++	afs_get_addrlist(ac.alist);
+ 	read_unlock(&server->fs_lock);
  
- static inline void mod_lruvec_state(struct lruvec *lruvec,
- 				    enum node_stat_item idx, int val)
-@@ -1128,6 +1129,10 @@ static inline void __mod_lruvec_slab_sta
- 	__mod_node_page_state(page_pgdat(page), idx, val);
+ 	atomic_set(&server->probe_outstanding, ac.alist->nr_addrs);
+@@ -163,6 +164,7 @@ static int afs_do_probe_fileserver(struc
+ 
+ 	if (!in_progress)
+ 		afs_fs_probe_done(server);
++	afs_put_addrlist(ac.alist);
+ 	return in_progress;
  }
  
-+static inline void mod_memcg_obj_state(void *p, int idx, int val)
-+{
-+}
-+
- static inline
- unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
- 					    gfp_t gfp_mask,
-@@ -1432,6 +1437,8 @@ static inline int memcg_cache_id(struct
- 	return memcg ? memcg->kmemcg_id : -1;
- }
- 
-+struct mem_cgroup *mem_cgroup_from_obj(void *p);
-+
- #else
- 
- static inline int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
-@@ -1473,6 +1480,11 @@ static inline void memcg_put_cache_ids(v
- {
- }
- 
-+static inline struct mem_cgroup *mem_cgroup_from_obj(void *p)
-+{
-+       return NULL;
-+}
-+
- #endif /* CONFIG_MEMCG_KMEM */
- 
- #endif /* _LINUX_MEMCONTROL_H */
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -394,8 +394,8 @@ static void account_kernel_stack(struct
- 		mod_zone_page_state(page_zone(first_page), NR_KERNEL_STACK_KB,
- 				    THREAD_SIZE / 1024 * account);
- 
--		mod_memcg_page_state(first_page, MEMCG_KERNEL_STACK_KB,
--				     account * (THREAD_SIZE / 1024));
-+		mod_memcg_obj_state(stack, MEMCG_KERNEL_STACK_KB,
-+				    account * (THREAD_SIZE / 1024));
- 	}
- }
- 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -786,6 +786,17 @@ void __mod_lruvec_slab_state(void *p, en
- 	rcu_read_unlock();
- }
- 
-+void mod_memcg_obj_state(void *p, int idx, int val)
-+{
-+	struct mem_cgroup *memcg;
-+
-+	rcu_read_lock();
-+	memcg = mem_cgroup_from_obj(p);
-+	if (memcg)
-+		mod_memcg_state(memcg, idx, val);
-+	rcu_read_unlock();
-+}
-+
- /**
-  * __count_memcg_events - account VM events in a cgroup
-  * @memcg: the memory cgroup
-@@ -2778,6 +2789,33 @@ static void commit_charge(struct page *p
- }
- 
- #ifdef CONFIG_MEMCG_KMEM
-+/*
-+ * Returns a pointer to the memory cgroup to which the kernel object is charged.
-+ *
-+ * The caller must ensure the memcg lifetime, e.g. by taking rcu_read_lock(),
-+ * cgroup_mutex, etc.
-+ */
-+struct mem_cgroup *mem_cgroup_from_obj(void *p)
-+{
-+	struct page *page;
-+
-+	if (mem_cgroup_disabled())
-+		return NULL;
-+
-+	page = virt_to_head_page(p);
-+
-+	/*
-+	 * Slab pages don't have page->mem_cgroup set because corresponding
-+	 * kmem caches can be reparented during the lifetime. That's why
-+	 * memcg_from_slab_page() should be used instead.
-+	 */
-+	if (PageSlab(page))
-+		return memcg_from_slab_page(page);
-+
-+	/* All other pages use page->mem_cgroup */
-+	return page->mem_cgroup;
-+}
-+
- static int memcg_alloc_cache_id(void)
- {
- 	int id, size;
 
 
