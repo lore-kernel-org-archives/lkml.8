@@ -2,172 +2,122 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4883C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD4BC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9809B20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D5D20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cp2ttPFf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODsZ4sF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgCaFoT (ORCPT
+        id S1729197AbgCaFpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:44:19 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:32910 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgCaFoT (ORCPT
+        Tue, 31 Mar 2020 01:45:34 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:50809 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgCaFpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:44:19 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g18so7721121plq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 22:44:18 -0700 (PDT)
+        Tue, 31 Mar 2020 01:45:33 -0400
+Received: by mail-pj1-f65.google.com with SMTP id v13so616056pjb.0;
+        Mon, 30 Mar 2020 22:45:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N4IUn+zEFF1zRvN63cSTLc53ybOJPdE+M6SeOuQVJFY=;
-        b=cp2ttPFfl77zeAImHigfmcnGAELpJoIKqKGcWmF0fpIrK5cg5G6y+KTu6OtQzN8hdj
-         3B4Vnts/pgwBE4lZo6aC4qOJZJfZjQ7h7Z+Oqh8NSFBxFJd3oFaGq3IiEaR6F4IaqWrs
-         5Uo93uWeuXk80DcZlRQiIAhr+14pZ8gvxXJmL9Ht9xbcIXaXf7EcNy5j/8/+TNs9GlTf
-         jcz0un0bJ+00UeBlSGv+NIYBaNAN2h7UDRRxok7n51NfQBySDVCLcF1fPE0z8ZQg4Xsq
-         +haIRqH8Xvvs3nt/JwaitQ3HUENVY8+buEOzOIv31vHUZPi7o7m8KRtcpK22AX/o7lJ+
-         11tA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oL8fdk5mmpy0zmnky2aGWkiNBKFYGLoSDb7pzpaDNLo=;
+        b=ODsZ4sF438MvrtLkHMrrZgBbY43hri6jMW/Sdhh9vmrxK+6Pg2qTC8+ZQxpdjjmWJk
+         Fbp79/MAAJvo8TMXZaprKXWvUuDslgw4oNDC0pUVt7P5PBvVd9QPunjtzoThaj/O0Hhp
+         fU2onB+CbGECL4WJ7NPn8Wkmmo2v8wbnt+BIYlG3YMK235kU6Tn741s0jCckLEUhoKRb
+         mLnIBMjAjoIo2PYL/7t7sxeQhGU5kMb8/Nq2aXNrKXdAUfSayT3X5GccNWG7RMBDrM/n
+         LIir+CwLhewCdyq5zJZ8RGkF5MP5vcm1d2FMoq5AThqHGVCjFLpUn7s6rM1OhL/ZlyEu
+         jY+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N4IUn+zEFF1zRvN63cSTLc53ybOJPdE+M6SeOuQVJFY=;
-        b=ACC8QDahQa42C+N0M36Md3RrDWvAfCcl9ypkcL96qklkH9ihwzj2zDiWuTmK02GSFS
-         bBqm76XS/znL2qsKXmA2rpOgVdHUFY+UwCbp2J9aULXMXepqlob3JqLZ+9bsY5R1EJVT
-         NjyTB5BGgLBqgIXpl+NWFhj/DO1iMzdW3dbJHKc2nQuI89qR38XFy72Sq8mhFHDVQKSc
-         mcQzBDmeAPr1gZ4xnYU4Qz0mZRCjcfZC8N/9CjOIxskoZJTwZJIuvd45TPIEMrcXHodA
-         7aGGXRrnj3rINyO3sq47dQQ7ruSFzraWiC3HMobGaQpv48FGCtUtFsOYHdRzpGKigfM4
-         bF/A==
-X-Gm-Message-State: AGi0PuZC6rACTAPJaGW69Kp2+k/zkqp1ybDdgXiHsipqbukRx4iK1k9Q
-        QxSmPpkYna7+bA7xb+VUjAmPwgCpbhg=
-X-Google-Smtp-Source: APiQypIPs/YGZ7X+wTzInoLrTlRem2xO9is6PoolBoTlMmuFE+R66oCvyuHlgFpFX2enoeAG5+xhNg==
-X-Received: by 2002:a17:90a:2710:: with SMTP id o16mr2021872pje.110.1585633457334;
-        Mon, 30 Mar 2020 22:44:17 -0700 (PDT)
-Received: from localhost ([45.127.44.10])
-        by smtp.gmail.com with ESMTPSA id z12sm12026239pfj.144.2020.03.30.22.44.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 22:44:16 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, sibis@codeaurora.org,
-        swboyd@chromium.org, dianders@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: qcom: sc7180: Fix cpu compatible
-Date:   Tue, 31 Mar 2020 11:14:07 +0530
-Message-Id: <baa90ee4bfe7f91c391252fa9049cea673fd7327.1585633235.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <18123f08bf1e60f6f7356c53f355884883b0897f.1585633235.git.amit.kucheria@linaro.org>
-References: <18123f08bf1e60f6f7356c53f355884883b0897f.1585633235.git.amit.kucheria@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oL8fdk5mmpy0zmnky2aGWkiNBKFYGLoSDb7pzpaDNLo=;
+        b=Vi97JUWb0U6lekvPph5PsM7PbU4sTXXhnZWUP7OluqvUxseoYo/5WxVkfPaEpe/Mec
+         +fpwCdPYGriPx3QM8ZuXSxqJJcM1Ddxq72q17iFDbblL2dLFZ5i8oo5sJLitwOjPNkjd
+         JA9TOW0V75If/vs47F5Og0LB3vlYV2g4q8jezqCYw001M6es87iz3qywWrWTQ5Tjai1X
+         Pmd5+copYMcFhacZTs+pFG9F2t43brbetXOnHNuMpYfkIN6H6qL02IuJ0wN0UiAaHxrS
+         iXyErVlopzA3sNebPuAsolk0zBVTeDUSQpJGsjxp6/h4LNHWLGqA/CQGhxCraBPIXpa+
+         Fp0g==
+X-Gm-Message-State: AGi0Pua1Y7/tRWP1msr3ux7Af3W/oKz/GGKNhTBEBcy7zBL9x7dYAWA8
+        1RS4xnxLIGAaZdmG1OFzXK9Kh4UW
+X-Google-Smtp-Source: APiQypLLeEdSNbs4zQs0IqSLAtMS4fvatpo1+pwvHzXfxKmH0M08lHhvQxuld+WQiQZFjAs/J1EjIA==
+X-Received: by 2002:a17:90a:a111:: with SMTP id s17mr1974434pjp.129.1585633532000;
+        Mon, 30 Mar 2020 22:45:32 -0700 (PDT)
+Received: from [192.168.1.18] (i223-218-245-204.s42.a013.ap.plala.or.jp. [223.218.245.204])
+        by smtp.googlemail.com with ESMTPSA id i14sm10912717pgh.47.2020.03.30.22.45.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 22:45:31 -0700 (PDT)
+Subject: Re: [PATCH net] veth: xdp: use head instead of hard_start
+To:     maowenan <maowenan@huawei.com>,
+        Jesper Dangaard Brouer <jbrouer@redhat.com>
+Cc:     davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
+        kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        jwi@linux.ibm.com, jianglidong3@jd.com, edumazet@google.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200330102631.31286-1-maowenan@huawei.com>
+ <20200330133442.132bde0c@carbon>
+ <3053de4c-cee6-f6fc-efc2-09c6250f3ef2@gmail.com>
+ <e7cf1271-2953-a5aa-ab25-c4b4a3843ee1@huawei.com>
+From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
+Message-ID: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
+Date:   Tue, 31 Mar 2020 14:45:26 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <e7cf1271-2953-a5aa-ab25-c4b4a3843ee1@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"arm,armv8" compatible should only be used for software models. Replace
-it with the real cpu type.
+On 2020/03/31 12:56, maowenan wrote:
+> On 2020/3/31 7:35, Toshiaki Makita wrote:
+>> Hi Mao & Jesper
+>> (Resending with plain text...)
+>>
+>> On 2020/03/30 20:34, Jesper Dangaard Brouer wrote:
+>>> On Mon, 30 Mar 2020 18:26:31 +0800
+>>> Mao Wenan <maowenan@huawei.com> wrote:
+>>>
+>>>> xdp.data_hard_start is mapped to the first
+>>>> address of xdp_frame, but the pointer hard_start
+>>>> is the offset(sizeof(struct xdp_frame)) of xdp_frame,
+>>>> it should use head instead of hard_start to
+>>>> set xdp.data_hard_start. Otherwise, if BPF program
+>>>> calls helper_function such as bpf_xdp_adjust_head, it
+>>>> will be confused for xdp_frame_end.
+>>>
+>>> I have noticed this[1] and have a patch in my current patchset for
+>>> fixing this.  IMHO is is not so important fix right now, as the effect
+>>> is that you currently only lose 32 bytes of headroom.
+>>>
+> I consider that it is needed because bpf_xdp_adjust_head() just a common helper function,
+> veth as one driver application should keep the same as 32 bytes of headroom as other driver.
+> And convert_to_xdp_frame set() also store info in top of packet, and set:
+> 	xdp_frame = xdp->data_hard_start;
+> 
+>>> [1] https://lore.kernel.org/netdev/158446621887.702578.17234304084556809684.stgit@firesoul/
+>>
+>> You are right, the subtraction is not necessary here.
+> I guess you mean that previous subtraction is not necessary ? this line : void *head = hard_start - sizeof(struct xdp_frame); ?
 
-Fixes: 90db71e480708 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
----
-Changes since v1:
-- Added fixes tag
-- Added acks
+No I just mean subtraction of headroom is not necessary, and I noticed this 
+description was confusing. Sorry about that.
+You can use "head" for data_hard_start.
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 8011c5fe2a31a..a01dfefd90bea 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -83,7 +83,7 @@
- 
- 		CPU0: cpu@0 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
-@@ -100,7 +100,7 @@
- 
- 		CPU1: cpu@100 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_100>;
-@@ -114,7 +114,7 @@
- 
- 		CPU2: cpu@200 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_200>;
-@@ -128,7 +128,7 @@
- 
- 		CPU3: cpu@300 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_300>;
-@@ -142,7 +142,7 @@
- 
- 		CPU4: cpu@400 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_400>;
-@@ -156,7 +156,7 @@
- 
- 		CPU5: cpu@500 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_500>;
-@@ -170,7 +170,7 @@
- 
- 		CPU6: cpu@600 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_600>;
-@@ -184,7 +184,7 @@
- 
- 		CPU7: cpu@700 {
- 			device_type = "cpu";
--			compatible = "arm,armv8";
-+			compatible = "qcom,kryo468";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_700>;
--- 
-2.20.1
-
+Toshiaki Makita
