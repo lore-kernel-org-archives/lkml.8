@@ -2,252 +2,194 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7084C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1855CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B490920781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:25:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="jaKNuyK6"
+	by mail.kernel.org (Postfix) with ESMTP id D39A020784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585635949;
+	bh=lbS2XvRLLgIkHuKcmBrVYxUT2fzqBQ/3ewCFhcdrKUs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Mu/5jasiBekLaIXMqZSCZP8JZReEsiTdaznuwSELdjSFSAbTaGQ3nsjyUqPyMOq/5
+	 DwqpjvhS/SPj8CyF41mfJs8bUVHmb7JxRs3uD+ORyX9STi+WIA+pTB0FaoCmGHNNPP
+	 jbD94mJ/H0CUH3DzrW8HFDTFc+BcLGnJJSSC4tU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbgCaGZI (ORCPT
+        id S1730056AbgCaGZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:25:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:51060 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729949AbgCaGYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:24:52 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48rznt2T4yz9v0KM;
-        Tue, 31 Mar 2020 08:24:50 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jaKNuyK6; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9kuhmWDyt8Bq; Tue, 31 Mar 2020 08:24:50 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48rznt15Xdz9v0KC;
-        Tue, 31 Mar 2020 08:24:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585635890; bh=5nryEhu9ZdC3QcAPQtb5kgYfw9XZ6OdDGR/6oi4BLng=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=jaKNuyK6imUrD0z/gXSulBayGXCSDh5ddaOBzDwXFhD347QfkMc3G6yP/0mjYg7mg
-         WmhKQ2co9HZdZ3DzX3DyqGaG22Nbl/bFJ+U9ocKuUmRW2Bmua0yo/POE7imAjTVql4
-         dZ+CsL+92TSom13PA6Y1cwqI5Qlcu9nxn+yHhfbM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C83458B784;
-        Tue, 31 Mar 2020 08:24:50 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 6QJLOOAWpn2c; Tue, 31 Mar 2020 08:24:50 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 832DD8B752;
-        Tue, 31 Mar 2020 08:24:50 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 829B865673; Tue, 31 Mar 2020 06:24:50 +0000 (UTC)
-Message-Id: <0b7974a0400563d4cd1b607462940db4d4526605.1585635837.git.christophe.leroy@c-s.fr>
-In-Reply-To: <40899eb1b8f10da3706acd06c3d46d2418c8886e.1585635837.git.christophe.leroy@c-s.fr>
-References: <40899eb1b8f10da3706acd06c3d46d2418c8886e.1585635837.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 10/10] powerpc/32: Replace RFI by rfi
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 31 Mar 2020 06:24:50 +0000 (UTC)
+        Tue, 31 Mar 2020 02:25:48 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:41022 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgCaGZs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 02:25:48 -0400
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02V6PRM2020258;
+        Tue, 31 Mar 2020 15:25:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02V6PRM2020258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585635928;
+        bh=bhHDF/pmVptyuAoHUwFW/YtM1ZLRsyzSLz5SMFr9KSE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ya91m2S2ZN7KXYPVglJDOXDsplu8DdVyJFEtDyGEoOpgwfq1DBFneqEk/BwlN65ES
+         55e6i4x7DRc6cbRlCz3AkluPl0vP8M69ekNqBgDcg337mqnq3D/Zv8YdH6YibZT2b7
+         ZaRXwcDQw5yRaiv/BH1kMx8E8D/M5knpIBh/IbjbU4QYq7T97tJGjBksuiibAic57K
+         etS3EmpxeXs/onxsSAUo1g3MK8LDIi389TKRKpGhFVE6ieG7qBbqq4dNmDWwa07hxc
+         zbvM9XOOheeHMgbSlit9q93L4G6idWao9DPqLZQ7ljQTvySxbVgCwQ1bBVPdLwCR7M
+         dHt3zzqKIF7BA==
+X-Nifty-SrcIP: [209.85.221.177]
+Received: by mail-vk1-f177.google.com with SMTP id v129so5060479vkf.10;
+        Mon, 30 Mar 2020 23:25:27 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYKfODBH7DsH4Up122XzqYnldVTZlx8kvMO6huJe+Jhp+ntUfMF
+        jYRajPezeBogag4YlaBBX1QWlhJFrmD0vtonszo=
+X-Google-Smtp-Source: APiQypJ6aYvHt8O+nUKi2P4e1tQlaNx841DQpH1QGjgiKd+2Tjbr2vki5+PR1yPxEfCJ/+AZxPmROqefEkc+iGZMOX8=
+X-Received: by 2002:a1f:1786:: with SMTP id 128mr10407782vkx.26.1585635926362;
+ Mon, 30 Mar 2020 23:25:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86> <20200317215515.226917-1-ndesaulniers@google.com>
+ <20200327224246.GA12350@ubuntu-m2-xlarge-x86> <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
+ <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
+ <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com> <20200330190312.GA32257@ubuntu-m2-xlarge-x86>
+In-Reply-To: <20200330190312.GA32257@ubuntu-m2-xlarge-x86>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 31 Mar 2020 15:24:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT1HoV5wUZRdeU0+P1nYAm2xQ4tpOG+7UtT4947QByakg@mail.gmail.com>
+Message-ID: <CAK7LNAT1HoV5wUZRdeU0+P1nYAm2xQ4tpOG+7UtT4947QByakg@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RFI was a macro waving the rfi instruction for the 40x.
+On Tue, Mar 31, 2020 at 4:03 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Mon, Mar 30, 2020 at 11:58:19AM -0700, Nick Desaulniers wrote:
+> > On Sat, Mar 28, 2020 at 6:57 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > I also had planned to provide a single switch to change
+> > > all the tool defaults to LLVM.
+> > >
+> > > So, supporting 'LLVM' is fine, but I'd rather want this
+> > > look symmetrical, and easy to understand.
+> > >
+> > > CPP        = $(CC) -E
+> > > ifneq ($(LLVM),)
+> >
+> > Yes, a simple if statement is much simpler than the overly complex patch I had.
+> >
+> > > CC         = $(LLVM_DIR)clang
+> >
+> > Do we need $LLVM_DIR? Shouldn't users just have that in their $PATH?
+> >
+> > Also, I think we need to support suffixed binaries, as debian
+> > distributes these with version suffixes, as Nathan points out.  Or do
+> > the debian packages install suffixed binaries AND path versioned
+> > non-suffixed binaries?
+>
+> I think the idea here is that ultimately, the suffixed versions of clang
+> that Debian has in /usr/bin are symlinks to binaries in
+> /usr/lib/llvm-#/bin; as a result, a user could say
+> LLVM_DIR=/usr/lib/llvm-#/bin/ and all of those tools would be picked up
+> automatically. I am not really sure what is better.
 
-Now that 40x is gone, rfi can be used directly.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/entry_32.S | 18 +++++++++---------
- arch/powerpc/kernel/head_32.S  | 18 +++++++++---------
- 2 files changed, 18 insertions(+), 18 deletions(-)
+I periodically build the latest llvm from the trunk,
+and install it under my home directory.
 
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index cae0bdc013e5..4920448f6ad9 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -203,7 +203,7 @@ transfer_to_handler_cont:
- 	mtspr	SPRN_SRR1,r10
- 	mtlr	r9
- 	SYNC
--	RFI				/* jump to handler, enable MMU */
-+	rfi				/* jump to handler, enable MMU */
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
- 1:	/* MSR is changing, re-enable MMU so we can notify lockdep. We need to
-@@ -216,7 +216,7 @@ transfer_to_handler_cont:
- 	mtspr	SPRN_SRR0,r12
- 	mtspr	SPRN_SRR1,r0
- 	SYNC
--	RFI
-+	rfi
- 
- reenable_mmu:
- 	/*
-@@ -290,7 +290,7 @@ stack_ovf:
- 	mtspr	SPRN_SRR0,r9
- 	mtspr	SPRN_SRR1,r10
- 	SYNC
--	RFI
-+	rfi
- #endif
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
-@@ -439,7 +439,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
- 	mtspr	SPRN_SRR0,r7
- 	mtspr	SPRN_SRR1,r8
- 	SYNC
--	RFI
-+	rfi
- #ifdef CONFIG_44x
- 2:	li	r7,0
- 	iccci	r0,r0
-@@ -570,7 +570,7 @@ ret_from_kernel_syscall:
- 	mtspr	SPRN_SRR0, r9
- 	mtspr	SPRN_SRR1, r10
- 	SYNC
--	RFI
-+	rfi
- 
- /*
-  * The fork/clone functions need to copy the full register set into
-@@ -773,7 +773,7 @@ fast_exception_return:
- 	REST_GPR(12, r11)
- 	lwz	r11,GPR11(r11)
- 	SYNC
--	RFI
-+	rfi
- 
- #ifndef CONFIG_BOOKE
- /* check if the exception happened in a restartable section */
-@@ -1008,7 +1008,7 @@ exc_exit_restart:
- 	.globl exc_exit_restart_end
- exc_exit_restart_end:
- 	SYNC
--	RFI
-+	rfi
- 
- #else /* !CONFIG_BOOKE */
- 	/*
-@@ -1313,7 +1313,7 @@ _GLOBAL(enter_rtas)
- 	stw	r7, THREAD + RTAS_SP(r2)
- 	mtspr	SPRN_SRR0,r8
- 	mtspr	SPRN_SRR1,r9
--	RFI
-+	rfi
- 1:	tophys_novmstack r9, r1
- #ifdef CONFIG_VMAP_STACK
- 	li	r0, MSR_KERNEL & ~MSR_IR	/* can take DTLB miss */
-@@ -1328,7 +1328,7 @@ _GLOBAL(enter_rtas)
- 	stw	r0, THREAD + RTAS_SP(r7)
- 	mtspr	SPRN_SRR0,r8
- 	mtspr	SPRN_SRR1,r9
--	RFI			/* return to caller */
-+	rfi			/* return to caller */
- 
- 	.globl	machine_check_in_rtas
- machine_check_in_rtas:
-diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
-index daaa153950c2..13866115a18a 100644
---- a/arch/powerpc/kernel/head_32.S
-+++ b/arch/powerpc/kernel/head_32.S
-@@ -220,7 +220,7 @@ turn_on_mmu:
- 	ori	r0,r0,start_here@l
- 	mtspr	SPRN_SRR0,r0
- 	SYNC
--	RFI				/* enables MMU */
-+	rfi				/* enables MMU */
- 
- /*
-  * We need __secondary_hold as a place to hold the other cpus on
-@@ -784,14 +784,14 @@ fast_hash_page_return:
- 	lwz	r11, THR11(r10)
- 	mfspr	r10, SPRN_SPRG_SCRATCH0
- 	SYNC
--	RFI
-+	rfi
- 
- 1:	/* ISI */
- 	mtcr	r11
- 	mfspr	r11, SPRN_SPRG_SCRATCH1
- 	mfspr	r10, SPRN_SPRG_SCRATCH0
- 	SYNC
--	RFI
-+	rfi
- 
- stack_overflow:
- 	vmap_stack_overflow_exception
-@@ -930,7 +930,7 @@ __secondary_start:
- 	mtspr	SPRN_SRR0,r3
- 	mtspr	SPRN_SRR1,r4
- 	SYNC
--	RFI
-+	rfi
- #endif /* CONFIG_SMP */
- 
- #ifdef CONFIG_KVM_BOOK3S_HANDLER
-@@ -1074,7 +1074,7 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
- 	mtspr	SPRN_SRR0,r4
- 	mtspr	SPRN_SRR1,r3
- 	SYNC
--	RFI
-+	rfi
- /* Load up the kernel context */
- 2:	bl	load_up_mmu
- 
-@@ -1099,7 +1099,7 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
- 	mtspr	SPRN_SRR0,r3
- 	mtspr	SPRN_SRR1,r4
- 	SYNC
--	RFI
-+	rfi
- 
- /*
-  * void switch_mmu_context(struct mm_struct *prev, struct mm_struct *next);
-@@ -1217,7 +1217,7 @@ _ENTRY(update_bats)
- 	mtspr	SPRN_SRR0, r4
- 	mtspr	SPRN_SRR1, r3
- 	SYNC
--	RFI
-+	rfi
- 1:	bl	clear_bats
- 	lis	r3, BATS@ha
- 	addi	r3, r3, BATS@l
-@@ -1237,7 +1237,7 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
- 	mtspr	SPRN_SRR0, r7
- 	mtspr	SPRN_SRR1, r6
- 	SYNC
--	RFI
-+	rfi
- 
- flush_tlbs:
- 	lis	r10, 0x40
-@@ -1258,7 +1258,7 @@ mmu_off:
- 	mtspr	SPRN_SRR0,r4
- 	mtspr	SPRN_SRR1,r3
- 	sync
--	RFI
-+	rfi
- 
- /*
-  * On 601, we use 3 BATs to map up to 24M of RAM at _PAGE_OFFSET
+So, I just thought it would be useful to
+allow a user to specify the llvm directory.
+
+Of course, I can do the equivalent by tweaking PATH, but
+I hesitate to make the non-released version my default.
+
+
+
+Having both LLVM_DIR and LLVM_SUFFIX seems verbose.
+
+In fact, the debian provides multiple versions of GCC.
+For example, my machine has
+
+masahiro@pug:~$ ls -1 /usr/bin/gcc-*
+/usr/bin/gcc-4.8
+/usr/bin/gcc-5
+/usr/bin/gcc-7
+/usr/bin/gcc-ar
+/usr/bin/gcc-ar-4.8
+/usr/bin/gcc-ar-5
+/usr/bin/gcc-ar-7
+/usr/bin/gcc-nm
+/usr/bin/gcc-nm-4.8
+/usr/bin/gcc-nm-5
+/usr/bin/gcc-nm-7
+/usr/bin/gcc-ranlib
+/usr/bin/gcc-ranlib-4.8
+/usr/bin/gcc-ranlib-5
+/usr/bin/gcc-ranlib-7
+
+But, nobody has suggested GCC_SUFFIX.
+
+So, I guess CROSS_COMPILE was enough to
+choose a specific tool version.
+
+
+
+
+> I'll try to have some other comments by later today/tonight.
+>
+> > > LD         = $(LLVM_DIR)ld.lld
+> > > AR         = $(LLVM_DIR)llvm-ar
+> > > NM         = $(LLVM_DIR)llvm-nm
+> > > OBJCOPY    = $(LLVM_DIR)llvm-objcopy
+> > > OBJDUMP    = $(LLVM_DIR)llvm-objdump
+> > > READELF    = $(LLVM_DIR)llvm-readelf
+> > > OBJSIZE    = $(LLVM_DIR)llvm-size
+> > > STRIP      = $(LLVM_DIR)llvm-strip
+> > > else
+> > > CC         = $(CROSS_COMPILE)gcc
+> > > LD         = $(CROSS_COMPILE)ld
+> > > AR         = $(CROSS_COMPILE)ar
+> > > NM         = $(CROSS_COMPILE)nm
+> > > OBJCOPY    = $(CROSS_COMPILE)objcopy
+> > > OBJDUMP    = $(CROSS_COMPILE)objdump
+> > > READELF    = $(CROSS_COMPILE)readelf
+> > > OBJSIZE    = $(CROSS_COMPILE)size
+> > > STRIP      = $(CROSS_COMPILE)strip
+> > > endif
+> > >
+> > >
+> > >
+> > > I attached two patches.
+> > > Comments appreciated.
+> >
+> > I'm not sure the second one that recommends changing cc/c++ is the way
+> > to go; I think it might harm hermeticity.
+>
+> Agreed. I do not modify my host system at all for this project, just
+> relying on PATH modification. In theory, we can still override HOSTCC
+> and HOSTCXX but that would defeat the purpose of that patch.
+>
+> Cheers,
+> Nathan
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200330190312.GA32257%40ubuntu-m2-xlarge-x86.
+
+
+
 -- 
-2.25.0
-
+Best Regards
+Masahiro Yamada
