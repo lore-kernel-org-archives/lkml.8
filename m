@@ -2,92 +2,124 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A1AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A929D206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0AASjRuF"
+	by mail.kernel.org (Postfix) with ESMTP id 2D1D520784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbgCaNse (ORCPT
+        id S1730872AbgCaNvt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:48:34 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38034 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730464AbgCaNse (ORCPT
+        Tue, 31 Mar 2020 09:51:49 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:38934 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730358AbgCaNvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:48:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=S5n7yDRQamti9CgoL/ypn1YynciA+zLihEOrWDF9zgo=; b=0AASjRuFb0QrDXRVsB0bJX/FtL
-        JSRmmzAkL8BJdmtP0MwBUhWbvLXIwv40bvlX/gIAOoQqZTcDe4Kef70K8ZdIXBPCmRMd7fzY5LqZS
-        mH6VlRCkCWblJZfi0nz/CXXLbOLpoWbuR9OSE71yxKAad7NDGwpMmCVmbgEyeY70PAQ0k2+gX4evf
-        IpOHXEJBdNLbkr5WuthBjVd597SaOrLjtv2M9oAjEp2jStLGojAE/UwK6h0KtayviNT5FrSmqQdcD
-        IATwZkheUvX6XDeDub9oz7/dv7ZJXoFpkQoqRh3ORCHevrUKQn6RqZKY8iYbq4FYim8EjdzGOlYtm
-        7/WHbAdA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJHFa-0002bY-Qi; Tue, 31 Mar 2020 13:48:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03A0330477A;
-        Tue, 31 Mar 2020 15:48:13 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BC27E29DA6117; Tue, 31 Mar 2020 15:48:13 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 15:48:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Aubrey Li <aubrey.li@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [GIT PULL] scheduler changes for v5.7
-Message-ID: <20200331134813.GQ20730@hirez.programming.kicks-ass.net>
-References: <20200330173159.GA128106@gmail.com>
- <20200331103333.GM3772@suse.de>
+        Tue, 31 Mar 2020 09:51:48 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-124-raG5mItQN4SiIRUf6s5KeA-1; Tue, 31 Mar 2020 14:51:44 +0100
+X-MC-Unique: raG5mItQN4SiIRUf6s5KeA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:51:44 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 31 Mar 2020 14:51:44 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: [RFC PATCH 00/12] Changes to code that reads iovec from userspace
+Thread-Topic: [RFC PATCH 00/12] Changes to code that reads iovec from
+ userspace
+Thread-Index: AdYHYETxpoUzI3CTQc6sOiLf8VKhPg==
+Date:   Tue, 31 Mar 2020 13:51:44 +0000
+Message-ID: <a2c781bbd5c44fd19483076fd0296943@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331103333.GM3772@suse.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:33:33AM +0100, Mel Gorman wrote:
-> On Mon, Mar 30, 2020 at 07:31:59PM +0200, Ingo Molnar wrote:
-> > Linus,
-> > 
-> > Please pull the latest sched-core-for-linus git tree from:
-> > 
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-for-linus
-> > 
-> >    # HEAD: 313f16e2e35abb833eab5bdebc6ae30699adca18 Merge branch 'sched/rt' into sched/core, to pick up completed topic tree
-> > 
-> > The main changes in this cycle are:
-> > 
-> >  - Various NUMA scheduling updates: harmonize the load-balancer and NUMA 
-> >    placement logic to not work against each other. The intended result is 
-> >    better locality, better utilization and fewer migrations.
-> > 
-> 
-> Thanks Ingo.
-> 
-> I noticed that the following patch did not make it to the list.
-> 
-> sched/fair: Fix negative imbalance in imbalance calculation
-> https://lore.kernel.org/lkml/1585201349-70192-1-git-send-email-aubrey.li@intel.com/
+This is RFC because we seem to be in a merge window.
 
-I have it, we'll get it in before the next release.
+The canonical code to read iov[] is currently:
+	struct iovec iovstack[UIO_FASTIOV];
+	struct iovec *iov;
+	...
+	iov = iovstack;
+	rc = import_iovec(..., UIO_FASTIOV, &iov, &iter);
+	if (rc < 0)
+		return rc;
+	...
+	kfree(iov);
+
+Note that the 'iov' parameter is used for two different things.
+On input it is an iov[] can can be used.
+On output it is an iov[] array that must be freed.
+
+If 'iovstack' is passed, the count is actually always UIO_FASTIOV (8)
+although in some places the array definition is in a different file
+(never mind function) from the constant used.
+
+import_iovec() itself is just a wrapper to rw_copy_check_uvector().
+So everything is passed through to a second function.
+Several items are 'passed by reference' - adding to the code paths.
+
+On success import_iovec() returned the transfer count.
+Only one caller looks at it, the count is also in iter.count.
+
+The new canonical code is:
+	struct iov_cache cache;
+	struct iovec *iov;
+	...
+	iov = iovec_import(..., &cache, &iter);
+	if (IS_ERR(iov))
+		return PTR_ERR(iov);
+	...
+	kfree(iov);
+
+Since 'struct iov_cache' is a fixed size there is no need to pass in
+a length (correct or not!). It can still be NULL (used by the scsi code).
+
+iovec_import() contains the code that used to be in rw_copy_check_uvector()
+and then sets up the iov_iter.
+
+rw_copy_check_uvector() is no more.
+The only other caller was in mm/process_vm_access.c when reading the
+iov[] for the target process addresses when copying from a differ process.
+This can extract the iov[] from an extra 'struct iov_iter'.
+
+In passing I noticed an access_ok() call on each fragment.
+I hope this is just there to bail out early!
+It is also skipped in process_vm_rw(). I did a quick look but couldn't
+see an obvious equivalent check.
+
+Patches 1 and 2 tidy up existing code.
+Patches 3 and 4 add the new interface.
+Patches 5 through 10 change all the callers.
+Patch 11 removes a 'hack' that allowed fs/io_uring be updated before the socket code.
+Patch 12 removes the old interface.
+
+I suspect the changes need to trickle through a merge window.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
