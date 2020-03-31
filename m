@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F157C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDD6C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E457C20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FA3220787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585697252;
-	bh=x7DzV0s4ROjdZWJe2RxSIJB/ii7d/wsIeF2JinMwFOo=;
+	s=default; t=1585697314;
+	bh=l7zMYSntV7hVq8rfpu63wjGejX5IPF+uFcD9Vs6O3I8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hS6LLvL7b93XzvPWncU+6Cqd4JaFjvc7BSu3SRCmj9Q+g2YbgnoTLrrsv7gwYoaSH
-	 JeQ77/9J0EHhE/7EcPLChkGO/pCfUdnjSjUMQWUcj6EcsILWl/+QFiigxQPttljLFN
-	 no2zmc2xp9gFOmyNfo/ACnd0nKwQGFZx179ceXUY=
+	b=Pb1Ava4ZqeisulIS5FLYEKBdwcIOzMPGLcFW+fc/UCNFIF01f7gBza9p+w/VIxOXy
+	 /tTnRxyEfJulird2gzb5feivhOQ4QyaNNl0IhZi62cxwLqoXsX5z22gJw5IVrSs7kI
+	 E2Y8CLvy4g6o/NJirl3z74BdsYcjAJhZwZaG5uBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731513AbgCaX1a (ORCPT
+        id S1731571AbgCaX2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 19:27:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48980 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 19:28:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbgCaX1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 19:27:30 -0400
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+        id S1731331AbgCaX2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 19:28:32 -0400
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B758320CC7;
-        Tue, 31 Mar 2020 23:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3645421775;
+        Tue, 31 Mar 2020 23:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585697249;
-        bh=x7DzV0s4ROjdZWJe2RxSIJB/ii7d/wsIeF2JinMwFOo=;
+        s=default; t=1585697311;
+        bh=l7zMYSntV7hVq8rfpu63wjGejX5IPF+uFcD9Vs6O3I8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0xWtKYorfntJUn3zsbp0ID4Nl7w4wPpnZO5Ggo8YLC3vMGTIxNDHex5Hd9S2Qltpd
-         nZuYpuIZWwZzhl09dXzcPj3wemdniZPT8qIfIyFahD2+ug3yUOrGMLmzgVHPaHUZX0
-         WRzXsVyRAKP+T6V8EVv46Y/i8io7KfBvZvibs6jQ=
-Received: by mail-ed1-f54.google.com with SMTP id v1so27436829edq.8;
-        Tue, 31 Mar 2020 16:27:28 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0pRsqcwLGK0L7ktCg6jTPD/SxbJUCHsO1U6CJOPPnfIM45+7I5
-        4Q18BpNZNVnStTZIdM6yEbNEYbIcnm8UfPUP7w==
-X-Google-Smtp-Source: ADFU+vtBb1KxI4+vTeZ5U2HQ3nMwxxGyWPlJXzhWQefQTTzE7BevfFVF32dfd5Ohkz+crkUGgNF6LeglDGiRNsaNUxQ=
-X-Received: by 2002:a50:9f07:: with SMTP id b7mr18189302edf.148.1585697247066;
- Tue, 31 Mar 2020 16:27:27 -0700 (PDT)
+        b=MUvJi6wRPlDITY6PDh0q/OLcS+7pn4GJTp71mf2egrupLmdVom35B4dl/FNfYMSL9
+         jvuFOF66rSY6u/g+qJ+tdnewpVmwV4npcvCkbIEEJWd7iaq1I5cAeVEpwD4jZxO/Cs
+         hA9NxsSqQJa8j8pW9q2zjQp8YdQnPB3oIcVKIFO8=
+Received: by mail-ed1-f42.google.com with SMTP id v1so27439172edq.8;
+        Tue, 31 Mar 2020 16:28:31 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1WbiKQBqDbRGog6Jos6daIlZONkXFc1y5l4XjoDpwT5Q3yFw+e
+        tbWJRh9HY3FQ61F4Ropx7/cfdMTxaxi5TA25EA==
+X-Google-Smtp-Source: ADFU+vs8xTP/4fNCKc/Lkxq6axyfNY0WeUUpH6PAk0Z4p/Dm89IelQXjsghn8yHY1mTBx4UE/MzCvvq1r5Omz1grjaY=
+X-Received: by 2002:a05:6402:b70:: with SMTP id cb16mr6166633edb.48.1585697309577;
+ Tue, 31 Mar 2020 16:28:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200331214609.1742152-1-enric.balletbo@collabora.com> <20200331214609.1742152-2-enric.balletbo@collabora.com>
-In-Reply-To: <20200331214609.1742152-2-enric.balletbo@collabora.com>
+References: <20200331214609.1742152-1-enric.balletbo@collabora.com> <20200331214609.1742152-3-enric.balletbo@collabora.com>
+In-Reply-To: <20200331214609.1742152-3-enric.balletbo@collabora.com>
 From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 1 Apr 2020 07:27:16 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9S_tWeB5VAVYv8mtFOgtAqw=9ts+a5ugEkaYFvKujosQ@mail.gmail.com>
-Message-ID: <CAAOTY_9S_tWeB5VAVYv8mtFOgtAqw=9ts+a5ugEkaYFvKujosQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] clk / soc: mediatek: Bind clock and gpu driver for mt2712
+Date:   Wed, 1 Apr 2020 07:28:19 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-wt1shM7RGTquTmej3VeCNXUy9ByxN+T56qDYG-MeJeA@mail.gmail.com>
+Message-ID: <CAAOTY_-wt1shM7RGTquTmej3VeCNXUy9ByxN+T56qDYG-MeJeA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] clk / soc: mediatek: Bind clock and gpu driver for mt2701
 To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Cc:     Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -87,8 +87,7 @@ Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
 > Now that the mmsys driver is the top-level entry point for the
 > multimedia subsystem, we could bind the clock and the gpu driver on
 > those devices that is expected to work, so the drm driver is
-> intantiated by the mmsys driver and display, hopefully, working again on
-> those devices.
+> intantiated by the mmsys driver and display, hopefully, working again.
 
 Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
@@ -98,18 +97,25 @@ Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 > If you have this hardware, please kindly provide your tested tag. Only
 > build tested.
 >
->  drivers/clk/mediatek/clk-mt2712-mm.c | 8 ++------
+>  drivers/clk/mediatek/clk-mt2701-mm.c | 8 ++------
 >  drivers/soc/mediatek/mtk-mmsys.c     | 8 ++++++++
 >  2 files changed, 10 insertions(+), 6 deletions(-)
 >
-> diff --git a/drivers/clk/mediatek/clk-mt2712-mm.c b/drivers/clk/mediatek/=
-clk-mt2712-mm.c
-> index 1c5948be35f3..660c1f63293f 100644
-> --- a/drivers/clk/mediatek/clk-mt2712-mm.c
-> +++ b/drivers/clk/mediatek/clk-mt2712-mm.c
-> @@ -128,9 +128,10 @@ static const struct mtk_gate mm_clks[] =3D {
+> diff --git a/drivers/clk/mediatek/clk-mt2701-mm.c b/drivers/clk/mediatek/=
+clk-mt2701-mm.c
+> index 054b597d4a73..3a4e895a3d0f 100644
+> --- a/drivers/clk/mediatek/clk-mt2701-mm.c
+> +++ b/drivers/clk/mediatek/clk-mt2701-mm.c
+> @@ -79,16 +79,12 @@ static const struct mtk_gate mm_clks[] =3D {
+>         GATE_DISP1(CLK_MM_TVE_FMM, "mm_tve_fmm", "mm_sel", 14),
+>  };
 >
->  static int clk_mt2712_mm_probe(struct platform_device *pdev)
+> -static const struct of_device_id of_match_clk_mt2701_mm[] =3D {
+> -       { .compatible =3D "mediatek,mt2701-mmsys", },
+> -       {}
+> -};
+> -
+>  static int clk_mt2701_mm_probe(struct platform_device *pdev)
 >  {
 > +       struct device *dev =3D &pdev->dev;
 > +       struct device_node *node =3D dev->parent->of_node;
@@ -117,49 +123,36 @@ clk-mt2712-mm.c
 >         int r;
 > -       struct device_node *node =3D pdev->dev.of_node;
 >
->         clk_data =3D mtk_alloc_clk_data(CLK_MM_NR_CLK);
+>         clk_data =3D mtk_alloc_clk_data(CLK_MM_NR);
 >
-> @@ -146,11 +147,6 @@ static int clk_mt2712_mm_probe(struct platform_devic=
-e *pdev)
->         return r;
->  }
->
-> -static const struct of_device_id of_match_clk_mt2712_mm[] =3D {
-> -       { .compatible =3D "mediatek,mt2712-mmsys", },
-> -       {}
-> -};
-> -
->  static struct platform_driver clk_mt2712_mm_drv =3D {
->         .probe =3D clk_mt2712_mm_probe,
->         .driver =3D {
 > diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-=
 mmsys.c
-> index 05e322c9c301..c7d3b7bcfa32 100644
+> index c7d3b7bcfa32..cacafe23c823 100644
 > --- a/drivers/soc/mediatek/mtk-mmsys.c
 > +++ b/drivers/soc/mediatek/mtk-mmsys.c
 > @@ -80,6 +80,10 @@ struct mtk_mmsys_driver_data {
 >         const char *clk_driver;
 >  };
 >
-> +static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data =3D {
-> +       .clk_driver =3D "clk-mt2712-mm",
+> +static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data =3D {
+> +       .clk_driver =3D "clk-mt2701-mm",
 > +};
 > +
->  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data =3D {
->         .clk_driver =3D "clk-mt8173-mm",
+>  static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data =3D {
+>         .clk_driver =3D "clk-mt2712-mm",
 >  };
-> @@ -319,6 +323,10 @@ static int mtk_mmsys_probe(struct platform_device *p=
+> @@ -323,6 +327,10 @@ static int mtk_mmsys_probe(struct platform_device *p=
 dev)
 >  }
 >
 >  static const struct of_device_id of_match_mtk_mmsys[] =3D {
 > +       {
-> +               .compatible =3D "mediatek,mt2712-mmsys",
-> +               .data =3D &mt2712_mmsys_driver_data,
+> +               .compatible =3D "mediatek,mt2701-mmsys",
+> +               .data =3D &mt2701_mmsys_driver_data,
 > +       },
 >         {
->                 .compatible =3D "mediatek,mt8173-mmsys",
->                 .data =3D &mt8173_mmsys_driver_data,
+>                 .compatible =3D "mediatek,mt2712-mmsys",
+>                 .data =3D &mt2712_mmsys_driver_data,
 > --
 > 2.25.1
 >
