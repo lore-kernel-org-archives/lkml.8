@@ -2,332 +2,140 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1441DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6009C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6255207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92617208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:01:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrA8KdmQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="At5xJ/o5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgCaLAn (ORCPT
+        id S1730618AbgCaLBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:00:43 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38472 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730380AbgCaLAn (ORCPT
+        Tue, 31 Mar 2020 07:01:04 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35653 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730514AbgCaLBE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:00:43 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e5so24563131edq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 04:00:40 -0700 (PDT)
+        Tue, 31 Mar 2020 07:01:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k5so7974003pga.2;
+        Tue, 31 Mar 2020 04:01:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7YnYpUhCDEO6kVHkJtFT+/hpwswgtWuGWlgTnicwYjY=;
-        b=KrA8KdmQhWXgSS1cNdY2OsLC5wtl1yWoiBQD5pFrjE3lWvcd99kK0TdAZ7bIruuXhX
-         9hxoCBI54/t5j/vaUtyL1SyaMDxjsyTYTBzPA5TnCjaZt2C+mFxU0PylILQUtocfXCLw
-         jDtiVfutJWxmZl+mRVQt/9L5viyVYeep/EPgBi6XavnPlB6G4fKGyVo21ij0XKdKn57p
-         6RbLTp+41YX4mSyVThZKXGoedbWE3UHoNkZx5WTu0hS6Ftk+8uEvKGAPtkBlPkhP84gk
-         l1R307xTqiII06+8dfBOj+C4JKM7sYa2f5Miy3iYXEwyO+ozJ//FxG6DBq6SOH81vkiR
-         Jk8g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v8U2QSDHa+y/e0j1Jilc1FkjIAm5z/QbjVI8HcCrHKY=;
+        b=At5xJ/o53UDzNQStGX5zKZ9i8BO3eeSmwVp/fmpfxCisPyywpPo7GcjVhntocjABlu
+         WUrPaIKfongAw/BiElmPvgPDI+E12Le1dgXbP8gPhjINGARAz4nW6vFSTjmA3CUe4LJL
+         Swuv0cb1ZU0eHsTUchGvsVQb9nRIAWJ2OLxxame/AFP9KfUd8sPb2od7nOHgNlYmmc/R
+         ySmIkkz4j/ADQVvyPai6pxWOC3yECTE/AKh62qnUpXQfKkpfs2RbufzzQSgG+uBH/jPd
+         MH1Cd9eDy6IeAnjoAOwuDQ+T2kNE2TvoWjJNLxt6VgoGeTmrtol/75FCfZ+j+n/ibIi2
+         jeQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7YnYpUhCDEO6kVHkJtFT+/hpwswgtWuGWlgTnicwYjY=;
-        b=qBtLWVobabJNI7b0gZPcuWjr5lulFjWFnosoQx9WJze5zGzrTedUtSQxLtx4E6L93A
-         u6lVf4rCi/A/T3fWI3TZbAMXZ4bGnuPVS5XmmB0eR2/QNKNBE6U4RuSNmun4JnuoyykO
-         SGvpcDTOeuIgJQ+BeRGUy+d1cr4ryNw+CNRPe1BsfXH1MwoPT94FaG7k+NOew+as4C0I
-         t1dbbho5V+825BePeZVKWUIBkKc9rKPhKAa+OV2Hc7FlbI7zqYkMjfEhpDgYMs78U1m0
-         ZoRkbPUetnQdjwrsbDR9LokP3P9HXvPV5Dn/3DhN+7wNw17Tpgb9VTRWPut6Mtl6eh6a
-         KdKQ==
-X-Gm-Message-State: ANhLgQ3OWsWw/wBM1I4hm1sXxeRm7cTFIsWM17mpfRUNHCRGSFU2pTsi
-        OIOIAIB5tuNxQFDdk1x3SrI=
-X-Google-Smtp-Source: ADFU+vtcEH6VMi2/5ZUfbSOjQ9ayqwmDQ+TzR/DftcvNeSPRFf2kSkDlp2bXKuc5lBWHTi5qZwujhA==
-X-Received: by 2002:a17:906:4d8d:: with SMTP id s13mr14367808eju.154.1585652439214;
-        Tue, 31 Mar 2020 04:00:39 -0700 (PDT)
-Received: from smtp.gmail.com ([2001:818:e238:a000:51c6:2c09:a768:9c37])
-        by smtp.gmail.com with ESMTPSA id w20sm2163124ejv.40.2020.03.31.04.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 04:00:38 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 08:00:32 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian Konig <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Rodrigo.Siqueira@amd.com
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] drm/amd/display: code cleanup of dc_link file on func
- dc_link_construct
-Message-ID: <35c885a1cc55513bbde719a868c8be195f982b43.1585651869.git.melissa.srw@gmail.com>
-References: <cover.1585651869.git.melissa.srw@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v8U2QSDHa+y/e0j1Jilc1FkjIAm5z/QbjVI8HcCrHKY=;
+        b=AWQj7/xxhq7d/t32raHl2ciWe3TK5HPyTubNgNmMZC1jHifhMs97DjboxfkWb8Nlwo
+         KSE6s1VdYFmjXF4J7bsuMgpsduNRWUphVnrJKvmIGQsoFnqmf0l5krRIiZrylQSjnPDj
+         SDFBwMTuU7s/5xa82gBoUrW4c+6bz29HCtVNZw2rGGt8NvLdq7nHIf+5J2troW65Z1F3
+         625ey1Q9kM/qltrN3oipgwW+2NE38XQgTubeBH2qlBDAge0m9RfRykXC0lugGEF5GNV4
+         5q3sUN1LG+0yph2jg2k+WCYi7iLzkGmtMFlNVp9PEpaLqN8Z/DNBr0E2Rsl5WeunOYpO
+         TpIA==
+X-Gm-Message-State: AGi0PubhZ+U/X3yHyz4s6PrH7o3b/ERRqgkrWsxCalx/QAQfNtPrrLOD
+        gp6omV8jp9LuI9NIU1gAPrYoTOln4xgvlpfNJ6Q=
+X-Google-Smtp-Source: APiQypJubSp9zq2/eye5c5WXaJ42/CmTuUTWONYN6DCYmdEisUBwlGtu4qzWnOJIcuUiLTf6e1YkPWz0zBwwRSXp2Lc=
+X-Received: by 2002:a63:5859:: with SMTP id i25mr3529135pgm.74.1585652462807;
+ Tue, 31 Mar 2020 04:01:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1585651869.git.melissa.srw@gmail.com>
+References: <20200330152711.8769-1-i.mikhaylov@yadro.com> <20200330152711.8769-3-i.mikhaylov@yadro.com>
+ <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com> <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
+In-Reply-To: <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 14:00:55 +0300
+Message-ID: <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removes codestyle issues in dc_link file, on dc_link_construct and
-translate_encoder_to_transmitter as suggested by checkpatch.pl.
+On Mon, Mar 30, 2020 at 11:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> On Mon, 2020-03-30 at 22:07 +0300, Andy Shevchenko wrote:
+> > On Mon, Mar 30, 2020 at 6:27 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-Types covered:
+...
 
-CHECK: Lines should not end with a '('
-WARNING: Missing a blank line after declarations
-CHECK: Alignment should match open parenthesis
-CHECK: Comparison to NULL could be written
-CHECK: Logical continuations should be on the previous line
-CHECK: Blank lines aren't necessary after an open brace '{'
+> > > +#define VCNL_DRV_NAME          "vcnl3020"
+> > > +#define VCNL_REGMAP_NAME       "vcnl3020_regmap"
+> >
+> > I'm wondering why you need the second one.
+>
+> For regmap initialize as name in
+> static const struct regmap_config vcnl3020_regmap_config = {
+>        .name           = VCNL_REGMAP_NAME,
+>
+> I can get rid of it from struct with name definition.
 
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
----
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 94 ++++++++++---------
- 1 file changed, 50 insertions(+), 44 deletions(-)
+I don't think we need a specific suffix. When somebody will look at it
+they will already know that they are looking into regmap realm.
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-index b5b202bd9d7c..a93997ff0419 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-@@ -1098,13 +1098,13 @@ bool dc_link_get_hpd_state(struct dc_link *dc_link)
- 	return state;
- }
- 
--static enum hpd_source_id get_hpd_line(
--		struct dc_link *link)
-+static enum hpd_source_id get_hpd_line(struct dc_link *link)
- {
- 	struct gpio *hpd;
- 	enum hpd_source_id hpd_id = HPD_SOURCEID_UNKNOWN;
- 
--	hpd = get_hpd_gpio(link->ctx->dc_bios, link->link_id, link->ctx->gpio_service);
-+	hpd = get_hpd_gpio(link->ctx->dc_bios, link->link_id,
-+			   link->ctx->gpio_service);
- 
- 	if (hpd) {
- 		switch (dal_irq_get_source(hpd)) {
-@@ -1179,8 +1179,7 @@ static enum channel_id get_ddc_line(struct dc_link *link)
- 	return channel;
- }
- 
--static enum transmitter translate_encoder_to_transmitter(
--	struct graphics_object_id encoder)
-+static enum transmitter translate_encoder_to_transmitter(struct graphics_object_id encoder)
- {
- 	switch (encoder.id) {
- 	case ENCODER_ID_INTERNAL_UNIPHY:
-@@ -1244,9 +1243,8 @@ static enum transmitter translate_encoder_to_transmitter(
- 	}
- }
- 
--static bool dc_link_construct(
--	struct dc_link *link,
--	const struct link_init_data *init_params)
-+static bool dc_link_construct(struct dc_link *link,
-+			      const struct link_init_data *init_params)
- {
- 	uint8_t i;
- 	struct ddc_service_init_data ddc_service_init_data = { { 0 } };
-@@ -1255,6 +1253,7 @@ static bool dc_link_construct(
- 	struct integrated_info info = {{{ 0 }}};
- 	struct dc_bios *bios = init_params->dc->ctx->dc_bios;
- 	const struct dc_vbios_funcs *bp_funcs = bios->funcs;
-+
- 	DC_LOGGER_INIT(dc_ctx->logger);
- 
- 	link->irq_source_hpd = DC_IRQ_SOURCE_INVALID;
-@@ -1266,23 +1265,27 @@ static bool dc_link_construct(
- 	link->ctx = dc_ctx;
- 	link->link_index = init_params->link_index;
- 
--	memset(&link->preferred_training_settings, 0, sizeof(struct dc_link_training_overrides));
--	memset(&link->preferred_link_setting, 0, sizeof(struct dc_link_settings));
-+	memset(&link->preferred_training_settings, 0,
-+	       sizeof(struct dc_link_training_overrides));
-+	memset(&link->preferred_link_setting, 0,
-+	       sizeof(struct dc_link_settings));
- 
--	link->link_id = bios->funcs->get_connector_id(bios, init_params->connector_index);
-+	link->link_id =
-+		bios->funcs->get_connector_id(bios, init_params->connector_index);
- 
- 	if (link->link_id.type != OBJECT_TYPE_CONNECTOR) {
- 		dm_output_to_console("%s: Invalid Connector ObjectID from Adapter Service for connector index:%d! type %d expected %d\n",
--			 __func__, init_params->connector_index,
--			 link->link_id.type, OBJECT_TYPE_CONNECTOR);
-+				     __func__, init_params->connector_index,
-+				     link->link_id.type, OBJECT_TYPE_CONNECTOR);
- 		goto create_fail;
- 	}
- 
- 	if (link->dc->res_pool->funcs->link_init)
- 		link->dc->res_pool->funcs->link_init(link);
- 
--	link->hpd_gpio = get_hpd_gpio(link->ctx->dc_bios, link->link_id, link->ctx->gpio_service);
--	if (link->hpd_gpio != NULL) {
-+	link->hpd_gpio = get_hpd_gpio(link->ctx->dc_bios, link->link_id,
-+				      link->ctx->gpio_service);
-+	if (link->hpd_gpio) {
- 		dal_gpio_open(link->hpd_gpio, GPIO_MODE_INTERRUPT);
- 		dal_gpio_unlock_pin(link->hpd_gpio);
- 		link->irq_source_hpd = dal_irq_get_source(link->hpd_gpio);
-@@ -1302,9 +1305,9 @@ static bool dc_link_construct(
- 		link->connector_signal = SIGNAL_TYPE_DVI_DUAL_LINK;
- 		break;
- 	case CONNECTOR_ID_DISPLAY_PORT:
--		link->connector_signal =	SIGNAL_TYPE_DISPLAY_PORT;
-+		link->connector_signal = SIGNAL_TYPE_DISPLAY_PORT;
- 
--		if (link->hpd_gpio != NULL)
-+		if (link->hpd_gpio)
- 			link->irq_source_hpd_rx =
- 					dal_irq_get_rx_source(link->hpd_gpio);
- 
-@@ -1312,7 +1315,7 @@ static bool dc_link_construct(
- 	case CONNECTOR_ID_EDP:
- 		link->connector_signal = SIGNAL_TYPE_EDP;
- 
--		if (link->hpd_gpio != NULL) {
-+		if (link->hpd_gpio) {
- 			link->irq_source_hpd = DC_IRQ_SOURCE_INVALID;
- 			link->irq_source_hpd_rx =
- 					dal_irq_get_rx_source(link->hpd_gpio);
-@@ -1322,32 +1325,33 @@ static bool dc_link_construct(
- 		link->connector_signal = SIGNAL_TYPE_LVDS;
- 		break;
- 	default:
--		DC_LOG_WARNING("Unsupported Connector type:%d!\n", link->link_id.id);
-+		DC_LOG_WARNING("Unsupported Connector type:%d!\n",
-+			       link->link_id.id);
- 		goto create_fail;
- 	}
- 
- 	/* TODO: #DAL3 Implement id to str function.*/
- 	LINK_INFO("Connector[%d] description:"
--			"signal %d\n",
--			init_params->connector_index,
--			link->connector_signal);
-+		  "signal %d\n",
-+		  init_params->connector_index,
-+		  link->connector_signal);
- 
- 	ddc_service_init_data.ctx = link->ctx;
- 	ddc_service_init_data.id = link->link_id;
- 	ddc_service_init_data.link = link;
- 	link->ddc = dal_ddc_service_create(&ddc_service_init_data);
- 
--	if (link->ddc == NULL) {
-+	if (!link->ddc) {
- 		DC_ERROR("Failed to create ddc_service!\n");
- 		goto ddc_create_fail;
- 	}
- 
- 	link->ddc_hw_inst =
--		dal_ddc_get_line(
--			dal_ddc_service_get_ddc_pin(link->ddc));
-+		dal_ddc_get_line(dal_ddc_service_get_ddc_pin(link->ddc));
- 
- 	enc_init_data.ctx = dc_ctx;
--	bp_funcs->get_src_obj(dc_ctx->dc_bios, link->link_id, 0, &enc_init_data.encoder);
-+	bp_funcs->get_src_obj(dc_ctx->dc_bios, link->link_id, 0,
-+			      &enc_init_data.encoder);
- 	enc_init_data.connector = link->link_id;
- 	enc_init_data.channel = get_ddc_line(link);
- 	enc_init_data.hpd_source = get_hpd_line(link);
-@@ -1355,11 +1359,11 @@ static bool dc_link_construct(
- 	link->hpd_src = enc_init_data.hpd_source;
- 
- 	enc_init_data.transmitter =
--			translate_encoder_to_transmitter(enc_init_data.encoder);
--	link->link_enc = link->dc->res_pool->funcs->link_enc_create(
--								&enc_init_data);
-+		translate_encoder_to_transmitter(enc_init_data.encoder);
-+	link->link_enc =
-+		link->dc->res_pool->funcs->link_enc_create(&enc_init_data);
- 
--	if (link->link_enc == NULL) {
-+	if (!link->link_enc) {
- 		DC_ERROR("Failed to create link encoder!\n");
- 		goto link_enc_create_fail;
- 	}
-@@ -1367,8 +1371,9 @@ static bool dc_link_construct(
- 	link->link_enc_hw_inst = link->link_enc->transmitter;
- 
- 	for (i = 0; i < 4; i++) {
--		if (BP_RESULT_OK !=
--				bp_funcs->get_device_tag(dc_ctx->dc_bios, link->link_id, i, &link->device_tag)) {
-+		if (bp_funcs->get_device_tag(dc_ctx->dc_bios,
-+					     link->link_id, i,
-+					     &link->device_tag) != BP_RESULT_OK) {
- 			DC_ERROR("Failed to find device tag!\n");
- 			goto device_tag_fail;
- 		}
-@@ -1376,13 +1381,14 @@ static bool dc_link_construct(
- 		/* Look for device tag that matches connector signal,
- 		 * CRT for rgb, LCD for other supported signal tyes
- 		 */
--		if (!bp_funcs->is_device_id_supported(dc_ctx->dc_bios, link->device_tag.dev_id))
-+		if (!bp_funcs->is_device_id_supported(dc_ctx->dc_bios,
-+						      link->device_tag.dev_id))
- 			continue;
--		if (link->device_tag.dev_id.device_type == DEVICE_TYPE_CRT
--			&& link->connector_signal != SIGNAL_TYPE_RGB)
-+		if (link->device_tag.dev_id.device_type == DEVICE_TYPE_CRT &&
-+		    link->connector_signal != SIGNAL_TYPE_RGB)
- 			continue;
--		if (link->device_tag.dev_id.device_type == DEVICE_TYPE_LCD
--			&& link->connector_signal == SIGNAL_TYPE_RGB)
-+		if (link->device_tag.dev_id.device_type == DEVICE_TYPE_LCD &&
-+		    link->connector_signal == SIGNAL_TYPE_RGB)
- 			continue;
- 		break;
- 	}
-@@ -1394,16 +1400,16 @@ static bool dc_link_construct(
- 	for (i = 0; i < MAX_NUMBER_OF_EXT_DISPLAY_PATH; i++) {
- 		struct external_display_path *path =
- 			&info.ext_disp_conn_info.path[i];
--		if (path->device_connector_id.enum_id == link->link_id.enum_id
--			&& path->device_connector_id.id == link->link_id.id
--			&& path->device_connector_id.type == link->link_id.type) {
- 
--			if (link->device_tag.acpi_device != 0
--				&& path->device_acpi_enum == link->device_tag.acpi_device) {
-+		if (path->device_connector_id.enum_id == link->link_id.enum_id &&
-+		    path->device_connector_id.id == link->link_id.id &&
-+		    path->device_connector_id.type == link->link_id.type) {
-+			if (link->device_tag.acpi_device != 0 &&
-+			    path->device_acpi_enum == link->device_tag.acpi_device) {
- 				link->ddi_channel_mapping = path->channel_mapping;
- 				link->chip_caps = path->caps;
- 			} else if (path->device_tag ==
--					link->device_tag.dev_id.raw_device_tag) {
-+				   link->device_tag.dev_id.raw_device_tag) {
- 				link->ddi_channel_mapping = path->channel_mapping;
- 				link->chip_caps = path->caps;
- 			}
-@@ -1427,7 +1433,7 @@ static bool dc_link_construct(
- ddc_create_fail:
- create_fail:
- 
--	if (link->hpd_gpio != NULL) {
-+	if (link->hpd_gpio) {
- 		dal_gpio_destroy_irq(&link->hpd_gpio);
- 		link->hpd_gpio = NULL;
- 	}
+...
+
+> > > +       rc = device_property_read_u32(data->dev, "vishay,led-current-
+> > > milliamp",
+> > > +                                     &led_current);
+> > > +       if (rc == 0) {
+> > > +               rc = regmap_write(data->regmap, VCNL_LED_CURRENT,
+> > > led_current);
+> > > +               if (rc)
+> > > +                       dev_err(data->dev,
+> > > +                               "Error (%d) setting LED current", rc);
+> > > +       }
+> > > +
+> > > +       return rc;
+> >
+> > Why not to use standard pattern, i.e.
+> >
+> >   if (rc)
+> >     return rc;
+> >   ...
+> >   rc = regmap_write(...);
+> >
+> > ?
+>
+> Optional parameter. There exists a lot of ways to do it:
+
+I'm simple reading the code. And I believe the above I suggested is
+cleaner equivalent.
+Is it?
+
+> rc = device_property_read_u32(dev, "milliamp", &led_current);
+> rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ? 0);
+
+This seems not equal to above.
+
+> Which one would be more preferable?
+
+One which has better readability and smallest indentation level.
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
