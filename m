@@ -2,116 +2,89 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF6AC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A13C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34150208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28D1208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585657940;
-	bh=7loumAm3kmhSpsdOIcJBHUWzkc8jtfOGOr7n6sGyhfw=;
-	h=Date:From:To:Subject:List-ID:From;
-	b=ACKxiQp9R3YPp5AVWSFFQ7xm+KvJbT4HILmqG4yIooOioYvI9s4WnffdjIiJ33igQ
-	 xfOpNaMRQ6AQocslNTigLfnanoLu3T1cYfmYaQSX7uf1N/fxYfowU6hA1gW+iGbw23
-	 gMMY5na9sSXOZbrKNpy19xiFJugqxCOh+vCCL4PQ=
+	s=default; t=1585658261;
+	bh=IaryMowmAx4OQ//gy52Bp04tanIU0UkHswH1YoJsT8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BOyqe5N3pZT/QJHwmibfyWJiJEiVWQqIHyduDgwid7zZgoeDJ6JR3cPvAO3W9VWW/
+	 s469ulACtdGxzkTDYlB2auajihfnl+jjSniDFzDt+7cJt5gKsJp63y0SN9GGfhDsDs
+	 EEu3uq97rQI6QpUM7za8t4t/0QIv1yXBYEs4/zq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbgCaMcT (ORCPT
+        id S1730729AbgCaMhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58144 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 08:37:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730760AbgCaMcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:32:19 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1730436AbgCaMhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 08:37:39 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F82220675;
-        Tue, 31 Mar 2020 12:32:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6359A2072E;
+        Tue, 31 Mar 2020 12:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585657938;
-        bh=7loumAm3kmhSpsdOIcJBHUWzkc8jtfOGOr7n6sGyhfw=;
-        h=Date:From:To:Subject:From;
-        b=p0kJ8dUHna7p4arS36bbC4dZRVC3koticP/sQYimTUavrXZ7Bwk+t4s/AHLVTAcMt
-         hHJOLzgWda5DP8XN2/0mcvrEUav9Sh6HK3vgFlLLfNzIIUcsHz2JANkQRAIBuz5dSz
-         KdlGe70odviMflB5TrwR0fgcLLtcxwkgrOXYC2HA=
-Date:   Tue, 31 Mar 2020 08:32:17 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Backport dependencies helper
-Message-ID: <20200331123217.GM4189@sasha-vm>
+        s=default; t=1585658259;
+        bh=IaryMowmAx4OQ//gy52Bp04tanIU0UkHswH1YoJsT8E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SaKeVZBvfVFoEHqJLbz1ikyoWwc6oN2EtK2dgUPhBs6A7eMaJkcCkeBD7yR+BoTB+
+         fN9koCz2ZA7p2MxmDkCWzVoCO/sBcqKe+CKQ6JmvllaeOK/niJZL+dwRlPk/dWe6cW
+         7bUzAdVBKCwc7tuOdTp0doCxc05rTxTRMi7cl4qE=
+Date:   Tue, 31 Mar 2020 13:37:34 +0100
+From:   Will Deacon <will@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [RFC PATCH 09/21] list: Remove unnecessary WRITE_ONCE() from
+ hlist_bl_add_before()
+Message-ID: <20200331123733.GB30061@willie-the-truck>
+References: <20200324153643.15527-1-will@kernel.org>
+ <20200324153643.15527-10-will@kernel.org>
+ <20200330233020.GF19865@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200330233020.GF19865@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Mon, Mar 30, 2020 at 04:30:20PM -0700, Paul E. McKenney wrote:
+> On Tue, Mar 24, 2020 at 03:36:31PM +0000, Will Deacon wrote:
+> > There is no need to use WRITE_ONCE() when inserting into a non-RCU
+> > protected list.
+> > 
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Will Deacon <will@kernel.org>
+> 
+> OK, I will bite...  Why "unsigned long" instead of "uintptr_t"?
 
-I wanted to share a resource I've been using to help me with doing
-backports to various stable kernels.
+I just did that for consistency with the rest of the file, e.g.
+hlist_bl_first(), hlist_bl_set_first(), hlist_bl_empty() and
+__hlist_bl_del() all cast to 'unsigned long', yet only
+hlist_bl_add_before() was using 'uintptr_t'
 
-In the Stable Kernel world, when we need to backport a patch, we'd
-rather take any relevant dependencies to make the patch work cleanly on
-an older kernel, rather than modifying the patch and diverging from
-upstream.
+> Not that it matters in the context of the Linux kernel, so:
+> 
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-This raises an interesting problem: how do we figure out which other
-patches might be "interesting" to look at? git-blame is a great tool,
-but it takes a while to go through the history of a patch, and given the
-volume of patches we need to look at, it just isn't enough.
+Thanks, Paul!
 
-So here's a tool in the form of a git repo that can help point out these
-interesting patches:
-
-        https://git.kernel.org/pub/scm/linux/kernel/git/sashal/deps.git/
-
-How does it work, you might ask? It's actually quite simple: Each
-directory represents a kernel version which we'll call K, and each file
-inside that directory is named after an upstream commit we'll call C,
-and it's content are the list of commits one would need to apply on top
-of kernel K to "reach" commit C.
-
-For example, let's say we want to apply:
-
-        f8788d86ab28 ("Linux 5.6-rc3")
-
-On top of the v5.5 kernel tree. All we need to do is:
-
-        $ cat v5.5/f8788d86ab28f61f7b46eb6be375f8a726783636
-        f8788d86ab28 ("Linux 5.6-rc3")
-        11a48a5a18c6 ("Linux 5.6-rc2")
-        bb6d3fb354c5 ("Linux 5.6-rc1")
-
-If you don't feel like cloning the repo (which contains quite a few
-files), you can also use kernel.org's web interface in a script that
-might look something like this:
-
-        #!/bin/bash
-        curl https://git.kernel.org/pub/scm/linux/kernel/git/sashal/deps.git/plain/$1/$2
-
-And then simply:
-
-        $ ./deps.sh v5.5 f8788d86ab28f61f7b46eb6be375f8a726783636
-        f8788d86ab28 ("Linux 5.6-rc3")
-        11a48a5a18c6 ("Linux 5.6-rc2")
-        bb6d3fb354c5 ("Linux 5.6-rc1")
-
-Caveats:
-
- - Each file is limited to 50 entries. I feel that at that point it
-   stops being useful.
- - Each file stops if a merge commit is hit.
- - I might have bugs in my scripts and some entries are broken, please
-   report those if you see them.
-
--- 
-Thanks,
-Sasha
+Will
