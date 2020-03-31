@@ -2,105 +2,122 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3433AC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6497C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076C820BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D2A208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585668898;
-	bh=Eif2B2ShIJpPgxuw/zOevzktekR3iUQpQKzn/Ra8G2A=;
+	s=default; t=1585669060;
+	bh=ggMm14KxXbY1mqecFv6pjM06I08zLyhqEuowrT/NApQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hZY5ofmJEIcnUskBz+l5OoyZR99OKl2m0GBHpLL4MtVuMErRbwm4v0o5G4jFDrSYT
-	 +cz/ejwkAJt74U5d4fIi+cqMZi5aJ8RTqIZ6MyuhbJj/4Iz+OBwax7cmQHwBb7xm0k
-	 StCKw01BOzCMC9zFzC4OrJ0GOvQUsWP4e9xCdYkE=
+	b=ujvuBCl5/vWiz2qPiy2vnr4nWotZUxAYjIhDgwonLqnbbkLhSnjvYlbrVk32/G+lI
+	 H4tyCjZHrz0AeU10EzqR7rtdaszzNkFVkUFruOfyXqq6CrFWb4dNIelONeQqyiYeOq
+	 XWJ6SLB2t7g4UGK1CrGQaAyKCUJHzpMswF9a+utw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbgCaPe4 (ORCPT
+        id S1730946AbgCaPhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:34:56 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37092 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaPe4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:34:56 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w10so26622397wrm.4;
-        Tue, 31 Mar 2020 08:34:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XWJpdT6ZsPCOgPe98UycjXxzkHnMVRDPn15M3ka7UM4=;
-        b=hJC3ikGApOoNVaBpATr/c//jIQhLRz3dLmRCnVFYqgu7FVyS4YiJFeY62OsWo98YJf
-         A4tyFC8wI3jBcskCdWZ2/Z7JugjIHs+eUtP5Bw7/ncHtzt9URqUV5meF+FPm/aa/S5NO
-         MqTOTWYKHjyvHuqwwaiiftNpLM1SElthOXOnGYJqbDC9iP/9zN93qYW+M2ErLeFj4g2J
-         itVhMdbWmMWWRbi4JpkxRjXO+66ZaAG7tKkU63yUERCiTq4y2IWhPP5i7F4OBmyxgU62
-         c+PE/qSixFr7JqWiQdVjKJg2V03O+cbxZ6ZcP2hfqgEc+8oxnVW/L+c2VAWNbI4Sxdw1
-         0PvQ==
-X-Gm-Message-State: ANhLgQ3NFqv3xDGP8WlyLgVhPuCIuh06Pc5Nl/HD7zvMoxHRbhZZs23D
-        zyl2Y0p+xWzhLlmwx3lENWA=
-X-Google-Smtp-Source: ADFU+vtOC9s0hgunzjXryLDkoY30klCWAusuNW8kiJdYJ6kgbFjbK79bnAt6gZ6I6SlD2xgVK1GhVQ==
-X-Received: by 2002:adf:ef08:: with SMTP id e8mr22284875wro.66.1585668894424;
-        Tue, 31 Mar 2020 08:34:54 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id o16sm24444126wrw.75.2020.03.31.08.34.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 08:34:53 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 17:34:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200331153450.GM30449@dhcp22.suse.cz>
-References: <20200331131628.153118-1-joel@joelfernandes.org>
- <20200331145806.GB236678@google.com>
+        Tue, 31 Mar 2020 11:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727703AbgCaPhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:37:39 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BB6420848;
+        Tue, 31 Mar 2020 15:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585669057;
+        bh=ggMm14KxXbY1mqecFv6pjM06I08zLyhqEuowrT/NApQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mGxhCt07fuJo88YbZTobkEe3mxir9Y88c89S+a3IWrsUceux7kjcXqDx/3NZydT5G
+         5vFmczVbdKf8IpGOlX3+Mm/NEAHVaIG0ejNjlPjvue8c4zRqmyOm0Q+d4Jj2hUanFA
+         yd7KuK/Vq2D2O7Ll3dGhk4HpgSSLabTT2hKfbZuA=
+Date:   Tue, 31 Mar 2020 17:37:35 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [PATCH 6/9] lockdep: Introduce wait-type checks
+Message-ID: <20200331153734.GA6979@lenoir>
+References: <20200313174701.148376-1-bigeasy@linutronix.de>
+ <20200313174701.148376-7-bigeasy@linutronix.de>
+ <CAMuHMdU6s1F=DnaguZXrV4sWzEO-EqTaGQ=N7zyhgGq1M+Q1Ug@mail.gmail.com>
+ <20200331145515.GR20730@hirez.programming.kicks-ass.net>
+ <20200331152850.GI20760@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331145806.GB236678@google.com>
+In-Reply-To: <20200331152850.GI20760@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 31-03-20 10:58:06, Joel Fernandes wrote:
-[...]
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 4be763355c9fb..965deefffdd58 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
-> >  
-> >  	if (!ptr)
-> >  		ptr = kmalloc(sizeof(unsigned long *) +
-> > -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
-> > +				sizeof(struct rcu_head), GFP_MEMALLOC);
+On Tue, Mar 31, 2020 at 05:28:50PM +0200, Peter Zijlstra wrote:
+> On Tue, Mar 31, 2020 at 04:55:15PM +0200, Peter Zijlstra wrote:
+> > On Tue, Mar 31, 2020 at 03:25:21PM +0200, Geert Uytterhoeven wrote:
+> > > On arm64 (e.g. R-Car H3 ES2.0):
+> > > 
+> > > +=============================
+> > > +[ BUG: Invalid wait context ]
+> > > +5.6.0-salvator-x-09423-gb29514ba13a9c459-dirty #679 Not tainted
+> > > +-----------------------------
+> > > +swapper/5/0 is trying to lock:
+> > > +ffffff86ff76f398 (&pool->lock){..-.}-{3:3}, at: __queue_work+0x134/0x430
+> > > +other info that might help us debug this:
+> > > +1 lock held by swapper/5/0:
+> > > + #0: ffffffc01103a4a0 (rcu_read_lock){....}-{1:3}, at:
+> > > rcu_lock_acquire.constprop.59+0x0/0x38
+> > > +stack backtrace:
+> > > +CPU: 5 PID: 0 Comm: swapper/5 Not tainted
+> > > 5.6.0-salvator-x-09423-gb29514ba13a9c459-dirty #679
+> > > +Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
+> > > +Call trace:
+> > > + dump_backtrace+0x0/0x180
+> > > + show_stack+0x14/0x1c
+> > > + dump_stack+0xdc/0x12c
+> > > + __lock_acquire+0x37c/0xf9c
+> > > + lock_acquire+0x258/0x288
+> > > + _raw_spin_lock+0x34/0x48
+> > > + __queue_work+0x134/0x430
+> > > + queue_work_on+0x48/0x8c
+> > > + timers_update_nohz+0x24/0x2c
+> > > + tick_nohz_activate.isra.15.part.16+0x5c/0x80
+> > > + tick_setup_sched_timer+0xe0/0xf0
+> > > + hrtimer_run_queues+0x88/0xf8
+> > 
+> > So this is complaining that it cannot take pool->lock, which is
+> > WAIT_CONFIG while holding RCU, which presents a WAIT_CONFIG context.
+> > 
+> > This seems to implicate something is amiss, because that should be
+> > allowed. The thing it doesn't print is the context, which in the above
+> > case is a (hrtimer) interrupt.
+> > 
+> > I suspect this really is a hardirq context and the next patch won't cure
+> > things. It looks nohz (full?) related.
+> > 
+> > Frederic, can you untangle this?
 > 
-> Just to add, the main requirements here are:
-> 1. Allocation should be bounded in time.
-> 2. Allocation should try hard (possibly tapping into reserves)
-> 3. Sleeping is Ok but should not affect the time bound.
+> Sebastian is right; I completely forgot the workqueue thing was still
+> pending.
+> 
 
-
-__GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
-memory reserves regarless of the sleeping status.
-
-Using __GFP_MEMALLOC is quite dangerous because it can deplete _all_ the
-memory. What does prevent the above code path to do that?
-If a partial access to reserves is sufficient then why the existing
-modifiers (mentioned above are not sufficient?
--- 
-Michal Hocko
-SUSE Labs
+Ok good, because I had no better answer :)
