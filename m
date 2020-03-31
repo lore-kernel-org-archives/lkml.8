@@ -2,141 +2,188 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E647C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA19C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F90020784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24BF20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585673114;
-	bh=yXSYjALH9rCfTIG/ITWYBcq2TGtnf7SEGFqz7AohhMc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=an7zbEjwlVn4tOaflaJSoJU0Yd4NHWHeIM2NpPx3ugQnvRwZq5H82kItEhazHnsi7
-	 KQbcbRd1tEHnLBNF2LKXXXm+uHiv2t5EkhjUkK4ZdGfERI1TX0dR0xXassCZUvGcM/
-	 5WFwrA7Cq8U5mnSxf5fun74Lorjw4W+DfMK5QEQU=
+	s=default; t=1585673135;
+	bh=BFOI8utcCJUthUn6pEPFq/uZFxBiooYTqmHFxGS7IWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XdR/2CimJLOnAMs68igb/Y20HWRdw8HT8GlrUl351SlJbMqmQ567ws8bDzU8CbgtK
+	 PPL+XY3b66xW/mR/DeWAw0U1kYzeIhak9l3jDd1VdWT1d0DS69vy+09LYz72fgOnty
+	 6BahYbs8epyR3yRjXs69/7I7G7zelbHHW2PN5dcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbgCaQpN (ORCPT
+        id S1731296AbgCaQpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:45:13 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46439 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731113AbgCaQpM (ORCPT
+        Tue, 31 Mar 2020 12:45:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39914 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730907AbgCaQpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:45:12 -0400
-Received: by mail-io1-f67.google.com with SMTP id i3so13279194ioo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=r0JAwdBM8J3oiIGwg0rcW6L9TGV0155fnPxFlRrMlTI=;
-        b=L7qA7P4KvyQENUGj3g9qyx+aJQZAMLmOoPzxBh1yA5Bk03Xq2CItkjuVY2OGxqB7CX
-         glKa7jDokq1Zp7NBiLnr8nacK9Mf1B0LQn0xxYPN1cn5Blr9LibND/FGW0DRCWqpTqyV
-         33RiWiEcuRhHSdbV76m61zgLVSb9MLtdaMOpA=
+        Tue, 31 Mar 2020 12:45:34 -0400
+Received: by mail-io1-f68.google.com with SMTP id c16so8001897iod.6;
+        Tue, 31 Mar 2020 09:45:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=r0JAwdBM8J3oiIGwg0rcW6L9TGV0155fnPxFlRrMlTI=;
-        b=Hzi6aD4SRjJrcn0gqNQ3JsCvifplLK4/8a90wYFijm0gqHskRv4mVP4OEKEba/Luv/
-         je4JmKWmClBc+DAlVJ2C6sfE1JpgmRDfT3hvRIZiip3NfTUeK7DG9Ok5GvRNdQ+IpNMa
-         rsQR1O3PZoIYQ1LUuw2hqpr+wny6ZYWlw+kEO4k/4GLQeEQBlOstHPfJWr3r91QDZnsX
-         c4mL6mrMUQZu1pO0H4RWKp9ill8AtB7+Kz7/O5oYAE9jg25r+za60ROmG0NyKrtbISCI
-         bNKz0O5kQYngE0SGrD3rQ47mUZJ1WXsLHkqUCsR0uzslwdSeMf2wmJJGfvLbG4Hi10Ul
-         XnWw==
-X-Gm-Message-State: ANhLgQ3Vh9qTUkUD7PKsgiKVXjHL3p97dT15fiwsGrQY9MirF987VA2w
-        pKUJ9+HwETGoh8GftFGge/2b1A==
-X-Google-Smtp-Source: ADFU+vsFQNZKvyoiMkGgxc+G61WBxRHne+j8QME+5vN6bWGQEh3/d60UseRLroe6jIzAPjzFyH+EZQ==
-X-Received: by 2002:a6b:5c0d:: with SMTP id z13mr15272201ioh.96.1585673111646;
-        Tue, 31 Mar 2020 09:45:11 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id f69sm6011590ilg.10.2020.03.31.09.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:45:10 -0700 (PDT)
-Subject: Re: [PATCH] Makefile: Update kselftest help information
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200330180711.14393-1-skhan@linuxfoundation.org>
- <CAK7LNARyVVNo8Ck4=s_bkwfxuFXj7MUFr2E_f-oOZEkjgm5Bmg@mail.gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <b580e8ce-1879-c516-72c8-041b2422ad1d@linuxfoundation.org>
-Date:   Tue, 31 Mar 2020 10:45:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=djfMFTQal4j3YcmeP+NkvF6u8NLqjW7dMGvc7vwGSYk=;
+        b=mMGMHLXNr89JWncj3NquhigkRkmG6r62SEWm5vVIMRnC2/lDisiO2+Ramphp+CVOvZ
+         b/x//mm8vVtr91NsbkzWFnztuLteai9YY0R59MCgX7fKR6smfmOkNsxYvEb81YPxCOTN
+         Sa7fhT3dKZK33kmQiSEEp2PuFgueridUw2xOYN1Wo7kRyYkVOkwUVne+T2Iv3etQRlbM
+         4wbx+8SrgrEkm46QDy2xEgvUBuVfmwTTZZYeagmkfoxsqW2Gbt9DCzINZ7OvA+NFJ/Ld
+         eA+82Vu3ol/L7wLPoIHqJOdkllfocxJK00jSFejQswMmjINgqu91/hRCAIxyETI9kKHK
+         bpXQ==
+X-Gm-Message-State: ANhLgQ1jY1ff3EzXbzfr/8A7p08kCqZQYhSLo4Ba5Mk1sGjW2agLULv8
+        4f322oVeKeKSiyCwcQbm+Q==
+X-Google-Smtp-Source: ADFU+vuLxTkZ9iuBzEXe91m9R/OUzviTz7bh17Aw3b6VexIv6nxEhQiaLJVnJGYLcpS8cWV44rER4Q==
+X-Received: by 2002:a5e:da0c:: with SMTP id x12mr15992337ioj.69.1585673131358;
+        Tue, 31 Mar 2020 09:45:31 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id v80sm6042145ila.62.2020.03.31.09.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 09:45:30 -0700 (PDT)
+Received: (nullmailer pid 14148 invoked by uid 1000);
+        Tue, 31 Mar 2020 16:45:29 -0000
+Date:   Tue, 31 Mar 2020 10:45:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate
+ inbound/outbound specific bindings
+Message-ID: <20200331164529.GA32149@bogus>
+References: <20200327104727.4708-1-kishon@ti.com>
+ <20200327104727.4708-2-kishon@ti.com>
+ <20200330160142.GA6259@bogus>
+ <2a18a228-9248-24a8-c9cd-a041c62aa381@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARyVVNo8Ck4=s_bkwfxuFXj7MUFr2E_f-oOZEkjgm5Bmg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a18a228-9248-24a8-c9cd-a041c62aa381@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 10:11 AM, Masahiro Yamada wrote:
-> On Tue, Mar 31, 2020 at 3:07 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
->>
->> Update kselftest help information.
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   Makefile | 15 +++++++++------
->>   1 file changed, 9 insertions(+), 6 deletions(-)
->>
->> diff --git a/Makefile b/Makefile
->> index e56bf7ef182d..5e5c770423c7 100644
->> --- a/Makefile
->> +++ b/Makefile
->> @@ -1470,12 +1470,15 @@ help:
->>          @echo  '  nsdeps          - Generate missing symbol namespace dependencies'
->>          @echo  ''
->>          @echo  'Kernel selftest:'
->> -       @echo  '  kselftest       - Build and run kernel selftest (run as root)'
->> -       @echo  '                    Build, install, and boot kernel before'
->> -       @echo  '                    running kselftest on it'
->> -       @echo  '  kselftest-clean - Remove all generated kselftest files'
->> -       @echo  '  kselftest-merge - Merge all the config dependencies of kselftest to existing'
->> -       @echo  '                    .config.'
->> +       @echo  '  kselftest         - Build and run kernel selftest'
->> +       @echo  '                      Build, install, and boot kernel before'
->> +       @echo  '                      running kselftest on it'
->> +       @echo  '                      Run as root for full coverage'
->> +       @echo  '  kselftest-all     - Build kernel selftest'
->> +       @echo  '  kselftest-install - Build and install kernel selftest'
->> +       @echo  '  kselftest-clean   - Remove all generated kselftest files'
->> +       @echo  '  kselftest-merge   - Merge all the config dependencies of'
->> +       @echo  '                      kselftest to existing .config.'
->>          @echo  ''
->>          @$(if $(dtstree), \
->>                  echo 'Devicetree:'; \
->> --
->> 2.20.1
->>
+On Tue, Mar 31, 2020 at 09:08:12AM +0530, Kishon Vijay Abraham I wrote:
+> Hi Rob,
 > 
+> On 3/30/2020 9:31 PM, Rob Herring wrote:
+> > On Fri, Mar 27, 2020 at 04:17:25PM +0530, Kishon Vijay Abraham I wrote:
+> >> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
+> >> host mode as both these could be derived from "ranges" and "dma-ranges"
+> >> property. "cdns,max-outbound-regions" property would still be required
+> >> for EP mode.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >> ---
+> >>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+> >>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+> >>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+> >>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+> >>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+> >>  5 files changed, 37 insertions(+), 11 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> >> index 2996f8d4777c..50ce5d79d2c7 100644
+> >> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> >> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> >> @@ -10,7 +10,7 @@ maintainers:
+> >>    - Tom Joseph <tjoseph@cadence.com>
+> >>  
+> >>  allOf:
+> >> -  - $ref: "cdns-pcie.yaml#"
+> >> +  - $ref: "cdns-pcie-ep.yaml#"
+> >>    - $ref: "pci-ep.yaml#"
+> >>  
+> >>  properties:
+> >> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> >> index cabbe46ff578..84a8f095d031 100644
+> >> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> >> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> >> @@ -45,8 +45,6 @@ examples:
+> >>              #size-cells = <2>;
+> >>              bus-range = <0x0 0xff>;
+> >>              linux,pci-domain = <0>;
+> >> -            cdns,max-outbound-regions = <16>;
+> >> -            cdns,no-bar-match-nbits = <32>;
+> >>              vendor-id = <0x17cd>;
+> >>              device-id = <0x0200>;
+> >>  
+> >> @@ -57,6 +55,7 @@ examples:
+> >>  
+> >>              ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
+> >>                       <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
+> >> +            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
+> >>  
+> >>              #interrupt-cells = <0x1>;
+> >>  
+> >> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> >> new file mode 100644
+> >> index 000000000000..6150a7a7bdbf
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> >> @@ -0,0 +1,25 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
+> >> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> >> +
+> >> +title: Cadence PCIe Device
+> >> +
+> >> +maintainers:
+> >> +  - Tom Joseph <tjoseph@cadence.com>
+> >> +
+> >> +allOf:
+> >> +  - $ref: "cdns-pcie.yaml#"
+> >> +
+> >> +properties:
+> >> +  cdns,max-outbound-regions:
+> >> +    description: maximum number of outbound regions
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >> +    minimum: 1
+> >> +    maximum: 32
+> >> +    default: 32
+> > 
+> > I have a feeling that as the PCI endpoint binding evolves this won't be 
+> > necessary. I can see a common need to define the number of BARs for an 
+> > endpoint and then this will again just be error checking.
 > 
-> Applied to linux-kbuild. Thanks.
+> For every buffer given by the host, we have to create a new outbound
+> translation. If there are no outbound regions, we have to report the error to
+> the endpoint function driver. At-least for reporting the error, we'd need to
+> have this binding no?
 
-Thanks.
+But isn't the endpoint defined to have some number of BARs? The PCI host 
+doesn't decide that.
 
+> > 
+> > What's the result if you write to a non-existent region in register 
+> > CDNS_PCIE_AT_OB_REGION_PCI_ADDR0/1? If the register is non-existent and 
+> > doesn't abort, you could detect this instead.
 > 
-> But, if we have more entries in the future,
-> we might want to consider to move these
-> to tools/testing/selftests/Makefile.
-> 
->
-Agreed.
+> I'm not sure if we should ever try to write to a non-existent register though
+> the behavior could be different in different platforms. IMHO maximum number of
+> outbound regions is a HW property and is best described in device tree.
 
-thanks,
--- Shuah
+AIUI, PCI defines non-existent (config space) registers to return all 
+1s. Not sure if this register is in PCI config space or the host SoC bus 
+(e.g. AXI). It seems PCI bridges get done both ways from what I've seen.
 
+Rob
