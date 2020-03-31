@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CBFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B392CC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2FC208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9E620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646277;
-	bh=TeARL0MEysMl1kXo3PO6VsWf6KiLr0xQ30CuSJnkSGo=;
+	s=default; t=1585646279;
+	bh=DxBXlCIzZHzAj+ZppowjceNLqo4ZsjCEnpsNfurN90o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sh/WyOF4sZisVvMPXj+rYUT/+DbSeybIYD8W0gperjbR1GuajBD1diluGsKvwikpv
-	 Po4qnlWT1CSiqj6eOUCBIDQf2nJdmR7wtqCRlRE0vGtyZ1Tx4v856OYsNWpi5EM9Zn
-	 dnqROIEwIf6cJLlIEu7wxp0y0dicjeNzqgnva0mY=
+	b=aaBTbL/1+1F+fB4zrYyG9Jkho/10SqjbTn/2+XULRz+AzLui5k7h208Qcfp0QLVsy
+	 XgbKaYbUci8AfXlERw3SHlZz9F1TF09tuSSZZLU3uIKxVRMXeqdG5Vj9dVv7shqQiz
+	 xOkkmud9R/4y3kYmUgnmYBedlL7Xu9Tdn+FXSSsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbgCaJRz (ORCPT
+        id S1732076AbgCaJR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731899AbgCaJRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:52 -0400
+        id S1731899AbgCaJR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B453320772;
-        Tue, 31 Mar 2020 09:17:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECD7F20675;
+        Tue, 31 Mar 2020 09:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646272;
-        bh=TeARL0MEysMl1kXo3PO6VsWf6KiLr0xQ30CuSJnkSGo=;
+        s=default; t=1585646276;
+        bh=DxBXlCIzZHzAj+ZppowjceNLqo4ZsjCEnpsNfurN90o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K2ytdZTf00jtoSGJFZa634uwCr/hpj3IdPLhr3rA0wxxthvoYSSxeyuhb/EJ02szk
-         qLF6yeq9DqfX002mPJfCwLHulN3EyEe5k9xGBWJWKBuPqEmp03tEqYfjLqsM+1cUeG
-         dGdXZ3Bsm3bUOXQx8bbBCRALTbluTdV12Aniq0jU=
+        b=t+H4QtWEfYXAU+JaDsXbHlBxySOvL3oNwCRgw7L0eBxpT0iTBK3hDHVyux7yZDyf+
+         qwaXuqJg4O24Su32UHtLHLuKs7Q9IoCgf/c6fxpLUalcl1bgmk2p9//EeiKSZ1V2mV
+         WMyNdALEiFjAbNR+uG0EFB+6g3hJhKS1NjtknrpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chih-Wei Huang <cwhuang@android-x86.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 134/155] r8169: fix PHY driver check on platforms w/o module softdeps
-Date:   Tue, 31 Mar 2020 10:59:34 +0200
-Message-Id: <20200331085433.273204395@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 135/155] clocksource/drivers/hyper-v: Untangle stimers and timesync from clocksources
+Date:   Tue, 31 Mar 2020 10:59:35 +0200
+Message-Id: <20200331085433.357680618@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,57 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Yubo Xie <yuboxie@microsoft.com>
 
-commit 2e8c339b4946490a922a21aa8cd869c6cfad2023 upstream.
+[ Upstream commit 0af3e137c144377fbaf5025ba784ff5ba7ad40c9 ]
 
-On Android/x86 the module loading infrastructure can't deal with
-softdeps. Therefore the check for presence of the Realtek PHY driver
-module fails. mdiobus_register() will try to load the PHY driver
-module, therefore move the check to after this call and explicitly
-check that a dedicated PHY driver is bound to the PHY device.
+hyperv_timer.c exports hyperv_cs, which is used by stimers and the
+timesync mechanism.  However, the clocksource dependency is not
+needed: these mechanisms only depend on the partition reference
+counter (which can be read via a MSR or via the TSC Reference Page).
 
-Fixes: f32593773549 ("r8169: check that Realtek PHY driver module is loaded")
-Reported-by: Chih-Wei Huang <cwhuang@android-x86.org>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Introduce the (function) pointer hv_read_reference_counter, as an
+embodiment of the partition reference counter read, and export it
+in place of the hyperv_cs pointer.  The latter can be removed.
 
+This should clarify that there's no relationship between Hyper-V
+stimers & timesync and the Linux clocksource abstractions.  No
+functional or semantic change.
+
+Suggested-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200109160650.16150-2-parri.andrea@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/realtek/r8169_main.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/clocksource/hyperv_timer.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -6903,6 +6903,13 @@ static int r8169_mdio_register(struct rt
- 	if (!tp->phydev) {
- 		mdiobus_unregister(new_bus);
- 		return -ENODEV;
-+	} else if (!tp->phydev->drv) {
-+		/* Most chip versions fail with the genphy driver.
-+		 * Therefore ensure that the dedicated PHY driver is loaded.
-+		 */
-+		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
-+		mdiobus_unregister(new_bus);
-+		return -EUNATCH;
- 	}
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -233,7 +233,8 @@ static u64 notrace read_hv_clock_tsc(str
  
- 	/* PHY will be woken up in rtl_open() */
-@@ -7064,15 +7071,6 @@ static int rtl_init_one(struct pci_dev *
- 	int chipset, region;
- 	int jumbo_max, rc;
+ static u64 read_hv_sched_clock_tsc(void)
+ {
+-	return read_hv_clock_tsc(NULL) - hv_sched_clock_offset;
++	return (read_hv_clock_tsc(NULL) - hv_sched_clock_offset) *
++		(NSEC_PER_SEC / HV_CLOCK_HZ);
+ }
  
--	/* Some tools for creating an initramfs don't consider softdeps, then
--	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
--	 * PHY driver is used that doesn't work with most chip versions.
--	 */
--	if (!driver_find("RTL8201CP Ethernet", &mdio_bus_type)) {
--		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
--		return -ENOENT;
--	}
--
- 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
- 	if (!dev)
- 		return -ENOMEM;
+ static struct clocksource hyperv_cs_tsc = {
+@@ -258,7 +259,8 @@ static u64 notrace read_hv_clock_msr(str
+ 
+ static u64 read_hv_sched_clock_msr(void)
+ {
+-	return read_hv_clock_msr(NULL) - hv_sched_clock_offset;
++	return (read_hv_clock_msr(NULL) - hv_sched_clock_offset) *
++		(NSEC_PER_SEC / HV_CLOCK_HZ);
+ }
+ 
+ static struct clocksource hyperv_cs_msr = {
 
 
