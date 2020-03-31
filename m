@@ -2,140 +2,212 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E67C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84072C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3036F20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:27:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20150623.gappssmtp.com header.i=@kudzu-us.20150623.gappssmtp.com header.b="xvsIaGxn"
+	by mail.kernel.org (Postfix) with ESMTP id 5C14A20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585668492;
+	bh=9gN//mK5UVb5oI3675OFZkQpiGmGfQCLZ6fYeaTLgLQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=jAHuQCjF+rH+sLDYSQUdoKS04dFTAaI423VfW1+CUB9R8VLeUThSnCwebdEFy1UKJ
+	 XII3sff9DfXIALgyd6v/PphDCeyUY8Aetg1YBgYdiWbyMoZfn2po+1TIm1oylGeuRK
+	 f5jKtc3LymOOzToYZLU1/NUaoRbBnBTkLZk9wSrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbgCaP1X (ORCPT
+        id S1730715AbgCaP2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:27:23 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37448 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730095AbgCaP1X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:27:23 -0400
-Received: by mail-qt1-f194.google.com with SMTP id z24so17419132qtu.4
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 08:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=VFmTu4uYulpUU5in51vToheYdVlAq1Y7eqMyGwDEhI8=;
-        b=xvsIaGxnMknx8N7QgJaLh9AYgim3Yzr9d2ImHJb6Fm01eN61rKj0TtvbuDRcAonw05
-         ZlQT1tqS2mvg9gInk48P+SLwLCFspAXO9goQ80GzoZSYcdozAOr4AbqieMYIDBCUhEga
-         XnQao8gTvNKF0cUQ7PWdMaBP5jx9dK++L03hKkti65thILpnTTU6HPikNcaOKAOynM3i
-         Xd4RfRPHXw1kpYFicGHnWU23E+FJLXUDWavXEqCQkBYqg/E+J5JqVP+9ViwXqzToUnjM
-         Ip29GoMWHHk0bc4oAX91VvskBcLFjXK386s3VyOVm/qiKMtxsgKhOOc89QwGBMb4zNDn
-         Dhgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=VFmTu4uYulpUU5in51vToheYdVlAq1Y7eqMyGwDEhI8=;
-        b=DfddWXqF/UVz+LdjzRZO7ZTTEZvSJYwFYQyLMFMG/mTdN1BLaOebaley6iRvkfk2aW
-         lu0ibLHCfmp4opl+CNcuLVyMlrrdRV2BoskHsjB2EGPNNI8Blrx2oiopgohEFhhYL+It
-         pKn8cn7vKGQi3GkBO9IMkb0GlMly1SAT+ILxROG6+f9ViMK5zLAntpQfwDBpf+YaI3VA
-         SiHEmxpr4Pvvuoea+v+V5LbotHJJiRsEknkLTleR/o2oLu9Wk6JQNgOpukYfObKi2g1U
-         8zIxB3Pt+1IIR1rkjDV+ANMosM/1xDrHwSvyRHRrRn++GgxUJlLd3SuR0eISqR5Z2auC
-         rkZw==
-X-Gm-Message-State: ANhLgQ39GOQy6M0U1CbJFjiQTuYLR0dvMt+kysavxprjPz9lhH0ngiob
-        223vdv+CnzFvCHnwKXH28XXQKT9YaTWbKQ==
-X-Google-Smtp-Source: ADFU+vs5KHa/86yJddBLr6QS2vwH/Z2sgGhSsdkNYXC51dKELK8f6xV1wM4weTeXYx51/wy8n5E3CQ==
-X-Received: by 2002:ac8:3072:: with SMTP id g47mr5590057qte.278.1585668442641;
-        Tue, 31 Mar 2020 08:27:22 -0700 (PDT)
-Received: from localhost ([2605:a601:a664:2e00:9c27:5ab0:8441:9150])
-        by smtp.gmail.com with ESMTPSA id r29sm14079899qtj.76.2020.03.31.08.27.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 08:27:22 -0700 (PDT)
-From:   Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jdm@athena.kudzu.us>
-Date:   Tue, 31 Mar 2020 11:27:21 -0400
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-ntb@googlegroups.com
-Subject: [GIT PULL] NTB bug fixes for v5.7
-Message-ID: <20200331152721.GA1719@athena.kudzu.us>
+        Tue, 31 Mar 2020 11:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730095AbgCaP2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:28:11 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29E6A20786;
+        Tue, 31 Mar 2020 15:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585668490;
+        bh=9gN//mK5UVb5oI3675OFZkQpiGmGfQCLZ6fYeaTLgLQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=1r9MkWGlOPY96fqtKnM2NBPRjsmfKiQMOYaho9XyNIOp8DN3Jd+m1a7zgHGkQHmxp
+         0E1m6QNrVrc1OYrM6tSru/Ix/Lrz0X9kqlE7957qM/ccql63xLUO/zX89HkvU3oDON
+         u8oy/odLzsadpqX42oyDC9d9dB3OahRqlBPA/+FQ=
+Date:   Tue, 31 Mar 2020 10:28:05 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v18 00/11] Add Error Disconnect Recover (EDR) support
+Message-ID: <20200331152805.GA188783@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
-Here are a few NTB bug fixes and AMD NTB driver changes for v5.7.  Please consider pulling them.
+On Mon, Mar 23, 2020 at 05:25:57PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> This patchset adds support for following features:
+> 
+> 1. Error Disconnect Recover (EDR) support.
+> 2. _OSC based negotiation support for DPC.
+> 
+> You can find EDR spec in the following link.
+> 
+> https://members.pcisig.com/wg/PCI-SIG/document/12614
+> 
+> Changes since v17 + Bjorns changes:
+>  * This version is based on Bjorn's review/edr branch.
+>  * Moved {pciehp,shpchp}_is_native() function definitions to pci.c and
+>    removed it's CONFIG_ACPI dependency.
+>  * Modified dpc_reset_link() function to return PCI_ERS_RESULT_NEED_RESET
+>    when hotplug is not supported or enabled in kernel.
+>  * Modified reset_link() function to handle PCI_ERS_RESULT_NEED_RESET as
+>    valid return value.
+>  * Moved the implementation of reset_link() function to pcie_do_recovery()
+>    and renamed function callback parameter from reset_cb to reset_link.
+>  * Moved the order of pci_acpi_add_edr_notifier() and
+>    pci_acpi_remove_edr_notifier() calls in pci_acpi_setup() and
+>    pci_acpi_cleanup() above wakeup capable support checks.
+>  * Used acpi_check_dsm() to check whether given _DSM is supported or
+>    not in edr.c.
+> 
+> Changes since v16:
+>  * Removed reset_link from pcie_port_service_driver.
+>  * Removed pcie_port_find_service().
+>  * Added pci_dpc_init() in pci_init_capabilities().
+> 
+> Changes since v15:
+>  * Splitted Patch # 3 in previous set into multiple patches.
+>  * Refactored EDR driver use pci_dev instead of dpc_dev.
+>  * Added some debug logs to EDR driver.
+>  * Used pci_aer_raw_clear_status() for clearing AER errors in EDR path.
+>  * Addressed other comments from Bjorn.
+>  * Rebased patches on top of Bjorns "PCI/DPC: Move data to struct pci_dev" patch.
+> 
+> Changes since v14:
+>  * Rebased on top of v5.6-rc1
+> 
+> Changes since v13:
+>  * Moved all EDR related code to edr.c
+>  * Addressed Bjorns comments.
+> 
+> Changes since v12:
+>  * Addressed Bjorns comments.
+>  * Added check for CONFIG_PCIE_EDR before requesting DPC control from firmware.
+>  * Removed ff_check parameter from AER APIs.
+>  * Used macros for _OST return status values in DPC driver.
+> 
+> Changes since v11:
+>  * Allowed error recovery to proceed after successful reset_link().
+>  * Used correct ACPI handle for sending EDR status.
+>  * Rebased on top of v5.5-rc5
+> 
+> Changes since v10:
+>  * Added "edr_enabled" member to dpc priv structure, which is used to cache EDR
+>    enabling status based on status of pcie_ports_dpc_native and FF mode.
+>  * Changed type of _DSM argument from Integer to Package in acpi_enable_dpc_port()
+>    function to fix ACPI related boot warnings.
+>  * Rebased on top of v5.5-rc3
+> 
+> Changes since v9:
+>  * Removed caching of pcie_aer_get_firmware_first() in dpc driver.
+>  * Added proper spec reference in git log for patch 5 & 7.
+>  * Added new function parameter "ff_check" to pci_cleanup_aer_uncorrect_error_status(),
+>    pci_aer_clear_fatal_status() and pci_cleanup_aer_error_status_regs() functions.
+>  * Rebased on top of v5.4-rc5
+> 
+> Changes since v8:
+>  * Rebased on top of v5.4-rc1
+> 
+> Changes since v7:
+>  * Updated DSM version number to match the spec.
+> 
+> Changes since v6:
+>  * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
+>  * Addressed Bjorn comments.
+> 
+> Changes since v5:
+>  * Addressed Keith's comments.
+>  * Added additional check for FF mode in pci_aer_init().
+>  * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
+> 
+> Changes since v4:
+>  * Rebased on top of v5.3-rc1
+>  * Fixed lock/unlock issue in edr_handle_event().
+>  * Merged "Update error status after reset_link()" patch into this patchset.
+> 
+> Changes since v3:
+>  * Moved EDR related ACPI functions/definitions to pci-acpi.c
+>  * Modified commit history in few patches to include spec reference.
+>  * Added support to handle DPC triggered by NON_FATAL errors.
+>  * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
+>  * Addressed Bjorn comments.
+> 
+> Changes since v2:
+>  * Split EDR support patch into multiple patches.
+>  * Addressed Bjorn comments.
+> 
+> Changes since v1:
+>  * Rebased on top of v5.1-rc1
+> 
+> Bjorn Helgaas (1):
+>   PCI/DPC: Move DPC data into struct pci_dev
+> 
+> Kuppuswamy Sathyanarayanan (10):
+>   PCI/ERR: Update error status after reset_link()
+>   PCI: move {pciehp,shpchp}_is_native() definitions to pci.c
+>   PCI/DPC: Fix DPC recovery issue in non hotplug case
+>   PCI/ERR: Remove service dependency in pcie_do_recovery()
+>   PCI/ERR: Return status of pcie_do_recovery()
+>   PCI/DPC: Cache DPC capabilities in pci_init_capabilities()
+>   PCI/AER: Add pci_aer_raw_clear_status() to unconditionally clear Error
+>     Status
+>   PCI/DPC: Expose dpc_process_error(), dpc_reset_link() for use by EDR
+>   PCI/DPC: Add Error Disconnect Recover (EDR) support
+>   PCI/AER: Rationalize error status register clearing
 
-Thanks,
-Jon
+Applied to pci/edr for v5.7, except these two:
 
+    PCI: move {pciehp,shpchp}_is_native() definitions to pci.c
+    PCI/DPC: Fix DPC recovery issue in non hotplug case
 
-
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-
-are available in the Git repository at:
-
-  git://github.com/jonmason/ntb tags/ntb-5.7
-
-for you to fetch changes up to b350f0a3eb264962caefeb892af56c1b727ee03f:
-
-  NTB: add pci shutdown handler for AMD NTB (2020-03-13 10:04:20 -0400)
-
-----------------------------------------------------------------
-Bug fixes for a few printing issues, link status detection bug on AMD
-hardware, and a DMA address issue with ntb_perf.  Also, large series of
-AMD NTB patches.
-
-----------------------------------------------------------------
-Alexander Fomichev (1):
-      ntb_hw_switchtec: Fix ntb_mw_clear_trans error if size == 0
-
-Arindam Nath (15):
-      NTB: Fix access to link status and control register
-      NTB: clear interrupt status register
-      NTB: Enable link up and down event notification
-      NTB: define a new function to get link status
-      NTB: return the side info status from amd_poll_link
-      NTB: set peer_sta within event handler itself
-      NTB: remove handling of peer_sta from amd_link_is_up
-      NTB: handle link down event correctly
-      NTB: handle link up, D0 and D3 events correctly
-      NTB: move ntb_ctrl handling to init and deinit
-      NTB: add helper functions to set and clear sideinfo
-      NTB: return link up status correctly for PRI and SEC
-      NTB: remove redundant setting of DB valid mask
-      NTB: send DB event when driver is loaded or un-loaded
-      NTB: add pci shutdown handler for AMD NTB
-
-Helge Deller (1):
-      ntb_tool: Fix printk format
-
-Jiasen Lin (2):
-      NTB: Fix an error in get link status
-      NTB: ntb_perf: Fix address err in perf_copy_chunk
-
-Sanjay R Mehta (1):
-      MAINTAINERS: update maintainer list for AMD NTB driver
-
-Takashi Iwai (1):
-      NTB: ntb_transport: Use scnprintf() for avoiding potential buffer overflow
-
- MAINTAINERS                            |   1 +
- drivers/ntb/hw/amd/ntb_hw_amd.c        | 290 +++++++++++++++++++++++++++------
- drivers/ntb/hw/amd/ntb_hw_amd.h        |   8 +-
- drivers/ntb/hw/mscc/ntb_hw_switchtec.c |   2 +-
- drivers/ntb/ntb_transport.c            |  58 +++----
- drivers/ntb/test/ntb_perf.c            |  57 +++++--
- drivers/ntb/test/ntb_tool.c            |  14 +-
- 7 files changed, 332 insertions(+), 98 deletions(-)
+>  Documentation/PCI/pcieaer-howto.rst       |  23 +-
+>  drivers/acpi/pci_root.c                   |  15 ++
+>  drivers/net/ethernet/intel/ice/ice_main.c |   4 +-
+>  drivers/ntb/hw/idt/ntb_hw_idt.c           |   4 +-
+>  drivers/pci/pci-acpi.c                    |  40 +---
+>  drivers/pci/pci.c                         |  40 +++-
+>  drivers/pci/pci.h                         |  13 +-
+>  drivers/pci/pcie/Kconfig                  |  10 +
+>  drivers/pci/pcie/Makefile                 |   1 +
+>  drivers/pci/pcie/aer.c                    |  40 ++--
+>  drivers/pci/pcie/dpc.c                    | 145 ++++++-------
+>  drivers/pci/pcie/edr.c                    | 251 ++++++++++++++++++++++
+>  drivers/pci/pcie/err.c                    |  67 ++----
+>  drivers/pci/pcie/portdrv.h                |   5 -
+>  drivers/pci/pcie/portdrv_core.c           |  21 --
+>  drivers/pci/probe.c                       |   2 +
+>  drivers/scsi/lpfc/lpfc_attr.c             |   4 +-
+>  include/linux/acpi.h                      |   6 +-
+>  include/linux/aer.h                       |   9 +-
+>  include/linux/pci-acpi.h                  |   8 +
+>  include/linux/pci.h                       |   6 +
+>  include/linux/pci_hotplug.h               |   7 +-
+>  22 files changed, 471 insertions(+), 250 deletions(-)
+>  create mode 100644 drivers/pci/pcie/edr.c
+> 
+> -- 
+> 2.17.1
+> 
