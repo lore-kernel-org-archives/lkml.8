@@ -2,99 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277A0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D02C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037EB2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BF920748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585639755;
+	bh=K+kSUFn5QmpohIurApP9XIGsLdwd699dH3yuXItWuiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=04DQLPDu0RMobEhrAZ/yr0+90+0ZEUFNhQesifrvRs9EOjKMGIYlVgFCx15nhXLnR
+	 gcwDmNOy13bB5aGPHGhfeUXfvHX4Tmp9uXnN6RhtVZZaUhmgRjDN4+ALZn7feiRCk8
+	 KqvOzvBeTzLRZ01pVB1ookQM/G+MyRP/awqd1AKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgCaH24 (ORCPT
+        id S1730006AbgCaH3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:28:56 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:48338 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgCaH2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:28:55 -0400
-X-Greylist: delayed 387 seconds by postgrey-1.27 at vger.kernel.org; Tue, 31 Mar 2020 03:28:55 EDT
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-        by gardel.0pointer.net (Postfix) with ESMTP id B5053E814E3;
-        Tue, 31 Mar 2020 09:22:25 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id D3507160704; Tue, 31 Mar 2020 09:22:24 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 09:22:24 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
-        viro@zeniv.linux.org.uk, dray@redhat.com, kzak@redhat.com,
-        mszeredi@redhat.com, swhiteho@redhat.com, jlayton@redhat.com,
-        raven@themaw.net, andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cyphar@cyphar.com
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200331072224.GA27062@gardel-login>
-References: <1445647.1585576702@warthog.procyon.org.uk>
- <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+        Tue, 31 Mar 2020 03:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbgCaH3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:29:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA8642072A;
+        Tue, 31 Mar 2020 07:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585639753;
+        bh=K+kSUFn5QmpohIurApP9XIGsLdwd699dH3yuXItWuiA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kCVMfrAGdSlyYD5ebr6vfmZ8Vt9m2/NynRiHqxBJSt9kY644r95zbSEGDh6TgLRGg
+         4oRC2zd2IlwpPhl40SrLW4dfdNNPzqvDgNw/lWm7ZSz3OpgdrOPD8Xv/9HxvtZMeJF
+         r7+gUops7UKDwrusSf5oM2gnzf44wDMddodBMvhM=
+Date:   Tue, 31 Mar 2020 09:29:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] driver core: Fix handling of fw_devlink=permissive
+Message-ID: <20200331072910.GC854501@kroah.com>
+References: <CGME20200331022842eucas1p29e52dc93c4bd0b6e470c41aef19c9a86@eucas1p2.samsung.com>
+ <20200331022832.209618-1-saravanak@google.com>
+ <781eefdc-c926-7566-5305-bb9633e6fac0@samsung.com>
+ <CAGETcx8aW-EY+bGEPr+20bZUF-=ghZDPyQ8AdU7eYYd-wOvekA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+In-Reply-To: <CAGETcx8aW-EY+bGEPr+20bZUF-=ghZDPyQ8AdU7eYYd-wOvekA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mo, 30.03.20 23:17, Christian Brauner (christian.brauner@ubuntu.com) wrote:
+On Mon, Mar 30, 2020 at 11:18:01PM -0700, Saravana Kannan wrote:
+> On Mon, Mar 30, 2020 at 10:43 PM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+> >
+> > Hi,
+> >
+> > On 2020-03-31 04:28, Saravana Kannan wrote:
+> > > When commit 8375e74f2bca ("driver core: Add fw_devlink kernel
+> > > commandline option") added fw_devlink, it didn't implement "permissive"
+> > > mode correctly.
+> > >
+> > > That commit got the device links flags correct to make sure unprobed
+> > > suppliers don't block the probing of a consumer. However, if a consumer
+> > > is waiting for mandatory suppliers to register, that could still block a
+> > > consumer from probing.
+> > >
+> > > This commit fixes that by making sure in permissive mode, all suppliers
+> > > to a consumer are treated as a optional suppliers. So, even if a
+> > > consumer is waiting for suppliers to register and link itself (using the
+> > > DL_FLAG_SYNC_STATE_ONLY flag) to the supplier, the consumer is never
+> > > blocked from probing.
+> > >
+> > > Fixes: 8375e74f2bca ("driver core: Add fw_devlink kernel commandline option")
+> > > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > > Hi Marek,
+> > >
+> > > If you pull in this patch and then add back in my patch that created the
+> > > boot problem for you, can you see if that fixes the boot issue for you?
+> >
+> > Indeed, this fixes booting on my Raspberry Pi3/4 boards with linux
+> > next-20200327. Thanks! :)
+> 
+> Hi Marek,
+> 
+> Thanks for testing, but I'm not able to find the tag next-20200327. I
+> can only find next-20200326 and next-20200330. I was just trying to
+> make sure that next-20200327 doesn't have the revert Greg did. I'm
+> guessing you meant next-20200326?
+> 
+> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> 
+> Thanks!
+> 
+> Greg,
+> 
+> Can you pull in my fix and then revert the revert?
 
-> Fwiw, putting down my kernel hat and speaking as someone who maintains
-> two container runtimes and various other low-level bits and pieces in
-> userspace who'd make heavy use of this stuff I would prefer the fd-based
-> fsinfo() approach especially in the light of across namespace
-> operations, querying all properties of a mount atomically all-at-once,
-> and safe delegation through fds. Another heavy user of this would be
-> systemd (Cced Lennart who I've discussed this with) which would prefer
-> the fd-based approach as well. I think pulling this into a filesystem
-> and making userspace parse around in a filesystem tree to query mount
-> information is the wrong approach and will get messy pretty quickly
-> especially in the face of mount and user namespace interactions and
-> various other pitfalls. fsinfo() fits quite nicely with the all-fd-based
-> approach of the whole mount api. So yes, definitely preferred from my
-> end.
+After 5.7-rc1 is out I will, thanks.
 
-Christian is right. I think it's very important to have an API that
-allows to query the state of fs attributes in a consistent state,
-i.e. so that the attributes userspace is interested in can be queried
-in a single call, so they all describe the very same point in
-time. Distributing attributes onto multiple individual files just
-sucks, because it's then guaranteed that you never can read them in a
-way they actually fit together, some attributes you read will be
-older, others newer. It's a big design flaw of sysfs (which is
-structured like this) if you ask me.
-
-I don't really care if the kernel API for this is binary or
-textual. Slight preference for binary, but I don't care too much.
-
-I think it would be wise to bind such APIs to fds, simply because it
-always works. Doing path based stuff sucks, because you always need to
-mount stuff and have a path tree set up, which is less ideal in a
-world where namespacing is common, and namespaces are a shared concept
-(at least with your other threads, if not with other processes). As a
-maintainer of an init system I really dislike APIs that I can only use
-after a mount structure has been set up, too often we want to do stuff
-before that. Moreover, philosophically I find it questionnable to use
-path based APIs to interface with the path object hierarchy itself. it
-feels "too recursive". Just keep this separate: build stuff on top of
-the fs that fits on top of the fs, but don't build fs APIs on top of
-fs APIs that stem from the same layer.
-
-Summary: atomic APIs rock, fd-based APIs rock. APIs built on
-individual files one can only read individually suck. APIs of the path
-layer exposed in the path layer suck.
-
-Hope this makes some sense?
-
-Lennart
+greg k-h
