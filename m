@@ -2,147 +2,190 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46E4C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891A7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783C320848
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501EB20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xt8ZOLs/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hOuh2Xt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbgCaOEo (ORCPT
+        id S1731106AbgCaOFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:04:44 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33238 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730951AbgCaOEo (ORCPT
+        Tue, 31 Mar 2020 10:05:25 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:12548 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730543AbgCaOFY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:04:44 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f20so22136880ljm.0;
-        Tue, 31 Mar 2020 07:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MDdUt2Xx7CsJa6khvoaGnC8v0ElEvPxQibVr3Q0lyA0=;
-        b=Xt8ZOLs/9+oLndJW2LeyLzmXHPe+a5ZaO7yuXusrKEEooFZqJk0SHV3D5NA3A0tuof
-         Kuj/fghd8kbgdHaUOc23KMYkypOLAU8gB6NyPHUFgg6SCPgGUmTbACI/mMMaDR7SOmfG
-         frE/wPklAnN/5IRz2rVDhBP/aSR25XIMr6DXr+Byi8O6Py3p5icVgGmRDJSAxIknYxVj
-         aOntTMQKGKCBLPwY3RRzXo1PD1vykgic5clRiQESmlZro7NwH4Uynitkua8q3blTXTku
-         kdVz+AHtttOrqkhXiSxnccwW44LMKSbPqguxWFkiWVRjtlmnHMQxbyjHuLkHxI8uFVRV
-         0nyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MDdUt2Xx7CsJa6khvoaGnC8v0ElEvPxQibVr3Q0lyA0=;
-        b=QVJHEylCIDN/xV7LktuHgBJqmoX+2YMMTYuoyqx/kPMnkFPxH+6zcCHDv2Yxah7r/Z
-         Wrh3v9TDjSbWxu/7urScad6QnexMRTqcG59+9KyYKCwiaG/1yeTJNXRCBWbgZox9hBeP
-         Y7K1HEk1k+qEh5xdVDRABovxAWfVEIxbhUSOh2tFMq+187EZm8SVGM0i7h657jdtRN8B
-         X/+F44H1kz33wf88yYg8TdUtwjNjR5T09W9nZct410YFgMduoddTkM4Z8RhX0QedtU/a
-         bLLSI+WTADcU8duwd/BA3RTkmUNjQq90obvINTfGCzm0lsV/KfYg+nwyaztiafkfEgAd
-         DfFA==
-X-Gm-Message-State: AGi0PuYATzY9hm/NekKWQZlfa9uOiQLN27o3gjrHuh4LJ+frsDmkzqv9
-        Wh/zRMh46qlyqHMPr0vQPh8=
-X-Google-Smtp-Source: APiQypI4fAWKLnARPHwBzr7LMf8/4/VuGvwrht4oSGSknhX+lU0YSToDfvpjMh2o1Loq9tzpRQlO0A==
-X-Received: by 2002:a05:651c:1102:: with SMTP id d2mr10524529ljo.102.1585663481281;
-        Tue, 31 Mar 2020 07:04:41 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id j125sm8678528lfj.38.2020.03.31.07.04.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 07:04:40 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 31 Mar 2020 16:04:33 +0200
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200331140433.GA26498@pc636>
-References: <20200331131628.153118-1-joel@joelfernandes.org>
+        Tue, 31 Mar 2020 10:05:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585663524; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=JPQGZVO7GQmUjDTatLNPuWZXRCXTSbNi57XEzEX56cE=;
+ b=hOuh2Xt7EVO4/2Vf4CjjMk8ECmeXIh3DoFSjRsRVRfuhTaEe0NZFuqvWUKbgFmUSkeKPFGp7
+ 3MqFJLqDL3Ziufzs3Rj70OfRRo7RTPmn4jq9nxFHsL5r8+ie1UWqpI49TuRUY1Kwj67ygpcn
+ IjwaOfqTZcN2HW0SkInlpoZSvME=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e834e23.7f61220ab848-smtp-out-n03;
+ Tue, 31 Mar 2020 14:05:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8A93DC433F2; Tue, 31 Mar 2020 14:05:22 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kalyan_t)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BBE03C433F2;
+        Tue, 31 Mar 2020 14:05:21 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331131628.153118-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 31 Mar 2020 19:35:21 +0530
+From:   kalyan_t@codeaurora.org
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, mkrishn@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        travitej@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH] drm/msm/dpu: ensure device suspend happens
+ during PM sleep
+In-Reply-To: <CAD=FV=WcFahUm8jK+QTwx7BkCb3GTgKqFLP_pdqWBqN-zawrbw@mail.gmail.com>
+References: <1585559008-12705-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAD=FV=WcFahUm8jK+QTwx7BkCb3GTgKqFLP_pdqWBqN-zawrbw@mail.gmail.com>
+Message-ID: <145ea4f469465674c8a2e36fdfcbec67@codeaurora.org>
+X-Sender: kalyan_t@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:16:28AM -0400, Joel Fernandes (Google) wrote:
-> In kfree_rcu() headless implementation (where the caller need not pass
-> an rcu_head, but rather directly pass a pointer to an object), we have
-> a fall-back where we allocate a rcu_head wrapper for the caller (not the
-> common case). This brings the pattern of needing to allocate some memory
-> to free some memory.  Currently we use GFP_ATOMIC flag to try harder for
-> this allocation, however the GFP_MEMALLOC flag is more tailored to this
-> pattern. We need to try harder not only during atomic context, but also
-> during non-atomic context anyway. So use the GFP_MEMALLOC flag instead.
+On 2020-03-31 00:25, Doug Anderson wrote:
+> Hi,
 > 
-> Also remove the __GFP_NOWARN flag simply because although we do have a
-> synchronize_rcu() fallback for absolutely worst case, we still would
-> like to not enter that path and atleast trigger a warning to the user.
+> On Mon, Mar 30, 2020 at 2:04 AM Kalyan Thota <kalyan_t@codeaurora.org> 
+> wrote:
+>> 
+>> "The PM core always increments the runtime usage counter
+>> before calling the ->suspend() callback and decrements it
+>> after calling the ->resume() callback"
+>> 
+>> DPU and DSI are managed as runtime devices. When
+>> suspend is triggered, PM core adds a refcount on all the
+>> devices and calls device suspend, since usage count is
+>> already incremented, runtime suspend was not getting called
+>> and it kept the clocks on which resulted in target not
+>> entering into XO shutdown.
+>> 
+>> Add changes to manage runtime devices during pm sleep.
+>> 
+>> Changes in v1:
+>>  - Remove unnecessary checks in the function
+>>    _dpu_kms_disable_dpu (Rob Clark).
+>> 
+>> Changes in v2:
+>>  - Avoid using suspend_late to reset the usagecount
+>>    as suspend_late might not be called during suspend
+>>    call failures (Doug).
+>> 
+>> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 33 
+>> +++++++++++++++++++++++++++++++++
+>>  drivers/gpu/drm/msm/msm_drv.c           |  4 ++++
+>>  drivers/gpu/drm/msm/msm_kms.h           |  2 ++
+>>  3 files changed, 39 insertions(+)
 > 
-> Cc: linux-mm@kvack.org
-> Cc: rcu@vger.kernel.org
-> Cc: willy@infradead.org
-> Cc: peterz@infradead.org
-> Cc: neilb@suse.com
-> Cc: vbabka@suse.cz
-> Cc: mgorman@suse.de
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
+> I am still 100% baffled by your patch and I never did quite understand
+> your response to my previous comments [1].  I think you're saying that
+> the problem you were facing is that if you call "suspend" but never
+> called "runtime_suspend" that the device stays active.  Is that right?
+>  If that's true, did you try something like this suggestion I made?
 > 
-> This patch is based on the (not yet upstream) code in:
-> git://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git (branch rcu/kfree)
-> 
-> It is a follow-up to the posted series:
-> https://lore.kernel.org/lkml/20200330023248.164994-1-joel@joelfernandes.org/
+> SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, 
+> pm_runtime_force_resume)
 > 
 > 
->  kernel/rcu/tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> index ce19f1d..2343cbd 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+>> @@ -26,6 +26,7 @@
+>>  #include "dpu_encoder.h"
+>>  #include "dpu_plane.h"
+>>  #include "dpu_crtc.h"
+>> +#include "dsi.h"
+>> 
+>>  #define CREATE_TRACE_POINTS
+>>  #include "dpu_trace.h"
+>> @@ -325,6 +326,37 @@ static void dpu_kms_disable_commit(struct msm_kms 
+>> *kms)
+>>         pm_runtime_put_sync(&dpu_kms->pdev->dev);
+>>  }
+>> 
+>> +static void _dpu_kms_disable_dpu(struct msm_kms *kms)
+>> +{
+>> +       struct dpu_kms *dpu_kms = to_dpu_kms(kms);
+>> +       struct drm_device *dev = dpu_kms->dev;
+>> +       struct msm_drm_private *priv = dev->dev_private;
+>> +       struct msm_dsi *dsi;
+>> +       int i;
+>> +
+>> +       dpu_kms_disable_commit(kms);
+>> +
+>> +       for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
+>> +               if (!priv->dsi[i])
+>> +                       continue;
+>> +               dsi = priv->dsi[i];
+>> +               pm_runtime_put_sync(&dsi->pdev->dev);
+>> +       }
+>> +       pm_runtime_put_sync(dev->dev);
+>> +
+>> +       /* Increment the usagecount without triggering a resume */
+>> +       pm_runtime_get_noresume(dev->dev);
+>> +
+>> +       pm_runtime_get_noresume(&dpu_kms->pdev->dev);
+>> +
+>> +       for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
+>> +               if (!priv->dsi[i])
+>> +                       continue;
+>> +               dsi = priv->dsi[i];
+>> +               pm_runtime_get_noresume(&dsi->pdev->dev);
+>> +       }
+>> +}
 > 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 4be763355c9fb..965deefffdd58 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
->  
->  	if (!ptr)
->  		ptr = kmalloc(sizeof(unsigned long *) +
-> -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
-> +				sizeof(struct rcu_head), GFP_MEMALLOC);
->  
-Hello, Joel
+> My pm_runtime knowledge is pretty weak sometimes, but the above
+> function looks crazy.  Maybe it's just me not understanding, but can
+> you please summarize what you're trying to accomplish?
+> 
+-- I was trying to get the runtime callbacks via controlling the device 
+usage_count
+Since the usage_count was already incremented by PM core, i was 
+decrementing and incrementing (without resume)
+so that callbacks are triggered.
 
-I have some questions regarding improving it, see below them:
+I have taken your suggestion on forcing the suspend instead of managing 
+it via usage_count.
+i'll follow it up in the next patchset.
 
-Do you mean __GFP_MEMALLOC? Can that flag be used in atomic context?
-Actually we do allocate there under spin lock. Should be combined with
-GFP_ATOMIC | __GFP_MEMALLOC?
-
-As for removing __GFP_NOWARN. Actually it is expectable that an
-allocation can fail, if so we follow last emergency case. You
-can see the trace but what would you do with that information?
-
-Thanks!
-
---
-Vlad Rezki
+> -Doug
+> 
+> [1] 
+> https://lore.kernel.org/r/114130f68c494f83303c51157e2c5bfa@codeaurora.org
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
