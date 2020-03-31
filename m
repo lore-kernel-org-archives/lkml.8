@@ -2,108 +2,105 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB79DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBBFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907B52078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE0B2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:50:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j9eW+kYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbgCaOuB (ORCPT
+        id S1730887AbgCaOuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:50:01 -0400
-Received: from mx.sdf.org ([205.166.94.20]:53379 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726595AbgCaOuB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:50:01 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02VEnFEj010261
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Tue, 31 Mar 2020 14:49:16 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02VEnFfb002103;
-        Tue, 31 Mar 2020 14:49:15 GMT
-Date:   Tue, 31 Mar 2020 14:49:15 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, lkml@sdf.org
-Subject: Re: [RFC PATCH v1 44/50] arm64: ptr auth: Use get_random_u64 instead
- of _bytes
-Message-ID: <20200331144915.GA4303@SDF.ORG>
-References: <202003281643.02SGhOi3016886@sdf.org>
- <20200330105745.GA1309@C02TD0UTHF1T.local>
- <20200330193237.GC9199@SDF.ORG>
- <20200331101412.GA1490@C02TD0UTHF1T.local>
+        Tue, 31 Mar 2020 10:50:14 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40009 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730528AbgCaOuO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 10:50:14 -0400
+Received: by mail-wr1-f65.google.com with SMTP id u10so26345160wro.7
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 07:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=LThkFwSkZqTw2d4yYtrBRfrpjqvh2S44Ii+brKsEaNw=;
+        b=j9eW+kYrODFdfrvu7dy3d7qBefcQklepGBvj9jeR8ukot9h5lwypuGf5uufqC6HRgI
+         kOxYY0Gl1d+rsvs3jI2joeQ/K9fw0zLrpKP2ZfW17KXY4+WUk/JSZ8KAUVAnIoYijiSG
+         72xe3HjDiRAGweyGBeu0koQ6R6h53GPsoakP+UZ63E0oG2b3gbice2QixK1CP37bWFvF
+         nFymoKBWxsY3etNsmAtN0CcDfZOj9AnypWpwdsYX9DdcJZicqd8a+AG3qJ4Xlh7CtbZV
+         wpoAEOJD53gMflO5aGS6pi7iX1qHirLV9b3hK64AZ+M80o5vpoCHeuC7oIDhoy097U7j
+         YpTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=LThkFwSkZqTw2d4yYtrBRfrpjqvh2S44Ii+brKsEaNw=;
+        b=mykSTOPSQkzzhEoxKWr9vscXt+fDl6f5C1UND2hLsVGojIMTCqmIbTZmAUTcM4jste
+         PNLXiETeU1POrTzGKNZd56mxysB9tVry/GhdNg0vqFVPQPPWolJ9jeRxQ2guY+6vYXWr
+         Xb5BTZ03sNWNlx2Rfh1rZHramN9zzIOOLBpBjneM7bJ3pDQMnEfYc9yCmAegb/DrLqVo
+         gc8CTwVcy4IZOlF6ERXQEkHN1+dU3DbvfCh1GqQmMXw1cmzwkyHQ5vU8obv9zi+OPhsk
+         sDzwF9AheSkekZchCElwhiQh4YWCKGmNB9rNevcpyjbkMVjw0MdRX0J/yX05HrpgvNpC
+         7MWg==
+X-Gm-Message-State: ANhLgQ1CCpcqlyWXrpmNj6Rw497mTcoLjmxX3HOaYm5qjoDzYAmopjoi
+        dRpoLcm+QBOuSyeaIzuHz/c=
+X-Google-Smtp-Source: ADFU+vsr3d8+VMK/1DccKZdQKSpk3+U3Tn2Yv0QuaeVmGVHxKuIWc8675z3Jx+k42MOjeg8U4DKKKQ==
+X-Received: by 2002:adf:ecc3:: with SMTP id s3mr20158772wro.32.1585666212208;
+        Tue, 31 Mar 2020 07:50:12 -0700 (PDT)
+Received: from [192.168.10.4] ([185.199.97.5])
+        by smtp.gmail.com with ESMTPSA id d6sm26595939wrw.10.2020.03.31.07.50.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 07:50:11 -0700 (PDT)
+Subject: Re: [Xen-devel] [PATCH] drm/xen: fix passing zero to 'PTR_ERR'
+ warning
+To:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        oleksandr_andrushchenko@epam.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <1585562347-30214-1-git-send-email-dingxiang@cmss.chinamobile.com>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <b4d43b05-8b30-749c-0b60-87b4cdd7b1dd@gmail.com>
+Date:   Tue, 31 Mar 2020 17:50:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331101412.GA1490@C02TD0UTHF1T.local>
+In-Reply-To: <1585562347-30214-1-git-send-email-dingxiang@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:14:12AM +0100, Mark Rutland wrote:
-> On Mon, Mar 30, 2020 at 07:32:37PM +0000, George Spelvin wrote:
->> On Mon, Mar 30, 2020 at 11:57:45AM +0100, Mark Rutland wrote:
->>> As I am unaware, how does the cost of get_random_bytes() compare to the
->>> cost of get_random_u64()?
->> 
->> It's approximately 8 times the cost.  [Of *one* get_random_u64()
->> call; 4x the cost of the two needed to generate a 128-bit key.]
->> 
->> Because get_random_bytes() implements anti-backtracking, it's a minimum 
->> of one global lock and one ChaCha20 operation per call.  Even though 
->> chacha_block_generic() returns 64 bytes, for anti-backtracking we use 
->> 32 of them to generate a new key and discard the remainder.
->> 
->> get_random_u64() uses the exact same generator, but amortizes the cost by 
->> storing the output in a per-CPU buffer which it only has to refill every 
->> 64 bytes generated.  7/8 of the time, it's just a fetch from a per-CPU 
->> data structure.
-> 
-> I see; thanks for this explanation. It would be helpful to mention the
-> backtracking distinction explicitly in the commit message, since it
-> currently only alludes to it in the first sentence.
-
-Easily done, but I need to find a centralized place to say it, or
-I'd be repeating myself a *lot* in the series.
-
-That said, thanks for prompting me to quantify the cost ratio.
-I knew it, but never actually wrote it down.
-
-> It's worth noting that the key values *can* be exposed to userspace when
-> CONFIG_CHECKPOINT_RESTORE is selected. On such kernels, a user could
-> regenerate and read the keys an arbitrary number of times on a CPU of
-> their choice. From my limited understanding I presume backtracking may
-> be a concern there?
-
-No.  Backtracking is an issue if the keys must remain secret *after*
-they are wiped from kernel memory.  This applies to session
-*encryption* keys (assuming the plaintext should remain secret
-after the session is over), and to any long-lived keys which are
-stored encrypted or otherwise inaccessible (e.g. in dedicated
-hardware).  The latter includes most asymmetric private keys.
-
-Since the pointer authentication keys are authentication keys,
-and valueless to an attacker once the kernel is done using them,
-there is no need for backtracking protetion.
-
-Basically, do you need to wipe the key (with memzero_explicit) when
-you are done with it?  If that is important, you also want to
-know that the key cannot be reconstructed from the CRNG state.
-
->> Yes, I went overboard, and your proposed change below is perfectly
->> fine with me.
-> 
-> Great. That's what I'd prefer due to clarity of the code, and I'm not
-> too concerned by the figures below given it only adds 12 bytes to the
-> contemporary text size.
-
-A modified patch will follow.  Thanks for your patience.
+On 3/30/20 12:59, Ding Xiang wrote:
+> Fix a static code checker warning:
+>      drivers/gpu/drm/xen/xen_drm_front.c:404 xen_drm_drv_dumb_create()
+>      warn: passing zero to 'PTR_ERR'
+>
+> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+> ---
+>   drivers/gpu/drm/xen/xen_drm_front.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
+> index 4be49c1..3741420 100644
+> --- a/drivers/gpu/drm/xen/xen_drm_front.c
+> +++ b/drivers/gpu/drm/xen/xen_drm_front.c
+> @@ -401,7 +401,7 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
+>   
+>   	obj = xen_drm_front_gem_create(dev, args->size);
+>   	if (IS_ERR_OR_NULL(obj)) {
+> -		ret = PTR_ERR(obj);
+> +		ret = PTR_ERR_OR_ZERO(obj);
+>   		goto fail;
+>   	}
+>   
