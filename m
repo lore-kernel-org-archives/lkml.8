@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BEDC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE94C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB22A20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06AB020772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646589;
-	bh=vm5XyX0tsjQ/Xm40vKLKZTkN5PGw3XOBoes038B+Sss=;
+	s=default; t=1585646595;
+	bh=Zf31paX7k2ZkrtIcuW+qjbnpvFLPskIxAlURiEL6dX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OtxhJV2ODzOhTs7wfdmA0EK92ktTEX5VsGa4BLzX70gwhaN/MIQPlpdPL1nd7T5CB
-	 0vwv09TPLm7rIl6YP9dTvLE1x3HC6En2UKg75lqt2LmLS9xNdJoVUWqPHCvu2XofJz
-	 CC2Rp+5Y//+hWH+r8jOT4BK98KOXfIgmUdCi8LeE=
+	b=e7zj6/jK9ZmBuZYyO/vylB/ZDRnGhdSwXH+x9jRzVk3gx2yG58afMuhhPJxVuXjVZ
+	 l7TASqnQHt+eoPo6SuwipnemusI4S4cdrDkz/5qKc7KVeadzbK40+DwGdcTpHbi9yg
+	 qbYivc1wqTR/Dyw3CV0HX9KzXDrxzkxhYvJ8cST0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbgCaJXI (ORCPT
+        id S1730854AbgCaJDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43688 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:03:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730883AbgCaJDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:03:51 -0400
+        id S1730616AbgCaJDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 974A120787;
-        Tue, 31 Mar 2020 09:03:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28A6220787;
+        Tue, 31 Mar 2020 09:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645431;
-        bh=vm5XyX0tsjQ/Xm40vKLKZTkN5PGw3XOBoes038B+Sss=;
+        s=default; t=1585645419;
+        bh=Zf31paX7k2ZkrtIcuW+qjbnpvFLPskIxAlURiEL6dX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TpuHIoe+jAyOZPJ+qe/8tNwV/pj2eFWCvWwYosvTEiHHLvKWsBeVnvT92vPquGBwk
-         QmB1wO2svhf4hpEhP884f0c8j8UAnQrkH2VFd5i8kuYgUw9acufd+xcf9Pd0CrBMk9
-         4P0TvgE06Xz1sj13dn51vBKO0m36I8MZhi9oUP2E=
+        b=wgkYENoCXgtCMTaClTb9z/G6PHFkGIvhRSpJgoheJYb11J7vo64W1cYIZpi+2KzBy
+         rbSu4PDifiifQfyrDEUUwdKMiUD+p2QuaL/ZVL8y20Z5nCoT8tKrZ4l2SYeti0TcHe
+         uCoMCYuKAKt7wjId3hf4CXROwvoxozXfkMdVSSzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 051/170] net: ip_gre: Separate ERSPAN newlink / changelink callbacks
-Date:   Tue, 31 Mar 2020 10:57:45 +0200
-Message-Id: <20200331085429.834339215@linuxfoundation.org>
+Subject: [PATCH 5.5 047/170] net: ena: fix incorrect setting of the number of msix vectors
+Date:   Tue, 31 Mar 2020 10:57:41 +0200
+Message-Id: <20200331085429.420618706@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,187 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit e1f8f78ffe9854308b9e12a73ebe4e909074fc33 ]
+[ Upstream commit ce1f352162828ba07470328828a32f47aa759020 ]
 
-ERSPAN shares most of the code path with GRE and gretap code. While that
-helps keep the code compact, it is also error prone. Currently a broken
-userspace can turn a gretap tunnel into a de facto ERSPAN one by passing
-IFLA_GRE_ERSPAN_VER. There has been a similar issue in ip6gretap in the
-past.
+Overview:
+We don't frequently change the msix vectors throughout the life cycle of
+the driver. We do so in two functions: ena_probe() and ena_restore().
+ena_probe() is only called when the driver is loaded. ena_restore() on the
+other hand is called during device reset / resume operations.
 
-To prevent these problems in future, split the newlink and changelink code
-paths. Split the ERSPAN code out of ipgre_netlink_parms() into a new
-function erspan_netlink_parms(). Extract a piece of common logic from
-ipgre_newlink() and ipgre_changelink() into ipgre_newlink_encap_setup().
-Add erspan_newlink() and erspan_changelink().
+We use num_io_queues for calculating and allocating the number of msix
+vectors. At ena_probe() this value is equal to max_num_io_queues and thus
+this is not an issue, however ena_restore() might be called after the
+number of io queues has changed.
 
-Fixes: 84e54fe0a5ea ("gre: introduce native tunnel support for ERSPAN")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
+A possible bug scenario is as follows:
+
+* Change number of queues from 8 to 4.
+  (num_io_queues = 4, max_num_io_queues = 8, msix_vecs = 9,)
+* Trigger reset occurs -> ena_restore is called.
+  (num_io_queues = 4, max_num_io_queues =8 , msix_vecs = 5)
+* Change number of queues from 4 to 6.
+  (num_io_queues = 6, max_num_io_queues = 8, msix_vecs = 5)
+* The driver will reset due to failure of check_for_rx_interrupt_queue()
+
+Fix:
+This can be easily fixed by always using max_num_io_queues to init the
+msix_vecs, since this number won't change as opposed to num_io_queues.
+
+Fixes: 4d19266022ec ("net: ena: multiple queue creation related cleanups")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_gre.c |  103 ++++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 85 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_netdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -1153,6 +1153,22 @@ static int ipgre_netlink_parms(struct ne
- 	if (data[IFLA_GRE_FWMARK])
- 		*fwmark = nla_get_u32(data[IFLA_GRE_FWMARK]);
- 
-+	return 0;
-+}
-+
-+static int erspan_netlink_parms(struct net_device *dev,
-+				struct nlattr *data[],
-+				struct nlattr *tb[],
-+				struct ip_tunnel_parm *parms,
-+				__u32 *fwmark)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+	int err;
-+
-+	err = ipgre_netlink_parms(dev, data, tb, parms, fwmark);
-+	if (err)
-+		return err;
-+
- 	if (data[IFLA_GRE_ERSPAN_VER]) {
- 		t->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
- 
-@@ -1276,45 +1292,70 @@ static void ipgre_tap_setup(struct net_d
- 	ip_tunnel_setup(dev, gre_tap_net_id);
- }
- 
--static int ipgre_newlink(struct net *src_net, struct net_device *dev,
--			 struct nlattr *tb[], struct nlattr *data[],
--			 struct netlink_ext_ack *extack)
-+static int
-+ipgre_newlink_encap_setup(struct net_device *dev, struct nlattr *data[])
- {
--	struct ip_tunnel_parm p;
- 	struct ip_tunnel_encap ipencap;
--	__u32 fwmark = 0;
--	int err;
- 
- 	if (ipgre_netlink_encap_parms(data, &ipencap)) {
- 		struct ip_tunnel *t = netdev_priv(dev);
--		err = ip_tunnel_encap_setup(t, &ipencap);
-+		int err = ip_tunnel_encap_setup(t, &ipencap);
- 
- 		if (err < 0)
- 			return err;
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -1346,7 +1346,7 @@ static int ena_enable_msix(struct ena_ad
  	}
  
-+	return 0;
-+}
-+
-+static int ipgre_newlink(struct net *src_net, struct net_device *dev,
-+			 struct nlattr *tb[], struct nlattr *data[],
-+			 struct netlink_ext_ack *extack)
-+{
-+	struct ip_tunnel_parm p;
-+	__u32 fwmark = 0;
-+	int err;
-+
-+	err = ipgre_newlink_encap_setup(dev, data);
-+	if (err)
-+		return err;
-+
- 	err = ipgre_netlink_parms(dev, data, tb, &p, &fwmark);
- 	if (err < 0)
- 		return err;
- 	return ip_tunnel_newlink(dev, tb, &p, fwmark);
- }
+ 	/* Reserved the max msix vectors we might need */
+-	msix_vecs = ENA_MAX_MSIX_VEC(adapter->num_io_queues);
++	msix_vecs = ENA_MAX_MSIX_VEC(adapter->max_num_io_queues);
+ 	netif_dbg(adapter, probe, adapter->netdev,
+ 		  "trying to enable MSI-X, vectors %d\n", msix_vecs);
  
-+static int erspan_newlink(struct net *src_net, struct net_device *dev,
-+			  struct nlattr *tb[], struct nlattr *data[],
-+			  struct netlink_ext_ack *extack)
-+{
-+	struct ip_tunnel_parm p;
-+	__u32 fwmark = 0;
-+	int err;
-+
-+	err = ipgre_newlink_encap_setup(dev, data);
-+	if (err)
-+		return err;
-+
-+	err = erspan_netlink_parms(dev, data, tb, &p, &fwmark);
-+	if (err)
-+		return err;
-+	return ip_tunnel_newlink(dev, tb, &p, fwmark);
-+}
-+
- static int ipgre_changelink(struct net_device *dev, struct nlattr *tb[],
- 			    struct nlattr *data[],
- 			    struct netlink_ext_ack *extack)
- {
- 	struct ip_tunnel *t = netdev_priv(dev);
--	struct ip_tunnel_encap ipencap;
- 	__u32 fwmark = t->fwmark;
- 	struct ip_tunnel_parm p;
- 	int err;
- 
--	if (ipgre_netlink_encap_parms(data, &ipencap)) {
--		err = ip_tunnel_encap_setup(t, &ipencap);
--
--		if (err < 0)
--			return err;
--	}
-+	err = ipgre_newlink_encap_setup(dev, data);
-+	if (err)
-+		return err;
- 
- 	err = ipgre_netlink_parms(dev, data, tb, &p, &fwmark);
- 	if (err < 0)
-@@ -1327,8 +1368,34 @@ static int ipgre_changelink(struct net_d
- 	t->parms.i_flags = p.i_flags;
- 	t->parms.o_flags = p.o_flags;
- 
--	if (strcmp(dev->rtnl_link_ops->kind, "erspan"))
--		ipgre_link_update(dev, !tb[IFLA_MTU]);
-+	ipgre_link_update(dev, !tb[IFLA_MTU]);
-+
-+	return 0;
-+}
-+
-+static int erspan_changelink(struct net_device *dev, struct nlattr *tb[],
-+			     struct nlattr *data[],
-+			     struct netlink_ext_ack *extack)
-+{
-+	struct ip_tunnel *t = netdev_priv(dev);
-+	__u32 fwmark = t->fwmark;
-+	struct ip_tunnel_parm p;
-+	int err;
-+
-+	err = ipgre_newlink_encap_setup(dev, data);
-+	if (err)
-+		return err;
-+
-+	err = erspan_netlink_parms(dev, data, tb, &p, &fwmark);
-+	if (err < 0)
-+		return err;
-+
-+	err = ip_tunnel_changelink(dev, tb, &p, fwmark);
-+	if (err < 0)
-+		return err;
-+
-+	t->parms.i_flags = p.i_flags;
-+	t->parms.o_flags = p.o_flags;
- 
- 	return 0;
- }
-@@ -1519,8 +1586,8 @@ static struct rtnl_link_ops erspan_link_
- 	.priv_size	= sizeof(struct ip_tunnel),
- 	.setup		= erspan_setup,
- 	.validate	= erspan_validate,
--	.newlink	= ipgre_newlink,
--	.changelink	= ipgre_changelink,
-+	.newlink	= erspan_newlink,
-+	.changelink	= erspan_changelink,
- 	.dellink	= ip_tunnel_dellink,
- 	.get_size	= ipgre_get_size,
- 	.fill_info	= ipgre_fill_info,
 
 
