@@ -2,109 +2,175 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E99C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4BEC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA1620BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585676236;
-	bh=oRPC8otloZFydoXiCmCWweBkCjVTQQBLiF9H9VTg7Po=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aKYdEfeQYZjHssSx1UE7tQ1TObYIgCMR9BjCnf9u4/LGa5lN2C7lajJhMM9vJ7Wxf
-	 2xVtRS1tfW54/6HfJE41W4dqxKUm0WbpjXKSjRGvbaZXvslGVexx72b+0y6oqKLLxl
-	 FH38WBIpC3exmFqCQ6QY4IeS/B5dgHFje5l2WgJw=
+	by mail.kernel.org (Postfix) with ESMTP id 559D320BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgCaRhO (ORCPT
+        id S1726595AbgCaRiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:37:14 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36504 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgCaRhO (ORCPT
+        Tue, 31 Mar 2020 13:38:14 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43757 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgCaRiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:37:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id b1so2336097ljp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 10:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6OxKMfb5gM7QgpqPWgcxadm93cwWvuJ3xwBX2b8h0Zk=;
-        b=QxeKeYdvDxDB2KsGnX96MJFLBWN6r9Xl8+/nIiMmPIZWNQXbE0OBwYYyKmRM7E/fef
-         BnDLeeW8GbZyT7kv0iN+fWr1quptod8J5R+QLtKCbWBkXLNlZVkBoPl0KHmiowGXRuDB
-         myOVnk4frLAjbB4qFDYiVBTowniezeJv1tkUk=
+        Tue, 31 Mar 2020 13:38:14 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a6so22884531otb.10;
+        Tue, 31 Mar 2020 10:38:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6OxKMfb5gM7QgpqPWgcxadm93cwWvuJ3xwBX2b8h0Zk=;
-        b=McXwSa8hAfADKqagve9oXhxbfenTKuv3LCmiJtSejQS//Ly6FLAu/SRX/8WwE7eiOL
-         3hnXsUYOpg80WtPikk8HnJ6mrf9k4iCwiCA7rkc4Bn+DhhfIf/77cKw73Oe2DO7MaWor
-         UxjLlZbG709wBc6L00xzf5AeDbwnkpoqPkY5kWGEww7WwhDQDcaDozZYu0T+qL4+hJum
-         iU0E2N69qIrXKbRfv44lHnzBW2KYpqHT/FKsiTq4477pWIJlQwgUgYsk69F9sfq7+byZ
-         uxev9/IMb+emSQoYNke3PJ0mS2jkMp73ztMwDy25KD9ocDao9cwyMqjoRgMwup3YwOhe
-         bJqQ==
-X-Gm-Message-State: AGi0PuakVG6iePf/7d07q83ajYKMJsb5yjOjBdcmEU+jyLttJFiBo8t/
-        9YMLr3aBHIrECvdU8tQfucCcATVARUs=
-X-Google-Smtp-Source: APiQypKd4AKyV3eLm2tTdlns4pU6EU8AJmOUoeudctM+4iijfuwhOj5AVKx7xY5aHTz+S8TLoilgUw==
-X-Received: by 2002:a2e:b8c1:: with SMTP id s1mr11365565ljp.0.1585676228824;
-        Tue, 31 Mar 2020 10:37:08 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id q10sm10336349lfa.29.2020.03.31.10.37.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 10:37:08 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 19so22863194ljj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 10:37:07 -0700 (PDT)
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr10831245lji.150.1585676227614;
- Tue, 31 Mar 2020 10:37:07 -0700 (PDT)
+        bh=NatCpzsVL/Jub5SRdDWqKNOUn/yqrxXRqh08wwc8Rqc=;
+        b=q7WOvNdBMYWaaTTs44lIA0iZf3uY71uumDtOAzEwNRd4+ZIkKORBNaSe4YzBxhS/K8
+         nGThWuu7bA4saYUBkyaHHksD7en8BKTCP3Q5oRYU9cSBGGclIxdjumKmjtiyrQAAP16E
+         IxdCuMXO1m4FuoMTffpSu2pcfsJiLll3l+vOM0dYZ+8LIEG43ltGsEpVH63CDnTSn5N8
+         EwRYOAaY6PHkx1n3i3Mtc0yMNf4N/eAL4HHUj7KK/TJl1c29pWZP/bCTpBtaSvx/zEc0
+         VQGjmfKYbFoZ/IfvOpOLqcnH9f/8ArLaF35lWCWNwP30f2E1e8DrJsR/AzDMmttwLlaO
+         sPiw==
+X-Gm-Message-State: ANhLgQ0aYmtpiKooaBAu0kWWuUU8+uFq+rY/xhenDKbJnxqBeZh2odG3
+        ot8eS09B1P3NTy1efoY198n2ny4mZGanfEDzXfs=
+X-Google-Smtp-Source: ADFU+vspEF2v26kohoeQ7QCAm0+UjlxoiRqZx5TDaqKhKoeYsajATEeEwLC7UOQBIc2LLDWOeDRVBW69y/TRQm7lJ2M=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr13796162otk.250.1585676291361;
+ Tue, 31 Mar 2020 10:38:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200331075305.GA57035@gmail.com>
-In-Reply-To: <20200331075305.GA57035@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 31 Mar 2020 10:36:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjFiniKY80uDdSmZVXqXJdvLQS8xeKo9TnN1POqiU5Qxg@mail.gmail.com>
-Message-ID: <CAHk-=wjFiniKY80uDdSmZVXqXJdvLQS8xeKo9TnN1POqiU5Qxg@mail.gmail.com>
-Subject: Re: [GIT PULL] x86/boot changes for v5.7
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
+References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+ <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com> <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 31 Mar 2020 19:38:00 +0200
+Message-ID: <CAMuHMdW+CACQXNa4RZwU4WgPY=Hw4w+o6vQ_c7=PemJOF+Ct6w@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
+ in correct sequence
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hao Bui <hao.bui.yg@renesas.com>,
+        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:53 AM Ingo Molnar <mingo@kernel.org> wrote:
->
->       x86/*/Makefile: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
+Hi Prabhakar,
 
-Ugh.
+On Tue, Mar 31, 2020 at 5:58 PM Prabhakar Mahadev Lad
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > -----Original Message-----
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Sent: 31 March 2020 16:18
+> > To: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Jiri Slaby <jslaby@suse.com>; open list:SERIAL DRIVERS <linux-
+> > serial@vger.kernel.org>; Linux-Renesas <linux-renesas-soc@vger.kernel.org>; Prabhakar <prabhakar.csengg@gmail.com>; Linux Kernel
+> > Mailing List <linux-kernel@vger.kernel.org>; Hao Bui <hao.bui.yg@renesas.com>; KAZUMI HARADA <kazumi.harada.rh@renesas.com>;
+> > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>; Sasha Levin <sashal@kernel.org>; Chris Brandt
+> > <Chris.Brandt@renesas.com>
+> > Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read in correct sequence
+>> > On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
+> > <kazuhiro.fujita.jg@renesas.com> wrote:
+> > > For SCIF and HSCIF interfaces the SCxSR register holds the status of
+> > > data that is to be read next from SCxRDR register, But where as for
+> > > SCIFA and SCIFB interfaces SCxSR register holds status of data that is
+> > > previously read from SCxRDR register.
+> > >
+> > > This patch makes sure the status register is read depending on the port
+> > > types so that errors are caught accordingly.
+> > >
+> > > Cc: <stable@vger.kernel.org>
+> > > Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+> > > Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
+> > > Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/drivers/tty/serial/sh-sci.c
+> > > +++ b/drivers/tty/serial/sh-sci.c
+> > > @@ -870,9 +870,16 @@ static void sci_receive_chars(struct uart_port *port)
+> > >                                 tty_insert_flip_char(tport, c, TTY_NORMAL);
+> > >                 } else {
+> > >                         for (i = 0; i < count; i++) {
+> > > -                               char c = serial_port_in(port, SCxRDR);
+> > > -
+> > > -                               status = serial_port_in(port, SCxSR);
+> > > +                               char c;
+> > > +
+> > > +                               if (port->type == PORT_SCIF ||
+> > > +                                   port->type == PORT_HSCIF) {
+> > > +                                       status = serial_port_in(port, SCxSR);
+> > > +                                       c = serial_port_in(port, SCxRDR);
+> > > +                               } else {
+> > > +                                       c = serial_port_in(port, SCxRDR);
+> > > +                                       status = serial_port_in(port, SCxSR);
+> > > +                               }
+> > >                                 if (uart_handle_sysrq_char(port, c)) {
+> > >                                         count--; i--;
+> > >                                         continue;
+> >
+> > I can confirm that the documentation for the Serial Status Register on
+> >   1. (H)SCIF on R-Car Gen1/2/3 says the framing/error flag applies to
+> >      the data that is "to be read next" from the FIFO., and that the
+> >      "Sample Flowchart for Serial Reception (2)" confirms this,
+> >   2. SCIF[AB] on R-Car Gen2, SH-Mobile AG5, R-Mobile A1 and APE6 says
+> >      the framing/error flag applies to the receive data that is "read"
+> >      from the FIFO, and that the "Example of Flow for Serial Reception
+> >      (2)" confirms this,
+> >   3. SCIF on RZ/A1H says something similar as for (H)SCIF above, using
+> >      slightly different wording, also confirmed by the "Sample Flowchart
+> >      for Receiving Serial Data (2)".
+> >
+> > However, the documentation for "SCIFA" on RZ/A2 (for which we use
+> > PORT_SCIF, not PORT_SCIFA, in the driver) has conflicting information:
+> >   1. Section 17.2.7 "Serial Status Register (FSR)" says:
+> >        - A receive framing/parity error occurred in the "next receive
+> >          data read" from the FIFO,
+> >        - Indicates whether there is a framing/parity error in the data
+> >          "read" from the FIFO.
+> >   2. Figure 17.8 "Sample Flowchart for Receiving Serial Data in
+> >      Asynchronous Mode (2)".
+> >        - Whether a framing error or parity error has occurred in the
+> >          received data that is "read" from the FIFO.
+> >
+> > So while the change looks OK for most Renesas ARM SoCs, the situation
+> > for RZ/A2 is unclear.
+> > Note that the above does not take into account variants used on SuperH
+> > SoCs.
+> >
+> I'll dig out some documentation wrt RZ/A2 & SuperH. Also H8300 needs to be considered.
 
-Looking at that commit, wouldn't it be better to try to move in a
-direction where the special 32-bit code (or other stub code) simply
-uses the actual KBUILD_CFLAGS as a base for what they do.
+AFAIK, H8/300 has SCI only, so is not affected.
 
-For example, in that EFI case, arm64 seems to do things the right way,
-and this is literally the x86 code being inferior.
+> By any chance do you have RZ/A2 to test .
 
-Both 32-bit and 64-bit arm seem to just filter out the flags that
-don't work for it the stub code.
+Actually I do.
 
-And honestly, that seems to be the *much* better approach.
+> > Nevertheless, this patch will need some testing on various hardware.
+> > Do you have a test case to verify the broken/fixed behavior?
+> >
+> Agreed, its been tested on RZ/G2x & RZ/G1x  by doing a loopback test, configure one interface as CS8 mode(8-bits data, No parity) and other as CS7 mode (7-bits data, 1-bit Parity) and parity errors should be detected.
 
-The x86 approach is just rewriting the the cflags from scratch
-inevitably has these kinds of odd special cases they it misses.
+Thanks, that's good to know!
 
-Wouldn't it be much better to try to standardize around that arm model instead?
+Gr{oetje,eeting}s,
 
-I've pulled this, but it hurts to see these kinds of magical hackery.
+                        Geert
 
-              Linus
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
