@@ -2,51 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36325C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029DD20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCC82137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646028;
-	bh=0geW2N5yklwjKb6rivq1v7IxgkL4xJnOpRV3pgTthvg=;
+	s=default; t=1585646032;
+	bh=rmRBAXEtpYuEgr8lxSMdhfQIo4FvG4sJzuape9PRm00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDSBIKnrsmWsj9FsBGKStq6FeCGLtNGAlwzabm2RL0A6DHfuTRrCMbczaly5XAmuj
-	 kWVV6hLE4c5CqOMBCsIolfMCuxAZzi2423tRf5xrPL4dBM6bFs/1SDwZx560+Wbec4
-	 pHCLDzuUgxPEdfsJYKQeBzvLqoIoy2eHoU+QuB5Y=
+	b=FQY4POf4MPXyjEAhty4HfiItGidj1hg0+TaF++04HPO+yVJZJhRUDBUCOt/ggA19O
+	 M5XlUmwTAdbQFi8N6i20jh4A36SaDgbr251cniMiX35CIxSbQ1MNJHejsCbNSNj9Gp
+	 E6EZWl7kApFtD0LKdUy3W/2kc2cl6OOUEJ30PGIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbgCaJNr (ORCPT
+        id S1731112AbgCaJNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33206 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731560AbgCaJNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:43 -0400
+        id S1730704AbgCaJNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E39B52072E;
-        Tue, 31 Mar 2020 09:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E17121582;
+        Tue, 31 Mar 2020 09:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646022;
-        bh=0geW2N5yklwjKb6rivq1v7IxgkL4xJnOpRV3pgTthvg=;
+        s=default; t=1585646025;
+        bh=rmRBAXEtpYuEgr8lxSMdhfQIo4FvG4sJzuape9PRm00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRTIWVvSfC8s1MDVEZK3MWqzaDeozXOrahXJPg+CVmvHixHSA6UurVIIRrr1h0M/9
-         Rkh9uZLEORVa2w6abIzZBmZInXhRbIlnaGx27z8Of7UlYJQp8VjQD2WoGLEP+oS1v5
-         jU7t9hbAYbyk6hcDG50DKjTKzrdfQvPvdUJ4qkH0=
+        b=1u+pdiXiz8zNfDx19b3q16pofwXKHpPQ1TEjQnX1LDP/c4VqfrDLfN1GPSyjsuMwH
+         OVQO8AaZZG271ldYx/5HN/LoiMRbJJXqGXTTSJAK0sIlohvHvKT2FFuRkO4sRUH73R
+         p+gLBwF/rOEgMqcTBCTRpJaJYPFImY8q1WjfBy7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/155] cgroup1: dont call release_agent when it is ""
-Date:   Tue, 31 Mar 2020 10:58:18 +0200
-Message-Id: <20200331085425.071082026@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 023/155] net: phy: dp83867: w/a for fld detect threshold bootstrapping issue
+Date:   Tue, 31 Mar 2020 10:57:43 +0200
+Message-Id: <20200331085420.995267250@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,43 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit 2e5383d7904e60529136727e49629a82058a5607 ]
+[ Upstream commit 749f6f6843115b424680f1aada3c0dd613ad807c ]
 
-Older (and maybe current) versions of systemd set release_agent to "" when
-shutting down, but do not set notify_on_release to 0.
+When the DP83867 PHY is strapped to enable Fast Link Drop (FLD) feature
+STRAP_STS2.STRAP_ FLD (reg 0x006F bit 10), the Energy Lost Threshold for
+FLD Energy Lost Mode FLD_THR_CFG.ENERGY_LOST_FLD_THR (reg 0x002e bits 2:0)
+will be defaulted to 0x2. This may cause the phy link to be unstable. The
+new DP83867 DM recommends to always restore ENERGY_LOST_FLD_THR to 0x1.
 
-Since 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate
-call_usermodehelper()"), we filter out such calls when the user mode helper
-path is "". However, when used in conjunction with an actual (i.e. non "")
-STATIC_USERMODEHELPER, the path is never "", so the real usermode helper
-will be called with argv[0] == "".
+Hence, restore default value of FLD_THR_CFG.ENERGY_LOST_FLD_THR to 0x1 when
+FLD is enabled by bootstrapping as recommended by DM.
 
-Let's avoid this by not invoking the release_agent when it is "".
-
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/cgroup/cgroup-v1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/dp83867.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 2db582706ec5c..f684c82efc2ea 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -784,7 +784,7 @@ void cgroup1_release_agent(struct work_struct *work)
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -25,7 +25,8 @@
+ #define DP83867_CFG3		0x1e
  
- 	pathbuf = kmalloc(PATH_MAX, GFP_KERNEL);
- 	agentbuf = kstrdup(cgrp->root->release_agent_path, GFP_KERNEL);
--	if (!pathbuf || !agentbuf)
-+	if (!pathbuf || !agentbuf || !strlen(agentbuf))
- 		goto out;
+ /* Extended Registers */
+-#define DP83867_CFG4            0x0031
++#define DP83867_FLD_THR_CFG	0x002e
++#define DP83867_CFG4		0x0031
+ #define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
+ #define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
+ #define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
+@@ -74,6 +75,7 @@
+ #define DP83867_STRAP_STS2_CLK_SKEW_RX_MASK	GENMASK(2, 0)
+ #define DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT	0
+ #define DP83867_STRAP_STS2_CLK_SKEW_NONE	BIT(2)
++#define DP83867_STRAP_STS2_STRAP_FLD		BIT(10)
  
- 	spin_lock_irq(&css_set_lock);
--- 
-2.20.1
-
+ /* PHY CTRL bits */
+ #define DP83867_PHYCR_FIFO_DEPTH_SHIFT		14
+@@ -103,6 +105,9 @@
+ /* CFG4 bits */
+ #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
+ 
++/* FLD_THR_CFG */
++#define DP83867_FLD_THR_CFG_ENERGY_LOST_THR_MASK	0x7
++
+ enum {
+ 	DP83867_PORT_MIRROING_KEEP,
+ 	DP83867_PORT_MIRROING_EN,
+@@ -318,6 +323,20 @@ static int dp83867_config_init(struct ph
+ 		phy_clear_bits_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4,
+ 				   BIT(7));
+ 
++	bs = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_STRAP_STS2);
++	if (bs & DP83867_STRAP_STS2_STRAP_FLD) {
++		/* When using strap to enable FLD, the ENERGY_LOST_FLD_THR will
++		 * be set to 0x2. This may causes the PHY link to be unstable -
++		 * the default value 0x1 need to be restored.
++		 */
++		ret = phy_modify_mmd(phydev, DP83867_DEVADDR,
++				     DP83867_FLD_THR_CFG,
++				     DP83867_FLD_THR_CFG_ENERGY_LOST_THR_MASK,
++				     0x1);
++		if (ret)
++			return ret;
++	}
++
+ 	if (phy_interface_is_rgmii(phydev)) {
+ 		val = phy_read(phydev, MII_DP83867_PHYCTRL);
+ 		if (val < 0)
 
 
