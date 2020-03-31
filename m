@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9DDC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F5BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABCE20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CFA20772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646208;
-	bh=IyginMYVJzvpy3Q5tHbEtrGdrQCTHoh7Rbw5CtAfmw0=;
+	s=default; t=1585646211;
+	bh=+2Yc5/72cHKArA4R+dzFgQDsJ7e4GYHSq8Ld72MC4zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mcu7bGL/XIdkd8NzP9dCuDOixnw6wUUyk47Sf7HqLmr98mVUdRVnoOenhKEo2DeMw
-	 ZuBEwAPZW8vy5AXpgPeB1D6FskDl2b5Cch8dCPTwvuzzwN+qIRzvZ5cKTO9VK4Ee5n
-	 Ifhd4CDRqJQ2pDwZqHYT4U+0BLqdD88NbJm1512E=
+	b=AGIBx4SZfAko4CxNznbqcfYBMlB7xs8+pULrh8Y9XIe6/Wf+vdLlM8XveJv8RIWlL
+	 DJ5IjbiOTwgFBWZJVt2VuLEimUwXLStRtJlnTCbFrwTNvZrQPwc1mtup5EbtL19S4e
+	 /WoUFEqQ7iwblVD36PHdAx50hqJWEJrMl2An6h+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731986AbgCaJQq (ORCPT
+        id S1731714AbgCaJQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37568 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731495AbgCaJQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:43 -0400
+        id S1731535AbgCaJQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:16:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4E942072E;
-        Tue, 31 Mar 2020 09:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63499208E0;
+        Tue, 31 Mar 2020 09:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646203;
-        bh=IyginMYVJzvpy3Q5tHbEtrGdrQCTHoh7Rbw5CtAfmw0=;
+        s=default; t=1585646205;
+        bh=+2Yc5/72cHKArA4R+dzFgQDsJ7e4GYHSq8Ld72MC4zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rm9RacMPYdRDeI9+Vz6G4ms4RhxmhUpYYumulDpGPArF9/qlFMIvU18mOU77Z8Seh
-         5PZn0uI1q3AG/IQnw/KgJ2C9TTpcrQJhZ+c4Znt30pJ763bwVJDTcVIDIfTmH2cwFU
-         j5O264E4sZ7g3t1++uXMhhgSUfGDT54zLLOHy2IA=
+        b=sZfDjhq0ou7HT/dys4JzQib4oCBqVINZg2Eiwg8shCF2yWZj7YpctxigC1+5RJczr
+         wTchjwL8nVFCbVwnaGRA/mhVVOMK1FsFEBN9xwEFeEuext5zcbC4/fjvkUOkDwDPeb
+         OTJ3Vccbp0rMnbHCnnSp6it49T3N4uBrBS15BQU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.4 115/155] RDMA/mlx5: Block delay drop to unprivileged users
-Date:   Tue, 31 Mar 2020 10:59:15 +0200
-Message-Id: <20200331085431.397025815@linuxfoundation.org>
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.4 116/155] xfrm: fix uctx len check in verify_sec_ctx_len
+Date:   Tue, 31 Mar 2020 10:59:16 +0200
+Message-Id: <20200331085431.490001424@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,36 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maor Gottlieb <maorg@mellanox.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit ba80013fba656b9830ef45cd40a6a1e44707f47a upstream.
+commit 171d449a028573b2f0acdc7f31ecbb045391b320 upstream.
 
-It has been discovered that this feature can globally block the RX port,
-so it should be allowed for highly privileged users only.
+It's not sufficient to do 'uctx->len != (sizeof(struct xfrm_user_sec_ctx) +
+uctx->ctx_len)' check only, as uctx->len may be greater than nla_len(rt),
+in which case it will cause slab-out-of-bounds when accessing uctx->ctx_str
+later.
 
-Fixes: 03404e8ae652("IB/mlx5: Add support to dropless RQ")
-Link: https://lore.kernel.org/r/20200322124906.1173790-1-leon@kernel.org
-Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This patch is to fix it by return -EINVAL when uctx->len > nla_len(rt).
+
+Fixes: df71837d5024 ("[LSM-IPSec]: Security association restriction.")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/mlx5/qp.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/xfrm/xfrm_user.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/hw/mlx5/qp.c
-+++ b/drivers/infiniband/hw/mlx5/qp.c
-@@ -6132,6 +6132,10 @@ struct ib_wq *mlx5_ib_create_wq(struct i
- 	if (udata->outlen && udata->outlen < min_resp_len)
- 		return ERR_PTR(-EINVAL);
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -110,7 +110,8 @@ static inline int verify_sec_ctx_len(str
+ 		return 0;
  
-+	if (!capable(CAP_SYS_RAWIO) &&
-+	    init_attr->create_flags & IB_WQ_FLAGS_DELAY_DROP)
-+		return ERR_PTR(-EPERM);
-+
- 	dev = to_mdev(pd->device);
- 	switch (init_attr->wq_type) {
- 	case IB_WQT_RQ:
+ 	uctx = nla_data(rt);
+-	if (uctx->len != (sizeof(struct xfrm_user_sec_ctx) + uctx->ctx_len))
++	if (uctx->len > nla_len(rt) ||
++	    uctx->len != (sizeof(struct xfrm_user_sec_ctx) + uctx->ctx_len))
+ 		return -EINVAL;
+ 
+ 	return 0;
 
 
