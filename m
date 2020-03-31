@@ -2,56 +2,53 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F111FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64735C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C765C21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304AC2072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646134;
-	bh=fo9mx5tUsBvfCAbCxsZ9yogROxnMFHZqmfTbCv2WYIU=;
+	s=default; t=1585646139;
+	bh=orhVSCEBXcC5KwzEYYjTBBxBvxGMor1crpLbKes0erU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xS99SeM906X8To1C4CE7ld10jhf/VEj1zwHbbTH9vG/+P8DJCTnBhTpICv7LtWTKQ
-	 LTTibcsOxdrENfx4UXP93FRKekz8o+x8CcDIr2Ywo/3z2f49QlLDnE+pzOgRUP0yt4
-	 l6xEO5GZYilq2xIoEUJ8+iz42Z7V0CSfYOAUF7vw=
+	b=qjYemQh+oSuZ8sUmDU8ccqq8VGirCoww7EyHOt93Pzgsbe1CT9vjlWHzVx8tUIKmY
+	 BbOvqovHFv/lrIC0MS/P1xgXYzuPR5aGTG6vLtwHCz/zlOokqMavZ4yEh10qtnghf+
+	 CtEg0ud49wA0Vof1ysRHUz77mXnPfvntYYAA9aa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbgCaJPc (ORCPT
+        id S1731920AbgCaJPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731903AbgCaJP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:15:26 -0400
+        id S1730754AbgCaJPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:15:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00A3F20772;
-        Tue, 31 Mar 2020 09:15:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39FDD2072E;
+        Tue, 31 Mar 2020 09:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646126;
-        bh=fo9mx5tUsBvfCAbCxsZ9yogROxnMFHZqmfTbCv2WYIU=;
+        s=default; t=1585646133;
+        bh=orhVSCEBXcC5KwzEYYjTBBxBvxGMor1crpLbKes0erU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J9FLQktd7zx6deMYIzVDQ+r5+HPVBtYrEvB1My+CPaSP6HbNMIAIZLiqWiTDy6YZx
-         bRUYHq7pmxk3tCdP3pgz1PPWoDJUMMn5PQW2iAbdSCh2Oax4LbVzmgbg/Cjj50DsTZ
-         nikELKVZBofgc7LQCEYG0uZAW7hGJb3n64i0qBKs=
+        b=iM/rlOBrvfDsC9/S8N+VA9X+L3uddC7oRkcCaVYB44kqLBM2r+6MJrz0qvtcgJjKW
+         20Jnzb2lPItlJIbSjFDg+YzPeDQyIIS1nb2D2Qb59/gCL0lv5yjkNL7KXvmjCEuAgV
+         D0EL+qt9EfYxtftfdR0sNCC8Q+ErNEqN2RrX5+jE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
-        He Zhe <zhe.he@windriver.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 5.4 091/155] perf probe: Fix to delete multiple probe event
-Date:   Tue, 31 Mar 2020 10:58:51 +0200
-Message-Id: <20200331085428.656190476@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ashish <ashishkumar.yadav@students.iiserpune.ac.in>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 093/155] rtlwifi: rtl8188ee: Fix regression due to commit d1d1a96bdb44
+Date:   Tue, 31 Mar 2020 10:58:53 +0200
+Message-Id: <20200331085428.934608374@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -64,61 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 6b8d68f1ce9266b05a55e93c62923ff51daae4c1 upstream.
+commit c80b18cbb04b7b101af9bd14550f13d9866c646a upstream.
 
-When we put an event with multiple probes, perf-probe fails to delete
-with filters. This comes from a failure to list up the event name
-because of overwrapping its name.
+For some unexplained reason, commit d1d1a96bdb44 ("rtlwifi: rtl8188ee:
+Remove local configuration variable") broke at least one system. As
+the only net effect of the change was to remove 2 bytes from the start
+of struct phy_status_rpt, this patch adds 2 bytes of padding at the
+beginning of the struct.
 
-To fix this issue, skip to list up the event which has same name.
-
-Without this patch:
-
-  # perf probe -l \*
-    probe_perf:map__map_ip (on perf_sample__fprintf_brstackoff:21@
-    probe_perf:map__map_ip (on perf_sample__fprintf_brstackoff:25@
-    probe_perf:map__map_ip (on append_inlines:12@util/machine.c in
-    probe_perf:map__map_ip (on unwind_entry:19@util/machine.c in /
-    probe_perf:map__map_ip (on map__map_ip@util/map.h in /home/mhi
-    probe_perf:map__map_ip (on map__map_ip@util/map.h in /home/mhi
-  # perf probe -d \*
-  "*" does not hit any event.
-    Error: Failed to delete events. Reason: No such file or directory (Code: -2)
-
-With it:
-
-  # perf probe -d \*
-  Removed event: probe_perf:map__map_ip
-  #
-
-Fixes: 72363540c009 ("perf probe: Support multiprobe event")
-Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Reported-by: He Zhe <zhe.he@windriver.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158287666197.16697.7514373548551863562.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: d1d1a96bdb44 ("rtlwifi: rtl8188ee: Remove local configuration variable")
+Cc: Stable <stable@vger.kernel.org>  # V5.4+
+Reported-by: Ashish <ashishkumar.yadav@students.iiserpune.ac.in>
+Tested-by: Ashish <ashishkumar.yadav@students.iiserpune.ac.in>
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 0f5fda11675f..8c852948513e 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -206,6 +206,9 @@ static struct strlist *__probe_file__get_namelist(int fd, bool include_group)
- 		} else
- 			ret = strlist__add(sl, tev.event);
- 		clear_probe_trace_event(&tev);
-+		/* Skip if there is same name multi-probe event in the list */
-+		if (ret == -EEXIST)
-+			ret = 0;
- 		if (ret < 0)
- 			break;
- 	}
+---
+ drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.h |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.h
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.h
+@@ -561,6 +561,7 @@ static inline void clear_pci_tx_desc_con
+ 	 rxmcs == DESC92C_RATE11M)
+ 
+ struct phy_status_rpt {
++	u8	padding[2];
+ 	u8	ch_corr[2];
+ 	u8	cck_sig_qual_ofdm_pwdb_all;
+ 	u8	cck_agc_rpt_ofdm_cfosho_a;
 
 
