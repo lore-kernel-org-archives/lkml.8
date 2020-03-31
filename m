@@ -2,133 +2,99 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F26BC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127D0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577C320787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E48207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ieUVlR2S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B1uS6vRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbgCaUzb (ORCPT
+        id S1731032AbgCaU54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:55:31 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45443 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbgCaUza (ORCPT
+        Tue, 31 Mar 2020 16:57:56 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21265 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728893AbgCaU5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:55:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t7so27815610wrw.12;
-        Tue, 31 Mar 2020 13:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fc3hIrkGUeKzO9HlP2wK7i0On1epT+EO4vUBDD3v+Js=;
-        b=ieUVlR2SYjqhAQj3opVq7EVf9dEqfCxvhzKHMNSj0SiNzytiIKSc1KOvMNQjdhpbZN
-         7j3siE3r/xoFuPKFXxxWiOYbuPdDtYweXPF5aatN0FwUM+7UBUvYcrX8P3WNcB6wP0k9
-         LM5+loss1ej6ifoCeuxMG5mmceb77Kh3WdhEHZV87tKQ7Ok3agX3+qHYdXAf1hr7w8df
-         HpjYyIFMcfxOV+zC8x8dEjPyB9g0U0+5E7pbCaVVGN6oWv7HLUQH2myDa2/cDbJIlitr
-         xhSIhhBb+mdsXqbx+0FjyBr1ftmbiMwBFcuqvLXW9bA/YyfXJlRqm6DwoiQKPeG258aG
-         GihA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fc3hIrkGUeKzO9HlP2wK7i0On1epT+EO4vUBDD3v+Js=;
-        b=F+PSadKmVxIJ1JylQQDJmjlbkcJNwji7Y6jZLYOaW5/fM8B/DICvTXHoG/B1XnxPNa
-         PobpQ0hRCw+PFvTWrJWrnLE7eHjrCcYRGP0VGNKSSe87ifoKG9qCx6pSnspw0GO87cK+
-         Riu9anv+qb5S+J+DCKkd8n3x18O1dbbtL4ykH2WaP7hfqvlw+PEG8VPOgrNW3Rg1yyZz
-         cePVEWODwJF/6DEruc0pvER4zGrHgFz714RW2TGPObVJL9Rf7tN1aDFgOZm7ocyHpKqP
-         ZUDXlGHJIqH/+1QIy79nR0AXL3fI6/hyN54JHd2d04gpeahrSbfDcgyxjFqOkHlI90xc
-         +rDQ==
-X-Gm-Message-State: ANhLgQ0JzAfaW3XRANdNW1mUKXrsoPMFsS5I6003qeoGbzplGjQ6DJGX
-        w0DbQcbcvi+Nxi6mx9hz/FU=
-X-Google-Smtp-Source: ADFU+vvvQrkHvHyq/feIWUCI04feJapay9mmX5XR9URaVoaDNOH7GT/Gqep2c9V3z9dsVwsvN2mJzg==
-X-Received: by 2002:adf:ce07:: with SMTP id p7mr21880987wrn.261.1585688126525;
-        Tue, 31 Mar 2020 13:55:26 -0700 (PDT)
-Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
-        by smtp.gmail.com with ESMTPSA id r11sm29657432wrn.24.2020.03.31.13.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:55:25 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 22:55:24 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] gpio: Avoid using pin ranges with !PINCTRL
-Message-ID: <20200331205524.GE2954599@ulmo>
-References: <20200330090257.2332864-1-thierry.reding@gmail.com>
- <CAMuHMdXiK3KLU1=s4ykxmUVSsgwbnnc476w=Nnj-HsVytK2Lqg@mail.gmail.com>
+        Tue, 31 Mar 2020 16:57:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585688274;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RT7YcYvPXgQSj7BD5jsv2sgp21ReQU5d7+m4XV0mPYY=;
+        b=B1uS6vRb8jIt19lmseS0VLDunPKStFk/jeuPlYbV04/agoi1SRgeRtAKG7lC2w1cZUKgaN
+        amD6+r06Q4lXP+OnuCJNCyuzkYt0CgO6mhMxcLLpC15/IoscAFVQiaMdeKZVbE422+oL5O
+        75SgXHWRFoHG+yMd6p6NtjOYcHiXih8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-wJmpsAMgPYy-FzNIsGhyfA-1; Tue, 31 Mar 2020 16:57:52 -0400
+X-MC-Unique: wJmpsAMgPYy-FzNIsGhyfA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 288B010CE78F;
+        Tue, 31 Mar 2020 20:57:50 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-113-88.rdu2.redhat.com [10.10.113.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 247B097B19;
+        Tue, 31 Mar 2020 20:57:48 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        David Francis <David.Francis@amd.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Wenjing Liu <Wenjing.Liu@amd.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] drm/amd/amdgpu_dm/mst: Remove unneeded edid assignment when destroying connectors
+Date:   Tue, 31 Mar 2020 16:57:34 -0400
+Message-Id: <20200331205740.135525-2-lyude@redhat.com>
+In-Reply-To: <20200331205740.135525-1-lyude@redhat.com>
+References: <20200331205740.135525-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d8Lz2Tf5e5STOWUP"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXiK3KLU1=s4ykxmUVSsgwbnnc476w=Nnj-HsVytK2Lqg@mail.gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Doesn't do anything, noticed this while cleaning up some unrelated
+stuff.
 
---d8Lz2Tf5e5STOWUP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Tue, Mar 31, 2020 at 03:05:43PM +0200, Geert Uytterhoeven wrote:
-> Hi Thierry,
->=20
-> Thanks for your patch!
->=20
-> On Mon, Mar 30, 2020 at 11:03 AM Thierry Reding
-> <thierry.reding@gmail.com> wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >
-> > Do not use the struct gpio_device's .pin_ranges field if the PINCTRL
-> > Kconfig symbol is not selected to avoid build failures.
-> >
-> > Fixes: d2fbe53a806e ("gpio: Support GPIO controllers without pin-ranges=
-")
->=20
-> WARNING: Unknown commit id 'd2fbe53a806e', maybe rebased or not pulled?
->=20
-> Fixes: 2ab73c6d8323fa1e ("gpio: Support GPIO controllers without pin-rang=
-es")
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c =
+b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index e8208df420d9..7b3303efb1ff 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -140,7 +140,6 @@ dm_dp_mst_connector_destroy(struct drm_connector *con=
+nector)
+ 	struct amdgpu_encoder *amdgpu_encoder =3D amdgpu_dm_connector->mst_enco=
+der;
+=20
+ 	kfree(amdgpu_dm_connector->edid);
+-	amdgpu_dm_connector->edid =3D NULL;
+=20
+ 	drm_encoder_cleanup(&amdgpu_encoder->base);
+ 	kfree(amdgpu_encoder);
+--=20
+2.25.1
 
-Yeah, it looks like I made this patch on top of my local tree but forgot
-to rebase on the latest linux-next.
-
-Thierry
-
---d8Lz2Tf5e5STOWUP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DrjwACgkQ3SOs138+
-s6GmYBAAm72E9z49F2uV5boN+ycWHCndSThMfzWp4N9d1FmWBr7Qcqlgl04oBnDc
-hLBFfFbcPoUj+WOXN4pWen5c7pHkB+bjp/A5lnNp4uep4+mv1fzVYn4w0H/xs8mu
-tpHczDhqi7qNGgVLd+6+x5nJJx6llZSsTCsUITOjsVFahxwqpX983ghzTNZN0oGJ
-3dgKFuYnaaDcuM+dQM7BRoBAUIUUPGSjJlDUHEH43cvs8h1VyKxaFHmxx1WfRuSz
-VNXsNhzrBdWcEvDloCIpVWMoEcMzjZfSn/D9mRSpIm6SYdy+0p8SH6qPf7/hMRDs
-Z/XntIUnU2Muj2lpnummOMlFKNgMbSg/OpZ1y5kpRH6MT9FwYW5S4msLixUU1ZRp
-iJe4dU7bqKHXGUJhL+Mu/s4kBC4B6TVJxEYe2PGPiArLdUBJkF8GL8161iH0eHOm
-Ogn7ZbIOiDuXOld2mloJwi9IpNNfx4bQGqMQAGBKDBozhqw7Sf5k7Vplvk1l3gmB
-WKK7+wh8T+ZmywNGQOcFlHDW530Tkno4qX96s81CI7CHCWlNm5vn/Ea+63fDKxpg
-OW1TqquGljYvTwkpqRU+8iIGO/qk1xyfY+P4KusP9qyRYtIfrZ31WfYCLgJvlrNV
-sDz0rdE/fvqWSZSY8/DWviZJDQAosi9avH0lo3uFaMykyKUWEpA=
-=NuoA
------END PGP SIGNATURE-----
-
---d8Lz2Tf5e5STOWUP--
