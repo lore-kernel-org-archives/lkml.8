@@ -2,157 +2,150 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EF5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869B0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC2E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="KbV95ITg"
+	by mail.kernel.org (Postfix) with ESMTP id 5DA27208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731430AbgCaW1b (ORCPT
+        id S1731463AbgCaW1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:27:31 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:58708 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaW1a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:27:30 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 71AA55E8E1;
-        Tue, 31 Mar 2020 18:27:28 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; s=sasl; bh=tUAISgeTECuY
-        FozM2eCvQreWHGo=; b=KbV95ITg+JUShCGHOrSj7y8wcyLrS+gMEJQANLLJlcBu
-        IZ1FDL3h4p/l7EiIe2MTIDk0avSD1aVw0/+YelC+kyW85JDv56GIfNLhxkaCXYbo
-        WYGck/y7BGUri5PeYTYXH3UzF/e+HH1Y+Hg3WNkU5rG3p4kzwnG0pKi0/5hEaVA=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; q=dns; s=sasl; b=pKtTVz
-        pVmKpiAD46FKIPLPkbpCwYT+f1KloLBZGudrzoU463tZVoyarfFB4px6DEaxScSL
-        Jv7QgZGtRpHebTCn+2XZL4MJ7q1gSBUnzTAexjCOq1LWWoN7cV9WEWQ7Gfp7Jaqz
-        S/vHp4csFKxxIfKB5Y07BuUoZ3g8MC1TsqTW8=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 6946D5E8E0;
-        Tue, 31 Mar 2020 18:27:28 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-Received: from [192.168.0.8] (unknown [76.183.130.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 7C4465E8DF;
-        Tue, 31 Mar 2020 18:27:27 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-Subject: Re: [PATCH] compiler.h: fix error in BUILD_BUG_ON() reporting
-To:     Vegard Nossum <vegard.nossum@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ian Abbott <abbotti@mev.co.uk>
-References: <20200331112637.25047-1-vegard.nossum@oracle.com>
-From:   Daniel Santos <daniel.santos@pobox.com>
-Message-ID: <91730318-da0e-c992-f154-a74044b26650@pobox.com>
-Date:   Tue, 31 Mar 2020 17:25:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 31 Mar 2020 18:27:41 -0400
+Received: from mga18.intel.com ([134.134.136.126]:33635 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730556AbgCaW1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 18:27:41 -0400
+IronPort-SDR: 6942gzEt1BCU0uMt4E3j+nw4YFwcpkxkfyho24pC/QkkOX4x6zw6lz/HJL+n9FHLM2TUM4btyE
+ 76Isutb6/XqA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 15:27:41 -0700
+IronPort-SDR: sm5w+8Oj3UiLPWOp2oWKzbwK5CAF0dUl41izCr8bm23fIOz9KrC7KNrS8TCcWxaCU/TdyyK92T
+ 0eu547XSuAoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,329,1580803200"; 
+   d="scan'208";a="295144707"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by FMSMGA003.fm.intel.com with ESMTP; 31 Mar 2020 15:27:39 -0700
+Date:   Tue, 31 Mar 2020 15:33:27 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH V10 09/11] iommu/vt-d: Cache virtual command capability
+ register
+Message-ID: <20200331153327.50219c12@jacob-builder>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0E7@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1584746861-76386-10-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0E7@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200331112637.25047-1-vegard.nossum@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Pobox-Relay-ID: CD919292-739E-11EA-A683-C28CBED8090B-06139138!pb-smtp1.pobox.com
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 6:26 AM, Vegard Nossum wrote:
-> compiletime_assert() uses __LINE__ to create a unique function name.
-> This means that if you have more than one BUILD_BUG_ON() in the same
-> source line (which can happen if they appear e.g. in a macro), then
-> the error message from the compiler might output the wrong condition.
->
-> For this source file:
->
-> 	#include <linux/build_bug.h>
->
-> 	#define macro() \
-> 		BUILD_BUG_ON(1); \
-> 		BUILD_BUG_ON(0);
->
-> 	void foo()
-> 	{
-> 		macro();
-> 	}
->
-> gcc would output:
->
-> ./include/linux/compiler.h:350:38: error: call to =E2=80=98__compiletim=
-e_assert_9=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: 0
->   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->
-> However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
-> instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, =
-so
-> each BUILD_BUG_ON() gets a different function name and the correct
-> condition is printed:
->
-> ./include/linux/compiler.h:350:38: error: call to =E2=80=98__compiletim=
-e_assert_0=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: 1
->   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
-_)
->
-> Cc: Daniel Santos <daniel.santos@pobox.com>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Ian Abbott <abbotti@mev.co.uk>
-> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-> ---
->  include/linux/compiler.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> index 5e88e7e33abec..034b0a644efcc 100644
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -347,7 +347,7 @@ static inline void *offset_to_ptr(const int *off)
->   * compiler has support to do so.
->   */
->  #define compiletime_assert(condition, msg) \
-> -	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-> +	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER_=
-_)
-> =20
->  #define compiletime_assert_atomic_type(t)				\
->  	compiletime_assert(__native_word(t),				\
+On Sat, 28 Mar 2020 10:04:38 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-This will break builds using gcc 4.2 and earlier and the expectation was
-that you don't put two of them on the same line -- not helpful in macros
-where it all must be on the same line.=C2=A0 Is gcc 4.2 still supported?=C2=
-=A0 If
-so, I recommend using another macro for the unique number that uses
-__COUNTER__ if available and __LINE__ otherwise.=C2=A0 This was the decis=
-ion
-for using __LINE__ when I wrote the original anyway.
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Saturday, March 21, 2020 7:28 AM
+> > 
+> > Virtual command registers are used in the guest only, to prevent
+> > vmexit cost, we cache the capability and store it during
+> > initialization.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> > Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > 
+> > ---
+> > v7 Reviewed by Eric & Baolu
+> > ---
+> > ---
+> >  drivers/iommu/dmar.c        | 1 +
+> >  include/linux/intel-iommu.h | 5 +++++
+> >  2 files changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+> > index 4d6b7b5b37ee..3b36491c8bbb 100644
+> > --- a/drivers/iommu/dmar.c
+> > +++ b/drivers/iommu/dmar.c
+> > @@ -963,6 +963,7 @@ static int map_iommu(struct intel_iommu *iommu,
+> > u64 phys_addr)
+> >  		warn_invalid_dmar(phys_addr, " returns all ones");
+> >  		goto unmap;
+> >  	}
+> > +	iommu->vccap = dmar_readq(iommu->reg + DMAR_VCCAP_REG);
+> > 
+> >  	/* the registers might be more than one page */
+> >  	map_size = max_t(int, ecap_max_iotlb_offset(iommu->ecap),
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index 43539713b3b3..ccbf164fb711
+> > 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -194,6 +194,9 @@
+> >  #define ecap_max_handle_mask(e) ((e >> 20) & 0xf)
+> >  #define ecap_sc_support(e)	((e >> 7) & 0x1) /* Snooping
+> > Control */
+> > 
+> > +/* Virtual command interface capabilities */  
+> 
+> capabilities -> capability
+Will do, I was thinking the future :)
 
-Also note that this construct:
+Thanks,
 
-BUILD_BUG_ON_MSG(0, "I like chicken"); BUILD_BUG_ON_MSG(1, "I don't like
-chicken");
+Jacob
+> 
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> 
+> > +#define vccap_pasid(v)		((v & DMA_VCS_PAS)) /* PASID
+> > allocation */
+> > +
+> >  /* IOTLB_REG */
+> >  #define DMA_TLB_FLUSH_GRANU_OFFSET  60
+> >  #define DMA_TLB_GLOBAL_FLUSH (((u64)1) << 60)
+> > @@ -287,6 +290,7 @@
+> > 
+> >  /* PRS_REG */
+> >  #define DMA_PRS_PPR	((u32)1)
+> > +#define DMA_VCS_PAS	((u64)1)
+> > 
+> >  #define IOMMU_WAIT_OP(iommu, offset, op, cond, sts)
+> > 	\
+> >  do
+> > {
+> > \ @@ -537,6 +541,7 @@ struct intel_iommu { u64
+> > reg_size; /* size of hw register set */ u64		cap;
+> >  	u64		ecap;
+> > +	u64		vccap;
+> >  	u32		gcmd; /* Holds TE, EAFL. Don't need
+> > SRTP, SFL, WBF */
+> >  	raw_spinlock_t	register_lock; /* protect register
+> > handling */ int		seq_id;	/* sequence id of the
+> > iommu */ --
+> > 2.7.4  
+> 
 
-will incorrectly claim that I like chicken.=C2=A0 This is because of how
-__attribute__((error)) works -- gcc will use the first declaration to
-define the error message.
-
-I couple of years ago, I almost wrote a gcc extension to get rid of this
-whole mess and just __builtin_const_assert(cond, msg).=C2=A0 Maybe I'll
-finish that this year.
-
-Daniel
+[Jacob Pan]
