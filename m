@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C672DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6E2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6B0208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47139208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646149;
-	bh=LH+pdYh8pTEmK3Nsg+SygCbEU0HB0/r/N8gDmFBvsl0=;
+	s=default; t=1585646152;
+	bh=t4fDSHC9Vo7tWKfxMQCIigCearlKnvxQUe+quo/ArlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zruFZSH4ETRF/aJk2gT2fzgtL8k1qFcfpgXWbaty6oflD2CplkVQimBhMRDod3GHH
-	 wHdpUcjKdmeZtd5Px7fM9e0bgj8oCJrQjwPNfNVnuxxb48QcqS3tqd6gL7LgHU7vX8
-	 rDxI628/qlESeXuryPli2i/JVJyoo3s0ksIheEkM=
+	b=l84n4LYRj0bdjECLSZTNiGPXiYq9BW0puwFtBCwDhEp3r/df679uEF7pRVke5PMVI
+	 HSzjNe7+mXE8wNiT4iRMBTz14KnM24Wx3cxzsiQk360Wgmb1ytHd3zirEDcFOPeZ0k
+	 Ts5Oll1fxkh9wTILnReAN5tzVL++XE1NznYe/A4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbgCaJPr (ORCPT
+        id S1731925AbgCaJPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730806AbgCaJPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:15:44 -0400
+        id S1726299AbgCaJPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:15:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0D0120787;
-        Tue, 31 Mar 2020 09:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C763208E0;
+        Tue, 31 Mar 2020 09:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646144;
-        bh=LH+pdYh8pTEmK3Nsg+SygCbEU0HB0/r/N8gDmFBvsl0=;
+        s=default; t=1585646146;
+        bh=t4fDSHC9Vo7tWKfxMQCIigCearlKnvxQUe+quo/ArlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+6xJFdGaZtBc7ECxJhDKHPwcSooDq2LcqI8KBjzDVbe/fNs47Ale8qwmLrtGMRSn
-         hpLWTPSME9aPx9/nsHeMznCimjTv9tfB7SF/+rl649X/vHlbNzUuBGVgeArm+oeBXa
-         d/K/Tk0XmIkdHopFbpab5l6uLhiZbUQi46nkv34o=
+        b=P/XcJu3Ij+9nvcXUwJ/bwMITFwXXQldQA1j6vyBX8QkZyXlOhj4l1jsyHEMtUAYUn
+         x9uLSjsWkQsLJncqkEBB2daZqHXc5x92whvuuj1so/ii45PdpYM3Z/VklA3DqpmFwk
+         Fn4ebYBtGk09YzdZ49/DmIDMl7Awwrirop0M4HBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bryan Gurney <bgurney@redhat.com>,
-        Bernhard Sulzer <micraft.b@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 096/155] scsi: sd: Fix optimal I/O size for devices that change reported values
-Date:   Tue, 31 Mar 2020 10:58:56 +0200
-Message-Id: <20200331085429.352108536@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.4 097/155] nl80211: fix NL80211_ATTR_CHANNEL_WIDTH attribute type
+Date:   Tue, 31 Mar 2020 10:58:57 +0200
+Message-Id: <20200331085429.444477280@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,54 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin K. Petersen <martin.petersen@oracle.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit ea697a8bf5a4161e59806fab14f6e4a46dc7dcb0 upstream.
+commit 0016d3201753b59f3ae84b868fe66c86ad256f19 upstream.
 
-Some USB bridge devices will return a default set of characteristics during
-initialization. And then, once an attached drive has spun up, substitute
-the actual parameters reported by the drive. According to the SCSI spec,
-the device should return a UNIT ATTENTION in case any reported parameters
-change. But in this case the change is made silently after a small window
-where default values are reported.
+The new opmode notification used this attribute with a u8, when
+it's documented as a u32 and indeed used in userspace as such,
+it just happens to work on little-endian systems since userspace
+isn't doing any strict size validation, and the u8 goes into the
+lower byte. Fix this.
 
-Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of
-physical block size") validated the reported optimal I/O size against the
-physical block size to overcome problems with devices reporting nonsensical
-transfer sizes. However, this validation did not account for the fact that
-aforementioned devices will return default values during a brief window
-during spin-up. The subsequent change in reported characteristics would
-invalidate the checking that had previously been performed.
-
-Unset a previously configured optimal I/O size should the sanity checking
-fail on subsequent revalidate attempts.
-
-Link: https://lore.kernel.org/r/33fb522e-4f61-1b76-914f-c9e6a3553c9b@gmail.com
-Cc: Bryan Gurney <bgurney@redhat.com>
-Cc: <stable@vger.kernel.org>
-Reported-by: Bernhard Sulzer <micraft.b@gmail.com>
-Tested-by: Bernhard Sulzer <micraft.b@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: stable@vger.kernel.org
+Fixes: 466b9936bf93 ("cfg80211: Add support to notify station's opmode change to userspace")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/20200325090531.be124f0a11c7.Iedbf4e197a85471ebd729b186d5365c0343bf7a8@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/sd.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/wireless/nl80211.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3171,9 +3171,11 @@ static int sd_revalidate_disk(struct gen
- 	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
- 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
- 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
--	} else
-+	} else {
-+		q->limits.io_opt = 0;
- 		rw_max = min_not_zero(logical_to_sectors(sdp, dev_max),
- 				      (sector_t)BLK_DEF_MAX_SECTORS);
-+	}
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -16407,7 +16407,7 @@ void cfg80211_sta_opmode_change_notify(s
+ 		goto nla_put_failure;
  
- 	/* Do not exceed controller limit */
- 	rw_max = min(rw_max, queue_max_hw_sectors(q));
+ 	if ((sta_opmode->changed & STA_OPMODE_MAX_BW_CHANGED) &&
+-	    nla_put_u8(msg, NL80211_ATTR_CHANNEL_WIDTH, sta_opmode->bw))
++	    nla_put_u32(msg, NL80211_ATTR_CHANNEL_WIDTH, sta_opmode->bw))
+ 		goto nla_put_failure;
+ 
+ 	if ((sta_opmode->changed & STA_OPMODE_N_SS_CHANGED) &&
 
 
