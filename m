@@ -2,127 +2,208 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086A2C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237DAC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20BF2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1EB20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="Gmmobyge";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="RFNKoRW/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2CifpBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgCaBdY (ORCPT
+        id S1729535AbgCaBkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 21:33:24 -0400
-Received: from smtp.uniroma2.it ([160.80.6.16]:46587 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729372AbgCaBdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 21:33:24 -0400
-Received: from smtpauth-2019-1.uniroma2.it (smtpauth-2019-1.uniroma2.it [160.80.5.46])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 02V1WGxM018227;
-        Tue, 31 Mar 2020 03:32:21 +0200
-Received: from [192.168.1.80] (93-36-196-249.ip61.fastwebnet.it [93.36.196.249])
-        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id DCCFC122910;
-        Tue, 31 Mar 2020 03:32:11 +0200 (CEST)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
-        s=ed201904; t=1585618332; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZA+BuNkoFMZJknutDx9BJWIxQCcnJxRo/IgWfooEnog=;
-        b=Gmmobygek/JzH4NA5PhWAxPvnT6YH1naati8gdJlEiM9zdy+rv7YVp28nAOthvhwQkeAQv
-        6x9zhC7058T1IyBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
-        t=1585618332; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZA+BuNkoFMZJknutDx9BJWIxQCcnJxRo/IgWfooEnog=;
-        b=RFNKoRW/Vx7Q6+sszu/W2zY044+ZJ29E/SSpS4ZW6BYb2bBv3hOJq20022tJiJhvjEWkJO
-        o7x99wRN4HnwerNR3DeU0Zg0iYA4Dn4hJqA1akiDLjxLvaUB4FsNvPBkTU+kNPKdSlMIWz
-        uaQg+PEbBaZusr/dvNu8H8wh2szIMdNyHM8prN7LuG3Xp5Z27LIDgfqWk53PfMBE+HBDGi
-        YFwYLJpKZ+2qdf2sz6OF8drqaPYsaX5ls3sYt0teLp7ylFhP8TlGjgok03c4VuQydclIWc
-        31V/7JTfynGdUEvhLfEm9ppDEuyG0flQD+RN4ggKvp8LGT/vee8GNqkYPmF+3g==
-Subject: Re: [net-next] seg6: add support for optional attributes during
- behavior construction
-To:     David Miller <davem@davemloft.net>
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        dav.lebrun@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, leon@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, bpf@vger.kernel.org,
-        paolo.lungaroni@cnit.it, ahmed.abdelsalam@gssi.it
-References: <20200319183641.29608-1-andrea.mayer@uniroma2.it>
- <20200325.193016.1654692564933635575.davem@davemloft.net>
- <20200331012348.e0b2373bd4a96fecc77686b6@uniroma2.it>
- <20200330.174944.1829532392145435132.davem@davemloft.net>
-From:   Stefano Salsano <stefano.salsano@uniroma2.it>
-Message-ID: <1a9409cd-0e2b-577b-f522-4149beca9d7c@uniroma2.it>
-Date:   Tue, 31 Mar 2020 03:32:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 21:40:46 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40605 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729358AbgCaBkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 21:40:45 -0400
+Received: by mail-qt1-f193.google.com with SMTP id c9so17036832qtw.7;
+        Mon, 30 Mar 2020 18:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EKZAtUisNzB+elti6oItTfupGpeOM+Jg12azmI7Z6WE=;
+        b=l2CifpBIVvo4k2KAev3wORlbRMa5Ibr+LVBJPpQJ0rAZai46OojX7Xaj9S4KNLkQTu
+         q66THOkKIH6K+54NA6GaXlZndn9ZdijkFIMGKLlnCPfJBLj1Qa4WPO/nV+fx1qjrk2Ht
+         nT7XBR1kLifRcJmNVuZFpq4ZgAFHLgQrABFyt/I/0x8Sy8ori+r85kfTwi96Xrqq0mgG
+         0pcvCIMlhgQDJt6VVRdGWtjGS1Bdx0XTg2lghp7l5nf9f5OncRVtzH387NkxyIVdxmwp
+         0jEmVS/oTuLC1jrtTnnC5pH1ykTtJdqJkZJ0XSRuxiELHxl3hTKbjCFwpS7DBxzY6L4N
+         Wd1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EKZAtUisNzB+elti6oItTfupGpeOM+Jg12azmI7Z6WE=;
+        b=LkkNRjW9GTQBtke2JGtWYpAmEMzG3WX9GJXNoRImyJ22ALMCwjntG5KkHukiMkbeg+
+         LwGtFgvZhWoxKAzrk23bN+c7FeJbKQh3DQdpObJWPGqbVZhi4gaOjLxSpkLLApy4hB25
+         J2A7cpYumSC+SVO5/LobQsz8zWF7sx/3ta/6BRVczu8iBUJaQJxzskDZSYxY66GyYmG7
+         mq+KYgisHQSzi/4Wpt7OnJSI/l+1CD8hvJXKmj6GhFTt19JWnFZke2DZMBhxWd7JbVlP
+         NraUbZLCF+RahlBCpoqA8C9msMRNxnfVibXn+6iUQOMvIAT2dKCD1Z/nSdB1nb0vNpi6
+         WVJA==
+X-Gm-Message-State: ANhLgQ3APPxBOzCBmlO7SmNHvauaDfRrbnY+gsU6lNiiyxlSnhl+KlEO
+        7ZqSgeKBlO/JIF4IeBTckxM=
+X-Google-Smtp-Source: ADFU+vs4vmEDilC0bYzltcbOvzpZBl2xxNRerAiCGin1ZTsNVPxqBfN1CM3eH+fAXVAVANPGPtyN9Q==
+X-Received: by 2002:ac8:348f:: with SMTP id w15mr2919381qtb.219.1585618843878;
+        Mon, 30 Mar 2020 18:40:43 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id j85sm11874791qke.20.2020.03.30.18.40.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Mar 2020 18:40:43 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id DF00027C0054;
+        Mon, 30 Mar 2020 21:40:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 30 Mar 2020 21:40:41 -0400
+X-ME-Sender: <xms:lp-CXoU3EkuNtreqUNGhtXLl-pSdCDyn3Z6b2DjG-F2GU7b_PBDahg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeiiedggeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghdpihhnrhhirgdrfhhrnecukfhppeehvddrudehhedruddu
+    uddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:lp-CXkF5NpG9FGc8Esr-qGI6vQLqK-plwQMH23SoCq5ZUUrmgkwbnQ>
+    <xmx:lp-CXicdsnSlZW57uKdCmc1BSLecrdPJQoossGWCfGyin4cZwZkjxg>
+    <xmx:lp-CXlZ9rLfMlYpUY5h7EXcBCfrGjqd_zAphE1tDspVL5g8XmMX9sA>
+    <xmx:mZ-CXtUh2T713PAsia1T5B0H7f59XNA8XmX3DhsUVRCbnseIWtNr21mwtvQ>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7E2FA306CA8E;
+        Mon, 30 Mar 2020 21:40:38 -0400 (EDT)
+Date:   Tue, 31 Mar 2020 09:40:37 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] Documentation/litmus-tests: Add litmus tests for
+ atomic APIs
+Message-ID: <20200331014037.GB59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200326024022.7566-1-boqun.feng@gmail.com>
+ <20200327221843.GA226939@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200330.174944.1829532392145435132.davem@davemloft.net>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: it-IT
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327221843.GA226939@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Il 2020-03-31 02:49, David Miller ha scritto:
-> From: Stefano Salsano <stefano.salsano@uniroma2.it>
-> Date: Tue, 31 Mar 2020 01:23:48 +0200
+On Fri, Mar 27, 2020 at 06:18:43PM -0400, Joel Fernandes wrote:
+> On Thu, Mar 26, 2020 at 10:40:18AM +0800, Boqun Feng wrote:
+> > A recent discussion raises up the requirement for having test cases for
+> > atomic APIs:
+> > 
+> > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> > 
+> > , and since we already have a way to generate a test module from a
+> > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > tests for atomic APIs. And based on the previous discussion, I create a
+> > new directory Documentation/atomic-tests and put these litmus tests
+> > here.
+> > 
+> > This patchset starts the work by adding the litmus tests which are
+> > already used in atomic_t.txt, and also improve the atomic_t.txt to make
+> > it consistent with the litmus tests.
+> > 
+> > Previous version:
+> > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
+> > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
+> > v3: https://lore.kernel.org/linux-doc/20200227004049.6853-1-boqun.feng@gmail.com/
 > 
->> Of course a new application (e.g. iproute2, pyroute) using a new optional
->> parameter will not work on older kernels, but simply because the new parameter
->> is not supported. It will not work even without our proposed patch.
->>
->> On the other hand, we think that the solution in the patch is more backward
->> compatible. Without the patch, if we define new attributes, old applications
->> (e.g. iproute2 scripts) will not work on newer kernels, while with the optional
->> attributes approach proposed in the patch they will work with no issues !
+> For full series:
 > 
-> Translation: You want to add backwards compatibility problems because
-> otherwise you'll have to add backwards compatibility problems.
-
-no this is not the correct translation :-) we do not want to add any 
-backward compatility problem
-
-we need to add a number of new parameters, if we keep the current 
-approach these parameters will be mandatory and we will have backward 
-compatibility problems: old applications will not work with new kernels
-
-if we are allowed to add optional parameters, old applications and new 
-applications will be able to work with old kernels and new kernels in 
-any combination
-
-> Sorry, I'm still not convinced.
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > 
-> You must find another way to achieve your objective.
+> One question I had was in the existing atomic_set() documentation, it talks
+> about atomic_add_unless() implementation based on locking could have issues.
+> It says the way to fix such cases is:
+> 
+> Quote:
+>     the typical solution is to then implement atomic_set{}() with
+>     atomic_xchg().
+> 
+> I didn't get how using atomic_xchg() fixes it. Is the assumption there that
+> atomic_xchg() would be implemented using locking to avoid atomic_set() having
 
+Right, I think that's the intent of the sentence.
 
--- 
-*******************************************************************
-Stefano Salsano
-Professore Associato
-Dipartimento Ingegneria Elettronica
-Universita' di Roma Tor Vergata
-Viale Politecnico, 1 - 00133 Roma - ITALY
+> issues? If so, we could clarify that in the document.
+> 
 
-http://netgroup.uniroma2.it/Stefano_Salsano/
+Patches are welcome ;-)
 
-E-mail  : stefano.salsano@uniroma2.it
-Cell.   : +39 320 4307310
-Office  : (Tel.) +39 06 72597770 (Fax.) +39 06 72597435
-*******************************************************************
+Regards,
+Boqun
 
+> thanks,
+> 
+>  - Joel
+> 
+> > 
+> > Changes since v3:
+> > 
+> > *	Merge two patches on atomic-set litmus test into one as per
+> > 	Alan. (Alan, you have acked only one of the two patches, so I
+> > 	don't add you acked-by for the combined patch).
+> > 
+> > *	Move the atomic litmus tests into litmus-tests/atomic to align
+> > 	with Joel's recent patches on RCU litmus tests.
+> > 
+> > I think we still haven't reach to a conclusion for the difference of
+> > atomic_add_unless() in herdtools, and I'm currently reading the source
+> > code of herd to resovle this. This is just an updated version to resolve
+> > ealier comments and react on Joel's RCU litmus tests.
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > [1]: http://diy.inria.fr/doc/litmus.html#klitmus
+> > 
+> > Boqun Feng (4):
+> >   tools/memory-model: Add an exception for limitations on _unless()
+> >     family
+> >   Documentation/litmus-tests: Introduce atomic directory
+> >   Documentation/litmus-tests/atomic: Add a test for atomic_set()
+> >   Documentation/litmus-tests/atomic: Add a test for
+> >     smp_mb__after_atomic()
+> > 
+> >  Documentation/atomic_t.txt                    | 24 +++++++-------
+> >  ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
+> >  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
+> >  Documentation/litmus-tests/atomic/README      | 16 ++++++++++
+> >  tools/memory-model/README                     | 10 ++++--
+> >  5 files changed, 91 insertions(+), 15 deletions(-)
+> >  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+> >  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> >  create mode 100644 Documentation/litmus-tests/atomic/README
+> > 
+> > -- 
+> > 2.25.1
+> > 
