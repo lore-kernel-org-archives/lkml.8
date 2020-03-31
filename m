@@ -2,151 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E95C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72A8C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3810C20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C01C2078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:15:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="d/6i2AgJ"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KbvvbCuW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731046AbgCaPPQ (ORCPT
+        id S1731085AbgCaPPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:15:16 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:42426 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730541AbgCaPPP (ORCPT
+        Tue, 31 Mar 2020 11:15:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52223 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731048AbgCaPPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:15:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ua1WXkeFaUxFqYZ8nyjvVXr7TgKUx9K5IEqWgK09E6E=; b=d/6i2AgJalK+/AfRhqPC0JamZ
-        vDIGWTPhwt8nNVux6QO18V6ZX4UKDLp/UngANMQP30Y4sSgi+GrILXyOWDz9uznlA+H92XcypNo15
-        lvu0DSuS2aCzyQcIl7ag9mPfNB99OT74LhNqUaNGi4Ii5TLJTwV3ASEvyFwIBPLvAzpubYzaR6MaX
-        JU9DE1N0LwQkQ4+IDzYC/aMQvw3WIW2htfHHzkbVmapZ7O7qqjesWVFJQhiQJzix8WreOGKHCFT4v
-        O8JXvmbDLiJQjpt/W1CCxui1cekU5vyUbnERQBB8z06HWJFrSyV0eUTNBytzs3ArMfzOvZRIaCdFR
-        MCzbaV6oA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43838)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jJIba-0000Tp-VP; Tue, 31 Mar 2020 16:15:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jJIbX-0008DZ-Cx; Tue, 31 Mar 2020 16:15:03 +0100
-Date:   Tue, 31 Mar 2020 16:15:03 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     David Jander <david@protonic.nl>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        netdev@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
-Message-ID: <20200331151503.GO25745@shell.armlinux.org.uk>
-References: <20200329110457.4113-1-o.rempel@pengutronix.de>
- <20200329150854.GA31812@lunn.ch>
- <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
- <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
- <20200330174114.GG25745@shell.armlinux.org.uk>
- <20200331104459.6857474e@erd988>
- <20200331125433.GA24486@lunn.ch>
+        Tue, 31 Mar 2020 11:15:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z7so241949wmk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 08:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ipYWlIFq3tHRPQUnqZtBdxsK4/UyR731/H9eH9PnfT4=;
+        b=KbvvbCuWTnx3deVUNXfh6ZH7/iir2HKLToXknDwo7In/7NB8wHWU62m7SbNHlQK15w
+         NYMV8jhWujQQ7f0S6Ej7AT5Bn2gH8fg/ntDxAxG/2Ml3w1WIM8Eh5GxUxAw2z0TfpFML
+         V4jsubaGezs2z+6lJKnB1kN6/No3ukTNiELuU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=ipYWlIFq3tHRPQUnqZtBdxsK4/UyR731/H9eH9PnfT4=;
+        b=fbEsuy8Pa+9dh2UKO9v6WdQMbItqqjgcaqVDD88gmX1N67iFkVir9HNC5BK9y4cRVP
+         YEjv/QOXhnLP5789B9+R2qHZhGWLdZQUKc0mEp4hk6cdKQWmryJN0S6fPF4SycGBJFHH
+         5nYNVmqlwpted7SUwXeiyH4MhKUhcuL2KNU/tg4xjC78qCDRlE29785dVy4MlvVKn0wR
+         a/VumyAeY329EDArPiQunfjCRUBwQ1ADeUF95gXORJOt37uy5H0od/RYsU5xHwiOwEUp
+         i+xBfKnLAUuxEtgtxgewZIO5XYqMmIC63XEMr0KDwU221aGguK5fn0IUq5yqQFOdsIwq
+         TRiQ==
+X-Gm-Message-State: ANhLgQ1ifoeqTLnKDIHDc9Tgq8icfXb/+briOot+KKrrk4fezF9fmHO1
+        cYc72dZHY8OcsZS4dsmbelG1Mg==
+X-Google-Smtp-Source: ADFU+vtAGfwopaPt/m4X2IibkfKMGh7X4KlgcFgCC08sXSkC7SEmBbQwoH17zK8HUyK6RhKgz0hjCQ==
+X-Received: by 2002:a1c:63c4:: with SMTP id x187mr3935335wmb.124.1585667717161;
+        Tue, 31 Mar 2020 08:15:17 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id v21sm4140105wmj.8.2020.03.31.08.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 08:15:16 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 17:15:14 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Oleksandr Andrushchenko <andr2000@gmail.com>
+Cc:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        oleksandr_andrushchenko@epam.com, airlied@linux.ie,
+        daniel@ffwll.ch, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [Xen-devel] [PATCH] drm/xen: fix passing zero to 'PTR_ERR'
+ warning
+Message-ID: <20200331151514.GO2363188@phenom.ffwll.local>
+Mail-Followup-To: Oleksandr Andrushchenko <andr2000@gmail.com>,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        oleksandr_andrushchenko@epam.com, airlied@linux.ie,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <1585562347-30214-1-git-send-email-dingxiang@cmss.chinamobile.com>
+ <b4d43b05-8b30-749c-0b60-87b4cdd7b1dd@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331125433.GA24486@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b4d43b05-8b30-749c-0b60-87b4cdd7b1dd@gmail.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:54:33PM +0200, Andrew Lunn wrote:
-> >  - Disable the SmartEEE feature of the phy. The comment in the code implies
-> >    that for some reason it doesn't work, but the reason itself is not given.
-> >    Anyway, disabling SmartEEE should IMHO opinion be controlled by a DT
-> >    setting. There is no reason to believe this problem is specific to the
-> >    i.MX6. Besides, it is a feature of the phy, so it seems logical to expose
-> >    that via the DT. Once that is done, it has no place here.
-> 
-> The device tree properties are defined:
-> 
-> bindings/net/ethernet-phy.yaml:  eee-broken-100tx:
-> bindings/net/ethernet-phy.yaml:  eee-broken-1000t:
-> bindings/net/ethernet-phy.yaml:  eee-broken-10gt:
-> bindings/net/ethernet-phy.yaml:  eee-broken-1000kx:
-> bindings/net/ethernet-phy.yaml:  eee-broken-10gkx4:
-> bindings/net/ethernet-phy.yaml:  eee-broken-10gkr:
-> 
-> And there is a helper:
-> 
-> void of_set_phy_eee_broken(struct phy_device *phydev)
+On Tue, Mar 31, 2020 at 05:50:10PM +0300, Oleksandr Andrushchenko wrote:
+> On 3/30/20 12:59, Ding Xiang wrote:
+> > Fix a static code checker warning:
+> >      drivers/gpu/drm/xen/xen_drm_front.c:404 xen_drm_drv_dumb_create()
+> >      warn: passing zero to 'PTR_ERR'
+> > 
+> > Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+> Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-Disabling the advertisement may solve it, but that is not known.
-What the quirk is doing is disabling the SmartEEE feature only
-(which is where the PHY handles the EEE so-called "transparently"
-to the MAC).
+merged to drm-misc-next-fixese.
+-Daniel
 
-It's all very well waving arms years later and saying we don't
-like code that was merged, but unless someone can prove that an
-alternative way is better and doesn't regress anything, there
-won't be a way forward.
-
-> >  - Enable TXC delay. To clarify, the RGMII specification version 1 specified
-> >    that the RXC and TXC traces should be routed long enough to introduce a
-> >    certain delay to the clock signal, or the delay should be introduced via
-> >    other means. In a later version of the spec, a provision was given for MAC
-> >    or PHY devices to generate this delay internally. The i.MX6 MAC interface
-> >    is unable to generate the required delay internally, so it has to be taken
-> >    care of either by the board layout, or by the PHY device. This is the
-> >    crucial point: The amount of delay set by the PHY delay register depends on
-> >    the board layout. It should NEVER be hard-coded in SoC setup code. The
-> >    correct way is to specify it in the DT. Needless to say that this too,
-> >    isn't i.MX6-specific.
-> 
-> Correct:
-> 
->       # RX and TX delays are added by the MAC when required
->       - rgmii
-> 
->       # RGMII with internal RX and TX delays provided by the PHY,
->       # the MAC should not add the RX or TX delays in this case
->       - rgmii-id
-> 
->       # RGMII with internal RX delay provided by the PHY, the MAC
->       # should not add an RX delay in this case
->       - rgmii-rxid
-> 
->       # RGMII with internal TX delay provided by the PHY, the MAC
->       # should not add an TX delay in this case
->       - rgmii-txid
-> 
-> The needed properties exist.
-> 
-> I think part of the issue is that there are iMX6 board which are not
-> device tree?
-
-I think it's historical - iMX6 never used to be able to enumerate
-anything on the MDIO bus, so the only way to configure stuff on the
-PHY was via quirks.  That seems to have changed in v3.17-rc1 without
-anyone noticing, which happened after the SolidRun support was merged
-(v3.14-rc1).  So, not surprisingly, SolidRun platforms don't make use
-of the DT properties - quite how one is supposed to know about this
-stuff, I've no idea (short of following almost every damn subsystem
-mailing list and reading tonnes of email - that's highly impractical.)
+> > ---
+> >   drivers/gpu/drm/xen/xen_drm_front.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
+> > index 4be49c1..3741420 100644
+> > --- a/drivers/gpu/drm/xen/xen_drm_front.c
+> > +++ b/drivers/gpu/drm/xen/xen_drm_front.c
+> > @@ -401,7 +401,7 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
+> >   	obj = xen_drm_front_gem_create(dev, args->size);
+> >   	if (IS_ERR_OR_NULL(obj)) {
+> > -		ret = PTR_ERR(obj);
+> > +		ret = PTR_ERR_OR_ZERO(obj);
+> >   		goto fail;
+> >   	}
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
