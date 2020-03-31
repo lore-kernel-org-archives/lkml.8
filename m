@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDABCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9431720848
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7854C20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645282;
-	bh=KvzhaAcLy43FUwrIjwAkHeCXYc3rw3M7R9H8+Ql4ais=;
+	s=default; t=1585645286;
+	bh=xvffDx0hCiYBgpQXCUZCW3SlnbePQdBwZt9YeMDHd/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7zlpxf2bz7A/h9QWcJt2FXd506My5bc/L/+MMmJv7RqhllU+mtcmz9id01vAGh93
-	 NZRJqPr5CBLlnHN14Wa+7GjbU0dk/SznvRCeNwhbb/FopNVql7GQrspI7Qy/mFt/bJ
-	 USgd1r42jmyIh5vzA5K/OgF7CCTGAKzTH4OHoD8U=
+	b=R/i4mHw/pTf3pfiFM0HisvOKw1oiRxcccRYmXsUPcDKILRrJaIYNJxJCvVtX/UeKX
+	 1rXM3yHPuRq0DdNfpaBEwbqpl/R6CY8jV3DY+/mX727/NUmrQTXGsABeMBUeBjX8Mb
+	 i6mmlrMVTkcm16guTE+1GzXNY1q9Gejx6z6e55cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbgCaJBV (ORCPT
+        id S1730564AbgCaJBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:01:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40370 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:01:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730529AbgCaJBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:01:16 -0400
+        id S1730547AbgCaJBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:01:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3819420848;
-        Tue, 31 Mar 2020 09:01:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9648A20787;
+        Tue, 31 Mar 2020 09:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645275;
-        bh=KvzhaAcLy43FUwrIjwAkHeCXYc3rw3M7R9H8+Ql4ais=;
+        s=default; t=1585645281;
+        bh=xvffDx0hCiYBgpQXCUZCW3SlnbePQdBwZt9YeMDHd/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKvV6ihgVF6p/GHTBXhoACaa6oY2O4W8iIHtWoSSmet1/V6S7xPhFXjgwBUjc7Tp9
-         WfBqRWKjiz/ig1w9CYDKEtFA4nBD5bTIsvA3V2YBEQtPRJa6Tas7OwRUR+g+ptldKU
-         ra9zKmZvDzuIE/jDR7U65r1tQypvZZQ32UQs2pIY=
+        b=Uh14wuXsj2nXglUUwk2YbXzw++gan02Huraru8NNY8YoIbRwc+bLGhDcG0BLA7mEQ
+         8AKNawFOuoSpRnOEz/7aWBZPfwFyFDHE5A9aKHfeLMjP5snq/e9qKZ4nemeQU6If11
+         grLdaU/VO+VBzxD5ANP1qDrqfNioQ3H2BNmmetM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com,
-        Alexander Potapenko <glider@google.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.6 18/23] libfs: fix infoleak in simple_attr_read()
-Date:   Tue, 31 Mar 2020 10:59:30 +0200
-Message-Id: <20200331085316.284532826@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.6 20/23] media: dib0700: fix rc endpoint lookup
+Date:   Tue, 31 Mar 2020 10:59:32 +0200
+Message-Id: <20200331085316.822212190@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -62,79 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit a65cab7d7f05c2061a3e2490257d3086ff3202c6 upstream.
+commit f52981019ad8d6718de79b425a574c6bddf81f7c upstream.
 
-Reading from a debugfs file at a nonzero position, without first reading
-at position 0, leaks uninitialized memory to userspace.
+Make sure to use the current alternate setting when verifying the
+interface descriptors to avoid submitting an URB to an invalid endpoint.
 
-It's a bit tricky to do this, since lseek() and pread() aren't allowed
-on these files, and write() doesn't update the position on them.  But
-writing to them with splice() *does* update the position:
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-	#define _GNU_SOURCE 1
-	#include <fcntl.h>
-	#include <stdio.h>
-	#include <unistd.h>
-	int main()
-	{
-		int pipes[2], fd, n, i;
-		char buf[32];
-
-		pipe(pipes);
-		write(pipes[1], "0", 1);
-		fd = open("/sys/kernel/debug/fault_around_bytes", O_RDWR);
-		splice(pipes[0], NULL, fd, NULL, 1, 0);
-		n = read(fd, buf, sizeof(buf));
-		for (i = 0; i < n; i++)
-			printf("%02x", buf[i]);
-		printf("\n");
-	}
-
-Output:
-	5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a30
-
-Fix the infoleak by making simple_attr_read() always fill
-simple_attr::get_buf if it hasn't been filled yet.
-
-Reported-by: syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com
-Reported-by: Alexander Potapenko <glider@google.com>
-Fixes: acaefc25d21f ("[PATCH] libfs: add simple attribute files")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200308023849.988264-1-ebiggers@kernel.org
+Fixes: c4018fa2e4c0 ("[media] dib0700: fix RC support on Hauppauge Nova-TD")
+Cc: stable <stable@vger.kernel.org>     # 3.16
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/libfs.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/media/usb/dvb-usb/dib0700_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -891,7 +891,7 @@ int simple_attr_open(struct inode *inode
- {
- 	struct simple_attr *attr;
+--- a/drivers/media/usb/dvb-usb/dib0700_core.c
++++ b/drivers/media/usb/dvb-usb/dib0700_core.c
+@@ -818,7 +818,7 @@ int dib0700_rc_setup(struct dvb_usb_devi
  
--	attr = kmalloc(sizeof(*attr), GFP_KERNEL);
-+	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
- 	if (!attr)
- 		return -ENOMEM;
+ 	/* Starting in firmware 1.20, the RC info is provided on a bulk pipe */
  
-@@ -931,9 +931,11 @@ ssize_t simple_attr_read(struct file *fi
- 	if (ret)
- 		return ret;
+-	if (intf->altsetting[0].desc.bNumEndpoints < rc_ep + 1)
++	if (intf->cur_altsetting->desc.bNumEndpoints < rc_ep + 1)
+ 		return -ENODEV;
  
--	if (*ppos) {		/* continued read */
-+	if (*ppos && attr->get_buf[0]) {
-+		/* continued read */
- 		size = strlen(attr->get_buf);
--	} else {		/* first read */
-+	} else {
-+		/* first read */
- 		u64 val;
- 		ret = attr->get(attr->data, &val);
- 		if (ret)
+ 	purb = usb_alloc_urb(0, GFP_KERNEL);
+@@ -838,7 +838,7 @@ int dib0700_rc_setup(struct dvb_usb_devi
+ 	 * Some devices like the Hauppauge NovaTD model 52009 use an interrupt
+ 	 * endpoint, while others use a bulk one.
+ 	 */
+-	e = &intf->altsetting[0].endpoint[rc_ep].desc;
++	e = &intf->cur_altsetting->endpoint[rc_ep].desc;
+ 	if (usb_endpoint_dir_in(e)) {
+ 		if (usb_endpoint_xfer_bulk(e)) {
+ 			pipe = usb_rcvbulkpipe(d->udev, rc_ep);
 
 
