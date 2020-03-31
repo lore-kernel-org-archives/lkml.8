@@ -2,427 +2,440 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A313BC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F192C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6801820748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A17920774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbgCaCpF (ORCPT
+        id S1729400AbgCaCt1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:45:05 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:46085 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbgCaCpE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:45:04 -0400
-Received: by mail-io1-f69.google.com with SMTP id c7so18042369iog.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 19:45:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=36a8ZMwdVlBtz8gcVwheDNG6RwX+THxk9wo2rPRq/wo=;
-        b=CRtJpatUYnKoWAh0JtSd11ilhIgzggQ+drZhIuuy+2xmbeuNtrC+7H72vGdc10Ha3E
-         60kLZzsPT3jbA4ObFMhQ5bMmTW5S54L8IZdpuHAEOlugPcjdyEMx/WgDmXkAAjEGM+XX
-         lXzH7FLzheYHqO2EzO2EOYe8ATeh5NMP6nwOSOGqSxV2i1M7qR+8i6gpgKxFgC8wv8SI
-         wUCLwzuS5Oscksx1zF1TVmbekMpDSxYPKkGFFFf+eZQonZHH462b6Ra1ts6KZrRCzxKJ
-         o/fAdy+62Drqef0r82YrpAJTbOCnb7puk35uWJNyoZpLWCe0WaCchSIQPsYMmPHdgGnR
-         3ieA==
-X-Gm-Message-State: ANhLgQ1xs6HAXqGJMbq7N7drjY6AkTXoIXWqDN/FmGJzOyI2HU6UCK8R
-        /K9m8EbaYClimXrWkpJ5jlbz97bFUgMgEVP/x8cP46Z0mQ7z
-X-Google-Smtp-Source: ADFU+vtQEJtMZJdn5OG0vbSOyM51ErApYe8IR5ioTwgcoWpmBmDd76ZEvJuNWvadCsgVDW4IDbLJ9OZ92Ccswfe7J6YamT3s4SdB
+        Mon, 30 Mar 2020 22:49:27 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18322 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727655AbgCaCt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 22:49:27 -0400
+IronPort-SDR: 3Gl3HIsp5mb3XF33cvDzy61z3I/ihLHvyO2CfC74uovHlDrmRuF0Q5PEUdC2QS9TLQazCAlica
+ jHj2Q1pUTnoA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 19:49:25 -0700
+IronPort-SDR: KfYs90Q2gie6yYtzl8uZASkCYnXFlYLDv3NSq27MtyqD0DeF0v5BviSYbGYOMgKJ/OUL+duE0+
+ dVV/oiVta9yA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,326,1580803200"; 
+   d="scan'208";a="272590048"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga004.fm.intel.com with ESMTP; 30 Mar 2020 19:49:25 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 19:49:25 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 30 Mar 2020 19:49:24 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 30 Mar 2020 19:49:24 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
+ Tue, 31 Mar 2020 10:49:22 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: RE: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+Thread-Topic: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+Thread-Index: AQHV/w5hchZ4XNV890+XBMGi6MGw3ahdsRPAgAGJtYCAAsrMAA==
+Date:   Tue, 31 Mar 2020 02:49:21 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D800D67@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+ <3215b83c-81f7-a30f-fe82-a51f29d7b874@redhat.com>
+In-Reply-To: <3215b83c-81f7-a30f-fe82-a51f29d7b874@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-Received: by 2002:a02:5ec2:: with SMTP id h185mr2085793jab.2.1585622702653;
- Mon, 30 Mar 2020 19:45:02 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 19:45:02 -0700
-In-Reply-To: <CADG63jD_VnBJ-fHfStVq5=4ceAT=nwqkXdWzJPcfu1U=fF657A@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f0858405a21d8d1f@google.com>
-Subject: Re: KASAN: stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-From:   syzbot <syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, anenbupt@gmail.com,
-        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
-        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> From: Auger Eric <eric.auger@redhat.com>
+> Sent: Sunday, March 29, 2020 11:34 PM
+> 
+> Hi,
+> 
+> On 3/28/20 11:01 AM, Tian, Kevin wrote:
+> >> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> >> Sent: Saturday, March 21, 2020 7:28 AM
+> >>
+> >> When Shared Virtual Address (SVA) is enabled for a guest OS via
+> >> vIOMMU, we need to provide invalidation support at IOMMU API and
+> driver
+> >> level. This patch adds Intel VT-d specific function to implement
+> >> iommu passdown invalidate API for shared virtual address.
+> >>
+> >> The use case is for supporting caching structure invalidation
+> >> of assigned SVM capable devices. Emulated IOMMU exposes queue
+> >
+> > emulated IOMMU -> vIOMMU, since virito-iommu could use the
+> > interface as well.
+> >
+> >> invalidation capability and passes down all descriptors from the guest
+> >> to the physical IOMMU.
+> >>
+> >> The assumption is that guest to host device ID mapping should be
+> >> resolved prior to calling IOMMU driver. Based on the device handle,
+> >> host IOMMU driver can replace certain fields before submit to the
+> >> invalidation queue.
+> >>
+> >> ---
+> >> v7 review fixed in v10
+> >> ---
+> >>
+> >> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> >> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> >> Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> >> ---
+> >>  drivers/iommu/intel-iommu.c | 182
+> >> ++++++++++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 182 insertions(+)
+> >>
+> >> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> >> index b1477cd423dd..a76afb0fd51a 100644
+> >> --- a/drivers/iommu/intel-iommu.c
+> >> +++ b/drivers/iommu/intel-iommu.c
+> >> @@ -5619,6 +5619,187 @@ static void
+> >> intel_iommu_aux_detach_device(struct iommu_domain *domain,
+> >>  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
+> >>  }
+> >>
+> >> +/*
+> >> + * 2D array for converting and sanitizing IOMMU generic TLB granularity
+> to
+> >> + * VT-d granularity. Invalidation is typically included in the unmap
+> operation
+> >> + * as a result of DMA or VFIO unmap. However, for assigned devices
+> guest
+> >> + * owns the first level page tables. Invalidations of translation caches in
+> the
+> >> + * guest are trapped and passed down to the host.
+> >> + *
+> >> + * vIOMMU in the guest will only expose first level page tables, therefore
+> >> + * we do not include IOTLB granularity for request without PASID (second
+> >> level).
+> >
+> > I would revise above as "We do not support IOTLB granularity for request
+> > without PASID (second level), therefore any vIOMMU implementation that
+> > exposes the SVA capability to the guest should only expose the first level
+> > page tables, implying all invalidation requests from the guest will include
+> > a valid PASID"
+> >
+> >> + *
+> >> + * For example, to find the VT-d granularity encoding for IOTLB
+> >> + * type and page selective granularity within PASID:
+> >> + * X: indexed by iommu cache type
+> >> + * Y: indexed by enum iommu_inv_granularity
+> >> + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+> >> + *
+> >> + * Granu_map array indicates validity of the table. 1: valid, 0: invalid
+> >> + *
+> >> + */
+> >> +const static int
+> >>
+> inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_
+> >> NR] = {
+> >> +	/*
+> >> +	 * PASID based IOTLB invalidation: PASID selective (per PASID),
+> >> +	 * page selective (address granularity)
+> >> +	 */
+> >> +	{0, 1, 1},
+> >> +	/* PASID based dev TLBs, only support all PASIDs or single PASID */
+> >> +	{1, 1, 0},
+> >
+> > Is this combination correct? when single PASID is being specified, it is
+> > essentially a page-selective invalidation since you need provide Address
+> > and Size.
+> Isn't it the same when G=1? Still the addr/size is used. Doesn't it
 
-syzbot tried to test the proposed patch but build/boot failed:
+I thought addr/size is not used when G=1, but it might be wrong. I'm
+checking with our vt-d spec owner.
 
-828/au0828-video.o
-  AR      drivers/media/usb/msi2500/built-in.a
-  CC      drivers/media/dvb-frontends/isl6423.o
-  CC      drivers/media/rc/keymaps/rc-nec-terratec-cinergy-xs.o
-  CC      drivers/media/usb/gspca/mars.o
-  CC      drivers/hid/hid-lg4ff.o
-  CC      drivers/gpu/drm/drm_vblank.o
-  CC      drivers/gpu/drm/drm_syncobj.o
-  CC      drivers/gpu/drm/drm_lease.o
-  AR      drivers/staging/rtl8712/built-in.a
-  CC      drivers/media/usb/dvb-usb/dw2102.o
-  AR      drivers/staging/built-in.a
-  CC      drivers/media/dvb-frontends/ec100.o
-  CC      drivers/media/dvb-frontends/ds3000.o
-  CC      drivers/media/rc/keymaps/rc-norwood.o
-  CC      drivers/media/dvb-frontends/ts2020.o
-  CC      drivers/media/usb/gspca/mr97310a.o
-  CC      drivers/media/usb/dvb-usb/dtv5100.o
-  CC      drivers/gpu/drm/drm_writeback.o
-  CC      drivers/hid/hid-lg-g15.o
-  AR      drivers/media/usb/cpia2/built-in.a
-  CC      drivers/media/usb/dvb-usb/cinergyT2-core.o
-  CC      drivers/media/usb/gspca/nw80x.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-i2c-core.o
-  CC      drivers/media/usb/usbvision/usbvision-core.o
-  CC      drivers/media/usb/stk1160/stk1160-core.o
-  CC      drivers/media/usb/stk1160/stk1160-v4l.o
-  CC      drivers/media/usb/dvb-usb/cinergyT2-fe.o
-  CC      drivers/media/usb/cx231xx/cx231xx-video.o
-  CC      drivers/media/usb/usbvision/usbvision-video.o
-  CC      drivers/media/usb/usbvision/usbvision-i2c.o
-  CC      drivers/media/usb/usbvision/usbvision-cards.o
-  CC      drivers/media/usb/au0828/au0828-vbi.o
-  CC      drivers/media/usb/au0828/au0828-input.o
-  CC      drivers/media/rc/keymaps/rc-npgtech.o
-  CC      drivers/media/usb/stk1160/stk1160-video.o
-  CC      drivers/media/usb/tm6000/tm6000-cards.o
-  CC      drivers/media/usb/tm6000/tm6000-core.o
-  CC      drivers/media/usb/tm6000/tm6000-i2c.o
-  CC      drivers/media/usb/tm6000/tm6000-video.o
-  CC      drivers/media/rc/keymaps/rc-odroid.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-audio.o
-  CC      drivers/media/usb/gspca/ov519.o
-  CC      drivers/hid/hid-logitech-dj.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-encoder.o
-  AR      drivers/media/usb/hdpvr/built-in.a
-  CC      drivers/media/usb/gspca/ov534.o
-  CC      drivers/hid/hid-logitech-hidpp.o
-  CC      drivers/media/usb/stk1160/stk1160-i2c.o
-  CC      drivers/hid/hid-magicmouse.o
-  CC      drivers/gpu/drm/i915/display/intel_crt.o
-  CC      drivers/media/rc/keymaps/rc-pctv-sedna.o
-  CC      drivers/hid/hid-mf.o
-  CC      drivers/gpu/drm/drm_client.o
-  CC      drivers/gpu/drm/drm_client_modeset.o
-  CC      drivers/gpu/drm/drm_atomic_uapi.o
-  CC      drivers/gpu/drm/drm_hdcp.o
-  CC      drivers/media/usb/tm6000/tm6000-stds.o
-  CC      drivers/media/usb/cx231xx/cx231xx-i2c.o
-  CC      drivers/media/dvb-frontends/mb86a20s.o
-  CC      drivers/media/usb/gspca/ov534_9.o
-  CC      drivers/media/usb/cx231xx/cx231xx-cards.o
-  CC      drivers/media/rc/keymaps/rc-pinnacle-color.o
-  CC      drivers/media/usb/cx231xx/cx231xx-core.o
-  CC      drivers/gpu/drm/drm_ioc32.o
-  CC      drivers/media/usb/cx231xx/cx231xx-avcore.o
-  CC      drivers/media/usb/tm6000/tm6000-input.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-video-v4l.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-eeprom.o
-  CC      drivers/media/usb/stk1160/stk1160-ac97.o
-  CC      drivers/media/usb/dvb-usb/az6027.o
-  CC      drivers/gpu/drm/drm_gem_shmem_helper.o
-  CC      drivers/gpu/drm/drm_panel.o
-  CC      drivers/media/rc/keymaps/rc-pinnacle-grey.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-main.o
-  CC      drivers/gpu/drm/drm_agpsupport.o
-  CC      drivers/hid/hid-microsoft.o
-  CC      drivers/media/usb/em28xx/em28xx-core.o
-  CC      drivers/media/usb/em28xx/em28xx-i2c.o
-  AR      drivers/media/usb/au0828/built-in.a
-  CC      drivers/media/usb/tm6000/tm6000-alsa.o
-  CC      drivers/media/usb/tm6000/tm6000-dvb.o
-  CC      drivers/gpu/drm/drm_pci.o
-  CC      drivers/media/usb/dvb-usb/technisat-usb2.o
-  CC      drivers/media/usb/em28xx/em28xx-cards.o
-  CC      drivers/media/usb/cx231xx/cx231xx-417.o
-  CC      drivers/media/rc/keymaps/rc-pinnacle-pctv-hd.o
-  AR      drivers/media/usb/stk1160/built-in.a
-  CC      drivers/gpu/drm/drm_debugfs.o
-  CC      drivers/media/usb/gspca/pac207.o
-  CC      drivers/gpu/drm/i915/display/intel_ddi.o
-  CC      drivers/media/usb/em28xx/em28xx-camera.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-hdw.o
-  CC      drivers/media/usb/usbtv/usbtv-core.o
-  CC      drivers/media/usb/go7007/go7007-v4l2.o
-  CC      drivers/media/dvb-frontends/ix2505v.o
-  CC      drivers/hid/hid-monterey.o
-  CC      drivers/gpu/drm/drm_debugfs_crc.o
-  CC      drivers/media/rc/keymaps/rc-pixelview.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-v4l2.o
-  CC      drivers/gpu/drm/drm_mipi_dsi.o
-  CC      drivers/gpu/drm/i915/display/intel_dp.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-ctrl.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-std.o
-  CC      drivers/media/dvb-frontends/cxd2820r_core.o
-  AR      drivers/media/usb/tm6000/built-in.a
-  CC      drivers/media/rc/keymaps/rc-pixelview-mk12.o
-  AR      drivers/media/usb/usbvision/built-in.a
-  CC      drivers/gpu/drm/drm_panel_orientation_quirks.o
-  CC      drivers/media/usb/em28xx/em28xx-video.o
-  CC      drivers/gpu/drm/i915/display/intel_dp_aux_backlight.o
-  CC      drivers/media/usb/usbtv/usbtv-video.o
-  CC      drivers/media/usb/cx231xx/cx231xx-pcb-cfg.o
-  CC      drivers/gpu/drm/i915/display/intel_dp_link_training.o
-  CC      drivers/media/usb/go7007/go7007-driver.o
-  CC      drivers/media/usb/cx231xx/cx231xx-vbi.o
-  AR      drivers/media/usb/dvb-usb/built-in.a
-  CC      drivers/media/rc/keymaps/rc-pixelview-002t.o
-  CC      drivers/gpu/drm/i915/display/intel_dp_mst.o
-  CC      drivers/hid/hid-multitouch.o
-  CC      drivers/media/usb/em28xx/em28xx-vbi.o
-  CC      drivers/media/usb/em28xx/em28xx-audio.o
-  CC      drivers/media/rc/keymaps/rc-pixelview-new.o
-  CC      drivers/hid/hid-nti.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-devattr.o
-  CC      drivers/media/usb/em28xx/em28xx-dvb.o
-  CC      drivers/hid/hid-ntrig.o
-  CC      drivers/media/usb/em28xx/em28xx-input.o
-  CC      drivers/media/usb/go7007/go7007-i2c.o
-  CC      drivers/media/rc/keymaps/rc-powercolor-real-angel.o
-  CC      drivers/media/rc/keymaps/rc-proteus-2309.o
-  CC      drivers/media/usb/go7007/go7007-fw.o
-  CC      drivers/media/rc/keymaps/rc-purpletv.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-context.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-io.o
-  CC      drivers/media/dvb-frontends/cxd2820r_c.o
-  CC      drivers/hid/hid-ortek.o
-  CC      drivers/hid/hid-prodikeys.o
-  CC      drivers/media/usb/as102/as102_drv.o
-  CC      drivers/media/usb/as102/as102_fw.o
-  CC      drivers/media/usb/as102/as10x_cmd.o
-  CC      drivers/media/rc/keymaps/rc-pv951.o
-  CC      drivers/media/rc/keymaps/rc-hauppauge.o
-  CC      drivers/media/usb/usbtv/usbtv-audio.o
-  CC      drivers/gpu/drm/i915/display/intel_dsi.o
-  CC      drivers/media/rc/keymaps/rc-rc6-mce.o
-  CC      drivers/hid/hid-pl.o
-  CC      drivers/gpu/drm/i915/display/intel_dsi_dcs_backlight.o
-  CC      drivers/media/usb/go7007/snd-go7007.o
-  CC      drivers/media/usb/cx231xx/cx231xx-input.o
-  CC      drivers/media/usb/gspca/pac7302.o
-  CC      drivers/media/usb/gspca/pac7311.o
-  CC      drivers/media/usb/cx231xx/cx231xx-dvb.o
-  CC      drivers/media/usb/cx231xx/cx231xx-audio.o
-  CC      drivers/media/usb/go7007/go7007-usb.o
-  CC      drivers/gpu/drm/i915/display/intel_dsi_vbt.o
-  CC      drivers/media/rc/keymaps/rc-real-audio-220-32-keys.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-ioread.o
-  CC      drivers/media/rc/keymaps/rc-reddo.o
-  CC      drivers/media/dvb-frontends/cxd2820r_t.o
-  CC      drivers/media/rc/keymaps/rc-snapstream-firefly.o
-  CC      drivers/media/usb/pulse8-cec/pulse8-cec.o
-  CC      drivers/media/usb/go7007/go7007-loader.o
-  CC      drivers/media/usb/rainshadow-cec/rainshadow-cec.o
-  CC      drivers/hid/hid-penmount.o
-  CC      drivers/hid/hid-petalynx.o
-  CC      drivers/gpu/drm/i915/display/intel_dvo.o
-  CC      drivers/hid/hid-picolcd_core.o
-  CC      drivers/media/usb/gspca/se401.o
-  CC      drivers/media/usb/as102/as10x_cmd_stream.o
-  AR      drivers/media/usb/usbtv/built-in.a
-  CC      drivers/media/rc/keymaps/rc-streamzap.o
-  CC      drivers/gpu/drm/i915/display/intel_gmbus.o
-  CC      drivers/gpu/drm/i915/display/intel_hdmi.o
-  CC      drivers/gpu/drm/i915/display/intel_lspcon.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-cx2584x-v4l.o
-  CC      drivers/media/rc/keymaps/rc-tango.o
-  CC      drivers/gpu/drm/i915/display/intel_lvds.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-wm8775.o
-  CC      drivers/media/usb/gspca/sn9c2028.o
-  CC      drivers/media/usb/go7007/s2250-board.o
-  CC      drivers/media/usb/as102/as102_usb_drv.o
-  CC      drivers/media/usb/as102/as10x_cmd_cfg.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-cs53l32a.o
-  CC      drivers/hid/hid-picolcd_fb.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-dvb.o
-  CC      drivers/media/usb/pvrusb2/pvrusb2-sysfs.o
-  CC      drivers/media/rc/keymaps/rc-tanix-tx3mini.o
-  CC      drivers/media/dvb-frontends/cxd2820r_t2.o
-  AR      drivers/media/usb/rainshadow-cec/built-in.a
-  CC      drivers/gpu/drm/i915/display/intel_panel.o
-  CC      drivers/media/rc/keymaps/rc-tanix-tx5max.o
-  CC      drivers/gpu/drm/i915/display/intel_sdvo.o
-  CC      drivers/media/dvb-frontends/cxd2841er.o
-  AR      drivers/media/usb/pulse8-cec/built-in.a
-  CC      drivers/media/rc/keymaps/rc-tbs-nec.o
-  CC      drivers/media/rc/keymaps/rc-technisat-ts35.o
-  AR      drivers/media/usb/em28xx/built-in.a
-  CC      drivers/media/rc/keymaps/rc-technisat-usb2.o
-  CC      drivers/gpu/drm/i915/display/intel_tv.o
-  CC      drivers/media/usb/gspca/sn9c20x.o
-  CC      drivers/media/usb/gspca/sonixb.o
-  CC      drivers/media/usb/gspca/sonixj.o
-  CC      drivers/media/rc/keymaps/rc-terratec-cinergy-c-pci.o
-  CC      drivers/media/rc/keymaps/rc-terratec-cinergy-s2-hd.o
-  AR      drivers/media/usb/cx231xx/built-in.a
-  CC      drivers/gpu/drm/i915/display/intel_vdsc.o
-  CC      drivers/hid/hid-picolcd_backlight.o
-  CC      drivers/hid/hid-picolcd_lcd.o
-  CC      drivers/hid/hid-picolcd_leds.o
-  CC      drivers/media/rc/keymaps/rc-terratec-cinergy-xs.o
-  AR      drivers/media/usb/as102/built-in.a
-  CC      drivers/media/rc/keymaps/rc-terratec-slim.o
-  CC      drivers/hid/hid-picolcd_cir.o
-  AR      drivers/media/usb/go7007/built-in.a
-  CC      drivers/media/rc/keymaps/rc-terratec-slim-2.o
-  CC      drivers/media/dvb-frontends/drxk_hard.o
-  CC      drivers/media/rc/keymaps/rc-tevii-nec.o
-  CC      drivers/media/rc/keymaps/rc-tivo.o
-  CC      drivers/hid/hid-picolcd_debugfs.o
-  CC      drivers/hid/hid-plantronics.o
-  CC      drivers/gpu/drm/i915/display/vlv_dsi.o
-  CC      drivers/media/rc/keymaps/rc-total-media-in-hand.o
-  CC      drivers/media/usb/gspca/spca500.o
-  CC      drivers/media/usb/gspca/spca501.o
-  CC      drivers/gpu/drm/i915/display/vlv_dsi_pll.o
-  CC      drivers/media/usb/gspca/spca505.o
-  CC      drivers/media/usb/gspca/spca506.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_hsw.o
-  CC      drivers/media/dvb-frontends/tda18271c2dd.o
-  CC      drivers/hid/hid-primax.o
-  CC      drivers/media/usb/gspca/spca508.o
-  CC      drivers/hid/hid-retrode.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_chv.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_bdw.o
-  CC      drivers/media/rc/keymaps/rc-total-media-in-hand-02.o
-  CC      drivers/media/rc/keymaps/rc-trekstor.o
-  CC      drivers/media/rc/keymaps/rc-tt-1500.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_sklgt2.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_sklgt3.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_sklgt4.o
-  CC      drivers/hid/hid-roccat.o
-  CC      drivers/media/usb/gspca/spca561.o
-  CC      drivers/media/rc/keymaps/rc-twinhan-dtv-cab-ci.o
-  CC      drivers/media/dvb-frontends/si2165.o
-  CC      drivers/media/usb/gspca/spca1528.o
-  CC      drivers/media/rc/keymaps/rc-twinhan1027.o
-  CC      drivers/media/dvb-frontends/a8293.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_bxt.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_kblgt2.o
-  CC      drivers/media/dvb-frontends/sp2.o
-  CC      drivers/hid/hid-roccat-common.o
-  CC      drivers/hid/hid-roccat-arvo.o
-  CC      drivers/hid/hid-roccat-isku.o
-  CC      drivers/hid/hid-roccat-kone.o
-  CC      drivers/hid/hid-roccat-koneplus.o
-  CC      drivers/hid/hid-roccat-konepure.o
-  CC      drivers/media/rc/keymaps/rc-vega-s9x.o
-  CC      drivers/media/usb/gspca/sq905.o
-  CC      drivers/media/dvb-frontends/tda10071.o
-  CC      drivers/media/dvb-frontends/rtl2830.o
-  CC      drivers/hid/hid-roccat-kovaplus.o
-  CC      drivers/hid/hid-roccat-lua.o
-  CC      drivers/hid/hid-roccat-pyra.o
-  CC      drivers/media/rc/keymaps/rc-videomate-m1f.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_kblgt3.o
-  CC      drivers/media/dvb-frontends/rtl2832.o
-  AR      drivers/media/usb/pvrusb2/built-in.a
-  CC      drivers/hid/hid-roccat-ryos.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_glk.o
-  CC      drivers/hid/hid-roccat-savu.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_cflgt2.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_cflgt3.o
-  CC      drivers/media/rc/keymaps/rc-videomate-s350.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_cnl.o
-  CC      drivers/media/rc/keymaps/rc-videomate-tv-pvr.o
-  CC      drivers/media/usb/gspca/sq905c.o
-  CC      drivers/media/usb/gspca/sq930x.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_icl.o
-  CC      drivers/gpu/drm/i915/oa/i915_oa_tgl.o
-  CC      drivers/hid/hid-rmi.o
-  CC      drivers/gpu/drm/i915/i915_perf.o
-  CC      drivers/media/usb/gspca/sunplus.o
-  CC      drivers/media/dvb-frontends/rtl2832_sdr.o
-  CC      drivers/hid/hid-saitek.o
-  CC      drivers/hid/hid-samsung.o
-  CC      drivers/media/dvb-frontends/m88rs2000.o
-  CC      drivers/media/dvb-frontends/af9033.o
-  CC      drivers/media/rc/keymaps/rc-wetek-hub.o
-  CC      drivers/media/usb/gspca/stk014.o
-  CC      drivers/media/rc/keymaps/rc-wetek-play2.o
-  CC      drivers/media/dvb-frontends/as102_fe.o
-  CC      drivers/gpu/drm/i915/i915_gpu_error.o
-  CC      drivers/media/dvb-frontends/tc90522.o
-  CC      drivers/media/dvb-frontends/gp8psk-fe.o
-  CC      drivers/media/rc/keymaps/rc-winfast.o
-  CC      drivers/hid/hid-sjoy.o
-  CC      drivers/hid/hid-sony.o
-  CC      drivers/gpu/drm/i915/i915_vgpu.o
-  CC      drivers/media/rc/keymaps/rc-winfast-usbii-deluxe.o
-  CC      drivers/hid/hid-speedlink.o
-  CC      drivers/media/rc/keymaps/rc-su3000.o
-  CC      drivers/media/dvb-frontends/zd1301_demod.o
-  CC      drivers/media/rc/keymaps/rc-xbox-dvd.o
-  CC      drivers/media/usb/gspca/stk1135.o
-  CC      drivers/hid/hid-steelseries.o
-  CC      drivers/hid/hid-sunplus.o
-  CC      drivers/media/usb/gspca/stv0680.o
-  CC      drivers/hid/hid-gaff.o
-  CC      drivers/hid/hid-tmff.o
-  CC      drivers/media/rc/keymaps/rc-x96max.o
-  CC      drivers/media/rc/keymaps/rc-zx-irdec.o
-  CC      drivers/hid/hid-tivo.o
-  CC      drivers/hid/hid-topseed.o
-  CC      drivers/media/usb/gspca/t613.o
-  CC      drivers/media/usb/gspca/topro.o
-  CC      drivers/media/usb/gspca/tv8532.o
-  CC      drivers/media/usb/gspca/touptek.o
-  CC      drivers/hid/hid-uclogic-core.o
-  CC      drivers/hid/hid-twinhan.o
-  CC      drivers/hid/hid-uclogic-rdesc.o
-  CC      drivers/media/usb/gspca/vc032x.o
-  CC      drivers/media/usb/gspca/xirlink_cit.o
-  CC      drivers/hid/hid-uclogic-params.o
-  CC      drivers/media/usb/gspca/vicam.o
-  CC      drivers/hid/hid-udraw-ps3.o
-  CC      drivers/hid/hid-led.o
-  CC      drivers/hid/hid-xinmo.o
-  AR      drivers/media/rc/keymaps/built-in.a
-  CC      drivers/hid/hid-zpff.o
-  AR      drivers/media/rc/built-in.a
-  CC      drivers/hid/hid-zydacron.o
-  CC      drivers/media/usb/gspca/zc3xx.o
-  CC      drivers/hid/wacom_wac.o
-  CC      drivers/hid/wacom_sys.o
-  CC      drivers/hid/hid-waltop.o
-  CC      drivers/hid/hid-wiimote-core.o
-  CC      drivers/hid/hid-wiimote-modules.o
-  CC      drivers/hid/hid-wiimote-debug.o
-  CC      drivers/hid/hid-sensor-hub.o
-  CC      drivers/hid/hid-sensor-custom.o
-  AR      drivers/media/dvb-frontends/built-in.a
-  AR      drivers/media/usb/gspca/built-in.a
-  AR      drivers/media/usb/built-in.a
-  AR      drivers/media/built-in.a
-  AR      drivers/gpu/drm/i915/built-in.a
-  AR      drivers/gpu/drm/built-in.a
-  AR      drivers/gpu/built-in.a
-  AR      drivers/hid/built-in.a
-Makefile:1683: recipe for target 'drivers' failed
-make: *** [drivers] Error 2
+> correspond to IOMMU_INV_GRANU_ADDR with
+> IOMMU_INV_ADDR_FLAGS_PASID flag
+> unset?
+> 
+> so {0, 0, 1}?
 
+I have one more open:
 
-Error text is too large and was truncated, full error text is at:
-https://syzkaller.appspot.com/x/error.txt?x=12e89493e00000
+How does userspace know which invalidation type/gran is supported?
+I didn't see such capability reporting in Yi's VFIO vSVA patch set. Do we
+want the user/kernel assume the same capability set if they are 
+architectural? However the kernel could also do some optimization
+e.g. hide devtlb invalidation capability given that the kernel already 
+invalidate devtlb automatically when serving iotlb invalidation...
 
+Thanks
+Kevin
 
-Tested on:
-
-commit:         0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-dashboard link: https://syzkaller.appspot.com/bug?extid=d403396d4df67ad0bd5f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14aafcb7e00000
+> 
+> Thanks
+> 
+> Eric
+> 
+> >
+> >> +	/* PASID cache */
+> >
+> > PASID cache is fully managed by the host. Guest PASID cache invalidation
+> > is interpreted by vIOMMU for bind and unbind operations. I don't think
+> > we should accept any PASID cache invalidation from userspace or guest.
+> >
+> >> +	{1, 1, 0}
+> >> +};
+> >> +
+> >> +const static int
+> >>
+> inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU
+> >> _NR] = {
+> >> +	/* PASID based IOTLB */
+> >> +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+> >> +	/* PASID based dev TLBs */
+> >> +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
+> >> +	/* PASID cache */
+> >> +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
+> >> +};
+> >> +
+> >> +static inline int to_vtd_granularity(int type, int granu, int *vtd_granu)
+> >> +{
+> >> +	if (type >= IOMMU_CACHE_INV_TYPE_NR || granu >=
+> >> IOMMU_INV_GRANU_NR ||
+> >> +		!inv_type_granu_map[type][granu])
+> >> +		return -EINVAL;
+> >> +
+> >> +	*vtd_granu = inv_type_granu_table[type][granu];
+> >> +
+> >
+> > btw do we really need both map and table here? Can't we just
+> > use one table with unsupported granularity marked as a special
+> > value?
+> >
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
+> >> +{
+> >> +	u64 nr_pages = (granu_size * nr_granules) >> VTD_PAGE_SHIFT;
+> >> +
+> >> +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9 for 2MB, etc.
+> >> +	 * IOMMU cache invalidate API passes granu_size in bytes, and
+> >> number of
+> >> +	 * granu size in contiguous memory.
+> >> +	 */
+> >> +	return order_base_2(nr_pages);
+> >> +}
+> >> +
+> >> +#ifdef CONFIG_INTEL_IOMMU_SVM
+> >> +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
+> >> +		struct device *dev, struct iommu_cache_invalidate_info
+> >> *inv_info)
+> >> +{
+> >> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+> >> +	struct device_domain_info *info;
+> >> +	struct intel_iommu *iommu;
+> >> +	unsigned long flags;
+> >> +	int cache_type;
+> >> +	u8 bus, devfn;
+> >> +	u16 did, sid;
+> >> +	int ret = 0;
+> >> +	u64 size = 0;
+> >> +
+> >> +	if (!inv_info || !dmar_domain ||
+> >> +		inv_info->version !=
+> >> IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (!dev || !dev_is_pci(dev))
+> >> +		return -ENODEV;
+> >> +
+> >> +	iommu = device_to_iommu(dev, &bus, &devfn);
+> >> +	if (!iommu)
+> >> +		return -ENODEV;
+> >> +
+> >> +	spin_lock_irqsave(&device_domain_lock, flags);
+> >> +	spin_lock(&iommu->lock);
+> >> +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus, devfn);
+> >> +	if (!info) {
+> >> +		ret = -EINVAL;
+> >> +		goto out_unlock;
+> >
+> > -ENOTSUPP?
+> >
+> >> +	}
+> >> +	did = dmar_domain->iommu_did[iommu->seq_id];
+> >> +	sid = PCI_DEVID(bus, devfn);
+> >> +
+> >> +	/* Size is only valid in non-PASID selective invalidation */
+> >> +	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+> >> +		size = to_vtd_size(inv_info->addr_info.granule_size,
+> >> +				   inv_info->addr_info.nb_granules);
+> >> +
+> >> +	for_each_set_bit(cache_type, (unsigned long *)&inv_info->cache,
+> >> IOMMU_CACHE_INV_TYPE_NR) {
+> >> +		int granu = 0;
+> >> +		u64 pasid = 0;
+> >> +
+> >> +		ret = to_vtd_granularity(cache_type, inv_info->granularity,
+> >> &granu);
+> >> +		if (ret) {
+> >> +			pr_err("Invalid cache type and granu
+> >> combination %d/%d\n", cache_type,
+> >> +				inv_info->granularity);
+> >> +			break;
+> >> +		}
+> >> +
+> >> +		/* PASID is stored in different locations based on granularity
+> >> */
+> >> +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID &&
+> >> +			inv_info->pasid_info.flags &
+> >> IOMMU_INV_PASID_FLAGS_PASID)
+> >> +			pasid = inv_info->pasid_info.pasid;
+> >> +		else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR
+> >> &&
+> >> +			inv_info->addr_info.flags &
+> >> IOMMU_INV_ADDR_FLAGS_PASID)
+> >> +			pasid = inv_info->addr_info.pasid;
+> >> +		else {
+> >> +			pr_err("Cannot find PASID for given cache type and
+> >> granularity\n");
+> >> +			break;
+> >> +		}
+> >> +
+> >> +		switch (BIT(cache_type)) {
+> >> +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> >> +			if ((inv_info->granularity !=
+> >> IOMMU_INV_GRANU_PASID) &&
+> >
+> > granularity == IOMMU_INV_GRANU_ADDR? otherwise it's unclear
+> > why IOMMU_INV_GRANU_DOMAIN also needs size check.
+> >
+> >> +				size && (inv_info->addr_info.addr &
+> >> ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> >> +				pr_err("Address out of range, 0x%llx, size
+> >> order %llu\n",
+> >> +					inv_info->addr_info.addr, size);
+> >> +				ret = -ERANGE;
+> >> +				goto out_unlock;
+> >> +			}
+> >> +
+> >> +			qi_flush_piotlb(iommu, did,
+> >> +					pasid,
+> >> +					mm_to_dma_pfn(inv_info-
+> >>> addr_info.addr),
+> >> +					(granu == QI_GRAN_NONG_PASID) ? -
+> >> 1 : 1 << size,
+> >> +					inv_info->addr_info.flags &
+> >> IOMMU_INV_ADDR_FLAGS_LEAF);
+> >> +
+> >> +			/*
+> >> +			 * Always flush device IOTLB if ATS is enabled since
+> >> guest
+> >> +			 * vIOMMU exposes CM = 1, no device IOTLB flush
+> >> will be passed
+> >> +			 * down.
+> >> +			 */
+> >
+> > Does VT-d spec mention that no device IOTLB flush is required when CM=1?
+> >
+> >> +			if (info->ats_enabled) {
+> >> +				qi_flush_dev_iotlb_pasid(iommu, sid, info-
+> >>> pfsid,
+> >> +						pasid, info->ats_qdep,
+> >> +						inv_info->addr_info.addr,
+> >> size,
+> >> +						granu);
+> >> +			}
+> >> +			break;
+> >> +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+> >> +			if (info->ats_enabled) {
+> >> +				qi_flush_dev_iotlb_pasid(iommu, sid, info-
+> >>> pfsid,
+> >> +						inv_info->addr_info.pasid,
+> >> info->ats_qdep,
+> >> +						inv_info->addr_info.addr,
+> >> size,
+> >> +						granu);
+> >
+> > I'm confused here. There are two granularities allowed for devtlb, but here
+> > you only handle one of them?
+> >
+> >> +			} else
+> >> +				pr_warn("Passdown device IOTLB flush w/o
+> >> ATS!\n");
+> >> +
+> >> +			break;
+> >> +		case IOMMU_CACHE_INV_TYPE_PASID:
+> >> +			qi_flush_pasid_cache(iommu, did, granu, inv_info-
+> >>> pasid_info.pasid);
+> >> +
+> >
+> > as earlier comment, we shouldn't allow userspace or guest to invalidate
+> > PASID cache
+> >
+> >> +			break;
+> >> +		default:
+> >> +			dev_err(dev, "Unsupported IOMMU invalidation
+> >> type %d\n",
+> >> +				cache_type);
+> >> +			ret = -EINVAL;
+> >> +		}
+> >> +	}
+> >> +out_unlock:
+> >> +	spin_unlock(&iommu->lock);
+> >> +	spin_unlock_irqrestore(&device_domain_lock, flags);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +#endif
+> >> +
+> >>  static int intel_iommu_map(struct iommu_domain *domain,
+> >>  			   unsigned long iova, phys_addr_t hpa,
+> >>  			   size_t size, int iommu_prot, gfp_t gfp)
+> >> @@ -6204,6 +6385,7 @@ const struct iommu_ops intel_iommu_ops = {
+> >>  	.is_attach_deferred	= intel_iommu_is_attach_deferred,
+> >>  	.pgsize_bitmap		= INTEL_IOMMU_PGSIZES,
+> >>  #ifdef CONFIG_INTEL_IOMMU_SVM
+> >> +	.cache_invalidate	= intel_iommu_sva_invalidate,
+> >>  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+> >>  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+> >>  #endif
+> >> --
+> >> 2.7.4
+> >
 
