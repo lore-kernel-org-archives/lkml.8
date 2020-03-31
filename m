@@ -2,146 +2,123 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7C5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83FDC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F4120BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A86420CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585675954;
-	bh=6EGkiFFNbAfKvMqgcib/d3FAMA1Mog8XoRKhmJlOslo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xMu9peaFVJG+iGn1ghHwMaqvBar4Eu9uAmj3g+YAi5hmb+FJHjfNRf+K3fUKWCkun
-	 kvTQWRmdI0IbI5q/cJ4VtgbrQy4D9c3nLDLtBFUlWZMIbFucyK8AL+QLaQF4qeDwCW
-	 yS0GofZlQLTIlAsYA2m08Lk6zHoDYCeWfs3MXVvA=
+	s=default; t=1585675965;
+	bh=X2XgSMpZecB6Xfvn+caMhUltJn87Kz+j/qIJt036iUY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H40y53wYF0l+UEJipBAxfTW0Y8f1K+K1CHEI0A7Spkyv0L/rVMxzimpy9XVV4C3I3
+	 XXY/vln+DoMgFate1AASwv6hEIRoNcKVDbVhhOtVpsSHQxDBFeLKQTn0L/eumukmEd
+	 vN+9UQDrvybOBHk6lgaR9Eve5At88vXrm+0T+6RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgCaRcd (ORCPT
+        id S1726937AbgCaRco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:32:33 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:57032 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgCaRcc (ORCPT
+        Tue, 31 Mar 2020 13:32:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43855 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgCaRco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:32:32 -0400
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 02VHWEbr021936
-        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 02:32:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 02VHWEbr021936
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585675935;
-        bh=apzVeH3ZSZdTyLs9ucwBXEBHGGEys7AlSqP5ZhodY/s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jVD0O/Vz8GNkLQaEWHiA4syrRtVzekwW9C0TQ3uo0gRYQi+4/ErCZWFBUwToaqxcB
-         34RDj8076HlqoQCu1gpEblQqyYH5zmvEt7XH0GwXtKWQAxqTPVeqNJwaD3CTXOWLIn
-         XF6HTHuxlHjcg0JifijvyALAXi+T/IEu5GfGpkU6q/7F6JKxIjoBrmIE+D1W1dW0Ji
-         2r8UPWdSaKXhVMH0AmDYIR8+wAjttSir53hIwwgp6985qwc7UwMJuXeICJ8PyCRuzd
-         TGPKLdetGnbu18SJnnIwASpmIQ+MNi846gUUSWLFASp2Q9xchGpClkPBPenbMQRF9N
-         s9vMSGhFZOB0A==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id v129so5586570vkf.10
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 10:32:15 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYogJYupHtQao6mDVUsmj9Xm2t+KBa76v/iX6LoSZLK03McXhJq
-        eRrYeo7p6No8cVoHXI61lVr27FPd6GhJ8UEhfN8=
-X-Google-Smtp-Source: APiQypLWtcZNBT5k0XdyG6N1qNydV6VOWdeWVVfre24H4CMJHh4qtiwTan0lXaOfWxgS6a+lpjafRPbY4fShNgrYUEY=
-X-Received: by 2002:a1f:32cf:: with SMTP id y198mr12581684vky.96.1585675934026;
- Tue, 31 Mar 2020 10:32:14 -0700 (PDT)
+        Tue, 31 Mar 2020 13:32:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id x9so16146683iom.10;
+        Tue, 31 Mar 2020 10:32:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vPjWnezOFCbPjkimVREtFrZweZBkX4AZCv7e/dhIDEA=;
+        b=PL/GZ3A7NRpRRUGOKK1Yn5W6EIAPj3Pz60Kwa97uupv+9SYpXVop+aFG7azcNqN0QO
+         KyWh8q24KLYC6k1Rvc57HMtVsumr1cQ4AJH1TrEOvioHg3NuN8kassiCdZp1j3WKk+vw
+         rUbNoOskrLRXRvxkMeORZSIkuMeSQxbRqJ9gOAvkdMpvLplaz0jop7ejBxfDU3UCZAPZ
+         VF0iu8q+JC+B9+DaeYTZ4w6F2PbItpTOnNKs/3JLuNfPE1SBhjnWtbFmOFF6fGCfRX1X
+         qSoYIAep2u4sRdN4RYEeAN1XCFcsbinYHWhdHV1IG/GQ+V7ufSMglBjMkvqt6GSxR3fp
+         1DYg==
+X-Gm-Message-State: ANhLgQ3qtV95f96ExQ8uf5XVrM41fg9IFuA4hfSVTRP5YXcHC+DYMzpU
+        2q9M0UFjz3BjJEJbIFfEFBKv7sY=
+X-Google-Smtp-Source: ADFU+vst4wZKDtasDsNpPn50nDRlEwtrpiYuD99OqXixa4fa/0G57dQhjqx1+LiKIYGOubIP3Jzvhw==
+X-Received: by 2002:a05:6638:120c:: with SMTP id n12mr5374260jas.32.1585675963133;
+        Tue, 31 Mar 2020 10:32:43 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id 79sm6191571ila.54.2020.03.31.10.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 10:32:42 -0700 (PDT)
+Received: (nullmailer pid 27604 invoked by uid 1000);
+        Tue, 31 Mar 2020 17:32:41 -0000
+Date:   Tue, 31 Mar 2020 11:32:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/12] devicetree: bindings: pci: add phy-tx0-term-offset
+ to qcom,pcie
+Message-ID: <20200331173241.GA25681@bogus>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+ <20200320183455.21311-8-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-References: <20200331112637.25047-1-vegard.nossum@oracle.com>
-In-Reply-To: <20200331112637.25047-1-vegard.nossum@oracle.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 1 Apr 2020 02:31:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASSaTGV926oA7qJGf6n03BaJ2R6fO8ZeZor2j45bqLqSA@mail.gmail.com>
-Message-ID: <CAK7LNASSaTGV926oA7qJGf6n03BaJ2R6fO8ZeZor2j45bqLqSA@mail.gmail.com>
-Subject: Re: [PATCH] compiler.h: fix error in BUILD_BUG_ON() reporting
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Santos <daniel.santos@pobox.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Ian Abbott <abbotti@mev.co.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320183455.21311-8-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 8:28 PM Vegard Nossum <vegard.nossum@oracle.com> wr=
-ote:
->
-> compiletime_assert() uses __LINE__ to create a unique function name.
-> This means that if you have more than one BUILD_BUG_ON() in the same
-> source line (which can happen if they appear e.g. in a macro), then
-> the error message from the compiler might output the wrong condition.
->
-> For this source file:
->
->         #include <linux/build_bug.h>
->
->         #define macro() \
->                 BUILD_BUG_ON(1); \
->                 BUILD_BUG_ON(0);
->
->         void foo()
->         {
->                 macro();
->         }
->
-> gcc would output:
->
-> ./include/linux/compiler.h:350:38: error: call to =E2=80=98__compiletime_=
-assert_9=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: 0
->   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->
-> However, it was not the BUILD_BUG_ON(0) that failed, so it should say 1
-> instead of 0. With this patch, we use __COUNTER__ instead of __LINE__, so
-> each BUILD_BUG_ON() gets a different function name and the correct
-> condition is printed:
->
-> ./include/linux/compiler.h:350:38: error: call to =E2=80=98__compiletime_=
-assert_0=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: 1
->   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->
-> Cc: Daniel Santos <daniel.santos@pobox.com>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Fri, Mar 20, 2020 at 07:34:50PM +0100, Ansuel Smith wrote:
+> Document phy-tx0-term-offset propriety to qcom pcie driver
 
+propriety?
 
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
-
-
-> Cc: Ian Abbott <abbotti@mev.co.uk>
-> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
+> 
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  include/linux/compiler.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> index 5e88e7e33abec..034b0a644efcc 100644
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -347,7 +347,7 @@ static inline void *offset_to_ptr(const int *off)
->   * compiler has support to do so.
->   */
->  #define compiletime_assert(condition, msg) \
-> -       _compiletime_assert(condition, msg, __compiletime_assert_, __LINE=
-__)
-> +       _compiletime_assert(condition, msg, __compiletime_assert_, __COUN=
-TER__)
->
->  #define compiletime_assert_atomic_type(t)                              \
->         compiletime_assert(__native_word(t),                            \
-> --
-> 2.16.1.72.g5be1f00a9.dirty
->
+>  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> index 6efcef040741..8c1d014f37b0 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> @@ -254,6 +254,12 @@
+>  			- "perst-gpios"	PCIe endpoint reset signal line
+>  			- "wake-gpios"	PCIe endpoint wake signal line
+>  
+> +- phy-tx0-term-offset:
 
+Needs a vendor prefix.
 
---=20
-Best Regards
-Masahiro Yamada
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: If not defined is 0. In ipq806x is set to 7. In newer
+> +				revision (v2.0) the offset is zero.
+> +
+>  * Example for ipq/apq8064
+>  	pcie@1b500000 {
+>  		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
+> @@ -293,6 +299,7 @@
+>  		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
+>  		pinctrl-0 = <&pcie_pins_default>;
+>  		pinctrl-names = "default";
+> +		phy-tx0-term-offset = <7>;
+>  	};
+>  
+>  * Example for apq8084
+> -- 
+> 2.25.1
+> 
