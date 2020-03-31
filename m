@@ -2,183 +2,155 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F2CC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41146C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8B020784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:31:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KlITRhrm"
+	by mail.kernel.org (Postfix) with ESMTP id 20B802071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731123AbgCaOby (ORCPT
+        id S1731094AbgCaOeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:31:54 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46236 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730896AbgCaOby (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:31:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585665112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n/LKamt1qJgTlZJvR2+ShYsZiF+S+pFT12QrU9mBZ2E=;
-        b=KlITRhrmvQ/ORzllRCKrcxJizWiEUBaRXMIlarVRSsQmP1aTIU50WL01HfaF8U2a0nKJLQ
-        GOqHD+PfPGnDGkNLVNJ/vJ6OpudpqBIL4T0PKzuS071bbQ+1W0V8OAaFjnkME/4CxXsU9t
-        ZHmaXgukY9QPnUEcKzbBoy2WT6Mhcd4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-RJe3syyjNmOJMo0W4nt5Qw-1; Tue, 31 Mar 2020 10:31:48 -0400
-X-MC-Unique: RJe3syyjNmOJMo0W4nt5Qw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C628107ACCC;
-        Tue, 31 Mar 2020 14:31:44 +0000 (UTC)
-Received: from localhost (ovpn-13-64.pek2.redhat.com [10.72.13.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D08196F85;
-        Tue, 31 Mar 2020 14:31:43 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 22:31:40 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200331143140.GA2402@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
- <20200331085513.GE30449@dhcp22.suse.cz>
- <20200331140332.GA2129@MiWiFi-R3L-srv>
- <20200331142138.GL30449@dhcp22.suse.cz>
+        Tue, 31 Mar 2020 10:34:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:64552 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730845AbgCaOeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 10:34:00 -0400
+IronPort-SDR: B9PYXwznGP3Hj+nnOhmMo+nJ/DlhzNVOcnZzOLUdO08DBzrOZYOFPDeQWXlbZ8UL/QoAueLe40
+ vXdgVmi7KeaA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 07:33:55 -0700
+IronPort-SDR: PoVz2pXBjVTUT9DlfTQYcfPUohGMn5hhvWqYZhmscH6zT9y0UxtuZRV7CvcbhfJsLoPX88lsrR
+ 8TDSbWmn+l9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="450183284"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 31 Mar 2020 07:33:53 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jJHxj-00EWXQ-VY; Tue, 31 Mar 2020 17:33:55 +0300
+Date:   Tue, 31 Mar 2020 17:33:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Grant Likely <grant.likely@arm.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nd@arm.com, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH] Add documentation on meaning of -EPROBE_DEFER
+Message-ID: <20200331143355.GP1922688@smile.fi.intel.com>
+References: <20200327170132.17275-1-grant.likely@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331142138.GL30449@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200327170132.17275-1-grant.likely@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/31/20 at 04:21pm, Michal Hocko wrote:
-> On Tue 31-03-20 22:03:32, Baoquan He wrote:
-> > Hi Michal,
-> > 
-> > On 03/31/20 at 10:55am, Michal Hocko wrote:
-> > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> > > > Maybe I mis-read the code, but I don't see how this could happen. In the
-> > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
-> > > > within the node because this is checked in zone_spanned_pages_in_node().
-> > > 
-> > > zone_spanned_pages_in_node does chech the zone boundaries are within the
-> > > node boundaries. But that doesn't really tell anything about other
-> > > potential zones interleaving with the physical memory range.
-> > > zone->spanned_pages simply gives the physical range for the zone
-> > > including holes. Interleaving nodes are essentially a hole
-> > > (__absent_pages_in_range is going to skip those).
-> > > 
-> > > That means that when free_area_init_core simply goes over the whole
-> > > physical zone range including holes and that is why we need to check
-> > > both for physical and logical holes (aka other nodes).
-> > > 
-> > > The life would be so much easier if the whole thing would simply iterate
-> > > over memblocks...
-> > 
-> > The memblock iterating sounds a great idea. I tried with putting the
-> > memblock iterating in the upper layer, memmap_init(), which is used for
-> > boot mem only anyway. Do you think it's doable and OK? It yes, I can
-> > work out a formal patch to make this simpler as you said. The draft code
-> > is as below. Like this it uses the existing code and involves little change.
+On Fri, Mar 27, 2020 at 05:01:32PM +0000, Grant Likely wrote:
+> Add a bit of documentation on what it means when a driver .probe() hook
+> returns the -EPROBE_DEFER error code, including the limitation that
+> -EPROBE_DEFER should be returned as early as possible, before the driver
+> starts to register child devices.
 > 
-> Doing this would be a step in the right direction! I haven't checked the
-> code very closely though. The below sounds way too simple to be truth I
-> am afraid. First for_each_mem_pfn_range is available only for
-> CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
-> saying that I really hate that being conditional). Also I haven't really
-> checked the deferred initialization path - I have a very vague
-> recollection that it has been converted to the memblock api but I have
-> happilly dropped all that memory.
+> Also: minor markup fixes in the same file
 
-Thanks for your quick response and pointing out the rest suspect aspects,
-I will investigate what you mentioned, see if they impact.
+Greg, can we at least for time being have this documented, means applied?
 
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Grant Likely <grant.likely@arm.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  .../driver-api/driver-model/driver.rst        | 32 ++++++++++++++++---
+>  1 file changed, 27 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/driver-model/driver.rst b/Documentation/driver-api/driver-model/driver.rst
+> index baa6a85c8287..63057d9bc8a6 100644
+> --- a/Documentation/driver-api/driver-model/driver.rst
+> +++ b/Documentation/driver-api/driver-model/driver.rst
+> @@ -4,7 +4,6 @@ Device Drivers
 >  
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index 138a56c0f48f..558d421f294b 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
-> >  		 * function.  They do not exist on hotplugged memory.
-> >  		 */
-> >  		if (context == MEMMAP_EARLY) {
-> > -			if (!early_pfn_valid(pfn)) {
-> > -				pfn = next_pfn(pfn);
-> > -				continue;
-> > -			}
-> > -			if (!early_pfn_in_nid(pfn, nid)) {
-> > -				pfn++;
-> > -				continue;
-> > -			}
-> >  			if (overlap_memmap_init(zone, &pfn))
-> >  				continue;
-> >  			if (defer_init(nid, pfn, end_pfn))
-> > @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
-> >  }
-> >  
-> >  void __meminit __weak memmap_init(unsigned long size, int nid,
-> > -				  unsigned long zone, unsigned long start_pfn)
-> > +				  unsigned long zone, unsigned long range_start_pfn)
-> >  {
-> > -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > +	unsigned long start_pfn, end_pfn;
-> > +	unsigned long range_end_pfn = range_start_pfn + size;
-> > +	int i;
-> > +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> > +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
-> > +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
-> > +		if (end_pfn > start_pfn)
-> > +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > +	}
-> >  }
-> >  
-> >  static int zone_batchsize(struct zone *zone)
-> 
+>  See the kerneldoc for the struct device_driver.
+>  
+> -
+>  Allocation
+>  ~~~~~~~~~~
+>  
+> @@ -167,9 +166,26 @@ the driver to that device.
+>  
+>  A driver's probe() may return a negative errno value to indicate that
+>  the driver did not bind to this device, in which case it should have
+> -released all resources it allocated::
+> +released all resources it allocated.
+> +
+> +Optionally, probe() may return -EPROBE_DEFER if the driver depends on
+> +resources that are not yet available (e.g., supplied by a driver that
+> +hasn't initialized yet).  The driver core will put the device onto the
+> +deferred probe list and will try to call it again later. If a driver
+> +must defer, it should return -EPROBE_DEFER as early as possible to
+> +reduce the amount of time spent on setup work that will need to be
+> +unwound and reexecuted at a later time.
+> +
+> +.. warning::
+> +      -EPROBE_DEFER must not be returned if probe() has already created
+> +      child devices, even if those child devices are removed again
+> +      in a cleanup path. If -EPROBE_DEFER is returned after a child
+> +      device has been registered, it may result in an infinite loop of
+> +      .probe() calls to the same driver.
+> +
+> +::
+>  
+> -	void (*sync_state)(struct device *dev);
+> +	void	(*sync_state)	(struct device *dev);
+>  
+>  sync_state is called only once for a device. It's called when all the consumer
+>  devices of the device have successfully probed. The list of consumers of the
+> @@ -212,6 +228,8 @@ over management of devices from the bootloader, the usage of sync_state() is
+>  not restricted to that. Use it whenever it makes sense to take an action after
+>  all the consumers of a device have probed.
+>  
+> +::
+> +
+>  	int 	(*remove)	(struct device *dev);
+>  
+>  remove is called to unbind a driver from a device. This may be
+> @@ -224,11 +242,15 @@ not. It should free any resources allocated specifically for the
+>  device; i.e. anything in the device's driver_data field.
+>  
+>  If the device is still present, it should quiesce the device and place
+> -it into a supported low-power state::
+> +it into a supported low-power state.
+> +
+> +::
+>  
+>  	int	(*suspend)	(struct device *dev, pm_message_t state);
+>  
+> -suspend is called to put the device in a low power state::
+> +suspend is called to put the device in a low power state.
+> +
+> +::
+>  
+>  	int	(*resume)	(struct device *dev);
+>  
 > -- 
-> Michal Hocko
-> SUSE Labs
+> 2.20.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
