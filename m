@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E24C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7C7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192D020772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468DB20772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646184;
-	bh=CamO4UEFcXfw9TeICbbmIbQ1M6RNs/sXyPRb67bcy08=;
+	s=default; t=1585646187;
+	bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o3TGmbK2NlqD9jr90lBgK8VNveptOrm15jhk0QEBd1on1uHn+fWp9g695mYQFhPtR
-	 BJ6oyKSQchu+1jrQDzhGqnGbbll9bPFolMLBWqJKwxGq56+vD4Cwe4MgRfFVgYvzCv
-	 5pYN4VM8zKR1zRtGpJcIz8ez3t99s9bmGTW8/KlA=
+	b=s1y62IqHKxwFMm4U25rT6TYdlz+KTsHcRn/LhgvM8gpbDqSEDr5RSRJuoSTOlzLrH
+	 C7nZAtJYLjAucBnvlossrVmKw2bkkQdhmP/IP6fHhto7qabUDH5jOT6PNqoNBT4/GR
+	 0YM9r9rtYUFdQd5aHQFcSb69n0oExRPIjjRldBb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730605AbgCaJQW (ORCPT
+        id S1731309AbgCaJQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:16:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36984 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731948AbgCaJQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:18 -0400
+        id S1731957AbgCaJQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:16:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B3692072E;
-        Tue, 31 Mar 2020 09:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 173EB20675;
+        Tue, 31 Mar 2020 09:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646177;
-        bh=CamO4UEFcXfw9TeICbbmIbQ1M6RNs/sXyPRb67bcy08=;
+        s=default; t=1585646181;
+        bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C0V8XZTLRsvP2cPAEOuXLdbE9xTc1Ls++c9NOgs/KcFdfG8ipaD2JgFg87oDkJHvk
-         gGbCj7wo4EWEgVad8P22EBX004M/xnA0bfbmY1fJ6Qy9B0AQFJi/QTcJtk3PH3vzXt
-         XFPg5WdGXEd5DAEDguAWTFX1DoaeiuDpFA1TmGfY=
+        b=tV0M5VxG3bWdIqW0KjSCvNChdrW30zpeSid8KQ68gDVw7+qfai7nJ0nIkUUvgn2ET
+         1P2NU8OhIbG9jXB5iqqc3eW+2/GpBTIvj1EJDhJN7CroHuO2rwNL1MoHW+1L3SsgFE
+         yiPvRZBSO0pQK2CczbtTAohI+RXbNsi7+U3n3tU0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/155] mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
-Date:   Tue, 31 Mar 2020 10:58:29 +0200
-Message-Id: <20200331085426.135403360@linuxfoundation.org>
+Subject: [PATCH 5.4 060/155] arm64: dts: ls1043a: FMan erratum A050385
+Date:   Tue, 31 Mar 2020 10:58:20 +0200
+Message-Id: <20200331085425.273996489@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit ba32679cac50c38fdf488296f96b1f3175532b8e ]
+[ Upstream commit b54d3900862374e1bb2846e6b39d79c896c0b200 ]
 
-When trying to transmit to an unknown destination, the mesh code would
-unconditionally transmit a HWMP PREQ even if HWMP is not the current
-path selection algorithm.
+The LS1043A SoC is affected by the A050385 erratum stating that
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak thus stopping further packet processing.
 
-Signed-off-by: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
-Link: https://lore.kernel.org/r/20200305140409.12204-1-cavallar@lri.fr
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index d699833703819..38a0383dfbcfa 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -1152,7 +1152,8 @@ int mesh_nexthop_resolve(struct ieee80211_sub_if_data *sdata,
- 		}
- 	}
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+index 6082ae0221364..d237162a87446 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+@@ -20,6 +20,8 @@
+ };
  
--	if (!(mpath->flags & MESH_PATH_RESOLVING))
-+	if (!(mpath->flags & MESH_PATH_RESOLVING) &&
-+	    mesh_path_sel_is_hwmp(sdata))
- 		mesh_queue_preq(mpath, PREQ_Q_F_START);
- 
- 	if (skb_queue_len(&mpath->frame_queue) >= MESH_FRAME_QUEUE_LEN)
+ &fman0 {
++	fsl,erratum-a050385;
++
+ 	/* these aliases provide the FMan ports mapping */
+ 	enet0: ethernet@e0000 {
+ 	};
 -- 
 2.20.1
 
