@@ -2,53 +2,53 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E9CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54527C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5631B208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D24212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645351;
-	bh=DgDqi8cEBElxJzK0lL7sf2xDwK9UfCXAY8lCEVZWOWI=;
+	s=default; t=1585645354;
+	bh=+ZWBgP1H1PJaYmkcqqo0h/4VC5fxqrnCIWwQ5MstPNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HVsufFpUGlmtrXsp5f8UtiB3NVU46cLWFI5vU9szOnTWUb7TRSjnlxHWQG9EBQsuS
-	 FUKNc5aJ2u65SkPivG5ua3Iyy8MHV4LoHMk9hT22eUTgsgE419pHeHMQALQ6y9vjE3
-	 imx0/MU8217UvkH/VINDJZvyWZWa83uJxjDZbkok=
+	b=a4bbV9Exbv6cKn0cZgfoBolh/dLIJnS6nyKGIv84PMdSv3Do94MT5kYDiVVcKCHeB
+	 ZmkIP/5TCQxSo4NvO2/3C0SxnvZu4jYnIsJuznyrCbthtkZKojdPBOI4PnL+uvs/qV
+	 cGXiAHv5TUDYtokNcbxTMhetqrnJ0WSD5YkLULkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730717AbgCaJCa (ORCPT
+        id S1730725AbgCaJCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41944 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730704AbgCaJC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:02:26 -0400
+        id S1730714AbgCaJC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:02:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8D9D208E0;
-        Tue, 31 Mar 2020 09:02:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57E2920B1F;
+        Tue, 31 Mar 2020 09:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645346;
-        bh=DgDqi8cEBElxJzK0lL7sf2xDwK9UfCXAY8lCEVZWOWI=;
+        s=default; t=1585645348;
+        bh=+ZWBgP1H1PJaYmkcqqo0h/4VC5fxqrnCIWwQ5MstPNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rxo/OG2H6Xh1auII3j+RNQr7EtHZCoRIb+GgREMB9c/GVTLjfp5ZEbhYIirkcWnI7
-         hnv3r9X3gr8RAp33Yqzlo4hSLUTlAxTv+X3A/n90P6ykaFZVGKWeni0h7/enJd4Faj
-         k6RRZkucsOozexG0B5i9USKKzRmfrfDgGhuyp1ao=
+        b=pBxS1JS3ni0hsQB2+/P4SbPqqzZmA7i9fMEEIhcjeqWEJ3LUF4q3mIqBByfk0GRu3
+         mSKlqoXzUJ7gazb8OVE5XLM8va9Y3qreLmCMkigIESawPFtTv4ySAD5XDA4VKbfkM5
+         eFs/6pqzrJOA+y7Z+Jq8KjeMYobNIzYKUKnEXEpM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 025/170] net: phy: mdio-bcm-unimac: Fix clock handling
-Date:   Tue, 31 Mar 2020 10:57:19 +0200
-Message-Id: <20200331085426.752610605@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 003/170] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
+Date:   Tue, 31 Mar 2020 10:56:57 +0200
+Message-Id: <20200331085424.442084970@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -61,41 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit c312c7818b86b663d32ec5d4b512abf06b23899a ]
+[ Upstream commit 18d200460cd73636d4f20674085c39e32b4e0097 ]
 
-The DT binding for this PHY describes an *optional* clock property.
-Due to a bug in the error handling logic, we are actually ignoring this
-clock *all* of the time so far.
+The busy timeout for the CMD5 to put the eMMC into sleep state, is specific
+to the card. Potentially the timeout may exceed the host->max_busy_timeout.
+If that becomes the case, mmc_sleep() converts from using an R1B response
+to an R1 response, as to prevent the host from doing HW busy detection.
 
-Fix this by using devm_clk_get_optional() to handle this clock properly.
+However, it has turned out that some hosts requires an R1B response no
+matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
+that, if the R1B gets enforced, the host becomes fully responsible of
+managing the needed busy timeout, in one way or the other.
 
-Fixes: b78ac6ecd1b6b ("net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider")
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200311092036.16084-1-ulf.hansson@linaro.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio-bcm-unimac.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/mmc/core/mmc.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -242,11 +242,9 @@ static int unimac_mdio_probe(struct plat
- 		return -ENOMEM;
- 	}
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
-+	priv->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
- 		return PTR_ERR(priv->clk);
--	else
--		priv->clk = NULL;
- 
- 	ret = clk_prepare_enable(priv->clk);
- 	if (ret)
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index f6912ded652dc..de14b5845f525 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -1910,9 +1910,12 @@ static int mmc_sleep(struct mmc_host *host)
+ 	 * If the max_busy_timeout of the host is specified, validate it against
+ 	 * the sleep cmd timeout. A failure means we need to prevent the host
+ 	 * from doing hw busy detection, which is done by converting to a R1
+-	 * response instead of a R1B.
++	 * response instead of a R1B. Note, some hosts requires R1B, which also
++	 * means they are on their own when it comes to deal with the busy
++	 * timeout.
+ 	 */
+-	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
++	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && host->max_busy_timeout &&
++	    (timeout_ms > host->max_busy_timeout)) {
+ 		cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
+ 	} else {
+ 		cmd.flags = MMC_RSP_R1B | MMC_CMD_AC;
+-- 
+2.20.1
+
 
 
