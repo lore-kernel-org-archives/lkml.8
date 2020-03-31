@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F46C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28793C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B5320B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71A320B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645406;
-	bh=oaAtHJtM84W+1ON8Z6ZB0S+/6Uf0penKkZJl/ZES+/8=;
+	s=default; t=1585645415;
+	bh=2vGgD4H5dto+NnkoP/8GmGv6oQW+1nr5MOXHsQ/uGgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gI09Y3UBgFpNoki7rgmHjyJ+qVwP8jQPerNIudQGJ03X4z4Hk1lSAqEX0ySLbnfon
-	 l1C9TJBQGGCxp2vKdZWgxYSKHKxHkzG34nmb28xyTmKwpe2WVDd6aRvX8u6RImxemR
-	 ahLWBM0M6PtRdw42bPFUZafwZzTK27TDgGIy6alQ=
+	b=gU/9UTuT2eL+kiloOeNRrtlgtOa7MYDv/qDNhWU8271id5Of+Qre7Gce9PjHSGMBq
+	 z61KOko/0yu7R7BFTg9yVkNRU5MhdZOfUsC4fDZ+bmohi9C+NvAG8Nf4epCmS4lDDZ
+	 fE4/XXjPlnqAGw7+3zn1BIXLBFiY5K+Lwd6ll/Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730440AbgCaJDU (ORCPT
+        id S1730840AbgCaJDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:03:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42998 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730180AbgCaJDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:03:17 -0400
+        id S1730603AbgCaJDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ACC5208E0;
-        Tue, 31 Mar 2020 09:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77AA9208E0;
+        Tue, 31 Mar 2020 09:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645396;
-        bh=oaAtHJtM84W+1ON8Z6ZB0S+/6Uf0penKkZJl/ZES+/8=;
+        s=default; t=1585645409;
+        bh=2vGgD4H5dto+NnkoP/8GmGv6oQW+1nr5MOXHsQ/uGgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKhBDFU53gz0bqGHRvaIO3Bu44ZG8Ct10n2Q3acSPNy6LwoSWwuKLX4voOvkTLK9E
-         RAn8psVRNShRRWAG1Eku08h7IPFlp3nnGRhraDcvu2ZvsNjnRYRcX3ot2YOzZJQcRr
-         UEsuELFDPJq7Ywj3HOjQiCPZML/bYgJv2qbBmRHA=
+        b=AdDA6UlWn96wI5SYsP9CCq9SD8DUN2g4kuSDB8DS61xxKm3tibNHX04LNPR01S/cY
+         /Up5PuYbjw2HM4X8CR6AZ+93xu5MD/FaYboCm3KHRhmqshT3yTZcFt7n3UZ6qAqXTn
+         rvnKsX8bqSDUv4ORaXW4t03cDgwNFzZurL5r1+3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 041/170] net: bcmgenet: keep MAC in reset until PHY is up
-Date:   Tue, 31 Mar 2020 10:57:35 +0200
-Message-Id: <20200331085428.748528317@linuxfoundation.org>
+Subject: [PATCH 5.5 045/170] bnxt_en: Free context memory after disabling PCI in probe error path.
+Date:   Tue, 31 Mar 2020 10:57:39 +0200
+Message-Id: <20200331085429.255371508@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,100 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 88f6c8bf1aaed5039923fb4c701cab4d42176275 ]
+[ Upstream commit 62bfb932a51f6d08eb409248e69f8d6428c2cabd ]
 
-As noted in commit 28c2d1a7a0bf ("net: bcmgenet: enable loopback
-during UniMAC sw_reset") the UniMAC must be clocked at least 5
-cycles while the sw_reset is asserted to ensure a clean reset.
+Other shutdown code paths will always disable PCI first to shutdown DMA
+before freeing context memory.  Do the same sequence in the error path
+of probe to be safe and consistent.
 
-That commit enabled local loopback to provide an Rx clock from the
-GENET sourced Tx clk. However, when connected in MII mode the Tx
-clk is sourced by the PHY so if an EPHY is not supplying clocks
-(e.g. when the link is down) the UniMAC does not receive the
-necessary clocks.
-
-This commit extends the sw_reset window until the PHY reports that
-the link is up thereby ensuring that the clocks are being provided
-to the MAC to produce a clean reset.
-
-One consequence is that if the system attempts to enter a Wake on
-LAN suspend state when the PHY link has not been active the MAC
-may not have had a chance to initialize cleanly. In this case, we
-remove the sw_reset and enable the WoL reception path as normal
-with the hope that the PHY will provide the necessary clocks to
-drive the WoL blocks if the link becomes active after the system
-has entered suspend.
-
-Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: c20dc142dd7b ("bnxt_en: Disable bus master during PCI shutdown and driver unload.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c     |   10 ++++------
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |    6 +++++-
- drivers/net/ethernet/broadcom/genet/bcmmii.c       |    6 ++++++
- 3 files changed, 15 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1972,6 +1972,8 @@ static void umac_enable_set(struct bcmge
- 	u32 reg;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11959,12 +11959,12 @@ init_err_pci_clean:
+ 	bnxt_hwrm_func_drv_unrgtr(bp);
+ 	bnxt_free_hwrm_short_cmd_req(bp);
+ 	bnxt_free_hwrm_resources(bp);
+-	bnxt_free_ctx_mem(bp);
+-	kfree(bp->ctx);
+-	bp->ctx = NULL;
+ 	kfree(bp->fw_health);
+ 	bp->fw_health = NULL;
+ 	bnxt_cleanup_pci(bp);
++	bnxt_free_ctx_mem(bp);
++	kfree(bp->ctx);
++	bp->ctx = NULL;
  
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	if (reg & CMD_SW_RESET)
-+		return;
- 	if (enable)
- 		reg |= mask;
- 	else
-@@ -1991,13 +1993,9 @@ static void reset_umac(struct bcmgenet_p
- 	bcmgenet_rbuf_ctrl_set(priv, 0);
- 	udelay(10);
- 
--	/* disable MAC while updating its registers */
--	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
--
--	/* issue soft reset with (rg)mii loopback to ensure a stable rxclk */
--	bcmgenet_umac_writel(priv, CMD_SW_RESET | CMD_LCL_LOOP_EN, UMAC_CMD);
-+	/* issue soft reset and disable MAC while updating its registers */
-+	bcmgenet_umac_writel(priv, CMD_SW_RESET, UMAC_CMD);
- 	udelay(2);
--	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
- }
- 
- static void bcmgenet_intr_disable(struct bcmgenet_priv *priv)
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-@@ -132,8 +132,12 @@ int bcmgenet_wol_power_down_cfg(struct b
- 		return -EINVAL;
- 	}
- 
--	/* disable RX */
-+	/* Can't suspend with WoL if MAC is still in reset */
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
-+	if (reg & CMD_SW_RESET)
-+		reg &= ~CMD_SW_RESET;
-+
-+	/* disable RX */
- 	reg &= ~CMD_RX_EN;
- 	bcmgenet_umac_writel(priv, reg, UMAC_CMD);
- 	mdelay(10);
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -95,6 +95,12 @@ void bcmgenet_mii_setup(struct net_devic
- 			       CMD_HD_EN |
- 			       CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE);
- 		reg |= cmd_bits;
-+		if (reg & CMD_SW_RESET) {
-+			reg &= ~CMD_SW_RESET;
-+			bcmgenet_umac_writel(priv, reg, UMAC_CMD);
-+			udelay(2);
-+			reg |= CMD_TX_EN | CMD_RX_EN;
-+		}
- 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
- 	} else {
- 		/* done if nothing has changed */
+ init_err_free:
+ 	free_netdev(dev);
 
 
