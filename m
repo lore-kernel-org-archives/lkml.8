@@ -2,112 +2,148 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF1FC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC0AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFDF20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7320320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:50:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp7OQ06N"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lv1z89sY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730595AbgCaLt5 (ORCPT
+        id S1730645AbgCaLur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:49:57 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53820 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730334AbgCaLt4 (ORCPT
+        Tue, 31 Mar 2020 07:50:47 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20820 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730334AbgCaLuq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:49:56 -0400
-Received: by mail-pj1-f66.google.com with SMTP id l36so966247pjb.3;
-        Tue, 31 Mar 2020 04:49:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/wPvbpIMhd7MnskghgUO5jeF7ND/28Jj4zI+1cNb8CE=;
-        b=cp7OQ06NQE0XtQPzutp24bGeZ2NvsNJQmmnWK3ccLOyanaxOxMc2oNRWBldBtsxLpA
-         tXMZ6HXF1y9xmtg1pg8roQxQiI8fzmTobx0P/zZsZwhkq6f8NsJy2NHoPVbdlkfhH3+a
-         lo8D5gucRqYfdEIqnZ4q+mCmFh3ego3D9ggr8FaK4RK+G52/NKzopGrBxquCHQFJPqKT
-         p4HTq6r7yOqZlVLcnL5D/C3wiQfv6eTWeAHUEcK4F3S4DCG0pYAkqmlcHnTyBHd6n20N
-         d2Dm4YyON6KekpYxDWcILIKq/wl0pzLcU861XGp0vJyJNU64KwMeK0hdPRtRZJaj/VEj
-         XFpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/wPvbpIMhd7MnskghgUO5jeF7ND/28Jj4zI+1cNb8CE=;
-        b=SdYTTPYwrPUPtXkcZesCQCLtWH7IULY79Jk2nT6ngY7hswjGWv4EAe71t1n1aIQBR+
-         la+Fs3qYOa1xfMsWJtwP3mMxXdR/GwJlRLINH0oHhpKGqtKB3gM7qqd95G49x6zNk6jS
-         M0gTi/Bshz8jB9jJkpq8Y+L0c0iJemN/QohfIr22fcpGKtHV+WcMRdHdJZJZt3g2PjXN
-         qyPMIFR0qHhOZ5kEP/rUl+hwZy8NfPt1Ntguyee5mPnt7MCYmeIL9UL9C6EFtxMtLvPb
-         eETNxKYDKzDMjskvPIo/JIQk3ROmwOf4BPdvxlTAYqUfiaWMnTjmlokQrqw8LmdIxUZP
-         LSHw==
-X-Gm-Message-State: AGi0PuZr6soBG7pO0mz02I7twm6c7RX+rwtxvetQK0uL34xwdoLVtZqN
-        XhL6TCoq+ZGtKUmV7j6y7b54eiBPfRhPfg==
-X-Google-Smtp-Source: APiQypIBjqOl1pWqZwL+WPV3jBmwrFFA8SIvj0PVeEIp3RjvywwUIvLZPi9mZYlsFCTo4/JTUnnYwA==
-X-Received: by 2002:a17:90b:4d04:: with SMTP id mw4mr3524626pjb.180.1585655395317;
-        Tue, 31 Mar 2020 04:49:55 -0700 (PDT)
-Received: from SARKAR ([122.178.242.244])
-        by smtp.gmail.com with ESMTPSA id z66sm2843635pfz.30.2020.03.31.04.49.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 04:49:54 -0700 (PDT)
-Message-ID: <5e832e62.1c69fb81.2a0e9.b85d@mx.google.com>
-X-Google-Original-Message-ID: <20200331114951.GB7750@rohitsarkar5398@gmail.com>
-Date:   Tue, 31 Mar 2020 17:19:51 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     "Sa, Nuno" <Nuno.Sa@analog.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "stefan.popa@analog.com" <stefan.popa@analog.com>,
-        "zhongjiang@huawei.com" <zhongjiang@huawei.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
- DEFINE_SIMPLE_ATTRIBUTE
-References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
- <20200329103818.2fce9529@archlinux>
- <aee10d6bfc5f2fef85d90245304f3e0f368f94ec.camel@analog.com>
- <BN6PR03MB33472A88BA78392686737F9099C80@BN6PR03MB3347.namprd03.prod.outlook.com>
- <74033597-c348-03df-d52f-748bf52c1a12@metafoo.de>
- <5e832756.1c69fb81.19c58.78e8@mx.google.com>
+        Tue, 31 Mar 2020 07:50:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585655445;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6rSn99Jf2Yhqj1O2XI4gkMZw531juCWPbfOI9Kxk2+Q=;
+        b=Lv1z89sYKHM6KVR4CVvGkoN5wOLa+B9aTmfoi6aci//DqV76T7z/jGs0UWE+OwXsaUJ+jc
+        xVbdcuMQ/8H2xh/TdUkLk4n/MIfjHhZsrnad2ELMEe7oD78tHugfgG51cvnRL7tgv8zaRD
+        Wxn49hxKNm8+zbyeT+C8tlz/eC6Zbh4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-399-lqV69-6ZN0Cq0oOUF3eelA-1; Tue, 31 Mar 2020 07:50:41 -0400
+X-MC-Unique: lqV69-6ZN0Cq0oOUF3eelA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA19118CA243;
+        Tue, 31 Mar 2020 11:50:39 +0000 (UTC)
+Received: from fuller.cnet (ovpn-116-11.gru2.redhat.com [10.97.116.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67F8319756;
+        Tue, 31 Mar 2020 11:50:39 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id 85183418CC02; Tue, 31 Mar 2020 08:50:14 -0300 (-03)
+Date:   Tue, 31 Mar 2020 08:50:14 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Chris Friesen <chris.friesen@windriver.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jim Somerville <Jim.Somerville@windriver.com>,
+        Christoph Lameter <cl@linux.com>
+Subject: Re: [patch 2/3] isolcpus: affine kernel threads to specified cpumask
+Message-ID: <20200331115014.GA2182@fuller.cnet>
+References: <20200328152117.881555226@redhat.com>
+ <20200328152503.225876188@redhat.com>
+ <20200331005706.GA24647@lenoir>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5e832756.1c69fb81.19c58.78e8@mx.google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200331005706.GA24647@lenoir>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Nuno,
-> > > > 
-> > > I don't have the exact parts that this patch is touching but I have other parts where this patch
-> > > applies and should be same. So, the idea to test this is to read the files in debugfs? Maybe also
-> > > some unbind + binding?
-> > > 
-> > > I will try to test this still today...
+On Tue, Mar 31, 2020 at 02:57:08AM +0200, Frederic Weisbecker wrote:
+> On Sat, Mar 28, 2020 at 12:21:19PM -0300, Marcelo Tosatti wrote:
+> > This is a kernel enhancement to configure the cpu affinity of kernel threads via kernel boot option isolcpus=no_kthreads,<isolcpus_params>,<cpulist>
 > > 
-> > The stress test is to open the debugfs file, then unbind the device and then
-> > read from the still open debugfs file.
-> Yes, also just to be sure, we need to test DEFINE_DEBUGFS_ATTRIBUTE
-> along with debugfs_create_file_unsafe. I will send out another patch
-> that changes debugfs_create_file to debugfs_create_file_unsafe and then
-> that can be tested.
-Have sent out a v2 that is ready to be tested
-> > - Lars
+> > When this option is specified, the cpumask is immediately applied upon
+> > thread launch. This does not affect kernel threads that specify cpu
+> > and node.
+> > 
+> > This allows CPU isolation (that is not allowing certain threads
+> > to execute on certain CPUs) without using the isolcpus=domain parameter,
+> > making it possible to enable load balancing on such CPUs
+> > during runtime (see kernel-parameters.txt).
+> > 
+> > Note-1: this is based off on Wind River's patch at
+> > https://github.com/starlingx-staging/stx-integ/blob/master/kernel/kernel-std/centos/patches/affine-compute-kernel-threads.patch
+> > 
+> > Difference being that this patch is limited to modifying
+> > kernel thread cpumask: Behaviour of other threads can
+> > be controlled via cgroups or sched_setaffinity.
+> > 
+> > Note-2: Wind River's patch was based off Christoph Lameter's patch at
+> > https://lwn.net/Articles/565932/ with the only difference being
+> > the kernel parameter changed from kthread to kthread_cpus.
+> > 
+> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+> > 
+> > ---
+> >  Documentation/admin-guide/kernel-parameters.txt |    8 ++++++++
+> >  include/linux/sched/isolation.h                 |    1 +
+> >  kernel/kthread.c                                |    6 ++++--
+> >  kernel/sched/isolation.c                        |    6 ++++++
+> >  4 files changed, 19 insertions(+), 2 deletions(-)
+> > 
+> > Index: linux-2.6/Documentation/admin-guide/kernel-parameters.txt
+> > ===================================================================
+> > --- linux-2.6.orig/Documentation/admin-guide/kernel-parameters.txt
+> > +++ linux-2.6/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -1959,6 +1959,14 @@
+> >  			  the CPU affinity syscalls or cpuset.
+> >  			  <cpu number> begins at 0 and the maximum value is
+> >  			  "number of CPUs in system - 1".
+> > +			  When using cpusets, use the isolcpus option "kthread"
+> > +			  to avoid creation of kernel threads on isolated CPUs.
+> > +
+> > +			kthread
+> > +			  Adjust the CPU affinity mask of unbound kernel threads to
+> > +			  not contain CPUs on the isolated list. This complements
+> > +			  the isolation provided by the cpusets mechanism described
+> > +			  above and by managed_irq option.
+
+Hi Frederic,
+
+> So, what about what I suggested with having "unbound" instead, which
+> includes all the CPU-unbound work?
 > 
-> Thanks,
-> Rohit
-Thanks,
-Rohit
+>  HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU | HK_FLAG_MISC | HK_FLAG_KTHREAD | HK_FLAG_SCHED
+
+After more thought, it would share certain flags with nohz_full=, which
+seemed confusing.
+
+> (and yes your suggestion of including HK_FLAG_SCHED is good).
+> 
+> Because I don't see the point of exposing kthread isolation alone as an ABI
+> so far.
+> 
+> Later I suspect I'll turn all these flags into a single HK_FLAG_UNBOUND.
+
+How about keeping the flags separate, and then on top of that do
+an "unbound" flag (less typing needed).
+
+This would allow users to combine the individual flags (again, useful
+for debugging) while at the same time having an option which groups
+all the others?
+
