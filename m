@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FDAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DDDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79BE521473
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408A620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646043;
-	bh=SgjzowQaTkWqrRUAZSl+8DClTAw+pzxwifTkKUtxYts=;
+	s=default; t=1585646047;
+	bh=JspOp3JCato+Ngd4oQfQrfM4XN3jMP+GM9OQRSWLRW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xcNjYxnlsFhstP0gRIVPDInvw5tJmyRmfsiTPIsyKrfjXFC0SC7zVDiQBiFII5Gvy
-	 nf/Cs3DBMnfftlX1VPiJrs251WwnHJ/HX7ynt0sHAIY8/bQ+X3RHk3BMlQ7IKimZP9
-	 6P9QcR20mG2R0YYRFG2btRbSKrUQuD1xk85xdeMw=
+	b=J8wfPKvjZOIjV4xV63z3YIivhHBcOBe8l3W1jzb8ZQ4SFvXVhndVT/rA+5gUTlQU7
+	 TJh6hWODJTvBLhZ9RK7uaE2AAg5eqEN38qoM53luac8Gc/CI7LfZ215obyDlFUv7EY
+	 NkBiHCb5jjbpHiBLatJ/6Gk4yAOCfjYfoTmS8djU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731787AbgCaJOC (ORCPT
+        id S1730429AbgCaJOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33668 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgCaJOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:14:00 -0400
+        id S1726299AbgCaJOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:14:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A65B2072E;
-        Tue, 31 Mar 2020 09:13:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAA1C2137B;
+        Tue, 31 Mar 2020 09:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646038;
-        bh=SgjzowQaTkWqrRUAZSl+8DClTAw+pzxwifTkKUtxYts=;
+        s=default; t=1585646043;
+        bh=JspOp3JCato+Ngd4oQfQrfM4XN3jMP+GM9OQRSWLRW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D5h27Qkj2W0lxb9n8wg1r84RUdspygLvYSP/5RuxsoPKXVo4VLR5nSCizcTIGWnU1
-         tCAvpDfLrtw0izsLfTTd7jb2pJCnVpw7LJcT8HSEcD+oid7Vqy04fQC5OZcLoYTZ1E
-         XYXgOMgF++mcG3z7a/C99LgdXCQ/QZ1fbik4J8+Y=
+        b=JEk+3Cvnsw3ySzUfv6/LVhZL8+LXM7fOsHA7aNFliurF+DPk4vJO7QcEDnz6BBjrr
+         T3A/TTc/WYxHMX20aDauG6p0fI52o0FwZtDQI3zP/5NqL+7CjvQpijPw4M6I0wBo2W
+         3siSjlHgG89uhL4dVdXVLauF1n8F74Z+HDQk+oNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
-        Pawel Dembicki <paweldembicki@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        stable@vger.kernel.org, Paul Blakey <paulb@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 026/155] net: qmi_wwan: add support for ASKEY WWHC050
-Date:   Tue, 31 Mar 2020 10:57:46 +0200
-Message-Id: <20200331085421.327616405@linuxfoundation.org>
+Subject: [PATCH 5.4 027/155] net/sched: act_ct: Fix leak of ct zone template on replace
+Date:   Tue, 31 Mar 2020 10:57:47 +0200
+Message-Id: <20200331085421.444017394@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,62 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Dembicki <paweldembicki@gmail.com>
+From: Paul Blakey <paulb@mellanox.com>
 
-[ Upstream commit 12a5ba5a1994568d4ceaff9e78c6b0329d953386 ]
+[ Upstream commit dd2af10402684cb5840a127caec9e7cdcff6d167 ]
 
-ASKEY WWHC050 is a mcie LTE modem.
-The oem configuration states:
+Currently, on replace, the previous action instance params
+is swapped with a newly allocated params. The old params is
+only freed (via kfree_rcu), without releasing the allocated
+ct zone template related to it.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
-D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=1690 ProdID=7588 Rev=ff.ff
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=813f0eef6e6e
-C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=84(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=86(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E:  Ad=88(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
-E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+Call tcf_ct_params_free (via call_rcu) for the old params,
+so it will release it.
 
-Tested on openwrt distribution.
-
-Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
+Signed-off-by: Paul Blakey <paulb@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/sched/act_ct.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1210,6 +1210,7 @@ static const struct usb_device_id produc
- 	{QMI_FIXED_INTF(0x1435, 0xd182, 5)},	/* Wistron NeWeb D18 */
- 	{QMI_FIXED_INTF(0x1435, 0xd191, 4)},	/* Wistron NeWeb D19Q1 */
- 	{QMI_QUIRK_SET_DTR(0x1508, 0x1001, 4)},	/* Fibocom NL668 series */
-+	{QMI_FIXED_INTF(0x1690, 0x7588, 4)},    /* ASKEY WWHC050 */
- 	{QMI_FIXED_INTF(0x16d8, 0x6003, 0)},	/* CMOTech 6003 */
- 	{QMI_FIXED_INTF(0x16d8, 0x6007, 0)},	/* CMOTech CHE-628S */
- 	{QMI_FIXED_INTF(0x16d8, 0x6008, 0)},	/* CMOTech CMU-301 */
+--- a/net/sched/act_ct.c
++++ b/net/sched/act_ct.c
+@@ -739,7 +739,7 @@ static int tcf_ct_init(struct net *net,
+ 	if (goto_ch)
+ 		tcf_chain_put_by_act(goto_ch);
+ 	if (params)
+-		kfree_rcu(params, rcu);
++		call_rcu(&params->rcu, tcf_ct_params_free);
+ 	if (res == ACT_P_CREATED)
+ 		tcf_idr_insert(tn, *a);
+ 
 
 
