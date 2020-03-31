@@ -2,134 +2,147 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E407BC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E7EC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AA220BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 152B320BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tetMq0tk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6iR0Ax8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbgCaPaB (ORCPT
+        id S1731125AbgCaPaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:30:01 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52150 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaPaB (ORCPT
+        Tue, 31 Mar 2020 11:30:05 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33252 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730391AbgCaPaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 11:30:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02VFTppm040271;
-        Tue, 31 Mar 2020 10:29:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585668591;
-        bh=kM4Ax6d+vhrMhW72KR5b85pDK4TnudTARv3wYwyWrtg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tetMq0tknzzZpVvEwpJLvt4eXavNQsnpk/tPWI8gD2HeuFdcRq8B90HPDd0c9AnUo
-         r5y3L2uK91IUR5AUITDe58qprFonipy2yxgkfjwTD9IsxULnl2jGE+CzTng/PEaW6y
-         jLwhD37QPmY68GG+AmWAF/RRa89c8JV1QzJMptOo=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02VFTpW0060517;
-        Tue, 31 Mar 2020 10:29:51 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Mar 2020 10:29:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Mar 2020 10:29:50 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02VFTm1v121414;
-        Tue, 31 Mar 2020 10:29:48 -0500
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <638d7136-6a74-8069-5331-b2248c948ed4@ti.com>
-Date:   Tue, 31 Mar 2020 20:59:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Received: by mail-lf1-f66.google.com with SMTP id x200so10508415lff.0;
+        Tue, 31 Mar 2020 08:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=xWWQQMjnoOXj+s35rdwO3AKWUNgB5UP2RN102SZyf9M=;
+        b=n6iR0Ax8nI25kt13ZeGCsBvnzPWCNcQh25Y3upu8+faElg1UmeSUZvzyCrEobwnxwc
+         gVNVJMeJVkjTnoRkX4CJnvEJrV5P1NW4deeOfm9g0Nercdv7CYLH2hH8ny2ka87gesHx
+         oyxIlVkIQuVkmpz7Tc/HGKF1aNxOjdpCvGTO1KhDoc0zeQuX/SOzgZ/pfeRUVUzuRBsp
+         XpFEKvQf+En0EZlW9iwD/63G2LR5zEzozv6vJ0Hy/LjskoC+GbEHzEV/d1aTUQgQQ9JP
+         cnMtBYNuvuGC9QJ2dMRo9w3h5iQSX3UHfPwiWqcWYzdtVloTd6TanNL1PTGtFWZycgcU
+         N+Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=xWWQQMjnoOXj+s35rdwO3AKWUNgB5UP2RN102SZyf9M=;
+        b=lXZOiUrA++XH+UWlD6ZzUIxye9eSbbFP+am29rqe6/a8TcVek7+PQvVt8xPPgFe/kR
+         FL4GihVeE4ZgkC63LjdjqN46GLWHf/DbcwpHqWjiwyTr5Gj77Cgm0OY/U5XSD9kQexCQ
+         encPqh3RtazqVhLRLJYrCvBL9rg87jeEJ3kh/k6qeFVUdfeuBmeiPKTQutJGzYJlF2Bx
+         RakKW4yxbdJqKA8n7h+L6M3m6Zzuy2wxuAmETUpDy/8DOuuTGKsAMNXHy+GjHQ9nzBo8
+         IM1ht1SUvIk8W672BhYAftcQZjzbrHpYbFlN3S6ijlgnU/2BMLUcUmFfJExh1xtZQFvE
+         veAg==
+X-Gm-Message-State: AGi0PuY6mXRToWL07eEt6V2MvtXo2RcnxlEt4eEoKd3pxXxiVx2Z2B/k
+        ZgLTttC8gxG9p1G+I2XeZHU=
+X-Google-Smtp-Source: APiQypLmVLtT8c3Ae8yFJGreZRae3ELGPZCOey9sa+nDWvoHUeTggKwcWmX/TR05X/+9guBOCeUrhg==
+X-Received: by 2002:ac2:4113:: with SMTP id b19mr2153946lfi.70.1585668599197;
+        Tue, 31 Mar 2020 08:29:59 -0700 (PDT)
+Received: from pablo-laptop ([2a02:a315:5445:5300:c0c9:238d:e5e0:ede5])
+        by smtp.googlemail.com with ESMTPSA id j125sm8827924lfj.38.2020.03.31.08.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 08:29:58 -0700 (PDT)
+Message-ID: <d9fe575926342b355f76e1f38fef62f0d7d38075.camel@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
+From:   =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 31 Mar 2020 17:29:56 +0200
+In-Reply-To: <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
+References: <20200312153411.13535-1-paul@crapouillou.net>
+         <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
+         <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
+         <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
+         <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
+         <X7728Q.UX8A28S31JO92@crapouillou.net>
+         <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200330141436.GG2431644@ulmo>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
-
-On 30/03/20 7:44 PM, Thierry Reding wrote:
-> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
->> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
->>> Only the Timer control register(TCLR) cannot be updated when the timer
->>> is running. Registers like Counter register(TCRR), loader register(TLDR),
->>> match register(TMAR) can be updated when the counter is running. Since
->>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
->>> timer for period/duty_cycle update.
->>
->> I'm not sure what is sensible here. Stopping the PWM for a short period
->> is bad, but maybe emitting a wrong period isn't better. You can however
->> optimise it if only one of period or duty_cycle changes.
->>
->> @Thierry, what is your position here? I tend to say a short stop is
->> preferable.
+On Tue, 2020-03-31 at 15:55 +0200, Marek Szyprowski wrote:
+> Hi Paul,
 > 
-> It's not clear to me from the above description how exactly the device
-> behaves, but I suspect that it may latch the values in those registers
-> and only update the actual signal output once a period has finished. I
-> know of a couple of other devices that do that, so it wouldn't be
-> surprising.
+> On 2020-03-31 15:09, Paul Cercueil wrote:
+> > Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > 
+> > Hi Marek,
+> > 
+> > Le mar. 31 mars 2020 à 7:36, Marek Szyprowski 
+> > <m.szyprowski@samsung.com> a écrit :
+> > > Hi Paul,
+> > > 
+> > > On 2020-03-18 15:25, Paul Cercueil wrote:
+> > > > > >   +    };
+> > > > > >   +
+> > > > > >   +    tsp_reg: regulator-1 {
+> > > > > >   +        compatible = "regulator-fixed";
+> > > > > >   +        regulator-name = "TSP_FIXED_VOLTAGES";
+> > > > > >   +        regulator-min-microvolt = <3300000>;
+> > > > > >   +        regulator-max-microvolt = <3300000>;
+> > > > > >   +        gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
+> > > > > >   +        startup-delay-us = <70000>;
+> > > > > >   +        enable-active-high;
+> > > > > >   +        regulator-boot-on;
+> > > > > >   +        regulator-always-on;
+> > > > > 
+> > > > >  always-on and boot-on should not be needed. You have a consumer 
+> > > > > for this
+> > > > >  regulator.
+> > > > 
+> > > >  About this: the touchscreen driver does not use a regulator, so I
+> > > >  believe that's why these properties were here.
+> > > > 
+> > > >  I sent patches upstream to address the issue:
+> > > >  https://protect2.fireeye.com/url?k=e8aedc29-b53072b3-e8af5766-0cc47a336fae-759579fd576d8382&u=https://lkml.org/lkml/2020/3/15/94 
+> > > > 
+> > > > 
+> > > >  I believe this means I cannot merge the i9100 devicetree until it is
+> > > >  acked.
+> > > 
+> > > One more information - similar change has been already posted, but it
+> > > looks it got lost then: https://patchwork.kernel.org/patch/10550903/
+> > 
+> > I was aware of this patch, but didn't know it was sent upstream.
+> > 
+> > This other patch uses two regulators, vdd/avdd but doesn't give any 
+> > reason why.
+> > 
+> I've checked the UniversalC210 schematic, which uses the same 
+> touchscreen chip. There are 2 supplies to the touchscreen chip: 2.8V VDD 
+> and 3.3V AVDD. Both are enabled by the same GPIO pin though. There is 
+> however no reset GPIO pin there.
+Hi
+Don't remember now how it worked on Galaxy S1, but it looks like it has
+the same setup - two regulators enabled by one GPIO pin.
 > 
-> Even if that was not the case, I think this is just the kind of thing
-> that we have to live with. Sometimes it just isn't possible to have all
-> supported devices adhere strictly to an API. So I think the best we can
-> do is have an API that loosely defines what's supposed to happen and
-> make a best effort to implement those semantics. If a device deviates
-> slightly from those expectations, we can always cross fingers and hope
-> that things still work. And it looks like they are.
-> 
-> So I think if Lokesh and Tony agree that this is the right thing to do
-> and have verified that things still work after this, that's about as
-> good as it's going to get.
+> > Paweł, is that really needed?
+> > 
+> Best regards
 
-Yes this is needed especially in the use-case[0] that I am trying to enable
-using PWM. In this case PWM cannot be stopped in between and needs to be updated
-dynamically. Also hardware doesn't provide any restrictions on updating the
-period. So IMHO, this might be the right thing to do.
-
-Tony did provide tested-by and I measured PWM signals on scope with these
-changes. Let me know if any thing else is required?
-
-[0] https://sourceforge.net/p/linuxptp/mailman/message/36943248/
-
-Thanks and regards,
-Lokesh
-
-> 
-> I know this is perhaps cheating a little, or turning a blind eye, but I
-> don't know what the alternative would be. Do we want to tell people that
-> a given PWM controller can't be used if it doesn't work according to our
-> expectations? That's hard to argue if that controller works just fine
-> for all known use-cases.
-> 
-> Thierry
-> 
