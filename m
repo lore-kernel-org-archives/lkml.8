@@ -2,79 +2,116 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC57C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7180EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3E2020784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585670595;
-	bh=QmepX9l5aviOm56/Qd1UErl4TtadKUX+jP7Va2re9AQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fWWIfblb40jsXWu54aNMfZclQrl/4D1ZwQF5ZQYxJQUmCraSVgE4sdmQZMzwdsT24
-	 +/L3f17eirgyBmAjW33O2ZZRXr2PNQwt5WPVIP83AeBtAQsfC3b6ul6eMeIkL6eTI5
-	 Spn/zJSb6GH8+voNrdUYmXlm/us3ZgdhjanhMdCU=
+	by mail.kernel.org (Postfix) with ESMTP id 453A9206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbgCaQDO (ORCPT
+        id S1731227AbgCaQD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 12:03:29 -0400
+Received: from mga06.intel.com ([134.134.136.31]:7045 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbgCaQDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:03:13 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2DAD206CC;
-        Tue, 31 Mar 2020 16:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585670593;
-        bh=QmepX9l5aviOm56/Qd1UErl4TtadKUX+jP7Va2re9AQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=0sVwBCga3J/rLKdy9JyIO5O7ZsKlYOoRniodTOoMOG9aNX3iAwSu60pSrU4xmcRwT
-         61j9uncp6v4T8uRPZf9KDeJSEvkc8Z773mlpc7z1mOOpuizkpncoWsBY+7/QG5ESc1
-         wf3KF43VHt3cXWC2q7NzYbpMS2FLuwFpcdrmnN7E=
-Date:   Tue, 31 Mar 2020 11:03:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, gregkh@linuxfoundation.org,
-        arnd@arndb.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
-Message-ID: <20200331160309.GA194762@google.com>
+        id S1730286AbgCaQD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:03:29 -0400
+IronPort-SDR: IiXMBa3bfCIuIJZm2w4b+W2Rhj4d15YERuatZP8CTPKLuF4Ey9v/6cjXJTMhl6vc6J6kWK35oi
+ suxY6cDKezgg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 09:02:57 -0700
+IronPort-SDR: i3YcuqOb7259MzCg51qQzr7zRWRdSHCZlHRjXjPHkSPzX8Syzb4FVL8NB/MFk0tDCUOYsULuoO
+ 7MWXEsVJyP5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="272809187"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Mar 2020 09:02:56 -0700
+Date:   Tue, 31 Mar 2020 09:08:43 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH] iommu/vt-d: Fix PASID cache flush
+Message-ID: <20200331090843.59961e03@jacob-builder>
+In-Reply-To: <53be1d27-6348-56db-7eac-6734f92f123d@redhat.com>
+References: <1585610725-78316-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <53be1d27-6348-56db-7eac-6734f92f123d@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
-> Since the current accelerator devices do not have standard PCIe capability
-> enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
-> been added to struct pci_dev.  Currently a PCI quirk must be used for the
-> devices that have such cap until the PCI cap is standardized. Add a helper
-> function to provide the check if a device supports the cmdmem capability.
+Actually, this is not a bug. The current code has:
+#define QI_PC_PASID_SEL             (QI_PC_TYPE | QI_PC_GRAN(1))
+
+Which already has the type and shift.
+
+In my vSVA series, I redefined granu such that I can use them in the 2D
+table lookup.
+
+-#define QI_PC_ALL_PASIDS       (QI_PC_TYPE | QI_PC_GRAN(0))        
+-#define QI_PC_PASID_SEL                (QI_PC_TYPE | QI_PC_GRAN(1))
++/* PASID cache invalidation granu */                               
++#define QI_PC_ALL_PASIDS       0                                   
++#define QI_PC_PASID_SEL                1                           
+
+Please ignore this, sorry about the confusion.
+
+On Tue, 31 Mar 2020 11:28:17 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
+
+> Hi Jacob,
 > 
-> Such capability is expected to be added to PCIe device cap enumeration in
-> the future.
+> On 3/31/20 1:25 AM, Jacob Pan wrote:
+> > PASID cache type and shift of granularity bits are missing in
+> > the current code.
+> > 
+> > Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table
+> > interface")
+> > 
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> 
+> Thanks
+> 
+> Eric
+> 
+> > ---
+> >  drivers/iommu/intel-pasid.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iommu/intel-pasid.c
+> > b/drivers/iommu/intel-pasid.c index 22b30f10b396..57d05b0fbafc
+> > 100644 --- a/drivers/iommu/intel-pasid.c
+> > +++ b/drivers/iommu/intel-pasid.c
+> > @@ -365,7 +365,8 @@ pasid_cache_invalidation_with_pasid(struct
+> > intel_iommu *iommu, {
+> >  	struct qi_desc desc;
+> >  
+> > -	desc.qw0 = QI_PC_DID(did) | QI_PC_PASID_SEL |
+> > QI_PC_PASID(pasid);
+> > +	desc.qw0 = QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
+> > +		   QI_PC_PASID(pasid) | QI_PC_TYPE;
+> >  	desc.qw1 = 0;
+> >  	desc.qw2 = 0;
+> >  	desc.qw3 = 0;
+> >   
+> 
 
-This needs some sort of thumbnail description of what "synchronous
-write notification" and "cmdmem" mean.
-
-Do you have a pointer to a PCI-SIG ECR or similar?
-
-Your window size seems to be 85 or so.  It would be easier if you used
-80 and wrapped the commit log to fit in 75 columns so it looks decent
-when "git log" indents it by 4.
+[Jacob Pan]
