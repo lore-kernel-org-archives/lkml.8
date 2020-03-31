@@ -2,203 +2,145 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC5DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE752C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0AA2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CE72072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJM3QE7O"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="esWvfnK1";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="wavDflmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgCaBlr (ORCPT
+        id S1729594AbgCaBoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 21:41:47 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:23098 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729358AbgCaBlr (ORCPT
+        Mon, 30 Mar 2020 21:44:00 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46984 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729089AbgCaBoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 21:41:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585618906;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uCvHMv98OtDr67jYpVLCMKXxZRhJK7JFA0omwE/cbpc=;
-        b=TJM3QE7OR9nIH19HP4Wuk8wQp+Y/oxzxeWmSrjFNRt1F15+7ZOqSXsgRT1BBaHpaJdoKn8
-        AIdXkM2aNklmcYL8aER5Eya0uyJk3Nn+YhhhacIxf9zYgzpJTEV2wTt2R0SKutag1Ccbl9
-        HvS/rwRla6cHaQzzfomy6LZWkb2Acd4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-372--8xn2ZqvPZCcT78xtiCDxw-1; Mon, 30 Mar 2020 21:41:42 -0400
-X-MC-Unique: -8xn2ZqvPZCcT78xtiCDxw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 30 Mar 2020 21:44:00 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE73D1005514;
-        Tue, 31 Mar 2020 01:41:40 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-23.pek2.redhat.com [10.72.8.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 91F6850C01;
-        Tue, 31 Mar 2020 01:41:31 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 09:41:09 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        linux-block@vger.kernel.org, groeck@chromium.org,
-        paolo.valente@linaro.org, linux-scsi@vger.kernel.org,
-        sqazi@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] scsi: core: Fix stall if two threads request budget
- at the same time
-Message-ID: <20200331014109.GA20230@ming.t460p>
-References: <20200330144907.13011-1-dianders@chromium.org>
- <20200330074856.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AE369C0FDE;
+        Tue, 31 Mar 2020 01:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585619039; bh=+JYwxjmNrGYe+FIxr1oRwnWUOSmki7yaI2j2Ch6XPXU=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=esWvfnK15aiaoYccxOYShAFDBFkXq0g92CgGjZAptlUnDhda0SqeUnof0RPvA2r1r
+         rKG3vZZEV+j7tQ+C9rEfi9fKGY8+InuVKcNDhGGwdQlBhdkO64apGIVPgGh6Y2F4th
+         FXsCHwg/xg8kglIQNGO3Scj0ZumqzHeXAGR93YZMVN1O3mSbVLbYyEykePJzRGrZwc
+         uAUN4o34AwergCVT9cwOzfDZh8E/KdeZvc5ATlpEc8OnX+GrYKPNXwlXj0c/KhZ5bH
+         r4VHE5isgHOnIMpz2b5Bx2YWjaIX8rGV0kOeMg5UDeKHHhBNI0bgkoQpnV6t83KNFZ
+         xdpqTM1q+qmAQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 05FABA00AE;
+        Tue, 31 Mar 2020 01:43:57 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 30 Mar 2020 18:43:51 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 30 Mar 2020 18:43:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lZuDVHVepN3yu0tCOo55Xi9Nw9hzJ3NvKeDOZlrKNGAWADwtgm2H9kIfFw+JgR+lS00t5sn5R0GW2K2pPnd1uIFe10s4/8VteYKrHk9XJeFeVtWXYtWncPWmynkGzY8jkBiyFJ0nwl3boWbMxFmJxR34gPJnpd+5ZCIbMFls4bHseE6KdNGMMzjruG2miqLRGQVHzl7ihFP+WbZ8oSqG6rJJwJtx+LuDU1MVMmewN2MEJn7TuNYQb7rEaWbzkLayCjKMTX9cktHQ5THLQRdmZ8WIbgBsFYRmdN3o1z0VHDDRIesUFdA0qpwJBxoeQFG5PL5fehfuD6G5zCFuoZncfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+JYwxjmNrGYe+FIxr1oRwnWUOSmki7yaI2j2Ch6XPXU=;
+ b=BVOsIh1Nhb4DlX9aHDFGOVqko7aXLXjKrA8sKDE3y4aJpxDtunCR3g6wxCD3glYAAvpt8np334d5cRwJnOE6AmNPd/IVjvSPLs5EWnsrEkCv81V049IJT7BSz0/hC0P81i5pgeW03JWgfrQMf6fepqTq/+018VWRokxASGMfYKymV/85XryC75ipM62dwQ8dOLW3ULf2vcWlviczS46syQ7x4SAGw0lIDY+ibGbbWqJRKo+Fi3GvcsPVrx6iKZSqialvG3ThmVDwTXCqYTc3qs+QctCIyhZ5JF5ezh9Kf9IZOrQlmmV4wudlPxevVlxFh0bSxz17z/v3fF970Qg67w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+JYwxjmNrGYe+FIxr1oRwnWUOSmki7yaI2j2Ch6XPXU=;
+ b=wavDflmJ/XlH+YuVruOS8hCqtvuz+Lc9iVTHI+csco9G5qOGJtb69exnPC14533PuO6BYuGujSnruio0pfbLWHY4pncWGOPzHVJjoFtyaHk/TSV+6AQk2EkVVxgr0f/nA16SN8Rtbn4/6ecvw4ux4v+G5YyhLlFk7OaJVSQLDkI=
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
+ by BYAPR12MB3447.namprd12.prod.outlook.com (2603:10b6:a03:a9::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Tue, 31 Mar
+ 2020 01:43:50 +0000
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
+ 01:43:50 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: Build regressions/improvements in v5.6
+Thread-Topic: Build regressions/improvements in v5.6
+Thread-Index: AQHWBpcvcUuu+ZudzU+b+A9JmGkSJahhl0cwgAAMygCAAEU6AIAABSyA
+Date:   Tue, 31 Mar 2020 01:43:49 +0000
+Message-ID: <8abe0bd7-d665-8625-ac4b-517f341fe0d3@synopsys.com>
+References: <20200330085854.19774-1-geert@linux-m68k.org>
+ <CAHp75Vc1gW2FnRpTNm6uu4gY3bSmccSkCFkAKqYraLincK29yA@mail.gmail.com>
+ <CAMuHMdXDBtOo_deXsmX=zA9_va0O5j8XydxoigmS35+Tj7xDDA@mail.gmail.com>
+ <CAHp75VfsfBD7djyB=S8QtQPdKTkpU5gFzyRYr8FshavoWgT0CA@mail.gmail.com>
+ <CY4PR1201MB01204FB968A6661FB8B295ACA1CB0@CY4PR1201MB0120.namprd12.prod.outlook.com>
+ <c8447243-98c6-d545-9766-e6b3f33f4d13@synopsys.com>
+ <a5e8ec79-2eff-7517-4b90-38d5cb366f45@roeck-us.net>
+In-Reply-To: <a5e8ec79-2eff-7517-4b90-38d5cb366f45@roeck-us.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-originating-ip: [24.7.46.224]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 978016bd-f6d0-463c-b7f5-08d7d514f608
+x-ms-traffictypediagnostic: BYAPR12MB3447:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB3447855CD2C14545F43D0E4FB6C80@BYAPR12MB3447.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-forefront-prvs: 0359162B6D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3592.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(366004)(376002)(346002)(136003)(396003)(39860400002)(36756003)(6506007)(71200400001)(8676002)(81166006)(81156014)(31696002)(4744005)(6512007)(107886003)(4326008)(53546011)(86362001)(2616005)(110136005)(316002)(66556008)(76116006)(66946007)(64756008)(66476007)(66446008)(5660300002)(478600001)(6486002)(54906003)(2906002)(26005)(8936002)(31686004)(186003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OjdsIno10Va6s7E+9sTZzS0Y6BGMzfLcMUOvxQF/9BR0Q+Cpt07ODWm0HRJ2J32SnqaIOkYAk+9FtONQva1j7g5kSuGL5voraXkPuxp16znWqhBT9BMBaTe0BR4c+omhixuXbvfFisGl6dcX0F4xtVAJumZCEVLLIbgRU9nqfo2dIYrRF1+JMXeYYnXHToCNcHsgHEstO+jAfV/7b1Xb0P15kA3nArZ5v1u7J716wQftRHOQMe8T8AR5I7SBmFWlfr6YWyY9khA4mHx3eQlCcC0kGUVOa9boVP5A/CvvbIVVcIxydA1HNG+r+HGvTxnKpf7Q19nubxeqq8zGDQAHhbf0aCGFhL77Ht06cELKOeNxy5FhyM1rmcjDv/111wUFCdL9YWM8uQLK5gbiMGW9Mr2WjE0922F0wpOQH0dgu3xQjx7DLz3CDwzhtotRXL3G
+x-ms-exchange-antispam-messagedata: x0c+IKJAM4Qnngtagkc7u9zFLuxIpIIl/FiyIwe0AKlFloDLjy/uZPwU79ezBv0QOZjnwE6ibBYxgz5cvS4+bchVL1/WcCkK4wg+aHhoHDbqLg3sHqV5/eC/1DPOhsk/dBztMUj6Iakr/5Sd+G8EbA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8F90019EAF54A04CA15F67A870A62860@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330074856.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MS-Exchange-CrossTenant-Network-Message-Id: 978016bd-f6d0-463c-b7f5-08d7d514f608
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 01:43:49.8074
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X3in3FpbYwNyphsV5CaGRhQmC9deHKboDPm2Wg3slAaJyMB5SxY4VdMk8v/vJQ8sT91/QIb4s9gEJ0gtEr+Mug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3447
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:49:06AM -0700, Douglas Anderson wrote:
-> It is possible for two threads to be running
-> blk_mq_do_dispatch_sched() at the same time with the same "hctx".
-> This is because there can be more than one caller to
-> __blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() doesn't
-> prevent more than one thread from entering.
-> 
-> If more than one thread is running blk_mq_do_dispatch_sched() at the
-> same time with the same "hctx", they may have contention acquiring
-> budget.  The blk_mq_get_dispatch_budget() can eventually translate
-> into scsi_mq_get_budget().  If the device's "queue_depth" is 1 (not
-> uncommon) then only one of the two threads will be the one to
-> increment "device_busy" to 1 and get the budget.
-> 
-> The losing thread will break out of blk_mq_do_dispatch_sched() and
-> will stop dispatching requests.  The assumption is that when more
-> budget is available later (when existing transactions finish) the
-> queue will be kicked again, perhaps in scsi_end_request().
-> 
-> The winning thread now has budget and can go on to call
-> dispatch_request().  If dispatch_request() returns NULL here then we
-> have a potential problem.  Specifically we'll now call
-
-I guess this problem should be BFQ specific. Now there is definitely
-requests in BFQ queue wrt. this hctx. However, looks this request is
-only available from another loser thread, and it won't be retrieved in
-the winning thread via e->type->ops.dispatch_request().
-
-Just wondering why BFQ is implemented in this way?
-
-> blk_mq_put_dispatch_budget() which translates into
-> scsi_mq_put_budget().  That will mark the device as no longer busy but
-> doesn't do anything to kick the queue.  This violates the assumption
-> that the queue would be kicked when more budget was available.
-> 
-> Pictorially:
-> 
-> Thread A                          Thread B
-> ================================= ==================================
-> blk_mq_get_dispatch_budget() => 1
-> dispatch_request() => NULL
->                                   blk_mq_get_dispatch_budget() => 0
->                                   // because Thread A marked
->                                   // "device_busy" in scsi_device
-> blk_mq_put_dispatch_budget()
-> 
-> The above case was observed in reboot tests and caused a task to hang
-> forever waiting for IO to complete.  Traces showed that in fact two
-> tasks were running blk_mq_do_dispatch_sched() at the same time with
-> the same "hctx".  The task that got the budget did in fact see
-> dispatch_request() return NULL.  Both tasks returned and the system
-> went on for several minutes (until the hung task delay kicked in)
-> without the given "hctx" showing up again in traces.
-> 
-> Let's attempt to fix this problem by detecting budget contention.  If
-> we're in the SCSI code's put_budget() function and we saw that someone
-> else might have wanted the budget we got then we'll kick the queue.
-> 
-> The mechanism of kicking due to budget contention has the potential to
-> overcompensate and kick the queue more than strictly necessary, but it
-> shouldn't hurt.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
->  drivers/scsi/scsi_scan.c   |  1 +
->  include/scsi/scsi_device.h |  2 ++
->  3 files changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index 610ee41fa54c..0530da909995 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -344,6 +344,21 @@ static void scsi_dec_host_busy(struct Scsi_Host *shost, struct scsi_cmnd *cmd)
->  	rcu_read_unlock();
->  }
->  
-> +static void scsi_device_dec_busy(struct scsi_device *sdev)
-> +{
-> +	bool was_contention;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&sdev->budget_lock, flags);
-> +	atomic_dec(&sdev->device_busy);
-> +	was_contention = sdev->budget_contention;
-> +	sdev->budget_contention = false;
-> +	spin_unlock_irqrestore(&sdev->budget_lock, flags);
-> +
-> +	if (was_contention)
-> +		blk_mq_run_hw_queues(sdev->request_queue, true);
-> +}
-> +
->  void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd)
->  {
->  	struct Scsi_Host *shost = sdev->host;
-> @@ -354,7 +369,7 @@ void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd *cmd)
->  	if (starget->can_queue > 0)
->  		atomic_dec(&starget->target_busy);
->  
-> -	atomic_dec(&sdev->device_busy);
-> +	scsi_device_dec_busy(sdev);
->  }
->  
->  static void scsi_kick_queue(struct request_queue *q)
-> @@ -1624,16 +1639,22 @@ static void scsi_mq_put_budget(struct blk_mq_hw_ctx *hctx)
->  	struct request_queue *q = hctx->queue;
->  	struct scsi_device *sdev = q->queuedata;
->  
-> -	atomic_dec(&sdev->device_busy);
-> +	scsi_device_dec_busy(sdev);
->  }
->  
->  static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
->  {
->  	struct request_queue *q = hctx->queue;
->  	struct scsi_device *sdev = q->queuedata;
-> +	unsigned long flags;
->  
-> -	if (scsi_dev_queue_ready(q, sdev))
-> +	spin_lock_irqsave(&sdev->budget_lock, flags);
-> +	if (scsi_dev_queue_ready(q, sdev)) {
-> +		spin_unlock_irqrestore(&sdev->budget_lock, flags);
->  		return true;
-> +	}
-> +	sdev->budget_contention = true;
-> +	spin_unlock_irqrestore(&sdev->budget_lock, flags);
-
-No, it really hurts performance by adding one per-sdev spinlock in fast path,
-and we actually tried to kill the atomic variable of 'sdev->device_busy'
-for high performance HBA.
-
-Thanks,
-Ming
-
+T24gMy8zMC8yMCA2OjI1IFBNLCBHdWVudGVyIFJvZWNrIHdyb3RlOg0KPiANCj4gSSBhbSBjdXJy
+ZW50bHkgdXNpbmcgdmFuaWxsYSBnY2MgOS4yLjAgdG8gYnVpbGQgYXJjIGFuZCBhcmN2MiBpbWFn
+ZXMuIEFyZSB5b3Ugc2F5aW5nDQo+IHRoYXQgSSBuZWVkIHRvIHVwZGF0ZSB0byBnY2MgOS4zLjAg
+PyBnY2MgOS4zLjAgd2FzIHJlbGVhc2VkIG9ubHkgYSBjb3VwbGUgb2Ygd2Vla3MNCj4gYWdvLiBJ
+IGRvbid0IHVzdWFsbHkganVtcCBvbnRvIG5ldyBjb21waWxlciByZWxlYXNlcyB0aGF0IHF1aWNr
+bHkgYmVjYXVzZSBlYWNoDQo+IHJlbGVhc2UgdGVuZHMgdG8gaGF2ZSByZWdyZXNzaW9ucy4NCj4g
+DQo+IFsgTmV2ZXIgbWluZCwgSSBqdXN0IG5vdGljZWQgR2VlcnQncyByZXBseS4gU3RpbGwuLi4u
+IF0NCg0KTm8geW91IGFyZSBnb29kLiBUaGUgaXNzdWUgd2FzIE1pY2hlYWwncyB0b29sY2hhaW4g
+ZnJvbSAyMDE2IHNvdXJjZXMuDQoNCi1WaW5lZXQNCg==
