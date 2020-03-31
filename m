@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F46C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D9820B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B5320B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645404;
-	bh=N4lza5PsPJ6ir0AzvN2vRfEMehU1QEbwTNi/AXOw9us=;
+	s=default; t=1585645406;
+	bh=oaAtHJtM84W+1ON8Z6ZB0S+/6Uf0penKkZJl/ZES+/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5t6outKIOlp39gmc6OedPOMOfKr9Vk7jCv3QYj93JZ85NyfNPMaVQIeLMkkT0C2R
-	 cEjfhySCK/vpa6Deg/koLQzZeUJAsTXKQpml3y5ePFkxa9dxQIo9WPB30D1C7wvCWb
-	 wMh+ukwqef8sXmTXjgmKV6EvDntV5ERbRvk5na8Y=
+	b=gI09Y3UBgFpNoki7rgmHjyJ+qVwP8jQPerNIudQGJ03X4z4Hk1lSAqEX0ySLbnfon
+	 l1C9TJBQGGCxp2vKdZWgxYSKHKxHkzG34nmb28xyTmKwpe2WVDd6aRvX8u6RImxemR
+	 ahLWBM0M6PtRdw42bPFUZafwZzTK27TDgGIy6alQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgCaJDW (ORCPT
+        id S1730440AbgCaJDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730768AbgCaJDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 05:03:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730180AbgCaJDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC71D208E0;
-        Tue, 31 Mar 2020 09:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ACC5208E0;
+        Tue, 31 Mar 2020 09:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645399;
-        bh=N4lza5PsPJ6ir0AzvN2vRfEMehU1QEbwTNi/AXOw9us=;
+        s=default; t=1585645396;
+        bh=oaAtHJtM84W+1ON8Z6ZB0S+/6Uf0penKkZJl/ZES+/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZXNBVGRNRX7/wXQmcfXPbK3wo5GoaDOHaDf3LQGtO3tl3fmONM8uvy1JNjZlVr7uD
-         3zhoEkTD81ztfmkxGm1L4QtZuFb1t7V+AQulQyzZ1mDD3CXnmzd6KSQ5w0NFt/Vzwf
-         m5mMfDliBILLpzkI3Po/f+FbxShsnCUMGQIwX7rA=
+        b=GKhBDFU53gz0bqGHRvaIO3Bu44ZG8Ct10n2Q3acSPNy6LwoSWwuKLX4voOvkTLK9E
+         RAn8psVRNShRRWAG1Eku08h7IPFlp3nnGRhraDcvu2ZvsNjnRYRcX3ot2YOzZJQcRr
+         UEsuELFDPJq7Ywj3HOjQiCPZML/bYgJv2qbBmRHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 042/170] bnxt_en: Fix Priority Bytes and Packets counters in ethtool -S.
-Date:   Tue, 31 Mar 2020 10:57:36 +0200
-Message-Id: <20200331085428.908015722@linuxfoundation.org>
+Subject: [PATCH 5.5 041/170] net: bcmgenet: keep MAC in reset until PHY is up
+Date:   Tue, 31 Mar 2020 10:57:35 +0200
+Message-Id: <20200331085428.748528317@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,94 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit a24ec3220f369aa0b94c863b6b310685a727151c ]
+[ Upstream commit 88f6c8bf1aaed5039923fb4c701cab4d42176275 ]
 
-There is an indexing bug in determining these ethtool priority
-counters.  Instead of using the queue ID to index, we need to
-normalize by modulo 10 to get the index.  This index is then used
-to obtain the proper CoS queue counter.  Rename bp->pri2cos to
-bp->pri2cos_idx to make this more clear.
+As noted in commit 28c2d1a7a0bf ("net: bcmgenet: enable loopback
+during UniMAC sw_reset") the UniMAC must be clocked at least 5
+cycles while the sw_reset is asserted to ensure a clean reset.
 
-Fixes: e37fed790335 ("bnxt_en: Add ethtool -S priority counters.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+That commit enabled local loopback to provide an Rx clock from the
+GENET sourced Tx clk. However, when connected in MII mode the Tx
+clk is sourced by the PHY so if an EPHY is not supplying clocks
+(e.g. when the link is down) the UniMAC does not receive the
+necessary clocks.
+
+This commit extends the sw_reset window until the PHY reports that
+the link is up thereby ensuring that the clocks are being provided
+to the MAC to produce a clean reset.
+
+One consequence is that if the system attempts to enter a Wake on
+LAN suspend state when the PHY link has not been active the MAC
+may not have had a chance to initialize cleanly. In this case, we
+remove the sw_reset and enable the WoL reception path as normal
+with the hope that the PHY will provide the necessary clocks to
+drive the WoL blocks if the link becomes active after the system
+has entered suspend.
+
+Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   10 +++++++++-
- drivers/net/ethernet/broadcom/bnxt/bnxt.h         |    2 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c |    8 ++++----
- 3 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c     |   10 ++++------
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c |    6 +++++-
+ drivers/net/ethernet/broadcom/genet/bcmmii.c       |    6 ++++++
+ 3 files changed, 15 insertions(+), 7 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7406,14 +7406,22 @@ static int bnxt_hwrm_port_qstats_ext(str
- 		pri2cos = &resp2->pri0_cos_queue_id;
- 		for (i = 0; i < 8; i++) {
- 			u8 queue_id = pri2cos[i];
-+			u8 queue_idx;
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1972,6 +1972,8 @@ static void umac_enable_set(struct bcmge
+ 	u32 reg;
  
-+			/* Per port queue IDs start from 0, 10, 20, etc */
-+			queue_idx = queue_id % 10;
-+			if (queue_idx > BNXT_MAX_QUEUE) {
-+				bp->pri2cos_valid = false;
-+				goto qstats_done;
-+			}
- 			for (j = 0; j < bp->max_q; j++) {
- 				if (bp->q_ids[j] == queue_id)
--					bp->pri2cos[i] = j;
-+					bp->pri2cos_idx[i] = queue_idx;
- 			}
- 		}
- 		bp->pri2cos_valid = 1;
- 	}
-+qstats_done:
- 	mutex_unlock(&bp->hwrm_cmd_lock);
- 	return rc;
+ 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
++	if (reg & CMD_SW_RESET)
++		return;
+ 	if (enable)
+ 		reg |= mask;
+ 	else
+@@ -1991,13 +1993,9 @@ static void reset_umac(struct bcmgenet_p
+ 	bcmgenet_rbuf_ctrl_set(priv, 0);
+ 	udelay(10);
+ 
+-	/* disable MAC while updating its registers */
+-	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
+-
+-	/* issue soft reset with (rg)mii loopback to ensure a stable rxclk */
+-	bcmgenet_umac_writel(priv, CMD_SW_RESET | CMD_LCL_LOOP_EN, UMAC_CMD);
++	/* issue soft reset and disable MAC while updating its registers */
++	bcmgenet_umac_writel(priv, CMD_SW_RESET, UMAC_CMD);
+ 	udelay(2);
+-	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
  }
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -1714,7 +1714,7 @@ struct bnxt {
- 	u16			fw_rx_stats_ext_size;
- 	u16			fw_tx_stats_ext_size;
- 	u16			hw_ring_stats_size;
--	u8			pri2cos[8];
-+	u8			pri2cos_idx[8];
- 	u8			pri2cos_valid;
  
- 	u16			hwrm_max_req_len;
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -589,25 +589,25 @@ skip_ring_stats:
- 		if (bp->pri2cos_valid) {
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_rx_bytes_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
+ static void bcmgenet_intr_disable(struct bcmgenet_priv *priv)
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
+@@ -132,8 +132,12 @@ int bcmgenet_wol_power_down_cfg(struct b
+ 		return -EINVAL;
+ 	}
  
- 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
- 			}
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_rx_pkts_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
- 
- 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
- 			}
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_tx_bytes_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
- 
- 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
- 			}
- 			for (i = 0; i < 8; i++, j++) {
- 				long n = bnxt_tx_pkts_pri_arr[i].base_off +
--					 bp->pri2cos[i];
-+					 bp->pri2cos_idx[i];
- 
- 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
- 			}
+-	/* disable RX */
++	/* Can't suspend with WoL if MAC is still in reset */
+ 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
++	if (reg & CMD_SW_RESET)
++		reg &= ~CMD_SW_RESET;
++
++	/* disable RX */
+ 	reg &= ~CMD_RX_EN;
+ 	bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 	mdelay(10);
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -95,6 +95,12 @@ void bcmgenet_mii_setup(struct net_devic
+ 			       CMD_HD_EN |
+ 			       CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE);
+ 		reg |= cmd_bits;
++		if (reg & CMD_SW_RESET) {
++			reg &= ~CMD_SW_RESET;
++			bcmgenet_umac_writel(priv, reg, UMAC_CMD);
++			udelay(2);
++			reg |= CMD_TX_EN | CMD_RX_EN;
++		}
+ 		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+ 	} else {
+ 		/* done if nothing has changed */
 
 
