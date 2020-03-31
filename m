@@ -2,312 +2,92 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5867C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B2AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BD720771
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BCB20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AuEpdqJa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XOXEiEAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729319AbgCaAAr (ORCPT
+        id S1729442AbgCaABW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:00:47 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46733 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729106AbgCaAAr (ORCPT
+        Mon, 30 Mar 2020 20:01:22 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:43833 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729398AbgCaABV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:00:47 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q5so15750399lfb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 17:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GhTora22O/xRri2wav17l2dK9RxeL1NLGG+m07hxnBU=;
-        b=AuEpdqJaTlWMT5ovqDAxZ0mtk0Tx9FwsjiCkWtRs+sf1k1V5ektgE4HuZ3clEnJ9cw
-         28tmNb5R+Z9DN+25mkRmkZC7rT0evaKJix82ef9Pif1hH7PgdBbExReUW6Th5fANsVk/
-         vxl72Mk+QWUOoOXRpsmF/9a+nGS+i07kZdDys=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GhTora22O/xRri2wav17l2dK9RxeL1NLGG+m07hxnBU=;
-        b=CFVbgbNJday1eLVfG9W8Y4+iI13x5qx0pCNirnJbxndVlwlPFcqEPIRR+/OqRe1/WC
-         gi3dQ5FIEbQm06jOFQZq6mgR+VgECKvBAqAsOnsvq3TBAToSzaf3wRbhoMiKMxMkwwTt
-         nM4yo9Xsl+CdTECJqTOIfmG7GIsu6dkT/awjYLO8orgJa44uptW6F5yiRQfTdL4cyq/q
-         zSPF2dXrJnYEK7AnMyo5KAC8rT6YpCtZ+BLpcW4eWWyC0zLy+i2QyUTKY736RPWxP1By
-         xh/YbUNtZncLaPuvFKXiBS8rdlJDPkAF/yik72EpT5hH6kbkadBalLzVdmMge8t+OiOB
-         pxWw==
-X-Gm-Message-State: AGi0PubN0KXN/UK8cO+cHczNUEZY76BfIb58p94iwn+BtwtU/sKCOd2h
-        Gi+R3caLwWy/IwPgnU6m/7OqVC3ilzkQ8y7e8jwHPQ==
-X-Google-Smtp-Source: APiQypJufoxcibfjDOqnStaQybUmnyI2TWBJoKFqz3cpvebIREGAV+EAXQpeVvU4vf5AuoMMqlV1gCcLS1TZBMarq1M=
-X-Received: by 2002:a19:c752:: with SMTP id x79mr9351805lff.144.1585612843568;
- Mon, 30 Mar 2020 17:00:43 -0700 (PDT)
+        Mon, 30 Mar 2020 20:01:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585612880;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XWMGIyM+EQlmNpNdyc1krEzJQU9C++X/ouqCdGDz9GY=;
+        b=XOXEiEAaKLL/qWGDodJinds4T46g/a6BWON8Cvzvzytci53i2ANmGaFSRk0bFGAEA+2Soc
+        oPx8rq0/KVVmu7drtENOaWuAgOD0dlYnIdI7FwtYos3tnR8OmfySmLHX/oPL3bEntZGFg1
+        TfJrAHHY5qX0UcjKWxn+H1pj/PoELGE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-9ovAUwVxO5em1mdQuZEQdA-1; Mon, 30 Mar 2020 20:01:16 -0400
+X-MC-Unique: 9ovAUwVxO5em1mdQuZEQdA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4B41800D50;
+        Tue, 31 Mar 2020 00:01:14 +0000 (UTC)
+Received: from elisabeth (unknown [10.36.110.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D362100EBB6;
+        Tue, 31 Mar 2020 00:01:09 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 02:01:03 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8] staging: vt6656: add error code handling to unused
+ variable
+Message-ID: <20200331020103.13008f53@elisabeth>
+In-Reply-To: <20200330233900.36938-1-jbwyatt4@gmail.com>
+References: <20200330233900.36938-1-jbwyatt4@gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200328074632.21907-1-mcchou@chromium.org> <20200328004507.v4.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
- <9CC14296-9A0E-4257-A388-B2F7C155CCE5@holtmann.org>
-In-Reply-To: <9CC14296-9A0E-4257-A388-B2F7C155CCE5@holtmann.org>
-From:   Miao-chen Chou <mcchou@chromium.org>
-Date:   Mon, 30 Mar 2020 17:00:32 -0700
-Message-ID: <CABmPvSF=pcffe18iAKgbU8bwFvVDp-NKeAFGw8auKoVd1XAuTQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
+On Mon, 30 Mar 2020 16:39:00 -0700
+"John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
 
-On Mon, Mar 30, 2020 at 3:06 PM Marcel Holtmann <marcel@holtmann.org> wrote=
-:
->
-> Hi Miao-chen,
->
-> > This adds a bit mask of driver_info for Microsoft vendor extension and
-> > indicates the support for Intel 9460/9560 and 9160/9260. See
-> > https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
-> > microsoft-defined-bluetooth-hci-commands-and-events for more informatio=
-n
-> > about the extension. This also add a kernel config, BT_MSFTEXT, and a
-> > source file to facilitate Microsoft vendor extension functions.
-> > This was verified with Intel ThunderPeak BT controller
-> > where msft_vnd_ext_opcode is 0xFC1E.
-> >
-> > Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-> >
-> > Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
-> > ---
-> >
-> > Changes in v4:
-> > - Introduce CONFIG_BT_MSFTEXT as a starting point of providing a
-> > framework to use Microsoft extension
-> > - Create include/net/bluetooth/msft.h and net/bluetooth/msft.c to
-> > facilitate functions of Microsoft extension.
-> >
-> > Changes in v3:
-> > - Create net/bluetooth/msft.c with struct msft_vnd_ext defined internal=
-ly
-> > and change the hdev->msft_ext field to void*.
-> > - Define and expose msft_vnd_ext_set_opcode() for btusb use.
-> > - Init hdev->msft_ext in hci_alloc_dev() and deinit it in hci_free_dev(=
-).
-> >
-> > Changes in v2:
-> > - Define struct msft_vnd_ext and add a field of this type to struct
-> > hci_dev to facilitate the support of Microsoft vendor extension.
-> >
-> > drivers/bluetooth/btusb.c        | 11 +++++++++--
-> > include/net/bluetooth/hci_core.h |  4 ++++
->
-> so I don=E2=80=99t like the intermixing of core features and drivers unle=
-ss it is needed. In this case it is not needed since we can first introduce=
- the core support and then enable the driver to use it.
-I will make btusb changes as a different commit in v5.
->
-> > net/bluetooth/Kconfig            |  9 ++++++++-
-> > net/bluetooth/Makefile           |  1 +
-> > net/bluetooth/msft.c             | 16 ++++++++++++++++
-> > net/bluetooth/msft.h             | 19 +++++++++++++++++++
-> > 6 files changed, 57 insertions(+), 3 deletions(-)
-> > create mode 100644 net/bluetooth/msft.c
-> > create mode 100644 net/bluetooth/msft.h
-> >
-> > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> > index 3bdec42c9612..0fe47708d3c8 100644
-> > --- a/drivers/bluetooth/btusb.c
-> > +++ b/drivers/bluetooth/btusb.c
-> > @@ -21,6 +21,7 @@
-> > #include <net/bluetooth/bluetooth.h>
-> > #include <net/bluetooth/hci_core.h>
-> >
-> > +#include "../../net/bluetooth/msft.h"
->
-> This was my bad. I didn=E2=80=99t realized that drivers need to the set t=
-he opcode and not the core. I updated the patches to fix this.
-I will move it to include/net/bluetooth/.
->
-> > #include "btintel.h"
-> > #include "btbcm.h"
-> > #include "btrtl.h"
-> > @@ -58,6 +59,7 @@ static struct usb_driver btusb_driver;
-> > #define BTUSB_CW6622          0x100000
-> > #define BTUSB_MEDIATEK                0x200000
-> > #define BTUSB_WIDEBAND_SPEECH 0x400000
-> > +#define BTUSB_MSFT_VND_EXT   0x800000
-> >
-> > static const struct usb_device_id btusb_table[] =3D {
-> >       /* Generic Bluetooth USB device */
-> > @@ -335,7 +337,8 @@ static const struct usb_device_id blacklist_table[]=
- =3D {
-> >
-> >       /* Intel Bluetooth devices */
-> >       { USB_DEVICE(0x8087, 0x0025), .driver_info =3D BTUSB_INTEL_NEW |
-> > -                                                  BTUSB_WIDEBAND_SPEEC=
-H },
-> > +                                                  BTUSB_WIDEBAND_SPEEC=
-H |
-> > +                                                  BTUSB_MSFT_VND_EXT }=
-,
-> >       { USB_DEVICE(0x8087, 0x0026), .driver_info =3D BTUSB_INTEL_NEW |
-> >                                                    BTUSB_WIDEBAND_SPEEC=
-H },
-> >       { USB_DEVICE(0x8087, 0x0029), .driver_info =3D BTUSB_INTEL_NEW |
-> > @@ -348,7 +351,8 @@ static const struct usb_device_id blacklist_table[]=
- =3D {
-> >       { USB_DEVICE(0x8087, 0x0aa7), .driver_info =3D BTUSB_INTEL |
-> >                                                    BTUSB_WIDEBAND_SPEEC=
-H },
-> >       { USB_DEVICE(0x8087, 0x0aaa), .driver_info =3D BTUSB_INTEL_NEW |
-> > -                                                  BTUSB_WIDEBAND_SPEEC=
-H },
-> > +                                                  BTUSB_WIDEBAND_SPEEC=
-H |
-> > +                                                  BTUSB_MSFT_VND_EXT }=
-,
->
-> Lets start with ThunderPeak 0x0025 for now. We are looking into enabling =
-this in a more generic fashion, but for now lets just enable one card.
-Ack.
->
-> >
-> >       /* Other Intel Bluetooth devices */
-> >       { USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
-> > @@ -3800,6 +3804,9 @@ static int btusb_probe(struct usb_interface *intf=
-,
-> >               set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks)=
-;
-> >               set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
-> >               set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
-> > +
-> > +             if (id->driver_info & BTUSB_MSFT_VND_EXT)
-> > +                     msft_set_opcode(hdev, 0xFC1E);
-> >       }
-> >
-> >       if (id->driver_info & BTUSB_MARVELL)
-> > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/h=
-ci_core.h
-> > index d4e28773d378..239cae2d9998 100644
-> > --- a/include/net/bluetooth/hci_core.h
-> > +++ b/include/net/bluetooth/hci_core.h
-> > @@ -484,6 +484,10 @@ struct hci_dev {
-> >       struct led_trigger      *power_led;
-> > #endif
-> >
-> > +#if IS_ENABLED(CONFIG_BT_MSFTEXT)
-> > +     __u16                   msft_opcode;
-> > +#endif
-> > +
-> >       int (*open)(struct hci_dev *hdev);
-> >       int (*close)(struct hci_dev *hdev);
-> >       int (*flush)(struct hci_dev *hdev);
-> > diff --git a/net/bluetooth/Kconfig b/net/bluetooth/Kconfig
-> > index 165148c7c4ce..5929ccb02b39 100644
-> > --- a/net/bluetooth/Kconfig
-> > +++ b/net/bluetooth/Kconfig
-> > @@ -30,7 +30,7 @@ menuconfig BT
-> >               L2CAP (Logical Link Control and Adaptation Protocol)
-> >               SMP (Security Manager Protocol) on LE (Low Energy) links
-> >            HCI Device drivers (Interface to the hardware)
-> > -          RFCOMM Module (RFCOMM Protocol)
-> > +          RFCOMM Module (RFCOMM Protocol)
->
-> Unrelated changes don=E2=80=99t belong here.
-This was probably done by my editor, I will recover it.
->
-> >            BNEP Module (Bluetooth Network Encapsulation Protocol)
-> >            CMTP Module (CAPI Message Transport Protocol)
-> >            HIDP Module (Human Interface Device Protocol)
-> > @@ -93,6 +93,13 @@ config BT_LEDS
-> >         This option selects a few LED triggers for different
-> >         Bluetooth events.
-> >
-> > +config BT_MSFTEXT
-> > +     bool "Enable Microsoft extensions"
-> > +     depends on BT
-> > +     help
-> > +       This options enables support for the Microsoft defined HCI
-> > +       vendor extensions.
-> > +
-> > config BT_SELFTEST
-> >       bool "Bluetooth self testing support"
-> >       depends on BT && DEBUG_KERNEL
-> > diff --git a/net/bluetooth/Makefile b/net/bluetooth/Makefile
-> > index fda41c0b4781..41dd541a44a5 100644
-> > --- a/net/bluetooth/Makefile
-> > +++ b/net/bluetooth/Makefile
-> > @@ -19,5 +19,6 @@ bluetooth-y :=3D af_bluetooth.o hci_core.o hci_conn.o=
- hci_event.o mgmt.o \
-> > bluetooth-$(CONFIG_BT_BREDR) +=3D sco.o
-> > bluetooth-$(CONFIG_BT_HS) +=3D a2mp.o amp.o
-> > bluetooth-$(CONFIG_BT_LEDS) +=3D leds.o
-> > +bluetooth-$(CONFIG_BT_MSFTEXT) +=3D msft.o
-> > bluetooth-$(CONFIG_BT_DEBUGFS) +=3D hci_debugfs.o
-> > bluetooth-$(CONFIG_BT_SELFTEST) +=3D selftest.o
-> > diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
-> > new file mode 100644
-> > index 000000000000..7609932c48ca
-> > --- /dev/null
-> > +++ b/net/bluetooth/msft.c
-> > @@ -0,0 +1,16 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/* Copyright (C) 2020 Google Corporation */
-> > +
-> > +#include <net/bluetooth/bluetooth.h>
-> > +#include <net/bluetooth/hci_core.h>
-> > +
-> > +#include "msft.h"
-> > +
-> > +void msft_set_opcode(struct hci_dev *hdev, __u16 opcode)
-> > +{
-> > +     hdev->msft_opcode =3D opcode;
-> > +
-> > +     bt_dev_info(hdev, "Enabling MSFT extensions with opcode 0x%2.2x",
-> > +                 hdev->msft_opcode);
-> > +}
-> > +EXPORT_SYMBOL(msft_set_opcode);
-> > diff --git a/net/bluetooth/msft.h b/net/bluetooth/msft.h
-> > new file mode 100644
-> > index 000000000000..7218ea759dde
-> > --- /dev/null
-> > +++ b/net/bluetooth/msft.h
-> > @@ -0,0 +1,19 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > +/* Copyright (C) 2020 Google Corporation */
-> > +
-> > +#ifndef __MSFT_H
-> > +#define __MSFT_H
-> > +
-> > +#include <net/bluetooth/hci_core.h>
-> > +
-> > +#if IS_ENABLED(CONFIG_BT_MSFTEXT)
-> > +
-> > +void msft_set_opcode(struct hci_dev *hdev, __u16 opcode);
-> > +
-> > +#else
-> > +
-> > +static inline void msft_set_opcode(struct hci_dev *hdev, __u16 opcode)=
- {}
-> > +
-> > +#endif
-> > +
-> > +#endif /* __MSFT_H*/
-Thanks,
-Miao
+> Add error code handling to unused 'ret' variable that was never used.
+> Return an error code from functions called within vnt_radio_power_on.
+> 
+> Issue reported by coccinelle (coccicheck).
+> 
+> Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> Suggested-by: Stefano Brivio <sbrivio@redhat.com>
+> Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+  ^ This should be dropped unless Quentin agrees to this version as well
+
+> Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+
+-- 
+Stefano
+
