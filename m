@@ -2,145 +2,312 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE752C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7962C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13CE72072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:44:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="esWvfnK1";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="wavDflmJ"
+	by mail.kernel.org (Postfix) with ESMTP id A004E206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbgCaBoA (ORCPT
+        id S1729489AbgCaBqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 21:44:00 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46984 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729089AbgCaBoA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 21:44:00 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id AE369C0FDE;
-        Tue, 31 Mar 2020 01:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1585619039; bh=+JYwxjmNrGYe+FIxr1oRwnWUOSmki7yaI2j2Ch6XPXU=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=esWvfnK15aiaoYccxOYShAFDBFkXq0g92CgGjZAptlUnDhda0SqeUnof0RPvA2r1r
-         rKG3vZZEV+j7tQ+C9rEfi9fKGY8+InuVKcNDhGGwdQlBhdkO64apGIVPgGh6Y2F4th
-         FXsCHwg/xg8kglIQNGO3Scj0ZumqzHeXAGR93YZMVN1O3mSbVLbYyEykePJzRGrZwc
-         uAUN4o34AwergCVT9cwOzfDZh8E/KdeZvc5ATlpEc8OnX+GrYKPNXwlXj0c/KhZ5bH
-         r4VHE5isgHOnIMpz2b5Bx2YWjaIX8rGV0kOeMg5UDeKHHhBNI0bgkoQpnV6t83KNFZ
-         xdpqTM1q+qmAQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 05FABA00AE;
-        Tue, 31 Mar 2020 01:43:57 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 30 Mar 2020 18:43:51 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 30 Mar 2020 18:43:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lZuDVHVepN3yu0tCOo55Xi9Nw9hzJ3NvKeDOZlrKNGAWADwtgm2H9kIfFw+JgR+lS00t5sn5R0GW2K2pPnd1uIFe10s4/8VteYKrHk9XJeFeVtWXYtWncPWmynkGzY8jkBiyFJ0nwl3boWbMxFmJxR34gPJnpd+5ZCIbMFls4bHseE6KdNGMMzjruG2miqLRGQVHzl7ihFP+WbZ8oSqG6rJJwJtx+LuDU1MVMmewN2MEJn7TuNYQb7rEaWbzkLayCjKMTX9cktHQ5THLQRdmZ8WIbgBsFYRmdN3o1z0VHDDRIesUFdA0qpwJBxoeQFG5PL5fehfuD6G5zCFuoZncfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+JYwxjmNrGYe+FIxr1oRwnWUOSmki7yaI2j2Ch6XPXU=;
- b=BVOsIh1Nhb4DlX9aHDFGOVqko7aXLXjKrA8sKDE3y4aJpxDtunCR3g6wxCD3glYAAvpt8np334d5cRwJnOE6AmNPd/IVjvSPLs5EWnsrEkCv81V049IJT7BSz0/hC0P81i5pgeW03JWgfrQMf6fepqTq/+018VWRokxASGMfYKymV/85XryC75ipM62dwQ8dOLW3ULf2vcWlviczS46syQ7x4SAGw0lIDY+ibGbbWqJRKo+Fi3GvcsPVrx6iKZSqialvG3ThmVDwTXCqYTc3qs+QctCIyhZ5JF5ezh9Kf9IZOrQlmmV4wudlPxevVlxFh0bSxz17z/v3fF970Qg67w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+JYwxjmNrGYe+FIxr1oRwnWUOSmki7yaI2j2Ch6XPXU=;
- b=wavDflmJ/XlH+YuVruOS8hCqtvuz+Lc9iVTHI+csco9G5qOGJtb69exnPC14533PuO6BYuGujSnruio0pfbLWHY4pncWGOPzHVJjoFtyaHk/TSV+6AQk2EkVVxgr0f/nA16SN8Rtbn4/6ecvw4ux4v+G5YyhLlFk7OaJVSQLDkI=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
- by BYAPR12MB3447.namprd12.prod.outlook.com (2603:10b6:a03:a9::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Tue, 31 Mar
- 2020 01:43:50 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
- 01:43:50 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: Build regressions/improvements in v5.6
-Thread-Topic: Build regressions/improvements in v5.6
-Thread-Index: AQHWBpcvcUuu+ZudzU+b+A9JmGkSJahhl0cwgAAMygCAAEU6AIAABSyA
-Date:   Tue, 31 Mar 2020 01:43:49 +0000
-Message-ID: <8abe0bd7-d665-8625-ac4b-517f341fe0d3@synopsys.com>
-References: <20200330085854.19774-1-geert@linux-m68k.org>
- <CAHp75Vc1gW2FnRpTNm6uu4gY3bSmccSkCFkAKqYraLincK29yA@mail.gmail.com>
- <CAMuHMdXDBtOo_deXsmX=zA9_va0O5j8XydxoigmS35+Tj7xDDA@mail.gmail.com>
- <CAHp75VfsfBD7djyB=S8QtQPdKTkpU5gFzyRYr8FshavoWgT0CA@mail.gmail.com>
- <CY4PR1201MB01204FB968A6661FB8B295ACA1CB0@CY4PR1201MB0120.namprd12.prod.outlook.com>
- <c8447243-98c6-d545-9766-e6b3f33f4d13@synopsys.com>
- <a5e8ec79-2eff-7517-4b90-38d5cb366f45@roeck-us.net>
-In-Reply-To: <a5e8ec79-2eff-7517-4b90-38d5cb366f45@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [24.7.46.224]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 978016bd-f6d0-463c-b7f5-08d7d514f608
-x-ms-traffictypediagnostic: BYAPR12MB3447:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3447855CD2C14545F43D0E4FB6C80@BYAPR12MB3447.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-forefront-prvs: 0359162B6D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3592.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(366004)(376002)(346002)(136003)(396003)(39860400002)(36756003)(6506007)(71200400001)(8676002)(81166006)(81156014)(31696002)(4744005)(6512007)(107886003)(4326008)(53546011)(86362001)(2616005)(110136005)(316002)(66556008)(76116006)(66946007)(64756008)(66476007)(66446008)(5660300002)(478600001)(6486002)(54906003)(2906002)(26005)(8936002)(31686004)(186003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OjdsIno10Va6s7E+9sTZzS0Y6BGMzfLcMUOvxQF/9BR0Q+Cpt07ODWm0HRJ2J32SnqaIOkYAk+9FtONQva1j7g5kSuGL5voraXkPuxp16znWqhBT9BMBaTe0BR4c+omhixuXbvfFisGl6dcX0F4xtVAJumZCEVLLIbgRU9nqfo2dIYrRF1+JMXeYYnXHToCNcHsgHEstO+jAfV/7b1Xb0P15kA3nArZ5v1u7J716wQftRHOQMe8T8AR5I7SBmFWlfr6YWyY9khA4mHx3eQlCcC0kGUVOa9boVP5A/CvvbIVVcIxydA1HNG+r+HGvTxnKpf7Q19nubxeqq8zGDQAHhbf0aCGFhL77Ht06cELKOeNxy5FhyM1rmcjDv/111wUFCdL9YWM8uQLK5gbiMGW9Mr2WjE0922F0wpOQH0dgu3xQjx7DLz3CDwzhtotRXL3G
-x-ms-exchange-antispam-messagedata: x0c+IKJAM4Qnngtagkc7u9zFLuxIpIIl/FiyIwe0AKlFloDLjy/uZPwU79ezBv0QOZjnwE6ibBYxgz5cvS4+bchVL1/WcCkK4wg+aHhoHDbqLg3sHqV5/eC/1DPOhsk/dBztMUj6Iakr/5Sd+G8EbA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8F90019EAF54A04CA15F67A870A62860@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 30 Mar 2020 21:46:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12655 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729035AbgCaBqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 21:46:39 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0A0148431BC035CFBB7C;
+        Tue, 31 Mar 2020 09:46:36 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 31 Mar
+ 2020 09:46:31 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix long latency due to discard during
+ umount
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
+ <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
+ <20200326133700.GR20234@codeaurora.org>
+ <2b0d8d4c-a981-4edc-d8ca-fe199a63ea79@huawei.com>
+ <20200327030542.GS20234@codeaurora.org>
+ <20200330065335.GT20234@codeaurora.org>
+ <9adc5c7e-7936-bac7-58b1-50631f8ac5eb@huawei.com>
+ <5ec3b2e1-162c-e62d-1834-100c8ae39ff7@huawei.com>
+ <20200330105122.GV20234@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <d65e7548-205d-ef28-e9fc-041ae1571cfd@huawei.com>
+Date:   Tue, 31 Mar 2020 09:46:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 978016bd-f6d0-463c-b7f5-08d7d514f608
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 01:43:49.8074
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X3in3FpbYwNyphsV5CaGRhQmC9deHKboDPm2Wg3slAaJyMB5SxY4VdMk8v/vJQ8sT91/QIb4s9gEJ0gtEr+Mug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3447
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <20200330105122.GV20234@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMy8zMC8yMCA2OjI1IFBNLCBHdWVudGVyIFJvZWNrIHdyb3RlOg0KPiANCj4gSSBhbSBjdXJy
-ZW50bHkgdXNpbmcgdmFuaWxsYSBnY2MgOS4yLjAgdG8gYnVpbGQgYXJjIGFuZCBhcmN2MiBpbWFn
-ZXMuIEFyZSB5b3Ugc2F5aW5nDQo+IHRoYXQgSSBuZWVkIHRvIHVwZGF0ZSB0byBnY2MgOS4zLjAg
-PyBnY2MgOS4zLjAgd2FzIHJlbGVhc2VkIG9ubHkgYSBjb3VwbGUgb2Ygd2Vla3MNCj4gYWdvLiBJ
-IGRvbid0IHVzdWFsbHkganVtcCBvbnRvIG5ldyBjb21waWxlciByZWxlYXNlcyB0aGF0IHF1aWNr
-bHkgYmVjYXVzZSBlYWNoDQo+IHJlbGVhc2UgdGVuZHMgdG8gaGF2ZSByZWdyZXNzaW9ucy4NCj4g
-DQo+IFsgTmV2ZXIgbWluZCwgSSBqdXN0IG5vdGljZWQgR2VlcnQncyByZXBseS4gU3RpbGwuLi4u
-IF0NCg0KTm8geW91IGFyZSBnb29kLiBUaGUgaXNzdWUgd2FzIE1pY2hlYWwncyB0b29sY2hhaW4g
-ZnJvbSAyMDE2IHNvdXJjZXMuDQoNCi1WaW5lZXQNCg==
+Hi Sahitya,
+
+On 2020/3/30 18:51, Sahitya Tummala wrote:
+> Hi Chao,
+> 
+> On Mon, Mar 30, 2020 at 06:16:40PM +0800, Chao Yu wrote:
+>> On 2020/3/30 16:38, Chao Yu wrote:
+>>> Hi Sahitya,
+>>>
+>>> Bad news, :( I guess we didn't catch the root cause, as after applying v3,
+>>> I still can reproduce this issue:
+>>>
+>>> generic/003 10s ...  30s
+>>
+>> I use zram as backend device of fstest,
+>>
+>> Call Trace:
+>>  dump_stack+0x66/0x8b
+>>  f2fs_submit_discard_endio+0x88/0xa0 [f2fs]
+>>  generic_make_request_checks+0x70/0x5f0
+>>  generic_make_request+0x3e/0x2e0
+>>  submit_bio+0x72/0x140
+>>  __submit_discard_cmd.isra.50+0x4a8/0x710 [f2fs]
+>>  __issue_discard_cmd+0x171/0x3a0 [f2fs]
+>>
+>> Does this mean zram uses single queue, so we may always fail to submit 'nowait'
+>> IO due to below condition:
+>>
+>> 	/*
+>> 	 * Non-mq queues do not honor REQ_NOWAIT, so complete a bio
+>> 	 * with BLK_STS_AGAIN status in order to catch -EAGAIN and
+>> 	 * to give a chance to the caller to repeat request gracefully.
+>> 	 */
+>> 	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q)) {
+>> 		status = BLK_STS_AGAIN;
+>> 		goto end_io;
+>> 	}
+>>
+> 
+> Yes, I have also just figured out that as the reason. But most of the real block
+> devic drivers support MQ. Can we thus fix this case by checking for MQ status
+> before enabling REQ_NOWAIT as below? Please share your comments.
+> 
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index cda7935..e7e2ffe 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -1131,7 +1131,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> 
+>         flag = dpolicy->sync ? REQ_SYNC : 0;
+> -       flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+> +
+> +       if (sbi->sb->s_bdev->bd_queue && queue_is_mq(sbi->sb->s_bdev->bd_queue))
+> +               flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+
+IMO, it's too tight to couple with block layer logic? however, I don't have
+any better idea about the solution.
+
+Anyway, I guess we can Cc to Jan and block mailing list for comments to see
+whether there is a better solution.
+
+Thoughts?
+
+Thanks,
+
+> 
+>         if (dc->state != D_PREP)
+>                 return 0;
+> 
+> Thanks,
+> 
+>>
+>>
+>>>
+>>> Thanks,
+>>>
+>>> On 2020/3/30 14:53, Sahitya Tummala wrote:
+>>>> Hi Chao,
+>>>>
+>>>> On Fri, Mar 27, 2020 at 08:35:42AM +0530, Sahitya Tummala wrote:
+>>>>> On Fri, Mar 27, 2020 at 09:51:43AM +0800, Chao Yu wrote:
+>>>>>>
+>>>>>> With this patch, most of xfstest cases cost 5 * n second longer than before.
+>>>>>>
+>>>>>> E.g. generic/003, during umount(), we looped into retrying one bio
+>>>>>> submission.
+>>>>>>
+>>>>>> [61279.829724] F2FS-fs (zram1): Found nat_bits in checkpoint
+>>>>>> [61279.885337] F2FS-fs (zram1): Mounted with checkpoint version = 5cf3cb8e
+>>>>>> [61281.912832] submit discard bio start [23555,1]
+>>>>>> [61281.912835] f2fs_submit_discard_endio [23555,1] err:-11
+>>>>>> [61281.912836] submit discard bio end [23555,1]
+>>>>>> [61281.912836] move dc to retry list [23555,1]
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>> [61286.881212] submit discard bio start [23555,1]
+>>>>>> [61286.881217] f2fs_submit_discard_endio [23555,1] err:-11
+>>>>>> [61286.881223] submit discard bio end [23555,1]
+>>>>>> [61286.881224] move dc to retry list [23555,1]
+>>>>>> [61286.905198] submit discard bio start [23555,1]
+>>>>>> [61286.905203] f2fs_submit_discard_endio [23555,1] err:-11
+>>>>>> [61286.905205] submit discard bio end [23555,1]
+>>>>>> [61286.905206] move dc to retry list [23555,1]
+>>>>>> [61286.929157] F2FS-fs (zram1): Issue discard(23555, 23555, 1) failed, ret: -11
+>>>>>>
+>>>>>> Could you take a look at this issue?
+>>>>>
+>>>>> Let me check and get back on this.
+>>>>
+>>>> I found the issue. The dc with multiple bios is getting requeued again and
+>>>> again in case if one of its bio gets -EAGAIN error. Even the successfully
+>>>> completed bios are getting requeued again resulting into long latency.
+>>>> I have fixed it by splitting the dc in such case so that we can requeue only
+>>>> the leftover bios into a new dc and retry that later within the 5 sec timeout.
+>>>>
+>>>> Please help to review v3 posted and if it looks good, I would like to request
+>>>> you to test the earlier regression scenario with it to check the result again?
+>>>>
+>>>> thanks,
+>>>>
+>>>>>
+>>>>> Thanks,
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>>
+>>>>>>>>> +				break;
+>>>>>>>>> +			}
+>>>>>>>>> +		}
+>>>>>>>>>  
+>>>>>>>>>  		atomic_inc(&dcc->issued_discard);
+>>>>>>>>>  
+>>>>>>>>> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
+>>>>>>>>>  	return issued;
+>>>>>>>>>  }
+>>>>>>>>>  
+>>>>>>>>> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
+>>>>>>> s> > +		struct discard_policy *dpolicy)
+>>>>>>>>> +{
+>>>>>>>>> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+>>>>>>>>> +	struct discard_cmd *dc, *tmp;
+>>>>>>>>> +	bool retry = false;
+>>>>>>>>> +	unsigned long flags;
+>>>>>>>>> +
+>>>>>>>>> +	if (dpolicy->type != DPOLICY_UMOUNT)
+>>>>>>>>> +		f2fs_bug_on(sbi, 1);
+>>>>>>>>> +
+>>>>>>>>> +	mutex_lock(&dcc->cmd_lock);
+>>>>>>>>> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
+>>>>>>>>> +		if (dpolicy->timeout != 0 &&
+>>>>>>>>> +			f2fs_time_over(sbi, dpolicy->timeout)) {
+>>>>>>>>> +			retry = false;
+>>>>>>>>> +			break;
+>>>>>>>>> +		}
+>>>>>>>>> +
+>>>>>>>>> +		spin_lock_irqsave(&dc->lock, flags);
+>>>>>>>>> +		if (!dc->bio_ref) {
+>>>>>>>>> +			dc->state = D_PREP;
+>>>>>>>>> +			dc->error = 0;
+>>>>>>>>> +			reinit_completion(&dc->wait);
+>>>>>>>>> +			__relocate_discard_cmd(dcc, dc);
+>>>>>>>>> +			retry = true;
+>>>>>>>>> +		}
+>>>>>>>>> +		spin_unlock_irqrestore(&dc->lock, flags);
+>>>>>>>>> +	}
+>>>>>>>>> +	mutex_unlock(&dcc->cmd_lock);
+>>>>>>>>> +
+>>>>>>>>> +	return retry;
+>>>>>>>>> +}
+>>>>>>>>> +
+>>>>>>>>>  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>>>>  					struct discard_policy *dpolicy)
+>>>>>>>>>  {
+>>>>>>>>> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>>>>  	struct list_head *pend_list;
+>>>>>>>>>  	struct discard_cmd *dc, *tmp;
+>>>>>>>>>  	struct blk_plug plug;
+>>>>>>>>> -	int i, issued = 0;
+>>>>>>>>> +	int i, err, issued = 0;
+>>>>>>>>>  	bool io_interrupted = false;
+>>>>>>>>>  
+>>>>>>>>>  	if (dpolicy->timeout != 0)
+>>>>>>>>>  		f2fs_update_time(sbi, dpolicy->timeout);
+>>>>>>>>>  
+>>>>>>>>> +retry:
+>>>>>>>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+>>>>>>>>>  		if (dpolicy->timeout != 0 &&
+>>>>>>>>>  				f2fs_time_over(sbi, dpolicy->timeout))
+>>>>>>>>> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>>>>  				break;
+>>>>>>>>>  			}
+>>>>>>>>>  
+>>>>>>>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>>>>>>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+>>>>>>>>> +			if (err == -EAGAIN)
+>>>>>>>>> +				congestion_wait(BLK_RW_ASYNC,
+>>>>>>>>> +						DEFAULT_IO_TIMEOUT);
+>>>>>>>>>  
+>>>>>>>>>  			if (issued >= dpolicy->max_requests)
+>>>>>>>>>  				break;
+>>>>>>>>> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>>>>>>>  			break;
+>>>>>>>>>  	}
+>>>>>>>>>  
+>>>>>>>>> +	if (!list_empty(&dcc->retry_list) &&
+>>>>>>>>> +		__should_discard_retry(sbi, dpolicy))
+>>>>>>>>> +		goto retry;
+>>>>>>>>> +
+>>>>>>>>>  	if (!issued && io_interrupted)
+>>>>>>>>>  		issued = -1;
+>>>>>>>>>  
+>>>>>>>>> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
+>>>>>>>>>  		goto next;
+>>>>>>>>>  	}
+>>>>>>>>>  
+>>>>>>>>> +	if (dpolicy->type == DPOLICY_UMOUNT &&
+>>>>>>>>> +		!list_empty(&dcc->retry_list)) {
+>>>>>>>>> +		wait_list = &dcc->retry_list;
+>>>>>>>>> +		goto next;
+>>>>>>>>> +	}
+>>>>>>>>> +
+>>>>>>>>>  	return trimmed;
+>>>>>>>>>  }
+>>>>>>>>>  
+>>>>>>>>> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+>>>>>>>>>  	for (i = 0; i < MAX_PLIST_NUM; i++)
+>>>>>>>>>  		INIT_LIST_HEAD(&dcc->pend_list[i]);
+>>>>>>>>>  	INIT_LIST_HEAD(&dcc->wait_list);
+>>>>>>>>> +	INIT_LIST_HEAD(&dcc->retry_list);
+>>>>>>>>>  	INIT_LIST_HEAD(&dcc->fstrim_list);
+>>>>>>>>>  	mutex_init(&dcc->cmd_lock);
+>>>>>>>>>  	atomic_set(&dcc->issued_discard, 0);
+>>>>>>>>>
+>>>>>>>
+>>>>>
+>>>>> -- 
+>>>>> --
+>>>>> Sent by a consultant of the Qualcomm Innovation Center, Inc.
+>>>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+>>>>
+>>>
+>>>
+>>> _______________________________________________
+>>> Linux-f2fs-devel mailing list
+>>> Linux-f2fs-devel@lists.sourceforge.net
+>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>> .
+>>>
+> 
