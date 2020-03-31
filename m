@@ -2,189 +2,96 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AECC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77736C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33A420786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDuAK8ri"
+	by mail.kernel.org (Postfix) with ESMTP id 4E36720786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585678199;
+	bh=WNwDqkTGN7+i8/6M/hXIfupyseuBGTj//UrBFLbG2GM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NwXCVZsBf32sPyw0F376QqLTbgiCVxYnzZ8gmcHXayiBqqOOhLM089A2Pz6cP1Y/s
+	 xihLHvjV4fg/UQrMhO2SuyH40iXFT6yQDzxBZXpI49j/2sEaUPaZZJbMRDv1jViEIo
+	 6bE1JEmyCvdAVpYmihoxQoMbgKXRER+E+kqJExJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgCaSJR (ORCPT
+        id S1727185AbgCaSJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:09:17 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:47091 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgCaSJR (ORCPT
+        Tue, 31 Mar 2020 14:09:58 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33400 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCaSJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:09:17 -0400
-Received: by mail-vs1-f65.google.com with SMTP id z125so14061680vsb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:09:16 -0700 (PDT)
+        Tue, 31 Mar 2020 14:09:57 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f20so23041802ljm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:09:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UPJq6ZlTzB31AHhJ/+QZLwm1iSTlBLnX9zVCEY1D9+4=;
-        b=oDuAK8ri3s9l8SoVYBHbDcZwEw9KgiiYf/MpM8+3UdjLAqFIF662mmjXuIXNyb/ez8
-         IzuHflTQWAUV2pof4NIUTD9JmBz2toCJIihOcdaBy8zPUmiQ+oeh/2rFJagHTursEWcs
-         4V6VYEYBBIaTCKTChOoTfPtT/NRaR/3u3mYkaI2hWqB3jPcxJF0cbe059XBt0KU6tm+z
-         MkNSk2yUyXCVvluLjfLYhYMIQgTHlVY8AL4imdlsUmenfrAaWURjFzltEvV3DcDd8qTZ
-         Nj7HLfHutH0+ZGOLDQ33x4GiMmNVJ1ka/xcvL+e0pdHMAA2DCXooIm7NmWSnhY3gVmk5
-         iaJA==
+         :cc;
+        bh=lpcU1t/tj2H7Six2K2HSWdYqKvP0QvKRCjffYNTRF6M=;
+        b=IRuW3sJFV3v7Crj6ckeoeLi2iD+L6VjNn2QCDu0AHs1i3B7V11GyDgS9G3ngpEMw2Q
+         e4Md+z08evDJ8udltxRtLMFbB6SDLIBfmZmjjYiMoWO79xxqfZ25S/b1kKeBbJFnXwWq
+         +0U1DVmA12kGN4Jw1Y6xf2g8iHaQTYNEVnhbM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UPJq6ZlTzB31AHhJ/+QZLwm1iSTlBLnX9zVCEY1D9+4=;
-        b=t3HLMyydSQVQWTIHEaL5VcwDaQA4eO6FJkIFN3MYibsnjYJ+dDp621rL4vx4HNwmHE
-         Ucg5qtIZv5v4QuYCdAplNrdxuxNSmYOcTNCIbFzl+cSXQ2vqMlPU9Q6HGcoAYBfln9PN
-         ku4xWlORqMtmeCukQ+/FCbeIZpiVQ1NgzAuWA6TRIBI6ig8IyOHsRxcq0uF/ulMRVDg1
-         8GdURjx2JcKqt49jZ4UiGL8kbjXwNTaKDlX4FQL6ClpKuZjSUwwhw1denikdf/Xjn1Bg
-         9vza31CBQnukgHpaqzBMJBLqXxxVj+S6USYfdne4BtiUl0XXkuTpfx491SWt1JaWANr9
-         BrAg==
-X-Gm-Message-State: AGi0PubQln3oDZPBs7CX1+puiWvysrXhb5Vu2L+Eki5/Z+T1moNdDtf4
-        HwcntRAcxlV8BIKtXMg+6eKhrIIjk9HAzL4eh4opyA==
-X-Google-Smtp-Source: APiQypKHYbxkIBOvGCboXv205msSO49ApFYBvgXnNfouHIfGDbCAyape1yuky1eiv5St/SnqpuMkCL9RRVhFK5wt3fQ=
-X-Received: by 2002:a05:6102:72d:: with SMTP id u13mr2964354vsg.35.1585678155840;
- Tue, 31 Mar 2020 11:09:15 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=lpcU1t/tj2H7Six2K2HSWdYqKvP0QvKRCjffYNTRF6M=;
+        b=pMFwS2rkCFlIhQGv2Vg0OsqAlPeXYLmnpT3jB7tx0uzyUpFyMWFt8ksULUIKXdHokK
+         UmeKyJrg62BtQkZCzy2cyF3bNfV9cNbbBXx0zHfR6GLMsG63JazD6B1/hxcQ1oYHz8kN
+         EFC0U9kacWTZPjQfiNnuOyr7ZrnYTiNlCYTUSmUqjU35nhkq3kG274x0yOPOKNhvz7Wd
+         WP/ycEFYgMDt4lEPGrnRMSg58AIFPS8XRYApZkIxdSqRKtJfLMD/yh8WhUEfaxC7R7HN
+         rwsv2Lz1gjMgMq7P7j/gptO9Ebb1f5Z2ndKW0oQNMRLzD+n2adcWAbZUA7IAdiVnSzXb
+         NvqQ==
+X-Gm-Message-State: AGi0PuZ1536s4Ih0yzn3MpMW96I5o9sjwZTIr0Y3LSCNBG6mRdSNOKJQ
+        jWrwgQvlm71PxOdo+tuKy+sdCITdvUs=
+X-Google-Smtp-Source: APiQypLSGy2ohdIEZlB/PtyDVpBCJYGRvrw0L4OPrml7s9krdm8us/zY+Yna+Kbhe3CuEzWN18982A==
+X-Received: by 2002:a2e:a40d:: with SMTP id p13mr194659ljn.264.1585678194872;
+        Tue, 31 Mar 2020 11:09:54 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id u25sm5164524lfo.71.2020.03.31.11.09.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 11:09:53 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id s13so6953258lfb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:09:53 -0700 (PDT)
+X-Received: by 2002:ac2:46d3:: with SMTP id p19mr6453610lfo.125.1585678192984;
+ Tue, 31 Mar 2020 11:09:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200325113407.26996-1-ulf.hansson@linaro.org>
- <VI1PR04MB504097B40CE0B804FA60D67A90CF0@VI1PR04MB5040.eurprd04.prod.outlook.com>
- <VI1PR04MB5040FFADA4F780422E208AC390CC0@VI1PR04MB5040.eurprd04.prod.outlook.com>
- <CAPDyKFr_yOmZ2MMvp=1krHejCRDRfhC0B+1icYR5xuZfhKy_ag@mail.gmail.com> <2b2f1b1e-d186-e60f-baa9-3223ad4101f0@arm.com>
-In-Reply-To: <2b2f1b1e-d186-e60f-baa9-3223ad4101f0@arm.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 31 Mar 2020 20:08:39 +0200
-Message-ID: <CAPDyKFoSeXsNOW4Defc_nLzfd5G8UvsTWUNMJNW6tAZ0gMV4Kg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     BOUGH CHEN <haibo.chen@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Ludovic Barre <ludovic.barre@st.com>
+References: <20200331080111.GA20569@gmail.com>
+In-Reply-To: <20200331080111.GA20569@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 31 Mar 2020 11:09:36 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjpBohNkBSxyPfC7w8165usbU5TuLohdbPs+D0bUYqJhQ@mail.gmail.com>
+Message-ID: <CAHk-=wjpBohNkBSxyPfC7w8165usbU5TuLohdbPs+D0bUYqJhQ@mail.gmail.com>
+Subject: Re: [GIT PULL] x86 cleanups for v5.7
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 27 Mar 2020 at 20:15, Robin Murphy <robin.murphy@arm.com> wrote:
+On Tue, Mar 31, 2020 at 1:01 AM Ingo Molnar <mingo@kernel.org> wrote:
 >
-> On 2020-03-27 3:34 pm, Ulf Hansson wrote:
-> > On Fri, 27 Mar 2020 at 04:02, BOUGH CHEN <haibo.chen@nxp.com> wrote:
-> >>
-> >>
-> >>> -----Original Message-----
-> >>> From: BOUGH CHEN
-> >>> Sent: 2020=E5=B9=B43=E6=9C=8826=E6=97=A5 12:41
-> >>> To: Ulf Hansson <ulf.hansson@linaro.org>; Greg Kroah-Hartman
-> >>> <gregkh@linuxfoundation.org>; Rafael J . Wysocki <rafael@kernel.org>;
-> >>> linux-kernel@vger.kernel.org
-> >>> Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
-> >>> Russell King <linux@armlinux.org.uk>; Linus Walleij <linus.walleij@li=
-naro.org>;
-> >>> Vinod Koul <vkoul@kernel.org>; Ludovic Barre <ludovic.barre@st.com>;
-> >>> linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org
-> >>> Subject: RE: [PATCH 0/2] amba/platform: Initialize dma_parms at the b=
-us level
-> >>>
-> >>>> -----Original Message-----
-> >>>> From: Ulf Hansson <ulf.hansson@linaro.org>
-> >>>> Sent: 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 19:34
-> >>>> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Rafael J .
-> >>>> Wysocki <rafael@kernel.org>; linux-kernel@vger.kernel.org
-> >>>> Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
-> >>>> Russell King <linux@armlinux.org.uk>; Linus Walleij
-> >>>> <linus.walleij@linaro.org>; Vinod Koul <vkoul@kernel.org>; BOUGH CHE=
-N
-> >>>> <haibo.chen@nxp.com>; Ludovic Barre <ludovic.barre@st.com>;
-> >>>> linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org; Ulf
-> >>>> Hansson <ulf.hansson@linaro.org>
-> >>>> Subject: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus
-> >>>> level
-> >>>>
-> >>>> It's currently the amba/platform driver's responsibility to initiali=
-ze
-> >>>> the pointer, dma_parms, for its corresponding struct device. The
-> >>>> benefit with this approach allows us to avoid the initialization and
-> >>>> to not waste memory for the struct device_dma_parameters, as this ca=
-n
-> >>>> be decided on a case by case basis.
-> >>>>
-> >>>> However, it has turned out that this approach is not very practical.
-> >>>> Not only does it lead to open coding, but also to real errors. In
-> >>>> principle callers of
-> >>>> dma_set_max_seg_size() doesn't check the error code, but just assume=
-s
-> >>>> it succeeds.
-> >>>>
-> >>>> For these reasons, this series initializes the dma_parms from the
-> >>>> amba/platform bus at the device registration point. This also follow=
-s
-> >>>> the way the PCI devices are being managed, see pci_device_add().
-> >>>>
-> >>>> If it turns out that this is an acceptable solution, we probably als=
-o
-> >>>> want the changes for stable, but I am not sure if it applies without=
- conflicts.
-> >>>>
-> >>>> The series is based on v5.6-rc7.
-> >>>>
-> >>>
-> >>> Hi Ulf,
-> >>>
-> >>> Since i.MXQM SMMU related code still not upstream yet, so I apply you=
-r
-> >>> patches on our internal Linux branch based on v5.4.24, and find it do=
- not work
-> >>> on my side. Maybe for platform core drivers, there is a gap between v=
-5.4.24
-> >>> and v5.6-rc7 which has the impact.
-> >>> I will try to put our SMMU related code into v5.6-rc7, then do the te=
-st again.
-> >>>
-> >>>
-> >>
-> >> Hi Ulf,
-> >>
-> >> On the latest Linux-next branch, the top commit 89295c59c1f063b533d071=
-ca49d0fa0c0783ca6f (tag: next-20200326), after add your two patches, I just=
- add the simple debug code as following in the /driver/mmc/core/queue.c, bu=
-t seems still not work as our expect, logically, it should work, so can you=
- or anyone test on other platform? This seems weird.
-> >
-> > You are right, this doesn't work for platform devices being added
-> > through the OF path.
-> >
-> > In other words, of_platform_device_create_pdata() manually allocates
-> > the platform device and assigns it the &platform_bus_type, but without
-> > calling platform_device_add().
-> >
-> > For amba, it works fine, as in that OF path, amba_device_add() is calle=
-d. Hmm.
-> >
-> > I re-spin this, to address the problem. Perhaps we simply need to use
-> > the ->probe() path.
+> This topic tree contains more commits than usual:
 >
-> FWIW we already have setup_pdev_dma_masks(), so it might be logical to
-> include dma_parms in there too.
+>  - most of it are uaccess cleanups/reorganization by Al
 
-Yep, thanks for the suggestion. This work fine.
+Lovely. This now makes my local boot-test tree be much closer to my
+upstream tree, since I've had my clang asm-goto stuff in my boot tree
+(and it had that series from Al).
 
-[...]
+Thanks.
 
-Kind regards
-Uffe
+                  Linus
