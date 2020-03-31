@@ -2,79 +2,98 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745BCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56898C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C56220772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6A820781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ox/XyHOD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731058AbgCaKys (ORCPT
+        id S1730656AbgCaKzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:54:48 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:43589 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730481AbgCaKwk (ORCPT
+        Tue, 31 Mar 2020 06:55:10 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45466 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730439AbgCaKzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:52:40 -0400
-IronPort-SDR: i2zbpogVhubMVvHdG3zxYQlLPYGS7p5gH89YnsVT+uRQzusC2HgEUE2CApiIjg+u34mvqNhv7K
- dQ5K/thphGOhU0hHbpY6Kqwl9ljdMFhRODdMpGnsnwqyqpHORNFjJae+bvxlL1MTyR5OWThXuK
- IOe8hdRfTSeYAjW12tozW4q+1uV5sa3PfDg7HukuKaMGhN1TtUI2foivLoZZCP6m7NCJyLrYoQ
- 5rIAkSvGvNWrXF6E1eOhkpVHouRpZh9e+vY9drmMM7Stg+uMbcT+CbGDKZD30zWDH0BqPumtiQ
- a0s=
-X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="47330778"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 31 Mar 2020 02:52:24 -0800
-IronPort-SDR: z1UqIzoq8yJDeWGNTItbf9aAO0Ya2BWj0J+5JN4DKrOWsFn4Cap/388dVBQfa1MBcvU+biaEjo
- pA3jFZKzCjOHyiX5BW7a6UIdz7NNbTzdJ1VL9s7Cy9yUqHwgF5+C7n4GnJerdyTBAwa78NVJol
- XJSBNrEqUUIAiZ0JHCFftgkZFW6ihFvRmNevIl4n/fPMFCyZnZmVHTSmZcXOAPEm+XJJinyrKV
- r9jcYujvRYglfH2+s3bNe45eZ4FjlkuJibaMWr/eHyl8HYtBmu9mvbp61Q6bG3+wgng2fGxxpZ
- rdk=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v10 23/55] dt-bindings: input: atmel: support to specify input name
-Date:   Tue, 31 Mar 2020 03:50:19 -0700
-Message-ID: <20200331105051.58896-24-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200331105051.58896-1-jiada_wang@mentor.com>
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
+        Tue, 31 Mar 2020 06:55:10 -0400
+Received: by mail-ed1-f67.google.com with SMTP id u59so24497925edc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 03:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=lJ28otLGH/TA0UFRVyaAv3N2y3mbjSrHeAW7r1D9pqQ=;
+        b=Ox/XyHODyaHFq5RQDXZmKlVHeUdUPDwHjUDHi8esLUsIw0rB3+3zGmrRd+Qy3P5G3L
+         jryZy/jSRFidXNn4mnsqe/vAHuyNCdEpxIsrC0arPlsPOipvVXXsX5RDcCtJP9yoMZwx
+         NIHLfam1/tknlph34PC3oWR+QUw5YxQoeTFHV5tJDwwJ2zgcVbiCD8S5FZq86S7cFsy/
+         smiQMpxjVoXVxEJoGCcYQ/4w7zSTv8fSVhFQ8M0ae5gulBU8aHNOwbIzlJUKjZYJ0kMy
+         zU5jVpZm3AStfZAYAzzJwOwgv4wBNuLbE5cyEpKvkgeWg7HyUeFLzZDz6Qzo+MRN7eo3
+         5SQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=lJ28otLGH/TA0UFRVyaAv3N2y3mbjSrHeAW7r1D9pqQ=;
+        b=r/6/4V7hSI4AQGUd8h4op0Tesuq9TuecVl6EssCmnkzZ42x9IS8KQ/rt7ZJUoFGOyP
+         e3npE8RP5jqM3DhQq0IXPi3ZyZGBbbvQXkmRvwSEGuCqz64E7g6HY8QCq8IqS0AO147o
+         3H8c30FQiPyOI9g28TcF+ZdYJbvLTrsWe16A6LNvplNw4HhckiXBxu5fXwfKxl8cfDoM
+         4xmEmrRow/ebQS3luZ/YKbIW/pHANRvr8pV0tckO0N0Zwh+P3/bSuzbd5QfWr4f92IMh
+         rawewPDWSS2jlMrPiRPh5yzHwnMmBB6Zwk08kkEsIu0SjektEE1aE0U5fDIIEBQmvGD1
+         FiNg==
+X-Gm-Message-State: ANhLgQ2Y6/QMhovv1thSp+YPVaQksLdHIMYhyEbnWuxJCLLi7vCDGscW
+        gmyrwgU23T0PV3wMm3G9P6T4Ax47/c+FYA==
+X-Google-Smtp-Source: ADFU+vuzYvhLkkf4P6xFXKXPnbxRp15lh/5fGfPH88RWrj0e6JgwXYjh+iwsAu82EDqgRUCBvDi1rw==
+X-Received: by 2002:a50:ec08:: with SMTP id g8mr15100184edr.321.1585652108744;
+        Tue, 31 Mar 2020 03:55:08 -0700 (PDT)
+Received: from smtp.gmail.com ([2001:818:e238:a000:51c6:2c09:a768:9c37])
+        by smtp.gmail.com with ESMTPSA id pj22sm2144956ejb.79.2020.03.31.03.55.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 03:55:08 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 07:55:00 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Rodrigo.Siqueira@amd.com
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] drm/amd/display: more code cleanup in the dc_link file
+Message-ID: <cover.1585651869.git.melissa.srw@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support to specify input name
+These patches address many code style issues on dc_link for readability
+and cleaning up warnings. Change suggested by checkpatch.pl.
+Some issues remain and need some minor code refactoring for proper handling. 
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Melissa Wen (4):
+  drm/amd/display: cleanup codestyle type BLOCK_COMMENT_STYLE on dc_link
+  drm/amd/display: codestyle cleanup on dc_link file until detect_dp
+    func
+  drm/amd/display: code cleanup on dc_link from is_same_edid to
+    get_ddc_line
+  drm/amd/display: code cleanup of dc_link file on func
+    dc_link_construct
 
-diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-index 29bb84a920d6..126266891cdc 100644
---- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-+++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-@@ -43,6 +43,8 @@ Optional properties for main touchpad device:
- - atmel,cfg_name: Provide name of configuration file in OBP_RAW format. This
-     will be downloaded from the firmware loader on probe to the device.
- 
-+- atmel,input_name: Override name of input device from the default.
-+
- Example:
- 
- 	touch@4b {
+ drivers/gpu/drm/amd/display/dc/core/dc_link.c | 358 +++++++++---------
+ 1 file changed, 176 insertions(+), 182 deletions(-)
+
 -- 
-2.17.1
+2.25.1
 
