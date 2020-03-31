@@ -2,111 +2,126 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC2EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D87C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E98B212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Vfu1l62X"
+	by mail.kernel.org (Postfix) with ESMTP id 6ED3321473
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585645596;
+	bh=HZ7GlHyZB6RnMvGr6cMq3mUlllhIUvbAbbr628e4hBk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=W2zPaJ5V02khes+dFMDcBABmQ5MzZKPKOb/TWKMzAK1VZN2ltKzGSEzreBcyqttDb
+	 bKiRI9fSJTzFrX2SyMo0WRiEnY9MsDceJEb/dYxiicpnJXrhks1ZHbB3u9M76L5NNc
+	 Jw8ykceSpAc2styT/hwevhKwGEsMb4UckQrnMVmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbgCaJGc (ORCPT
+        id S1730416AbgCaJGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:06:32 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42494 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731138AbgCaJG3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:06:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585645589; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=OlOD3aygKk+kpGLkhsVi4IEdqcNCdHsjR4aqyj00l7I=; b=Vfu1l62XiHHMnf2zhUicyFYNKe2IitASQGLGh3IrpE8wa5ySzNi31G6STNdsFZNbB+rby42U
- F/8dSaBAWa5oiKN5c8MntkHSUaj8gv+FMemVvvzW4lr4zmrnA5OP0VVIZfzOGLSTrlNMzQHd
- kPpimLBdRV7ECguN9hrVwoa4Cq8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e830809.7f5a0b4511f0-smtp-out-n04;
- Tue, 31 Mar 2020 09:06:17 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 487DAC44792; Tue, 31 Mar 2020 09:06:17 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Tue, 31 Mar 2020 05:06:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730888AbgCaJGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:06:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: stummala)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52DABC433D2;
-        Tue, 31 Mar 2020 09:06:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52DABC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-Date:   Tue, 31 Mar 2020 14:36:08 +0530
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-Cc:     Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [PATCH] f2fs: prevent meta updates while checkpoint is in
- progress
-Message-ID: <20200331090608.GZ20234@codeaurora.org>
-References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
- <20200331035419.GB79749@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B93E212CC;
+        Tue, 31 Mar 2020 09:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585645590;
+        bh=HZ7GlHyZB6RnMvGr6cMq3mUlllhIUvbAbbr628e4hBk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DFwitTFHPJ+KlgMRhqfMTsN3bX6pet9TS34uw1S8f/mC5tKg73owSWtO7LIz7v/V2
+         zWZiV7poqsXs2eITRtJZU3hU0Q2nhfw+rigMq9NeZdeBV3DzJooDff1Cp5wV3DPfLm
+         VhWTR2id6So6R82pDyfKgPQfzXtPToKA+wDdzG+M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.5 099/170] perf probe: Do not depend on dwfl_module_addrsym()
+Date:   Tue, 31 Mar 2020 10:58:33 +0200
+Message-Id: <20200331085434.761153477@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
+References: <20200331085423.990189598@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331035419.GB79749@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 08:54:19PM -0700, Jaegeuk Kim wrote:
-> On 03/26, Sahitya Tummala wrote:
-> > allocate_segment_for_resize() can cause metapage updates if
-> > it requires to change the current node/data segments for resizing.
-> > Stop these meta updates when there is a checkpoint already
-> > in progress to prevent inconsistent CP data.
-> 
-> I'd prefer to use f2fs_lock_op() in bigger coverage.
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Do you mean to cover the entire free_segment_range() function within
-f2fs_lock_op()? Please clarify.
+commit 1efde2754275dbd9d11c6e0132a4f09facf297ab upstream.
 
-Thanks,
+Do not depend on dwfl_module_addrsym() because it can fail on user-space
+shared libraries.
 
-> 
-> > 
-> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> > ---
-> >  fs/f2fs/gc.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> > index 5bca560..6122bad 100644
-> > --- a/fs/f2fs/gc.c
-> > +++ b/fs/f2fs/gc.c
-> > @@ -1399,8 +1399,10 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
-> >  	int err = 0;
-> >  
-> >  	/* Move out cursegs from the target range */
-> > +	f2fs_lock_op(sbi);
-> >  	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
-> >  		allocate_segment_for_resize(sbi, type, start, end);
-> > +	f2fs_unlock_op(sbi);
-> >  
-> >  	/* do GC to move out valid blocks in the range */
-> >  	for (segno = start; segno <= end; segno += sbi->segs_per_sec) {
-> > -- 
-> > Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-> > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Actually, same bug was fixed by commit 664fee3dc379 ("perf probe: Do not
+use dwfl_module_addrsym if dwarf_diename finds symbol name"), but commit
+07d369857808 ("perf probe: Fix wrong address verification) reverted to
+get actual symbol address from symtab.
 
--- 
---
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+This fixes it again by getting symbol address from DIE, and only if the
+DIE has only address range, it uses dwfl_module_addrsym().
+
+Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
+Reported-by: Alexandre Ghiti <alex@ghiti.fr>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Link: http://lore.kernel.org/lkml/158281812176.476.14164573830975116234.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/perf/util/probe-finder.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -636,14 +636,19 @@ static int convert_to_trace_point(Dwarf_
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Try to get actual symbol name from symtab */
+-	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
++	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
++		/* If the DIE has entrypc, use it. */
++		symbol = dwarf_diename(sp_die);
++	} else {
++		/* Try to get actual symbol name and address from symtab */
++		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
++		eaddr = sym.st_value;
++	}
+ 	if (!symbol) {
+ 		pr_warning("Failed to find symbol at 0x%lx\n",
+ 			   (unsigned long)paddr);
+ 		return -ENOENT;
+ 	}
+-	eaddr = sym.st_value;
+ 
+ 	tp->offset = (unsigned long)(paddr - eaddr);
+ 	tp->address = (unsigned long)paddr;
+
+
