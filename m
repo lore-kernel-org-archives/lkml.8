@@ -2,177 +2,105 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B245C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30F8C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5AF20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA20420784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585665101;
+	bh=GbwCITgX7+ViF0nZ/SYsVFgrvblVn2yk006z/KmssC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tXTyCwJODdFBFU5MXs+CCh2yJUqqJ0J1aMuvcTJOY4GQHouB6fiOjWfeUqJEkZrhz
+	 r3sLuxi3AMLtWJKTVY/ZqtXWPbZt//poRmhCo+uTJ1OD9aSzOqWZn4VlfKojS/4hPy
+	 kkC+pAofsiYrXpKoh11AkrxRfu79r3QoBKUKm1rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbgCaOag (ORCPT
+        id S1731109AbgCaObk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:30:36 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12592 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731156AbgCaOaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:30:35 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 26B92B45686137A5CFF1;
-        Tue, 31 Mar 2020 22:30:03 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 31 Mar 2020 22:29:57 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>, <arnd@arndb.de>,
-        <rostedt@goodmis.org>, <maz@kernel.org>, <suzuki.poulose@arm.com>,
-        <tglx@linutronix.de>, <yuzhao@google.com>, <Dave.Martin@arm.com>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>, <corbet@lwn.net>, <vgupta@synopsys.com>,
-        <tony.luck@intel.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>,
-        <kuhn.chenqun@huawei.com>
-Subject: [RFC PATCH v5 8/8] arm64: tlb: Set the TTL field in flush_tlb_range
-Date:   Tue, 31 Mar 2020 22:29:27 +0800
-Message-ID: <20200331142927.1237-9-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200331142927.1237-1-yezhenyu2@huawei.com>
-References: <20200331142927.1237-1-yezhenyu2@huawei.com>
+        Tue, 31 Mar 2020 10:31:40 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42322 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730810AbgCaObk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 10:31:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 22so10398519pfa.9;
+        Tue, 31 Mar 2020 07:31:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZV1KfwgGLtoEiy3TkAg/zZ6KIB+b40AZeOP0Q0XHWHU=;
+        b=V/ckHBGkUv+faIurBZm6aWkZw8kSgZv/W32v4KnRdHa3ae4XdBHYzRPzrKlm7N82wq
+         6tazVl/vkU+thJE5va34cOiRLqXI+R3LequulATdCwnwje5A/mPVtrJnOyq4p3pf+N9S
+         6uWJsnj/KTpQ1pK/7N4Q+NxBYqFyKHZkQdcOF0mhY4JoKZyZWXFW2Ndgx2WFDfwdP7BJ
+         MWVTD+PhVu28Po06FEONOF8zzI2Aj4+b5+JgzeW01tA5XH5tqXtmeLUAUSeVh5znX8tv
+         nuwpsyj7NAZxrbSl1bRHfMPNFXEo8WFUJSSR/58GUmp2BhDV82HXg3nLf+31df9865qf
+         SKrg==
+X-Gm-Message-State: ANhLgQ32zP88vMIDbn+syR3TVqKLMyTETGr3z6aXJ7+BTrJztNOUYEjX
+        VrYUXRNssY1JKm3NBQ5+tmA=
+X-Google-Smtp-Source: ADFU+vv9QG+JNLAPq5Hse2+XL1fqy/ETctrMBCrfQRW4WYOaoKGlkutwe7Dhv7pKCEUfjkAs3IExyg==
+X-Received: by 2002:a63:7e10:: with SMTP id z16mr18195431pgc.412.1585665098929;
+        Tue, 31 Mar 2020 07:31:38 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 184sm469375pge.71.2020.03.31.07.31.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 07:31:35 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 0DA0940277; Tue, 31 Mar 2020 14:31:35 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 14:31:35 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200331143134.GY11244@42.do-not-panic.com>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-2-vbabka@suse.cz>
+ <20200330224422.GX11244@42.do-not-panic.com>
+ <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch uses the cleared_* in struct mmu_gather to set the
-TTL field in flush_tlb_range().
+On Tue, Mar 31, 2020 at 09:42:46AM +0200, Vlastimil Babka wrote:
+> On 3/31/20 12:44 AM, Luis Chamberlain wrote:
+> > 
+> > This is wonderful when we think about existing sysctls which have
+> > corresponding silly boot params that do the same thing. However, shoving
+> > a boot param capability down every possible built-in sysctl brings
+> > forward support considerations we should take serious, as this would
+> > add a new user interface and we'll have to support it.
+> 
+> Hmm, if I boot with an initramfs with init process that does mount /proc and set
+> some sysctl there as the very first thing, then this will be almost the same
+> moment as my patch does it. There is no further kernel initialization in
+> between. So with your logic we already do support all non-modular sysctls to be
+> set so early.
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- arch/arm64/include/asm/tlb.h      | 39 ++++++++++++++++++++++++++++++-
- arch/arm64/include/asm/tlbflush.h | 22 +++++------------
- 2 files changed, 44 insertions(+), 17 deletions(-)
+Yes, true. Then by all means:
 
-diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-index b76df828e6b7..72b6e3763df2 100644
---- a/arch/arm64/include/asm/tlb.h
-+++ b/arch/arm64/include/asm/tlb.h
-@@ -21,11 +21,34 @@ static void tlb_flush(struct mmu_gather *tlb);
- 
- #include <asm-generic/tlb.h>
- 
-+/*
-+ * get the tlbi levels in arm64.  Default value is 0 if more than one
-+ * of cleared_* is set or neither is set.
-+ * Arm64 doesn't support p4ds now.
-+ */
-+static inline int tlb_get_level(struct mmu_gather *tlb)
-+{
-+	int sum = tlb->cleared_ptes + tlb->cleared_pmds +
-+		  tlb->cleared_puds + tlb->cleared_p4ds;
-+
-+	if (sum != 1)
-+		return 0;
-+	else if (tlb->cleared_ptes)
-+		return 3;
-+	else if (tlb->cleared_pmds)
-+		return 2;
-+	else if (tlb->cleared_puds)
-+		return 1;
-+
-+	return 0;
-+}
-+
- static inline void tlb_flush(struct mmu_gather *tlb)
- {
- 	struct vm_area_struct vma = TLB_FLUSH_VMA(tlb->mm, 0);
- 	bool last_level = !tlb->freed_tables;
- 	unsigned long stride = tlb_get_unmap_size(tlb);
-+	int tlb_level = tlb_get_level(tlb);
- 
- 	/*
- 	 * If we're tearing down the address space then we only care about
-@@ -38,7 +61,21 @@ static inline void tlb_flush(struct mmu_gather *tlb)
- 		return;
- 	}
- 
--	__flush_tlb_range(&vma, tlb->start, tlb->end, stride, last_level);
-+	__flush_tlb_range(&vma, tlb->start, tlb->end, stride,
-+			  last_level, tlb_level);
-+}
-+
-+static inline void flush_tlb_range(struct mmu_gather *tlb,
-+				   struct vm_area_struct *vma,
-+				   unsigned long start, unsigned long end)
-+{
-+	/*
-+	 * We cannot use leaf-only invalidation here, since we may be invalidating
-+	 * table entries as part of collapsing hugepages or moving page tables.
-+	 */
-+	unsigned long stride = tlb_get_unmap_size(tlb);
-+	int tlb_level = tlb_get_level(tlb);
-+	__flush_tlb_range(vma, start, end, stride, false, tlb_level);
- }
- 
- static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 0b4d75a2270b..dc8e803692f8 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -215,7 +215,8 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
- 
- static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 				     unsigned long start, unsigned long end,
--				     unsigned long stride, bool last_level)
-+				     unsigned long stride, bool last_level,
-+				     int tlb_level)
- {
- 	unsigned long asid = ASID(vma->vm_mm);
- 	unsigned long addr;
-@@ -237,27 +238,16 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
- 	dsb(ishst);
- 	for (addr = start; addr < end; addr += stride) {
- 		if (last_level) {
--			__tlbi_level(vale1is, addr, 0);
--			__tlbi_user_level(vale1is, addr, 0);
-+			__tlbi_level(vale1is, addr, tlb_level);
-+			__tlbi_user_level(vale1is, addr, tlb_level);
- 		} else {
--			__tlbi_level(vae1is, addr, 0);
--			__tlbi_user_level(vae1is, addr, 0);
-+			__tlbi_level(vae1is, addr, tlb_level);
-+			__tlbi_user_level(vae1is, addr, tlb_level);
- 		}
- 	}
- 	dsb(ish);
- }
- 
--static inline void flush_tlb_range(struct mmu_gather *tlb,
--				   struct vm_area_struct *vma,
--				   unsigned long start, unsigned long end)
--{
--	/*
--	 * We cannot use leaf-only invalidation here, since we may be invalidating
--	 * table entries as part of collapsing hugepages or moving page tables.
--	 */
--	__flush_tlb_range(vma, start, end, PAGE_SIZE, false);
--}
--
- static inline void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
- 	unsigned long addr;
--- 
-2.19.1
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-
+  Luis
