@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B9DC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDA3C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E18E208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BB520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645274;
-	bh=gFz0AHUfNBGQrSN7xcAOj65QeONXXdylWCBDDmIvE3A=;
+	s=default; t=1585645277;
+	bh=0CeNMpF2I3Al+pQh8jpMHNjh0FrwPZUcwKc7/Wt+lBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zmJJXcTt6drT4WXgd0ZbecTGxfQeCP9T0iqk74ZGEGkuxi5f2VlpvDGsuq+6UWPcE
-	 JUcG8yvcF5+XdqPcMSvIvMlrikx6XuOF+HseWq7IvH8AW8m2UjUIYVJOYLfBacKAhj
-	 fJqdG9/C2DCsVXPi3XDRV8jQqa0RA227RjdXgVlQ=
+	b=TVrNXuZ3m+rqNpCo29RrKSptuUrItn/HtiRpL2VveZ5Zz82y6EU1RuXi4w6oZQpv1
+	 f4Mex16eXKKjiBx/FJcUPibVdc3Fl/rrzXy2KuKROIbC9obQkYZ/dFR1KBhpzCndjg
+	 GChomAYdVFjVGfGbw8Ahi5DW+n4QMVs7nydeuhHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730518AbgCaJBN (ORCPT
+        id S1730530AbgCaJBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:01:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgCaJBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:01:07 -0400
+        id S1730511AbgCaJBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:01:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E737120848;
-        Tue, 31 Mar 2020 09:01:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8895F20B1F;
+        Tue, 31 Mar 2020 09:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645266;
-        bh=gFz0AHUfNBGQrSN7xcAOj65QeONXXdylWCBDDmIvE3A=;
+        s=default; t=1585645269;
+        bh=0CeNMpF2I3Al+pQh8jpMHNjh0FrwPZUcwKc7/Wt+lBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0Kx/FkVffIszYzLV0cDg5l3Z4XpIHOceMWnIBB/YBz0yK/ajiVNSef6ZYtuAHYrt
-         hLx7b40fPChC8paddgXKC/AoKQOsuvp/djFYdpuO9xL7/2YMSm64xmBXZ72fwQ7L9c
-         ngQNiNjfDwKBFbnLiosZnn2Lpkb3R9NwNag1W8MM=
+        b=vZHkW7pywEw7jrJUP/epusbbENeOLD5eldSRhK/H8ZhqvSM3q7LYWiy4+DZ4fgguT
+         xRSvETtkTVu9hmCJowjvGNLHLju9PCvdpJNgh57ypzvckgH2ihqqPKPLeQXO6hRWhV
+         Hzdc2bciZGNoK6JRLu6wmjoiRH6gdofFRTm509Ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 5.6 15/23] staging: wfx: fix init/remove vs IRQ race
-Date:   Tue, 31 Mar 2020 10:59:27 +0200
-Message-Id: <20200331085315.125120268@linuxfoundation.org>
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 5.6 16/23] staging: wfx: annotate nested gc_list vs tx queue locking
+Date:   Tue, 31 Mar 2020 10:59:28 +0200
+Message-Id: <20200331085315.519262911@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -63,176 +61,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 4033714d6cbe04893aa0708d1fcaa45dd8eb3f53 upstream.
+commit e2525a95cc0887c7dc0549cb5d0ac3e796e1d54c upstream.
 
-Current code races in init/exit with interrupt handlers. This is noticed
-by the warning below. Fix it by using devres for ordering allocations and
-IRQ de/registration.
+Lockdep is complaining about recursive locking, because it can't make
+a difference between locked skb_queues. Annotate nested locks and avoid
+double bh_disable/enable.
 
-WARNING: CPU: 0 PID: 827 at drivers/staging/wfx/bus_spi.c:142 wfx_spi_irq_handler+0x5c/0x64 [wfx]
-race condition in driver init/deinit
+[...]
+insmod/815 is trying to acquire lock:
+cb7d6418 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xfc/0x198 [wfx]
+
+but task is already holding lock:
+cb7d61f4 (&(&list->lock)->rlock){+...}, at: wfx_tx_queues_clear+0xa0/0x198 [wfx]
+
+[...]
+Possible unsafe locking scenario:
+
+      CPU0
+      ----
+ lock(&(&list->lock)->rlock);
+ lock(&(&list->lock)->rlock);
 
 Cc: stable@vger.kernel.org
-Fixes: 0096214a59a7 ("staging: wfx: add support for I/O access")
+Fixes: 9bca45f3d692 ("staging: wfx: allow to send 802.11 frames")
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Reviewed-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/f0c66cbb3110c2736cd4357c753fba8c14ee3aee.1581416843.git.mirq-linux@rere.qmqm.pl
+Link: https://lore.kernel.org/r/5e30397af95854b4a7deea073b730c00229f42ba.1581416843.git.mirq-linux@rere.qmqm.pl
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wfx/bus_sdio.c |   15 ++++++---------
- drivers/staging/wfx/bus_spi.c  |   27 ++++++++++++++-------------
- drivers/staging/wfx/main.c     |   21 +++++++++++++--------
- drivers/staging/wfx/main.h     |    1 -
- 4 files changed, 33 insertions(+), 31 deletions(-)
+ drivers/staging/wfx/queue.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/staging/wfx/bus_sdio.c
-+++ b/drivers/staging/wfx/bus_sdio.c
-@@ -200,25 +200,23 @@ static int wfx_sdio_probe(struct sdio_fu
- 	if (ret)
- 		goto err0;
- 
--	ret = wfx_sdio_irq_subscribe(bus);
--	if (ret)
--		goto err1;
--
- 	bus->core = wfx_init_common(&func->dev, &wfx_sdio_pdata,
- 				    &wfx_sdio_hwbus_ops, bus);
- 	if (!bus->core) {
- 		ret = -EIO;
--		goto err2;
-+		goto err1;
+--- a/drivers/staging/wfx/queue.c
++++ b/drivers/staging/wfx/queue.c
+@@ -130,12 +130,12 @@ static void wfx_tx_queue_clear(struct wf
+ 	spin_lock_bh(&queue->queue.lock);
+ 	while ((item = __skb_dequeue(&queue->queue)) != NULL)
+ 		skb_queue_head(gc_list, item);
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	for (i = 0; i < ARRAY_SIZE(stats->link_map_cache); ++i) {
+ 		stats->link_map_cache[i] -= queue->link_map_cache[i];
+ 		queue->link_map_cache[i] = 0;
  	}
- 
-+	ret = wfx_sdio_irq_subscribe(bus);
-+	if (ret)
-+		goto err1;
-+
- 	ret = wfx_probe(bus->core);
- 	if (ret)
--		goto err3;
-+		goto err2;
- 
- 	return 0;
- 
--err3:
--	wfx_free_common(bus->core);
- err2:
- 	wfx_sdio_irq_unsubscribe(bus);
- err1:
-@@ -234,7 +232,6 @@ static void wfx_sdio_remove(struct sdio_
- 	struct wfx_sdio_priv *bus = sdio_get_drvdata(func);
- 
- 	wfx_release(bus->core);
--	wfx_free_common(bus->core);
- 	wfx_sdio_irq_unsubscribe(bus);
- 	sdio_claim_host(func);
- 	sdio_disable_func(func);
---- a/drivers/staging/wfx/bus_spi.c
-+++ b/drivers/staging/wfx/bus_spi.c
-@@ -156,6 +156,11 @@ static void wfx_spi_request_rx(struct wo
- 	wfx_bh_request_rx(bus->core);
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	spin_unlock_bh(&queue->queue.lock);
  }
  
-+static void wfx_flush_irq_work(void *w)
-+{
-+	flush_work(w);
-+}
-+
- static size_t wfx_spi_align_size(void *priv, size_t size)
- {
- 	// Most of SPI controllers avoid DMA if buffer size is not 32bit aligned
-@@ -211,22 +216,23 @@ static int wfx_spi_probe(struct spi_devi
- 		udelay(2000);
+@@ -207,9 +207,9 @@ void wfx_tx_queue_put(struct wfx_dev *wd
+ 
+ 	++queue->link_map_cache[tx_priv->link_id];
+ 
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	++stats->link_map_cache[tx_priv->link_id];
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	spin_unlock_bh(&queue->queue.lock);
+ }
+ 
+@@ -237,11 +237,11 @@ static struct sk_buff *wfx_tx_queue_get(
+ 		__skb_unlink(skb, &queue->queue);
+ 		--queue->link_map_cache[tx_priv->link_id];
+ 
+-		spin_lock_bh(&stats->pending.lock);
++		spin_lock_nested(&stats->pending.lock, 1);
+ 		__skb_queue_tail(&stats->pending, skb);
+ 		if (!--stats->link_map_cache[tx_priv->link_id])
+ 			wakeup_stats = true;
+-		spin_unlock_bh(&stats->pending.lock);
++		spin_unlock(&stats->pending.lock);
  	}
+ 	spin_unlock_bh(&queue->queue.lock);
+ 	if (wakeup_stats)
+@@ -259,10 +259,10 @@ int wfx_pending_requeue(struct wfx_dev *
+ 	spin_lock_bh(&queue->queue.lock);
+ 	++queue->link_map_cache[tx_priv->link_id];
  
--	ret = devm_request_irq(&func->dev, func->irq, wfx_spi_irq_handler,
--			       IRQF_TRIGGER_RISING, "wfx", bus);
--	if (ret)
--		return ret;
--
- 	INIT_WORK(&bus->request_rx, wfx_spi_request_rx);
- 	bus->core = wfx_init_common(&func->dev, &wfx_spi_pdata,
- 				    &wfx_spi_hwbus_ops, bus);
- 	if (!bus->core)
- 		return -EIO;
- 
--	ret = wfx_probe(bus->core);
-+	ret = devm_add_action_or_reset(&func->dev, wfx_flush_irq_work,
-+				       &bus->request_rx);
- 	if (ret)
--		wfx_free_common(bus->core);
-+		return ret;
-+
-+	ret = devm_request_irq(&func->dev, func->irq, wfx_spi_irq_handler,
-+			       IRQF_TRIGGER_RISING, "wfx", bus);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return wfx_probe(bus->core);
- }
- 
- static int wfx_spi_remove(struct spi_device *func)
-@@ -234,11 +240,6 @@ static int wfx_spi_remove(struct spi_dev
- 	struct wfx_spi_priv *bus = spi_get_drvdata(func);
- 
- 	wfx_release(bus->core);
--	wfx_free_common(bus->core);
--	// A few IRQ will be sent during device release. Hopefully, no IRQ
--	// should happen after wdev/wvif are released.
--	devm_free_irq(&func->dev, func->irq, bus);
--	flush_work(&bus->request_rx);
+-	spin_lock_bh(&stats->pending.lock);
++	spin_lock_nested(&stats->pending.lock, 1);
+ 	++stats->link_map_cache[tx_priv->link_id];
+ 	__skb_unlink(skb, &stats->pending);
+-	spin_unlock_bh(&stats->pending.lock);
++	spin_unlock(&stats->pending.lock);
+ 	__skb_queue_tail(&queue->queue, skb);
+ 	spin_unlock_bh(&queue->queue.lock);
  	return 0;
- }
- 
---- a/drivers/staging/wfx/main.c
-+++ b/drivers/staging/wfx/main.c
-@@ -262,6 +262,16 @@ static int wfx_send_pdata_pds(struct wfx
- 	return ret;
- }
- 
-+static void wfx_free_common(void *data)
-+{
-+	struct wfx_dev *wdev = data;
-+
-+	mutex_destroy(&wdev->rx_stats_lock);
-+	mutex_destroy(&wdev->conf_mutex);
-+	wfx_tx_queues_deinit(wdev);
-+	ieee80211_free_hw(wdev->hw);
-+}
-+
- struct wfx_dev *wfx_init_common(struct device *dev,
- 				const struct wfx_platform_data *pdata,
- 				const struct hwbus_ops *hwbus_ops,
-@@ -332,15 +342,10 @@ struct wfx_dev *wfx_init_common(struct d
- 	wfx_init_hif_cmd(&wdev->hif_cmd);
- 	wfx_tx_queues_init(wdev);
- 
--	return wdev;
--}
-+	if (devm_add_action_or_reset(dev, wfx_free_common, wdev))
-+		return NULL;
- 
--void wfx_free_common(struct wfx_dev *wdev)
--{
--	mutex_destroy(&wdev->rx_stats_lock);
--	mutex_destroy(&wdev->conf_mutex);
--	wfx_tx_queues_deinit(wdev);
--	ieee80211_free_hw(wdev->hw);
-+	return wdev;
- }
- 
- int wfx_probe(struct wfx_dev *wdev)
---- a/drivers/staging/wfx/main.h
-+++ b/drivers/staging/wfx/main.h
-@@ -34,7 +34,6 @@ struct wfx_dev *wfx_init_common(struct d
- 				const struct wfx_platform_data *pdata,
- 				const struct hwbus_ops *hwbus_ops,
- 				void *hwbus_priv);
--void wfx_free_common(struct wfx_dev *wdev);
- 
- int wfx_probe(struct wfx_dev *wdev);
- void wfx_release(struct wfx_dev *wdev);
 
 
