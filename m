@@ -2,108 +2,150 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEF8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BCEC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F512073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E969D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LPlrAqLP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eZaUbKqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgCaS0z (ORCPT
+        id S1727611AbgCaS1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:26:55 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53247 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCaS0y (ORCPT
+        Tue, 31 Mar 2020 14:27:31 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33812 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCaS1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:26:54 -0400
-Received: by mail-pj1-f67.google.com with SMTP id ng8so1431095pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:26:54 -0700 (PDT)
+        Tue, 31 Mar 2020 14:27:31 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a23so8439714plm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:27:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=64CGxkVCN+tpcc5h0TLuNJ8a0+sAEqYpYu5ixxZ2mkg=;
-        b=LPlrAqLP/r1SwN4Ni33l2KQkmUbmZQ5e2B8/T0hekORvqd7ZHsRdfVBuFJ+71qMGlI
-         iNcSc7h4BDQPrR6lBAbeSfC2UjMpqitCX+rfJozQiFTo44sIVa9v3gYfOM6/hxSNwtAc
-         SVRlyESM7ogE4R8gp9eKC7Bd4vn/+TDLdg1jM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zLVDD+NzMHaNk3lT9nXy779lPxGGvFl1BeZrYwA43Fw=;
+        b=eZaUbKqBQsAGEDWohcgVWreqYFpuy1mtBi8+zOZFx4hKtYXVoodnXBRoqO5ffqHmyJ
+         s+TE9G2H7Wez9Qr9x1vq0LGjzrhad/x5PKrJ1+UMhBbOBxRBDX7ry0dL3vIHj1k75YVv
+         7NqwAL+5p8OUn3W7fOUI219Glds7agiAj/hLMgByUGeC2b9+fW2EpYPyKoQw6c1z9g3U
+         KtK6Ia2Gx7k5g6CjE4Kc2Bo18fYpsJSHTS25OlRYlqeE/r4+8wLTDR9rmVMqcQ6Y2JtF
+         sUNYHN8gSJS9S2L1MfGM/RZnGtHHdFTIfnHnyhceOUiyeOifHVSMKIDrD/KANnLQ7Th5
+         O28w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=64CGxkVCN+tpcc5h0TLuNJ8a0+sAEqYpYu5ixxZ2mkg=;
-        b=WBB7acxBYBls+SyKNGlTGcjsfhxV0eLN/qoKJ3uk92UxTyuWBuTYQHXGq/VGkRaRZR
-         DqCOcfVtyGNIpqO1aBh861UPoX17X4d8gzHOYUVqnAyfvYH5ryXj6Woz7OT+vm734Yh0
-         wiV1miaX11uByNhaAs9iUpGqJHMlcGiL2IPzoN0qIqn8JCxWP4KUSBEg5jkswBbmHsy3
-         O8kqmV2WO2v0sZ+9AravoJFpFM8TnGTHMVdgMDgDP07NRVS7P36rJ1Wv7rwKbcYS38ml
-         RXc3XubUy8kkrj8+QHHl0neDqpniMUWOGWcEbXAtjBkXeJNGk6xfvPHZ49ZQuK74nbSG
-         dWtw==
-X-Gm-Message-State: AGi0Pua5thXRA9XbvPJ4dMUEkljipIqfgud+BmOpHkRA7FteSFeSw76b
-        csP7y0G3GgaSbWsmcp6+OxLG7w==
-X-Google-Smtp-Source: APiQypKI94JfKPIkpz/wT7WensQDX/0VxvYe7qtJDDSNIyHzhN59+sKmEZbVAOJ/tlrINrMpXAwDwA==
-X-Received: by 2002:a17:90a:3606:: with SMTP id s6mr172866pjb.195.1585679213559;
-        Tue, 31 Mar 2020 11:26:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r9sm8228895pfg.2.2020.03.31.11.26.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 11:26:52 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 11:26:51 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <202003311125.939F851A6@keescook>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-2-vbabka@suse.cz>
- <20200330224422.GX11244@42.do-not-panic.com>
- <8146e3d0-89c3-7f79-f786-084c58282c85@suse.cz>
- <20200331074836.GB30449@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zLVDD+NzMHaNk3lT9nXy779lPxGGvFl1BeZrYwA43Fw=;
+        b=QJhwthn2E/gk4ooZxbRQLvVdp+schYtc1VptJ/Is76+snDnzJ/uu+Eb5LSnbMOnnnB
+         LPMTkSNkCvgcjSm6eBMxHC25J6hj/zm7IugEyfPZKF/j01EGwfz3Sk5ZqeSJ/DAmcVuq
+         f13+VpYTr5DbiVDBtOzKP1SYdURTVE6Yj7tSFriE/uCI2HZLlAAmyMpIVNG2fnFN6DI+
+         zuB80QQSnYPQiBkSX3EAXwq1noQ99seM5shqmGNpTZAxRHP78KM2MB06qPQCa6ux7MS5
+         1wR8/WypdjIcjmKBjbp+KaVm7Xyc7/6gpALOuAHZtz1rCs9zdeBfTalN/QaAHbLSAHzi
+         RMyg==
+X-Gm-Message-State: AGi0Pub4xB0V/0Fn0d8G0/dYoifEt8sacG7ybyBi+r6/fsmZrSIRWXQO
+        xl+mORlNdNpmn40qYa8t5O468KhZJxOkb4ww6/ENjkUYedA=
+X-Google-Smtp-Source: APiQypI7iAE735GgCKkeZusjs8UlrOmYraVum5tmyZ7a9ZtEskbpvk2jByn4JUjxs7U3xgaqUrYxkZIAf+J/001kv4E=
+X-Received: by 2002:a17:90a:9f03:: with SMTP id n3mr209849pjp.29.1585679249825;
+ Tue, 31 Mar 2020 11:27:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331074836.GB30449@dhcp22.suse.cz>
+References: <20200330230256.28323-1-vitor@massaru.org>
+In-Reply-To: <20200330230256.28323-1-vitor@massaru.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 31 Mar 2020 11:27:18 -0700
+Message-ID: <CAFd5g47hiPf7Xy0f4YER+HzHHXyUV0dhiQ=2ZXfezEHBcrTuEQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: Fix kunit.py run --build_dir='<foo>' fails on
+ "unclean" trees
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:48:36AM +0200, Michal Hocko wrote:
-> On Tue 31-03-20 09:42:46, Vlastimil Babka wrote:
-> [...]
-> > > Should we not do this, we'll have to live with the consequences of
-> > > supporting the full swoop of sysctls are boot params, whatever
-> > > consequences those may be.
-> > 
-> > Of course when the first user tries to set some particular sysctl as boot param
-> > and finds and reports it doesn't work as intended, then it can be fixed or
-> > blacklisted and it can't break anyone else?
-> 
-> Absolutely agreed. I would be really careful to not overengineer this
-> whole thing.
+On Mon, Mar 30, 2020 at 4:03 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
+>
+> Fix this bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
+>
+> For some reason, the environment variable ARCH is used instead of ARCH
+> passed as an argument, this patch uses a copy of the env, but using
+> ARCH=um and CROSS_COMPILER='' to avoid this problem.
+>
+> This patch doesn't change the user's environment variables, avoiding
+> side effects.
 
-Right -- this is supposed to be _simple_, and I think that's the primary
-benefit here. If we encounter problems we can fix those cases. The
-careful place, I think, needs to be with converting existing boot params
-to be aliases. That's when timing considerations need to be taken into
-account carefully.
+Seems reasonable to me.
 
--- 
-Kees Cook
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+
+I cannot test this as your patch doesn't apply to our for-next branch
+(kselftest/kunit). You can find it here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=kunit
+
+> ---
+>  tools/testing/kunit/kunit_kernel.py | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+> index d99ae75ef72f..0cb1f81ac8f2 100644
+> --- a/tools/testing/kunit/kunit_kernel.py
+> +++ b/tools/testing/kunit/kunit_kernel.py
+> @@ -15,6 +15,7 @@ import kunit_config
+>
+>  KCONFIG_PATH = '.config'
+>  kunitconfig_path = '.kunitconfig'
+> +env = dict(os.environ.copy(), ARCH='um', CROSS_COMPILE='')
+>
+>  class ConfigError(Exception):
+>         """Represents an error trying to configure the Linux kernel."""
+> @@ -36,22 +37,22 @@ class LinuxSourceTreeOperations(object):
+>                         raise ConfigError(e.output)
+>
+>         def make_olddefconfig(self, build_dir):
+> -               command = ['make', 'ARCH=um', 'olddefconfig']
+> +               command = ['make', 'olddefconfig']
+>                 if build_dir:
+>                         command += ['O=' + build_dir]
+>                 try:
+> -                       subprocess.check_output(command)
+> +                       subprocess.check_output(command, env=env)
+>                 except OSError as e:
+>                         raise ConfigError('Could not call make command: ' + e)
+>                 except subprocess.CalledProcessError as e:
+>                         raise ConfigError(e.output)
+>
+>         def make(self, jobs, build_dir):
+> -               command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
+> +               command = ['make', '--jobs=' + str(jobs)]
+>                 if build_dir:
+>                         command += ['O=' + build_dir]
+>                 try:
+> -                       subprocess.check_output(command)
+> +                       subprocess.check_output(command, env=env)
+>                 except OSError as e:
+>                         raise BuildError('Could not call execute make: ' + e)
+>                 except subprocess.CalledProcessError as e:
+> @@ -66,7 +67,8 @@ class LinuxSourceTreeOperations(object):
+>                         [linux_bin] + params,
+>                         stdin=subprocess.PIPE,
+>                         stdout=subprocess.PIPE,
+> -                       stderr=subprocess.PIPE)
+> +                       stderr=subprocess.PIPE,
+> +                       env=env)
+>                 process.wait(timeout=timeout)
+>                 return process
+>
+> --
+> 2.21.1
+>
