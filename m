@@ -2,108 +2,106 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DC1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B011C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B88B20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72A62080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="TcGP1kiF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N0z7FKtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729898AbgCaTnB (ORCPT
+        id S1729537AbgCaTpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:43:01 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42254 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbgCaTnB (ORCPT
+        Tue, 31 Mar 2020 15:45:40 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24123 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727768AbgCaTpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:43:01 -0400
-Received: by mail-ed1-f68.google.com with SMTP id cw6so25927993edb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HFZna7B6g1qQUnAQTOaaX3bdubKi7WXs6HzJfhZe8E4=;
-        b=TcGP1kiFt9TdcQCMN/6cHIEa8mw5mBMiYAgzq5W5XMfO9Pplrw2mgTSH95iHFkjugK
-         VNgA55P4+EMCWXOZlJVe9vEBju8ag+gGELwv3TPDpBljOsqJNv1dgIaIsLKdA7RG6BnN
-         3sTGVsH3VMr2PFu+Gs2kiwF6gEq9MgmoG35qY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HFZna7B6g1qQUnAQTOaaX3bdubKi7WXs6HzJfhZe8E4=;
-        b=qIVC5r4Jg6ZWfnru32xEeH/Hojw2tqTBOx6+7NafTzH6Jl/Tq1EMsyBZ/ZhhTfB31C
-         MFOaDTCf1JEmulc8ZINCI6qWnvJC00M7v9v/AwhRrrvuDVO+JpJFcg7tvw8zRCpwEo0r
-         1lzJi7lLyrYQt1c+b7tl6xiM086nM8GEZnzw9TemqKpnk9LMhz4PdVTCmmPjReaGSfHP
-         9oBvcWnTbF1hiLpozKi7KuB/A2VOp2qVtuWvjMqSDH/OKyvgQc3quB3zDOxfnEF4f7FF
-         mkM5Q0bIyMnVrCDhnGfBRlxBA2jZ8aMVqzB9AffaIJrWfz1yJ69TXhiyAenh7T3Njc3O
-         xNCQ==
-X-Gm-Message-State: ANhLgQ3XHNWtMGSXsfqOZ7Y6GXMuCaDpAOTnPSp35+x84zTnT4AW4CZq
-        8aukWV3r2sjVVHasEIHnvgJgf9Cwrt9UiKBY7kfuGw==
-X-Google-Smtp-Source: ADFU+vtrYvHHl1chvcRo/VYstpzDmXRwHh8LdW6LXuVqHM34+7/GlmkkMu0Wr8lt8XH3sfM/6AQ9IhhQXBTgz0BbqIs=
-X-Received: by 2002:aa7:cfd4:: with SMTP id r20mr17351970edy.378.1585683779811;
- Tue, 31 Mar 2020 12:42:59 -0700 (PDT)
+        Tue, 31 Mar 2020 15:45:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585683938;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mcpjr22EubvpvBv5U1Nr7UCjm49Gd0MVWUusU3L0BO0=;
+        b=N0z7FKttUDHft1dUjZNZCHN/2iy6sAX4z9DByWHSPrMy2HSxXx8KbfAMZhxxtVxljvN2lr
+        vZPkF5bCs6U9v/lmGNNlxH9AQzG0Bs49aBBbWmdXqo+OPxplsCsT2hYuh5NklAh5XvnQVb
+        BKa2OwtBQjnzdo4iUIsUpUfQ7QLGrQs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-mi-6gqLsPvy_dhd7NAlIvA-1; Tue, 31 Mar 2020 15:40:30 -0400
+X-MC-Unique: mi-6gqLsPvy_dhd7NAlIvA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E35C11084426;
+        Tue, 31 Mar 2020 19:40:28 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-118-184.phx2.redhat.com [10.3.118.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38C945C1BB;
+        Tue, 31 Mar 2020 19:40:21 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 6A6F42202D7; Tue, 31 Mar 2020 15:40:20 -0400 (EDT)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, vgoyal@redhat.com, aarcange@redhat.com,
+        dhildenb@redhat.com
+Subject: [PATCH 3/4] kvm: Always get async page notifications
+Date:   Tue, 31 Mar 2020 15:40:10 -0400
+Message-Id: <20200331194011.24834-4-vgoyal@redhat.com>
+In-Reply-To: <20200331194011.24834-1-vgoyal@redhat.com>
+References: <20200331194011.24834-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-References: <1445647.1585576702@warthog.procyon.org.uk> <CAJfpegvZ_qtdGcP4bNQyYt1BbgF9HdaDRsmD43a-Muxgki+wTw@mail.gmail.com>
- <2294742.1585675875@warthog.procyon.org.uk>
-In-Reply-To: <2294742.1585675875@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 31 Mar 2020 21:42:48 +0200
-Message-ID: <CAJfpegtn1A=dL9VZJQ2GRWsOiP+YSs-4ezE9YgEYNmb-AF0OLA@mail.gmail.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 7:31 PM David Howells <dhowells@redhat.com> wrote:
->
-> Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > The basic problem in my view, is that the performance requirement of a
-> > "get filesystem information" type of API just does not warrant a
-> > binary coded interface. I've said this a number of times, but it fell
-> > on deaf ears.
->
-> It hasn't so fallen, but don't necessarily agree with you.  Let's pin some
-> numbers on this.
+Right now, we seem to get async pf related notifications only if guest
+is in user mode, or if it is in kernel mode and CONFIG_PREEMPTION is
+enabled. I think idea is that if CONFIG_PREEMPTION is enabled then it
+gives us opportunity to schedule something else if page is not ready.
 
-Cool, thanks for testing.  Unfortunately the test-fsinfo-perf.c file
-didn't make it into the patch.   Can you please refresh and resend?
+If KVM_ASYNC_PF_SEND_ALWAYS is not set, then host will not send
+notifications of PAGE_NOT_PRESENT/PAGE_READY. Instead once page
+has been installed guest will run.
 
-> Okay, the results:
->
->   For  1000 mounts, f= 1514us f2= 1102us p=  6014us p2=  6935us; p=4.0*f p=5.5*f2 p=0.9*p2
->   For  2000 mounts, f= 4712us f2= 3675us p= 20937us p2= 22878us; p=4.4*f p=5.7*f2 p=0.9*p2
->   For  3000 mounts, f= 6795us f2= 5304us p= 31080us p2= 34056us; p=4.6*f p=5.9*f2 p=0.9*p2
->   For  4000 mounts, f= 9291us f2= 7434us p= 40723us p2= 46479us; p=4.4*f p=5.5*f2 p=0.9*p2
->   For  5000 mounts, f=11423us f2= 9219us p= 50878us p2= 58857us; p=4.5*f p=5.5*f2 p=0.9*p2
->   For 10000 mounts, f=22899us f2=18240us p=101054us p2=117273us; p=4.4*f p=5.5*f2 p=0.9*p2
->   For 20000 mounts, f=45811us f2=37211us p=203640us p2=237377us; p=4.4*f p=5.5*f2 p=0.9*p2
->   For 30000 mounts, f=69703us f2=54800us p=306778us p2=357629us; p=4.4*f p=5.6*f2 p=0.9*p2
+Now we are adding capability to report errors as part of async pf
+protocol. That means we need async pf related notifications so that
+we can make a task wait and when error is reported, we can either
+send SIGBUS to user process or search through exception tables for
+possible error handler.
 
-So even the p2 method will give at least 80k queries/s, which is quite
-good, considering that the need to rescan the complete mount tree
-should be exceedingly rare (and in case it mattered, could be
-optimized by priming from /proc/self/mountinfo).
+Hence enable async pf notifications always. Not sure if this will
+have noticieable performance implication though.
 
-Thanks,
-Miklos
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ arch/x86/kernel/kvm.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 42d17e8c0135..97753a648133 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -336,9 +336,7 @@ static void kvm_guest_cpu_init(void)
+ 	if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF) && kvmapf) {
+ 		u64 pa =3D slow_virt_to_phys(this_cpu_ptr(&apf_reason));
+=20
+-#ifdef CONFIG_PREEMPTION
+ 		pa |=3D KVM_ASYNC_PF_SEND_ALWAYS;
+-#endif
+ 		pa |=3D KVM_ASYNC_PF_ENABLED;
+=20
+ 		if (kvm_para_has_feature(KVM_FEATURE_ASYNC_PF_VMEXIT))
+--=20
+2.25.1
+
