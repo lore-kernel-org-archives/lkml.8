@@ -2,214 +2,210 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B39C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE5AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E1F20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885D020786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585671684;
-	bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
+	s=default; t=1585671773;
+	bh=3yY7k+b2+9JS9T5W0aaeOiyvqPvzzbRIS7q6iXihTjg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qzOTsS0JdAfmu2XExeKPZ8SK3mK4yLFYqTQwFNIyx1aqFdd5zMB2DMs+LyScvjpfx
-	 LcfyWqH36WC+UPBmBYnHHZs1mdtc8X+vNHr0mQ0eoXbQ9d7M3spfaVXMN9v0sWAexc
-	 tL/jUB6YpVuoMGRQBxS9LW/LHoBdkXCuoWdIl4/c=
+	b=k4ChBevGpC2g9eOnQXpD6rRU83SA/wXIkKNNGhcliXx/RFd8i/XS/uo9C4L4BitOw
+	 v6NVpS2y4DJWpNue6a3oXCdfQS1yIQsS8+U2VjS7UPAB4bFNYL2N6GHf/5ZxKG63cj
+	 xIrgEXlBrvzMw2KQvH3v/JiENXSW7R80ifcbJjRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730607AbgCaQVX (ORCPT
+        id S1730706AbgCaQWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:21:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730011AbgCaQVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:21:23 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58DD21473;
-        Tue, 31 Mar 2020 16:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585671682;
-        bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gNLQBrPcq3oyN2Ogv+oTJyFfBNekyyJFE8OMY+ksIRuIUm4Epp9KM6Y1F/8vi0HEK
-         10SfgtgPdKeKpsdZiqQ2ixSx9HcCCrFep4hoh/CePpyQATN8UU/WSDZC0IVmvAP2LT
-         v14r3TcSkQKemqZJ9R1yludBCEJye3nWX1UaBApI=
-Received: by mail-qt1-f175.google.com with SMTP id z12so18836742qtq.5;
-        Tue, 31 Mar 2020 09:21:21 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0eFQXJPHRl5wRowCdEqbAlE5Qup/b60Tefav6tVtVAI01tH+j3
-        jEPDKj3BsjkAHgUdk6rL/n79Yy8651xuJTczsA==
-X-Google-Smtp-Source: ADFU+vtynyRBpHK1zGlgHy3HIyDVqOtqkMP9vtFANRwUVhPPv/eanwLrG9DiWcusvM2HxEgWHSF1cMX0wltfSbKtWIU=
-X-Received: by 2002:ac8:1611:: with SMTP id p17mr5993804qtj.300.1585671680921;
- Tue, 31 Mar 2020 09:21:20 -0700 (PDT)
+        Tue, 31 Mar 2020 12:22:52 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46644 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgCaQWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:22:52 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q5so17795706lfb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H0krxhczgA496JeTGfWjPTKYIgHf9GcW9MVmaaVn2GY=;
+        b=PZypqVAapY01bjsOjN2q6EITWh5onkx6m6fo+GxMpFeF0I2LpJsrttwKpFnc3LNNpF
+         Z7cVt2tso8YtHq2cdzfIN1dqfk9kwXhDrdPuiPurGi7aarOS9FqdvqSAOYvfmqO4qLPW
+         3t9xxwV4L0CiXkuJQnpt5bW/75tf/vMt5o4uw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H0krxhczgA496JeTGfWjPTKYIgHf9GcW9MVmaaVn2GY=;
+        b=LzCGyogYZ1HNc/zZeZWHPLIVxoeGKBdhDTfugghz9EQ9AQrzkmfCq7V5kEOwiSKMQN
+         fV+6Sak5CodsIenwgYAIxSm4rKQay0rHmCIjcCiXMn1v/x7TSwQKGYOafBiXTPnHscbi
+         SQudMwlRnepG22y5uWXdWSXG7Q1/rTMtIXNwduufukdiUq3Gs2U9bijOFZ+leC9xRQVg
+         C+te2cGOCPYSxjL82cybNiR/wWK4coJPt5gkYuJR41gFhzLOmOIWhUWwJKDj5T7K/3jR
+         Opr58+Dj4BL5aihjBJwpTF6aNYAtxOLScgCmBLeNOgcg/90xqiDAfx9FS2ewnKXXzZsu
+         fzng==
+X-Gm-Message-State: AGi0PuYyhiLkS6hHNbLAlKYC74paThinWeDRhp8et8L2S5npNflPnK4b
+        WQOOrXIUxdyzGjETLaGoZJ9Om/vfW8A=
+X-Google-Smtp-Source: APiQypLQjCA9PjL0ti++FVdU0ziGRsJenRZeVQDfPdts+g8LFpxUAQxvlizfBk5lccPIrw/SsskNjw==
+X-Received: by 2002:a05:6512:73:: with SMTP id i19mr11412106lfo.197.1585671768218;
+        Tue, 31 Mar 2020 09:22:48 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id n23sm8811154lji.59.2020.03.31.09.22.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 09:22:47 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id j17so17798296lfe.7
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 09:22:47 -0700 (PDT)
+X-Received: by 2002:ac2:46d3:: with SMTP id p19mr6164735lfo.125.1585671766812;
+ Tue, 31 Mar 2020 09:22:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200315191632.12536-1-rentao.bupt@gmail.com> <20200315191632.12536-7-rentao.bupt@gmail.com>
- <20200330192347.GA6388@bogus> <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
-In-Reply-To: <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 31 Mar 2020 10:21:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
-Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
- ID/string properties
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tao Ren <taoren@fb.com>
+References: <20200330120315.GA10196@alpha.franken.de>
+In-Reply-To: <20200330120315.GA10196@alpha.franken.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 31 Mar 2020 09:22:30 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg3wXH2JNxkQi+eLZkpuxqV+wPiHhw_Jf7ViH33Sw7PHA@mail.gmail.com>
+Message-ID: <CAHk-=wg3wXH2JNxkQi+eLZkpuxqV+wPiHhw_Jf7ViH33Sw7PHA@mail.gmail.com>
+Subject: Re: [GIT PULL] MIPS changes for v5.7-rc1
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 6:14 PM Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
+On Mon, Mar 30, 2020 at 5:03 AM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
 >
-> On Mon, 2020-03-30 at 13:23 -0600, Rob Herring wrote:
-> > On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
-> > > From: Tao Ren <rentao.bupt@gmail.com>
-> > >
-> > > Update device tree binding document for aspeed vhub's device IDs and
-> > > string properties.
-> > >
-> > > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > > ---
-> > >  No change in v2:
-> > >    - the patch is added into the series since v2.
-> > >
-> > >  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
-> > >  1 file changed, 68 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > index 06399ba0d9e4..5b2e8d867219 100644
-> > > --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > @@ -52,6 +52,59 @@ properties:
-> > >          minimum: 1
-> > >          maximum: 21
-> > >
-> > > +  vhub-vendor-id:
-> > > +    description: vhub Vendor ID
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - maximum: 65535
-> > > +
-> > > +  vhub-product-id:
-> > > +    description: vhub Product ID
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - maximum: 65535
-> >
-> > There's already standard 'vendor-id' and 'device-id' properties. Use
-> > those.
->
-> So yes and no... I don't fundamentally object but keep in mind that
-> traditionally, the properties are about matching with a physical
-> hardware.
->
-> In this case however, we are describing a virtual piece of HW and so
-> those IDs are going to be picked up to be exposed as the USB
-> vendor/device of the vhub on the USB bus.
->
-> Not necessarily an issue but it's more "configuration" than "matching"
-> and as such, it might make sense to expose that with a prefix, though I
-> would prefer something like usb-vendor-id or usb,vendor-id...
+> I probably messed up my tree, when merging mips_fixes_5_6_1. My way
+> to solve this was to merge v5.6 into mips-next to get a pull request with
+> just the changes from mips-next. I hope this is still ok for you.
 
-For FDT uses, it's pretty much been configuration. It's mostly been
-for PCI that I've seen these properties used.
+Please don't do this.
 
-> > > +
-> > > +  vhub-device-revision:
-> >
-> > Specific to USB, not vhub.
->
-> Same as the above.
->
-> > > +    description: vhub Device Revision in binary-coded decimal
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - maximum: 65535
-> > > +
-> > > +  vhub-strings:
-> > > +    type: object
-> > > +
-> > > +    properties:
-> > > +      '#address-cells':
-> > > +        const: 1
-> > > +
-> > > +      '#size-cells':
-> > > +        const: 0
-> > > +
-> > > +    patternProperties:
-> > > +      '^string@[0-9a-f]+$':
-> > > +        type: object
-> > > +        description: string descriptors of the specific language
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            maxItems: 1
-> > > +            description: 16-bit Language Identifier defined by USB-IF
-> > > +
-> > > +          manufacturer:
-> > > +            description: vhub manufacturer
-> > > +            allOf:
-> > > +              - $ref: /schemas/types.yaml#/definitions/string
-> > > +
-> > > +          product:
-> > > +            description: vhub product name
-> > > +            allOf:
-> > > +              - $ref: /schemas/types.yaml#/definitions/string
-> > > +
-> > > +          serial-number:
-> > > +            description: vhub device serial number
-> > > +            allOf:
-> > > +              - $ref: /schemas/types.yaml#/definitions/string
-> >
-> > For all of this, it's USB specific, not vhub specific. I'm not sure this
-> > is the right approach. It might be better to just define properties
-> > which are just raw USB descriptors rather than inventing some DT format
-> > that then has to be converted into USB descriptors.
->
-> Raw blob in the DT is rather annoying and leads to hard to parse stuff
-> for both humans and scripts. The main strenght of the DT is it's easy
-> to read and manipulate.
+If you need to do a merge in order to get the right diffstat, do it as
+a local _test_ merge, and get the diffstat from that.
 
-True, and I'd certainly agree when we're talking about some vendor
-specific blob. but there's already code/tools to parse USB
-descriptors.
+So what  happened is that you merged in mips_fixes-5.6-1 into the
+branch, and that part is fine. That merge makes sense in the context
+of mips development, and the merge even has a proper commit message,
+not just the "Merge xyz" messages that I hate.
 
-> Also not the entire descriptor is configurable this way.
->
-> That said, it could be that using  the DT for the above is overkill and
-> instead, we should consider a configfs like the rest of USB gadget.
-> Though it isn't obvious how to do that, the current gadget stuff
-> doesn't really "fit" what we need here.
+So far so good.
 
-Surely the descriptor building code can be shared at a minimum.
+HOWEVER.
 
-Regardless of whether gadget configfs fits, usually it is pretty clear
-whether something belongs in DT or userspace. That should be decided
-first.
+Now, _because_ you merged that other branch, your MIPS development
+branch has two different base commits - the base for the original
+development, and the base for the mips fixes.
 
-> Maybe we could expose the port as UDCs but not actually expose them on
-> the bus until the hub is "activated" via a special configfs entry...
+And again, this is all fine. There's absolutely nothing wrong with
+having multiple bases. It happens normally any time you don't have
+entirely linear development. No problem.
 
-If control of the hub is done by userspace, I'd think configuration
-should be there too.
+But the one thing that having multiple base points of development
+means is that now you can't trivially do a diff for what has changed.
+A diff is by definition an operation that takes a beginning point and
+an end point, and shows the difference between those _two_ points.
 
-Rob
+But with two bases for development thanks to that fixes branch merge,
+you don't have two points. You have _three_ points - you have your two
+beginning points, and the end point of your branch, and as a result,
+you can't trivially generate a diff of "this is what my branch has
+done.
+
+Your solution for this is technically correct: the way to get a "what
+have I changed" is to do a merge, in order to get the required two
+points: after doing a merge, you can now basically just say "ok, now I
+can diff the state before merging my work, and after merging my work,
+and I now have the two required points to do a diff with".
+
+BUT!
+
+By all means do the merge, but don't _send_ me the merge. Do it as a
+temporary branch in your own repository that you then just throw away.
+The only reason for the merge was to generate the diff, there's no
+reason to then expose it in the git history.
+
+See what I'm saying? The merge is the correct thing to do, but it
+doesn't make sense to anybody else than you as that "this is what I've
+done" final thing, so you shouldn't then ask me to pull the merge.
+
+Now, why do I hate these kinds of merges?
+
+ (a) a lot of people end up merging my tip-of-tree during the merge
+window, which is absolutely horrible and causes actual technical
+problems (in that they now get whatever buggy state my tree may be in
+during that unstable time).
+
+You did *not* make that mistake. You merged v5.6, which is good.
+That's the supposedly stable state (ok, we have a nasty wireless
+driver bug in it, but that's not your fault, and you did the best
+thing you could do if you have to do a merge in the first place).
+
+ (b) the back-merges inevitably have completely sucky merge messages
+
+This is fundamental. They have sucky merge messages, because they have
+no actual real reason, so you _cannot_ document the reason. The best
+you can do is "to get a clean diff" (which is _not_ a development
+reason) or "to fix up conflicts" (which is a *negative* reason, since
+I want to see them).
+
+So your merge message has "Merge tag 'v5.6' into mips-next"
+
+That's not useful. And as mentioned, it _cannot_ be useful. It's about
+as good as it ever gets in these situations. But it's not great, and
+it's not great for the reason I already mentioned: there simply
+_isn't_ a good reason for the merge. It only makes sense in your local
+context, not in the context of development activity.
+
+ (c) it makes it harder to figure out the development line.
+
+This is to me the big reason not to do back-merges. It makes the
+commit graph ugly and harder to follow. It very much shows up in
+"gitk" when you start looking visually at development, and it makes
+our development history even harder to visualize than it should
+normally be. It can also make for nastier bisection because now your
+development is more intertwined with upstream development, but
+_usually_ that ends up not being a huge deal.
+
+Anyway, because you merged a real tagged release, many of the
+fundamental problems with back-merges are much less of an issue.
+Merging a tagged release makes all of (a)-(c) better. So this isn't a
+disaster by any means, but this is still a "please don't do this".
+
+Now, I have two choices:
+
+ - I can merge your merge
+
+ - I can just merge your commit _before_ you did the merge (because
+you didn't do anything else after doing the merge).
+
+In this case, I've taken your merge. It's not the worst kind of merge
+because it took that tagged release, and by taking your merge I also
+end up getting your tag (and thus your signature) in my merge commit.
+So in this case, I have two non-optimal choices, and I'll just take
+the one with your signature.
+
+But I would have been much happier, and not have had to write this
+message (for the n'th time) if you simply hadn't done this.
+
+Yes, by all means do the merge locally into a "test-merge" branch. If
+you do it into a test branch, you can just merge my random state of
+the day (because it doesn't _matter_ - it's just for your own
+testing), and that way you can also see if there are conflicts and
+report them as part of the pull request. And you get the diff I would
+get, and see the whole "this is what my branch really ends up
+changing".
+
+But then throw that test branch away, and tag and send me the
+pre-merge state - your real development.
+
+So for next time, please keep this in mind.
+
+                     Linus
