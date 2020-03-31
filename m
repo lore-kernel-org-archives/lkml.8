@@ -2,258 +2,444 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3880C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE69C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9495A2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:06:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PGbHZFmN"
+	by mail.kernel.org (Postfix) with ESMTP id A532D2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgCaSGP (ORCPT
+        id S1726788AbgCaSHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:06:15 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36096 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgCaSGP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:06:15 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g62so3945292wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:06:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=rdHIFzp6WyS0NijgnSKxc0qBm0w7b6RkFiTqIi5G0RI=;
-        b=PGbHZFmNgek1IF9cb9XkbLzdCxHpn4Gh5pLqY2lNXlPYj2wgdW2tpOyQfxRW+lADlM
-         BMGcDDbQ2/yv6YArqmRRlo7X7B7yryVBNiJbkHmb2bDeEO64PVl/wdpd5zGAvGkTqhtq
-         uYAw9gYLQAyVV8jj+4SPAqa6Ydz5DH9zM2nwcHPyYJq6Qk8Td29I8douEblKObLiexak
-         x1MpLaxLZjIScdnqlbeK0d8rCrxP/0iKBBR2PkGXXWziupX0gRV3DYVXQH+S2RMUoBpJ
-         PSLt9c3LjYT3vExYUvVEmcbD97MSoJhpftyBhiRnQgNH2lIEG+9mHNLTrHR4WN4G/HS7
-         ObIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=rdHIFzp6WyS0NijgnSKxc0qBm0w7b6RkFiTqIi5G0RI=;
-        b=UwwkuQMHjGfofghOd59fNOAPbpwf38oTcn9xF18WgXMn8jkvbk2BrBtXhwTgDoFQ3S
-         8nchDTfZ4+AXDOYDVx621MrIM7TenCcYUThJHtMVY6SYYXEpO1vVKZ23Q/UIndQPWQYn
-         WP8fPhSvP8Wd9eE2Z5MU7wKIeAzoYD9tc4YhGZkZAHtm1x29fpBJg+Y3gh4JSxoberOC
-         2gfasfglAkCF4HiKncBuqkjaqQlvcrugHS2PjTzLBwkvM9sJu1eoYKXWdeArE3abrBDH
-         cE2QefuMtHPAyIIEEOPyRfREF81JqLho9BdYfwvV9A8HDtb8n96siGVpCfWRu+jB9c86
-         RgNw==
-X-Gm-Message-State: AGi0PuY4m443zgQO4KXgpXDB2Bcx5v6PZ/eS81hK8z1GcZdZCoMUFeYO
-        /IQz4ig5vm7q0CxlEtSnZRHUzQ==
-X-Google-Smtp-Source: APiQypID0x6nOClfq+P0TTy8TSQdW9f1BCd93MzMM1F4FQaFe2EeZjymclbKAMKVAxxzX94LrjBXSQ==
-X-Received: by 2002:a05:600c:21d4:: with SMTP id x20mr23109wmj.77.1585677972371;
-        Tue, 31 Mar 2020 11:06:12 -0700 (PDT)
-Received: from [192.168.0.102] ([84.33.138.35])
-        by smtp.gmail.com with ESMTPSA id y11sm4580878wmi.13.2020.03.31.11.06.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Mar 2020 11:06:11 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] scsi: core: Fix stall if two threads request budget
- at the same time
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20200331014109.GA20230@ming.t460p>
-Date:   Tue, 31 Mar 2020 20:07:35 +0200
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>, jejb@linux.ibm.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-scsi@vger.kernel.org, sqazi@google.com,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D38AB98D-7F6A-4C61-8A8F-C22C53671AC8@linaro.org>
-References: <20200330144907.13011-1-dianders@chromium.org>
- <20200330074856.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
- <20200331014109.GA20230@ming.t460p>
-To:     Ming Lei <ming.lei@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Tue, 31 Mar 2020 14:07:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:33654 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgCaSHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 14:07:48 -0400
+IronPort-SDR: +uYI2S+0MWbulGgf++UdKu7lpjo6izDTegNJNcsgKUuEDy8o1jDdKw5QqwPAoI4p0qavond3L/
+ e1PltMl3k6dw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 11:07:45 -0700
+IronPort-SDR: ozOR1wTx35jy3xePHpo2X4YB7CrAIhtAh1QTgWOqa6Y0rCeaKkXTXay4rRTx9Hg9601LpVFg0x
+ mT0fE66ihrXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="252329911"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 31 Mar 2020 11:07:45 -0700
+Date:   Tue, 31 Mar 2020 11:13:32 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
+Message-ID: <20200331111332.0718ffd2@jacob-builder>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 28 Mar 2020 10:01:42 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
+
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Saturday, March 21, 2020 7:28 AM
+> > 
+> > When Shared Virtual Address (SVA) is enabled for a guest OS via
+> > vIOMMU, we need to provide invalidation support at IOMMU API and
+> > driver level. This patch adds Intel VT-d specific function to
+> > implement iommu passdown invalidate API for shared virtual address.
+> > 
+> > The use case is for supporting caching structure invalidation
+> > of assigned SVM capable devices. Emulated IOMMU exposes queue  
+> 
+> emulated IOMMU -> vIOMMU, since virito-iommu could use the
+> interface as well.
+> 
+True, but it does not invalidate this statement about emulated IOMMU. I
+will add another statement saying "the same interface can be used for
+virtio-IOMMU as well". OK?
+
+> > invalidation capability and passes down all descriptors from the
+> > guest to the physical IOMMU.
+> > 
+> > The assumption is that guest to host device ID mapping should be
+> > resolved prior to calling IOMMU driver. Based on the device handle,
+> > host IOMMU driver can replace certain fields before submit to the
+> > invalidation queue.
+> > 
+> > ---
+> > v7 review fixed in v10
+> > ---
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/iommu/intel-iommu.c | 182
+> > ++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 182 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index b1477cd423dd..a76afb0fd51a
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -5619,6 +5619,187 @@ static void
+> > intel_iommu_aux_detach_device(struct iommu_domain *domain,
+> >  	aux_domain_remove_dev(to_dmar_domain(domain), dev);
+> >  }
+> > 
+> > +/*
+> > + * 2D array for converting and sanitizing IOMMU generic TLB
+> > granularity to
+> > + * VT-d granularity. Invalidation is typically included in the
+> > unmap operation
+> > + * as a result of DMA or VFIO unmap. However, for assigned devices
+> > guest
+> > + * owns the first level page tables. Invalidations of translation
+> > caches in the
+> > + * guest are trapped and passed down to the host.
+> > + *
+> > + * vIOMMU in the guest will only expose first level page tables,
+> > therefore
+> > + * we do not include IOTLB granularity for request without PASID
+> > (second level).  
+> 
+> I would revise above as "We do not support IOTLB granularity for
+> request without PASID (second level), therefore any vIOMMU
+> implementation that exposes the SVA capability to the guest should
+> only expose the first level page tables, implying all invalidation
+> requests from the guest will include a valid PASID"
+> 
+Sounds good.
+
+> > + *
+> > + * For example, to find the VT-d granularity encoding for IOTLB
+> > + * type and page selective granularity within PASID:
+> > + * X: indexed by iommu cache type
+> > + * Y: indexed by enum iommu_inv_granularity
+> > + * [IOMMU_CACHE_INV_TYPE_IOTLB][IOMMU_INV_GRANU_ADDR]
+> > + *
+> > + * Granu_map array indicates validity of the table. 1: valid, 0:
+> > invalid
+> > + *
+> > + */
+> > +const static int
+> > inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_
+> > NR] = {
+> > +	/*
+> > +	 * PASID based IOTLB invalidation: PASID selective (per
+> > PASID),
+> > +	 * page selective (address granularity)
+> > +	 */
+> > +	{0, 1, 1},
+> > +	/* PASID based dev TLBs, only support all PASIDs or single
+> > PASID */
+> > +	{1, 1, 0},  
+> 
+> Is this combination correct? when single PASID is being specified, it
+> is essentially a page-selective invalidation since you need provide
+> Address and Size. 
+> 
+This is for translation between generic UAPI granu to VT-d granu, it
+has nothing to do with address and size.
+e.g.
+If user passes IOMMU_INV_GRANU_PASID for the single PASID case as you
+mentioned, this map table shows it is valid.
+
+Then the lookup result will get VT-d granu:
+QI_DEV_IOTLB_GRAN_PASID_SEL, which means G=0.
 
 
-> Il giorno 31 mar 2020, alle ore 03:41, Ming Lei <ming.lei@redhat.com> =
-ha scritto:
->=20
-> On Mon, Mar 30, 2020 at 07:49:06AM -0700, Douglas Anderson wrote:
->> It is possible for two threads to be running
->> blk_mq_do_dispatch_sched() at the same time with the same "hctx".
->> This is because there can be more than one caller to
->> __blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() doesn't
->> prevent more than one thread from entering.
->>=20
->> If more than one thread is running blk_mq_do_dispatch_sched() at the
->> same time with the same "hctx", they may have contention acquiring
->> budget.  The blk_mq_get_dispatch_budget() can eventually translate
->> into scsi_mq_get_budget().  If the device's "queue_depth" is 1 (not
->> uncommon) then only one of the two threads will be the one to
->> increment "device_busy" to 1 and get the budget.
->>=20
->> The losing thread will break out of blk_mq_do_dispatch_sched() and
->> will stop dispatching requests.  The assumption is that when more
->> budget is available later (when existing transactions finish) the
->> queue will be kicked again, perhaps in scsi_end_request().
->>=20
->> The winning thread now has budget and can go on to call
->> dispatch_request().  If dispatch_request() returns NULL here then we
->> have a potential problem.  Specifically we'll now call
->=20
-> I guess this problem should be BFQ specific. Now there is definitely
-> requests in BFQ queue wrt. this hctx. However, looks this request is
-> only available from another loser thread, and it won't be retrieved in
-> the winning thread via e->type->ops.dispatch_request().
->=20
-> Just wondering why BFQ is implemented in this way?
->=20
+> > +	/* PASID cache */  
+> 
+> PASID cache is fully managed by the host. Guest PASID cache
+> invalidation is interpreted by vIOMMU for bind and unbind operations.
+> I don't think we should accept any PASID cache invalidation from
+> userspace or guest.
+> 
 
-BFQ inherited this powerful non-working scheme from CFQ, some age ago.
+True for vIOMMU, this is here for completeness. Can be used by virtio
+IOMMU, since PC flush is inclusive (IOTLB, devTLB), it is more
+efficient.
 
-In more detail: if BFQ has at least one non-empty internal queue, then
-is says of course that there is work to do.  But if the currently
-in-service queue is empty, and is expected to receive new I/O, then
-BFQ plugs I/O dispatch to enforce service guarantees for the
-in-service queue, i.e., BFQ responds NULL to a dispatch request.
+> > +	{1, 1, 0}
+> > +};
+> > +
+> > +const static int
+> > inv_type_granu_table[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU
+> > _NR] = {
+> > +	/* PASID based IOTLB */
+> > +	{0, QI_GRAN_NONG_PASID, QI_GRAN_PSI_PASID},
+> > +	/* PASID based dev TLBs */
+> > +	{QI_DEV_IOTLB_GRAN_ALL, QI_DEV_IOTLB_GRAN_PASID_SEL, 0},
+> > +	/* PASID cache */
+> > +	{QI_PC_ALL_PASIDS, QI_PC_PASID_SEL, 0},
+> > +};
+> > +
+> > +static inline int to_vtd_granularity(int type, int granu, int
+> > *vtd_granu) +{
+> > +	if (type >= IOMMU_CACHE_INV_TYPE_NR || granu >=
+> > IOMMU_INV_GRANU_NR ||
+> > +		!inv_type_granu_map[type][granu])
+> > +		return -EINVAL;
+> > +
+> > +	*vtd_granu = inv_type_granu_table[type][granu];
+> > +  
+> 
+> btw do we really need both map and table here? Can't we just
+> use one table with unsupported granularity marked as a special
+> value?
+> 
+Yes, for value = 1. e.g. G=0 but still valid.
 
-It would be very easy to change bfq_has_work so that it returns false
-in case the in-service queue is empty, even if there is I/O
-backlogged.  My only concern is: since everything has worked with the
-current scheme for probably 15 years, are we sure that everything is
-still ok after we change this scheme?
+> > +	return 0;
+> > +}
+> > +
+> > +static inline u64 to_vtd_size(u64 granu_size, u64 nr_granules)
+> > +{
+> > +	u64 nr_pages = (granu_size * nr_granules) >>
+> > VTD_PAGE_SHIFT; +
+> > +	/* VT-d size is encoded as 2^size of 4K pages, 0 for 4k, 9
+> > for 2MB, etc.
+> > +	 * IOMMU cache invalidate API passes granu_size in bytes,
+> > and number of
+> > +	 * granu size in contiguous memory.
+> > +	 */
+> > +	return order_base_2(nr_pages);
+> > +}
+> > +
+> > +#ifdef CONFIG_INTEL_IOMMU_SVM
+> > +static int intel_iommu_sva_invalidate(struct iommu_domain *domain,
+> > +		struct device *dev, struct
+> > iommu_cache_invalidate_info *inv_info)
+> > +{
+> > +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+> > +	struct device_domain_info *info;
+> > +	struct intel_iommu *iommu;
+> > +	unsigned long flags;
+> > +	int cache_type;
+> > +	u8 bus, devfn;
+> > +	u16 did, sid;
+> > +	int ret = 0;
+> > +	u64 size = 0;
+> > +
+> > +	if (!inv_info || !dmar_domain ||
+> > +		inv_info->version !=
+> > IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> > +		return -EINVAL;
+> > +
+> > +	if (!dev || !dev_is_pci(dev))
+> > +		return -ENODEV;
+> > +
+> > +	iommu = device_to_iommu(dev, &bus, &devfn);
+> > +	if (!iommu)
+> > +		return -ENODEV;
+> > +
+> > +	spin_lock_irqsave(&device_domain_lock, flags);
+> > +	spin_lock(&iommu->lock);
+> > +	info = iommu_support_dev_iotlb(dmar_domain, iommu, bus,
+> > devfn);
+> > +	if (!info) {
+> > +		ret = -EINVAL;
+> > +		goto out_unlock;  
+> 
+> -ENOTSUPP?
+> 
+I guess it can go either way in that the error is based on invalid
+inputs.
 
-I'm confident it would be ok, because a timer fires if the in-service
-queue does not receive any I/O for too long, and the handler of the
-timer invokes blk_mq_run_hw_queues().
+> > +	}
+> > +	did = dmar_domain->iommu_did[iommu->seq_id];
+> > +	sid = PCI_DEVID(bus, devfn);
+> > +
+> > +	/* Size is only valid in non-PASID selective invalidation
+> > */
+> > +	if (inv_info->granularity != IOMMU_INV_GRANU_PASID)
+> > +		size =
+> > to_vtd_size(inv_info->addr_info.granule_size,
+> > +
+> > inv_info->addr_info.nb_granules); +
+> > +	for_each_set_bit(cache_type, (unsigned long
+> > *)&inv_info->cache, IOMMU_CACHE_INV_TYPE_NR) {
+> > +		int granu = 0;
+> > +		u64 pasid = 0;
+> > +
+> > +		ret = to_vtd_granularity(cache_type,
+> > inv_info->granularity, &granu);
+> > +		if (ret) {
+> > +			pr_err("Invalid cache type and granu
+> > combination %d/%d\n", cache_type,
+> > +				inv_info->granularity);
+> > +			break;
+> > +		}
+> > +
+> > +		/* PASID is stored in different locations based on
+> > granularity */
+> > +		if (inv_info->granularity == IOMMU_INV_GRANU_PASID
+> > &&
+> > +			inv_info->pasid_info.flags &
+> > IOMMU_INV_PASID_FLAGS_PASID)
+> > +			pasid = inv_info->pasid_info.pasid;
+> > +		else if (inv_info->granularity ==
+> > IOMMU_INV_GRANU_ADDR &&
+> > +			inv_info->addr_info.flags &
+> > IOMMU_INV_ADDR_FLAGS_PASID)
+> > +			pasid = inv_info->addr_info.pasid;
+> > +		else {
+> > +			pr_err("Cannot find PASID for given cache
+> > type and granularity\n");
+> > +			break;
+> > +		}
+> > +
+> > +		switch (BIT(cache_type)) {
+> > +		case IOMMU_CACHE_INV_TYPE_IOTLB:
+> > +			if ((inv_info->granularity !=
+> > IOMMU_INV_GRANU_PASID) &&  
+> 
+> granularity == IOMMU_INV_GRANU_ADDR? otherwise it's unclear
+> why IOMMU_INV_GRANU_DOMAIN also needs size check.
+> 
+Good point! will fix.
 
-Looking forward to your feedback before proposing a change,
-Paolo
+> > +				size && (inv_info->addr_info.addr &
+> > ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+> > +				pr_err("Address out of range,
+> > 0x%llx, size order %llu\n",
+> > +					inv_info->addr_info.addr,
+> > size);
+> > +				ret = -ERANGE;
+> > +				goto out_unlock;
+> > +			}
+> > +
+> > +			qi_flush_piotlb(iommu, did,
+> > +					pasid,
+> > +					mm_to_dma_pfn(inv_info-  
+> > >addr_info.addr),  
+> > +					(granu ==
+> > QI_GRAN_NONG_PASID) ? - 1 : 1 << size,
+> > +					inv_info->addr_info.flags &
+> > IOMMU_INV_ADDR_FLAGS_LEAF);
+> > +
+> > +			/*
+> > +			 * Always flush device IOTLB if ATS is
+> > enabled since guest
+> > +			 * vIOMMU exposes CM = 1, no device IOTLB
+> > flush will be passed
+> > +			 * down.
+> > +			 */  
+> 
+> Does VT-d spec mention that no device IOTLB flush is required when
+> CM=1?
+> 
+Not explicitly. Just following the guideline in CH6.1 for efficient
+virtualization. Early on, we also had discussion on supporting virtio
+where IOTLB flush is inclusive.
+Let me rephrase the comment:
+/*
+ * Always flush device IOTLB if ATS is enabled. vIOMMU
+ * in the guest may assume IOTLB flush is inclusive,
+ * which is more efficient.
+ */
 
->> blk_mq_put_dispatch_budget() which translates into
->> scsi_mq_put_budget().  That will mark the device as no longer busy =
-but
->> doesn't do anything to kick the queue.  This violates the assumption
->> that the queue would be kicked when more budget was available.
->>=20
->> Pictorially:
->>=20
->> Thread A                          Thread B
->> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> blk_mq_get_dispatch_budget() =3D> 1
->> dispatch_request() =3D> NULL
->>                                  blk_mq_get_dispatch_budget() =3D> 0
->>                                  // because Thread A marked
->>                                  // "device_busy" in scsi_device
->> blk_mq_put_dispatch_budget()
->>=20
->> The above case was observed in reboot tests and caused a task to hang
->> forever waiting for IO to complete.  Traces showed that in fact two
->> tasks were running blk_mq_do_dispatch_sched() at the same time with
->> the same "hctx".  The task that got the budget did in fact see
->> dispatch_request() return NULL.  Both tasks returned and the system
->> went on for several minutes (until the hung task delay kicked in)
->> without the given "hctx" showing up again in traces.
->>=20
->> Let's attempt to fix this problem by detecting budget contention.  If
->> we're in the SCSI code's put_budget() function and we saw that =
-someone
->> else might have wanted the budget we got then we'll kick the queue.
->>=20
->> The mechanism of kicking due to budget contention has the potential =
-to
->> overcompensate and kick the queue more than strictly necessary, but =
-it
->> shouldn't hurt.
->>=20
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>=20
->> drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
->> drivers/scsi/scsi_scan.c   |  1 +
->> include/scsi/scsi_device.h |  2 ++
->> 3 files changed, 27 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
->> index 610ee41fa54c..0530da909995 100644
->> --- a/drivers/scsi/scsi_lib.c
->> +++ b/drivers/scsi/scsi_lib.c
->> @@ -344,6 +344,21 @@ static void scsi_dec_host_busy(struct Scsi_Host =
-*shost, struct scsi_cmnd *cmd)
->> 	rcu_read_unlock();
->> }
->>=20
->> +static void scsi_device_dec_busy(struct scsi_device *sdev)
->> +{
->> +	bool was_contention;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&sdev->budget_lock, flags);
->> +	atomic_dec(&sdev->device_busy);
->> +	was_contention =3D sdev->budget_contention;
->> +	sdev->budget_contention =3D false;
->> +	spin_unlock_irqrestore(&sdev->budget_lock, flags);
->> +
->> +	if (was_contention)
->> +		blk_mq_run_hw_queues(sdev->request_queue, true);
->> +}
->> +
->> void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd =
-*cmd)
->> {
->> 	struct Scsi_Host *shost =3D sdev->host;
->> @@ -354,7 +369,7 @@ void scsi_device_unbusy(struct scsi_device *sdev, =
-struct scsi_cmnd *cmd)
->> 	if (starget->can_queue > 0)
->> 		atomic_dec(&starget->target_busy);
->>=20
->> -	atomic_dec(&sdev->device_busy);
->> +	scsi_device_dec_busy(sdev);
->> }
->>=20
->> static void scsi_kick_queue(struct request_queue *q)
->> @@ -1624,16 +1639,22 @@ static void scsi_mq_put_budget(struct =
-blk_mq_hw_ctx *hctx)
->> 	struct request_queue *q =3D hctx->queue;
->> 	struct scsi_device *sdev =3D q->queuedata;
->>=20
->> -	atomic_dec(&sdev->device_busy);
->> +	scsi_device_dec_busy(sdev);
->> }
->>=20
->> static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
->> {
->> 	struct request_queue *q =3D hctx->queue;
->> 	struct scsi_device *sdev =3D q->queuedata;
->> +	unsigned long flags;
->>=20
->> -	if (scsi_dev_queue_ready(q, sdev))
->> +	spin_lock_irqsave(&sdev->budget_lock, flags);
->> +	if (scsi_dev_queue_ready(q, sdev)) {
->> +		spin_unlock_irqrestore(&sdev->budget_lock, flags);
->> 		return true;
->> +	}
->> +	sdev->budget_contention =3D true;
->> +	spin_unlock_irqrestore(&sdev->budget_lock, flags);
->=20
-> No, it really hurts performance by adding one per-sdev spinlock in =
-fast path,
-> and we actually tried to kill the atomic variable of =
-'sdev->device_busy'
-> for high performance HBA.
->=20
-> Thanks,
-> Ming
 
+> > +			if (info->ats_enabled) {
+> > +				qi_flush_dev_iotlb_pasid(iommu,
+> > sid, info-  
+> > >pfsid,  
+> > +						pasid,
+> > info->ats_qdep,
+> > +
+> > inv_info->addr_info.addr, size,
+> > +						granu);
+> > +			}
+> > +			break;
+> > +		case IOMMU_CACHE_INV_TYPE_DEV_IOTLB:
+> > +			if (info->ats_enabled) {
+> > +				qi_flush_dev_iotlb_pasid(iommu,
+> > sid, info-  
+> > >pfsid,  
+> > +
+> > inv_info->addr_info.pasid, info->ats_qdep,
+> > +
+> > inv_info->addr_info.addr, size,
+> > +						granu);  
+> 
+> I'm confused here. There are two granularities allowed for devtlb,
+> but here you only handle one of them?
+> 
+granu is passed into the flush function, which can be 1 or 0.
+
+> > +			} else
+> > +				pr_warn("Passdown device IOTLB
+> > flush w/o ATS!\n");
+> > +
+> > +			break;
+> > +		case IOMMU_CACHE_INV_TYPE_PASID:
+> > +			qi_flush_pasid_cache(iommu, did, granu,
+> > inv_info-  
+> > >pasid_info.pasid);  
+> > +  
+> 
+> as earlier comment, we shouldn't allow userspace or guest to
+> invalidate PASID cache
+> 
+same explanation :)
+
+> > +			break;
+> > +		default:
+> > +			dev_err(dev, "Unsupported IOMMU
+> > invalidation type %d\n",
+> > +				cache_type);
+> > +			ret = -EINVAL;
+> > +		}
+> > +	}
+> > +out_unlock:
+> > +	spin_unlock(&iommu->lock);
+> > +	spin_unlock_irqrestore(&device_domain_lock, flags);
+> > +
+> > +	return ret;
+> > +}
+> > +#endif
+> > +
+> >  static int intel_iommu_map(struct iommu_domain *domain,
+> >  			   unsigned long iova, phys_addr_t hpa,
+> >  			   size_t size, int iommu_prot, gfp_t gfp)
+> > @@ -6204,6 +6385,7 @@ const struct iommu_ops intel_iommu_ops = {
+> >  	.is_attach_deferred	=
+> > intel_iommu_is_attach_deferred, .pgsize_bitmap		=
+> > INTEL_IOMMU_PGSIZES, #ifdef CONFIG_INTEL_IOMMU_SVM
+> > +	.cache_invalidate	= intel_iommu_sva_invalidate,
+> >  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
+> >  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
+> >  #endif
+> > --
+> > 2.7.4  
+> 
+
+[Jacob Pan]
