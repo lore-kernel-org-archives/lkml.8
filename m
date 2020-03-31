@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92385C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E22DC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67971208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24979208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646358;
-	bh=LTWg13/c2mtDBsqXDHT15ekp/aG+3/g8YDCRwjATuFI=;
+	s=default; t=1585646360;
+	bh=RJWgcURUs3Z19QWXn0t+F1nFSi/KIiKBPPZsaqrFPzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ac5KneGFCD6hgK9Dx0FTPmFdhvCFZTUZY1lrElAVnfD/ptyS86xkcMQirRk1Mwrah
-	 xYMfoUW3Mn03y9f1mv08288iGmQDd3ZG8+3TIUWGEG8ZESkSgwN4KV/31w4amiPDNN
-	 UpV1xLcFgycv++Nb3l8/PcVMyVtNkLJ6o299PL3g=
+	b=fl32agnDpEo4FjMWS8dvypfYTfckzGOPm2kUjKheY7pKJGxTA/K+t7Iq/ruDbKe7/
+	 J7eJ0IadNacJ4tF0HxGrZUV3xInmTOYui7/DtyLWfoMpjUqCtbwIia8CA7BDCLkn0G
+	 rfMvLudmIXdyi8UrfmkiSgwkoJt8a4Yos/Q7SmLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbgCaJTR (ORCPT
+        id S1732212AbgCaJTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:19:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:19:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731055AbgCaJTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:19:13 -0400
+        id S1732201AbgCaJTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:19:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B783120787;
-        Tue, 31 Mar 2020 09:19:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3751520787;
+        Tue, 31 Mar 2020 09:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646353;
-        bh=LTWg13/c2mtDBsqXDHT15ekp/aG+3/g8YDCRwjATuFI=;
+        s=default; t=1585646350;
+        bh=RJWgcURUs3Z19QWXn0t+F1nFSi/KIiKBPPZsaqrFPzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xKBLf++OfjHGncA0fTm37+LLdaN7vnqza1e+5MJpNNNi9ni9g8D9HJtEIJoCMe6Fn
-         R59bXs1jZL6t6bz+IHveihCgJ44gzDr+fcHEOD84++gG094oiJTqtitw1MHRp/AxZ9
-         6uy1XIQs1HvXpJlMBuHMZU6r0NG068lff+5/KBfs=
+        b=kIxXFSBIDH3xvoKnwyza9GWpxi66+2UzXFFSHf2HnTCOwlj2uHjhWQcpXm4I9D7Jm
+         YjgLsJHunpOPOV2zcZIBCFeXa/rVQi4XJyXlOtLQhOQ28PF7Cxrwkfy45uJ9Quqf+B
+         jETdA1gBKdd56p2Obk4uThu+dPCcdxE2eK1ceFoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com,
-        Alexander Potapenko <glider@google.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 150/155] libfs: fix infoleak in simple_attr_read()
-Date:   Tue, 31 Mar 2020 10:59:50 +0200
-Message-Id: <20200331085434.902340838@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 149/155] ahci: Add Intel Comet Lake H RAID PCI ID
+Date:   Tue, 31 Mar 2020 10:59:49 +0200
+Message-Id: <20200331085434.816225586@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -62,79 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit a65cab7d7f05c2061a3e2490257d3086ff3202c6 upstream.
+commit 32d2545462c6cede998267b86e57cda5d1dc2225 upstream.
 
-Reading from a debugfs file at a nonzero position, without first reading
-at position 0, leaks uninitialized memory to userspace.
+Add the PCI ID to the driver list to support this new device.
 
-It's a bit tricky to do this, since lseek() and pread() aren't allowed
-on these files, and write() doesn't update the position on them.  But
-writing to them with splice() *does* update the position:
-
-	#define _GNU_SOURCE 1
-	#include <fcntl.h>
-	#include <stdio.h>
-	#include <unistd.h>
-	int main()
-	{
-		int pipes[2], fd, n, i;
-		char buf[32];
-
-		pipe(pipes);
-		write(pipes[1], "0", 1);
-		fd = open("/sys/kernel/debug/fault_around_bytes", O_RDWR);
-		splice(pipes[0], NULL, fd, NULL, 1, 0);
-		n = read(fd, buf, sizeof(buf));
-		for (i = 0; i < n; i++)
-			printf("%02x", buf[i]);
-		printf("\n");
-	}
-
-Output:
-	5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a30
-
-Fix the infoleak by making simple_attr_read() always fill
-simple_attr::get_buf if it hasn't been filled yet.
-
-Reported-by: syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com
-Reported-by: Alexander Potapenko <glider@google.com>
-Fixes: acaefc25d21f ("[PATCH] libfs: add simple attribute files")
 Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200308023849.988264-1-ebiggers@kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/libfs.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/ata/ahci.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -821,7 +821,7 @@ int simple_attr_open(struct inode *inode
- {
- 	struct simple_attr *attr;
- 
--	attr = kmalloc(sizeof(*attr), GFP_KERNEL);
-+	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
- 	if (!attr)
- 		return -ENOMEM;
- 
-@@ -861,9 +861,11 @@ ssize_t simple_attr_read(struct file *fi
- 	if (ret)
- 		return ret;
- 
--	if (*ppos) {		/* continued read */
-+	if (*ppos && attr->get_buf[0]) {
-+		/* continued read */
- 		size = strlen(attr->get_buf);
--	} else {		/* first read */
-+	} else {
-+		/* first read */
- 		u64 val;
- 		ret = attr->get(attr->data, &val);
- 		if (ret)
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -393,6 +393,7 @@ static const struct pci_device_id ahci_p
+ 	{ PCI_VDEVICE(INTEL, 0xa252), board_ahci }, /* Lewisburg RAID*/
+ 	{ PCI_VDEVICE(INTEL, 0xa256), board_ahci }, /* Lewisburg RAID*/
+ 	{ PCI_VDEVICE(INTEL, 0xa356), board_ahci }, /* Cannon Lake PCH-H RAID */
++	{ PCI_VDEVICE(INTEL, 0x06d7), board_ahci }, /* Comet Lake-H RAID */
+ 	{ PCI_VDEVICE(INTEL, 0x0f22), board_ahci_mobile }, /* Bay Trail AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x0f23), board_ahci_mobile }, /* Bay Trail AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x22a3), board_ahci_mobile }, /* Cherry Tr. AHCI */
 
 
