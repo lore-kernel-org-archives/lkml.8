@@ -2,112 +2,86 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D5C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E864DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C74820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585685176;
-	bh=cLJ+9DpZOu0InCSh5VV1rZHd2XO/Z2RB0U+b7l/G3EE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=An4uRS2eW0JpyGnOvLhvaXcHwLYUetsuEiAP9HxTP2J47PSecU6/18QGfUowDeG2e
-	 GurjwUL7Ojha/fqjUOwV5C/bhdgEx1pgkQcubA74+Z6lGwZyTHM2KBpyjdMMblM6M7
-	 4Kt5r/lQVzlOnDGW6D38ABgUHCIUs6G4fdgdm9y0=
+	by mail.kernel.org (Postfix) with ESMTP id AE0CE206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WACU5+Xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgCaUGP (ORCPT
+        id S1729210AbgCaUJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:06:15 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40131 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgCaUGO (ORCPT
+        Tue, 31 Mar 2020 16:09:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36168 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgCaUJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:06:14 -0400
-Received: by mail-io1-f65.google.com with SMTP id k9so23180263iov.7;
-        Tue, 31 Mar 2020 13:06:14 -0700 (PDT)
+        Tue, 31 Mar 2020 16:09:34 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u15so9335911lfi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 13:09:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MKaVv0QFSusV0PkUpSiPeLn+wqflJBF9dNYt1NXd3nY=;
+        b=WACU5+XjMDtXULxTZI3cQPuNE+UvZXD8jd+XmnQ+Z1j1qBAFpD08j907T6I93wlOu9
+         FdwYTqPCZO/3qM4C56Ij44YCy9lrAAQixPcCOB8F7VDaIaWsKVu9j9krN7Je02jfVelw
+         /hc8J8WE+WUNGdP21CUYXpBnrg93J7rknINiv70BfJ6lonUHnUgJnN2eAB9YFXB5pnHU
+         ekNYjURgy7vTk0T2B0+ShX6hgTWP2+1x8znblb/AwsjCEkLLxFJxyuNVKWq/tbg1V5Eo
+         8jp9ImM6AnhtL+YJf2frQ6lYAjkkV2i+dvWZmTQPH7e1xHlpe7xsdTZ7krbQCkxycOdc
+         ZG9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wcJV+sTCvoXRorMTo3bla0YIvIY9cRD9ViFSeOd4nhY=;
-        b=IBuyMOPx6WPfsVnrNpd6GbkrI6eXp6ahtCn0nVytcL0vYvafj9LpssY69tZ4y/Llu4
-         Kb4PR67S3T5zZ4xcBvX+AB8aLrVwEqDFNEB/Vva1Rt+guEpIsoE5+2EYe7dT6HxclOOh
-         jyXt743kd33Az8F4wdn14X6GgBIg9VqxJwzZLkGWJ/IOanApkH0Wfoi+7gf4+K55GWwN
-         n6INkEbP3xal54GoNZIhtvxRkK69l7htmQrtQfY7i5GVmBfbR+hPY1gPuCQQL/fIwGkp
-         6j2pc9hwnCppEXAb4cNdHVEYgK7/kb7SoDb9izGXcPPJG7tFK1L39uG+NDolBRu1UuEI
-         LFaQ==
-X-Gm-Message-State: ANhLgQ2no+aglnPEJwhOHbJfPB6D/iPNlnQyX1dA+ueRR6eVtlkUblV1
-        lRzXQ65dqpdhiF3dCCE95g==
-X-Google-Smtp-Source: ADFU+vuiVI5b8z8thkcndKw6U1+iSGDIMWVZ0mMnFrO0LB3iYtaFNhiK7560NgAcRwmO5JbsytVojg==
-X-Received: by 2002:a6b:d20f:: with SMTP id q15mr10379413iob.179.1585685173591;
-        Tue, 31 Mar 2020 13:06:13 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id s25sm6221528ilb.37.2020.03.31.13.06.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:06:12 -0700 (PDT)
-Received: (nullmailer pid 13332 invoked by uid 1000);
-        Tue, 31 Mar 2020 20:06:11 -0000
-Date:   Tue, 31 Mar 2020 14:06:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 3/3] iio: adc: Add support for PMIC7 ADC
-Message-ID: <20200331200611.GA10950@bogus>
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
- <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MKaVv0QFSusV0PkUpSiPeLn+wqflJBF9dNYt1NXd3nY=;
+        b=tRnyEOxRSF/Zs+ZOQ3Ftbx7IOkTtNTuPoqhwraC04b7im9/dOVzSxcerVfY5FJ1DWG
+         iyjxLJQM4X+XIqKMjTqBLB85N6GJ6POI54xs4gyiHxAPbBwf5z60DjQRObbLYf1VEHSg
+         XKj38Gj/z1jZljQpcJ1QLlQ1ZjBB8n55rN3/Y9jQNKBCEXecqGNYCteOAz3pCOJ34IRR
+         AlsB2vwklWG3Jwk5eKy45zBn58lbzaaJDiqN7tJgwFwF+PL8VnaAjLk1sDv/WqfmS0sb
+         cht1KBsB5JSMWPY4FHmAYdJoLOoJ0JJPnZ/NsmwaiqsHnaciHl1BQa7/+1J21cRmT11J
+         Ojfw==
+X-Gm-Message-State: AGi0PuY9hinTbE8mN1XR05SrIGC1I5UMLbMHQGlbSMd29kJ4uM2CCf6d
+        eW/jZsyenlXuAj9cMBbsq/kTpxSOeO1DRUN9tnJz2A==
+X-Google-Smtp-Source: APiQypJGFFBCketP8L6snf0eVRiknRW2dOs8vCGK+VPhA8ByP6xKDxjeuS3UpUpWzZd2d3D79cVxY5Pop7HT8WIZHbQ=
+X-Received: by 2002:ac2:5b49:: with SMTP id i9mr12659030lfp.21.1585685370750;
+ Tue, 31 Mar 2020 13:09:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200330095801.2421589-1-thierry.reding@gmail.com>
+In-Reply-To: <20200330095801.2421589-1-thierry.reding@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 31 Mar 2020 22:09:19 +0200
+Message-ID: <CACRpkdYEHMCkQpU5f6kxS8caz9QovrHfi8u_iq3ns21v1p7L2A@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Define of_pinctrl_get() dummy for !PINCTRL
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:14:10PM +0530, Jishnu Prakash wrote:
-> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
-> major change from PMIC5 is that all SW communication to ADC goes through
-> PMK8350, which communicates with other PMICs through PBS when the ADC
-> on PMK8350 works in master mode. The SID register is used to identify the
-> PMICs with which the PBS needs to communicate. Add support for the same.
-> 
-> In addition, add definitions for ADC channels and virtual channel
-> definitions per PMIC, to be used by ADC clients for PMIC7.
-> 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-> ---
->  drivers/iio/adc/qcom-spmi-adc5.c                 | 239 ++++++++++++++++++++-
->  drivers/iio/adc/qcom-vadc-common.c               | 260 +++++++++++++++++++++++
->  drivers/iio/adc/qcom-vadc-common.h               |  14 ++
->  include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h  |  67 ++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h |  88 ++++++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h |  46 ++++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h |  28 +++
->  include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h |  28 +++
->  include/dt-bindings/iio/qcom,spmi-vadc.h         |  78 ++++++-
+On Mon, Mar 30, 2020 at 11:58 AM Thierry Reding
+<thierry.reding@gmail.com> wrote:
 
-DT headers go in the binding patch(es).
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Currently, the of_pinctrl_get() dummy is only defined for !OF, which can
+> still cause build failures on configurations with OF enabled but PINCTRL
+> disabled. Make sure to define the dummy if either OF or PINCTRL are not
+> enabled.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
->  9 files changed, 843 insertions(+), 5 deletions(-)
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
->  create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+Patch applied.
+
+Yours,
+Linus Walleij
