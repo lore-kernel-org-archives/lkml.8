@@ -2,147 +2,130 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDD5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2104EC2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D304206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8D120780
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Gr0LvrHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbgCaHqx (ORCPT
+        id S1730040AbgCaHrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:46:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50794 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726299AbgCaHqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:46:52 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9AD01F0DF21D4FFBF467;
-        Tue, 31 Mar 2020 15:46:47 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 31 Mar 2020 15:46:38 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: use round_up()/DIV_ROUND_UP()
-Date:   Tue, 31 Mar 2020 15:46:28 +0800
-Message-ID: <20200331074628.25325-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 31 Mar 2020 03:47:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53961 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgCaHrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:47:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b12so1356095wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9TfK1u1VpPaq5iA6J1WQwLfjQ6lOwx15msGpVq0i+7c=;
+        b=Gr0LvrHjjJ5qr8lqINKW/3hKNpu+pFwzsUq58/tgAuectYIefxdFpYIe+jeXnMPUjx
+         IGmkhlcbkNL3xDq8h6ZFf0EodqpQVZ/RFZnQCKmXl8eJtE5KyCfZI3TTJfvGIjBuYZdw
+         8JKTetKFESliIYV8V4jLl7aJjPMuplmWL/SzA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=9TfK1u1VpPaq5iA6J1WQwLfjQ6lOwx15msGpVq0i+7c=;
+        b=cF5dOj9wPRTFTbwDcjIuYuhmWk+s903lEk/AdouX6LxAI/ibWz9SH11UyJGIgagqfg
+         C27FQFOhwJxESLa7oP1MnHslvi2Bd3xrEnhaxL+DrFHp/ZwJo+liQ9AIj+uXqtZfsvep
+         I6WsmBHocDIWWO6gDDlhEdpHDxKUxMwzFe0sIzXEdAXbspmzdYe5r8Hyo77KnMHz4Jiv
+         XLwa77+18o6HnNhLbKhvYQwbHHiCXNJxJ7ByPpqdQQy0HDEXAeLJr0UeBZDqwciXRod0
+         DKDwPhTGgz0DzYlhsIISXaIz0R4Cbxk2CM3iXmUad2uJ+rJjJD90KHdhXU0MNND5pEqU
+         aRLg==
+X-Gm-Message-State: ANhLgQ1c/4ANYXjq4WV+KfnoLN5OAx2sqHVLdoY/yVdnxAW0RpgDtGvs
+        CpRY0LzPJUMC6ZdZsQmHXty49g==
+X-Google-Smtp-Source: ADFU+vtayUlqbWaVjEdDpSf+eVK+fU90P3qYqeML/NIzR7pnIBLOepUFWDkVMvgCmV92cYRgJios+A==
+X-Received: by 2002:a7b:cd02:: with SMTP id f2mr1981956wmj.97.1585640843372;
+        Tue, 31 Mar 2020 00:47:23 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id t21sm2795111wmt.43.2020.03.31.00.47.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 00:47:22 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:47:20 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>, kbuild-all@lists.01.org,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: fix ifnullfree.cocci warnings
+Message-ID: <20200331074720.GD2363188@phenom.ffwll.local>
+Mail-Followup-To: Julia Lawall <julia.lawall@inria.fr>,
+        kbuild-all@lists.01.org, Sam Ravnborg <sam@ravnborg.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <alpine.DEB.2.21.2003270908410.2709@hadrien>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2003270908410.2709@hadrien>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.i_cluster_size should be power of 2, so we can use round_up() instead
-of roundup() to enhance the calculation.
+On Fri, Mar 27, 2020 at 09:11:44AM +0100, Julia Lawall wrote:
+> NULL check before kfree is not needed.
+> 
+> Generated by: scripts/coccinelle/free/ifnullfree.cocci
+> 
+> Fixes: c6603c740e0e ("drm: add managed resources tied to drm_device")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+> ---
+> 
+> tree:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
 
-In addition, use DIV_ROUND_UP to clean up codes.
+Hm this doesn't apply anymore, the patch is for an interim state (because
+bisectability). Care to regen (the pattern still exists), I'm happy to
+apply.
+-Daniel
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- don't change blocksize to PAGE_SIZE
- fs/f2fs/data.c | 14 ++++++--------
- fs/f2fs/file.c | 17 +++++------------
- 2 files changed, 11 insertions(+), 20 deletions(-)
+> head:   9e1ed9fb1eb0a4bc43a26365c592d3095286038b
+> commit: c6603c740e0e3492c9c95fdab833375bf7117b6b [1587/1636] drm: add managed resources tied to drm_device
+> :::::: branch date: 8 hours ago
+> :::::: commit date: 9 hours ago
+> 
+> Up to you, if you tihnk it is useful...
+> 
+>  drm_drv.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> --- a/drivers/gpu/drm/drm_drv.c
+> +++ b/drivers/gpu/drm/drm_drv.c
+> @@ -837,8 +837,9 @@ static void drm_dev_release(struct kref
+>  	if (!dev->driver->release && !dev->managed.final_kfree) {
+>  		WARN_ON(!list_empty(&dev->managed.resources));
+>  		kfree(dev);
+> -	} else if (dev->managed.final_kfree)
+> +	} else {
+>  		kfree(dev->managed.final_kfree);
+> +	}
+>  }
+> 
+>  /**
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 0a829a89f596..fea93719f14f 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1969,8 +1969,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
- 					bool is_readahead)
- {
- 	struct bio *bio = *bio_ret;
--	const unsigned blkbits = inode->i_blkbits;
--	const unsigned blocksize = 1 << blkbits;
-+	const unsigned blocksize = 1 << inode->i_blkbits;
- 	sector_t block_in_file;
- 	sector_t last_block;
- 	sector_t last_block_in_file;
-@@ -1979,8 +1978,8 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
- 
- 	block_in_file = (sector_t)page_index(page);
- 	last_block = block_in_file + nr_pages;
--	last_block_in_file = (f2fs_readpage_limit(inode) + blocksize - 1) >>
--							blkbits;
-+	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
-+								blocksize);
- 	if (last_block > last_block_in_file)
- 		last_block = last_block_in_file;
- 
-@@ -2091,16 +2090,15 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 	struct bio *bio = *bio_ret;
- 	unsigned int start_idx = cc->cluster_idx << cc->log_cluster_size;
- 	sector_t last_block_in_file;
--	const unsigned blkbits = inode->i_blkbits;
--	const unsigned blocksize = 1 << blkbits;
-+	const unsigned blocksize = 1 << inode->i_blkbits;
- 	struct decompress_io_ctx *dic = NULL;
- 	int i;
- 	int ret = 0;
- 
- 	f2fs_bug_on(sbi, f2fs_cluster_is_empty(cc));
- 
--	last_block_in_file = (f2fs_readpage_limit(inode) +
--					blocksize - 1) >> blkbits;
-+	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
-+								blocksize);
- 
- 	/* get rid of pages beyond EOF */
- 	for (i = 0; i < cc->cluster_size; i++) {
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index c2d38a1c4972..0f8be076620c 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -736,16 +736,9 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
- 	 * for compressed file, only support cluster size
- 	 * aligned truncation.
- 	 */
--	if (f2fs_compressed_file(inode)) {
--		size_t cluster_shift = PAGE_SHIFT +
--					F2FS_I(inode)->i_log_cluster_size;
--		size_t cluster_mask = (1 << cluster_shift) - 1;
--
--		free_from = from >> cluster_shift;
--		if (from & cluster_mask)
--			free_from++;
--		free_from <<= cluster_shift;
--	}
-+	if (f2fs_compressed_file(inode))
-+		free_from = round_up(from,
-+				F2FS_I(inode)->i_cluster_size << PAGE_SHIFT);
- #endif
- 
- 	err = f2fs_do_truncate_blocks(inode, free_from, lock);
-@@ -3537,7 +3530,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
- 
- 		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
- 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
--		count = roundup(count, F2FS_I(inode)->i_cluster_size);
-+		count = round_up(count, F2FS_I(inode)->i_cluster_size);
- 
- 		ret = release_compress_blocks(&dn, count);
- 
-@@ -3689,7 +3682,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
- 
- 		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
- 		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
--		count = roundup(count, F2FS_I(inode)->i_cluster_size);
-+		count = round_up(count, F2FS_I(inode)->i_cluster_size);
- 
- 		ret = reserve_compress_blocks(&dn, count);
- 
 -- 
-2.18.0.rc1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
