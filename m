@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B32BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C0B2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D9820B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645397;
-	bh=qx1EzHDl9zZsR19UzEe5WF95rNKTfjaKgs1WrRiJfcA=;
+	s=default; t=1585645404;
+	bh=N4lza5PsPJ6ir0AzvN2vRfEMehU1QEbwTNi/AXOw9us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JgRRWi37dgsWyV1OkBKQ8f+1rx4CCrsN5hdpzHl1ti/t/m2JNDLtc1QShFlNia4Mb
-	 mm4M/vhzrOucDs5mAkT+OsSyZNxrgWVGS2MNN11jV+FzToPvwar7JihXwZPFWX1ChI
-	 +Gu+N2xX9TwUnMxNAoCIgYUtKA8wg03pfLyxOUWI=
+	b=w5t6outKIOlp39gmc6OedPOMOfKr9Vk7jCv3QYj93JZ85NyfNPMaVQIeLMkkT0C2R
+	 cEjfhySCK/vpa6Deg/koLQzZeUJAsTXKQpml3y5ePFkxa9dxQIo9WPB30D1C7wvCWb
+	 wMh+ukwqef8sXmTXjgmKV6EvDntV5ERbRvk5na8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbgCaJDP (ORCPT
+        id S1730596AbgCaJDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:03:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730437AbgCaJDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:03:13 -0400
+        id S1730768AbgCaJDU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC06208E0;
-        Tue, 31 Mar 2020 09:03:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC71D208E0;
+        Tue, 31 Mar 2020 09:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645393;
-        bh=qx1EzHDl9zZsR19UzEe5WF95rNKTfjaKgs1WrRiJfcA=;
+        s=default; t=1585645399;
+        bh=N4lza5PsPJ6ir0AzvN2vRfEMehU1QEbwTNi/AXOw9us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cNPtC70HfxAGdxzQcwvzFYqwnad+LN/KmO2N6C/iZV5evXT99KzhLGMXWazi08KGm
-         hKybgBZNXCkY5/wXE/0RwsAzrwUsHxQW+p3Imt+SelF4VXVsgKRte/mzCEgBSxKFd3
-         H+9pl1NRKJnM/RW55ja3BMCmVumqYJgDEZMe3zig=
+        b=ZXNBVGRNRX7/wXQmcfXPbK3wo5GoaDOHaDf3LQGtO3tl3fmONM8uvy1JNjZlVr7uD
+         3zhoEkTD81ztfmkxGm1L4QtZuFb1t7V+AQulQyzZ1mDD3CXnmzd6KSQ5w0NFt/Vzwf
+         m5mMfDliBILLpzkI3Po/f+FbxShsnCUMGQIwX7rA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 040/170] Revert "net: bcmgenet: use RGMII loopback for MAC reset"
-Date:   Tue, 31 Mar 2020 10:57:34 +0200
-Message-Id: <20200331085428.328345541@linuxfoundation.org>
+Subject: [PATCH 5.5 042/170] bnxt_en: Fix Priority Bytes and Packets counters in ethtool -S.
+Date:   Tue, 31 Mar 2020 10:57:36 +0200
+Message-Id: <20200331085428.908015722@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,89 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 612eb1c3b9e504de24136c947ed7c07bc342f3aa ]
+[ Upstream commit a24ec3220f369aa0b94c863b6b310685a727151c ]
 
-This reverts commit 3a55402c93877d291b0a612d25edb03d1b4b93ac.
+There is an indexing bug in determining these ethtool priority
+counters.  Instead of using the queue ID to index, we need to
+normalize by modulo 10 to get the index.  This index is then used
+to obtain the proper CoS queue counter.  Rename bp->pri2cos to
+bp->pri2cos_idx to make this more clear.
 
-This is not a good solution when connecting to an external switch
-that may not support the isolation of the TXC signal resulting in
-output driver contention on the pin.
-
-A different solution is necessary.
-
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: e37fed790335 ("bnxt_en: Add ethtool -S priority counters.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c |    2 +
- drivers/net/ethernet/broadcom/genet/bcmmii.c   |   34 -------------------------
- 2 files changed, 2 insertions(+), 34 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   10 +++++++++-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h         |    2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c |    8 ++++----
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1996,6 +1996,8 @@ static void reset_umac(struct bcmgenet_p
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -7406,14 +7406,22 @@ static int bnxt_hwrm_port_qstats_ext(str
+ 		pri2cos = &resp2->pri0_cos_queue_id;
+ 		for (i = 0; i < 8; i++) {
+ 			u8 queue_id = pri2cos[i];
++			u8 queue_idx;
  
- 	/* issue soft reset with (rg)mii loopback to ensure a stable rxclk */
- 	bcmgenet_umac_writel(priv, CMD_SW_RESET | CMD_LCL_LOOP_EN, UMAC_CMD);
-+	udelay(2);
-+	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
++			/* Per port queue IDs start from 0, 10, 20, etc */
++			queue_idx = queue_id % 10;
++			if (queue_idx > BNXT_MAX_QUEUE) {
++				bp->pri2cos_valid = false;
++				goto qstats_done;
++			}
+ 			for (j = 0; j < bp->max_q; j++) {
+ 				if (bp->q_ids[j] == queue_id)
+-					bp->pri2cos[i] = j;
++					bp->pri2cos_idx[i] = queue_idx;
+ 			}
+ 		}
+ 		bp->pri2cos_valid = 1;
+ 	}
++qstats_done:
+ 	mutex_unlock(&bp->hwrm_cmd_lock);
+ 	return rc;
  }
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
+@@ -1714,7 +1714,7 @@ struct bnxt {
+ 	u16			fw_rx_stats_ext_size;
+ 	u16			fw_tx_stats_ext_size;
+ 	u16			hw_ring_stats_size;
+-	u8			pri2cos[8];
++	u8			pri2cos_idx[8];
+ 	u8			pri2cos_valid;
  
- static void bcmgenet_intr_disable(struct bcmgenet_priv *priv)
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -181,38 +181,8 @@ int bcmgenet_mii_config(struct net_devic
- 	const char *phy_name = NULL;
- 	u32 id_mode_dis = 0;
- 	u32 port_ctrl;
--	int bmcr = -1;
--	int ret;
- 	u32 reg;
+ 	u16			hwrm_max_req_len;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -589,25 +589,25 @@ skip_ring_stats:
+ 		if (bp->pri2cos_valid) {
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_rx_bytes_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
  
--	/* MAC clocking workaround during reset of umac state machines */
--	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
--	if (reg & CMD_SW_RESET) {
--		/* An MII PHY must be isolated to prevent TXC contention */
--		if (priv->phy_interface == PHY_INTERFACE_MODE_MII) {
--			ret = phy_read(phydev, MII_BMCR);
--			if (ret >= 0) {
--				bmcr = ret;
--				ret = phy_write(phydev, MII_BMCR,
--						bmcr | BMCR_ISOLATE);
--			}
--			if (ret) {
--				netdev_err(dev, "failed to isolate PHY\n");
--				return ret;
--			}
--		}
--		/* Switch MAC clocking to RGMII generated clock */
--		bcmgenet_sys_writel(priv, PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
--		/* Ensure 5 clks with Rx disabled
--		 * followed by 5 clks with Reset asserted
--		 */
--		udelay(4);
--		reg &= ~(CMD_SW_RESET | CMD_LCL_LOOP_EN);
--		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
--		/* Ensure 5 more clocks before Rx is enabled */
--		udelay(2);
--	}
--
- 	switch (priv->phy_interface) {
- 	case PHY_INTERFACE_MODE_INTERNAL:
- 		phy_name = "internal PHY";
-@@ -282,10 +252,6 @@ int bcmgenet_mii_config(struct net_devic
+ 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
+ 			}
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_rx_pkts_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
  
- 	bcmgenet_sys_writel(priv, port_ctrl, SYS_PORT_CTRL);
+ 				buf[j] = le64_to_cpu(*(rx_port_stats_ext + n));
+ 			}
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_tx_bytes_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
  
--	/* Restore the MII PHY after isolation */
--	if (bmcr >= 0)
--		phy_write(phydev, MII_BMCR, bmcr);
--
- 	priv->ext_phy = !priv->internal_phy &&
- 			(priv->phy_interface != PHY_INTERFACE_MODE_MOCA);
+ 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
+ 			}
+ 			for (i = 0; i < 8; i++, j++) {
+ 				long n = bnxt_tx_pkts_pri_arr[i].base_off +
+-					 bp->pri2cos[i];
++					 bp->pri2cos_idx[i];
  
+ 				buf[j] = le64_to_cpu(*(tx_port_stats_ext + n));
+ 			}
 
 
