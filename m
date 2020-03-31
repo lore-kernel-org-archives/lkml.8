@@ -2,69 +2,68 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CB7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7209C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10FF20732
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585623631;
-	bh=c5nhMy/dBxSV0dLnMqAKVocJn0LoMFAuYlUZ+3vYB6M=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=KHwcuygvmoB5EvTRyWotenv8BOBYGyaVDD4UkgDnl2NaE730ABBZwQLkOayl+Uas7
-	 NFCA2ORrU9j5f6a+LKNgDryeefe/czK87F4rt/G64+uxr2PbQIqmImU0mP4prpD85Y
-	 esBTfv1y5bZivrbrDJkDWFlfn0OIrTcmzkrruYUM=
+	by mail.kernel.org (Postfix) with ESMTP id AFDA220732
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730369AbgCaDAa (ORCPT
+        id S1729865AbgCaDA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 23:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730301AbgCaDAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 23:00:14 -0400
-Subject: Re: [GIT pull] x86/entry for v5.7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585623614;
-        bh=c5nhMy/dBxSV0dLnMqAKVocJn0LoMFAuYlUZ+3vYB6M=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=v4CPAEd6mtpOVP+5atalSm00+ivAx0x+vHBsFyG6Zo4JkNJ8ckbY8Okgz9QdIx97I
-         C8P54poDR7ZdFcDR4tx7IMWoCWjKfQ+6x2YKcdNU81Phft9YoiM7lHtiDFL4YJUZEj
-         cI6jTOWh0yeQHJZW8fgdhxRp4ckwBVlrPsLhmx8U=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <158557963437.22376.13314216004420999087.tglx@nanos.tec.linutronix.de>
-References: <158557962955.22376.9136086165862170511.tglx@nanos.tec.linutronix.de>
- <158557963437.22376.13314216004420999087.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <158557963437.22376.13314216004420999087.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- x86-entry-2020-03-30
-X-PR-Tracked-Commit-Id: 290a4474d019c7e49c186100e157fff5e273ab3b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d5f744f9a2ac9ca6d5baf72e97ce6dc4c2f19fe4
-Message-Id: <158562361438.8590.10677332368375359427.pr-tracker-bot@kernel.org>
-Date:   Tue, 31 Mar 2020 03:00:14 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        Mon, 30 Mar 2020 23:00:59 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45952 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729372AbgCaDA7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 23:00:59 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BFB1B15D1720D;
+        Mon, 30 Mar 2020 20:00:57 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 20:00:56 -0700 (PDT)
+Message-Id: <20200330.200056.456632783811662995.davem@davemloft.net>
+To:     matthias.schiffer@ew.tq-group.com
+Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 2/4] net: dsa: mv88e6xxx: account for PHY base
+ address offset in dual chip mode
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200330135345.4361-2-matthias.schiffer@ew.tq-group.com>
+References: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
+        <20200330135345.4361-2-matthias.schiffer@ew.tq-group.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 30 Mar 2020 20:00:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 30 Mar 2020 14:47:14 -0000:
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Date: Mon, 30 Mar 2020 15:53:43 +0200
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-entry-2020-03-30
+> diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
+> index e5430cf2ad71..88c148a62366 100644
+> --- a/drivers/net/dsa/mv88e6xxx/chip.h
+> +++ b/drivers/net/dsa/mv88e6xxx/chip.h
+> @@ -257,6 +257,7 @@ struct mv88e6xxx_chip {
+>  	const struct mv88e6xxx_bus_ops *smi_ops;
+>  	struct mii_bus *bus;
+>  	int sw_addr;
+> +	unsigned int phy_base_addr;
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d5f744f9a2ac9ca6d5baf72e97ce6dc4c2f19fe4
+Please preserve the reverse christmas tree ordering here.
 
-Thank you!
+And this submission was quite late and net-next is closing now so
+please resubmit this after the merge window and net-next opens again.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Thanks.
