@@ -2,166 +2,190 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DC5C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4E2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1EB32080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585685649;
-	bh=3hGNBX/MtzkMry8ExK/dL2ufyiCU1fzgSSe2pXdslmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wrj4CRANI8jzeppOJLSE6isYgs/lFOnX65JDcZgUbCfCWM4b4eXCBSprokR83lfq8
-	 aFyG2b/vgRwTb0L52QEaArbl2j3tb+8Mgn4ff+uwCrlyJjDBqSCkm4NUj+IMHjKNbx
-	 TW7gfqNnEXRPMCVLH8Cy2r7128zZn4YKQ8KLaL+I=
+	by mail.kernel.org (Postfix) with ESMTP id 105E920757
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:15:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ERSHpwaL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgCaUOJ (ORCPT
+        id S1728187AbgCaUPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:14:09 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34462 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgCaUOI (ORCPT
+        Tue, 31 Mar 2020 16:15:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33786 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727708AbgCaUPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:14:08 -0400
-Received: by mail-il1-f195.google.com with SMTP id t11so20782533ils.1;
-        Tue, 31 Mar 2020 13:14:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mi0F7xescdi5BUfbFSsgV16XAWuv/drpgItNLfvWHRA=;
-        b=bIiV8y6nD7Kk6mmI2r8GzsegbsSlevbGDTZPxQfB9j2vVVDzlOiCmTNrhnDB903JiM
-         +sRS/FDmFQIO4voniEVGCmwwkpgHM1hDf9S4ws5l7KVQww/JeibnzKqret+KNVo4yzbi
-         PocnJGWzf6cYt9WIhljVo3JnyiDtUAtTX8TP/oDa/cdoIw9k78MpI/s4uvALj6sVSYMW
-         6CQuuIFESL5S2XECfgzSjZ7EauqVP0S46su50ZEFxE4/8RgOJwutHlHbGIZQyeyfgSV+
-         h/1LMBXBtucchbxkYjmMJHFwrQrA7RtJMkuOV5Q1AvxETOxcZPr+Y9R4QRDbqjO0mLI1
-         o5jA==
-X-Gm-Message-State: ANhLgQ3bdqRzpjU527hYqkiL1SWoyJN7TvpQZnKmN24TVBOILlsGbf+a
-        wYKCCNK7Ab8To3XC2YfSNQ==
-X-Google-Smtp-Source: ADFU+vsTyKde0ZJ+1HPBmeWqBwGUvGZ/RjDMO+08xxGhivNmr8zoJ1fODw6Mvfil941467xCRAilOg==
-X-Received: by 2002:a92:8548:: with SMTP id f69mr18179772ilh.20.1585685647795;
-        Tue, 31 Mar 2020 13:14:07 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m129sm372341ioa.2.2020.03.31.13.14.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:14:06 -0700 (PDT)
-Received: (nullmailer pid 24173 invoked by uid 1000);
-        Tue, 31 Mar 2020 20:14:02 -0000
-Date:   Tue, 31 Mar 2020 14:14:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: rtc: Convert snps,dw-apb-timer to DT
- schema
-Message-ID: <20200331201402.GA13587@bogus>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
+        Tue, 31 Mar 2020 16:15:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=YNxUumd62CdDUyZgJxr+W4r4Uf2toNQYfW9j9GWEFxc=; b=ERSHpwaLLKeBcZ17mwpqlvkeA2
+        oEbEIEhDhmdURuc4JHd1tqx0G6rv2sg9zEF81GRIeN7k2ZfC40iHm/HiwTH8R3ov65HHSQ39VeiHi
+        8JkS4PiO9XsTGLLoHtPHzj3ixuWkXeiquo6p7iTNUYBEmddsQD0ctVxL8mbdPswowl7Ww+svmrMuS
+        +DWYjYv1AfAx4XDoN0x7Vej3x9LGUFRGjksg4dg370axnLCBuipsukvCSR7ASgyItL2KMBrA3EYzu
+        fOA+rqbJAAi0zPpVPd6qLabsWHOjOlFX8WhsNvztTkZmpquOQ1G30DhXP/OfyOdEmt5ohh3SK5WdY
+        ytlrG1dw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJNIU-00058J-69; Tue, 31 Mar 2020 20:15:42 +0000
+Subject: Re: [PATCH] vdpa: move to drivers/vdpa
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+References: <20200331191825.249436-1-mst@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4b7c3c44-4834-85e2-91c0-0dbb3aa02a80@infradead.org>
+Date:   Tue, 31 Mar 2020 13:15:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200331191825.249436-1-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 08:43:20PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On 3/31/20 12:19 PM, Michael S. Tsirkin wrote:
+> We have both vhost and virtio drivers that depend on vdpa.
+> It's easier to locate it at a top level directory otherwise
+> we run into issues e.g. if vhost is built-in but virtio
+> is modular.  Let's just move it up a level.
 > 
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with DT schema. This commit replaces Synopsys DW Timer
-> legacy bare text binding with YAML file. As before the binding file
-> states that the corresponding dts node is supposed to be compatible
-> with generic DW APB Timer indicated by the "snps,dw-apb-timer"
-> compatible string and to provide a mandatory registers memory range,
-> one timer interrupt, either reference clock source or a fixed clock
-> rate value. It may also have an optional APB bus reference clock
-> phandle specified.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-rtc@vger.kernel.org
-> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 > ---
 > 
-> I have doubts that this binding file belongs to the bindings/rtc
-> directory seeing it's a pure timer with no rtc facilities like
-> days/months/years counting and alarms. What about moving it to the
-> "Documentation/devicetree/bindings/timer/" directory?
+> Randy I'd say the issue you are reporting (vhost=y, virtio=m)
+> is esoteric enough not to require a rebase for this.
+> So I'd just apply this on top.
+> Do you agree?
 
-+1
+Sure, looks fine from just reading it.
+I haven't had a chance to test it yet.
 
-> I also don't know who is the corresponding driver maintainer, so I added
-> Daniel Lezcano to the maintainers schema. Any idea what email should be
-> specified there instead?
+Thanks.
+
+>  MAINTAINERS                                   | 1 +
+>  drivers/Kconfig                               | 2 ++
+>  drivers/Makefile                              | 1 +
+>  drivers/{virtio => }/vdpa/Kconfig             | 0
+>  drivers/{virtio => }/vdpa/Makefile            | 0
+>  drivers/{virtio => }/vdpa/ifcvf/Makefile      | 0
+>  drivers/{virtio => }/vdpa/ifcvf/ifcvf_base.c  | 0
+>  drivers/{virtio => }/vdpa/ifcvf/ifcvf_base.h  | 0
+>  drivers/{virtio => }/vdpa/ifcvf/ifcvf_main.c  | 0
+>  drivers/{virtio => }/vdpa/vdpa.c              | 0
+>  drivers/{virtio => }/vdpa/vdpa_sim/Makefile   | 0
+>  drivers/{virtio => }/vdpa/vdpa_sim/vdpa_sim.c | 0
+>  drivers/virtio/Kconfig                        | 2 --
+>  13 files changed, 4 insertions(+), 2 deletions(-)
+>  rename drivers/{virtio => }/vdpa/Kconfig (100%)
+>  rename drivers/{virtio => }/vdpa/Makefile (100%)
+>  rename drivers/{virtio => }/vdpa/ifcvf/Makefile (100%)
+>  rename drivers/{virtio => }/vdpa/ifcvf/ifcvf_base.c (100%)
+>  rename drivers/{virtio => }/vdpa/ifcvf/ifcvf_base.h (100%)
+>  rename drivers/{virtio => }/vdpa/ifcvf/ifcvf_main.c (100%)
+>  rename drivers/{virtio => }/vdpa/vdpa.c (100%)
+>  rename drivers/{virtio => }/vdpa/vdpa_sim/Makefile (100%)
+>  rename drivers/{virtio => }/vdpa/vdpa_sim/vdpa_sim.c (100%)
 > 
-> Please also note, that "oneOf: - required: ..." pattern isn't working
-> here. So if you omit any of the clock-related property the
-> dt_binding_check procedure won't fail. Seeing the anyOf schema is working
-> I suppose this happens due to the dtschema/lib.py script, which replaces
-> the global oneOf with a fixup for the interrupts/interrupts-extended
-> properties:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 70c47bc55343..7cfa55c765fd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17695,6 +17695,7 @@ L:	virtualization@lists.linux-foundation.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/virtio/
+>  F:	drivers/virtio/
+> +F:	drivers/vdpa/
+>  F:	tools/virtio/
+>  F:	drivers/net/virtio_net.c
+>  F:	drivers/block/virtio_blk.c
+> diff --git a/drivers/Kconfig b/drivers/Kconfig
+> index 7a6d8b2b68b4..ac23d520e916 100644
+> --- a/drivers/Kconfig
+> +++ b/drivers/Kconfig
+> @@ -138,6 +138,8 @@ source "drivers/virt/Kconfig"
+>  
+>  source "drivers/virtio/Kconfig"
+>  
+> +source "drivers/vdpa/Kconfig"
+> +
+>  source "drivers/vhost/Kconfig"
+>  
+>  source "drivers/hv/Kconfig"
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index 31cf17dee252..21688f3b1588 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -42,6 +42,7 @@ obj-$(CONFIG_DMADEVICES)	+= dma/
+>  obj-y				+= soc/
+>  
+>  obj-$(CONFIG_VIRTIO)		+= virtio/
+> +obj-$(CONFIG_VDPA)		+= vdpa/
+>  obj-$(CONFIG_XEN)		+= xen/
+>  
+>  # regulators early, since some subsystems rely on them to initialize
+> diff --git a/drivers/virtio/vdpa/Kconfig b/drivers/vdpa/Kconfig
+> similarity index 100%
+> rename from drivers/virtio/vdpa/Kconfig
+> rename to drivers/vdpa/Kconfig
+> diff --git a/drivers/virtio/vdpa/Makefile b/drivers/vdpa/Makefile
+> similarity index 100%
+> rename from drivers/virtio/vdpa/Makefile
+> rename to drivers/vdpa/Makefile
+> diff --git a/drivers/virtio/vdpa/ifcvf/Makefile b/drivers/vdpa/ifcvf/Makefile
+> similarity index 100%
+> rename from drivers/virtio/vdpa/ifcvf/Makefile
+> rename to drivers/vdpa/ifcvf/Makefile
+> diff --git a/drivers/virtio/vdpa/ifcvf/ifcvf_base.c b/drivers/vdpa/ifcvf/ifcvf_base.c
+> similarity index 100%
+> rename from drivers/virtio/vdpa/ifcvf/ifcvf_base.c
+> rename to drivers/vdpa/ifcvf/ifcvf_base.c
+> diff --git a/drivers/virtio/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf_base.h
+> similarity index 100%
+> rename from drivers/virtio/vdpa/ifcvf/ifcvf_base.h
+> rename to drivers/vdpa/ifcvf/ifcvf_base.h
+> diff --git a/drivers/virtio/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
+> similarity index 100%
+> rename from drivers/virtio/vdpa/ifcvf/ifcvf_main.c
+> rename to drivers/vdpa/ifcvf/ifcvf_main.c
+> diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
+> similarity index 100%
+> rename from drivers/virtio/vdpa/vdpa.c
+> rename to drivers/vdpa/vdpa.c
+> diff --git a/drivers/virtio/vdpa/vdpa_sim/Makefile b/drivers/vdpa/vdpa_sim/Makefile
+> similarity index 100%
+> rename from drivers/virtio/vdpa/vdpa_sim/Makefile
+> rename to drivers/vdpa/vdpa_sim/Makefile
+> diff --git a/drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+> similarity index 100%
+> rename from drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
+> rename to drivers/vdpa/vdpa_sim/vdpa_sim.c
+> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+> index 99e424570644..2aadf398d8cc 100644
+> --- a/drivers/virtio/Kconfig
+> +++ b/drivers/virtio/Kconfig
+> @@ -109,5 +109,3 @@ config VIRTIO_MMIO_CMDLINE_DEVICES
+>  	 If unsure, say 'N'.
+>  
+>  endif # VIRTIO_MENU
+> -
+> -source "drivers/virtio/vdpa/Kconfig"
 > 
-> > def fixup_interrupts(schema):
-> >    # Supporting 'interrupts' implies 'interrupts-extended' is also supported.
-> >    if not 'interrupts' in schema['properties'].keys():
-> >        return
-> >
-> >    # Any node with 'interrupts' can have 'interrupt-parent'
-> >    schema['properties']['interrupt-parent'] = True
-> >
-> >    schema['properties']['interrupts-extended'] = { "$ref": "#/properties/interrupts" };
-> >
-> >    if not ('required' in schema.keys() and 'interrupts' in schema['required']):
-> >        return
-> >
-> !>    # Currently no better way to express either 'interrupts' or 'interrupts-extended'
-> !>    # is required. If this fails validation, the error reporting is the whole
-> !>    # schema file fails validation
-> !>    schema['oneOf'] = [ {'required': ['interrupts']}, {'required': ['interrupts-extended']} ]
 
-I'll fix this. I'll have to check for 'oneOf' and if it exists then put 
-it under an 'allOf'.
 
-> ---
->  .../devicetree/bindings/rtc/dw-apb.txt        | 32 -------
->  .../bindings/rtc/snps,dw-apb-timer.yaml       | 88 +++++++++++++++++++
->  2 files changed, 88 insertions(+), 32 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/dw-apb.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/snps,dw-apb-timer.yaml
-
-Otherwise, looks good.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
