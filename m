@@ -2,80 +2,76 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEE1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F866C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C31DA212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jw0wCsv9"
+	by mail.kernel.org (Postfix) with ESMTP id 194B4214DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585673025;
+	bh=FjSFAHe7QVSkuOBQVhx+RMwcv3gaGtV+UbZ9uyd09qw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=euSSrp8RypodF+qdEBEdf3m3i+/Ya/STlvCsecih/Q0jXJMg/8bKWYsm378c2fNLU
+	 D6BLkylHqtL75ICUTDgxbKKFDvDVMq9cZorrxFOLGC5fGGjIMAyDw1y97nTZEuAHiR
+	 5y6iWa0ohZ/VIYm9XUp8VqjI9mHojc2DKsvZ86a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731254AbgCaQmM (ORCPT
+        id S1731151AbgCaQno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:42:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57130 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730442AbgCaQmM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:42:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uZ5E0WO6BJBy6aOSh2zh6JJICxRfhShrGtTHHcnqcww=; b=jw0wCsv9arFbFqYn6LQmNxh5nZ
-        Fvk4IXwcuxJMLknZKreDBvaRHUwmppnjtHDXfPGPMqDUXGgeocve9yL+0X0/rxU3HPYpYdMu907xU
-        CI49fRgoAVy72/zMxZgZZv8EYhBp5qyS0SajB59j2Fb6MCSjT4KfgMEiakguBTfEg4Djzwo/AmWyI
-        YcBe0DpNrhBtde499wg+RRl2yK0xJBapRbsmctQ+Gz9uLNndi6SqkEgEZ11i+H2t6fPOouNwnOGd6
-        VwHwcCmjwn8qknIoA8b05BGMKdQLEgELI2gpWlGwiiSO6aCeMMVRtpPcbtfOxwFnpYR8t/uWM7gSD
-        PO1ZnejQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJJxs-0006df-6z; Tue, 31 Mar 2020 16:42:12 +0000
-Date:   Tue, 31 Mar 2020 09:42:12 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200331164212.GC21484@bombadil.infradead.org>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-6-richard.weiyang@gmail.com>
- <20200330124842.GY22483@bombadil.infradead.org>
- <20200330141558.soeqhstone2liqud@master>
- <20200330142821.GD22483@bombadil.infradead.org>
- <20200331134208.gfkyym6n3gpgk3x3@master>
+        Tue, 31 Mar 2020 12:43:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730442AbgCaQnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:43:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C980B212CC;
+        Tue, 31 Mar 2020 16:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585673023;
+        bh=FjSFAHe7QVSkuOBQVhx+RMwcv3gaGtV+UbZ9uyd09qw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gtcmxeicZKh5jZZK+x/9JuKvuHOM+bXbOcLenv9uX1xXWKUeOw1FnwCwu+QDvCQ7l
+         yQJtlpsdtOiejFL9dS3iUH/6OTU7tkDCInaP73vKsqt54GgF3+CkHjJZIgwriQYyea
+         /qZz4D4aFQOMgPxixgZsl+mpWuU0eG4T19kuHR0k=
+Date:   Tue, 31 Mar 2020 18:43:40 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Grant Likely <grant.likely@arm.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nd@arm.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Saravana Kannan <saravanak@google.com>
+Subject: Re: [PATCH] Add documentation on meaning of -EPROBE_DEFER
+Message-ID: <20200331164340.GA1821785@kroah.com>
+References: <20200327170132.17275-1-grant.likely@arm.com>
+ <20200331143355.GP1922688@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331134208.gfkyym6n3gpgk3x3@master>
+In-Reply-To: <20200331143355.GP1922688@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:42:08PM +0000, Wei Yang wrote:
-> On Mon, Mar 30, 2020 at 07:28:21AM -0700, Matthew Wilcox wrote:
-> >On Mon, Mar 30, 2020 at 02:15:58PM +0000, Wei Yang wrote:
-> >> On Mon, Mar 30, 2020 at 05:48:42AM -0700, Matthew Wilcox wrote:
-> >> >On Mon, Mar 30, 2020 at 12:36:39PM +0000, Wei Yang wrote:
-> >> >> If an entry is at the last level, whose parent's shift is 0, it is not
-> >> >> expected to be a node. We can just leverage the xa_is_node() check to
-> >> >> break the loop instead of check shift additionally.
-> >> >
-> >> >I know you didn't run the test suite after making this change.
-> >> 
-> >> I did kernel build test, but not the test suite as you mentioned.
-> >> 
-> >> Would you mind sharing some steps on using the test suite? And which case you
-> >> think would trigger the problem?
-> >
-> >cd tools/testing/radix-tree/; make; ./main
-> >
+On Tue, Mar 31, 2020 at 05:33:55PM +0300, Andy Shevchenko wrote:
+> On Fri, Mar 27, 2020 at 05:01:32PM +0000, Grant Likely wrote:
+> > Add a bit of documentation on what it means when a driver .probe() hook
+> > returns the -EPROBE_DEFER error code, including the limitation that
+> > -EPROBE_DEFER should be returned as early as possible, before the driver
+> > starts to register child devices.
+> > 
+> > Also: minor markup fixes in the same file
 > 
-> Hmm... I did a make on top of 5.6-rc6, it failed. Would you mind taking a look
-> into this?
+> Greg, can we at least for time being have this documented, means applied?
 
-It works for me.  I run it almost every day.  What error did you see?
+It's the middle of the merge window, you know I can't take anything in
+my trees until after -rc1 is out.
+
+I will queue it up then, thanks.
+
+greg k-h
