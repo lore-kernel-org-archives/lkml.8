@@ -2,54 +2,51 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A7FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C3DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F92120675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC626208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645555;
-	bh=TJQTlco6/TsVQswAqImirXtZQeLLhrJeiZHNKt0POek=;
+	s=default; t=1585645560;
+	bh=bSQM1Dtvif4FaNcL9hMzSAR+D8lrIbIInjKk3q1hPjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzkvtv75+T+HztNsY9AZhXlSadJXj3z4lqrPnOthJ0SIxgSO8kdP5YVFdch3lz13N
-	 psJOxHopgUc7rF7DVDw/LtFfLA5UffQXLbNMGpzhIYVtBZxPKQkn32/xoun6pH8dA+
-	 klQEPJOyR5qRsR8UeHLaUimWGt79xZWTzKajbW+I=
+	b=Z7dbTnX664P1+0l3bxU6hoHPKf4TPh1l396cqqneOKG0oz6kSUKXQ0xQRSw/I/pLW
+	 LoRWd4L1vbDVFiQ5gbef/hndj/+mtQg4EWPJtxZVtZzB63Wi2KbU1VJK8L60JJUMBB
+	 vhiZjAnCLUhWrjLkxy4smEeDn4FfwGpp69bsDNjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbgCaJFy (ORCPT
+        id S1731089AbgCaJF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:05:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47014 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730053AbgCaJFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:05:51 -0400
+        id S1731075AbgCaJFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:05:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA4220B1F;
-        Tue, 31 Mar 2020 09:05:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E11E420675;
+        Tue, 31 Mar 2020 09:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645549;
-        bh=TJQTlco6/TsVQswAqImirXtZQeLLhrJeiZHNKt0POek=;
+        s=default; t=1585645552;
+        bh=bSQM1Dtvif4FaNcL9hMzSAR+D8lrIbIInjKk3q1hPjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqbPSEGI7GTYYbFo0Ywel9f+NiKOnmb8c4HSu/QEQNTo3zOngHxXVqviKDrT/Pz0t
-         3pi/e9qVUeXEdJl5+e+vAlHvrS70Qy/FQpa0G/XkLiMSfSZY03leDJEJuedHiXciW2
-         dtVdlzNUtaurv5Y7Ble+TKJBxtMK8IAzXQrPByao=
+        b=dvPb5AEmD/DqgaiKAzeiA61knVoVDmZKStxmVzkY8JMA9K8Pmq28xyQBfgknqOYxk
+         NuVgpdlTIVi5/xZ9pkak5LDOo87TnbCXsZwBhFQNxGSKpCj9QOSDeoEmyNwNNkrAI3
+         ESMnt3YKlW37+Nmub1Lqa8T1/SfeiOQi6HOK9rWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Leung <martin.leung@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 070/170] drm/amd/display: update soc bb for nv14
-Date:   Tue, 31 Mar 2020 10:58:04 +0200
-Message-Id: <20200331085431.832144377@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 088/170] RDMA/odp: Fix leaking the tgid for implicit ODP
+Date:   Tue, 31 Mar 2020 10:58:22 +0200
+Message-Id: <20200331085433.639637797@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -62,161 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Leung <martin.leung@amd.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit d5349775c1726ce997b8eb4982cd85a01f1c8b42 ]
+commit 0f9826f4753f74f935e18c2a640484ecbd941346 upstream.
 
-[why]
-nv14 previously inherited soc bb from generic dcn 2, did not match
-watermark values according to memory team
+The tgid used to be part of ib_umem_free_notifier(), when it was reworked
+it got moved to release, but it should have been unconditional as all umem
+alloc paths get the tgid.
 
-[how]
-add nv14 specific soc bb: copy nv2 generic that it was
-using from before, but changed num channels to 8
+As is, creating an implicit ODP will leak the tgid reference.
 
-Signed-off-by: Martin Leung <martin.leung@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lore.kernel.org/r/20200304181607.GA22412@ziepe.ca
+Cc: stable@kernel.org
+Fixes: f25a546e6529 ("RDMA/odp: Use mmu_interval_notifier_insert()")
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../drm/amd/display/dc/dcn20/dcn20_resource.c | 114 ++++++++++++++++++
- 1 file changed, 114 insertions(+)
+ drivers/infiniband/core/umem_odp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 23ff2f1c75b5c..41c4ee84f8bb5 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -337,6 +337,117 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_0_soc = {
- 	.use_urgent_burst_bw = 0
- };
- 
-+struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv14_soc = {
-+	.clock_limits = {
-+			{
-+				.state = 0,
-+				.dcfclk_mhz = 560.0,
-+				.fabricclk_mhz = 560.0,
-+				.dispclk_mhz = 513.0,
-+				.dppclk_mhz = 513.0,
-+				.phyclk_mhz = 540.0,
-+				.socclk_mhz = 560.0,
-+				.dscclk_mhz = 171.0,
-+				.dram_speed_mts = 8960.0,
-+			},
-+			{
-+				.state = 1,
-+				.dcfclk_mhz = 694.0,
-+				.fabricclk_mhz = 694.0,
-+				.dispclk_mhz = 642.0,
-+				.dppclk_mhz = 642.0,
-+				.phyclk_mhz = 600.0,
-+				.socclk_mhz = 694.0,
-+				.dscclk_mhz = 214.0,
-+				.dram_speed_mts = 11104.0,
-+			},
-+			{
-+				.state = 2,
-+				.dcfclk_mhz = 875.0,
-+				.fabricclk_mhz = 875.0,
-+				.dispclk_mhz = 734.0,
-+				.dppclk_mhz = 734.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 875.0,
-+				.dscclk_mhz = 245.0,
-+				.dram_speed_mts = 14000.0,
-+			},
-+			{
-+				.state = 3,
-+				.dcfclk_mhz = 1000.0,
-+				.fabricclk_mhz = 1000.0,
-+				.dispclk_mhz = 1100.0,
-+				.dppclk_mhz = 1100.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 1000.0,
-+				.dscclk_mhz = 367.0,
-+				.dram_speed_mts = 16000.0,
-+			},
-+			{
-+				.state = 4,
-+				.dcfclk_mhz = 1200.0,
-+				.fabricclk_mhz = 1200.0,
-+				.dispclk_mhz = 1284.0,
-+				.dppclk_mhz = 1284.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 1200.0,
-+				.dscclk_mhz = 428.0,
-+				.dram_speed_mts = 16000.0,
-+			},
-+			/*Extra state, no dispclk ramping*/
-+			{
-+				.state = 5,
-+				.dcfclk_mhz = 1200.0,
-+				.fabricclk_mhz = 1200.0,
-+				.dispclk_mhz = 1284.0,
-+				.dppclk_mhz = 1284.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 1200.0,
-+				.dscclk_mhz = 428.0,
-+				.dram_speed_mts = 16000.0,
-+			},
-+		},
-+	.num_states = 5,
-+	.sr_exit_time_us = 8.6,
-+	.sr_enter_plus_exit_time_us = 10.9,
-+	.urgent_latency_us = 4.0,
-+	.urgent_latency_pixel_data_only_us = 4.0,
-+	.urgent_latency_pixel_mixed_with_vm_data_us = 4.0,
-+	.urgent_latency_vm_data_only_us = 4.0,
-+	.urgent_out_of_order_return_per_channel_pixel_only_bytes = 4096,
-+	.urgent_out_of_order_return_per_channel_pixel_and_vm_bytes = 4096,
-+	.urgent_out_of_order_return_per_channel_vm_only_bytes = 4096,
-+	.pct_ideal_dram_sdp_bw_after_urgent_pixel_only = 40.0,
-+	.pct_ideal_dram_sdp_bw_after_urgent_pixel_and_vm = 40.0,
-+	.pct_ideal_dram_sdp_bw_after_urgent_vm_only = 40.0,
-+	.max_avg_sdp_bw_use_normal_percent = 40.0,
-+	.max_avg_dram_bw_use_normal_percent = 40.0,
-+	.writeback_latency_us = 12.0,
-+	.ideal_dram_bw_after_urgent_percent = 40.0,
-+	.max_request_size_bytes = 256,
-+	.dram_channel_width_bytes = 2,
-+	.fabric_datapath_to_dcn_data_return_bytes = 64,
-+	.dcn_downspread_percent = 0.5,
-+	.downspread_percent = 0.38,
-+	.dram_page_open_time_ns = 50.0,
-+	.dram_rw_turnaround_time_ns = 17.5,
-+	.dram_return_buffer_per_channel_bytes = 8192,
-+	.round_trip_ping_latency_dcfclk_cycles = 131,
-+	.urgent_out_of_order_return_per_channel_bytes = 256,
-+	.channel_interleave_bytes = 256,
-+	.num_banks = 8,
-+	.num_chans = 8,
-+	.vmm_page_size_bytes = 4096,
-+	.dram_clock_change_latency_us = 404.0,
-+	.dummy_pstate_latency_us = 5.0,
-+	.writeback_dram_clock_change_latency_us = 23.0,
-+	.return_bus_width_bytes = 64,
-+	.dispclk_dppclk_vco_speed_mhz = 3850,
-+	.xfc_bus_transport_time_us = 20,
-+	.xfc_xbuf_latency_tolerance_us = 4,
-+	.use_urgent_burst_bw = 0
-+};
-+
- struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { 0 };
- 
- #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
-@@ -3282,6 +3393,9 @@ void dcn20_patch_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_st
- static struct _vcs_dpi_soc_bounding_box_st *get_asic_rev_soc_bb(
- 	uint32_t hw_internal_rev)
- {
-+	if (ASICREV_IS_NAVI14_M(hw_internal_rev))
-+		return &dcn2_0_nv14_soc;
-+
- 	if (ASICREV_IS_NAVI12_P(hw_internal_rev))
- 		return &dcn2_0_nv12_soc;
- 
--- 
-2.20.1
-
+--- a/drivers/infiniband/core/umem_odp.c
++++ b/drivers/infiniband/core/umem_odp.c
+@@ -290,8 +290,8 @@ void ib_umem_odp_release(struct ib_umem_
+ 		mmu_interval_notifier_remove(&umem_odp->notifier);
+ 		kvfree(umem_odp->dma_list);
+ 		kvfree(umem_odp->page_list);
+-		put_pid(umem_odp->tgid);
+ 	}
++	put_pid(umem_odp->tgid);
+ 	kfree(umem_odp);
+ }
+ EXPORT_SYMBOL(ib_umem_odp_release);
 
 
