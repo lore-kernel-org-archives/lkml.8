@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB5DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8E2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B80212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E46215A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645250;
-	bh=7GkF9U1QC4/acQ/zYteAI1o0BdFXo/0FC7l9Hnlp3EQ=;
+	s=default; t=1585645255;
+	bh=ho35sVTquqF+nMCh8sjY2bccs/JY5rCm7rSUWaXHH/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iI/Qq1BhbuRYo+gwTa6sftH3XbyPiLp0VDhxZa7qWgY5F/fFVmKKJ1jteLmZiyM1l
-	 weZKhpOlO01i5P1Ng3WZs9BuSYSSkgmJ8//E2hGCfGE3u3URqI8vTiFtyFM98k4a+i
-	 9UGvMEn7w3SKlKdyVlji42S1+O7Y9gepOY5R23iY=
+	b=rozgb//OrFqXv5CGgoYPIk068XFmiZ81jmzFrN5f77oooh7Ea/Y2zXzXmmS1+GJ+9
+	 BqtGIha171cER77Lq+IVXrUVc7JVho9HKNE3VQor66lBVDZivysvepC6DzKbVkRDSz
+	 dYeubvZy9CM4IRRz3GRs8N1pWKGVYCttZppT2zd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbgCaJAs (ORCPT
+        id S1730474AbgCaJAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:00:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39618 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730031AbgCaJAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:00:46 -0400
+        id S1730285AbgCaJAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:00:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2458020B80;
-        Tue, 31 Mar 2020 09:00:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11BF820B1F;
+        Tue, 31 Mar 2020 09:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645245;
-        bh=7GkF9U1QC4/acQ/zYteAI1o0BdFXo/0FC7l9Hnlp3EQ=;
+        s=default; t=1585645252;
+        bh=ho35sVTquqF+nMCh8sjY2bccs/JY5rCm7rSUWaXHH/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TfpIw9xG61QMdEgZsrvYII3F6prcv8YUqHXIwWhpbkaeCTxx30a+PTSSx4oy6ZB2s
-         OUb1euN15aBrKhMwRRC+BfyZGVJLNSgPS5MSicyeWcAckQpwWE0yfy07kd7TX9aS40
-         9ehLaYYiZGxdoWT5t1aLqmn3dBGLgYsWTvaeVj1I=
+        b=GKun6qYpPzAbtYm3X9Xcdz/ORnTYin8I40yoHlLSwVbI6XwMethJw50eCplNlS5HO
+         CcC/m/Qa3yeLHfSIfFmXWkF51E83+uw5fh54AvfWURlGxlHjpXLZe4vZPA5/1JlWmp
+         zNt5pN8uuulsYkc3YgQnqsflcjRbJatKAPAJgLAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.6 09/23] media: usbtv: fix control-message timeouts
-Date:   Tue, 31 Mar 2020 10:59:21 +0200
-Message-Id: <20200331085312.064800702@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
+Subject: [PATCH 5.6 13/23] staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
+Date:   Tue, 31 Mar 2020 10:59:25 +0200
+Message-Id: <20200331085314.292545907@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -61,64 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 536f561d871c5781bc33d26d415685211b94032e upstream.
+commit 1165dd73e811a07d947aee218510571f516081f6 upstream.
 
-The driver was issuing synchronous uninterruptible control requests
-without using a timeout. This could lead to the driver hanging on
-various user requests due to a malfunctioning (or malicious) device
-until the device is physically disconnected.
+We can't handle the case length > WLAN_DATA_MAXLEN.
+Because the size of rxfrm->data is WLAN_DATA_MAXLEN(2312), and we can't
+read more than that.
 
-The USB upper limit of five seconds per request should be more than
-enough.
-
-Fixes: f3d27f34fdd7 ("[media] usbtv: Add driver for Fushicai USBTV007 video frame grabber")
-Fixes: c53a846c48f2 ("[media] usbtv: add video controls")
-Cc: stable <stable@vger.kernel.org>     # 3.11
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Thanks-to: Hillf Danton <hdanton@sina.com>
+Reported-and-tested-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326131850.17711-1-hqjagain@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/usbtv/usbtv-core.c  |    2 +-
- drivers/media/usb/usbtv/usbtv-video.c |    5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/staging/wlan-ng/hfa384x_usb.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/media/usb/usbtv/usbtv-core.c
-+++ b/drivers/media/usb/usbtv/usbtv-core.c
-@@ -56,7 +56,7 @@ int usbtv_set_regs(struct usbtv *usbtv,
- 
- 		ret = usb_control_msg(usbtv->udev, pipe, USBTV_REQUEST_REG,
- 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
--			value, index, NULL, 0, 0);
-+			value, index, NULL, 0, USB_CTRL_GET_TIMEOUT);
- 		if (ret < 0)
- 			return ret;
+--- a/drivers/staging/wlan-ng/hfa384x_usb.c
++++ b/drivers/staging/wlan-ng/hfa384x_usb.c
+@@ -3372,6 +3372,8 @@ static void hfa384x_int_rxmonitor(struct
+ 	     WLAN_HDR_A4_LEN + WLAN_DATA_MAXLEN + WLAN_CRC_LEN)) {
+ 		pr_debug("overlen frm: len=%zd\n",
+ 			 skblen - sizeof(struct p80211_caphdr));
++
++		return;
  	}
---- a/drivers/media/usb/usbtv/usbtv-video.c
-+++ b/drivers/media/usb/usbtv/usbtv-video.c
-@@ -800,7 +800,8 @@ static int usbtv_s_ctrl(struct v4l2_ctrl
- 		ret = usb_control_msg(usbtv->udev,
- 			usb_rcvctrlpipe(usbtv->udev, 0), USBTV_CONTROL_REG,
- 			USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
--			0, USBTV_BASE + 0x0244, (void *)data, 3, 0);
-+			0, USBTV_BASE + 0x0244, (void *)data, 3,
-+			USB_CTRL_GET_TIMEOUT);
- 		if (ret < 0)
- 			goto error;
- 	}
-@@ -851,7 +852,7 @@ static int usbtv_s_ctrl(struct v4l2_ctrl
- 	ret = usb_control_msg(usbtv->udev, usb_sndctrlpipe(usbtv->udev, 0),
- 			USBTV_CONTROL_REG,
- 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
--			0, index, (void *)data, size, 0);
-+			0, index, (void *)data, size, USB_CTRL_SET_TIMEOUT);
  
- error:
- 	if (ret < 0)
+ 	skb = dev_alloc_skb(skblen);
 
 
