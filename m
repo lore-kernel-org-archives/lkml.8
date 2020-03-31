@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7C9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C45C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A11208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CD220675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646270;
-	bh=1V9krcCmZuB1V+rTsau6j1FmzkI174XQlHz6yYPQc34=;
+	s=default; t=1585646274;
+	bh=An0gNQn7YMvXnKeG9BQYZZh6VW6cJv6Egsntd0dEeoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WzbMiHJ+k3VmbSdtyeW0eWfuWhSMIwdJu33xEAjdD4fQFF8uK8hzF0EKdq9JT5RgF
-	 L4D0QK/X6p+IxMNXsKCCLQsSfq8gMU3VsNF2kuz65FAoWIRMRwmnzN4hNVgmmuhzm3
-	 tWNV6ugAZbyI7RJhOTe2ewDJghETEqFbVSZg7N28=
+	b=dfqbi76b1hnFGEjQ4y70vsBS8taKSR3yJj3pj796et9qH5HHebdHSdkN7EKKTn0zL
+	 xSNw/HrqeV/neMn2HyGazDWyvDHZk8rHtGqVJwUOWdX4YpVNxPWUt4AVyqPTN/McWc
+	 PzNWwpEavJbP8EUf4xr8NsLhaJOmWKzlKfyRswmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbgCaJRp (ORCPT
+        id S1731983AbgCaJRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730666AbgCaJRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:43 -0400
+        id S1730819AbgCaJRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BBFE20675;
-        Tue, 31 Mar 2020 09:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10BAF20772;
+        Tue, 31 Mar 2020 09:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646262;
-        bh=1V9krcCmZuB1V+rTsau6j1FmzkI174XQlHz6yYPQc34=;
+        s=default; t=1585646269;
+        bh=An0gNQn7YMvXnKeG9BQYZZh6VW6cJv6Egsntd0dEeoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rRvwvziTubwyu7W78weiX6AWAru0GEDSQw/PVZ/s1t9fyZPBIlGQmIUWBmDNrqNLP
-         eoNmx6lML2j0JqH3aUVzpl/fBMJOoJNJAkAsYL04cJdOxbjFNJSF/MXUJiFVLj21i5
-         WeyPUSZnfmmWOabcHLxeTWJXRmtiYlc1JqAQ/A/w=
+        b=LL8cwkBjGeMgnmxDFmvWl94+wXoXugEt1GeUTUl/xny/uRCEiTSrR/IcdCvSkMgWd
+         CzMZ8P4i0otfPuVM4cQnl0fN/k2nVjjvhYR4ZsP+kVXUGgYf++gIK31NUppkS9nFVT
+         ysUIDASdYRP7yp4L3P6POny1P+XgRISjcsiLMlaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.4 131/155] bpf, sockmap: Remove bucket->lock from sock_{hash|map}_free
-Date:   Tue, 31 Mar 2020 10:59:31 +0200
-Message-Id: <20200331085432.965935873@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 5.4 133/155] vti6: Fix memory leak of skb if input policy check fails
+Date:   Tue, 31 Mar 2020 10:59:33 +0200
+Message-Id: <20200331085433.186362372@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,104 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: Torsten Hilbrich <torsten.hilbrich@secunet.com>
 
-commit 90db6d772f749e38171d04619a5e3cd8804a6d02 upstream.
+commit 2a9de3af21aa8c31cd68b0b39330d69f8c1e59df upstream.
 
-The bucket->lock is not needed in the sock_hash_free and sock_map_free
-calls, in fact it is causing a splat due to being inside rcu block.
+The vti6_rcv function performs some tests on the retrieved tunnel
+including checking the IP protocol, the XFRM input policy, the
+source and destination address.
 
-| BUG: sleeping function called from invalid context at net/core/sock.c:2935
-| in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 62, name: kworker/0:1
-| 3 locks held by kworker/0:1/62:
-|  #0: ffff88813b019748 ((wq_completion)events){+.+.}, at: process_one_work+0x1d7/0x5e0
-|  #1: ffffc900000abe50 ((work_completion)(&map->work)){+.+.}, at: process_one_work+0x1d7/0x5e0
-|  #2: ffff8881381f6df8 (&stab->lock){+...}, at: sock_map_free+0x26/0x180
-| CPU: 0 PID: 62 Comm: kworker/0:1 Not tainted 5.5.0-04008-g7b083332376e #454
-| Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190727_073836-buildvm-ppc64le-16.ppc.fedoraproject.org-3.fc31 04/01/2014
-| Workqueue: events bpf_map_free_deferred
-| Call Trace:
-|  dump_stack+0x71/0xa0
-|  ___might_sleep.cold+0xa6/0xb6
-|  lock_sock_nested+0x28/0x90
-|  sock_map_free+0x5f/0x180
-|  bpf_map_free_deferred+0x58/0x80
-|  process_one_work+0x260/0x5e0
-|  worker_thread+0x4d/0x3e0
-|  kthread+0x108/0x140
-|  ? process_one_work+0x5e0/0x5e0
-|  ? kthread_park+0x90/0x90
-|  ret_from_fork+0x3a/0x50
+In all but one places the skb is released in the error case. When
+the input policy check fails the network packet is leaked.
 
-The reason we have stab->lock and bucket->locks in sockmap code is to
-handle checking EEXIST in update/delete cases. We need to be careful during
-an update operation that we check for EEXIST and we need to ensure that the
-psock object is not in some partial state of removal/insertion while we do
-this. So both map_update_common and sock_map_delete need to guard from being
-run together potentially deleting an entry we are checking, etc. But by the
-time we get to the tear-down code in sock_{ma[|hash}_free we have already
-disconnected the map and we just did synchronize_rcu() in the line above so
-no updates/deletes should be in flight. Because of this we can drop the
-bucket locks from the map free'ing code, noting no update/deletes can be
-in-flight.
+Using the same goto-label discard in this case to fix this problem.
 
-Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
-Reported-by: Jakub Sitnicki <jakub@cloudflare.com>
-Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/158385850787.30597.8346421465837046618.stgit@john-Precision-5820-Tower
+Fixes: ed1efb2aefbb ("ipv6: Add support for IPsec virtual tunnel interfaces")
+Signed-off-by: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+Reviewed-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/sock_map.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/ipv6/ip6_vti.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -233,8 +233,11 @@ static void sock_map_free(struct bpf_map
- 	struct bpf_stab *stab = container_of(map, struct bpf_stab, map);
- 	int i;
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -311,7 +311,7 @@ static int vti6_rcv(struct sk_buff *skb)
  
-+	/* After the sync no updates or deletes will be in-flight so it
-+	 * is safe to walk map and remove entries without risking a race
-+	 * in EEXIST update case.
-+	 */
- 	synchronize_rcu();
--	raw_spin_lock_bh(&stab->lock);
- 	for (i = 0; i < stab->map.max_entries; i++) {
- 		struct sock **psk = &stab->sks[i];
- 		struct sock *sk;
-@@ -248,7 +251,6 @@ static void sock_map_free(struct bpf_map
- 			release_sock(sk);
- 		}
- 	}
--	raw_spin_unlock_bh(&stab->lock);
- 
- 	/* wait for psock readers accessing its map link */
- 	synchronize_rcu();
-@@ -863,10 +865,13 @@ static void sock_hash_free(struct bpf_ma
- 	struct hlist_node *node;
- 	int i;
- 
-+	/* After the sync no updates or deletes will be in-flight so it
-+	 * is safe to walk map and remove entries without risking a race
-+	 * in EEXIST update case.
-+	 */
- 	synchronize_rcu();
- 	for (i = 0; i < htab->buckets_num; i++) {
- 		bucket = sock_hash_select_bucket(htab, i);
--		raw_spin_lock_bh(&bucket->lock);
- 		hlist_for_each_entry_safe(elem, node, &bucket->head, node) {
- 			hlist_del_rcu(&elem->node);
- 			lock_sock(elem->sk);
-@@ -875,7 +880,6 @@ static void sock_hash_free(struct bpf_ma
+ 		if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb)) {
  			rcu_read_unlock();
- 			release_sock(elem->sk);
+-			return 0;
++			goto discard;
  		}
--		raw_spin_unlock_bh(&bucket->lock);
- 	}
  
- 	/* wait for psock readers accessing its map link */
+ 		ipv6h = ipv6_hdr(skb);
 
 
