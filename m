@@ -2,383 +2,178 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C3BC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A410EC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6391D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB642071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585664504;
+	bh=3e4yfCq3SiMJAhsb+PNmLBJ6RbMYhm88+5Hk57q2zpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FJBs2YFwLGnLRArQyzNwa6yE6+Mn7z6FchvFcTixgczxgrCWiVoVSA2ccxeR6gw3d
+	 7MTAdJHNU3ynMTgaE2AcrkboglydtMu61HV982qBO31QC/0ipK8kwttqHszIW+O9s0
+	 qArJNAFOluUnypym+xPVtE1/UxxnRt5m3cyECHlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgCaOTn (ORCPT
+        id S1730925AbgCaOVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:19:43 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13636 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730464AbgCaOTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:19:43 -0400
-IronPort-SDR: j7cNB8neDCt1XMZ9hGrX68O2sXlfP47X/s2Y7lo/z7rQhGlX0TvdOFZbEkanz9Q+ToAwcscZX8
- 72p72I6Ip/lA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 07:19:42 -0700
-IronPort-SDR: cRKDxEEbRCRWnWVfnFjCLSXiabFWp5mt/JJwnXdk3rIB1htmesLkIq6Y/TnQ31OLsOG4h1Soqn
- U1tkJrjrMr9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="328098370"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 31 Mar 2020 07:19:32 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jJHjp-00EWLW-QM; Tue, 31 Mar 2020 17:19:33 +0300
-Date:   Tue, 31 Mar 2020 17:19:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Tue, 31 Mar 2020 10:21:43 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42021 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730464AbgCaOVn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 10:21:43 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h15so26178253wrx.9;
+        Tue, 31 Mar 2020 07:21:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wqixz+ZIYAqgoA7MPWIYOpEEYP0CoNu6CnseEEi5hws=;
+        b=DsyXcH88Wt1uKyk4WnK7FiML7pHV/KZ4GujNwSsaNHwTENzOypEnKTJ9lmRz/XAf99
+         ZGbpBwu2YT3wyTo7RHP+2PKl5KXnazntTxPfQ6Zi3xNEG5QnspNE47Y5BTwg0sJMrm1M
+         MCu0khtfPO/McBMkC/i/U4ob5AEy0xhiSsunc0lvklP3c/CRAwhPAIdRwGWwBMTd8mu3
+         6HhvyDcydT8QINPxcgLL2D74bkTa6fYI0/7ATd2b/xrwZX7Eb9O7wBomX/UW5Rd8uawI
+         prZ+Do/fmGAE1Fqt88KF2JNqlNCdbhpplTSEGn1mSHz1g6WmO4N7oaa4S08px5H4LlPc
+         OjJw==
+X-Gm-Message-State: ANhLgQ0rxTiZ6AwKAkRsFO7eLurP6Y31LxHmmVeODHHYQXXbtQ90glur
+        A86v8pne3zJ6joCOH8h5YHM=
+X-Google-Smtp-Source: ADFU+vuyE5SEZ+dPIFAcnIpCK+KoCMyMOpra8z4yVhIRJ2B/XSHZ5tSKeX1VNNnmQoYfW1esDx7ZTg==
+X-Received: by 2002:adf:eb0c:: with SMTP id s12mr20671936wrn.293.1585664500850;
+        Tue, 31 Mar 2020 07:21:40 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id v7sm24508561wrs.96.2020.03.31.07.21.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 07:21:39 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 16:21:38 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Tal Gilboa <talgi@mellanox.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH v7 09/10] power: supply: Support ROHM bd99954 charger
-Message-ID: <20200331141933.GK1922688@smile.fi.intel.com>
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
- <1cc9518fbd8f0e0b4724f9bc1ac37353a0b073b5.1585656144.git.matti.vaittinen@fi.rohmeurope.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20200331142138.GL30449@dhcp22.suse.cz>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330175100.GD30942@linux.ibm.com>
+ <20200330182301.GM14243@dhcp22.suse.cz>
+ <20200331081423.GE30942@linux.ibm.com>
+ <20200331085513.GE30449@dhcp22.suse.cz>
+ <20200331140332.GA2129@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1cc9518fbd8f0e0b4724f9bc1ac37353a0b073b5.1585656144.git.matti.vaittinen@fi.rohmeurope.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200331140332.GA2129@MiWiFi-R3L-srv>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 03:28:17PM +0300, Matti Vaittinen wrote:
-> The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-> secondary battery intended to be used in space-constraint equipment such
-> as Low profile Notebook PC, Tablets and other applications. BD99954
-> provides a Dual-source Battery Charger, two port BC1.2 detection and a
-> Battery Monitor.
+On Tue 31-03-20 22:03:32, Baoquan He wrote:
+> Hi Michal,
 > 
-> Support ROHM BD99954 Charger IC.
+> On 03/31/20 at 10:55am, Michal Hocko wrote:
+> > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
+> > > Maybe I mis-read the code, but I don't see how this could happen. In the
+> > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
+> > > calculate_node_totalpages() that ensures that node->node_zones are entirely
+> > > within the node because this is checked in zone_spanned_pages_in_node().
+> > 
+> > zone_spanned_pages_in_node does chech the zone boundaries are within the
+> > node boundaries. But that doesn't really tell anything about other
+> > potential zones interleaving with the physical memory range.
+> > zone->spanned_pages simply gives the physical range for the zone
+> > including holes. Interleaving nodes are essentially a hole
+> > (__absent_pages_in_range is going to skip those).
+> > 
+> > That means that when free_area_init_core simply goes over the whole
+> > physical zone range including holes and that is why we need to check
+> > both for physical and logical holes (aka other nodes).
+> > 
+> > The life would be so much easier if the whole thing would simply iterate
+> > over memblocks...
+> 
+> The memblock iterating sounds a great idea. I tried with putting the
+> memblock iterating in the upper layer, memmap_init(), which is used for
+> boot mem only anyway. Do you think it's doable and OK? It yes, I can
+> work out a formal patch to make this simpler as you said. The draft code
+> is as below. Like this it uses the existing code and involves little change.
 
-...
-
-> +static irqreturn_t bd9995x_irq_handler_thread(int irq, void *private)
-> +{
-> +	struct bd9995x_device *bd = private;
-> +	int ret, status, mask, i;
-> +	unsigned long tmp;
-> +	struct bd9995x_state state;
-> +
-> +	/*
-> +	 * The bd9995x does not seem to generate big amount of interrupts.
-> +	 * The logic regarding which interrupts can cause relevant
-> +	 * status changes seem to be pretty complex.
-> +	 *
-> +	 * So lets implement really simple and hopefully bullet-proof handler:
-> +	 * It does not really matter which IRQ we handle, we just go and
-> +	 * re-read all interesting statuses + give the framework a nudge.
-> +	 *
-> +	 * Other option would be building a _complex_ and error prone logic
-> +	 * trying to decide what could have been changed (resulting this IRQ
-> +	 * we are now handling). During the normal operation the BD99954 does
-> +	 * not seem to be generating much of interrupts so benefit from such
-> +	 * logic would probably be minimal.
-> +	 */
-> +
-> +	ret = regmap_read(bd->rmap, INT0_STATUS, &status);
-> +	if (ret) {
-> +		dev_err(bd->dev, "Failed to read IRQ status\n");
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	ret = regmap_field_read(bd->rmap_fields[F_INT0_SET], &mask);
-> +	if (ret) {
-> +		dev_err(bd->dev, "Failed to read IRQ mask\n");
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	/* Handle only IRQs that are not masked */
-> +	status &= mask;
-> +	tmp = status;
-> +
-> +	/* Lowest bit does not represent any sub-registers */
-> +	tmp >>= 1;
-> +
-> +	/*
-> +	 * Mask and ack IRQs we will handle (+ the idiot bit)
-> +	 */
-> +	ret = regmap_field_write(bd->rmap_fields[F_INT0_SET], 0);
-> +	if (ret) {
-> +		dev_err(bd->dev, "Failed to mask F_INT0\n");
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	ret = regmap_write(bd->rmap, INT0_STATUS, status);
-> +	if (ret) {
-> +		dev_err(bd->dev, "Failed to ack F_INT0\n");
-> +		goto err_umask;
-> +	}
-> +
-> +	for_each_set_bit(i, &tmp, 7) {
-> +		int sub_status, sub_mask;
-> +		int sub_status_reg[] = {
-> +			INT1_STATUS, INT2_STATUS, INT3_STATUS, INT4_STATUS,
-> +			INT5_STATUS, INT6_STATUS, INT7_STATUS,
-> +		};
-> +		struct regmap_field *sub_mask_f[] = {
-> +			bd->rmap_fields[F_INT1_SET],
-> +			bd->rmap_fields[F_INT2_SET],
-> +			bd->rmap_fields[F_INT3_SET],
-> +			bd->rmap_fields[F_INT4_SET],
-> +			bd->rmap_fields[F_INT5_SET],
-> +			bd->rmap_fields[F_INT6_SET],
-> +			bd->rmap_fields[F_INT7_SET],
-> +		};
-> +
-> +		/* Clear sub IRQs */
-> +		ret = regmap_read(bd->rmap, sub_status_reg[i], &sub_status);
-> +		if (ret) {
-> +			dev_err(bd->dev, "Failed to read IRQ sub-status\n");
-> +			goto err_umask;
-> +		}
-
-
-Looking into it makes me thing that you perhaps need regmap IRQ chip?
-Have you chance to look at drivers/mfd/intel_soc_pmic_bxtwc.c, for example?
-
-> +		ret = regmap_field_read(sub_mask_f[i], &sub_mask);
-> +		if (ret) {
-> +			dev_err(bd->dev, "Failed to read IRQ sub-mask\n");
-> +			goto err_umask;
-> +		}
-> +
-> +		/* Ack active sub-statuses */
-> +		sub_status &= sub_mask;
-> +
-> +		ret = regmap_write(bd->rmap, sub_status_reg[i], sub_status);
-> +		if (ret) {
-> +			dev_err(bd->dev, "Failed to ack sub-IRQ\n");
-> +			goto err_umask;
-> +		}
-> +	}
-> +
-> +	ret = regmap_field_write(bd->rmap_fields[F_INT0_SET], mask);
-> +	if (ret)
-> +		/* May as well retry once */
-> +		goto err_umask;
-> +
-> +	/* Read whole chip state */
-> +	ret = bd9995x_get_chip_state(bd, &state);
-> +	if (ret < 0) {
-> +		dev_err(bd->dev, "Failed to read chip state\n");
-> +	} else {
-> +		mutex_lock(&bd->lock);
-> +		bd->state = state;
-> +		mutex_unlock(&bd->lock);
-> +
-> +		power_supply_changed(bd->charger);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +
-> +err_umask:
-> +	ret = regmap_field_write(bd->rmap_fields[F_INT0_SET], mask);
-> +	if (ret)
-> +		dev_err(bd->dev,
-> +		"Failed to un-mask F_INT0 - IRQ permanently disabled\n");
-> +
-> +	return IRQ_NONE;
-> +}
-
-...
-
-> +static int bd9995x_fw_probe(struct bd9995x_device *bd)
-> +{
-> +	int ret;
-> +	struct power_supply_battery_info info;
-> +	u32 property;
+Doing this would be a step in the right direction! I haven't checked the
+code very closely though. The below sounds way too simple to be truth I
+am afraid. First for_each_mem_pfn_range is available only for
+CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
+saying that I really hate that being conditional). Also I haven't really
+checked the deferred initialization path - I have a very vague
+recollection that it has been converted to the memblock api but I have
+happilly dropped all that memory.
+ 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 138a56c0f48f..558d421f294b 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>  		 * function.  They do not exist on hotplugged memory.
+>  		 */
+>  		if (context == MEMMAP_EARLY) {
+> -			if (!early_pfn_valid(pfn)) {
+> -				pfn = next_pfn(pfn);
+> -				continue;
+> -			}
+> -			if (!early_pfn_in_nid(pfn, nid)) {
+> -				pfn++;
+> -				continue;
+> -			}
+>  			if (overlap_memmap_init(zone, &pfn))
+>  				continue;
+>  			if (defer_init(nid, pfn, end_pfn))
+> @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
+>  }
+>  
+>  void __meminit __weak memmap_init(unsigned long size, int nid,
+> -				  unsigned long zone, unsigned long start_pfn)
+> +				  unsigned long zone, unsigned long range_start_pfn)
+>  {
+> -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
+> +	unsigned long start_pfn, end_pfn;
+> +	unsigned long range_end_pfn = range_start_pfn + size;
 > +	int i;
-> +	int regval;
-> +	bool found;
-> +	struct bd9995x_init_data *init = &bd->init_data;
-> +	struct battery_init battery_inits[] = {
-> +		{
-> +			.name = "trickle-charging current",
-> +			.info_data = &info.tricklecharge_current_ua,
-> +			.range = &charging_current_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->itrich_set,
-> +		}, {
-> +			.name = "pre-charging current",
-> +			.info_data = &info.precharge_current_ua,
-> +			.range = &charging_current_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->iprech_set,
-> +		}, {
-> +			.name = "pre-to-trickle charge voltage threshold",
-> +			.info_data = &info.precharge_voltage_max_uv,
-> +			.range = &trickle_to_pre_threshold_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->vprechg_th_set,
-> +		}, {
-> +			.name = "charging termination current",
-> +			.info_data = &info.charge_term_current_ua,
-> +			.range = &charging_current_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->iterm_set,
-> +		}, {
-> +			.name = "charging re-start voltage",
-> +			.info_data = &info.charge_restart_voltage_uv,
-> +			.range = &charge_voltage_regulation_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->vrechg_set,
-> +		}, {
-> +			.name = "battery overvoltage limit",
-> +			.info_data = &info.overvoltage_limit_uv,
-> +			.range = &charge_voltage_regulation_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->vbatovp_set,
-> +		}, {
-> +			.name = "fast-charging max current",
-> +			.info_data = &info.constant_charge_current_max_ua,
-> +			.range = &fast_charge_current_ranges[0],
-> +			.ranges = 1,
-> +			.data = &init->ichg_set,
-> +		}, {
-> +			.name = "fast-charging voltage",
-> +			.info_data = &info.constant_charge_voltage_max_uv,
-> +			.range = &charge_voltage_regulation_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->vfastchg_reg_set1,
-> +		},
-> +	};
-> +	struct dt_init props[] = {
-> +		{
-> +			.prop = "rohm,vsys-regulation-microvolt",
-> +			.range = &vsys_voltage_regulation_ranges[0],
-> +			.ranges = 2,
-> +			.data = &init->vsysreg_set,
-> +		}, {
-> +			.prop = "rohm,vbus-input-current-limit-microamp",
-> +			.range = &input_current_limit_ranges[0],
-> +			.ranges = 1,
-> +			.data = &init->ibus_lim_set,
-> +		}, {
-> +			.prop = "rohm,vcc-input-current-limit-microamp",
-> +			.range = &input_current_limit_ranges[0],
-> +			.ranges = 1,
-> +			.data = &init->icc_lim_set,
-> +		},
-> +	};
-> +
-
-> +	/*
-> +	 * The power_supply_get_battery_info() does not support getting values
-> +	 * from ACPI. Let's fix it if ACPI is required here.
-> +	 */
-
-Previously we discussed this and you told that you don't need ACPI support. Did
-I get your wrong or something has been changed? If the latter, perhaps
-converting power supply core to use device property API is not harder than what
-you have done below.
-
-> +	ret = power_supply_get_battery_info(bd->charger, &info);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(battery_inits); i++) {
-> +		int val = *battery_inits[i].info_data;
-> +		const struct linear_range *range = battery_inits[i].range;
-> +		int ranges = battery_inits[i].ranges;
-> +
-> +		if (val == -EINVAL)
-> +			continue;
-> +
-> +		ret = linear_range_get_selector_low_array(range, ranges, val,
-> +							  &regval, &found);
-> +		if (ret) {
-> +			dev_err(bd->dev, "Unsupported value for %s\n",
-> +				battery_inits[i].name);
-> +
-> +			power_supply_put_battery_info(bd->charger, &info);
-> +			return -EINVAL;
-> +		}
-> +		if (!found) {
-> +			dev_warn(bd->dev,
-> +				 "Unsupported value for %s - using smaller\n",
-> +				 battery_inits[i].name);
-> +		}
-> +		*(battery_inits[i].data) = regval;
+> +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
+> +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
+> +		if (end_pfn > start_pfn)
+> +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
 > +	}
-> +
-> +	power_supply_put_battery_info(bd->charger, &info);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(props); i++) {
-> +		ret = device_property_read_u32(bd->dev, props[i].prop,
-> +					       &property);
-> +		if (ret < 0) {
-> +			dev_err(bd->dev, "failed to read %s", props[i].prop);
-> +
-> +			return ret;
-> +		}
-> +
-> +		ret = linear_range_get_selector_low_array(props[i].range,
-> +							  props[i].ranges,
-> +							  property, &regval,
-> +							  &found);
-> +		if (ret) {
-> +			dev_err(bd->dev, "Unsupported value for '%s'\n",
-> +				props[i].prop);
-> +
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (!found) {
-> +			dev_warn(bd->dev,
-> +				 "Unsupported value for '%s' - using smaller\n",
-> +				 props[i].prop);
-> +		}
-> +
-> +		*(props[i].data) = regval;
-> +	}
-> +
-> +	return 0;
-> +}
+>  }
+>  
+>  static int zone_batchsize(struct zone *zone)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Michal Hocko
+SUSE Labs
