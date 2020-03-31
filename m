@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0086C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7977FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8681C2072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EF3C20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645984;
-	bh=Oz0qI06ehZL1R8FnE8z2ekkD37JMOBJNah1EdjcNgbY=;
+	s=default; t=1585645989;
+	bh=upmdMxCOQwLw4/80vqIIQ9aPaJZjTLkqmq0BnGCdU9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0XmUxnHMpNM/H5kDHFvW1X6/VXB9lDn18Z4x2nfj2nubeYJJDe3T4uD9Wdni2t74S
-	 znx+6qVwXypjN8vrjhr0oVXfji6IaSfc2SQooUGcTzzuLWgkteuelaOzKQ8W3l8cV7
-	 4fryAyArbr29NaQDpBDLuz4/JPDOVW2Ns8frqxvI=
+	b=M5lkV2Q8NtEfuFfk1PCCVnp/RcocQC2CiUuj3S3Jl7o3RG8f18yw/N3T8wGpIZg7F
+	 gMOYqNmuh8u1Bp+e0DK8G90HTNYyYikTpF1tVIgyfx4a+6AKdlG1yvE3rQ2TlEnaOD
+	 wH5cyurezw0g9PhRehMhziGJ1XRWFxsYjAYuLkos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbgCaJNC (ORCPT
+        id S1731603AbgCaJM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60132 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:12:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730502AbgCaJNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:00 -0400
+        id S1730328AbgCaJMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:12:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65CFA20675;
-        Tue, 31 Mar 2020 09:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21AD020787;
+        Tue, 31 Mar 2020 09:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645979;
-        bh=Oz0qI06ehZL1R8FnE8z2ekkD37JMOBJNah1EdjcNgbY=;
+        s=default; t=1585645974;
+        bh=upmdMxCOQwLw4/80vqIIQ9aPaJZjTLkqmq0BnGCdU9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xR6xBZslYrRXnLqVuyHyRnkiWUiKOwTuwM6t15xBDGsKd8h0A1WNGQIF5LjCoZ3J
-         OkpQZRcqj2c3ZeKVWmfyqtzeLKn7Xh6F/r8Nh6bCIaOGABzQF8YUfp5n9qj/fqKsEH
-         of4VhtYN/WTbAeQSwmLIn7NAm1Nd9BtmQmS3p/vw=
+        b=aw3Oc0E5Ay0qP+IkZKbPl/Y8FR1tdrZqkJWTrQTx6wABNJY+AfV563KbDQpFo4lhs
+         8BuwGq8U1nrLT4y6+Vv1V34waVIJC1uBIaAiY3a1Uv4Edf5fHBoUR1GcHjlaUufIVF
+         Y4GCZRPk3YXmg52KxIq2QvWKuGW5VdvWBZBJvtbk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org,
+        syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com,
+        Petr Machata <petrm@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 047/155] hsr: add restart routine into hsr_get_node_list()
-Date:   Tue, 31 Mar 2020 10:58:07 +0200
-Message-Id: <20200331085423.735966261@linuxfoundation.org>
+Subject: [PATCH 5.4 045/155] net: ip_gre: Accept IFLA_INFO_DATA-less configuration
+Date:   Tue, 31 Mar 2020 10:58:05 +0200
+Message-Id: <20200331085423.486368957@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,99 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit ca19c70f5225771c05bcdcb832b4eb84d7271c5e ]
+[ Upstream commit 32ca98feab8c9076c89c0697c5a85e46fece809d ]
 
-The hsr_get_node_list() is to send node addresses to the userspace.
-If there are so many nodes, it could fail because of buffer size.
-In order to avoid this failure, the restart routine is added.
+The fix referenced below causes a crash when an ERSPAN tunnel is created
+without passing IFLA_INFO_DATA. Fix by validating passed-in data in the
+same way as ipgre does.
 
-Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Fixes: e1f8f78ffe98 ("net: ip_gre: Separate ERSPAN newlink / changelink callbacks")
+Reported-by: syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com
+Signed-off-by: Petr Machata <petrm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_netlink.c |   38 ++++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ net/ipv4/ip_gre.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/hsr/hsr_netlink.c
-+++ b/net/hsr/hsr_netlink.c
-@@ -360,16 +360,14 @@ fail:
-  */
- static int hsr_get_node_list(struct sk_buff *skb_in, struct genl_info *info)
- {
--	/* For receiving */
--	struct nlattr *na;
-+	unsigned char addr[ETH_ALEN];
- 	struct net_device *hsr_dev;
--
--	/* For sending */
- 	struct sk_buff *skb_out;
--	void *msg_head;
- 	struct hsr_priv *hsr;
--	void *pos;
--	unsigned char addr[ETH_ALEN];
-+	bool restart = false;
-+	struct nlattr *na;
-+	void *pos = NULL;
-+	void *msg_head;
- 	int res;
+--- a/net/ipv4/ip_gre.c
++++ b/net/ipv4/ip_gre.c
+@@ -1164,6 +1164,8 @@ static int erspan_netlink_parms(struct n
+ 	err = ipgre_netlink_parms(dev, data, tb, parms, fwmark);
+ 	if (err)
+ 		return err;
++	if (!data)
++		return 0;
  
- 	if (!info)
-@@ -387,8 +385,9 @@ static int hsr_get_node_list(struct sk_b
- 	if (!is_hsr_master(hsr_dev))
- 		goto rcu_unlock;
- 
-+restart:
- 	/* Send reply */
--	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
-+	skb_out = genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_ATOMIC);
- 	if (!skb_out) {
- 		res = -ENOMEM;
- 		goto fail;
-@@ -402,17 +401,28 @@ static int hsr_get_node_list(struct sk_b
- 		goto nla_put_failure;
- 	}
- 
--	res = nla_put_u32(skb_out, HSR_A_IFINDEX, hsr_dev->ifindex);
--	if (res < 0)
--		goto nla_put_failure;
-+	if (!restart) {
-+		res = nla_put_u32(skb_out, HSR_A_IFINDEX, hsr_dev->ifindex);
-+		if (res < 0)
-+			goto nla_put_failure;
-+	}
- 
- 	hsr = netdev_priv(hsr_dev);
- 
--	pos = hsr_get_next_node(hsr, NULL, addr);
-+	if (!pos)
-+		pos = hsr_get_next_node(hsr, NULL, addr);
- 	while (pos) {
- 		res = nla_put(skb_out, HSR_A_NODE_ADDR, ETH_ALEN, addr);
--		if (res < 0)
-+		if (res < 0) {
-+			if (res == -EMSGSIZE) {
-+				genlmsg_end(skb_out, msg_head);
-+				genlmsg_unicast(genl_info_net(info), skb_out,
-+						info->snd_portid);
-+				restart = true;
-+				goto restart;
-+			}
- 			goto nla_put_failure;
-+		}
- 		pos = hsr_get_next_node(hsr, pos, addr);
- 	}
- 	rcu_read_unlock();
-@@ -429,7 +439,7 @@ invalid:
- 	return 0;
- 
- nla_put_failure:
--	kfree_skb(skb_out);
-+	nlmsg_free(skb_out);
- 	/* Fall through */
- 
- fail:
+ 	if (data[IFLA_GRE_ERSPAN_VER]) {
+ 		t->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
 
 
