@@ -2,103 +2,98 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DBAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D70C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50AE920842
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="dXRKPE5N"
+	by mail.kernel.org (Postfix) with ESMTP id 1946920842
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbgCaWc0 (ORCPT
+        id S1731425AbgCaWeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:32:26 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:62014 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaWcZ (ORCPT
+        Tue, 31 Mar 2020 18:34:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33770 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaWeW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:32:25 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 9EB225E923;
-        Tue, 31 Mar 2020 18:32:23 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; s=sasl; bh=ij8E2mP4qn59
-        jj81vTeQK6B7GHM=; b=dXRKPE5N4m7oXAcItLUINV5/aqGBbNL9+oXl1FMODExK
-        j4cC6UHcXb9i2bFG2Sj19JpkR8aHIlskVH0wbLizueh/UA64CfMqz9tIqDyVIXZN
-        Hr2EHeGpohsN493+2FHsCl9lnoAhc5t9IH7YCeUuG6+ZvUhUF6T7d+PTR92jg1A=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; q=dns; s=sasl; b=ikshDs
-        vqIHah/bWJ1uWaMmIWWdFR8pcP3B3w20KKbAT8SH3CEdNn9T6xX5ZNW1+Q/Dndwm
-        x1WY/CAv5Z66KQeIJpGdYxSAdCBxqFur9tboO1FiGDVoX38mEJI1kIMNZOCoBSML
-        Hih51i3nhK/SX3fkHxvHMtxwhgxF4+qgTj/ps=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 955CA5E922;
-        Tue, 31 Mar 2020 18:32:23 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-Received: from [192.168.0.8] (unknown [76.183.130.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 64C775E921;
-        Tue, 31 Mar 2020 18:32:17 -0400 (EDT)
-        (envelope-from daniel.santos@pobox.com)
-Subject: Re: [PATCH] compiler.h: fix error in BUILD_BUG_ON() reporting
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Joe Perches <joe@perches.com>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ian Abbott <abbotti@mev.co.uk>
-References: <20200331112637.25047-1-vegard.nossum@oracle.com>
- <dc53b8704ec674cba636b41d7f55bf507a7bd7aa.camel@perches.com>
- <123d3606-cebf-4261-4b04-7d53d1fcdb07@prevas.dk>
-From:   Daniel Santos <daniel.santos@pobox.com>
-Message-ID: <7acde2e5-60dd-f384-fda7-1d018608f8e7@pobox.com>
-Date:   Tue, 31 Mar 2020 17:30:30 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 31 Mar 2020 18:34:22 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJPSQ-0000wr-Sx; Wed, 01 Apr 2020 00:34:07 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 5CA2F103A01; Wed,  1 Apr 2020 00:34:06 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        gregkh@linuxfoundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
+In-Reply-To: <20200331220006.GA37376@google.com>
+References: <20200331220006.GA37376@google.com>
+Date:   Wed, 01 Apr 2020 00:34:06 +0200
+Message-ID: <87ftdoupb5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <123d3606-cebf-4261-4b04-7d53d1fcdb07@prevas.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Pobox-Relay-ID: 7D88B43C-739F-11EA-BD69-C28CBED8090B-06139138!pb-smtp1.pobox.com
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/31/20 1:56 PM, Rasmus Villemoes wrote:
-> On 31/03/2020 20.20, Joe Perches wrote:
->> On Tue, 2020-03-31 at 13:26 +0200, Vegard Nossum wrote:
->>>  #define compiletime_assert(condition, msg) \
->>> -	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__=
-)
->>> +	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTE=
-R__)
->> This might be better using something like __LINE__ ## _ ## __COUNTER__
->>
->> as line # is somewhat useful to identify the specific assert in a file=
-.
->>
-> Eh, if the assert fires, doesn't the compiler's diagnostics already
-> contain all kinds of location information?
+Bjorn Helgaas <helgaas@kernel.org> writes:
+> On Tue, Mar 31, 2020 at 10:59:44AM -0700, Dave Jiang wrote:
+>> On 3/31/2020 9:03 AM, Bjorn Helgaas wrote:
+>> > On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
+>> > > Since the current accelerator devices do not have standard PCIe capability
+>> > > enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
+>> > > been added to struct pci_dev.  Currently a PCI quirk must be used for the
+>> > > devices that have such cap until the PCI cap is standardized. Add a helper
+>> > > function to provide the check if a device supports the cmdmem capability.
+>> > > 
+>> > > Such capability is expected to be added to PCIe device cap enumeration in
+>> > > the future.
+>> > This needs some sort of thumbnail description of what "synchronous
+>> > write notification" and "cmdmem" mean.
+>> 
+>> I will add more explanation.
+>> 
+>> > Do you have a pointer to a PCI-SIG ECR or similar?
+>> 
+>> Deferrable Memory Write (DMWr) ECR
+>> 
+>> https://members.pcisig.com/wg/PCI-SIG/document/13747
+>> 
+>> From what I'm told it should be available for public review by EOW.
 >
-> Rasmus
+> Please use terminology from the spec instead of things like
+> "synchronous write notification".
+>
+> AIUI, ENQCMDS is an x86 instruction.  That would have no meaning in
+> the PCIe domain.
+>
+> I'm not committing to acking any part of this before the ECR is
+> accepted, but if you're adding support for the feature described by
+> the ECR, you might as well add support for discovering the DMWr
+> capability via Device Capabilities 2 as described in the ECR.
 
-Yes, the diagnostic contains the file name and line in a far more useful
-format that every IDE knows how to read.=C2=A0 __LINE__ is only used for
-uniqueness and was chosen when __COUNTER__ (introduced in gcc 4.3) was
-still somewhat new.
+Don't worry. There is nothing to decide and ack before the basic
+architecture support for ENQCMD[S] is discussed and accepted. The
+patches providing this support have been posted 2 hrs before this pile
+hit the mailing lists yesterday.
 
-Daniel
+Thanks,
+
+        tglx
+
