@@ -2,123 +2,169 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5754FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3EFC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E57120787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E0420787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="BYPoPlZD"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YT3gFZs7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731522AbgCaXDz (ORCPT
+        id S1731538AbgCaXEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 19:03:55 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44202 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731362AbgCaXDy (ORCPT
+        Tue, 31 Mar 2020 19:04:44 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:50518 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731523AbgCaXEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 19:03:54 -0400
-Received: by mail-qk1-f196.google.com with SMTP id j4so25028138qkc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 16:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=6+Ad8chN8N6NC/ANcuSXXfqOAu/A2JYw1wt09IvHLHk=;
-        b=BYPoPlZDMsKi0FSqwT7J8j6e3ZsLsoLTc7e6bIfOvF8i9JfwL7ujted9TDYKSoyCEL
-         wss6qyMAAdamEMvjPT/2XG2iacb18LUIARFADHbjQeX9VksO5PqLSbZxbeT06uYN98YF
-         4BQopInUjf1ZuGBvv67W/pnS8xy0ztTGyLBWHG33iRK7T52eSeT0vLLjb4bHx9tz2K1J
-         qjaQDPDGP9cY7gIqyqz+kGRc8cwjYbjNXKXVcTnXfqmRAg7b9DPF6suxl4WF3fau28jE
-         MKGMYopKmx6oqV5ILGl6MO0TDuf9+ewPUKiOVbP6bhHhx5z4ZJtytn/nREN/UCOMjdRj
-         jZDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=6+Ad8chN8N6NC/ANcuSXXfqOAu/A2JYw1wt09IvHLHk=;
-        b=mNyWcPfujn8HD4JLBVOmvStDeMt5Z/QfjIObt+frG8h7idQpAKMsXeRTjRJG+qrV5y
-         5TCh32dKuIDQMrTPOhvShRrSv7Qu0mldUMz/HjokYEGBE1NeqofoeTw+LLX938lxs3aN
-         YsiO7BZCZIYLdxEwOg0simDnkpd37yylCW8XnW1o3YNJ4kkmdOCH57j6N8W4fUYD0DPn
-         mCLyNMyyrS0zvGBWYpsoc8haRKCp+xbrSnS7wLhli5uEWJVq+UPgfLDpH9BOEzYddzEi
-         4OQu+Q959ECB6QveEAPub6zO8DyX8dr4Qhxi4zV+rKNoClI/pUpJw6CJrPGDqWynsGOh
-         fR4w==
-X-Gm-Message-State: ANhLgQ2fq1l7W7RAuxwMc9gYiDj2+ZTDCqGCF59kPI+iIZSNFsfN8249
-        YZIOg/AGOU6Ubg75nET/gyB7MA==
-X-Google-Smtp-Source: ADFU+vvgq8KvtHWzopj9WKZIu9UuPfUEJEUwl8GnN31YdGOfnI2WhbAP2wY/viaa+nxTOMOBd1yfgw==
-X-Received: by 2002:ae9:dd85:: with SMTP id r127mr6295575qkf.58.1585695832139;
-        Tue, 31 Mar 2020 16:03:52 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id j39sm228345qtk.96.2020.03.31.16.03.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 16:03:51 -0700 (PDT)
-Message-ID: <6db0b1a2a521386613489443053a980621c48767.camel@massaru.org>
-Subject: Re: [PATCH 1/2] Documentation: filesystems: Convert sysfs-pci to
- ReST
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Tue, 31 Mar 2020 20:03:46 -0300
-In-Reply-To: <20200331165707.7c708646@lwn.net>
-References: <cover.1585693146.git.vitor@massaru.org>
-         <637c0379a76fcf4eb6cdde0de3cc727203fd942f.1585693146.git.vitor@massaru.org>
-         <20200331165707.7c708646@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Tue, 31 Mar 2020 19:04:43 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200331230441epoutp039f1fcb01ba27f2acf315d6d1c3efa513~BhgC_JSlp1116911169epoutp03e
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 23:04:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200331230441epoutp039f1fcb01ba27f2acf315d6d1c3efa513~BhgC_JSlp1116911169epoutp03e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585695881;
+        bh=I2qNvxYsnMhgjz7vv3e+IBnyt/mBwlreFpG3uPjXxFI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=YT3gFZs73Ei0sXOEhJBp6XX/cV/foyR51C2DQGPnsv31QfAxS8DcL8KAfRgDwR53x
+         8OrHL4KOvK7uOuQwtuvoC78qKXmcEWrLiKIrnOFBi/0b1RxFnliTi/Y7E4VLaJyoYp
+         4QxPhfO8mgFo4YnmpKHpBZWR+pdGPwgsgVt4BXA0=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200331230440epcas1p2b4e761025fa9cd7b8a83a80d86c8aaba~BhgCciaUZ2205822058epcas1p2f;
+        Tue, 31 Mar 2020 23:04:40 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 48sPzV49M9zMqYkb; Tue, 31 Mar
+        2020 23:04:38 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        64.69.04160.68CC38E5; Wed,  1 Apr 2020 08:04:38 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200331230437epcas1p4d802f63c12e014d47fe44715ae9c6a74~Bhf-gW0WF1803018030epcas1p48;
+        Tue, 31 Mar 2020 23:04:37 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200331230437epsmtrp217a52aefc4ff1f55d78be37b6be3b948~Bhf-fIJLN0841408414epsmtrp2h;
+        Tue, 31 Mar 2020 23:04:37 +0000 (GMT)
+X-AuditID: b6c32a38-297ff70000001040-be-5e83cc867058
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C2.35.04158.58CC38E5; Wed,  1 Apr 2020 08:04:37 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200331230437epsmtip11fa331ae70de6ac5bb330de4cd2f37a9~Bhf-NdAXK2139221392epsmtip1J;
+        Tue, 31 Mar 2020 23:04:37 +0000 (GMT)
+Subject: Re: [PATCH v1 1/5] PM / devfreq: tegra: Add Dmitry as a maintainer
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <db4883d4-18b7-238a-798b-ad45aad978fc@samsung.com>
+Date:   Wed, 1 Apr 2020 08:13:43 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
+In-Reply-To: <20200330231617.17079-2-digetx@gmail.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHJsWRmVeSWpSXmKPExsWy7bCmnm7bmeY4g43diharPz5mtGiZtYjF
+        4mzTG3aLjz33WC0u75rDZvG59wijReeXWWwWF0+5WtxuXMFm8e/aRhaLn7vmsThwe7y/0cru
+        sXPWXXaPTas62Tx6m9+xefRtWcXo8XmTXABbVLZNRmpiSmqRQmpecn5KZl66rZJ3cLxzvKmZ
+        gaGuoaWFuZJCXmJuqq2Si0+ArltmDtB5SgpliTmlQKGAxOJiJX07m6L80pJUhYz84hJbpdSC
+        lJwCywK94sTc4tK8dL3k/FwrQwMDI1OgwoTsjO6lK9kLfnNV7O/fzdzA2MfZxcjBISFgIvFu
+        v04XIxeHkMAORolHb9eyQjifGCVOXF3LBOF8Y5Q4u/ktWxcjJ1jHgnn3oKr2Mkosn/6VBcJ5
+        zyhxZFkXM0iVsIC3xK83P8ASIgKLmSReb57LApJgFiiR2D3xCBOIzSagJbH/xQ2wsfwCihJX
+        fzxmBLF5Bewk5h1aBDaIRUBF4ubLO2BxUYEwiZPbWqBqBCVOznwCNpNTwExiwoV+Joj54hK3
+        nsyHsuUltr+dwwxyhITAZHaJnffvskL84CKxrWECI4QtLPHq+BZ2CFtK4vO7vVB/VkusPHmE
+        DaK5g1Fiy/4LUM3GEvuXTmYCBR+zgKbE+l36EGFFiZ2/5zJCLOaTePe1hxUSwrwSHW1CECXK
+        Epcf3GWCsCUlFrd3sk1gVJqF5J1ZSF6YheSFWQjLFjCyrGIUSy0ozk1PLTYsMEGO7k2M4LSr
+        ZbGDcc85n0OMAhyMSjy8ClbNcUKsiWXFlbmHGCU4mJVEeNn8G+KEeFMSK6tSi/Lji0pzUosP
+        MZoCQ3sis5Rocj4wJ+SVxBuaGhkbG1uYGJqZGhoqifNOvZ4TJySQnliSmp2aWpBaBNPHxMEp
+        1cCoUnVwhl7YGb/TBrPfLvLy0Q0RnLU4KcLkXl6Nca/l3akqMvKdMvVHIr41HJAxf/hw5QyG
+        ZSwOcco/a+bmy0b8zZh58J6XNkesh+xN9w3T1dbfOsB/6vPBL5ervrnWB8x75Pzu4aqaqOMn
+        Z4uF/5R9KM5Xfuiss2dRdWez7dP3JccdPLbIfzJWYinOSDTUYi4qTgQAtLOlhNEDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSnG7rmeY4gzendS1Wf3zMaNEyaxGL
+        xdmmN+wWH3vusVpc3jWHzeJz7xFGi84vs9gsLp5ytbjduILN4t+1jSwWP3fNY3Hg9nh/o5Xd
+        Y+esu+wem1Z1snn0Nr9j8+jbsorR4/MmuQC2KC6blNSczLLUIn27BK6M7qUr2Qt+c1Xs79/N
+        3MDYx9nFyMkhIWAisWDePVYQW0hgN6PEj5OsEHFJiWkXjzJ3MXIA2cIShw8XdzFyAZW8ZZTY
+        vvsBO0iNsIC3xK83P1hAEiICS5kkVtz8ApZgFiiROPHsHytEx1ZGic0f14El2AS0JPa/uMEG
+        YvMLKEpc/fGYEcTmFbCTmHdoETOIzSKgInHz5R2wuKhAmMTOJY+ZIGoEJU7OfMICYnMKmElM
+        uNDPBLFMXeLPvEvMELa4xK0n86Hi8hLb385hnsAoPAtJ+ywkLbOQtMxC0rKAkWUVo2RqQXFu
+        em6xYYFRXmq5XnFibnFpXrpecn7uJkZw/Glp7WA8cSL+EKMAB6MSD6+iVXOcEGtiWXFl7iFG
+        CQ5mJRFeNv+GOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2CyTByc
+        Ug2Msyqmn/zotOZDnty80/z71T7UfF1UFuXFpZnCN9n95k0129eNzJeevWvRmujwbMH3/H3i
+        pd/068yF3hyx6Fh+7FT/vyTzY+cO5YrtTPBde2r17e1vFzN/vnnt8vyzch0em3ewecfcVJPP
+        9lih+W1zpd5aS/fQ03eOuKqEfTX78ruALfmiT5zuGiWW4oxEQy3mouJEAB/GwL27AgAA
+X-CMS-MailID: 20200331230437epcas1p4d802f63c12e014d47fe44715ae9c6a74
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200330232036epcas1p2cba89238a41fa0941d0abcaf2b457072
+References: <20200330231617.17079-1-digetx@gmail.com>
+        <CGME20200330232036epcas1p2cba89238a41fa0941d0abcaf2b457072@epcas1p2.samsung.com>
+        <20200330231617.17079-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-31 at 16:57 -0600, Jonathan Corbet wrote:
-> On Tue, 31 Mar 2020 19:28:56 -0300
-> Vitor Massaru Iha <vitor@massaru.org> wrote:
+On 3/31/20 8:16 AM, Dmitry Osipenko wrote:
+> I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
+> want to help keep them working and evolving in the future.
 > 
-> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> > ---
-> >  .../{sysfs-pci.txt => sysfs-pci.rst}          | 40 ++++++++++-----
-> > ----
-> >  1 file changed, 22 insertions(+), 18 deletions(-)
-> >  rename Documentation/filesystems/{sysfs-pci.txt => sysfs-pci.rst}
-> > (82%)
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  MAINTAINERS | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> Please supply a changelog with your patches.
-> 
-> The conversion you have done in this file is incomplete; I suspect
-> that
-> you have not actually built the docs and seen what the results look
-> like.
-> There are literal blocks that you have not marked as such, as a
-> minimum.
-> Please actually do a docs build (after adding this file to index.rst)
-> and
-> make sure that the output is what you intended.
-> 
-> One other thing of note...this file dates back to before the Git era,
-> and
-> while it has seen numerous tweaks since then, it's clearly
-> outdated.  Look
-> at what's actually under /sys/devices/pci* compared to what's
-> documented.
-> I will take the conversion without it, but what I would really like
-> to see
-> would be an effort to document all of the attributes that appear
-> there
-> with current kernels.
-> 
-> Thanks,
-> 
-> jon
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8b8abe756ae0..9e8b0779f6df 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10931,6 +10931,15 @@ F:	include/linux/memblock.h
+>  F:	mm/memblock.c
+>  F:	Documentation/core-api/boot-time-mm.rst
+>  
+> +MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
+> +M:	Dmitry Osipenko <digetx@gmail.com>
+> +L:	linux-pm@vger.kernel.org
+> +L:	linux-tegra@vger.kernel.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
 
-Thanks for the review, I will check your comments and correct themif that document is still needed.
+Need to update it as following:
+git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
 
-BR,
-Vitor
+> +S:	Maintained
+> +F:	drivers/devfreq/tegra20-devfreq.c
+> +F:	drivers/devfreq/tegra30-devfreq.c
+> +
+>  MEMORY MANAGEMENT
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  L:	linux-mm@kvack.org
+> 
 
+I already agreed it. To prevent the merge conflict of MAINTAINERS,
+better to be merged it to linux-pm.git maintainer. On next time,
+please add Rafael J. Wysocki to To list.
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
