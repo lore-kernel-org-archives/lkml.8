@@ -2,131 +2,240 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97692C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17E3C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6304F20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB46E207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gB69s7S5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tp4B9kbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbgCaUk6 (ORCPT
+        id S1730081AbgCaUqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:40:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38358 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbgCaUk6 (ORCPT
+        Tue, 31 Mar 2020 16:46:06 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52094 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbgCaUqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:40:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6tH+zODD2TY2pB32niBjLq/y3AZwAV0LHkQ0NlUifq8=; b=gB69s7S5OwB45mm/PZKHmhMo4W
-        kxWuFeo47HVg2/SumgcIlbH3J3gCLNoi5H4Qx+12uT8nhmrghvzzAndedpoANR8dX9VLYmdVQJXQL
-        T4SrmZqD1eX51M5gVjUg2Rn3SOs+EMkExA7k6KHVoOykgaoC57FnGbGoSDTirKCIokKLuy4mhfa/f
-        mpQcTkd9HjviMuNsQRF6BeyQMyipCkBnkrL6l9t8SZP09VbsX6UHaYlZhsdbmmn/DoW9LE90ubHtQ
-        Md7CBlwUYNfcH8bQT5YPVDtTYFamCDL1EmTkqcrxWmyFuQaU3Ta676Uqf8YANfMSDgKmNZ2adnf3G
-        0hKtcjDw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJNgo-0003iR-1h; Tue, 31 Mar 2020 20:40:50 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D918A98354A; Tue, 31 Mar 2020 22:40:47 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 22:40:47 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-Message-ID: <20200331204047.GF2452@worktop.programming.kicks-ass.net>
-References: <20200326113049.GD20696@hirez.programming.kicks-ass.net>
- <20200326135620.tlmof5fa7p5wct62@treble>
- <20200326154938.GO20713@hirez.programming.kicks-ass.net>
- <20200326195718.GD2452@worktop.programming.kicks-ass.net>
- <20200327010001.i3kebxb4um422ycb@treble>
- <20200330170200.GU20713@hirez.programming.kicks-ass.net>
- <20200330190205.k5ssixd5hpshpjjq@treble>
- <20200330200254.GV20713@hirez.programming.kicks-ass.net>
- <20200331111652.GH20760@hirez.programming.kicks-ass.net>
- <20200331202315.zialorhlxmml6ec7@treble>
+        Tue, 31 Mar 2020 16:46:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z7so1404480wmk.1;
+        Tue, 31 Mar 2020 13:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6pGGh8thrIa0GryZbGioyjh/cLiHar/6v6kxCJ7Zax4=;
+        b=tp4B9kbTY+DY7WRWdxUebMQhc5iVzxM/nBNMZdJZgSanztCKmkrLkwesVyyFXJD7Y2
+         QRzxoTzMgYD2E0zEL7mraezeBGqaQR9TAKQecOqu4rB0F5wf/FlyCLWdj9B8supSralv
+         HIYmcun11E3veBznvyUNEq2hDbj29Rzx0sUZANBXDWng+bdbCFdSWpylFyfKktq5oR5k
+         oa4ViAaGIVzyJA8aIlae5Fddo6vKhGxU3r8lNgIqqALYg2Sbcjh+lAQ9g12OGZCZQRMA
+         HlxyRCLyuw+8yvI4DlvAnOTTf4xPaGO2IQ9H+6q56AnNmSxQRAhTabkGMCCdr2w8LoHB
+         LG/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6pGGh8thrIa0GryZbGioyjh/cLiHar/6v6kxCJ7Zax4=;
+        b=AUMZpdxDgyJsdlzkR7RN9nCCng1xbepZ6KAG5AbdqGzfGwuc62oigAtddjKPdc/rlg
+         qdLqx2+kWpLDzufQAb8J9xAJGMhkZBiXepX7S9fm/bWyMvk+ephk68W2fNNHPEr15Zi/
+         zKfWuHpirlxTPmz+0euuxQ+D1hYqWM8t//AM8ayvsrLShz4fZ4h/lnbg2fvPQHrHIZQ0
+         M+fLSJnUe7nlChb2aOMdUBPFjCBIdPKiZ0k3TaCjY/857jd2AIhScMVGbiPM/Pg3W8fd
+         +GB7Yh1FJfVsZrGrPnM10YbLRbDmIoWtYis4MovWK6RBwj7Wch0QN/anrcLkvVxyl6Qu
+         uzDg==
+X-Gm-Message-State: AGi0PuaKfIpiG99ofzdQ+VjOthuWDI8wqMM61ErAu4CkK2ttxWtwuIpn
+        xUDAOuX+VLJQLaGj4x483F4=
+X-Google-Smtp-Source: APiQypLXxc5GJ5smoVD6fqviuHe2EI83IiRgBkix7kBU2greUpKrR2xVr1FFtcHilgljIJ2tD9hjvQ==
+X-Received: by 2002:a1c:a78a:: with SMTP id q132mr688282wme.107.1585687562586;
+        Tue, 31 Mar 2020 13:46:02 -0700 (PDT)
+Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
+        by smtp.gmail.com with ESMTPSA id x6sm5065715wmi.2.2020.03.31.13.46.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 13:46:00 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 22:45:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+Message-ID: <20200331204559.GB2954599@ulmo>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <20200330141436.GG2431644@ulmo>
+ <20200330191654.waoocllctanh5nk5@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
 Content-Disposition: inline
-In-Reply-To: <20200331202315.zialorhlxmml6ec7@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330191654.waoocllctanh5nk5@pengutronix.de>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 03:23:15PM -0500, Josh Poimboeuf wrote:
-> On Tue, Mar 31, 2020 at 01:16:52PM +0200, Peter Zijlstra wrote:
-> > Subject: objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-> > 
-> > This replaces the SAVE/RESTORE hints with a RET_OFFSET hint that applies
-> > to the following instructions:
-> > 
-> >  - any instruction that terminates a function, like: RETURN and sibling
-> >    calls. It allows the stack-frame to be off by @sp_offset, ie. it
-> >    allows stuffing the return stack.
-> > 
-> >  - EXCEPTION_RETURN (a new INSN_type that splits IRET out of
-> >    CONTEXT_SWITCH) and here it denotes a @sp_offset sized POP and makes
-> >    the instruction continue.
-> 
-> Looking closer, I see how my UNWIND_HINT_ADJUST idea doesn't work for
-> the ftrace_regs_caller() case.  The ORC data is actually correct there.
-> So basically we need a way to tell objtool to be quiet.
 
-Right.
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I now understand what you're trying to do with the RET_TAIL thing, and I
-> guess it's ok for the ftrace case.  But I'd rather an UNWIND_HINT_IGNORE
-> before the tail cail, which would tell objtool to just silence the tail
-> call warning.  It's simpler for the user to understand, it's simpler
-> logic in objtool, and I think an "ignore warnings for the next insn"
-> hint would be more generally applicable anyway.
+On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Thierry,
+>=20
+> On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
+> > On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
+> > > > Only the Timer control register(TCLR) cannot be updated when the ti=
+mer
+> > > > is running. Registers like Counter register(TCRR), loader register(=
+TLDR),
+> > > > match register(TMAR) can be updated when the counter is running. Si=
+nce
+> > > > TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+> > > > timer for period/duty_cycle update.
+> > >=20
+> > > I'm not sure what is sensible here. Stopping the PWM for a short peri=
+od
+> > > is bad, but maybe emitting a wrong period isn't better. You can howev=
+er
+> > > optimise it if only one of period or duty_cycle changes.
+> > >=20
+> > > @Thierry, what is your position here? I tend to say a short stop is
+> > > preferable.
+> >=20
+> > It's not clear to me from the above description how exactly the device
+> > behaves, but I suspect that it may latch the values in those registers
+> > and only update the actual signal output once a period has finished. I
+> > know of a couple of other devices that do that, so it wouldn't be
+> > surprising.
+> >=20
+> > Even if that was not the case, I think this is just the kind of thing
+> > that we have to live with. Sometimes it just isn't possible to have all
+> > supported devices adhere strictly to an API. So I think the best we can
+> > do is have an API that loosely defines what's supposed to happen and
+> > make a best effort to implement those semantics. If a device deviates
+> > slightly from those expectations, we can always cross fingers and hope
+> > that things still work. And it looks like they are.
+> >=20
+> > So I think if Lokesh and Tony agree that this is the right thing to do
+> > and have verified that things still work after this, that's about as
+> > good as it's going to get.
+>=20
+> I'd say this isn't for the platform people to decide. My position here
+> is that the PWM drivers should behave as uniform as possible to minimize
+> surprises for consumers. And so it's a "PWM decision" that is to be made
+> here, not an "omap decision".
 
-I like how this is specific on how far the stack can be off, as opposed
-so say 'ignore any warning on this instruction'.
+I think there's a fine line to be walked here. I agree that we should
+aim to have as much consistency between drivers as possible. At the same
+time I think we need to be pragmatic. As Lokesh said, the particular use
+case here requires this type of on-the-fly adjustment of the PWM period
+without stopping and restarting the PWM. It doesn't work otherwise. So
+th alternative that you're proposing is to say that we don't support
+that use-case, even though it works just fine given this particular
+hardware. That's not really an option.
 
-Because by saying this RET should be +8, we'll still get a warning when
-this is not the case (and in fact I should strengthen the patch to
-implement that).
+> > I know this is perhaps cheating a little, or turning a blind eye, but I
+> > don't know what the alternative would be. Do we want to tell people that
+> > a given PWM controller can't be used if it doesn't work according to our
+> > expectations? That's hard to argue if that controller works just fine
+> > for all known use-cases.
+>=20
+> I'd like have some official policy here which of the alternatives is the
+> preferred cheat.
+>=20
+> The situation here is that period and duty_cycle cannot be updated
+> atomically. So the two options are:
+>=20
+>  - stop shortly
+>  - update with hardware running and maybe emit a broken period
 
-Also, you don't want to suppress any other valid warning at that
-instruction.
+I think we can already support both of those with the existing API. If
+a consumer wants to stop the PWM while reconfiguring, they should be
+able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
+equivalent) and for the second case they can just do pwm_config() (or
+the atomic equivalent).
 
-Furthermore, I really don't think we ought to worry about ease-of-use
-here, there's really not that many people writing x86 assembly.
+Some hardware may actually require the PWM to be disabled before
+reconfiguring, so they won't be able to strictly adhere to the second
+use-case.
 
-> But also... the RET_OFFSET usage for sync_core() *really* bugs me.
+But as discussed above, I don't want to strive for a lowest common
+denominator that would preclude some more specific use-cases from
+working if the hardware supports it.
 
-Fair enough.
+So I think we should aim for drivers to implement the semantics as
+closely as possible. If the hardware doesn't support some of these
+requirements strictly while a particular use-case depends on that, then
+that just means that the hardware isn't compatible with that use-case.
+Chances are that the system just isn't going to be designed to support
+that use-case in the first place if the hardware can't do it.
 
-> I know you said it's like an indirect tail call with a bigger frame, but
-> that's kind of stretching it because the function frame is still there.
-> 
-> And objtool doesn't treat it like a tail call at all.  In fact, it
-> handles it *completely* differently from the normal ret-tail-call case.
-> Instead of silencing a tail call warning, it adjusts the stack offset
-> and continues the code path.
-> 
-> This basically adds *two* new hint types, while trying to call them the
-> same thing.  There's no overlapping functionality between them in
-> objtool, other than the use of the same insn->ret_offset variable.  But
-> it's two distinct functionalities, depending on the context (return/tail
-> vs IRETQ).
+The sysfs interface is a bit of a special case here because it isn't
+possible to know what use-cases people are going to come up with. It's
+most likely that they'll try something and if it doesn't work they can
+see if a driver patch can improve things. If not, perhaps the hardware
+just isn't up to the task and that'll be the end of it.
 
-I'm not against adding a second/separate hint for this. In fact, I
-almost considered teaching objtool how to interpret the whole IRET frame
-so that we can do it without hints. It's just that that's too much code
-for this one case.
+I haven't yet come across a case where things actually fail because we
+are too flexible in what the API permits, so I don't see a need to add
+arbitrary restrictions.
 
-HINT_IRET_SELF ?
+> I tend to say "stop shortly" is the better alternative.
+
+That's clearly subjective. In this particular case it's certainly not
+the case. If the API had that assumption baked in there'd be no way to
+support this use-case, even though hardware evidently supports it.
+
+So I certainly think that there are areas where we need to find common
+ground for abstraction, but I think being overly restrictive can make an
+API completely useless.
+
+One possible extension that I can imagine would be to introduce some
+sort of capability structure that drivers can fill in to describe the
+behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
+could describe that they are able to change the period and/or duty cycle
+while the PWM is on. There could be another capability bit that says
+that the current period will finish before new settings are applied. Yet
+another capability could describe that duty-cycle and period can be
+applied atomically. Consumers could then check those capabilities to see
+if they match their requirements.
+
+But then again, I think that would just make things overly complicated.
+None of the existing consumers need that, so it doesn't seem like there
+is much demand for that feature. In practice I suspect most consumers
+work fine despite potentially small deviations in how the PWM behaves.
+
+Thierry
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DrAUACgkQ3SOs138+
+s6HeQQ/+NgM/YuaCE72oyuDDrK2bui7Ix20v0pnyIjTlTiNMrI1ExZcTqB7AbiBu
+UILX8+0IWjMHZrvB0l7QHQcOeTIyOCVhzSkRSsiPskbXEb+zg+hOuXvSwR483/bI
+UcIowFSxFAF+cGoGgGtl+PbrCUNwiD4h9NONzX9NiLAzsxpwDQuMrTlje1JcWlhu
++rOco2QZLGCfiakzxim/sovv1ALF5G2aAYK9bTkrjnY05Ko98/EjMG4vrMHj5Olc
+Gj3kKB4Z16hhq44igzLjq3afLAb4JuV8vZQ0aamh0Ob6jvQ8NuDw/b+mAuTbmCZY
+qUVAud5gJHCABecxfFav5WXSSF8sKPlh5vpAJvYQ5o/I/s5QNOSpLPdhUSuHOsbE
+6cfCWNXXwRDR5xTKlRqEw/pA56ttGlqjPfLvx/nKW99cQKoKY5IjznefWXhqnnXd
+Ev6vTfRgtXphJQLcW1EPfAmG1ZOWtUaUlAgn1tGYsQFJRjjAZqyAnKC0JDAye8TJ
+ujAS2pDhMQpSn9m62NNW5+kb4+7Yyxdc82NbBgCqBiJFwbB/bV5quk3VepwVfOje
+pGJsxHBiSv0JseKwZldEXSjVeeeE8QANAMnWzGIkYniWxd16WfXOPMjBQzqAKXUO
+mitq6V6Ax52gh/k5qHuxHmeRrc2Qji6oOfNNeeyjEcBHeCJAoug=
+=byzS
+-----END PGP SIGNATURE-----
+
+--3uo+9/B/ebqu+fSQ--
