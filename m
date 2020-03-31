@@ -2,107 +2,94 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4369C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8995DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CAA2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 591FE2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjyKoAHI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDM3v2vU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730909AbgCaNmN (ORCPT
+        id S1730928AbgCaNmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:42:13 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41549 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730216AbgCaNmN (ORCPT
+        Tue, 31 Mar 2020 09:42:46 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43948 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730216AbgCaNmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:42:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h9so25983173wrc.8;
-        Tue, 31 Mar 2020 06:42:11 -0700 (PDT)
+        Tue, 31 Mar 2020 09:42:46 -0400
+Received: by mail-lf1-f66.google.com with SMTP id n20so17312816lfl.10;
+        Tue, 31 Mar 2020 06:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h9LY2iXv/ppo2lNiZE8mQF/9TzGJ001hikG+hgYnB/Q=;
-        b=IjyKoAHI3n070pNL8QaDaq5+WNNQSQrpMbrQsHn3KBHh3pPnrmKQJ3HTYGXbKzdx/2
-         e3Hh1wzCZZuqnjGl91FW+buR56Oj9S0Vpk/O3XF3QaJvlRLDPRz+5yqLDj+t/vc7JNke
-         DCBc+2J35R6xohZ2eSASq6+n1h6ZOxC7MmNp7SxYUrwqZTB1R8UKo7bGnnjDFYutylPv
-         h5hH4ZLKLycGmjtOm2RmKSJ9bJyuarCbIeOeWm4qlMvgIU9n1c1Lq1rNKdTemCVEfBy2
-         EdkB+aKpz3yO33Rk80J01zCyhQ4VVariqI9x11dl4cp5s9NYBLfF+qVuFa9chVmAHQYp
-         RUEA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g+oOx8oe1EcOiEsQwOx41lZlMI2tyT5SQXJ7reK/MjM=;
+        b=oDM3v2vUvoB+zQ1qxrk49Rs6ZBg+nafBMNk2MMzG+O8CPZW0Hudl4k6TwLZW4EMtJQ
+         fLBL0OIBYoNagGt804nTK8OZRHQcGD9TkcD/23CfxQu/IVD+Z8JAEon21F8t1lvztDi9
+         Tz5F28Tp5Nb3drKK+NDJO4zfpF1LnPGT54tgPPtUquRxFbqVF3sityDiMimZ94LN5H4m
+         9E30zffqveXsn+CfPYHHzZVgdTvf71weNFZ1d3R85/ri4X85LHdLh1JeCSY+++udvlls
+         sKV1dgy8Tmy1IXx/3uurUncdjaJy+dkQBEYwfdDl7J2IpK1ctInx9/6BCAFJfyhgcD0E
+         i0cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h9LY2iXv/ppo2lNiZE8mQF/9TzGJ001hikG+hgYnB/Q=;
-        b=NrHzxtoZ0z7owef1fSA151xxlPdXjC8oCPGnM4Rw1OI4wmBKVYEQiSG1CJCR/eGotM
-         H/tVmcNzQjhGaomcpQxzyP94AyzaK4aLhh9Jta2XaNnipPafWDY3USy6yRcHlP8X1fgt
-         MMBd9sLPqGiHWP5MRoOzb9eUsnGGq4yy9HQyrbyDHeSUCnsgpht9o/JX80n1kLpD2vGk
-         R80s+36WK+HxOPNV9KYJBBRrwQPgCO6Z2pR/aGxxyYqq/vl2vIA8mrIil9/kuDSQ54by
-         v+vWVOCZE8W75mP7we5D3X6hlCDDaOz8lZlFAVTXsZFpVlvAY+v9+338LE6qbBtstzua
-         pSKQ==
-X-Gm-Message-State: ANhLgQ1f2vNEqHIYORSQ58oRS8U+qGe8uB0VUTJ9vhjnA4B/RSssj7C5
-        YD+I1MKJEsNM4cLae2FxP80=
-X-Google-Smtp-Source: ADFU+vsR2NgjHwweFOJpS9UKtPUxE8zgC3Ubn8W4w1wkp/+qlKfzgNC9l2mHPMeDcupwzdMJCApZrQ==
-X-Received: by 2002:adf:9384:: with SMTP id 4mr20327790wrp.214.1585662131336;
-        Tue, 31 Mar 2020 06:42:11 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id m11sm3907455wmf.9.2020.03.31.06.42.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 06:42:09 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 13:42:08 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200331134208.gfkyym6n3gpgk3x3@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-1-richard.weiyang@gmail.com>
- <20200330123643.17120-6-richard.weiyang@gmail.com>
- <20200330124842.GY22483@bombadil.infradead.org>
- <20200330141558.soeqhstone2liqud@master>
- <20200330142821.GD22483@bombadil.infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g+oOx8oe1EcOiEsQwOx41lZlMI2tyT5SQXJ7reK/MjM=;
+        b=tLJWzIzn0OT1fy/Zr0ueAlW7ElOFdZjI18FZsI4XwVB4X9Bx2cX2eriRwxzBkPGoYV
+         098142kSvrci7raBZZTnj8RroXaWTaNQ+nJeWYt60I1BBPe7q+nu94V3qtOruFWWgST6
+         JiAJeOcawYkAwlwz95xD0ToyLbs3i7576nn0KkEPdYuaXRCwPosyNHcymVBA+IjRSEGr
+         hxDtz4wTTgnaURxxEmqeB6/r6TMByzhvGapFOEIBcKF3Gui/hdGA9IcLn0aI1exzgUgw
+         MUihpWiwOz+ulsmK9UEZ0AB981DnjiaoSZkbYHf8jzzBfDy+Blu0Hr2nCkxMX7DF0QeY
+         ixGQ==
+X-Gm-Message-State: AGi0PuYjAXBve7kK8MafkdzIY9hdsc/TwRNkdUb+xHjWBE+3ZVtYcMWO
+        7d2KHDNIbCRI19I2WMVynKGbhhxf+maBug/iYkE=
+X-Google-Smtp-Source: APiQypL+H+6Kyrx6/X3/WVdrnJz8eQS2wW8bf4HVX9M6MsjMu5LPvIiOLF5pjFJDq/yzciCsM+hUGrhPSZOPEEObj1A=
+X-Received: by 2002:ac2:4c3b:: with SMTP id u27mr11614521lfq.7.1585662163062;
+ Tue, 31 Mar 2020 06:42:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330142821.GD22483@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20200313110350.10864-1-robert.foss@linaro.org>
+ <20200313110350.10864-3-robert.foss@linaro.org> <CAOMZO5D9bmXt9_qGTXw+qUG6JDHfuNtx++fJPJtn+mj1Dzsbag@mail.gmail.com>
+ <CAG3jFystdBKnosNQ0LeWQfHEtMgU4iGSr_XuS2XU3-902c31nQ@mail.gmail.com>
+In-Reply-To: <CAG3jFystdBKnosNQ0LeWQfHEtMgU4iGSr_XuS2XU3-902c31nQ@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 31 Mar 2020 10:42:33 -0300
+Message-ID: <CAOMZO5DHBCJbfS2Lt7R-3J_TUJi1is2Xn6n5iZkRwvmn5i6Dmg@mail.gmail.com>
+Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:28:21AM -0700, Matthew Wilcox wrote:
->On Mon, Mar 30, 2020 at 02:15:58PM +0000, Wei Yang wrote:
->> On Mon, Mar 30, 2020 at 05:48:42AM -0700, Matthew Wilcox wrote:
->> >On Mon, Mar 30, 2020 at 12:36:39PM +0000, Wei Yang wrote:
->> >> If an entry is at the last level, whose parent's shift is 0, it is not
->> >> expected to be a node. We can just leverage the xa_is_node() check to
->> >> break the loop instead of check shift additionally.
->> >
->> >I know you didn't run the test suite after making this change.
->> 
->> I did kernel build test, but not the test suite as you mentioned.
->> 
->> Would you mind sharing some steps on using the test suite? And which case you
->> think would trigger the problem?
->
->cd tools/testing/radix-tree/; make; ./main
->
+Hi Robert,
 
-Hmm... I did a make on top of 5.6-rc6, it failed. Would you mind taking a look
-into this?
+On Tue, Mar 31, 2020 at 10:37 AM Robert Foss <robert.foss@linaro.org> wrote:
 
->The IDR tests are the ones which are going to trigger on this.
+> After testing this change, it breaks the driver during probing.
 
--- 
-Wei Yang
-Help you, Help me
+Why exactly does it break probing? Maybe the GPIO polarity defined in
+the device tree is wrong?
+
+> I had a quick look into GPIOD_OUT_HIGH & LOW definitions, and they
+> seem to never be 0 or 1.
+
+If you do a grep in all gpiod_set_value_cansleep() usages in the
+kernel tree, there is not a single case where  GPIOD_OUT_HIGH or
+GPIOD_OUT_LOW is passed as argument of gpiod_set_value_cansleep().
