@@ -2,312 +2,138 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7962C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28F8C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A004E206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A76206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:46:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5/hhm6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgCaBqj (ORCPT
+        id S1729618AbgCaBq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 21:46:39 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12655 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729035AbgCaBqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 21:46:39 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0A0148431BC035CFBB7C;
-        Tue, 31 Mar 2020 09:46:36 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 31 Mar
- 2020 09:46:31 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix long latency due to discard during
- umount
-To:     Sahitya Tummala <stummala@codeaurora.org>
-CC:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
- <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
- <20200326133700.GR20234@codeaurora.org>
- <2b0d8d4c-a981-4edc-d8ca-fe199a63ea79@huawei.com>
- <20200327030542.GS20234@codeaurora.org>
- <20200330065335.GT20234@codeaurora.org>
- <9adc5c7e-7936-bac7-58b1-50631f8ac5eb@huawei.com>
- <5ec3b2e1-162c-e62d-1834-100c8ae39ff7@huawei.com>
- <20200330105122.GV20234@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <d65e7548-205d-ef28-e9fc-041ae1571cfd@huawei.com>
-Date:   Tue, 31 Mar 2020 09:46:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 30 Mar 2020 21:46:57 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40900 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729557AbgCaBq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 21:46:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585619215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Uo+1bM5jLbPf26TN6zEnjUeeLZzs+2jX0NNWi8ZBweA=;
+        b=U5/hhm6+07Um63PyTZohHQEwa5e+Y1Z1SMnDGFVfS/i+5cyQSaEEOWJG/ItRcoS83lWcml
+        s2XXT2bB4iW3Juqr7JJWhDpRvwfMzcRczmv4ZXKAfcErp5KdqXO1k88ykUmBxQOGgIATqv
+        rFAwRz+2xTPV3w8athFRcqE9Z44/WW0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-219-ByELsUk1MmGYaIeZ40WgHg-1; Mon, 30 Mar 2020 21:46:50 -0400
+X-MC-Unique: ByELsUk1MmGYaIeZ40WgHg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C48291005509;
+        Tue, 31 Mar 2020 01:46:46 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-247.pek2.redhat.com [10.72.12.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 20332100EBB3;
+        Tue, 31 Mar 2020 01:46:36 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 09:46:32 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Kairui Song <kasong@redhat.com>, anthony.yznaga@oracle.com,
+        Jan Setje-Eilers <jan.setjeeilers@oracle.com>,
+        Alexander Graf <graf@amazon.com>,
+        iommu@lists.linux-foundation.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dwmw@amazon.com,
+        benh@amazon.com, Jan Kiszka <jan.kiszka@siemens.com>,
+        alcioa@amazon.com, aggh@amazon.com, aagch@amazon.com,
+        dhr@amazon.com, Laszlo Ersek <lersek@redhat.com>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        brijesh.singh@amd.com,
+        "Lendacky, Thomas" <thomas.lendacky@amd.com>,
+        kexec@lists.infradead.org
+Subject: Re: [PATCH] swiotlb: Allow swiotlb to live at pre-defined address
+Message-ID: <20200331014632.GA81569@dhcp-128-65.nay.redhat.com>
+References: <20200326162922.27085-1-graf@amazon.com>
+ <20200328115733.GA67084@dhcp-128-65.nay.redhat.com>
+ <CACPcB9d_Pz9SRhSsRzqygRR6waV7r8MnGcCP952svnZtpFaxnQ@mail.gmail.com>
+ <20200330134004.GA31026@char.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200330105122.GV20234@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330134004.GA31026@char.us.oracle.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sahitya,
+On 03/30/20 at 09:40am, Konrad Rzeszutek Wilk wrote:
+> On Mon, Mar 30, 2020 at 02:06:01PM +0800, Kairui Song wrote:
+> > On Sat, Mar 28, 2020 at 7:57 PM Dave Young <dyoung@redhat.com> wrote:
+> > >
+> > > On 03/26/20 at 05:29pm, Alexander Graf wrote:
+> > > > The swiotlb is a very convenient fallback mechanism for bounce buffering of
+> > > > DMAable data. It is usually used for the compatibility case where devices
+> > > > can only DMA to a "low region".
+> > > >
+> > > > However, in some scenarios this "low region" may be bound even more
+> > > > heavily. For example, there are embedded system where only an SRAM region
+> > > > is shared between device and CPU. There are also heterogeneous computing
+> > > > scenarios where only a subset of RAM is cache coherent between the
+> > > > components of the system. There are partitioning hypervisors, where
+> > > > a "control VM" that implements device emulation has limited view into a
+> > > > partition's memory for DMA capabilities due to safety concerns.
+> > > >
+> > > > This patch adds a command line driven mechanism to move all DMA memory into
+> > > > a predefined shared memory region which may or may not be part of the
+> > > > physical address layout of the Operating System.
+> > > >
+> > > > Ideally, the typical path to set this configuration would be through Device
+> > > > Tree or ACPI, but neither of the two mechanisms is standardized yet. Also,
+> > > > in the x86 MicroVM use case, we have neither ACPI nor Device Tree, but
+> > > > instead configure the system purely through kernel command line options.
+> > > >
+> > > > I'm sure other people will find the functionality useful going forward
+> > > > though and extend it to be triggered by DT/ACPI in the future.
+> > >
+> > > Hmm, we have a use case for kdump, this maybe useful.  For example
+> > > swiotlb is enabled by default if AMD SME/SEV is active, and in kdump
+> > > kernel we have to increase the crashkernel reserved size for the extra
+> > > swiotlb requirement.  I wonder if we can just reuse the old kernel's
+> > > swiotlb region and pass the addr to kdump kernel.
+> > >
+> > 
+> > Yes, definitely helpful for kdump kernel. This can help reduce the
+> > crashkernel value.
+> > 
+> > Previously I was thinking about something similar, play around the
+> > e820 entry passed to kdump and let it place swiotlb in wanted region.
+> > Simply remap it like in this patch looks much cleaner.
+> > 
+> > If this patch is acceptable, one more patch is needed to expose the
+> > swiotlb in iomem, so kexec-tools can pass the right kernel cmdline to
+> > second kernel.
+> 
+> We seem to be passsing a lot of data to kexec.. Perhaps something
+> of a unified way since we seem to have a lot of things to pass - disabling
+> IOMMU, ACPI RSDT address, and then this.
 
-On 2020/3/30 18:51, Sahitya Tummala wrote:
-> Hi Chao,
-> 
-> On Mon, Mar 30, 2020 at 06:16:40PM +0800, Chao Yu wrote:
->> On 2020/3/30 16:38, Chao Yu wrote:
->>> Hi Sahitya,
->>>
->>> Bad news, :( I guess we didn't catch the root cause, as after applying v3,
->>> I still can reproduce this issue:
->>>
->>> generic/003 10s ...  30s
->>
->> I use zram as backend device of fstest,
->>
->> Call Trace:
->>  dump_stack+0x66/0x8b
->>  f2fs_submit_discard_endio+0x88/0xa0 [f2fs]
->>  generic_make_request_checks+0x70/0x5f0
->>  generic_make_request+0x3e/0x2e0
->>  submit_bio+0x72/0x140
->>  __submit_discard_cmd.isra.50+0x4a8/0x710 [f2fs]
->>  __issue_discard_cmd+0x171/0x3a0 [f2fs]
->>
->> Does this mean zram uses single queue, so we may always fail to submit 'nowait'
->> IO due to below condition:
->>
->> 	/*
->> 	 * Non-mq queues do not honor REQ_NOWAIT, so complete a bio
->> 	 * with BLK_STS_AGAIN status in order to catch -EAGAIN and
->> 	 * to give a chance to the caller to repeat request gracefully.
->> 	 */
->> 	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q)) {
->> 		status = BLK_STS_AGAIN;
->> 		goto end_io;
->> 	}
->>
-> 
-> Yes, I have also just figured out that as the reason. But most of the real block
-> devic drivers support MQ. Can we thus fix this case by checking for MQ status
-> before enabling REQ_NOWAIT as below? Please share your comments.
-> 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index cda7935..e7e2ffe 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -1131,7 +1131,9 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> 
->         flag = dpolicy->sync ? REQ_SYNC : 0;
-> -       flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
-> +
-> +       if (sbi->sb->s_bdev->bd_queue && queue_is_mq(sbi->sb->s_bdev->bd_queue))
-> +               flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+acpi_rsdp kernel cmdline is not useful anymore.  The initial purpose is
+for kexec-rebooting in efi system.  But now we have supported efi boot
+across kexec reboot thus that is useless now.
 
-IMO, it's too tight to couple with block layer logic? however, I don't have
-any better idea about the solution.
+Thanks
+Dave
 
-Anyway, I guess we can Cc to Jan and block mailing list for comments to see
-whether there is a better solution.
-
-Thoughts?
-
-Thanks,
-
-> 
->         if (dc->state != D_PREP)
->                 return 0;
-> 
-> Thanks,
-> 
->>
->>
->>>
->>> Thanks,
->>>
->>> On 2020/3/30 14:53, Sahitya Tummala wrote:
->>>> Hi Chao,
->>>>
->>>> On Fri, Mar 27, 2020 at 08:35:42AM +0530, Sahitya Tummala wrote:
->>>>> On Fri, Mar 27, 2020 at 09:51:43AM +0800, Chao Yu wrote:
->>>>>>
->>>>>> With this patch, most of xfstest cases cost 5 * n second longer than before.
->>>>>>
->>>>>> E.g. generic/003, during umount(), we looped into retrying one bio
->>>>>> submission.
->>>>>>
->>>>>> [61279.829724] F2FS-fs (zram1): Found nat_bits in checkpoint
->>>>>> [61279.885337] F2FS-fs (zram1): Mounted with checkpoint version = 5cf3cb8e
->>>>>> [61281.912832] submit discard bio start [23555,1]
->>>>>> [61281.912835] f2fs_submit_discard_endio [23555,1] err:-11
->>>>>> [61281.912836] submit discard bio end [23555,1]
->>>>>> [61281.912836] move dc to retry list [23555,1]
->>>>>>
->>>>>> ...
->>>>>>
->>>>>> [61286.881212] submit discard bio start [23555,1]
->>>>>> [61286.881217] f2fs_submit_discard_endio [23555,1] err:-11
->>>>>> [61286.881223] submit discard bio end [23555,1]
->>>>>> [61286.881224] move dc to retry list [23555,1]
->>>>>> [61286.905198] submit discard bio start [23555,1]
->>>>>> [61286.905203] f2fs_submit_discard_endio [23555,1] err:-11
->>>>>> [61286.905205] submit discard bio end [23555,1]
->>>>>> [61286.905206] move dc to retry list [23555,1]
->>>>>> [61286.929157] F2FS-fs (zram1): Issue discard(23555, 23555, 1) failed, ret: -11
->>>>>>
->>>>>> Could you take a look at this issue?
->>>>>
->>>>> Let me check and get back on this.
->>>>
->>>> I found the issue. The dc with multiple bios is getting requeued again and
->>>> again in case if one of its bio gets -EAGAIN error. Even the successfully
->>>> completed bios are getting requeued again resulting into long latency.
->>>> I have fixed it by splitting the dc in such case so that we can requeue only
->>>> the leftover bios into a new dc and retry that later within the 5 sec timeout.
->>>>
->>>> Please help to review v3 posted and if it looks good, I would like to request
->>>> you to test the earlier regression scenario with it to check the result again?
->>>>
->>>> thanks,
->>>>
->>>>>
->>>>> Thanks,
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>> Thanks,
->>>>>>>
->>>>>>>> Thanks,
->>>>>>>>
->>>>>>>>> +				break;
->>>>>>>>> +			}
->>>>>>>>> +		}
->>>>>>>>>  
->>>>>>>>>  		atomic_inc(&dcc->issued_discard);
->>>>>>>>>  
->>>>>>>>> @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
->>>>>>>>>  	return issued;
->>>>>>>>>  }
->>>>>>>>>  
->>>>>>>>> +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
->>>>>>> s> > +		struct discard_policy *dpolicy)
->>>>>>>>> +{
->>>>>>>>> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
->>>>>>>>> +	struct discard_cmd *dc, *tmp;
->>>>>>>>> +	bool retry = false;
->>>>>>>>> +	unsigned long flags;
->>>>>>>>> +
->>>>>>>>> +	if (dpolicy->type != DPOLICY_UMOUNT)
->>>>>>>>> +		f2fs_bug_on(sbi, 1);
->>>>>>>>> +
->>>>>>>>> +	mutex_lock(&dcc->cmd_lock);
->>>>>>>>> +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
->>>>>>>>> +		if (dpolicy->timeout != 0 &&
->>>>>>>>> +			f2fs_time_over(sbi, dpolicy->timeout)) {
->>>>>>>>> +			retry = false;
->>>>>>>>> +			break;
->>>>>>>>> +		}
->>>>>>>>> +
->>>>>>>>> +		spin_lock_irqsave(&dc->lock, flags);
->>>>>>>>> +		if (!dc->bio_ref) {
->>>>>>>>> +			dc->state = D_PREP;
->>>>>>>>> +			dc->error = 0;
->>>>>>>>> +			reinit_completion(&dc->wait);
->>>>>>>>> +			__relocate_discard_cmd(dcc, dc);
->>>>>>>>> +			retry = true;
->>>>>>>>> +		}
->>>>>>>>> +		spin_unlock_irqrestore(&dc->lock, flags);
->>>>>>>>> +	}
->>>>>>>>> +	mutex_unlock(&dcc->cmd_lock);
->>>>>>>>> +
->>>>>>>>> +	return retry;
->>>>>>>>> +}
->>>>>>>>> +
->>>>>>>>>  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>>>  					struct discard_policy *dpolicy)
->>>>>>>>>  {
->>>>>>>>> @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>>>  	struct list_head *pend_list;
->>>>>>>>>  	struct discard_cmd *dc, *tmp;
->>>>>>>>>  	struct blk_plug plug;
->>>>>>>>> -	int i, issued = 0;
->>>>>>>>> +	int i, err, issued = 0;
->>>>>>>>>  	bool io_interrupted = false;
->>>>>>>>>  
->>>>>>>>>  	if (dpolicy->timeout != 0)
->>>>>>>>>  		f2fs_update_time(sbi, dpolicy->timeout);
->>>>>>>>>  
->>>>>>>>> +retry:
->>>>>>>>>  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
->>>>>>>>>  		if (dpolicy->timeout != 0 &&
->>>>>>>>>  				f2fs_time_over(sbi, dpolicy->timeout))
->>>>>>>>> @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>>>  				break;
->>>>>>>>>  			}
->>>>>>>>>  
->>>>>>>>> -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
->>>>>>>>> +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
->>>>>>>>> +			if (err == -EAGAIN)
->>>>>>>>> +				congestion_wait(BLK_RW_ASYNC,
->>>>>>>>> +						DEFAULT_IO_TIMEOUT);
->>>>>>>>>  
->>>>>>>>>  			if (issued >= dpolicy->max_requests)
->>>>>>>>>  				break;
->>>>>>>>> @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
->>>>>>>>>  			break;
->>>>>>>>>  	}
->>>>>>>>>  
->>>>>>>>> +	if (!list_empty(&dcc->retry_list) &&
->>>>>>>>> +		__should_discard_retry(sbi, dpolicy))
->>>>>>>>> +		goto retry;
->>>>>>>>> +
->>>>>>>>>  	if (!issued && io_interrupted)
->>>>>>>>>  		issued = -1;
->>>>>>>>>  
->>>>>>>>> @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
->>>>>>>>>  		goto next;
->>>>>>>>>  	}
->>>>>>>>>  
->>>>>>>>> +	if (dpolicy->type == DPOLICY_UMOUNT &&
->>>>>>>>> +		!list_empty(&dcc->retry_list)) {
->>>>>>>>> +		wait_list = &dcc->retry_list;
->>>>>>>>> +		goto next;
->>>>>>>>> +	}
->>>>>>>>> +
->>>>>>>>>  	return trimmed;
->>>>>>>>>  }
->>>>>>>>>  
->>>>>>>>> @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
->>>>>>>>>  	for (i = 0; i < MAX_PLIST_NUM; i++)
->>>>>>>>>  		INIT_LIST_HEAD(&dcc->pend_list[i]);
->>>>>>>>>  	INIT_LIST_HEAD(&dcc->wait_list);
->>>>>>>>> +	INIT_LIST_HEAD(&dcc->retry_list);
->>>>>>>>>  	INIT_LIST_HEAD(&dcc->fstrim_list);
->>>>>>>>>  	mutex_init(&dcc->cmd_lock);
->>>>>>>>>  	atomic_set(&dcc->issued_discard, 0);
->>>>>>>>>
->>>>>>>
->>>>>
->>>>> -- 
->>>>> --
->>>>> Sent by a consultant of the Qualcomm Innovation Center, Inc.
->>>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
->>>>
->>>
->>>
->>> _______________________________________________
->>> Linux-f2fs-devel mailing list
->>> Linux-f2fs-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>> .
->>>
-> 
