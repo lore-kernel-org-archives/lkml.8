@@ -2,168 +2,396 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490A3C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A68C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285012080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D72B020838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CNpRPyHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbgCaVvI (ORCPT
+        id S1731419AbgCaVxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:51:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18504 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731098AbgCaVvH (ORCPT
+        Tue, 31 Mar 2020 17:53:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43294 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731270AbgCaVxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:51:07 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VLYX23076878;
-        Tue, 31 Mar 2020 17:51:03 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 303ymkgg6w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Mar 2020 17:51:03 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02VLoNV9013165;
-        Tue, 31 Mar 2020 21:51:02 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03wdc.us.ibm.com with ESMTP id 301x76m51t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Mar 2020 21:51:02 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VLp2ug37945770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 21:51:02 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2592D28058;
-        Tue, 31 Mar 2020 21:51:02 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C5522805E;
-        Tue, 31 Mar 2020 21:51:02 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 31 Mar 2020 21:51:01 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     linux-integrity@vger.kernel.org, jarkko.sakkinen@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v3] tpm: Add support for event log pointer found in TPM2 ACPI table
-Date:   Tue, 31 Mar 2020 17:51:00 -0400
-Message-Id: <20200331215100.883860-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 31 Mar 2020 17:53:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585691582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7DWwbQKlPN0MbpVazTHqEZ9NSt8J5UXYVsBh1VrbJ7M=;
+        b=CNpRPyHgijbI3X1++jbauyCMrEyIbeidZbml3Fv7PjDLmHmU1Wr+dQRlorMtgI3ZH53F9p
+        NRppnXvOV5XAWqxkbjxORlaHhlta+nyWssaguFILSQ/l86IlGtKJaLvMkTfLt2jGCE75fT
+        3cW6XPhOe/pzLKdFbLUWX5PD50ZWtCg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-NtLnUT3pNoq8lBWy2Qte8A-1; Tue, 31 Mar 2020 17:53:01 -0400
+X-MC-Unique: NtLnUT3pNoq8lBWy2Qte8A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFDA68024DF;
+        Tue, 31 Mar 2020 21:52:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 907CB101D480;
+        Tue, 31 Mar 2020 21:52:53 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, dray@redhat.com, kzak@redhat.com,
+        mszeredi@redhat.com, swhiteho@redhat.com, jlayton@redhat.com,
+        raven@themaw.net, andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lennart@poettering.net, cyphar@cyphar.com
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003310171
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2418285.1585691572.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 31 Mar 2020 22:52:52 +0100
+Message-ID: <2418286.1585691572@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+Christian Brauner <christian.brauner@ubuntu.com> wrote:
 
-In case a TPM2 is attached, search for a TPM2 ACPI table when trying
-to get the event log from ACPI. If one is found, use it to get the
-start and length of the log area. This allows non-UEFI systems, such
-as SeaBIOS, to pass an event log when using a TPM2.
+> querying all properties of a mount atomically all-at-once,
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+I don't actually offer that, per se.
+
+Having an atomic all-at-once query for a single mount is actually quite a
+burden on the system.  There's potentially a lot of state involved, much o=
+f
+which you don't necessarily need.
+
+I've tried to avoid the need to do that by adding change counters that can=
+ be
+queried cheaply.  You read the counters, then you check mounts and superbl=
+ocks
+for which the counters have changed, and then you re-read the counters.  I=
+'ve
+added multiple counters, assigned to different purposes, to make it easier=
+ to
+pin down what has changed - and so reduce the amount of checking required.
+
+What I have added to fsinfo() is a way to atomically retrieve a list of al=
+l
+the children of a mount, including, for each mount, the mount ID (which ma=
+y
+have been reused), a uniquifier (which shouldn't wrap over the kernel
+lifetime) and the sum of the mount object and superblock change counters.
+
+This should allow you to quickly rescan the mount tree as fsinfo() can loo=
+k up
+mounts by mount ID instead of by path or fd.
+
+Below is a sample file from the kernel that scans by this method, displayi=
+ng
+an ascii art tree of all the mounts under a path or mount.
+
+David
 ---
- drivers/char/tpm/eventlog/acpi.c | 56 +++++++++++++++++++++++++---------------
- 1 file changed, 35 insertions(+), 21 deletions(-)
+// SPDX-License-Identifier: GPL-2.0-or-later
+/* Test the fsinfo() system call
+ *
+ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
+ * Written by David Howells (dhowells@redhat.com)
+ */
 
-diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-index 63ada5e53f13..e714a2bd0423 100644
---- a/drivers/char/tpm/eventlog/acpi.c
-+++ b/drivers/char/tpm/eventlog/acpi.c
-@@ -49,9 +49,8 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	void __iomem *virt;
- 	u64 len, start;
- 	struct tpm_bios_log *log;
--
--	if (chip->flags & TPM_CHIP_FLAG_TPM2)
--		return -ENODEV;
-+	struct acpi_table_tpm2 *tbl;
-+	int format;
- 
- 	log = &chip->log;
- 
-@@ -61,23 +60,38 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	if (!chip->acpi_dev_handle)
- 		return -ENODEV;
- 
--	/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
--	status = acpi_get_table(ACPI_SIG_TCPA, 1,
--				(struct acpi_table_header **)&buff);
--
--	if (ACPI_FAILURE(status))
--		return -ENODEV;
--
--	switch(buff->platform_class) {
--	case BIOS_SERVER:
--		len = buff->server.log_max_len;
--		start = buff->server.log_start_addr;
--		break;
--	case BIOS_CLIENT:
--	default:
--		len = buff->client.log_max_len;
--		start = buff->client.log_start_addr;
--		break;
-+	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
-+		status = acpi_get_table("TPM2", 1,
-+					(struct acpi_table_header **)&tbl);
-+		if (ACPI_FAILURE(status))
-+			return -ENODEV;
-+		if (tbl->header.length < sizeof(*tbl))
-+			return -ENODEV;
-+		len = tbl->log_area_minimum_length;
-+		start = tbl->log_area_start_address;
-+		if (!start || !len)
-+			return -ENODEV;
-+		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_2;
-+	} else {
-+		/* Find TCPA entry in RSDT (ACPI_LOGICAL_ADDRESSING) */
-+		status = acpi_get_table(ACPI_SIG_TCPA, 1,
-+					(struct acpi_table_header **)&buff);
-+
-+		if (ACPI_FAILURE(status))
-+			return -ENODEV;
-+
-+		switch (buff->platform_class) {
-+		case BIOS_SERVER:
-+			len = buff->server.log_max_len;
-+			start = buff->server.log_start_addr;
-+			break;
-+		case BIOS_CLIENT:
-+		default:
-+			len = buff->client.log_max_len;
-+			start = buff->client.log_start_addr;
-+			break;
-+		}
-+		format = EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
- 	}
- 	if (!len) {
- 		dev_warn(&chip->dev, "%s: TCPA log area empty\n", __func__);
-@@ -98,7 +112,7 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 	memcpy_fromio(log->bios_event_log, virt, len);
- 
- 	acpi_os_unmap_iomem(virt, len);
--	return EFI_TCG2_EVENT_LOG_FORMAT_TCG_1_2;
-+	return format;
- 
- err:
- 	kfree(log->bios_event_log);
--- 
-2.14.5
+#define _GNU_SOURCE
+#define _ATFILE_SOURCE
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <time.h>
+#include <math.h>
+#include <sys/syscall.h>
+#include <linux/fsinfo.h>
+#include <linux/socket.h>
+#include <linux/fcntl.h>
+#include <sys/stat.h>
+#include <arpa/inet.h>
+
+#ifndef __NR_fsinfo
+#define __NR_fsinfo -1
+#endif
+
+static __attribute__((unused))
+ssize_t fsinfo(int dfd, const char *filename,
+	       struct fsinfo_params *params, size_t params_size,
+	       void *result_buffer, size_t result_buf_size)
+{
+	return syscall(__NR_fsinfo, dfd, filename,
+		       params, params_size,
+		       result_buffer, result_buf_size);
+}
+
+static char tree_buf[4096];
+static char bar_buf[4096];
+static unsigned int children_list_interval;
+
+/*
+ * Get an fsinfo attribute in a statically allocated buffer.
+ */
+static void get_attr(unsigned int mnt_id, unsigned int attr, unsigned int =
+Nth,
+		     void *buf, size_t buf_size)
+{
+	struct fsinfo_params params =3D {
+		.flags		=3D FSINFO_FLAGS_QUERY_MOUNT,
+		.request	=3D attr,
+		.Nth		=3D Nth,
+	};
+	char file[32];
+	long ret;
+
+	sprintf(file, "%u", mnt_id);
+
+	memset(buf, 0xbd, buf_size);
+
+	ret =3D fsinfo(AT_FDCWD, file, &params, sizeof(params), buf, buf_size);
+	if (ret =3D=3D -1) {
+		fprintf(stderr, "mount-%s: %m\n", file);
+		exit(1);
+	}
+}
+
+/*
+ * Get an fsinfo attribute in a dynamically allocated buffer.
+ */
+static void *get_attr_alloc(unsigned int mnt_id, unsigned int attr,
+			    unsigned int Nth, size_t *_size)
+{
+	struct fsinfo_params params =3D {
+		.flags		=3D FSINFO_FLAGS_QUERY_MOUNT,
+		.request	=3D attr,
+		.Nth		=3D Nth,
+	};
+	size_t buf_size =3D 4096;
+	char file[32];
+	void *r;
+	long ret;
+
+	sprintf(file, "%u", mnt_id);
+
+	for (;;) {
+		r =3D malloc(buf_size);
+		if (!r) {
+			perror("malloc");
+			exit(1);
+		}
+		memset(r, 0xbd, buf_size);
+
+		ret =3D fsinfo(AT_FDCWD, file, &params, sizeof(params), r, buf_size);
+		if (ret =3D=3D -1) {
+			fprintf(stderr, "mount-%s: %x,%x,%x %m\n",
+				file, params.request, params.Nth, params.Mth);
+			exit(1);
+		}
+
+		if (ret <=3D buf_size) {
+			*_size =3D ret;
+			break;
+		}
+		buf_size =3D (ret + 4096 - 1) & ~(4096 - 1);
+	}
+
+	return r;
+}
+
+/*
+ * Display a mount and then recurse through its children.
+ */
+static void display_mount(unsigned int mnt_id, unsigned int depth, char *p=
+ath)
+{
+	struct fsinfo_mount_topology top;
+	struct fsinfo_mount_child child;
+	struct fsinfo_mount_info info;
+	struct fsinfo_ids ids;
+	void *children;
+	unsigned int d;
+	size_t ch_size, p_size;
+	char dev[64];
+	int i, n, s;
+
+	get_attr(mnt_id, FSINFO_ATTR_MOUNT_TOPOLOGY, 0, &top, sizeof(top));
+	get_attr(mnt_id, FSINFO_ATTR_MOUNT_INFO, 0, &info, sizeof(info));
+	get_attr(mnt_id, FSINFO_ATTR_IDS, 0, &ids, sizeof(ids));
+	if (depth > 0)
+		printf("%s", tree_buf);
+
+	s =3D strlen(path);
+	printf("%s", !s ? "\"\"" : path);
+	if (!s)
+		s +=3D 2;
+	s +=3D depth;
+	if (s < 38)
+		s =3D 38 - s;
+	else
+		s =3D 1;
+	printf("%*.*s", s, s, "");
+
+	sprintf(dev, "%x:%x", ids.f_dev_major, ids.f_dev_minor);
+	printf("%10u %8x %2x %x %5s %s",
+	       info.mnt_id,
+	       (info.sb_changes +
+		info.sb_notifications +
+		info.mnt_attr_changes +
+		info.mnt_topology_changes +
+		info.mnt_subtree_notifications),
+	       info.attr, top.propagation,
+	       dev, ids.f_fs_name);
+	putchar('\n');
+
+	children =3D get_attr_alloc(mnt_id, FSINFO_ATTR_MOUNT_CHILDREN, 0, &ch_si=
+ze);
+	n =3D ch_size / children_list_interval - 1;
+
+	bar_buf[depth + 1] =3D '|';
+	if (depth > 0) {
+		tree_buf[depth - 4 + 1] =3D bar_buf[depth - 4 + 1];
+		tree_buf[depth - 4 + 2] =3D ' ';
+	}
+
+	tree_buf[depth + 0] =3D ' ';
+	tree_buf[depth + 1] =3D '\\';
+	tree_buf[depth + 2] =3D '_';
+	tree_buf[depth + 3] =3D ' ';
+	tree_buf[depth + 4] =3D 0;
+	d =3D depth + 4;
+
+	memset(&child, 0, sizeof(child));
+	for (i =3D 0; i < n; i++) {
+		void *p =3D children + i * children_list_interval;
+
+		if (sizeof(child) >=3D children_list_interval)
+			memcpy(&child, p, children_list_interval);
+		else
+			memcpy(&child, p, sizeof(child));
+
+		if (i =3D=3D n - 1)
+			bar_buf[depth + 1] =3D ' ';
+		path =3D get_attr_alloc(child.mnt_id, FSINFO_ATTR_MOUNT_POINT,
+				      0, &p_size);
+		display_mount(child.mnt_id, d, path + 1);
+		free(path);
+	}
+
+	free(children);
+	if (depth > 0) {
+		tree_buf[depth - 4 + 1] =3D '\\';
+		tree_buf[depth - 4 + 2] =3D '_';
+	}
+	tree_buf[depth] =3D 0;
+}
+
+/*
+ * Find the ID of whatever is at the nominated path.
+ */
+static unsigned int lookup_mnt_by_path(const char *path)
+{
+	struct fsinfo_mount_info mnt;
+	struct fsinfo_params params =3D {
+		.flags		=3D FSINFO_FLAGS_QUERY_PATH,
+		.request	=3D FSINFO_ATTR_MOUNT_INFO,
+	};
+
+	if (fsinfo(AT_FDCWD, path, &params, sizeof(params), &mnt, sizeof(mnt)) =3D=
+=3D -1) {
+		perror(path);
+		exit(1);
+	}
+
+	return mnt.mnt_id;
+}
+
+/*
+ * Determine the element size for the mount child list.
+ */
+static unsigned int query_list_element_size(int mnt_id, unsigned int attr)
+{
+	struct fsinfo_attribute_info attr_info;
+
+	get_attr(mnt_id, FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, attr,
+		 &attr_info, sizeof(attr_info));
+	return attr_info.size;
+}
+
+/*
+ *
+ */
+int main(int argc, char **argv)
+{
+	unsigned int mnt_id;
+	char *path;
+	bool use_mnt_id =3D false;
+	int opt;
+
+	while ((opt =3D getopt(argc, argv, "m"))) {
+		switch (opt) {
+		case 'm':
+			use_mnt_id =3D true;
+			continue;
+		}
+		break;
+	}
+
+	argc -=3D optind;
+	argv +=3D optind;
+
+	switch (argc) {
+	case 0:
+		mnt_id =3D lookup_mnt_by_path("/");
+		path =3D "ROOT";
+		break;
+	case 1:
+		path =3D argv[0];
+		if (use_mnt_id) {
+			mnt_id =3D strtoul(argv[0], NULL, 0);
+			break;
+		}
+
+		mnt_id =3D lookup_mnt_by_path(argv[0]);
+		break;
+	default:
+		printf("Format: test-mntinfo\n");
+		printf("Format: test-mntinfo <path>\n");
+		printf("Format: test-mntinfo -m <mnt_id>\n");
+		exit(2);
+	}
+
+	children_list_interval =3D
+		query_list_element_size(mnt_id, FSINFO_ATTR_MOUNT_CHILDREN);
+
+	printf("MOUNT                                 MOUNT ID   CHANGE#  AT P DE=
+V   TYPE\n");
+	printf("------------------------------------- ---------- -------- -- - --=
+--- --------\n");
+	display_mount(mnt_id, 0, path);
+	return 0;
+}
 
