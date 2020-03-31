@@ -2,88 +2,221 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBB4C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E7DC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E6220658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:02:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585684921;
-	bh=c3ae9kn65pDkOCfHTKewNDcf0QCCjBeMT8l+odqiohw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=icBQsigYPxVzDqaTigOsvhXRgQGGDUehypRMbXxcYaF2mKpO1kiM4ZBGkZkZUcOoA
-	 ODbf3twIbQkggOGeuK8ANwmrWnsypEI9lQi+Lc8OcjwZwA2oTzbT1kWEw43TKdeCTx
-	 9bkDu34zTKsiN5YptztY928z0syf+hUaUuC650dI=
+	by mail.kernel.org (Postfix) with ESMTP id D4B132080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="qjEIqcXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbgCaUCA (ORCPT
+        id S1731142AbgCaUCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:02:00 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39936 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727708AbgCaUCA (ORCPT
+        Tue, 31 Mar 2020 16:02:22 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35529 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgCaUCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:02:00 -0400
-Received: by mail-il1-f194.google.com with SMTP id j9so20777268ilr.7;
-        Tue, 31 Mar 2020 13:01:59 -0700 (PDT)
+        Tue, 31 Mar 2020 16:02:22 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k13so24530946qki.2
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 13:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=Q1beehtgWdVUjw4H/uaMAEYCwGvvcPji2ivitcnMva8=;
+        b=qjEIqcXDFFQ1IVgRToaVEFyL+0yx+IHNvMfCjj1ZHcVpXyMqr/hcYS1hfnj2uVmjjv
+         yF+qKqa9VvvPLCcwZ56GYq/5cMJwhVKSopJqHOxjo73zWwQET2IZ1Su5NLgv13G4oqcu
+         Ho1jOsFYGPvNGoCteEmV1OxTymHbHz3pKZpamIUnpEWAE3tESP4ValkKap8szgNtnVE2
+         L8euZT+pZ0CrVfRxjtsB1gSE9AT1NNvn0cxK9xffq358Uh1tM05ZO05zgGNOTqyTQeEP
+         yTQPBU7ZfTLZBByEWwAdXwumthwfQIde9hm4L9IiAIGIfjzJOTbu6QVTDkyr+W4SoeDV
+         gaDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=inn69R6pXVv7tn5IiOj3WCmHSXEzB0bu6RYjdj4+w9I=;
-        b=S1qySzMqNWRdHOSgAUeob7svajg6gGZ6j+OoPoi4XpIMqGThswddLgpztcRnEmhDaf
-         OjnDmwc9TUq4jFvxpfJdfCg1icJ0dUS1jw7LqqbmbdA1E+xCCONJGDDrzXr6nexTcmdv
-         eNQiY+sdh3rkc7sVch2GsN/dSOcV3dJp8dtemVVTtECK9kfeL6e+p+LAJVtd+dMS00+B
-         VkTYhwmg+AJmXzPz7T01SoK4izTQfjDZPgisOd2ALop013toRXycHVcpDSJobdQG6seZ
-         QLS6snJ9VLpAo+5Q9WDfjE7ZU5xNt9Hu+UohrFw9hLsBuKhyagrx/zUQ5wq78WCKZlCB
-         cH+A==
-X-Gm-Message-State: ANhLgQ2TqTKR0QjuMox3FCCtdPpwUwVNS7Zpenj6bizhfglq5DUi2bAC
-        sGsTOUUSO54GfoJQXHdk6w==
-X-Google-Smtp-Source: ADFU+vsICc4DhBvaBEO5MjNBpVjmJPABPfazkSQ87pqZhrYedeNGTExxSKz2gZT+RvOxqRGZ9E7szA==
-X-Received: by 2002:a92:9c54:: with SMTP id h81mr18455056ili.109.1585684919454;
-        Tue, 31 Mar 2020 13:01:59 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id r29sm6263789ilk.76.2020.03.31.13.01.57
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Q1beehtgWdVUjw4H/uaMAEYCwGvvcPji2ivitcnMva8=;
+        b=i7UpI5DfszfR1Jfkkt3ZsJKifYca5YsGXysYinjnuOOARtJPaDVNRa+lp3xaeWQ/3m
+         UfROV6lxwTgNUn7vreNjZZ/4N9S0SeKcvTMZPcjERHGnrrTt6Xpe9j/NetetTphd/8e2
+         V5haAaZWl9viLROZaKemmEDJP/I2Yxmf3nQER2z7Iyx6uM62caxcs9f+9wyQ1AuBX1Up
+         31nVoCgcxSyKfoYdcDR+AIvs1bBd6DRLRDd2Zc8Rro2SPCb+7Fg1cD43M/r6qw/+w9Ny
+         aZ3ETSfpVFDV0cnOdKAzRW4XeVnnJj1TnKgmwr+pRhdOE+CFN+v9WqU1fVEdpSoAZg0n
+         NFHw==
+X-Gm-Message-State: ANhLgQ2UAUD4F9wZP48ZvyxEvBVRddHfnJLHWIVDOOXLcfEa91udZwne
+        VifWGldACixHeFo0TL4QNuROEg==
+X-Google-Smtp-Source: ADFU+vti1QMwOqAdl+gaxBXKBzLkewg0+Axr05e9r2mxkQ8EUGr/8S/DnP48kOLNivRmNJ7kFTFSGQ==
+X-Received: by 2002:a37:61d0:: with SMTP id v199mr6669980qkb.292.1585684939953;
+        Tue, 31 Mar 2020 13:02:19 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id t43sm14488528qtc.14.2020.03.31.13.02.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:01:58 -0700 (PDT)
-Received: (nullmailer pid 7245 invoked by uid 1000);
-        Tue, 31 Mar 2020 20:01:56 -0000
-Date:   Tue, 31 Mar 2020 14:01:56 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, heiko@sntech.de,
-        robh+dt@kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: sound: rockchip-spdif: add
- power-domains property
-Message-ID: <20200331200156.GA7186@bogus>
-References: <20200324123155.11858-1-jbx6244@gmail.com>
- <20200324123155.11858-3-jbx6244@gmail.com>
+        Tue, 31 Mar 2020 13:02:19 -0700 (PDT)
+Message-ID: <953a450cf58e2a459f7a09267cbbbcd38e5cc6bc.camel@massaru.org>
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        skhan@linuxfoundation.org
+Date:   Tue, 31 Mar 2020 17:02:14 -0300
+In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
+References: <20200331085308.098696461@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324123155.11858-3-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 13:31:55 +0100, Johan Jonker wrote:
-> In the old txt situation we add/describe only properties that are used
-> by the driver/hardware itself. With yaml it also filters things in a
-> node that are used by other drivers like 'power-domains' for rk3399,
-> so add it to 'rockchip-spdif.yaml'.
+On Tue, 2020-03-31 at 10:59 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.1 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied,
+> please
+> let me know.
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+> Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	
+> https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-
+> stable-rc.git linux-5.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+> Pseudo-Shortlog of commits:
+> 
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Linux 5.6.1-rc1
+> 
+> Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>     media: v4l2-core: fix a use-after-free bug of sd->devnode
+> 
+> Johan Hovold <johan@kernel.org>
+>     media: xirlink_cit: add missing descriptor sanity checks
+> 
+> Johan Hovold <johan@kernel.org>
+>     media: stv06xx: add missing descriptor sanity checks
+> 
+> Johan Hovold <johan@kernel.org>
+>     media: dib0700: fix rc endpoint lookup
+> 
+> Johan Hovold <johan@kernel.org>
+>     media: ov519: add missing endpoint sanity checks
+> 
+> Eric Biggers <ebiggers@google.com>
+>     libfs: fix infoleak in simple_attr_read()
+> 
+> Kai-Heng Feng <kai.heng.feng@canonical.com>
+>     ahci: Add Intel Comet Lake H RAID PCI ID
+> 
+> Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>     staging: wfx: annotate nested gc_list vs tx queue locking
+> 
+> Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>     staging: wfx: fix init/remove vs IRQ race
+> 
+> Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>     staging: wfx: add proper "compatible" string
+> 
+> Qiujun Huang <hqjagain@gmail.com>
+>     staging: wlan-ng: fix use-after-free Read in
+> hfa384x_usbin_callback
+> 
+> Qiujun Huang <hqjagain@gmail.com>
+>     staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
+> 
+> Larry Finger <Larry.Finger@lwfinger.net>
+>     staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
+> 
+> Dan Carpenter <dan.carpenter@oracle.com>
+>     staging: kpc2000: prevent underflow in cpld_reconfigure()
+> 
+> Johan Hovold <johan@kernel.org>
+>     media: usbtv: fix control-message timeouts
+> 
+> Johan Hovold <johan@kernel.org>
+>     media: flexcop-usb: fix endpoint sanity check
+> 
+> Mans Rullgard <mans@mansr.com>
+>     usb: musb: fix crash with highmen PIO and usbmon
+> 
+> Qiujun Huang <hqjagain@gmail.com>
+>     USB: serial: io_edgeport: fix slab-out-of-bounds read in
+> edge_interrupt_callback
+> 
+> Matthias Reichl <hias@horus.com>
+>     USB: cdc-acm: restore capability check order
+> 
+> Pawel Dembicki <paweldembicki@gmail.com>
+>     USB: serial: option: add Wistron Neweb D19Q1
+> 
+> Pawel Dembicki <paweldembicki@gmail.com>
+>     USB: serial: option: add BroadMobi BM806U
+> 
+> Pawel Dembicki <paweldembicki@gmail.com>
+>     USB: serial: option: add support for ASKEY WWHC050
+> 
+> Daniel Borkmann <daniel@iogearbox.net>
+>     bpf: Undo incorrect __reg_bound_offset32 handling
+> 
+> 
+> -------------
+> 
+> Diffstat:
+> 
+>  Makefile                                           |  4 +--
+>  drivers/ata/ahci.c                                 |  1 +
+>  drivers/media/usb/b2c2/flexcop-usb.c               |  6 ++--
+>  drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +--
+>  drivers/media/usb/gspca/ov519.c                    | 10 ++++++
+>  drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 +++++++++-
+>  drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +++
+>  drivers/media/usb/gspca/xirlink_cit.c              | 18 +++++++++-
+>  drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
+>  drivers/media/usb/usbtv/usbtv-video.c              |  5 +--
+>  drivers/media/v4l2-core/v4l2-device.c              |  1 +
+>  drivers/staging/kpc2000/kpc2000/core.c             |  4 +--
+>  drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
+>  .../bindings/net/wireless/siliabs,wfx.txt          |  7 ++--
+>  drivers/staging/wfx/bus_sdio.c                     | 15 ++++----
+>  drivers/staging/wfx/bus_spi.c                      | 41
+> +++++++++++++---------
+>  drivers/staging/wfx/main.c                         | 21 ++++++-----
+>  drivers/staging/wfx/main.h                         |  1 -
+>  drivers/staging/wfx/queue.c                        | 16 ++++-----
+>  drivers/staging/wlan-ng/hfa384x_usb.c              |  2 ++
+>  drivers/staging/wlan-ng/prism2usb.c                |  1 +
+>  drivers/usb/class/cdc-acm.c                        | 18 +++++-----
+>  drivers/usb/musb/musb_host.c                       | 17 +++------
+>  drivers/usb/serial/io_edgeport.c                   |  2 +-
+>  drivers/usb/serial/option.c                        |  6 ++++
+>  fs/libfs.c                                         |  8 +++--
+>  kernel/bpf/verifier.c                              | 19 ----------
+>  27 files changed, 149 insertions(+), 104 deletions(-)
+> 
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Compiled, booted, and no regressions on my machine.
+
+BR,
+Vitor
+
