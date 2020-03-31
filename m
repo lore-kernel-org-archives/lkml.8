@@ -2,183 +2,112 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1E4C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF1FC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645D4206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFDF20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:49:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cp7OQ06N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbgCaLs1 (ORCPT
+        id S1730595AbgCaLt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:48:27 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:52068 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730560AbgCaLs0 (ORCPT
+        Tue, 31 Mar 2020 07:49:57 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53820 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730334AbgCaLt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:48:26 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 746A28030774;
-        Tue, 31 Mar 2020 11:48:19 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id a9g7bqgioPTM; Tue, 31 Mar 2020 14:48:18 +0300 (MSK)
-Date:   Tue, 31 Mar 2020 14:48:24 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics
- support
-Message-ID: <20200331114824.e3uljdymvsjuh6wh@ubsrv2.baikal.int>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200306135451.4AF0480307C4@mail.baikalelectronics.ru>
+        Tue, 31 Mar 2020 07:49:56 -0400
+Received: by mail-pj1-f66.google.com with SMTP id l36so966247pjb.3;
+        Tue, 31 Mar 2020 04:49:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/wPvbpIMhd7MnskghgUO5jeF7ND/28Jj4zI+1cNb8CE=;
+        b=cp7OQ06NQE0XtQPzutp24bGeZ2NvsNJQmmnWK3ccLOyanaxOxMc2oNRWBldBtsxLpA
+         tXMZ6HXF1y9xmtg1pg8roQxQiI8fzmTobx0P/zZsZwhkq6f8NsJy2NHoPVbdlkfhH3+a
+         lo8D5gucRqYfdEIqnZ4q+mCmFh3ego3D9ggr8FaK4RK+G52/NKzopGrBxquCHQFJPqKT
+         p4HTq6r7yOqZlVLcnL5D/C3wiQfv6eTWeAHUEcK4F3S4DCG0pYAkqmlcHnTyBHd6n20N
+         d2Dm4YyON6KekpYxDWcILIKq/wl0pzLcU861XGp0vJyJNU64KwMeK0hdPRtRZJaj/VEj
+         XFpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/wPvbpIMhd7MnskghgUO5jeF7ND/28Jj4zI+1cNb8CE=;
+        b=SdYTTPYwrPUPtXkcZesCQCLtWH7IULY79Jk2nT6ngY7hswjGWv4EAe71t1n1aIQBR+
+         la+Fs3qYOa1xfMsWJtwP3mMxXdR/GwJlRLINH0oHhpKGqtKB3gM7qqd95G49x6zNk6jS
+         M0gTi/Bshz8jB9jJkpq8Y+L0c0iJemN/QohfIr22fcpGKtHV+WcMRdHdJZJZt3g2PjXN
+         qyPMIFR0qHhOZ5kEP/rUl+hwZy8NfPt1Ntguyee5mPnt7MCYmeIL9UL9C6EFtxMtLvPb
+         eETNxKYDKzDMjskvPIo/JIQk3ROmwOf4BPdvxlTAYqUfiaWMnTjmlokQrqw8LmdIxUZP
+         LSHw==
+X-Gm-Message-State: AGi0PuZr6soBG7pO0mz02I7twm6c7RX+rwtxvetQK0uL34xwdoLVtZqN
+        XhL6TCoq+ZGtKUmV7j6y7b54eiBPfRhPfg==
+X-Google-Smtp-Source: APiQypIBjqOl1pWqZwL+WPV3jBmwrFFA8SIvj0PVeEIp3RjvywwUIvLZPi9mZYlsFCTo4/JTUnnYwA==
+X-Received: by 2002:a17:90b:4d04:: with SMTP id mw4mr3524626pjb.180.1585655395317;
+        Tue, 31 Mar 2020 04:49:55 -0700 (PDT)
+Received: from SARKAR ([122.178.242.244])
+        by smtp.gmail.com with ESMTPSA id z66sm2843635pfz.30.2020.03.31.04.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 04:49:54 -0700 (PDT)
+Message-ID: <5e832e62.1c69fb81.2a0e9.b85d@mx.google.com>
+X-Google-Original-Message-ID: <20200331114951.GB7750@rohitsarkar5398@gmail.com>
+Date:   Tue, 31 Mar 2020 17:19:51 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>
+Cc:     "Sa, Nuno" <Nuno.Sa@analog.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "stefan.popa@analog.com" <stefan.popa@analog.com>,
+        "zhongjiang@huawei.com" <zhongjiang@huawei.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
+ DEFINE_SIMPLE_ATTRIBUTE
+References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
+ <20200329103818.2fce9529@archlinux>
+ <aee10d6bfc5f2fef85d90245304f3e0f368f94ec.camel@analog.com>
+ <BN6PR03MB33472A88BA78392686737F9099C80@BN6PR03MB3347.namprd03.prod.outlook.com>
+ <74033597-c348-03df-d52f-748bf52c1a12@metafoo.de>
+ <5e832756.1c69fb81.19c58.78e8@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200306135451.4AF0480307C4@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <5e832756.1c69fb81.19c58.78e8@mx.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Andy,
-
-Finally I've thought this through reasonably conformed with the changes
-requested in the framework of the other patchsets. My comments are
-below.
-
-On Fri, Mar 06, 2020 at 03:54:45PM +0200, Andy Shevchenko wrote:
-> First of all, I got only 3 out of 6 patches. Are you sure you properly prepared
-> the series?
-> 
-> On Fri, Mar 06, 2020 at 04:19:49PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <fancer.lancer@gmail.com>
-> 
-> Same comment as per DMA series, try next time to link the cover letter to the
-> series correctly.
-> 
-> > There are three DW I2C controllers embedded into the Baikal-T1 SoC. Two
-> > of them are normal with standard DW I2C IP-core configurations and registers
-> > accessible over normal MMIO space - so they are acceptable by the available
-> > DW I2C driver with no modification.
-> 
-> > But there is a third, which is a bit
-> > different. Its registers are indirectly accessed be means of "command/data
-> > in/data out" registers tuple. In order to have it also supported by the DW
-> > I2C driver, we must modify the code a bit. This is a main purpose of this
-> > patchset.
+Hey Nuno,
+> > > > 
+> > > I don't have the exact parts that this patch is touching but I have other parts where this patch
+> > > applies and should be same. So, the idea to test this is to read the files in debugfs? Maybe also
+> > > some unbind + binding?
+> > > 
+> > > I will try to test this still today...
 > > 
-> > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > file with yaml-based one. Then we found and fixed a bug in the DW I2C FIFO size
-> > detection algorithm which tried to do it too early before dw_readl/dw_writel
-> > methods could be used.
+> > The stress test is to open the debugfs file, then unbind the device and then
+> > read from the still open debugfs file.
+> Yes, also just to be sure, we need to test DEFINE_DEBUGFS_ATTRIBUTE
+> along with debugfs_create_file_unsafe. I will send out another patch
+> that changes debugfs_create_file to debugfs_create_file_unsafe and then
+> that can be tested.
+Have sent out a v2 that is ready to be tested
+> > - Lars
 > 
-> So far so good (looks like, I think colleagues of mine and myself will review
-> individual patches later on).
-> 
-> > Finally we introduced a platform-specific flag
-> > ACCESS_INDIRECT, which would enable the indirect access to the DW I2C registers
-> > implemented for one of the Baikal-T1 SoC DW I2C controllers. See the commit
-> > message of the corresponding patch for details.
-> 
-> This is quite questionable. In Intel SoCs we have indirect I²C controllers to
-> access (inside PMIC, for example). The approach used to do that is usually to
-> have an IPC mechanism and specific bus controller driver. See i2c-cht-wc.c for
-> instance.
-> 
-> I'm not sure if it makes a lot of duplication and if actually switching I²C
-> DesignWare driver to regmap API will solve it. At least that is the second
-> approach I would consider.
-> 
-> But I'll wait others to comment on this. We have to settle the solution before
-> going further.
-> 
-
-As I see the others have not comments.) Anyway I see your point and having the
-regmap-based interface might be better than the approach I've suggested
-in this patchset particularly seeing that our DW i2c IP registers are
-hidden behind a system controller register space.
-
-In order to follow your proposition to create a dedicated regmap and to supply
-it to the DW i2c driver, I have to redevelop not only this patchset, but
-also an adjacent drivers. In particular the changes will concern the
-MFD-based System Controller driver (which will instantiate this DW i2c
-controller device), Clocks Control Unit drivers set, and a few
-others. The whole alteration I described in the RFC:
-https://lkml.org/lkml/2020/3/22/393
-You've been in Cc there, so fill free to send your comments regarding
-the changes I suggested. Though this time I hope the solution will
-satisfy everyone, who had issues with patchsets I've recently sent.
-
-Getting back to your comment in the framework of this patchset. The approach
-used for CHT Whiskey Cove i2c isn't fully suitable in our case for
-the reason of the DW I2C controller nature. DW I2C controller is a generic
-controller and used on many different platforms, while AFAICS CHT Whiskey Cove
-I2C is the SoC-specific used to access a charger-IC. So in the former case we
-may have an arbitrary set of i2c-slaves connected to the controller on
-different platforms, while on the latter one - there is a fixed set of
-slaves. In addition due to the same reason the DW I2C IP might be
-embedded into different sub-blocks on different platforms, while the CHT
-Whiskey Cove I2C is known to be a part of Intel CHT WC SoC PMIC.
-For instance Baikal-T1 SoC has one DW I2C controller embedded into the
-System Controller with indirectly accessible registers and two DW I2C
-interfaces with normal memory mapped registers. Due to this in case of DW I2C
-driver we can't just "suck" the regmap out from a parental MFD or
-anywhere else as it's done in the CHT Whiskey Cove I2C driver, but instead
-we should somehow supply a regmap pointer to the driver.
-
-Taking into account all of these we can utilize a combined approach
-implemented in ./drivers/i2c/busses/i2c-cht-wc.c and
-drivers/mfd/intel_quark_i2c_gpio.c . I'll add a regmap pointer field to the
-"struct dw_i2c_platform_data" structure, so in case if there is no
-IORESOURCE_MEM resources available (platform_get_resource() fails), we
-try to get a regmap pointer from the platform data. If there is no valid
-regmap available, then completely fail the driver probe procedure. Though
-due to this alteration I'll have to change the
-dw_i2c_platform_data.i2c_scl_freq field usage a bit. In case if it's
-zero, then call i2c_parse_fw_timings(). This won't hurt ACPI or dt-less
-platforms, but will let us cover a case when regmap is set while i2c
-clock frequency is supposed to be taken from the kernel firmware (like
-dtb, etc).
-
-So if you are Ok with this, I'll send a v2 patchset with corresponding
-alteration implemented.
-
-Regards,
--Sergey
-
-> > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > commit 98d54f81e36b ("Linux 5.6-rc4").
-> 
-> `git format-patch --base ...` should do the job.
-> 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> 
-> Same comment as per UART patch. Who is the Alexey in relation to the work done?
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> Thanks,
+> Rohit
+Thanks,
+Rohit
