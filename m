@@ -2,73 +2,118 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D16C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7AAC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15915212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:48:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TceaVzPK"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC7E2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585676947;
+	bh=7YB6ND8mrDeGDIhLt1OHuowTw1wah86m08QhZkfLdrg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=m6XvHiOwzeCeRV8Wn0akpBVcTzli3rVFIYeogtzdEM1gmmknYRh48N+LzW7k+zwkp
+	 M0hjs5AMpsDnDuF6EQ4of8776IYxeg+cDjfHFEia0HKXGg1lPRE72HXg/24KoO1sQg
+	 ad1N09qJBxOGebfIupq8Qdf+HqPJjzDsutzoFQI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgCaRsd (ORCPT
+        id S1727376AbgCaRtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:48:33 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44744 "EHLO mail.skyhub.de"
+        Tue, 31 Mar 2020 13:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgCaRsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:48:32 -0400
-Received: from zn.tnic (p200300EC2F0C0900F1B8AEA007893A5C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:900:f1b8:aea0:789:3a5c])
+        id S1725988AbgCaRtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:49:05 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6FBE11EC0CC3;
-        Tue, 31 Mar 2020 19:48:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585676911;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=FfjbbwtF7FGDeVUNh7GVhRJaQHIJbHSKbcyegihWkhQ=;
-        b=TceaVzPKPBzULblMEgOQwNOjY7VAUzPR6j7hpkncsOqrLB+zEQo305ZQSxRS21mu9EY+Ou
-        YV4DCVHFSmy2ohvBgvbq/dLEbRv3irzzytKaShHlH5Ud9Wg5LlpkNekwJDIyowAZnkOT1K
-        GWXKLTAGSVcx/nv8m+VwmracnjDF9Cg=
-Date:   Tue, 31 Mar 2020 19:48:26 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] x86/boot changes for v5.7
-Message-ID: <20200331174826.GD29131@zn.tnic>
-References: <20200331075305.GA57035@gmail.com>
- <CAHk-=wjFiniKY80uDdSmZVXqXJdvLQS8xeKo9TnN1POqiU5Qxg@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 04076212CC;
+        Tue, 31 Mar 2020 17:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585676945;
+        bh=7YB6ND8mrDeGDIhLt1OHuowTw1wah86m08QhZkfLdrg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=cYgWjwN1R88kTK3yT2gG1k3SpiZ9Vz0fYzWRtS56ooUUeRv4wJ+zDEmlu3P8LJOWP
+         h8OEYSp4AikI9nTg/2BD2m4OiX2DEGbbakpNo75tOVvcmM9QGxkB+itppGyk5tKydr
+         bh3+XF8WM7K0qL2ikOs7IigsYlsGE+HIoUSRWE8Q=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 72EED35226C3; Tue, 31 Mar 2020 10:49:04 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 10:49:04 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200331174904.GN19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331140433.GA26498@pc636>
+ <20200331150911.GC236678@google.com>
+ <20200331160119.GA27614@pc636>
+ <20200331170232.GA28413@pc636>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjFiniKY80uDdSmZVXqXJdvLQS8xeKo9TnN1POqiU5Qxg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200331170232.GA28413@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:36:51AM -0700, Linus Torvalds wrote:
-> Wouldn't it be much better to try to standardize around that arm model
-> instead?
+On Tue, Mar 31, 2020 at 07:02:32PM +0200, Uladzislau Rezki wrote:
+> > >
+> > > Paul was concerned about following scenario with hitting synchronize_rcu():
+> > > 1. Consider a system under memory pressure.
+> > > 2. Consider some other subsystem X depending on another system Y which uses
+> > >    kfree_rcu(). If Y doesn't complete the operation in time, X accumulates
+> > >    more memory.
+> > > 3. Since kfree_rcu() on Y hits synchronize_rcu() a lot, it slows it down.
+> > >    This causes X to further allocate memory, further causing a chain
+> > >    reaction.
+> > > Paul, please correct me if I'm wrong.
+> > > 
+> > I see your point and agree that in theory it can happen. So, we should
+> > make it more tight when it comes to rcu_head attachment logic.
+> > 
+> Just adding more thoughts about such concern. Even though in theory we
+> can run into something like that. But also please note, that under high
+> memory pressure it also does not mean that (X) will always succeed with
+> further infinite allocations, so memory pressure is something common.
+> As soon as the situation becomes slightly better we do our work much
+> efficient.
+> 
+> Practically, i was trying to simulate memory pressure to hit synchronize_rcu()
+> on my test system. By just simulating head-less freeing(for any object) and
+> by always dynamic attaching path. So i could trigger it, but that was really
+> hard to achieve and it happened only few times. So that was not like a constant
+> hit. What i got constantly were:
+> 
+> - System got recovered and proceed with "normal" path;
+> - The OOM hit as a final step, when the system is run out of memory fully.
+> 
+> So, practically i have not seen massive synchronize_rcu() hit.
 
-Yap, as a matter of fact, this did came up recently as one thing that we
-should do to avoid "fixes" like that. I'll put it on my TODO list and
-won't be mad - at all, actually - if someone beats me to it. :-)
+Understood, but given the attractive properties of headless kfree_rcu(),
+it is not unreasonable to expect its usage to remain low.  In addition,
+memory-pressure scenarios can be quite involved.  Finally, as Joel
+pointed out offlist, the per-CPU cached structure acts as a small
+portion of kfree_rcu()-specific reserved memory, so you guys have at
+least partially addressed parts of my concerns already.
 
-Thx.
+I am not at all a fan of using GFP_MEMALLOC because kfree_rcu()
+is sufficiently low-level to be in the business of ensuring its own
+forward progress.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+							Thanx, Paul
