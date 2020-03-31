@@ -2,154 +2,93 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776AEC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43E1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D98820786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76DC20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nK+odSu4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730688AbgCaPRx (ORCPT
+        id S1730615AbgCaPW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:17:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41254 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730466AbgCaPRx (ORCPT
+        Tue, 31 Mar 2020 11:22:28 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49284 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729682AbgCaPW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:17:53 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f52so22359819otf.8;
-        Tue, 31 Mar 2020 08:17:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EigPugVYmhk/pRUl2H9XjY7fv+LW/feGStO+h6/A098=;
-        b=YHPg/+tOGNcZ7bzSPzvSfr61asCsLhsS5zhehLDzH6JyVetiWt5sGAognwgMVWlHdv
-         1xcCoBVNCZur92XZFvjgop3YDlZmIxMBDshPvN+MM9Z6bOad70Eja0kcKXPrg1EZXiDS
-         v26CXD7FepbdrqQcChX42hKEC2i6sZKW5qPdLUzEy8tF+VZDG3+ZS1KbJWO8L8w8DPGo
-         8ZB8XdPbSht4tqvR5K7FQK30kDAzayz+3PVb9wmcrkxYXQppH8n/aNXoVLe8h4Bngbvd
-         6lYw8y0yvJNK9MUUeieAsEn/6cwgJkr45865axE8JqE1FYVuqs8IBHcW/sBT2DG4W7M1
-         FFCw==
-X-Gm-Message-State: ANhLgQ1njkSzJAUTcHbUV+6APFFBcedDeEIsRhGG5A1KfLI2SxR1PL54
-        K6iScoXUvlYweqbJXKTBCRcV5gJuPSk0SYZuUck=
-X-Google-Smtp-Source: ADFU+vtAW45dGRunEP7yFSpCB6bD3WFANNafSJ0m0zzZDj2x3nTjtq9KiXEMI29dPf0nak4RlzD9VTWyLAn9DXnUx/U=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr2217525otl.145.1585667870554;
- Tue, 31 Mar 2020 08:17:50 -0700 (PDT)
+        Tue, 31 Mar 2020 11:22:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zW1mJXX01S6hc6lAM0/5NL3R426sp5kOO7vEk1pRlno=; b=nK+odSu435R1sr2b7E+aErSJ4o
+        pUuuvHgcHqFF8xMAsWfnuTNznhI1HtGlbyjSm4PJi3Z2+lalRqanhNCs5uGaFTS5u1iEOCaC95oUw
+        PAxcOjh4wTKZAs4qKNb2tq+a1MFQly66tCoXwPxJRkOINXwLao+D+xtztsIE3gQU88KHZiySfcapq
+        WxCpBueNuDFoH9NA70OCtCEW3LzLIQXpvuRSrDDmW4du6jGFd9zAYuwGR3xEU247iklZSsvoCHJ7N
+        uNNCITvmOX9C1DekyDxbPt6vTcLCQFWWbcRi4YeQYi2PAQyVdqBFRduQjHJRm+n8LA/Ksk9uv/Ji4
+        02e5CfCg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJIia-0005Xh-Np; Tue, 31 Mar 2020 15:22:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4574A30015A;
+        Tue, 31 Mar 2020 17:22:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2753829D75854; Tue, 31 Mar 2020 17:22:17 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 17:22:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Chris Friesen <chris.friesen@windriver.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jim Somerville <Jim.Somerville@windriver.com>,
+        Christoph Lameter <cl@linux.com>
+Subject: Re: [patch 3/3] isolcpus: undeprecate on documentation
+Message-ID: <20200331152217.GT20730@hirez.programming.kicks-ass.net>
+References: <20200328152117.881555226@redhat.com>
+ <20200328152503.271570281@redhat.com>
 MIME-Version: 1.0
-References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
-In-Reply-To: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 31 Mar 2020 17:17:39 +0200
-Message-ID: <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
- in correct sequence
-To:     Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hao Bui <hao.bui.yg@renesas.com>,
-        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200328152503.271570281@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fujita-san,
+On Sat, Mar 28, 2020 at 12:21:20PM -0300, Marcelo Tosatti wrote:
+> isolcpus is used to control steering of interrupts to managed_irqs and
+> kernel threads, therefore its incorrect to state that its deprecated.
+> 
+> Remove deprecation warning.
+> 
+> Suggested-by: Chris Friesen <chris.friesen@windriver.com>
+> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
+> 
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> Index: linux-2.6/Documentation/admin-guide/kernel-parameters.txt
+> ===================================================================
+> --- linux-2.6.orig/Documentation/admin-guide/kernel-parameters.txt
+> +++ linux-2.6/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1926,7 +1926,6 @@
+>  			Format: <RDP>,<reset>,<pci_scan>,<verbosity>
+>  
+>  	isolcpus=	[KNL,SMP,ISOL] Isolate a given set of CPUs from disturbance.
+> -			[Deprecated - use cpusets instead]
+>  			Format: [flag-list,]<cpu-list>
+>  
 
-CC -stable, +sasha, +seebe
-
-On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
-<kazuhiro.fujita.jg@renesas.com> wrote:
-> For SCIF and HSCIF interfaces the SCxSR register holds the status of
-> data that is to be read next from SCxRDR register, But where as for
-> SCIFA and SCIFB interfaces SCxSR register holds status of data that is
-> previously read from SCxRDR register.
->
-> This patch makes sure the status register is read depending on the port
-> types so that errors are caught accordingly.
->
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
-> Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
-> Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -870,9 +870,16 @@ static void sci_receive_chars(struct uart_port *port)
->                                 tty_insert_flip_char(tport, c, TTY_NORMAL);
->                 } else {
->                         for (i = 0; i < count; i++) {
-> -                               char c = serial_port_in(port, SCxRDR);
-> -
-> -                               status = serial_port_in(port, SCxSR);
-> +                               char c;
-> +
-> +                               if (port->type == PORT_SCIF ||
-> +                                   port->type == PORT_HSCIF) {
-> +                                       status = serial_port_in(port, SCxSR);
-> +                                       c = serial_port_in(port, SCxRDR);
-> +                               } else {
-> +                                       c = serial_port_in(port, SCxRDR);
-> +                                       status = serial_port_in(port, SCxSR);
-> +                               }
->                                 if (uart_handle_sysrq_char(port, c)) {
->                                         count--; i--;
->                                         continue;
-
-I can confirm that the documentation for the Serial Status Register on
-  1. (H)SCIF on R-Car Gen1/2/3 says the framing/error flag applies to
-     the data that is "to be read next" from the FIFO., and that the
-     "Sample Flowchart for Serial Reception (2)" confirms this,
-  2. SCIF[AB] on R-Car Gen2, SH-Mobile AG5, R-Mobile A1 and APE6 says
-     the framing/error flag applies to the receive data that is "read"
-     from the FIFO, and that the "Example of Flow for Serial Reception
-     (2)" confirms this,
-  3. SCIF on RZ/A1H says something similar as for (H)SCIF above, using
-     slightly different wording, also confirmed by the "Sample Flowchart
-     for Receiving Serial Data (2)".
-
-However, the documentation for "SCIFA" on RZ/A2 (for which we use
-PORT_SCIF, not PORT_SCIFA, in the driver) has conflicting information:
-  1. Section 17.2.7 "Serial Status Register (FSR)" says:
-       - A receive framing/parity error occurred in the "next receive
-         data read" from the FIFO,
-       - Indicates whether there is a framing/parity error in the data
-         "read" from the FIFO.
-  2. Figure 17.8 "Sample Flowchart for Receiving Serial Data in
-     Asynchronous Mode (2)".
-       - Whether a framing error or parity error has occurred in the
-         received data that is "read" from the FIFO.
-
-So while the change looks OK for most Renesas ARM SoCs, the situation
-for RZ/A2 is unclear.
-Note that the above does not take into account variants used on SuperH
-SoCs.
-
-Nevertheless, this patch will need some testing on various hardware.
-Do you have a test case to verify the broken/fixed behavior?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+It's still an absolute horrible piece of crap though. nozh_full piling
+more and more shit on it doesn't make it more shiny.
