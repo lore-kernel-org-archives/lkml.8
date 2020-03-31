@@ -2,99 +2,127 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98755C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD86C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5392080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373682080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:04:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="apGA2nFZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/hQhjn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731320AbgCaWEM (ORCPT
+        id S1731391AbgCaWEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:04:12 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20531 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728493AbgCaWEM (ORCPT
+        Tue, 31 Mar 2020 18:04:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44637 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbgCaWEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:04:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585692251;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/nfgOy3O0fCtYT2cXHRPJbltzLgwVrys56KLhZQvEmo=;
-        b=apGA2nFZDo5l//pr/b1urooiD9mFAlatg998H6F34m84LP5Jzev9dNOSHInUz4JaOl9umo
-        n9NKmX6Sxuue71q/ZclY2ATZWGlcpxNvs4Ctzt/DSP/FqJ3u/faqjFoMsXqjDXrQASF7ew
-        lMW4ZyIgksH6KVZn3ENVVd5IR3IML7M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-U6jGcOySMmC0H04j8ali1A-1; Tue, 31 Mar 2020 18:04:09 -0400
-X-MC-Unique: U6jGcOySMmC0H04j8ali1A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 127798017CE;
-        Tue, 31 Mar 2020 22:04:08 +0000 (UTC)
-Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F5721001B09;
-        Tue, 31 Mar 2020 22:04:07 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 17:04:05 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] objtool: check: Fix NULL pointer dereference
-Message-ID: <20200331220405.2zopmakvcgytfze5@treble>
-References: <20200331002040.GA11302@embeddedor>
+        Tue, 31 Mar 2020 18:04:44 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m17so28058079wrw.11;
+        Tue, 31 Mar 2020 15:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K04d4E619JqJooDocmXBidoUR3eMnXv/Sjm/pn+vcqc=;
+        b=P/hQhjn1cnbdOGryaLUrCZZRN/ePZIqY64iDBgsud7Go8Uf3j2zSAaUIYjGq89cAzF
+         k8GsKu+tfPbeAVHD+FXCiuFkrHeL+RYrC747Y4TFO0jdVN2sBt5vUNSK6Xuag194imU5
+         cDoAjRkVH1KKJtU9OrBsGnm3yRSQ6+SvSNYt/yh91Yi0JxXU6G5oY5t05VaY9+/keaWZ
+         q//AfMFQKrY2DCzi7M2KeWPAdBethaKmJZv7XFzYAOvEI1dZx+UyGagUjwN9yktpr7aX
+         RJhH0lndhRlKQ/3a8nAHhqXn5aeN7xzvAYRhnkTBLH2po8ncuWdFkglSnJrDbV/Khlj2
+         fQcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K04d4E619JqJooDocmXBidoUR3eMnXv/Sjm/pn+vcqc=;
+        b=UXqz8KsF5jeufvv83MF/VQxP6Lo4s1/35tS+Q/Vis/gLlr6u++a5JVnN+ltxrBfKfS
+         yZetg2I+iBpzpEeUBahRkxUQo/bRDXu6lsG/jvuX3xdqr1oymecB1jcRZbWckzM9U6hx
+         lsEQRwwj2Nx+k1qj7TffSSrzsdtZ/njBlA11gL3Q68nZupfEtjephCtFQqADefLtSM7d
+         Bmsq8FMz3eLdoa15OW8GYuXxGZF/DCTvm8v6ArCuFQmqv7wOEu7HOXVAoiH4x9AOT9/V
+         HJ+3uvo2gC2ClVcV9rZgE2YI9ynzMryNerolEmJA2zmZCagZCrhdQeM+ithmxHSpAGvd
+         71Pw==
+X-Gm-Message-State: ANhLgQ17yr8884QuubdyCEy1MO/Ve03NMlOgRhcDO2Gw5P/3nNqt5xB/
+        WnI6COTNXvjM19f0WpclLqQ=
+X-Google-Smtp-Source: ADFU+vsvWZJ8fIiCmHp3Zp0k7J6xxXy43eev5tOznFF7bpC0JTGNOryX5j+MM6Ajs8csBzLFpUOuDQ==
+X-Received: by 2002:a05:6000:51:: with SMTP id k17mr19168527wrx.148.1585692282256;
+        Tue, 31 Mar 2020 15:04:42 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id b187sm5918614wmc.14.2020.03.31.15.04.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Mar 2020 15:04:41 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 22:04:40 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
+ node
+Message-ID: <20200331220440.roq4pv6wk7tq23gx@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-6-richard.weiyang@gmail.com>
+ <20200330124842.GY22483@bombadil.infradead.org>
+ <20200330141558.soeqhstone2liqud@master>
+ <20200330142821.GD22483@bombadil.infradead.org>
+ <20200331134208.gfkyym6n3gpgk3x3@master>
+ <20200331164212.GC21484@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331002040.GA11302@embeddedor>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200331164212.GC21484@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:20:40PM -0500, Gustavo A. R. Silva wrote:
-> In case func is null, there is a null pointer dereference at 2029:
-> 
-> 2029                 WARN("%s uses BP as a scratch register",
-> 2030                      func->name);
-> 
-> Fix this by null-checking func.
-> 
-> Addresses-Coverity-ID: 1492002 ("Dereference after null check")
-> Fixes: c705cecc8431 ("objtool: Track original function across branches")
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  tools/objtool/check.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index e3bb76358148..182cc48fa892 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -2025,7 +2025,7 @@ static int validate_return(struct symbol *func, struct instruction *insn, struct
->  		return 1;
->  	}
->  
-> -	if (state->bp_scratch) {
-> +	if (func && state->bp_scratch) {
->  		WARN("%s uses BP as a scratch register",
->  		     func->name);
->  		return 1;
+On Tue, Mar 31, 2020 at 09:42:12AM -0700, Matthew Wilcox wrote:
+>On Tue, Mar 31, 2020 at 01:42:08PM +0000, Wei Yang wrote:
+>> On Mon, Mar 30, 2020 at 07:28:21AM -0700, Matthew Wilcox wrote:
+>> >On Mon, Mar 30, 2020 at 02:15:58PM +0000, Wei Yang wrote:
+>> >> On Mon, Mar 30, 2020 at 05:48:42AM -0700, Matthew Wilcox wrote:
+>> >> >On Mon, Mar 30, 2020 at 12:36:39PM +0000, Wei Yang wrote:
+>> >> >> If an entry is at the last level, whose parent's shift is 0, it is not
+>> >> >> expected to be a node. We can just leverage the xa_is_node() check to
+>> >> >> break the loop instead of check shift additionally.
+>> >> >
+>> >> >I know you didn't run the test suite after making this change.
+>> >> 
+>> >> I did kernel build test, but not the test suite as you mentioned.
+>> >> 
+>> >> Would you mind sharing some steps on using the test suite? And which case you
+>> >> think would trigger the problem?
+>> >
+>> >cd tools/testing/radix-tree/; make; ./main
+>> >
+>> 
+>> Hmm... I did a make on top of 5.6-rc6, it failed. Would you mind taking a look
+>> into this?
+>
+>It works for me.  I run it almost every day.  What error did you see?
 
-We should still do the warning even if there's no func.  I'll make a
-slightly different patch which unconditionally uses WARN_FUNC().
 
-I'll give you Reported-by credit and keep the coverity tag.  Thanks!
+The error message:
+
+cc -I. -I../../include -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined   -c -o main.o main.c
+In file included from ./linux/../../../../include/linux/radix-tree.h:15,
+                 from ./linux/radix-tree.h:5,
+                 from main.c:10:
+./linux/rcupdate.h:5:10: fatal error: urcu.h: No such file or directory
+    5 | #include <urcu.h>
+      |          ^~~~~~~~
+compilation terminated.
+make: *** [<builtin>: main.o] Error 1
+
+
+I didn't touch any code in testing directory.
 
 -- 
-Josh
-
+Wei Yang
+Help you, Help me
