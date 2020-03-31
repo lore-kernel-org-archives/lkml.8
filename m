@@ -2,123 +2,174 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BCEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C143AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F8D20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F0620848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saDy0un/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="19zHJfz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgCaRCq (ORCPT
+        id S1731381AbgCaRDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:02:46 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36143 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731353AbgCaRCn (ORCPT
+        Tue, 31 Mar 2020 13:03:14 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:44200 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730216AbgCaRDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:02:43 -0400
-Received: by mail-lj1-f194.google.com with SMTP id b1so2217714ljp.3;
-        Tue, 31 Mar 2020 10:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2HZuGdxB+x0mWlELwgsKVlrZ7g66xEPOmCIgcev6cRk=;
-        b=saDy0un/8sSw+q2znKEJCS5QDo1c/iC0dk11oKl+JOJfL4CehAZVMFFlcyu621sIuI
-         TpW5C06zUV0WDCr/X9/mUTfAfTpcbjqBE98ukvR//mgALXjLvwcWhUmG2yPendEbBJeV
-         C2jkfOTrcwrRfyZ9iEiFsTuZ2QY96LLf+hh6QBBR9ZpFP7dmieBaOthVuOTi/2jyDm6O
-         EZX8gF8J1mFOVjktbw6zMgj7Y6WLKLvliXqkQNGs41Huv7GbNswxobuCSn0G7n1CuMKw
-         aYizYm0bVR0VwwbhMRNHf2+N0ignpgtMJyOrgwLV7A5lXZAaYxj+WVQfuxUMQYe9QoQt
-         rpGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2HZuGdxB+x0mWlELwgsKVlrZ7g66xEPOmCIgcev6cRk=;
-        b=PR8Si+77WR/Ub1CBVRloO1D1i44Fo6xTFkE3f2siHUJ21nKMOuqHdsABS4msq8L0ql
-         VNTZQ54Gs9T6N1CenhbQjRoygssyFjybwretPhSAy8TgaTC3GlMRnIB3y+T2+X5jkGDP
-         twYi3tDY1E9oUGXs0ukkEBuQhD2PBwr5XkO9ZpAo28a/o2rXaSxJX+ROiOoGX+qKUh6W
-         BQOygen1ynBfTKdY0T86F5BYbTgZXtAWYybJ7CQvVR1EjZrxOLcBtm8SGtXARekXWdxW
-         ikqiwyRrWDrexFxn4ZKgr5jYhF99ioxFuhtH1mGpohPLaSYxTispCvNfEaGOcg3nVu2x
-         KnYg==
-X-Gm-Message-State: AGi0PuYk8L3dnAR4m215rUxUnE4zKIhAwEQb3MpMbsxm95jd+hOJogxH
-        lF94tf+XpHW2O7icJCCepcs=
-X-Google-Smtp-Source: APiQypJAzaqWR8QOVGnwEqbA0+F/7BL3cHgAFxPFWoMIz2nlJAcp6b/ae4HVuSEo264GCzY5Cs5SmQ==
-X-Received: by 2002:a2e:3a19:: with SMTP id h25mr1985208lja.133.1585674160923;
-        Tue, 31 Mar 2020 10:02:40 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id 195sm6845074lfi.75.2020.03.31.10.02.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:02:40 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 31 Mar 2020 19:02:32 +0200
-To:     Uladzislau Rezki <urezki@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200331170232.GA28413@pc636>
-References: <20200331131628.153118-1-joel@joelfernandes.org>
- <20200331140433.GA26498@pc636>
- <20200331150911.GC236678@google.com>
- <20200331160119.GA27614@pc636>
+        Tue, 31 Mar 2020 13:03:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Yp40Y2DCbP2hyounIEGsR0vBBWXR1/GHlHEP6SbSYmE=; b=19zHJfz5KTn93xMOlPsGUqQu4
+        J6Rlikkne2Fsa5AGx8zzagOGReqTe4MMgVdtOoKx0NzNhZlr1gGekDzd81bNA9cFZ4m6J33kTXWJB
+        EzNgBv8GMf8H1vjkcda0doXk9Ds62AtLm5AiffIHUixwo+00mo8Ryzdx/kbGczoQYxe6q2nRQ6a43
+        fRlIcSe44KYHRjrLtRyV4nL58tOV2y5G+lvHubJqRxGU3eqvTjdkhZwHdexjFrGLCbV+uiYEAZqSI
+        8VnktUYN8PGdWZaHz3mt5DKem82F/Q2Hy75KonmSgbDiM03jrqVcMsuYidqoZk44OcLkVnYR414ze
+        cgV7HqW5Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60452)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jJKI2-00013O-RU; Tue, 31 Mar 2020 18:03:03 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jJKI0-0008HE-Il; Tue, 31 Mar 2020 18:03:00 +0100
+Date:   Tue, 31 Mar 2020 18:03:00 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     David Jander <david@protonic.nl>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+Message-ID: <20200331170300.GQ25745@shell.armlinux.org.uk>
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+ <20200329150854.GA31812@lunn.ch>
+ <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+ <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
+ <20200330174114.GG25745@shell.armlinux.org.uk>
+ <20200331104459.6857474e@erd988>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331160119.GA27614@pc636>
+In-Reply-To: <20200331104459.6857474e@erd988>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >
-> > Paul was concerned about following scenario with hitting synchronize_rcu():
-> > 1. Consider a system under memory pressure.
-> > 2. Consider some other subsystem X depending on another system Y which uses
-> >    kfree_rcu(). If Y doesn't complete the operation in time, X accumulates
-> >    more memory.
-> > 3. Since kfree_rcu() on Y hits synchronize_rcu() a lot, it slows it down.
-> >    This causes X to further allocate memory, further causing a chain
-> >    reaction.
-> > Paul, please correct me if I'm wrong.
-> > 
-> I see your point and agree that in theory it can happen. So, we should
-> make it more tight when it comes to rcu_head attachment logic.
+On Tue, Mar 31, 2020 at 10:44:59AM +0200, David Jander wrote:
+> I have checked with the datasheet of the AR8035, and AFAICS, what the code
+> does is this:
 > 
-Just adding more thoughts about such concern. Even though in theory we
-can run into something like that. But also please note, that under high
-memory pressure it also does not mean that (X) will always succeed with
-further infinite allocations, so memory pressure is something common.
-As soon as the situation becomes slightly better we do our work much
-efficient.
+>  - Disable the SmartEEE feature of the phy. The comment in the code implies
+>    that for some reason it doesn't work, but the reason itself is not given.
+>    Anyway, disabling SmartEEE should IMHO opinion be controlled by a DT
+>    setting. There is no reason to believe this problem is specific to the
+>    i.MX6. Besides, it is a feature of the phy, so it seems logical to expose
+>    that via the DT. Once that is done, it has no place here.
+> 
+>  - Set the external clock output to 125MHz. This is needed because the i.MX6
+>    needs a 125MHz reference clock input. But it is not a requirement to use
+>    this output. It is perfectly fine and possible to design a board that uses
+>    an external oscillator for this. It is also possible that an i.MX6 design
+>    has such a phy connected to a MAC behind a switch or some other interface.
+>    Independent of i.MX6 this setting can also be necessary for other hardware
+>    designs, based on different SoC's. In summary, this is a feature of the
+>    specific hardware design at hand, and has nothing to do with the i.MX6
+>    specifically. This should definitely be exposed through the DT and not be
+>    here.
+> 
+>  - Enable TXC delay. To clarify, the RGMII specification version 1 specified
+>    that the RXC and TXC traces should be routed long enough to introduce a
+>    certain delay to the clock signal, or the delay should be introduced via
+>    other means. In a later version of the spec, a provision was given for MAC
+>    or PHY devices to generate this delay internally. The i.MX6 MAC interface
+>    is unable to generate the required delay internally, so it has to be taken
+>    care of either by the board layout, or by the PHY device. This is the
+>    crucial point: The amount of delay set by the PHY delay register depends on
+>    the board layout. It should NEVER be hard-coded in SoC setup code. The
+>    correct way is to specify it in the DT. Needless to say that this too,
+>    isn't i.MX6-specific.
 
-Practically, i was trying to simulate memory pressure to hit synchronize_rcu()
-on my test system. By just simulating head-less freeing(for any object) and
-by always dynamic attaching path. So i could trigger it, but that was really
-hard to achieve and it happened only few times. So that was not like a constant
-hit. What i got constantly were:
+Let's say this is simple to do, shall we?
 
-- System got recovered and proceed with "normal" path;
-- The OOM hit as a final step, when the system is run out of memory fully.
+So, if I disable the call to ar8031_phy_fixup() from ar8035_phy_fixup(),
+and add the following to the imx6qdl-sr-som.dtsi fragment:
 
-So, practically i have not seen massive synchronize_rcu() hit.
+&fec {
+...
+        phy-handle = <&phy>;
 
---
-Vlad Rezki
+        mdio {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                phy: ethernet-phy@0 {
+                        reg = <0>;
+                        qca,clk-out-frequency = <125000000>;
+                };
+        };
+};
+
+Note that phy-mode is already RGMII-ID.  This should work, right?
+
+The link still comes up, which is good, but the PHY registers for
+the clock output are wrong.
+
+MMD 3 register 0x8016 contains 0xb282, not 0xb29a which it has
+_with_ the quirk - and thus the above clock frequency stated in
+DT is not being selected.  Forcing this register to the right
+value restores networking.
+
+Yes, the PHY driver is being used:
+
+Qualcomm Atheros AR8035 2188000.ethernet-1:00: attached PHY driver [Qualcomm Atheros AR8035] (mii_bus:phy_addr=2188000.ethernet-1:00, irq=POLL)
+
+So that's not the problem.
+
+Adding some debug shows that the phy_device that is being used is
+the correct one:
+
+Qualcomm Atheros AR8035 2188000.ethernet-1:00: node=/soc/aips-bus@2100000/ethernet@2188000/mdio/ethernet-phy@0
+
+and it is correctly parsing the clk-out-frequency property:
+
+Qualcomm Atheros AR8035 2188000.ethernet-1:00: cof=0 125000000
+
+When we get to attaching the PHY however:
+
+Qualcomm Atheros AR8035 2188000.ethernet-1:00: clk_25m_mask=0004 clk_25m_reg=0000
+
+which is just wrong.  That's because:
+
+                if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
+                    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
+                        priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
+                        priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
+                }
+
+is patently untested - those "~" should not be there.  These masks
+are one-bits-set for the values that comprise the fields, not
+zero-bits-set.
+
+So, I see a patch series is going to be necessary to fix the cockup(s)
+in the PHY driver before we can do anything with DT files.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
