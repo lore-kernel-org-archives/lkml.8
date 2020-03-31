@@ -2,262 +2,122 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCA5C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31862C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2592521473
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:01:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mu2z0ze3"
+	by mail.kernel.org (Postfix) with ESMTP id 179EC212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgCaSA6 (ORCPT
+        id S1726956AbgCaSCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:00:58 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46994 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727771AbgCaSAb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:00:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585677630;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9jyYclxXMODW7FpOYyCrTBF0w92w0ifC0JZBLyDDlrM=;
-        b=Mu2z0ze3C7zxICI4GQ3rnZMm4SA9F1CwqKJFRVZmo/KYm6zSTrYUMJhumaaJyYCGw9Pei3
-        qAuxINlIvyqbMlJT0CDzYng+EgrLbbPr1zamaJ37WA6084hbcwtkhD/9vnPcLepIVogUV/
-        2R6U8cyX44wQXzFHc8Y6++1HU4mPw0A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171-ur2pUe5CNSeuIhoGh7klXg-1; Tue, 31 Mar 2020 14:00:28 -0400
-X-MC-Unique: ur2pUe5CNSeuIhoGh7klXg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE2321007277;
-        Tue, 31 Mar 2020 18:00:26 +0000 (UTC)
-Received: from eperezma.remote.csb (ovpn-112-92.ams2.redhat.com [10.36.112.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A5A35C1A2;
-        Tue, 31 Mar 2020 18:00:24 +0000 (UTC)
-From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH v2 4/8] vhost: batching fetches
-Date:   Tue, 31 Mar 2020 20:00:02 +0200
-Message-Id: <20200331180006.25829-5-eperezma@redhat.com>
-In-Reply-To: <20200331180006.25829-1-eperezma@redhat.com>
-References: <20200331180006.25829-1-eperezma@redhat.com>
+        Tue, 31 Mar 2020 14:02:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16127 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726199AbgCaSCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 14:02:44 -0400
+IronPort-SDR: j2NZ3SlPxn625hqJet8G8+Vs3jyT3gZveo1kbHBzeVr1Sq3iAHkMkzORzP03etou3Uum/AALkx
+ TLEV/skRKVDw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 11:02:44 -0700
+IronPort-SDR: Xmx1u/O6AfpkZBrQjD1Mw4wxecKCMtKYwvOUKO7DlkvZwglVp87aDyPldtXFWEkyA6bcaalHGx
+ HGz90nJ1R8Yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="240205398"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 11:02:42 -0700
+Subject: Re: [PATCH 3/6] pci: add PCI quirk cmdmem fixup for Intel DSA device
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, gregkh@linuxfoundation.org,
+        arnd@arndb.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+References: <20200331155906.GA191980@google.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <03073d25-9351-5bc7-e971-8e21b82f122f@intel.com>
+Date:   Tue, 31 Mar 2020 11:02:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200331155906.GA191980@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Michael S. Tsirkin" <mst@redhat.com>
 
-With this patch applied, new and old code perform identically.
+On 3/31/2020 8:59 AM, Bjorn Helgaas wrote:
+> Take a look and make yours match (applies to other patches in the
+> series as well):
+>
+>    $ git log --oneline drivers/pci/quirks.c
+>    299bd044a6f3 ("PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports")
+>    0325837c51cb ("PCI: Add ACS quirk for Zhaoxin multi-function devices")
+>    2880325bda8d ("PCI: Avoid ASMedia XHCI USB PME# from D0 defect")
+>    b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism for Xeon chipsets")
+>    5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
+>    7b90dfc4873b ("PCI: Add DMA alias quirk for PLX PEX NTB")
+>    09298542cd89 ("PCI: Add nr_devfns parameter to pci_add_dma_alias()")
+>
+> There's no need to mention "PCI" twice.  Also no need for both "quirk"
+> and "fixup".  This is all in the interest of putting more information
+> in the small space of the subject line.
+Ok I'll fix up.
+>
+> On Mon, Mar 30, 2020 at 02:27:06PM -0700, Dave Jiang wrote:
+>> Since there is no standard way that defines a PCI device that receives
+>> descriptors or commands with synchronous write operations, add quirk to set
+>> cmdmem for the Intel accelerator device that supports it.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/pci/quirks.c |   11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 29f473ebf20f..ba0572b9b9c8 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -5461,3 +5461,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>>   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+>>   			      PCI_CLASS_DISPLAY_VGA, 8,
+>>   			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+>> +
+>> +/*
+>> + * Until the PCI Sig defines a standard capaiblity check that indicates a
+>> + * device has cmdmem with synchronous write capability, we'll add a quirk
+>> + * for device that supports it.
+> s/PCI Sig/PCI-SIG/
+> s/capaiblity/capability/
+>
+> It's not clear why this would need to be in drivers/pci/quirks.c as
+> opposed to being in the driver itself.
 
-Lots of extra optimizations are now possible, e.g.
-we can fetch multiple heads with copy_from/to_user now.
-We can get rid of maintaining the log array.  Etc etc.
+That would make the driver to set the PCI device struct cap bit instead 
+of this being set on discovery right? And if the driver isn't loaded, 
+then the cap wouldn't be set. In the future if user space wants to 
+discover this information that may be an issue.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
----
- drivers/vhost/test.c  |  2 +-
- drivers/vhost/vhost.c | 47 ++++++++++++++++++++++++++++++++++++++-----
- drivers/vhost/vhost.h |  5 ++++-
- 3 files changed, 47 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
-index e37c92d4d7ad..58da17af93e9 100644
---- a/drivers/vhost/test.c
-+++ b/drivers/vhost/test.c
-@@ -119,7 +119,7 @@ static int vhost_test_open(struct inode *inode, struc=
-t file *f)
- 	dev =3D &n->dev;
- 	vqs[VHOST_TEST_VQ] =3D &n->vqs[VHOST_TEST_VQ];
- 	n->vqs[VHOST_TEST_VQ].handle_kick =3D handle_vq_kick;
--	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
-+	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
- 		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT);
-=20
- 	f->private_data =3D n;
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 56c5253056ee..1646b1ce312a 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -303,6 +303,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
- {
- 	vq->num =3D 1;
- 	vq->ndescs =3D 0;
-+	vq->first_desc =3D 0;
- 	vq->desc =3D NULL;
- 	vq->avail =3D NULL;
- 	vq->used =3D NULL;
-@@ -371,6 +372,11 @@ static int vhost_worker(void *data)
- 	return 0;
- }
-=20
-+static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
-+{
-+	return vq->max_descs - UIO_MAXIOV;
-+}
-+
- static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
- {
- 	kfree(vq->descs);
-@@ -393,6 +399,9 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *=
-dev)
- 	for (i =3D 0; i < dev->nvqs; ++i) {
- 		vq =3D dev->vqs[i];
- 		vq->max_descs =3D dev->iov_limit;
-+		if (vhost_vq_num_batch_descs(vq) < 0) {
-+			return -EINVAL;
-+		}
- 		vq->descs =3D kmalloc_array(vq->max_descs,
- 					  sizeof(*vq->descs),
- 					  GFP_KERNEL);
-@@ -1643,6 +1652,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigne=
-d int ioctl, void __user *arg
- 		vq->last_avail_idx =3D s.num;
- 		/* Forget the cached index value. */
- 		vq->avail_idx =3D vq->last_avail_idx;
-+		vq->ndescs =3D vq->first_desc =3D 0;
- 		break;
- 	case VHOST_GET_VRING_BASE:
- 		s.index =3D idx;
-@@ -2211,7 +2221,7 @@ static int fetch_indirect_descs(struct vhost_virtqu=
-eue *vq,
- 	return 0;
- }
-=20
--static int fetch_descs(struct vhost_virtqueue *vq)
-+static int fetch_buf(struct vhost_virtqueue *vq)
- {
- 	unsigned int i, head, found =3D 0;
- 	struct vhost_desc *last;
-@@ -2224,7 +2234,11 @@ static int fetch_descs(struct vhost_virtqueue *vq)
- 	/* Check it isn't doing very strange things with descriptor numbers. */
- 	last_avail_idx =3D vq->last_avail_idx;
-=20
--	if (vq->avail_idx =3D=3D vq->last_avail_idx) {
-+	if (unlikely(vq->avail_idx =3D=3D vq->last_avail_idx)) {
-+		/* If we already have work to do, don't bother re-checking. */
-+		if (likely(vq->ndescs))
-+			return vq->num;
-+
- 		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
- 			vq_err(vq, "Failed to access avail idx at %p\n",
- 				&vq->avail->idx);
-@@ -2315,6 +2329,24 @@ static int fetch_descs(struct vhost_virtqueue *vq)
- 	return 0;
- }
-=20
-+static int fetch_descs(struct vhost_virtqueue *vq)
-+{
-+	int ret =3D 0;
-+
-+	if (unlikely(vq->first_desc >=3D vq->ndescs)) {
-+		vq->first_desc =3D 0;
-+		vq->ndescs =3D 0;
-+	}
-+
-+	if (vq->ndescs)
-+		return 0;
-+
-+	while (!ret && vq->ndescs <=3D vhost_vq_num_batch_descs(vq))
-+		ret =3D fetch_buf(vq);
-+
-+	return vq->ndescs ? 0 : ret;
-+}
-+
- /* This looks in the virtqueue and for the first available buffer, and c=
-onverts
-  * it to an iovec for convenient access.  Since descriptors consist of s=
-ome
-  * number of output then some number of input descriptors, it's actually=
- two
-@@ -2340,7 +2372,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
- 	if (unlikely(log))
- 		*log_num =3D 0;
-=20
--	for (i =3D 0; i < vq->ndescs; ++i) {
-+	for (i =3D vq->first_desc; i < vq->ndescs; ++i) {
- 		unsigned iov_count =3D *in_num + *out_num;
- 		struct vhost_desc *desc =3D &vq->descs[i];
- 		int access;
-@@ -2386,14 +2418,19 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
- 		}
-=20
- 		ret =3D desc->id;
-+
-+		if (!(desc->flags & VRING_DESC_F_NEXT))
-+			break;
- 	}
-=20
--	vq->ndescs =3D 0;
-+	vq->first_desc =3D i + 1;
-=20
- 	return ret;
-=20
- err:
--	vhost_discard_vq_desc(vq, 1);
-+	for (i =3D vq->first_desc; i < vq->ndescs; ++i)
-+		if (!(vq->descs[i].flags & VRING_DESC_F_NEXT))
-+			vhost_discard_vq_desc(vq, 1);
- 	vq->ndescs =3D 0;
-=20
- 	return ret;
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index c1efd8256a88..64a4ebab6dd2 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -100,6 +100,7 @@ struct vhost_virtqueue {
-=20
- 	struct vhost_desc *descs;
- 	int ndescs;
-+	int first_desc;
- 	int max_descs;
-=20
- 	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
-@@ -242,7 +243,7 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
- int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
-=20
- #define vq_err(vq, fmt, ...) do {                                  \
--		pr_debug(pr_fmt(fmt), ##__VA_ARGS__);       \
-+		pr_err(pr_fmt(fmt), ##__VA_ARGS__);       \
- 		if ((vq)->error_ctx)                               \
- 				eventfd_signal((vq)->error_ctx, 1);\
- 	} while (0)
-@@ -268,6 +269,8 @@ static inline void vhost_vq_set_backend_opaque(struct=
- vhost_virtqueue *vq,
- 					       void *private_data)
- {
- 	vq->private_data =3D private_data;
-+	vq->ndescs =3D 0;
-+	vq->first_desc =3D 0;
- }
-=20
- /**
---=20
-2.18.1
 
+>
+>> + */
+>> +static void device_cmdmem_fixup(struct pci_dev *pdev)
+>> +{
+>> +	pdev->cmdmem = 1;
+>> +}
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0b25, device_cmdmem_fixup);
+>>
