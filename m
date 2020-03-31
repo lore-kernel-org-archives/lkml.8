@@ -2,217 +2,136 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6B5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8D3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 347AB206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QmT8jZjq"
+	by mail.kernel.org (Postfix) with ESMTP id 66DFE207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbgCaKM3 (ORCPT
+        id S1730263AbgCaKOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:12:29 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:37470 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729997AbgCaKM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:12:28 -0400
-Received: by mail-qv1-f65.google.com with SMTP id n1so10540613qvz.4
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 03:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PpCiJ4Lui2bH+hihck/1M29XXQzUL8SEpkRFBSZWS3E=;
-        b=QmT8jZjqQT6Ge6TZl0USa3Psy6X5Ku3sOlIKNsBoYH0OclG1nmg/DFtLjm36rBgkmV
-         nwuOew2VCLGe7YZN2x9mbT76TiuQbhh5z0Gjlcxp/cMfKFyE8gpup4sQTsMkHIrQfAI3
-         OSloK3Btgk2aslJnpj1h6w/9mDil5s+WQY0BawQ+AN6iy8eekzY91DB7zWabqsE1P7YA
-         ALssG3mSvg+ZeN+D9a6LUMaU1/+4DfXisMTiVPsOsMX2i3bLpvVxBAp6VzEKC+KqTCV9
-         EG0tIV2IaKAMbezizQKQIcEHNpjnMTX79kady7FAEaHBJC62qTd/pf9gSICBbnGcu/Iu
-         qjUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PpCiJ4Lui2bH+hihck/1M29XXQzUL8SEpkRFBSZWS3E=;
-        b=QmFs+e25pQK8wkjkLEOMBn6Inx5+phyMAKNN/zp15ot5yqL+fcRF2g+EvhLgaV328d
-         1lOViK6vd9gsy/EKYZe1VdC9buv4ZiDiiyG9H/GvJjgVRrECooMyZRPhm7qluRZgJXjq
-         mGo5bIsY7dJ2dQ5UFxUW1qaF9BUhMemI7lWRP8Vq4sTUjgB/3nWsy/kdGOzB5AzkP5tA
-         13+V8rSGAr/bAwnj5cY8rbeNVPE/If1y5EIuSAITuaYsdBH+0bPjWQHDRHeBL2kowWeD
-         9BU8vYiNfFgTRfHwg15+08GbOfvnf4eX6RBMUzGUp3nxvcIkqX0PGRmOJgwQjI3anlhp
-         SEoA==
-X-Gm-Message-State: ANhLgQ2J0kXuFTVaD2do5P9CtX7I3fO5MpzfCcFGfxvi0FwoB/adKh7g
-        NNdPL9m84InlcoaI4MQ7lcebPKWs3bMUbEE4MacAdQ==
-X-Google-Smtp-Source: ADFU+vv3TFu2Ux8dJ2SbfkrLryByw+hIEf6FkvZrzCLuK96WA/ar1PPlUm5TyNUi4z0RnbGT2pLQSkrVjYUzE439wIA=
-X-Received: by 2002:ad4:49d1:: with SMTP id j17mr16149922qvy.80.1585649546681;
- Tue, 31 Mar 2020 03:12:26 -0700 (PDT)
+        Tue, 31 Mar 2020 06:14:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:50130 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727655AbgCaKOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 06:14:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A29BB30E;
+        Tue, 31 Mar 2020 03:14:18 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6855D3F52E;
+        Tue, 31 Mar 2020 03:14:17 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 11:14:12 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     George Spelvin <lkml@SDF.ORG>
+Cc:     linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v1 44/50] arm64: ptr auth: Use get_random_u64 instead
+ of _bytes
+Message-ID: <20200331101412.GA1490@C02TD0UTHF1T.local>
+References: <202003281643.02SGhOi3016886@sdf.org>
+ <20200330105745.GA1309@C02TD0UTHF1T.local>
+ <20200330193237.GC9199@SDF.ORG>
 MIME-Version: 1.0
-References: <20200319164227.87419-1-trishalfonso@google.com>
- <20200319164227.87419-4-trishalfonso@google.com> <CACT4Y+YHPfP3LP04=Zc4NgyhH8FMJ9m-eU_VPjmk5SmGWo_fTg@mail.gmail.com>
- <CAKFsvU+N=8=VmKVdNdf6os26z+vVD=vR=TL5GJtLQhR9FxOJUQ@mail.gmail.com>
- <CACT4Y+ZGcZhbkcAVVfKP1gUs7mg=LrSwBqhqpUozSX8Fof6ANA@mail.gmail.com>
- <CAKFsvUK-9QU7SfKLoL0w75VgSOneO8DWciHTDYMfU8aD98Unbw@mail.gmail.com>
- <CACT4Y+ZhraraMNC+uvD9O7h3wMQntiEu5zSmVd_UYEaqvdxTaA@mail.gmail.com> <CAKFsvUKaeHnHp0Y9BUiB=RRHLd0TNoEA99VaUZVyfrQy8ptTqA@mail.gmail.com>
-In-Reply-To: <CAKFsvUKaeHnHp0Y9BUiB=RRHLd0TNoEA99VaUZVyfrQy8ptTqA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 31 Mar 2020 12:12:15 +0200
-Message-ID: <CACT4Y+Y_zQPispr5FgW1VWr0Kpc3Z-6AR3TxEFJN1zKB72C2XQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] KASAN: Port KASAN Tests to KUnit
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330193237.GC9199@SDF.ORG>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 8:57 PM Patricia Alfonso
-<trishalfonso@google.com> wrote:
-> > On Thu, Mar 26, 2020 at 4:15 PM Patricia Alfonso
-> > <trishalfonso@google.com> wrote:
-> > > > > > <kasan-dev@googlegroups.com> wrote:
-> > > > > > >
-> > > > > > > Transfer all previous tests for KASAN to KUnit so they can be=
- run
-> > > > > > > more easily. Using kunit_tool, developers can run these tests=
- with their
-> > > > > > > other KUnit tests and see "pass" or "fail" with the appropria=
-te KASAN
-> > > > > > > report instead of needing to parse each KASAN report to test =
-KASAN
-> > > > > > > functionalities. All KASAN reports are still printed to dmesg=
-.
-> > > > > > >
-> > > > > > > Stack tests do not work in UML so those tests are protected i=
-nside an
-> > > > > > > "#if IS_ENABLED(CONFIG_KASAN_STACK)" so this only runs if sta=
-ck
-> > > > > > > instrumentation is enabled.
-> > > > > > >
-> > > > > > > copy_user_test cannot be run in KUnit so there is a separate =
-test file
-> > > > > > > for those tests, which can be run as before as a module.
-> > > > > >
-> > > > > > Hi Patricia,
-> > > > > >
-> > > > > > FWIW I've got some conflicts applying this patch on latest linu=
-x-next
-> > > > > > next-20200324. There are some changes to the tests in mm tree I=
- think.
-> > > > > >
-> > > > > > Which tree will this go through? I would be nice to resolve the=
-se
-> > > > > > conflicts somehow, but I am not sure how. Maybe the kasan tests
-> > > > > > changes are merged upstream next windows, and then rebase this?
-> > > > > >
-> > > > > > Also, how can I apply this for testing? I assume this is based =
-on some
-> > > > > > kunit branch? which one?
-> > > > > >
-> > > > > Hmm... okay, that sounds like a problem. I will have to look into=
- the
-> > > > > conflicts. I'm not sure which tree this will go through upstream;=
- I
-> > > > > expect someone will tell me which is best when the time comes. Th=
-is is
-> > > > > based on the kunit branch in the kunit documentation here:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kself=
-test.git/log/?h=3Dkunit
-> > > >
-> > > > I've checked out:
-> > > >
-> > > > commit 0476e69f39377192d638c459d11400c6e9a6ffb0 (HEAD, kselftest/ku=
-nit)
-> > > > Date:   Mon Mar 23 12:04:59 2020 -0700
-> > > >
-> > > > But the build still fails for me:
-> > > >
-> > > > mm/kasan/report.c: In function =E2=80=98kasan_update_kunit_status=
-=E2=80=99:
-> > > > mm/kasan/report.c:466:6: error: implicit declaration of function
-> > > > =E2=80=98kunit_find_named_resource=E2=80=99 [-Werror=3Dimplicit-fun=
-ction-declar]
-> > > >   466 |  if (kunit_find_named_resource(cur_test, "kasan_data")) {
-> > > >       |      ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > mm/kasan/report.c:467:12: warning: assignment to =E2=80=98struct
-> > > > kunit_resource *=E2=80=99 from =E2=80=98int=E2=80=99 makes pointer =
-from integer without a cas]
-> > > >   467 |   resource =3D kunit_find_named_resource(cur_test, "kasan_d=
-ata");
-> > > >       |            ^
-> > > > mm/kasan/report.c:468:24: error: =E2=80=98struct kunit_resource=E2=
-=80=99 has no member
-> > > > named =E2=80=98data=E2=80=99
-> > > >   468 |   kasan_data =3D resource->data;
-> > > >       |                        ^~
-> > > >
-> > > > What am I doing wrong?
-> > >
-> > > This patchset relies on another RFC patchset from Alan:
-> > > https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-e=
-mail-alan.maguire@oracle.com/T/#t
-> > >
-> > > I thought I linked it in the commit message but it may only be in the
-> > > commit message for part 2/3. It should work with Alan's patchset, but
-> > > let me know if you have any trouble.
-> >
-> > Please push your state of code to some git repository, so that I can
-> > pull it. Github or gerrit or whatever.
->
-> Here's a Gerrit link: https://kunit-review.googlesource.com/c/linux/+/351=
-3
+On Mon, Mar 30, 2020 at 07:32:37PM +0000, George Spelvin wrote:
+> Sorry for the delay responding; I had to re-set-up my arm64
+> cross-compilation environment.
+> 
+> On Mon, Mar 30, 2020 at 11:57:45AM +0100, Mark Rutland wrote:
+> > On Tue, Dec 10, 2019 at 07:15:55AM -0500, George Spelvin wrote:
+> >> Since these are authentication keys, stored in the kernel as long
+> >> as they're important, get_random_u64 is fine.  In particular,
+> >> get_random_bytes has significant per-call overhead, so five
+> >> separate calls is painful.
+> > 
+> > As I am unaware, how does the cost of get_random_bytes() compare to the
+> > cost of get_random_u64()?
+> 
+> It's approximately 8 times the cost.
+> 
+> Because get_random_bytes() implements anti-backtracking, it's a minimum 
+> of one global lock and one ChaCha20 operation per call.  Even though 
+> chacha_block_generic() returns 64 bytes, for anti-backtracking we use 
+> 32 of them to generate a new key and discard the remainder.
+> 
+> get_random_u64() uses the exact same generator, but amortizes the cost by 
+> storing the output in a per-CPU buffer which it only has to refill every 
+> 64 bytes generated.  7/8 of the time, it's just a fetch from a per-CPU 
+> data structure.
 
-This worked well for me! Thanks!
+I see; thanks for this explanation. It would be helpful to mention the
+backtracking distinction explicitly in the commit message, since it
+currently only alludes to it in the first sentence.
 
-The first thing I hit is that my default config has panic_on_warn=3D1
-set, which has the same effect as the "multi shot" setting.
-I think we need to save/restore panic_on_warn the same way we do for
-multi shot (+rename kasan_multi_shot_init/exit to something more
-generic).
+It's worth noting that the key values *can* be exposed to userspace when
+CONFIG_CHECKPOINT_RESTORE is selected. On such kernels, a user could
+regenerate and read the keys an arbitrary number of times on a CPU of
+their choice. From my limited understanding I presume backtracking may
+be a concern there?
 
-After removing panic_on_warn=3D1 I was able to run the tests
-successfully on x86_64.
+> >> This ended up being a more extensive change, since the previous
+> >> code was unrolled and 10 calls to get_random_u64() seems excessive.
+> >> So the code was rearranged to have smaller object size.
+> > 
+> > It's not really "unrolled", but rather "not a loop", so I'd prefer to
+> > not artifially make it look like one.
+> 
+> I intended that to mean "not in a loop, but could be".  I guess
+> this entire exchange is about the distinction between "could be"
+> and "should be".  ;-)
+> 
+> Yes, I went overboard, and your proposed change below is perfectly
+> fine with me.
 
-And after injecting some simple bugs, I got expected test failures:
+Great. That's what I'd prefer due to clarity of the code, and I'm not
+too concerned by the figures below given it only adds 12 bytes to the
+contemporary text size.
 
-[    3.191793] # kasan_memchr: EXPECTATION FAILED at lib/test_kasan.c:509
-[    3.191793] Expected kasan_data->report_expected =3D=3D
-kasan_data->report_found, but
-[    3.191793] kasan_data->report_expected =3D=3D 1
-[    3.191793] kasan_data->report_found =3D=3D 0
-[    3.191852] not ok 30 - kasan_memchr
-[    3.195588] # kasan_memcmp: EXPECTATION FAILED at lib/test_kasan.c:523
-[    3.195588] Expected kasan_data->report_expected =3D=3D
-kasan_data->report_found, but
-[    3.195588] kasan_data->report_expected =3D=3D 1
-[    3.195588] kasan_data->report_found =3D=3D 0
-[    3.195659] not ok 31 - kasan_memcmp
+Thanks,
+Mark.
 
-
-All of these should be static:
-
-struct kunit_resource resource;
-struct kunit_kasan_expectation fail_data;
-bool multishot;
-int kasan_multi_shot_init(struct kunit *test)
-void kasan_multi_shot_exit(struct kunit *test)
-
-With the comments in the previous emails, this looks good to me.
+> > Could you please quantify the size difference when going from
+> > get_random_bytes() to get_random_u64(), if that is excessive enough to
+> > warrant changing the structure of the code? Otherwise please leave the
+> > structure as-is as given it is much easier to reason about -- suggestion
+> > below on how to do that neatly.
+> 
+> Here are the various code sizes:
+>    text    data     bss     dec     hex filename
+>    1480       0       0    1480     5c8 arch/arm64/kernel/pointer_auth.o.old
+>     862       0       0     862     35e arch/arm64/kernel/pointer_auth.o.new
+>    1492       0       0    1492     5d4 arch/arm64/kernel/pointer_auth.o.new2
+>    1560       0       0    1560     618 arch/arm64/kernel/pointer_auth.o.new3
+> 
+> "old" is the existing code.  "new" is my restructured code.
+> "new2" is your simple change with a __ptrauth_key_init() helper.
+> "new3" is with the helper forced noinline.
+> 
+> I shrank the code significantly, but deciding whether that's a net
+> improvement is your perogative.
+> 
+> I should mention that at the end of my patch series, I added a function 
+> (currently called get_random_nonce(), but that's subject to revision) 
+> which uses the get_random_u64 internals with the same interface as 
+> get_random_bytes().  We could postpone this whole thing until that gets
+> a final name and merged.
+> 
+> 
+> (BTW, somehow in my patch a "#include <linux/prctl.h>" needed in the 
+> revised <asm/pointer_auth.h> got omitted.  I probably did something stupid 
+> like added it in my cross-compilation tree but didn't push it back to my 
+> main development tree.  Sorry.)
