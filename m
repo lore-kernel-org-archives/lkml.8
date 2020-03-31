@@ -2,114 +2,127 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FD4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086A2C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D5C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D20BF2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 01:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="Gmmobyge";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="RFNKoRW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgCaBcL (ORCPT
+        id S1729588AbgCaBdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 21:32:11 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12654 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729021AbgCaBcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 21:32:11 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 38501D422F8AFB709CCE;
-        Tue, 31 Mar 2020 09:32:08 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 31 Mar 2020 09:32:01 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <nixiaoming@huawei.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <wangle6@huawei.com>,
-        <zhangweimin12@huawei.com>, <yebin10@huawei.com>,
-        <houtao1@huawei.com>
-Subject: [PATCH v4] mtd: clear cache_state to avoid writing to bad blocks repeatedly
-Date:   Tue, 31 Mar 2020 09:31:59 +0800
-Message-ID: <1585618319-119741-1-git-send-email-nixiaoming@huawei.com>
-X-Mailer: git-send-email 1.8.5.6
+        Mon, 30 Mar 2020 21:33:24 -0400
+Received: from smtp.uniroma2.it ([160.80.6.16]:46587 "EHLO smtp.uniroma2.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729372AbgCaBdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 21:33:24 -0400
+Received: from smtpauth-2019-1.uniroma2.it (smtpauth-2019-1.uniroma2.it [160.80.5.46])
+        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 02V1WGxM018227;
+        Tue, 31 Mar 2020 03:32:21 +0200
+Received: from [192.168.1.80] (93-36-196-249.ip61.fastwebnet.it [93.36.196.249])
+        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id DCCFC122910;
+        Tue, 31 Mar 2020 03:32:11 +0200 (CEST)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
+        s=ed201904; t=1585618332; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZA+BuNkoFMZJknutDx9BJWIxQCcnJxRo/IgWfooEnog=;
+        b=Gmmobygek/JzH4NA5PhWAxPvnT6YH1naati8gdJlEiM9zdy+rv7YVp28nAOthvhwQkeAQv
+        6x9zhC7058T1IyBg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
+        t=1585618332; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZA+BuNkoFMZJknutDx9BJWIxQCcnJxRo/IgWfooEnog=;
+        b=RFNKoRW/Vx7Q6+sszu/W2zY044+ZJ29E/SSpS4ZW6BYb2bBv3hOJq20022tJiJhvjEWkJO
+        o7x99wRN4HnwerNR3DeU0Zg0iYA4Dn4hJqA1akiDLjxLvaUB4FsNvPBkTU+kNPKdSlMIWz
+        uaQg+PEbBaZusr/dvNu8H8wh2szIMdNyHM8prN7LuG3Xp5Z27LIDgfqWk53PfMBE+HBDGi
+        YFwYLJpKZ+2qdf2sz6OF8drqaPYsaX5ls3sYt0teLp7ylFhP8TlGjgok03c4VuQydclIWc
+        31V/7JTfynGdUEvhLfEm9ppDEuyG0flQD+RN4ggKvp8LGT/vee8GNqkYPmF+3g==
+Subject: Re: [net-next] seg6: add support for optional attributes during
+ behavior construction
+To:     David Miller <davem@davemloft.net>
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        dav.lebrun@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, leon@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, bpf@vger.kernel.org,
+        paolo.lungaroni@cnit.it, ahmed.abdelsalam@gssi.it
+References: <20200319183641.29608-1-andrea.mayer@uniroma2.it>
+ <20200325.193016.1654692564933635575.davem@davemloft.net>
+ <20200331012348.e0b2373bd4a96fecc77686b6@uniroma2.it>
+ <20200330.174944.1829532392145435132.davem@davemloft.net>
+From:   Stefano Salsano <stefano.salsano@uniroma2.it>
+Message-ID: <1a9409cd-0e2b-577b-f522-4149beca9d7c@uniroma2.it>
+Date:   Tue, 31 Mar 2020 03:32:11 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200330.174944.1829532392145435132.davem@davemloft.net>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: it-IT
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function call process is as follows:
-	mtd_blktrans_work()
-	  while (1)
-	    do_blktrans_request()
-	      mtdblock_writesect()
-	        do_cached_write()
-	          write_cached_data() /*if cache_state is STATE_DIRTY*/
-	            erase_write()
+Il 2020-03-31 02:49, David Miller ha scritto:
+> From: Stefano Salsano <stefano.salsano@uniroma2.it>
+> Date: Tue, 31 Mar 2020 01:23:48 +0200
+> 
+>> Of course a new application (e.g. iproute2, pyroute) using a new optional
+>> parameter will not work on older kernels, but simply because the new parameter
+>> is not supported. It will not work even without our proposed patch.
+>>
+>> On the other hand, we think that the solution in the patch is more backward
+>> compatible. Without the patch, if we define new attributes, old applications
+>> (e.g. iproute2 scripts) will not work on newer kernels, while with the optional
+>> attributes approach proposed in the patch they will work with no issues !
+> 
+> Translation: You want to add backwards compatibility problems because
+> otherwise you'll have to add backwards compatibility problems.
 
-write_cached_data() returns failure without modifying cache_state
-and cache_offset. So when do_cached_write() is called again,
-write_cached_data() will be called again to perform erase_write()
-on the same cache_offset.
+no this is not the correct translation :-) we do not want to add any 
+backward compatility problem
 
-But if this cache_offset points to a bad block, erase_write() will
-always return -EIO. Writing to this mtdblk is equivalent to losing
-the current data, and repeatedly writing to the bad block.
+we need to add a number of new parameters, if we keep the current 
+approach these parameters will be mandatory and we will have backward 
+compatibility problems: old applications will not work with new kernels
 
-Repeatedly writing a bad block has no real benefits,
-but brings some negative effects:
-1 Lost subsequent data
-2 Loss of flash device life
-3 erase_write() bad blocks are very time-consuming. For example:
-	the function do_erase_oneblock() in chips/cfi_cmdset_0020.c or
-	chips/cfi_cmdset_0002.c may take more than 20 seconds to return
+if we are allowed to add optional parameters, old applications and new 
+applications will be able to work with old kernels and new kernels in 
+any combination
 
-Therefore, when erase_write() returns -EIO in write_cached_data(),
-clear cache_state to avoid writing to bad blocks repeatedly.
+> Sorry, I'm still not convinced.
+> 
+> You must find another way to achieve your objective.
 
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/mtd/mtdblock.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mtd/mtdblock.c b/drivers/mtd/mtdblock.c
-index 078e0f6..32e52d8 100644
---- a/drivers/mtd/mtdblock.c
-+++ b/drivers/mtd/mtdblock.c
-@@ -89,8 +89,6 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
- 
- 	ret = erase_write (mtd, mtdblk->cache_offset,
- 			   mtdblk->cache_size, mtdblk->cache_data);
--	if (ret)
--		return ret;
- 
- 	/*
- 	 * Here we could arguably set the cache state to STATE_CLEAN.
-@@ -98,9 +96,14 @@ static int write_cached_data (struct mtdblk_dev *mtdblk)
- 	 * be notified if this content is altered on the flash by other
- 	 * means.  Let's declare it empty and leave buffering tasks to
- 	 * the buffer cache instead.
-+	 *
-+	 * If this cache_offset points to a bad block, data cannot be
-+	 * written to the device. Clear cache_state to avoid writing to
-+	 * bad blocks repeatedly.
- 	 */
--	mtdblk->cache_state = STATE_EMPTY;
--	return 0;
-+	if (ret == 0 || ret == -EIO)
-+		mtdblk->cache_state = STATE_EMPTY;
-+	return ret;
- }
- 
- 
 -- 
-1.8.5.6
+*******************************************************************
+Stefano Salsano
+Professore Associato
+Dipartimento Ingegneria Elettronica
+Universita' di Roma Tor Vergata
+Viale Politecnico, 1 - 00133 Roma - ITALY
+
+http://netgroup.uniroma2.it/Stefano_Salsano/
+
+E-mail  : stefano.salsano@uniroma2.it
+Cell.   : +39 320 4307310
+Office  : (Tel.) +39 06 72597770 (Fax.) +39 06 72597435
+*******************************************************************
 
