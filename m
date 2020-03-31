@@ -2,137 +2,132 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAF1C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69298C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAF12078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4069F20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kX2+YjEF"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UcX4NrqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbgCaO6J (ORCPT
+        id S1730703AbgCaPBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:58:09 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44409 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbgCaO6J (ORCPT
+        Tue, 31 Mar 2020 11:01:45 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57662 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730153AbgCaPBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:58:09 -0400
-Received: by mail-qk1-f195.google.com with SMTP id j4so23223395qkc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 07:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cIZTwSTovCqpZjcH+8VKON/BYcVXt4dyLFHN/7fWLC0=;
-        b=kX2+YjEFA7reVl0nZqgetW7HHWs3WBI8tDuovxTjTwwVwqW3601QSEjGEsCGuePVj7
-         LeJYnQq9IpkrFubdFv7FGPJwARcYAe9R6jylxk3Pa+7d/tXkyxj20UwItvKvKi6iEgdm
-         3Bb9hGRRxwfEbpNgz5aR7L0gIR2HceLIlhu8U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cIZTwSTovCqpZjcH+8VKON/BYcVXt4dyLFHN/7fWLC0=;
-        b=MIhaCWOPiG9Wk4Trdg5qkMaK6tfglwf6PO8i6B4ML9wCteAP8OYjVr2RBoc+nZrhTs
-         DlsQYqSvLXHYu4mcY5oLY6zz8YSHTI6YM2p8LPOW7PGjQU6Gq9979THRzVjYvwJGkg9F
-         8INb77KJiKGOj/L/VhQS/nJD0HZHLOPYxpT55piEpMMGQu67I6e1SowZD93fN9r4iD03
-         linI4463Jpk1LYsdAzDl55RRueOcUlBUD/AzIZG0u+bguqSKMdj1hrwgjxTkLMwyEtHB
-         QluCxQFkO5aV1Xw7VMkiWg+CakHuAYK+6iSaihYOZM0zUpPOcvyyAUNYMkZpXRp/UTqN
-         INFw==
-X-Gm-Message-State: ANhLgQ2QRFH2ph0R+NVYaCxQyOYu0DU+cacNCTJfEbo/dYz1F2Uvn4Xt
-        hfzm2j18Na8e4lQ0zQqNAs+tAtxytwE=
-X-Google-Smtp-Source: ADFU+vvPtFUJr9gLEzw5E54meLVFZylfDHn2cwkCKpLYfEDzB9hmFVGY0wKdA27LYbe+/zml0iNEug==
-X-Received: by 2002:a37:a4d6:: with SMTP id n205mr5467313qke.352.1585666687349;
-        Tue, 31 Mar 2020 07:58:07 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id n142sm12693714qkn.11.2020.03.31.07.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 07:58:06 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 10:58:06 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, rcu@vger.kernel.org, willy@infradead.org,
-        peterz@infradead.org, neilb@suse.com, vbabka@suse.cz,
-        mgorman@suse.de, Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200331145806.GB236678@google.com>
-References: <20200331131628.153118-1-joel@joelfernandes.org>
+        Tue, 31 Mar 2020 11:01:44 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VEwljB021795;
+        Tue, 31 Mar 2020 17:01:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=RRp8QYyeUiwuSaXSnIHnR9hdRCvg8TE5DV1VWhJfO9c=;
+ b=UcX4NrqDDsCH0+NbGCIMMUopkKgeeMNjQB/GJXKTltDNzQt5J4gptk9hbTa0JoJwxrGv
+ Q6SjvOd+l/XKhv6sQQqQD+rF986XEoaQId3y00Ke40cwE7MqGohA5W0BlTjlz0WbkcPO
+ 4uUFk5hIYw3cOSS/MXYRLztJov/b1Re09+gcWYXa3vgqtT8vcVwPLz9fKx3rXLOzxAuL
+ 7jvBwd059dOhDw3vqKOaifeKku82O+6vuWcEZFrgnV5PxsurbUdGqFIzXpXGJcFUyHO2
+ SYumR54vuXivBlNLLPo2gPXHEpyb5xMDnb3+AO+Tu+mOjdlS/EvH+IyuD3oUHXb4Xbdc EA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 302y53suhq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 17:01:03 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CACE100038;
+        Tue, 31 Mar 2020 17:00:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA0CB2B4D4F;
+        Tue, 31 Mar 2020 17:00:57 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 31 Mar
+ 2020 17:00:52 +0200
+Subject: Re: [RFC PATCH v2 0/4] Add device tree build information
+To:     Steve McIntyre <steve.mcintyre@linaro.org>
+CC:     Frank Rowand <frowand.list@gmail.com>, <robh+dt@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        <david@gibson.dropbear.id.au>, <sjg@chromium.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kbuild@vger.kernel.org>,
+        <devicetree-compiler@vger.kernel.org>, Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <1b946fcf-47a9-012d-1b04-f4bbd2682607@gmail.com>
+ <67d75f0c-7478-23b0-8619-746cf83cedb5@gmail.com>
+ <dba17be2-067f-8221-f313-7a3edcf61511@st.com>
+ <20200331010347.GF4037@linaro.org>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <afa534b0-c671-600f-f344-de7026dc2c79@st.com>
+Date:   Tue, 31 Mar 2020 17:00:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331131628.153118-1-joel@joelfernandes.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200331010347.GF4037@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_05:2020-03-31,2020-03-31 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:16:28AM -0400, Joel Fernandes (Google) wrote:
-> In kfree_rcu() headless implementation (where the caller need not pass
-> an rcu_head, but rather directly pass a pointer to an object), we have
-> a fall-back where we allocate a rcu_head wrapper for the caller (not the
-> common case). This brings the pattern of needing to allocate some memory
-> to free some memory.  Currently we use GFP_ATOMIC flag to try harder for
-> this allocation, however the GFP_MEMALLOC flag is more tailored to this
-> pattern. We need to try harder not only during atomic context, but also
-> during non-atomic context anyway. So use the GFP_MEMALLOC flag instead.
-> 
-> Also remove the __GFP_NOWARN flag simply because although we do have a
-> synchronize_rcu() fallback for absolutely worst case, we still would
-> like to not enter that path and atleast trigger a warning to the user.
-> 
-> Cc: linux-mm@kvack.org
-> Cc: rcu@vger.kernel.org
-> Cc: willy@infradead.org
-> Cc: peterz@infradead.org
-> Cc: neilb@suse.com
-> Cc: vbabka@suse.cz
-> Cc: mgorman@suse.de
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
-> 
-> This patch is based on the (not yet upstream) code in:
-> git://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git (branch rcu/kfree)
-> 
-> It is a follow-up to the posted series:
-> https://lore.kernel.org/lkml/20200330023248.164994-1-joel@joelfernandes.org/
-> 
-> 
->  kernel/rcu/tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 4be763355c9fb..965deefffdd58 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
->  
->  	if (!ptr)
->  		ptr = kmalloc(sizeof(unsigned long *) +
-> -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
-> +				sizeof(struct rcu_head), GFP_MEMALLOC);
+Hi Steeve
 
-Just to add, the main requirements here are:
-1. Allocation should be bounded in time.
-2. Allocation should try hard (possibly tapping into reserves)
-3. Sleeping is Ok but should not affect the time bound.
+On 3/31/20 3:03 AM, Steve McIntyre wrote:
+> Hi Alexandre,
+> 
+> On Mon, Mar 02, 2020 at 01:55:55PM +0100, Alexandre Torgue wrote:
+>> On 2/28/20 6:47 PM, Frank Rowand wrote:
+>>>> This would require modifying every single main .dts file to get the build info
+>>>> I would prefer the method that Ian and David came up with (sorry, no lore link,
+>>>> it did not go to lkml).  Extract from David's email:
+>>>>
+>>>>      Date:   Tue, 21 Jan 2020 13:05:25 +1100
+>>>>      From:   David Gibson <david@gibson.dropbear.id.au>
+>>>>      Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+>>>>
+>>>>      > Given that dts files are run through the C preprocessor before being
+>>>>      > fed to dtc, the build script could use the '-include' flag to force-
+>>>>      > include a fragment containing generated build info without any need to
+>>>>      > modify existing dts files.
+>>>>
+>>>>      Uh... maybe.  -include will essentially prepend the forced file, which
+>>>>      is a bit awkward for our purposes.  It means that the prepended file
+>>>>      would need the /dts-v1/ tag, and we couldn't have it in the main files
+>>>>      which would be a bit confusing.  I think it would also cause problems
+>>>>      with any /memreserve/ tags and means that the main tree could in
+>>>>      theory overwrite the build information which we don't necessarily
+>>>>      want.
+>>>>
+>>>>      I guess we could build things the other way around: have the main .dts
+>>>>      file specified with -include and have the dts on the dtc commandline
+>>>>      be a fixed one with the build information.  It'd be a little weird,
+>>>>      though.
+>>>>
+>>>> -Frank
+>>
+>> Yes. I try briefly this idea but I got issues with dts-v1 tag. I agree, it is
+>> cleaner to not modify input dts file. I can rework int this way.
+> 
+> Have you made any progress on this please?
 
-Considering this, GFP_MEMALLOC|GFP_NOWAIT seems appropriate. Thoughts?
+Unfortunately no. I cook something locally but not yet upstream-able.
+Due to project issue I didn't find time to work on it. I think (I hope) 
+to be less busy next week and so I'll restart it.
 
-thanks,
+regards
+alex
 
- - Joel
-
-
+> 
+> Cheers,
+> 
