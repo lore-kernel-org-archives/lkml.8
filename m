@@ -2,106 +2,141 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C82C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B11C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5547C208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:19:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+HVeM3m"
+	by mail.kernel.org (Postfix) with ESMTP id BD1C62080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbgCaWTs (ORCPT
+        id S1731555AbgCaWUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:19:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51336 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731501AbgCaWTk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:19:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z7so1721781wmk.1;
-        Tue, 31 Mar 2020 15:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fhOtbK0ZVL1ABebYKJYf0UxxzluO0JY5MJfCTLBiR34=;
-        b=r+HVeM3maVxMRhkBI7oLDen47oS7HmRaPaSjtAMU02gVLwkshUft66tvURvWjSHxzR
-         W109P8EYraukDqPYd8tl4WZSOGZcjoj66uh+Pd19kJbFzIGvTicWLxfWOYXmvLpf4yoZ
-         qaxc8yXXj0+ER78L7fdtD9V+EOBZYzeMMRBDE6QM1jEkZI0JPmclXzngUDxkBi1EirK5
-         XxPelKRY/Sn1ZZ6sGQLY3fc690TcWfccJtgsZEASCW8aRKJdm2xzXdxiWwD+dc96hccZ
-         E0hwISOFccljqEVLfbYHGcMeXwVmuDYhbyPVvX1LdJUtXt1uQolmDp09qhPp45tro5WI
-         jRZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fhOtbK0ZVL1ABebYKJYf0UxxzluO0JY5MJfCTLBiR34=;
-        b=P8ENSrS6fPaYpWQQgXmXIBhWiwJ4rBtmYSeDjs7uXtc6vE5SF0c3V9DCgrXtSbVpZR
-         pzw2EDAWZy82K+Ng71R+Grtclu8AMG/gcMGu1/gNeL3WNQMNssynbb72PHi1K1qO3Uhm
-         vcSsRjrXL+UWB6nBj0VqmjNygBKA6DJq0smVnG1iUArP1yNCmXdYUwhLvBDPnF7Xg4cE
-         q8wXlzFVqp0FLuNYJbdVYuVDZfYk4YS9y9plWx+lFod/s+jzY1B+m3qeTNN6QTIgnuWk
-         LbmU7TC0Iu4V7mpa9Ih2LiXjckP5GhkZwm/d/R7vLFLi+vwb+UHOMmNTwY2cGCzoqtpl
-         fX8w==
-X-Gm-Message-State: AGi0PuZOGvjvZJP51nQtzvy0UTUYnNKUPUYIDQtvjV4IiXMuK7NCS/RQ
-        /ltPF05bi/H/eGmM1GX+K2k=
-X-Google-Smtp-Source: APiQypJq3gyQgChBKAlZCKqwaP7n5oYFR+3hgCYHrGm0DKxPp6ZWxDRlhXaG/69yP7aWPAzciCh/lg==
-X-Received: by 2002:a1c:a78a:: with SMTP id q132mr1009518wme.107.1585693178288;
-        Tue, 31 Mar 2020 15:19:38 -0700 (PDT)
-Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
-        by smtp.gmail.com with ESMTPSA id a186sm9940wmh.33.2020.03.31.15.19.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 15:19:37 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] arm64: tegra: Enable native timers on Jetson AGX Xavier
-Date:   Wed,  1 Apr 2020 00:19:14 +0200
-Message-Id: <20200331221914.2966407-8-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200331221914.2966407-1-thierry.reding@gmail.com>
-References: <20200331221914.2966407-1-thierry.reding@gmail.com>
+        Tue, 31 Mar 2020 18:20:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50906 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731331AbgCaWUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 18:20:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6F5BFAEF9;
+        Tue, 31 Mar 2020 22:20:00 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        Michal Hocko <mhocko@kernel.org>
+Date:   Wed, 01 Apr 2020 09:19:49 +1100
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free memory pattern
+In-Reply-To: <20200331160117.GA170994@google.com>
+References: <20200331131628.153118-1-joel@joelfernandes.org> <20200331145806.GB236678@google.com> <20200331153450.GM30449@dhcp22.suse.cz> <20200331160117.GA170994@google.com>
+Message-ID: <877dz0yxoa.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Enable the native timers on Jetson AGX Xavier to allow using the
-watchdog functionality to recover from system hangs, for example.
+On Tue, Mar 31 2020, Joel Fernandes wrote:
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+> On Tue, Mar 31, 2020 at 05:34:50PM +0200, Michal Hocko wrote:
+>> On Tue 31-03-20 10:58:06, Joel Fernandes wrote:
+>> [...]
+>> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+>> > > index 4be763355c9fb..965deefffdd58 100644
+>> > > --- a/kernel/rcu/tree.c
+>> > > +++ b/kernel/rcu/tree.c
+>> > > @@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head=
+_to_object(void *obj)
+>> > >=20=20
+>> > >  	if (!ptr)
+>> > >  		ptr =3D kmalloc(sizeof(unsigned long *) +
+>> > > -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
+>> > > +				sizeof(struct rcu_head), GFP_MEMALLOC);
+>> >=20
+>> > Just to add, the main requirements here are:
+>> > 1. Allocation should be bounded in time.
+>> > 2. Allocation should try hard (possibly tapping into reserves)
+>> > 3. Sleeping is Ok but should not affect the time bound.
+>>=20
+>>=20
+>> __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
+>> memory reserves regarless of the sleeping status.
+>>=20
+>> Using __GFP_MEMALLOC is quite dangerous because it can deplete _all_ the
+>> memory. What does prevent the above code path to do that?
+>
+> Can you suggest what prevents other users of GFP_MEMALLOC from doing that
+> also? That's the whole point of having a reserve, in normal usage no one =
+will
+> use it, but some times you need to use it. Keep in mind this is not a com=
+mon
+> case in this code here, this is triggered only if earlier allocation atte=
+mpts
+> failed. Only *then* we try with GFP_MEMALLOC with promises to free additi=
+onal
+> memory soon.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index 623f7d7d216b..d68588f2709e 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -52,6 +52,10 @@ memory-controller@2c00000 {
- 			status = "okay";
- 		};
- 
-+		timer@3010000 {
-+			status = "okay";
-+		};
-+
- 		serial@3110000 {
- 			status = "okay";
- 		};
--- 
-2.24.1
+I think that "soon" is the key point.  Users of __GFP_MEMALLOC certainly
+must be working to free other memory, that other memory needs to be freed
+"soon".  In particular - sooner than all the reserve is exhausted.  This
+can require rate-limiting.  If one allocation can result in one page
+being freed, that is good and it is probably OK to have 1000 allocations
+resulting in 1000 pages being freed soon.  But 10 million allocation to
+gain 10 million pages is not such a good thing and shouldn't be needed.
+Once those first 1000 pages have been freed, you won't need
+__GFP_MEMALLOC allocations any more, and you must be prepare to wait for
+them.
 
+So where does the rate-limiting happen in your proposal?  A GP can be
+multiple milliseconds, which is time for lots of memory to be allocated
+and for rcu-free queues to grow quite large.
+
+You mention a possible fall-back of calling synchronize_rcu().  I think
+that needs to be a fallback that happens well before __GFP_MEMALLOC is
+exhausted.   You need to choose some maximum amount that you will
+allocate, then use synchronize_rcu() (or probably the _expedited
+version) after that.  The pool of reserves are certainly there for you
+to use, but not for you to exhaust.
+
+If you have your own rate-limiting, then I think __GFP_MEMALLOC is
+probably OK, and also you *don't* want the memalloc to wait.  If memory
+cannot be allocated immediately, you need to use your own fallback.
+
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6DwgUACgkQOeye3VZi
+gbn8dw//VrVoUDhphrjEjsJyukpCM0UjwbId09tUpvlEYfWlx15r7Xx+z0+hJCtC
+E0AI/g9iPmv1rln63hebTXYZcsXFygsZSY9a+YQaPxyPk01dnqGer7fOVQN8qYzK
+Au4I0MxmeaH9/wTPzlzPUppNqOWhgYB9+Z9FJXxgLlzmgQaGkTzrvqEH43Fp/H9/
+E2bgWXPKTwds03SpucOMDCrU+foZrA7pfT3RzNNjcbHI6/W118gbvawPlIAPhec1
+6Cb9TS54XeiUP4gLixiummpdb5zK5MYH65HCL4CaHPI+2XOfMuSYQRIhshjOe3jx
+i8e/+zZGT8ZCQwgjA7NCL8R/zaswheDgo1SFPbAcfLAcJ4nmeXXnHt2MIGin/MYv
+sV36qdaXSDS/ldBspq/peBpCp3UF6Hma1n2lJdH+de5f7HHT2uu9MklgFiZupr2s
+aeZOQ5hRRApU54HnKtexU2h8Txj1t+RK/LXxqOAa4gx0VRKD4Y0DZ7uUUA3cHbno
+SnTXxHyBbVOlGEI0YozLoSLmzkm6d38DugOjbWnAUL6jr/mP2EvihaD4Nsu9f1fP
+yc/iMtb67JhWvnBEFzFVGBkmIr3yBWNBzg1bbYbppXSrdusC2Fy5kzLE7e0puk5B
+O604On3Np16ezCYNutPK6NZJDIAI4pFrraHl3NhzvfMMqkBQncY=
+=pEbp
+-----END PGP SIGNATURE-----
+--=-=-=--
