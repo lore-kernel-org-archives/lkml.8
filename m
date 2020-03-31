@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A29BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86869C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B942072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7E220787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646063;
-	bh=WrLmrYraf+mK7cIgFLavPmqL/IOaaNICmzVAiwoZoPE=;
+	s=default; t=1585646066;
+	bh=xluyj0zuzesqOXbJY4Nak2oA9OlTyRQhQwI56NsHeus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0cLB4X3BNVUYDZCOJcwBlnneFaSNKPDt7348b44XV4ulB1SyRZlBdFRb45jBifHp1
-	 XZ7zRmptbHqIjErxntiTukaSAqlslIJGlZk9a+5wx/w5v1a9m16uKtWJeFWXXGXG7E
-	 Unwcn6I4XrIZz8DcNOuzUqJc4LITebVjDN/My/kE=
+	b=zAP3Z5kCR3ftizAI7hf+6a3+Mn53im97+uAWYqBETIfB8Y8UCKCJ/xCfFd69jSYVJ
+	 EmrNmMxuxEAfWUgDYWbG5nz2mLc0OAGE1/sxUowUIsy+RWvAEN4OqlhjsqZb3M0KNO
+	 oKwPSVBsvdo2maRJDgAUauCVq8c7m3fCupHqB1M8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731835AbgCaJOW (ORCPT
+        id S1730523AbgCaJOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730628AbgCaJOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 05:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730452AbgCaJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E6320675;
-        Tue, 31 Mar 2020 09:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D72420675;
+        Tue, 31 Mar 2020 09:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646060;
-        bh=WrLmrYraf+mK7cIgFLavPmqL/IOaaNICmzVAiwoZoPE=;
+        s=default; t=1585646058;
+        bh=xluyj0zuzesqOXbJY4Nak2oA9OlTyRQhQwI56NsHeus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXXB5TfCuX5Uq6emregBJGYWDx7UfF7Kpubmqsn6Glmc6T90OMeTENLwcLiI9iCGM
-         24nyROIq5WT6lBZonVG0eANTIQQVILdXZnAJJaxPB7KOLwuwurJflxGvOjm8i+f38A
-         psagjN8Oq6s/2e/sfNLeoAWsoKmRoltUEoNjkXAY=
+        b=Gd5Z1YNbP2eA30xgjvS3Z5EiBdXwVu+UrcDUCwHMWBUhf0K4brarQhJA1sXE3MPJC
+         Vy1M4f0kpSjsaEhQsKhWV8jCk/Kh+3znhh6v9pU1IzQ6IM+VXoms5cDokQx+6nf5br
+         y6P6WRJchxeYu0sVf9/o9FEGuSY5UakxPwUA21Ao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org,
+        Dominik Czarnota <dominik.b.czarnota@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/155] net: hns3: fix "tc qdisc del" failed issue
-Date:   Tue, 31 Mar 2020 10:58:32 +0200
-Message-Id: <20200331085426.476301033@linuxfoundation.org>
+Subject: [PATCH 5.4 071/155] sxgbe: Fix off by one in samsung driver strncpy size arg
+Date:   Tue, 31 Mar 2020 10:58:31 +0200
+Message-Id: <20200331085426.355997346@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,39 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Dominik Czarnota <dominik.b.czarnota@gmail.com>
 
-[ Upstream commit 5eb01ddfcfb25e6ebc404a41deae946bde776731 ]
+[ Upstream commit f3cc008bf6d59b8d93b4190e01d3e557b0040e15 ]
 
-The HNS3 driver supports to configure TC numbers and TC to priority
-map via "tc" tool. But when delete the rule, will fail, because
-the HNS3 driver needs at least one TC, but the "tc" tool sets TC
-number to zero when delete.
+This patch fixes an off-by-one error in strncpy size argument in
+drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c. The issue is that in:
 
-This patch makes sure that the TC number is at least one.
+        strncmp(opt, "eee_timer:", 6)
 
-Fixes: 30d240dfa2e8 ("net: hns3: Add mqprio hardware offload support in hns3 driver")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+the passed string literal: "eee_timer:" has 10 bytes (without the NULL
+byte) and the passed size argument is 6. As a result, the logic will
+also accept other, malformed strings, e.g. "eee_tiXXX:".
+
+This bug doesn't seem to have any security impact since its present in
+module's cmdline parsing code.
+
+Signed-off-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 0c8d2269bc46e..403e0f089f2af 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1596,7 +1596,7 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
- 	netif_dbg(h, drv, netdev, "setup tc: num_tc=%u\n", tc);
- 
- 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
--		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
-+		kinfo->dcb_ops->setup_tc(h, tc ? tc : 1, prio_tc) : -EOPNOTSUPP;
- }
- 
- static int hns3_nic_setup_tc(struct net_device *dev, enum tc_setup_type type,
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+index c56fcbb370665..38767d7979147 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+@@ -2279,7 +2279,7 @@ static int __init sxgbe_cmdline_opt(char *str)
+ 	if (!str || !*str)
+ 		return -EINVAL;
+ 	while ((opt = strsep(&str, ",")) != NULL) {
+-		if (!strncmp(opt, "eee_timer:", 6)) {
++		if (!strncmp(opt, "eee_timer:", 10)) {
+ 			if (kstrtoint(opt + 10, 0, &eee_timer))
+ 				goto err;
+ 		}
 -- 
 2.20.1
 
