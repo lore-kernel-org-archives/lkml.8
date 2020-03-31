@@ -2,143 +2,128 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F390AC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30236C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD10C20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UFKNoN4+"
+	by mail.kernel.org (Postfix) with ESMTP id 1534620BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgCaRi3 (ORCPT
+        id S1727354AbgCaRig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:38:29 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:57343 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725958AbgCaRi3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:38:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585676308; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=A68oC8U79UBpdukiOxjd0RuIgv72CKAYZ4hNjVAU4J4=;
- b=UFKNoN4+pwVUJFK2PSmSqN1RtpSyw0PIHS7Hi34ZLeRlUytymE9Hias6I7mNkjs4LHl3qaVD
- EAniWV0GbD6wU4x/dYWiXarG8X8rAJwG328kANsCBuW2iDSglh+y1C69jbhjKyNrG8IJeQ5b
- T6sQvRRKnEcWYBQuhMsh986wtJ0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e838013.7f249de50e30-smtp-out-n01;
- Tue, 31 Mar 2020 17:38:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6F137C43637; Tue, 31 Mar 2020 17:38:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0B3BC433F2;
-        Tue, 31 Mar 2020 17:38:24 +0000 (UTC)
+        Tue, 31 Mar 2020 13:38:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29500 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgCaRif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:38:35 -0400
+IronPort-SDR: 7TFlakVTUL17VraFxIcpmdwQ4TklKa+3aiJz2MFnJt13hcNbOpVXMugtCS+rqjceN++0OoC9QC
+ HeqpMITL6d8A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 10:38:35 -0700
+IronPort-SDR: +80pqEqpZGnfcTG8qMjLqnQAe9s7PRwtT7bSfbMMZblRCRcgZ+2Vosn2js7RaCaBytTEQTG/iT
+ sOl13PoC2gfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
+   d="scan'208";a="240199847"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 10:38:32 -0700
+Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+ <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
+ <20200331100406.GB1204199@kroah.com>
+ <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
+ <20200331172459.GA1841577@kroah.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <2fb7ca3e-504a-19d7-2e7b-b34ecc481ffc@intel.com>
+Date:   Tue, 31 Mar 2020 10:38:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200331172459.GA1841577@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Mar 2020 10:38:24 -0700
-From:   rishabhb@codeaurora.org
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>, psodagud@codeaurora.org,
-        tsoni@codeaurora.org, Siddharth Gupta <sidgup@codeaurora.org>,
-        linux-remoteproc-owner@vger.kernel.org
-Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
-In-Reply-To: <CANLsYkxEA66kGZh1rToSn79fpgPHqEjMZsSw74Rx3OLwG2k35w@mail.gmail.com>
-References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org>
- <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
- <20200330221245.GA17782@xps15> <20200330224554.GD215915@minitux>
- <CANLsYkxEA66kGZh1rToSn79fpgPHqEjMZsSw74Rx3OLwG2k35w@mail.gmail.com>
-Message-ID: <30f8b41df8831d19ce6efd0a28862708@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-31 09:47, Mathieu Poirier wrote:
-> On Mon, 30 Mar 2020 at 16:45, Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
->> 
->> On Mon 30 Mar 15:12 PDT 2020, Mathieu Poirier wrote:
->> [..]
->> > > +   struct rproc *rproc;
->> > > +
->> > > +   rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->> > > +   if (!rproc)
->> > > +           return -EINVAL;
->> > > +
->> > > +   rproc_shutdown(rproc);
->> >
->> > The scenario I see here is that a userspace program will call
->> > open(/dev/rproc_xyz, SOME_OPTION) when it is launched.  The file stays open
->> > until either the application shuts down, in which case it calls close() or it
->> > crashes.  In that case the system will automatically close all file descriptors
->> > that were open by the application, which will also call rproc_shutdown().
->> >
->> > To me the same functionality can be achieved with the current functionality
->> > provided by sysfs.
->> >
->> > When the application starts it needs to read
->> > "/sys/class/remoteproc/remoteprocX/state".  If the state is "offline" then
->> > "start" should be written to "/sys/.../state".  If the state is "running" the
->> > application just crashed and got restarted.  In which case it needs to stop the
->> > remote processor and start it again.
->> >
->> 
->> A case when this would be useful is the Qualcomm modem, which relies 
->> on
->> disk access through a "remote file system service" [1].
->> 
->> Today we register the service (a few layers ontop of rpmsg/GLINK) then
->> find the modem remoteproc and write "start" into the state sysfs file.
->> 
->> When we get a signal for termination we write "stop" into state to 
->> stop
->> the remoteproc before exiting.
->> 
->> There is however no way for us to indicate to the modem that rmtfs 
->> just
->> died, e.g. a kill -9 on the process will result in the modem continue
->> and the next IO request will fail which in most cases will be fatal.
-I have this scenario written down in the cover letter for this patchset
-  "[PATCH 0/2] Add character device interface to remoteproc"
-I'll add it to the commit text as well.
-> 
-> The modem will crash when attempting an IO while rmtfs is down?
-> 
->> 
->> So instead having rmtfs holding /dev/rproc_foo open would upon its
->> termination cause the modem to be stopped automatically, and as the
->> system respawns rmtfs the modem would be started anew and the two 
->> sides
->> would be synced up again.
-> 
-> I have a better idea of what is going on now - thanks for writing this 
-> up.
-> 
-> I would make this feature a kernel configurable option as some people
-> may not want it.  I also think having "/dev/remoteprocX" is fine, so
-> no need to change anything currently visible in sysfs.
-Ok. Makes sense.
-> 
-> Mathieu
-> 
->> 
->> [1] https://github.com/andersson/rmtfs
->> 
->> Regards,
->> Bjorn
+
+On 3/31/2020 10:24 AM, Greg KH wrote:
+> On Tue, Mar 31, 2020 at 10:07:07AM -0700, Dave Jiang wrote:
+>> On 3/31/2020 3:04 AM, Greg KH wrote:
+>>> On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
+>>>> Since the current accelerator devices do not have standard PCIe capability
+>>>> enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
+>>>> been added to struct pci_dev.  Currently a PCI quirk must be used for the
+>>>> devices that have such cap until the PCI cap is standardized. Add a helper
+>>>> function to provide the check if a device supports the cmdmem capability.
+>>>>
+>>>> Such capability is expected to be added to PCIe device cap enumeration in
+>>>> the future.
+>>>>
+>>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>> ---
+>>>>    drivers/base/core.c    |   13 +++++++++++++
+>>>>    include/linux/device.h |    2 ++
+>>>>    include/linux/pci.h    |    1 +
+>>>>    3 files changed, 16 insertions(+)
+>>>>
+>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>>> index dbb0f9130f42..cd9f5b040ed4 100644
+>>>> --- a/drivers/base/core.c
+>>>> +++ b/drivers/base/core.c
+>>>> @@ -27,6 +27,7 @@
+>>>>    #include <linux/netdevice.h>
+>>>>    #include <linux/sched/signal.h>
+>>>>    #include <linux/sysfs.h>
+>>>> +#include <linux/pci.h>
+>>>>    #include "base.h"
+>>>>    #include "power/power.h"
+>>>> @@ -3790,3 +3791,15 @@ int device_match_any(struct device *dev, const void *unused)
+>>>>    	return 1;
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(device_match_any);
+>>>> +
+>>>> +bool device_supports_cmdmem(struct device *dev)
+>>>> +{
+>>>> +	struct pci_dev *pdev;
+>>>> +
+>>>> +	if (!dev_is_pci(dev))
+>>>> +		return false;
+>>>> +
+>>>> +	pdev = to_pci_dev(dev);
+>>>> +	return pdev->cmdmem;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(device_supports_cmdmem);
+>>> Why would a pci-specific function like this be ok to have in the driver
+>>> core?  Please keep it in the pci core code instead.
+>> The original thought was to introduce a new arch level memory mapping
+>> semantic.
+> Please do not.  Also, that's not what you are doing here from what I can
+> tell.
+>
+>> If you feel this should be PCI exclusive, should we make the ioremap
+>> routines for this memory type pci specific as well?
+> Why wouldn't it be?  Is this needed anywhere else?
+
+Ok I'll make this pci specific.
+
+
+>
+> thanks,
+>
+> greg k-h
