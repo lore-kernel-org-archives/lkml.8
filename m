@@ -2,244 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE52C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6625FC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D47F206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ADED206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnpeTBqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbgCaLqt convert rfc822-to-8bit (ORCPT
+        id S1730629AbgCaLsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:46:49 -0400
-Received: from maillog.nuvoton.com ([202.39.227.15]:40884 "EHLO
-        maillog.nuvoton.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbgCaLqX (ORCPT
+        Tue, 31 Mar 2020 07:48:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34726 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730424AbgCaLsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:46:23 -0400
-Received: from NTHCCAS01.nuvoton.com (nthccas01.nuvoton.com [10.1.8.28])
-        by maillog.nuvoton.com (Postfix) with ESMTP id 0B94F1C80EC7;
-        Tue, 31 Mar 2020 19:35:02 +0800 (CST)
-Received: from NTILML02.nuvoton.com (10.190.1.46) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Tue, 31 Mar 2020
- 19:35:01 +0800
-Received: from NTILML02.nuvoton.com (10.190.1.47) by NTILML02.nuvoton.com
- (10.190.1.47) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Tue, 31 Mar
- 2020 14:34:58 +0300
-Received: from taln70.nuvoton.co.il (10.191.1.70) by NTILML02.nuvoton.com
- (10.190.1.46) with Microsoft SMTP Server id 15.0.1130.7 via Frontend
- Transport; Tue, 31 Mar 2020 14:34:58 +0300
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-        by taln70.nuvoton.co.il (Postfix) with ESMTP id 00BEC250;
-        Tue, 31 Mar 2020 14:34:59 +0300 (IDT)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id E65DF639B1; Tue, 31 Mar 2020 14:34:28 +0300 (IDT)
-From:   <amirmizi6@gmail.com>
-To:     <Eyal.Cohen@nuvoton.com>, <jarkko.sakkinen@linux.intel.com>,
-        <oshrialkoby85@gmail.com>, <alexander.steffen@infineon.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <peterhuewe@gmx.de>,
-        <jgg@ziepe.ca>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <oshri.alkoby@nuvoton.com>,
-        <tmaimon77@gmail.com>, <gcwilson@us.ibm.com>,
-        <kgoldman@us.ibm.com>, <Dan.Morav@nuvoton.com>,
-        <oren.tanami@nuvoton.com>, <shmulik.hager@nuvoton.com>,
-        <amir.mizinski@nuvoton.com>, Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send all bytes in one shot without last byte in exception
-Date:   Tue, 31 Mar 2020 14:32:04 +0300
-Message-ID: <20200331113207.107080-5-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200331113207.107080-1-amirmizi6@gmail.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
+        Tue, 31 Mar 2020 07:48:04 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l14so3103719pgb.1;
+        Tue, 31 Mar 2020 04:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=++UQlU6VN9bMxqDPdQyUp42DcXToJ2hwFVgrDIaZHqs=;
+        b=DnpeTBqmQ09ZN3NXi5SsJcWx9eJloyCTDAjUGp7W3ujRWHrEAffpirrxpGE+/5NZJ/
+         PFaJh0WUYpXH8lubP3jepsiDwe0hMz5fi0RCZCk9GiB07CYck4SRY5FJSVwVZ3gPYDWZ
+         utYVBnsu18+Q1bH2PTgjL1cxFv589vbgKXcjQuhg/FE2FkR47s0xQupNWYASV1JhHH8b
+         f1b+3JrWQvXFvsI587ixk5ECRa4hhEduioP0U19lQPpMzFOhwUDokg6/p8mLMHwafS/p
+         4REYbDxZNAczqAFQUOUiyMvCuZ5ijg1cldarm0LZeiRXGYtLviEYH5OOCzijLcg/eo23
+         PIyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=++UQlU6VN9bMxqDPdQyUp42DcXToJ2hwFVgrDIaZHqs=;
+        b=omi3tWjsonmHucWgw/oHLjoXv0S5oodWV8l01wwmGI74xgYMdXTZ+wEO+RKoIVOUYW
+         FWt9U8VVd3l9GYy8LsovCBPxZZKD4X93MEATvYTCHhhqc4JhyP1kL3O9jhATSXktKxSt
+         rPRE64G0sTXBQaYU6MwzZpiqTx6KKfV3zpDNAZeagYFLN0WPnPZQN0Sgi1VAlbvrU1dm
+         z0BZzBVC2uQdvPUX7KkTNHCvw4xsAJPe3ZycyOEisHTTo3rKby6ZTM+QekTdqRflqQDN
+         lAyM23bRGsO+WX+azx8+McL5d5A/Hu2PhJ7mF+w6Qs/lGe45RSY/mnq7Oj/x+9YF65kz
+         6bsA==
+X-Gm-Message-State: AGi0Puamzqc2zcSd7ORDzQv3LfUfP4/ykWS3rr3ITzVg2A3nPpCtalzR
+        ZYmqWnEmELXN+njCmFdN1uTVbc9GDzzJWQ==
+X-Google-Smtp-Source: APiQypI54/hk+3/QJD7H5lyRnC0PFFEBG6sV3AsATVr65uXQv2wnXbSRfDI1h7izLDqdFA1uEAWb0w==
+X-Received: by 2002:a63:7159:: with SMTP id b25mr3716022pgn.72.1585655282423;
+        Tue, 31 Mar 2020 04:48:02 -0700 (PDT)
+Received: from localhost.localdomain ([122.178.242.244])
+        by smtp.gmail.com with ESMTPSA id i15sm11601220pgc.74.2020.03.31.04.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 04:48:01 -0700 (PDT)
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     linux-iio@vger.kernel.org
+Cc:     dragos.bogdan@analog.com, Rohit Sarkar <rohitsarkar5398@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of DEFINE_SIMPLE_ATTRIBUTE
+Date:   Tue, 31 Mar 2020 17:17:29 +0530
+Message-Id: <20200331114732.14739-1-rohitsarkar5398@gmail.com>
+X-Mailer: git-send-email 2.23.0.385.gbc12974a89
+In-Reply-To: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
+References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+The debugfs_create_file_unsafe method does not protect the fops given to
+it from file removal. It must be used with DEFINE_DEBUGFS_ATTRIBUTE
+which makes the fops aware of the file lifetime.
 
-Today, actual implementation for send massage is not correct. We check and
-loop only on TPM_STS.stsValid bit and next we single check TPM_STS.expect
-bit value.
-TPM_STS.expected bit shall be checked in the same time of
-TPM_STS.stsValid, and should be repeated until timeout_A.
-To aquire that, "wait_for_tpm_stat" function is modified to
-"wait_for_tpm_stat_result". this function read regulary status register
-and check bit defined by "mask" to reach value defined in "mask_result"
-(that way a bit in mask can be checked if reached 1 or 0).
+Further using DEFINE_DEBUGFS_ATTRIBUTE along with
+debugfs_create_file_unsafe significantly reduces the overhead introduced by
+debugfs_create_file which creates a lifetime managing proxy around each
+fops handed in. Refer [1] for more on this.
 
-Respectively, to send message as defined in
-TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be
-sent in one shot instead of sending last byte in exception.
+Fixes the following warnings reported by coccinelle:
+drivers/iio/imu//adis16460.c:126:0-23: WARNING: adis16460_flash_count_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+drivers/iio/imu//adis16460.c:108:0-23: WARNING: adis16460_product_id_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+drivers/iio/imu//adis16460.c:90:0-23: WARNING: adis16460_serial_number_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+drivers/iio/imu//adis16400.c:278:0-23: WARNING: adis16400_flash_count_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+drivers/iio/imu//adis16400.c:261:0-23: WARNING: adis16400_product_id_fops should be defined with DEFINE_DEBUGFS_ATTRIBUTE
 
-This improvment was suggested by Benoit Houyere.
+[1]: https://lists.gt.net/linux/kernel/2369498
 
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm_tis_core.c | 72 ++++++++++++++++-------------------------
- 1 file changed, 28 insertions(+), 44 deletions(-)
+Changelog v1 -> v2
+* Use debugfs_create_file_unsafe instead of debugfs_create_file
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index 18b9dc4..c8f4cf8 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -44,9 +44,10 @@ static bool wait_for_tpm_stat_cond(struct tpm_chip *chip, u8 mask,
-        return false;
- }
+Rohit Sarkar (2):
+  iio: imu: adis16400: use DEFINE_DEBUGFS_ATTRIBUTE instead of
+    DEFINE_SIMPLE_ATTRIBUTE
+  iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE instead of
+    DEFINE_SIMPLE_ATTRIBUTE
 
--static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
--               unsigned long timeout, wait_queue_head_t *queue,
--               bool check_cancel)
-+static int wait_for_tpm_stat_result(struct tpm_chip *chip, u8 mask,
-+                                   u8 mask_result, unsigned long timeout,
-+                                   wait_queue_head_t *queue,
-+                                   bool check_cancel)
- {
-        unsigned long stop;
-        long rc;
-@@ -55,7 +56,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
+ drivers/iio/imu/adis16400.c | 19 ++++++++++---------
+ drivers/iio/imu/adis16460.c | 27 +++++++++++++++------------
+ 2 files changed, 25 insertions(+), 21 deletions(-)
 
-        /* check current status */
-        status = chip->ops->status(chip);
--       if ((status & mask) == mask)
-+       if ((status & mask) == mask_result)
-                return 0;
+-- 
+2.23.0.385.gbc12974a89
 
-        stop = jiffies + timeout;
-@@ -83,7 +84,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
-                        usleep_range(TPM_TIMEOUT_USECS_MIN,
-                                     TPM_TIMEOUT_USECS_MAX);
-                        status = chip->ops->status(chip);
--                       if ((status & mask) == mask)
-+                       if ((status & mask) == mask_result)
-                                return 0;
-                } while (time_before(jiffies, stop));
-        }
-@@ -290,10 +291,11 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
-        int size = 0, burstcnt, rc;
-
-        while (size < count) {
--               rc = wait_for_tpm_stat(chip,
--                                TPM_STS_DATA_AVAIL | TPM_STS_VALID,
--                                chip->timeout_c,
--                                &priv->read_queue, true);
-+               rc = wait_for_tpm_stat_result(chip,
-+                                       TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                       TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                       chip->timeout_c,
-+                                       &priv->read_queue, true);
-                if (rc < 0)
-                        return rc;
-                burstcnt = get_burstcount(chip);
-@@ -348,8 +350,9 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-                        goto out;
-                }
-
--               if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--                                     &priv->int_queue, false) < 0) {
-+               if (wait_for_tpm_stat_result(chip, TPM_STS_VALID,
-+                                            TPM_STS_VALID, chip->timeout_c,
-+                                            &priv->int_queue, false) < 0) {
-                        size = -ETIME;
-                        goto out;
-                }
-@@ -385,61 +388,40 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
-        struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-        int rc, status, burstcnt;
-        size_t count = 0;
--       bool itpm = priv->flags & TPM_TIS_ITPM_WORKAROUND;
-
-        status = tpm_tis_status(chip);
-        if ((status & TPM_STS_COMMAND_READY) == 0) {
-                tpm_tis_ready(chip);
--               if (wait_for_tpm_stat
--                   (chip, TPM_STS_COMMAND_READY, chip->timeout_b,
--                    &priv->int_queue, false) < 0) {
-+               if (wait_for_tpm_stat_result(chip, TPM_STS_COMMAND_READY,
-+                                            TPM_STS_COMMAND_READY,
-+                                            chip->timeout_b,
-+                                            &priv->int_queue, false) < 0) {
-                        rc = -ETIME;
-                        goto out_err;
-                }
-        }
-
--       while (count < len - 1) {
-+       while (count < len) {
-                burstcnt = get_burstcount(chip);
-                if (burstcnt < 0) {
-                        dev_err(&chip->dev, "Unable to read burstcount\n");
-                        rc = burstcnt;
-                        goto out_err;
-                }
--               burstcnt = min_t(int, burstcnt, len - count - 1);
-+               burstcnt = min_t(int, burstcnt, len - count);
-                rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
-                                         burstcnt, buf + count);
-                if (rc < 0)
-                        goto out_err;
-
-                count += burstcnt;
--
--               if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--                                       &priv->int_queue, false) < 0) {
--                       rc = -ETIME;
--                       goto out_err;
--               }
--               status = tpm_tis_status(chip);
--               if (!itpm && (status & TPM_STS_DATA_EXPECT) == 0) {
--                       rc = -EIO;
--                       goto out_err;
--               }
-        }
--
--       /* write last byte */
--       rc = tpm_tis_write8(priv, TPM_DATA_FIFO(priv->locality), buf[count]);
--       if (rc < 0)
--               goto out_err;
--
--       if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--                               &priv->int_queue, false) < 0) {
-+       if (wait_for_tpm_stat_result(chip, TPM_STS_VALID | TPM_STS_DATA_EXPECT,
-+                                    TPM_STS_VALID, chip->timeout_c,
-+                                    &priv->int_queue, false) < 0) {
-                rc = -ETIME;
-                goto out_err;
-        }
--       status = tpm_tis_status(chip);
--       if (!itpm && (status & TPM_STS_DATA_EXPECT) != 0) {
--               rc = -EIO;
--               goto out_err;
--       }
-
-        return 0;
-
-@@ -496,9 +478,11 @@ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
-                ordinal = be32_to_cpu(*((__be32 *) (buf + 6)));
-
-                dur = tpm_calc_ordinal_duration(chip, ordinal);
--               if (wait_for_tpm_stat
--                   (chip, TPM_STS_DATA_AVAIL | TPM_STS_VALID, dur,
--                    &priv->read_queue, false) < 0) {
-+               if (wait_for_tpm_stat_result(chip,
-+                                            TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                            TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                            dur,
-+                                            &priv->read_queue, false) < 0) {
-                        rc = -ETIME;
-                        goto out_err;
-                }
---
-2.7.4
-
-
-
-===========================================================================================
-The privileged confidential information contained in this email is intended for use only by the addressees as indicated by the original sender of this email. If you are not the addressee indicated in this email or are not responsible for delivery of the email to such a person, please kindly reply to the sender indicating this fact and delete all copies of it from your computer and network server immediately. Your cooperation is highly appreciated. It is advised that any unauthorized use of confidential information of Nuvoton is strictly prohibited; and any information in this email irrelevant to the official business of Nuvoton shall be deemed as neither given nor endorsed by Nuvoton.
