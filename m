@@ -2,143 +2,100 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108F1C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00988C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB52520787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B36207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PZT/+9jO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gCFMJoI5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730626AbgCaVG3 (ORCPT
+        id S1731186AbgCaVHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:06:29 -0400
-Received: from ozlabs.org ([203.11.71.1]:51899 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbgCaVG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:06:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sMM60qtxz9sT1;
-        Wed,  1 Apr 2020 08:06:26 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585688786;
-        bh=eiIA93VCZCj0BV+o0eugl5O9jkjn5FnSmOxahgvXpNI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PZT/+9jOum8OWy+vl/035GLEC7wTZAaJDy9Cr4/bMVLUKNfPKuEHwkrPp0vp4POe1
-         Jyk9aklUh2lFwaA6kagliT0OFoz4FPdVtw3IGN0BMJyRRSPol4NDbaV70/K7YPBSlo
-         N9xG/oYafOpD1uI1BhY0asywc/ErvBd+tHcb96AlYejJstXiet3hdOoWJRy8ocjyLT
-         O6oJ0LZFLaOSQwPoKuwqap7IqJxUlIajn2Ak/sGYCflsCHP3fb8E02kjjIwbnBdd5Q
-         NJYd3JDG3AcAxkz14GYffctoczaPsvGS8Sip2tlc24nvia4vr7nNEswBKDiaqSK/iV
-         nnPUHS9SVuj5w==
-Date:   Wed, 1 Apr 2020 08:06:24 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: linux-next: build failure after merge of the input tree
-Message-ID: <20200401080624.5c3b3891@canb.auug.org.au>
-In-Reply-To: <20200325181600.207eb7ac@canb.auug.org.au>
-References: <20200325181600.207eb7ac@canb.auug.org.au>
+        Tue, 31 Mar 2020 17:07:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:51726 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgCaVHd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 17:07:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TdKLErdYAhpy+aevf+rPoQWJBOmm5AFEN10IJcqqdTA=; b=gCFMJoI5t1iLIbrbakBPfey08z
+        r4FSRSNoq+3IjxCH6HfkCgcD3t0IikcK57Uxd2OVPkAj86HJbGfXxW9kJX/Na6iTquXJDPrpzT4jl
+        6WdvpYy7SVc9hdokiiYPKSvick4f5e13cervutSgE+62Rcayfd4phdInk5HqnWXwhRFHKfVZWKrPK
+        Y4FG8hUXpwu9icbvoTJpDysml7UjaN3JyfwRRSYNs17lzEde3eEB9w/1P/M8DBivCR1UKFDt0s5JI
+        KWBwpeR+1JZ4QKaNglBpR+bHh4kEb/IgfZlxRnwoBoljiDZwndCOisJxo6jm+XsH60wb2sWCEVMJn
+        aK+NcPbA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJO6V-0005iL-8I; Tue, 31 Mar 2020 21:07:23 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 692A098354A; Tue, 31 Mar 2020 23:07:20 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 23:07:20 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+Message-ID: <20200331210720.GG2452@worktop.programming.kicks-ass.net>
+References: <20200326135620.tlmof5fa7p5wct62@treble>
+ <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+ <20200326195718.GD2452@worktop.programming.kicks-ass.net>
+ <20200327010001.i3kebxb4um422ycb@treble>
+ <20200330170200.GU20713@hirez.programming.kicks-ass.net>
+ <20200330190205.k5ssixd5hpshpjjq@treble>
+ <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+ <20200331111652.GH20760@hirez.programming.kicks-ass.net>
+ <20200331202315.zialorhlxmml6ec7@treble>
+ <20200331204047.GF2452@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/WKjc7kGA0//_OfO+296aCAq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331204047.GF2452@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/WKjc7kGA0//_OfO+296aCAq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 31, 2020 at 10:40:47PM +0200, Peter Zijlstra wrote:
+> On Tue, Mar 31, 2020 at 03:23:15PM -0500, Josh Poimboeuf wrote:
 
-Hi all,
+> > I now understand what you're trying to do with the RET_TAIL thing, and I
+> > guess it's ok for the ftrace case.  But I'd rather an UNWIND_HINT_IGNORE
+> > before the tail cail, which would tell objtool to just silence the tail
+> > call warning.  It's simpler for the user to understand, it's simpler
+> > logic in objtool, and I think an "ignore warnings for the next insn"
+> > hint would be more generally applicable anyway.
+> 
+> I like how this is specific on how far the stack can be off, as opposed
+> so say 'ignore any warning on this instruction'.
+> 
+> Because by saying this RET should be +8, we'll still get a warning when
+> this is not the case (and in fact I should strengthen the patch to
+> implement that).
 
-On Wed, 25 Mar 2020 18:16:00 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> After merging the input tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
->=20
-> drivers/input/touchscreen/goodix.c: In function 'goodix_irq_direction_out=
-put':
-> drivers/input/touchscreen/goodix.c:624:12: error: implicit declaration of=
- function 'acpi_execute_simple_method' [-Werror=3Dimplicit-function-declara=
-tion]
->   624 |   status =3D acpi_execute_simple_method(ACPI_HANDLE(dev),
->       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/input/touchscreen/goodix.c:606:17: warning: unused variable 'dev'=
- [-Wunused-variable]
->   606 |  struct device *dev =3D &ts->client->dev;
->       |                 ^~~
-> drivers/input/touchscreen/goodix.c: In function 'goodix_irq_direction_inp=
-ut':
-> drivers/input/touchscreen/goodix.c:634:17: warning: unused variable 'dev'=
- [-Wunused-variable]
->   634 |  struct device *dev =3D &ts->client->dev;
->       |                 ^~~
-> cc1: some warnings being treated as errors
->=20
-> Caused by commit
->=20
->   c5fca485320e ("Input: goodix - add support for controlling the IRQ pin =
-through ACPI methods")
->=20
-> I have applied the following patch for today:
->=20
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 25 Mar 2020 18:04:08 +1100
-> Subject: [PATCH] Input: goodix - mark as BROKEN for noe
->=20
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/input/touchscreen/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscree=
-n/Kconfig
-> index c071f7c407b6..98788fb83917 100644
-> --- a/drivers/input/touchscreen/Kconfig
-> +++ b/drivers/input/touchscreen/Kconfig
-> @@ -380,6 +380,7 @@ config TOUCHSCREEN_GOODIX
->  	tristate "Goodix I2C touchscreen"
->  	depends on I2C
->  	depends on GPIOLIB || COMPILE_TEST
-> +	depends on BROKEN
->  	help
->  	  Say Y here if you have the Goodix touchscreen (such as one
->  	  installed in Onda v975w tablets) connected to your
+Like this; I'm confused on what cfa.offset is vs stack_size though.
 
-I am still marking this as BROKEN ...
+But this way we're strict and always warn when the unexpected happens.
 
---=20
-Cheers,
-Stephen Rothwell
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1423,8 +1423,7 @@ static bool has_modified_stack_frame(str
+ 	    !(ret_offset && state->cfa.offset == initial_func_cfi.cfa.offset + ret_offset))
+ 		return true;
+ 
+-	if (state->stack_size != initial_func_cfi.cfa.offset &&
+-	    !(ret_offset && state->stack_size == initial_func_cfi.cfa.offset + ret_offset))
++	if (state->stack_size != initial_func_cfi.cfa.offset + ret_offset)
+ 		return true;
+ 
+ 	for (i = 0; i < CFI_NUM_REGS; i++) {
 
---Sig_/WKjc7kGA0//_OfO+296aCAq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6DsNAACgkQAVBC80lX
-0GzghQf/RCSypmhvNXsgSmNlKwY3tNEZ+O86i2RhBM+COTB1CF/aGXCKC04axvIa
-M/qhUKTVPKF9RBCd8TeSTxWeoaSSTz5xh8Kwh/i0NfP3+gx86ETjBwTwQYJYadfg
-hBwEG1406sVoHQ+CEI6yiCUW+ZCJlhSb9ijY4Uc9b+gB9iyZn3DwBfDvXd6HGkaD
-vFGs8e0Lk7ICony/IahXPp054LFP0/9wT7fuasrfl9f2zId2Zi7MebJ6QTwZROil
-HhnJsRTlfcZAn20XJLIm3AnN9uJCpLyeRJTTGB508XRqJEYYuDU0+vRDmTwZWNRl
-v1dRkKDgyrZ7Thjv7U3Lsp8byhikrg==
-=P0p2
------END PGP SIGNATURE-----
-
---Sig_/WKjc7kGA0//_OfO+296aCAq--
