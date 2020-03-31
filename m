@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CD0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD09C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D0820772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651CF208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646216;
-	bh=G/zQPYs7GWV+jXp+rWe/LIgnh+0jqvatsNAm9hy88Rc=;
+	s=default; t=1585646220;
+	bh=0wveDMe7uyg5AfVuGN/w8XtmkVLcDHD92wtygOJaXvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ht0DZl5QNPVuKXGAF0+N+AJ+BZUmRF1qRsf37We3CFv6Iuf0YpYLtyFkAea/7Qt5E
-	 tfUV2S6Q7y458zWbvVrh55IEHwzkWoUwP2aOm5uyG4JvdtEv2Cm2i4CqM7sBzrEUfI
-	 1cyWqB7zTL5Rkdk+xjL9HEJ+IB00p1gBS1Tjz9/A=
+	b=S1o1uDtDAZpxbl8c+cJdrM7cmh0r7JOWO7Z0ItlE6Xcl6do2rPbyz9Vw+GcQy00O8
+	 bEj35anZPQhZOFVCSh/2FxJOPKe0hU6dwsw3o82Tv0iIpoq06RALMv5NpPgVAeF0ec
+	 etC2E/CMtlAuh4zD784WRMmn4OKyq2fvQRACoF7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbgCaJQz (ORCPT
+        id S1731994AbgCaJQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731987AbgCaJQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:50 -0400
+        id S1731538AbgCaJQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:16:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 613682072E;
-        Tue, 31 Mar 2020 09:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13F6F2072E;
+        Tue, 31 Mar 2020 09:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646209;
-        bh=G/zQPYs7GWV+jXp+rWe/LIgnh+0jqvatsNAm9hy88Rc=;
+        s=default; t=1585646215;
+        bh=0wveDMe7uyg5AfVuGN/w8XtmkVLcDHD92wtygOJaXvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vJuNPhzEnJ+AlqdvpwPAh6f6+CbOkwAvkDmsddRe90OkiXA2f7fQb4h01ddM5wQaP
-         h/vdNtTL25KpdyrBH0f/JgwOBGODCYYZdRgGXzZsrmv6rUkVLkZjr/yzxt3I1YpSfx
-         Z7w/ePOetCIOW7m+jkRuJ5/93VbwaDqpBZwTnHZQ=
+        b=smIgykHkgyAj8gGb9DZeVbthicyJJIkTfWbwngNpG1C9BFm6DxiUTiuBYkJoaceO6
+         bcW0FSuFeiM4UsA8qImAimw6ptajMNvXGLHUdD56SNgAhUNuLsu5nv/MpYZEFTKoSl
+         578y4FAOoH6cp46yUNsjvNJkFBvnR6ovJHD9apF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 117/155] xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
-Date:   Tue, 31 Mar 2020 10:59:17 +0200
-Message-Id: <20200331085431.582714966@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.4 119/155] afs: Fix client call Rx-phase signal handling
+Date:   Tue, 31 Mar 2020 10:59:19 +0200
+Message-Id: <20200331085431.770555114@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,60 +58,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-commit a1a7e3a36e01ca6e67014f8cf673cb8e47be5550 upstream.
+commit 7d7587db0d7fd1138f2afcffdc46a8e15630b944 upstream.
 
-Without doing verify_sec_ctx_len() check in xfrm_add_acquire(), it may be
-out-of-bounds to access uctx->ctx_str with uctx->ctx_len, as noticed by
-syz:
+Fix the handling of signals in client rxrpc calls made by the afs
+filesystem.  Ignore signals completely, leaving call abandonment or
+connection loss to be detected by timeouts inside AF_RXRPC.
 
-  BUG: KASAN: slab-out-of-bounds in selinux_xfrm_alloc_user+0x237/0x430
-  Read of size 768 at addr ffff8880123be9b4 by task syz-executor.1/11650
+Allowing a filesystem call to be interrupted after the entire request has
+been transmitted and an abort sent means that the server may or may not
+have done the action - and we don't know.  It may even be worse than that
+for older servers.
 
-  Call Trace:
-   dump_stack+0xe8/0x16e
-   print_address_description.cold.3+0x9/0x23b
-   kasan_report.cold.4+0x64/0x95
-   memcpy+0x1f/0x50
-   selinux_xfrm_alloc_user+0x237/0x430
-   security_xfrm_policy_alloc+0x5c/0xb0
-   xfrm_policy_construct+0x2b1/0x650
-   xfrm_add_acquire+0x21d/0xa10
-   xfrm_user_rcv_msg+0x431/0x6f0
-   netlink_rcv_skb+0x15a/0x410
-   xfrm_netlink_rcv+0x6d/0x90
-   netlink_unicast+0x50e/0x6a0
-   netlink_sendmsg+0x8ae/0xd40
-   sock_sendmsg+0x133/0x170
-   ___sys_sendmsg+0x834/0x9a0
-   __sys_sendmsg+0x100/0x1e0
-   do_syscall_64+0xe5/0x660
-   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
-
-So fix it by adding the missing verify_sec_ctx_len check there.
-
-Fixes: 980ebd25794f ("[IPSEC]: Sync series - acquire insert")
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_user.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/afs/rxrpc.c          |   34 ++--------------------------------
+ include/net/af_rxrpc.h  |    4 +---
+ net/rxrpc/af_rxrpc.c    |   33 +++------------------------------
+ net/rxrpc/ar-internal.h |    1 -
+ net/rxrpc/input.c       |    1 -
+ 5 files changed, 6 insertions(+), 67 deletions(-)
 
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -2276,6 +2276,9 @@ static int xfrm_add_acquire(struct sk_bu
- 	err = verify_newpolicy_info(&ua->policy);
- 	if (err)
- 		goto free_state;
-+	err = verify_sec_ctx_len(attrs);
-+	if (err)
-+		goto free_state;
+--- a/fs/afs/rxrpc.c
++++ b/fs/afs/rxrpc.c
+@@ -603,11 +603,7 @@ call_complete:
+ long afs_wait_for_call_to_complete(struct afs_call *call,
+ 				   struct afs_addr_cursor *ac)
+ {
+-	signed long rtt2, timeout;
+ 	long ret;
+-	bool stalled = false;
+-	u64 rtt;
+-	u32 life, last_life;
+ 	bool rxrpc_complete = false;
  
- 	/*   build an XP */
- 	xp = xfrm_policy_construct(net, &ua->policy, attrs, &err);
+ 	DECLARE_WAITQUEUE(myself, current);
+@@ -618,14 +614,6 @@ long afs_wait_for_call_to_complete(struc
+ 	if (ret < 0)
+ 		goto out;
+ 
+-	rtt = rxrpc_kernel_get_rtt(call->net->socket, call->rxcall);
+-	rtt2 = nsecs_to_jiffies64(rtt) * 2;
+-	if (rtt2 < 2)
+-		rtt2 = 2;
+-
+-	timeout = rtt2;
+-	rxrpc_kernel_check_life(call->net->socket, call->rxcall, &last_life);
+-
+ 	add_wait_queue(&call->waitq, &myself);
+ 	for (;;) {
+ 		set_current_state(TASK_UNINTERRUPTIBLE);
+@@ -636,37 +624,19 @@ long afs_wait_for_call_to_complete(struc
+ 			call->need_attention = false;
+ 			__set_current_state(TASK_RUNNING);
+ 			afs_deliver_to_call(call);
+-			timeout = rtt2;
+ 			continue;
+ 		}
+ 
+ 		if (afs_check_call_state(call, AFS_CALL_COMPLETE))
+ 			break;
+ 
+-		if (!rxrpc_kernel_check_life(call->net->socket, call->rxcall, &life)) {
++		if (!rxrpc_kernel_check_life(call->net->socket, call->rxcall)) {
+ 			/* rxrpc terminated the call. */
+ 			rxrpc_complete = true;
+ 			break;
+ 		}
+ 
+-		if (call->intr && timeout == 0 &&
+-		    life == last_life && signal_pending(current)) {
+-			if (stalled)
+-				break;
+-			__set_current_state(TASK_RUNNING);
+-			rxrpc_kernel_probe_life(call->net->socket, call->rxcall);
+-			timeout = rtt2;
+-			stalled = true;
+-			continue;
+-		}
+-
+-		if (life != last_life) {
+-			timeout = rtt2;
+-			last_life = life;
+-			stalled = false;
+-		}
+-
+-		timeout = schedule_timeout(timeout);
++		schedule();
+ 	}
+ 
+ 	remove_wait_queue(&call->waitq, &myself);
+--- a/include/net/af_rxrpc.h
++++ b/include/net/af_rxrpc.h
+@@ -58,9 +58,7 @@ int rxrpc_kernel_charge_accept(struct so
+ 			       rxrpc_user_attach_call_t, unsigned long, gfp_t,
+ 			       unsigned int);
+ void rxrpc_kernel_set_tx_length(struct socket *, struct rxrpc_call *, s64);
+-bool rxrpc_kernel_check_life(const struct socket *, const struct rxrpc_call *,
+-			     u32 *);
+-void rxrpc_kernel_probe_life(struct socket *, struct rxrpc_call *);
++bool rxrpc_kernel_check_life(const struct socket *, const struct rxrpc_call *);
+ u32 rxrpc_kernel_get_epoch(struct socket *, struct rxrpc_call *);
+ bool rxrpc_kernel_get_reply_time(struct socket *, struct rxrpc_call *,
+ 				 ktime_t *);
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -371,45 +371,18 @@ EXPORT_SYMBOL(rxrpc_kernel_end_call);
+  * rxrpc_kernel_check_life - Check to see whether a call is still alive
+  * @sock: The socket the call is on
+  * @call: The call to check
+- * @_life: Where to store the life value
+  *
+- * Allow a kernel service to find out whether a call is still alive - ie. we're
+- * getting ACKs from the server.  Passes back in *_life a number representing
+- * the life state which can be compared to that returned by a previous call and
+- * return true if the call is still alive.
+- *
+- * If the life state stalls, rxrpc_kernel_probe_life() should be called and
+- * then 2RTT waited.
++ * Allow a kernel service to find out whether a call is still alive -
++ * ie. whether it has completed.
+  */
+ bool rxrpc_kernel_check_life(const struct socket *sock,
+-			     const struct rxrpc_call *call,
+-			     u32 *_life)
++			     const struct rxrpc_call *call)
+ {
+-	*_life = call->acks_latest;
+ 	return call->state != RXRPC_CALL_COMPLETE;
+ }
+ EXPORT_SYMBOL(rxrpc_kernel_check_life);
+ 
+ /**
+- * rxrpc_kernel_probe_life - Poke the peer to see if it's still alive
+- * @sock: The socket the call is on
+- * @call: The call to check
+- *
+- * In conjunction with rxrpc_kernel_check_life(), allow a kernel service to
+- * find out whether a call is still alive by pinging it.  This should cause the
+- * life state to be bumped in about 2*RTT.
+- *
+- * The must be called in TASK_RUNNING state on pain of might_sleep() objecting.
+- */
+-void rxrpc_kernel_probe_life(struct socket *sock, struct rxrpc_call *call)
+-{
+-	rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, true, false,
+-			  rxrpc_propose_ack_ping_for_check_life);
+-	rxrpc_send_ack_packet(call, true, NULL);
+-}
+-EXPORT_SYMBOL(rxrpc_kernel_probe_life);
+-
+-/**
+  * rxrpc_kernel_get_epoch - Retrieve the epoch value from a call.
+  * @sock: The socket the call is on
+  * @call: The call to query
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -675,7 +675,6 @@ struct rxrpc_call {
+ 
+ 	/* transmission-phase ACK management */
+ 	ktime_t			acks_latest_ts;	/* Timestamp of latest ACK received */
+-	rxrpc_serial_t		acks_latest;	/* serial number of latest ACK received */
+ 	rxrpc_seq_t		acks_lowest_nak; /* Lowest NACK in the buffer (or ==tx_hard_ack) */
+ 	rxrpc_seq_t		acks_lost_top;	/* tx_top at the time lost-ack ping sent */
+ 	rxrpc_serial_t		acks_lost_ping;	/* Serial number of probe ACK */
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -882,7 +882,6 @@ static void rxrpc_input_ack(struct rxrpc
+ 	    before(prev_pkt, call->ackr_prev_seq))
+ 		goto out;
+ 	call->acks_latest_ts = skb->tstamp;
+-	call->acks_latest = sp->hdr.serial;
+ 
+ 	call->ackr_first_seq = first_soft_ack;
+ 	call->ackr_prev_seq = prev_pkt;
 
 
