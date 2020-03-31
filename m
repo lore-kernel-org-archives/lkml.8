@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E64C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E780C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CF12137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BDE120B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645452;
-	bh=S092gFVFtOYE7P8NHrfnFQpRTJsmjesAJzX7X3rp8K8=;
+	s=default; t=1585645456;
+	bh=d3l6xmg0mmfp+pYZoyTmV6i9lnt0Y9OlZH1480sdZIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=On123kOtSJKN07PMC/CUFiomAd+f3MqEtRAALbDP1yXikKc2t2W1aN6T94MVty3CK
-	 UBaBR2QIjCBuA33t8NSDiNwVN+OAXLPAB+bumXl2A5yDjQETmTwBik1hw85PxQqxJx
-	 YChkxWVtxiUhEdT2q1opuClgd8XAdEFfmIrIl1T4=
+	b=GYmkqrvI9QxmwZk7lI+1BQpNgEB5+3np6LkaSqrxoir34UJllwsnhSC4sdOKuZDlz
+	 t2Zof0UYq66wMJOyONfrP3yHx4edoGmcUPhpFLZd1BBBhI72yq6U9UtVcN5l/YOdY/
+	 J3DY8+JABzjxZ3uhHESxIDcrEZsTEYR9zBuFvku8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgCaJEL (ORCPT
+        id S1730927AbgCaJEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43928 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:04:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730469AbgCaJEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:04:06 -0400
+        id S1730729AbgCaJEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:04:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DEFF2137B;
-        Tue, 31 Mar 2020 09:04:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5F0D20B1F;
+        Tue, 31 Mar 2020 09:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645446;
-        bh=S092gFVFtOYE7P8NHrfnFQpRTJsmjesAJzX7X3rp8K8=;
+        s=default; t=1585645451;
+        bh=d3l6xmg0mmfp+pYZoyTmV6i9lnt0Y9OlZH1480sdZIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=weBqK/1fkHR8YVO8E24wCdqszMZhxC0iMyXRpoQPdaYp+gAAHBYjEaPPx5PBQ6XYs
-         MALcvqCEMsKylB71RyNDv5P7U4LJpdR7q0eoXjb/UFiZ6ovAtFEZOhctyNbykWCwvk
-         LNrDhm+xPot/2+sOTc8GjyEiOb33FfH48EUNtvIU=
+        b=CqdKtwu9HwKPRThlTDCCY/yLYOVqF4hy1Rxl7HeaRQnrLrrTnKEzST2iMVbGIFd6J
+         sHNPs+N+qt1L2xowRf+kFi+eEpT3vFnXGdyxQcnEaUkOpB6GSZL+2ETmxI8bn8U/p5
+         EW9JhQ8i0fuSw3zhBMGRKm1mmoEvA8dSqaJ58tkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com,
-        syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com,
-        syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
-Subject: [PATCH 5.5 029/170] net_sched: cls_route: remove the right filter from hashtable
-Date:   Tue, 31 Mar 2020 10:57:23 +0200
-Message-Id: <20200331085427.181960701@linuxfoundation.org>
+        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 057/170] net/mlx5e: Enhance ICOSQ WQE info fields
+Date:   Tue, 31 Mar 2020 10:57:51 +0200
+Message-Id: <20200331085430.648058662@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -65,45 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Aya Levin <ayal@mellanox.com>
 
-[ Upstream commit ef299cc3fa1a9e1288665a9fdc8bff55629fd359 ]
+[ Upstream commit 1de0306c3a05d305e45b1f1fabe2f4e94222eb6b ]
 
-route4_change() allocates a new filter and copies values from
-the old one. After the new filter is inserted into the hash
-table, the old filter should be removed and freed, as the final
-step of the update.
+Add number of WQEBBs (WQE's Basic Block) to WQE info struct. Set the
+number of WQEBBs on WQE post, and increment the consumer counter (cc)
+on completion.
 
-However, the current code mistakenly removes the new one. This
-looks apparently wrong to me, and it causes double "free" and
-use-after-free too, as reported by syzbot.
+In case of error completions, the cc was mistakenly not incremented,
+keeping a gap between cc and pc (producer counter). This failed the
+recovery flow on the ICOSQ from a CQE error which timed-out waiting for
+the cc and pc to meet.
 
-Reported-and-tested-by: syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
-Fixes: 1109c00547fc ("net: sched: RCU cls_route")
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: be5323c8379f ("net/mlx5e: Report and recover from CQE error on ICOSQ")
+Signed-off-by: Aya Levin <ayal@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_route.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h      |    1 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c   |   11 +++++------
+ drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c |    1 +
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
---- a/net/sched/cls_route.c
-+++ b/net/sched/cls_route.c
-@@ -534,8 +534,8 @@ static int route4_change(struct net *net
- 			fp = &b->ht[h];
- 			for (pfp = rtnl_dereference(*fp); pfp;
- 			     fp = &pfp->next, pfp = rtnl_dereference(*fp)) {
--				if (pfp == f) {
--					*fp = f->next;
-+				if (pfp == fold) {
-+					rcu_assign_pointer(*fp, fold->next);
- 					break;
- 				}
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -371,6 +371,7 @@ enum {
+ 
+ struct mlx5e_sq_wqe_info {
+ 	u8  opcode;
++	u8 num_wqebbs;
+ 
+ 	/* Auxiliary data for different opcodes. */
+ 	union {
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -477,6 +477,7 @@ static inline void mlx5e_fill_icosq_frag
+ 	/* fill sq frag edge with nops to avoid wqe wrapping two pages */
+ 	for (; wi < edge_wi; wi++) {
+ 		wi->opcode = MLX5_OPCODE_NOP;
++		wi->num_wqebbs = 1;
+ 		mlx5e_post_nop(wq, sq->sqn, &sq->pc);
+ 	}
+ }
+@@ -525,6 +526,7 @@ static int mlx5e_alloc_rx_mpwqe(struct m
+ 	umr_wqe->uctrl.xlt_offset = cpu_to_be16(xlt_offset);
+ 
+ 	sq->db.ico_wqe[pi].opcode = MLX5_OPCODE_UMR;
++	sq->db.ico_wqe[pi].num_wqebbs = MLX5E_UMR_WQEBBS;
+ 	sq->db.ico_wqe[pi].umr.rq = rq;
+ 	sq->pc += MLX5E_UMR_WQEBBS;
+ 
+@@ -621,6 +623,7 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
+ 
+ 			ci = mlx5_wq_cyc_ctr2ix(&sq->wq, sqcc);
+ 			wi = &sq->db.ico_wqe[ci];
++			sqcc += wi->num_wqebbs;
+ 
+ 			if (last_wqe && unlikely(get_cqe_opcode(cqe) != MLX5_CQE_REQ)) {
+ 				netdev_WARN_ONCE(cq->channel->netdev,
+@@ -631,16 +634,12 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
+ 				break;
  			}
+ 
+-			if (likely(wi->opcode == MLX5_OPCODE_UMR)) {
+-				sqcc += MLX5E_UMR_WQEBBS;
++			if (likely(wi->opcode == MLX5_OPCODE_UMR))
+ 				wi->umr.rq->mpwqe.umr_completed++;
+-			} else if (likely(wi->opcode == MLX5_OPCODE_NOP)) {
+-				sqcc++;
+-			} else {
++			else if (unlikely(wi->opcode != MLX5_OPCODE_NOP))
+ 				netdev_WARN_ONCE(cq->channel->netdev,
+ 						 "Bad OPCODE in ICOSQ WQE info: 0x%x\n",
+ 						 wi->opcode);
+-			}
+ 
+ 		} while (!last_wqe);
+ 
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c
+@@ -78,6 +78,7 @@ void mlx5e_trigger_irq(struct mlx5e_icos
+ 	u16 pi = mlx5_wq_cyc_ctr2ix(wq, sq->pc);
+ 
+ 	sq->db.ico_wqe[pi].opcode = MLX5_OPCODE_NOP;
++	sq->db.ico_wqe[pi].num_wqebbs = 1;
+ 	nopwqe = mlx5e_post_nop(wq, sq->sqn, &sq->pc);
+ 	mlx5e_notify_hw(wq, sq->pc, sq->uar_map, &nopwqe->ctrl);
+ }
 
 
