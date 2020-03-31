@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7977FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3716C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF3C20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAC620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645989;
-	bh=upmdMxCOQwLw4/80vqIIQ9aPaJZjTLkqmq0BnGCdU9w=;
+	s=default; t=1585645993;
+	bh=lPv5/SVxRUsJE9C6iPhlGEWnmckp85fixzSHFBBxPAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M5lkV2Q8NtEfuFfk1PCCVnp/RcocQC2CiUuj3S3Jl7o3RG8f18yw/N3T8wGpIZg7F
-	 gMOYqNmuh8u1Bp+e0DK8G90HTNYyYikTpF1tVIgyfx4a+6AKdlG1yvE3rQ2TlEnaOD
-	 wH5cyurezw0g9PhRehMhziGJ1XRWFxsYjAYuLkos=
+	b=OA+nEVnOYSHcufvJAg5tqQNYif5+q+99KccHpJX8JXKa7NWGTeSWuyXDxG0aiDUa/
+	 NGqER4aEhpB6ePvzvrQkYy74MDygzAFpWFujxml3VJY3+WqjoUzYEXtY3Bsknh0OwB
+	 5uuabeSM3eQQp6ssOuIZFnUzOQyZQbeoHmisqhWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731603AbgCaJM4 (ORCPT
+        id S1730517AbgCaJNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59994 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730328AbgCaJMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:12:54 -0400
+        id S1730244AbgCaJNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21AD020787;
-        Tue, 31 Mar 2020 09:12:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02DBC20675;
+        Tue, 31 Mar 2020 09:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645974;
-        bh=upmdMxCOQwLw4/80vqIIQ9aPaJZjTLkqmq0BnGCdU9w=;
+        s=default; t=1585645987;
+        bh=lPv5/SVxRUsJE9C6iPhlGEWnmckp85fixzSHFBBxPAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aw3Oc0E5Ay0qP+IkZKbPl/Y8FR1tdrZqkJWTrQTx6wABNJY+AfV563KbDQpFo4lhs
-         8BuwGq8U1nrLT4y6+Vv1V34waVIJC1uBIaAiY3a1Uv4Edf5fHBoUR1GcHjlaUufIVF
-         Y4GCZRPk3YXmg52KxIq2QvWKuGW5VdvWBZBJvtbk=
+        b=Y0Gue4b2t6zI70++bUXrkhVpTEzMD+vJlPb+IVx9e6sxbWNYJyIN6kcKg2HplAOWx
+         qu93ZkHu4nQlxt1xKr2oem2g2ZtLI0GmI99uoeED06v0PqD/+SDpFKSVmYZ/YTXZ0g
+         CmoYLFf++aPuclRwkjwTVI4RA6cpKRYKH/nxPQCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com,
-        Petr Machata <petrm@mellanox.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 045/155] net: ip_gre: Accept IFLA_INFO_DATA-less configuration
-Date:   Tue, 31 Mar 2020 10:58:05 +0200
-Message-Id: <20200331085423.486368957@linuxfoundation.org>
+Subject: [PATCH 5.4 048/155] hsr: set .netnsok flag
+Date:   Tue, 31 Mar 2020 10:58:08 +0200
+Message-Id: <20200331085423.855557540@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,33 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 32ca98feab8c9076c89c0697c5a85e46fece809d ]
+[ Upstream commit 09e91dbea0aa32be02d8877bd50490813de56b9a ]
 
-The fix referenced below causes a crash when an ERSPAN tunnel is created
-without passing IFLA_INFO_DATA. Fix by validating passed-in data in the
-same way as ipgre does.
+The hsr module has been supporting the list and status command.
+(HSR_C_GET_NODE_LIST and HSR_C_GET_NODE_STATUS)
+These commands send node information to the user-space via generic netlink.
+But, in the non-init_net namespace, these commands are not allowed
+because .netnsok flag is false.
+So, there is no way to get node information in the non-init_net namespace.
 
-Fixes: e1f8f78ffe98 ("net: ip_gre: Separate ERSPAN newlink / changelink callbacks")
-Reported-by: syzbot+1b4ebf4dae4e510dd219@syzkaller.appspotmail.com
-Signed-off-by: Petr Machata <petrm@mellanox.com>
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_gre.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/hsr/hsr_netlink.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -1164,6 +1164,8 @@ static int erspan_netlink_parms(struct n
- 	err = ipgre_netlink_parms(dev, data, tb, parms, fwmark);
- 	if (err)
- 		return err;
-+	if (!data)
-+		return 0;
- 
- 	if (data[IFLA_GRE_ERSPAN_VER]) {
- 		t->erspan_ver = nla_get_u8(data[IFLA_GRE_ERSPAN_VER]);
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -470,6 +470,7 @@ static struct genl_family hsr_genl_famil
+ 	.version = 1,
+ 	.maxattr = HSR_A_MAX,
+ 	.policy = hsr_genl_policy,
++	.netnsok = true,
+ 	.module = THIS_MODULE,
+ 	.ops = hsr_ops,
+ 	.n_ops = ARRAY_SIZE(hsr_ops),
 
 
