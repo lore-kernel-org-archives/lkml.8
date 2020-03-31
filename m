@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7783AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F2DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 459C520787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6300D2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645889;
-	bh=3mVnKTF2uYAXRjiu36c2VE+rQ9dRUSV0W8Csiw4csOs=;
+	s=default; t=1585645893;
+	bh=HeEzbeDHe5YF1KUgv3rzS1HaR+nSqhMKG6IuSXD3plo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVlefvt/XWCU9OMOfm9P/un2XazPPu4TfJtGMJHD/ZYXvUKjfUA0qXJUIO8DGpiUs
-	 vpr5WPCkuLLAfjjq5PysFJzWa7OY/we3VKw5AFfMzijDzhBPNC7OlVf/idcfggm3Kp
-	 N8PHJAyCJxW7xyZB9z6YJMkhvBZiVYpvEgXe2qyA=
+	b=DxquN2Mq39USI4FqpABsosDGpM2k9VoC9zxi650dB+4jI7S0HYzai+uUqdN9lbOWT
+	 3TvX30+pkQeHrfMqlMUqmqlohNcitQ9F0bQ6wmTbNs9xwUJPUWRgM7CqJfC0n45KOz
+	 71GhnirrAvFoDhc4f1Mqaie8x7PBFOHXDg9G3h6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731213AbgCaJL1 (ORCPT
+        id S1731707AbgCaJLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731460AbgCaJLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:11:20 -0400
+        id S1731696AbgCaJLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:11:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BFDD20675;
-        Tue, 31 Mar 2020 09:11:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD44C20675;
+        Tue, 31 Mar 2020 09:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645879;
-        bh=3mVnKTF2uYAXRjiu36c2VE+rQ9dRUSV0W8Csiw4csOs=;
+        s=default; t=1585645882;
+        bh=HeEzbeDHe5YF1KUgv3rzS1HaR+nSqhMKG6IuSXD3plo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XwyjIy9X86lHD9B3x1r1ay6dy2hRHu01ZSrkHRI12OFWTha1+Msy2qv4HfzPAugVb
-         6o3lWWICoucFHKoKTTW5uZSMyHD1bbcUoVdm2c8hmMPVpYrMJONkWGQ7bXIoCvrT73
-         Yihd09viiFMUf0B1LB2adUcUCwDJbRWwPRpLlku8=
+        b=CIQoa3tj8Cxlrtj+c5lvz82ZYsA8TdJ6HWHMw+iG2uzaUEXbjEUZmJZ25TMQ0Osc9
+         ga7/yg2ammPt7ukZYI3/PreWgt3riNW33JBVNS2N2vlreLRH3YeMeJ8+8KFM9+nNm4
+         b9XKj3POjz+A87qzqp8Ny7h5bUXos0MUcWC/rAJg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Kenneth R. Crudup" <kenny@panix.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 006/155] ACPI: PM: s2idle: Rework ACPI events synchronization
-Date:   Tue, 31 Mar 2020 10:57:26 +0200
-Message-Id: <20200331085419.054651700@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 007/155] cxgb4: fix throughput drop during Tx backpressure
+Date:   Tue, 31 Mar 2020 10:57:27 +0200
+Message-Id: <20200331085419.163290714@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,80 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-commit 024aa8732acb7d2503eae43c3fe3504d0a8646d0 upstream.
+[ Upstream commit 7affd80802afb6ca92dba47d768632fbde365241 ]
 
-Note that the EC GPE processing need not be synchronized in
-acpi_s2idle_wake() after invoking acpi_ec_dispatch_gpe(), because
-that function checks the GPE status and dispatches its handler if
-need be and the SCI action handler is not going to run anyway at
-that point.
+commit 7c3bebc3d868 ("cxgb4: request the TX CIDX updates to status page")
+reverted back to getting Tx CIDX updates via DMA, instead of interrupts,
+introduced by commit d429005fdf2c ("cxgb4/cxgb4vf: Add support for SGE
+doorbell queue timer")
 
-Moreover, it is better to drain all of the pending ACPI events
-before restoring the working-state configuration of GPEs in
-acpi_s2idle_restore(), because those events are likely to be related
-to system wakeup, in which case they will not be relevant going
-forward.
+However, it missed reverting back several code changes where Tx CIDX
+updates are not explicitly requested during backpressure when using
+interrupt mode. These missed changes cause slow recovery during
+backpressure because the corresponding interrupt no longer comes and
+hence results in Tx throughput drop.
 
-Rework the code to take these observations into account.
+So, revert back these missed code changes, as well, which will allow
+explicitly requesting Tx CIDX updates when backpressure happens.
+This enables the corresponding interrupt with Tx CIDX update message
+to get generated and hence speed up recovery and restore back
+throughput.
 
-Tested-by: Kenneth R. Crudup <kenny@panix.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 7c3bebc3d868 ("cxgb4: request the TX CIDX updates to status page")
+Fixes: d429005fdf2c ("cxgb4/cxgb4vf: Add support for SGE doorbell queue timer")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/acpi/sleep.c |   26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c |   42 +------------------------------
+ 1 file changed, 2 insertions(+), 40 deletions(-)
 
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -977,6 +977,16 @@ static int acpi_s2idle_prepare_late(void
- 	return 0;
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -1469,16 +1469,7 @@ out_free:	dev_kfree_skb_any(skb);
+ 		 * has opened up.
+ 		 */
+ 		eth_txq_stop(q);
+-
+-		/* If we're using the SGE Doorbell Queue Timer facility, we
+-		 * don't need to ask the Firmware to send us Egress Queue CIDX
+-		 * Updates: the Hardware will do this automatically.  And
+-		 * since we send the Ingress Queue CIDX Updates to the
+-		 * corresponding Ethernet Response Queue, we'll get them very
+-		 * quickly.
+-		 */
+-		if (!q->dbqt)
+-			wr_mid |= FW_WR_EQUEQ_F | FW_WR_EQUIQ_F;
++		wr_mid |= FW_WR_EQUEQ_F | FW_WR_EQUIQ_F;
+ 	}
+ 
+ 	wr = (void *)&q->q.desc[q->q.pidx];
+@@ -1792,16 +1783,7 @@ static netdev_tx_t cxgb4_vf_eth_xmit(str
+ 		 * has opened up.
+ 		 */
+ 		eth_txq_stop(txq);
+-
+-		/* If we're using the SGE Doorbell Queue Timer facility, we
+-		 * don't need to ask the Firmware to send us Egress Queue CIDX
+-		 * Updates: the Hardware will do this automatically.  And
+-		 * since we send the Ingress Queue CIDX Updates to the
+-		 * corresponding Ethernet Response Queue, we'll get them very
+-		 * quickly.
+-		 */
+-		if (!txq->dbqt)
+-			wr_mid |= FW_WR_EQUEQ_F | FW_WR_EQUIQ_F;
++		wr_mid |= FW_WR_EQUEQ_F | FW_WR_EQUIQ_F;
+ 	}
+ 
+ 	/* Start filling in our Work Request.  Note that we do _not_ handle
+@@ -2924,26 +2906,6 @@ static void t4_tx_completion_handler(str
+ 	}
+ 
+ 	txq = &s->ethtxq[pi->first_qset + rspq->idx];
+-
+-	/* We've got the Hardware Consumer Index Update in the Egress Update
+-	 * message.  If we're using the SGE Doorbell Queue Timer mechanism,
+-	 * these Egress Update messages will be our sole CIDX Updates we get
+-	 * since we don't want to chew up PCIe bandwidth for both Ingress
+-	 * Messages and Status Page writes.  However, The code which manages
+-	 * reclaiming successfully DMA'ed TX Work Requests uses the CIDX value
+-	 * stored in the Status Page at the end of the TX Queue.  It's easiest
+-	 * to simply copy the CIDX Update value from the Egress Update message
+-	 * to the Status Page.  Also note that no Endian issues need to be
+-	 * considered here since both are Big Endian and we're just copying
+-	 * bytes consistently ...
+-	 */
+-	if (txq->dbqt) {
+-		struct cpl_sge_egr_update *egr;
+-
+-		egr = (struct cpl_sge_egr_update *)rsp;
+-		WRITE_ONCE(txq->q.stat->cidx, egr->cidx);
+-	}
+-
+ 	t4_sge_eth_txq_egress_update(adapter, txq, -1);
  }
  
-+static void acpi_s2idle_sync(void)
-+{
-+	/*
-+	 * The EC driver uses the system workqueue and an additional special
-+	 * one, so those need to be flushed too.
-+	 */
-+	acpi_ec_flush_work();
-+	acpi_os_wait_events_complete(); /* synchronize Notify handling */
-+}
-+
- static bool acpi_s2idle_wake(void)
- {
- 	if (!acpi_sci_irq_valid())
-@@ -1021,13 +1031,8 @@ static bool acpi_s2idle_wake(void)
- 		 * should be missed by canceling the wakeup here.
- 		 */
- 		pm_system_cancel_wakeup();
--		/*
--		 * The EC driver uses the system workqueue and an additional
--		 * special one, so those need to be flushed too.
--		 */
--		acpi_os_wait_events_complete(); /* synchronize EC GPE processing */
--		acpi_ec_flush_work();
--		acpi_os_wait_events_complete(); /* synchronize Notify handling */
-+
-+		acpi_s2idle_sync();
- 
- 		/*
- 		 * The SCI is in the "suspended" state now and it cannot produce
-@@ -1055,6 +1060,13 @@ static void acpi_s2idle_restore_early(vo
- 
- static void acpi_s2idle_restore(void)
- {
-+	/*
-+	 * Drain pending events before restoring the working-state configuration
-+	 * of GPEs.
-+	 */
-+	acpi_os_wait_events_complete(); /* synchronize GPE processing */
-+	acpi_s2idle_sync();
-+
- 	s2idle_wakeup = false;
- 
- 	acpi_enable_all_runtime_gpes();
 
 
