@@ -2,52 +2,72 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51303C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AC2C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1A920BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB04420772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:44:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SHQb2BZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCaRnP (ORCPT
+        id S1727026AbgCaRom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:43:15 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54076 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgCaRnP (ORCPT
+        Tue, 31 Mar 2020 13:44:42 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:40736 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgCaRol (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:43:15 -0400
-Received: by mail-il1-f199.google.com with SMTP id a15so5180890ilh.20
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 10:43:13 -0700 (PDT)
+        Tue, 31 Mar 2020 13:44:41 -0400
+Received: by mail-yb1-f195.google.com with SMTP id a5so8079790ybo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 10:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jR1ZIvGGpwr49EcYtbAyRYtsyb7fcIsCPTJgz8brLjg=;
+        b=SHQb2BZb1NJwzySP/s/k9r0GQUXNdN+AowbsOZXgtxeugyf1Pbz5h9RYTfQ/txGmiz
+         NW6n042eS9IZqgphrdA1Ix0kbn9I1Dcc9NfMaX1Oc352yj3IUPLpe6Ts7yzbDQTDV+ms
+         wOMIWDEWIRPaVQTApzIEL2LXOw28qnygtqLrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bV9QEiuox3oTe+1g5OR3+ILPLH6kOwEiLYWW7f3FLMI=;
-        b=K0o03mJokQ8OI5oHr3ZZWmSx+Hfsj0B1HVfBysRs4lVgLRgIertxy+7IbgCurfDd7J
-         YEEst5SWtK2QVeh3Mdd6IJspwrD7SKp/HOCrW0nXvh6tzXYzN2bH1oUx/C4Ni8pG1AmM
-         ddgFcYcl/RlRfOk1qnRQc/GJ9g39KVJaNoF6RmKv3x0Nvz3qaFNvlwQK13mshfzW9YNx
-         tIU8gi+aFYc+f6I6ktrVMHKtmhL43b1lV1CDSIOPhN3vbQge84Q8uX2T3u6Luc6cJQY3
-         RG4aCx0r+vmBpx5ArnJsUZi+Uq8OEOjZfAJXBOeGWkf4fMtcdUSEbKUv6ZEvaHzYsQTl
-         hwkw==
-X-Gm-Message-State: ANhLgQ3eSGaLabjVCshxnGC+H06oIqRKAKT6wOy18wHrCRI8RD+HlzzG
-        36CuEgdKlvRhxtHIlGz5NcTutoQtT9V3wuNVtZRsfb5j4sAE
-X-Google-Smtp-Source: ADFU+vsDh4M0VhoHLp+T4aBKgf2nZSTUlLTxVgUMQ3NdfAJtCZoyExQ5CxOXvlxseISdPQw3B+V8nZJlIjTZOk+Wx6vsVYXizn6s
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jR1ZIvGGpwr49EcYtbAyRYtsyb7fcIsCPTJgz8brLjg=;
+        b=ZApkTFPKiJ5eY84y71rFXXgtRGAHySkbe67p39kMqWKGMiGGBWi9EKHsp6rmQkboCV
+         sp2JhiOSwyHsTLdwggywP7rcL8EMaJL+X1o70N2+LYXz5MB0bpoNJsj2a9ba1gs5H1bR
+         ARayxLBzIhGL3UBBnmk0Nx5UkQxBK2WMQYvNHfaYXH5EDK5KUEcBO76mp3UQ/dqmzNqw
+         xMjdltf5xkCaAiMsOFBvI//0Ev2WRyWy1LW3PDAKBHbyilsVq0pRZ5p/bzJuBc0vAHh4
+         ZrsqaQgATdAhhRIipf/hA1gt3sEPVX6+u6H2mqiCYrko0rpCwfKjw1CgYvN3T/IeIzWC
+         aiHw==
+X-Gm-Message-State: ANhLgQ2/dkkWxwGSJkLz0WvZCwbkjY+RPeKpVF+H0HBT36SK8nuNVHFG
+        FZJPmDkIJ4mnDX7RQL8Jmqi4H8dHwwUGooU3yTEv5Q==
+X-Google-Smtp-Source: ADFU+vve5e1tGuJEA3r0In28yh8ZrkCmYIkMq/ET420MGqIwCwN7MftCJTiN7MqyF8fIt9NpdjXD9GAtvkLDqJQBdlo=
+X-Received: by 2002:a25:6042:: with SMTP id u63mr31758293ybb.77.1585676679963;
+ Tue, 31 Mar 2020 10:44:39 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:498e:: with SMTP id k14mr15572167ilg.160.1585676592777;
- Tue, 31 Mar 2020 10:43:12 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 10:43:12 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000a8e8605a22a1ae0@google.com>
-Subject: INFO: rcu detected stall in netlink_sendmsg (4)
-From:   syzbot <syzbot+0fb70e87d8e0ac278fe9@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sven@narfation.org, sw@simonwunderlich.de,
+References: <000000000000da6059059fcfdcf9@google.com> <0000000000005b022005a22a0050@google.com>
+ <20200331174116.GA1844017@kroah.com>
+In-Reply-To: <20200331174116.GA1844017@kroah.com>
+From:   Grant Grundler <grundler@chromium.org>
+Date:   Tue, 31 Mar 2020 10:44:29 -0700
+Message-ID: <CANEJEGuhZChGXFzbwaEwArM4UKjUxZo=WNbREPH3887xtu62Nw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in skb_release_data (2)
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot <syzbot+a66a7c2e996797bb4acb@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, festevam@gmail.com,
+        Grant Grundler <grundler@chromium.org>,
+        Hayes Wang <hayeswang@realtek.com>, johan.hedberg@gmail.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org, linux-imx@nxp.com,
+        LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org,
+        marcel@holtmann.org, nishadkamdar@gmail.com, peter.chen@nxp.com,
+        Prashant Malani <pmalani@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, shawnguo@kernel.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,100 +75,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Mar 31, 2020 at 10:41 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Mar 31, 2020 at 10:36:01AM -0700, syzbot wrote:
+> > syzbot suspects this bug was fixed by commit:
+> >
+> > commit d9958306d4be14f4c7466242b38ed3893a7b1386
+> > Author: Nishad Kamdar <nishadkamdar@gmail.com>
+> > Date:   Sun Mar 15 10:55:07 2020 +0000
+> >
+> >     USB: chipidea: Use the correct style for SPDX License Identifier
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16d4940be00000
+> > start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+> > git tree:       upstream
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=a66a7c2e996797bb4acb
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c25a81e00000
+> >
+> > If the result looks correct, please mark the bug fixed by replying with:
+> >
+> > #syz fix: USB: chipidea: Use the correct style for SPDX License Identifier
+>
+> I really doubt a comment change fixed a syzbot bug :)
 
-syzbot found the following crash on:
+Just as I don't believe the bug was caused by pmalani's patch to r8152.
 
-HEAD commit:    ae661dec Merge branch 'ifla_xdp_expected_fd'
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12245647e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b5acf5ac38a50651
-dashboard link: https://syzkaller.appspot.com/bug?extid=0fb70e87d8e0ac278fe9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syzbot is just having trouble automatically bisecting/tracking this
+bug since it appears only intermittently.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0fb70e87d8e0ac278fe9@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	0-....: (1 GPs behind) idle=5c2/1/0x4000000000000002 softirq=376075/376076 fqs=5176 
-	(t=10500 jiffies g=506061 q=176208)
-NMI backtrace for cpu 0
-CPU: 0 PID: 17281 Comm: syz-executor.5 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x231/0x27e lib/nmi_backtrace.c:62
- trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
- rcu_dump_cpu_stacks+0x169/0x1b3 kernel/rcu/tree_stall.h:254
- print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
- check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
- rcu_pending kernel/rcu/tree.c:3030 [inline]
- rcu_sched_clock_irq.cold+0x518/0xc55 kernel/rcu/tree.c:2276
- update_process_times+0x25/0x60 kernel/time/timer.c:1726
- tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:171
- tick_sched_timer+0x4e/0x140 kernel/time/tick-sched.c:1314
- __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
- __hrtimer_run_queues+0x32c/0xdd0 kernel/time/hrtimer.c:1579
- hrtimer_interrupt+0x312/0x770 kernel/time/hrtimer.c:1641
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
- smp_apic_timer_interrupt+0x15b/0x600 arch/x86/kernel/apic/apic.c:1144
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:759 [inline]
-RIP: 0010:lock_release+0x45f/0x7c0 kernel/locking/lockdep.c:4505
-Code: 94 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 d0 02 00 00 48 83 3d 6d 1d 1b 08 00 0f 84 71 01 00 00 48 8b 3c 24 57 9d <0f> 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 48 01 c3 48 c7 03 00
-RSP: 0018:ffffc90003d9ec30 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff12e7698 RBX: 1ffff920007b3d89 RCX: 1ffff110098769b9
-RDX: dffffc0000000000 RSI: 1ffff110098769c5 RDI: 0000000000000282
-RBP: ffff88804c3b4540 R08: 0000000000000004 R09: fffffbfff14cc269
-R10: fffffbfff14cc268 R11: ffffffff8a661347 R12: bc95c6993a9665e0
-R13: ffffffff87a36fb1 R14: ffff88804c3b4dd0 R15: 0000000000000003
- __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:174 [inline]
- _raw_spin_unlock_bh+0x12/0x30 kernel/locking/spinlock.c:207
- spin_unlock_bh include/linux/spinlock.h:383 [inline]
- batadv_tt_local_purge_pending_clients+0x2a1/0x3b0 net/batman-adv/translation-table.c:3914
- batadv_tt_local_resize_to_mtu+0x96/0x130 net/batman-adv/translation-table.c:4198
- batadv_update_min_mtu net/batman-adv/hard-interface.c:626 [inline]
- batadv_hardif_activate_interface.part.0.cold+0xc6/0x294 net/batman-adv/hard-interface.c:653
- batadv_hardif_activate_interface net/batman-adv/hard-interface.c:800 [inline]
- batadv_hardif_enable_interface+0x9f2/0xaa0 net/batman-adv/hard-interface.c:792
- batadv_softif_slave_add+0x92/0x150 net/batman-adv/soft-interface.c:859
- do_set_master net/core/rtnetlink.c:2470 [inline]
- do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2443
- do_setlink+0xaa2/0x3680 net/core/rtnetlink.c:2605
- __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3266
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3391
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2478
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6b9/0x7d0 net/socket.c:2343
- ___sys_sendmsg+0x100/0x170 net/socket.c:2397
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2430
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c849
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f043b72fc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f043b7306d4 RCX: 000000000045c849
-RDX: 0000000000000000 RSI: 00000000200001c0 RDI: 0000000000000003
-RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000009f5 R14: 00000000004ccac9 R15: 000000000076bf0c
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+cheers,
+grant
