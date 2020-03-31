@@ -2,192 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7251CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5374EC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A746206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A76D20BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="iZHJ0fOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731222AbgCaQzF (ORCPT
+        id S1731116AbgCaQ4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:55:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34520 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730099AbgCaQzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:55:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 09140ADBB;
-        Tue, 31 Mar 2020 16:55:03 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH] mm, dump_page(): do not crash with invalid mapping pointer
-Date:   Tue, 31 Mar 2020 18:54:54 +0200
-Message-Id: <20200331165454.12263-1-vbabka@suse.cz>
-X-Mailer: git-send-email 2.26.0
+        Tue, 31 Mar 2020 12:56:11 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:35534 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730099AbgCaQ4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:56:10 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 855544126D;
+        Tue, 31 Mar 2020 16:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1585673767; x=1587488168; bh=gqp2ICgJ2oa8nDsJt1Xk3VAdh
+        K30cb8p4Nje35DG6LY=; b=iZHJ0fOlc7CKEAkrgHYsLLGzVeKsdbEYmt5eye6B0
+        lGrV3ycOT8HS/AfyRxc/kfJwPgmQDRf2tcztqzMiOEqAcnA2IMZFFcZRJrKEZhPV
+        edgs/qasWWSCg9TBeAQIgjec2MkT6IfEihQ432TNl8l/ZQXW+hP0iV2gQ10hvXfr
+        jA=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id o0lESavaoZVW; Tue, 31 Mar 2020 19:56:07 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 3513C41259;
+        Tue, 31 Mar 2020 19:56:07 +0300 (MSK)
+Received: from localhost.localdomain (10.199.0.226) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Tue, 31 Mar 2020 19:56:07 +0300
+Message-ID: <86186f02c630a05cf7254a38e0f15d726e2f440b.camel@yadro.com>
+Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 31 Mar 2020 19:56:18 +0300
+In-Reply-To: <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com>
+References: <20200330152711.8769-1-i.mikhaylov@yadro.com>
+         <20200330152711.8769-3-i.mikhaylov@yadro.com>
+         <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
+         <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
+         <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.0.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have seen a following problem on a RPi4 with 1G RAM:
+On Tue, 2020-03-31 at 14:00 +0300, Andy Shevchenko wrote:
+> > > Why not to use standard pattern, i.e.
+> > > 
+> > >   if (rc)
+> > >     return rc;
+> > >   ...
+> > >   rc = regmap_write(...);
+> > > 
+> > > ?
+> > 
+> > Optional parameter. There exists a lot of ways to do it:
+> 
+> I'm simple reading the code. And I believe the above I suggested is
+> cleaner equivalent.
+> Is it?
+> 
+> > rc = device_property_read_u32(dev, "milliamp", &led_current);
+> > rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ? 0);
+> 
+> This seems not equal to above.
 
-BUG: Bad page state in process systemd-hwdb  pfn:35601
-page:ffff7e0000d58040 refcount:15 mapcount:131221 mapping:efd8fe765bc80080 index:0x1 compound_mapcount: -32767
-Unable to handle kernel paging request at virtual address efd8fe765bc80080
-Mem abort info:
-  ESR = 0x96000004
-  Exception class = DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000004
-  CM = 0, WnR = 0
-[efd8fe765bc80080] address between user and kernel address ranges
-Internal error: Oops: 96000004 [#1] SMP
-Modules linked in: btrfs libcrc32c xor xor_neon zlib_deflate raid6_pq mmc_block xhci_pci xhci_hcd usbcore sdhci_iproc sdhci_pltfm sdhci mmc_core clk_raspberrypi gpio_raspberrypi_exp pcie_brcmstb bcm2835_dma gpio_regulator phy_generic fixed sg scsi_mod efivarfs
-Supported: No, Unreleased kernel
-CPU: 3 PID: 408 Comm: systemd-hwdb Not tainted 5.3.18-8-default #1 SLE15-SP2 (unreleased)
-Hardware name: raspberrypi rpi/rpi, BIOS 2020.01 02/21/2020
-pstate: 40000085 (nZcv daIf -PAN -UAO)
-pc : __dump_page+0x268/0x368
-lr : __dump_page+0xc4/0x368
-sp : ffff000012563860
-x29: ffff000012563860 x28: ffff80003ddc4300
-x27: 0000000000000010 x26: 000000000000003f
-x25: ffff7e0000d58040 x24: 000000000000000f
-x23: efd8fe765bc80080 x22: 0000000000020095
-x21: efd8fe765bc80080 x20: ffff000010ede8b0
-x19: ffff7e0000d58040 x18: ffffffffffffffff
-x17: 0000000000000001 x16: 0000000000000007
-x15: ffff000011689708 x14: 3030386362353637
-x13: 6566386466653a67 x12: 6e697070616d2031
-x11: 32323133313a746e x10: 756f6370616d2035
-x9 : ffff00001168a840 x8 : ffff00001077a670
-x7 : 000000000000013d x6 : ffff0000118a43b5
-x5 : 0000000000000001 x4 : ffff80003dd9e2c8
-x3 : ffff80003dd9e2c8 x2 : 911c8d7c2f483500
-x1 : dead000000000100 x0 : efd8fe765bc80080
-Call trace:
- __dump_page+0x268/0x368
- bad_page+0xd4/0x168
- check_new_page_bad+0x80/0xb8
- rmqueue_bulk.constprop.26+0x4d8/0x788
- get_page_from_freelist+0x4d4/0x1228
- __alloc_pages_nodemask+0x134/0xe48
- alloc_pages_vma+0x198/0x1c0
- do_anonymous_page+0x1a4/0x4d8
- __handle_mm_fault+0x4e8/0x560
- handle_mm_fault+0x104/0x1e0
- do_page_fault+0x1e8/0x4c0
- do_translation_fault+0xb0/0xc0
- do_mem_abort+0x50/0xb0
- el0_da+0x24/0x28
-Code: f9401025 8b8018a0 9a851005 17ffffca (f94002a0)
----[ end trace 703ac54becfd8094 ]---
+Yes, it is not equal. Error will be returned in case of non existent parameter
+in vcnl3020_init but parameter is optional. rc shouldn't be checked or should
+return 0 with your suggestion.
 
-Besides the underlying issue with page->mapping containing a bogus value for
-some reason, we can see that __dump_page() crashed by trying to read the
-pointer at mapping->host, turning a recoverable warning into full Oops.
-
-It can be expected that when page is reported as bad state for some reason, the
-pointers there should not be trusted blindly. So this patch treats all data in
-__dump_page() that depends on page->mapping as lava, using
-probe_kernel_read_strict(). Ideally this would include the dentry->d_parent
-recursively, but that would mean changing printk handler for %pd. Chances of
-reaching the dentry printing part with an initially bogus mapping pointer
-should be rather low, though.
-
-Also prefix printing mapping->a_ops with a description of what is being
-printed.  In case the value is bogus, %ps will print raw value instead of
-the symbol name and then it's not obvious at all that it's printing a_ops.
-
-Reported-by: Petr Tesarik <ptesarik@suse.cz>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- mm/debug.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 50 insertions(+), 6 deletions(-)
-
-diff --git a/mm/debug.c b/mm/debug.c
-index 2189357f0987..f2ede2df585a 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -110,13 +110,57 @@ void __dump_page(struct page *page, const char *reason)
- 	else if (PageAnon(page))
- 		type = "anon ";
- 	else if (mapping) {
--		if (mapping->host && mapping->host->i_dentry.first) {
--			struct dentry *dentry;
--			dentry = container_of(mapping->host->i_dentry.first, struct dentry, d_u.d_alias);
--			pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
--		} else
--			pr_warn("%ps\n", mapping->a_ops);
-+		const struct inode *host;
-+		const struct address_space_operations *a_ops;
-+		const struct hlist_node *dentry_first;
-+		const struct dentry *dentry_ptr;
-+		struct dentry dentry;
-+
-+		/*
-+		 * mapping can be invalid pointer and we don't want to crash
-+		 * accessing it, so probe everything depending on it carefully
-+		 */
-+		if (probe_kernel_read_strict(&host, &mapping->host,
-+						sizeof(struct inode *)) ||
-+		    probe_kernel_read_strict(&a_ops, &mapping->a_ops,
-+				sizeof(struct address_space_operations *))) {
-+			pr_warn("failed to read mapping->host or a_ops, mapping not a valid kernel address?\n");
-+			goto out_mapping;
-+		}
-+
-+		if (!host) {
-+			pr_warn("mapping->a_ops:%ps\n", a_ops);
-+			goto out_mapping;
-+		}
-+
-+		if (probe_kernel_read_strict(&dentry_first,
-+			&host->i_dentry.first, sizeof(struct hlist_node *))) {
-+			pr_warn("mapping->a_ops:%ps with invalid mapping->host inode address %px\n",
-+				a_ops, host);
-+			goto out_mapping;
-+		}
-+
-+		if (!dentry_first) {
-+			pr_warn("mapping->a_ops:%ps\n", a_ops);
-+			goto out_mapping;
-+		}
-+
-+		dentry_ptr = container_of(dentry_first, struct dentry, d_u.d_alias);
-+		if (probe_kernel_read_strict(&dentry, dentry_ptr,
-+							sizeof(struct dentry))) {
-+			pr_warn("mapping->aops:%ps with invalid mapping->host->i_dentry.first %px\n",
-+				a_ops, dentry_ptr);
-+		} else {
-+			/*
-+			 * if dentry is corrupted, the %pd handler may still
-+			 * crash, but it's unlikely that we reach here with a
-+			 * corrupted struct page
-+			 */
-+			pr_warn("mapping->aops:%ps dentry name:\"%pd\"\n",
-+								a_ops, &dentry);
-+		}
- 	}
-+out_mapping:
- 	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) != __NR_PAGEFLAGS + 1);
- 
- 	pr_warn("%sflags: %#lx(%pGp)%s\n", type, page->flags, &page->flags,
--- 
-2.26.0
+rc = device_property_read_u32(...);
+if (rc)
+	return 0;
+rc = regmap_write(...);
+if (rc)
+	dev_err(...);
+return rc;
 
