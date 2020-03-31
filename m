@@ -2,211 +2,128 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D397C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FADC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE872083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:51:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37702206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585641192;
+	bh=anQ2Kx6Irj0DxiRIawFmGmeYAFvITDRn8QoPEfEiluA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=QNmbN0LaFSczOTBUKhB1zfHghqtdtlfApvTZp5F7rvKjLx0tF1SsKJYwR/lCoEisU
+	 CbaR8ZbWIHScfjZNXjK06/PGNrVhCbDhQhtxx2gAyzYXfGPgB8taC3NCMR47tNqQLk
+	 s/IQz+m8yGdrN19dMdyR9mp4Ux1TYjn66fVhAUxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730141AbgCaHvh (ORCPT
+        id S1730022AbgCaHxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:51:37 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12661 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730060AbgCaHvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:51:36 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4AAA3FE431CC4978FE5D;
-        Tue, 31 Mar 2020 15:51:34 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 31 Mar
- 2020 15:51:30 +0800
-Subject: Re: [PATCH] f2fs: use round_up()/DIV_ROUND_UP()
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200330100349.56127-1-yuchao0@huawei.com>
- <20200330184230.GB34947@google.com>
- <2b5ec2a6-218a-a291-a6fc-d87cd40be4db@huawei.com>
- <20200331035537.GC79749@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <2fb61e2a-0725-2c97-8d7e-7f6b23a93ea9@huawei.com>
-Date:   Tue, 31 Mar 2020 15:51:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 31 Mar 2020 03:53:11 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39994 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbgCaHxK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:53:10 -0400
+Received: by mail-wr1-f65.google.com with SMTP id u10so24638803wro.7
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:53:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qm1wbxYI4abwRfoFmKlOWUMampCo+IRgCWIazrzvwlE=;
+        b=hYg80fO/gfwWvMwj5SVh+6dazFrKKh87Z/3d8kmdnNxcJbl/jp+bjznaZO4UyTdUr9
+         DyECSCqilkAc7BmXF4viw4bGgNodHsjPubP7/ZkZjF7plhOKcrCGhdF3Ma9CiFObUafc
+         INGNG04/B6YuOPWgs0fKLWKJpw5B6u0E92WbaV7XZD2GMM5FK27aMlk33yXk7exz4mVb
+         LHCoVfmLZtHiuGwNWNz+w0xHNxigdPSVtG5OqwKncrHptqUByx/Gbu++AS+saNkLFPeJ
+         a4uMw7kalXukDNjby02pC6x0x40MV7s3R3bWH48XpwkCo+MBS41bAgm88u9Bxpw2Leam
+         UOaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=qm1wbxYI4abwRfoFmKlOWUMampCo+IRgCWIazrzvwlE=;
+        b=AptHPoV6z9UEbVyutTwNdtr4P7lLUZgEoXIxcXjOyBViayvK0vtkV22YBx0cy9XsiU
+         7YjSVTjqq+lCHbh9Ub8O9wUoaJOwdmfsGn00tnicXIfzl9UXyu1zU+vEXMIHezBLOxSd
+         yRi1SvGdfWGyjDhYnRgxiVTUa441DMqPcTkdaBCxtd4/wNLjVZWgwiqs+GzU0vS7L9yI
+         VnoIZwM7xaShzSxD3eXIyxw7zD01Gru6CxYpWwwOyHRNnPkvCayOKJLhE0t6GNJv9xev
+         OchlXlGRhv0x/8qT/GmK1VlulyDj8pn/HL11Qs6tCeazvAIKu1D79uiqmX+pgM2KMk8W
+         Vtqg==
+X-Gm-Message-State: ANhLgQ0cNOB5cyw4gQWKuSQdbZ65JQrx+2HPkrFupBCMKifqn/TDEkeJ
+        m5sYeEIFJgF8VPDuYQpuXe4=
+X-Google-Smtp-Source: ADFU+vv3J/gSIs83hhkakSmZoECv9LiMkUd6jz1znC6BxOg5dQR4sK8960WF5Gb8M1ligB5dqzzO6Q==
+X-Received: by 2002:a5d:66c3:: with SMTP id k3mr18709106wrw.407.1585641188186;
+        Tue, 31 Mar 2020 00:53:08 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id f12sm21916992wrm.94.2020.03.31.00.53.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 00:53:07 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:53:05 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/boot changes for v5.7
+Message-ID: <20200331075305.GA57035@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331035537.GC79749@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/31 11:55, Jaegeuk Kim wrote:
-> On 03/31, Chao Yu wrote:
->> On 2020/3/31 2:42, Jaegeuk Kim wrote:
->>> On 03/30, Chao Yu wrote:
->>>> .i_cluster_size should be power of 2, so we can use round_up() instead
->>>> of roundup() to enhance the calculation.
->>>>
->>>> In addition, use DIV_ROUND_UP to clean up codes.
->>>>
->>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>> ---
->>>>  fs/f2fs/data.c | 16 ++++++----------
->>>>  fs/f2fs/file.c | 17 +++++------------
->>>>  2 files changed, 11 insertions(+), 22 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>>> index 0a829a89f596..8257d5e7aa3b 100644
->>>> --- a/fs/f2fs/data.c
->>>> +++ b/fs/f2fs/data.c
->>>> @@ -1969,8 +1969,6 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->>>>  					bool is_readahead)
->>>>  {
->>>>  	struct bio *bio = *bio_ret;
->>>> -	const unsigned blkbits = inode->i_blkbits;
->>>> -	const unsigned blocksize = 1 << blkbits;
->>>>  	sector_t block_in_file;
->>>>  	sector_t last_block;
->>>>  	sector_t last_block_in_file;
->>>> @@ -1979,8 +1977,8 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->>>>  
->>>>  	block_in_file = (sector_t)page_index(page);
->>>>  	last_block = block_in_file + nr_pages;
->>>> -	last_block_in_file = (f2fs_readpage_limit(inode) + blocksize - 1) >>
->>>> -							blkbits;
->>>> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
->>>> +								PAGE_SIZE);
->>>
->>> What if PAGE_SIZE is bigger than 4KB?
->>
->> We don't support 8kb+ sized-page, right?
-> 
-> That's only assumption below. I don't think we can just replace block with PAGE
-> in every places.
+Linus,
 
-Fixed,
+Please pull the latest x86-boot-for-linus git tree from:
 
-BTW, we didn't unify the usage of PAGE_SIZE/blocksize when
-calling bio_add_page(), it needs to unify to use PAGE_SIZE?
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-boot-for-linus
 
-f2fs_read_multi_pages()
+   # HEAD: c90beea22a2bece4b0bbb39789bf835504421594 x86/boot/compressed: Fix debug_puthex() parameter type
 
-	if (bio_add_page(bio, page, blocksize, 0) < blocksize)
+Misc cleanups and small enhancements all around the map.
 
-f2fs_submit_page_write
+  out-of-topic modifications in x86-boot-for-linus:
+  ---------------------------------------------------
+  drivers/firmware/efi/libstub/Makefile# 003602ad5516: x86/*/Makefile: Use -fno-asy
 
-	if (bio_add_page(io->bio, bio_page, PAGE_SIZE, 0) < PAGE_SIZE) {
+ Thanks,
 
-> 
->>
->> static int __init init_f2fs_fs(void)
->> {
->> 	int err;
->>
->> 	if (PAGE_SIZE != F2FS_BLKSIZE) {
->> 		printk("F2FS not supported on PAGE_SIZE(%lu) != %d\n",
->> 				PAGE_SIZE, F2FS_BLKSIZE);
->> 		return -EINVAL;
->> 	}
->>
->> Thanks,
->>
->>>
->>>>  	if (last_block > last_block_in_file)
->>>>  		last_block = last_block_in_file;
->>>>  
->>>> @@ -2062,7 +2060,7 @@ static int f2fs_read_single_page(struct inode *inode, struct page *page,
->>>>  	 */
->>>>  	f2fs_wait_on_block_writeback(inode, block_nr);
->>>>  
->>>> -	if (bio_add_page(bio, page, blocksize, 0) < blocksize)
->>>> +	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
->>>>  		goto submit_and_realloc;
->>>>  
->>>>  	inc_page_count(F2FS_I_SB(inode), F2FS_RD_DATA);
->>>> @@ -2091,16 +2089,14 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
->>>>  	struct bio *bio = *bio_ret;
->>>>  	unsigned int start_idx = cc->cluster_idx << cc->log_cluster_size;
->>>>  	sector_t last_block_in_file;
->>>> -	const unsigned blkbits = inode->i_blkbits;
->>>> -	const unsigned blocksize = 1 << blkbits;
->>>>  	struct decompress_io_ctx *dic = NULL;
->>>>  	int i;
->>>>  	int ret = 0;
->>>>  
->>>>  	f2fs_bug_on(sbi, f2fs_cluster_is_empty(cc));
->>>>  
->>>> -	last_block_in_file = (f2fs_readpage_limit(inode) +
->>>> -					blocksize - 1) >> blkbits;
->>>> +	last_block_in_file = DIV_ROUND_UP(f2fs_readpage_limit(inode),
->>>> +								PAGE_SIZE);
->>>>  
->>>>  	/* get rid of pages beyond EOF */
->>>>  	for (i = 0; i < cc->cluster_size; i++) {
->>>> @@ -2197,7 +2193,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
->>>>  
->>>>  		f2fs_wait_on_block_writeback(inode, blkaddr);
->>>>  
->>>> -		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
->>>> +		if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE)
->>>>  			goto submit_and_realloc;
->>>>  
->>>>  		inc_page_count(sbi, F2FS_RD_DATA);
->>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>>> index c2d38a1c4972..0f8be076620c 100644
->>>> --- a/fs/f2fs/file.c
->>>> +++ b/fs/f2fs/file.c
->>>> @@ -736,16 +736,9 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
->>>>  	 * for compressed file, only support cluster size
->>>>  	 * aligned truncation.
->>>>  	 */
->>>> -	if (f2fs_compressed_file(inode)) {
->>>> -		size_t cluster_shift = PAGE_SHIFT +
->>>> -					F2FS_I(inode)->i_log_cluster_size;
->>>> -		size_t cluster_mask = (1 << cluster_shift) - 1;
->>>> -
->>>> -		free_from = from >> cluster_shift;
->>>> -		if (from & cluster_mask)
->>>> -			free_from++;
->>>> -		free_from <<= cluster_shift;
->>>> -	}
->>>> +	if (f2fs_compressed_file(inode))
->>>> +		free_from = round_up(from,
->>>> +				F2FS_I(inode)->i_cluster_size << PAGE_SHIFT);
->>>>  #endif
->>>>  
->>>>  	err = f2fs_do_truncate_blocks(inode, free_from, lock);
->>>> @@ -3537,7 +3530,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
->>>>  
->>>>  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->>>>  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
->>>> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
->>>> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
->>>>  
->>>>  		ret = release_compress_blocks(&dn, count);
->>>>  
->>>> @@ -3689,7 +3682,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
->>>>  
->>>>  		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
->>>>  		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
->>>> -		count = roundup(count, F2FS_I(inode)->i_cluster_size);
->>>> +		count = round_up(count, F2FS_I(inode)->i_cluster_size);
->>>>  
->>>>  		ret = reserve_compress_blocks(&dn, count);
->>>>  
->>>> -- 
->>>> 2.18.0.rc1
->>> .
->>>
-> .
-> 
+	Ingo
+
+------------------>
+Arvind Sankar (6):
+      x86/boot/compressed/64: Use LEA to initialize boot stack pointer
+      x86/boot/compressed/64: Use 32-bit (zero-extended) MOV for z_output_len
+      x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
+      x86/boot/compressed: Remove .eh_frame section from bzImage
+      x86/*/Makefile: Use -fno-asynchronous-unwind-tables to suppress .eh_frame sections
+      x86/vmlinux: Drop unneeded linker script discard of .eh_frame
+
+Guenter Roeck (1):
+      x86/setup: Fix static memory detection
+
+Joerg Roedel (1):
+      x86/boot/compressed: Fix debug_puthex() parameter type
+
+
+ arch/x86/boot/Makefile                |  1 +
+ arch/x86/boot/compressed/Makefile     |  1 +
+ arch/x86/boot/compressed/head_64.S    |  8 +++-----
+ arch/x86/boot/compressed/misc.h       |  2 +-
+ arch/x86/boot/setup.ld                |  1 -
+ arch/x86/include/asm/dwarf2.h         |  4 ++--
+ arch/x86/include/asm/sections.h       | 20 ++++++++++++++++++++
+ arch/x86/kernel/setup.c               |  1 -
+ arch/x86/kernel/vmlinux.lds.S         |  7 ++-----
+ arch/x86/realmode/rm/Makefile         |  1 +
+ arch/x86/realmode/rm/realmode.lds.S   |  1 -
+ drivers/firmware/efi/libstub/Makefile |  3 ++-
+ 12 files changed, 33 insertions(+), 17 deletions(-)
+
