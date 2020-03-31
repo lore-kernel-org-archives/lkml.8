@@ -2,129 +2,98 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA4C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA540C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A889120CC7
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585675504;
-	bh=fqj8rZSX2LtQTT5i1PXswN5RpOtslvLeE1KpZGlhvQM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ynqpwhkuxjAKGOMbY2Bz+/Pw9WoVHY8pD3LXFxNMFKVC98n96uH31lVb7cSkfMNXG
-	 0PE2ZdrYT0NyRFPefAxsg9NAR1gBjNgM5LxphGBehdAQVq7AfhO7OlFevgAP/dm6DC
-	 pucDfuuUdxInLtLd6p55fOHL7ojBlKvDhBrO53tY=
+	by mail.kernel.org (Postfix) with ESMTP id 82AA720BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:25:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4KTcb1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726271AbgCaRZD (ORCPT
+        id S1726353AbgCaRZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgCaRZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:25:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E155220BED;
-        Tue, 31 Mar 2020 17:25:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585675502;
-        bh=fqj8rZSX2LtQTT5i1PXswN5RpOtslvLeE1KpZGlhvQM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jPP8VZGjkyxMKz4ildZObA4mn4wDlnaD5j4vTqunlzN8MIGSm/1Lxg2dEVO2atzFa
-         fjT36a9OMrjYr4JUd+iMVVUv7jlNkyp3Mhc3UL7VHzY2Mgto/Y+jGVnQBmMOnRCd2t
-         RubqfH2yZZxjid30NVtJAyK985MthNBuhydR2U9w=
-Date:   Tue, 31 Mar 2020 19:24:59 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
-Message-ID: <20200331172459.GA1841577@kroah.com>
-References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
- <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
- <20200331100406.GB1204199@kroah.com>
- <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
+        Tue, 31 Mar 2020 13:25:10 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39253 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgCaRZK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:25:10 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g32so4587824pgb.6;
+        Tue, 31 Mar 2020 10:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0CF+RVRZ5+EBDJ1PwDAIZhgsPHAgdEwo97U5c4uthYQ=;
+        b=O4KTcb1e4nvjWYiYxqstR4fipYRBssCwH7Y8yjsIfaVNJDiV7zknVfPPU6zlKJpUxr
+         WAqWMtljzkcWjfYQAG0+4THRRKu3x8LL6SQySS6RO6GY/tSECu0M9VogTZPHf9Vbc4tw
+         AXTzX+ChZ8l0a46BbTQ3PqIHFslyqGKvTze9llF3NCAjDrdYoZGr3WkaMDdJB9tDoDLK
+         BkGikRcxZ1Ha4il6nsI+bkDKCjxxx7PmUWgarTGMWCtbmjyo/O4VQftsAHh9UlPnImkz
+         VFpNyIJ44FNjqJxCb5rJoGjjD7aCGJ5TwYBnOS86C7fVpaytQdw+FM1ckK4FXMNaiMgV
+         7SAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0CF+RVRZ5+EBDJ1PwDAIZhgsPHAgdEwo97U5c4uthYQ=;
+        b=IbnhJ6BOQVCMgM5K/B42wmsPEzcDFiFT0IZN/YJVdzkoihbGFiKJjHy3R6of9TbZHo
+         fpSfqseW9lxSsZL/pABI5aIT1Lb27+pgY/oBt/V5Ab+ZcbkBjwNB8RRaq5BsUDBWY04u
+         sPH0zlzr707oDy4dZhm9Kvr4R5l6FwJJ1r9f6K5UPSjnymQlz3UyykyI+/ewr2IoTUxd
+         9T0TceNPRF5GNZJNBGakBtUMNDlTrj4KhZkjC8pR/RrS34FEIH9bJgu/3Hup3HCgkRlJ
+         xxMSwhB4SMpbwMAElHJstioSzjb92HSJARmL3TwIMMIS95/xPKjSdj4AFOcpHxGh6bV9
+         ibiQ==
+X-Gm-Message-State: ANhLgQ2OvgKdGVJPhQWaUoPt+nG1R8W78iEoHAPSGrj0nwHU05qbnzZA
+        XSts6GJy3L2+8lDorKjiaKlfzURYrqLkFNGCS74=
+X-Google-Smtp-Source: ADFU+vvJ58xFp7fAmN/IlP9pLsjdwYgUeX7CEW9cTr9ulw07E6JB4eftS0SoxlIHYsnAS1X1h2HA2MGKLqsp5Ik9Kkw=
+X-Received: by 2002:aa7:958f:: with SMTP id z15mr18682395pfj.130.1585675507170;
+ Tue, 31 Mar 2020 10:25:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
+References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com>
+ <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com> <4fe47b0323c1d65d429ee89b000e8bfcd984495f.camel@richard-neumann.de>
+ <896f84bc-f0d6-59a5-c894-809695aa348f@amd.com>
+In-Reply-To: <896f84bc-f0d6-59a5-c894-809695aa348f@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 20:24:59 +0300
+Message-ID: <CAHp75Vfr6q_H6z6tRFfaKedF7oR7nhmZvRWL4mxx3W7uypUFvA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
+ fusion Hub using HID framework
+To:     "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>
+Cc:     Richard Neumann <mail@richard-neumann.de>,
+        Sandeep Singh <Sandeep.Singh@amd.com>,
+        Shyam-sundar.S-k@amd.com, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:07:07AM -0700, Dave Jiang wrote:
-> 
-> On 3/31/2020 3:04 AM, Greg KH wrote:
-> > On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
-> > > Since the current accelerator devices do not have standard PCIe capability
-> > > enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
-> > > been added to struct pci_dev.  Currently a PCI quirk must be used for the
-> > > devices that have such cap until the PCI cap is standardized. Add a helper
-> > > function to provide the check if a device supports the cmdmem capability.
-> > > 
-> > > Such capability is expected to be added to PCIe device cap enumeration in
-> > > the future.
-> > > 
-> > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > ---
-> > >   drivers/base/core.c    |   13 +++++++++++++
-> > >   include/linux/device.h |    2 ++
-> > >   include/linux/pci.h    |    1 +
-> > >   3 files changed, 16 insertions(+)
-> > > 
-> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > index dbb0f9130f42..cd9f5b040ed4 100644
-> > > --- a/drivers/base/core.c
-> > > +++ b/drivers/base/core.c
-> > > @@ -27,6 +27,7 @@
-> > >   #include <linux/netdevice.h>
-> > >   #include <linux/sched/signal.h>
-> > >   #include <linux/sysfs.h>
-> > > +#include <linux/pci.h>
-> > >   #include "base.h"
-> > >   #include "power/power.h"
-> > > @@ -3790,3 +3791,15 @@ int device_match_any(struct device *dev, const void *unused)
-> > >   	return 1;
-> > >   }
-> > >   EXPORT_SYMBOL_GPL(device_match_any);
-> > > +
-> > > +bool device_supports_cmdmem(struct device *dev)
-> > > +{
-> > > +	struct pci_dev *pdev;
-> > > +
-> > > +	if (!dev_is_pci(dev))
-> > > +		return false;
-> > > +
-> > > +	pdev = to_pci_dev(dev);
-> > > +	return pdev->cmdmem;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(device_supports_cmdmem);
-> > Why would a pci-specific function like this be ok to have in the driver
-> > core?  Please keep it in the pci core code instead.
-> 
-> The original thought was to introduce a new arch level memory mapping
-> semantic.
+On Tue, Mar 31, 2020 at 4:26 PM Shah, Nehal-bakulchandra
+<nehal-bakulchandra.shah@amd.com> wrote:
+> On 3/31/2020 6:01 PM, Richard Neumann wrote:
+> > Not a real review, but your patch series seems to be repeating a lot
+> > from drivers/i2c/busses/i2c-amd-mp2*.
+> > Is there any chance we could re-use the code?
+> > E.g. the AMD_C2P_* definitions from drivers/i2c/busses/i2c-amd-mp2.h?
+>
+> Thanks for the mail. Yes there are some common structures, however as of now we have kept separately considering both
+>
+> are part of different sub systems. But may be will consider this input for future enhancement.
 
-Please do not.  Also, that's not what you are doing here from what I can
-tell.
+It can be done in a form of shared definitions at least in
+include/linux/platform_data/x86/amd-mp2.h or alike ...
 
-> If you feel this should be PCI exclusive, should we make the ioremap
-> routines for this memory type pci specific as well?
-
-Why wouldn't it be?  Is this needed anywhere else?
-
-thanks,
-
-greg k-h
+-- 
+With Best Regards,
+Andy Shevchenko
