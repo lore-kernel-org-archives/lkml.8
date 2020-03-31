@@ -2,124 +2,185 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FD4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7902C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844FB20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u7OnbxbR"
+	by mail.kernel.org (Postfix) with ESMTP id 8EA4020748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585622517;
+	bh=B+LmmNb+cgM/4UyX/6Xyvh89hLYDTK/8QTG3/94W7ZM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=w6TitRLwagW2rQdVUsXQR7ABKX+E9SDzlS3MqQc2iCeRrFxVKWqQLe+jAQSviucm5
+	 Pc8CAVCIaql4kRGXQAGKqAITD2Wm4IX2JbGKRgTFZARJhvcuqpSfPEz1pn5KkVqK/+
+	 ei8sg4uweckXMnF6h3Hj/z7+hiwY3NsD4DGJ8/gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbgCaCjs (ORCPT
+        id S1729533AbgCaCl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:39:48 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:16767 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727464AbgCaCjs (ORCPT
+        Mon, 30 Mar 2020 22:41:56 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:55571 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbgCaCl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:39:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585622388; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=F0cnuHPPoBwL4ZXyaNpltI2ZJBgY3zhLpDoVyFkzMWU=;
- b=u7OnbxbRA4BS1CZ5WFRSnJ1FKlw41x2Te+q+9fN99lDJmN4EokmAFec8FG7RIV5xb0CIGxmQ
- QSKpNhKbxWuRVz8ef5fYlNSUq5HTYhHKk2TYxy+Pw9YE3AfU0cR+ns0Keqf0dLawN1NJeJUT
- gH9NdbNsXjxBDOfE6ayq/C9kM/8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e82ad6e.7f8e52e5be68-smtp-out-n03;
- Tue, 31 Mar 2020 02:39:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 864B1C433F2; Tue, 31 Mar 2020 02:39:42 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36F9BC433D2;
-        Tue, 31 Mar 2020 02:39:42 +0000 (UTC)
+        Mon, 30 Mar 2020 22:41:56 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 02V2fYj9001485;
+        Tue, 31 Mar 2020 11:41:34 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02V2fYj9001485
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585622494;
+        bh=qUuUnCsN8QlAO5iOjog4Igp1OPvQEJ88D5zsqGqYn7U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dW6dJjZl4xezbyiRpUG9JZjRS4M2F6Ip77bTIlynUunxfFiP/emz/sxqvnBo9QiWC
+         R+pSsK8b+2OHzDLbIMbUw4cJg2qc1cVlyv7qPUkC/ofNZzgAhYOh0vpP30gg658JgD
+         ovqjV0us7rU+NJPkADzjG2p+T45BjAt6WOfYJneSgBNfyAXiIfaawU08T+mve4iuH+
+         JvhMCrbiHWwOfNwIAf6A3XUDCllO+f0BXCmWuVgPBnkOoXtdxcsBvcwzQJACMW7aRC
+         uVmNl5BdIstQAOLKBK0J20U1Z5p8+2cmM6gm4MXWDSQDBb/5zHmEO/IvK81ZIoEsyV
+         xgTWFfJb4bx9g==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id x82so12462892vsc.12;
+        Mon, 30 Mar 2020 19:41:34 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub8z/QjZN92xRceBuUpVu099iyIJ2DKkp9ACD2o31NzNSSvs7cx
+        dI3/8UFpM88yaSnIYiF4ARiyiL0i0i9H53HqqS8=
+X-Google-Smtp-Source: APiQypIsfngKW6W3/e3RrGqIhGPUv4K9UPA+khlcl/3rMUyBDK4h1+L0IalpWWgd/sy++0ILPCJrgJn0ughJVH6Xwwo=
+X-Received: by 2002:a67:6542:: with SMTP id z63mr11156512vsb.179.1585622493397;
+ Mon, 30 Mar 2020 19:41:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 31 Mar 2020 10:39:42 +0800
-From:   tingwei@codeaurora.org
-To:     Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: hw_breakpoint: don't clear debug registers in halt
- mode
-In-Reply-To: <20200330134218.GB10633@willie-the-truck>
-References: <20200328083209.21793-1-tingwei@codeaurora.org>
- <20200330123946.GH1309@C02TD0UTHF1T.local>
- <20200330134218.GB10633@willie-the-truck>
-Message-ID: <2f4d076b2b21de3908f0821126d0c61e@codeaurora.org>
-X-Sender: tingwei@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200326080104.27286-1-masahiroy@kernel.org> <20200326080104.27286-9-masahiroy@kernel.org>
+In-Reply-To: <20200326080104.27286-9-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 31 Mar 2020 11:40:57 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARueG4wM-_z+xDjwHci=wwAad8CqP1UF5mFJpPf8Zg71Q@mail.gmail.com>
+Message-ID: <CAK7LNARueG4wM-_z+xDjwHci=wwAad8CqP1UF5mFJpPf8Zg71Q@mail.gmail.com>
+Subject: Re: [PATCH v2 08/16] x86: replace arch macros from compiler with CONFIG_X86_{32,64}
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020-03-30 21:42，Will Deacon 写道：
-> On Mon, Mar 30, 2020 at 01:39:46PM +0100, Mark Rutland wrote:
->> On Sat, Mar 28, 2020 at 04:32:09PM +0800, Tingwei Zhang wrote:
->> > If external debugger sets a breakpoint for one Kernel function
->> > when device is in bootloader mode and loads Kernel, this breakpoint
->> > will be wiped out in hw_breakpoint_reset(). To fix this, check
->> > MDSCR_EL1.HDE in hw_breakpoint_reset(). When MDSCR_EL1.HDE is
->> > 0b1, halting debug is enabled. Don't reset debug registers in this
-> case.
->> 
->> I don't think this is sufficient, because the kernel can still
->> subsequently mess with breakpoints, and the HW debugger might not be
->> attached at this point in time anyhow.
->> 
->> I reckon this should hang off the existing "nodebumon" command line
->> option, and we shouldn't use HW breakpoints at all when that is 
->> passed.
->> Then you can pass that to prevent the kernel stomping on the external
->> debugger.
->> 
->> Will, thoughts?
-> 
-> I was going to suggest the same thing, although we will also need to 
-> take
-> care to reset the registers if "nodebugmon" is toggled at runtime via 
-> the
-> "debug_enabled" file in debugfs.
-> 
-> Will
+On Thu, Mar 26, 2020 at 5:03 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> If the intention is to check i386/x86_64 excluding UML, testing
+> CONFIG_X86_{32,64} is simpler.
+>
+> The reason for checking __i386__ / __x86_64__ was perhaps because
+> lib/raid6/algos.c is built not only for the kernel but also for
+> testing the library code from userspace.
+>
+> However, lib/raid6/test/Makefile passes -DCONFIG_X86_{32,64} for
+> this case. So, I do not see a reason to not use CONFIG option here.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> ---
 
-Thanks for the suggestion, Mark and Will. It's a great idea to use
-"nodebugmon". When "nodebugmon" is set, Kernel won't change HW 
-breakpoints.
 
-For reset the registers after "debug_enabled" is toggled, I'm thinking 
-if
-we are adding unnecessary complexity here.If we take that approach, we 
-will
-hook "debug_enabled" interface and use smp_call_function_single() to 
-call
-hw_breakpoint_reset() on each CPU. Wait for all CPUs' execution done and
-change "debug_enabled". External debugger would clear the breakpoints 
-when
-it detaches the device and restores its breakpoints when attaches the 
-device.
-Assume debug_enabled is changed to one after external debugger detaches 
-the
-device. Debugger would already clear the breakpoint registers. If 
-debgger is
-still attached, there's nothing Kernel can do to stop it 
-restores/programs
-the breakpoint registers.
+Sorry, this patch broke UML builds.
 
-What do you think of this?
+https://lkml.org/lkml/2020/3/27/618
 
-Thanks,
-Tingwei
+
+
+I will drop this patch for tomorrow's linux-next.
+
+
+
+CONFIG_X86 is not defined for ARCH=um.
+So, I still think it is OK to replace one complicated line
+in lib/raid6/x86.h
+
+   #if (defined(__i386__) || defined(__x86_64__)) && !defined(__arch_um__)
+
+with:
+
+   #ifdef CONFIG_X86
+
+
+
+
+Also, I slightly prefer
+
+   #if defined(CONFIG_X86_32) && !defined(CONFIG_UML)
+
+to
+
+   #if defined(__i386__) && !defined(__arch_um__)
+
+
+
+But, we do not need to rush this now.
+
+
+This patch does not affect the rest of this series.
+
+Thanks.
+
+
+
+
+
+> Changes in v2: None
+>
+>  kernel/signal.c   | 2 +-
+>  lib/raid6/algos.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 5b2396350dd1..db557e1629e5 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -1246,7 +1246,7 @@ static void print_fatal_signal(int signr)
+>         struct pt_regs *regs = signal_pt_regs();
+>         pr_info("potentially unexpected fatal signal %d.\n", signr);
+>
+> -#if defined(__i386__) && !defined(__arch_um__)
+> +#ifdef CONFIG_X86_32
+>         pr_info("code at %08lx: ", regs->ip);
+>         {
+>                 int i;
+> diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
+> index df08664d3432..b5a02326cfb7 100644
+> --- a/lib/raid6/algos.c
+> +++ b/lib/raid6/algos.c
+> @@ -29,7 +29,7 @@ struct raid6_calls raid6_call;
+>  EXPORT_SYMBOL_GPL(raid6_call);
+>
+>  const struct raid6_calls * const raid6_algos[] = {
+> -#if defined(__i386__) && !defined(__arch_um__)
+> +#ifdef CONFIG_X86_32
+>  #ifdef CONFIG_AS_AVX512
+>         &raid6_avx512x2,
+>         &raid6_avx512x1,
+> @@ -45,7 +45,7 @@ const struct raid6_calls * const raid6_algos[] = {
+>         &raid6_mmxx2,
+>         &raid6_mmxx1,
+>  #endif
+> -#if defined(__x86_64__) && !defined(__arch_um__)
+> +#ifdef CONFIG_X86_64
+>  #ifdef CONFIG_AS_AVX512
+>         &raid6_avx512x4,
+>         &raid6_avx512x2,
+> --
+> 2.17.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
