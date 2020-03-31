@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBD4C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2475DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C0C20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE69C20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645535;
-	bh=eTsrk4rS2oByHAz2G34KbqfNarKNhRueHXowZf1Awo4=;
+	s=default; t=1585645540;
+	bh=6+miePqbsWnqPWj5QsrnY3qI0o3oL7KNQ57soRmKgJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f7dn5XLenhwKMGn7+tPrXRQTakUEnVQbgWEYxoCf0IPtGHfPlXULCDGOHae46C4x3
-	 S/wyYqqPJJ7B1Mk/wXAFp7QsEjJphMWp8Ify4KFuMv4Uxhi7XzQQ/ARPJrt3HJJCGR
-	 IoA444CRFnKM1kDYely76GTDD5xMaxJyz7+j7I/k=
+	b=zqNV6WEZBHBc2WG88/26YFi5fbRnl9lkcYcWcI76ivVjB4nmVbMgDfkVpAC7TDxrp
+	 ZapewxB+33xTqoM9m0N59nrGjqYVbBdm9hiV2DAx6P2CT3XyJJkjMaCBQM7kJnbH4u
+	 aGU1WwO9fkT+M8hHp9TXZXYimXYCQgzWa6HJxP2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbgCaJFe (ORCPT
+        id S1730795AbgCaJFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730541AbgCaJFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:05:33 -0400
+        id S1730541AbgCaJFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:05:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B07120B80;
-        Tue, 31 Mar 2020 09:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAD4220787;
+        Tue, 31 Mar 2020 09:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645532;
-        bh=eTsrk4rS2oByHAz2G34KbqfNarKNhRueHXowZf1Awo4=;
+        s=default; t=1585645537;
+        bh=6+miePqbsWnqPWj5QsrnY3qI0o3oL7KNQ57soRmKgJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUblurlyG+tcG3+W0+6KPmfCK0nhZvc+Eh4RGS1xxjHZp01BYZ6/UbjYikSSzqa41
-         X7193yhnit7f4cvwq6c/gC3WKuS/Ms019XJIKxQLgkaAPW+vv4oYTQJBXaYDnEmcxg
-         WcGkSIXTZPi1N4xfkl8HX5fziors5R/aNKAjGwk8=
+        b=SAZmUqtVxU/FwwkYDI+EZM4GLSFnG8dvUzmT18Tr0HV1udOr21kDhiO6diqBBQYWz
+         RvyYYOx+ZO2yzWiYDvRNjmzbTwEoXQWCUMiW2HhCnPknVgRK1FxNehdkpzZLH8kEzf
+         sSCSSllmn5p/g8DFecAfm1N6sZOnlvQYFwxpRUcg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, teika kazura <teika@gmx.com>,
+        stable@vger.kernel.org, Yussuf Khalil <dev@pp3345.net>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.5 083/170] Input: fix stale timestamp on key autorepeat events
-Date:   Tue, 31 Mar 2020 10:58:17 +0200
-Message-Id: <20200331085433.125640559@linuxfoundation.org>
+Subject: [PATCH 5.5 084/170] Input: synaptics - enable RMI on HP Envy 13-ad105ng
+Date:   Tue, 31 Mar 2020 10:58:18 +0200
+Message-Id: <20200331085433.226214381@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,34 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Yussuf Khalil <dev@pp3345.net>
 
-commit 4134252ab7e2c339a54302b88496cb5a89cdbaec upstream.
+commit 1369d0abe469fb4cdea8a5bce219d38cb857a658 upstream.
 
-We need to refresh timestamp when emitting key autorepeat events, otherwise
-they will carry timestamp of the original key press event.
+This laptop (and perhaps other variants of the same model) reports an
+SMBus-capable Synaptics touchpad. Everything (including suspend and
+resume) works fine when RMI is enabled via the kernel command line, so
+let's add it to the whitelist.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206929
-Fixes: 3b51c44bd693 ("Input: allow drivers specify timestamp for input events")
+Signed-off-by: Yussuf Khalil <dev@pp3345.net>
+Link: https://lore.kernel.org/r/20200307213508.267187-1-dev@pp3345.net
 Cc: stable@vger.kernel.org
-Reported-by: teika kazura <teika@gmx.com>
-Tested-by: teika kazura <teika@gmx.com>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/input.c |    1 +
+ drivers/input/mouse/synaptics.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -190,6 +190,7 @@ static void input_repeat_key(struct time
- 			input_value_sync
- 		};
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -186,6 +186,7 @@ static const char * const smbus_pnp_ids[
+ 	"SYN3052", /* HP EliteBook 840 G4 */
+ 	"SYN3221", /* HP 15-ay000 */
+ 	"SYN323d", /* HP Spectre X360 13-w013dx */
++	"SYN3257", /* HP Envy 13-ad105ng */
+ 	NULL
+ };
  
-+		input_set_timestamp(dev, ktime_get());
- 		input_pass_values(dev, vals, ARRAY_SIZE(vals));
- 
- 		if (dev->rep[REP_PERIOD])
 
 
