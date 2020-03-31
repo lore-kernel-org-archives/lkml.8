@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31A4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516E1C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A9720B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26FE3212CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645526;
-	bh=AlHW95CssIqsx8U4u/AbjdIfdvzK5ovjHTD8W6WJLuM=;
+	s=default; t=1585645528;
+	bh=TXg//bs+/ZskiFsmA2fT4UWOVj10ZmFUdDtwwCgJwgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OV/of1Jtmm/sji6+dnTapMNcz1nUN8hob+tqhaeDp1dQPzrZhPpC64+hK6NXUMx3o
-	 R+/l4pGD81hy+9TpuYjJ6EXTpheQ0kJypVOndIRLF8j6Cur9vCZJjiLfM2ahABCrR4
-	 L9C4SoqUZCdyjciLZYWJfXwHS6kmPbf6QT8pYhCg=
+	b=CVuKKLfxJHo0KbSKfDERpQ6QIv5SQpIpDqc9Qv/oCLcQ4mJGHwmu2R/Vv7xEgsUjk
+	 XelcWrBozFvwou25v7mZL8bcsKG1d89Hw9wXUflxd3JKMWgs8gAsgvs+t4SVkSG7Z+
+	 dJnMxSl93H5JoQILag/d/ULPM3Uw62QgD67Qmogg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730493AbgCaJFY (ORCPT
+        id S1731044AbgCaJF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46196 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730470AbgCaJFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:05:19 -0400
+        id S1730799AbgCaJFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:05:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC46F20787;
-        Tue, 31 Mar 2020 09:05:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB93B20787;
+        Tue, 31 Mar 2020 09:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645518;
-        bh=AlHW95CssIqsx8U4u/AbjdIfdvzK5ovjHTD8W6WJLuM=;
+        s=default; t=1585645524;
+        bh=TXg//bs+/ZskiFsmA2fT4UWOVj10ZmFUdDtwwCgJwgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3jwnaK1dSiu2dY5JvnJP4ptG0sAr5YqdoHH7ZUKQkrM+w3nuEYB9+UGjOup5SCIO
-         bgIs6SRLoR74qACuTVckfO5TN0fa+17i9GxJXWUrGFeI8ZyXo2AkaAyR5U52eZU7Zn
-         xuH6mzo1EssMcncDStK1Wl82oxwbeRPeojxLjTUg=
+        b=kTTb6BUlXAqm5kAkyE/fyIy2vHyw+glFDi5t7FZv8Ih73nLvqR9U4rAjVOl5pwkP3
+         RrZzoxhbnKj7RSBpTceeKwMa+5QsSZwgBnfdz7vyimSc+cLjoe2t1JYyA6CatqLy9L
+         efhXIZxTyV7aYdWglvD0kGYgvEhyagN57w5hZG0E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominik Czarnota <dominik.b.czarnota@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 078/170] sxgbe: Fix off by one in samsung driver strncpy size arg
-Date:   Tue, 31 Mar 2020 10:58:12 +0200
-Message-Id: <20200331085432.618157886@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Megha Dey <megha.dey@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 080/170] iommu/vt-d: Populate debugfs if IOMMUs are detected
+Date:   Tue, 31 Mar 2020 10:58:14 +0200
+Message-Id: <20200331085432.821179266@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -61,42 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dominik Czarnota <dominik.b.czarnota@gmail.com>
+From: Megha Dey <megha.dey@linux.intel.com>
 
-[ Upstream commit f3cc008bf6d59b8d93b4190e01d3e557b0040e15 ]
+[ Upstream commit 1da8347d8505c137fb07ff06bbcd3f2bf37409bc ]
 
-This patch fixes an off-by-one error in strncpy size argument in
-drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c. The issue is that in:
+Currently, the intel iommu debugfs directory(/sys/kernel/debug/iommu/intel)
+gets populated only when DMA remapping is enabled (dmar_disabled = 0)
+irrespective of whether interrupt remapping is enabled or not.
 
-        strncmp(opt, "eee_timer:", 6)
+Instead, populate the intel iommu debugfs directory if any IOMMUs are
+detected.
 
-the passed string literal: "eee_timer:" has 10 bytes (without the NULL
-byte) and the passed size argument is 6. As a result, the logic will
-also accept other, malformed strings, e.g. "eee_tiXXX:".
-
-This bug doesn't seem to have any security impact since its present in
-module's cmdline parsing code.
-
-Signed-off-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: ee2636b8670b1 ("iommu/vt-d: Enable base Intel IOMMU debugfs support")
+Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel-iommu-debugfs.c | 11 ++++++++++-
+ drivers/iommu/intel-iommu.c         |  4 +++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-index 52ed111d98f4d..15e3f668218b1 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-@@ -2279,7 +2279,7 @@ static int __init sxgbe_cmdline_opt(char *str)
- 	if (!str || !*str)
- 		return -EINVAL;
- 	while ((opt = strsep(&str, ",")) != NULL) {
--		if (!strncmp(opt, "eee_timer:", 6)) {
-+		if (!strncmp(opt, "eee_timer:", 10)) {
- 			if (kstrtoint(opt + 10, 0, &eee_timer))
- 				goto err;
- 		}
+diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel-iommu-debugfs.c
+index 80378c10dd77a..bdf095e9dbe03 100644
+--- a/drivers/iommu/intel-iommu-debugfs.c
++++ b/drivers/iommu/intel-iommu-debugfs.c
+@@ -281,9 +281,16 @@ static int dmar_translation_struct_show(struct seq_file *m, void *unused)
+ {
+ 	struct dmar_drhd_unit *drhd;
+ 	struct intel_iommu *iommu;
++	u32 sts;
+ 
+ 	rcu_read_lock();
+ 	for_each_active_iommu(iommu, drhd) {
++		sts = dmar_readl(iommu->reg + DMAR_GSTS_REG);
++		if (!(sts & DMA_GSTS_TES)) {
++			seq_printf(m, "DMA Remapping is not enabled on %s\n",
++				   iommu->name);
++			continue;
++		}
+ 		root_tbl_walk(m, iommu);
+ 		seq_putc(m, '\n');
+ 	}
+@@ -353,6 +360,7 @@ static int ir_translation_struct_show(struct seq_file *m, void *unused)
+ 	struct dmar_drhd_unit *drhd;
+ 	struct intel_iommu *iommu;
+ 	u64 irta;
++	u32 sts;
+ 
+ 	rcu_read_lock();
+ 	for_each_active_iommu(iommu, drhd) {
+@@ -362,7 +370,8 @@ static int ir_translation_struct_show(struct seq_file *m, void *unused)
+ 		seq_printf(m, "Remapped Interrupt supported on IOMMU: %s\n",
+ 			   iommu->name);
+ 
+-		if (iommu->ir_table) {
++		sts = dmar_readl(iommu->reg + DMAR_GSTS_REG);
++		if (iommu->ir_table && (sts & DMA_GSTS_IRES)) {
+ 			irta = virt_to_phys(iommu->ir_table->base);
+ 			seq_printf(m, " IR table address:%llx\n", irta);
+ 			ir_tbl_remap_entry_show(m, iommu);
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 10176d8ea3e65..7f31775e9b554 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5005,6 +5005,9 @@ int __init intel_iommu_init(void)
+ 
+ 	down_write(&dmar_global_lock);
+ 
++	if (!no_iommu)
++		intel_iommu_debugfs_init();
++
+ 	if (no_iommu || dmar_disabled) {
+ 		/*
+ 		 * We exit the function here to ensure IOMMU's remapping and
+@@ -5100,7 +5103,6 @@ int __init intel_iommu_init(void)
+ 	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
+ 
+ 	intel_iommu_enabled = 1;
+-	intel_iommu_debugfs_init();
+ 
+ 	return 0;
+ 
 -- 
 2.20.1
 
