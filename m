@@ -2,214 +2,122 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15967C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B15C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF97B2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13241206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:39:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dmi4tPnj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BAOCWSpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730038AbgCaHjI (ORCPT
+        id S1730051AbgCaHjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:39:08 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38674 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgCaHjI (ORCPT
+        Tue, 31 Mar 2020 03:39:43 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43378 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgCaHjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:39:08 -0400
-Received: by mail-vs1-f68.google.com with SMTP id x206so12872768vsx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:39:06 -0700 (PDT)
+        Tue, 31 Mar 2020 03:39:42 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k5so8471545oiw.10;
+        Tue, 31 Mar 2020 00:39:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mf4BvDmC+BGalJU9mD8gdNB8rFbbjrC+WqY4Crh0V9U=;
-        b=Dmi4tPnjWtoexjKLMIWqLDO5lCj3eQdHzUN071JAVkhCTGW2dViDrf3zad75bGYIPc
-         d0tqnzqL8Bj8qwzVlVzHOjntDEyZw9VhRwUYwJur//Tfk8ueGnJdlsdF2P4u2IE6rzEw
-         5vzDSI7EvnvF1qwMf1GqeACswRLGjCYk2lItk=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mAUnvEZguD6CfDl4gHndNC/T8IwUXTZiBxjH+at4TTc=;
+        b=BAOCWSpovHS0fIzkHaAGLyJ47omoO1No0w6POuhEJhxM3BQxFtCIbzRCWf0zPfRKRj
+         6OfEIHVk/j/rjUqoxjuMMF52nXczqJ10r9iCobz3HDYqDefLXsR0OmFWRzwCSJ92irbY
+         wgfj+acI9+lHCdVUNqwdpXeAUGiRBMHhzj2UQzE8JNtJ0zXrUJfAailu6TWp0wVENI62
+         4wKj0ufFmyVbBDCHUuOkoFg5ldXn9aCiJmKw/oYb1eX8X+1itIRLQ4F0BdeQxwI0zyDD
+         g3hzQ1XGclY9h+WnU1WHf5w3/COjdbxDJ5A3J/bdu+sVRswlryTgdni4TcbkplX+tEop
+         RGkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mf4BvDmC+BGalJU9mD8gdNB8rFbbjrC+WqY4Crh0V9U=;
-        b=Nv+ToQaEZDZkL26QX7ojO6iMx9WDSt2U/kNu2mzUY9W/pVx60iNf53qjOXdpVWQbIf
-         vkOkyko917vMnZCtrE0zu+c2hlkBTdtt9znJBXRAfGM3cgsET0zw2ULITb6FPes4B6SO
-         AFbvF2pTRgzTlhkSCMfNzDP9vnjkTl+AvEg16ntruL/NJvHzHYw3mW7thtAFp9dM7tm+
-         iWRjWCTvbTPoBGTW4mKjCa/62jIAbP32g+vXm35uQ2JfU3sICFv+y8j0T5wA35gFuDjc
-         50dZC8f0exSQ37NB7jyBtXlFPCbot8U96APFasxPMBKuVH7VG5K5PnKgfuCuMekueZmR
-         HgXw==
-X-Gm-Message-State: AGi0PuY1yxHH7QgpXjX5o/lSeQSVMLa+PwhSOEdN26NAsGTcpwR7jCO4
-        EiHdlNPze56+ejFexM9O5LWvARORQJVOznF/hzG6ig==
-X-Google-Smtp-Source: APiQypJ8tjSDzNqqzb7QPP0t8s2sSqBWUkMLyEdCd2TJFUnJLO+3bNKncFxIFwNs73XDYJEY31KCmS0oC5Cf+GSpzZw=
-X-Received: by 2002:a67:d45:: with SMTP id 66mr10355355vsn.1.1585640346189;
- Tue, 31 Mar 2020 00:39:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mAUnvEZguD6CfDl4gHndNC/T8IwUXTZiBxjH+at4TTc=;
+        b=jNB7VHJAAmtfAWuD5t8iA+VIXhP1lWhBkF8hFiHjKU1OX6Zh1KuNL4S8bDxr0HWZY+
+         BZHJYY22pk7VRGbmPoHMfEq18UlfCjXMz8C1BRlvaCDcnB+G56iJL435ZATsNUvbETJu
+         fimBL9DG88PKXAlvYlJObgd9Vr6+i780lOizWAKjM3dneNYGsgQHadqA5ec8O77mT83g
+         1K2ivMaC2AbnaueUqrG3f1F9awlTpqncFE3+W30Cl1/j8jxZmnVFCooxbQzC/+h76ezQ
+         kI2RtCJkcdSN437uE7akTg3o6qVzynTn6bVoShfoXEfSO67VsrTjbPEp4NwTUWUpO3aL
+         cvPg==
+X-Gm-Message-State: ANhLgQ0rIrFRmrOMJP6bF4iQnVk9u3Y5IhLCIKthv2BxbOJRku7fehMR
+        xvvgOLRmi4cR070RWrjX4po=
+X-Google-Smtp-Source: ADFU+vtnEAPociO8YfQmbNs0FQoZh40NVXPYe+BT18z9nE1Y7XHAgXGynisBg3O1sZtZwTgULToJvQ==
+X-Received: by 2002:aca:c3c1:: with SMTP id t184mr1222939oif.113.1585640381659;
+        Tue, 31 Mar 2020 00:39:41 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id g39sm5084010otb.26.2020.03.31.00.39.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Mar 2020 00:39:40 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 00:39:38 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+Subject: Re: mmotm 2020-03-30-18-46 uploaded (freesync)
+Message-ID: <20200331073938.GA54733@ubuntu-m2-xlarge-x86>
+References: <20200331014748.ajL0G62jF%akpm@linux-foundation.org>
+ <a266d6a4-6d48-aadc-afd7-af0eb7c2d9db@infradead.org>
 MIME-Version: 1.0
-References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 31 Mar 2020 15:38:55 +0800
-Message-ID: <CANMq1KAT0x7rLeRVQ7uzxSFbq+g_ef_OCAfAVf3dtYySJwYG2Q@mail.gmail.com>
-Subject: Re: [PATCH v11 4/5] rtc: mt6397: Add support for the MediaTek MT6358 RTC
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-rtc@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a266d6a4-6d48-aadc-afd7-af0eb7c2d9db@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:07 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> From: Ran Bi <ran.bi@mediatek.com>
->
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> driver which only needed by armv7 CPU without ATF.
->
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+On Mon, Mar 30, 2020 at 11:18:26PM -0700, Randy Dunlap wrote:
+> On 3/30/20 6:47 PM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2020-03-30-18-46 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
+> 
+> on i386:
+> 
+> ld: drivers/gpu/drm/amd/display/modules/freesync/freesync.o: in function `mod_freesync_build_vrr_params':
+> freesync.c:(.text+0x790): undefined reference to `__udivdi3'
+> 
+> 
+> Full randconfig file is attached.
+> 
+> -- 
+> ~Randy
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
 
-This looks good to me now, thanks.
+Hi Randy,
 
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
+I am guessing this should fix it since I ran into this on arm
+allyesconfig:
 
-> ---
->  drivers/power/reset/mt6323-poweroff.c |  2 +-
->  drivers/rtc/rtc-mt6397.c              | 23 +++++++++++++++++++----
->  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
->  3 files changed, 28 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-> index 1caf43d..0532803 100644
-> --- a/drivers/power/reset/mt6323-poweroff.c
-> +++ b/drivers/power/reset/mt6323-poweroff.c
-> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
->         int ret;
->
->         regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-> -       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-> +       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
->
->         ret = regmap_read_poll_timeout(pwrc->regmap,
->                                         pwrc->base + RTC_BBPU, val,
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index cda238d..7f3dfd2 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,6 +9,7 @@
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
-> @@ -20,7 +21,7 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->         int ret;
->         u32 data;
->
-> -       ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +       ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
->         if (ret < 0)
->                 return ret;
->
-> @@ -269,6 +270,8 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         rtc->addr_base = res->start;
->
-> +       rtc->data = of_device_get_match_data(&pdev->dev);
-> +
->         rtc->irq = platform_get_irq(pdev, 0);
->         if (rtc->irq < 0)
->                 return rtc->irq;
-> @@ -325,10 +328,22 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->                         mt6397_rtc_resume);
->
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +       .wrtgr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +       .wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> -       { .compatible = "mediatek,mt6323-rtc", },
-> -       { .compatible = "mediatek,mt6397-rtc", },
-> -       { }
-> +       { .compatible = "mediatek,mt6323-rtc",
-> +               .data = &mt6397_rtc_data, },
-> +       { .compatible = "mediatek,mt6358-rtc",
-> +               .data = &mt6358_rtc_data, },
-> +       { .compatible = "mediatek,mt6397-rtc",
-> +               .data = &mt6397_rtc_data, },
-> +       {}
->  };
->  MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
->
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> index 7dfb63b..6200f3b 100644
-> --- a/include/linux/mfd/mt6397/rtc.h
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -18,7 +18,9 @@
->  #define RTC_BBPU_CBUSY         BIT(6)
->  #define RTC_BBPU_KEY            (0x43 << 8)
->
-> -#define RTC_WRTGR              0x003c
-> +#define RTC_WRTGR_MT6358       0x3a
-> +#define RTC_WRTGR_MT6397       0x3c
-> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
->
->  #define RTC_IRQ_STA            0x0002
->  #define RTC_IRQ_STA_AL         BIT(0)
-> @@ -65,6 +67,10 @@
->  #define MTK_RTC_POLL_DELAY_US  10
->  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
->
-> +struct mtk_rtc_data {
-> +       u32                     wrtgr;
-> +};
-> +
->  struct mt6397_rtc {
->         struct device           *dev;
->         struct rtc_device       *rtc_dev;
-> @@ -74,6 +80,7 @@ struct mt6397_rtc {
->         struct regmap           *regmap;
->         int                     irq;
->         u32                     addr_base;
-> +       const struct mtk_rtc_data *data;
->  };
->
->  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
-> --
-> 2.6.4
+https://lore.kernel.org/lkml/20200330221614.7661-1-natechancellor@gmail.com/
+
+FWIW, not an mmotm issue since the patch comes from the AMD tree.
+
+Cheers,
+Nathan
