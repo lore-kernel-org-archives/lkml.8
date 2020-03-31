@@ -2,126 +2,174 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E846C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660DBC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725BB20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MZJOQji6"
+	by mail.kernel.org (Postfix) with ESMTP id 45546206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbgCaQGu (ORCPT
+        id S1731192AbgCaQHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:06:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35170 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730366AbgCaQGu (ORCPT
+        Tue, 31 Mar 2020 12:07:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56712 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731160AbgCaQHO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:06:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qRwSxdkJvHVO9CkLZvWsN5O2euno318Z4mdLOQ7HH6c=; b=MZJOQji6zdAFUyZaVuBWCB+w1q
-        4ZVHLlU+o7L4njebBrdJk5IHN8a+SfwEpY/U9tVwuqF0pDmfkTycFUlwFuzqi769zZVXroNtXugA+
-        xEfu36aHljRgKSeQ6RZne3c6+Cgo3MdGeT7xTRA0UVNbDMLOnvTz59hrbb2+VTjIzAck5gFndhULy
-        kXvLbb6zKNzK8wnSikNNlR/f/53yzLTGx8NScrLwmHwb8ruEQeDgezYtCHf1qgQnqRlI/ZG6WxPRs
-        Q+Oh/odfoL6p84/Xm3LlKRKJCkjidrk7Oooq1r0gZORMoDk7YP84mqcZdZ4mghXuA0ZIyvp/1GYBD
-        uptCUYqw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJJPW-0000PV-5b; Tue, 31 Mar 2020 16:06:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5A1A930015A;
-        Tue, 31 Mar 2020 18:06:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 062F329D910F5; Tue, 31 Mar 2020 18:06:39 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 18:06:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz
-Subject: [RFC][PATCH] x86,ftrace: Shrink ftrace_regs_caller() by one byte
-Message-ID: <20200331160639.GV20730@hirez.programming.kicks-ass.net>
-References: <20200326113049.GD20696@hirez.programming.kicks-ass.net>
- <20200326135620.tlmof5fa7p5wct62@treble>
- <20200326154938.GO20713@hirez.programming.kicks-ass.net>
- <20200326195718.GD2452@worktop.programming.kicks-ass.net>
- <20200327010001.i3kebxb4um422ycb@treble>
- <20200330170200.GU20713@hirez.programming.kicks-ass.net>
- <20200330190205.k5ssixd5hpshpjjq@treble>
- <20200330200254.GV20713@hirez.programming.kicks-ass.net>
- <20200331111652.GH20760@hirez.programming.kicks-ass.net>
- <20200331113136.01316614@gandalf.local.home>
+        Tue, 31 Mar 2020 12:07:14 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VG3IQ2057565
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:07:13 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30206ydsre-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:07:13 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 31 Mar 2020 17:07:05 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 31 Mar 2020 17:07:01 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VG77c447775936
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 16:07:07 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3EB37AE056;
+        Tue, 31 Mar 2020 16:07:07 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54913AE04D;
+        Tue, 31 Mar 2020 16:07:06 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.207.69])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 31 Mar 2020 16:07:06 +0000 (GMT)
+Date:   Tue, 31 Mar 2020 19:07:03 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-mips@vger.kernel.org, peterx@redhat.com
+Subject: Re: [PATCH] KVM: MIPS: fix compilation
+References: <20200331154749.5457-1-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331113136.01316614@gandalf.local.home>
+In-Reply-To: <20200331154749.5457-1-pbonzini@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20033116-0012-0000-0000-0000039BB633
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033116-0013-0000-0000-000021D8C2EF
+Message-Id: <20200331160703.GF30942@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_05:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=945 suspectscore=1
+ bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003310141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:31:36AM -0400, Steven Rostedt wrote:
-> On Tue, 31 Mar 2020 13:16:52 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Mar 31, 2020 at 11:47:49AM -0400, Paolo Bonzini wrote:
+> Commit 31168f033e37 is correct that pud_index() & __pud_offset() are the same
+> when pud_index() is actually provided, however it does not take into account
+> the __PAGETABLE_PUD_FOLDED case.  Provide kvm_pud_index so that MIPS KVM
+> compiles.
 > 
-> > @@ -235,8 +237,8 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
-> >  
-> >  	/* If ORIG_RAX is anything but zero, make this a call to that */
-> >  	movq ORIG_RAX(%rsp), %rax
-> > -	cmpq	$0, %rax
-> > -	je	1f
-> > +	testq	%rax, %rax
-> > +	jz	1f
-> >  
-> >  	/* Swap the flags with orig_rax */
-> >  	movq MCOUNT_REG_SIZE(%rsp), %rdi
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/mips/kvm/mmu.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
 > 
-> Hi Peter,
-> 
-> Can you send this change as a separate patch as it has nothing to do with
-> this current change, and is a clean up patch that stands on its own.
+> diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+> index 7dad7a293eae..ccf98c22fd2c 100644
+> --- a/arch/mips/kvm/mmu.c
+> +++ b/arch/mips/kvm/mmu.c
+> @@ -25,6 +25,12 @@
+>  #define KVM_MMU_CACHE_MIN_PAGES 2
+>  #endif
+>  
+> +#if defined(__PAGETABLE_PUD_FOLDED)
+> +#define kvm_pud_index(gva) 0
+> +#else
+> +#define kvm_pud_index(gva) pud_index(gva)
+> +#endif
+> +
 
-Sure. But then I have to like write a Changelog for it... :/
+I'd prefer simply making pud_index() always defined. When pud level is
+folded asm-generic/pgtable-nopud.h will define PTRS_PER_PUD to 1 and
+pud_index() will evaluate to 0 anyway.
 
----
-Subject: x86,ftrace: Shrink ftrace_regs_caller() by one byte
-
-'Optimize' ftrace_regs_caller. Instead of comparing against an
-immediate, the more natural way to test for zero on x86 is: 'test
-%r,%r'.
-
-  48 83 f8 00             cmp    $0x0,%rax
-  74 49                   je     226 <ftrace_regs_call+0xa3>
-
-  48 85 c0                test   %rax,%rax
-  74 49                   je     225 <ftrace_regs_call+0xa2>
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/kernel/ftrace_64.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 369e61faacfe..8e71c492d623 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -235,8 +235,8 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
+diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+index f92716cfa4f4..ee5dc0c145b9 100644
+--- a/arch/mips/include/asm/pgtable-64.h
++++ b/arch/mips/include/asm/pgtable-64.h
+@@ -172,6 +172,8 @@
  
- 	/* If ORIG_RAX is anything but zero, make this a call to that */
- 	movq ORIG_RAX(%rsp), %rax
--	cmpq	$0, %rax
--	je	1f
-+	testq	%rax, %rax
-+	jz	1f
+ extern pte_t invalid_pte_table[PTRS_PER_PTE];
  
- 	/* Swap the flags with orig_rax */
- 	movq MCOUNT_REG_SIZE(%rsp), %rdi
++#define pud_index(address)	(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
++
+ #ifndef __PAGETABLE_PUD_FOLDED
+ /*
+  * For 4-level pagetables we defines these ourselves, for 3-level the
+@@ -210,8 +212,6 @@ static inline void p4d_clear(p4d_t *p4dp)
+ 	p4d_val(*p4dp) = (unsigned long)invalid_pud_table;
+ }
+ 
+-#define pud_index(address)	(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+-
+ static inline unsigned long p4d_page_vaddr(p4d_t p4d)
+ {
+ 	return p4d_val(p4d);
+
+>  static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
+>  				  int min, int max)
+>  {
+> @@ -234,8 +240,8 @@ static bool kvm_mips_flush_gpa_pud(pud_t *pud, unsigned long start_gpa,
+>  {
+>  	pmd_t *pmd;
+>  	unsigned long end = ~0ul;
+> -	int i_min = pud_index(start_gpa);
+> -	int i_max = pud_index(end_gpa);
+> +	int i_min = kvm_pud_index(start_gpa);
+> +	int i_max = kvm_pud_index(end_gpa);
+>  	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PUD - 1);
+>  	int i;
+>  
+> @@ -361,8 +367,8 @@ static int kvm_mips_##name##_pud(pud_t *pud, unsigned long start,	\
+>  	int ret = 0;							\
+>  	pmd_t *pmd;							\
+>  	unsigned long cur_end = ~0ul;					\
+> -	int i_min = pud_index(start);				\
+> -	int i_max = pud_index(end);					\
+> +	int i_min = kvm_pud_index(start);				\
+> +	int i_max = kvm_pud_index(end);					\
+>  	int i;								\
+>  									\
+>  	for (i = i_min; i <= i_max; ++i, start = 0) {			\
+> @@ -896,8 +902,8 @@ static bool kvm_mips_flush_gva_pud(pud_t *pud, unsigned long start_gva,
+>  {
+>  	pmd_t *pmd;
+>  	unsigned long end = ~0ul;
+> -	int i_min = pud_index(start_gva);
+> -	int i_max = pud_index(end_gva);
+> +	int i_min = kvm_pud_index(start_gva);
+> +	int i_max = kvm_pud_index(end_gva);
+>  	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PUD - 1);
+>  	int i;
+>  
+> -- 
+> 2.18.2
+> 
+
+-- 
+Sincerely yours,
+Mike.
+
