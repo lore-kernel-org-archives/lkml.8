@@ -2,125 +2,111 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3168C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B7DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FBD20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8437120757
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgCaUSw (ORCPT
+        id S1730642AbgCaUVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:18:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33672 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727708AbgCaUSw (ORCPT
+        Tue, 31 Mar 2020 16:21:00 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:31635 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727708AbgCaUVA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:18:52 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jJNLW-0008KN-0M; Tue, 31 Mar 2020 22:18:50 +0200
-Date:   Tue, 31 Mar 2020 22:18:49 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     syzbot <syzbot+62c155c276e580cfb606@syzkaller.appspotmail.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: [PATCH] lockdep: Don't access the hrtimer after the callback
-Message-ID: <20200331201849.fkp2siy3vcdqvqlz@linutronix.de>
-References: <000000000000b8935105a229a739@google.com>
+        Tue, 31 Mar 2020 16:21:00 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 31 Mar 2020 13:20:59 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 31 Mar 2020 13:20:58 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id C20AA4BC2; Tue, 31 Mar 2020 13:20:58 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 13:20:58 -0700
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and
+ function
+Message-ID: <20200331202058.GB25781@codeaurora.org>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+ <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
+ <20200330204359.GB5107@codeaurora.org>
+ <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000b8935105a229a739@google.com>
+In-Reply-To: <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A hrtimer can be released in its callback as reported by syzbot.
+On Tue, Mar 31, 2020 at 05:24:52PM +0200, Arnd Bergmann wrote:
+> On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
+> <gurus@codeaurora.org> wrote:
+> >
+> > On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
+> > > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> > >
+> > > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > > >
+> > > >         period_cycles /= prescale;
+> > > >         c = (unsigned long long)period_cycles * state->duty_cycle;
+> > > > -       do_div(c, state->period);
+> > > > -       duty_cycles = c;
+> > > > +       duty_cycles = div64_u64(c, state->period);
+> > > >
+> > >
+> > > This change looks fine, but I wonder if the code directly above it
+> > >
+> > >         c = clk_get_rate(imx->clk_per);
+> > >         c *= state->period;
+> > >         do_div(c, 1000000000);
+> > >         period_cycles = c;
+> > >
+> > > might run into an overflow when both the clock rate and the period
+> > > are large numbers.
+> >
+> > Hmm. Seems to me like addressing this would be outside the scope of this
+> > patch series.
+> 
+> I think it should be part of the same series, addressing bugs that
+> were introduced
+> by the change to 64-bit period. If it's not getting fixed along with
+> the other regressions,
+> I fear nobody is going to go back and fix it later.
 
-Retrieve the context in which the hrtimer expires before its callback is
-invoked and use it in lockdep_hrtimer_exit().
+Makes sense, I agree. Would this be an acceptable fix?
 
-Reported-by: syzbot+62c155c276e580cfb606@syzkaller.appspotmail.com
-Fixes: 40db173965c0 ("lockdep: Add hrtimer context tracing bits")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/irqflags.h | 22 +++++++++++++---------
- kernel/time/hrtimer.c    |  5 +++--
- 2 files changed, 16 insertions(+), 11 deletions(-)
+Instead of multiplying c and state->period first and then dividing by
+10^9, first divide state->period by 10^9 and then multiply the quotient
+of that division with c and assign it to period_cycles. Like so:
 
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index a16adbb58f66a..808d10de852f9 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -58,16 +58,20 @@ do {						\
- } while (0)
- 
- # define lockdep_hrtimer_enter(__hrtimer)		\
--	  do {						\
--		  if (!__hrtimer->is_hard)		\
--			current->irq_config = 1;	\
--	  } while (0)
-+({							\
-+	bool __expires_hardirq = true;			\
-+	if (!__hrtimer->is_hard) {			\
-+		current->irq_config = 1;		\
-+		__expires_hardirq = false;		\
-+	}						\
-+	__expires_hardirq;				\
-+})
- 
--# define lockdep_hrtimer_exit(__hrtimer)		\
--	  do {						\
--		  if (!__hrtimer->is_hard)		\
-+# define lockdep_hrtimer_exit(__expires_hardirq)	\
-+	do {						\
-+		if (__expires_hardirq == false)	\
- 			current->irq_config = 0;	\
--	  } while (0)
-+	} while (0)
- 
- # define lockdep_posixtimer_enter()				\
- 	  do {							\
-@@ -102,7 +106,7 @@ do {						\
- # define trace_hardirq_exit()		do { } while (0)
- # define lockdep_softirq_enter()	do { } while (0)
- # define lockdep_softirq_exit()		do { } while (0)
--# define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
-+# define lockdep_hrtimer_enter(__hrtimer)		false
- # define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
- # define lockdep_posixtimer_enter()		do { } while (0)
- # define lockdep_posixtimer_exit()		do { } while (0)
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 8cce72501aea5..817a9c7be47e3 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1481,6 +1481,7 @@ static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base,
- {
- 	enum hrtimer_restart (*fn)(struct hrtimer *);
- 	int restart;
-+	bool expires_in_hardirq;
- 
- 	lockdep_assert_held(&cpu_base->lock);
- 
-@@ -1514,11 +1515,11 @@ static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base,
- 	 */
- 	raw_spin_unlock_irqrestore(&cpu_base->lock, flags);
- 	trace_hrtimer_expire_entry(timer, now);
--	lockdep_hrtimer_enter(timer);
-+	expires_in_hardirq = lockdep_hrtimer_enter(timer);
- 
- 	restart = fn(timer);
- 
--	lockdep_hrtimer_exit(timer);
-+	lockdep_hrtimer_exit(expires_in_hardirq);
- 	trace_hrtimer_expire_exit(timer);
- 	raw_spin_lock_irq(&cpu_base->lock);
- 
--- 
-2.26.0
+	c = clk_get_rate(imx->clk_per);
+	c *= div_u64(state->period, 1000000000);
+	period_cycles = c;
 
+This should take care of overflow not happening because state->period is
+converted from nanoseconds to seconds early on and so becomes a small
+number.
+
+Thank you.
+
+Guru Das.
