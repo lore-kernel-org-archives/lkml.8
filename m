@@ -2,315 +2,156 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FFFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5515C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A81207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CB72078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 14:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KNzi5Q/p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBuNpmAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbgCaOKT (ORCPT
+        id S1731018AbgCaOKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:10:19 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50990 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730358AbgCaOKS (ORCPT
+        Tue, 31 Mar 2020 10:10:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41836 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730742AbgCaOKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:10:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585663816;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=zaDvsYN8BRJn6uzt9vBaEcPBXIxrW6ki6PG9mgIOd/0=;
-        b=KNzi5Q/ptSpAlKSl4pcxJQk1s6o8KEjIlv4nDnBOEOOIlRLZLpWEeXTjbfkRbt2OZecLr+
-        t+Df/Sq6ihHQ/PjhjM/3ghlSB75GRVZqhCBikWZyuJ8QIxgVTCdz7jULxvP1Pyw6uUZHqF
-        S1YvL/DLbJrHOOcB74MqtL16ur5uLxQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-rDuJkBoBOOCVSDWMqShx_A-1; Tue, 31 Mar 2020 10:10:12 -0400
-X-MC-Unique: rDuJkBoBOOCVSDWMqShx_A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5780A801E74;
-        Tue, 31 Mar 2020 14:10:11 +0000 (UTC)
-Received: from [10.36.114.0] (ovpn-114-0.ams2.redhat.com [10.36.114.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C2795C1C5;
-        Tue, 31 Mar 2020 14:10:00 +0000 (UTC)
-Subject: Re: [RFC for Linux] virtio_balloon: Add VIRTIO_BALLOON_F_THP_ORDER to
- handle THP spilt issue
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Hui Zhu <teawater@gmail.com>, jasowang@redhat.com,
-        akpm@linux-foundation.org, pagupta@redhat.com,
-        mojha@codeaurora.org, namit@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, qemu-devel@nongnu.org,
-        Hui Zhu <teawaterz@linux.alibaba.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-References: <20200326031817-mutt-send-email-mst@kernel.org>
- <C4C6BAF7-C040-403D-997C-48C7AB5A7D6B@redhat.com>
- <20200326054554-mutt-send-email-mst@kernel.org>
- <f26dc94a-7296-90c9-56cd-4586b78bc03d@redhat.com>
- <20200331091718-mutt-send-email-mst@kernel.org>
- <02a393ce-c4b4-ede9-7671-76fa4c19097a@redhat.com>
- <20200331093300-mutt-send-email-mst@kernel.org>
- <b69796e0-fa41-a219-c3e5-a11e9f5f18bf@redhat.com>
- <20200331100359-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
- 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
- zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
- Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
- jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
- II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
- Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
- RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
- ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
- Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
- ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
- 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
- GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
- GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
- H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
- 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
- ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
- GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
- CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
- njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
- FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
-Organization: Red Hat GmbH
-Message-ID: <85f699d4-459a-a319-0a8f-96c87d345c49@redhat.com>
-Date:   Tue, 31 Mar 2020 16:09:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 10:10:30 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h9so26122674wrc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 07:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6KkVAX9LHQdy5bHn212eBpteLV15dAVUf1jSf5zOtEI=;
+        b=CBuNpmAdmCOS9vPjHPGBzs3t/L7Yy6BKi/X/WMLwNFHK85ob3GXcaVicIX131gfJn2
+         OU8OqjmxYznVOzw9ShEUda19LDx6ErO2Z1y5NCgqYgJ9BmkpVH4/K8MyjDXe13mjsxg/
+         BB2i6Sy9cMjQttATOhQ32MukPB1hmG3r5LI7JfjFRrRlI7C3qBFymVIWXYs+kVfaC3zk
+         R1uXZpAWPjrh9ry545106iUh6fNP3A4aLtkpmQyyG20Bvkkfyr7VSel8H2al5hDn3JM7
+         dCvpRDi901uzlVNmgDNP1wHvYyRMuDAxcI7kD5o/IFirSeHOgzVBdQko+U/ah64ZsuKK
+         7bzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6KkVAX9LHQdy5bHn212eBpteLV15dAVUf1jSf5zOtEI=;
+        b=rsV0hEfjB2mwFfhm2blTCjFc0hjSmqoDiFvMOHq9Eg5C6k7+l4eyQ/l8oOk6IAsQdV
+         /QyvBitSLSZcN9NFMfc22zonzJ0XBu//r0n68p/kcw/d33b0aWmu4wzUUMqmkatbU+hI
+         YWITmuW5kc8pNfb75bZt8hLheXYIC5tscW0/mtw54Gm/caT0JXeKi8vnvzXuFKZOXsPI
+         5O+bvFtQT9tFBhDCXJR9XFw2zj9hKPMF5wHkayjODcsJaKEdZ8VPrj1Jtw0pE7WvhWFl
+         oAYKlqB/H/0Iy9Ll4ovYwkBGHXPe45b+om/moXfZd3CYOvwDl0cRktbU/Z6uK6Sg9lHj
+         qgUw==
+X-Gm-Message-State: ANhLgQ0noas0ao586CQdvijtrrBkDJXKYZ18f0LR19nletuW4xD04Ysn
+        jCDnC7vvHMUOxrTlHGPYGO73fvR1sAboiiARixg=
+X-Google-Smtp-Source: ADFU+vuptnxHXiRXfHruTSFrIWhJmSwzLXngCmzoyKLq6ikXfD7hMknhh7AogD4BJxghw+8QXj8CfDHg6qw7LeNCLRA=
+X-Received: by 2002:a5d:6742:: with SMTP id l2mr21860749wrw.124.1585663828600;
+ Tue, 31 Mar 2020 07:10:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200331100359-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200325090741.21957-2-bigbeeshane@gmail.com> <CGME20200327075458eucas1p2f1011560c5d2d2a754d2394f56367ebb@eucas1p2.samsung.com>
+ <4aef60ff-d9e4-d3d0-1a28-8c2dc3b94271@samsung.com> <82df6735-1cf0-e31f-29cc-f7d07bdaf346@amd.com>
+ <cd773011-969b-28df-7488-9fddae420d81@samsung.com> <bba81019-d585-d950-ecd0-c0bf36a2f58d@samsung.com>
+ <CADnq5_O6pwxJsYdfJO0xZtmER05GtO+2-4uHTeexKNeHyUq8_Q@mail.gmail.com> <3a0cb2bc-84be-6f9f-a0e8-ecb653026301@samsung.com>
+In-Reply-To: <3a0cb2bc-84be-6f9f-a0e8-ecb653026301@samsung.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Tue, 31 Mar 2020 10:10:17 -0400
+Message-ID: <CADnq5_NEhfZwE6B0UBu0My7Sk5YNoDE=7Nj_CUYpPe9HOjpjqQ@mail.gmail.com>
+Subject: Re: [v4,1/3] drm/prime: use dma length macro when mapping sg
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Dave Airlie <airlied@linux.ie>,
+        "Deucher, Alexander" <alexander.deucher@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx-request@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31.03.20 16:07, Michael S. Tsirkin wrote:
-> On Tue, Mar 31, 2020 at 04:03:18PM +0200, David Hildenbrand wrote:
->> On 31.03.20 15:37, Michael S. Tsirkin wrote:
->>> On Tue, Mar 31, 2020 at 03:32:05PM +0200, David Hildenbrand wrote:
->>>> On 31.03.20 15:24, Michael S. Tsirkin wrote:
->>>>> On Tue, Mar 31, 2020 at 12:35:24PM +0200, David Hildenbrand wrote:
->>>>>> On 26.03.20 10:49, Michael S. Tsirkin wrote:
->>>>>>> On Thu, Mar 26, 2020 at 08:54:04AM +0100, David Hildenbrand wrote=
-:
->>>>>>>>
->>>>>>>>
->>>>>>>>> Am 26.03.2020 um 08:21 schrieb Michael S. Tsirkin <mst@redhat.c=
-om>:
->>>>>>>>>
->>>>>>>>> =EF=BB=BFOn Thu, Mar 12, 2020 at 09:51:25AM +0100, David Hilden=
-brand wrote:
->>>>>>>>>>> On 12.03.20 09:47, Michael S. Tsirkin wrote:
->>>>>>>>>>> On Thu, Mar 12, 2020 at 09:37:32AM +0100, David Hildenbrand w=
-rote:
->>>>>>>>>>>> 2. You are essentially stealing THPs in the guest. So the fa=
-stest
->>>>>>>>>>>> mapping (THP in guest and host) is gone. The guest won't be =
-able to make
->>>>>>>>>>>> use of THP where it previously was able to. I can imagine th=
-is implies a
->>>>>>>>>>>> performance degradation for some workloads. This needs a pro=
-per
->>>>>>>>>>>> performance evaluation.
->>>>>>>>>>>
->>>>>>>>>>> I think the problem is more with the alloc_pages API.
->>>>>>>>>>> That gives you exactly the given order, and if there's
->>>>>>>>>>> a larger chunk available, it will split it up.
->>>>>>>>>>>
->>>>>>>>>>> But for balloon - I suspect lots of other users,
->>>>>>>>>>> we do not want to stress the system but if a large
->>>>>>>>>>> chunk is available anyway, then we could handle
->>>>>>>>>>> that more optimally by getting it all in one go.
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> So if we want to address this, IMHO this calls for a new API.
->>>>>>>>>>> Along the lines of
->>>>>>>>>>>
->>>>>>>>>>>    struct page *alloc_page_range(gfp_t gfp, unsigned int min_=
-order,
->>>>>>>>>>>                    unsigned int max_order, unsigned int *orde=
-r)
->>>>>>>>>>>
->>>>>>>>>>> the idea would then be to return at a number of pages in the =
-given
->>>>>>>>>>> range.
->>>>>>>>>>>
->>>>>>>>>>> What do you think? Want to try implementing that?
->>>>>>>>>>
->>>>>>>>>> You can just start with the highest order and decrement the or=
-der until
->>>>>>>>>> your allocation succeeds using alloc_pages(), which would be e=
-nough for
->>>>>>>>>> a first version. At least I don't see the immediate need for a=
- new
->>>>>>>>>> kernel API.
->>>>>>>>>
->>>>>>>>> OK I remember now.  The problem is with reclaim. Unless reclaim=
- is
->>>>>>>>> completely disabled, any of these calls can sleep. After it wak=
-es up,
->>>>>>>>> we would like to get the larger order that has become available
->>>>>>>>> meanwhile.
->>>>>>>>>
->>>>>>>>
->>>>>>>> Yes, but that=E2=80=98s a pure optimization IMHO.
->>>>>>>> So I think we should do a trivial implementation first and then =
-see what we gain from a new allocator API. Then we might also be able to =
-justify it using real numbers.
->>>>>>>>
->>>>>>>
->>>>>>> Well how do you propose implement the necessary semantics?
->>>>>>> I think we are both agreed that alloc_page_range is more or
->>>>>>> less what's necessary anyway - so how would you approximate it
->>>>>>> on top of existing APIs?
->>>>>> diff --git a/include/linux/balloon_compaction.h b/include/linux/ba=
-lloon_compaction.h
->>>
->>> .....
->>>
->>>
->>>>>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
->>>>>> index 26de020aae7b..067810b32813 100644
->>>>>> --- a/mm/balloon_compaction.c
->>>>>> +++ b/mm/balloon_compaction.c
->>>>>> @@ -112,23 +112,35 @@ size_t balloon_page_list_dequeue(struct ball=
-oon_dev_info *b_dev_info,
->>>>>>  EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->>>>>> =20
->>>>>>  /*
->>>>>> - * balloon_page_alloc - allocates a new page for insertion into t=
-he balloon
->>>>>> - *			page list.
->>>>>> + * balloon_pages_alloc - allocates a new page (of at most the giv=
-en order)
->>>>>> + * 			 for insertion into the balloon page list.
->>>>>>   *
->>>>>>   * Driver must call this function to properly allocate a new ball=
-oon page.
->>>>>>   * Driver must call balloon_page_enqueue before definitively remo=
-ving the page
->>>>>>   * from the guest system.
->>>>>>   *
->>>>>> + * Will fall back to smaller orders if allocation fails. The orde=
-r of the
->>>>>> + * allocated page is stored in page->private.
->>>>>> + *
->>>>>>   * Return: struct page for the allocated page or NULL on allocati=
-on failure.
->>>>>>   */
->>>>>> -struct page *balloon_page_alloc(void)
->>>>>> +struct page *balloon_pages_alloc(int order)
->>>>>>  {
->>>>>> -	struct page *page =3D alloc_page(balloon_mapping_gfp_mask() |
->>>>>> -				       __GFP_NOMEMALLOC | __GFP_NORETRY |
->>>>>> -				       __GFP_NOWARN);
->>>>>> -	return page;
->>>>>> +	struct page *page;
->>>>>> +
->>>>>> +	while (order >=3D 0) {
->>>>>> +		page =3D alloc_pages(balloon_mapping_gfp_mask() |
->>>>>> +				   __GFP_NOMEMALLOC | __GFP_NORETRY |
->>>>>> +				   __GFP_NOWARN, order);
->>>>>> +		if (page) {
->>>>>> +			set_page_private(page, order);
->>>>>> +			return page;
->>>>>> +		}
->>>>>> +		order--;
->>>>>> +	}
->>>>>> +	return NULL;
->>>>>>  }
->>>>>> -EXPORT_SYMBOL_GPL(balloon_page_alloc);
->>>>>> +EXPORT_SYMBOL_GPL(balloon_pages_alloc);
->>>>>> =20
->>>>>>  /*
->>>>>>   * balloon_page_enqueue - inserts a new page into the balloon pag=
-e list.
->>>>>
->>>>>
->>>>> I think this will try to invoke direct reclaim from the first itera=
-tion
->>>>> to free up the max order.
->>>>
->>>> %__GFP_NORETRY: The VM implementation will try only very lightweight
->>>> memory direct reclaim to get some memory under memory pressure (thus=
- it
->>>> can sleep). It will avoid disruptive actions like OOM killer.
->>>>
->>>> Certainly good enough for a first version I would say, no?
->>>
->>> Frankly how well that behaves would depend a lot on the workload.
->>> Can regress just as well.
->>>
->>> For the 1st version I'd prefer something that is the least disruptive=
-,
->>> and that IMHO means we only trigger reclaim at all in the same config=
-uration
->>> as now - when we can't satisfy the lowest order allocation.
->>
->> Agreed.
->>
->>>
->>> Anything else would be a huge amount of testing with all kind of
->>> workloads.
->>>
->>
->> So doing a "& ~__GFP_RECLAIM" in case order > 0? (as done in
->> GFP_TRANSHUGE_LIGHT)
->=20
-> That will improve the situation when reclaim is not needed, but leave
-> the problem in place for when it's needed: if reclaim does trigger, we
-> can get a huge free page and immediately break it up.
->=20
-> So it's ok as a first step but it will make the second step harder as
-> we'll need to test with reclaim :).
+On Tue, Mar 31, 2020 at 1:25 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> Hi Alex,
+>
+> On 2020-03-30 15:23, Alex Deucher wrote:
+> > On Mon, Mar 30, 2020 at 4:18 AM Marek Szyprowski
+> > <m.szyprowski@samsung.com> wrote:
+> >> Hi
+> >>
+> >> On 2020-03-27 10:10, Marek Szyprowski wrote:
+> >>> Hi Christian,
+> >>>
+> >>> On 2020-03-27 09:11, Christian K=C3=B6nig wrote:
+> >>>> Am 27.03.20 um 08:54 schrieb Marek Szyprowski:
+> >>>>> On 2020-03-25 10:07, Shane Francis wrote:
+> >>>>>> As dma_map_sg can reorganize scatter-gather lists in a
+> >>>>>> way that can cause some later segments to be empty we should
+> >>>>>> always use the sg_dma_len macro to fetch the actual length.
+> >>>>>>
+> >>>>>> This could now be 0 and not need to be mapped to a page or
+> >>>>>> address array
+> >>>>>>
+> >>>>>> Signed-off-by: Shane Francis <bigbeeshane@gmail.com>
+> >>>>>> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> >>>>> This patch landed in linux-next 20200326 and it causes a kernel
+> >>>>> panic on
+> >>>>> various Exynos SoC based boards.
+> >>>>>> ---
+> >>>>>>     drivers/gpu/drm/drm_prime.c | 2 +-
+> >>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>>
+> >>>>>> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_pri=
+me.c
+> >>>>>> index 86d9b0e45c8c..1de2cde2277c 100644
+> >>>>>> --- a/drivers/gpu/drm/drm_prime.c
+> >>>>>> +++ b/drivers/gpu/drm/drm_prime.c
+> >>>>>> @@ -967,7 +967,7 @@ int drm_prime_sg_to_page_addr_arrays(struct
+> >>>>>> sg_table *sgt, struct page **pages,
+> >>>>>>            index =3D 0;
+> >>>>>>         for_each_sg(sgt->sgl, sg, sgt->nents, count) {
+> >>>>>> -        len =3D sg->length;
+> >>>>>> +        len =3D sg_dma_len(sg);
+> >>>>>>             page =3D sg_page(sg);
+> >>>>>>             addr =3D sg_dma_address(sg);
+> >>>>> Sorry, but this code is wrong :(
+> >>>> Well it is at least better than before because it makes most drivers
+> >>>> work correctly again.
+> >>> Well, I'm not sure that a half-broken fix should be considered as a
+> >>> fix ;)
+> >>>
+> >>> Anyway, I just got the comment from Shane, that my patch is fixing th=
+e
+> >>> issues with amdgpu and radeon, while still working fine for exynos, s=
+o
+> >>> it is indeed a proper fix.
+> >> Today I've noticed that this patch went to final v5.6 without even a d=
+ay
+> >> of testing in linux-next, so v5.6 is broken on Exynos and probably a f=
+ew
+> >> other ARM archs, which rely on the drm_prime_sg_to_page_addr_arrays
+> >> function.
+> > Please commit your patch and cc stable.
+>
+> I've already did that: https://lkml.org/lkml/2020/3/27/555
 
-I expect the whole "steal huge pages from your guest" to be problematic,
-as I already mentioned to Alex. This needs a performance evaluation.
+Do you have drm-misc commit rights or do you need someone to commit
+this for you?
 
-This all smells like a lot of workload dependent fine-tuning. :)
+Alex
 
---=20
-Thanks,
 
-David / dhildenb
-
+>
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+>
