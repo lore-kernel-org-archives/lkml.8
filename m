@@ -2,100 +2,140 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3626C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 856E0C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB51C20784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6394E20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cW0Tj1W3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgCaSiz convert rfc822-to-8bit (ORCPT
+        id S1728185AbgCaSiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:38:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:33625 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbgCaSix (ORCPT
+        Tue, 31 Mar 2020 14:38:54 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39158 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbgCaSiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:38:53 -0400
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MIxBa-1jceow0gdm-00KRBo for <linux-kernel@vger.kernel.org>; Tue, 31 Mar
- 2020 20:38:52 +0200
-Received: by mail-qv1-f46.google.com with SMTP id bp12so7417514qvb.7
+        Tue, 31 Mar 2020 14:38:52 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h6so12426467lfp.6
         for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:38:51 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0tbmbAIJOt3BD5pbtSwx9MkZibq02wQ9VFN0H1ndFO9MbWSAKe
-        Rp5JqslkzbX4zKXbHhzCAOUTptOhMpmlGAsVWR8=
-X-Google-Smtp-Source: ADFU+vuTGFGpCxNIh+cobymgdpMJ4evVMQiQmSWM3uw7oyUk1XxgrJtQG+HV5AiOi7nmMntLNw37psCO8HP1MAfYp7o=
-X-Received: by 2002:a0c:f647:: with SMTP id s7mr18334119qvm.4.1585679931041;
- Tue, 31 Mar 2020 11:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ef53u72gwX154C7xAMYz+wCT3OMfVTWwHYstmLaCNlc=;
+        b=cW0Tj1W36bWIKjTQK8D9mJ/96C2vkHPZEcGEzeHzqpZy67M9jPUIyXRV5YA1X2DaHZ
+         Nzpvr5UpM29BGo6lks/pgSsnJES6sPStXAo9uafNp0/NlfHr3bJpYjCISQ8jc5IydKuv
+         iHi7rqNqMiHP+rAsoHJW6SVRpUMNK/RhN1BJmik/agnq4A1zJm38xhfmtxsDxu/c/PYf
+         KNl0mzd8Klq3O9ErQheYvhlwcsAQ4RCIuLEvbAx+wakyHiycLj6pt8B00BtM7cBGB0Ac
+         wuqLoq169V2kl68TDfQyIlc5tkHPXYmP1QNVQrAI2ij9lp2xx6LLurbGqM9Jaes8Dvlv
+         3IgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ef53u72gwX154C7xAMYz+wCT3OMfVTWwHYstmLaCNlc=;
+        b=rFEISobXhJUGSmbZnXA39y6HzQvMtIe3RyxyyG2HufxGSKrpktjoMTaapJKRG36Hg3
+         Wz5mE1Q+SjI8DtD2yzjI4/w8ak+WPf1z7K9ZfkCF3MJl2JBjBdXvRSsiF57vJ2TwQeIq
+         UOiYHm02R0As1UF3qc6gnn4e8FlxUzj1tAmZFBWFsS16vwf5A/Zr2IgsnbWx04UfQabv
+         Y9vktAo4jzbhE2aI8922QkrXYZQBgPCmjZzsTrGaztZZSuW2dDMJXkDM+faxR1LkOVcC
+         b80ju576OIhuVl9nBAhT8hvwNvX1gmgyb6gQxfum7AiLBNm224nxXy9ntFG0/tPeZ9tM
+         GFpw==
+X-Gm-Message-State: AGi0PuZegtmSGq4yEtsBw9PeO4NVXVf0Qms22jTiXZms7S9lCg0ODb/m
+        +RIxxApQWl6eiSrwLRMnTpZwGw==
+X-Google-Smtp-Source: APiQypJlHBdy85VzPZtpSqUGdPox7hK2Nb2Ow9qHdh0GVGjkZIEzlPooZMXhxhreWPUR3bq6fB+QZA==
+X-Received: by 2002:a19:c507:: with SMTP id w7mr11146673lfe.131.1585679930697;
+        Tue, 31 Mar 2020 11:38:50 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id b28sm10331849ljp.90.2020.03.31.11.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 11:38:49 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>, stable@vger.kernel.org
+Subject: [PATCH v2 1/2] driver core: platform: Initialize dma_parms for platform devices
+Date:   Tue, 31 Mar 2020 20:38:43 +0200
+Message-Id: <20200331183844.30488-2-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200331183844.30488-1-ulf.hansson@linaro.org>
+References: <20200331183844.30488-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-References: <698e9a42a06eb856eef4501c3c0a182c034a5d8c.1585640941.git.christophe.leroy@c-s.fr>
- <50d0ce1a96fa978cd0dfabde30cf75d23691622a.1585640942.git.christophe.leroy@c-s.fr>
- <CAK8P3a3u4y7Zm8w43QScqUk6macBL1wO3S0qPisf9+d9FqSHfw@mail.gmail.com>
- <833d63fe-3b94-a3be-1abb-a629386aa0dd@c-s.fr> <CAK8P3a244P38c+JCRnf1EscQOSzaQQNZc6b5F=LFE2a_im8AqQ@mail.gmail.com>
- <74e76b4e-5e4f-f3de-96a8-f6a451b3243a@c-s.fr>
-In-Reply-To: <74e76b4e-5e4f-f3de-96a8-f6a451b3243a@c-s.fr>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 31 Mar 2020 20:38:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1jM8W72iH0qmMLRBRsv8ANYdL0xro0iWty3FvM6HTd0A@mail.gmail.com>
-Message-ID: <CAK8P3a1jM8W72iH0qmMLRBRsv8ANYdL0xro0iWty3FvM6HTd0A@mail.gmail.com>
-Subject: Re: [PATCH v2 09/11] powerpc/platforms: Move files from 4xx to 44x
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:T7JWZ/SrY725G9NuCQvDKkK2WnO7EVVEYP7XBHUazcx7PU310HL
- kwfFf3Zp8xVXVUT99DuL1vxQs5fLjjHtErwUplDqIjFBQ+tyISw/EBH/ALX7Cbe1+0B5Be7
- mRKg5X2jT0Qo9RmGNFxXYA9vl76DnaSMiy984g2wVDI/pHQPw4hA3o0fbo3ua5G3E0NFT1P
- VJceP2KZASxegqQKyZ8gg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UYlOC/DahJk=:uNYfcZDk8JgPHTauOyFLTX
- QqkdyIy3q6nPdd7Osa+aj6sT/3XdP2OyEv6kP6SsJPXmdN21Vx9B4l+AOHzC5ResMjDUeYOrs
- h1ULjClDIdqvazAyGUpCqPbkqwNK6gANew7rGB5WSui62/pkNKJn/an6U7R4Zi1QlreH1c+kf
- I5cbiY6gnslGn1VNkn4Gp9OZDTkEqDXe/IltdoLVIEhuL/DpaKU9FExrlKlaaEX0uRpo2xif0
- FgvgZ0lZOi2TllqiS9yMzxIv5ADVqr2BfnRK/EKEAswJ0zhnQDp0AcER8hUycZlsrPUJNDALK
- cjxla8a0/mHK2zhqnfuzGWO9myDnfIQeFVldPm8pT0tKvkMcgmZL9HxctntkRNwoTA8YJZ760
- JAX5+J7IXuBgxv2LnreZ/lSkOGZDLcTZlhd/cmVivEmcG1U2CyYTIf0kW4fj7CZO5RbKsb8QZ
- TVccRVGzgvtHkx81FcOR9QyHTqcehRTaBXcxDiNU4HNmUZCB9eQm0t0ZOquzZesCtCXN0+uER
- G1bd3mPe+7dSDWj8uz544YGPCmoS74Q0MCVFOZn5J5UbPjTZ1o5NFmnL3FBDEWxTlmeNiC6In
- O+rxQKCIGaq55oqXUbndjxei/3ZqJa4hJLkErysmFzxABlPSuW7s44LkbaAxY3RWl529fmHQ1
- 3O4JWZe6FkCN8Qe5GbxaVEV6Dfapm4DU55n04wrUS5p0WmLLowUcYadqBvKKmFy5ONp6WvjYC
- DzeyGA4WSWsnZj8Stxbs9VIvLrJUxixt7nhzVRg8foso74HKo82eMd486Pn3fYwchQs2BDo6J
- mfA7b8YHYFbmZ48jGGtVfZyO8P+pgjQX8BjOQ65S7a8d70sUvs=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 6:19 PM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
-> Le 31/03/2020 à 18:04, Arnd Bergmann a écrit :
-> > That has the risk of breaking user's defconfig files, but given the
-> > small number of users, it may be nicer for consistency. In either
-> > case, the two symbols should probably hang around as synonyms,
-> > the question is just which one is user visible.
-> >
->
-> Not sure it is a good idea to keep two synonyms. In the past we made our
-> best to remove synonyms (We had CONFIG_8xx and CONFIG_PPC_8xx being
-> synonyms, we had CONFIG_6xx and CONFIG_BOOK3S_32 and
-> CONFIG_PPC_STD_MMU_32 being synonyms).
-> I think it is a lot cleaner when we can avoid synonyms.
+It's currently the platform driver's responsibility to initialize the
+pointer, dma_parms, for its corresponding struct device. The benefit with
+this approach allows us to avoid the initialization and to not waste memory
+for the struct device_dma_parameters, as this can be decided on a case by
+case basis.
 
-Ok, fair enough.
+However, it has turned out that this approach is not very practical.  Not
+only does it lead to open coding, but also to real errors. In principle
+callers of dma_set_max_seg_size() doesn't check the error code, but just
+assumes it succeeds.
 
-> By the way I already dropped CONFIG_4xx in previous patch (8/11). It was
-> not many 4xx changed to 44x. It would be a lot more in the other way
-> round I'm afraid.
+For these reasons, let's do the initialization from the common platform bus
+at the device registration point. This also follows the way the PCI devices
+are being managed, see pci_device_add().
 
-Right. Maybe stay with 44x for both then (as in your current patches), as it
-means changing less in a part of the code that has few users anyway.
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-      Arnd
+---
+
+Changes in v2:
+	- Move initialization to setup_pdev_dma_masks(). This means the
+	initialization is done also in the OF path.
+
+---
+ drivers/base/platform.c         | 2 ++
+ include/linux/platform_device.h | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index b5ce7b085795..c81b68d5d66d 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -361,6 +361,8 @@ struct platform_object {
+  */
+ static void setup_pdev_dma_masks(struct platform_device *pdev)
+ {
++	pdev->dev.dma_parms = &pdev->dma_parms;
++
+ 	if (!pdev->dev.coherent_dma_mask)
+ 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+ 	if (!pdev->dev.dma_mask) {
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index 041bfa412aa0..81900b3cbe37 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -25,6 +25,7 @@ struct platform_device {
+ 	bool		id_auto;
+ 	struct device	dev;
+ 	u64		platform_dma_mask;
++	struct device_dma_parameters dma_parms;
+ 	u32		num_resources;
+ 	struct resource	*resource;
+ 
+-- 
+2.20.1
+
