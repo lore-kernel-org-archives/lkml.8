@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9E7C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B32BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361D0208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C0B2137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645395;
-	bh=N+owriBuSW8TD8SbqXaAB46DfoDo5110Pd7r+uwbDb8=;
+	s=default; t=1585645397;
+	bh=qx1EzHDl9zZsR19UzEe5WF95rNKTfjaKgs1WrRiJfcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Is8c3Ox9kWqchOpMtkekGHP0Eu5Ozs4MySBPdy4oHS3ESekL/zt3zTb1E7kmkcuoH
-	 6uecCMMkDdpVU3hSfkdMAnVhsGP4WXA1PUQvVX+GZ376Rd9oqdlnzVXVo/fU0xP77z
-	 wwfXr4vid1V4UTYzuGFLSNm4rPIrT43Z2Qq9oZ2o=
+	b=JgRRWi37dgsWyV1OkBKQ8f+1rx4CCrsN5hdpzHl1ti/t/m2JNDLtc1QShFlNia4Mb
+	 mm4M/vhzrOucDs5mAkT+OsSyZNxrgWVGS2MNN11jV+FzToPvwar7JihXwZPFWX1ChI
+	 +Gu+N2xX9TwUnMxNAoCIgYUtKA8wg03pfLyxOUWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbgCaJDN (ORCPT
+        id S1730814AbgCaJDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42866 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730161AbgCaJDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:03:11 -0400
+        id S1730437AbgCaJDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:03:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 253D22145D;
-        Tue, 31 Mar 2020 09:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC06208E0;
+        Tue, 31 Mar 2020 09:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645390;
-        bh=N+owriBuSW8TD8SbqXaAB46DfoDo5110Pd7r+uwbDb8=;
+        s=default; t=1585645393;
+        bh=qx1EzHDl9zZsR19UzEe5WF95rNKTfjaKgs1WrRiJfcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FuSXUCQsyWFQcssTbgHyOzaVGkNw5MWJ+nMXwKod7w7K1Y/F1RjUJcV5dRxsjZW/e
-         8EDq8FB6huIAEj+xoXMDrFeOzd+En12T/sLVyuddPhnyEnYkc/G8gdWz4pLolCXC/i
-         wMZvswiDDd67sFSeZKGEuDt0VepYRWh8MwieoHkI=
+        b=cNPtC70HfxAGdxzQcwvzFYqwnad+LN/KmO2N6C/iZV5evXT99KzhLGMXWazi08KGm
+         hKybgBZNXCkY5/wXE/0RwsAzrwUsHxQW+p3Imt+SelF4VXVsgKRte/mzCEgBSxKFd3
+         H+9pl1NRKJnM/RW55ja3BMCmVumqYJgDEZMe3zig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 039/170] vxlan: check return value of gro_cells_init()
-Date:   Tue, 31 Mar 2020 10:57:33 +0200
-Message-Id: <20200331085428.174267737@linuxfoundation.org>
+Subject: [PATCH 5.5 040/170] Revert "net: bcmgenet: use RGMII loopback for MAC reset"
+Date:   Tue, 31 Mar 2020 10:57:34 +0200
+Message-Id: <20200331085428.328345541@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,51 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit 384d91c267e621e0926062cfb3f20cb72dc16928 ]
+[ Upstream commit 612eb1c3b9e504de24136c947ed7c07bc342f3aa ]
 
-gro_cells_init() returns error if memory allocation is failed.
-But the vxlan module doesn't check the return value of gro_cells_init().
+This reverts commit 3a55402c93877d291b0a612d25edb03d1b4b93ac.
 
-Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")`
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+This is not a good solution when connecting to an external switch
+that may not support the isolation of the TXC signal resulting in
+output driver contention on the pin.
+
+A different solution is necessary.
+
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vxlan.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c |    2 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c   |   34 -------------------------
+ 2 files changed, 2 insertions(+), 34 deletions(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2778,10 +2778,19 @@ static void vxlan_vs_add_dev(struct vxla
- /* Setup stats when device is created */
- static int vxlan_init(struct net_device *dev)
- {
-+	struct vxlan_dev *vxlan = netdev_priv(dev);
-+	int err;
-+
- 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
- 	if (!dev->tstats)
- 		return -ENOMEM;
+--- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
+@@ -1996,6 +1996,8 @@ static void reset_umac(struct bcmgenet_p
  
-+	err = gro_cells_init(&vxlan->gro_cells, dev);
-+	if (err) {
-+		free_percpu(dev->tstats);
-+		return err;
-+	}
-+
- 	return 0;
+ 	/* issue soft reset with (rg)mii loopback to ensure a stable rxclk */
+ 	bcmgenet_umac_writel(priv, CMD_SW_RESET | CMD_LCL_LOOP_EN, UMAC_CMD);
++	udelay(2);
++	bcmgenet_umac_writel(priv, 0, UMAC_CMD);
  }
  
-@@ -3042,8 +3051,6 @@ static void vxlan_setup(struct net_devic
+ static void bcmgenet_intr_disable(struct bcmgenet_priv *priv)
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -181,38 +181,8 @@ int bcmgenet_mii_config(struct net_devic
+ 	const char *phy_name = NULL;
+ 	u32 id_mode_dis = 0;
+ 	u32 port_ctrl;
+-	int bmcr = -1;
+-	int ret;
+ 	u32 reg;
  
- 	vxlan->dev = dev;
- 
--	gro_cells_init(&vxlan->gro_cells, dev);
+-	/* MAC clocking workaround during reset of umac state machines */
+-	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
+-	if (reg & CMD_SW_RESET) {
+-		/* An MII PHY must be isolated to prevent TXC contention */
+-		if (priv->phy_interface == PHY_INTERFACE_MODE_MII) {
+-			ret = phy_read(phydev, MII_BMCR);
+-			if (ret >= 0) {
+-				bmcr = ret;
+-				ret = phy_write(phydev, MII_BMCR,
+-						bmcr | BMCR_ISOLATE);
+-			}
+-			if (ret) {
+-				netdev_err(dev, "failed to isolate PHY\n");
+-				return ret;
+-			}
+-		}
+-		/* Switch MAC clocking to RGMII generated clock */
+-		bcmgenet_sys_writel(priv, PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
+-		/* Ensure 5 clks with Rx disabled
+-		 * followed by 5 clks with Reset asserted
+-		 */
+-		udelay(4);
+-		reg &= ~(CMD_SW_RESET | CMD_LCL_LOOP_EN);
+-		bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+-		/* Ensure 5 more clocks before Rx is enabled */
+-		udelay(2);
+-	}
 -
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
- 		spin_lock_init(&vxlan->hash_lock[h]);
- 		INIT_HLIST_HEAD(&vxlan->fdb_head[h]);
+ 	switch (priv->phy_interface) {
+ 	case PHY_INTERFACE_MODE_INTERNAL:
+ 		phy_name = "internal PHY";
+@@ -282,10 +252,6 @@ int bcmgenet_mii_config(struct net_devic
+ 
+ 	bcmgenet_sys_writel(priv, port_ctrl, SYS_PORT_CTRL);
+ 
+-	/* Restore the MII PHY after isolation */
+-	if (bmcr >= 0)
+-		phy_write(phydev, MII_BMCR, bmcr);
+-
+ 	priv->ext_phy = !priv->internal_phy &&
+ 			(priv->phy_interface != PHY_INTERFACE_MODE_MOCA);
+ 
 
 
