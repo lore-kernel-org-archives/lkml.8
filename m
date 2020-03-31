@@ -2,123 +2,180 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9613EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C58C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF96206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:16:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrlCLFDz"
+	by mail.kernel.org (Postfix) with ESMTP id F2337206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgCaGQa (ORCPT
+        id S1727481AbgCaGRr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:16:30 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34425 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgCaGQa (ORCPT
+        Tue, 31 Mar 2020 02:17:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726060AbgCaGRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:16:30 -0400
-Received: by mail-pj1-f66.google.com with SMTP id q16so696490pje.1;
-        Mon, 30 Mar 2020 23:16:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Bwmhd/qMjqfnmk2NrehDvM1RwoFtBpq3lJKU07oCmio=;
-        b=BrlCLFDzmYc+AAViMVJVSU5y9FL+KqUA4BqUSoK609nYetQshxMF/effuwVDgh498L
-         lo1znnTTWkyuHwvouUUPEFNHP9EK8sxou4uRHhA8cyeeReFYXGdElPzZiO06KHP/b7S/
-         ZhXQJAk8N/oGrHQNIV0s39CbjXV91aCJvzFEqqIBq6WUcx+SVkIl08GRQPldoznO1qv4
-         dsRgRmshya91/ZiNoxWK+WKssv7svxOaizzG0KC/mDMFswKy6+QNtWiEk2dNiIu9AkMu
-         ie0ACeXCtfQGMgFi90S0g2QwPeKwf+xLdBHvbT4+3rLpl/bZeAAurnSm9g2x/XzRrL+N
-         bEQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bwmhd/qMjqfnmk2NrehDvM1RwoFtBpq3lJKU07oCmio=;
-        b=Ml99XNV6+Ckan0T5nVEi155lHrO+hoNf75tNGUEy4wJhw8t9EGkoODxB00jRP8fceP
-         LL1AzAiypdtGRlWHn/8iK5l19aykq8SRidQT6mG+XsWbJWAvjdzTjrvZTnWmdsbjnUHy
-         2wI6V8VUACUp4AJSAYw60x0wHF55inxYKnq9NIMAM+S3wAR7PRrIFdpOKYwZMLYSeGmr
-         8Ueelnf/HpTu7OisciEYyC6TxlMsVrwe8cNH8r71ztCYu40ymj3Kjp5AY1f+tjVV5kuA
-         xDBjDsVHFrOEmHLpaofwCXZE+mrazvgBD1XYTw75Ns0C7C280TxWKfKarSdWsl3zzbqF
-         ewog==
-X-Gm-Message-State: ANhLgQ2mSplLmnMLCI+4OXxWL17AzkxJZ4tSZ6mhcT0zi0LsFjjUAIK9
-        RwEVnKxP6ex+J4fxusd5qxspGDNk
-X-Google-Smtp-Source: ADFU+vuxifUfFthlKQHiaJVcNmCEOiFKoz4dTaCr9rahtDFCWUIJvQ7xy7kDcFwH7wc8FIzdBt2q4Q==
-X-Received: by 2002:a17:902:d695:: with SMTP id v21mr15590318ply.135.1585635388219;
-        Mon, 30 Mar 2020 23:16:28 -0700 (PDT)
-Received: from [192.168.1.18] (i223-218-245-204.s42.a013.ap.plala.or.jp. [223.218.245.204])
-        by smtp.googlemail.com with ESMTPSA id p1sm1037307pjr.40.2020.03.30.23.16.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 23:16:27 -0700 (PDT)
-Subject: Re: [PATCH net v2] veth: xdp: use head instead of hard_start
-To:     Mao Wenan <maowenan@huawei.com>, davem@davemloft.net,
-        ast@kernel.org, daniel@iogearbox.net, kuba@kernel.org,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        jwi@linux.ibm.com, jianglidong3@jd.com, edumazet@google.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
- <20200331060641.79999-1-maowenan@huawei.com>
-From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
-Message-ID: <7a1d55ad-1427-67fe-f204-4d4a0ab2c4b1@gmail.com>
-Date:   Tue, 31 Mar 2020 15:16:22 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 02:17:47 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02V64N0o018208
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 02:17:46 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 303wa93q70-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 02:17:46 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Tue, 31 Mar 2020 07:17:38 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 31 Mar 2020 07:17:36 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02V6HftA45285860
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 06:17:41 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5853FAE05A;
+        Tue, 31 Mar 2020 06:17:41 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8F25AE04D;
+        Tue, 31 Mar 2020 06:17:40 +0000 (GMT)
+Received: from localhost (unknown [9.85.74.140])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 06:17:40 +0000 (GMT)
+Date:   Tue, 31 Mar 2020 11:47:39 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH 10/12] powerpc/entry32: Blacklist exception entry points
+ for kprobe.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <dff05b59a161434a546010507000816750073f28.1585474724.git.christophe.leroy@c-s.fr>
+        <aea027844b12fcbc29ea78d26c5848a6794d1688.1585474724.git.christophe.leroy@c-s.fr>
+        <1585588031.jvow7mwq4x.naveen@linux.ibm.com>
+        <7f367f35-1bb8-bbb6-f399-8e911f76e043@c-s.fr>
+        <83053ddf-9ba6-d551-6711-890c3f3810b5@c-s.fr>
+In-Reply-To: <83053ddf-9ba6-d551-6711-890c3f3810b5@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200331060641.79999-1-maowenan@huawei.com>
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20033106-0012-0000-0000-0000039B6A12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033106-0013-0000-0000-000021D874DA
+Message-Id: <1585635379.0xixuk2jdc.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_02:2020-03-30,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/03/31 15:06, Mao Wenan wrote:
-> xdp.data_hard_start is equal to first address of
-> struct xdp_frame, which is mentioned in
-> convert_to_xdp_frame(). But the pointer hard_start
-> in veth_xdp_rcv_one() is 32 bytes offset of frame,
-> so it should use head instead of hard_start to
-> set xdp.data_hard_start. Otherwise, if BPF program
-> calls helper_function such as bpf_xdp_adjust_head, it
-> will be confused for xdp_frame_end.
-
-I think you should discuss this more with Jesper before
-submitting v2.
-He does not like this to be included now due to merge conflict risk.
-Basically I agree with him that we don't need to hurry with this fix.
-
-Toshiaki Makita
-
+Christophe Leroy wrote:
 > 
-> Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->   v2: add fixes tag, as well as commit log.
->   drivers/net/veth.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-> index d4cbb9e8c63f..5ea550884bf8 100644
-> --- a/drivers/net/veth.c
-> +++ b/drivers/net/veth.c
-> @@ -506,7 +506,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
->   		struct xdp_buff xdp;
->   		u32 act;
->   
-> -		xdp.data_hard_start = hard_start;
-> +		xdp.data_hard_start = head;
->   		xdp.data = frame->data;
->   		xdp.data_end = frame->data + frame->len;
->   		xdp.data_meta = frame->data - frame->metasize;
+> Le 30/03/2020 à 20:33, Christophe Leroy a écrit :
+>> 
+>> 
+>> Le 30/03/2020 à 19:08, Naveen N. Rao a écrit :
+>>> Christophe Leroy wrote:
+>>>> kprobe does not handle events happening in real mode.
+>>>>
+>>>> As exception entry points are running with MMU disabled,
+>>>> blacklist them.
+>>>>
+>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>>> ---
+>>>>  arch/powerpc/kernel/entry_32.S | 7 +++++++
+>>>>  1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/arch/powerpc/kernel/entry_32.S 
+>>>> b/arch/powerpc/kernel/entry_32.S
+>>>> index 94f78c03cb79..9a1a45d6038a 100644
+>>>> --- a/arch/powerpc/kernel/entry_32.S
+>>>> +++ b/arch/powerpc/kernel/entry_32.S
+>>>> @@ -51,6 +51,7 @@ mcheck_transfer_to_handler:
+>>>>      mfspr    r0,SPRN_DSRR1
+>>>>      stw    r0,_DSRR1(r11)
+>>>>      /* fall through */
+>>>> +_ASM_NOKPROBE_SYMBOL(mcheck_transfer_to_handler)
+>>>>
+>>>>      .globl    debug_transfer_to_handler
+>>>>  debug_transfer_to_handler:
+>>>> @@ -59,6 +60,7 @@ debug_transfer_to_handler:
+>>>>      mfspr    r0,SPRN_CSRR1
+>>>>      stw    r0,_CSRR1(r11)
+>>>>      /* fall through */
+>>>> +_ASM_NOKPROBE_SYMBOL(debug_transfer_to_handler)
+>>>>
+>>>>      .globl    crit_transfer_to_handler
+>>>>  crit_transfer_to_handler:
+>>>> @@ -94,6 +96,7 @@ crit_transfer_to_handler:
+>>>>      rlwinm    r0,r1,0,0,(31 - THREAD_SHIFT)
+>>>>      stw    r0,KSP_LIMIT(r8)
+>>>>      /* fall through */
+>>>> +_ASM_NOKPROBE_SYMBOL(crit_transfer_to_handler)
+>>>>  #endif
+>>>>
+>>>>  #ifdef CONFIG_40x
+>>>> @@ -115,6 +118,7 @@ crit_transfer_to_handler:
+>>>>      rlwinm    r0,r1,0,0,(31 - THREAD_SHIFT)
+>>>>      stw    r0,KSP_LIMIT(r8)
+>>>>      /* fall through */
+>>>> +_ASM_NOKPROBE_SYMBOL(crit_transfer_to_handler)
+>>>>  #endif
+>>>>
+>>>>  /*
+>>>> @@ -127,6 +131,7 @@ crit_transfer_to_handler:
+>>>>      .globl    transfer_to_handler_full
+>>>>  transfer_to_handler_full:
+>>>>      SAVE_NVGPRS(r11)
+>>>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler_full)
+>>>>      /* fall through */
+>>>>
+>>>>      .globl    transfer_to_handler
+>>>> @@ -286,6 +291,8 @@ reenable_mmu:
+>>>>      lwz    r2, GPR2(r11)
+>>>>      b    fast_exception_return
+>>>>  #endif
+>>>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler)
+>>>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler_cont)
+>>>
+>>> These are added after 'reenable_mmu', which is itself not blacklisted. 
+>>> Is that intentional?
+>> 
+>> Yes I put it as the complete end of the entry part, ie just before 
+>> stack_ovf which is a function by itself.
+>> 
+>> Note that reenable_mmu is inside an #ifdef CONFIG_TRACE_IRQFLAGS.
+>> 
+>> I'm not completely sure where to put the _ASM_NOKPROBE_SYMBOL()s, that's 
+>> the reason why I put it close to the symbol itself in my first series.
+>> 
+>> Could you have a look at the code and tell me what looks the most 
+>> appropriate as a location to you ?
+>> 
+>> https://elixir.bootlin.com/linux/v5.6/source/arch/powerpc/kernel/entry_32.S#L230 
 > 
+> Ok, thinking about it once more, I guess we have a problem as everything 
+> after that reenable_mmu will be visible.
+
+I see that we reach reenable_mmu through a 'rfi' with MSR_KERNEL, which 
+seems safe to me. So, I figured it can be probed without issues?
+
+- Naveen
+
