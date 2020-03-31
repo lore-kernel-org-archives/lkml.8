@@ -2,139 +2,178 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88FDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E20FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8471B21556
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FBD20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:39:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YAzpmToC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gzp6usWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgCaSi7 (ORCPT
+        id S1727607AbgCaSjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:38:59 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38769 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgCaSiy (ORCPT
+        Tue, 31 Mar 2020 14:39:41 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34279 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgCaSjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:38:54 -0400
-Received: by mail-lf1-f67.google.com with SMTP id c5so18205883lfp.5
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:38:53 -0700 (PDT)
+        Tue, 31 Mar 2020 14:39:41 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l14so3604230pgb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KW3Lbde0NrLlMFOPBVL9VFr/xqlRRv5C9s8T2uV/EC8=;
-        b=YAzpmToCHjPKwhVBcWenpASCnFKvzdesYgGqqYMRCP6llJmlm7Y0lj5BXG7cxcVRIl
-         1fQhsBHrIpdVSutqQJVbpCEti0sA06lsT2dwQTcMRT/nIwMMC4O94hZhauz+WI9GJO6p
-         12WAtAAApshg2SASKYHsA3S/db71nblcaq3R52IYHCxiGj7rIDzrt1M+tKgLtq7iTSFU
-         aODeaHftNj89LL0xeI0W+Hei2+iJIAT2joCgO2P38SQDfWP6+Ktk5uEgbg+CJVvx4E49
-         ZrGqhnUVONAeEWgjWrVaZ3BhXiqrh+R/IFaUyAlqH2Zjkgh2qY9Z0AkIAL6AblS6MrhU
-         Y3sQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SHbm0jKU3Qf278+OR+FaPiESB5wVrt4XPcJB5hVkN60=;
+        b=gzp6usWwaOaYw59h8kIkVvyKdywVJuZ3NJfd1wircVTJnmvJhRmmVES8Jd/uck+Hcj
+         ihI+fmLC9r0Fv+rle/XhuJNKG4Dhm3WrAd9b6Gcf22o9h5fjVyDFOPWL42kso1BjM5Ur
+         Aq4LNX5vpl4l7pUG4lJYmg9K8myTVDTRz/3Cb/ZLxtzl1N75YXTh7ZwYDQZnWSqTNFQ2
+         0UxAU/6LqBe2UKoLTLyqYslEIfZlCWGgoUmL1E1HN9bAfYM2qIEUaUNBIbaIBGOWuojs
+         YP2RcDR7MZJsyWmuOefOtp80GgmLixZ4eEUTEQOEyE4nnUkCANBzKbPpgq7dBHmtW9D1
+         N1yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KW3Lbde0NrLlMFOPBVL9VFr/xqlRRv5C9s8T2uV/EC8=;
-        b=Kh73BcCih/XGz6m2wMqGCV+dsB5X0Fe4jNy1Kvte34ZL8OxARf4GPkILWGPKTD+nqE
-         HEIoHYr9l3lUIYLRl3k/6dv0oXgmxyUjltjfBXPuTsWSTRZd2wFxsR3bq9eWJr1szcYW
-         exM95KXcqPKW57jMnzE/xmwidpJUnuczFhwqKZNOLzJalgPyOCm58gNEa9EfpOiIN86C
-         W0MldNSEQeqVpVfQCMpmjGqJHUv2Cd+IwjxJoDkgIAVlC5NM6n8/CbpDcvqUPmGmFv5L
-         Ul3m49WYMBBAKEoPvoFKKXnS79dLYd+2YVhpPU9HJx7M9XsWCprLJ/NosCenTvuoT3Qh
-         jVmA==
-X-Gm-Message-State: AGi0PubltkwFXIVoSa1g+2zoLZfHH2laxbHCXmx6+25ZSEW9ciC9YnFC
-        FMsh/6ZKtB6GXnaxSEzmcyTtrQ==
-X-Google-Smtp-Source: APiQypJ8E6I5iZxeoPH0TWIB8ALP7NCLvCUGTgJRpQtCJG/xvf6AdHVA3ceds7R25cl2FPBp6aBIHA==
-X-Received: by 2002:a05:6512:3091:: with SMTP id z17mr12711035lfd.42.1585679932325;
-        Tue, 31 Mar 2020 11:38:52 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id b28sm10331849ljp.90.2020.03.31.11.38.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 11:38:51 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>, stable@vger.kernel.org
-Subject: [PATCH v2 2/2] amba: Initialize dma_parms for amba devices
-Date:   Tue, 31 Mar 2020 20:38:44 +0200
-Message-Id: <20200331183844.30488-3-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200331183844.30488-1-ulf.hansson@linaro.org>
-References: <20200331183844.30488-1-ulf.hansson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SHbm0jKU3Qf278+OR+FaPiESB5wVrt4XPcJB5hVkN60=;
+        b=XODclHaD8Eue349bGJ4BUiCwHx95IHU19r1Sb+RgPZpCU1G4iIDhnukeLhF64tyVbZ
+         ePt40Mv7XGMYyy+tpFSIg3zQBi9H7fUmo5g4Fs0amnJJypPYdn1OY8JGhRh40gaeWzdb
+         s68XSqzdO/y0QmMDOwTSXRrcv1IeC9pPxQYxMg5ffZx6+l+fLIZYtH7ylxoHTi3eTNfO
+         b+VnMEQTEUjzP5BUIl5lc1QJ5CXBvbBnyLh8I71sCws0czUaOzmXHoDzsvpKRm59/+4k
+         UQ3rgZaI/V0pVdSV5eToPXFN3qO9xgzp30hIQCE1zLyNNHfzUj3tG1/1pwjtq7LlZAxf
+         /eqw==
+X-Gm-Message-State: ANhLgQ2N00qLvmzpS+iuFS4xAM1vA97n/0heNn7BwZg4Pepzpm5hALvb
+        6gENJKyY6uycA5cO8BW7P/eTYch+HELiUMk8GKQDrASKskY=
+X-Google-Smtp-Source: ADFU+vt+QKSB0svWikbyaxQU/tNYV7l0CyBNJzadXZUr6nAWWVA3ubW5u0JpCnXSlSUZLq70aMKxIv46KBrhiN7BU4s=
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr19536884pgb.263.1585679979479;
+ Tue, 31 Mar 2020 11:39:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86> <20200317215515.226917-1-ndesaulniers@google.com>
+ <20200327224246.GA12350@ubuntu-m2-xlarge-x86> <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
+ <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
+ <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com>
+ <20200330190312.GA32257@ubuntu-m2-xlarge-x86> <CAK7LNAT1HoV5wUZRdeU0+P1nYAm2xQ4tpOG+7UtT4947QByakg@mail.gmail.com>
+In-Reply-To: <CAK7LNAT1HoV5wUZRdeU0+P1nYAm2xQ4tpOG+7UtT4947QByakg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 31 Mar 2020 11:39:27 -0700
+Message-ID: <CAKwvOd==U6NvvYz8aUz8fUNdvz27pKrn8X5205rFadpGXzRC-Q@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's currently the amba driver's responsibility to initialize the pointer,
-dma_parms, for its corresponding struct device. The benefit with this
-approach allows us to avoid the initialization and to not waste memory for
-the struct device_dma_parameters, as this can be decided on a case by case
-basis.
+On Mon, Mar 30, 2020 at 11:25 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Tue, Mar 31, 2020 at 4:03 AM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > On Mon, Mar 30, 2020 at 11:58:19AM -0700, Nick Desaulniers wrote:
+> > > On Sat, Mar 28, 2020 at 6:57 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > >
+> > > > I also had planned to provide a single switch to change
+> > > > all the tool defaults to LLVM.
+> > > >
+> > > > So, supporting 'LLVM' is fine, but I'd rather want this
+> > > > look symmetrical, and easy to understand.
+> > > >
+> > > > CPP        = $(CC) -E
+> > > > ifneq ($(LLVM),)
+> > >
+> > > Yes, a simple if statement is much simpler than the overly complex patch I had.
+> > >
+> > > > CC         = $(LLVM_DIR)clang
+> > >
+> > > Do we need $LLVM_DIR? Shouldn't users just have that in their $PATH?
+> > >
+> > > Also, I think we need to support suffixed binaries, as debian
+> > > distributes these with version suffixes, as Nathan points out.  Or do
+> > > the debian packages install suffixed binaries AND path versioned
+> > > non-suffixed binaries?
+> >
+> > I think the idea here is that ultimately, the suffixed versions of clang
+> > that Debian has in /usr/bin are symlinks to binaries in
+> > /usr/lib/llvm-#/bin; as a result, a user could say
+> > LLVM_DIR=/usr/lib/llvm-#/bin/ and all of those tools would be picked up
+> > automatically. I am not really sure what is better.
 
-However, it has turned out that this approach is not very practical. Not
-only does it lead to open coding, but also to real errors. In principle
-callers of dma_set_max_seg_size() doesn't check the error code, but just
-assumes it succeeds.
+$ sudo apt install clang-8
+$ which clang-8
+/usr/bin/clang-8
+$ ls -l `!!`
+/usr/bin/clang-8 -> ../lib/llvm-8/bin/clang
+$ ls /usr/lib/llvm-8/bin
+<non suffixed versions>
 
-For these reasons, let's do the initialization from the common amba bus at
-the device registration point. This also follows the way the PCI devices
-are being managed, see pci_device_add().
+Ok, so Nathan, it looks like we don't need the version suffixes.
+Instead, we can be more explicit with our $PATH, and only add the
+above (and bintutils).  I was thinking supporting the suffix was
+required for our CI, but it seems like maybe not.
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
+> I periodically build the latest llvm from the trunk,
+> and install it under my home directory.
+> So, I just thought it would be useful to
+> allow a user to specify the llvm directory.
+> Of course, I can do the equivalent by tweaking PATH, but
+> I hesitate to make the non-released version my default.
 
-Changes in v2:
-	- Move initialization to amba_device_initialize() to be more consistent
-	with how we manage platform devices.
+Respectfully, I strongly disagree.  This should be handled by
+modifications to $PATH, either by your shell's .rc file when you
+always want it, or exported for a session when you want it, or
+prefixed to an invocation for the duration of that command.  We should
+not have a new variable just for the path of a few tools.
 
----
- drivers/amba/bus.c       | 1 +
- include/linux/amba/bus.h | 1 +
- 2 files changed, 2 insertions(+)
+Rather than `make LLVM_DIR=~/llvm-project LLVM=1`, you can do
+`PATH=$PATH:~/llvm-project make LLVM=1`. (or export it manually or via
+your shell .rc, depending on how comfortable you are with that
+version).
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index fe1523664816..8558b629880b 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -645,6 +645,7 @@ static void amba_device_initialize(struct amba_device *dev, const char *name)
- 	dev->dev.release = amba_device_release;
- 	dev->dev.bus = &amba_bustype;
- 	dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-+	dev->dev.dma_parms = &dev->dma_parms;
- 	dev->res.name = dev_name(&dev->dev);
- }
- 
-diff --git a/include/linux/amba/bus.h b/include/linux/amba/bus.h
-index 26f0ecf401ea..0bbfd647f5c6 100644
---- a/include/linux/amba/bus.h
-+++ b/include/linux/amba/bus.h
-@@ -65,6 +65,7 @@ struct amba_device {
- 	struct device		dev;
- 	struct resource		res;
- 	struct clk		*pclk;
-+	struct device_dma_parameters dma_parms;
- 	unsigned int		periphid;
- 	unsigned int		cid;
- 	struct amba_cs_uci_id	uci;
+> Having both LLVM_DIR and LLVM_SUFFIX seems verbose.
+
+I agree, so maybe just LLVM=y, and we can support both non-standard
+locations and debian suffixes via modifications to PATH.
+
+>
+> In fact, the debian provides multiple versions of GCC.
+> For example, my machine has
+>
+> masahiro@pug:~$ ls -1 /usr/bin/gcc-*
+> /usr/bin/gcc-4.8
+> /usr/bin/gcc-5
+> /usr/bin/gcc-7
+> /usr/bin/gcc-ar
+> /usr/bin/gcc-ar-4.8
+> /usr/bin/gcc-ar-5
+> /usr/bin/gcc-ar-7
+> /usr/bin/gcc-nm
+> /usr/bin/gcc-nm-4.8
+> /usr/bin/gcc-nm-5
+> /usr/bin/gcc-nm-7
+> /usr/bin/gcc-ranlib
+> /usr/bin/gcc-ranlib-4.8
+> /usr/bin/gcc-ranlib-5
+> /usr/bin/gcc-ranlib-7
+>
+> But, nobody has suggested GCC_SUFFIX.
+>
+> So, I guess CROSS_COMPILE was enough to
+> choose a specific tool version.
+
+Or no one was testing specific versions of gcc with more than one
+installed.  I can ask the KernelCI folks next week if this is an issue
+they face or have faced.
 -- 
-2.20.1
-
+Thanks,
+~Nick Desaulniers
