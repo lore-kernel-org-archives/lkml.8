@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE71C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60519C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FCE2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322802137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646247;
-	bh=LUr+Qy3SYx/y4w3WfYIPeBIObF+JeJjDiX67mmvdWiM=;
+	s=default; t=1585646250;
+	bh=Tj/iq0FRyUK/KJfzZTg+0+d4QNo001tjbb7+70vHkUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GpHnjdYvFxS+5LOfD8zeto8/nhpaaabEmRTAUGQSwnBxJurTkuyYgMpQwBLn6XU0h
-	 ZvLSCwq1qIEsLvYdAOPWzULF+u82kPf2wF1W/B3ZqO6jn5HL5RWq+TJyKWGuFpF+B3
-	 gzUaCY75Ax2RqDaajDhHjw7kX8oJldyOZJW3Kwew=
+	b=CcCdbEWhQC/SsaRutsvE+ALG9x98EyGXAvub/URCV1IY3vpFiW3LebBMad+LPcl99
+	 2SJegXFKnBVV0g2ikw5khL53a1Ayc+pPpMZx9JBgXYNSpUR1TenRswRhclHkAnXjAX
+	 IR9gwgbjXdWapsQS5gULxcbJYtxA39aLUnHfvZWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbgCaJR0 (ORCPT
+        id S1732053AbgCaJR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38390 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731897AbgCaJRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:19 -0400
+        id S1732037AbgCaJRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9217F20675;
-        Tue, 31 Mar 2020 09:17:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C006B20675;
+        Tue, 31 Mar 2020 09:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646239;
-        bh=LUr+Qy3SYx/y4w3WfYIPeBIObF+JeJjDiX67mmvdWiM=;
+        s=default; t=1585646244;
+        bh=Tj/iq0FRyUK/KJfzZTg+0+d4QNo001tjbb7+70vHkUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AU+VqdjCxg1lHjSr9bCdhV7ZwkzNg5sApLy0vfJziKvHP4DRlJP1HjgG2oPpGaSxr
-         0q4CxseznnZhcWj/yUyNQeNDm0FUsO9Dv0rI209jtdUFsugOY8Bgs0MtW2r4eCIoQ8
-         Jf9Zm7AsF8HcKtYMSTDidJc7B41tTC+JPLX6xOb0=
+        b=lucerV/qlx8Fswy2eQZgRCwCtNKhHu6GdQAIyLBpv7MccpBqS8+jEm7qIAJXlXEJo
+         xWegBju6G6MC7lrQHvq8U+T/ggEaPdTnAKBiEWFhV2gvn2Y1wBUQjs1sgFUfPDNqD9
+         qPU5pBCWar0GL7A+p/UDbzr5UebBX/YdgSGs+o3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 126/155] netfilter: nft_fwd_netdev: allow to redirect to ifb via ingress
-Date:   Tue, 31 Mar 2020 10:59:26 +0200
-Message-Id: <20200331085432.460087902@linuxfoundation.org>
+        stable@vger.kernel.org, Xi Wang <xi.wang@gmail.com>,
+        Luke Nelson <luke.r.nels@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.4 128/155] bpf, x32: Fix bug with JMP32 JSET BPF_X checking upper bits
+Date:   Tue, 31 Mar 2020 10:59:28 +0200
+Message-Id: <20200331085432.664230082@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -58,38 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Luke Nelson <lukenels@cs.washington.edu>
 
-commit bcfabee1afd99484b6ba067361b8678e28bbc065 upstream.
+commit 80f1f85036355e5581ec0b99913410345ad3491b upstream.
 
-Set skb->tc_redirected to 1, otherwise the ifb driver drops the packet.
-Set skb->tc_from_ingress to 1 to reinject the packet back to the ingress
-path after leaving the ifb egress path.
+The current x32 BPF JIT is incorrect for JMP32 JSET BPF_X when the upper
+32 bits of operand registers are non-zero in certain situations.
 
-This patch inconditionally sets on these two skb fields that are
-meaningful to the ifb driver. The existing forward action is guaranteed
-to run from ingress path.
+The problem is in the following code:
 
-Fixes: 39e6dea28adc ("netfilter: nf_tables: add forward expression to the netdev family")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  case BPF_JMP | BPF_JSET | BPF_X:
+  case BPF_JMP32 | BPF_JSET | BPF_X:
+  ...
+
+  /* and dreg_lo,sreg_lo */
+  EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
+  /* and dreg_hi,sreg_hi */
+  EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
+  /* or dreg_lo,dreg_hi */
+  EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
+
+This code checks the upper bits of the operand registers regardless if
+the BPF instruction is BPF_JMP32 or BPF_JMP64. Registers dreg_hi and
+dreg_lo are not loaded from the stack for BPF_JMP32, however, they can
+still be polluted with values from previous instructions.
+
+The following BPF program demonstrates the bug. The jset64 instruction
+loads the temporary registers and performs the jump, since ((u64)r7 &
+(u64)r8) is non-zero. The jset32 should _not_ be taken, as the lower
+32 bits are all zero, however, the current JIT will take the branch due
+the pollution of temporary registers from the earlier jset64.
+
+  mov64    r0, 0
+  ld64     r7, 0x8000000000000000
+  ld64     r8, 0x8000000000000000
+  jset64   r7, r8, 1
+  exit
+  jset32   r7, r8, 1
+  mov64    r0, 2
+  exit
+
+The expected return value of this program is 2; under the buggy x32 JIT
+it returns 0. The fix is to skip using the upper 32 bits for jset32 and
+compare the upper 32 bits for jset64 only.
+
+All tests in test_bpf.ko and selftests/bpf/test_verifier continue to
+pass with this change.
+
+We found this bug using our automated verification tool, Serval.
+
+Fixes: 69f827eb6e14 ("x32: bpf: implement jitting of JMP32")
+Co-developed-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Xi Wang <xi.wang@gmail.com>
+Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20200305234416.31597-1-luke.r.nels@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_fwd_netdev.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/net/bpf_jit_comp32.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/net/netfilter/nft_fwd_netdev.c
-+++ b/net/netfilter/nft_fwd_netdev.c
-@@ -28,6 +28,10 @@ static void nft_fwd_netdev_eval(const st
- 	struct nft_fwd_netdev *priv = nft_expr_priv(expr);
- 	int oif = regs->data[priv->sreg_dev];
- 
-+	/* These are used by ifb only. */
-+	pkt->skb->tc_redirected = 1;
-+	pkt->skb->tc_from_ingress = 1;
-+
- 	nf_fwd_netdev_egress(pkt, oif);
- 	regs->verdict.code = NF_STOLEN;
- }
+--- a/arch/x86/net/bpf_jit_comp32.c
++++ b/arch/x86/net/bpf_jit_comp32.c
+@@ -2039,10 +2039,12 @@ static int do_jit(struct bpf_prog *bpf_p
+ 			}
+ 			/* and dreg_lo,sreg_lo */
+ 			EMIT2(0x23, add_2reg(0xC0, sreg_lo, dreg_lo));
+-			/* and dreg_hi,sreg_hi */
+-			EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
+-			/* or dreg_lo,dreg_hi */
+-			EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
++			if (is_jmp64) {
++				/* and dreg_hi,sreg_hi */
++				EMIT2(0x23, add_2reg(0xC0, sreg_hi, dreg_hi));
++				/* or dreg_lo,dreg_hi */
++				EMIT2(0x09, add_2reg(0xC0, dreg_lo, dreg_hi));
++			}
+ 			goto emit_cond_jmp;
+ 		}
+ 		case BPF_JMP | BPF_JSET | BPF_K:
 
 
