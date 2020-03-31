@@ -2,146 +2,224 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978C4C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4EEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BE721973
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355B220714
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="naBdxTbY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gkLrXlWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbgCaWst (ORCPT
+        id S1731471AbgCaWs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:48:49 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35370 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731259AbgCaWst (ORCPT
+        Tue, 31 Mar 2020 18:48:58 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39854 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731407AbgCaWs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:48:49 -0400
-Received: by mail-pj1-f68.google.com with SMTP id g9so1777982pjp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:48:48 -0700 (PDT)
+        Tue, 31 Mar 2020 18:48:57 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i20so23764228ljn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:48:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=PzUxe8ko8vz1S1g23peXxZLjPYDb7Lz9ppyXcN8eAuw=;
-        b=naBdxTbYLPllr28JdItkaY0txWH0NLxTtGo3sh2eGsw+cz3uQyPl0Rsi5YuCe3zC3n
-         /LjqrIyB3giSCzTCcFxs5fgLLyqdBLvBw5eADih+f0RBO5P7a/Y1gptbORl9Fw4GpXM/
-         HGix4fz7zBuR/ljJV/EGs+BpM9ME0/2894ssYuRyFcc8JUpk3snOJRGxCEG6mF0aw5/l
-         l0d1UAXbQtMLcJczthPZbiwElkHwkbF6yJMAvN1WTWD8cbLpuB1Yt1geMxMslVzr+c8j
-         Oky0l46dkr+bnWjx6KSXfhPvrD+CN7pXrLHIv3NYoDxCd41QZjC6x7fVv5R8+lVD8nx6
-         QriA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7EgE3rQUBwKB+OsNaorPCoGcvdaSTA93aqDrB6D4TEc=;
+        b=gkLrXlWeXFOSVICast5Vdl5R5P3IOcA/C6dTpriALza9D4E6Y6Qd652tVMYoj2pY3P
+         DN47bRyHES/yPSQOm7K3SMnISIFaCOSoghFeabV7lMExqinTjNSHkz7tKMQ+H19tgYzl
+         A9372xTpCD9MIMVGWYWT+F5jGZWz+Fs2zGfe2w+2SUu/Il1cptPCYi0tM/+XZRpAIR3D
+         xJ4G3wavpa1cE53/NVAoTG99j8pRrrnlsWvC0aUIASE8vWsF6GaozXk/FWJKf698GgGJ
+         kffciFjXKMUs3pCMAGQDP4ubtD5jtjSITiT14urXLT87awxyqjDtvVLgtoSMrntQJLEB
+         9oKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PzUxe8ko8vz1S1g23peXxZLjPYDb7Lz9ppyXcN8eAuw=;
-        b=jOdlFPwSCEJaX0vk2ayqM1FRU1GnYuZuOmo20Wk3srJxFYMvqAj3UmuUbCC/rfz1Sa
-         O8Uk2uqLA7X7nhNrsqPwvFvbTmrj7HIzB6vrE9xaBwtIa2Fb2XdAQZzC61chT4d2AlrY
-         aYkl8lM53jYyO0/hAG0fk07c/J2ZL/e8ccVaaYRkC5R5EuM2D/UTaibRMuKMP9afFar5
-         CwjBPpzncm2k+JRQSSp3u14ewCSdEwYnBJ4tzDJ6wGpDKK4WZUJWu8PXg8bkKA6AR2Tc
-         OuTcz6T/ZQuVlJH5oAktOEotD63MhB101bpCc7eJHSPZ9iUep7VcL85W72/2PHSQyYJR
-         D4aQ==
-X-Gm-Message-State: AGi0PuYgexUZ7nAiNMz27MXpCZ/zdGwJs/JSkcYln02JDWfprehYuCpv
-        rrEyWvcARO0LjtdIVwQwaWuCcoJrSlM=
-X-Google-Smtp-Source: APiQypJkW7S7TSzizhePr+uNfJv4g9bpFLpYHxkuFM8tDqrRgnbYrww+BeK6AofGL9Oa3dGYvTx6Ww==
-X-Received: by 2002:a17:902:8546:: with SMTP id d6mr9102382plo.280.1585694927175;
-        Tue, 31 Mar 2020 15:48:47 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id k14sm158906pfg.15.2020.03.31.15.48.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 31 Mar 2020 15:48:46 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        bhelgaas@google.com, kishon@ti.com, paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH v2] PCI: dwc: Warn MEM resource size exceeds max for 32-bits
-Date:   Tue, 31 Mar 2020 15:48:35 -0700
-Message-Id: <1585694915-32005-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7EgE3rQUBwKB+OsNaorPCoGcvdaSTA93aqDrB6D4TEc=;
+        b=G+Z/XbNr00XMqkXW/1ceWPR4ZixayxmPG1josebOf9xEdfjn0Kn6jqeOYK1PolW4I+
+         /FcGJmdF63KjnSfLcO3ZuZjlvdeWySOak//r2hdmCh7+S/SpUmw9j10iK7z+zZuj+lMU
+         o4veMt2wbP0+SgQ+WavU9tPJ6tbKiYYEFOGp6qVubdCKItQ06AN0WUroqQ/HqdlDtGqN
+         1dBs3fjVK/orYpNvzZ4qvGGtuIqjOTRniV/DLs2heV3rnykKm1BKkecyEIuE7vP6TCqZ
+         Pi7GPqygdgnc7QL4iQ/EEellaLFGLOb4YwjJCB1wQc7d9MFsMG9aqirOI+8rW5yQq17O
+         Uugg==
+X-Gm-Message-State: AGi0PuZz6t+Wl8ORjiAYHVt10bZ1LY1DggxUSSJlXBQIR2K6zm6TdsHs
+        RhooU/SblmQw99AVOs6qnN2nU4aqcklYNGWUva4UgA==
+X-Google-Smtp-Source: APiQypJ+B+qhItODgJVwcNmLxHZLIAdDTta58U7ToLrZU85bMoPFj8kp5unGdwCGxs81XDXJ/rJlN0fJg9AFRYY2PLs=
+X-Received: by 2002:a2e:8015:: with SMTP id j21mr10850819ljg.165.1585694933444;
+ Tue, 31 Mar 2020 15:48:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200331141450.035873853@linuxfoundation.org>
+In-Reply-To: <20200331141450.035873853@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 1 Apr 2020 04:18:41 +0530
+Message-ID: <CA+G9fYuU-5o5DG1VSQuCPx=TSs61-1jBekdGb5yvMRz4ur3BQg@mail.gmail.com>
+Subject: Re: [PATCH 5.5 000/171] 5.5.14-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        john.fastabend@gmail.com, komachi.yoshiki@gmail.com,
+        Andrii Nakryiko <andriin@fb.com>, lukenels@cs.washington.edu,
+        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
+On Tue, 31 Mar 2020 at 21:02, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.5.14 release.
+> There are 171 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 02 Apr 2020 14:12:02 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.5.14-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.5.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Output a warning for MEM resource size with non-zero upper 32-bits.
 
-ATU programming functions limit the size of the translated region to 4GB
-by using a u32 size parameter. Function dw_pcie_prog_outbound_atu() does
-not program the upper 32-bit ATU limit register. These issues may result
-in undefined behavior for resource sizes with non-zero upper 32-bits.
+Results from Linaro=E2=80=99s test farm.
+Regressions on x86_64 and i386.
 
-For example, a 128GB address space starting at physical CPU address of
-0x2000000000 with size of 0x2000000000 needs the following values
-programmed into the lower and upper 32-bit limit registers:
- 0x3fffffff in the upper 32-bit limit register
- 0xffffffff in the lower 32-bit limit register
+selftests bpf test_verifier reports as failed.
+This test PASSED on v5.5.13
 
-Currently, only the lower 32-bit limit register is programmed with a
-value of 0xffffffff but the upper 32-bit limit register is not being
-programmed. As a result, the upper 32-bit limit register remains at its
-default value after reset of 0x0.
+#554/p jgt32: range bound deduction, reg op imm FAIL
+Failed to load prog 'Success'!
+R8 unbounded memory access, make sure to bounds check any array access
+into a map
+verification time 141 usec
+stack depth 8
+processed 16 insns (limit 1000000) max_states_per_insn 0 total_states
+1 peak_states 1 mark_read 1
+#555/p jgt32: range bound deduction, reg1 op reg2, reg1 unknown FAIL
+Failed to load prog 'Success'!
+R8 unbounded memory access, make sure to bounds check any array access
+into a map
+verification time 94 usec
+stack depth 8
+processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
+1 peak_states 1 mark_read 1
+#556/p jle32: range bound deduction, reg1 op reg2, reg2 unknown FAIL
+Failed to load prog 'Success'!
+R8 unbounded memory access, make sure to bounds check any array access
+into a map
+verification time 68 usec
+stack depth 8
+processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
+1 peak_states 1 mark_read 1
 
-This would be a problem for a 128GB PCIe space because the internal
-calculation of the limit address in ATU programming functions in effect
-reduces the size to 4GB. This may also produce undefined behavior since
-the ATU limit address may be lower than the ATU base address.
 
-This limitation also means that multiple ATUs would need to be used to
-map larger regions.
+Summary
+------------------------------------------------------------------------
 
-ATU programming functions may be changed to specify a u64 size parameter
-for the translated region. Along with this change, the internal
-calculation of the limit address, the address of the last byte in the
-translated region, needs to change such that both the lower 32-bit and
-upper 32-bit limit registers can be programmed correctly.
+kernel: 5.5.14-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.5.y
+git commit: b487728d5e18490b0e551a6518d0647ae641ca3a
+git describe: v5.5.13-172-gb487728d5e18
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
+ld/v5.5.13-172-gb487728d5e18
 
-Without change, this issue can go unnoticed. A warning may prompt the
-user to look for possible issues.
+Regressions (compared to build v5.5.13)
+  x86_64:
+  qemu_x86_64:
+     kselftest: bpf_test_verifier - FAILED
+    # Summary 1577 PASSED, 0 SKIPPED, 3 FAILED
 
-Changing the ATU programming functions impacts all PCIe drivers that
-depend on dwc which seem to be currently happy with the u32 size limit.
-A solution that allows existing PCIe drivers to phase into the fix on
-their own individual schedules, if they need to, may be desirable.
+No fixes (compared to build v5.5.13)
 
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Ran 27293 total tests in the following environments and test suites.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 395feb8ca051..df5ebe02ffca 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-+	resource_size_t mem_size;
- 	u32 hdr_type;
- 	int ret;
- 
-@@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		case IORESOURCE_MEM:
- 			pp->mem = win->res;
- 			pp->mem->name = "MEM";
--			pp->mem_size = resource_size(pp->mem);
-+			mem_size = resource_size(pp->mem);
-+			if (upper_32_bits(mem_size))
-+				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
-+			pp->mem_size = mem_size;
- 			pp->mem_bus_addr = pp->mem->start - win->offset;
- 			break;
- 		case 0:
--- 
-2.7.4
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* ltp-syscalls-tests
+* kvm-unit-tests
+* ltp-cve-tests
+* ltp-open-posix-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+ref:
+https://lkft.validation.linaro.org/scheduler/job/1327830#L3067
+https://lkft.validation.linaro.org/scheduler/job/1327830#L3067
+https://lkft.validation.linaro.org/scheduler/job/1328415#L1656
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
