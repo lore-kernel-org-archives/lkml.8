@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C613C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74E9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0521320772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB09F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645860;
-	bh=HShBr38L9TtO0Jru578++oUHXplOTkg6vdn9iu3NCIQ=;
+	s=default; t=1585645862;
+	bh=QBRWgqCrNTqkqSiXzSZqGwRGdI6o65xRYc1R9QeALGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d78KD5QuJJSlTn6pxjg24kSAPyoOLq8HnzyQmXcmBb/JBx8Rs+NqSnrxKHcbBUAa8
-	 OBmAwN/mMJVUw2zxwLqviZt5f3R2kVpYqbF9dn6A1pqw3ST2HZhuNb70SjuPYI4r9L
-	 isUgkSZgJLD/KJoTB6Tx4eTIY+REkPwWwbCZDozs=
+	b=n56q7PFz1QWHficNq9TpZAg1Uyx7SxMIlHlrkzluDcBUsCHIiV8tckqVw892cPXMt
+	 eq9Boat4QDdB7Ivybms6nP8Q7RJIFEc7FGLKF/3UTht7PwCPuYujH06kusBCh0BW+h
+	 VI704Xv3jMvnMog6XY3NtQvOlluHHXMuZZTAhzGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731520AbgCaJK6 (ORCPT
+        id S1731656AbgCaJLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54808 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:11:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731635AbgCaJKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:10:52 -0400
+        id S1731642AbgCaJKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:10:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA8E20772;
-        Tue, 31 Mar 2020 09:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1D6120787;
+        Tue, 31 Mar 2020 09:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645851;
-        bh=HShBr38L9TtO0Jru578++oUHXplOTkg6vdn9iu3NCIQ=;
+        s=default; t=1585645854;
+        bh=QBRWgqCrNTqkqSiXzSZqGwRGdI6o65xRYc1R9QeALGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ojjA0IVe6r+/ESbABBSI29l/H78l8iG9Siq9qubyI7u0Fi2hozEr7Km8flaajJ5Zv
-         aPwoCdONp8hlCPhBEZj5tBiMOeda0bCP/NTIX7i3gMbQQNASwff9kRE5huXAuAkQPi
-         fIvJeN9dFwy/AIQMb8CFV/REHaCFUS8h/BiyoXoo=
+        b=0Yen5+R9wykkufjX6Fmmisstmh1HrxhyclnRV0QgJJCTYmgwIav+GhV1/9tg+cD0r
+         k+z4hhy8nQkRdlWVQjz612bcP24fY8EEGKJ53TuPJ2PXaUO0FYag+9j26fiNOZozvd
+         WwiINhGtYwJX5cnvyzkz7z4bCPiSxeuDF9w9HNPY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Bruno Meneguele <bmeneg@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 014/155] mlxsw: spectrum_mr: Fix list iteration in error path
-Date:   Tue, 31 Mar 2020 10:57:34 +0200
-Message-Id: <20200331085419.978106381@linuxfoundation.org>
+Subject: [PATCH 5.4 015/155] net/bpfilter: fix dprintf usage for /dev/kmsg
+Date:   Tue, 31 Mar 2020 10:57:35 +0200
+Message-Id: <20200331085420.091785566@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,48 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Bruno Meneguele <bmeneg@redhat.com>
 
-[ Upstream commit f6bf1bafdc2152bb22aff3a4e947f2441a1d49e2 ]
+[ Upstream commit 13d0f7b814d9b4c67e60d8c2820c86ea181e7d99 ]
 
-list_for_each_entry_from_reverse() iterates backwards over the list from
-the current position, but in the error path we should start from the
-previous position.
+The bpfilter UMH code was recently changed to log its informative messages to
+/dev/kmsg, however this interface doesn't support SEEK_CUR yet, used by
+dprintf(). As result dprintf() returns -EINVAL and doesn't log anything.
 
-Fix this by using list_for_each_entry_continue_reverse() instead.
+However there already had some discussions about supporting SEEK_CUR into
+/dev/kmsg interface in the past it wasn't concluded. Since the only user of
+that from userspace perspective inside the kernel is the bpfilter UMH
+(userspace) module it's better to correct it here instead waiting a conclusion
+on the interface.
 
-This suppresses the following error from coccinelle:
-
-drivers/net/ethernet/mellanox/mlxsw//spectrum_mr.c:655:34-38: ERROR:
-invalid reference to the index variable of the iterator on line 636
-
-Fixes: c011ec1bbfd6 ("mlxsw: spectrum: Add the multicast routing offloading logic")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: 36c4357c63f3 ("net: bpfilter: print umh messages to /dev/kmsg")
+Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_mr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/bpfilter/main.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_mr.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_mr.c
-@@ -637,12 +637,12 @@ static int mlxsw_sp_mr_vif_resolve(struc
- 	return 0;
+--- a/net/bpfilter/main.c
++++ b/net/bpfilter/main.c
+@@ -10,7 +10,7 @@
+ #include <asm/unistd.h>
+ #include "msgfmt.h"
  
- err_erif_unresolve:
--	list_for_each_entry_from_reverse(erve, &mr_vif->route_evif_list,
--					 vif_node)
-+	list_for_each_entry_continue_reverse(erve, &mr_vif->route_evif_list,
-+					     vif_node)
- 		mlxsw_sp_mr_route_evif_unresolve(mr_table, erve);
- err_irif_unresolve:
--	list_for_each_entry_from_reverse(irve, &mr_vif->route_ivif_list,
--					 vif_node)
-+	list_for_each_entry_continue_reverse(irve, &mr_vif->route_ivif_list,
-+					     vif_node)
- 		mlxsw_sp_mr_route_ivif_unresolve(mr_table, irve);
- 	mr_vif->rif = NULL;
- 	return err;
+-int debug_fd;
++FILE *debug_f;
+ 
+ static int handle_get_cmd(struct mbox_request *cmd)
+ {
+@@ -35,9 +35,10 @@ static void loop(void)
+ 		struct mbox_reply reply;
+ 		int n;
+ 
++		fprintf(debug_f, "testing the buffer\n");
+ 		n = read(0, &req, sizeof(req));
+ 		if (n != sizeof(req)) {
+-			dprintf(debug_fd, "invalid request %d\n", n);
++			fprintf(debug_f, "invalid request %d\n", n);
+ 			return;
+ 		}
+ 
+@@ -47,7 +48,7 @@ static void loop(void)
+ 
+ 		n = write(1, &reply, sizeof(reply));
+ 		if (n != sizeof(reply)) {
+-			dprintf(debug_fd, "reply failed %d\n", n);
++			fprintf(debug_f, "reply failed %d\n", n);
+ 			return;
+ 		}
+ 	}
+@@ -55,9 +56,10 @@ static void loop(void)
+ 
+ int main(void)
+ {
+-	debug_fd = open("/dev/kmsg", 00000002);
+-	dprintf(debug_fd, "Started bpfilter\n");
++	debug_f = fopen("/dev/kmsg", "w");
++	setvbuf(debug_f, 0, _IOLBF, 0);
++	fprintf(debug_f, "Started bpfilter\n");
+ 	loop();
+-	close(debug_fd);
++	fclose(debug_f);
+ 	return 0;
+ }
 
 
