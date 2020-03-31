@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755C8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360ADC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDF5208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D0C208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645578;
-	bh=CY/wbAodfT00hdTU5A7Rz1+tsKBLLbSu1NJDFYyHIy4=;
+	s=default; t=1585645582;
+	bh=WdrpLdSsYq3kQgncJPzNCgTZYn/K/kVhYZKhp/uifWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIFpIuh+XZZ/gkJkzTISaM9k4rl7QP7QHsFAl8RI+YPye9ux/7/8dVuWDRwfSbELt
-	 lMAzbEmqmn07rYXsnHz6O6egapJHB0BdUSDZ/zmm3Jt1Z9KauMpg6VadZY8/jE/wV5
-	 LlC9To+JZFBr2kSOa1MrQgKER9VtVNvY6idH6Kho=
+	b=0SdxR+61OyB2UmOIciHe4x8/m9sUBbxx8dDE3MyLg9vrjlxxmIEV+dKOC5foKhcxB
+	 j0YZt1AUFqXPLr+KlAvfL+kUZe0ale3ooTWKFAeiOd9e7DPfPYqhrWvzupffSwWDtV
+	 MuO6gbzSEk4+53eVBKoaF9Zk3BHJofYjd7dZiHkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbgCaJGQ (ORCPT
+        id S1731131AbgCaJGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:06:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47462 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:06:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731110AbgCaJGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:06:08 -0400
+        id S1731116AbgCaJGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:06:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC84C20787;
-        Tue, 31 Mar 2020 09:06:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FC2C20787;
+        Tue, 31 Mar 2020 09:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645568;
-        bh=CY/wbAodfT00hdTU5A7Rz1+tsKBLLbSu1NJDFYyHIy4=;
+        s=default; t=1585645574;
+        bh=WdrpLdSsYq3kQgncJPzNCgTZYn/K/kVhYZKhp/uifWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FkH6Rcw2MUV99AvSWg6ncCRUrE0xgka55sihZufwHL7w2pIAPIqyyj8xnGv+4kwUW
-         ed1dYstZM8jlpcSjYrfG7cnHJFWa9jxGemOk2l0rfZMjf/+wV/LonI/s2824myKJ4I
-         yLC0wnQEHB05WkOCdtecqJW5/b4lXMgmE/vyJzeI=
+        b=LSfou71gnQyjgYZD3l8+3f3yK0SQ0ADD8M82qIH4qs94wyPYm9u9xFIY1Y/yjgG56
+         74uMRFOVU2c7BVjLzaDoPSU+d0gO1oa84zf26TaqVDSqY9OOjS0V4NKgH/sOsJIN9/
+         RnRzoeGZ2y+/cw2OqwyGqWRziBam5MKyYcIsJ1sM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.5 093/170] ceph: fix memory leak in ceph_cleanup_snapid_map()
-Date:   Tue, 31 Mar 2020 10:58:27 +0200
-Message-Id: <20200331085434.134918164@linuxfoundation.org>
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        stable@kernel.org, Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.5 095/170] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Date:   Tue, 31 Mar 2020 10:58:29 +0200
+Message-Id: <20200331085434.336896278@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,50 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Henriques <lhenriques@suse.com>
+From: Roger Quadros <rogerq@ti.com>
 
-commit c8d6ee01449cd0d2f30410681cccb616a88f50b1 upstream.
+commit cfb5d65f25959f724081bae8445a0241db606af6 upstream.
 
-kmemleak reports the following memory leak:
+The L3 interconnect's memory map is from 0x0 to
+0xffffffff. Out of this, System memory (SDRAM) can be
+accessed from 0x80000000 to 0xffffffff (2GB)
 
-unreferenced object 0xffff88821feac8a0 (size 96):
-  comm "kworker/1:0", pid 17, jiffies 4294896362 (age 20.512s)
-  hex dump (first 32 bytes):
-    a0 c8 ea 1f 82 88 ff ff 00 c9 ea 1f 82 88 ff ff  ................
-    00 00 00 00 00 00 00 00 00 01 00 00 00 00 ad de  ................
-  backtrace:
-    [<00000000b3ea77fb>] ceph_get_snapid_map+0x75/0x2a0
-    [<00000000d4060942>] fill_inode+0xb26/0x1010
-    [<0000000049da6206>] ceph_readdir_prepopulate+0x389/0xc40
-    [<00000000e2fe2549>] dispatch+0x11ab/0x1521
-    [<000000007700b894>] ceph_con_workfn+0xf3d/0x3240
-    [<0000000039138a41>] process_one_work+0x24d/0x590
-    [<00000000eb751f34>] worker_thread+0x4a/0x3d0
-    [<000000007e8f0d42>] kthread+0xfb/0x130
-    [<00000000d49bd1fa>] ret_from_fork+0x3a/0x50
+DRA7 does support 4GB of SDRAM but upper 2GB can only be
+accessed by the MPU subsystem.
 
-A kfree is missing while looping the 'to_free' list of ceph_snapid_map
-objects.
+Add the dma-ranges property to reflect the physical address limit
+of the L3 bus.
 
-Cc: stable@vger.kernel.org
-Fixes: 75c9627efb72 ("ceph: map snapid to anonymous bdev ID")
-Signed-off-by: Luis Henriques <lhenriques@suse.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
+and CONFIG_ARM_LPAE enabled. This is because the controller
+supports 64-bit DMA and its driver sets the dma_mask to 64-bit
+thus resulting in DMA accesses beyond L3 limit of 2G.
+
+Setting the correct bus_dma_limit fixes the issue.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Cc: stable@kernel.org
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/snap.c |    1 +
+ arch/arm/boot/dts/dra7.dtsi |    1 +
  1 file changed, 1 insertion(+)
 
---- a/fs/ceph/snap.c
-+++ b/fs/ceph/snap.c
-@@ -1155,5 +1155,6 @@ void ceph_cleanup_snapid_map(struct ceph
- 			pr_err("snapid map %llx -> %x still in use\n",
- 			       sm->snap, sm->dev);
- 		}
-+		kfree(sm);
- 	}
- }
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -148,6 +148,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
++		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 		ti,hwmods = "l3_main_1", "l3_main_2";
+ 		reg = <0x0 0x44000000 0x0 0x1000000>,
+ 		      <0x0 0x45000000 0x0 0x1000>;
 
 
