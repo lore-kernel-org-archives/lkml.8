@@ -2,281 +2,108 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3F9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41923C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F0B20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC0120CC7
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l61YYZbY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlatPw3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgCaR0W (ORCPT
+        id S1726307AbgCaR1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:26:22 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37466 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725947AbgCaR0V (ORCPT
+        Tue, 31 Mar 2020 13:27:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34306 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgCaR1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:26:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585675580; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=DwhIqupMXC0dslLDYbxcWJRUxh3pizy7OnAeG1p59EQ=; b=l61YYZbYzrf0JzLRU+9zaaC+lirqiHHbK3gscF5z+vOiqZomk7t+AEJAKWssbXlh6e/1E8S5
- 8S7Swwxxq/bh3rm+n5icIh32boGsHoxga8ERVat4Ajkc+I76PW+pRkYqcM3lvDHDxRovAYKS
- ID5ph1fZYeSX5EoXjot5Ceor6es=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e837d2d.7f13f36acd50-smtp-out-n05;
- Tue, 31 Mar 2020 17:26:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C9A14C433D2; Tue, 31 Mar 2020 17:26:05 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E8D03C433F2;
-        Tue, 31 Mar 2020 17:26:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E8D03C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 31 Mar 2020 11:26:02 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        sibis@codeaurora.org, saravanak@google.com, viresh.kumar@linaro.org
-Subject: Re: [PATCH 3/5] drm: msm: scale DDR BW along with GPU frequency
-Message-ID: <20200331172600.GB11573@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        sibis@codeaurora.org, saravanak@google.com, viresh.kumar@linaro.org
-References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
- <1585641353-23229-4-git-send-email-smasetty@codeaurora.org>
+        Tue, 31 Mar 2020 13:27:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id o1so7869232edv.1;
+        Tue, 31 Mar 2020 10:27:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=mcrAQUUjnBmTfyv+ejaR6lSeHh26TbNTkCdqRT85gWA=;
+        b=YlatPw3kMTZwYOzqxtb8S39edjOKJUTha51WoQFYTrWT2PcTiobKlbWzEfHJlvYy+a
+         9GOelMXYppY/JnKF1cN1iDf6J+FZUMhR768t1nn6gjZo1v9sgd9h8nCMJIxt8PJV9It+
+         kTTMuWUcPGLQJpryr5ULgdzywzXas3lCBjOO6J6TttPwZsXZ5y1Lw7zjMUig/LDq0Dz8
+         egwlf/F1mW7mHmi+fTmxvv00+9CvhH//IYkfzVkROwkUCt0JAhFm0O+n9Tnv6iusuFB8
+         N0toXzSmnJDRdhuRwpN0M+1oLnsYVgOj00xNdA//GzFqvVj6cbr+vphNKuazKqqfWLSB
+         Rg1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mcrAQUUjnBmTfyv+ejaR6lSeHh26TbNTkCdqRT85gWA=;
+        b=qFE2eRjlLESUwOiHpK2yQm1cmqht2FqzhkrQgvhttlu7KfB0aYfRkLYuE73THPUea+
+         n6LE52Du/AxK1qGgzZmk8ySUV+kmefmEGv9AakgkwWBeijokfIj+RiP3Axf/AJIzl3S8
+         xl/kuO198Wh+eWcKryKOXfe+4bxEVJInNCoAGxK4fbDaCMckwzKpmD2rgELn6Yf26cuh
+         hePYj0MZ0xlTiqW+jheUFfJHzTMRLqeMmWfU9oqKBAWlCTbav/0+hS2a5p2xh8AtV9iu
+         4r1yj6V6o3kW60ifWHDNj6kcIAwRWP+d+9peFKxxUzhG2R0haAazmxKVQNsZvCKJUdIE
+         xgKw==
+X-Gm-Message-State: ANhLgQ3qoEG3Qhoe//mDHlsq6R0/tqMq5JoV6qyez+YpgqpKDgA1D5cg
+        uI4NG0OG2l0gtvCd8CjeG4chQuu6
+X-Google-Smtp-Source: APiQypL7Rfa6dCTvHvhnrKLsJSWybE0ElcF/fHPTVnCGjVuFvFtf2WL13/3pMwTMBF64EQQv0IWoOQ==
+X-Received: by 2002:a05:651c:22e:: with SMTP id z14mr10406742ljn.64.1585675282154;
+        Tue, 31 Mar 2020 10:21:22 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id l7sm3452845lfg.79.2020.03.31.10.21.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 10:21:21 -0700 (PDT)
+Subject: Re: [PATCH 5/9] power: supply: smb347-charger: Implement device-tree
+ support
+To:     Jonghwa Lee <jonghwa3.lee@samsung.com>,
+        David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Myungjoo Ham <myungjoo.ham@samsung.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        mika.westerberg@linux.intel.com, ramakrishna.pallala@intel.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200329161552.215075-1-david@ixit.cz>
+ <CGME20200329163055epcas1p2cb50a5892440ecff127f87cb4306571e@epcas1p2.samsung.com>
+ <20200329162128.218584-6-david@ixit.cz>
+ <2dc4e25c-4b3a-1675-1f9e-0437a3526835@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <44ab265e-4a67-bc26-d931-ca7d155171a2@gmail.com>
+Date:   Tue, 31 Mar 2020 20:20:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585641353-23229-4-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <2dc4e25c-4b3a-1675-1f9e-0437a3526835@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:25:51PM +0530, Sharat Masetty wrote:
-> This patch adds support to parse the OPP tables attached the GPU device,
-> the main opp table and the DDR bandwidth opp table. Additionally, vote
-> for the GPU->DDR bandwidth when setting the GPU frequency by querying
-> the linked DDR BW opp to the GPU opp.
-> 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a6xx_gmu.c   | 41 ++++++++++++++++++++++++++----
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 44 +++++++++++++++++++++++++++++----
->  drivers/gpu/drm/msm/msm_gpu.h           |  9 +++++++
->  3 files changed, 84 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> index 748cd37..489d9b6 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> @@ -100,6 +100,40 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
->  		A6XX_GMU_SPTPRAC_PWR_CLK_STATUS_GX_HM_CLK_OFF));
->  }
-> 
-> +void a6xx_gmu_set_icc_vote(struct msm_gpu *gpu, unsigned long gpu_freq)
-> +{
-> +	struct dev_pm_opp *gpu_opp, *ddr_opp;
-> +	struct opp_table **tables = gpu->opp_tables;
-> +	unsigned long peak_bw;
-> +
-> +	if (!gpu->opp_tables[GPU_DDR_OPP_TABLE_INDEX])
-> +		goto done;
-> +
-> +	gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
-> +	if (IS_ERR_OR_NULL(gpu_opp))
-> +		goto done;
-> +
-> +	ddr_opp = dev_pm_opp_xlate_required_opp(tables[GPU_OPP_TABLE_INDEX],
-> +					    tables[GPU_DDR_OPP_TABLE_INDEX],
-> +					    gpu_opp);
-> +	dev_pm_opp_put(gpu_opp);
-> +
-> +	if (IS_ERR_OR_NULL(ddr_opp))
-> +		goto done;
+Hello Jonghwa,
 
-I think that the final approach is still up in the air but either way we're
-going to pull the bandwidth from an OPP, its just a question of which OPP.
+31.03.2020 03:25, Jonghwa Lee пишет:
+> On 20. 3. 30. 오전 1:21, David Heidelberg wrote:
+>> This patch makes smb347 charger driver to support dt binding. All legacy
+>> platform data now can be parsed from dt.
+>> Because of that smb347 is i2c client driver, IRQ number can be passed
+>> automatically through client's irq variable if it is defined in dt.
+>> No more to use requesting gpio to irq manually in dt-way.
+> Thanks for keeping original commit description and revealing where it 
+> comes from.
+> 
+> Anyway, in the above description, the last three lines doesn't match to 
+> the commit since
+> 
+> the original patch is now split. Please remove them or you can rewrite 
+> description as your own.
 
-> +	peak_bw = dev_pm_opp_get_bw(ddr_opp, NULL);
-> +	dev_pm_opp_put(ddr_opp);
-> +
-> +	icc_set_bw(gpu->icc_path, 0, peak_bw);
-> +	return;
-> +done:
-> +	/*
-> +	 * If there is a problem, for now leave it at max so that the
-> +	 * performance is nominal.
-> +	 */
-> +	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> +}
-> +
->  static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
->  {
->  	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
-> @@ -128,11 +162,8 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
-> 
->  	gmu->freq = gmu->gpu_freqs[index];
-> 
-> -	/*
-> -	 * Eventually we will want to scale the path vote with the frequency but
-> -	 * for now leave it at max so that the performance is nominal.
-> -	 */
-> -	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> +	if (gpu->icc_path)
-> +		a6xx_gmu_set_icc_vote(gpu, gmu->freq);
-
-This function is annoying because we call it from two different spots, but it
-feels wasteful that devfreq gives us an OPP pointer and we go out of our way to
-not use it only to search for it again in the set_icc_vote function. I think
-maybe we should pass the OPP through from msm_gpu.c.  We could have a helper
-function to pull the initial opp in a6xx_gmu_resume to make it clean.
-
-
->  }
-> 
->  void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 2d13694..bbbcc7a 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -882,7 +882,7 @@ static int adreno_get_pwrlevels(struct device *dev,
->  {
->  	unsigned long freq = ULONG_MAX;
->  	struct dev_pm_opp *opp;
-> -	int ret;
-> +	int ret, i;
-> 
->  	gpu->fast_rate = 0;
-> 
-> @@ -890,9 +890,29 @@ static int adreno_get_pwrlevels(struct device *dev,
->  	if (!of_find_property(dev->of_node, "operating-points-v2", NULL))
->  		ret = adreno_get_legacy_pwrlevels(dev);
->  	else {
-> -		ret = dev_pm_opp_of_add_table(dev);
-> -		if (ret)
-> -			DRM_DEV_ERROR(dev, "Unable to set the OPP table\n");
-> +		int count = of_count_phandle_with_args(dev->of_node,
-> +				"operating-points-v2", NULL);
-> +
-> +		count = min(count, GPU_DDR_OPP_TABLE_INDEX + 1);
-> +		count = max(count, 1);
-> +
-> +		for (i = 0; i < count; i++) {
-> +			ret = dev_pm_opp_of_add_table_indexed(dev, i);
-> +			if (ret) {
-> +				DRM_DEV_ERROR(dev, "Add OPP table %d: failed %d\n",
-> +						i, ret);
-> +				goto err;
-> +			}
-> +
-> +			gpu->opp_tables[i] =
-> +				dev_pm_opp_get_opp_table_indexed(dev, i);
-> +			if (!gpu->opp_tables[i]) {
-> +				DRM_DEV_ERROR(dev, "Get OPP table failed index %d\n",
-> +						i);
-> +				ret = -EINVAL;
-> +				goto err;
-> +			}
-> +		}
->  	}
-> 
->  	if (!ret) {
-> @@ -919,12 +939,24 @@ static int adreno_get_pwrlevels(struct device *dev,
->  		gpu->icc_path = NULL;
-> 
->  	return 0;
-> +err:
-> +	for (; i >= 0; i--) {
-> +		if (gpu->opp_tables[i]) {
-> +			dev_pm_opp_put_opp_table(gpu->opp_tables[i]);
-> +			gpu->opp_tables[i] = NULL;
-> +		}
-> +	}
-> +
-> +	dev_pm_opp_remove_table(dev);
-> +	return ret;
->  }
-> 
->  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  		struct adreno_gpu *adreno_gpu,
->  		const struct adreno_gpu_funcs *funcs, int nr_rings)
->  {
-> +	int ret = 0;
-> +
->  	struct adreno_platform_config *config = pdev->dev.platform_data;
->  	struct msm_gpu_config adreno_gpu_config  = { 0 };
->  	struct msm_gpu *gpu = &adreno_gpu->base;
-> @@ -945,7 +977,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
-> 
->  	adreno_gpu_config.nr_rings = nr_rings;
-> 
-> -	adreno_get_pwrlevels(&pdev->dev, gpu);
-> +	ret = adreno_get_pwrlevels(&pdev->dev, gpu);
-> +	if (ret)
-> +		return ret;
-> 
->  	pm_runtime_set_autosuspend_delay(&pdev->dev,
->  		adreno_gpu->info->inactive_period);
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index ab8f0f9c..5b98b48 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.h
-> +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -66,6 +66,12 @@ struct msm_gpu_funcs {
->  	void (*gpu_set_freq)(struct msm_gpu *gpu, unsigned long freq);
->  };
-> 
-> +/* opp table indices */
-> +enum {
-> +	GPU_OPP_TABLE_INDEX,
-> +	GPU_DDR_OPP_TABLE_INDEX,
-> +};
-> +
->  struct msm_gpu {
->  	const char *name;
->  	struct drm_device *dev;
-> @@ -113,6 +119,9 @@ struct msm_gpu {
-> 
->  	struct icc_path *icc_path;
-> 
-> +	/* gpu/ddr opp tables */
-> +	struct opp_table *opp_tables[2];
-
-You don't need an array here. We're not going to have that many tables.
-
-struct opp_table *gpu_opp_table;
-struct opp_table *bw_opp_table;
-
-Is sufficient and we don't need an enum.
-
-> +
->  	/* Hang and Inactivity Detection:
->  	 */
->  #define DRM_MSM_INACTIVE_PERIOD   66 /* in ms (roughly four frames) */
-> --
-> 2.7.4
-> 
-
-Jordan
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+That's a good suggestion, thank you very much.
