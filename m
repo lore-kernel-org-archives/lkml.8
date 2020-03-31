@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9B4C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F094BC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DD920B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AEF20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645216;
-	bh=rAT7k9QfL/uRKMskwddcHA1BKZ5ENz8y42pgaEwLH+I=;
+	s=default; t=1585645219;
+	bh=ZmACsDQQqEmFzphVKiN3V7EO4QhkgJNKRbxPkL6TpN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YM5K603cvM1G401Nf460oNoQlJw2vvbf5l1FIHo6uS3vKaqkDgGPRx0RrDJ0T+8PS
-	 CBhvzpyXoN7LSmLwKbart4VvlJkAWLLtqIt2jY6XxO7lPza4iPqiyzC8ECYfSWLTha
-	 UYXKT8UcrrfXNdZ7srJfi1aNNcwTgD83Zyy1RJJk=
+	b=Rddu1TT//K3xZocxYXPqIAWmLDs1QCBk/MKw+U7CSm3Kh8ORntLhsezNjuFbJppm7
+	 yEG3V78ACv6ieWk2HvroMmr0Oas+iPpag9frZzLy9yALm0UrjDluHxg4lvpVlDE2c6
+	 dr3iA/432ct7YFX8cgqFPwOSHc3EodcK8KLJKe4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbgCaJAP (ORCPT
+        id S1730379AbgCaJAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:00:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgCaJAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:00:13 -0400
+        id S1729425AbgCaJAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:00:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D32420848;
-        Tue, 31 Mar 2020 09:00:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8A5B20B1F;
+        Tue, 31 Mar 2020 09:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645213;
-        bh=rAT7k9QfL/uRKMskwddcHA1BKZ5ENz8y42pgaEwLH+I=;
+        s=default; t=1585645216;
+        bh=ZmACsDQQqEmFzphVKiN3V7EO4QhkgJNKRbxPkL6TpN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnWvgB+E/PTWVpz0fKFQIKrLvQk5S9kscDdGVHCWPBES+sj9uMlIbwPxFrdJGNQ49
-         ycmdrJJlRMi5J0QVTU5zbV3Jyx8ZoCMlf3zmYYMvjXJvUW+ccuIYeXOFLGOOjitUtJ
-         0pkdV/NuEG0zazwXrNaBZ9LBEgCfktcy2dtS234c=
+        b=L1NqMg2xCdJwF6Q+esqxOAQm5JKH5XjcQjx9wAiC2Pci0yZiT7BjOcZjjkOjs8Npx
+         5lR1lQeaEqRUdZOOneW3uW9eMTA4qDCS2VRi7iK9PsvKbIHZa1/hhsVhdmy9/fSYsO
+         qplYXVkXbzJff9vYCzwKO9sQc9eSVv5F6lDWdAqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.6 10/23] staging: kpc2000: prevent underflow in cpld_reconfigure()
-Date:   Tue, 31 Mar 2020 10:59:22 +0200
-Message-Id: <20200331085312.471276445@linuxfoundation.org>
+        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
+        kovi <zraetn@gmail.com>
+Subject: [PATCH 5.6 11/23] staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
+Date:   Tue, 31 Mar 2020 10:59:23 +0200
+Message-Id: <20200331085313.039043273@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -58,38 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
 
-commit 72db61d7d17a475d3cc9de1a7c871d518fcd82f0 upstream.
+commit 38ef48f7d4b7342f145a1b4f96023bde99aeb245 upstream.
 
-This function should not allow negative values of "wr_val".  If
-negatives are allowed then capping the upper bound at 7 is
-meaningless.  Let's make it unsigned.
+The ASUS USB-N10 Nano B1 has been reported as a new RTL8188EU device.
+Add it to the device tables.
 
-Fixes: 7dc7967fc39a ("staging: kpc2000: add initial set of Daktronics drivers")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200224103325.hrxdnaeqsthplu42@kili.mountain
+Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
+Reported-by: kovi <zraetn@gmail.com>
+Cc: Stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200321180011.26153-1-Larry.Finger@lwfinger.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/kpc2000/kpc2000/core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/kpc2000/kpc2000/core.c
-+++ b/drivers/staging/kpc2000/kpc2000/core.c
-@@ -110,10 +110,10 @@ static ssize_t cpld_reconfigure(struct d
- 				const char *buf, size_t count)
- {
- 	struct kp2000_device *pcard = dev_get_drvdata(dev);
--	long wr_val;
-+	unsigned long wr_val;
- 	int rv;
- 
--	rv = kstrtol(buf, 0, &wr_val);
-+	rv = kstrtoul(buf, 0, &wr_val);
- 	if (rv < 0)
- 		return rv;
- 	if (wr_val > 7)
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -32,6 +32,7 @@ static const struct usb_device_id rtw_us
+ 	/****** 8188EUS ********/
+ 	{USB_DEVICE(0x056e, 0x4008)}, /* Elecom WDC-150SU2M */
+ 	{USB_DEVICE(0x07b8, 0x8179)}, /* Abocom - Abocom */
++	{USB_DEVICE(0x0B05, 0x18F0)}, /* ASUS USB-N10 Nano B1 */
+ 	{USB_DEVICE(0x2001, 0x330F)}, /* DLink DWA-125 REV D1 */
+ 	{USB_DEVICE(0x2001, 0x3310)}, /* Dlink DWA-123 REV D1 */
+ 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
 
 
