@@ -2,224 +2,164 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4EEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DAEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355B220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7452B20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gkLrXlWe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYBKWCsr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbgCaWs6 (ORCPT
+        id S1731501AbgCaWtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:48:58 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39854 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731407AbgCaWs5 (ORCPT
+        Tue, 31 Mar 2020 18:49:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34548 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731255AbgCaWtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:48:57 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i20so23764228ljn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:48:54 -0700 (PDT)
+        Tue, 31 Mar 2020 18:49:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c195so2143948wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7EgE3rQUBwKB+OsNaorPCoGcvdaSTA93aqDrB6D4TEc=;
-        b=gkLrXlWeXFOSVICast5Vdl5R5P3IOcA/C6dTpriALza9D4E6Y6Qd652tVMYoj2pY3P
-         DN47bRyHES/yPSQOm7K3SMnISIFaCOSoghFeabV7lMExqinTjNSHkz7tKMQ+H19tgYzl
-         A9372xTpCD9MIMVGWYWT+F5jGZWz+Fs2zGfe2w+2SUu/Il1cptPCYi0tM/+XZRpAIR3D
-         xJ4G3wavpa1cE53/NVAoTG99j8pRrrnlsWvC0aUIASE8vWsF6GaozXk/FWJKf698GgGJ
-         kffciFjXKMUs3pCMAGQDP4ubtD5jtjSITiT14urXLT87awxyqjDtvVLgtoSMrntQJLEB
-         9oKQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zgt1uESpUWtghd1ufq6ryDrkORzZCgqG+MTqVl1OJU8=;
+        b=dYBKWCsrRIrxOPPAvaqGuprsttjEf/m/+5i+hN0TKkXz9XhtDRigwZUpBdQFP+dH++
+         gutqwG91SWJ1oAdHkeCnowVWYd9GjGbjOlsEnOIA+JF0g2n+MMTgRCUiqP4RuQDCNaao
+         O2lY5bjdVKppObdYd8FMU5b6zonfU4BKmpuLTI0T4CIEISBoJgzLM1/Bl007rD3HGh3A
+         GWn0sXHPWve0RnFW7uoIsLFsaw4cAEzPLjyNAdMvBiYBf9pxhGqe62IYCvvZVvUKawnN
+         Fqsbz1G6Bw5zEqrX+j7UqSF+SZiSKKz70pCs0zELBGGFNHwpCz26J8I4TbS+/XrUhLB6
+         GOMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7EgE3rQUBwKB+OsNaorPCoGcvdaSTA93aqDrB6D4TEc=;
-        b=G+Z/XbNr00XMqkXW/1ceWPR4ZixayxmPG1josebOf9xEdfjn0Kn6jqeOYK1PolW4I+
-         /FcGJmdF63KjnSfLcO3ZuZjlvdeWySOak//r2hdmCh7+S/SpUmw9j10iK7z+zZuj+lMU
-         o4veMt2wbP0+SgQ+WavU9tPJ6tbKiYYEFOGp6qVubdCKItQ06AN0WUroqQ/HqdlDtGqN
-         1dBs3fjVK/orYpNvzZ4qvGGtuIqjOTRniV/DLs2heV3rnykKm1BKkecyEIuE7vP6TCqZ
-         Pi7GPqygdgnc7QL4iQ/EEellaLFGLOb4YwjJCB1wQc7d9MFsMG9aqirOI+8rW5yQq17O
-         Uugg==
-X-Gm-Message-State: AGi0PuZz6t+Wl8ORjiAYHVt10bZ1LY1DggxUSSJlXBQIR2K6zm6TdsHs
-        RhooU/SblmQw99AVOs6qnN2nU4aqcklYNGWUva4UgA==
-X-Google-Smtp-Source: APiQypJ+B+qhItODgJVwcNmLxHZLIAdDTta58U7ToLrZU85bMoPFj8kp5unGdwCGxs81XDXJ/rJlN0fJg9AFRYY2PLs=
-X-Received: by 2002:a2e:8015:: with SMTP id j21mr10850819ljg.165.1585694933444;
- Tue, 31 Mar 2020 15:48:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zgt1uESpUWtghd1ufq6ryDrkORzZCgqG+MTqVl1OJU8=;
+        b=d/okxaHE702x3Uk0RqawKQFGES8QqDryzm4NpweNFMdr7QGOle+IpU7q439vQqiPzx
+         50KYZDrMAWxyBHMsiANiBd7HVpwI0giPft8qj+m22V7JAhUo+PikNJmcGyTJh0Xt9wkD
+         YrreD8Dk1P9cddpBWKQF9Y/BVl/qyKfhRcG8UM6r5YpxOKmq/Cs49ChUYzlJaKIyaoIs
+         SbxPHGH054eJKq/ZNIbd3mydvnfhB2A7kOT54+4DF7ElPuhG/AqzQl2iClaYPl9+aYqr
+         UYvNcimm8PI07sk2dbYMwj84D9vQnSPSSNiCJaT4ZPMC/8nJ9yOzhW0Aue7CX+MZfkZd
+         lyoA==
+X-Gm-Message-State: AGi0Pua0+rlIErgWorJy6jkqLpBlgaf1TyXjsesap6oDGEoBipsWT7U0
+        zzuiVLZdkkeE9hvxHbo5Yzk=
+X-Google-Smtp-Source: APiQypJaVgJ9oQBkUZlzCnvEtL1kpWcMkOHQRatPvmQ9gMsBk0+m0umgJTq4LA3jifn9mnBNqy89zg==
+X-Received: by 2002:a05:600c:21d4:: with SMTP id x20mr1060188wmj.77.1585694952154;
+        Tue, 31 Mar 2020 15:49:12 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id m5sm110490wmg.13.2020.03.31.15.49.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 15:49:10 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 00:49:10 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] clocksource: Add debugfs support
+Message-ID: <20200331224910.GA2967489@ulmo>
+References: <20200331214045.2957710-1-thierry.reding@gmail.com>
+ <87lfnguqky.fsf@nanos.tec.linutronix.de>
+ <20200331222917.GG2954599@ulmo>
 MIME-Version: 1.0
-References: <20200331141450.035873853@linuxfoundation.org>
-In-Reply-To: <20200331141450.035873853@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 1 Apr 2020 04:18:41 +0530
-Message-ID: <CA+G9fYuU-5o5DG1VSQuCPx=TSs61-1jBekdGb5yvMRz4ur3BQg@mail.gmail.com>
-Subject: Re: [PATCH 5.5 000/171] 5.5.14-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        john.fastabend@gmail.com, komachi.yoshiki@gmail.com,
-        Andrii Nakryiko <andriin@fb.com>, lukenels@cs.washington.edu,
-        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
+Content-Disposition: inline
+In-Reply-To: <20200331222917.GG2954599@ulmo>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Mar 2020 at 21:02, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.5.14 release.
-> There are 171 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 02 Apr 2020 14:12:02 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.5.14-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.5.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Results from Linaro=E2=80=99s test farm.
-Regressions on x86_64 and i386.
+On Wed, Apr 01, 2020 at 12:29:17AM +0200, Thierry Reding wrote:
+> On Wed, Apr 01, 2020 at 12:06:37AM +0200, Thomas Gleixner wrote:
+> > Thierry,
+> >=20
+> > Thierry Reding <thierry.reding@gmail.com> writes:
+> > > Add a top-level "clocksource" directory to debugfs. For each clocksou=
+rce
+> > > registered with the system, a subdirectory will be added with attribu=
+tes
+> > > that can be queried to obtain information about the clocksource.
+> >=20
+> > first of all this does tell what this patch does but omits the more
+> > important information about the WHY.
+> >=20
+> > What's even worse is that the changelog is blantantly wrong.
+> >=20
+> > > +static int clocksource_debugfs_counter_show(struct seq_file *s, void=
+ *data)
+> > > +{
+> > > +	struct clocksource *cs =3D s->private;
+> > > +
+> > > +	seq_printf(s, "%llu\n", cs->read(cs));
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +DEFINE_SHOW_ATTRIBUTE(clocksource_debugfs_counter);
+> > > +
+> > > +static void clocksource_debugfs_add(struct clocksource *cs)
+> > > +{
+> > > +	if (!debugfs_root)
+> > > +		return;
+> > > +
+> > > +	cs->debugfs =3D debugfs_create_dir(cs->name, debugfs_root);
+> > > +
+> > > +	debugfs_create_file("counter", 0444, cs->debugfs, cs,
+> > > +			    &clocksource_debugfs_counter_fops);
+> > > +}
+> >=20
+> > It does not provide any information about the clocksource, it provides
+> > an interface to read the counter - nothing else.
+>=20
+> The counter is part of the information about a clocksource, isn't it?
+> But yes, frankly I had anticipated that I'd be adding more files here
+> and when I ended up not doing that I forgot to update the patch
+> description.
 
-selftests bpf test_verifier reports as failed.
-This test PASSED on v5.5.13
+Looking again, I suppose I could add a couple of the fields from struct
+clocksource to this as well. The rating seems like it would be useful,
+as well as perhaps the mult (and maxadj) and shift fields, which would
+give users an easy way of converting the counter value to nanoseconds.
+max_idle_ns, max_cycles and mask seem too low-level and are really only
+useful for the kernel to deal with the clocksource.
 
-#554/p jgt32: range bound deduction, reg op imm FAIL
-Failed to load prog 'Success'!
-R8 unbounded memory access, make sure to bounds check any array access
-into a map
-verification time 141 usec
-stack depth 8
-processed 16 insns (limit 1000000) max_states_per_insn 0 total_states
-1 peak_states 1 mark_read 1
-#555/p jgt32: range bound deduction, reg1 op reg2, reg1 unknown FAIL
-Failed to load prog 'Success'!
-R8 unbounded memory access, make sure to bounds check any array access
-into a map
-verification time 94 usec
-stack depth 8
-processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
-1 peak_states 1 mark_read 1
-#556/p jle32: range bound deduction, reg1 op reg2, reg2 unknown FAIL
-Failed to load prog 'Success'!
-R8 unbounded memory access, make sure to bounds check any array access
-into a map
-verification time 68 usec
-stack depth 8
-processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
-1 peak_states 1 mark_read 1
+"flags" might also be interesting.
 
+Any other suggestions?
 
-Summary
-------------------------------------------------------------------------
+Thierry
 
-kernel: 5.5.14-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.5.y
-git commit: b487728d5e18490b0e551a6518d0647ae641ca3a
-git describe: v5.5.13-172-gb487728d5e18
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
-ld/v5.5.13-172-gb487728d5e18
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regressions (compared to build v5.5.13)
-  x86_64:
-  qemu_x86_64:
-     kselftest: bpf_test_verifier - FAILED
-    # Summary 1577 PASSED, 0 SKIPPED, 3 FAILED
+-----BEGIN PGP SIGNATURE-----
 
-No fixes (compared to build v5.5.13)
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DyOMACgkQ3SOs138+
+s6Fu6w//WwiI/Wot1vrxQPuA8shfQvUV7ZJ9UYwMncWTSr/IXRHqQZ7EW3hck6mA
+rBU3lhA6c1oLaeDNbExMV6gY97cwEYT7viHr9o5TqZqpSFqkXJKT4LWr/CyzNyO/
+GlMftSZVz9KsAMyhmJ4zRaEtPO6BbrVB0QCmX5nAmIJawcfamnv0Zega6VQSW91d
+ZlbDUr5NWdkRSkVS4hTTqS7nxxwexC96CZcPmoQAtwBiUqQZKBEf2JAyXOZcwkoQ
+Tl4DjDZo0j75UvIDv6Bsnpe+1ICqoJDWSWNtQUwuW/0G4aPvaDT6kW++EW7JgbVN
+mAment0A7HsBekPrfm2HOcSL+1JmRA1r24RL4IBKkcnfBg/EFgQ5K/SXh2fZbplG
+mPNHb9yyT+o9Ye0Hr/RDSTGlXfx+X0RYhD5oJ8lyLsyy1M2XvEDUpTPRMHKTPM4m
+dcT7268Iy2NaZFF5I/nl0crcXaDKg7ueASi67qZefmwoeakZ4RCyIGjeVAQFXY6J
+SLDRTurFIqiqW+piP9qQ4QodhY2C+V6QvDe1Vxj9gvyuiFb6KJtoaMjA+KAvp4CV
+4Nh2Q6uZzbeWfCopJkYoN6vSj/V9+dk7NhiAtYXJ/Ul6XlDR8zwJdys+EMU3HSoW
+yt07oKwt3wGHoR4GMcerUV/z3CXPNzpPMVPNurzlflSfkSoylE8=
+=u6ci
+-----END PGP SIGNATURE-----
 
-Ran 27293 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* v4l2-compliance
-* ltp-syscalls-tests
-* kvm-unit-tests
-* ltp-cve-tests
-* ltp-open-posix-tests
-* network-basic-tests
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
-ref:
-https://lkft.validation.linaro.org/scheduler/job/1327830#L3067
-https://lkft.validation.linaro.org/scheduler/job/1327830#L3067
-https://lkft.validation.linaro.org/scheduler/job/1328415#L1656
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+--DocE+STaALJfprDB--
