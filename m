@@ -2,126 +2,143 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A556C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDAAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D88320786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9285F20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ai2x9csO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acOi2m3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731026AbgCaQTF (ORCPT
+        id S1731127AbgCaQTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:19:05 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:64454 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730617AbgCaQTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:19:04 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48sDzT07Jnz9txJr;
-        Tue, 31 Mar 2020 18:19:01 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ai2x9csO; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id N22mOPXF1ILt; Tue, 31 Mar 2020 18:19:00 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48sDzS5xVJz9txJq;
-        Tue, 31 Mar 2020 18:19:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585671540; bh=NEXqywkSlgRfByPzbvoDJ/4fd6f+W61o5Ov6z4fNrJw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ai2x9csOQFjKRHxb8FXGuAvOBdasakK0lkMVidCfd/asmB8fqeLaSzey7JqjUkdQ1
-         jNceU7gfV+ZdKWtgjiX0jvFTRJPetmVEVGiVRFLYXSym86udCuuqhGOKFjRc7wJ4F0
-         Oj2CnxLZkLg4AWIz0ObHYSbZryQLkI2azOm+gn1o=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5C01C8B868;
-        Tue, 31 Mar 2020 18:19:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id gnWL4mYvDiAU; Tue, 31 Mar 2020 18:19:02 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B85AC8B752;
-        Tue, 31 Mar 2020 18:19:01 +0200 (CEST)
-Subject: Re: [PATCH v2 09/11] powerpc/platforms: Move files from 4xx to 44x
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <698e9a42a06eb856eef4501c3c0a182c034a5d8c.1585640941.git.christophe.leroy@c-s.fr>
- <50d0ce1a96fa978cd0dfabde30cf75d23691622a.1585640942.git.christophe.leroy@c-s.fr>
- <CAK8P3a3u4y7Zm8w43QScqUk6macBL1wO3S0qPisf9+d9FqSHfw@mail.gmail.com>
- <833d63fe-3b94-a3be-1abb-a629386aa0dd@c-s.fr>
- <CAK8P3a244P38c+JCRnf1EscQOSzaQQNZc6b5F=LFE2a_im8AqQ@mail.gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <74e76b4e-5e4f-f3de-96a8-f6a451b3243a@c-s.fr>
-Date:   Tue, 31 Mar 2020 18:19:01 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 12:19:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43452 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730413AbgCaQTj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:19:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585671577;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Knl+J+ncq8iy4lpwl7zts4N74U3gDGfq7AsLaAMdSLI=;
+        b=acOi2m3ojbSQyy1BXLdQGgFXJX1rQmgqxFE7ZdG12ZKEuFsrgzybBNoheJ9V7boFS6Zcbh
+        FHgOCOlnt8jSnBy8DEk7D+DyIyuSOSjxpdfKy9SM7ENh3DKlS00CwocdUy0u2VVVAOanAu
+        CaoO2bbPZiioM4hV6UgKI8875r2kwrc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-438-3Dsj50QLPnCv2dedz5fYsw-1; Tue, 31 Mar 2020 12:19:33 -0400
+X-MC-Unique: 3Dsj50QLPnCv2dedz5fYsw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D60C1137840;
+        Tue, 31 Mar 2020 16:19:32 +0000 (UTC)
+Received: from [10.36.112.58] (ovpn-112-58.ams2.redhat.com [10.36.112.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C7DCD5C1A2;
+        Tue, 31 Mar 2020 16:19:28 +0000 (UTC)
+Subject: Re: [PATCH] iommu/vt-d: Fix PASID cache flush
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Raj Ashok <ashok.raj@intel.com>
+References: <1585610725-78316-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <53be1d27-6348-56db-7eac-6734f92f123d@redhat.com>
+ <20200331090843.59961e03@jacob-builder>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <2e9fc0f5-6181-0a10-db59-67e0ffca14cd@redhat.com>
+Date:   Tue, 31 Mar 2020 18:19:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a244P38c+JCRnf1EscQOSzaQQNZc6b5F=LFE2a_im8AqQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200331090843.59961e03@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacob,
 
+On 3/31/20 6:08 PM, Jacob Pan wrote:
+> Actually, this is not a bug. The current code has:
+> #define QI_PC_PASID_SEL             (QI_PC_TYPE | QI_PC_GRAN(1))
+> 
+> Which already has the type and shift.
+> 
+> In my vSVA series, I redefined granu such that I can use them in the 2D
+> table lookup.
+> 
+> -#define QI_PC_ALL_PASIDS       (QI_PC_TYPE | QI_PC_GRAN(0))        
+> -#define QI_PC_PASID_SEL                (QI_PC_TYPE | QI_PC_GRAN(1))
+> +/* PASID cache invalidation granu */                               
+> +#define QI_PC_ALL_PASIDS       0                                   
+> +#define QI_PC_PASID_SEL                1                           
+> 
+> Please ignore this, sorry about the confusion.
+OK I missed that as well, sorry. So that's not a fix but the code will
+become more readable/consistent in your vSVA series.
 
-Le 31/03/2020 à 18:04, Arnd Bergmann a écrit :
-> On Tue, Mar 31, 2020 at 5:26 PM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->> Le 31/03/2020 à 17:14, Arnd Bergmann a écrit :
->>> On Tue, Mar 31, 2020 at 9:49 AM Christophe Leroy
->>> <christophe.leroy@c-s.fr> wrote:
->>>>
->>>> Only 44x uses 4xx now, so only keep one directory.
->>>>
->>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>>> ---
->>>>    arch/powerpc/platforms/44x/Makefile           |  9 +++++++-
->>>>    arch/powerpc/platforms/{4xx => 44x}/cpm.c     |  0
->>>
->>> No objections to moving everything into one place, but I wonder if the
->>> combined name should be 4xx instead of 44x, given that 44x currently
->>> include 46x and 47x. OTOH your approach has the advantage of
->>> moving fewer files.
->>>
+Thanks
+
+Eric
+> 
+> On Tue, 31 Mar 2020 11:28:17 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
+> 
+>> Hi Jacob,
 >>
->> In that case, should we also rename CONFIG_44x to CONFIG_4xx ?
+>> On 3/31/20 1:25 AM, Jacob Pan wrote:
+>>> PASID cache type and shift of granularity bits are missing in
+>>> the current code.
+>>>
+>>> Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table
+>>> interface")
+>>>
+>>> Cc: Eric Auger <eric.auger@redhat.com>
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
+>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>>
+>> Thanks
+>>
+>> Eric
+>>
+>>> ---
+>>>  drivers/iommu/intel-pasid.c | 3 ++-
+>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/iommu/intel-pasid.c
+>>> b/drivers/iommu/intel-pasid.c index 22b30f10b396..57d05b0fbafc
+>>> 100644 --- a/drivers/iommu/intel-pasid.c
+>>> +++ b/drivers/iommu/intel-pasid.c
+>>> @@ -365,7 +365,8 @@ pasid_cache_invalidation_with_pasid(struct
+>>> intel_iommu *iommu, {
+>>>  	struct qi_desc desc;
+>>>  
+>>> -	desc.qw0 = QI_PC_DID(did) | QI_PC_PASID_SEL |
+>>> QI_PC_PASID(pasid);
+>>> +	desc.qw0 = QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
+>>> +		   QI_PC_PASID(pasid) | QI_PC_TYPE;
+>>>  	desc.qw1 = 0;
+>>>  	desc.qw2 = 0;
+>>>  	desc.qw3 = 0;
+>>>   
+>>
 > 
-> That has the risk of breaking user's defconfig files, but given the
-> small number of users, it may be nicer for consistency. In either
-> case, the two symbols should probably hang around as synonyms,
-> the question is just which one is user visible.
+> [Jacob Pan]
 > 
 
-Not sure it is a good idea to keep two synonyms. In the past we made our 
-best to remove synonyms (We had CONFIG_8xx and CONFIG_PPC_8xx being 
-synonyms, we had CONFIG_6xx and CONFIG_BOOK3S_32 and 
-CONFIG_PPC_STD_MMU_32 being synonyms).
-I think it is a lot cleaner when we can avoid synonyms.
-
-By the way I already dropped CONFIG_4xx in previous patch (8/11). It was 
-not many 4xx changed to 44x. It would be a lot more in the other way 
-round I'm afraid.
-
-But I agree with you it might be more natural to change to 4xx.
-
-Michael, any preference ?
-
-Christophe
