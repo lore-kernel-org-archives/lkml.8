@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E84BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92385C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CECF2208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67971208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646353;
-	bh=9hWSpkGoaapxtwI1VTAYEMYi3VHxmv/f80ceLJgjp7Y=;
+	s=default; t=1585646358;
+	bh=LTWg13/c2mtDBsqXDHT15ekp/aG+3/g8YDCRwjATuFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tccjd87PuaIh3TUycyU8Qv6m9ZiCm5p6HzAKjHHk3DT+/ccTkgW11nCL2kYa83Tds
-	 /9Z01UnMQLnG7Vt3/cqjfYEKjg9y/Amq3qVR4qcydb41A3oTzY9cne0C7HvlK8Vxc7
-	 snQQ9OkPKDq3kkDnoY2K3ClDdnN0t+FKCo7pcSa4=
+	b=ac5KneGFCD6hgK9Dx0FTPmFdhvCFZTUZY1lrElAVnfD/ptyS86xkcMQirRk1Mwrah
+	 xYMfoUW3Mn03y9f1mv08288iGmQDd3ZG8+3TIUWGEG8ZESkSgwN4KV/31w4amiPDNN
+	 UpV1xLcFgycv++Nb3l8/PcVMyVtNkLJ6o299PL3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732204AbgCaJTM (ORCPT
+        id S1730841AbgCaJTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:19:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41110 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:19:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732197AbgCaJTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:19:07 -0400
+        id S1731055AbgCaJTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:19:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB4152137B;
-        Tue, 31 Mar 2020 09:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B783120787;
+        Tue, 31 Mar 2020 09:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646347;
-        bh=9hWSpkGoaapxtwI1VTAYEMYi3VHxmv/f80ceLJgjp7Y=;
+        s=default; t=1585646353;
+        bh=LTWg13/c2mtDBsqXDHT15ekp/aG+3/g8YDCRwjATuFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M9jI58yNWvNR+rzN8G+Qrh5N/qQZXkJ4+6aV3OIHeRu4c2ji3wZC0zUib2dBnndbV
-         mj2L1zXuNNAfcbWwbucH9110gLAi6Cvof8Vt/vRNgCfOYSz411QSk3PGVs5XKQ/WHM
-         rm4He9yLJBGeF7GKK4dsAwgbY7NEAWwCEwmpvnKc=
+        b=xKBLf++OfjHGncA0fTm37+LLdaN7vnqza1e+5MJpNNNi9ni9g8D9HJtEIJoCMe6Fn
+         R59bXs1jZL6t6bz+IHveihCgJ44gzDr+fcHEOD84++gG094oiJTqtitw1MHRp/AxZ9
+         6uy1XIQs1HvXpJlMBuHMZU6r0NG068lff+5/KBfs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 148/155] staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
-Date:   Tue, 31 Mar 2020 10:59:48 +0200
-Message-Id: <20200331085434.693818123@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com,
+        Alexander Potapenko <glider@google.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 150/155] libfs: fix infoleak in simple_attr_read()
+Date:   Tue, 31 Mar 2020 10:59:50 +0200
+Message-Id: <20200331085434.902340838@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -59,35 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 1165dd73e811a07d947aee218510571f516081f6 upstream.
+commit a65cab7d7f05c2061a3e2490257d3086ff3202c6 upstream.
 
-We can't handle the case length > WLAN_DATA_MAXLEN.
-Because the size of rxfrm->data is WLAN_DATA_MAXLEN(2312), and we can't
-read more than that.
+Reading from a debugfs file at a nonzero position, without first reading
+at position 0, leaks uninitialized memory to userspace.
 
-Thanks-to: Hillf Danton <hdanton@sina.com>
-Reported-and-tested-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200326131850.17711-1-hqjagain@gmail.com
+It's a bit tricky to do this, since lseek() and pread() aren't allowed
+on these files, and write() doesn't update the position on them.  But
+writing to them with splice() *does* update the position:
+
+	#define _GNU_SOURCE 1
+	#include <fcntl.h>
+	#include <stdio.h>
+	#include <unistd.h>
+	int main()
+	{
+		int pipes[2], fd, n, i;
+		char buf[32];
+
+		pipe(pipes);
+		write(pipes[1], "0", 1);
+		fd = open("/sys/kernel/debug/fault_around_bytes", O_RDWR);
+		splice(pipes[0], NULL, fd, NULL, 1, 0);
+		n = read(fd, buf, sizeof(buf));
+		for (i = 0; i < n; i++)
+			printf("%02x", buf[i]);
+		printf("\n");
+	}
+
+Output:
+	5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a30
+
+Fix the infoleak by making simple_attr_read() always fill
+simple_attr::get_buf if it hasn't been filled yet.
+
+Reported-by: syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com
+Reported-by: Alexander Potapenko <glider@google.com>
+Fixes: acaefc25d21f ("[PATCH] libfs: add simple attribute files")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200308023849.988264-1-ebiggers@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wlan-ng/hfa384x_usb.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/libfs.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/wlan-ng/hfa384x_usb.c
-+++ b/drivers/staging/wlan-ng/hfa384x_usb.c
-@@ -3374,6 +3374,8 @@ static void hfa384x_int_rxmonitor(struct
- 	     WLAN_HDR_A4_LEN + WLAN_DATA_MAXLEN + WLAN_CRC_LEN)) {
- 		pr_debug("overlen frm: len=%zd\n",
- 			 skblen - sizeof(struct p80211_caphdr));
-+
-+		return;
- 	}
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -821,7 +821,7 @@ int simple_attr_open(struct inode *inode
+ {
+ 	struct simple_attr *attr;
  
- 	skb = dev_alloc_skb(skblen);
+-	attr = kmalloc(sizeof(*attr), GFP_KERNEL);
++	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
+ 	if (!attr)
+ 		return -ENOMEM;
+ 
+@@ -861,9 +861,11 @@ ssize_t simple_attr_read(struct file *fi
+ 	if (ret)
+ 		return ret;
+ 
+-	if (*ppos) {		/* continued read */
++	if (*ppos && attr->get_buf[0]) {
++		/* continued read */
+ 		size = strlen(attr->get_buf);
+-	} else {		/* first read */
++	} else {
++		/* first read */
+ 		u64 val;
+ 		ret = attr->get(attr->data, &val);
+ 		if (ret)
 
 
