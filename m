@@ -2,241 +2,186 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DAFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3552C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A1920675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D87E206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:35:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="r61IT9w2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgCaFcF (ORCPT
+        id S1726442AbgCaFfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:32:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:55437 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgCaFcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:32:05 -0400
-IronPort-SDR: I3u6n3m4xSzq3L/iOKcRpbqSnMpCaV3/ELfFltvGXcdcXiFlpT/IO4bturFwIraeEwvDeaGFbz
- theEZVlnZOrw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 22:32:04 -0700
-IronPort-SDR: SBkuA8p6OeShhufll+XxCy0kKHHejl7vhjrXSvL6B2Ghv6rC1xEIQB+AWCt2r0WHZv5AoeIRAH
- WeAESTGWhqhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="237592794"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga007.jf.intel.com with ESMTP; 30 Mar 2020 22:32:02 -0700
-Date:   Tue, 31 Mar 2020 13:10:45 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v3 4/7] fpga: dfl: afu: add interrupt support for error
- reporting
-Message-ID: <20200331051045.GD8468@hao-dev>
-References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
- <1585038763-22944-5-git-send-email-yilun.xu@intel.com>
+        Tue, 31 Mar 2020 01:35:37 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58939 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726001AbgCaFfh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 01:35:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585632936; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=fes4q3BYaybrvlgVDtBeVWule4OgaJcrX3+0iF8Z4cw=; b=r61IT9w27i82C8UD3ezCrLwxn0aZjYc+Nd2sGlCc0tji7nGayiBPXUjqsPfHCBGKE1GYS9sE
+ igTqQtPncZj8NzafxqIrWLWqLxbZhM4XIWLhDf75C2hhVqbHSdPhXBlfuUnX1zEOqRX05iOQ
+ nfs6faVhCoLVmbZum77oYamwZ0g=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e82d69c.7f59d0ebf928-smtp-out-n02;
+ Tue, 31 Mar 2020 05:35:24 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B9B0FC433BA; Tue, 31 Mar 2020 05:35:24 +0000 (UTC)
+Received: from [192.168.0.104] (unknown [183.82.140.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F2464C433F2;
+        Tue, 31 Mar 2020 05:35:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F2464C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH 1/4] clk: qcom: gdsc: Handle GDSC regulator supplies
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Clark <robdclark@gmail.com>
+References: <20200319053902.3415984-1-bjorn.andersson@linaro.org>
+ <20200319053902.3415984-2-bjorn.andersson@linaro.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <5dbd8e67-cc9f-631b-0b4f-b45389be83cd@codeaurora.org>
+Date:   Tue, 31 Mar 2020 11:05:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585038763-22944-5-git-send-email-yilun.xu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200319053902.3415984-2-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 04:32:40PM +0800, Xu Yilun wrote:
-> Error reporting interrupt is very useful to notify users that some
-> errors are detected by the hardware. Once users are notified, they
-> could query hardware logged error states, no need to continuously
-> poll on these states.
+Hi Stephen,
+
+I think the upstream design always wanted the client/consumer to enable 
+the GPU Rail and then turn ON the GDSC?
+
+Why are we going ahead with adding the support of regulator in the GDSC 
+driver?
+
+On 3/19/2020 11:08 AM, Bjorn Andersson wrote:
+> Certain GDSCs, such as the GPU_GX on MSM8996, requires that the upstream
+> regulator supply is powered in order to be turned on.
 > 
-> This patch follows the common DFL interrupt notification and handling
-> mechanism, implements two ioctl commands below for user to query
-> number of irqs supported, and set/unset interrupt triggers.
+> It's not guaranteed that the bootloader will leave these supplies on and
+> the driver core will attempt to enable any GDSCs before allowing the
+> individual drivers to probe defer on the PMIC regulator driver not yet
+> being present.
 > 
->  Ioctls:
->  * DFL_FPGA_PORT_ERR_GET_IRQ_NUM
->    get the number of irqs, which is used to determine whether/how many
->    interrupts error reporting feature supports.
+> So the gdsc driver needs to be made aware of supplying regulators and
+> probe defer on their absence, and it needs to enable and disable the
+> regulator accordingly.
 > 
->  * DFL_FPGA_PORT_ERR_SET_IRQ
->    set/unset given eventfds as error interrupt triggers.
+> Voltage adjustments of the supplying regulator are deferred to the
+> client drivers themselves.
 > 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> ----
-> v2: use DFL_FPGA_PORT_ERR_GET_IRQ_NUM instead of
->     DFL_FPGA_PORT_ERR_GET_INFO
->     Delete flag field for DFL_FPGA_PORT_ERR_SET_IRQ param
-> v3: put_user() instead of copy_to_user()
->     improves comments
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  drivers/fpga/dfl-afu-error.c  | 60 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/fpga/dfl-afu-main.c   |  4 +++
->  include/uapi/linux/fpga-dfl.h | 29 +++++++++++++++++++++
->  3 files changed, 93 insertions(+)
+>   drivers/clk/qcom/gdsc.c | 24 ++++++++++++++++++++++++
+>   drivers/clk/qcom/gdsc.h |  4 ++++
+>   2 files changed, 28 insertions(+)
 > 
-> diff --git a/drivers/fpga/dfl-afu-error.c b/drivers/fpga/dfl-afu-error.c
-> index c1467ae..757f9f5 100644
-> --- a/drivers/fpga/dfl-afu-error.c
-> +++ b/drivers/fpga/dfl-afu-error.c
-> @@ -15,6 +15,7 @@
->   */
->  
->  #include <linux/uaccess.h>
-> +#include <linux/fpga-dfl.h>
->  
->  #include "dfl-afu.h"
->  
-> @@ -219,6 +220,64 @@ static void port_err_uinit(struct platform_device *pdev,
->  	afu_port_err_mask(&pdev->dev, true);
->  }
->  
-> +static long
-> +port_err_get_num_irqs(struct platform_device *pdev,
-> +		      struct dfl_feature *feature, unsigned long arg)
-> +{
-> +	return put_user(feature->nr_irqs, (__u32 __user *)arg);
-> +}
-
-Looks like this function is same in patch 5 and 6 too. Is it possible, we can
-share the common code? same case for below set irq function, right?
-
-Thanks
-Hao
-
-> +
-> +static long port_err_set_irq(struct platform_device *pdev,
-> +			     struct dfl_feature *feature, unsigned long arg)
-> +{
-> +	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> +	struct dfl_fpga_irq_set hdr;
-> +	s32 *fds;
-> +	long ret;
-> +
-> +	if (!feature->nr_irqs)
-> +		return -ENOENT;
-> +
-> +	if (copy_from_user(&hdr, (void __user *)arg, sizeof(hdr)))
-> +		return -EFAULT;
-> +
-> +	if (!hdr.count || (hdr.start + hdr.count > feature->nr_irqs) ||
-> +	    (hdr.start + hdr.count < hdr.start))
-> +		return -EINVAL;
-> +
-> +	fds = memdup_user((void __user *)(arg + sizeof(hdr)),
-> +			  hdr.count * sizeof(s32));
-> +	if (IS_ERR(fds))
-> +		return PTR_ERR(fds);
-> +
-> +	mutex_lock(&pdata->lock);
-> +	ret = dfl_fpga_set_irq_triggers(feature, hdr.start, hdr.count, fds);
-> +	mutex_unlock(&pdata->lock);
-> +
-> +	kfree(fds);
-> +	return ret;
-> +}
-> +
-> +static long
-> +port_err_ioctl(struct platform_device *pdev, struct dfl_feature *feature,
-> +	       unsigned int cmd, unsigned long arg)
-> +{
-> +	long ret = -ENODEV;
-> +
-> +	switch (cmd) {
-> +	case DFL_FPGA_PORT_ERR_GET_IRQ_NUM:
-> +		ret = port_err_get_num_irqs(pdev, feature, arg);
-> +		break;
-> +	case DFL_FPGA_PORT_ERR_SET_IRQ:
-> +		ret = port_err_set_irq(pdev, feature, arg);
-> +		break;
-> +	default:
-> +		dev_dbg(&pdev->dev, "%x cmd not handled", cmd);
+> diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+> index a250f59708d8..3528789cc9d0 100644
+> --- a/drivers/clk/qcom/gdsc.c
+> +++ b/drivers/clk/qcom/gdsc.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/regmap.h>
+>   #include <linux/reset-controller.h>
+>   #include <linux/slab.h>
+> +#include <linux/regulator/consumer.h>
+>   #include "gdsc.h"
+>   
+>   #define PWR_ON_MASK		BIT(31)
+> @@ -112,6 +113,12 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
+>   	int ret;
+>   	u32 val = (status == GDSC_ON) ? 0 : SW_COLLAPSE_MASK;
+>   
+> +	if (status == GDSC_ON && sc->rsupply) {
+> +		ret = regulator_enable(sc->rsupply);
+> +		if (ret < 0)
+> +			return ret;
 > +	}
 > +
-> +	return ret;
-> +}
+>   	ret = regmap_update_bits(sc->regmap, sc->gdscr, SW_COLLAPSE_MASK, val);
+>   	if (ret)
+>   		return ret;
+> @@ -143,6 +150,13 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
+>   
+>   	ret = gdsc_poll_status(sc, status);
+>   	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
 > +
->  const struct dfl_feature_id port_err_id_table[] = {
->  	{.id = PORT_FEATURE_ID_ERROR,},
->  	{0,}
-> @@ -227,4 +286,5 @@ const struct dfl_feature_id port_err_id_table[] = {
->  const struct dfl_feature_ops port_err_ops = {
->  	.init = port_err_init,
->  	.uinit = port_err_uinit,
-> +	.ioctl = port_err_ioctl,
->  };
-> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> index b0c3178..357cd5d 100644
-> --- a/drivers/fpga/dfl-afu-main.c
-> +++ b/drivers/fpga/dfl-afu-main.c
-> @@ -577,6 +577,7 @@ static int afu_release(struct inode *inode, struct file *filp)
->  {
->  	struct platform_device *pdev = filp->private_data;
->  	struct dfl_feature_platform_data *pdata;
-> +	struct dfl_feature *feature;
->  
->  	dev_dbg(&pdev->dev, "Device File Release\n");
->  
-> @@ -586,6 +587,9 @@ static int afu_release(struct inode *inode, struct file *filp)
->  	dfl_feature_dev_use_end(pdata);
->  
->  	if (!dfl_feature_dev_use_count(pdata)) {
-> +		dfl_fpga_dev_for_each_feature(pdata, feature)
-> +			dfl_fpga_set_irq_triggers(feature, 0,
-> +						  feature->nr_irqs, NULL);
->  		__port_reset(pdev);
->  		afu_dma_region_destroy(pdata);
->  	}
-> diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.h
-> index ec70a0746..9ade943 100644
-> --- a/include/uapi/linux/fpga-dfl.h
-> +++ b/include/uapi/linux/fpga-dfl.h
-> @@ -151,6 +151,35 @@ struct dfl_fpga_port_dma_unmap {
->  
->  #define DFL_FPGA_PORT_DMA_UNMAP		_IO(DFL_FPGA_MAGIC, DFL_PORT_BASE + 4)
->  
-> +/**
-> + * DFL_FPGA_PORT_ERR_GET_IRQ_NUM - _IOR(DFL_FPGA_MAGIC, DFL_PORT_BASE + 5,
-> + *								__u32 num_irqs)
-> + *
-> + * Get the number of irqs supported by the fpga port error reporting private
-> + * feature. Currently hardware supports up to 1 irq.
-> + * Return: 0 on success, -errno on failure.
-> + */
-> +#define DFL_FPGA_PORT_ERR_GET_IRQ_NUM	_IOR(DFL_FPGA_MAGIC,	\
-> +					     DFL_PORT_BASE + 5, __u32)
+> +	if (!ret && status == GDSC_OFF && sc->rsupply) {
+> +		ret = regulator_disable(sc->rsupply);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
 > +
-> +/**
-> + * DFL_FPGA_PORT_ERR_SET_IRQ - _IOW(DFL_FPGA_MAGIC, DFL_PORT_BASE + 6,
-> + *						struct dfl_fpga_irq_set)
-> + *
-> + * Set fpga port error reporting interrupt trigger if evtfds[n] is valid.
-> + * Unset related interrupt trigger if evtfds[n] is a negative value.
-> + * Return: 0 on success, -errno on failure.
-> + */
-> +struct dfl_fpga_irq_set {
-> +	__u32 start;		/* Index of the first irq */
-> +	__u32 count;		/* The number of eventfd handler */
-> +	__s32 evtfds[];		/* Eventfd handler */
-> +};
+>   	return ret;
+>   }
+>   
+> @@ -371,6 +385,16 @@ int gdsc_register(struct gdsc_desc *desc,
+>   	if (!data->domains)
+>   		return -ENOMEM;
+>   
+> +	/* Resolve any regulator supplies */
+> +	for (i = 0; i < num; i++) {
+> +		if (!scs[i] || !scs[i]->supply)
+> +			continue;
 > +
-> +#define DFL_FPGA_PORT_ERR_SET_IRQ	_IOW(DFL_FPGA_MAGIC,	\
-> +					     DFL_PORT_BASE + 6,	\
-> +					     struct dfl_fpga_irq_set)
+> +		scs[i]->rsupply = devm_regulator_get(dev, scs[i]->supply);
+> +		if (IS_ERR(scs[i]->rsupply))
+> +			return PTR_ERR(scs[i]->rsupply);
+> +	}
 > +
->  /* IOCTLs for FME file descriptor */
->  
->  /**
-> -- 
-> 2.7.4
+>   	data->num_domains = num;
+>   	for (i = 0; i < num; i++) {
+>   		if (!scs[i])
+> diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
+> index 64cdc8cf0d4d..c36fc26dcdff 100644
+> --- a/drivers/clk/qcom/gdsc.h
+> +++ b/drivers/clk/qcom/gdsc.h
+> @@ -10,6 +10,7 @@
+>   #include <linux/pm_domain.h>
+>   
+>   struct regmap;
+> +struct regulator;
+>   struct reset_controller_dev;
+>   
+>   /**
+> @@ -52,6 +53,9 @@ struct gdsc {
+>   	struct reset_controller_dev	*rcdev;
+>   	unsigned int			*resets;
+>   	unsigned int			reset_count;
+> +
+> +	const char 			*supply;
+> +	struct regulator		*rsupply;
+>   };
+>   
+>   struct gdsc_desc {
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
