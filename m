@@ -5,43 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBC3C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82982C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DB72071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543702071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbgCaNdl (ORCPT
+        id S1730957AbgCaNdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:33:41 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:37366 "EHLO loongson.cn"
+        Tue, 31 Mar 2020 09:33:44 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:37370 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730464AbgCaNdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:33:40 -0400
+        id S1730216AbgCaNdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:33:42 -0400
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf9+pRoNeSSIiAA--.19S3;
-        Tue, 31 Mar 2020 21:33:31 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf9+pRoNeSSIiAA--.19S5;
+        Tue, 31 Mar 2020 21:33:32 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Huacai Chen <chenhc@lemote.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH v3 1/3] MIPS: Loongson: Get host bridge information
-Date:   Tue, 31 Mar 2020 21:33:26 +0800
-Message-Id: <1585661608-3356-2-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH v3 3/3] MIPS: Loongson: Add PCI support for 7A1000
+Date:   Tue, 31 Mar 2020 21:33:28 +0800
+Message-Id: <1585661608-3356-4-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
 In-Reply-To: <1585661608-3356-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1585661608-3356-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxf9+pRoNeSSIiAA--.19S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCryDAr1Uuw4kCrWDJw48Crg_yoW5Zr4Upa
-        9ay3WrGrs5Wr13urs5ArWj9r1fAan5tFsxWFW2gw1Y9F97Xw1YqFsYkF18Zr47AFs8Ga48
-        X3sagr48GF43Cw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9v14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+X-CM-TRANSID: AQAAf9Dxf9+pRoNeSSIiAA--.19S5
+X-Coremail-Antispam: 1UD129KBjvJXoW3Xw1rKry3ZFWxuFy3uFWruFg_yoWxCF1UpF
+        43A3WUKr4FqF1fGFnYy3yUGF1rAFZxJF9rKFW2kryj93sxZryFqF95W3W5tr4fKw4DXa47
+        W3yfKF17G3WjkaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9v14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+        x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
         Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
         ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
         xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
@@ -51,103 +51,202 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxCryDAr1Uuw4kCrWDJw48Crg_yoW5Zr4Upa
         JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
         v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
         j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjgTmJUUUUU==
+        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUDKs7UUUUU==
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Read the address of host bridge configuration space to get the vendor ID
-and device ID of host bridge, and then we can distinguish various types
-of host bridge such as Loongson 7A1000 or AMD RS780E.
+Add PCI support for 7A1000 to detect PCI device.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
 
 v3:
-  - Modify the macro definition HOST_BRIDGE_CONFIG_ADDR and
-    add comment to make it easy to read.
+  - Move ls7a1000_pci_class_quirk() to fixup-loongson3.c
   - Use PCI_VENDOR_ID_LOONGSON in pci_ids.h instead of 0x0014
 
   PCI_VENDOR_ID_LOONGSON depends on the mainline tree's commit:
   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9acb9fe18d86
 
- arch/mips/include/asm/mach-loongson64/boot_param.h |  6 ++++++
- arch/mips/loongson64/env.c                         | 18 ++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ arch/mips/include/asm/mach-loongson64/boot_param.h |  9 ++++
+ arch/mips/loongson64/env.c                         |  2 +
+ arch/mips/pci/fixup-loongson3.c                    | 12 +++++
+ arch/mips/pci/ops-loongson3.c                      | 63 ++++++++++++++++++++--
+ 4 files changed, 82 insertions(+), 4 deletions(-)
 
 diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
-index 2ed483e..a272427 100644
+index a36d3dc..c8f8d6b 100644
 --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
 +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
-@@ -192,6 +192,11 @@ struct boot_params {
- 	struct efi_reset_system_t reset_system;
+@@ -197,6 +197,7 @@ enum loongson_bridge_type {
+ 	LS7A1000 = 2
  };
  
-+enum loongson_bridge_type {
-+	RS780E = 1,
-+	LS7A1000 = 2
-+};
-+
++struct pci_bus;
  struct loongson_system_configuration {
  	u32 nr_cpus;
  	u32 nr_nodes;
-@@ -200,6 +205,7 @@ struct loongson_system_configuration {
- 	u16 boot_cpu_id;
- 	u16 reserved_cpus_mask;
- 	enum loongson_cpu_type cputype;
-+	enum loongson_bridge_type bridgetype;
- 	u64 ht_control_base;
- 	u64 pci_mem_start_addr;
- 	u64 pci_mem_end_addr;
+@@ -222,6 +223,8 @@ struct loongson_system_configuration {
+ 	struct sensor_device sensors[MAX_SENSORS];
+ 	u64 workarounds;
+ 	void (*early_config)(void);
++	int (*pci_config_access)(unsigned char access_type, struct pci_bus *bus,
++				 unsigned int devfn, int where, u32 *data);
+ };
+ 
+ extern struct efi_memory_map_loongson *loongson_memmap;
+@@ -230,5 +233,11 @@ extern struct loongson_system_configuration loongson_sysconf;
+ extern u32 node_id_offset;
+ extern void rs780e_early_config(void);
+ extern void ls7a1000_early_config(void);
++extern int rs780e_pci_config_access(unsigned char access_type,
++		struct pci_bus *bus, unsigned int devfn,
++		int where, u32 *data);
++extern int ls7a1000_pci_config_access(unsigned char access_type,
++		struct pci_bus *bus, unsigned int devfn,
++		int where, u32 *data);
+ 
+ #endif
 diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 2554ef1..257a9b6 100644
+index 8b8d6f6..0190ea6 100644
 --- a/arch/mips/loongson64/env.c
 +++ b/arch/mips/loongson64/env.c
-@@ -14,12 +14,15 @@
-  * Author: Wu Zhangjin, wuzhangjin@gmail.com
-  */
- #include <linux/export.h>
-+#include <linux/pci_ids.h>
- #include <asm/bootinfo.h>
- #include <loongson.h>
- #include <boot_param.h>
- #include <builtin_dtbs.h>
- #include <workarounds.h>
- 
-+#define HOST_BRIDGE_CONFIG_ADDR	((void __iomem *)TO_UNCAC(0x1a000000))
-+
- u32 cpu_clock_freq;
- EXPORT_SYMBOL(cpu_clock_freq);
- struct efi_memory_map_loongson *loongson_memmap;
-@@ -43,6 +46,8 @@ void __init prom_init_env(void)
- 	struct system_loongson *esys;
- 	struct efi_cpuinfo_loongson *ecpu;
- 	struct irq_source_routing_table *eirq_source;
-+	u32 id;
-+	u16 vendor, device;
- 
- 	/* firmware arguments are initialized in head.S */
- 	boot_p = (struct boot_params *)fw_arg2;
-@@ -178,4 +183,17 @@ void __init prom_init_env(void)
- 		memcpy(loongson_sysconf.sensors, esys->sensors,
- 			sizeof(struct sensor_device) * loongson_sysconf.nr_sensors);
- 	pr_info("CpuClock = %u\n", cpu_clock_freq);
-+
-+	/* Read the ID of PCI host bridge to detect bridge type */
-+	id = readl(HOST_BRIDGE_CONFIG_ADDR);
-+	vendor = id & 0xffff;
-+	device = (id >> 16) & 0xffff;
-+
-+	if (vendor == PCI_VENDOR_ID_LOONGSON && device == 0x7a00) {
-+		pr_info("The bridge chip is Loongson 7A1000\n");
-+		loongson_sysconf.bridgetype = LS7A1000;
-+	} else {
-+		pr_info("The bridge chip is AMD RS780E or SR5690\n");
-+		loongson_sysconf.bridgetype = RS780E;
-+	}
+@@ -193,9 +193,11 @@ void __init prom_init_env(void)
+ 		pr_info("The bridge chip is Loongson 7A1000\n");
+ 		loongson_sysconf.bridgetype = LS7A1000;
+ 		loongson_sysconf.early_config = ls7a1000_early_config;
++		loongson_sysconf.pci_config_access = ls7a1000_pci_config_access;
+ 	} else {
+ 		pr_info("The bridge chip is AMD RS780E or SR5690\n");
+ 		loongson_sysconf.bridgetype = RS780E;
+ 		loongson_sysconf.early_config = rs780e_early_config;
++		loongson_sysconf.pci_config_access = rs780e_pci_config_access;
+ 	}
  }
+diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson3.c
+index 8a741c2..569649e 100644
+--- a/arch/mips/pci/fixup-loongson3.c
++++ b/arch/mips/pci/fixup-loongson3.c
+@@ -64,6 +64,18 @@ static void pci_fixup_radeon(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
+ 				PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
+ 
++static void ls7a1000_pci_class_quirk(struct pci_dev *dev)
++{
++	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
++}
++
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON, 0x7a09,
++			ls7a1000_pci_class_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON, 0x7a19,
++			ls7a1000_pci_class_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON, 0x7a29,
++			ls7a1000_pci_class_quirk);
++
+ /* Do platform specific device initialization at pci_enable_device() time */
+ int pcibios_plat_dev_init(struct pci_dev *dev)
+ {
+diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
+index 2f6ad36..b69e569 100644
+--- a/arch/mips/pci/ops-loongson3.c
++++ b/arch/mips/pci/ops-loongson3.c
+@@ -13,7 +13,10 @@
+ #define HT1LO_PCICFG_BASE      0x1a000000
+ #define HT1LO_PCICFG_BASE_TP1  0x1b000000
+ 
+-static int loongson3_pci_config_access(unsigned char access_type,
++#define HT1LO_PCICFG_BASE_EXT		0xefe00000000
++#define HT1LO_PCICFG_BASE_TP1_EXT	0xefe10000000
++
++int rs780e_pci_config_access(unsigned char access_type,
+ 		struct pci_bus *bus, unsigned int devfn,
+ 		int where, u32 *data)
+ {
+@@ -62,11 +65,63 @@ static int loongson3_pci_config_access(unsigned char access_type,
+ 	return PCIBIOS_SUCCESSFUL;
+ }
+ 
++
++int ls7a1000_pci_config_access(unsigned char access_type,
++		struct pci_bus *bus, unsigned int devfn,
++		int where, u32 *data)
++{
++	u_int64_t addr;
++	void *addrp;
++	unsigned char busnum = bus->number;
++	int device = PCI_SLOT(devfn);
++	int function = PCI_FUNC(devfn);
++	int reg = where & ~3;
++
++	if (where >= PCI_CFG_SPACE_EXP_SIZE)
++		return PCIBIOS_DEVICE_NOT_FOUND;
++
++	if (busnum == 0 && device > 23)
++		return PCIBIOS_DEVICE_NOT_FOUND;
++
++	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
++		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
++		if (busnum == 0) {
++			addr = HT1LO_PCICFG_BASE | addr;
++			addrp = (void *)TO_UNCAC(addr);
++		} else {
++			addr = HT1LO_PCICFG_BASE_TP1 | addr;
++			addrp = (void *)TO_UNCAC(addr);
++		}
++	} else { /* extended config */
++		reg = (reg & 0xff) | ((reg & 0xf00) << 16);
++		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
++		if (busnum == 0) {
++			addr = HT1LO_PCICFG_BASE_EXT | addr;
++			addrp = (void *)TO_UNCAC(addr);
++		} else {
++			addr = HT1LO_PCICFG_BASE_TP1_EXT | addr;
++			addrp = (void *)TO_UNCAC(addr);
++		}
++	}
++
++	if (access_type == PCI_ACCESS_WRITE)
++		*(unsigned int *)addrp = cpu_to_le32(*data);
++	else {
++		*data = le32_to_cpu(*(unsigned int *)addrp);
++		if (*data == 0xffffffff) {
++			*data = -1;
++			return PCIBIOS_DEVICE_NOT_FOUND;
++		}
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
+ static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int devfn,
+ 				 int where, int size, u32 *val)
+ {
+ 	u32 data = 0;
+-	int ret = loongson3_pci_config_access(PCI_ACCESS_READ,
++	int ret = loongson_sysconf.pci_config_access(PCI_ACCESS_READ,
+ 			bus, devfn, where, &data);
+ 
+ 	if (ret != PCIBIOS_SUCCESSFUL)
+@@ -91,7 +146,7 @@ static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
+ 	if (size == 4)
+ 		data = val;
+ 	else {
+-		ret = loongson3_pci_config_access(PCI_ACCESS_READ,
++		ret = loongson_sysconf.pci_config_access(PCI_ACCESS_READ,
+ 				bus, devfn, where, &data);
+ 		if (ret != PCIBIOS_SUCCESSFUL)
+ 			return ret;
+@@ -104,7 +159,7 @@ static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int devfn,
+ 			    (val << ((where & 3) << 3));
+ 	}
+ 
+-	ret = loongson3_pci_config_access(PCI_ACCESS_WRITE,
++	ret = loongson_sysconf.pci_config_access(PCI_ACCESS_WRITE,
+ 			bus, devfn, where, &data);
+ 
+ 	return ret;
 -- 
 2.1.0
 
