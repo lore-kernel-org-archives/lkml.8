@@ -2,184 +2,356 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7F6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222D8C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C6B20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDFD20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kI5mOwjm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zaxzgois"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgCaG2I (ORCPT
+        id S1729745AbgCaGaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:28:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:12639 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgCaG2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:28:08 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48rzsd3MLMz9tw25;
-        Tue, 31 Mar 2020 08:28:05 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=kI5mOwjm; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Y72CvPfE2aJI; Tue, 31 Mar 2020 08:28:05 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48rzsd2GPWz9v0KF;
-        Tue, 31 Mar 2020 08:28:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585636085; bh=QHEbKBEkArQVVuyJdKh0gGs4/CIEJ9/kI47jhRFbnMU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kI5mOwjmMfai0Zz39DOOAus2hYlZKmozithcxAVsFm7RCYbaCXdjcqhzrUgXC8azV
-         6mgB96i8R3iIc3YAmZGjhTjrNroLQuA9p8kR0CF09eyjcFf4YATGnI7RDNODZlF3Vf
-         pzvCUASD2lnHe/iR+i0tQWA4DVeybWiNzlsSNFO0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 04FCE8B784;
-        Tue, 31 Mar 2020 08:28:06 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id x4NtmrzTKc-4; Tue, 31 Mar 2020 08:28:05 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 337088B774;
-        Tue, 31 Mar 2020 08:28:04 +0200 (CEST)
-Subject: Re: [PATCH 10/12] powerpc/entry32: Blacklist exception entry points
- for kprobe.
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <dff05b59a161434a546010507000816750073f28.1585474724.git.christophe.leroy@c-s.fr>
- <aea027844b12fcbc29ea78d26c5848a6794d1688.1585474724.git.christophe.leroy@c-s.fr>
- <1585588031.jvow7mwq4x.naveen@linux.ibm.com>
- <7f367f35-1bb8-bbb6-f399-8e911f76e043@c-s.fr>
- <83053ddf-9ba6-d551-6711-890c3f3810b5@c-s.fr>
- <1585635379.0xixuk2jdc.naveen@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <bc184460-70be-0fe2-0a01-a97ee96652c0@c-s.fr>
-Date:   Tue, 31 Mar 2020 08:28:04 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 02:30:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43300 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCaGaL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 02:30:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id v23so7729311ply.10
+        for <linux-kernel@vger.kernel.org>; Mon, 30 Mar 2020 23:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jjn+ASRlX8M3ZZPMh5uPprMvWDPtGLPGmzZNh+IUH1Q=;
+        b=ZaxzgoisWtL73VOT31YL2mGQgRi0brkCjMTdPnhOnIY6uduQ6W//C9tSoLJnrQI5qg
+         OdS77Gh7NqpnwpMG+mRNB3ukt9o6Gn8vontAd1C1aSiNGhF8iqxV5VxvEsFTDrIrK2lj
+         eqzmroC18AuTfqdxzJ+ihzoR82EIQQtJVMRApizOmh/aSPVeLTvSOd82Qk7iqED+pdzT
+         zcYzt5oBSMn8yW2IJN+DWDmyy7O5lmI9Avi8xwND8vkQy61J6wPDYHPFdgQsgp6hD4az
+         1uapUCq6YnrQMZacAOCY0zHeRZjzhqcCXY2VWiYcFMutm9WquLU7wVord4pXGE82jZ3p
+         Tt1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jjn+ASRlX8M3ZZPMh5uPprMvWDPtGLPGmzZNh+IUH1Q=;
+        b=tpAda22lHgj1lBLQUfeHLTBfRfen4RvMMeN7G+P+ct11borY4CwCwjYVzqrUCBk6Xv
+         DsvAMyJYsIeoHt9kJTs22EnQhSQqcC2jP3ndgRNUDX6VGgh/Y4FMNcZ1/0VUi/mGCmcR
+         7VfP5gX7Wb4HfKoxsInudpi78n+5ODCI33Rw9nm3O0lWdM4/3hCU3xSJccmiBGAVxDh8
+         tjPaXtsUFZ9VIEgQ+0fG1pMZx7AQ18x4W0GUi87LYoZL7Zxel3ATODCLwo2JR2TCPg7O
+         LH/6DVrxSkVOdXHv1KKuSLregpJ685AnP3KJKFXRNPeN4sPslJyj2YJRGcUIOaOU/mKh
+         bVhg==
+X-Gm-Message-State: AGi0PuZyikUsEc7IKT+DeEm5F1EMlWyE6OxFaW5vS0ipsKxZKimSOMUb
+        e6p0jc0u9iYYIp9G6DCrwDTtsA==
+X-Google-Smtp-Source: APiQypJ/Cv1F1BPohc2bSxoc4ke0wWmo8tfo0CTKdBVVo8zaosJp7T0VLejTn8j2tewP6vPoRn6iVg==
+X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr2188819pjn.34.1585636209011;
+        Mon, 30 Mar 2020 23:30:09 -0700 (PDT)
+Received: from localhost.localdomain ([117.210.211.37])
+        by smtp.gmail.com with ESMTPSA id e7sm4348162pfm.3.2020.03.30.23.30.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 30 Mar 2020 23:30:08 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     jarkko.sakkinen@linux.intel.com, zohar@linux.ibm.com,
+        jejb@linux.ibm.com
+Cc:     corbet@lwn.net, casey@schaufler-ca.com, janne.karhunen@gmail.com,
+        kgoldman@us.ibm.com, david.safford@ge.com, monty.wiseman@ge.com,
+        daniel.thompson@linaro.org, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH] doc: trusted-encrypted: updates with TEE as a new trust source
+Date:   Tue, 31 Mar 2020 11:59:25 +0530
+Message-Id: <1585636165-22481-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <1585635379.0xixuk2jdc.naveen@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Update documentation for Trusted and Encrypted Keys with TEE as a new
+trust source. Following is brief description of updates:
 
+- Add a section to demostrate a list of supported devices along with
+  their security properties/guarantees.
+- Add a key generation section.
+- Updates for usage section including differences specific to a trust
+  source.
 
-Le 31/03/2020 à 08:17, Naveen N. Rao a écrit :
-> Christophe Leroy wrote:
->>
->>
->> Le 30/03/2020 à 20:33, Christophe Leroy a écrit :
->>>
->>>
->>> Le 30/03/2020 à 19:08, Naveen N. Rao a écrit :
->>>> Christophe Leroy wrote:
->>>>> kprobe does not handle events happening in real mode.
->>>>>
->>>>> As exception entry points are running with MMU disabled,
->>>>> blacklist them.
->>>>>
->>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>>>> ---
->>>>>  arch/powerpc/kernel/entry_32.S | 7 +++++++
->>>>>  1 file changed, 7 insertions(+)
->>>>>
->>>>> diff --git a/arch/powerpc/kernel/entry_32.S 
->>>>> b/arch/powerpc/kernel/entry_32.S
->>>>> index 94f78c03cb79..9a1a45d6038a 100644
->>>>> --- a/arch/powerpc/kernel/entry_32.S
->>>>> +++ b/arch/powerpc/kernel/entry_32.S
->>>>> @@ -51,6 +51,7 @@ mcheck_transfer_to_handler:
->>>>>      mfspr    r0,SPRN_DSRR1
->>>>>      stw    r0,_DSRR1(r11)
->>>>>      /* fall through */
->>>>> +_ASM_NOKPROBE_SYMBOL(mcheck_transfer_to_handler)
->>>>>
->>>>>      .globl    debug_transfer_to_handler
->>>>>  debug_transfer_to_handler:
->>>>> @@ -59,6 +60,7 @@ debug_transfer_to_handler:
->>>>>      mfspr    r0,SPRN_CSRR1
->>>>>      stw    r0,_CSRR1(r11)
->>>>>      /* fall through */
->>>>> +_ASM_NOKPROBE_SYMBOL(debug_transfer_to_handler)
->>>>>
->>>>>      .globl    crit_transfer_to_handler
->>>>>  crit_transfer_to_handler:
->>>>> @@ -94,6 +96,7 @@ crit_transfer_to_handler:
->>>>>      rlwinm    r0,r1,0,0,(31 - THREAD_SHIFT)
->>>>>      stw    r0,KSP_LIMIT(r8)
->>>>>      /* fall through */
->>>>> +_ASM_NOKPROBE_SYMBOL(crit_transfer_to_handler)
->>>>>  #endif
->>>>>
->>>>>  #ifdef CONFIG_40x
->>>>> @@ -115,6 +118,7 @@ crit_transfer_to_handler:
->>>>>      rlwinm    r0,r1,0,0,(31 - THREAD_SHIFT)
->>>>>      stw    r0,KSP_LIMIT(r8)
->>>>>      /* fall through */
->>>>> +_ASM_NOKPROBE_SYMBOL(crit_transfer_to_handler)
->>>>>  #endif
->>>>>
->>>>>  /*
->>>>> @@ -127,6 +131,7 @@ crit_transfer_to_handler:
->>>>>      .globl    transfer_to_handler_full
->>>>>  transfer_to_handler_full:
->>>>>      SAVE_NVGPRS(r11)
->>>>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler_full)
->>>>>      /* fall through */
->>>>>
->>>>>      .globl    transfer_to_handler
->>>>> @@ -286,6 +291,8 @@ reenable_mmu:
->>>>>      lwz    r2, GPR2(r11)
->>>>>      b    fast_exception_return
->>>>>  #endif
->>>>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler)
->>>>> +_ASM_NOKPROBE_SYMBOL(transfer_to_handler_cont)
->>>>
->>>> These are added after 'reenable_mmu', which is itself not 
->>>> blacklisted. Is that intentional?
->>>
->>> Yes I put it as the complete end of the entry part, ie just before 
->>> stack_ovf which is a function by itself.
->>>
->>> Note that reenable_mmu is inside an #ifdef CONFIG_TRACE_IRQFLAGS.
->>>
->>> I'm not completely sure where to put the _ASM_NOKPROBE_SYMBOL()s, 
->>> that's the reason why I put it close to the symbol itself in my first 
->>> series.
->>>
->>> Could you have a look at the code and tell me what looks the most 
->>> appropriate as a location to you ?
->>>
->>> https://elixir.bootlin.com/linux/v5.6/source/arch/powerpc/kernel/entry_32.S#L230 
->>
->>
->> Ok, thinking about it once more, I guess we have a problem as 
->> everything after that reenable_mmu will be visible.
-> 
-> I see that we reach reenable_mmu through a 'rfi' with MSR_KERNEL, which 
-> seems safe to me. So, I figured it can be probed without issues?
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
 
-Yes it can. And that's the reason why I didn't blacklist it. However the 
-4: and 7: which are after reenable_mmu are called from earlier, at a 
-time we are still in real mode. So I need to do something about that I 
-guess.
+First of all apologies for the long delay due to my involvement on other
+projects. So now I am able to pick up pending documentation work [1].
 
-Christophe
+I have tried to list down comparison on the basis of security properties/
+guarantees among TPM and a TEE as mentioned by Mimi here [2].
+
+So I do look forward to comments and fruitful discussions.
+
+[1] https://lkml.org/lkml/2019/11/4/886
+[2] https://lore.kernel.org/linux-integrity/1568025601.4614.253.camel@linux.ibm.com/#t
+
+ Documentation/security/keys/trusted-encrypted.rst | 201 ++++++++++++++++++----
+ 1 file changed, 170 insertions(+), 31 deletions(-)
+
+diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
+index 50ac8bc..c12ba47 100644
+--- a/Documentation/security/keys/trusted-encrypted.rst
++++ b/Documentation/security/keys/trusted-encrypted.rst
+@@ -6,30 +6,161 @@ Trusted and Encrypted Keys are two new key types added to the existing kernel
+ key ring service.  Both of these new types are variable length symmetric keys,
+ and in both cases all keys are created in the kernel, and user space sees,
+ stores, and loads only encrypted blobs.  Trusted Keys require the availability
+-of a Trusted Platform Module (TPM) chip for greater security, while Encrypted
+-Keys can be used on any system.  All user level blobs, are displayed and loaded
+-in hex ascii for convenience, and are integrity verified.
++of a Trust Source for greater security, while Encrypted Keys can be used on any
++system. All user level blobs, are displayed and loaded in hex ascii for
++convenience, and are integrity verified.
+ 
+-Trusted Keys use a TPM both to generate and to seal the keys.  Keys are sealed
+-under a 2048 bit RSA key in the TPM, and optionally sealed to specified PCR
+-(integrity measurement) values, and only unsealed by the TPM, if PCRs and blob
+-integrity verifications match.  A loaded Trusted Key can be updated with new
+-(future) PCR values, so keys are easily migrated to new pcr values, such as
+-when the kernel and initramfs are updated.  The same key can have many saved
+-blobs under different PCR values, so multiple boots are easily supported.
+ 
+-TPM 1.2
+--------
++Trust Source
++============
+ 
+-By default, trusted keys are sealed under the SRK, which has the default
+-authorization value (20 zeros).  This can be set at takeownership time with the
+-trouser's utility: "tpm_takeownership -u -z".
++Trust Source provides the sense of security for the Trusted Keys, on which
++basis Trusted Keys establishes a Trust model with its user. A Trust Source could
++differ from one system to another depending on its security requirements. It
++could be either an off-chip device or an on-chip device. Following section
++demostrates a list of supported devices along with their security properties/
++guarantees:
+ 
+-TPM 2.0
+--------
++  *  Root of trust for storage
+ 
+-The user must first create a storage key and make it persistent, so the key is
+-available after reboot. This can be done using the following commands.
++     (1) TPM (Trusted Platform Module: hardware device)
++
++         Rooted to Storage Root Key (SRK) which never leaves the TPM that
++         provides crypto operation to establish root of trust for storage.
++
++     (2) TEE (Trusted Execution Environment: OP-TEE based on Arm TrustZone)
++
++         Rooted to Hardware Unique Key (HUK) which is generally burnt in on-chip
++         fuses and is accessible to TEE only.
++
++  *  Execution isolation
++
++     (1) TPM
++
++         Fixed set of operations running in isolated execution environment.
++
++     (2) TEE
++
++         Customizable set of operations running in isolated execution
++         environment verified via Secure/Trusted boot process.
++
++  * Optional binding to platform integrity state
++
++     (1) TPM
++
++         Keys can be optionally sealed to specified PCR (integrity measurement)
++         values, and only unsealed by the TPM, if PCRs and blob integrity
++         verifications match. A loaded Trusted Key can be updated with new
++         (future) PCR values, so keys are easily migrated to new pcr values,
++         such as when the kernel and initramfs are updated.  The same key can
++         have many saved blobs under different PCR values, so multiple boots are
++         easily supported.
++
++     (2) TEE
++
++         Relies on Secure/Trusted boot process for platform integrity. It can
++         be extended with TEE based measured boot process.
++
++  *  On-chip versus off-chip
++
++     (1) TPM
++
++         Off-chip device connected via serial bus (like I2C, SPI etc.) exposing
++         physical access which represents an attack surface that can be
++         mitigated via tamper detection.
++
++     (2) TEE
++
++         On-chip functionality, immune to this attack surface.
++
++  *  Memory attacks (DRAM based like attaching a bus monitor etc.)
++
++     (1) TPM
++
++         Immune to these attacks as it doesn’t make use of system DRAM.
++
++     (2) TEE
++
++         An implementation based on TrustZone protected DRAM is susceptible to
++         such attacks. In order to mitigate these attacks one needs to rely on
++         on-chip secure RAM to store secrets or have the entire TEE
++         implementation based on on-chip secure RAM. An alternative mitigation
++         would be to use encrypted DRAM.
++
++  *  Side-channel attacks (cache, memory, CPU or time based)
++
++     (1) TPM
++
++         Immune to side-channel attacks as its resources are isolated from the
++         main OS.
++
++     (2) TEE
++
++         A careful implementation is required to mitigate against these attacks
++         for resources which are shared (eg. shared memory) with the main OS.
++         Cache and CPU based side-channel attacks can be mitigated via
++         invalidating caches and CPU registers during context switch to and from
++         the secure world.
++         To mitigate against time based attacks, one needs to have time
++         invariant implementations (like crypto algorithms etc.).
++
++  *  Resistance to physical attacks (power analysis, electromagnetic emanation,
++     probes etc.)
++
++     (1) TPM
++
++         Provides limited protection utilizing tamper resistance.
++
++     (2) TEE
++
++         Provides no protection by itself, relies on the underlying platform for
++         features such as tamper resistance.
++
++
++Key Generation
++==============
++
++Trusted Keys
++------------
++
++New keys are created from trust source generated random numbers, and are
++encrypted/decrypted using trust source storage root key.
++
++  *  TPM (hardware device) based RNG
++
++     Strength of random numbers may vary from one device manufacturer to
++     another.
++
++  *  TEE (OP-TEE based on Arm TrustZone) based RNG
++
++     RNG is customizable as per platform needs. It can either be direct output
++     from platform specific hardware RNG or a software based Fortuna CSPRNG
++     which can be seeded via multiple entropy sources.
++
++Encrypted Keys
++--------------
++
++Encrypted keys do not depend on a trust source, and are faster, as they use AES
++for encryption/decryption. New keys are created from kernel generated random
++numbers, and are encrypted/decrypted using a specified ‘master’ key. The
++‘master’ key can either be a trusted-key or user-key type. The main disadvantage
++of encrypted keys is that if they are not rooted in a trusted key, they are only
++as secure as the user key encrypting them. The master user key should therefore
++be loaded in as secure a way as possible, preferably early in boot.
++
++
++Usage
++=====
++
++Trusted Keys usage: TPM
++-----------------------
++
++TPM 1.2: By default, trusted keys are sealed under the SRK, which has the
++default authorization value (20 zeros).  This can be set at takeownership time
++with the trouser's utility: "tpm_takeownership -u -z".
++
++TPM 2.0: The user must first create a storage key and make it persistent, so the
++key is available after reboot. This can be done using the following commands.
+ 
+ With the IBM TSS 2 stack::
+ 
+@@ -79,14 +210,21 @@ TPM_STORED_DATA format.  The key length for new keys are always in bytes.
+ Trusted Keys can be 32 - 128 bytes (256 - 1024 bits), the upper limit is to fit
+ within the 2048 bit SRK (RSA) keylength, with all necessary structure/padding.
+ 
+-Encrypted keys do not depend on a TPM, and are faster, as they use AES for
+-encryption/decryption.  New keys are created from kernel generated random
+-numbers, and are encrypted/decrypted using a specified 'master' key.  The
+-'master' key can either be a trusted-key or user-key type.  The main
+-disadvantage of encrypted keys is that if they are not rooted in a trusted key,
+-they are only as secure as the user key encrypting them.  The master user key
+-should therefore be loaded in as secure a way as possible, preferably early in
+-boot.
++Trusted Keys usage: TEE
++-----------------------
++
++Usage::
++
++    keyctl add trusted name "new keylen" ring
++    keyctl add trusted name "load hex_blob" ring
++    keyctl print keyid
++
++"keyctl print" returns an ascii hex copy of the sealed key, which is in format
++specific to TEE device implementation.  The key length for new keys are always
++in bytes. Trusted Keys can be 32 - 128 bytes (256 - 1024 bits).
++
++Encrypted Keys usage
++--------------------
+ 
+ The decrypted portion of encrypted keys can contain either a simple symmetric
+ key or a more complex structure. The format of the more complex structure is
+@@ -104,8 +242,8 @@ Where::
+ 	format:= 'default | ecryptfs | enc32'
+ 	key-type:= 'trusted' | 'user'
+ 
+-
+ Examples of trusted and encrypted key usage:
++--------------------------------------------
+ 
+ Create and save a trusted key named "kmk" of length 32 bytes.
+ 
+@@ -151,7 +289,7 @@ Load a trusted key from the saved blob::
+     f1f8fff03ad0acb083725535636addb08d73dedb9832da198081e5deae84bfaf0409c22b
+     e4a8aea2b607ec96931e6f4d4fe563ba
+ 
+-Reseal a trusted key under new pcr values::
++Reseal (TPM specific) a trusted key under new pcr values::
+ 
+     $ keyctl update 268728824 "update pcrinfo=`cat pcr.blob`"
+     $ keyctl print 268728824
+@@ -165,11 +303,12 @@ Reseal a trusted key under new pcr values::
+     7ef6a24defe4846104209bf0c3eced7fa1a672ed5b125fc9d8cd88b476a658a4434644ef
+     df8ae9a178e9f83ba9f08d10fa47e4226b98b0702f06b3b8
+ 
++
+ The initial consumer of trusted keys is EVM, which at boot time needs a high
+ quality symmetric key for HMAC protection of file metadata.  The use of a
+ trusted key provides strong guarantees that the EVM key has not been
+-compromised by a user level problem, and when sealed to specific boot PCR
+-values, protects against boot and offline attacks.  Create and save an
++compromised by a user level problem, and when sealed to a platform integrity
++state, protects against boot and offline attacks.  Create and save an
+ encrypted key "evm" using the above trusted key "kmk":
+ 
+ option 1: omitting 'format'::
+-- 
+2.7.4
+
