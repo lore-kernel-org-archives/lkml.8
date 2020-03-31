@@ -2,109 +2,94 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179B6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9DDC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86ED20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KKKuEq4Z"
+	by mail.kernel.org (Postfix) with ESMTP id AABCE20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585646208;
+	bh=IyginMYVJzvpy3Q5tHbEtrGdrQCTHoh7Rbw5CtAfmw0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Mcu7bGL/XIdkd8NzP9dCuDOixnw6wUUyk47Sf7HqLmr98mVUdRVnoOenhKEo2DeMw
+	 ZuBEwAPZW8vy5AXpgPeB1D6FskDl2b5Cch8dCPTwvuzzwN+qIRzvZ5cKTO9VK4Ee5n
+	 Ifhd4CDRqJQ2pDwZqHYT4U+0BLqdD88NbJm1512E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbgCaJQn (ORCPT
+        id S1731986AbgCaJQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 31 Mar 2020 05:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731495AbgCaJQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 05:16:43 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52490 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730328AbgCaJQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:38 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02V9BPwH080439;
-        Tue, 31 Mar 2020 09:16:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=soT205CLbo3pSZEAx9AVjNKeXiqZkOzPFfSpgHTqh+M=;
- b=KKKuEq4ZbL21qiOck4SWuo0lJ4mO0T+NNuoZZdFAcdVJtohEC/BLrX0w9NUhzRiLNoOh
- G6O+gw140niz57E14RFYNOVpM8oyF9+tHiH47ejsxspUucqxPQgsX+KPiEX0v80B2gvm
- G2Zuu0c6Bb4BLcMPfuXvSlBC2N2aJ6rRxZOO6OdECLNnh0GS2rS3Z3jP+jk5POszxnLE
- 4pijWU5bcmpShEn1rnX3W/UdV/upHH3sMu8QhdkxFNh0Xwcru6yuwITXesDvGZxcZqtw
- lcMBf8iV8RmTVDeRoI3HJDEnjo/NN6esFWteR280KbCugmc75XHcTnPUpdQ9s4s4EBaT +g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 303ceuxeg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 09:16:35 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02V96ubU002205;
-        Tue, 31 Mar 2020 09:16:34 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 302g2dq5kj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 09:16:34 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02V9GXDA017837;
-        Tue, 31 Mar 2020 09:16:33 GMT
-Received: from [10.175.15.184] (/10.175.15.184)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Mar 2020 02:16:33 -0700
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>,
-        linux-kbuild@vger.kernel.org
-Subject: single target builds are broken
-Message-ID: <a5ce79eb-be9d-df97-0b58-5aee5a48f4d3@oracle.com>
-Date:   Tue, 31 Mar 2020 11:16:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4E942072E;
+        Tue, 31 Mar 2020 09:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585646203;
+        bh=IyginMYVJzvpy3Q5tHbEtrGdrQCTHoh7Rbw5CtAfmw0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rm9RacMPYdRDeI9+Vz6G4ms4RhxmhUpYYumulDpGPArF9/qlFMIvU18mOU77Z8Seh
+         5PZn0uI1q3AG/IQnw/KgJ2C9TTpcrQJhZ+c4Znt30pJ763bwVJDTcVIDIfTmH2cwFU
+         j5O264E4sZ7g3t1++uXMhhgSUfGDT54zLLOHy2IA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 115/155] RDMA/mlx5: Block delay drop to unprivileged users
+Date:   Tue, 31 Mar 2020 10:59:15 +0200
+Message-Id: <20200331085431.397025815@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
+References: <20200331085418.274292403@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003310082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1011 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003310082
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Maor Gottlieb <maorg@mellanox.com>
 
-Hi,
+commit ba80013fba656b9830ef45cd40a6a1e44707f47a upstream.
 
-I often run 'make foo/bar.o' as part of my workflow, even when bar.o is
-not specified in any kernel makefile, and this has worked just fine for
-years.
+It has been discovered that this feature can globally block the RX port,
+so it should be allowed for highly privileged users only.
 
-This is broken after commit 394053f4a4b3e3eeeaa67b67fc886a9a75bd9e4d
-(kbuild: make single targets work more correctly) and just gives an error:
+Fixes: 03404e8ae652("IB/mlx5: Add support to dropless RQ")
+Link: https://lore.kernel.org/r/20200322124906.1173790-1-leon@kernel.org
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-$ make kernel/test.o
-   CALL    scripts/checksyscalls.sh
-   CALL    scripts/atomic/check-atomics.sh
-   DESCEND  objtool
-make[2]: *** No rule to make target 'kernel/test.o'.  Stop.
-scripts/Makefile.build:502: recipe for target '__build' failed
-make[1]: *** [__build] Error 2
-Makefile:1670: recipe for target 'kernel' failed
-make: *** [kernel] Error 2
+---
+ drivers/infiniband/hw/mlx5/qp.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-For top-level objects (e.g. 'make bar.o') the situation is even worse,
-since make exits with status 0 without building anything :-/
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -6132,6 +6132,10 @@ struct ib_wq *mlx5_ib_create_wq(struct i
+ 	if (udata->outlen && udata->outlen < min_resp_len)
+ 		return ERR_PTR(-EINVAL);
+ 
++	if (!capable(CAP_SYS_RAWIO) &&
++	    init_attr->create_flags & IB_WQ_FLAGS_DELAY_DROP)
++		return ERR_PTR(-EPERM);
++
+ 	dev = to_mdev(pd->device);
+ 	switch (init_attr->wq_type) {
+ 	case IB_WQT_RQ:
 
-Is there any chance we can get this back? It was super useful for me.
 
-
-Vegard
