@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C682AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DD2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41FD20757
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89ED20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgCaEPT (ORCPT
+        id S1729810AbgCaEPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 00:15:19 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46970 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbgCaEPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 00:15:18 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:46948 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbgCaEPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 00:15:16 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C5DB2007AF;
-        Tue, 31 Mar 2020 06:15:17 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 92F822007CC;
+        Tue, 31 Mar 2020 06:15:15 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 16AE62007D5;
-        Tue, 31 Mar 2020 06:15:11 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5CC612007D3;
+        Tue, 31 Mar 2020 06:15:09 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 27B5F402C8;
-        Tue, 31 Mar 2020 12:14:57 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E1650402C4;
+        Tue, 31 Mar 2020 12:14:55 +0800 (SGT)
 From:   Yangbo Lu <yangbo.lu@nxp.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
@@ -40,9 +40,9 @@ Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: [v2, 7/7] net: dsa: felix: enable PTP programmable pin
-Date:   Tue, 31 Mar 2020 12:11:13 +0800
-Message-Id: <20200331041113.15873-8-yangbo.lu@nxp.com>
+Subject: [v2, 6/7] net: mscc: ocelot: enable PTP programmable pin
+Date:   Tue, 31 Mar 2020 12:11:12 +0800
+Message-Id: <20200331041113.15873-7-yangbo.lu@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200331041113.15873-1-yangbo.lu@nxp.com>
 References: <20200331041113.15873-1-yangbo.lu@nxp.com>
@@ -59,14 +59,14 @@ Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 Changes for v2:
 	- Added this patch.
 ---
- drivers/net/dsa/ocelot/felix.c | 6 ++++--
+ drivers/net/ethernet/mscc/ocelot_board.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index e1573bc..bfa4c12 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -504,13 +504,15 @@ static struct ptp_clock_info ocelot_ptp_clock_info = {
+diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+index ee016f7..67a8d61 100644
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -372,13 +372,15 @@ static struct ptp_clock_info ocelot_ptp_clock_info = {
  	.max_adj	= 0x7fffffff,
  	.n_alarm	= 0,
  	.n_ext_ts	= 0,
@@ -83,7 +83,7 @@ index e1573bc..bfa4c12 100644
 +	.enable		= ocelot_ptp_enable,
  };
  
- /* Hardware initialization done here so that we can allocate structures with
+ static int mscc_ocelot_probe(struct platform_device *pdev)
 -- 
 2.7.4
 
