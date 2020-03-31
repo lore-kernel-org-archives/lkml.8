@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C3DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B74FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC626208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40844208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645560;
-	bh=bSQM1Dtvif4FaNcL9hMzSAR+D8lrIbIInjKk3q1hPjI=;
+	s=default; t=1585645563;
+	bh=UNYn8Ftm2U+xuoqzdwgc59OmLPnfj1sfx624GvHCahU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7dbTnX664P1+0l3bxU6hoHPKf4TPh1l396cqqneOKG0oz6kSUKXQ0xQRSw/I/pLW
-	 LoRWd4L1vbDVFiQ5gbef/hndj/+mtQg4EWPJtxZVtZzB63Wi2KbU1VJK8L60JJUMBB
-	 vhiZjAnCLUhWrjLkxy4smEeDn4FfwGpp69bsDNjM=
+	b=EMASjvXjLv8LDIBfPkfzi9u3dL2q0R2cqIY+8pwEZazJRlsBdiGbEtstXs24RRh7V
+	 YlracZmnaIa7518Peb5iKouvYRfd9NZnaE/CuasfwO3m0K73KZ+mShrmoy53j42tNI
+	 0/O8mEMrwZCKSw7TAntUDUG97acgA01ZkeV1N5gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbgCaJF7 (ORCPT
+        id S1731104AbgCaJGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47074 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:06:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731075AbgCaJFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:05:53 -0400
+        id S1730053AbgCaJFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:05:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E11E420675;
-        Tue, 31 Mar 2020 09:05:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EC9E20B1F;
+        Tue, 31 Mar 2020 09:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645552;
-        bh=bSQM1Dtvif4FaNcL9hMzSAR+D8lrIbIInjKk3q1hPjI=;
+        s=default; t=1585645555;
+        bh=UNYn8Ftm2U+xuoqzdwgc59OmLPnfj1sfx624GvHCahU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvPb5AEmD/DqgaiKAzeiA61knVoVDmZKStxmVzkY8JMA9K8Pmq28xyQBfgknqOYxk
-         NuVgpdlTIVi5/xZ9pkak5LDOo87TnbCXsZwBhFQNxGSKpCj9QOSDeoEmyNwNNkrAI3
-         ESMnt3YKlW37+Nmub1Lqa8T1/SfeiOQi6HOK9rWE=
+        b=gjTReSPt/sUvnHZtOdNjmaOuCjdb8OVnPebpuNSnW3Ugjpu8SRKY8plQjapmlqu95
+         Vs0m1GX8lbRnr5hqiWiC9xE7HSY+j02jTZrRc2tSyrSEWEqg4un/aIZ31KYM5TOItS
+         l4ZR3ogTUbpKp53T4LBS7Q59WKw+lwjkpW4cuWuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.5 088/170] RDMA/odp: Fix leaking the tgid for implicit ODP
-Date:   Tue, 31 Mar 2020 10:58:22 +0200
-Message-Id: <20200331085433.639637797@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Masney <masneyb@onstation.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.5 089/170] gpiolib: Fix irq_disable() semantics
+Date:   Tue, 31 Mar 2020 10:58:23 +0200
+Message-Id: <20200331085433.743228689@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,37 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 0f9826f4753f74f935e18c2a640484ecbd941346 upstream.
+commit 8959b304c7062889b1276092cc8590dc1ba98f65 upstream.
 
-The tgid used to be part of ib_umem_free_notifier(), when it was reworked
-it got moved to release, but it should have been unconditional as all umem
-alloc paths get the tgid.
+The implementation if .irq_disable() which kicks in between
+the gpiolib and the driver is not properly mimicking the
+expected semantics of the irqchip core: the irqchip will
+call .irq_disable() if that exists, else it will call
+mask_irq() which first checks if .irq_mask() is defined
+before calling it.
 
-As is, creating an implicit ODP will leak the tgid reference.
+Since we are calling it unconditionally, we get this bug
+from drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c, as it only
+defines .irq_mask_ack and not .irq_mask:
 
-Link: https://lore.kernel.org/r/20200304181607.GA22412@ziepe.ca
-Cc: stable@kernel.org
-Fixes: f25a546e6529 ("RDMA/odp: Use mmu_interval_notifier_insert()")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+  Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  pgd = (ptrval)
+  (...)
+  PC is at 0x0
+  LR is at gpiochip_irq_disable+0x20/0x30
+
+Fix this by only calling .irq_mask() if it exists.
+
+Cc: Brian Masney <masneyb@onstation.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Fixes: 461c1a7d4733 ("gpiolib: override irq_enable/disable")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20200306132326.1329640-1-linus.walleij@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/umem_odp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -290,8 +290,8 @@ void ib_umem_odp_release(struct ib_umem_
- 		mmu_interval_notifier_remove(&umem_odp->notifier);
- 		kvfree(umem_odp->dma_list);
- 		kvfree(umem_odp->page_list);
--		put_pid(umem_odp->tgid);
- 	}
-+	put_pid(umem_odp->tgid);
- 	kfree(umem_odp);
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2323,9 +2323,16 @@ static void gpiochip_irq_disable(struct
+ {
+ 	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+ 
++	/*
++	 * Since we override .irq_disable() we need to mimic the
++	 * behaviour of __irq_disable() in irq/chip.c.
++	 * First call .irq_disable() if it exists, else mimic the
++	 * behaviour of mask_irq() which calls .irq_mask() if
++	 * it exists.
++	 */
+ 	if (chip->irq.irq_disable)
+ 		chip->irq.irq_disable(d);
+-	else
++	else if (chip->irq.chip->irq_mask)
+ 		chip->irq.chip->irq_mask(d);
+ 	gpiochip_disable_irq(chip, d->hwirq);
  }
- EXPORT_SYMBOL(ib_umem_odp_release);
 
 
