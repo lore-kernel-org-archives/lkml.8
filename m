@@ -2,122 +2,88 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1A3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F17C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE512072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="hQvltprA"
+	by mail.kernel.org (Postfix) with ESMTP id 78FB820675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585645790;
+	bh=h/JNQ+2tDnREXItSe9CGEeJX602SDVdH+hs3zHL9yF4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZYNuyR1kiXqC4f7tT1DYW+5XVH+GebunB1nosEtz7jUm5cNb54CdIZQJAf6Z62bHD
+	 W+4HHSlDxAYL4Och7/31M3aVDycklpQ6AyEyg5hOMu3hliHLMqD1IC60hiMKTynUd6
+	 ivEqtgBl/mJ3JP/lkj/5xjAUktJL/vyRP3KVjWOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731517AbgCaJJp (ORCPT
+        id S1730793AbgCaJJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:09:45 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:51023 "EHLO mx1.tq-group.com"
+        Tue, 31 Mar 2020 05:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731369AbgCaJJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:09:43 -0400
-IronPort-SDR: sZB/W3tX2EDNQIDG5CobiUoShToM0PuH8HJmpWULERpmgYPZ8+UaMGWL+b6t98wAYzEUtQDAq/
- 1eSwGjkW5bpN7ipa/cExrMcyHCEn4QtAibrfBoC6aT9D/JFZXCY9eY7i3KwwDkR8KtBmTcYNjG
- qkd+rK8faIgwKALGdqKaZcw7CoBUii40SnJLoQAoeKvy9ZO+TyEgtIldlz9Ti7/1f19JVO/+kw
- c8VWOIrv7rIVB2UnZuSD0X06b/+/CXD8zulySRHvD1Nn0q5om+OpXQ/3V9aQBnFakg210a3og0
- C0Q=
-X-IronPort-AV: E=Sophos;i="5.72,327,1580770800"; 
-   d="scan'208";a="11620744"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 31 Mar 2020 11:09:41 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 31 Mar 2020 11:09:41 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 31 Mar 2020 11:09:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1585645781; x=1617181781;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AmNQ70x+U90ksL+IF0QKz+uIkUgY48xR+6uNMkj/fdc=;
-  b=hQvltprAy/j1rGp1rMrdTZlvZEFXSS2U/QgOJYKn3JIr4HGGsCbEqm/e
-   th+E9wxdkGijsprbo/4idy/1ujvsVdBTKEZ5wawX+8pahMq0+hskGngtI
-   a7IPrmdhG7f0m7DZwA+cz9s9I+KlkrKPDOVEv4blt0YVlLhQlZJJOlrF5
-   jPC2cgrWHdXG7b5ghfhhLkHMS/gga86/SnHUhHe1Ptrc5DSY4zBdKbC5x
-   o19t6TsB9m25USCPdocyFqBDh4StyJk6pPT3jeSZCGXpo2S5ry1lqy/mY
-   LfirnNm0mm0wJwbIi5f1Oo0PIyhr+hBwtjS2M2DAn5ObHAqocIIZfxWEy
-   g==;
-IronPort-SDR: BNIMxixaKYbDbaNh/qECj2bdl5U81jLwJ28F61hn/AKoqlxNFn8XZ6uA3Y2g+Md3D3flcA54+w
- NTKCoH4ywraeauwofQxJd71PozGlxaKy7cSw0wLYgQqGJJhOtGzNjZWcLB+DyJtx/vWs2yEXtU
- UsB8kEhOewiLKe1y7ppmassKMADNTUgBpnS6IM6+9F6Hh51xgOinshRXhVH4OiBKVpaM2gXgnE
- gFvI8tjeRDItH2Aa2ah4tbF0EtVHuOuVbzOyu9/iMdIpmy28mbIw8iLMKa/U05NoalZVNy0uQc
- 110=
-X-IronPort-AV: E=Sophos;i="5.72,327,1580770800"; 
-   d="scan'208";a="11620743"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 31 Mar 2020 11:09:41 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id ACE69280065;
-        Tue, 31 Mar 2020 11:09:46 +0200 (CEST)
-Message-ID: <a796bf7cfb1f72a888522050320624546950c281.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH net-next 1/4] net: dsa: allow switch drivers
- to override default slave PHY addresses
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
-        kuba@kernel.org
-Date:   Tue, 31 Mar 2020 11:09:32 +0200
-In-Reply-To: <6a306ad4-c029-03a3-7a1c-0fdadc13d386@gmail.com>
-References: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
-         <6a306ad4-c029-03a3-7a1c-0fdadc13d386@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1730995AbgCaJJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:09:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 033502072E;
+        Tue, 31 Mar 2020 09:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585645785;
+        bh=h/JNQ+2tDnREXItSe9CGEeJX602SDVdH+hs3zHL9yF4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZfkjMkCJlYRB4izD3/9hOt+qMHUSTWBwJ7gOT1xphmJHRsq9bE+ynW359p4Rid+F/
+         OBbybvtBbWmtR3ZJl4Uo7mHy8GhSEKxL2lF2i2DzJYFnoYmYJPdtAUjtbZnOTnwEP/
+         HrfJyVI73xPdfmuTbacdVKR2u7lsjEthEDKtnEvg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.5 164/170] ahci: Add Intel Comet Lake H RAID PCI ID
+Date:   Tue, 31 Mar 2020 10:59:38 +0200
+Message-Id: <20200331085440.150584808@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
+References: <20200331085423.990189598@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-30 at 20:04 -0700, Florian Fainelli wrote:
-> 
-> On 3/30/2020 6:53 AM, Matthias Schiffer wrote:
-> > Avoid having to define a PHY for every physical port when PHY
-> > addresses
-> > are fixed, but port index != PHY address.
-> > 
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > >
-> 
-> You could do this much more elegantly by doing this with Device Tree
-> and
-> specifying the built-in PHYs to be hanging off the switch's internal
-> MDIO bus and specifying the port to PHY address mapping, you would
-> only
-> patch #4 then.
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-This does work indeed, but it seems we have different ideas on
-elegance.
+commit 32d2545462c6cede998267b86e57cda5d1dc2225 upstream.
 
-I'm not happy about the fact that an implementor needs to study the
-switch manual in great detail to find out about things like the PHY
-address offsets when the driver could just to the right thing by
-default. Requiring this only for some switch configurations, while
-others work fine with the defaults, doesn't make this any less
-confusing (I'd even argue that it would be better if there weren't any
-default PHY and IRQ mappings for the switch ports, but I also
-understand that this can't easily be removed at this point...)
+Add the PCI ID to the driver list to support this new device.
 
-In particular when PHY IRQ support is desired (not implemented on the
-PHY driver side for this switch yet; not sure if my current project
-will require it), indices are easy to get wrong - which might not be
-noticed as long as there is no PHY driver with IRQ support for the port
-PHYs, potentially breaking existing Device Trees with future kernel
-updates. For this reason, I think at least patch #2 should be
-considered even if #1 and #3 are rejected.
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Kind regards,
-Matthias
+---
+ drivers/ata/ahci.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -401,6 +401,7 @@ static const struct pci_device_id ahci_p
+ 	{ PCI_VDEVICE(INTEL, 0xa252), board_ahci }, /* Lewisburg RAID*/
+ 	{ PCI_VDEVICE(INTEL, 0xa256), board_ahci }, /* Lewisburg RAID*/
+ 	{ PCI_VDEVICE(INTEL, 0xa356), board_ahci }, /* Cannon Lake PCH-H RAID */
++	{ PCI_VDEVICE(INTEL, 0x06d7), board_ahci }, /* Comet Lake-H RAID */
+ 	{ PCI_VDEVICE(INTEL, 0x0f22), board_ahci_mobile }, /* Bay Trail AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x0f23), board_ahci_mobile }, /* Bay Trail AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x22a3), board_ahci_mobile }, /* Cherry Tr. AHCI */
+
 
