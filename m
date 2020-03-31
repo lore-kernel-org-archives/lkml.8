@@ -2,108 +2,111 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B5EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFE0C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876202080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585691878;
-	bh=Zu1+EDUOL9F+mTyPpnq9JwMy3rLL0NZ6rRu7yWBytSM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Yr4qs9FPGMF7s6LHBb9UbrZ41T0yQPA9Xr8X9LTDXjsSG92w5RaIpQavAjfSGrtDG
-	 I/GEcC+0NGqyPCnWJNTEOTFT6/luFmrYshdDUIUsEEh+NqiRZRTzkkdoxzXbThiATA
-	 Q14PpZFNONRfZEVjh9vkG8y3bKloyc21kom6WW8M=
+	by mail.kernel.org (Postfix) with ESMTP id 6C7EC2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cy44Ew/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbgCaV55 (ORCPT
+        id S1731530AbgCaV6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:57:57 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40290 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731250AbgCaV55 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:57:57 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 19so23615917ljj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 14:57:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TWCL2jCppG5LkoKMYYPBwC+nwI0ZdMJ2BLHFibGdvI0=;
-        b=PUXpLmb3tX0bxge/0WtFWPqqx57HXPBcgrdgO5zWA71NBQj8TgTxIlRKouWePigaHD
-         avry2Mt29/TnJWoEoWgxVKRe/I4TdNKFU9QrnHIjrgONlXZpAxeOMOgoFTN0Ax6i0Ogp
-         ib2zWaoo36ruVJGV7Z8H7upXi6FauXuTe9iAk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TWCL2jCppG5LkoKMYYPBwC+nwI0ZdMJ2BLHFibGdvI0=;
-        b=YNj1e9foHQyVKS5m8I53vhwKXMMcRgQ5yxWG/qqdC0obKYg1D0aON6alJNm2wD2FJN
-         uvmpqK6kGwnuDpXzxjdH445FY8txf1fpwsJOWZpbvoGrDAM7RAoRGBl+cS0CJ/eSH1Zi
-         rbaaDH3aAMNBvArZYZ/BTPL7hjZhqidiZYuz007WbapPmdE8zpGDW2HIHUazIGGtISet
-         9O2E4RHw9kptFnRChgTHCvg3TI36EMDSjmFa5dXoZAYcxNUgL066WyQ9Tppl//mjTSah
-         Kw1Mm+udWJShwn2lNtSxs2PtNYCebzknVcKvcw5VMY6c8xuEQC7xSns7A/yrC9UhdYaG
-         g3/w==
-X-Gm-Message-State: AGi0PubqeibKfsC+Qju6kl6OzJel7NGYwyJr5AcsWBC0+ir+WcX8oeqD
-        RQm8ggyxFTVDjR8atUoiNQ7VztYF3mo=
-X-Google-Smtp-Source: APiQypK8YU9XLM2Fo+v6uD7vikihz5o5wa/bzKq2mVSqFyzBpXuKONeo1b2JIByzggi1hyFM22q/yg==
-X-Received: by 2002:a2e:94c8:: with SMTP id r8mr11328016ljh.28.1585691873822;
-        Tue, 31 Mar 2020 14:57:53 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id d2sm107995lfj.67.2020.03.31.14.57.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 14:57:53 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id n17so23661928lji.8
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 14:57:52 -0700 (PDT)
-X-Received: by 2002:a2e:8652:: with SMTP id i18mr11824471ljj.265.1585691872539;
- Tue, 31 Mar 2020 14:57:52 -0700 (PDT)
+        Tue, 31 Mar 2020 17:58:01 -0400
+Received: from ozlabs.org ([203.11.71.1]:58275 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728840AbgCaV6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 17:58:00 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sNVW6rPHz9sSM;
+        Wed,  1 Apr 2020 08:57:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585691878;
+        bh=2jTbOx6UDNCCJt7scrIlbo1YKUJvdCR9MpDmRqeyOXc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cy44Ew/gBN+Xw+PVJYzSfBaD8o7XYDwrdQG2Ru5aNa8rJ1RvmppA9Z/nqM8HrkQlD
+         WcZ+ZhbSgUrWbzWa1tiVu2Gv1vn5OIj88i/GCFVFaBdsvQC4T1mkLIGDIkkSN3L+io
+         ihzdHgDlpLASBlytd9ZKV1N9eohbWrTHoALHpAbBtINWQZfn2N3hBmhkkSAtjoRpa0
+         hJTWKGpo+29T2Lv471RHjsjPvvyqJK37JaTMhDlODucNr1kpkZg26LqdXWz75iTgpf
+         XN674BdYNhqF3zRP0ZT0R2OOGcGTpenmoB+4zHQ4yYeTZlqp/KoNn+qWg6ft1PZG5C
+         4R/+9DqWSBcEg==
+Date:   Wed, 1 Apr 2020 08:57:53 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: linux-next: build warning after merge of the tip tree
+Message-ID: <20200401085753.617c1636@canb.auug.org.au>
+In-Reply-To: <20200330134746.627dcd93@canb.auug.org.au>
+References: <20200330134746.627dcd93@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1136650016.19797621.1585672680530.JavaMail.zimbra@redhat.com> <328533763.19799053.1585672849599.JavaMail.zimbra@redhat.com>
-In-Reply-To: <328533763.19799053.1585672849599.JavaMail.zimbra@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 31 Mar 2020 14:57:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whP9ufV=m6PrSWOcJCEx2Ere1fqhRYszE+Wu1D1ZjTn5Q@mail.gmail.com>
-Message-ID: <CAHk-=whP9ufV=m6PrSWOcJCEx2Ere1fqhRYszE+Wu1D1ZjTn5Q@mail.gmail.com>
-Subject: Re: GFS2 changes for the 5.7 merge window
-To:     Bob Peterson <rpeterso@redhat.com>
-Cc:     cluster-devel <cluster-devel@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/DX5omHHHCR4=V+XF50fjow3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 9:41 AM Bob Peterson <rpeterso@redhat.com> wrote:
+--Sig_/DX5omHHHCR4=V+XF50fjow3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Mon, 30 Mar 2020 13:47:46 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> Could you please pull the following changes for gfs2?
+> Hi all,
+>=20
+> After merging the tip tree, today's linux-next build (arm
+> multi_v7_defconfig) produced this warning:
+>=20
+> kernel/futex.c: In function 'do_futex':
+> kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in th=
+is function [-Wmaybe-uninitialized]
+>  1676 |   return oldval =3D=3D cmparg;
+>       |          ~~~~~~~^~~~~~~~~
+> kernel/futex.c:1652:6: note: 'oldval' was declared here
+>  1652 |  int oldval, ret;
+>       |      ^~~~~~
+>=20
+> Introduced by commit
+>=20
+>   a08971e9488d ("futex: arch_futex_atomic_op_inuser() calling conventions=
+ change")
+>=20
+> but I don't see how it makes this difference :-(
 
-So I've pulled it, but I note that you didn't get the automated
-notification of that like almost everybody else does.
+I now get this warning from building Linus' tree :-(
 
-The reason seems to be pretty simple: the pr-tracker-bot looks for
-emails to lkml (and other mailing lists) with variations of the
-subject line "[GIT PULL]" in it.
+--=20
+Cheers,
+Stephen Rothwell
 
-And while lkml was cc'd for your pull request, you don't use that
-subject line prefix, and so pr-tracker-bot ignores your email.
+--Sig_/DX5omHHHCR4=V+XF50fjow3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-I don't personally care - you do have the markers that _I_ look for,
-with both "git" and "pull" in the message body, so your pull request
-doesn't get lost in the chaos that is my inbox during the merge
-window. So this is purely about that notification bot.
+-----BEGIN PGP SIGNATURE-----
 
-IOW, if you care, then you should change your scripting (or manual
-habits, I don't know) to have that "[GIT PULL]" in the subject line,
-and then you will get that nice timely notification when I've pulled
-(and pushed out).
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6DvOEACgkQAVBC80lX
+0GwRPwgAjbTwhKZtLS/8RkEUC6ICv/zAc7X7bQGdchzK8dKf2/fnPo1Sr2bsPWyj
+bEjfLXoFmSgSKhuy4L2kFvjAdhj5IJVP08+stdbhPfUjuliRI5Buk7Cf8G5s8SHq
+ZworVHHnHlDuGC19gbdTYKZ3Y6LHYwNv6hi5A/jTFCO9lIUSiEJiJP4C8uIVNS1q
+VUzj4TTSdKMT1K/lwpcr/uSAnGhFhum91sBM13N5AV9zmSnqWZP8Oh0K5fyhaG2e
+ga6l6iCxmw9sCswMBTBUN8k8mshFjwNq2PSrpthPGpdmezXeKO7l4S3cjY+CcsrE
+A+QC4YKMfpm0RrQiizfaGTNdj/8d6Q==
+=yUPm
+-----END PGP SIGNATURE-----
 
-And if you don't want that notification, you can just continue doing
-what you're doing.
-
-                  Linus
+--Sig_/DX5omHHHCR4=V+XF50fjow3--
