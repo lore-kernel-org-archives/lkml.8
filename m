@@ -2,175 +2,143 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4BEC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F390AC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559D320BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD10C20BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UFKNoN4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgCaRiO (ORCPT
+        id S1727125AbgCaRi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:38:14 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43757 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgCaRiO (ORCPT
+        Tue, 31 Mar 2020 13:38:29 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57343 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725958AbgCaRi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:38:14 -0400
-Received: by mail-ot1-f67.google.com with SMTP id a6so22884531otb.10;
-        Tue, 31 Mar 2020 10:38:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NatCpzsVL/Jub5SRdDWqKNOUn/yqrxXRqh08wwc8Rqc=;
-        b=q7WOvNdBMYWaaTTs44lIA0iZf3uY71uumDtOAzEwNRd4+ZIkKORBNaSe4YzBxhS/K8
-         nGThWuu7bA4saYUBkyaHHksD7en8BKTCP3Q5oRYU9cSBGGclIxdjumKmjtiyrQAAP16E
-         IxdCuMXO1m4FuoMTffpSu2pcfsJiLll3l+vOM0dYZ+8LIEG43ltGsEpVH63CDnTSn5N8
-         EwRYOAaY6PHkx1n3i3Mtc0yMNf4N/eAL4HHUj7KK/TJl1c29pWZP/bCTpBtaSvx/zEc0
-         VQGjmfKYbFoZ/IfvOpOLqcnH9f/8ArLaF35lWCWNwP30f2E1e8DrJsR/AzDMmttwLlaO
-         sPiw==
-X-Gm-Message-State: ANhLgQ0aYmtpiKooaBAu0kWWuUU8+uFq+rY/xhenDKbJnxqBeZh2odG3
-        ot8eS09B1P3NTy1efoY198n2ny4mZGanfEDzXfs=
-X-Google-Smtp-Source: ADFU+vspEF2v26kohoeQ7QCAm0+UjlxoiRqZx5TDaqKhKoeYsajATEeEwLC7UOQBIc2LLDWOeDRVBW69y/TRQm7lJ2M=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr13796162otk.250.1585676291361;
- Tue, 31 Mar 2020 10:38:11 -0700 (PDT)
+        Tue, 31 Mar 2020 13:38:29 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585676308; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=A68oC8U79UBpdukiOxjd0RuIgv72CKAYZ4hNjVAU4J4=;
+ b=UFKNoN4+pwVUJFK2PSmSqN1RtpSyw0PIHS7Hi34ZLeRlUytymE9Hias6I7mNkjs4LHl3qaVD
+ EAniWV0GbD6wU4x/dYWiXarG8X8rAJwG328kANsCBuW2iDSglh+y1C69jbhjKyNrG8IJeQ5b
+ T6sQvRRKnEcWYBQuhMsh986wtJ0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e838013.7f249de50e30-smtp-out-n01;
+ Tue, 31 Mar 2020 17:38:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6F137C43637; Tue, 31 Mar 2020 17:38:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0B3BC433F2;
+        Tue, 31 Mar 2020 17:38:24 +0000 (UTC)
 MIME-Version: 1.0
-References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
- <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com> <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB3590E3D12546BC6711CEB542AAC80@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 31 Mar 2020 19:38:00 +0200
-Message-ID: <CAMuHMdW+CACQXNa4RZwU4WgPY=Hw4w+o6vQ_c7=PemJOF+Ct6w@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
- in correct sequence
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 31 Mar 2020 10:38:24 -0700
+From:   rishabhb@codeaurora.org
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hao Bui <hao.bui.yg@renesas.com>,
-        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>, psodagud@codeaurora.org,
+        tsoni@codeaurora.org, Siddharth Gupta <sidgup@codeaurora.org>,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
+In-Reply-To: <CANLsYkxEA66kGZh1rToSn79fpgPHqEjMZsSw74Rx3OLwG2k35w@mail.gmail.com>
+References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org>
+ <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
+ <20200330221245.GA17782@xps15> <20200330224554.GD215915@minitux>
+ <CANLsYkxEA66kGZh1rToSn79fpgPHqEjMZsSw74Rx3OLwG2k35w@mail.gmail.com>
+Message-ID: <30f8b41df8831d19ce6efd0a28862708@codeaurora.org>
+X-Sender: rishabhb@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
-
-On Tue, Mar 31, 2020 at 5:58 PM Prabhakar Mahadev Lad
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > -----Original Message-----
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Sent: 31 March 2020 16:18
-> > To: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Jiri Slaby <jslaby@suse.com>; open list:SERIAL DRIVERS <linux-
-> > serial@vger.kernel.org>; Linux-Renesas <linux-renesas-soc@vger.kernel.org>; Prabhakar <prabhakar.csengg@gmail.com>; Linux Kernel
-> > Mailing List <linux-kernel@vger.kernel.org>; Hao Bui <hao.bui.yg@renesas.com>; KAZUMI HARADA <kazumi.harada.rh@renesas.com>;
-> > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>; Sasha Levin <sashal@kernel.org>; Chris Brandt
-> > <Chris.Brandt@renesas.com>
-> > Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read in correct sequence
->> > On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
-> > <kazuhiro.fujita.jg@renesas.com> wrote:
-> > > For SCIF and HSCIF interfaces the SCxSR register holds the status of
-> > > data that is to be read next from SCxRDR register, But where as for
-> > > SCIFA and SCIFB interfaces SCxSR register holds status of data that is
-> > > previously read from SCxRDR register.
-> > >
-> > > This patch makes sure the status register is read depending on the port
-> > > types so that errors are caught accordingly.
-> > >
-> > > Cc: <stable@vger.kernel.org>
-> > > Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
-> > > Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
-> > > Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/drivers/tty/serial/sh-sci.c
-> > > +++ b/drivers/tty/serial/sh-sci.c
-> > > @@ -870,9 +870,16 @@ static void sci_receive_chars(struct uart_port *port)
-> > >                                 tty_insert_flip_char(tport, c, TTY_NORMAL);
-> > >                 } else {
-> > >                         for (i = 0; i < count; i++) {
-> > > -                               char c = serial_port_in(port, SCxRDR);
-> > > -
-> > > -                               status = serial_port_in(port, SCxSR);
-> > > +                               char c;
-> > > +
-> > > +                               if (port->type == PORT_SCIF ||
-> > > +                                   port->type == PORT_HSCIF) {
-> > > +                                       status = serial_port_in(port, SCxSR);
-> > > +                                       c = serial_port_in(port, SCxRDR);
-> > > +                               } else {
-> > > +                                       c = serial_port_in(port, SCxRDR);
-> > > +                                       status = serial_port_in(port, SCxSR);
-> > > +                               }
-> > >                                 if (uart_handle_sysrq_char(port, c)) {
-> > >                                         count--; i--;
-> > >                                         continue;
-> >
-> > I can confirm that the documentation for the Serial Status Register on
-> >   1. (H)SCIF on R-Car Gen1/2/3 says the framing/error flag applies to
-> >      the data that is "to be read next" from the FIFO., and that the
-> >      "Sample Flowchart for Serial Reception (2)" confirms this,
-> >   2. SCIF[AB] on R-Car Gen2, SH-Mobile AG5, R-Mobile A1 and APE6 says
-> >      the framing/error flag applies to the receive data that is "read"
-> >      from the FIFO, and that the "Example of Flow for Serial Reception
-> >      (2)" confirms this,
-> >   3. SCIF on RZ/A1H says something similar as for (H)SCIF above, using
-> >      slightly different wording, also confirmed by the "Sample Flowchart
-> >      for Receiving Serial Data (2)".
-> >
-> > However, the documentation for "SCIFA" on RZ/A2 (for which we use
-> > PORT_SCIF, not PORT_SCIFA, in the driver) has conflicting information:
-> >   1. Section 17.2.7 "Serial Status Register (FSR)" says:
-> >        - A receive framing/parity error occurred in the "next receive
-> >          data read" from the FIFO,
-> >        - Indicates whether there is a framing/parity error in the data
-> >          "read" from the FIFO.
-> >   2. Figure 17.8 "Sample Flowchart for Receiving Serial Data in
-> >      Asynchronous Mode (2)".
-> >        - Whether a framing error or parity error has occurred in the
-> >          received data that is "read" from the FIFO.
-> >
-> > So while the change looks OK for most Renesas ARM SoCs, the situation
-> > for RZ/A2 is unclear.
-> > Note that the above does not take into account variants used on SuperH
-> > SoCs.
-> >
-> I'll dig out some documentation wrt RZ/A2 & SuperH. Also H8300 needs to be considered.
-
-AFAIK, H8/300 has SCI only, so is not affected.
-
-> By any chance do you have RZ/A2 to test .
-
-Actually I do.
-
-> > Nevertheless, this patch will need some testing on various hardware.
-> > Do you have a test case to verify the broken/fixed behavior?
-> >
-> Agreed, its been tested on RZ/G2x & RZ/G1x  by doing a loopback test, configure one interface as CS8 mode(8-bits data, No parity) and other as CS7 mode (7-bits data, 1-bit Parity) and parity errors should be detected.
-
-Thanks, that's good to know!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On 2020-03-31 09:47, Mathieu Poirier wrote:
+> On Mon, 30 Mar 2020 at 16:45, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+>> 
+>> On Mon 30 Mar 15:12 PDT 2020, Mathieu Poirier wrote:
+>> [..]
+>> > > +   struct rproc *rproc;
+>> > > +
+>> > > +   rproc = container_of(inode->i_cdev, struct rproc, char_dev);
+>> > > +   if (!rproc)
+>> > > +           return -EINVAL;
+>> > > +
+>> > > +   rproc_shutdown(rproc);
+>> >
+>> > The scenario I see here is that a userspace program will call
+>> > open(/dev/rproc_xyz, SOME_OPTION) when it is launched.  The file stays open
+>> > until either the application shuts down, in which case it calls close() or it
+>> > crashes.  In that case the system will automatically close all file descriptors
+>> > that were open by the application, which will also call rproc_shutdown().
+>> >
+>> > To me the same functionality can be achieved with the current functionality
+>> > provided by sysfs.
+>> >
+>> > When the application starts it needs to read
+>> > "/sys/class/remoteproc/remoteprocX/state".  If the state is "offline" then
+>> > "start" should be written to "/sys/.../state".  If the state is "running" the
+>> > application just crashed and got restarted.  In which case it needs to stop the
+>> > remote processor and start it again.
+>> >
+>> 
+>> A case when this would be useful is the Qualcomm modem, which relies 
+>> on
+>> disk access through a "remote file system service" [1].
+>> 
+>> Today we register the service (a few layers ontop of rpmsg/GLINK) then
+>> find the modem remoteproc and write "start" into the state sysfs file.
+>> 
+>> When we get a signal for termination we write "stop" into state to 
+>> stop
+>> the remoteproc before exiting.
+>> 
+>> There is however no way for us to indicate to the modem that rmtfs 
+>> just
+>> died, e.g. a kill -9 on the process will result in the modem continue
+>> and the next IO request will fail which in most cases will be fatal.
+I have this scenario written down in the cover letter for this patchset
+  "[PATCH 0/2] Add character device interface to remoteproc"
+I'll add it to the commit text as well.
+> 
+> The modem will crash when attempting an IO while rmtfs is down?
+> 
+>> 
+>> So instead having rmtfs holding /dev/rproc_foo open would upon its
+>> termination cause the modem to be stopped automatically, and as the
+>> system respawns rmtfs the modem would be started anew and the two 
+>> sides
+>> would be synced up again.
+> 
+> I have a better idea of what is going on now - thanks for writing this 
+> up.
+> 
+> I would make this feature a kernel configurable option as some people
+> may not want it.  I also think having "/dev/remoteprocX" is fine, so
+> no need to change anything currently visible in sysfs.
+Ok. Makes sense.
+> 
+> Mathieu
+> 
+>> 
+>> [1] https://github.com/andersson/rmtfs
+>> 
+>> Regards,
+>> Bjorn
