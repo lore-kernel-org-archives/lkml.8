@@ -2,133 +2,129 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19823C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C53D3C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4EB6207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D8A207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:58:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmnABhqZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+OEVQmh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbgCaU6K (ORCPT
+        id S1731350AbgCaU6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:58:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21554 "EHLO
+        Tue, 31 Mar 2020 16:58:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54280 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731303AbgCaU6I (ORCPT
+        with ESMTP id S1728428AbgCaU6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:58:08 -0400
+        Tue, 31 Mar 2020 16:58:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585688287;
+        s=mimecast20190719; t=1585688291;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nMTuWgH43GvSmLl3/vGFHtIMAhCbcDhmbQIosf8L0DQ=;
-        b=BmnABhqZkM8Ecipy/dwn2qDoMFhcCoyaQC+v7aYMSxD4GmaQeYfVq+U8Mzex1nAWRGfAGL
-        7XRl+W3xNQZfF8suFbv69LGMIGue8T4A7K3YC5L9PKaaRR5LCPmuAiix8c3gP1P8PMSJ+x
-        FCVAP6wj4X+mJzvk+gg/Z4flm2TY1So=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-bjSavILoN6KuVEDGmG00Ww-1; Tue, 31 Mar 2020 16:58:05 -0400
-X-MC-Unique: bjSavILoN6KuVEDGmG00Ww-1
-Received: by mail-wr1-f72.google.com with SMTP id m15so13564491wrb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 13:58:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nMTuWgH43GvSmLl3/vGFHtIMAhCbcDhmbQIosf8L0DQ=;
-        b=FI7r4tEqDtwN9TtEYQ5jdf6nYLdvqx7PpHHX3GfcDouMk3GzYrww1vXW3jAjJcMdNy
-         gt/u0yfw78NiwMWbGOqPSs8C6rnf1cuhVBnMpRjqk6XRurIACccz0wFUKiARmSBPCmce
-         YHOjLyeQBi3Wbt3Uylzc7ANfToTG+1fcoD6f9cQbFOjjw2sTDSq4Xkq55059UI+qvCD1
-         vGVGFv9n0UnKwWB/v0RIQYCQzQxxY8+EyHw10dMblY0Z8qO5CwlqPB7Fj7yTs58rHSZZ
-         0lmnyH+9JUuugZMBbuXJ0OglbnL58JNaURMr16QKM0X9ul0qDz+HZdfozvLw3eqHI5wu
-         qPGw==
-X-Gm-Message-State: ANhLgQ16BqR5a5qfZbGOVAOVhKXNl88Q/xFZQKGl0Wp9uDIReClPuh8A
-        AsOZs+FSMh1B6gkgr+EJNTHkGbPR9BSGvUySTDYSulHhbo7lNR1n/w1T2SnuABk7cTtEwawcknp
-        k9mPJqxhNuQZK2lyNQ9CX+dSm
-X-Received: by 2002:a05:6000:10c8:: with SMTP id b8mr20964628wrx.138.1585688284479;
-        Tue, 31 Mar 2020 13:58:04 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtjE8SVKcDqJXpBwY3z/nljFiImBJhiy66LJgYJ18HOdry7Gow9qqZRHMNtuEBqfbVTRq42RQ==
-X-Received: by 2002:a05:6000:10c8:: with SMTP id b8mr20964598wrx.138.1585688284037;
-        Tue, 31 Mar 2020 13:58:04 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id e5sm27609022wru.92.2020.03.31.13.58.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:58:03 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 16:57:59 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>
-Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown
- sub-parameters
-Message-ID: <20200331205759.GA648829@xz-x1>
-References: <20200204161639.267026-1-peterx@redhat.com>
- <20200214194008.GA1193332@xz-x1>
- <877e0oud5i.fsf@nanos.tec.linutronix.de>
- <20200309151917.GB4206@xz-x1>
+        bh=mpM1XxT0yKaKGYgf2gGKRTmepGnz6nJa59IN7BPPkTY=;
+        b=f+OEVQmhuu6eWUitWHhzZWqCAQOjC1OMS7D4bYVQWvSEhlngDS1PJltKp77zH7L4rfz4CM
+        85gkgBol9YEPRCnVhDW8U9U8rk7Ez/ht846+omo0T9+nufHvN8f+NGTMoMt4T33KqL1fsG
+        d5FynTSne/C4+tj3i07upJwryaY1u2Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-_8ieoBgKMOu3PpoyXoV6Rw-1; Tue, 31 Mar 2020 16:58:04 -0400
+X-MC-Unique: _8ieoBgKMOu3PpoyXoV6Rw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B89E6192296B;
+        Tue, 31 Mar 2020 20:58:02 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-113-88.rdu2.redhat.com [10.10.113.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CCE199DE2;
+        Tue, 31 Mar 2020 20:58:00 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] drm/dp_mst: Remove drm_dp_mst_topology_cbs.destroy_connector
+Date:   Tue, 31 Mar 2020 16:57:37 -0400
+Message-Id: <20200331205740.135525-5-lyude@redhat.com>
+In-Reply-To: <20200331205740.135525-1-lyude@redhat.com>
+References: <20200331205740.135525-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200309151917.GB4206@xz-x1>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 11:19:17AM -0400, Peter Xu wrote:
-> On Fri, Feb 14, 2020 at 09:28:25PM +0100, Thomas Gleixner wrote:
-> > Peter Xu <peterx@redhat.com> writes:
-> > 
-> > > On Tue, Feb 04, 2020 at 11:16:39AM -0500, Peter Xu wrote:
-> > >> The "isolcpus=" parameter allows sub-parameters to exist before the
-> > >> cpulist is specified, and if it sees unknown sub-parameters the whole
-> > >> parameter will be ignored.  This design is incompatible with itself
-> > >> when we add more sub-parameters to "isolcpus=", because the old
-> > >> kernels will not recognize the new "isolcpus=" sub-parameters, then it
-> > >> will invalidate the whole parameter so the CPU isolation will not
-> > >> really take effect if we start to use the new sub-parameters while
-> > >> later we reboot into an old kernel. Instead we will see this when
-> > >> booting the old kernel:
-> > >> 
-> > >>     isolcpus: Error, unknown flag
-> > >> 
-> > >> The better and compatible way is to allow "isolcpus=" to skip unknown
-> > >> sub-parameters, so that even if we add new sub-parameters to it the
-> > >> old kernel will still be able to behave as usual even if with the new
-> > >> sub-parameter is specified.
-> > >> 
-> > >> Ideally this patch should be there when we introduce the first
-> > >> sub-parameter for "isolcpus=", so it's already a bit late.  However
-> > >> late is better than nothing.
-> > >
-> > > Ping - Hi, Thomas, do you have any further comment on this patch?
-> > 
-> > Fine with me.
-> > 
-> > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Thanks Thomas!
-> 
-> Does anyone like to pick this up, or does this patch needs more
-> review?
+Now that we've removed the last user of this callback, get rid of it and
+drm_dp_destroy_connector().
 
-Another gentle ping with the hope that this patch can be picked up.
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
+---
+ drivers/gpu/drm/drm_dp_mst_topology.c | 16 +++-------------
+ include/drm/drm_dp_mst_helper.h       |  2 --
+ 2 files changed, 3 insertions(+), 15 deletions(-)
 
-It's a very simple patch, but I really hope it can be in asap because
-the latter means the more kernel versions will be affected by this
-isolcpus incompatibility defect (and imo should consider stable too).
-
-Thanks.
-
--- 
-Peter Xu
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
+dp_mst_topology.c
+index 31b7a8f5309d..e235b2b29f59 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -4692,23 +4692,13 @@ static void drm_dp_tx_work(struct work_struct *wo=
+rk)
+ 	mutex_unlock(&mgr->qlock);
+ }
+=20
+-static inline void drm_dp_destroy_connector(struct drm_dp_mst_port *port=
+)
++static inline void
++drm_dp_delayed_destroy_port(struct drm_dp_mst_port *port)
+ {
+-	if (!port->connector)
+-		return;
+-
+-	if (port->mgr->cbs->destroy_connector) {
+-		port->mgr->cbs->destroy_connector(port->mgr, port->connector);
+-	} else {
++	if (port->connector) {
+ 		drm_connector_unregister(port->connector);
+ 		drm_connector_put(port->connector);
+ 	}
+-}
+-
+-static inline void
+-drm_dp_delayed_destroy_port(struct drm_dp_mst_port *port)
+-{
+-	drm_dp_destroy_connector(port);
+=20
+ 	drm_dp_port_set_pdt(port, DP_PEER_DEVICE_NONE, port->mcs);
+ 	drm_dp_mst_put_port_malloc(port);
+diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_hel=
+per.h
+index 13461db1444a..7af51c947b81 100644
+--- a/include/drm/drm_dp_mst_helper.h
++++ b/include/drm/drm_dp_mst_helper.h
+@@ -488,8 +488,6 @@ struct drm_dp_mst_topology_mgr;
+ struct drm_dp_mst_topology_cbs {
+ 	/* create a connector for a port */
+ 	struct drm_connector *(*add_connector)(struct drm_dp_mst_topology_mgr *=
+mgr, struct drm_dp_mst_port *port, const char *path);
+-	void (*destroy_connector)(struct drm_dp_mst_topology_mgr *mgr,
+-				  struct drm_connector *connector);
+ };
+=20
+ #define DP_MAX_PAYLOAD (sizeof(unsigned long) * 8)
+--=20
+2.25.1
 
