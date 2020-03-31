@@ -2,52 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84624C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCC82137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598192072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646032;
-	bh=rmRBAXEtpYuEgr8lxSMdhfQIo4FvG4sJzuape9PRm00=;
+	s=default; t=1585646035;
+	bh=QaVZu7oeE9kvody+R9vApzpKSF+e7ayYBfps5bhprrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FQY4POf4MPXyjEAhty4HfiItGidj1hg0+TaF++04HPO+yVJZJhRUDBUCOt/ggA19O
-	 M5XlUmwTAdbQFi8N6i20jh4A36SaDgbr251cniMiX35CIxSbQ1MNJHejsCbNSNj9Gp
-	 E6EZWl7kApFtD0LKdUy3W/2kc2cl6OOUEJ30PGIU=
+	b=GZ0rcYmUztgxW7kkQIlaHvJW2DTr2ZYL+GzY160hekdZBMw2NjVBGpcB1wMETIvbn
+	 MPxCdCaD66ptDt7HizLCvAVel/wqRqKzZ7PeM66qNd1DyscR4/Mdx5m1h4GBzxqf+X
+	 2ye7GoYuBC3/B6CSTPELHSsGBEh6cwyR+EkTgRXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbgCaJNt (ORCPT
+        id S1731636AbgCaJNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33310 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730704AbgCaJNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:46 -0400
+        id S1731345AbgCaJNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E17121582;
-        Tue, 31 Mar 2020 09:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71A0D2072E;
+        Tue, 31 Mar 2020 09:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646025;
-        bh=rmRBAXEtpYuEgr8lxSMdhfQIo4FvG4sJzuape9PRm00=;
+        s=default; t=1585646029;
+        bh=QaVZu7oeE9kvody+R9vApzpKSF+e7ayYBfps5bhprrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1u+pdiXiz8zNfDx19b3q16pofwXKHpPQ1TEjQnX1LDP/c4VqfrDLfN1GPSyjsuMwH
-         OVQO8AaZZG271ldYx/5HN/LoiMRbJJXqGXTTSJAK0sIlohvHvKT2FFuRkO4sRUH73R
-         p+gLBwF/rOEgMqcTBCTRpJaJYPFImY8q1WjfBy7g=
+        b=I3sqFM0LjudA3VLCqPKNkq7ExUxghoXTyLznKkAvnn38FUobmHWWkUefxDr8PtIai
+         fCdAM7o/K/n30C2IhvCBy1BCaZS/GcR+PyaouXR9Kn1bbvv3dCMtjJuuj9UGhzfR+j
+         /XlBSFYGdf36HWinvMloPuJzNuvgNPRRHX5vQvo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 023/155] net: phy: dp83867: w/a for fld detect threshold bootstrapping issue
-Date:   Tue, 31 Mar 2020 10:57:43 +0200
-Message-Id: <20200331085420.995267250@linuxfoundation.org>
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 059/155] dt-bindings: net: FMan erratum A050385
+Date:   Tue, 31 Mar 2020 10:58:19 +0200
+Message-Id: <20200331085425.175656389@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,76 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit 749f6f6843115b424680f1aada3c0dd613ad807c ]
+[ Upstream commit 26d5bb9e4c4b541c475751e015072eb2cbf70d15 ]
 
-When the DP83867 PHY is strapped to enable Fast Link Drop (FLD) feature
-STRAP_STS2.STRAP_ FLD (reg 0x006F bit 10), the Energy Lost Threshold for
-FLD Energy Lost Mode FLD_THR_CFG.ENERGY_LOST_FLD_THR (reg 0x002e bits 2:0)
-will be defaulted to 0x2. This may cause the phy link to be unstable. The
-new DP83867 DM recommends to always restore ENERGY_LOST_FLD_THR to 0x1.
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak; thus stopping further packet processing.
 
-Hence, restore default value of FLD_THR_CFG.ENERGY_LOST_FLD_THR to 0x1 when
-FLD is enabled by bootstrapping as recommended by DM.
+The FMAN internal queue can overflow when FMAN splits single
+read or write transactions into multiple smaller transactions
+such that more than 17 AXI transactions are in flight from FMAN
+to interconnect. When the FMAN internal queue overflows, it can
+stall further packet processing. The issue can occur with any one
+of the following three conditions:
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+  1. FMAN AXI transaction crosses 4K address boundary (Errata
+     A010022)
+  2. FMAN DMA address for an AXI transaction is not 16 byte
+     aligned, i.e. the last 4 bits of an address are non-zero
+  3. Scatter Gather (SG) frames have more than one SG buffer in
+     the SG list and any one of the buffers, except the last
+     buffer in the SG list has data size that is not a multiple
+     of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
+
+With any one of the above three conditions present, there is
+likelihood of stalled FMAN packet processing, especially under
+stress with multiple ports injecting line-rate traffic.
+
+To avoid situations that stall FMAN packet processing, all of the
+above three conditions must be avoided; therefore, configure the
+system with the following rules:
+
+  1. Frame buffers must not span a 4KB address boundary, unless
+     the frame start address is 256 byte aligned
+  2. All FMAN DMA start addresses (for example, BMAN buffer
+     address, FD[address] + FD[offset]) are 16B aligned
+  3. SG table and buffer addresses are 16B aligned and the size
+     of SG buffers are multiple of 16 bytes, except for the last
+     SG buffer that can be of any size.
+
+Additional workaround notes:
+- Address alignment of 64 bytes is recommended for maximally
+efficient system bus transactions (although 16 byte alignment is
+sufficient to avoid the stall condition)
+- To support frame sizes that are larger than 4K bytes, there are
+two options:
+  1. Large single buffer frames that span a 4KB page boundary can
+     be converted into SG frames to avoid transaction splits at
+     the 4KB boundary,
+  2. Align the large single buffer to 256B address boundaries,
+     ensure that the frame address plus offset is 256B aligned.
+- If software generated SG frames have buffers that are unaligned
+and with random non-multiple of 16 byte lengths, before
+transmitting such frames via FMAN, frames will need to be copied
+into a new single buffer or multiple buffer SG frame that is
+compliant with the three rules listed above.
+
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c |   21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/net/fsl-fman.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -25,7 +25,8 @@
- #define DP83867_CFG3		0x1e
+diff --git a/Documentation/devicetree/bindings/net/fsl-fman.txt b/Documentation/devicetree/bindings/net/fsl-fman.txt
+index 299c0dcd67db4..1316f0aec0cf3 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fman.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fman.txt
+@@ -110,6 +110,13 @@ PROPERTIES
+ 		Usage: required
+ 		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
  
- /* Extended Registers */
--#define DP83867_CFG4            0x0031
-+#define DP83867_FLD_THR_CFG	0x002e
-+#define DP83867_CFG4		0x0031
- #define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
- #define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
- #define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
-@@ -74,6 +75,7 @@
- #define DP83867_STRAP_STS2_CLK_SKEW_RX_MASK	GENMASK(2, 0)
- #define DP83867_STRAP_STS2_CLK_SKEW_RX_SHIFT	0
- #define DP83867_STRAP_STS2_CLK_SKEW_NONE	BIT(2)
-+#define DP83867_STRAP_STS2_STRAP_FLD		BIT(10)
- 
- /* PHY CTRL bits */
- #define DP83867_PHYCR_FIFO_DEPTH_SHIFT		14
-@@ -103,6 +105,9 @@
- /* CFG4 bits */
- #define DP83867_CFG4_PORT_MIRROR_EN              BIT(0)
- 
-+/* FLD_THR_CFG */
-+#define DP83867_FLD_THR_CFG_ENERGY_LOST_THR_MASK	0x7
++- fsl,erratum-a050385
++		Usage: optional
++		Value type: boolean
++		Definition: A boolean property. Indicates the presence of the
++		erratum A050385 which indicates that DMA transactions that are
++		split can result in a FMan lock.
 +
- enum {
- 	DP83867_PORT_MIRROING_KEEP,
- 	DP83867_PORT_MIRROING_EN,
-@@ -318,6 +323,20 @@ static int dp83867_config_init(struct ph
- 		phy_clear_bits_mmd(phydev, DP83867_DEVADDR, DP83867_CFG4,
- 				   BIT(7));
+ =============================================================================
+ FMan MURAM Node
  
-+	bs = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_STRAP_STS2);
-+	if (bs & DP83867_STRAP_STS2_STRAP_FLD) {
-+		/* When using strap to enable FLD, the ENERGY_LOST_FLD_THR will
-+		 * be set to 0x2. This may causes the PHY link to be unstable -
-+		 * the default value 0x1 need to be restored.
-+		 */
-+		ret = phy_modify_mmd(phydev, DP83867_DEVADDR,
-+				     DP83867_FLD_THR_CFG,
-+				     DP83867_FLD_THR_CFG_ENERGY_LOST_THR_MASK,
-+				     0x1);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (phy_interface_is_rgmii(phydev)) {
- 		val = phy_read(phydev, MII_DP83867_PHYCTRL);
- 		if (val < 0)
+-- 
+2.20.1
+
 
 
