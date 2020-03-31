@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35C6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C85C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79C3B20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98DE20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645507;
-	bh=NeubGs2Kg9duRgrqga3UHI//e9k9vjc8bZ8Y4TZt8vM=;
+	s=default; t=1585645512;
+	bh=CDK92CjtltPfetDZtqbXhiCGOui1J5dMDllimrK+Xuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iyQCC6M/Psg9PHUk6uCqmG1GNmaL0znuibmzaYDgLAaBZCngoVvCW/WSoa8jwkQ0q
-	 gxyWFKGPEmVJdC8JjbFTxj3uq2avtCNpG3WSdu4CmetxmP0AhHPLmVESgGSIhOyppc
-	 z8qFYRScWplragyuuyccLEaomAeiBVLVDIYt/hQk=
+	b=zHJU+AzGQzD9ZrN17VGbYW1+bS+xcAXVKChj/Yub7Yqq19tWiUaUe/ZgRI+rEiC8i
+	 6tY97ORMrLNI1X1RBlnA6dB1TdJ2nIGzCGe+j+lN0gqWZkaVwH+YW2DyIt6Gh+Aub+
+	 mB1l7dqXfQA4eAARTcWMqqa0gz8EXNOeiZ8PcsBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbgCaJFG (ORCPT
+        id S1730779AbgCaJFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45882 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730570AbgCaJFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:05:04 -0400
+        id S1730441AbgCaJFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:05:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC4520787;
-        Tue, 31 Mar 2020 09:05:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A53A921835;
+        Tue, 31 Mar 2020 09:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645503;
-        bh=NeubGs2Kg9duRgrqga3UHI//e9k9vjc8bZ8Y4TZt8vM=;
+        s=default; t=1585645508;
+        bh=CDK92CjtltPfetDZtqbXhiCGOui1J5dMDllimrK+Xuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B8evKuMfHDfYTI4vEb+aYjvj8eh/4lV8iZQ6kTq+e3PX89r8RC9aQRrSMPCZXUtIS
-         V+JKaZVREoCVlIdC8Fcp7UaRcjZE4Jy+1Y6rUHkiDxhi5RSAAd43+ntURO64QmtdMa
-         LSaxmKr8O0WYvcYMUykyIuR82KWX26Wg+PyxbovY=
+        b=CbdTSjFk82mSI46YGwQ2ZZdbVuq8I0hesd9YBmC/EEO8c/YDEpQlOty/RO4fdzl3n
+         UkxpqWj5oO6UR93ETZklGr0HZTqfb+lh092ykWObRZKPfNu2HAralK+GHRH1HhviKO
+         Y3eK+5RtvaD54zA4Aq+tzXveu8k3QhWTvcaNqWGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
+        stable@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 035/170] slcan: not call free_netdev before rtnl_unlock in slcan_open
-Date:   Tue, 31 Mar 2020 10:57:29 +0200
-Message-Id: <20200331085427.768203682@linuxfoundation.org>
+Subject: [PATCH 5.5 026/170] net: phy: mdio-mux-bcm-iproc: check clk_prepare_enable() return value
+Date:   Tue, 31 Mar 2020 10:57:20 +0200
+Message-Id: <20200331085426.866429083@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,36 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Hartkopp <socketcan@hartkopp.net>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit 2091a3d42b4f339eaeed11228e0cbe9d4f92f558 ]
+[ Upstream commit 872307abbd0d9afd72171929806c2fa33dc34179 ]
 
-As the description before netdev_run_todo, we cannot call free_netdev
-before rtnl_unlock, fix it by reorder the code.
+Check clk_prepare_enable() return value.
 
-This patch is a 1:1 copy of upstream slip.c commit f596c87005f7
-("slip: not call free_netdev before rtnl_unlock in slip_open").
-
-Reported-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Fixes: 2c7230446bc9 ("net: phy: Add pm support to Broadcom iProc mdio mux driver")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/slcan.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/phy/mdio-mux-bcm-iproc.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -625,7 +625,10 @@ err_free_chan:
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
- 	slc_free_netdev(sl->dev);
-+	/* do not call free_netdev before rtnl_unlock */
-+	rtnl_unlock();
- 	free_netdev(sl->dev);
-+	return err;
+--- a/drivers/net/phy/mdio-mux-bcm-iproc.c
++++ b/drivers/net/phy/mdio-mux-bcm-iproc.c
+@@ -288,8 +288,13 @@ static int mdio_mux_iproc_suspend(struct
+ static int mdio_mux_iproc_resume(struct device *dev)
+ {
+ 	struct iproc_mdiomux_desc *md = dev_get_drvdata(dev);
++	int rc;
  
- err_exit:
- 	rtnl_unlock();
+-	clk_prepare_enable(md->core_clk);
++	rc = clk_prepare_enable(md->core_clk);
++	if (rc) {
++		dev_err(md->dev, "failed to enable core clk\n");
++		return rc;
++	}
+ 	mdio_mux_iproc_config(md);
+ 
+ 	return 0;
 
 
