@@ -7,93 +7,122 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56898C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8FF0C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6A820781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D59320772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ox/XyHOD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t6w3POTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbgCaKzK (ORCPT
+        id S1730546AbgCaK4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:55:10 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45466 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730439AbgCaKzK (ORCPT
+        Tue, 31 Mar 2020 06:56:41 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36680 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730410AbgCaK4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:55:10 -0400
-Received: by mail-ed1-f67.google.com with SMTP id u59so24497925edc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 03:55:09 -0700 (PDT)
+        Tue, 31 Mar 2020 06:56:41 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c23so1797919pgj.3;
+        Tue, 31 Mar 2020 03:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=lJ28otLGH/TA0UFRVyaAv3N2y3mbjSrHeAW7r1D9pqQ=;
-        b=Ox/XyHODyaHFq5RQDXZmKlVHeUdUPDwHjUDHi8esLUsIw0rB3+3zGmrRd+Qy3P5G3L
-         jryZy/jSRFidXNn4mnsqe/vAHuyNCdEpxIsrC0arPlsPOipvVXXsX5RDcCtJP9yoMZwx
-         NIHLfam1/tknlph34PC3oWR+QUw5YxQoeTFHV5tJDwwJ2zgcVbiCD8S5FZq86S7cFsy/
-         smiQMpxjVoXVxEJoGCcYQ/4w7zSTv8fSVhFQ8M0ae5gulBU8aHNOwbIzlJUKjZYJ0kMy
-         zU5jVpZm3AStfZAYAzzJwOwgv4wBNuLbE5cyEpKvkgeWg7HyUeFLzZDz6Qzo+MRN7eo3
-         5SQw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UTtHrNU5LzWuuToKx4rO2ORYgVK3pfVrzoDsMYbSSFk=;
+        b=t6w3POTN/j3iSn5Qw6KJGzuBljRD/rguLo5r2495D3BfxURl+HxCLhInI88NWTIwCd
+         jkrbsfXef3vzpZgmIXHHPYheHwHPSmkpLxApYEaVW5wRSV4BWIl+Xvxx4+cowVVlF/hK
+         whbiMArrCv8m0RW0u5udo0K91mcljCO9N+/a9FdW+EhyO50bEJHhluN5N9GiqRi9+oAd
+         ri/XJji7OiFNKUItD53WTsju6rIUm929C8q/ZgarddZ/lg+ZFkssBgkngtw4+ujDBzl6
+         WxluL7t/yRGTHd8/Tc71L6sSJ6nEi2YLtszzWlGJEOS/Vuyk9qZRkKzNPm4m0lgsuYKL
+         7vuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=lJ28otLGH/TA0UFRVyaAv3N2y3mbjSrHeAW7r1D9pqQ=;
-        b=r/6/4V7hSI4AQGUd8h4op0Tesuq9TuecVl6EssCmnkzZ42x9IS8KQ/rt7ZJUoFGOyP
-         e3npE8RP5jqM3DhQq0IXPi3ZyZGBbbvQXkmRvwSEGuCqz64E7g6HY8QCq8IqS0AO147o
-         3H8c30FQiPyOI9g28TcF+ZdYJbvLTrsWe16A6LNvplNw4HhckiXBxu5fXwfKxl8cfDoM
-         4xmEmrRow/ebQS3luZ/YKbIW/pHANRvr8pV0tckO0N0Zwh+P3/bSuzbd5QfWr4f92IMh
-         rawewPDWSS2jlMrPiRPh5yzHwnMmBB6Zwk08kkEsIu0SjektEE1aE0U5fDIIEBQmvGD1
-         FiNg==
-X-Gm-Message-State: ANhLgQ2Y6/QMhovv1thSp+YPVaQksLdHIMYhyEbnWuxJCLLi7vCDGscW
-        gmyrwgU23T0PV3wMm3G9P6T4Ax47/c+FYA==
-X-Google-Smtp-Source: ADFU+vuzYvhLkkf4P6xFXKXPnbxRp15lh/5fGfPH88RWrj0e6JgwXYjh+iwsAu82EDqgRUCBvDi1rw==
-X-Received: by 2002:a50:ec08:: with SMTP id g8mr15100184edr.321.1585652108744;
-        Tue, 31 Mar 2020 03:55:08 -0700 (PDT)
-Received: from smtp.gmail.com ([2001:818:e238:a000:51c6:2c09:a768:9c37])
-        by smtp.gmail.com with ESMTPSA id pj22sm2144956ejb.79.2020.03.31.03.55.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 03:55:08 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 07:55:00 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian Konig <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Rodrigo.Siqueira@amd.com
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] drm/amd/display: more code cleanup in the dc_link file
-Message-ID: <cover.1585651869.git.melissa.srw@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UTtHrNU5LzWuuToKx4rO2ORYgVK3pfVrzoDsMYbSSFk=;
+        b=rl9DmwNS5LKdOWwJmRF4smVWWQuCVDNw7ORqUP1AXlLOsSGYsui7C7YfYZ3ObPyxsB
+         uGIYbD+OEPGrEuEuD12+LKhPjVQ5PB/4cZ9DOTdxN5GsO9E1lfO6mtRqsD9bjDD3Ucii
+         6xz9CbIw+6x1CiXuEqxRtKS03kIkC6JOkLzT6ztdCqjVSBO0VRJcbIAfpGPDuEoQTUqY
+         rgP4jEx+Ah1BZqCu1xNLomGaS5juaB07nsrbWJTwS/WTLuIcfs0q2xlWhoFvU0ybs4ui
+         PsuF2vPh9MgkyPQaoECWqfpVbYZ/JAQyLu1C65DNy0A8Tj9j5UlkOVUIpCoFaH7R2sW0
+         dHbA==
+X-Gm-Message-State: AGi0PuZgx7Ly3qwSC3eWBsMlKdPVDmct+O9aGIErBuOPigRt+0BDdrxq
+        1iQTEc5pdfjvuJj0YMqqWmLBNdJ8UKZ3ZE57RB4=
+X-Google-Smtp-Source: APiQypK4967Yz3wvCe1oAOumRP/nk49TIrQmH1L64tCyCNI5Hwunx0suz5YhTj1EwTTQSNkwAm4ZE99/Vn3wVK6FZJ8=
+X-Received: by 2002:a63:7b1d:: with SMTP id w29mr3546845pgc.4.1585652199992;
+ Tue, 31 Mar 2020 03:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200317135649.8876-1-michael.auchter@ni.com> <20200317145113.12413-1-michael.auchter@ni.com>
+ <CAHp75Veh3QRfqVFOpYbuuxcPqirc1_YrF-iZfRjNsYk7DWqYpQ@mail.gmail.com> <20200330201243.GA22106@xaphan>
+In-Reply-To: <20200330201243.GA22106@xaphan>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 13:56:32 +0300
+Message-ID: <CAHp75VcEAgrRREjT867xDAXVqr6q9CR-pB5keCj2+-AdqjFYVA@mail.gmail.com>
+Subject: Re: Re: [PATCH v2 1/2] iio: adc: ad7291: convert to device tree
+To:     Michael Auchter <michael.auchter@ni.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches address many code style issues on dc_link for readability
-and cleaning up warnings. Change suggested by checkpatch.pl.
-Some issues remain and need some minor code refactoring for proper handling. 
+On Mon, Mar 30, 2020 at 11:12 PM Michael Auchter <michael.auchter@ni.com> wrote:
+> On Sun, Mar 22, 2020 at 01:46:21AM +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 17, 2020 at 4:53 PM Michael Auchter <michael.auchter@ni.com> wrote:
 
-Melissa Wen (4):
-  drm/amd/display: cleanup codestyle type BLOCK_COMMENT_STYLE on dc_link
-  drm/amd/display: codestyle cleanup on dc_link file until detect_dp
-    func
-  drm/amd/display: code cleanup on dc_link from is_same_edid to
-    get_ddc_line
-  drm/amd/display: code cleanup of dc_link file on func
-    dc_link_construct
+...
 
- drivers/gpu/drm/amd/display/dc/core/dc_link.c | 358 +++++++++---------
- 1 file changed, 176 insertions(+), 182 deletions(-)
+> > > +       chip->reg = devm_regulator_get_optional(&client->dev, "vref");
+> > > +       if (!IS_ERR(chip->reg)) {
+> >
+> > Why not to go with usual positive conditional?
+>
+> I took this pattern from ad7266.c which Lars pointed me to. I agree that
+> a positive conditional here would probably be more natural. I'll change
+> that if you'd prefer.
+
+Yes, please do.
+
+...
+
+> > > +               .of_match_table = of_match_ptr(ad7291_of_match),
+> >
+> > No need to use of_match_ptr(). Haven't you got a compiler warning in !OF case?
+>
+> Hm, no warning as far as I can see with !OF...
+
+Have you used `make W=1 ...`? With it you should get a warning that
+table defined but not used.
+
+> but agreed that this
+> doesn't make much sense as-is.
+>
+> Is dropping of_match_ptr() the preferred route here? The driver doesn't
+> depend on OF, so it seems like keeping of_match_ptr and instead guarding
+> the ad7291_of_match table with #ifdef CONFIG_OF would be preferred. Of
+> course, maybe that's not worth it for saving some bytes from the final
+> image.
+
+You need either both (of_match_ptr() _and_ ugly ifdeffery, and note
+you will need of.h for that) or none (mod_devicetable.h maybe needed,
+though).
+
+> Let me know which route would be preferred.
+
+If we would like to use this in non-DT environment, then drop all that
+OF-specific stuff.
 
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
