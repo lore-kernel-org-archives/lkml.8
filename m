@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F01C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31803C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D868208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20FC20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645775;
-	bh=AWCdgu6dNEmRTTcrueFTFFBMA8I6/uWJz3XKank3eVQ=;
+	s=default; t=1585645779;
+	bh=mZN6uiwiuaobsbLUSA3uRQG07YXcU8jDnZ0rgAkJwlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BjAG/iiZV0v0kVw0+jaNF4TCAINV/azHdgS6XRI+s1Ye+kUC4r5JJ8NY73hBTNp3P
-	 sWlZvh27vOhRJiz6DQ21IhR9RhC3rE/+XGwI7589njouuv05vBrJf2a75/JQUBmCoT
-	 97btTeF6dvnD6tM1y+pdy7F+reiv59BNt9rZ9lfI=
+	b=cjBHCOyy+NW69yaUdrBQweNVV72YNB8ltH7Vmep6itiQ8lyTXvtkPRD2GZ7gqZIu4
+	 FF06nWDSeQ7H4lMt81l7NTyIb18IYVBFvV7BI1vKfZjBb6FpgNG2v2NdZAaMf/To6q
+	 4x/3dlnKh4d85g2hI7I40t7LKQwBbRghRXV9I8EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbgCaJJe (ORCPT
+        id S1731490AbgCaJJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:09:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52650 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731473AbgCaJJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:09:30 -0400
+        id S1731479AbgCaJJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:09:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C319D20675;
-        Tue, 31 Mar 2020 09:09:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C87CF2072E;
+        Tue, 31 Mar 2020 09:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645770;
-        bh=AWCdgu6dNEmRTTcrueFTFFBMA8I6/uWJz3XKank3eVQ=;
+        s=default; t=1585645775;
+        bh=mZN6uiwiuaobsbLUSA3uRQG07YXcU8jDnZ0rgAkJwlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYvqBUCXc7upa2WEce+8k36V3/1VDsS7zi/6b1jCBuEuCC6Kt36MFO8Hbd+cmLxV5
-         eFUjlHjtD/uLdxPEb3V23H9dsY6AJc0J/3jXDTMVY/bvOx5Pl1QG0ZMUrCK9AL32bt
-         CxGCVkPFhRrF0lr+o1/X4pCJjd6YZyG+cretx2mo=
+        b=c3FjYtHtBLPQ3HWZyiJQjILqT6ynE0BkNYk7V2YYBk2Tb3mcyCz2jFiPjNgAFazgW
+         2xvVJ9U/Gl2PXz+3ef+v2rtLS5+fWQG88ArObKcC/ElWQDgozdsaTxxYohIlnqNtdS
+         O/U9nOBVQxZ6PEVKIHMvVcsqgvZOXfRvlvUL8jLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Roman Gushchin <guro@fb.com>
-Subject: [PATCH 5.5 118/170] bpf: Fix cgroup ref leak in cgroup_bpf_inherit on out-of-memory
-Date:   Tue, 31 Mar 2020 10:58:52 +0200
-Message-Id: <20200331085436.664958401@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.5 110/170] mac80211: mark station unauthorized before key removal
+Date:   Tue, 31 Mar 2020 10:58:44 +0200
+Message-Id: <20200331085435.872068772@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,36 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 1d8006abaab4cb90f81add86e8d1bf9411add05a upstream.
+commit b16798f5b907733966fd1a558fca823b3c67e4a1 upstream.
 
-There is no compensating cgroup_bpf_put() for each ancestor cgroup in
-cgroup_bpf_inherit(). If compute_effective_progs returns error, those cgroups
-won't be freed ever. Fix it by putting them in cleanup code path.
+If a station is still marked as authorized, mark it as no longer
+so before removing its keys. This allows frames transmitted to it
+to be rejected, providing additional protection against leaking
+plain text data during the disconnection flow.
 
-Fixes: e10360f815ca ("bpf: cgroup: prevent out-of-order release of cgroup bpf")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Roman Gushchin <guro@fb.com>
-Link: https://lore.kernel.org/bpf/20200309224017.1063297-1-andriin@fb.com
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200326155133.ccb4fb0bb356.If48f0f0504efdcf16b8921f48c6d3bb2cb763c99@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/cgroup.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/mac80211/sta_info.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -228,6 +228,9 @@ cleanup:
- 	for (i = 0; i < NR; i++)
- 		bpf_prog_array_free(arrays[i]);
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -4,7 +4,7 @@
+  * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+  * Copyright (C) 2015 - 2017 Intel Deutschland GmbH
+- * Copyright (C) 2018-2019 Intel Corporation
++ * Copyright (C) 2018-2020 Intel Corporation
+  */
  
-+	for (p = cgroup_parent(cgrp); p; p = cgroup_parent(p))
-+		cgroup_bpf_put(p);
+ #include <linux/module.h>
+@@ -1049,6 +1049,11 @@ static void __sta_info_destroy_part2(str
+ 	might_sleep();
+ 	lockdep_assert_held(&local->sta_mtx);
+ 
++	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
++		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
++		WARN_ON_ONCE(ret);
++	}
 +
- 	percpu_ref_exit(&cgrp->bpf.refcnt);
+ 	/* now keys can no longer be reached */
+ 	ieee80211_free_sta_keys(local, sta);
  
- 	return -ENOMEM;
 
 
