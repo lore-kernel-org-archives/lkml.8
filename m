@@ -2,203 +2,287 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED7BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D1BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2923C20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C490E20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgCaGGm convert rfc822-to-8bit (ORCPT
+        id S1729634AbgCaGG7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:06:42 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24050 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgCaGGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:06:42 -0400
-IronPort-SDR: GxQ7omR+N7vK7QYyf+F2AGR6IpBthleZ0j22UIL2kwFz2F5LSHyE7B8gI73cRdlUwrdnQCun8O
- vecp7qdD79tg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 23:06:41 -0700
-IronPort-SDR: J6huhyhGhOkmDuoqZEOkpb0JECRSVTko7DSCE/TudLhGxJ1l4uWL8X1U5Qab8kKGLjp/6wljFR
- ZCzBY0OcWWtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="294830873"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 23:06:41 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 30 Mar 2020 23:06:41 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 30 Mar 2020 23:06:41 -0700
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 30 Mar 2020 23:06:40 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
- Tue, 31 Mar 2020 14:06:39 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Tue, 31 Mar 2020 02:06:59 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:45331 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgCaGG7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 02:06:59 -0400
+Received: from marcel-macpro.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 5DDE2CECC4;
+        Tue, 31 Mar 2020 08:16:30 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v4 2/2] Bluetooth: btusb: Read the supported features of
+ Microsoft vendor extension
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CABmPvSF2SMWUs_62jeAse3DbgRgQBiOinKZQuPN7k+MKYL6eDw@mail.gmail.com>
+Date:   Tue, 31 Mar 2020 08:06:57 +0200
+Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: RE: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Topic: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Index: AQHWAvq+z2SPyfblHkGvV1oKjQsO9ahaFEoAgAB7VgCAAS14gP//zqQAgAEODYCABAXlIIAALvMAgAFssAA=
-Date:   Tue, 31 Mar 2020 06:06:38 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-        <20200326094442.5be042ce@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
-        <20200327074702.GA27959@infradead.org>
-        <20200327165335.397f24a3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
- <20200330090746.23c5599c@jacob-builder>
-In-Reply-To: <20200330090746.23c5599c@jacob-builder>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
+        netdev <netdev@vger.kernel.org>
 Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+Message-Id: <E1FC614F-47DD-4455-8D73-A0D95D7E0F26@holtmann.org>
+References: <20200328074632.21907-1-mcchou@chromium.org>
+ <20200328004507.v4.2.Ic59b637deef8e646f6599a80c9a2aa554f919e55@changeid>
+ <1FA9284F-C8DD-40A3-81A7-65AC6DE1E3C5@holtmann.org>
+ <CABmPvSF2SMWUs_62jeAse3DbgRgQBiOinKZQuPN7k+MKYL6eDw@mail.gmail.com>
+To:     Miao-chen Chou <mcchou@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Sent: Tuesday, March 31, 2020 12:08 AM
-> 
-> On Mon, 30 Mar 2020 05:40:40 +0000
-> "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> 
-> > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Sent: Saturday, March 28, 2020 7:54 AM
-> > >
-> > > On Fri, 27 Mar 2020 00:47:02 -0700
-> > > Christoph Hellwig <hch@infradead.org> wrote:
-> > >
-> > > > On Fri, Mar 27, 2020 at 02:49:55AM +0000, Tian, Kevin wrote:
-> > > > > If those API calls are inter-dependent for composing a feature
-> > > > > (e.g. SVA), shouldn't we need a way to check them together
-> > > > > before exposing the feature to the guest, e.g. through a
-> > > > > iommu_get_uapi_capabilities interface?
-> > > >
-> > > > Yes, that makes sense.  The important bit is to have a capability
-> > > > flags and not version numbers.
-> > >
-> > > The challenge is that there are two consumers in the kernel for
-> > > this. 1. VFIO only look for compatibility, and size of each data
-> > > struct such that it can copy_from_user.
-> > >
-> > > 2. IOMMU driver, the "real consumer" of the content.
-> > >
-> > > For 2, I agree and we do plan to use the capability flags to check
-> > > content and maintain backward compatibility etc.
-> > >
-> > > For VFIO, it is difficult to do size look up based on capability
-> > > flags.
-> >
-> > Can you elaborate the difficulty in VFIO? if, as Christoph Hellwig
-> > pointed out, version number is already avoided everywhere, it is
-> > interesting to know whether this work becomes a real exception
-> > or just requires a different mindset.
-> >
-> From VFIO p.o.v. the IOMMU UAPI data is opaque, it only needs to do two
-> things:
-> 1. is the UAPI compatible?
-> 2. what is the size to copy?
-> 
-> If you look at the version number, this is really a "version as size"
-> lookup, as provided by the helper function in this patch. An example
-> can be the newly introduced clone3 syscall.
-> https://lwn.net/Articles/792628/
-> In clone3, new version must have new size. The slight difference here
-> is that, unlike clone3, we have multiple data structures instead of a
-> single struct clone_args {}. And each struct has flags to enumerate its
-> contents besides size.
+Hi Miao-chen,
 
-Thanks for providing that link. However clone3 doesn't include a version
-field to do "version as size" lookup. Instead, as you said, it includes a
-size parameter which sounds like the option 3 (argsz) listed below.
+>>> This defines opcode and packet structures of Microsoft vendor extension.
+>>> For now, we add only the HCI_VS_MSFT_Read_Supported_Features command. See
+>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+>>> microsoft-defined-bluetooth-hci-commands-and-events#microsoft-defined-
+>>> bluetooth-hci-events for more details.
+>>> Upon initialization of a hci_dev, we issue a
+>>> HCI_VS_MSFT_Read_Supported_Features command to read the supported features
+>>> of Microsoft vendor extension if the opcode of Microsoft vendor extension
+>>> is valid. See https://docs.microsoft.com/en-us/windows-hardware/drivers/
+>>> bluetooth/microsoft-defined-bluetooth-hci-commands-and-events#
+>>> hci_vs_msft_read_supported_features for more details.
+>>> This was verified on a device with Intel ThunderPeak BT controller where
+>>> the Microsoft vendor extension features are 0x000000000000003f.
+>>> 
+>>> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+>>> 
+>>> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+>>> ---
+>>> 
+>>> Changes in v4:
+>>> - Move MSFT's do_open() and do_close() from net/bluetooth/hci_core.c to
+>>> net/bluetooth/msft.c.
+>>> - Other than msft opcode, define struct msft_data to host the rest of
+>>> information of Microsoft extension and leave a void* pointing to a
+>>> msft_data in struct hci_dev.
+>>> 
+>>> Changes in v3:
+>>> - Introduce msft_vnd_ext_do_open() and msft_vnd_ext_do_close().
+>>> 
+>>> Changes in v2:
+>>> - Issue a HCI_VS_MSFT_Read_Supported_Features command with
+>>> __hci_cmd_sync() instead of constructing a request.
+>>> 
+>>> include/net/bluetooth/hci_core.h |   1 +
+>>> net/bluetooth/hci_core.c         |   5 ++
+>>> net/bluetooth/hci_event.c        |   5 ++
+>>> net/bluetooth/msft.c             | 126 +++++++++++++++++++++++++++++++
+>>> net/bluetooth/msft.h             |  10 +++
+>>> 5 files changed, 147 insertions(+)
+>>> 
+>>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+>>> index 239cae2d9998..59ddcd3a52cc 100644
+>>> --- a/include/net/bluetooth/hci_core.h
+>>> +++ b/include/net/bluetooth/hci_core.h
+>>> @@ -486,6 +486,7 @@ struct hci_dev {
+>>> 
+>>> #if IS_ENABLED(CONFIG_BT_MSFTEXT)
+>>>      __u16                   msft_opcode;
+>>> +     void                    *msft_data;
+>>> #endif
+>>> 
+>>>      int (*open)(struct hci_dev *hdev);
+>>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+>>> index dbd2ad3a26ed..c38707de767a 100644
+>>> --- a/net/bluetooth/hci_core.c
+>>> +++ b/net/bluetooth/hci_core.c
+>>> @@ -44,6 +44,7 @@
+>>> #include "hci_debugfs.h"
+>>> #include "smp.h"
+>>> #include "leds.h"
+>>> +#include "msft.h"
+>>> 
+>>> static void hci_rx_work(struct work_struct *work);
+>>> static void hci_cmd_work(struct work_struct *work);
+>>> @@ -1563,6 +1564,8 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+>>>          hci_dev_test_flag(hdev, HCI_VENDOR_DIAG) && hdev->set_diag)
+>>>              ret = hdev->set_diag(hdev, true);
+>>> 
+>>> +     msft_do_open(hdev);
+>>> +
+>>>      clear_bit(HCI_INIT, &hdev->flags);
+>>> 
+>>>      if (!ret) {
+>>> @@ -1758,6 +1761,8 @@ int hci_dev_do_close(struct hci_dev *hdev)
+>>> 
+>>>      hci_sock_dev_event(hdev, HCI_DEV_DOWN);
+>>> 
+>>> +     msft_do_close(hdev);
+>>> +
+>>>      if (hdev->flush)
+>>>              hdev->flush(hdev);
+>>> 
+>>> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+>>> index 20408d386268..42b5871151a6 100644
+>>> --- a/net/bluetooth/hci_event.c
+>>> +++ b/net/bluetooth/hci_event.c
+>>> @@ -35,6 +35,7 @@
+>>> #include "a2mp.h"
+>>> #include "amp.h"
+>>> #include "smp.h"
+>>> +#include "msft.h"
+>>> 
+>>> #define ZERO_KEY "\x00\x00\x00\x00\x00\x00\x00\x00" \
+>>>               "\x00\x00\x00\x00\x00\x00\x00\x00"
+>>> @@ -6144,6 +6145,10 @@ void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb)
+>>>              hci_num_comp_blocks_evt(hdev, skb);
+>>>              break;
+>>> 
+>>> +     case HCI_EV_VENDOR:
+>>> +             msft_vendor_evt(hdev, skb);
+>>> +             break;
+>>> +
+>>>      default:
+>>>              BT_DBG("%s event 0x%2.2x", hdev->name, event);
+>>>              break;
+>>> diff --git a/net/bluetooth/msft.c b/net/bluetooth/msft.c
+>>> index 7609932c48ca..f76e4c79556e 100644
+>>> --- a/net/bluetooth/msft.c
+>>> +++ b/net/bluetooth/msft.c
+>>> @@ -6,6 +6,24 @@
+>>> 
+>>> #include "msft.h"
+>>> 
+>>> +#define MSFT_OP_READ_SUPPORTED_FEATURES              0x00
+>>> +struct msft_cp_read_supported_features {
+>>> +     __u8   sub_opcode;
+>>> +} __packed;
+>>> +struct msft_rp_read_supported_features {
+>>> +     __u8   status;
+>>> +     __u8   sub_opcode;
+>>> +     __le64 features;
+>>> +     __u8   evt_prefix_len;
+>>> +     __u8   evt_prefix[0];
+>>> +} __packed;
+>>> +
+>>> +struct msft_data {
+>>> +     __u64 features;
+>>> +     __u8  evt_prefix_len;
+>>> +     __u8  *evt_prefix;
+>>> +};
+>>> +
+>>> void msft_set_opcode(struct hci_dev *hdev, __u16 opcode)
+>>> {
+>>>      hdev->msft_opcode = opcode;
+>>> @@ -14,3 +32,111 @@ void msft_set_opcode(struct hci_dev *hdev, __u16 opcode)
+>>>                  hdev->msft_opcode);
+>>> }
+>>> EXPORT_SYMBOL(msft_set_opcode);
+>>> +
+>>> +static struct msft_data *read_supported_features(struct hci_dev *hdev)
+>>> +{
+>>> +     struct msft_data *msft;
+>> 
+>> I used a second parameter, but yes, my initial code was totally flawed with the msft_data access.
+> Ack.
+>> 
+>>> +     struct msft_cp_read_supported_features cp;
+>>> +     struct msft_rp_read_supported_features *rp;
+>>> +     struct sk_buff *skb;
+>>> +
+>>> +     cp.sub_opcode = MSFT_OP_READ_SUPPORTED_FEATURES;
+>>> +
+>>> +     skb = __hci_cmd_sync(hdev, hdev->msft_opcode, sizeof(cp), &cp,
+>>> +                          HCI_CMD_TIMEOUT);
+>>> +     if (IS_ERR(skb)) {
+>>> +             bt_dev_err(hdev, "Failed to read MSFT supported features (%ld)",
+>>> +                        PTR_ERR(skb));
+>>> +             return NULL;
+>>> +     }
+>>> +
+>>> +     if (skb->len < sizeof(*rp)) {
+>>> +             bt_dev_err(hdev, "MSFT supported features length mismatch");
+>>> +             goto failed;
+>>> +     }
+>>> +
+>>> +     rp = (struct msft_rp_read_supported_features *)skb->data;
+>>> +
+>>> +     if (rp->sub_opcode != MSFT_OP_READ_SUPPORTED_FEATURES)
+>>> +             goto failed;
+>>> +
+>>> +     msft = kzalloc(sizeof(*msft), GFP_KERNEL);
+>>> +     if (!msft)
+>>> +             goto failed;
+>>> +
+>>> +     if (rp->evt_prefix_len > 0) {
+>>> +             msft->evt_prefix = kmemdup(rp->evt_prefix, rp->evt_prefix_len,
+>>> +                                        GFP_KERNEL);
+>>> +             if (!msft->evt_prefix)
+>>> +                     goto failed;
+>>> +     }
+>>> +
+>>> +     msft->evt_prefix_len = rp->evt_prefix_len;
+>>> +     msft->features = __le64_to_cpu(rp->features);
+>>> +     kfree_skb(skb);
+>>> +
+>>> +     bt_dev_info(hdev, "MSFT supported features %llx", msft->features);
+>>> +     return msft;
+>>> +
+>>> +failed:
+>>> +     kfree_skb(skb);
+>>> +     return NULL;
+>>> +}
+>>> +
+>>> +void msft_do_open(struct hci_dev *hdev)
+>>> +{
+>>> +     if (hdev->msft_opcode == HCI_OP_NOP)
+>>> +             return;
+>>> +
+>>> +     bt_dev_dbg(hdev, "Initialize MSFT extension");
+>>> +     hdev->msft_data = read_supported_features(hdev);
+>>> +}
+>>> +
+>>> +void msft_do_close(struct hci_dev *hdev)
+>>> +{
+>>> +     struct msft_data *msft = hdev->msft_data;
+>>> +
+>>> +     if (!msft)
+>>> +             return;
+>>> +
+>>> +     bt_dev_dbg(hdev, "Cleanup of MSFT extension");
+>>> +
+>>> +     hdev->msft_data = NULL;
+>>> +
+>>> +     kfree(msft->evt_prefix);
+>>> +     kfree(msft);
+>>> +}
+>>> +
+>>> +int msft_vendor_evt(struct hci_dev *hdev, struct sk_buff *skb)
+>>> +{
+>> 
+>> So this was on purpose void. There is no point in returning any feedback from this function. It either handles the event or it doesn’t. The caller function doesn’t care.
+> I was thinking that if there are two extensions, the vendor events
+> should be processed either msft or the other function. Therefore,
+> should we use the return value to determine whether to hand skb to the
+> other function?
 
-> 
-> Besides breaching data abstraction, if VFIO has to check IOMMU flags to
-> determine the sizes, it has many combinations.
-> 
-> We also separate the responsibilities into two parts
-> 1. compatibility - version, size by VFIO
-> 2. sanity check - capability flags - by IOMMU
+my thinking was that we just hand the vendor events to all functions. Let them deal with the details. I would not over-design this right now. Keep it simple. As long as it is not userspace facing API, we can easily change that when we need it.
 
-I feel argsz+flags approach can perfectly meet above requirement. The
-userspace set the size and flags for whatever capabilities it uses, and
-VFIO simply copies the parameters by size and pass to IOMMU for
-further sanity check. Of course the assumption is that we do provide
-an interface for userspace to enumerate all supported capabilities.
+Regards
 
-Is there anything that I overlooked here? I suppose there might be
-some difficulties that block you from going the argsz way...
+Marcel
 
-Thanks
-Kevin
-
-> 
-> I think the latter matches what Christoph's comments. So we are in
-> agreement at the IOMMU level :)
-> 
-> For example:
-> During guest PASID bind, IOMMU driver operates on the data passed from
-> VFIO and check format & flags to take different code path.
-> 
-> #define IOMMU_PASID_FORMAT_INTEL_VTD	1
-> 	__u32 format;
-> #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
-> 	__u64 flags;
-> 
-> Jacob
-> 
-> > btw the most relevant discussion which I can find out now is here:
-> > 	https://lkml.org/lkml/2020/2/3/1126
-> >
-> > It mentioned 3 options for handling extension:
-> > --
-> > 1. Disallow adding new members to each structure other than reuse
-> > padding bits or adding union members at the end.
-> > 2. Allow extension of the structures beyond union, but union size has
-> > to be fixed with reserved spaces
-> > 3. Adopt VFIO argsz scheme, I don't think we need version for each
-> > struct anymore. argsz implies the version that user is using assuming
-> > UAPI data is extension only.
-> > --
-> >
-> > the first two are both version-based. Looks most guys agreed with
-> > option-1 (in this v2), but Alex didn't give his opinion at the
-> > moment. The last response from him was the raise of option-3 using
-> > argsz to avoid version. So, we also need hear from him. Alex?
-> >
-> > Thanks
-> > Kevin
-> 
-> [Jacob Pan]
