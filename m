@@ -2,185 +2,134 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D19C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8624C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B08520772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B7720838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:20:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwfLzDpO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guww+fno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbgCaLTy (ORCPT
+        id S1730516AbgCaLUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:19:54 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41228 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729925AbgCaLTy (ORCPT
+        Tue, 31 Mar 2020 07:20:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44672 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730343AbgCaLUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:19:54 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d24so4172915pll.8;
-        Tue, 31 Mar 2020 04:19:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qBLtW8uvZoq+p9ltVC/Y5j+G4s1oN9kaNzCh4VS1yxI=;
-        b=JwfLzDpOVdZFO1406Fk+QlttCn0PO48+P8d4KPaDr9g3QvYmoKiqbbTQYy++UW9oN3
-         Fl0YkQBcM1bThSLhz0khZz0Vh3QgsA07wlgqlWsBHIHYqd659xlz7y30ci5gbMoX9639
-         WCQUK9AN09GsTdMrpM2FX3h4tlUXD189yqz9RkalaXrTo2/O/K7HLvpUtTgMkQoZnVYL
-         RMMN6n6NyoLS5WyYXItT7T7tMSGovK3+Q4TAdgyR5ZZFluCjF79R6dlCsmRijDFRzD/g
-         P+Fos/0RpgjJZ7CeemMRbm/ITh78RnJdool7Lh3jKuOQxrPqzqivsLC+HT9Ap7EbhveZ
-         iYpg==
+        Tue, 31 Mar 2020 07:20:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585653634;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=EgVXfSbdEiIceutRcqYMXl2BzCyVe5g+grLOfxv7pm8=;
+        b=guww+fnopykCUybGsYsjj2jszVnfEiR32oECkTsWnfIaWykLSp8+TklH13Ww3mSJdb4/hv
+        5hO45C6esJl+DKxljIXt6yWg/eU7UkVc1rgJlC5drkywPrVlwkGw2m2E9kSPMCEPOcp/bZ
+        EKOvvZXRFw/tt+JNicNWwhghNEyiFE0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-190-zNgtW-5JPAWaBuvIcK8dmg-1; Tue, 31 Mar 2020 07:20:33 -0400
+X-MC-Unique: zNgtW-5JPAWaBuvIcK8dmg-1
+Received: by mail-wr1-f69.google.com with SMTP id q14so3232196wro.7
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 04:20:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qBLtW8uvZoq+p9ltVC/Y5j+G4s1oN9kaNzCh4VS1yxI=;
-        b=rEz6Jk7v/rDAkQgrVkFQ02thGk54wj2b0AqTUDGzFmMMTnX8fQDXf7sThL14CYhU+s
-         9CTTH8gT5KyPwuUyiDfpVeQYnoyil1y2Z4lHeeRpLCPwp9k86OTXTGbZ/AR/sGTwQ5Qn
-         Ov5Xr8vaTVib67clbNVo1/HeqokRXFBNYgR3G1myGItNun75nuX5NQK8EUe6DhJajHby
-         dRwKazDKxnbu2y+TjRHIa06Go2umpfEMSn0wNzSZiLELzSqM/CJ9/YvoJo90UHQmlk2W
-         CBHPnWwJFJUxSey4e1k016//m+WIW0Zximv76vQPqdZjJMRyAmSHycdXEccfnoqjubJH
-         QPrg==
-X-Gm-Message-State: AGi0Pub2teRaSIf1wLd19OluGCvR+ssM4lnDDzU7mjnmgEmtZEcWTHiC
-        jOhNsmB6BdEVw50NPPH/PI9Xi9bHzzNNCw==
-X-Google-Smtp-Source: APiQypI0AwWzixpkNx4ZCBzMxRKFWeeqKcaPP1l4wrQA1McijAVxf6FNaT3DCESD36mIMOfrMZviaQ==
-X-Received: by 2002:a17:902:6947:: with SMTP id k7mr4652864plt.222.1585653591863;
-        Tue, 31 Mar 2020 04:19:51 -0700 (PDT)
-Received: from SARKAR ([122.178.242.244])
-        by smtp.gmail.com with ESMTPSA id q61sm1691460pja.2.2020.03.31.04.19.50
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=EgVXfSbdEiIceutRcqYMXl2BzCyVe5g+grLOfxv7pm8=;
+        b=A8yqCynPcNxFC51uHEMXaM3mMDvXj+8yfdn+4nAUhwQC9+4M54JNj4AkNPzTPCidOf
+         ji3w0Bs1japtS9+ayOFV6GM2dj4i/8kXVMiQES3SkMuvhWa11LPZxJQjIpXLQAHfucJ9
+         1R+xNmKWkY62JjS+1uipPTg4eoZoAKumqvmDxDxH6+blCSVr6TbauNecg/FrzPzBNcak
+         RtHctaSoDKGpOiSnej4SOyNreGmpOE0E3L5VzGi5bHRbbss4r6vID+prH6rVynwgR1aI
+         0E8H4wgGBHQ6XG0CwkmFXmfY2MdJiwLCJdSjxT/5BpFuGbApF8Cv2Vf2Wi4YE9m+WTNE
+         6i5g==
+X-Gm-Message-State: ANhLgQ3jxiRcDBgmuIkrHjeVgNXzWRi45u5XQOVoQiikRc5GGu1EZ9jm
+        HVnjDgm14uqcZvljDNznF1Sw++NhcbEO39icD0c+ka4pGEqMRboQpk5QHJJ1x4LGdEcNbkuP0jd
+        lgXVWtVSVhf7/iJVVh0IV2mYU
+X-Received: by 2002:adf:f104:: with SMTP id r4mr19389699wro.375.1585653632023;
+        Tue, 31 Mar 2020 04:20:32 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsj73M4ya+/mbx5V8pR8T+pH0jDHJTdrCEDydbcDb9MlQv9v+fm1NZ8qgyAARz58WsbCWvRiQ==
+X-Received: by 2002:adf:f104:: with SMTP id r4mr19389663wro.375.1585653631773;
+        Tue, 31 Mar 2020 04:20:31 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id r9sm3477744wma.47.2020.03.31.04.20.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 04:19:50 -0700 (PDT)
-Message-ID: <5e832756.1c69fb81.19c58.78e8@mx.google.com>
-X-Google-Original-Message-ID: <20200331111947.GA7750@rohitsarkar5398@gmail.com>
-Date:   Tue, 31 Mar 2020 16:49:47 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     "Sa, Nuno" <Nuno.Sa@analog.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "stefan.popa@analog.com" <stefan.popa@analog.com>,
-        "zhongjiang@huawei.com" <zhongjiang@huawei.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
- DEFINE_SIMPLE_ATTRIBUTE
-References: <20200328063456.24012-1-rohitsarkar5398@gmail.com>
- <20200329103818.2fce9529@archlinux>
- <aee10d6bfc5f2fef85d90245304f3e0f368f94ec.camel@analog.com>
- <BN6PR03MB33472A88BA78392686737F9099C80@BN6PR03MB3347.namprd03.prod.outlook.com>
- <74033597-c348-03df-d52f-748bf52c1a12@metafoo.de>
+        Tue, 31 Mar 2020 04:20:31 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     ltykernel@gmail.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, michael.h.kelley@microsoft.com, wei.liu@kernel.org
+Subject: Re: [PATCH V2] x86/Hyper-V: don't allocate clockevent device when synthetic timer is unavailable
+In-Reply-To: <20200331021738.2572-1-Tianyu.Lan@microsoft.com>
+References: <20200331021738.2572-1-Tianyu.Lan@microsoft.com>
+Date:   Tue, 31 Mar 2020 13:20:29 +0200
+Message-ID: <87sgho22ki.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <74033597-c348-03df-d52f-748bf52c1a12@metafoo.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:08:00PM +0200, Lars-Peter Clausen wrote:
-> On 3/31/20 12:58 PM, Sa, Nuno wrote:
-> > Hi Rohit,
-> > 
-> > > From: linux-iio-owner@vger.kernel.org <linux-iio-owner@vger.kernel.org> On
-> > > Behalf Of Ardelean, Alexandru
-> > > Sent: Montag, 30. März 2020 11:20
-> > > To: jic23@kernel.org; rohitsarkar5398@gmail.com
-> > > Cc: stefan.popa@analog.com; zhongjiang@huawei.com; linux-
-> > > iio@vger.kernel.org; Bogdan, Dragos <Dragos.Bogdan@analog.com>;
-> > > pmeerw@pmeerw.net; knaack.h@gmx.de; Hennerich, Michael
-> > > <Michael.Hennerich@analog.com>; linux-kernel@vger.kernel.org;
-> > > lars@metafoo.de
-> > > Subject: Re: [PATCH 0/2] use DEFINE_DEBUGFS_ATTRIBUTE instead of
-> > > DEFINE_SIMPLE_ATTRIBUTE
-> > > 
-> > > On Sun, 2020-03-29 at 10:38 +0100, Jonathan Cameron wrote:
-> > > > On Sat, 28 Mar 2020 12:04:53 +0530
-> > > > Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
-> > > > 
-> > > > > The debugfs_create_file_unsafe method does not protect the fops given to
-> > > > > it from file removal. It must be used with DEFINE_DEBUGFS_ATTRIBUTE
-> > > > > which makes the fops aware of the file lifetime.
-> > > > > 
-> > > > > Further using DEFINE_DEBUGFS_ATTRIBUTE along with
-> > > > > debugfs_create_file_unsafe significantly reduces the overhead introduced
-> > > by
-> > > > > debugfs_create_file which creates a lifetime managing proxy around each
-> > > > > fops handed in. Refer [1] for more on this.
-> > > > > 
-> > > > > Fixes the following warnings reported by coccinelle:
-> > > > > drivers/iio/imu//adis16460.c:126:0-23: WARNING:
-> > > adis16460_flash_count_fops
-> > > > > should be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> > > > > drivers/iio/imu//adis16460.c:108:0-23: WARNING:
-> > > adis16460_product_id_fops
-> > > > > should be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> > > > > drivers/iio/imu//adis16460.c:90:0-23: WARNING:
-> > > adis16460_serial_number_fops
-> > > > > should be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> > > > > drivers/iio/imu//adis16400.c:278:0-23: WARNING:
-> > > adis16400_flash_count_fops
-> > > > > should be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> > > > > drivers/iio/imu//adis16400.c:261:0-23: WARNING:
-> > > adis16400_product_id_fops
-> > > > > should be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> > > > > 
-> > > > > [1]: https://lists.gt.net/linux/kernel/2369498
-> > > > > 
-> > > > > Rohit Sarkar (2):
-> > > > >    iio: imu: adis16400: use DEFINE_DEBUGFS_ATTRIBUTE instead of
-> > > > >      DEFINE_SIMPLE_ATTRIBUTE
-> > > > >    iio: imu: adis16460: use DEFINE_DEBUGFS_ATTRIBUTE instead of
-> > > > >      DEFINE_SIMPLE_ATTRIBUTE
-> > > > > 
-> > > > >   drivers/iio/imu/adis16400.c | 4 ++--
-> > > > >   drivers/iio/imu/adis16460.c | 6 +++---
-> > > > >   2 files changed, 5 insertions(+), 5 deletions(-)
-> > > > > 
-> > > > Hi Rohit,
-> > > > 
-> > > > You've opened a can of worms with this one.  There as a previous series
-> > > > posted doing exactly this change back in 2019 by Zhong Jiang (cc'd)
-> > > > 
-> > > > At the time I did a bit of looking into why this had been universally taken
-> > > > up cross tree and turned out there are some potential issues.
-> > > > 
-> > > > Alexandru added it to the list of things to test, but I guess it got
-> > > > buried under other work and is still outstanding.
-> > > > 
-> > > yep
-> > > my bad;
-> > > will try to make room these days for that old one
-> > > 
-> > > 
-> > I don't have the exact parts that this patch is touching but I have other parts where this patch
-> > applies and should be same. So, the idea to test this is to read the files in debugfs? Maybe also
-> > some unbind + binding?
-> > 
-> > I will try to test this still today...
-> 
-> The stress test is to open the debugfs file, then unbind the device and then
-> read from the still open debugfs file.
-Yes, also just to be sure, we need to test DEFINE_DEBUGFS_ATTRIBUTE
-along with debugfs_create_file_unsafe. I will send out another patch
-that changes debugfs_create_file to debugfs_create_file_unsafe and then
-that can be tested.
+ltykernel@gmail.com writes:
 
-> - Lars
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>
+> Current code initializes clock event data structure for syn timer
+> even when it's unavailable. Fix it.
+>
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+> Change since v1:
+> 	Update title and commit log. 
+>
+>  drivers/hv/hv.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index 632d25674e7f..2e893768fc76 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -212,13 +212,16 @@ int hv_synic_alloc(void)
+>  		tasklet_init(&hv_cpu->msg_dpc,
+>  			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
+>  
+> -		hv_cpu->clk_evt = kzalloc(sizeof(struct clock_event_device),
+> -					  GFP_KERNEL);
+> -		if (hv_cpu->clk_evt == NULL) {
+> -			pr_err("Unable to allocate clock event device\n");
+> -			goto err;
+> +		if (ms_hyperv.features & HV_MSR_SYNTIMER_AVAILABLE) {
+> +			hv_cpu->clk_evt =
+> +				kzalloc(sizeof(struct clock_event_device),
+> +						  GFP_KERNEL);
+> +			if (hv_cpu->clk_evt == NULL) {
+> +				pr_err("Unable to allocate clock event device\n");
+> +				goto err;
+> +			}
+> +			hv_init_clockevent_device(hv_cpu->clk_evt, cpu);
+>  		}
+> -		hv_init_clockevent_device(hv_cpu->clk_evt, cpu);
+>  
+>  		hv_cpu->synic_message_page =
+>  			(void *)get_zeroed_page(GFP_ATOMIC);
 
-Thanks,
-Rohit
+Thank you for fixing the subject! I had one more question on the
+previous version which still stands: which tree is this patch for?
+Upstream, clockevent allocation has moved to
+drivers/clocksource/hyperv_timer.c and the code there is different.
+
+Is this intended for some stable tree?
+
+-- 
+Vitaly
+
