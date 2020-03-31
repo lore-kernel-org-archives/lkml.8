@@ -2,190 +2,235 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6655DC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD980C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4618B20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36F820675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgCaM3S (ORCPT
+        id S1730718AbgCaMbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:29:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35376 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730357AbgCaM3S (ORCPT
+        Tue, 31 Mar 2020 08:31:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14930 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730437AbgCaMbO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:29:18 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k21so21803287ljh.2;
-        Tue, 31 Mar 2020 05:29:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FUJ0nnn1teDxAjMTgBP9PB/LAo361cB2pDkrttpbKCw=;
-        b=RokIgXqm7MNEUIIvo7nVp4xQqybHDeOcWmNdMIVbgxY7UbVm2KbaI0qWTxCNn0rwoR
-         WUNRyKBzzAu9XugjuQ0Kv22DN1+IyCr1iRhZU4y8PwF/joZJA5tgOy8LhQ9Nch6vdKY/
-         72N8gVvgg34cgNv2zVzHGbMGJ4v4Ei4h9WFpgr2WGEgGPnS591BS05dkFWmtky5pJ992
-         qbjAwlb0oBWLmxUiLNCM3F2WLTFZKgLDOp+qZiWZZ0eEmUXbVKrodb7ac04CiAWSmPv1
-         3tBrzROGA9GM9bylF5y2ImYQjPpW5QHNKb55xOO/23+vU/Wm08/+tW9mHsrNtI3oWDHU
-         8rEQ==
-X-Gm-Message-State: AGi0PuY176hXgcfSN2fQm1tQexGGjsoHu9wkbph/mvRO7xsX/m6DqMzf
-        QrDY75bYQsDAIoDY1yw6gQA=
-X-Google-Smtp-Source: APiQypJuRj9oTGFsuYIgiUZZ/VnsSMGTSXj6d34L70VFaPQff6ftV9TFKZMeONiYgW9l/OVv6Ef/jg==
-X-Received: by 2002:a2e:9b55:: with SMTP id o21mr9666391ljj.74.1585657754243;
-        Tue, 31 Mar 2020 05:29:14 -0700 (PDT)
-Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
-        by smtp.gmail.com with ESMTPSA id 203sm8529690ljf.65.2020.03.31.05.29.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 05:29:13 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 15:29:05 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Tue, 31 Mar 2020 08:31:14 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VC3v1G005350
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 08:31:12 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3022f3ccvj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 08:31:12 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Tue, 31 Mar 2020 13:30:55 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 31 Mar 2020 13:30:49 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VCV29E45285796
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 12:31:02 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFFED4C050;
+        Tue, 31 Mar 2020 12:31:01 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11E484C04A;
+        Tue, 31 Mar 2020 12:31:01 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.170.245])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 12:31:01 +0000 (GMT)
+Date:   Tue, 31 Mar 2020 14:30:59 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
+        Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Tal Gilboa <talgi@mellanox.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: [PATCH v7 10/10] power: supply: Fix Kconfig help text indentiation
-Message-ID: <5f74fddeb8d91c67f7151595e19e11437d7a8689.1585656144.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+In-Reply-To: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20033112-0020-0000-0000-000003BEEC78
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033112-0021-0000-0000-000022178CDF
+Message-Id: <20200331143059.29fca8fa@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_04:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 phishscore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indent the help text as explained in
-Documentation/process/coding-style.rst
+On Tue, 24 Mar 2020 10:52:52 +0530
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+> This series adds more arch page table helper tests. The new tests here are
+> either related to core memory functions and advanced arch pgtable helpers.
+> This also creates a documentation file enlisting all expected semantics as
+> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
+> 
+> This series has been tested on arm64 and x86 platforms. There is just one
+> expected failure on arm64 that will be fixed when we enable THP migration.
+> 
+> [   21.741634] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:782
+> 
+> which corresponds to
+> 
+> WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd))))
+> 
+> There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
+> ifdefs scattered across the test. But consolidating all the fallback stubs
+> is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
+> not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
+> 
+> This series has been build tested on many platforms including the ones that
+> subscribe the test through ARCH_HAS_DEBUG_VM_PGTABLE.
+> 
 
-I just learned the help text in Kconfigs should be indented by two
-spaces. I fixed this for BD99954 as suggested by Randy and decided
-that I could do this for few other entries as well while I was at
-it anyways.
+Hi Anshuman,
 
-No changes since v6.
+thanks for the update. There are a couple of issues on s390, some might
+also affect other archs.
 
- drivers/power/supply/Kconfig | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+1) The pxd_huge_tests are using pxd_set/clear_huge, which defaults to
+returning 0 if !CONFIG_HAVE_ARCH_HUGE_VMAP. As result, the checks for
+!pxd_test/clear_huge in the pxd_huge_tests will always trigger the
+warning. This should affect all archs w/o CONFIG_HAVE_ARCH_HUGE_VMAP.
+Could be fixed like this:
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index af96d7fa56b1..f606ba069e4e 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -415,7 +415,7 @@ config CHARGER_PCF50633
- 	tristate "NXP PCF50633 MBC"
- 	depends on MFD_PCF50633
- 	help
--	 Say Y to include support for NXP PCF50633 Main Battery Charger.
-+	  Say Y to include support for NXP PCF50633 Main Battery Charger.
+@@ -923,8 +923,10 @@ void __init debug_vm_pgtable(void)
+        pmd_leaf_tests(pmd_aligned, prot);
+        pud_leaf_tests(pud_aligned, prot);
  
- config BATTERY_RX51
- 	tristate "Nokia RX-51 (N900) battery driver"
-@@ -609,15 +609,15 @@ config CHARGER_TPS65090
- 	tristate "TPS65090 battery charger driver"
- 	depends on MFD_TPS65090
- 	help
--	 Say Y here to enable support for battery charging with TPS65090
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with TPS65090
-+	  PMIC chips.
+-       pmd_huge_tests(pmdp, pmd_aligned, prot);
+-       pud_huge_tests(pudp, pud_aligned, prot);
++       if (IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMAP)) {
++               pmd_huge_tests(pmdp, pmd_aligned, prot);
++               pud_huge_tests(pudp, pud_aligned, prot);
++       }
  
- config CHARGER_TPS65217
- 	tristate "TPS65217 battery charger driver"
- 	depends on MFD_TPS65217
- 	help
--	 Say Y here to enable support for battery charging with TPS65217
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with TPS65217
-+	  PMIC chips.
- 
- config BATTERY_GAUGE_LTC2941
- 	tristate "LTC2941/LTC2943 Battery Gauge Driver"
-@@ -671,16 +671,16 @@ config CHARGER_SC2731
- 	tristate "Spreadtrum SC2731 charger driver"
- 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
- 	help
--	 Say Y here to enable support for battery charging with SC2731
--	 PMIC chips.
-+	  Say Y here to enable support for battery charging with SC2731
-+	  PMIC chips.
- 
- config FUEL_GAUGE_SC27XX
- 	tristate "Spreadtrum SC27XX fuel gauge driver"
- 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
- 	depends on IIO
- 	help
--	 Say Y here to enable support for fuel gauge with SC27XX
--	 PMIC chips.
-+	  Say Y here to enable support for fuel gauge with SC27XX
-+	  PMIC chips.
- 
- config CHARGER_UCS1002
- 	tristate "Microchip UCS1002 USB Port Power Controller"
-@@ -698,9 +698,9 @@ config CHARGER_BD70528
- 	select LINEAR_RANGES
- 	default n
- 	help
--	 Say Y here to enable support for getting battery status
--	 information and altering charger configurations from charger
--	 block of the ROHM BD70528 Power Management IC.
-+	  Say Y here to enable support for getting battery status
-+	  information and altering charger configurations from charger
-+	  block of the ROHM BD70528 Power Management IC.
- 
- config CHARGER_BD99954
- 	tristate "ROHM bd99954 charger driver"
--- 
-2.21.0
+        pte_savedwrite_tests(pte_aligned, prot);
+        pmd_savedwrite_tests(pmd_aligned, prot);
 
+BTW, please add some comments to the various #ifdef/#else stuff, especially
+when the different parts are far away and/or nested.
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+2) The hugetlb_advanced_test will fail because it directly de-references
+huge *ptep pointers instead of using huge_ptep_get() for this. We have
+very different pagetable entry layout for pte and (large) pmd on s390,
+and unfortunately the whole hugetlbfs code is using pte_t instead of pmd_t
+like THP. For this reason, huge_ptep_get() was introduced, which will
+return a "converted" pte, because directly reading from a *ptep (pointing
+to a large pmd) will not return a proper pte. Only ARM has also an
+implementation of huge_ptep_get(), so they could be affected, depending
+on what exactly they need it for.
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Could be fixed like this (the first de-reference is a bit special,
+because at that point *ptep does not really point to a large (pmd) entry
+yet, it is initially an invalid pte entry, which breaks our huge_ptep_get()
+conversion logic. I also added PMD_MASK alignment for RANDOM_ORVALUE,
+because we do have some special bits there in our large pmds. It seems
+to also work w/o that alignment, but it feels a bit wrong):
+
+@@ -731,26 +731,26 @@ static void __init hugetlb_advanced_test
+                                          unsigned long vaddr, pgprot_t prot)
+ {
+        struct page *page = pfn_to_page(pfn);
+-       pte_t pte = READ_ONCE(*ptep);
++       pte_t pte;
+
+-       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
++       pte = pte_mkhuge(mk_pte_phys(RANDOM_ORVALUE & PMD_MASK, prot));
+        set_huge_pte_at(mm, vaddr, ptep, pte);
+        barrier();
+        WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+        huge_pte_clear(mm, vaddr, ptep, PMD_SIZE);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(!huge_pte_none(pte));
+ 
+        pte = mk_huge_pte(page, prot);
+        set_huge_pte_at(mm, vaddr, ptep, pte);
+        huge_ptep_set_wrprotect(mm, vaddr, ptep);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(huge_pte_write(pte));
+ 
+        pte = mk_huge_pte(page, prot);
+        set_huge_pte_at(mm, vaddr, ptep, pte);
+        huge_ptep_get_and_clear(mm, vaddr, ptep);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(!huge_pte_none(pte));
+ 
+        pte = mk_huge_pte(page, prot);
+@@ -759,7 +759,7 @@ static void __init hugetlb_advanced_test
+        pte = huge_pte_mkwrite(pte);
+        pte = huge_pte_mkdirty(pte);
+        huge_ptep_set_access_flags(vma, vaddr, ptep, pte, 1);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(!(huge_pte_write(pte) && huge_pte_dirty(pte)));
+ }
+ #else
+
+3) The pmd_protnone_tests() has an issue, because it passes a pmd to
+pmd_protnone() which has not been marked as large. We check for large
+pmd in the s390 implementation of pmd_protnone(), and will fail if a
+pmd is not large. We had similar issues before, in other helpers, where
+I changed the logic on s390 to not require the pmd large check, but I'm
+not so sure in this case. Is there a valid use case for doing
+pmd_protnone() on "normal" pmds? Or could this be changed like this:
+
+@@ -537,7 +537,7 @@ static void __init pte_protnone_tests(un
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ static void __init pmd_protnone_tests(unsigned long pfn, pgprot_t prot)
+ {
+-       pmd_t pmd = pfn_pmd(pfn, prot);
++       pmd_t pmd = mk_huge_pmd(pfn_to_page(pfn), prot);
+
+        if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
+                return;
+
+Regards,
+Gerald
+
