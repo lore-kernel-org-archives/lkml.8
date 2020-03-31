@@ -2,129 +2,135 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3C6C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42247C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689FD20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A2320732
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbgCaD3R (ORCPT
+        id S1729900AbgCaD3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 23:29:17 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12657 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727358AbgCaD3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 23:29:17 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 78841DC6D5413620629F;
-        Tue, 31 Mar 2020 11:29:14 +0800 (CST)
-Received: from [127.0.0.1] (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 31 Mar 2020
- 11:29:09 +0800
-Subject: Re: [PATCH -next] ACPICA: Make acpi_protocol_lengths static
-To:     "Kaneda, Erik" <erik.kaneda@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Moore, Robert" <robert.moore@intel.com>
-References: <20200328034706.17840-1-yuehaibing@huawei.com>
- <CAJZ5v0ikZoo5bgrfUsGic7FTCZQu7m_EYLDH1LMcMGNwNjtvqw@mail.gmail.com>
- <CY4PR11MB171942777865293C74EF1D9AF0CB0@CY4PR11MB1719.namprd11.prod.outlook.com>
-CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <81c23927-e3eb-dd97-6b9d-5e91d19a61b8@huawei.com>
-Date:   Tue, 31 Mar 2020 11:29:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
-MIME-Version: 1.0
-In-Reply-To: <CY4PR11MB171942777865293C74EF1D9AF0CB0@CY4PR11MB1719.namprd11.prod.outlook.com>
+        Mon, 30 Mar 2020 23:29:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:49295 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727358AbgCaD3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 23:29:30 -0400
+IronPort-SDR: WKixkB4qGUoOe4Gm257fxpEShDQnvYDpPSygS5fLh5xpKAZL/TM/IbssJpLBtnsSDHZDWk56gx
+ wIcO9kACe2pA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 20:29:29 -0700
+IronPort-SDR: Y9CbFUs/KSal0b/RN+y3oz1G8RxDxU7qi0JkZGFrEjycdmLJpcA5BeGVMUzLjp4NPc9ePGbdwR
+ 3bJ4GddnFhag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,326,1580803200"; 
+   d="scan'208";a="294802480"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Mar 2020 20:29:29 -0700
+Received: from fmsmsx163.amr.corp.intel.com (10.18.125.72) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 20:29:29 -0700
+Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
+ fmsmsx163.amr.corp.intel.com (10.18.125.72) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 30 Mar 2020 20:29:29 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
+ Tue, 31 Mar 2020 11:29:26 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+Subject: RE: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
+Thread-Topic: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
+Thread-Index: AQHV/Nh9FI7fbfgIUkqDZ3DrcNQ1xKhN+YUAgAfwusCACwVbAIABLSaw
+Date:   Tue, 31 Mar 2020 03:29:26 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E1738B1A1C@SHSMSX104.ccr.corp.intel.com>
+References: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
+ <20200318154826.GC24357@linux.intel.com>
+ <82D7661F83C1A047AF7DC287873BF1E1738A9724@SHSMSX104.ccr.corp.intel.com>
+ <20200330172152.GE24988@linux.intel.com>
+In-Reply-To: <20200330172152.GE24988@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/31 1:52, Kaneda, Erik wrote:
-> 
-> 
->> -----Original Message-----
->> From: linux-acpi-owner@vger.kernel.org <linux-acpi-
->> owner@vger.kernel.org> On Behalf Of Rafael J. Wysocki
->> Sent: Saturday, March 28, 2020 2:14 AM
->> To: YueHaibing <yuehaibing@huawei.com>; Moore, Robert
->> <robert.moore@intel.com>; Kaneda, Erik <erik.kaneda@intel.com>
->> Cc: Wysocki, Rafael J <rafael.j.wysocki@intel.com>; Len Brown
->> <lenb@kernel.org>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>;
->> open list:ACPI COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>;
->> Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
->> Subject: Re: [PATCH -next] ACPICA: Make acpi_protocol_lengths static
->>
->> On Sat, Mar 28, 2020 at 4:47 AM YueHaibing <yuehaibing@huawei.com>
->> wrote:
->>>
->>> Fix sparse warning:
->>>
->>> drivers/acpi/acpica/exfield.c:25:10: warning:
->>>  symbol 'acpi_protocol_lengths' was not declared. Should it be static?
->  
-> I don’t understand what sparse is trying to say here. This variable is declared in exfield.c...
-> Could you provide more details on this sparse warning?
-
-This is sparse -Wdel option's job, see man manual:
-
-       -Wdecl Warn about any non-static variable or function definition that
-              has no previous declaration.
-
-              Private symbols (functions and variables) internal to a given
-              source file should use static, to allow additional compiler
-              optimizations, allow detection of unused symbols, and prevent
-              other code from relying on these internal symbols.  Public
-              symbols used by other source files will need declarations
-              visible to those other source files, such as in a header file.
-              All declarations should fall into one of these two categories.
-              Thus, with -Wdecl, Sparse warns about any symbol definition
-              with neither static nor a declaration.  To fix this warning,
-              declare private symbols static, and ensure that the files
-              defining public symbols have the symbol declarations available
-              first (such as by including the appropriate header file).
-
-> 
-> Erik
-> 
->>>
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>
->> Bob, Erik, I'm leaving this one to you.
->>
->>> ---
->>>  drivers/acpi/acpica/exfield.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/acpi/acpica/exfield.c
->>> b/drivers/acpi/acpica/exfield.c index e85eb31e5075..3323a2ba6a31
->>> 100644
->>> --- a/drivers/acpi/acpica/exfield.c
->>> +++ b/drivers/acpi/acpica/exfield.c
->>> @@ -22,7 +22,7 @@ ACPI_MODULE_NAME("exfield")
->>>   */
->>>  #define ACPI_INVALID_PROTOCOL_ID        0x80
->>>  #define ACPI_MAX_PROTOCOL_ID            0x0F
->>> -const u8 acpi_protocol_lengths[] = {
->>> +static const u8 acpi_protocol_lengths[] = {
->>>         ACPI_INVALID_PROTOCOL_ID,       /* 0 - reserved */
->>>         ACPI_INVALID_PROTOCOL_ID,       /* 1 - reserved */
->>>         0x00,                   /* 2 - ATTRIB_QUICK */
->>> --
->>> 2.17.1
->>>
->>>
-
+PiA+ID4gT24gV2VkLCBNYXIgMTgsIDIwMjAgYXQgMTE6NDg6MThBTSArMDgwMCwgTHV3ZWkgS2Fu
+ZyB3cm90ZToNCj4gPiA+ID4gSWYgdGhlIGxvZ2ljYWwgcHJvY2Vzc29yIGlzIG9wZXJhdGluZyB3
+aXRoIEludGVsIFBUIGVuYWJsZWQgKA0KPiA+ID4gPiBJQTMyX1JUSVRfQ1RMLlRyYWNlRW4gPSAx
+KSBhdCB0aGUgdGltZSBvZiBWTSBlbnRyeSwgdGhlIOKAnGxvYWQNCj4gPiA+ID4gSUEzMl9SVElU
+X0NUTOKAnSBWTS1lbnRyeSBjb250cm9sIG11c3QgYmUgMChTRE0gMjYuMi4xLjEpLg0KPiA+ID4g
+Pg0KPiA+ID4gPiBUaGUgZmlyc3QgZGlzYWJsZWQgdGhlIGhvc3QgSW50ZWwgUFQoQ2xlYXIgVHJh
+Y2VFbikgd2lsbCBtYWtlIGFsbA0KPiA+ID4gPiB0aGUgYnVmZmVyZWQgcGFja2V0cyBhcmUgZmx1
+c2hlZCBvdXQgb2YgdGhlIHByb2Nlc3NvciBhbmQgaXQgbWF5DQo+ID4gPiA+IGNhdXNlIGFuIElu
+dGVsIFBUIFBNSS4gVGhlIGhvc3QgSW50ZWwgUFQgd2lsbCBiZSByZS1lbmFibGVkIGluIHRoZQ0K
+PiA+ID4gPiBob3N0IEludGVsIFBUIFBNSSBoYW5kbGVyLg0KPiA+ID4gPg0KPiA+ID4gPiBoYW5k
+bGVfcG1pX2NvbW1vbigpDQo+ID4gPiA+ICAgICAtPiBpbnRlbF9wdF9pbnRlcnJ1cHQoKQ0KPiA+
+ID4gPiAgICAgICAgICAgICAtPiBwdF9jb25maWdfc3RhcnQoKQ0KPiA+ID4NCj4gPiA+IElJVUMs
+IHRoaXMgaXMgb25seSBwb3NzaWJsZSB3aGVuIFBUICJwbGF5cyBuaWNlIiB3aXRoIFZNWCwgY29y
+cmVjdD8NCj4gPiA+IE90aGVyd2lzZSBwdC0+dm14X29uIHdpbGwgYmUgdHJ1ZSBhbmQgcHRfY29u
+ZmlnX3N0YXJ0KCkgd291bGQgc2tpcA0KPiA+ID4gdGhlIFdSTVNSLg0KPiA+ID4NCj4gPiA+IEFu
+ZCBJUFQgUE1JIG11c3QgYmUgZGVsaXZlcmVkIHZpYSBOTUkgKHRob3VnaCBtYXliZSB0aGV5J3Jl
+IGFsd2F5cw0KPiA+ID4gZGVsaXZlcmVkIHZpYSBOTUk/KS4NCj4gPiA+DQo+ID4gPiBJbiBhbnkg
+Y2FzZSwgcmVkb2luZyBXUk1TUiBkb2Vzbid0IHNlZW0gc2FmZSwgYW5kIGl0IGNlcnRhaW5seSBp
+c24ndA0KPiA+ID4gcGVyZm9ybWFudCwgZS5nLiB3aGF0IHByZXZlbnRzIHRoZSBzZWNvbmQgV1JN
+U1IgZnJvbSB0cmlnZ2VyaW5nIGENCj4gPiA+IHNlY29uZCBJUFQgUE1JPw0KPiA+ID4NCj4gPiA+
+IHB0X2d1ZXN0X2VudGVyKCkgaXMgY2FsbGVkIGFmdGVyIHRoZSBzd2l0Y2ggdG8gdGhlIHZDUFUg
+aGFzIGFscmVhZHkNCj4gPiA+IGJlZW4gcmVjb3JkZWQsIGNhbid0IHRoaXMgYmUgaGFuZGxlZCBp
+biB0aGUgSVBUIGNvZGUsIGUuZy4gc29tZXRoaW5nIGxpa2UNCj4gdGhpcz8NCj4gPiA+DQo+ID4g
+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvZXZlbnRzL2ludGVsL3B0LmMgYi9hcmNoL3g4Ni9ldmVu
+dHMvaW50ZWwvcHQuYw0KPiA+ID4gaW5kZXgNCj4gPiA+IDFkYjdhNTFkOTc5Mi4uZTM4ZGRhZTlm
+MGQxIDEwMDY0NA0KPiA+ID4gLS0tIGEvYXJjaC94ODYvZXZlbnRzL2ludGVsL3B0LmMNCj4gPiA+
+ICsrKyBiL2FyY2gveDg2L2V2ZW50cy9pbnRlbC9wdC5jDQo+ID4gPiBAQCAtNDA1LDcgKzQwNSw3
+IEBAIHN0YXRpYyB2b2lkIHB0X2NvbmZpZ19zdGFydChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQp
+DQo+ID4gPiAgICAgICAgIGN0bCB8PSBSVElUX0NUTF9UUkFDRUVOOw0KPiA+ID4gICAgICAgICBp
+ZiAoUkVBRF9PTkNFKHB0LT52bXhfb24pKQ0KPiA+ID4gICAgICAgICAgICAgICAgIHBlcmZfYXV4
+X291dHB1dF9mbGFnKCZwdC0+aGFuZGxlLCBQRVJGX0FVWF9GTEFHX1BBUlRJQUwpOw0KPiA+ID4g
+LSAgICAgICBlbHNlDQo+ID4gPiArICAgICAgIGVsc2UgKCEoY3VycmVudC0+ZmxhZ3MgJiBQRl9W
+Q1BVKSkNCj4gPiA+ICAgICAgICAgICAgICAgICB3cm1zcmwoTVNSX0lBMzJfUlRJVF9DVEwsIGN0
+bCk7DQo+ID4NCj4gPiBJbnRlbCBQVCBjYW4gd29yayBpbiBTWVNURU0gYW5kIEhPU1RfR1VFU1Qg
+bW9kZSBieSBzZXR0aW5nIHRoZQ0KPiA+IGt2bS1pbnRlbC5rbyBwYXJhbWV0ZXIgInB0X21vZGUi
+LiAgSW4gU1lTVEVNIG1vZGUsIHRoZSBob3N0IGFuZCBndWVzdA0KPiA+IFBUIHRyYWNlIHdpbGwg
+YmUgc2F2ZWQgaW4gdGhlIGhvc3QgYnVmZmVyLiBUaGUgS1ZNIGRvIG5vdGhpbmcgZHVyaW5nDQo+
+ID4gVk0tZW50cnkvZXhpdCBpbiBTWVNURU0gbW9kZSBhbmQgSW50ZWwgUFQgUE1JIG1heSBoYXBw
+ZW5lZCBvbiBhbnkNCj4gPiBwbGFjZS4gVGhlIFBUIHRyYWNlIG1heSBiZSBkaXNhYmxlZCB3aGVu
+IHJ1bm5pbmcgaW4gS1ZNKFBUIG9ubHkgbmVlZHMNCj4gPiB0byBiZSBkaXNhYmxlZCBiZWZvcmUg
+Vk0tZW50cnkgaW4gSE9TVF9HVUVTVCBtb2RlKS4NCj4gDQo+IEFoLCByaWdodC4gIFdoYXQgYWJv
+dXQgZW5oYW5jaW5nIGludGVsX3B0X2hhbmRsZV92bXgoKSBhbmQgJ3N0cnVjdCBwdCcgdG8NCj4g
+cmVwbGFjZSB2bXhfb24gd2l0aCBhIGZpZWxkIHRoYXQgaW5jb3Jwb3JhdGVzIHRoZSBLVk0gbW9k
+ZT8NCg0KU29tZSBoaXN0b3J5IGlzIHRoZSBob3N0IHBlcmYgZGlkbid0IGZ1bGx5IGFncmVlIHdp
+dGggaW50cm9kdWNpbmcgSE9TVF9HVUVTVCBtb2RlIGZvciBQVCBpbiBLVk0uIEJlY2F1c2UgdGhl
+IEtWTSB3aWxsIGRpc2FibGUgdGhlIGhvc3QgdHJhY2UgYmVmb3JlIFZNLWVudHJ5IGluIEhPU1Rf
+R1VFU1QgbW9kZSBhbmQgS1ZNIGd1ZXN0IHdpbGwgd2luIGluIHRoaXMgY2FzZS4gZS5nLiBJbnRl
+bCBQVCBoYXMgYmVlbiBlbmFibGVkIGluIEtWTSBndWVzdCBhbmQgdGhlIGhvc3Qgd2FudHMgdG8g
+c3RhcnQgc3lzdGVtLXdpZGUgdHJhY2UoY29sbGVjdCBhbGwgdGhlIHRyYWNlIG9uIHRoaXMgc3lz
+dGVtKSBhdCB0aGlzIHRpbWUsIHRoZSB0cmFjZSBwcm9kdWNlZCBieSB0aGUgR3Vlc3QgT1Mgd2ls
+bCBiZSBzYXZlZCBpbiBndWVzdCBQVCBidWZmZXIgYW5kIGhvc3QgYnVmZmVyIGNhbid0IGdldCB0
+aGlzLiBTbyBJIHByZWZlciBkb24ndCBpbnRyb2R1Y2UgdGhlIEtWTSBQVCBtb2RlIHRvIGhvc3Qg
+cGVyZiBmcmFtZXdvcmsuIFRoZSBzaW1pbGFyIHByb2JsZW0gaGFwcGVucyBvbiBQRUJTIHZpcnR1
+YWxpemF0aW9uIHZpYSBEUyBhcyB3ZWxsLg0KDQpUaGFua3MsDQpMdXdlaSBLYW5nDQoNCj4gIEZy
+b20gYW4gb3V0c2lkZXIncyBwZXJzcGVjdGl2ZSwgdGhhdCdkIGJlIGFuIGltcHJvdm1lbnQgaXJy
+ZXNwZWN0aXZlIG9mIHRoaXMgYnVnIGZpeCBhcw0KPiAndm14X29uJyBpcyBtaXNsZWFkaW5nLCBl
+LmcuIGl0IGNhbiBiZSAlZmFsc2Ugd2hlbiB0aGUgQ1BVIGlzIHBvc3QtIFZNWE9OLA0KPiBhbmQg
+cmVhbGx5IG1lYW5zICJwb3N0LVZNWE9OIGFuZCBJbnRlbCBQVCBjYW4ndCB0cmFjZSBpdCIuDQo=
