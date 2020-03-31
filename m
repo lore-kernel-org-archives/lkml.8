@@ -2,114 +2,110 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0652C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E6CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9391720787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7A021974
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VDiCMTXy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFpsBADr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgCaWk1 (ORCPT
+        id S1731441AbgCaWm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:40:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44554 "EHLO
+        Tue, 31 Mar 2020 18:42:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34012 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729153AbgCaWk1 (ORCPT
+        with ESMTP id S1727955AbgCaWm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:40:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id m17so28186423wrw.11
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 15:40:25 -0700 (PDT)
+        Tue, 31 Mar 2020 18:42:28 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so28275790wrl.1;
+        Tue, 31 Mar 2020 15:42:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jY5b0DeIGw0kq+dmH/vJgCrU2SOoRk0fZBuTs/xmVo0=;
-        b=VDiCMTXyKUNt4iheUBH8m+6xsiIx/rgJTGicdZ/BWJF7GmTfsrCY7g+447EMzve3aq
-         Y+ldUezP4BlAWoR5IQfLpc6iFnWWr1G6v9bb02zEQLrKSg4qsJ4HrBuw7+exNKd9bAfU
-         jdqJY5s8D3nIc5Tz5vqTofy5j8BNQJ7duYeCA=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1jsuwtxuUphpE0RZhef4PDISQgTlLi4Ca2smnB8QhUI=;
+        b=qFpsBADrpxeqLat60SC4r8eFLqa9EQpyfUJ0PHJjOUDv77WE2TTxgmJJIvqryxuVqE
+         VIRRwBBYy8UymCCCsmMqHyLxeegl8aHL1M186n9xpumZduxYHgPAkyLPCGgRW7tupUbx
+         nUobJ22z7KXcOaqDf52le4WcqjXXJ7CK24z6WBMVsc/jZ8h8J/h3R2UKchatYLniqYKw
+         Yg6DWBaPlwL+w7vTkHkz9QbOtYo0W05KsdcCIvSOrPMhvHWiTmKtYyVfTJYpYRT4x8UZ
+         AVbqszIl251A+i2FjHwie8m0X8hECIZ6M7c/RUXHWIXefEkCY2YqMi6SrtjDqOEUKrUf
+         aXYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jY5b0DeIGw0kq+dmH/vJgCrU2SOoRk0fZBuTs/xmVo0=;
-        b=p/zNUrASDXHcKTw9Xgda9GvHn0El3yimMO9O9w1l4fQOXYjwUYj1O+nRM7hlr1GC0D
-         R1bsPOfQk/jtSYdTSMLe9JZmWtVncB+4H4R1JYMw3YcP/r3uWXqpXJELQIrvLBBctFpp
-         gA6rDggdRq6Ia8DqmtUNBF4yd5u3DkNDx9RJVtXSdihU4S5l+ge9TJrmpf6Iw2JVGOg7
-         9azPZ+G8chc7iMH/OcfHN3Jhe47qacwj+t8RlQL89Ym6Orus9rOiZ3Ux4H1Klf/DwlcP
-         RheWiEHQcZvEsjvME9ZgpWRIxpOc7wb27MP7cKWHaA8a0IzdZBlMVqRiJNRLf4+9+CtJ
-         7DIg==
-X-Gm-Message-State: AGi0PuZ6SJ3SS7ytRd1wcsjbh+P5NMEp6dqwwyAkFJqzZWejTER1joRR
-        NhRtV723P4h3EqqbPT8r2zTOUCr9CuM=
-X-Google-Smtp-Source: APiQypLOGvUileQhr35EVvXv/b90kFXVu0uzau9TlILC3ZUR48htnauWq/BaHsz4upygp1gntHv0QA==
-X-Received: by 2002:adf:fe52:: with SMTP id m18mr976140wrs.162.1585694424872;
-        Tue, 31 Mar 2020 15:40:24 -0700 (PDT)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id 138sm79981wmb.21.2020.03.31.15.40.24
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=1jsuwtxuUphpE0RZhef4PDISQgTlLi4Ca2smnB8QhUI=;
+        b=VeADCdpQvFHtHfq1HTJ+hD7Gl1J0K7T6anCuIvcFyqFZC8y+Z507lQEOtU3kRHczn6
+         qAvZ8Qn215S+SazVZr+ei/Wl4kj5JzvTny6jqLrrWpoE4uq+GBOfl7mv8/1H+SzmDtoo
+         0/gZRwWc4Dwc2FRhuJGl75bIYPG60Rtg7vKsmOerBukseVcgXu7nBGO9WVehoLDjQEsS
+         Ha+scq4wUt53jmI/4m3Yo/9S/r65QUcW2RYSEX2sTo/+D9DCXG6uDbrOjAp3LLQMJXc+
+         QztYY6oLAbB1yzVbnMZiAM+gGXWASIGdI+wC4t+DNxgF0HGyR8zHJoTI+iO7m5ttbYG0
+         060w==
+X-Gm-Message-State: ANhLgQ1pD4lpwh9jnQGjWby7rLA7oexhcF/LGnQbVMt4FYDSO02ruMAz
+        kZ87RUJlzzrJlgILtBcSr1LzCLm0BtI=
+X-Google-Smtp-Source: ADFU+vvRoF9pFdVcJa9cMPcXPxkqycsPt/wZshyxiR0NL1tLIR0+e5n+OF7X4t22pk3doCclhV3r9g==
+X-Received: by 2002:adf:9dca:: with SMTP id q10mr22166975wre.11.1585694545103;
+        Tue, 31 Mar 2020 15:42:25 -0700 (PDT)
+Received: from donizetti.redhat.com ([2001:b07:6468:f312:b55d:5ed2:8a41:41ea])
+        by smtp.gmail.com with ESMTPSA id q13sm275388wrg.21.2020.03.31.15.42.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 15:40:24 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 1 Apr 2020 00:40:22 +0200
-To:     Slava Bacherikov <slava@bacher09.org>
-Cc:     andriin@fb.com, keescook@chromium.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jannh@google.com,
-        alexei.starovoitov@gmail.com, daniel@iogearbox.net,
-        kernel-hardening@lists.openwall.com,
-        Liu Yiding <liuyd.fnst@cn.fujitsu.com>
-Subject: Re: [PATCH v2 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
-Message-ID: <20200331224022.GA23586@google.com>
-References: <20200331215536.34162-1-slava@bacher09.org>
+        Tue, 31 Mar 2020 15:42:24 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     eesposit@redhat.com
+Subject: [PATCH] KVM: x86: move kvm_create_vcpu_debugfs after last failure point
+Date:   Wed,  1 Apr 2020 00:42:22 +0200
+Message-Id: <20200331224222.393439-1-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331215536.34162-1-slava@bacher09.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-Apr 00:55, Slava Bacherikov wrote:
-> Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
-> enabled will produce invalid btf file, since gen_btf function in
-> link-vmlinux.sh script doesn't handle *.dwo files.
-> 
-> Enabling DEBUG_INFO_REDUCED will also produce invalid btf file, and
-> using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
-> 
-> Signed-off-by: Slava Bacherikov <slava@bacher09.org>
-> Reported-by: Jann Horn <jannh@google.com>
-> Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
-> Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
+The placement of kvm_create_vcpu_debugfs is more or less irrelevant, since
+it cannot fail and userspace should not care about the debugfs entries until
+it knows the vcpu has been created.  Moving it after the last failure
+point removes the need to remove the directory when unwinding the creation.
 
-I can say that I also got invalid BTF when I tried using
-DEBUG_INFO_REDUCED.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ virt/kvm/kvm_main.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-So here's a first one from of these from me :)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 027259af883e..0a78e1d874ed 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2823,8 +2823,6 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
+ 	if (r)
+ 		goto vcpu_free_run_page;
+ 
+-	kvm_create_vcpu_debugfs(vcpu);
+-
+ 	mutex_lock(&kvm->lock);
+ 	if (kvm_get_vcpu_by_id(kvm, id)) {
+ 		r = -EEXIST;
+@@ -2853,11 +2851,11 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
+ 
+ 	mutex_unlock(&kvm->lock);
+ 	kvm_arch_vcpu_postcreate(vcpu);
++	kvm_create_vcpu_debugfs(vcpu);
+ 	return r;
+ 
+ unlock_vcpu_destroy:
+ 	mutex_unlock(&kvm->lock);
+-	debugfs_remove_recursive(vcpu->debugfs_dentry);
+ 	kvm_arch_vcpu_destroy(vcpu);
+ vcpu_free_run_page:
+ 	free_page((unsigned long)vcpu->run);
+-- 
+2.24.1
 
-Acked-by: KP Singh <kpsingh@google.com>
-
-> ---
->  lib/Kconfig.debug | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index f61d834e02fe..9ae288e2a6c0 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -223,6 +223,7 @@ config DEBUG_INFO_DWARF4
->  config DEBUG_INFO_BTF
->  	bool "Generate BTF typeinfo"
->  	depends on DEBUG_INFO
-> +	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED && !GCC_PLUGIN_RANDSTRUCT
->  	help
->  	  Generate deduplicated BTF type information from DWARF debug info.
->  	  Turning this on expects presence of pahole tool, which will convert
-> -- 
-> 2.24.1
-> 
