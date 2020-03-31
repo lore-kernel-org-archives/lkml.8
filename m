@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E34C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D65C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3ED208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A96A20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646566;
-	bh=89D/W5dkDOEaebT6FttbPUhPib2LdV/V0/CH33cNdGs=;
+	s=default; t=1585646576;
+	bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0vx+Batb2A3QO2KPOHA5Qy/cR9pdKfclKFbfzmTXChoI4oBetmrmhqYgsVqDaOQY
-	 sxpq3+gIAhEorxgykP1CHycQ8LcQwcu+Kp+MVl5VISmt9okJIKNCBQYxPcAtO3SEQ3
-	 Il9v1yAGkGr3cHfVV7b3VcrpVdcp9n6ygwRDb7ng=
+	b=NwgE0CYdH6mwEDfLUAeiyMQ2MiNAOsr/tQ0JO6grjnc4yVPAy5v2vG82SEFMmhhb4
+	 cvSdo/mZvhCiJj3M1E0wbNokggOGHd89yqYjqaEKnhI7P0UB8Acq9dAyWqynU0V6pO
+	 zpMSQUbDMPHvPpFKs5ME3IPFkimSm3/jsavR0Bv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731301AbgCaJWp (ORCPT
+        id S1731454AbgCaJWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47822 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730859AbgCaJGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:06:23 -0400
+        id S1730582AbgCaJFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FFBB208E0;
-        Tue, 31 Mar 2020 09:06:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CC74208E0;
+        Tue, 31 Mar 2020 09:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645582;
-        bh=89D/W5dkDOEaebT6FttbPUhPib2LdV/V0/CH33cNdGs=;
+        s=default; t=1585645521;
+        bh=l6DvBGw4cKYvjyvNNBYmUeY/T80hQ8zM0ealCYAMkT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmoel8NHUYe1IZnaed9UQ9xC9UozDb0LwxPhrp9HLpjlH3UJjsL7lYs2q3I5e7qS3
-         ytp56zZn3cWdcp7a6XePav4GEwXbuyZ7LYO9O/jeP7n50DlsV7oJAxRFWVnv8j0Hae
-         FFTC5ysUxcyclT3h681wlTRigiqmEkMo6p1Asfw0=
+        b=G+Zc8guvaoYtBU2j6m14puYYp6EtlW7lHbQcb9XKgE1jUaMvAK7LjxhrwL5/ENjT/
+         +ZGawwHrHezP4Cj69GH4wqalIiVvIZQ6oUg4XQqmwFcyolSw2crD4N2tvloJf78A70
+         XrpJmm3pnjodrl/RQl2Pa+jkKElcI7A0cNR8nESU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
-        Candice Li <Candice.Li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 071/170] drm/amdgpu: correct ROM_INDEX/DATA offset for VEGA20
-Date:   Tue, 31 Mar 2020 10:58:05 +0200
-Message-Id: <20200331085431.914377179@linuxfoundation.org>
+        stable@vger.kernel.org, Megha Dey <megha.dey@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 079/170] iommu/vt-d: Fix debugfs register reads
+Date:   Tue, 31 Mar 2020 10:58:13 +0200
+Message-Id: <20200331085432.702392801@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -61,75 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hawking Zhang <Hawking.Zhang@amd.com>
+From: Megha Dey <megha.dey@linux.intel.com>
 
-[ Upstream commit f1c2cd3f8fb959123a9beba18c0e8112dcb2e137 ]
+[ Upstream commit ba3b01d7a6f4ab9f8a0557044c9a7678f64ae070 ]
 
-The ROMC_INDEX/DATA offset was changed to e4/e5 since
-from smuio_v11 (vega20/arcturus).
+Commit 6825d3ea6cde ("iommu/vt-d: Add debugfs support to show register
+contents") dumps the register contents for all IOMMU devices.
 
-Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Tested-by: Candice Li <Candice.Li@amd.com>
-Reviewed-by: Candice Li <Candice.Li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Currently, a 64 bit read(dmar_readq) is done for all the IOMMU registers,
+even though some of the registers are 32 bits, which is incorrect.
+
+Use the correct read function variant (dmar_readl/dmar_readq) while
+reading the contents of 32/64 bit registers respectively.
+
+Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+Link: https://lore.kernel.org/r/1583784587-26126-2-git-send-email-megha.dey@linux.intel.com
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/soc15.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/iommu/intel-iommu-debugfs.c | 40 ++++++++++++++++++-----------
+ include/linux/intel-iommu.h         |  2 ++
+ 2 files changed, 27 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index 624e223175c21..d6f4f825b439c 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -87,6 +87,13 @@
- #define HDP_MEM_POWER_CTRL__RC_MEM_POWER_CTRL_EN_MASK	0x00010000L
- #define HDP_MEM_POWER_CTRL__RC_MEM_POWER_LS_EN_MASK		0x00020000L
- #define mmHDP_MEM_POWER_CTRL_BASE_IDX	0
-+
-+/* for Vega20/arcturus regiter offset change */
-+#define	mmROM_INDEX_VG20				0x00e4
-+#define	mmROM_INDEX_VG20_BASE_IDX			0
-+#define	mmROM_DATA_VG20					0x00e5
-+#define	mmROM_DATA_VG20_BASE_IDX			0
-+
- /*
-  * Indirect registers accessor
-  */
-@@ -307,6 +314,8 @@ static bool soc15_read_bios_from_rom(struct amdgpu_device *adev,
- {
- 	u32 *dw_ptr;
- 	u32 i, length_dw;
-+	uint32_t rom_index_offset;
-+	uint32_t rom_data_offset;
+diff --git a/drivers/iommu/intel-iommu-debugfs.c b/drivers/iommu/intel-iommu-debugfs.c
+index 471f05d452e01..80378c10dd77a 100644
+--- a/drivers/iommu/intel-iommu-debugfs.c
++++ b/drivers/iommu/intel-iommu-debugfs.c
+@@ -32,38 +32,42 @@ struct iommu_regset {
  
- 	if (bios == NULL)
- 		return false;
-@@ -319,11 +328,23 @@ static bool soc15_read_bios_from_rom(struct amdgpu_device *adev,
- 	dw_ptr = (u32 *)bios;
- 	length_dw = ALIGN(length_bytes, 4) / 4;
- 
-+	switch (adev->asic_type) {
-+	case CHIP_VEGA20:
-+	case CHIP_ARCTURUS:
-+		rom_index_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_INDEX_VG20);
-+		rom_data_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_DATA_VG20);
-+		break;
-+	default:
-+		rom_index_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_INDEX);
-+		rom_data_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_DATA);
-+		break;
-+	}
+ #define IOMMU_REGSET_ENTRY(_reg_)					\
+ 	{ DMAR_##_reg_##_REG, __stringify(_reg_) }
+-static const struct iommu_regset iommu_regs[] = {
 +
- 	/* set rom index to 0 */
--	WREG32(SOC15_REG_OFFSET(SMUIO, 0, mmROM_INDEX), 0);
-+	WREG32(rom_index_offset, 0);
- 	/* read out the rom data */
- 	for (i = 0; i < length_dw; i++)
--		dw_ptr[i] = RREG32(SOC15_REG_OFFSET(SMUIO, 0, mmROM_DATA));
-+		dw_ptr[i] = RREG32(rom_data_offset);
++static const struct iommu_regset iommu_regs_32[] = {
+ 	IOMMU_REGSET_ENTRY(VER),
+-	IOMMU_REGSET_ENTRY(CAP),
+-	IOMMU_REGSET_ENTRY(ECAP),
+ 	IOMMU_REGSET_ENTRY(GCMD),
+ 	IOMMU_REGSET_ENTRY(GSTS),
+-	IOMMU_REGSET_ENTRY(RTADDR),
+-	IOMMU_REGSET_ENTRY(CCMD),
+ 	IOMMU_REGSET_ENTRY(FSTS),
+ 	IOMMU_REGSET_ENTRY(FECTL),
+ 	IOMMU_REGSET_ENTRY(FEDATA),
+ 	IOMMU_REGSET_ENTRY(FEADDR),
+ 	IOMMU_REGSET_ENTRY(FEUADDR),
+-	IOMMU_REGSET_ENTRY(AFLOG),
+ 	IOMMU_REGSET_ENTRY(PMEN),
+ 	IOMMU_REGSET_ENTRY(PLMBASE),
+ 	IOMMU_REGSET_ENTRY(PLMLIMIT),
++	IOMMU_REGSET_ENTRY(ICS),
++	IOMMU_REGSET_ENTRY(PRS),
++	IOMMU_REGSET_ENTRY(PECTL),
++	IOMMU_REGSET_ENTRY(PEDATA),
++	IOMMU_REGSET_ENTRY(PEADDR),
++	IOMMU_REGSET_ENTRY(PEUADDR),
++};
++
++static const struct iommu_regset iommu_regs_64[] = {
++	IOMMU_REGSET_ENTRY(CAP),
++	IOMMU_REGSET_ENTRY(ECAP),
++	IOMMU_REGSET_ENTRY(RTADDR),
++	IOMMU_REGSET_ENTRY(CCMD),
++	IOMMU_REGSET_ENTRY(AFLOG),
+ 	IOMMU_REGSET_ENTRY(PHMBASE),
+ 	IOMMU_REGSET_ENTRY(PHMLIMIT),
+ 	IOMMU_REGSET_ENTRY(IQH),
+ 	IOMMU_REGSET_ENTRY(IQT),
+ 	IOMMU_REGSET_ENTRY(IQA),
+-	IOMMU_REGSET_ENTRY(ICS),
+ 	IOMMU_REGSET_ENTRY(IRTA),
+ 	IOMMU_REGSET_ENTRY(PQH),
+ 	IOMMU_REGSET_ENTRY(PQT),
+ 	IOMMU_REGSET_ENTRY(PQA),
+-	IOMMU_REGSET_ENTRY(PRS),
+-	IOMMU_REGSET_ENTRY(PECTL),
+-	IOMMU_REGSET_ENTRY(PEDATA),
+-	IOMMU_REGSET_ENTRY(PEADDR),
+-	IOMMU_REGSET_ENTRY(PEUADDR),
+ 	IOMMU_REGSET_ENTRY(MTRRCAP),
+ 	IOMMU_REGSET_ENTRY(MTRRDEF),
+ 	IOMMU_REGSET_ENTRY(MTRR_FIX64K_00000),
+@@ -126,10 +130,16 @@ static int iommu_regset_show(struct seq_file *m, void *unused)
+ 		 * by adding the offset to the pointer (virtual address).
+ 		 */
+ 		raw_spin_lock_irqsave(&iommu->register_lock, flag);
+-		for (i = 0 ; i < ARRAY_SIZE(iommu_regs); i++) {
+-			value = dmar_readq(iommu->reg + iommu_regs[i].offset);
++		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_32); i++) {
++			value = dmar_readl(iommu->reg + iommu_regs_32[i].offset);
++			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
++				   iommu_regs_32[i].regs, iommu_regs_32[i].offset,
++				   value);
++		}
++		for (i = 0 ; i < ARRAY_SIZE(iommu_regs_64); i++) {
++			value = dmar_readq(iommu->reg + iommu_regs_64[i].offset);
+ 			seq_printf(m, "%-16s\t0x%02x\t\t0x%016llx\n",
+-				   iommu_regs[i].regs, iommu_regs[i].offset,
++				   iommu_regs_64[i].regs, iommu_regs_64[i].offset,
+ 				   value);
+ 		}
+ 		raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 6d8bf4bdf240d..1e5dad8b8e59b 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -120,6 +120,8 @@
  
- 	return true;
- }
+ #define dmar_readq(a) readq(a)
+ #define dmar_writeq(a,v) writeq(v,a)
++#define dmar_readl(a) readl(a)
++#define dmar_writel(a, v) writel(v, a)
+ 
+ #define DMAR_VER_MAJOR(v)		(((v) & 0xf0) >> 4)
+ #define DMAR_VER_MINOR(v)		((v) & 0x0f)
 -- 
 2.20.1
 
