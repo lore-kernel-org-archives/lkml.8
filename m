@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E33C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C17AC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E462F20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098612166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645519;
-	bh=0H0yxTCH0FS9s8xJIWY4odP8O/qWQfnbC5X7miz54Mc=;
+	s=default; t=1585645521;
+	bh=IKMRmH74vmWvgonCOt9OVPayC8V5NZ4cwRm+9cNEM0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1AD1ipDADcxxLWoIVnK1tTHDWoIbpEZr0q85qrfEAJ2LI+n9VmA6LcACkUvAkA78
-	 pfdBKnd0gDj4p4YlAulwmtkeW85jld3xx1JWaoAcH8JynoiQQW1JEJCM/vinP2NvAr
-	 gqrXcgnLZmP1N7DgFYChMYUA7Zp8y9RoglJVUL2U=
+	b=v+fJ8YIPsq/TyDvMcLhxVP91hsCeTnggQxuS4+t1uZed04HO++150nCJwAOeoNACq
+	 Psc9QYDUKv/1X6B/sUcN0F4mJ8Tl29d0EedJucF379SdBgZkTo+A5dkP6oTAh5nLXN
+	 6JqfLcU4h+V2HkvEY2YbMyqIcL1ju3brkUtikSMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgCaJE4 (ORCPT
+        id S1730996AbgCaJEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:04:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45646 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730648AbgCaJEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:04:53 -0400
+        id S1730662AbgCaJEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EFFD20787;
-        Tue, 31 Mar 2020 09:04:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B2A720787;
+        Tue, 31 Mar 2020 09:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645492;
-        bh=0H0yxTCH0FS9s8xJIWY4odP8O/qWQfnbC5X7miz54Mc=;
+        s=default; t=1585645478;
+        bh=IKMRmH74vmWvgonCOt9OVPayC8V5NZ4cwRm+9cNEM0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mf/DuTMLf/APqh2iwbMuUtqAOIPBJzy37Gr3lRDbSRijeUWwn3ZK1qMTedmf2qQhi
-         2EA/ZSS0ZQezJkUSS7fxjZl5pkySlAOaKZ010g4o6nSaNsJHZczKe7AjDLJVyDRLN6
-         RZoLZFcbKyFZRq83waDX8a9drhWefL6tMVFFJ6V4=
+        b=Wa8gP2RyfeKaIhDNlUNtXCenrvX/DcJgxjM01HFpyBKsmwRO/9VVUKf880l5f0Rtc
+         hZrlwnZnIY40f8/xgtHJdTu1oBiXKXxRHpqtW2uuT27bIGLZ1PZTibYjjw7FH79P5T
+         qLD65Pg3d5a2ZuURCs9FbSQ2s4WE9FmXePsr+Tsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,11 +46,10 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Pirko <jiri@resnulli.us>,
         Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com,
-        syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
-Subject: [PATCH 5.5 031/170] net_sched: keep alloc_hash updated after hash allocation
-Date:   Tue, 31 Mar 2020 10:57:25 +0200
-Message-Id: <20200331085427.367126817@linuxfoundation.org>
+        syzbot+653090db2562495901dc@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 030/170] net_sched: hold rtnl lock in tcindex_partial_destroy_work()
+Date:   Tue, 31 Mar 2020 10:57:24 +0200
+Message-Id: <20200331085427.277734183@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -65,37 +64,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 0d1c3530e1bd38382edef72591b78e877e0edcd3 ]
+[ Upstream commit b1be2e8cd290f620777bfdb8aa00890cd2fa02b5 ]
 
-In commit 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
-I moved cp->hash calculation before the first
-tcindex_alloc_perfect_hash(), but cp->alloc_hash is left untouched.
-This difference could lead to another out of bound access.
+syzbot reported a use-after-free in tcindex_dump(). This is due to
+the lack of RTNL in the deferred rcu work. We queue this work with
+RTNL in tcindex_change(), later, tcindex_dump() is called:
 
-cp->alloc_hash should always be the size allocated, we should
-update it after this tcindex_alloc_perfect_hash().
+        fh = tp->ops->get(tp, t->tcm_handle);
+	...
+        err = tp->ops->change(..., &fh, ...);
+        tfilter_notify(..., fh, ...);
 
-Reported-and-tested-by: syzbot+dcc34d54d68ef7d2d53d@syzkaller.appspotmail.com
-Reported-and-tested-by: syzbot+c72da7b9ed57cde6fca2@syzkaller.appspotmail.com
-Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
+but there is nothing to serialize the pending
+tcindex_partial_destroy_work() with tcindex_dump().
+
+Fix this by simply holding RTNL in tcindex_partial_destroy_work(),
+so that it won't be called until RTNL is released after
+tc_new_tfilter() is completed.
+
+Reported-and-tested-by: syzbot+653090db2562495901dc@syzkaller.appspotmail.com
+Fixes: 3d210534cc93 ("net_sched: fix a race condition in tcindex_destroy()")
 Cc: Jamal Hadi Salim <jhs@mojatatu.com>
 Cc: Jiri Pirko <jiri@resnulli.us>
 Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/sched/cls_tcindex.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/net/sched/cls_tcindex.c
 +++ b/net/sched/cls_tcindex.c
-@@ -359,6 +359,7 @@ tcindex_set_parms(struct net *net, struc
+@@ -261,8 +261,10 @@ static void tcindex_partial_destroy_work
+ 					      struct tcindex_data,
+ 					      rwork);
  
- 		if (tcindex_alloc_perfect_hash(net, cp) < 0)
- 			goto errout;
-+		cp->alloc_hash = cp->hash;
- 		for (i = 0; i < min(cp->hash, p->hash); i++)
- 			cp->perfect[i].res = p->perfect[i].res;
- 		balloc = 1;
++	rtnl_lock();
+ 	kfree(p->perfect);
+ 	kfree(p);
++	rtnl_unlock();
+ }
+ 
+ static void tcindex_free_perfect_hash(struct tcindex_data *cp)
 
 
