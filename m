@@ -2,140 +2,112 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0306C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BFDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08C020787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 080DF20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="orbEX5Ts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgCaIXe (ORCPT
+        id S1729958AbgCaI0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:23:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:47290 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgCaIXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:23:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A4D530E;
-        Tue, 31 Mar 2020 01:23:33 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C58F3F71E;
-        Tue, 31 Mar 2020 01:23:31 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:23:25 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     bjorn@helgaas.com
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        Andrew Murray <andrew.murray@arm.com>, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Tue, 31 Mar 2020 04:26:12 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47544 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726488AbgCaI0L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:26:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585643171; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=d+grUI5NNPTWGY1TGR+JJEiHRsD9XOCJGD3QPIT8u20=; b=orbEX5Tsmfxa1sQb3+BaBRXBluPUpG68W1iBMMhdtwGk4MnyznBdkP1WSi4bJBCYoQYndfws
+ V5nykeMBVOKXHAc8c9JY4fTQ/k1vxHx5UNL+0MTMxs/M38a03RTP4rDrv1i/7LOm4F2/9W2v
+ atkggCZ3hfuGPcEMCIV9NcnFHlc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e82fea2.7f47f68d8f48-smtp-out-n05;
+ Tue, 31 Mar 2020 08:26:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A037C43637; Tue, 31 Mar 2020 08:26:10 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.183.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E3A2C433F2;
+        Tue, 31 Mar 2020 08:26:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E3A2C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v14 4/6] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
+ caches
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        ARM <linux-arm-kernel@lists.infradead.org>, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-Message-ID: <20200331082325.GA32028@e121166-lin.cambridge.arm.com>
-References: <20200330214721.GA128269@google.com>
- <bba72560-85cc-b59b-b0e8-bfc7c7408736@nvidia.com>
- <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
+ <1585244270-637-5-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=UQAbqitmYR7=5+AAL8pqy2imzEWf8BTkBoD6mthAwpKw@mail.gmail.com>
+ <7bd2c923-4003-a1c4-610f-548e79a94d35@codeaurora.org>
+ <CAD=FV=WEH_A4SvyX0uv9Z_n+z9_SYcdm2LfsLRK7qALEiOyHqQ@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <d76424f3-965e-abaa-9622-185eff94dfe9@codeaurora.org>
+Date:   Tue, 31 Mar 2020 13:56:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAD=FV=WEH_A4SvyX0uv9Z_n+z9_SYcdm2LfsLRK7qALEiOyHqQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:00:57PM -0500, Bjorn Helgaas wrote:
-> On Mon, Mar 30, 2020 at 9:55 PM Vidya Sagar <vidyas@nvidia.com> wrote:
-> >
-> >
-> >
-> > On 3/31/2020 3:17 AM, Bjorn Helgaas wrote:
-> > > External email: Use caution opening links or attachments
-> > >
-> > >
-> > > On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
-> > >> Add support for the endpoint mode of Synopsys DesignWare core based
-> > >> dual mode PCIe controllers present in Tegra194 SoC.
-> > >>
-> > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > >> Acked-by: Thierry Reding <treding@nvidia.com>
-> > >> ---
-> > >> V5:
-> > >> * Added Acked-by: Thierry Reding <treding@nvidia.com>
-> > >> * Removed unwanted header file inclusion
-> > >>
-> > >> V4:
-> > >> * Addressed Lorenzo's review comments
-> > >> * Started using threaded irqs instead of kthreads
-> > >>
-> > >> V3:
-> > >> * Addressed Thierry's review comments
-> > >>
-> > >> V2:
-> > >> * Addressed Bjorn's review comments
-> > >> * Made changes as part of addressing review comments for other patches
-> > >>
-> > >>   drivers/pci/controller/dwc/Kconfig         |  30 +-
-> > >>   drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
-> > >>   2 files changed, 691 insertions(+), 18 deletions(-)
-> > >>
-> > >> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > >> index 0830dfcfa43a..169cde58dd92 100644
-> > >> --- a/drivers/pci/controller/dwc/Kconfig
-> > >> +++ b/drivers/pci/controller/dwc/Kconfig
-> > >> @@ -248,14 +248,38 @@ config PCI_MESON
-> > >>          implement the driver.
-> > >>
-> > >>   config PCIE_TEGRA194
-> > >> -     tristate "NVIDIA Tegra194 (and later) PCIe controller"
-> > >> +     tristate
-> > >> +
-> > >> +config PCIE_TEGRA194_HOST
-> > >> +     tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
-> > >>        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> > >>        depends on PCI_MSI_IRQ_DOMAIN
-> > >>        select PCIE_DW_HOST
-> > >>        select PHY_TEGRA194_P2U
-> > >> +     select PCIE_TEGRA194
-> > >> +     default y
-> > >
-> > > Sorry I missed this before, but why is this "default y"?  From
-> > > Documentation/kbuild/kconfig-language.rst:
-> > >
-> > >    The default value deliberately defaults to 'n' in order to avoid
-> > >    bloating the build. With few exceptions, new config options should
-> > >    not change this. The intent is for "make oldconfig" to add as little
-> > >    as possible to the config from release to release.
-> > >
-> > > I do see that several other things in other drivers/pci/ Kconfig files
-> > > are also "default y", and we should probably change some of them.  But
-> > > I don't want to add even more unless there's a good reason.
-> > >
-> > > I'm not looking for more reactions like these:
-> > >
-> > > https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
-> > > https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
-> > >
-> > > Can you please update this patch to either remove the "default y" or
-> > > add the rationale for keeping it?
-> > I'm fine with removing 'default y' line.
-> > Should I send a patch only with this change?
-> 
-> I think it's probably just as easy for Lorenzo to delete that line on
-> his branch.  If not, I'll cherry-pick the patches on that branch and
-> do it locally.
+Hi,
 
-Done, pushed out. It is a guideline that it is worth keeping in mind
-while I review the code, sorry for missing it.
+On 3/27/2020 11:52 PM, Doug Anderson wrote:
+> Hi,
+>
+> On Fri, Mar 27, 2020 at 4:00 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>>    * @ctrlr: controller making request to flush cached data
+>>    *
+>> - * Return: -EBUSY if the controller is busy, probably waiting on a response
+>> - * to a RPMH request sent earlier.
+>> + * Return: 0 on success, error number otherwise.
+>>    *
+>> - * This function is always called from the sleep code from the last CPU
+>> - * that is powering down the entire system. Since no other RPMH API would be
+>> - * executing at this time, it is safe to run lockless.
+>> + * This function can either be called from sleep code on the last CPU
+>> + * (thus no spinlock needed) or with the ctrlr->cache_lock already held.
+>>
+>> Now you can remove the "or with the ctrlr->cache_lock already held"
+>> since it's no longer true.
+>>
+>> It can be true for other RSCs, so i kept as it is.
+> I don't really understand this.  The cache_lock is only a concept in
+> "rpmh.c".  How could another RSC grab the cache lock?  If nothing
+> else, can you remove this comment until support for those other RSCs
+> are added and we can evaluate then?
+>
+> -Doug
+Okay i will remove this comment until support for other RSCs are added.
 
-Lorenzo
+Thanks,
+Maulik
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
