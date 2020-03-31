@@ -2,160 +2,104 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD01C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33174C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF10207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03309207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:03:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nPw94g7G"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VOuG5LKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgCaLCK (ORCPT
+        id S1730609AbgCaLDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:02:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55724 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730380AbgCaLCK (ORCPT
+        Tue, 31 Mar 2020 07:03:31 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:19827 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730410AbgCaLDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:02:10 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VAtkeg104245;
-        Tue, 31 Mar 2020 11:02:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=8UJKYPmVqO3q927NHBR2tIQ/sC9DY5OTafLbmNr3u9s=;
- b=nPw94g7GH/VFVIsdAMlMKKfP/GFM6I67moeRxg+yL2bYzt1lWkYEp6aXyTP/rfz+0bfW
- Q2utHuntLreyD5MvgIsjJYdNHXWYZOmboBekqjBAFy3YxmXsn3Z8+xHVQkrTr2SRRdsu
- VLqxB064Fl+ZwZikV0sO4AhtyP7mwBhcporZhAPVm8wojmmtP4PeaaRegE868NTj/vSu
- HUl11Ui43Z7+4Eb1va50J0PXUFYEpLuqCaAPtKe/E7+rGB89J5jzJhUKd5sx5VjuWIi3
- scRhYa+AxcayhE3GCfQ2MiDYpMCcBPksa9AdhDkf6o+Zhtb3gtpXRCL/vn4WEjCEYxxl DA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 303yun1g3g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 11:02:06 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VB25hU091900;
-        Tue, 31 Mar 2020 11:02:05 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 302g9x2bhs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 11:02:05 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02VB23SC026099;
-        Tue, 31 Mar 2020 11:02:03 GMT
-Received: from [10.175.15.184] (/10.175.15.184)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Mar 2020 04:02:03 -0700
-Subject: Re: single target builds are broken
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-References: <a5ce79eb-be9d-df97-0b58-5aee5a48f4d3@oracle.com>
- <CAK7LNAQ8LZMPxrjVkuLizHjVZyBtSmLFZ=EvDCCAPb-XGfJLHA@mail.gmail.com>
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-Message-ID: <8c491e3b-a622-14c1-15c3-8cff061017ba@oracle.com>
-Date:   Tue, 31 Mar 2020 13:01:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 31 Mar 2020 07:03:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585652610; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=2rsGgE6kxJOfKICJK2M5MN0aGFpCfcgS/HPOQr3wV6w=; b=VOuG5LKMtYsApTAihJWQ2BZpzRHUg9Fgf0sOl3Wqbs5crgxwvbMMjuczViFGkd3XgBibBM+/
+ BHeBcV6eWmd6xA/wMTS4bLZyubz6TeNo46a2rxlxY0Hvp2jm2aF7s9PWbWuOOlasMWlplvJV
+ +WFTcAGFmo93M/wZS9QsneJeILE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e83237e.7facd3ebe148-smtp-out-n02;
+ Tue, 31 Mar 2020 11:03:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B8195C433BA; Tue, 31 Mar 2020 11:03:26 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 837BCC433D2;
+        Tue, 31 Mar 2020 11:03:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 837BCC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com
+Subject: Re: [PATCH] ath9k: fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+References: <1585625296-31013-1-git-send-email-hqjagain@gmail.com>
+Date:   Tue, 31 Mar 2020 14:03:22 +0300
+In-Reply-To: <1585625296-31013-1-git-send-email-hqjagain@gmail.com> (Qiujun
+        Huang's message of "Tue, 31 Mar 2020 11:28:16 +0800")
+Message-ID: <87bloc23d1.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNAQ8LZMPxrjVkuLizHjVZyBtSmLFZ=EvDCCAPb-XGfJLHA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003310100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003310098
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Qiujun Huang <hqjagain@gmail.com> writes:
 
-On 3/31/20 11:49 AM, Masahiro Yamada wrote:
-> On Tue, Mar 31, 2020 at 6:16 PM Vegard Nossum <vegard.nossum@oracle.com> wrote:
->>
->>
->> Hi,
->>
->> I often run 'make foo/bar.o' as part of my workflow, even when bar.o is
->> not specified in any kernel makefile, and this has worked just fine for
->> years.
->>
->> This is broken after commit 394053f4a4b3e3eeeaa67b67fc886a9a75bd9e4d
->> (kbuild: make single targets work more correctly) and just gives an error:
->>
->> $ make kernel/test.o
->>     CALL    scripts/checksyscalls.sh
->>     CALL    scripts/atomic/check-atomics.sh
->>     DESCEND  objtool
->> make[2]: *** No rule to make target 'kernel/test.o'.  Stop.
->> scripts/Makefile.build:502: recipe for target '__build' failed
->> make[1]: *** [__build] Error 2
->> Makefile:1670: recipe for target 'kernel' failed
->> make: *** [kernel] Error 2
-> 
-> 
-> This is intentional to make the single target builds
-> work in the same manner as the normal builds.
-> 
-> 
-> The necessary CONFIG dependency must be met.
-> 
-> obj-$(CONFIG_FOO) += foo.o
-> 
-> foo.o can be built only when CONFIG_FOO is y/m.
-> 
-> 
-> 
->> For top-level objects (e.g. 'make bar.o') the situation is even worse,
->> since make exits with status 0 without building anything :-/
-> 
-> 
-> There is no .c or .S file at the top-level of the kernel source tree.
-> 
-> 'make bar.o' never happens.
+> Add barrier to accessing the stack array skb_pool.
+>
+> Reported-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  drivers/net/wireless/ath/ath9k/hif_usb.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
+> index dd0c323..c4a2b72 100644
+> --- a/drivers/net/wireless/ath/ath9k/hif_usb.c
+> +++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+> @@ -612,6 +612,11 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
+>  			hif_dev->remain_skb = nskb;
+>  			spin_unlock(&hif_dev->rx_lock);
+>  		} else {
+> +			if (pool_index == MAX_PKT_NUM_IN_TRANSFER) {
+> +				dev_err(&hif_dev->udev->dev,
+> +					"ath9k_htc: over RX MAX_PKT_NUM\n");
+> +				goto err;
+> +			}
 
-It doesn't happen in mainline, but I often use that to small test things
-in an isolated source file. As just one example you can do
+What about 'pool_index >= MAX_PKT_NUM_IN_TRANSFER' just to be on the
+safe side? Ah, but then error handling won't work:
 
-#include <linux/sched.h>
-unsigned int task_struct_size = sizeof(struct task_struct);
+err:
+	for (i = 0; i < pool_index; i++) {
+		RX_STAT_ADD(skb_completed_bytes, skb_pool[i]->len);
+		ath9k_htc_rx_msg(hif_dev->htc_handle, skb_pool[i],
+				 skb_pool[i]->len, USB_WLAN_RX_PIPE);
+		RX_STAT_INC(skb_completed);
+	}
 
-and then you can look in the object file to find the size. Or any other
-of a million useful things that you might want to do without rebuilding
-an actual source file or modifying makefiles.
+Maybe that should use 'min(pool_index, MAX_PKT_NUM_IN_TRANSFER - 1)' or
+something? Or maybe it's just overengineerin, dunno.
 
->> Is there any chance we can get this back? It was super useful for me.
-> 
-> 
-> What you want is "Let's build whatever", right?
-
-It's really useful to be able to build object files separately, but as
-if it was part of the kernel (so e.g. with all the gcc flags, include
-paths, etc.).
-
-> No, please add 'obj-y += test.o' if you want to
-> test your local file.
-
-This is a clear workflow regression for me. Why is it so absolutely
-necessary to break the way it used to work?
-
-At the very least, can we find a way to reduce the typing overhead for
-testing one-offs like that? 'make STANDALONE=1 test.o' or something?
-
-
-Vegard
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
