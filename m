@@ -2,92 +2,147 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E59C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E542C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFC1206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:32:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lhIpZLRt"
+	by mail.kernel.org (Postfix) with ESMTP id 0F480208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgCaKcM (ORCPT
+        id S1730338AbgCaKc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:32:12 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47830 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729925AbgCaKcM (ORCPT
+        Tue, 31 Mar 2020 06:32:56 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:48102 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729925AbgCaKcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:32:12 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VANSSs125012;
-        Tue, 31 Mar 2020 10:32:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=q2xPT9aYNv3n8ZfbCyQkPK3lG0v/KfOw17OG2y43ouA=;
- b=lhIpZLRtq2AjXT1Kfb6unwfCrf+/KxLUQSLSCeGbIL152rjCcDe2M6V1dm2wT3VR1Ray
- JZoEgPmhkt4ZiOy35Hz26ZGZ5qvsQ34RshMPFHzxMobeqJhZazxAkh6r0Xg0uEMrn0Fk
- gkNc8e40yYtaf0BhZl5x5hHJhQTtxYsAgQ26avU/6wDMau3IIYtut2+BmmHVLRKAlnQH
- qWdWupTro37VhqY995dFoe1OYnEBs+xRUfbnkOhNW6cj4mlGbNvlm/xaY2CROD5gh5ZY
- 4CJ3zwSBgtZ9zVYVCXhUXYwS7KWGxqpnCHX+dk72QsWFVFuUHM75cD8931DttTaHWCA/ Ng== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 303ceuxrxt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 10:32:03 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02VAMHx5003801;
-        Tue, 31 Mar 2020 10:30:02 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 302g4rbm0f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 10:30:02 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02VAU10p009562;
-        Tue, 31 Mar 2020 10:30:01 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 31 Mar 2020 03:30:00 -0700
-Date:   Tue, 31 Mar 2020 13:29:53 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: vt6656: Define EnCFG_BBType_MASK as OR between
- previous defines
-Message-ID: <20200331102953.GB2066@kadam>
-References: <20200327165802.8445-1-oscar.carter@gmx.com>
+        Tue, 31 Mar 2020 06:32:55 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 47818634C87;
+        Tue, 31 Mar 2020 13:32:16 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jJEBr-0001Gy-Bd; Tue, 31 Mar 2020 13:32:15 +0300
+Date:   Tue, 31 Mar 2020 13:32:15 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+Message-ID: <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+ <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+ <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200327165802.8445-1-oscar.carter@gmx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=890 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003310094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9576 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=955 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003310094
+In-Reply-To: <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks!
+Hi Hans,
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
+> On 3/25/20 12:03 PM, Sakari Ailus wrote:
+> > Hi Sowjanya,
+> > 
+> > Thanks for the patchset.
+> > 
+> > On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
+> >> Tegra210 contains a powerful Video Input (VI) hardware controller
+> >> which can support up to 6 MIPI CSI camera sensors.
+> >>
+> >> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+> >> capture from an external camera sensor connected to CSI or from
+> >> built-in test pattern generator.
+> >>
+> >> Tegra210 supports built-in test pattern generator from CSI to VI.
+> >>
+> >> This patch adds a V4L2 media controller and capture driver support
+> >> for Tegra210 built-in CSI to VI test pattern generator.
+> >>
+> >> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> >> ---
+> >>  drivers/staging/media/Kconfig              |    2 +
+> >>  drivers/staging/media/Makefile             |    1 +
+> >>  drivers/staging/media/tegra/Kconfig        |   10 +
+> >>  drivers/staging/media/tegra/Makefile       |    8 +
+> >>  drivers/staging/media/tegra/TODO           |   10 +
+> >>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
+> >>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
+> >>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
+> >>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
+> >>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
+> >>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
+> >>  drivers/staging/media/tegra/tegra-video.h  |   32 +
+> >>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
+> >>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
+> > 
+> > Why staging? Are there reasons not to aim this to the kernel proper right
+> > away? If you only support TPG, the driver may not have too many (if any)
+> > real users anyway.
+> > 
+> >>  14 files changed, 3182 insertions(+)
+> >>  create mode 100644 drivers/staging/media/tegra/Kconfig
+> >>  create mode 100644 drivers/staging/media/tegra/Makefile
+> >>  create mode 100644 drivers/staging/media/tegra/TODO
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra210.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra210.h
+> >>
+> 
+> <snip>
+> 
+> >> +static int tegra_channel_g_input(struct file *file, void *priv,
+> >> +				 unsigned int *i)
+> >> +{
+> >> +	*i = 0;
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int tegra_channel_s_input(struct file *file, void *priv,
+> >> +				 unsigned int input)
+> >> +{
+> >> +	if (input > 0)
+> >> +		return -EINVAL;
+> >> +
+> >> +	return 0;
+> >> +}
+> > 
+> > Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
+> > linux-media; it's relevant here, too.
+> 
+> No, it isn't. The pipeline is controlled by the driver, not by userspace.
+> This is a regular video capture driver, not an ISP driver.
 
-regards,
-dan carpenter
+I don't think that really makes a difference, whether a device is an ISP or
+not, but instead what does is whether there is something to control in its
+pipeline that cannot be generally done through the regular V4L2 interface.
+Even plain CSI-2 receiver drivers should be media device centric these days
+as doing otherwise excludes using a range of sensor drivers with them,
+including any possible future support for e.g. sensor embedded data.
 
+-- 
+Kind regards,
+
+Sakari Ailus
