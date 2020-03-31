@@ -2,173 +2,721 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B31C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6488BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EF020757
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="R7DqVX6I";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="jZVz7wof"
+	by mail.kernel.org (Postfix) with ESMTP id 257F020781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgCaEPe (ORCPT
+        id S1726621AbgCaEPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 00:15:34 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:13044 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729813AbgCaEPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 00:15:32 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02V4EYMM029553;
-        Mon, 30 Mar 2020 21:15:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=FygILm7lc8gDJZ6VmyesLqjhlKzuBSSfWm37+vwXj58=;
- b=R7DqVX6IrFBLHvj9yJPSPXL24fE3g12ryg/7r6GP+sGCemwK9ZJuurbNqguOREwcdcX2
- qI8qGrQRYdJBq3CM/WPJ6iltHuJVJpOlQ3jVSsL0dMKrIoZCCzwoHz+vBOKbzBGc4hUj
- n8FUuYjB/5W3nOlWv8zhppZV02nFD0v3mKU= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3024dgpaq9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 30 Mar 2020 21:15:16 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 30 Mar 2020 21:15:16 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qo0RX/mY8s/Ac5daSP0bS3/ek09dK2H+ZCm5jb/VSTDR+iqA0KVJULz6X6vfO1Mkyplg2d9XWHN5uZu3XeBXcBBhk4Kq/DECcR0NWhtU8e1/jNWUK36ywTd/mDhIzEsjyJT5C7pFaAFTRCxVEvwDVfbYrN+6L52ijlmjYBR+ZeOFAkZA5fup8L4WPbVJHD70HZVvpCNSvtuPBsyuIA9e7NJrcEbkwq2IwfQQ/Avov4dDlbMp9ZgHMp6ipqYaxntPG94KaXyzhY1TjqlWdqJGRlG92WbYWXNEtDwKdwqzpFfNuWl0Z1PtGDrcrtc3aeQOD+ag02Tt0UIr4RaGN7uGhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FygILm7lc8gDJZ6VmyesLqjhlKzuBSSfWm37+vwXj58=;
- b=G1jUm/U6SsOX0np4TokW1o6dbNQAzPOlFHY+Q2LaZxXPVnRzNLJg/G6GBlESkNZBfNpUBAaeFLTRv/t6qM+ZCXHd6mu6/iCfao9MBmnXSsOMPFriTiCpnBtdVbnQB3xdQFl4AOPt0693GUiu6uDOonyV/fCC1fE/zSD4UE7IS6KVJ84wDoKWUMMK4rixb6wuyH4AfjHxPEgGo8YBbJAcbW09kKPFw2zzxxv7TgRdOUw2lGrustVN69PvmwTSADyQZ1RO5d4bi9ewH0xoLLevFyI0lwSLDns54vl64Pr6hMF+0x8/jQBVtxVzv0L7OD6Ll6nShSOMHo1pdrqnGtZiBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FygILm7lc8gDJZ6VmyesLqjhlKzuBSSfWm37+vwXj58=;
- b=jZVz7wofNxyTXs7YNcJ20ka+5+I0YVXyyeIKQ4yFdCDNTo5Od/WpKhmXAsqASqeLOhBdWkI3+A/+bDeBVuG0r1mZnrvh7UEwsgxyoFIvcMCJkVDJ2uxW0LF9e5lBGFHVeLTSbXa3hMiA70MGu5Hhi0kWnuu6Ke4xFZgpEqLAVUQ=
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com (2603:10b6:303:50::17)
- by MW3PR15MB3835.namprd15.prod.outlook.com (2603:10b6:303:50::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Tue, 31 Mar
- 2020 04:15:14 +0000
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c]) by MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c%7]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
- 04:15:14 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     "sedat.dilek@gmail.com" <sedat.dilek@gmail.com>
-CC:     Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        "Michael van der Westhuizen" <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Patrick Williams" <patrick@stwcx.xyz>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
- initramfs
-Thread-Topic: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
- initramfs
-Thread-Index: AQHWBeEQDgWL3aTsC0eAZqS0g1IF3qhiGjEA
-Date:   Tue, 31 Mar 2020 04:15:14 +0000
-Message-ID: <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com>
-References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
-In-Reply-To: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [67.188.225.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d50f459-101d-4f9e-728c-08d7d52a1cfd
-x-ms-traffictypediagnostic: MW3PR15MB3835:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR15MB3835E9A9762E372AC949AF46ABC80@MW3PR15MB3835.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0359162B6D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB3753.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(39860400002)(346002)(366004)(136003)(376002)(66446008)(64756008)(71200400001)(66556008)(2906002)(6506007)(91956017)(76116006)(66946007)(53546011)(66476007)(4326008)(7416002)(33656002)(6916009)(6512007)(5660300002)(81156014)(81166006)(2616005)(8936002)(8676002)(186003)(26005)(316002)(86362001)(36756003)(6486002)(478600001)(54906003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: B0CFByCHaoCxGKupY31JZLO624baKuQR1r21HJqPvmKf3lO5Z0HwNPO1K+Qvx7rHhJyG7LkYZ93jsB3Ue028YCskxSRdh8Ib1jXBNyM560ElIX95DBSE31azNDLslvMm2LQVGXqTh+rx68SRGq0X7TdMh2cebQb+neIIq1UeSoDCae3qIcYYQyGehXzEZL07prKcFnwRAS9HjwgDybXAW0KBh3WURPW43NHHVf9qi/uEPwkDbkwKMC7i+Jm69giuUbBQn9Jsx7edexsLfqn3wp+atf/losrbxcMf9b0jxCsifWU5ghZN/P0nLH6bfy/IRZ3XO8J5FGm6TZNMY15vUAo4BvpxC0GA5n8jK1hZZQ8zT/UPKncdcE8nAVVYZBoZ9lWdYkH+7jzb5e08AJPVITPL1Ii6L788DtWYA3qkNoKpl29Lk2MhLqJBk5XawIHe
-x-ms-exchange-antispam-messagedata: 8ZntYrDmNu7a9e/uX43L8OvpyHMJen1g0pS1/e46jRJGJ2IkvoSEyvCgMj2FDxfurdz5U4F6dS4hdrRx/C6UqgNxXwZMZO2sNwLvaZ/19eGTOIJpK/AqxxvlMRLXt3CnuX+R1anWpljS8PCoTqwpnw==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FEED80B093E22C4884948E4AFC9AE77A@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d50f459-101d-4f9e-728c-08d7d52a1cfd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Mar 2020 04:15:14.6465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v8cfBD8oLesN6ifPaJbK9nUhyo24Q9fLZO7GOOm9rTFbXRJiTVqbDa4IBkBxnRHq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3835
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_01:2020-03-30,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003310035
-X-FB-Internal: deliver
+        Tue, 31 Mar 2020 00:15:09 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39202 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgCaEPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 00:15:07 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4575B1A17FF;
+        Tue, 31 Mar 2020 06:15:04 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 945541A07C5;
+        Tue, 31 Mar 2020 06:14:57 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B582440297;
+        Tue, 31 Mar 2020 12:14:49 +0800 (SGT)
+From:   Yangbo Lu <yangbo.lu@nxp.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: [v2, 1/7] net: mscc: ocelot: move ocelot ptp clock code out of ocelot.c
+Date:   Tue, 31 Mar 2020 12:11:07 +0800
+Message-Id: <20200331041113.15873-2-yangbo.lu@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200331041113.15873-1-yangbo.lu@nxp.com>
+References: <20200331041113.15873-1-yangbo.lu@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Mar 29, 2020, at 8:45 AM, Sedat Dilek <sedat.dilek@gmail.com> wrote:
->=20
-> [ CC: Nick Desaulniers ]
->=20
-> Hi Nick,
->=20
-> I have tested your patchset v3 on top of Linux v5.6-rc7+
-> compiled/linked with Clang/LLD v9.0.1.
->=20
-> My Linux system is Debian/testing (will be "bullseye" aka version 11) AMD=
-64.
-> I used zstd package version 1.4.4+dfsg-3.
->=20
-> I have no big numbers for you expect a comparison of initrd.img files
-> compressed with GZIP (default by Debian) and ZSTD:
->=20
-> root# du -k /boot/initrd.img-$(uname -r).{gz,zst}
-> 29272   /boot/initrd.img-5.6.0-rc7-1-amd64-clang.gz
-> 23540   /boot/initrd.img-5.6.0-rc7-1-amd64-clang.zst
->=20
-> I needed to do some modifications to stuff from
-> initramfs-tools/initramfs-tools-core (see end-titles).
->=20
-> Do you plan to push this for Linux v5.7?
+The Ocelot PTP clock driver had been embedded into ocelot.c driver.
+It had supported basic gettime64/settime64/adjtime/adjfine functions
+by now which were used by both Ocelot switch and Felix switch.
 
-I hope that it will be accepted. From my point of view this patch set is
-ready for merge, except for the maximum window size increase
-requested by Petr.
+This patch is to move current ptp clock code out of ocelot.c driver
+maintaining as a single ocelot_ptp.c.
+For futher new features implementation, the common code could be put
+in ocelot_ptp.c and the switch specific code should be in specific
+switch driver. The interrupt implementation in SoC is different
+between Ocelot and Felix.
 
-> Feel free to add credits for the whole series:
->=20
->   Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+---
+Changes for v2:
+	- Put PTP driver under drivers/net/ethernet/mscc/.
+	- Initialized PTP separately in ocelot/felix platforms.
+---
+ drivers/net/dsa/ocelot/felix.c                     |  25 +++
+ drivers/net/ethernet/mscc/Makefile                 |   2 +-
+ drivers/net/ethernet/mscc/ocelot.c                 | 206 ---------------------
+ drivers/net/ethernet/mscc/ocelot.h                 |   3 +-
+ drivers/net/ethernet/mscc/ocelot_board.c           |  25 +++
+ drivers/net/ethernet/mscc/ocelot_ptp.c             | 203 ++++++++++++++++++++
+ include/soc/mscc/ocelot.h                          |   1 -
+ .../net/ethernet => include/soc}/mscc/ocelot_ptp.h |  11 ++
+ 8 files changed, 266 insertions(+), 210 deletions(-)
+ create mode 100644 drivers/net/ethernet/mscc/ocelot_ptp.c
+ rename {drivers/net/ethernet => include/soc}/mscc/ocelot_ptp.h (64%)
 
-Thanks for testing the patch set Sedat!
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index 79ca3aa..e1573bc 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -7,6 +7,7 @@
+ #include <soc/mscc/ocelot_sys.h>
+ #include <soc/mscc/ocelot_dev.h>
+ #include <soc/mscc/ocelot_ana.h>
++#include <soc/mscc/ocelot_ptp.h>
+ #include <soc/mscc/ocelot.h>
+ #include <linux/packing.h>
+ #include <linux/module.h>
+@@ -497,6 +498,21 @@ static int felix_init_structs(struct felix *felix, int num_phys_ports)
+ 	return 0;
+ }
+ 
++static struct ptp_clock_info ocelot_ptp_clock_info = {
++	.owner		= THIS_MODULE,
++	.name		= "felix ptp",
++	.max_adj	= 0x7fffffff,
++	.n_alarm	= 0,
++	.n_ext_ts	= 0,
++	.n_per_out	= 0,
++	.n_pins		= 0,
++	.pps		= 0,
++	.gettime64	= ocelot_ptp_gettime64,
++	.settime64	= ocelot_ptp_settime64,
++	.adjtime	= ocelot_ptp_adjtime,
++	.adjfine	= ocelot_ptp_adjfine,
++};
++
+ /* Hardware initialization done here so that we can allocate structures with
+  * devm without fear of dsa_register_switch returning -EPROBE_DEFER and causing
+  * us to allocate structures twice (leak memory) and map PCI memory twice
+@@ -513,6 +529,14 @@ static int felix_setup(struct dsa_switch *ds)
+ 		return err;
+ 
+ 	ocelot_init(ocelot);
++	if (ocelot->ptp) {
++		err = ocelot_init_timestamp(ocelot, &ocelot_ptp_clock_info);
++		if (err) {
++			dev_err(ocelot->dev,
++				"Timestamp initialization failed\n");
++			ocelot->ptp = 0;
++		}
++	}
+ 
+ 	for (port = 0; port < ds->num_ports; port++) {
+ 		ocelot_init_port(ocelot, port);
+@@ -551,6 +575,7 @@ static void felix_teardown(struct dsa_switch *ds)
+ 	if (felix->info->mdio_bus_free)
+ 		felix->info->mdio_bus_free(ocelot);
+ 
++	ocelot_deinit_timestamp(ocelot);
+ 	/* stop workqueue thread */
+ 	ocelot_deinit(ocelot);
+ }
+diff --git a/drivers/net/ethernet/mscc/Makefile b/drivers/net/ethernet/mscc/Makefile
+index 9a36c26..91b33b5 100644
+--- a/drivers/net/ethernet/mscc/Makefile
++++ b/drivers/net/ethernet/mscc/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ obj-$(CONFIG_MSCC_OCELOT_SWITCH) += mscc_ocelot_common.o
+ mscc_ocelot_common-y := ocelot.o ocelot_io.o
+-mscc_ocelot_common-y += ocelot_regs.o ocelot_tc.o ocelot_police.o ocelot_ace.o ocelot_flower.o
++mscc_ocelot_common-y += ocelot_regs.o ocelot_tc.o ocelot_police.o ocelot_ace.o ocelot_flower.o ocelot_ptp.o
+ obj-$(CONFIG_MSCC_OCELOT_SWITCH_OCELOT) += ocelot_board.o
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index b4731df..6cfd6dc 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -14,7 +14,6 @@
+ #include <linux/module.h>
+ #include <linux/netdevice.h>
+ #include <linux/phy.h>
+-#include <linux/ptp_clock_kernel.h>
+ #include <linux/skbuff.h>
+ #include <linux/iopoll.h>
+ #include <net/arp.h>
+@@ -1989,200 +1988,6 @@ struct notifier_block ocelot_switchdev_blocking_nb __read_mostly = {
+ };
+ EXPORT_SYMBOL(ocelot_switchdev_blocking_nb);
+ 
+-int ocelot_ptp_gettime64(struct ptp_clock_info *ptp, struct timespec64 *ts)
+-{
+-	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
+-	unsigned long flags;
+-	time64_t s;
+-	u32 val;
+-	s64 ns;
+-
+-	spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
+-
+-	val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
+-	val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
+-	val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_SAVE);
+-	ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
+-
+-	s = ocelot_read_rix(ocelot, PTP_PIN_TOD_SEC_MSB, TOD_ACC_PIN) & 0xffff;
+-	s <<= 32;
+-	s += ocelot_read_rix(ocelot, PTP_PIN_TOD_SEC_LSB, TOD_ACC_PIN);
+-	ns = ocelot_read_rix(ocelot, PTP_PIN_TOD_NSEC, TOD_ACC_PIN);
+-
+-	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
+-
+-	/* Deal with negative values */
+-	if (ns >= 0x3ffffff0 && ns <= 0x3fffffff) {
+-		s--;
+-		ns &= 0xf;
+-		ns += 999999984;
+-	}
+-
+-	set_normalized_timespec64(ts, s, ns);
+-	return 0;
+-}
+-EXPORT_SYMBOL(ocelot_ptp_gettime64);
+-
+-static int ocelot_ptp_settime64(struct ptp_clock_info *ptp,
+-				const struct timespec64 *ts)
+-{
+-	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
+-	unsigned long flags;
+-	u32 val;
+-
+-	spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
+-
+-	val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
+-	val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
+-	val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_IDLE);
+-
+-	ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
+-
+-	ocelot_write_rix(ocelot, lower_32_bits(ts->tv_sec), PTP_PIN_TOD_SEC_LSB,
+-			 TOD_ACC_PIN);
+-	ocelot_write_rix(ocelot, upper_32_bits(ts->tv_sec), PTP_PIN_TOD_SEC_MSB,
+-			 TOD_ACC_PIN);
+-	ocelot_write_rix(ocelot, ts->tv_nsec, PTP_PIN_TOD_NSEC, TOD_ACC_PIN);
+-
+-	val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
+-	val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
+-	val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_LOAD);
+-
+-	ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
+-
+-	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
+-	return 0;
+-}
+-
+-static int ocelot_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
+-{
+-	if (delta > -(NSEC_PER_SEC / 2) && delta < (NSEC_PER_SEC / 2)) {
+-		struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
+-		unsigned long flags;
+-		u32 val;
+-
+-		spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
+-
+-		val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
+-		val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
+-		val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_IDLE);
+-
+-		ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
+-
+-		ocelot_write_rix(ocelot, 0, PTP_PIN_TOD_SEC_LSB, TOD_ACC_PIN);
+-		ocelot_write_rix(ocelot, 0, PTP_PIN_TOD_SEC_MSB, TOD_ACC_PIN);
+-		ocelot_write_rix(ocelot, delta, PTP_PIN_TOD_NSEC, TOD_ACC_PIN);
+-
+-		val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
+-		val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
+-		val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_DELTA);
+-
+-		ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
+-
+-		spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
+-	} else {
+-		/* Fall back using ocelot_ptp_settime64 which is not exact. */
+-		struct timespec64 ts;
+-		u64 now;
+-
+-		ocelot_ptp_gettime64(ptp, &ts);
+-
+-		now = ktime_to_ns(timespec64_to_ktime(ts));
+-		ts = ns_to_timespec64(now + delta);
+-
+-		ocelot_ptp_settime64(ptp, &ts);
+-	}
+-	return 0;
+-}
+-
+-static int ocelot_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+-{
+-	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
+-	u32 unit = 0, direction = 0;
+-	unsigned long flags;
+-	u64 adj = 0;
+-
+-	spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
+-
+-	if (!scaled_ppm)
+-		goto disable_adj;
+-
+-	if (scaled_ppm < 0) {
+-		direction = PTP_CFG_CLK_ADJ_CFG_DIR;
+-		scaled_ppm = -scaled_ppm;
+-	}
+-
+-	adj = PSEC_PER_SEC << 16;
+-	do_div(adj, scaled_ppm);
+-	do_div(adj, 1000);
+-
+-	/* If the adjustment value is too large, use ns instead */
+-	if (adj >= (1L << 30)) {
+-		unit = PTP_CFG_CLK_ADJ_FREQ_NS;
+-		do_div(adj, 1000);
+-	}
+-
+-	/* Still too big */
+-	if (adj >= (1L << 30))
+-		goto disable_adj;
+-
+-	ocelot_write(ocelot, unit | adj, PTP_CLK_CFG_ADJ_FREQ);
+-	ocelot_write(ocelot, PTP_CFG_CLK_ADJ_CFG_ENA | direction,
+-		     PTP_CLK_CFG_ADJ_CFG);
+-
+-	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
+-	return 0;
+-
+-disable_adj:
+-	ocelot_write(ocelot, 0, PTP_CLK_CFG_ADJ_CFG);
+-
+-	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
+-	return 0;
+-}
+-
+-static struct ptp_clock_info ocelot_ptp_clock_info = {
+-	.owner		= THIS_MODULE,
+-	.name		= "ocelot ptp",
+-	.max_adj	= 0x7fffffff,
+-	.n_alarm	= 0,
+-	.n_ext_ts	= 0,
+-	.n_per_out	= 0,
+-	.n_pins		= 0,
+-	.pps		= 0,
+-	.gettime64	= ocelot_ptp_gettime64,
+-	.settime64	= ocelot_ptp_settime64,
+-	.adjtime	= ocelot_ptp_adjtime,
+-	.adjfine	= ocelot_ptp_adjfine,
+-};
+-
+-static int ocelot_init_timestamp(struct ocelot *ocelot)
+-{
+-	struct ptp_clock *ptp_clock;
+-
+-	ocelot->ptp_info = ocelot_ptp_clock_info;
+-	ptp_clock = ptp_clock_register(&ocelot->ptp_info, ocelot->dev);
+-	if (IS_ERR(ptp_clock))
+-		return PTR_ERR(ptp_clock);
+-	/* Check if PHC support is missing at the configuration level */
+-	if (!ptp_clock)
+-		return 0;
+-
+-	ocelot->ptp_clock = ptp_clock;
+-
+-	ocelot_write(ocelot, SYS_PTP_CFG_PTP_STAMP_WID(30), SYS_PTP_CFG);
+-	ocelot_write(ocelot, 0xffffffff, ANA_TABLES_PTP_ID_LOW);
+-	ocelot_write(ocelot, 0xffffffff, ANA_TABLES_PTP_ID_HIGH);
+-
+-	ocelot_write(ocelot, PTP_CFG_MISC_PTP_EN, PTP_CFG_MISC);
+-
+-	/* There is no device reconfiguration, PTP Rx stamping is always
+-	 * enabled.
+-	 */
+-	ocelot->hwtstamp_config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+-
+-	return 0;
+-}
+-
+ /* Configure the maximum SDU (L2 payload) on RX to the value specified in @sdu.
+  * The length of VLAN tags is accounted for automatically via DEV_MAC_TAGS_CFG.
+  * In the special case that it's the NPI port that we're configuring, the
+@@ -2528,15 +2333,6 @@ int ocelot_init(struct ocelot *ocelot)
+ 	queue_delayed_work(ocelot->stats_queue, &ocelot->stats_work,
+ 			   OCELOT_STATS_CHECK_DELAY);
+ 
+-	if (ocelot->ptp) {
+-		ret = ocelot_init_timestamp(ocelot);
+-		if (ret) {
+-			dev_err(ocelot->dev,
+-				"Timestamp initialization failed\n");
+-			return ret;
+-		}
+-	}
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ocelot_init);
+@@ -2549,8 +2345,6 @@ void ocelot_deinit(struct ocelot *ocelot)
+ 	cancel_delayed_work(&ocelot->stats_work);
+ 	destroy_workqueue(ocelot->stats_queue);
+ 	mutex_destroy(&ocelot->stats_lock);
+-	if (ocelot->ptp_clock)
+-		ptp_clock_unregister(ocelot->ptp_clock);
+ 
+ 	for (i = 0; i < ocelot->num_phys_ports; i++) {
+ 		port = ocelot->ports[i];
+diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
+index e34ef83..5aa2e45 100644
+--- a/drivers/net/ethernet/mscc/ocelot.h
++++ b/drivers/net/ethernet/mscc/ocelot.h
+@@ -15,18 +15,17 @@
+ #include <linux/phy.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+-#include <linux/ptp_clock_kernel.h>
+ #include <linux/regmap.h>
+ 
+ #include <soc/mscc/ocelot_qsys.h>
+ #include <soc/mscc/ocelot_sys.h>
+ #include <soc/mscc/ocelot_dev.h>
+ #include <soc/mscc/ocelot_ana.h>
++#include <soc/mscc/ocelot_ptp.h>
+ #include <soc/mscc/ocelot.h>
+ #include "ocelot_rew.h"
+ #include "ocelot_qs.h"
+ #include "ocelot_tc.h"
+-#include "ocelot_ptp.h"
+ 
+ #define OCELOT_BUFFER_CELL_SZ 60
+ 
+diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+index 0ac9fbf7..ee016f7 100644
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -366,6 +366,21 @@ static const struct vcap_props vsc7514_vcap_props[] = {
+ 	},
+ };
+ 
++static struct ptp_clock_info ocelot_ptp_clock_info = {
++	.owner		= THIS_MODULE,
++	.name		= "ocelot ptp",
++	.max_adj	= 0x7fffffff,
++	.n_alarm	= 0,
++	.n_ext_ts	= 0,
++	.n_per_out	= 0,
++	.n_pins		= 0,
++	.pps		= 0,
++	.gettime64	= ocelot_ptp_gettime64,
++	.settime64	= ocelot_ptp_settime64,
++	.adjtime	= ocelot_ptp_adjtime,
++	.adjfine	= ocelot_ptp_adjfine,
++};
++
+ static int mscc_ocelot_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -469,6 +484,15 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+ 	ocelot->vcap = vsc7514_vcap_props;
+ 
+ 	ocelot_init(ocelot);
++	if (ocelot->ptp) {
++		err = ocelot_init_timestamp(ocelot, &ocelot_ptp_clock_info);
++		if (err) {
++			dev_err(ocelot->dev,
++				"Timestamp initialization failed\n");
++			ocelot->ptp = 0;
++		}
++	}
++
+ 	/* No NPI port */
+ 	ocelot_configure_cpu(ocelot, -1, OCELOT_TAG_PREFIX_NONE,
+ 			     OCELOT_TAG_PREFIX_NONE);
+@@ -574,6 +598,7 @@ static int mscc_ocelot_remove(struct platform_device *pdev)
+ {
+ 	struct ocelot *ocelot = platform_get_drvdata(pdev);
+ 
++	ocelot_deinit_timestamp(ocelot);
+ 	ocelot_deinit(ocelot);
+ 	unregister_switchdev_blocking_notifier(&ocelot_switchdev_blocking_nb);
+ 	unregister_switchdev_notifier(&ocelot_switchdev_nb);
+diff --git a/drivers/net/ethernet/mscc/ocelot_ptp.c b/drivers/net/ethernet/mscc/ocelot_ptp.c
+new file mode 100644
+index 0000000..69d4e56
+--- /dev/null
++++ b/drivers/net/ethernet/mscc/ocelot_ptp.c
+@@ -0,0 +1,203 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/* Microsemi Ocelot PTP clock driver
++ *
++ * Copyright (c) 2017 Microsemi Corporation
++ * Copyright 2020 NXP
++ */
++#include <soc/mscc/ocelot_ptp.h>
++#include <soc/mscc/ocelot_sys.h>
++#include <soc/mscc/ocelot.h>
++
++int ocelot_ptp_gettime64(struct ptp_clock_info *ptp, struct timespec64 *ts)
++{
++	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
++	unsigned long flags;
++	time64_t s;
++	u32 val;
++	s64 ns;
++
++	spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
++
++	val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
++	val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
++	val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_SAVE);
++	ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
++
++	s = ocelot_read_rix(ocelot, PTP_PIN_TOD_SEC_MSB, TOD_ACC_PIN) & 0xffff;
++	s <<= 32;
++	s += ocelot_read_rix(ocelot, PTP_PIN_TOD_SEC_LSB, TOD_ACC_PIN);
++	ns = ocelot_read_rix(ocelot, PTP_PIN_TOD_NSEC, TOD_ACC_PIN);
++
++	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
++
++	/* Deal with negative values */
++	if (ns >= 0x3ffffff0 && ns <= 0x3fffffff) {
++		s--;
++		ns &= 0xf;
++		ns += 999999984;
++	}
++
++	set_normalized_timespec64(ts, s, ns);
++	return 0;
++}
++EXPORT_SYMBOL(ocelot_ptp_gettime64);
++
++int ocelot_ptp_settime64(struct ptp_clock_info *ptp,
++			 const struct timespec64 *ts)
++{
++	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
++	unsigned long flags;
++	u32 val;
++
++	spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
++
++	val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
++	val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
++	val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_IDLE);
++
++	ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
++
++	ocelot_write_rix(ocelot, lower_32_bits(ts->tv_sec), PTP_PIN_TOD_SEC_LSB,
++			 TOD_ACC_PIN);
++	ocelot_write_rix(ocelot, upper_32_bits(ts->tv_sec), PTP_PIN_TOD_SEC_MSB,
++			 TOD_ACC_PIN);
++	ocelot_write_rix(ocelot, ts->tv_nsec, PTP_PIN_TOD_NSEC, TOD_ACC_PIN);
++
++	val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
++	val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK | PTP_PIN_CFG_DOM);
++	val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_LOAD);
++
++	ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
++
++	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
++	return 0;
++}
++EXPORT_SYMBOL(ocelot_ptp_settime64);
++
++int ocelot_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
++{
++	if (delta > -(NSEC_PER_SEC / 2) && delta < (NSEC_PER_SEC / 2)) {
++		struct ocelot *ocelot = container_of(ptp, struct ocelot,
++						     ptp_info);
++		unsigned long flags;
++		u32 val;
++
++		spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
++
++		val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
++		val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK |
++			 PTP_PIN_CFG_DOM);
++		val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_IDLE);
++
++		ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
++
++		ocelot_write_rix(ocelot, 0, PTP_PIN_TOD_SEC_LSB, TOD_ACC_PIN);
++		ocelot_write_rix(ocelot, 0, PTP_PIN_TOD_SEC_MSB, TOD_ACC_PIN);
++		ocelot_write_rix(ocelot, delta, PTP_PIN_TOD_NSEC, TOD_ACC_PIN);
++
++		val = ocelot_read_rix(ocelot, PTP_PIN_CFG, TOD_ACC_PIN);
++		val &= ~(PTP_PIN_CFG_SYNC | PTP_PIN_CFG_ACTION_MASK |
++			 PTP_PIN_CFG_DOM);
++		val |= PTP_PIN_CFG_ACTION(PTP_PIN_ACTION_DELTA);
++
++		ocelot_write_rix(ocelot, val, PTP_PIN_CFG, TOD_ACC_PIN);
++
++		spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
++	} else {
++		/* Fall back using ocelot_ptp_settime64 which is not exact. */
++		struct timespec64 ts;
++		u64 now;
++
++		ocelot_ptp_gettime64(ptp, &ts);
++
++		now = ktime_to_ns(timespec64_to_ktime(ts));
++		ts = ns_to_timespec64(now + delta);
++
++		ocelot_ptp_settime64(ptp, &ts);
++	}
++	return 0;
++}
++EXPORT_SYMBOL(ocelot_ptp_adjtime);
++
++int ocelot_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
++{
++	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
++	u32 unit = 0, direction = 0;
++	unsigned long flags;
++	u64 adj = 0;
++
++	spin_lock_irqsave(&ocelot->ptp_clock_lock, flags);
++
++	if (!scaled_ppm)
++		goto disable_adj;
++
++	if (scaled_ppm < 0) {
++		direction = PTP_CFG_CLK_ADJ_CFG_DIR;
++		scaled_ppm = -scaled_ppm;
++	}
++
++	adj = PSEC_PER_SEC << 16;
++	do_div(adj, scaled_ppm);
++	do_div(adj, 1000);
++
++	/* If the adjustment value is too large, use ns instead */
++	if (adj >= (1L << 30)) {
++		unit = PTP_CFG_CLK_ADJ_FREQ_NS;
++		do_div(adj, 1000);
++	}
++
++	/* Still too big */
++	if (adj >= (1L << 30))
++		goto disable_adj;
++
++	ocelot_write(ocelot, unit | adj, PTP_CLK_CFG_ADJ_FREQ);
++	ocelot_write(ocelot, PTP_CFG_CLK_ADJ_CFG_ENA | direction,
++		     PTP_CLK_CFG_ADJ_CFG);
++
++	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
++	return 0;
++
++disable_adj:
++	ocelot_write(ocelot, 0, PTP_CLK_CFG_ADJ_CFG);
++
++	spin_unlock_irqrestore(&ocelot->ptp_clock_lock, flags);
++	return 0;
++}
++EXPORT_SYMBOL(ocelot_ptp_adjfine);
++
++int ocelot_init_timestamp(struct ocelot *ocelot, struct ptp_clock_info *info)
++{
++	struct ptp_clock *ptp_clock;
++
++	ocelot->ptp_info = *info;
++	ptp_clock = ptp_clock_register(&ocelot->ptp_info, ocelot->dev);
++	if (IS_ERR(ptp_clock))
++		return PTR_ERR(ptp_clock);
++	/* Check if PHC support is missing at the configuration level */
++	if (!ptp_clock)
++		return 0;
++
++	ocelot->ptp_clock = ptp_clock;
++
++	ocelot_write(ocelot, SYS_PTP_CFG_PTP_STAMP_WID(30), SYS_PTP_CFG);
++	ocelot_write(ocelot, 0xffffffff, ANA_TABLES_PTP_ID_LOW);
++	ocelot_write(ocelot, 0xffffffff, ANA_TABLES_PTP_ID_HIGH);
++
++	ocelot_write(ocelot, PTP_CFG_MISC_PTP_EN, PTP_CFG_MISC);
++
++	/* There is no device reconfiguration, PTP Rx stamping is always
++	 * enabled.
++	 */
++	ocelot->hwtstamp_config.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
++
++	return 0;
++}
++EXPORT_SYMBOL(ocelot_init_timestamp);
++
++int ocelot_deinit_timestamp(struct ocelot *ocelot)
++{
++	if (ocelot->ptp_clock)
++		ptp_clock_unregister(ocelot->ptp_clock);
++	return 0;
++}
++EXPORT_SYMBOL(ocelot_deinit_timestamp);
+diff --git a/include/soc/mscc/ocelot.h b/include/soc/mscc/ocelot.h
+index ebffcb3..fe301794 100644
+--- a/include/soc/mscc/ocelot.h
++++ b/include/soc/mscc/ocelot.h
+@@ -618,7 +618,6 @@ int ocelot_vlan_add(struct ocelot *ocelot, int port, u16 vid, bool pvid,
+ int ocelot_vlan_del(struct ocelot *ocelot, int port, u16 vid);
+ int ocelot_hwstamp_get(struct ocelot *ocelot, int port, struct ifreq *ifr);
+ int ocelot_hwstamp_set(struct ocelot *ocelot, int port, struct ifreq *ifr);
+-int ocelot_ptp_gettime64(struct ptp_clock_info *ptp, struct timespec64 *ts);
+ int ocelot_port_add_txtstamp_skb(struct ocelot_port *ocelot_port,
+ 				 struct sk_buff *skb);
+ void ocelot_get_txtstamp(struct ocelot *ocelot);
+diff --git a/drivers/net/ethernet/mscc/ocelot_ptp.h b/include/soc/mscc/ocelot_ptp.h
+similarity index 64%
+rename from drivers/net/ethernet/mscc/ocelot_ptp.h
+rename to include/soc/mscc/ocelot_ptp.h
+index 9ede14a..f01b0ce 100644
+--- a/drivers/net/ethernet/mscc/ocelot_ptp.h
++++ b/include/soc/mscc/ocelot_ptp.h
+@@ -4,11 +4,15 @@
+  *
+  * License: Dual MIT/GPL
+  * Copyright (c) 2017 Microsemi Corporation
++ * Copyright 2020 NXP
+  */
+ 
+ #ifndef _MSCC_OCELOT_PTP_H_
+ #define _MSCC_OCELOT_PTP_H_
+ 
++#include <linux/ptp_clock_kernel.h>
++#include <soc/mscc/ocelot.h>
++
+ #define PTP_PIN_CFG_RSZ			0x20
+ #define PTP_PIN_TOD_SEC_MSB_RSZ		PTP_PIN_CFG_RSZ
+ #define PTP_PIN_TOD_SEC_LSB_RSZ		PTP_PIN_CFG_RSZ
+@@ -38,4 +42,11 @@ enum {
+ 
+ #define PTP_CFG_CLK_ADJ_FREQ_NS		BIT(30)
+ 
++int ocelot_ptp_gettime64(struct ptp_clock_info *ptp, struct timespec64 *ts);
++int ocelot_ptp_settime64(struct ptp_clock_info *ptp,
++			 const struct timespec64 *ts);
++int ocelot_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta);
++int ocelot_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm);
++int ocelot_init_timestamp(struct ocelot *ocelot, struct ptp_clock_info *info);
++int ocelot_deinit_timestamp(struct ocelot *ocelot);
+ #endif
+-- 
+2.7.4
 
--Nick=
