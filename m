@@ -2,130 +2,115 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2104EC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBE3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8D120780
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:47:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Gr0LvrHj"
+	by mail.kernel.org (Postfix) with ESMTP id 674DD206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:47:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgCaHrZ (ORCPT
+        id S1730077AbgCaHrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:47:25 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53961 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726299AbgCaHrZ (ORCPT
+        Tue, 31 Mar 2020 03:47:39 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52011 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgCaHrj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:47:25 -0400
-Received: by mail-wm1-f65.google.com with SMTP id b12so1356095wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9TfK1u1VpPaq5iA6J1WQwLfjQ6lOwx15msGpVq0i+7c=;
-        b=Gr0LvrHjjJ5qr8lqINKW/3hKNpu+pFwzsUq58/tgAuectYIefxdFpYIe+jeXnMPUjx
-         IGmkhlcbkNL3xDq8h6ZFf0EodqpQVZ/RFZnQCKmXl8eJtE5KyCfZI3TTJfvGIjBuYZdw
-         8JKTetKFESliIYV8V4jLl7aJjPMuplmWL/SzA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=9TfK1u1VpPaq5iA6J1WQwLfjQ6lOwx15msGpVq0i+7c=;
-        b=cF5dOj9wPRTFTbwDcjIuYuhmWk+s903lEk/AdouX6LxAI/ibWz9SH11UyJGIgagqfg
-         C27FQFOhwJxESLa7oP1MnHslvi2Bd3xrEnhaxL+DrFHp/ZwJo+liQ9AIj+uXqtZfsvep
-         I6WsmBHocDIWWO6gDDlhEdpHDxKUxMwzFe0sIzXEdAXbspmzdYe5r8Hyo77KnMHz4Jiv
-         XLwa77+18o6HnNhLbKhvYQwbHHiCXNJxJ7ByPpqdQQy0HDEXAeLJr0UeBZDqwciXRod0
-         DKDwPhTGgz0DzYlhsIISXaIz0R4Cbxk2CM3iXmUad2uJ+rJjJD90KHdhXU0MNND5pEqU
-         aRLg==
-X-Gm-Message-State: ANhLgQ1c/4ANYXjq4WV+KfnoLN5OAx2sqHVLdoY/yVdnxAW0RpgDtGvs
-        CpRY0LzPJUMC6ZdZsQmHXty49g==
-X-Google-Smtp-Source: ADFU+vtayUlqbWaVjEdDpSf+eVK+fU90P3qYqeML/NIzR7pnIBLOepUFWDkVMvgCmV92cYRgJios+A==
-X-Received: by 2002:a7b:cd02:: with SMTP id f2mr1981956wmj.97.1585640843372;
-        Tue, 31 Mar 2020 00:47:23 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id t21sm2795111wmt.43.2020.03.31.00.47.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 00:47:22 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:47:20 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>, kbuild-all@lists.01.org,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: fix ifnullfree.cocci warnings
-Message-ID: <20200331074720.GD2363188@phenom.ffwll.local>
-Mail-Followup-To: Julia Lawall <julia.lawall@inria.fr>,
-        kbuild-all@lists.01.org, Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <alpine.DEB.2.21.2003270908410.2709@hadrien>
+        Tue, 31 Mar 2020 03:47:39 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jJBcO-0004m4-Me; Tue, 31 Mar 2020 09:47:28 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:9c00:37c7:b172:db58] (unknown [IPv6:2a03:f580:87bc:d400:9c00:37c7:b172:db58])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 060294D8C3A;
+        Tue, 31 Mar 2020 07:47:25 +0000 (UTC)
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Oleksij Rempel <o.rempel@pengutronix.de>, linux-imx@nxp.com,
+        kernel@pengutronix.de, David Jander <david@protonic.nl>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+ <20200329150854.GA31812@lunn.ch>
+ <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+ <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com>
+ <20200330174114.GG25745@shell.armlinux.org.uk>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <5ae5c0de-f05c-5e3f-86e1-a9afdd3e1ef1@pengutronix.de>
+Date:   Tue, 31 Mar 2020 09:47:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2003270908410.2709@hadrien>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200330174114.GG25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 09:11:44AM +0100, Julia Lawall wrote:
-> NULL check before kfree is not needed.
+On 3/30/20 7:41 PM, Russell King - ARM Linux admin wrote:
+>>> arch/arm/mach-imx/mach-imx6q.c:167:		phy_register_fixup_for_uid(PHY_ID_KSZ9021, MICREL_PHY_ID_MASK,
+>>> arch/arm/mach-imx/mach-imx6q.c:169:		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+>>> arch/arm/mach-imx/mach-imx6q.c:171:		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+>>> arch/arm/mach-imx/mach-imx6q.c:173:		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
 > 
-> Generated by: scripts/coccinelle/free/ifnullfree.cocci
-> 
-> Fixes: c6603c740e0e ("drm: add managed resources tied to drm_device")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
-> ---
-> 
-> tree:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+> As far as I'm concerned, the AR8035 fixup is there with good reason.
+> It's not just "random" but is required to make the AR8035 usable with
+> the iMX6 SoCs.  Not because of a board level thing, but because it's
+> required for the AR8035 to be usable with an iMX6 SoC.
 
-Hm this doesn't apply anymore, the patch is for an interim state (because
-bisectability). Care to regen (the pattern still exists), I'm happy to
-apply.
--Daniel
+Is this still ture, if the AR8035 is attached to a switch behind an iMX6?
 
-> head:   9e1ed9fb1eb0a4bc43a26365c592d3095286038b
-> commit: c6603c740e0e3492c9c95fdab833375bf7117b6b [1587/1636] drm: add managed resources tied to drm_device
-> :::::: branch date: 8 hours ago
-> :::::: commit date: 9 hours ago
-> 
-> Up to you, if you tihnk it is useful...
-> 
->  drm_drv.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> --- a/drivers/gpu/drm/drm_drv.c
-> +++ b/drivers/gpu/drm/drm_drv.c
-> @@ -837,8 +837,9 @@ static void drm_dev_release(struct kref
->  	if (!dev->driver->release && !dev->managed.final_kfree) {
->  		WARN_ON(!list_empty(&dev->managed.resources));
->  		kfree(dev);
-> -	} else if (dev->managed.final_kfree)
-> +	} else {
->  		kfree(dev->managed.final_kfree);
-> +	}
->  }
-> 
->  /**
+regards,
+Marc
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
