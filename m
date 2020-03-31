@@ -2,153 +2,156 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F647C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CE6C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BD3208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF65207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXJ2/Xh5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="veoTVgVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbgCaJx2 (ORCPT
+        id S1730375AbgCaJzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:53:28 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44095 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729425AbgCaJx1 (ORCPT
+        Tue, 31 Mar 2020 05:55:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46323 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730217AbgCaJzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:53:27 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v134so18365663oie.11;
-        Tue, 31 Mar 2020 02:53:27 -0700 (PDT)
+        Tue, 31 Mar 2020 05:55:54 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q3so10079133pff.13;
+        Tue, 31 Mar 2020 02:55:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ZJf+8fO1Di3E+rPRN5mDE1xuCphkytmjd4M4kAVzgCM=;
-        b=XXJ2/Xh5u0ckiJFmd6yNoQkREmmgsJkkg4YsEaOLDUehbmkcJ93XWoKudEuETsfUF7
-         oHN3t8JtTKTioLE4665fREueOYo5Mdn8XNXyTn0GsEmnKxtqzByQJkoGHuaoXWa5Ic5N
-         eGWz8kBQRJf11yBaEzUQfvbo+rcH8GpW/Ns38MnnKWJs/ZuXxBuIVLSUUcH+RHb5GhrQ
-         yz8eNXYNFuOd2IxxB1nLIgkxdJFvKh5KDvssbYn1TTLvrTJREJVNV7wTgFHen+7RI7zn
-         22dJuxs/CXSLbW/1IJNua+c1sqBMY4KLWZePXUqhTzgQ71UTm7h1ipNRhGJzO4WBzX34
-         w/NA==
+        bh=OhHn08M8/D8HCM9gjXRbI/j0PhmAwA3tYAp3gRgxrKk=;
+        b=veoTVgVRtYQTK+5zN3HYDh+HdtUTeX2nPPRVzQPABdleK9zHQb4Qfl3r/T33195phu
+         DUMvCdDjmJ78SwW3P5o7zoX0gQW9ZZDwSrxEVbpixY5yShzky96M6m66YJKWwWc/MH7V
+         DTMF5UWOC4YbOb73eYMwZR65xCARdm0J/queSu86YPQrB0FH77ohZOcmu/5KUeQVQ6I4
+         nQFqCHefw2XGkVEG/L6uSEWsxvl3sjAAL6Ir2zECJfvkWLoJdbK4tzNXLmcUYsGJ/sBq
+         CPnwAaW2kHAUq3VyOfa33eKhAyvQVC0DX4/21UX9tD/bRIhnr7KrIZxDHyWY1o/jw5ul
+         +t5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZJf+8fO1Di3E+rPRN5mDE1xuCphkytmjd4M4kAVzgCM=;
-        b=XzsIaBEPkF1ZWM9bSV8uXfA8Cv9tWhFIfbnvgTxUqa867HRHodEw4Vpfh9PNrBre/b
-         fS+jNrSvH8e+iuiodVX2fI4W2emv1E8emGCeZV3HJh5itNeygCJy+47HI2USMmi0wxZq
-         bkVO80YeG5ot+Bk1bl1iVfNGoA+gsGr29V5HodpfeSRvz5eYUtTfUKDBqjmV9kCvJwn7
-         xac0i/EWT1+/zeGZ31mLdvA5BYUbQMrmeWtgU5NwDAyiZ+BeaK4kM+xXU/YHtSmd0XQr
-         kRJ43o2uju6zCPXoUQ8aYTtFs2L8UVvnXUAHO34S/KuRKxdslM0Hzwtd+eKLgWth0G+t
-         wHtg==
-X-Gm-Message-State: ANhLgQ1D/JFtLr51dL7JGAfXJC+1Zc+0YDt+o5RiInOZUOx9lEiyzTEL
-        1Xmu9x58dCwKCbw78JQ9s3E=
-X-Google-Smtp-Source: ADFU+vvG0/OMmV3QMr8IkYw11Tdp20RKzY0vxktD6SyERQOVBnrAsYwXlvOx1yYNLDpSlAf/Rcx9ww==
-X-Received: by 2002:aca:cf8a:: with SMTP id f132mr1375989oig.151.1585648406904;
-        Tue, 31 Mar 2020 02:53:26 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id t4sm4387340otm.45.2020.03.31.02.53.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 02:53:25 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 02:53:23 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dirk Mueller <dmueller@suse.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5.5 102/170] scripts/dtc: Remove redundant YYLOC global
- declaration
-Message-ID: <20200331095323.GA32667@ubuntu-m2-xlarge-x86>
-References: <20200331085423.990189598@linuxfoundation.org>
- <20200331085435.053942582@linuxfoundation.org>
+        bh=OhHn08M8/D8HCM9gjXRbI/j0PhmAwA3tYAp3gRgxrKk=;
+        b=qfBNUbcbHxNKTH3tp86gb0/BWysLF7QEpcAm6XHTs+C5M462q2VxeS8OpKkVJ3bA1h
+         h0LRQ5zXQzmRvs5Sh9Dc6GIPZ+hCoArIsafUg+gIQYZz7wVRV8l76BhJNJrqw6VEEDiY
+         ktnRRZmBEZJku9HMxm45xOtBlnpKwXornjOnlFhz60WzrSEyx/I8bF9NUflaBWq79eOG
+         NsENh2s09QliQiGO91BLSnKJLO/f3Two2w0a97Sjh8MmOPr7ABNhCxu2tLdO8IT/Yxs2
+         m6pJNaSBt9S4+QPu6nI3dCcp7myluDUy4LJ8En0t7YkzMjLL5vJtq+z+fwNarlk5V8Nk
+         5/IQ==
+X-Gm-Message-State: AGi0PuZ9SaC+lbGKRngEJwuv8WZGhy8Mxn+x31QC4XAQaGTCZ0AmTwJB
+        8b8hUA02LYveYrPxrvWBADE=
+X-Google-Smtp-Source: APiQypKviN8/GNUryvnwnsY+oU28GHx/wV6pyb4CAI4uheoqqx5DsQb2OaoNtRTW26FnN4BK6da7gA==
+X-Received: by 2002:a63:8ac3:: with SMTP id y186mr4395435pgd.277.1585648552952;
+        Tue, 31 Mar 2020 02:55:52 -0700 (PDT)
+Received: from Asurada (c-73-162-191-63.hsd1.ca.comcast.net. [73.162.191.63])
+        by smtp.gmail.com with ESMTPSA id mq6sm1626110pjb.38.2020.03.31.02.55.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Mar 2020 02:55:52 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 02:55:34 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 1/7] ASoC: dt-bindings: fsl_asrc: Add new property
+ fsl,asrc-format
+Message-ID: <20200331095534.GA2976@Asurada>
+References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+ <24f69c50925b93afd7a706bd888ee25d27247c78.1583725533.git.shengjiu.wang@nxp.com>
+ <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
+ <20200320173213.GA9093@bogus>
+ <20200323212038.GA7527@Asurada-Nvidia.nvidia.com>
+ <CAA+D8APu0JYqnUvY+fCYTcZ9U1BCv-zU8J4Zt-5doZcNkgaXFQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331085435.053942582@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAA+D8APu0JYqnUvY+fCYTcZ9U1BCv-zU8J4Zt-5doZcNkgaXFQ@mail.gmail.com>
+User-Agent: Mutt/1.5.22 (2013-10-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:58:36AM +0200, Greg Kroah-Hartman wrote:
-> From: Dirk Mueller <dmueller@suse.com>
+On Tue, Mar 31, 2020 at 10:28:25AM +0800, Shengjiu Wang wrote:
+> Hi
 > 
-> commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
-> 
-> gcc 10 will default to -fno-common, which causes this error at link
-> time:
-> 
->   (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-> 
-> This is because both dtc-lexer as well as dtc-parser define the same
-> global symbol yyloc. Before with -fcommon those were merged into one
-> defintion. The proper solution would be to to mark this as "extern",
-> however that leads to:
-> 
->   dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
->    26 | extern YYLTYPE yylloc;
->       |                ^~~~~~
-> In file included from dtc-lexer.l:24:
-> dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
->   127 | extern YYLTYPE yylloc;
->       |                ^~~~~~
-> cc1: all warnings being treated as errors
-> 
-> which means the declaration is completely redundant and can just be
-> dropped.
-> 
-> Signed-off-by: Dirk Mueller <dmueller@suse.com>
-> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-> [robh: cherry-pick from upstream]
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  scripts/dtc/dtc-lexer.l |    1 -
->  1 file changed, 1 deletion(-)
-> 
-> --- a/scripts/dtc/dtc-lexer.l
-> +++ b/scripts/dtc/dtc-lexer.l
-> @@ -23,7 +23,6 @@ LINECOMMENT	"//".*\n
->  #include "srcpos.h"
->  #include "dtc-parser.tab.h"
->  
-> -YYLTYPE yylloc;
->  extern bool treesource_error;
->  
->  /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-> 
-> 
+> On Tue, Mar 24, 2020 at 5:22 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> >
+> > On Fri, Mar 20, 2020 at 11:32:13AM -0600, Rob Herring wrote:
+> > > On Mon, Mar 09, 2020 at 02:19:44PM -0700, Nicolin Chen wrote:
+> > > > On Mon, Mar 09, 2020 at 11:58:28AM +0800, Shengjiu Wang wrote:
+> > > > > In order to support new EASRC and simplify the code structure,
+> > > > > We decide to share the common structure between them. This bring
+> > > > > a problem that EASRC accept format directly from devicetree, but
+> > > > > ASRC accept width from devicetree.
+> > > > >
+> > > > > In order to align with new ESARC, we add new property fsl,asrc-format.
+> > > > > The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> > > > > can accept format from devicetree, don't need to convert it to
+> > > > > format through width.
+> > > > >
+> > > > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 5 +++++
+> > > > >  1 file changed, 5 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > > > index cb9a25165503..780455cf7f71 100644
+> > > > > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > > > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > > > @@ -51,6 +51,11 @@ Optional properties:
+> > > > >                     will be in use as default. Otherwise, the big endian
+> > > > >                     mode will be in use for all the device registers.
+> > > > >
+> > > > > +   - fsl,asrc-format     : Defines a mutual sample format used by DPCM Back
+> > > > > +                   Ends, which can replace the fsl,asrc-width.
+> > > > > +                   The value is SNDRV_PCM_FORMAT_S16_LE, or
+> > > > > +                   SNDRV_PCM_FORMAT_S24_LE
+> > > >
+> > > > I am still holding the concern at the DT binding of this format,
+> > > > as it uses values from ASoC header file instead of a dt-binding
+> > > > header file -- not sure if we can do this. Let's wait for Rob's
+> > > > comments.
+> > >
+> > > I assume those are an ABI as well, so it's okay to copy them unless we
+> >
+> > They are defined under include/uapi. So I think we can use them?
+> >
+> > > already have some format definitions for DT. But it does need to be copy
+> > > in a header under include/dt-bindings/.
+> >
+> > Shengjiu is actually quoting those integral values, rather than
+> > those macros, so actually no need copy to include/dt-bindings,
+> > yet whoever adds this format property to a new DT would need to
+> > look up the value in a header file under include/uapi. I's just
+> > wondering if that's okay.
+> >
+> > Thanks
+> Shall I keep this change or drop this change?
 
-Hi Greg,
+This version of patch defines the format using those two marcos.
+So what Rob suggested is to copy those defines from uapi header
+file to dt-bindings folder. But you don't intend to do that?
 
-Replying here simply because I am not subscribed to the stable-commits
-mailing list and there does not appear to be an easy way to reply to one
-of those emails through the existing archives because they are not as
-nice as lore.kernel.org.
-
-This patch is fine for the current releases in review but 4.4, 4.9, and
-4.14 need to have the patch applied to scripts/dtc/dtc-lexer.lex.c_shipped
-because prior to commit e039139be8c2 ("scripts/dtc: generate lexer and
-parser during build instead of shipping"), that was the file that was
-being built. Running the command below in the stable-queue repo works
-for me and I have tested all of the patches to make sure they still
-apply (albeit with some fuzz).
-
-$ sed -i 's;scripts/dtc/dtc-lexer.l;scripts/dtc/dtc-lexer.lex.c_shipped;g' \
-queue-{4.4,4.9,4.14}/scripts-dtc-remove-redundant-yyloc-global-declaration.patch
-
-If you would prefer a set of patches, let me know.
-
-Cheers,
-Nathan
+My follow-up mail is to find if using integral values is doable.
+Yet, not seeing any reply further. I think you can make a choice
+to send it -- We will see how Rob acks eventually, or not.
