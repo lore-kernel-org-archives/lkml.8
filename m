@@ -2,114 +2,124 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C004C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6AFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E0B207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C0A207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:56:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="SRrMxw42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgCaI4d (ORCPT
+        id S1730304AbgCaI4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:56:33 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36209 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726299AbgCaI4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:56:32 -0400
-IronPort-SDR: mK8ECY0m5cs7ahrKu5XgV9tcD46HGCq/RJ42PUfw3ECl9OvO/Qfzce63cR18iy6v1gZ/Rx83Ea
- PAXeaDxpNI7w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 01:56:31 -0700
-IronPort-SDR: rY2Lz/HrtN4L05LwqCHEIGPro6fjbVG88EiP8Yy2Btzm2jo0QEIOOymxovM50kXXzqYHbexX0Z
- aYptoeE+mgFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="450093037"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.23])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Mar 2020 01:56:28 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zi Yan <ziy@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: [PATCH] /proc/PID/smaps: Add PMD migration entry parsing
-Date:   Tue, 31 Mar 2020 16:56:04 +0800
-Message-Id: <20200331085604.1260162-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 31 Mar 2020 04:56:49 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41314 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730161AbgCaI4s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:56:48 -0400
+Received: by mail-ed1-f68.google.com with SMTP id v1so24148077edq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 01:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=naz5vFiOyfqlYWnFE99McWHBp3JuwM6PJW7GvvgW6Cc=;
+        b=SRrMxw42id0lcjITOkFTm2e3NqOUSpRQCBgX9s9jnPN2a4QIoRIquUmMdmA0BMf4Xp
+         U9VQN9PleCKPt5lfXlorjcO0kIf7U2qTLno3a5/zbtdGi6/2rue+eSwXvWzUkQQ0e/+T
+         wx6QHGfcYE219bRqR+z8DEBh5rBLCib4PDNcg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=naz5vFiOyfqlYWnFE99McWHBp3JuwM6PJW7GvvgW6Cc=;
+        b=MwbZBygwphHWh9lU0vMqfpfFTTGlsNneAU5OkfAvWW1vcy+eowAXCiTPcglC4FpC/9
+         DwB7mbr/HslBfRjRHtEQguqDle2wLZC0M+ykY/nNbhT3GuARqsaVcdirtReAPXBUUA3D
+         Du9c8Hn77jj/5oOgGkvlkqFnM0RP0l61zQhz8TTLJckNFS9/c+BrxcLs0mj03utdEuGq
+         lrOvOpX9SkCG1RTNTvsXD1L0S1QOYwGXSPa9C1QuGq4OLqj66hGDKK/z4Do3JM//KyDz
+         QeUx/VrIy9/Fnpe8AMIfMooWJZhOdEzU3ypKTKQejMllKQ6g85evvRcacwlD6Kd6ldYA
+         rT9w==
+X-Gm-Message-State: ANhLgQ2lKlgVSajZMwlwru5davJAR+hoI1vGrPP3VHgEvocMwx8wIIYE
+        yJx68qcsSeSdrafVi7KyqiUCEbNmendnbjHqeiexug==
+X-Google-Smtp-Source: ADFU+vuc3wwrmQlPzGgTvWh3b6LAUponQqY+y346aNWSjswhKCEVIqgH877rVN/HXD7gX3ps66sOeJ/wC9Whp3TCFTQ=
+X-Received: by 2002:a17:906:848d:: with SMTP id m13mr14671902ejx.348.1585645006637;
+ Tue, 31 Mar 2020 01:56:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1445647.1585576702@warthog.procyon.org.uk> <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+ <CAJfpegtjmkJUSqORFv6jw-sYbqEMh9vJz64+dmzWhATYiBmzVQ@mail.gmail.com> <20200331083430.kserp35qabnxvths@ws.net.home>
+In-Reply-To: <20200331083430.kserp35qabnxvths@ws.net.home>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 31 Mar 2020 10:56:35 +0200
+Message-ID: <CAJfpegsNpabFwoLL8HffNbi_4DuGMn4eYpFc6n7223UFnEPAbA@mail.gmail.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+To:     Karel Zak <kzak@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+On Tue, Mar 31, 2020 at 10:34 AM Karel Zak <kzak@redhat.com> wrote:
+>
+> On Tue, Mar 31, 2020 at 07:11:11AM +0200, Miklos Szeredi wrote:
+> > On Mon, Mar 30, 2020 at 11:17 PM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> >
+> > > Fwiw, putting down my kernel hat and speaking as someone who maintains
+> > > two container runtimes and various other low-level bits and pieces in
+> > > userspace who'd make heavy use of this stuff I would prefer the fd-based
+> > > fsinfo() approach especially in the light of across namespace
+> > > operations, querying all properties of a mount atomically all-at-once,
+> >
+> > fsinfo(2) doesn't meet the atomically all-at-once requirement.
+>
+> I guess your /proc based idea have exactly the same problem...
 
-Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
-ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
-is added.
+Yes, that's exactly what I wanted to demonstrate: there's no
+fundamental difference between the two API's in this respect.
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
----
- fs/proc/task_mmu.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+> I see two possible ways:
+>
+> - after open("/mnt", O_PATH) create copy-on-write object in kernel to
+>   represent mount node -- kernel will able to modify it, but userspace
+>   will get unchanged data from the FD until to close()
+>
+> - improve fsinfo() to provide set (list) of the attributes by one call
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 8d382d4ec067..b5b3aef8cb3b 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -548,8 +548,17 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 	bool locked = !!(vma->vm_flags & VM_LOCKED);
- 	struct page *page;
- 
--	/* FOLL_DUMP will return -EFAULT on huge zero page */
--	page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
-+	if (pmd_present(*pmd)) {
-+		/* FOLL_DUMP will return -EFAULT on huge zero page */
-+		page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
-+	} else if (unlikely(is_swap_pmd(*pmd))) {
-+		swp_entry_t entry = pmd_to_swp_entry(*pmd);
-+
-+		VM_BUG_ON(!is_migration_entry(entry));
-+		page = migration_entry_to_page(entry);
-+	} else {
-+		return;
-+	}
- 	if (IS_ERR_OR_NULL(page))
- 		return;
- 	if (PageAnon(page))
-@@ -578,8 +587,7 @@ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
- 
- 	ptl = pmd_trans_huge_lock(pmd, vma);
- 	if (ptl) {
--		if (pmd_present(*pmd))
--			smaps_pmd_entry(pmd, addr, walk);
-+		smaps_pmd_entry(pmd, addr, walk);
- 		spin_unlock(ptl);
- 		goto out;
- 	}
--- 
-2.25.0
+I think we are approaching this from the wrong end.   Let's just
+ignore all of the proposed interfaces for now and only concentrate on
+what this will be used for.
 
+Start with a set of use cases by all interested parties.  E.g.
+
+ - systemd wants to keep track attached mounts in a namespace, as well
+as new detached mounts created by fsmount()
+
+ - systemd need to keep information (such as parent, children, mount
+flags, fs options, etc) up to date on any change of topology or
+attributes.
+
+ - util linux needs to display the topology and state of mounts in the
+system that corresponds to a consistent state that set of mounts
+
+ - etc...
+
+From that we can derive a set of requirements for the API.
+
+Thanks,
+Miklos
