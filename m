@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E0FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686FDC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAA9920658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 359E220658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646439;
-	bh=aajlEBPgsF9TWsTs1qzScjchYnUPHpC5ectjpFA3GQU=;
+	s=default; t=1585646445;
+	bh=QJg5dbPMMfu3F11UcTFkO03F2cyBYQMHfMbgC//ejzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DRvJK2QA/MQh81z4mzDYic/h6mMPahOqLERA2KuVSaf8CfUOLL9YwfApGFxC+v3t5
-	 clb4gDfQIw9RRSI4ID8kfk4opLuAh/7sWQnzWqB1C/MUEs0Jtf82P4WrmsHadQ2qCt
-	 hFVu/C83I8yYv1qfp9ATA4rhW0JAMvDWN97GMXG8=
+	b=UUBWttWakTNulfC6o+bOSQNSdaCP2rwmeI9Ufs7PiblSht0c35XqfyRKDDK62+skL
+	 T4oFlXLGvcqnoXL5XQjSFZ0C64lAkzdVThQrPXxfcuZVOxbrKHJvryyBq68Ig3seAp
+	 fu2iYw/rHZGhbozd2KmUlAyOQ8sGZ2tB+JU9RSIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731077AbgCaJNl (ORCPT
+        id S1731742AbgCaJUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:20:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbgCaJNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:37 -0400
+        id S1730638AbgCaJNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 882222072E;
-        Tue, 31 Mar 2020 09:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6470420772;
+        Tue, 31 Mar 2020 09:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646016;
-        bh=aajlEBPgsF9TWsTs1qzScjchYnUPHpC5ectjpFA3GQU=;
+        s=default; t=1585646019;
+        bh=QJg5dbPMMfu3F11UcTFkO03F2cyBYQMHfMbgC//ejzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Spe4zpPvTB9DHAb8oh1OT31ul677tt4+31g1/X718IXOEU77MrOUA3IcxzZT/XBBp
-         Z4T12+EY8RahL6NCaCBTvIVjheRchenb+gXTrUTMilxy7z6uZbIazoRHU+FBhI6A1K
-         uEKRTHJ0vil5QlzSGLkQIiTR3Afefk+OnM+bySpg=
+        b=LUHE/NjhcLah79x2KTUYRmnVx3EFdjdvRKxG1cH2znbcsluvTxFzBZwxcth6cTdQa
+         LIzmr/8/r4fpRkJAYaP5107dH3xj4Y2TDpw57BBTxC8TcyemrEgO4o0KOBj8CxF59u
+         FH0DbVV9UHFaKFknlcfBl4ydvfyDs4WLOL3vH5aE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Gilbert <floppym@gentoo.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Dajun Jin <adajunjin@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 056/155] cpupower: avoid multiple definition with gcc -fno-common
-Date:   Tue, 31 Mar 2020 10:58:16 +0200
-Message-Id: <20200331085424.859303320@linuxfoundation.org>
+Subject: [PATCH 5.4 057/155] drivers/of/of_mdio.c:fix of_mdiobus_register()
+Date:   Tue, 31 Mar 2020 10:58:17 +0200
+Message-Id: <20200331085424.967560333@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,88 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Gilbert <floppym@gentoo.org>
+From: Dajun Jin <adajunjin@gmail.com>
 
-[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
+[ Upstream commit 209c65b61d94344522c41a83cd6ce51aac5fd0a4 ]
 
-Building cpupower with -fno-common in CFLAGS results in errors due to
-multiple definitions of the 'cpu_count' and 'start_time' variables.
+When registers a phy_device successful, should terminate the loop
+or the phy_device would be registered in other addr. If there are
+multiple PHYs without reg properties, it will go wrong.
 
-./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-multiple definition of `cpu_count';
-./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-first defined here
-...
-./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
-multiple definition of `start_time';
-./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
-first defined here
-
-The -fno-common option will be enabled by default in GCC 10.
-
-Bug: https://bugs.gentoo.org/707462
-Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Dajun Jin <adajunjin@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/of/of_mdio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 3f893b99b337c..555cb338a71a4 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -82,7 +82,7 @@ static struct pci_access *pci_acc;
- static struct pci_dev *amd_fam14h_pci_dev;
- static int nbp1_entered;
- 
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- #ifdef DEBUG
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index f634aeb65c5f6..7fb4f7a291ad5 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -19,7 +19,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
- 
- static unsigned long long **previous_count;
- static unsigned long long **current_count;
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- static int cpuidle_get_count_percent(unsigned int id, double *percent,
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-index d3c3e6e7aa26c..3d54fd4336261 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-@@ -27,6 +27,8 @@ struct cpuidle_monitor *all_monitors[] = {
- 0
- };
- 
-+int cpu_count;
-+
- static struct cpuidle_monitor *monitors[MONITORS_MAX];
- static unsigned int avail_monitors;
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index a2d901d3bfaf9..eafef38f1982e 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -25,7 +25,7 @@
- #endif
- #define CSTATE_DESC_LEN 60
- 
--int cpu_count;
-+extern int cpu_count;
- 
- /* Hard to define the right names ...: */
- enum power_range_e {
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index bd6129db64178..c34a6df712adb 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -268,6 +268,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 				rc = of_mdiobus_register_phy(mdio, child, addr);
+ 				if (rc && rc != -ENODEV)
+ 					goto unregister;
++				break;
+ 			}
+ 		}
+ 	}
 -- 
 2.20.1
 
