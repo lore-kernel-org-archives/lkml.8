@@ -2,144 +2,124 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A002C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3AEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702F820781
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB9820BED
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:11:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="wAFNN/UM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QlxLiCgJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730811AbgCaPLH (ORCPT
+        id S1730935AbgCaPLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:11:07 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:39857 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbgCaPLH (ORCPT
+        Tue, 31 Mar 2020 11:11:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39287 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbgCaPLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:11:07 -0400
-Received: by mail-qv1-f65.google.com with SMTP id v38so11012597qvf.6
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 08:11:06 -0700 (PDT)
+        Tue, 31 Mar 2020 11:11:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p10so26454268wrt.6;
+        Tue, 31 Mar 2020 08:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cL08A4+kp0Y65AGLtqIoipG3SABzeYJkBubqqjwQrYg=;
-        b=wAFNN/UMuvu+vH9ES4W5SFNAVQYgWw45te05ekS4MQu7vEn7mxRosfgjeRbU3HiEAq
-         hUnlFE/DdeULkB891pVk8cdhRoYRQZSTgsAVDJP6Pg/ZtPIN2xPS+7aCiX/i9kpstFZC
-         nI3k03KbtEY+bcIQriZyQl90tTpaRsfj9nIEafKhQ1sxNc1fu3xTpgYwPDmQNRO9MpC+
-         BTqrNwSsj9qOUOdsTvZcPfw35IbXlLcCKCARpsi4Y/nSexlhABrVoP5pWvOPRHZFpltY
-         76ctavOq5D/flZ8NBqsajomS/yb4+k8cLYxHZLXCIIRGpFZm38okEgNvLePyq2IPU0WQ
-         5Xvg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=YYhDTmriCLA8KTnKhlbvHb66ns2uGy0fGvIYDhb16xc=;
+        b=QlxLiCgJlYgom/DQ+81Mmado/IIC3zI4QbaqcNRZL0cypCxeTZLkhFgJ7WL0u7ZLcO
+         6Fdvz6xdSBB8mYb7WtnlRYTQR02tGT241HzNUuBy+eaC1sJouiO2dflPRFL/HOEqMLea
+         +IUIqS9s14KSfBVRbNWCiDC0pTZ5Zx162nPy7Dezp+bHSqJCDBCfjJ91s1sQg8tbs/BZ
+         2WR81KRfzOQ0+FuOz69NvysUm/NT29jreAXXoPO2dGSW+TdoLV1gubqFui0hEzXD21Rj
+         RVRZp4mSvm16hPkvDkBVMgMpjoyKPBNIxEg9bf0FjOgabdzl/5WJWSDMrMS8BFxhGktt
+         hCXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cL08A4+kp0Y65AGLtqIoipG3SABzeYJkBubqqjwQrYg=;
-        b=X7Zn2lpNYhj8TDunEU2WZSn4VEMF+3XxVExlmOiVJuNWKHN+jVkjeupt8DgS9PGPdc
-         GJlEIbUtaskEMhs9cC0Hrs5Li65W7fEeKwHhYUK0bKIU8UfCTEcCTiagm8FsNVEeaMga
-         8NmtvXFgE2K00XcJ6IJLMk2ln3eV8w2TwyfeTLdtoIHqtOBhQpNQ7nNuRuTMe7lkVtPa
-         3kNLwPvwEzbmE2G1gDyubkPrBTrdJgU5+YFOSRPCf4N2rBFZXocKBcv2euamV/wf3jCd
-         WJX0FsO9TodIce1WDE6mb4vIdOaSIilNmcl8ekZ7lc60bMromxd/yew+QKs/BZb+Qdft
-         nyqw==
-X-Gm-Message-State: ANhLgQ2BaLuJ0XknOkwlJgrc9c9uISULkiXHFN3ovM0Bs1UdJCjFA5sh
-        yOavB0lcZBlXi6RrsnqQ8S10lQ==
-X-Google-Smtp-Source: ADFU+vt3LCjS0xkXV3rjTOBSJRA2OF5NbQ3lYcpN2wK4TAg1p0cskQb+ade5qXppPN1vNqf2ot/j1A==
-X-Received: by 2002:ad4:4364:: with SMTP id u4mr16331097qvt.58.1585667465461;
-        Tue, 31 Mar 2020 08:11:05 -0700 (PDT)
-Received: from localhost (70.44.39.90.res-cmts.bus.ptd.net. [70.44.39.90])
-        by smtp.gmail.com with ESMTPSA id t43sm13933859qtc.14.2020.03.31.08.11.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 08:11:04 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 11:11:03 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        mgorman@suse.de, Steven Rostedt <rostedt@goodmis.org>,
-        mingo@redhat.com, Linux MM <linux-mm@kvack.org>,
-        linux-block@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] psi: enhance psi with the help of ebpf
-Message-ID: <20200331151103.GB2089@cmpxchg.org>
-References: <1585221127-11458-1-git-send-email-laoar.shao@gmail.com>
- <20200326143102.GB342070@cmpxchg.org>
- <CALOAHbCe9msQ+7uON=7iXnud-hzDcrnz_2er4PMQRXtNLM2BSQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=YYhDTmriCLA8KTnKhlbvHb66ns2uGy0fGvIYDhb16xc=;
+        b=Vo9j0+/kEjw5YdoWjVOjtyhUM2A5xTNAfh9eiOstCeVYXQfrbwU8FgM7zP+BIgVREw
+         2IXGWJOQSh1McMGTA02fzJRURNctq3OuDm3b9N52MqFt1Bb0QEyMWEO6XsHJeo7sn07o
+         hnK6YstkElqbtEQQ+bbxRmkQ/17tp5BgOCgjzJVt3ZPoIJD9xtYZZfXiFd6bG4oAzOSI
+         k+bbVe+36GmTA5TTvIScu4+GYFjiejzOJqUT7GQ7Z8WXcdwn9kglMB1RuKsngDfEOAjX
+         8T4VfM0srGSU+7EDmEoNIWl0pudlRVLokzsXD5j9L8ib/99c1TxXZTeBYpzeKDRQhCjO
+         s38Q==
+X-Gm-Message-State: ANhLgQ2eMV7R/cpqiTyzAFqmAcDiP886005PxpXX6xHVHL7FfelY4QDF
+        fwroHm/14Ub5RaY4NoOG4HlXBWa4FysbisfvQnc=
+X-Google-Smtp-Source: ADFU+vtP4vt6oMeO5LfNYEDj0gjnca9MI09Sub6Coviiad1q1qVMRL79d9Dmr78UBhMmNMy5fyf9s9gtLFi1o9ULx3U=
+X-Received: by 2002:adf:ef51:: with SMTP id c17mr20737459wrp.130.1585667494944;
+ Tue, 31 Mar 2020 08:11:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbCe9msQ+7uON=7iXnud-hzDcrnz_2er4PMQRXtNLM2BSQ@mail.gmail.com>
+References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
+ <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com>
+In-Reply-To: <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 31 Mar 2020 17:11:35 +0200
+Message-ID: <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and initramfs
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Nick Terrell <nickrterrell@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 09:17:59AM +0800, Yafang Shao wrote:
-> On Thu, Mar 26, 2020 at 10:31 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+On Tue, Mar 31, 2020 at 6:15 AM Nick Terrell <terrelln@fb.com> wrote:
+
+[...]
+
+> > Do you plan to push this for Linux v5.7?
+>
+> I hope that it will be accepted. From my point of view this patch set is
+> ready for merge, except for the maximum window size increase
+> requested by Petr.
+>
+
+Hi Nick,
+
+thanks for your answer.
+
+Did you send out a pull-request already?
+
+Can you point me to that request or patch of Petr?
+Is it relevant or optional for the pull-request?
+
+> > Feel free to add credits for the whole series:
 > >
-> > On Thu, Mar 26, 2020 at 07:12:05AM -0400, Yafang Shao wrote:
-> > > PSI gives us a powerful way to anaylze memory pressure issue, but we can
-> > > make it more powerful with the help of tracepoint, kprobe, ebpf and etc.
-> > > Especially with ebpf we can flexiblely get more details of the memory
-> > > pressure.
-> > >
-> > > In orderc to achieve this goal, a new parameter is added into
-> > > psi_memstall_{enter, leave}, which indicates the specific type of a
-> > > memstall. There're totally ten memstalls by now,
-> > >         MEMSTALL_KSWAPD
-> > >         MEMSTALL_RECLAIM_DIRECT
-> > >         MEMSTALL_RECLAIM_MEMCG
-> > >         MEMSTALL_RECLAIM_HIGH
-> > >         MEMSTALL_KCOMPACTD
-> > >         MEMSTALL_COMPACT
-> > >         MEMSTALL_WORKINGSET_REFAULT
-> > >         MEMSTALL_WORKINGSET_THRASHING
-> > >         MEMSTALL_MEMDELAY
-> > >         MEMSTALL_SWAPIO
-> >
-> > What does this provide over the events tracked in /proc/vmstats?
-> >
-> 
-> /proc/vmstat only tells us which events occured, but it can't tell us
-> how long these events take.
-> Sometimes we really want to know how long the event takes and PSI can
-> provide us the data
-> For example, in the past days when I did performance tuning for a
-> database service, I monitored that the latency spike is related with
-> the workingset_refault counter in /proc/vmstat, and at that time I
-> really want to know the spread of latencies caused by
-> workingset_refault, but there's no easy way to get it. Now with newly
-> added MEMSTALL_WORKINGSET_REFAULT, I can get the latencies caused by
-> workingset refault.
+> >   Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+>
+> Thanks for testing the patch set Sedat!
+>
 
-Okay, but how do you use that information in practice?
+I have re-tested zstd-v3 patchset with Linux version 5.6 final and
+Clang/LLD version 10.0.0 final (from Debian/unstable repository).
 
-> > Can you elaborate a bit how you are using this information? It's not
-> > quite clear to me from the example in patch #2.
-> >
-> 
-> From the traced data in patch #2, we can find that the high latencies
-> of user tasks are always type 7 of memstall , which is
-> MEMSTALL_WORKINGSET_THRASHING,  and then we should look into the
-> details of wokingset of the user tasks and think about how to improve
-> it - for example, by reducing the workingset.
+Is it possible to mention that there might distro-specific changes
+needed to initramfs-handling?
+For Debian you are welcome to include below Link [1].
+Not sure I will send/ask to/on the debian-kernel mailing list in this topic.
 
-That's an analyses we run frequently as well: we see high pressure,
-and then correlate it with the events.
+Thanks and bonne chance.
 
-High rate of refaults? The workingset is too big.
+Regards,
+- Sedat -
 
-High rate of compaction work? Somebody is asking for higher order
-pages under load; check THP events next.
-
-etc.
-
-This works fairly reliably. I'm curious what the extra per-event
-latency breakdown would add and where it would be helpful.
-
-I'm not really opposed to your patches it if it is, I just don't see
-the usecase right now.
+[1] LINK: https://lore.kernel.org/lkml/CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com/
