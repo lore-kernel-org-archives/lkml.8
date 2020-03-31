@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C45C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CBFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2CD220675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2FC208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646274;
-	bh=An0gNQn7YMvXnKeG9BQYZZh6VW6cJv6Egsntd0dEeoc=;
+	s=default; t=1585646277;
+	bh=TeARL0MEysMl1kXo3PO6VsWf6KiLr0xQ30CuSJnkSGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dfqbi76b1hnFGEjQ4y70vsBS8taKSR3yJj3pj796et9qH5HHebdHSdkN7EKKTn0zL
-	 xSNw/HrqeV/neMn2HyGazDWyvDHZk8rHtGqVJwUOWdX4YpVNxPWUt4AVyqPTN/McWc
-	 PzNWwpEavJbP8EUf4xr8NsLhaJOmWKzlKfyRswmI=
+	b=sh/WyOF4sZisVvMPXj+rYUT/+DbSeybIYD8W0gperjbR1GuajBD1diluGsKvwikpv
+	 Po4qnlWT1CSiqj6eOUCBIDQf2nJdmR7wtqCRlRE0vGtyZ1Tx4v856OYsNWpi5EM9Zn
+	 dnqROIEwIf6cJLlIEu7wxp0y0dicjeNzqgnva0mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731983AbgCaJRw (ORCPT
+        id S1731856AbgCaJRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:17:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730819AbgCaJRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:17:49 -0400
+        id S1731899AbgCaJRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:17:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10BAF20772;
-        Tue, 31 Mar 2020 09:17:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B453320772;
+        Tue, 31 Mar 2020 09:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646269;
-        bh=An0gNQn7YMvXnKeG9BQYZZh6VW6cJv6Egsntd0dEeoc=;
+        s=default; t=1585646272;
+        bh=TeARL0MEysMl1kXo3PO6VsWf6KiLr0xQ30CuSJnkSGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LL8cwkBjGeMgnmxDFmvWl94+wXoXugEt1GeUTUl/xny/uRCEiTSrR/IcdCvSkMgWd
-         CzMZ8P4i0otfPuVM4cQnl0fN/k2nVjjvhYR4ZsP+kVXUGgYf++gIK31NUppkS9nFVT
-         ysUIDASdYRP7yp4L3P6POny1P+XgRISjcsiLMlaY=
+        b=K2ytdZTf00jtoSGJFZa634uwCr/hpj3IdPLhr3rA0wxxthvoYSSxeyuhb/EJ02szk
+         qLF6yeq9DqfX002mPJfCwLHulN3EyEe5k9xGBWJWKBuPqEmp03tEqYfjLqsM+1cUeG
+         dGdXZ3Bsm3bUOXQx8bbBCRALTbluTdV12Aniq0jU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 5.4 133/155] vti6: Fix memory leak of skb if input policy check fails
-Date:   Tue, 31 Mar 2020 10:59:33 +0200
-Message-Id: <20200331085433.186362372@linuxfoundation.org>
+        stable@vger.kernel.org, Chih-Wei Huang <cwhuang@android-x86.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 134/155] r8169: fix PHY driver check on platforms w/o module softdeps
+Date:   Tue, 31 Mar 2020 10:59:34 +0200
+Message-Id: <20200331085433.273204395@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,39 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit 2a9de3af21aa8c31cd68b0b39330d69f8c1e59df upstream.
+commit 2e8c339b4946490a922a21aa8cd869c6cfad2023 upstream.
 
-The vti6_rcv function performs some tests on the retrieved tunnel
-including checking the IP protocol, the XFRM input policy, the
-source and destination address.
+On Android/x86 the module loading infrastructure can't deal with
+softdeps. Therefore the check for presence of the Realtek PHY driver
+module fails. mdiobus_register() will try to load the PHY driver
+module, therefore move the check to after this call and explicitly
+check that a dedicated PHY driver is bound to the PHY device.
 
-In all but one places the skb is released in the error case. When
-the input policy check fails the network packet is leaked.
-
-Using the same goto-label discard in this case to fix this problem.
-
-Fixes: ed1efb2aefbb ("ipv6: Add support for IPsec virtual tunnel interfaces")
-Signed-off-by: Torsten Hilbrich <torsten.hilbrich@secunet.com>
-Reviewed-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: f32593773549 ("r8169: check that Realtek PHY driver module is loaded")
+Reported-by: Chih-Wei Huang <cwhuang@android-x86.org>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv6/ip6_vti.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/realtek/r8169_main.c |   16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -311,7 +311,7 @@ static int vti6_rcv(struct sk_buff *skb)
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -6903,6 +6903,13 @@ static int r8169_mdio_register(struct rt
+ 	if (!tp->phydev) {
+ 		mdiobus_unregister(new_bus);
+ 		return -ENODEV;
++	} else if (!tp->phydev->drv) {
++		/* Most chip versions fail with the genphy driver.
++		 * Therefore ensure that the dedicated PHY driver is loaded.
++		 */
++		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
++		mdiobus_unregister(new_bus);
++		return -EUNATCH;
+ 	}
  
- 		if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb)) {
- 			rcu_read_unlock();
--			return 0;
-+			goto discard;
- 		}
+ 	/* PHY will be woken up in rtl_open() */
+@@ -7064,15 +7071,6 @@ static int rtl_init_one(struct pci_dev *
+ 	int chipset, region;
+ 	int jumbo_max, rc;
  
- 		ipv6h = ipv6_hdr(skb);
+-	/* Some tools for creating an initramfs don't consider softdeps, then
+-	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
+-	 * PHY driver is used that doesn't work with most chip versions.
+-	 */
+-	if (!driver_find("RTL8201CP Ethernet", &mdio_bus_type)) {
+-		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
+-		return -ENOENT;
+-	}
+-
+ 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
+ 	if (!dev)
+ 		return -ENOMEM;
 
 
