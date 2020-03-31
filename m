@@ -2,170 +2,124 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42079C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB098C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5F5206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4762206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E99eDqdY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BieI9KA7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgCaUKU (ORCPT
+        id S1731159AbgCaUKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:10:20 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52626 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbgCaUKT (ORCPT
+        Tue, 31 Mar 2020 16:10:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41568 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727720AbgCaUKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:10:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t8so575523wmi.2;
-        Tue, 31 Mar 2020 13:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1ImEIaV3nXuK6yquJu5EukWx7JhTMru+TXwYXIQyAaI=;
-        b=E99eDqdY4HJGId13EKiYbpscE70iR0/OVbLNeuthXDg+Ohbo2KcDauSJWxb0ASyQVv
-         pYtqeU24eUsVwyzRPse4B/iCch2Uk9Y2SgI4Urh/RqfciqNNJz5AAtNXjBb+O+yrWJ6n
-         bgO8T3NBS3UUQ4W0W5Yma8lcQAgrKjzdJd6kAaRhhEd3taqRjHXaeFGY7CGu/qRIm4fS
-         CkdIntsYlG7ZeuCFx7F497Cg6xjaEv7c1TW3+rAaY40LzE5GnDeNjFKdoF1lF65yy4FC
-         DQOzN0AmTrCs8/iKrv5BoJ2QUvZTPDuBfqL4xq54WOFRzvOUeBfPrWOIYZ/0u6oAtGT3
-         oEbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1ImEIaV3nXuK6yquJu5EukWx7JhTMru+TXwYXIQyAaI=;
-        b=hBgt/p88NmAwj2H0O4K9CXBSIWZfmp0jZX8zFihdWy+RGDUA/RQ4QkFe6AQ1ZWO6IB
-         F1Xmc7mzxtxvmc126x6zEZf+BSDSHP0TIn7aitaK3dntbkD9G7VtlZF7IFe/rkuZBENl
-         5ZRSVfc9nfZvFoT3OaNfNRmuBw9Aglljsc90up6p9Kyef/U0A19Y49w+f9HB7mZGErZm
-         jG0Udq6vcsi2JDGk3JeKP7YbkDOv4Lh69vLxv3VwVU8Pyt5XeyBHikTfVSOGuMbEFIY2
-         h1pK6e+j/c3FuOBCvm+MzoVc57pFrrWmsbyXurQOuUpz9B3jVxJOSAkTXcPyf/2v/YEJ
-         KRZg==
-X-Gm-Message-State: AGi0Pub4jO/GqjgiPhtQRvjgG7JTscOrGXrvsnd5I/YA3cxIgMyablVV
-        rDs65gMYBWKdMO1e/BRlnKA=
-X-Google-Smtp-Source: APiQypIXhVEBSl058ScHcaAUhfncpA1Z+DlZ2N/DTT5Emn6Kqlx3gbOH/lW9gKvpR8ZCm0MkBthHrg==
-X-Received: by 2002:a05:600c:2294:: with SMTP id 20mr565380wmf.130.1585685416991;
-        Tue, 31 Mar 2020 13:10:16 -0700 (PDT)
-Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
-        by smtp.gmail.com with ESMTPSA id w9sm30494935wrk.18.2020.03.31.13.10.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:10:15 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 22:10:14 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200331201014.GA2954599@ulmo>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <638d7136-6a74-8069-5331-b2248c948ed4@ti.com>
+        Tue, 31 Mar 2020 16:10:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585685420;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9tiFegyAVmmAr1Blf/zEd5Ozn4gaTM1GAemIQes9+TA=;
+        b=BieI9KA7faroJ6Y4BsBcj8VOmTdWhL24yZLN2NVJZ2rU4ELM8s0MIRcL9HVL1ZTNXef0IE
+        vD07PSvnci/q54V1J6lvt4xw/oWF6DrqHr9bd19Elw6XlmL1ChEap+ZuYlBs9v+2GSyDck
+        shv5cryf8Rj2oi0eaBt8TACrbPOc6hk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-422-1tFIgNMfN5aGcZnHSE4dlg-1; Tue, 31 Mar 2020 15:40:27 -0400
+X-MC-Unique: 1tFIgNMfN5aGcZnHSE4dlg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2260DB6F;
+        Tue, 31 Mar 2020 19:40:26 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-118-184.phx2.redhat.com [10.3.118.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3339160BE0;
+        Tue, 31 Mar 2020 19:40:21 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 595FB220291; Tue, 31 Mar 2020 15:40:20 -0400 (EDT)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     virtio-fs@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, vgoyal@redhat.com, aarcange@redhat.com,
+        dhildenb@redhat.com
+Subject: [RFC PATCH 0/4] kvm,x86,async_pf: Add capability to return page fault error 
+Date:   Tue, 31 Mar 2020 15:40:07 -0400
+Message-Id: <20200331194011.24834-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
-Content-Disposition: inline
-In-Reply-To: <638d7136-6a74-8069-5331-b2248c948ed4@ti.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Current page fault logic in kvm seems to assume that host will always
+be able to successfully resolve page fault soon or later. There does not
+seem to be any mechanism for hypervisor to return an error say -EFAULT
+to guest.
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We are writing DAX support for virtiofs filesystem. This will allow
+directly mapping host page cache page into guest user space process.
 
-On Tue, Mar 31, 2020 at 08:59:47PM +0530, Lokesh Vutla wrote:
-> Hi Thierry,
->=20
-> On 30/03/20 7:44 PM, Thierry Reding wrote:
-> > On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> >> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> >>> Only the Timer control register(TCLR) cannot be updated when the timer
-> >>> is running. Registers like Counter register(TCRR), loader register(TL=
-DR),
-> >>> match register(TMAR) can be updated when the counter is running. Since
-> >>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> >>> timer for period/duty_cycle update.
-> >>
-> >> I'm not sure what is sensible here. Stopping the PWM for a short period
-> >> is bad, but maybe emitting a wrong period isn't better. You can however
-> >> optimise it if only one of period or duty_cycle changes.
-> >>
-> >> @Thierry, what is your position here? I tend to say a short stop is
-> >> preferable.
-> >=20
-> > It's not clear to me from the above description how exactly the device
-> > behaves, but I suspect that it may latch the values in those registers
-> > and only update the actual signal output once a period has finished. I
-> > know of a couple of other devices that do that, so it wouldn't be
-> > surprising.
-> >=20
-> > Even if that was not the case, I think this is just the kind of thing
-> > that we have to live with. Sometimes it just isn't possible to have all
-> > supported devices adhere strictly to an API. So I think the best we can
-> > do is have an API that loosely defines what's supposed to happen and
-> > make a best effort to implement those semantics. If a device deviates
-> > slightly from those expectations, we can always cross fingers and hope
-> > that things still work. And it looks like they are.
-> >=20
-> > So I think if Lokesh and Tony agree that this is the right thing to do
-> > and have verified that things still work after this, that's about as
-> > good as it's going to get.
->=20
-> Yes this is needed especially in the use-case[0] that I am trying to enab=
-le
-> using PWM. In this case PWM cannot be stopped in between and needs to be =
-updated
-> dynamically. Also hardware doesn't provide any restrictions on updating t=
-he
-> period. So IMHO, this might be the right thing to do.
->=20
-> Tony did provide tested-by and I measured PWM signals on scope with these
-> changes. Let me know if any thing else is required?
->=20
-> [0] https://sourceforge.net/p/linuxptp/mailman/message/36943248/
+This mechanism now needs additional support from kvm where a page
+fault error needs to be propagated back into guest. For example, say
+guest process mmaped a file (and this did an mmap of portion of file
+on host into qemu address space). Now file gets truncated and guest
+process tries to access mapped region. It will generate page fault
+in host and it will try to map the file page. But page is not there
+any more so it will get back -EFAULT. But there is no mechanism to
+send this information back to guest and currently host sends PAGE_READY
+to guest, guest retries and fault happens again and host tries to
+resolve page fault again and this becomes an infinite loop.
 
-=46rom you measurements, can you tell whether or not the signal actually
-gets updated in the middle of a period, or does it only get updated at
-the end of a full period?
+This is an RFC patch series which tries to extend async page fault
+mechanism to also be able to communicate back that an error occurred
+while resolving the page fault. Then guest can send SIGBUS to guest
+process accessing the truncated portion of file. Or if access happened
+in guest kernel, then it can try to fixup the exception and jump
+to error handling portion if there is one. =20
 
-Does the reference manual document this?
+This patch series tries to solve it only for x86 architecture on intel
+vmx only. Also it does not solve the problem for nested virtualization.
 
-Thierry
+Is extending async page fault mechanism to report error back to
+guest is right thing to do? Or there needs to be another way.
 
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature; name="signature.asc"
+Any feedback or comments are welcome.=20
 
------BEGIN PGP SIGNATURE-----
+Thanks
+Vivek
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6Do6YACgkQ3SOs138+
-s6GpWw/9En4Lm+RFouT2oX8bU3PqB2/Osqii7EKJN3vMtai+xafLPW9dtxA4SKqv
-+YwY883PKm0oRZZIdXu7Ul+3d01c+oMD4BA6DqQkUbi9UUd4an+Dk+lYLsy6iIjc
-4xx2ntB7GD5zpNXBqMJuU91nQ5bDiaKhp7UuwE+unO4QslHephbnyV5QGxWAUEOC
-FP+f8WBPIm/xmwNGWkgVVOrmWDPptJFLSL0j0nBGB4En9Gm7hAaNnVPJUNUeuUE2
-iNBV27uNrREKX6zUumZvTWzSABA8Cx6zd8/nA2Hra+PO2LmmDfdpl3dKqZDXuu8b
-luR+Cm0DFXpAC+3xuTD50pYqN0fWB5POvXvqBb3eZxpXd8z8vAdypgvmJi/gqb4P
-8jPgMdkeO/6ilLphZMLfyvl1AfcBp5XtZ0V70Uj75mC6MgOZAvbVqcRAT2U4ZGnn
-HI1YY8Ae/QfVqZetuK4sjIrt9h4a60RZ45CFX/+2uAo1imzYHItsk+9NtWSxr2nh
-DrzNK5RW6MfRPfyRMNhpcsbOH0wHuHAhFCDjNSzRpYmXc4C4qb1JFnkzbZng+XP+
-KcYJ1mDsJ1IfU9+mGVowb5QDPb4xo9mfn4TIqNzN0nBLFYInI/bGEz2gRtdfAT+X
-BBimFPPVbr1udSQJGTJ7Ei9wh89lmBdKW39XnVvsjI0407anivQ=
-=SKaG
------END PGP SIGNATURE-----
+Vivek Goyal (4):
+  kvm: Add capability to be able to report async pf error to guest
+  kvm: async_pf: Send faulting gva address in case of error
+  kvm: Always get async page notifications
+  kvm,x86,async_pf: Search exception tables in case of error
 
---BOKacYhQ+x31HxR3--
+ Documentation/virt/kvm/cpuid.rst     |  4 ++
+ Documentation/virt/kvm/msr.rst       | 11 +++--
+ arch/x86/include/asm/kvm_host.h      | 17 ++++++-
+ arch/x86/include/asm/kvm_para.h      | 13 +++---
+ arch/x86/include/asm/vmx.h           |  2 +
+ arch/x86/include/uapi/asm/kvm_para.h | 12 ++++-
+ arch/x86/kernel/kvm.c                | 69 ++++++++++++++++++++++------
+ arch/x86/kvm/cpuid.c                 |  3 +-
+ arch/x86/kvm/mmu/mmu.c               | 12 +++--
+ arch/x86/kvm/vmx/nested.c            |  2 +-
+ arch/x86/kvm/vmx/vmx.c               | 11 ++++-
+ arch/x86/kvm/x86.c                   | 37 +++++++++++----
+ include/linux/kvm_host.h             |  1 +
+ virt/kvm/async_pf.c                  |  6 ++-
+ 14 files changed, 156 insertions(+), 44 deletions(-)
+
+--=20
+2.25.1
+
