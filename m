@@ -2,183 +2,104 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F95C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358A3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D43A20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC90F206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:23:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="Gbl5FLoB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EaAKaR6r"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="msadQkSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgCaAW1 (ORCPT
+        id S1729488AbgCaAXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:22:27 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:53331 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729019AbgCaAW0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:22:26 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id A14415C021F;
-        Mon, 30 Mar 2020 20:22:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 30 Mar 2020 20:22:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        fG/iCWf7UOZXnfH+ATlLs3rRuyP99c7ldOnVHq3HQvQ=; b=Gbl5FLoB0ersamj6
-        fTWJ7s9t7yQC5c1vvNjDiIy1Rh7nO8/6axGqJqMVCIcQIQqBJTYdtS1r8hXs70Em
-        aMCyv/N2OGY1Z/JusrXwcuBuPmNZvq68RcHMORIUBDLTtqMK6DaMazXauziQuexb
-        RSxTPqQzezDUcSlt4OeBSa+XwM+oqLYtLL8rsskbEB30tTAzgT/PLDFwpskxORTa
-        TPkdL+O1FRXnLFU8hkTHzhMjjTys4eznggOqTCbA85lvgeSXclFAjv1VPlqm05P2
-        ca9J8+j7nUx07RcUh8jlihGWfhRkaOX1NfFyGbz+azj2N/Ml8zy+VaxtCKL8x930
-        exro3Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=fG/iCWf7UOZXnfH+ATlLs3rRuyP99c7ldOnVHq3HQ
-        vQ=; b=EaAKaR6r50iNcZLC3ZEQ265a4xQfByjdSv8ReRzb2yykuXxDhdFBzl+Vl
-        eGhEhTic9dHaB+j7PVNUxMKHT+flWvkL5Xtxgd5iADwRwNoKILjXnLrXTbKtjbAm
-        40g3NbDTXVOU/Ltf3vr6PeEU025bv0ToIXPMqYhK0aiSMGEMN3tqySTfqc1qTs7r
-        xuY63tgUYoVOCk5ToG8lVUl45LFa6zJCOjVvYPwgp8G3PS8W3mXZlG5vcVnpVfDN
-        dDtut9dDU2gB4k31nLbrtwqot4Hr2lbBFH1ip1v62NwvHlkalnI6urFOYlmh6XFA
-        KMmhLSzb2lVwKwb3Hp5jBLTUbdWlA==
-X-ME-Sender: <xms:QY2CXrV4Gs3wkmjFbC3E_zal9NJJ20ReO6wYS6TUYpQd5QKgZiEzlw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeiiedgfedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
-    drudeiiedrvdefvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:QY2CXt21U2Z3VhyhAnlOI5oQZQittKa9j8Q7Q9SPtuS8zT3iw4N5Ew>
-    <xmx:QY2CXs2Y7bHVkIJISgSBqxNEv9LDi-Uv3n-GUaoFreerddcOz9dDHQ>
-    <xmx:QY2CXslcDSe2NL0_auwBIrJtSOZc3Blvr8BiBaYen2EmQGeSgTYnRQ>
-    <xmx:QY2CXkCNYZttNKPVSd9_zia5Sbp9DhapUljw6EFzYTT48SgdGS3_zA>
-Received: from mickey.themaw.net (unknown [118.209.166.232])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C26EC3280064;
-        Mon, 30 Mar 2020 20:22:22 -0400 (EDT)
-Message-ID: <546b7365be9c6315d93464af10fc97d453f39784.camel@themaw.net>
-Subject: Re: [PATCH 3/4] vfs: check for autofs expiring dentry in
- follow_automount()
-From:   Ian Kent <raven@themaw.net>
-To:     "McIntyre, Vincent (CASS, Marsfield)" <Vincent.Mcintyre@csiro.au>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        autofs mailing list <autofs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Tue, 31 Mar 2020 08:22:19 +0800
-In-Reply-To: <20200330232032.vmlt3glzqdkgijhy@mayhem.atnf.CSIRO.AU>
-References: <158560961146.14841.14430383874338917674.stgit@mickey.themaw.net>
-         <158560962258.14841.1166162348928695084.stgit@mickey.themaw.net>
-         <20200330232032.vmlt3glzqdkgijhy@mayhem.atnf.CSIRO.AU>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 30 Mar 2020 20:23:40 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34781 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729019AbgCaAXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 20:23:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rqn46N8rz9sSJ;
+        Tue, 31 Mar 2020 11:23:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585614218;
+        bh=9r7wDHIFILZ0hqXYju725jtK4PGLc9++mStNdgrkjew=;
+        h=Date:From:To:Cc:Subject:From;
+        b=msadQkSpYy+CKYaF0PSoRTvR8gj1QlSaoTeTtdfhYz0FjO4F+Qj62Y65u+Es+gi3p
+         KP9BuIBN7OoYPZpzZiida8O5MmVSyNQtFtuSoSN6kc6O+5DqUyr53/E3d81GT1SPXP
+         R33h5C48ZPCMoej/oOM6+0+IIvTfEgNhPokCPkjm6uDNLPyl/d1PZTRKiS3treD/LO
+         VwX+tQG+zt4HJcWDak18+RrUV5S1KD1epO6dlNPuhQXqleQ5ZvFIGv0qqUq7ZNh8IT
+         YwQ5trMFAi238uC98f912is0VCDvJtg85hsOxQQlHi1LnotUJK+jJo6U/wKOdFfXRz
+         ++TVLLEJCV1bw==
+Date:   Tue, 31 Mar 2020 11:23:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jian Yang <jianyang@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: linux-next: manual merge of the net-next tree with the spdx tree
+Message-ID: <20200331112334.213ea512@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/xF.fursOG1Ek/.9ANGWx=Gg";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-30 at 23:20 +0000, McIntyre, Vincent (CASS, Marsfield)
-wrote:
-> On Tue, Mar 31, 2020 at 07:07:02AM +0800, Ian Kent wrote:
-> > follow_automount() checks if a stat family system call path walk is
-> > being done on a positive dentry and and returns -EISDIR to indicate
-> > the dentry should be used as is without attempting an automount.
-> > 
-> > But if autofs is expiring the dentry at the time it should be
-> > remounted following the expire.
-> > 
-> > There are two cases, in the case of a "nobrowse" indirect autofs
-> > mount it would have been mounted on lookup anyway. In the case of
-> > a "browse" indirect or direct autofs mount re-mounting it will
-> > maintain the mount which is what user space would be expected.
-> > 
-> > This will defer expiration of the mount which might lead to mounts
-> > unexpectedly remaining mounted under heavy stat activity but
-> > there's
-> > no other choice in order to maintain consistency for user space.
-> > 
-> > Signed-off-by: Ian Kent <raven@themaw.net>
-> > ---
-> > fs/autofs/root.c |   10 +++++++++-
-> > fs/namei.c       |   13 +++++++++++--
-> > 2 files changed, 20 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/autofs/root.c b/fs/autofs/root.c
-> > index a1c9c32e104f..b3f748e4df08 100644
-> > --- a/fs/autofs/root.c
-> > +++ b/fs/autofs/root.c
-> > @@ -406,9 +406,17 @@ static int autofs_d_manage(const struct path
-> > *path, bool rcu_walk)
-> > 
-> > 	/* Check for (possible) pending expire */
-> > 	if (ino->flags & AUTOFS_INF_WANT_EXPIRE) {
-> > +		/* dentry possibly going to be picked for expire,
-> > +		 * proceed to ref-walk mode.
-> > +		 */
-> > 		if (rcu_walk)
-> > 			return -ECHILD;
-> > -		return 0;
-> > +
-> > +		/* ref-walk mode, return 1 so follow_automount()
-> > +		 * can wait on the expire outcome and possibly
-> > +		 * attempt a re-mount.
-> > +		 */
-> > +		return 1;
-> > 	}
-> > 
-> > 	/*
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index db6565c99825..869e0d4bb4d9 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -1227,11 +1227,20 @@ static int follow_automount(struct path
-> > *path, struct nameidata *nd,
-> > 	 * mounted directory.  Also, autofs may mark negative dentries
-> > 	 * as being automount points.  These will need the attentions
-> > 	 * of the daemon to instantiate them before they can be used.
-> > +	 *
-> > +	 * Also if ->d_manage() returns 1 the dentry transit needs
-> > +	 * to be managing. For autofs, a return of 1 it tells us the
-> 
-> Unclear. Do you mean "to be managed." ? Or "managing." ?
+--Sig_/xF.fursOG1Ek/.9ANGWx=Gg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Right, and I didn't label these v2 either, bit stressed at the
-moment I guess.
+Hi all,
 
-Ian
-> 
-> Cheers
-> Vince
-> 
-> > +	 * dentry might be expired, so proceed to ->d_automount().
-> > 	 */
-> > 	if (!(nd->flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
-> > 			   LOOKUP_OPEN | LOOKUP_CREATE |
-> > LOOKUP_AUTOMOUNT)) &&
-> > -	    path->dentry->d_inode)
-> > -		return -EISDIR;
-> > +	    path->dentry->d_inode) {
-> > +		if (path->dentry->d_flags & DCACHE_MANAGE_TRANSIT) {
-> > +			if (!path->dentry->d_op->d_manage(path, false))
-> > +				return -EISDIR;
-> > +		} else
-> > +			return -EISDIR;
-> > +	}
-> > 
-> > 	nd->total_link_count++;
-> > 	if (nd->total_link_count >= 40)
-> > 
-> 
-> -- 
+Today's linux-next merge of the net-next tree got a conflict in:
 
+  tools/testing/selftests/networking/timestamping/.gitignore
+
+between commit:
+
+  d198b34f3855 (".gitignore: add SPDX License Identifier")
+
+from the spdx tree and commit:
+
+  5ef5c90e3cb3 ("selftests: move timestamping selftests to net folder")
+
+from the net-next tree.
+
+I fixed it up (I just deleted the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/xF.fursOG1Ek/.9ANGWx=Gg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6CjYYACgkQAVBC80lX
+0GxUigf9HpgzmG8qDby9zCuA+R4g4pTJY9RqOIjjbSqO2+B70vYN2L3NHZiD8GI3
+SIXXZX4DTRd/p9LbHr7+ojWqR1Ru4lFQpxYh7HQnuX+rNiNwwL8N3FxNVGJ7RXwx
+LaV3EbqsLyVlNeg+OvPaqLwRRAb3/gTFg+5oWGAiM8jR674WKVTNqFMJiQgE7asZ
+mV+DNcThLxGgmqdJv2VqNJ4T1qxQ2GKZhm8TQJlyKHp6fXXgr5RKP4XzND2zTFwR
+ZGcN2kVqpg6+jyvhX7v+zbFJgVVIMUXEg02WBQMr6RGVdrx81bjs6AdzGolyIpN4
+VGKZMvdsrb/5IFIi13RlrDtR3LSMmA==
+=gT/b
+-----END PGP SIGNATURE-----
+
+--Sig_/xF.fursOG1Ek/.9ANGWx=Gg--
