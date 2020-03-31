@@ -2,128 +2,252 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817FCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BD4C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC1720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V7ygkBjj"
+	by mail.kernel.org (Postfix) with ESMTP id 200B420838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgCaMQd (ORCPT
+        id S1730787AbgCaMRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:16:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42230 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730343AbgCaMQd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:16:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585656992;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AIkdm1RPzoMJraitwnvvrTQS82YbBm+BBWTAYvOw/a0=;
-        b=V7ygkBjjVC7byuxTLIiu/9ck2JdtrQ2EaL1EAwyB90fy8M0AG/aTVgTb+5EGZgwXPKvDqQ
-        h0qXSdUFKs8JuN2GuVKiiPAwnSS+On0oZXQrEHuObC52nL8HMEZEABvkpOV4CvBmAIt9ze
-        nhMZtuhqfSeIEj6VJYL+U+7VZlRotc4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-ovqkbLb-OdyJhgql6ixa_A-1; Tue, 31 Mar 2020 08:16:30 -0400
-X-MC-Unique: ovqkbLb-OdyJhgql6ixa_A-1
-Received: by mail-wr1-f72.google.com with SMTP id d17so12917027wrw.19
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 05:16:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AIkdm1RPzoMJraitwnvvrTQS82YbBm+BBWTAYvOw/a0=;
-        b=Ki5aQx04WdzCBNl++4CfsUFRoEyGmv9JzbAPjUlz+32A80iVj29kKRwbM/a1gaHfl2
-         UbdDUKwgiYy+AZbNCMmxiZ1Iuaic3arIsq2HNj3JxixDALuZ2cVI9pLOTtzlI1WsoDSb
-         Zz8v/mTcv0FABx8XlIe1V9d4vD3rYNIL69q4yARNnvOJTSd+ZCKCV83c51SlDYSWaA8Y
-         L1GZ7X8A3D4Z1JWYd+Rpgi/vS7yHBEN9GrLlCUKihf6iGFNe+m4Ag/u05S+rz3U4VfYe
-         iFlEypze86BoUI20ve96NUnh0HoO9W6u6VKaEqtPfyqkgMxbhUC1rOHLmojZIGuldRBZ
-         +16w==
-X-Gm-Message-State: ANhLgQ1suFHGANSc433RGOYphVRBBQscNUE4CVh2EgmAZKi++0OB7rZG
-        6sQgy1K4YzSR1aXj1EVZIEmzdHx8glUJG6V4apyue4K+u5Bvtzqn2Nsbn+ZxgapbOmHhCB8uSXl
-        JL1KFDsbES6IjJHkzbHZl0IaZ
-X-Received: by 2002:a1c:f409:: with SMTP id z9mr3340247wma.51.1585656989319;
-        Tue, 31 Mar 2020 05:16:29 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvcbyZLww2LXTEarvjb+E499WK7YYqe/vu5BI2QScvGR8UQClxweAMw8FUdntCdulV276PfnA==
-X-Received: by 2002:a1c:f409:: with SMTP id z9mr3340231wma.51.1585656989082;
-        Tue, 31 Mar 2020 05:16:29 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b55d:5ed2:8a41:41ea? ([2001:b07:6468:f312:b55d:5ed2:8a41:41ea])
-        by smtp.gmail.com with ESMTPSA id b199sm3939974wme.23.2020.03.31.05.16.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 05:16:28 -0700 (PDT)
-Subject: Re: [PATCH 1/3] KVM: x86: introduce kvm_mmu_invalidate_gva
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Junaid Shahid <junaids@google.com>
-References: <20200326093516.24215-1-pbonzini@redhat.com>
- <20200326093516.24215-2-pbonzini@redhat.com>
- <20200328182631.GQ8104@linux.intel.com>
- <2a1f9477-c289-592e-25ff-f22a37044457@redhat.com>
- <20200330184726.GJ24988@linux.intel.com>
- <87v9mk24qy.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <bb7b1075-a4fc-e0d3-d8fd-f516d107d5e2@redhat.com>
-Date:   Tue, 31 Mar 2020 14:16:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 31 Mar 2020 08:17:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18052 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730711AbgCaMRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 08:17:52 -0400
+IronPort-SDR: WlQ0DVRRemDr7RWNLQw+o5ZfKFhJHzzw8MKgwVDeaIYAA3L2x//Zvk3XZSreekj/gl7xAURn9J
+ w5MGyt1opuFg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 05:17:51 -0700
+IronPort-SDR: LYtlAFAPob+FXfTmrIW/lRXkqfZJhCTUbXaprhrp9D1xM9HkGzCy8aecbvk04+AGJKoC4PvigD
+ H9XjHHp68jRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
+   d="scan'208";a="249032770"
+Received: from tking1-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.59.94])
+  by orsmga003.jf.intel.com with ESMTP; 31 Mar 2020 05:17:40 -0700
+Date:   Tue, 31 Mar 2020 15:17:39 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Subject: Re: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send
+ all bytes in one shot without last byte in exception
+Message-ID: <20200331121720.GB9284@linux.intel.com>
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-5-amirmizi6@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87v9mk24qy.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331113207.107080-5-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/03/20 12:33, Vitaly Kuznetsov wrote:
->> Works for me.  My vote is for anything other than guest_mmu :-)
->
-> Oh come on guys, nobody protested when I called it this way :-)
+On Tue, Mar 31, 2020 at 02:32:04PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Today, actual implementation for send massage is not correct. We check and
+> loop only on TPM_STS.stsValid bit and next we single check TPM_STS.expect
+> bit value.
+> TPM_STS.expected bit shall be checked in the same time of
+> TPM_STS.stsValid, and should be repeated until timeout_A.
+> To aquire that, "wait_for_tpm_stat" function is modified to
+> "wait_for_tpm_stat_result". this function read regulary status register
+> and check bit defined by "mask" to reach value defined in "mask_result"
+> (that way a bit in mask can be checked if reached 1 or 0).
+> 
+> Respectively, to send message as defined in
+> TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be
+> sent in one shot instead of sending last byte in exception.
+> 
+> This improvment was suggested by Benoit Houyere.
 
-Sure I take full responsibility for that. :)
+Use suggested-by tag.
 
-> Peronally, I don't quite like 'shadow_tdp_mmu' because it doesn't have
-> any particular reference to the fact that it is a nested/L2 related
-> thing (maybe it's just a shadow MMU?)
+Also if something is not correct, please provide a fixes tag.
 
-Well, nested virt is the only case in which you shadow TDP.  Both
-interpretations work:
+You are speaking now in theoretical level, which we don't really
+care that much. Is this causing you real issues? If the answer is
+yes, please report them. If the answer is no, we don't need this.
 
-* "shadow tdp_mmu": an MMU for two-dimensional page tables that employs
-shadowing
+/Jarkko
 
-* "shadow_tdp MMU": the MMU for two-dimensional page tables.
-
-> Also, we already have a thing
-> called 'nested_mmu'... Maybe let's be bold and rename all three things,
-> like
->
-> root_mmu -> l1_mmu
-> guest_mmu -> l1_nested_mmu
-> nested_mmu -> l2_mmu (l2_walk_mmu)
-
-I am not particularly fond of using l1/l2 outside code that specifically
-deals with nested virt.  Also, l1_nested_mmu is too confusing with
-respect to the current nested_mmu (likewise for root_mmu I would rename
-it to guest_mmu but it would be an awful source of mental confusion as
-well as semantic source code conflicts).
-
-That said, I wouldn't mind replacing nested_mmu to something else, for
-example nested_walk_mmu.
-
-Paolo
-
+> 
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> ---
+>  drivers/char/tpm/tpm_tis_core.c | 72 ++++++++++++++++-------------------------
+>  1 file changed, 28 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+> index 18b9dc4..c8f4cf8 100644
+> --- a/drivers/char/tpm/tpm_tis_core.c
+> +++ b/drivers/char/tpm/tpm_tis_core.c
+> @@ -44,9 +44,10 @@ static bool wait_for_tpm_stat_cond(struct tpm_chip *chip, u8 mask,
+>         return false;
+>  }
+> 
+> -static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
+> -               unsigned long timeout, wait_queue_head_t *queue,
+> -               bool check_cancel)
+> +static int wait_for_tpm_stat_result(struct tpm_chip *chip, u8 mask,
+> +                                   u8 mask_result, unsigned long timeout,
+> +                                   wait_queue_head_t *queue,
+> +                                   bool check_cancel)
+>  {
+>         unsigned long stop;
+>         long rc;
+> @@ -55,7 +56,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
+> 
+>         /* check current status */
+>         status = chip->ops->status(chip);
+> -       if ((status & mask) == mask)
+> +       if ((status & mask) == mask_result)
+>                 return 0;
+> 
+>         stop = jiffies + timeout;
+> @@ -83,7 +84,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
+>                         usleep_range(TPM_TIMEOUT_USECS_MIN,
+>                                      TPM_TIMEOUT_USECS_MAX);
+>                         status = chip->ops->status(chip);
+> -                       if ((status & mask) == mask)
+> +                       if ((status & mask) == mask_result)
+>                                 return 0;
+>                 } while (time_before(jiffies, stop));
+>         }
+> @@ -290,10 +291,11 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
+>         int size = 0, burstcnt, rc;
+> 
+>         while (size < count) {
+> -               rc = wait_for_tpm_stat(chip,
+> -                                TPM_STS_DATA_AVAIL | TPM_STS_VALID,
+> -                                chip->timeout_c,
+> -                                &priv->read_queue, true);
+> +               rc = wait_for_tpm_stat_result(chip,
+> +                                       TPM_STS_DATA_AVAIL | TPM_STS_VALID,
+> +                                       TPM_STS_DATA_AVAIL | TPM_STS_VALID,
+> +                                       chip->timeout_c,
+> +                                       &priv->read_queue, true);
+>                 if (rc < 0)
+>                         return rc;
+>                 burstcnt = get_burstcount(chip);
+> @@ -348,8 +350,9 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>                         goto out;
+>                 }
+> 
+> -               if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
+> -                                     &priv->int_queue, false) < 0) {
+> +               if (wait_for_tpm_stat_result(chip, TPM_STS_VALID,
+> +                                            TPM_STS_VALID, chip->timeout_c,
+> +                                            &priv->int_queue, false) < 0) {
+>                         size = -ETIME;
+>                         goto out;
+>                 }
+> @@ -385,61 +388,40 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
+>         struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+>         int rc, status, burstcnt;
+>         size_t count = 0;
+> -       bool itpm = priv->flags & TPM_TIS_ITPM_WORKAROUND;
+> 
+>         status = tpm_tis_status(chip);
+>         if ((status & TPM_STS_COMMAND_READY) == 0) {
+>                 tpm_tis_ready(chip);
+> -               if (wait_for_tpm_stat
+> -                   (chip, TPM_STS_COMMAND_READY, chip->timeout_b,
+> -                    &priv->int_queue, false) < 0) {
+> +               if (wait_for_tpm_stat_result(chip, TPM_STS_COMMAND_READY,
+> +                                            TPM_STS_COMMAND_READY,
+> +                                            chip->timeout_b,
+> +                                            &priv->int_queue, false) < 0) {
+>                         rc = -ETIME;
+>                         goto out_err;
+>                 }
+>         }
+> 
+> -       while (count < len - 1) {
+> +       while (count < len) {
+>                 burstcnt = get_burstcount(chip);
+>                 if (burstcnt < 0) {
+>                         dev_err(&chip->dev, "Unable to read burstcount\n");
+>                         rc = burstcnt;
+>                         goto out_err;
+>                 }
+> -               burstcnt = min_t(int, burstcnt, len - count - 1);
+> +               burstcnt = min_t(int, burstcnt, len - count);
+>                 rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
+>                                          burstcnt, buf + count);
+>                 if (rc < 0)
+>                         goto out_err;
+> 
+>                 count += burstcnt;
+> -
+> -               if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
+> -                                       &priv->int_queue, false) < 0) {
+> -                       rc = -ETIME;
+> -                       goto out_err;
+> -               }
+> -               status = tpm_tis_status(chip);
+> -               if (!itpm && (status & TPM_STS_DATA_EXPECT) == 0) {
+> -                       rc = -EIO;
+> -                       goto out_err;
+> -               }
+>         }
+> -
+> -       /* write last byte */
+> -       rc = tpm_tis_write8(priv, TPM_DATA_FIFO(priv->locality), buf[count]);
+> -       if (rc < 0)
+> -               goto out_err;
+> -
+> -       if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
+> -                               &priv->int_queue, false) < 0) {
+> +       if (wait_for_tpm_stat_result(chip, TPM_STS_VALID | TPM_STS_DATA_EXPECT,
+> +                                    TPM_STS_VALID, chip->timeout_c,
+> +                                    &priv->int_queue, false) < 0) {
+>                 rc = -ETIME;
+>                 goto out_err;
+>         }
+> -       status = tpm_tis_status(chip);
+> -       if (!itpm && (status & TPM_STS_DATA_EXPECT) != 0) {
+> -               rc = -EIO;
+> -               goto out_err;
+> -       }
+> 
+>         return 0;
+> 
+> @@ -496,9 +478,11 @@ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+>                 ordinal = be32_to_cpu(*((__be32 *) (buf + 6)));
+> 
+>                 dur = tpm_calc_ordinal_duration(chip, ordinal);
+> -               if (wait_for_tpm_stat
+> -                   (chip, TPM_STS_DATA_AVAIL | TPM_STS_VALID, dur,
+> -                    &priv->read_queue, false) < 0) {
+> +               if (wait_for_tpm_stat_result(chip,
+> +                                            TPM_STS_DATA_AVAIL | TPM_STS_VALID,
+> +                                            TPM_STS_DATA_AVAIL | TPM_STS_VALID,
+> +                                            dur,
+> +                                            &priv->read_queue, false) < 0) {
+>                         rc = -ETIME;
+>                         goto out_err;
+>                 }
+> --
+> 2.7.4
+> 
+> 
+> 
+> ===========================================================================================
+> The privileged confidential information contained in this email is intended for use only by the addressees as indicated by the original sender of this email. If you are not the addressee indicated in this email or are not responsible for delivery of the email to such a person, please kindly reply to the sender indicating this fact and delete all copies of it from your computer and network server immediately. Your cooperation is highly appreciated. It is advised that any unauthorized use of confidential information of Nuvoton is strictly prohibited; and any information in this email irrelevant to the official business of Nuvoton shall be deemed as neither given nor endorsed by Nuvoton.
