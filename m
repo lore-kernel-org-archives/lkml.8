@@ -2,144 +2,137 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF3DC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEB1C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F212080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yASCTbB1"
+	by mail.kernel.org (Postfix) with ESMTP id D94012080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbgCaVe5 (ORCPT
+        id S1731271AbgCaVgP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:34:57 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15660 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727955AbgCaVe5 (ORCPT
+        Tue, 31 Mar 2020 17:36:15 -0400
+Received: from m4a0072g.houston.softwaregrp.com ([15.124.2.130]:40984 "EHLO
+        m4a0072g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727955AbgCaVgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:34:57 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VLY8AI013715;
-        Tue, 31 Mar 2020 23:34:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=hogJljl3NSx7SbRBP5t51xt8cHudqMc3OCqtkkmKgFU=;
- b=yASCTbB1xg2nlN9WKX+WEs7JcLif3yHoyl6wHzPaJ4bKHSyCL4XUx5CBtxAp9I2b5iky
- 3ZqVA7x0AReUZu5/z4zRtqJg7ubIWtsl6H71432ju/7lzvlMynigy2bNIfcgKpOfC3UH
- QfIDsLrFMS9SX2z3L3UfkZvFfK0/IYgY1P1iKbZYuyyCOf6GVHB3Xt7Iuu38JIC/EK57
- pdkjbNGHkPRsofM2PCj4NKtKxBB6jC1q2Klm4uHkGSZV5vAYWYHwscwcEAy6Gxid6cxv
- f3g880PQFPP3s7BaUx7mC1ImGdGvnnSNYxEyLMOgZKsIE8onq1I0LZRys5DCcggKAZ6f jw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301vkdsjj2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Mar 2020 23:34:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E34A810002A;
-        Tue, 31 Mar 2020 23:34:28 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C08452067F3;
-        Tue, 31 Mar 2020 23:34:28 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 31 Mar
- 2020 23:34:28 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Tue, 31 Mar 2020 23:34:28 +0200
-From:   Benoit HOUYERE <benoit.houyere@st.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "amirmizi6@gmail.com" <amirmizi6@gmail.com>
-CC:     "Eyal.Cohen@nuvoton.com" <Eyal.Cohen@nuvoton.com>,
-        "oshrialkoby85@gmail.com" <oshrialkoby85@gmail.com>,
-        "alexander.steffen@infineon.com" <alexander.steffen@infineon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "oshri.alkoby@nuvoton.com" <oshri.alkoby@nuvoton.com>,
-        "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
-        "gcwilson@us.ibm.com" <gcwilson@us.ibm.com>,
-        "kgoldman@us.ibm.com" <kgoldman@us.ibm.com>,
-        "Dan.Morav@nuvoton.com" <Dan.Morav@nuvoton.com>,
-        "oren.tanami@nuvoton.com" <oren.tanami@nuvoton.com>,
-        "shmulik.hager@nuvoton.com" <shmulik.hager@nuvoton.com>,
-        "amir.mizinski@nuvoton.com" <amir.mizinski@nuvoton.com>,
-        Olivier COLLART <olivier.collart@st.com>,
-        Yves MAGNAUD <yves.magnaud@st.com>
-Subject: RE: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send
- all bytes in one shot without last byte in exception
-Thread-Topic: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send
- all bytes in one shot without last byte in exception
-Thread-Index: AQHWB1ZoDft9Zu6RoU68XNbFk/pAW6hjMfyw
-Date:   Tue, 31 Mar 2020 21:34:28 +0000
-Message-ID: <19c8ae3023404ae9affcb1ce04b7ee4b@SFHDAG3NODE3.st.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-5-amirmizi6@gmail.com>
- <20200331121720.GB9284@linux.intel.com>
-In-Reply-To: <20200331121720.GB9284@linux.intel.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
+        Tue, 31 Mar 2020 17:36:15 -0400
+Received: FROM m4a0072g.houston.softwaregrp.com (15.120.17.147) BY m4a0072g.houston.softwaregrp.com WITH ESMTP;
+ Tue, 31 Mar 2020 21:34:49 +0000
+Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
+ M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 31 Mar 2020 21:35:46 +0000
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (15.124.8.11) by
+ M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Tue, 31 Mar 2020 21:35:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FbGYimx+xQToUTa7pnmihmUwqE0LITNiAHgxFIpMYxQv5QG8s0DA1icTr34BAOJQvfmI2U2lXqUsk18HTL3h2yJQxOgNv2wFYx9HiMmoT2dZTMeO3SzCycpPB/cal7e1qijUEb4c6WOcih0IiMh2qyg0F+sfkuC5vI1Cl4xn/c1PhEAB08Bah8RKhRbi4C8v50kakOuVNfUm+ip6ts7br3pAkEMG+xIzBIWNUgDzqtPsBWIqUWbv2cL+r7rMQeXFVhuC68unj1AntMiL8g4+XLv1bgLxDGtBigzlCPt8kml8hRwz7BVmnzVdXbPgg46rV23eRZ6Fol99+qLQ0ldqrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dSyWjt7HXdQD/97cQ02RRbKMvmj2bpqjey4Kdq2Rd6w=;
+ b=DkXwRL3BI/5E2TfmG1yvmA89UYQbSIJrFWbHBCXapUW3AcNFdCOawHeeEha6jAlRfBuNeYRrAWaQ3MbUDuFuyE2Q2l8GJ7gkT9NgdKZrP4ZLMl6YJoajygRuGUYT9hITcQgqeJiKhXWypOkX95PTFZ9McW8zHLlIfpuTTzJn/3gHToPJeyQ0iuKb+2PT60pK0VQk4TrRLbe+R6uCME1z+wbfGGLhfKnAJCV+SoeFvy8IqojZ0UNwhW2xub7ajyc0/9BaZ1CFA6ZMmLVFG3EREdjIIh5SBpyeybLgZknyC0dwOodck53u/O822tPsnsBOTeQGorWafprAZADToeHr6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=DMueller@suse.com; 
+Received: from DM6PR18MB2458.namprd18.prod.outlook.com (2603:10b6:5:188::18)
+ by DM6PR18MB3353.namprd18.prod.outlook.com (2603:10b6:5:1c2::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Tue, 31 Mar
+ 2020 21:35:44 +0000
+Received: from DM6PR18MB2458.namprd18.prod.outlook.com
+ ([fe80::f874:3829:ad75:5777]) by DM6PR18MB2458.namprd18.prod.outlook.com
+ ([fe80::f874:3829:ad75:5777%3]) with mapi id 15.20.2856.019; Tue, 31 Mar 2020
+ 21:35:44 +0000
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 5.5 102/170] scripts/dtc: Remove redundant YYLOC global
+ declaration
+From:   =?utf-8?Q?Dirk_M=C3=BCller?= <dmueller@suse.com>
+In-Reply-To: <20200331120917.GA1617997@kroah.com>
+Date:   Tue, 31 Mar 2020 23:35:38 +0200
+CC:     Nathan Chancellor <natechancellor@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Rob Herring <robh@kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-ID: <8020A90C-7DEE-40DF-86F6-4446DE144BAA@suse.com>
+References: <20200331085423.990189598@linuxfoundation.org>
+ <20200331085435.053942582@linuxfoundation.org>
+ <20200331095323.GA32667@ubuntu-m2-xlarge-x86>
+ <20200331100238.GA1204199@kroah.com>
+ <5B6493BE-F9FE-41A4-A88A-5E4DF5BCE098@suse.com>
+ <20200331120917.GA1617997@kroah.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-ClientProxiedBy: LO2P265CA0044.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:61::32) To DM6PR18MB2458.namprd18.prod.outlook.com
+ (2603:10b6:5:188::18)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.22.222.25] (95.118.34.218) by LO2P265CA0044.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:61::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Tue, 31 Mar 2020 21:35:42 +0000
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Originating-IP: [95.118.34.218]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d0805b31-550c-41dd-7c17-08d7d5bb77da
+X-MS-TrafficTypeDiagnostic: DM6PR18MB3353:
+X-Microsoft-Antispam-PRVS: <DM6PR18MB3353455EFDE1F615F8409BADABC80@DM6PR18MB3353.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0359162B6D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR18MB2458.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(136003)(396003)(4326008)(5660300002)(33656002)(6666004)(66476007)(2906002)(66946007)(8676002)(66556008)(8936002)(956004)(186003)(81156014)(86362001)(2616005)(6486002)(316002)(16526019)(16576012)(81166006)(54906003)(6916009)(26005)(52116002)(36756003)(478600001);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HfFRnq6ABDNPMJD8VPmxyNT/96AbC7B/ivG3kCAFmhfEQ3pM+G9j/pwUEY0RdTAwH7gpAe3nTV8IzMLR+UC+scWiO/PMhPTjvlY5pkS1JXFd1pdfYmMQlLrPIlaW7s+4joC5aA2c+5jxyBBXxTYJ0u0lrNWgLCmEOsTw0g24uzD6CoxxwYSI8Dq3y0wJp5X7BSYLQQ4riYjaJ9g0IR0lu+Z0aJq7+0SFCr69IedfB0x8loVMokEtJfxNUEhoM0jh3PEenOKJiyuTuNO0yhZ8+RyVJ7R4LFMNXf3tsxsMP8Z37nKdF3WVaRjNXjKyBsm88Gd6rlMBhVPzQL6ONhA+MlWJAdRrj83IBwqLrITgXFRKyVIdTwY8rZk6qCTvwJpUpOJpYPJu2R0JBJNWxJGsP2Sw02QMPA934nhJNqayxaBvu9zSPcoGXM/xUWSUlarB
+X-MS-Exchange-AntiSpam-MessageData: XiQVmfUU/ZvYnzAilkx1vRxnmpKopLbVYHz440FLIFnlWuYLD1ISMrDfpPTBws2/SvCzrO9dyM2R3LRNKHRr4u7R3YUvVWLqeKkjfaXUZu/N2D31gvESI0PwJVmtn1jHIuE3IYX8IaRA8IWFp0KNjQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0805b31-550c-41dd-7c17-08d7d5bb77da
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2020 21:35:44.4461
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X1P4pSZyeVnMdBu7kuuL7eC0rqaO9oW9FhX02YsFm7NCOSXJU2TJ3hh3ix086Kq1L1IsFI5D/qFMM+cRRQ7K4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB3353
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
-> On Tue, Mar 31, 2020 at 02:32:04PM +0300, amirmizi6@gmail.com wrote:
-> > From: Amir Mizinski <amirmizi6@gmail.com>
-> >=20
-> > Today, actual implementation for send massage is not correct. We check=
-=20
-> > and loop only on TPM_STS.stsValid bit and next we single check=20
-> > TPM_STS.expect bit value.
-> > TPM_STS.expected bit shall be checked in the same time of=20
-> > TPM_STS.stsValid, and should be repeated until timeout_A.
-> > To aquire that, "wait_for_tpm_stat" function is modified to=20
-> > "wait_for_tpm_stat_result". this function read regulary status=20
-> > register and check bit defined by "mask" to reach value defined in "mas=
-k_result"
-> > (that way a bit in mask can be checked if reached 1 or 0).
-> >=20
-> > Respectively, to send message as defined in=20
-> >  TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be=
-=20
-> > sent in one shot instead of sending last byte in exception.
-> >=20
-> > This improvment was suggested by Benoit Houyere.
+>> However I think the sed above on the *patch* means that the patch will *only* modify the generated sources, not the input sources. I think
+>> it would be better to patch both *input* and *generated* sources, or backport the generate-at-runtime patch as well (which might be
+>> even further outside the stable policy). 
+> 
+> What do you mean by "input sources" here?
 
->Use suggested-by tag.
 
->Also if something is not correct, please provide a fixes tag.
+scripts/dtc/update-dtc-source.sh in older kernel generates a _shipped variant of the files from the .l/.y files:
 
-> You are speaking now in theoretical level, which we don't really care tha=
-t much. Is this causing you real issues? If the answer is yes, please repor=
-t them. If the > >answer is no, we don't need this.
 
-> /Jarkko
+$ ls -1 scripts/dtc/dtc-lexer.l*
+scripts/dtc/dtc-lexer.l
+scripts/dtc/dtc-lexer.lex.c_shipped
 
-I2C TPM specification introduce CRC calculation on TPM command bytes. CRC c=
-alculation take place from last byte acquired to  TPM_STS.expected bit rese=
-t (=3D0) .It introduces latency and actual incorrect implementation becomes=
- visible now under I2C on the contrary before that's all.=20
-The case where TPM keeps TPM_STS.expected bit set  with TPM_STS.stsValid se=
-t after last byte reception is possible and is not an issue. It's not theor=
-etical level, it's practical level now.
+in newer kernels these _shipped files are generated at build time from dtc-lexer.l, which my patch is updating. I suggested
+to modify the patches for older release to *both* patch dtc-lexer.l as well as update the *generated* files that are tracked
+in git as dtc-lexer.lex.c_shipped rather than just in/place modifying the generated file (which would then at some later point
+in time get lost as other changes regenerate the _shipped file then, reintroducing the bug). 
 
+
+> If I drop it for now, I'll have to add it back when gcc10 is pushed out
+> to my build systems and laptops :(
+
+Let me know if I can help with a backportable patch. 
+
+Greetings,
+Dirk
 
