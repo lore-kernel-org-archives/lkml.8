@@ -2,111 +2,118 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E527BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D886CC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA13520787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:37:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XTvtKtJF"
+	by mail.kernel.org (Postfix) with ESMTP id B98D220787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbgCaIhh (ORCPT
+        id S1730245AbgCaIh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:37:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46116 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730076AbgCaIhg (ORCPT
+        Tue, 31 Mar 2020 04:37:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33155 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729819AbgCaIh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:37:36 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j17so24719738wru.13
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 01:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bw9s/mMNE/c7asckCQOQ8iAFN4jSk9KCdHX9uwgrhEw=;
-        b=XTvtKtJFWmp2Zmc3VHP/lvfCJ1inAsyaqylWIh4Ss2EKA+1ovJ1tZmg5c1aXZ3q1zH
-         goXa/80FrVAlCdEsamIa0Jor0NdqbZbeODuoBI4nBsVZjN54/VQXvZWNDd3Yt5c8Zzog
-         y+6S1xkEXg9k9OHLfXBnbyNzBRQEEvi1RUL7KPol2Ldpc6jaI+0wWqYOUDr5VxOjlLOG
-         Thgq/dr9FhALeoYg9RGCzIZhLz0emEdHlnoFSv3kct7Gz3xgQ4um7eDgk/DyxIVFTAyN
-         KGD7UbQHUcme5r1KIMbkd1YQI/FYPlMhhp4FeOk12xCgoCxR9ciQpHntE1wf1+flNhUK
-         5k/g==
+        Tue, 31 Mar 2020 04:37:58 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 22so21226269otf.0;
+        Tue, 31 Mar 2020 01:37:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bw9s/mMNE/c7asckCQOQ8iAFN4jSk9KCdHX9uwgrhEw=;
-        b=dda7/PZxwtxJowKTmAM0gCqtIW7nXt7NbWk/6xiab9IPHq01/wbA84qxQIaysOQO+b
-         gOpIST+0zsWVoPAlrQ1XcjzumusA4CfjHcw5D1anHZ0FtYnLSHmunIqfqjbDeMpL54jT
-         JDvI66GGVHRRFLGNq2qSOLuJy5R0DMeDbvuXMCGKXD2XJZJ2dwcIyoLVUS8dvRQk/Oiy
-         DQ1OABSVcoJ8qKsDTz7mdPDa5dq1awaohs9/zdSMAPwCnTDarC8N5GPBUs8EFo3d5eOf
-         KuuyH31Qff/SRTbPvkZp1CvpXmkTNjB/q33k1DG0mt2UHEZu0K0yqrX/D0rkEop7Bnat
-         1Gnw==
-X-Gm-Message-State: ANhLgQ0ubornyT7nUXwYFiEk9bUAZgKzEEs7Ptbu/dtqW/qcThXTl7rG
-        +M5xncDRU4qp79Sgo6D+7sdjcA==
-X-Google-Smtp-Source: ADFU+vvfGC1b/+1ygxgUrGk28VZ+Ia8a+bilQBp6RcBH82KuSbgACrUme3dO63WJl/H4m1H7wNagzQ==
-X-Received: by 2002:adf:b307:: with SMTP id j7mr20134382wrd.128.1585643852432;
-        Tue, 31 Mar 2020 01:37:32 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id j188sm2955870wmj.36.2020.03.31.01.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 01:37:31 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     devicetree@vger.kernel.org
-Cc:     benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2] dt-bindings: usb: dwc2: fix bindings for amlogic,meson-gxbb-usb
-Date:   Tue, 31 Mar 2020 10:37:29 +0200
-Message-Id: <20200331083729.24906-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ICwZe74cinsq+H0Mi/M0UaoDjI0NelMBSLemc/4qo/U=;
+        b=DaWiXXxuW+hubThhZc6nQanxaJG1FaCt4Gagh5VUbOe+sM/L+mcOQMMnBEMeRSEvAU
+         ANXuhHig71Y9jQJeexgWjVNt22NpQ/EgpDrnARhMJWxnTQ5YNIQu0352U9f9sUS9BoAm
+         1LxECxDqXqIGavUYaY2hR8ItSkA6XsxxDRgF8C2M4dImsnYrbUPvD/0JVJTtqipMqflv
+         ZH9V5+SCUnV/Q6rG2j6HOB2tQSnUAYLXJ40+99etu6MKCeoiUdM56e+ExlUXOPzIjh7E
+         kPuS1m3ddD32s/V/ZqNl7jjmAo98V3Rc80fssLiNhOv3bQm6r2zVSR5Lf6ho7zh4K01H
+         yPeg==
+X-Gm-Message-State: ANhLgQ0+GiABFHxYHVT4ZTgYFaNdx/Wyv3GCIFbtOkQBhmrHMCA9GZRE
+        5xRgAAsJ/FNyCxzRy5WI8+1ospPOeDxBkqVIGfc=
+X-Google-Smtp-Source: ADFU+vtSPfJ+5lxhEQluC4omuajmCx1I5+UeA+6FUPL98dSUb/IOkPQ50CVMgweKGCB3Ke/QvJKhPWahlIZSg528NQg=
+X-Received: by 2002:a4a:a442:: with SMTP id w2mr9650592ool.90.1585643876316;
+ Tue, 31 Mar 2020 01:37:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200331104947.264c98e5@canb.auug.org.au>
+In-Reply-To: <20200331104947.264c98e5@canb.auug.org.au>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 31 Mar 2020 10:37:45 +0200
+Message-ID: <CAMuHMdW_hUzSGnPg1NMtix9ztnAoJboX62H+Yja6P7M3xF9eFg@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the pci tree with Linus' tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The amlogic,meson-gxbb-usb compatible needs snps,dwc2 aswell like other
-Amlogic SoC.
+On Tue, Mar 31, 2020 at 1:52 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> Today's linux-next merge of the pci tree got a conflict in:
+>
+>   drivers/net/ethernet/intel/ice/ice_main.c
+>
+> between commit:
+>
+>   19cce2c6f6dc ("ice: Make print statements more compact")
 
-Fixes: f3ca745d8a0e ("dt-bindings: usb: Convert DWC2 bindings to json-schema")
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/usb/dwc2.yaml | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+FWIW, that doesn't really look like an improvement to me, as the long
+lines are now broken by my editor, making them harder to read...
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index 71cf7ba32237..b5303d918e70 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -44,14 +44,11 @@ properties:
-       - const: lantiq,arx100-usb
-       - const: lantiq,xrx200-usb
-       - items:
--          - const: amlogic,meson8-usb
--          - const: snps,dwc2
--      - items:
--          - const: amlogic,meson8b-usb
--          - const: snps,dwc2
--      - const: amlogic,meson-gxbb-usb
--      - items:
--          - const: amlogic,meson-g12a-usb
-+          - enum:
-+            - amlogic,meson8-usb
-+            - amlogic,meson8b-usb
-+            - amlogic,meson-gxbb-usb
-+            - amlogic,meson-g12a-usb
-           - const: snps,dwc2
-       - const: amcc,dwc-otg
-       - const: snps,dwc2
+>
+> from Linus' tree and commit:
+>
+>   894020fdd88c ("PCI/AER: Rationalize error status register clearing")
+>
+> from the pci tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>
+> --
+> Cheers,
+> Stephen Rothwell
+>
+> diff --cc drivers/net/ethernet/intel/ice/ice_main.c
+> index 5ef28052c0f8,effca3fa92e0..000000000000
+> --- a/drivers/net/ethernet/intel/ice/ice_main.c
+> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
+> @@@ -3458,9 -3495,10 +3458,9 @@@ static pci_ers_result_t ice_pci_err_slo
+>                         result = PCI_ERS_RESULT_DISCONNECT;
+>         }
+>
+> -       err = pci_cleanup_aer_uncorrect_error_status(pdev);
+> +       err = pci_aer_clear_nonfatal_status(pdev);
+>         if (err)
+> -               dev_dbg(&pdev->dev, "pci_cleanup_aer_uncorrect_error_status failed, error %d\n",
+>  -              dev_dbg(&pdev->dev,
+>  -                      "pci_aer_clear_nonfatal_status() failed, error %d\n",
+> ++              dev_dbg(&pdev->dev, "pci_aer_clear_nonfatal_status() failed, error %d\n",
+>                         err);
+>                 /* non-fatal, continue */
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.22.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
