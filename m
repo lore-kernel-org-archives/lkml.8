@@ -2,118 +2,342 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7AAC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8634C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC7E2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716F220675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 17:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585676947;
-	bh=7YB6ND8mrDeGDIhLt1OHuowTw1wah86m08QhZkfLdrg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=m6XvHiOwzeCeRV8Wn0akpBVcTzli3rVFIYeogtzdEM1gmmknYRh48N+LzW7k+zwkp
-	 M0hjs5AMpsDnDuF6EQ4of8776IYxeg+cDjfHFEia0HKXGg1lPRE72HXg/24KoO1sQg
-	 ad1N09qJBxOGebfIupq8Qdf+HqPJjzDsutzoFQI4=
+	s=default; t=1585677248;
+	bh=4MWbv7hrQZArB5UAgUjfbtOCVUiiJlMgW1B/Cr52Nwk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Unvj1YtiipLodxvWyu8bgT3DPaUemo9NJbcvIx5RhkPdUfuB9zzN8gZ6SGcoVDR6n
+	 emKDEuD1uKq+EB5LcWz+TZvTJ4I4ixXtjQ/vpd21dTlTTHCtk7Ra7L9VGcFjQb0r9F
+	 NCwp8m7MZzHN9xb8tc56szIzlTIe5WtNRGTXSeiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgCaRtG (ORCPT
+        id S1726291AbgCaRyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:49:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgCaRtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:49:05 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04076212CC;
-        Tue, 31 Mar 2020 17:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585676945;
-        bh=7YB6ND8mrDeGDIhLt1OHuowTw1wah86m08QhZkfLdrg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cYgWjwN1R88kTK3yT2gG1k3SpiZ9Vz0fYzWRtS56ooUUeRv4wJ+zDEmlu3P8LJOWP
-         h8OEYSp4AikI9nTg/2BD2m4OiX2DEGbbakpNo75tOVvcmM9QGxkB+itppGyk5tKydr
-         bh3+XF8WM7K0qL2ikOs7IigsYlsGE+HIoUSRWE8Q=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 72EED35226C3; Tue, 31 Mar 2020 10:49:04 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 10:49:04 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200331174904.GN19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200331131628.153118-1-joel@joelfernandes.org>
- <20200331140433.GA26498@pc636>
- <20200331150911.GC236678@google.com>
- <20200331160119.GA27614@pc636>
- <20200331170232.GA28413@pc636>
+        Tue, 31 Mar 2020 13:54:07 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43150 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbgCaRyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:54:07 -0400
+Received: by mail-io1-f65.google.com with SMTP id x9so16223801iom.10;
+        Tue, 31 Mar 2020 10:54:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VVqxzqCk/8iKLQzhs53o31LGL6xk02tsOhwWahTs5eM=;
+        b=da7YOos67aYWE15eRjQCVWed0yf6NpWRfUxfxZ3XpAnlXbGLJ1+rJUMw282E00m/tN
+         rnEKWFuSETXJc6myVZ367KAHAGOU0RwEvg7o+0lEnPLGsCO058zB1/UYIwZifVWCePCs
+         z1zulqubYu6YDO/UbICGqgKO6cQ4qaM1QPB1JS+0bB118XbF4txedWki+Thg6ZSoCXLW
+         k/tBY/WSFH+JRLitxzA9kMXGTDK9nAWX1MAZzkz7aMMOSBa1XGsHgCWdtkAV0oInDLTw
+         n7YOggaPwN+O2Cn7DW6CAdBhjqWtwQQzZOYcdLC/IAh81rUjGGWm21qNHEoLgFh3RCrZ
+         9srg==
+X-Gm-Message-State: ANhLgQ12TJJZbG+9cj4g1Op5PqlRk+KF40n/0n/xff1cgzUchUPLidfd
+        uB9iUNwNcg1xzD3N3dyCvg==
+X-Google-Smtp-Source: ADFU+vvXkSukGu2SPM2EgxgtLqkTK+D0VHQKKIdwAmLB0GUZ/sqJRqKEYT5sgfJXFkvT0QhqMfsF6A==
+X-Received: by 2002:a05:6602:164b:: with SMTP id y11mr16703395iow.3.1585677245141;
+        Tue, 31 Mar 2020 10:54:05 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id l70sm6185605ili.81.2020.03.31.10.54.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 10:54:04 -0700 (PDT)
+Received: (nullmailer pid 25121 invoked by uid 1000);
+        Tue, 31 Mar 2020 17:54:01 -0000
+Date:   Tue, 31 Mar 2020 11:54:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V4 1/4] backlight: qcom-wled: convert the wled bindings
+ to .yaml format
+Message-ID: <20200331175401.GA9791@bogus>
+References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
+ <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331170232.GA28413@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 07:02:32PM +0200, Uladzislau Rezki wrote:
-> > >
-> > > Paul was concerned about following scenario with hitting synchronize_rcu():
-> > > 1. Consider a system under memory pressure.
-> > > 2. Consider some other subsystem X depending on another system Y which uses
-> > >    kfree_rcu(). If Y doesn't complete the operation in time, X accumulates
-> > >    more memory.
-> > > 3. Since kfree_rcu() on Y hits synchronize_rcu() a lot, it slows it down.
-> > >    This causes X to further allocate memory, further causing a chain
-> > >    reaction.
-> > > Paul, please correct me if I'm wrong.
-> > > 
-> > I see your point and agree that in theory it can happen. So, we should
-> > make it more tight when it comes to rcu_head attachment logic.
-> > 
-> Just adding more thoughts about such concern. Even though in theory we
-> can run into something like that. But also please note, that under high
-> memory pressure it also does not mean that (X) will always succeed with
-> further infinite allocations, so memory pressure is something common.
-> As soon as the situation becomes slightly better we do our work much
-> efficient.
+On Mon, Mar 23, 2020 at 11:16:55PM +0530, Kiran Gunda wrote:
+> Convert the qcom-wled bindings from .txt to .yaml format.
 > 
-> Practically, i was trying to simulate memory pressure to hit synchronize_rcu()
-> on my test system. By just simulating head-less freeing(for any object) and
-> by always dynamic attaching path. So i could trigger it, but that was really
-> hard to achieve and it happened only few times. So that was not like a constant
-> hit. What i got constantly were:
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  .../bindings/leds/backlight/qcom-wled.txt          | 154 -----------------
+>  .../bindings/leds/backlight/qcom-wled.yaml         | 184 +++++++++++++++++++++
+>  2 files changed, 184 insertions(+), 154 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> new file mode 100644
+> index 0000000..8a388bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> @@ -0,0 +1,184 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Binding for Qualcomm Technologies, Inc. WLED driver
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+
+Should be the h/w owner (you), not who applies patches.
+
+> +
+> +description: |
+> +  WLED (White Light Emitting Diode) driver is used for controlling display
+> +  backlight that is part of PMIC on Qualcomm Technologies, Inc. reference
+> +  platforms. The PMIC is connected to the host processor via SPMI bus.
+> +
+> +properties:
+> +  compatible :
+
+Drop the space ^
+
+> +    enum:
+> +       - qcom,pm8941-wled
+> +       - qcom,pmi8998-wled
+> +       - qcom,pm660l-wled
+
+Wrong indent (1 space too many).
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  default-brightness:
+> +    maxItems: 1
+
+maxItems is for arrays and this is a single scalar.
+
+> +    description:
+> +      brightness value on boot, value from 0-4095.
+
+0-4095 sounds like a constraint.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+
+There should be a common definition for this.
+
+> +        default: 2048
+> +
+> +  label:
+> +    maxItems: 1
+> +    description:
+> +      The name of the backlight device.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/string
+
+Already has a type. Just 'label: true' is enough.
+
+> +
+> +  qcom,cs-out:
+> +    description:
+> +      enable current sink output.
+> +      This property is supported only for PM8941.
+> +    type: boolean
+> +
+> +  qcom,cabc:
+> +    description:
+> +      enable content adaptive backlight control.
+> +    type: boolean
+> +
+> +  qcom,ext-gen:
+> +    description:
+> +      use externally generated modulator signal to dim.
+> +      This property is supported only for PM8941.
+> +    type: boolean
+> +
+> +  qcom,current-limit:
+> +    maxItems: 1
+
+Not an array.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      mA; per-string current limit; value from 0 to 25 with
+
+25 sounds like a constraint.
+
+> +      1 mA step. This property is supported only for pm8941.
+> +    default: 20
+> +
+> +  qcom,current-limit-microamp:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+
+properties with unit suffix already have a type.
+
+> +    description:
+> +      uA; per-string current limit; value from 0 to 30000 with
+> +      2500 uA step.
+
+steps can be expressed using 'multipleOf'
+
+> +    default: 25
+
+25 can never be a multiple of 2500
+
+> +
+> +  qcom,current-boost-limit:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      mA; boost current limit.
+> +      For pm8941 one of 105, 385, 525, 805, 980, 1260, 1400, 1680.
+> +      Default, 805 mA.
+> +      For pmi8998 one of 105, 280, 450, 620, 970, 1150, 1300,
+> +      1500. Default 970 mA.
+
+Constraints.
+
+> +
+> +  qcom,switching-freq:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      kHz; switching frequency; one of 600, 640, 685, 738,
+> +      800, 872, 960, 1066, 1200, 1371, 1600, 1920, 2400, 3200,
+> +      4800, 9600.
+> +      Default for pm8941 1600 kHz
+> +               for pmi8998 800 kHz
+
+Constraints!
+
+> +
+> +  qcom,ovp:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      V; Over-voltage protection limit; one of 27, 29, 32, 35. Default 29V
+> +      This property is supported only for PM8941.
+> +
+> +  qcom,ovp-millivolt:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      mV; Over-voltage protection limit;
+> +      For pmi8998 one of 18100, 19600, 29600, 31100.
+> +      Default 29600 mV.
+> +      If this property is not specified for PM8941, it
+> +      falls back to "qcom,ovp" property.
+> +
+> +  qcom,num-strings:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      number of led strings attached;
+> +      value for PM8941 from 1 to 3. Default 2
+> +      For PMI8998 from 1 to 4.
+> +
+> +  interrupts:
+> +    maxItems: 2
+
+items:
+  - description: ...
+  - description: ...
+
+> +    description:
+> +      Interrupts associated with WLED. This should be
+> +      "short" and "ovp" interrupts. Interrupts can be
+> +      specified as per the encoding listed under
+> +      Documentation/devicetree/bindings/spmi/
+> +      qcom,spmi-pmic-arb.txt.
+
+encoding is outside the scope of the binding.
+
+> +
+> +  interrupt-names:
+> +    description:
+> +      Interrupt names associated with the interrupts.
+> +      Must be "short" and "ovp". The short circuit detection
+> +      is not supported for PM8941.
+
+Names should be constraints.
+
+> +
+> +  qcom,enabled-strings:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description:
+> +      Array of the WLED strings numbered from 0 to 3. Each
+> +      string of leds are operated individually. Specify the
+> +      list of strings used by the device. Any combination of
+> +      led strings can be used.
+> +
+> +  qcom,external-pfet:
+> +    description:
+> +      Specify if external PFET control for short circuit
+> +      protection is used. This property is supported only
+> +      for PMI8998.
+> +    type: boolean
+> +
+> +  qcom,auto-string-detection:
+> +    description:
+> +      Enables auto-detection of the WLED string configuration.
+> +      This feature is not supported for PM8941.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - label
+> +
+> +examples:
+> +  - |
+> +    pm8941-wled@d800 {
+
+backlight@...
+
+> +        compatible = "qcom,pm8941-wled";
+> +        reg = <0xd800 0x100>;
+> +        label = "backlight";
+> +
+> +        qcom,cs-out;
+> +        qcom,current-limit = <20>;
+> +        qcom,current-boost-limit = <805>;
+> +        qcom,switching-freq = <1600>;
+> +        qcom,ovp = <29>;
+> +        qcom,num-strings = <2>;
+> +        qcom,enabled-strings = <0 1>;
+> +     };
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>  a Linux Foundation Collaborative Project
 > 
-> - System got recovered and proceed with "normal" path;
-> - The OOM hit as a final step, when the system is run out of memory fully.
-> 
-> So, practically i have not seen massive synchronize_rcu() hit.
-
-Understood, but given the attractive properties of headless kfree_rcu(),
-it is not unreasonable to expect its usage to remain low.  In addition,
-memory-pressure scenarios can be quite involved.  Finally, as Joel
-pointed out offlist, the per-CPU cached structure acts as a small
-portion of kfree_rcu()-specific reserved memory, so you guys have at
-least partially addressed parts of my concerns already.
-
-I am not at all a fan of using GFP_MEMALLOC because kfree_rcu()
-is sufficiently low-level to be in the business of ensuring its own
-forward progress.
-
-							Thanx, Paul
