@@ -2,97 +2,129 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D6EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3C6C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D182072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:28:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNf3rzkg"
+	by mail.kernel.org (Postfix) with ESMTP id 689FD20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729626AbgCaD2Z (ORCPT
+        id S1729778AbgCaD3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 23:28:25 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34554 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgCaD2Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 23:28:25 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a23so7600626plm.1;
-        Mon, 30 Mar 2020 20:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WhvIKiAZ62YDlD1oWveLP+fNPkAUs0qLIZB4yIs6/dg=;
-        b=bNf3rzkgLVBSncpOONhhDp4K7PRzDa+Yzl/FsqGoGmv/dtEwZ+P6HsEA2KCXF2aYXa
-         7goBcZk1N5lG2V4WWL/qySJ4mMKAsVew3ufGxgJuAa5QYsaQjC/iVmk5GzSPBpINeSaK
-         KiANoTI9nZgMqUTbjDYTVTDH+b9AbfMixl60l5p+MfJWnpPZQUQqTIF+6p79iBSPcnEf
-         Xjt9GYxR7t5eVyK8nxLrsiK/SbilC3xQ2XN1yaG4mgyhulinoYUxS9x+7V1Ktwu4dP/p
-         TNfbOD8FEXqZdXDqV34tjsug9RwixqmxgExoWEPWQYdtwANAXDC60t4Sxi71Ym9IE6ak
-         66LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WhvIKiAZ62YDlD1oWveLP+fNPkAUs0qLIZB4yIs6/dg=;
-        b=P5LS8wg8gDkCNrPYzO9ASrwsXcXiCu5BrkcfS4IUVceqaoB/v4hDpc9LOzloW/XPgW
-         38FCXUso1UQWWwhw/MDkgseqqGMZpIFxKNARiu0sadcPOOZCi0IpUl4dBtZwEyT/6HZx
-         hZm6Kc+6iDESKy5GlYnv4PRYvJd0yrUljGKihtDa0O7Wixm5p5+RB6h2K6CXoyqOREni
-         IfQZKyAPZnbE3WNT9FzSMHPXJUdh/BE5iIv7nl0ZIx/vO70QAI2Sb6LwODSHku54I8eF
-         iPhepnOrLgWrMhiCfZclfWcnevaQOAlIDieaVdwWT57uEiZWj2N8pvxypFvZWkszb3Mw
-         A2EQ==
-X-Gm-Message-State: ANhLgQ2ZVBIptdxvMj2mYh+SRgIirA/PKO4VpNu/Rv/cCFZPQ+WPZVGz
-        bAYoVYO/4B6CUOnW6E64lJga8O7M
-X-Google-Smtp-Source: ADFU+vs1bNwqTVCuFgh6LE546VHpMUSdu5Q9jb1K8Wh8hI7LsW3Q99gMy03oWAW0Bf9aW5kCaNsUww==
-X-Received: by 2002:a17:902:aa97:: with SMTP id d23mr15465999plr.244.1585625302223;
-        Mon, 30 Mar 2020 20:28:22 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id v59sm761223pjb.26.2020.03.30.20.28.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Mar 2020 20:28:21 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        anenbupt@gmail.com, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] ath9k: fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-Date:   Tue, 31 Mar 2020 11:28:16 +0800
-Message-Id: <1585625296-31013-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 30 Mar 2020 23:29:17 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12657 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727358AbgCaD3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 23:29:17 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 78841DC6D5413620629F;
+        Tue, 31 Mar 2020 11:29:14 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Tue, 31 Mar 2020
+ 11:29:09 +0800
+Subject: Re: [PATCH -next] ACPICA: Make acpi_protocol_lengths static
+To:     "Kaneda, Erik" <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Moore, Robert" <robert.moore@intel.com>
+References: <20200328034706.17840-1-yuehaibing@huawei.com>
+ <CAJZ5v0ikZoo5bgrfUsGic7FTCZQu7m_EYLDH1LMcMGNwNjtvqw@mail.gmail.com>
+ <CY4PR11MB171942777865293C74EF1D9AF0CB0@CY4PR11MB1719.namprd11.prod.outlook.com>
+CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <81c23927-e3eb-dd97-6b9d-5e91d19a61b8@huawei.com>
+Date:   Tue, 31 Mar 2020 11:29:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <CY4PR11MB171942777865293C74EF1D9AF0CB0@CY4PR11MB1719.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add barrier to accessing the stack array skb_pool.
+On 2020/3/31 1:52, Kaneda, Erik wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: linux-acpi-owner@vger.kernel.org <linux-acpi-
+>> owner@vger.kernel.org> On Behalf Of Rafael J. Wysocki
+>> Sent: Saturday, March 28, 2020 2:14 AM
+>> To: YueHaibing <yuehaibing@huawei.com>; Moore, Robert
+>> <robert.moore@intel.com>; Kaneda, Erik <erik.kaneda@intel.com>
+>> Cc: Wysocki, Rafael J <rafael.j.wysocki@intel.com>; Len Brown
+>> <lenb@kernel.org>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>;
+>> open list:ACPI COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>;
+>> Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+>> Subject: Re: [PATCH -next] ACPICA: Make acpi_protocol_lengths static
+>>
+>> On Sat, Mar 28, 2020 at 4:47 AM YueHaibing <yuehaibing@huawei.com>
+>> wrote:
+>>>
+>>> Fix sparse warning:
+>>>
+>>> drivers/acpi/acpica/exfield.c:25:10: warning:
+>>>  symbol 'acpi_protocol_lengths' was not declared. Should it be static?
+>  
+> I don’t understand what sparse is trying to say here. This variable is declared in exfield.c...
+> Could you provide more details on this sparse warning?
 
-Reported-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/net/wireless/ath/ath9k/hif_usb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This is sparse -Wdel option's job, see man manual:
 
-diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.c b/drivers/net/wireless/ath/ath9k/hif_usb.c
-index dd0c323..c4a2b72 100644
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -612,6 +612,11 @@ static void ath9k_hif_usb_rx_stream(struct hif_device_usb *hif_dev,
- 			hif_dev->remain_skb = nskb;
- 			spin_unlock(&hif_dev->rx_lock);
- 		} else {
-+			if (pool_index == MAX_PKT_NUM_IN_TRANSFER) {
-+				dev_err(&hif_dev->udev->dev,
-+					"ath9k_htc: over RX MAX_PKT_NUM\n");
-+				goto err;
-+			}
- 			nskb = __dev_alloc_skb(pkt_len + 32, GFP_ATOMIC);
- 			if (!nskb) {
- 				dev_err(&hif_dev->udev->dev,
--- 
-1.8.3.1
+       -Wdecl Warn about any non-static variable or function definition that
+              has no previous declaration.
+
+              Private symbols (functions and variables) internal to a given
+              source file should use static, to allow additional compiler
+              optimizations, allow detection of unused symbols, and prevent
+              other code from relying on these internal symbols.  Public
+              symbols used by other source files will need declarations
+              visible to those other source files, such as in a header file.
+              All declarations should fall into one of these two categories.
+              Thus, with -Wdecl, Sparse warns about any symbol definition
+              with neither static nor a declaration.  To fix this warning,
+              declare private symbols static, and ensure that the files
+              defining public symbols have the symbol declarations available
+              first (such as by including the appropriate header file).
+
+> 
+> Erik
+> 
+>>>
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Bob, Erik, I'm leaving this one to you.
+>>
+>>> ---
+>>>  drivers/acpi/acpica/exfield.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/acpi/acpica/exfield.c
+>>> b/drivers/acpi/acpica/exfield.c index e85eb31e5075..3323a2ba6a31
+>>> 100644
+>>> --- a/drivers/acpi/acpica/exfield.c
+>>> +++ b/drivers/acpi/acpica/exfield.c
+>>> @@ -22,7 +22,7 @@ ACPI_MODULE_NAME("exfield")
+>>>   */
+>>>  #define ACPI_INVALID_PROTOCOL_ID        0x80
+>>>  #define ACPI_MAX_PROTOCOL_ID            0x0F
+>>> -const u8 acpi_protocol_lengths[] = {
+>>> +static const u8 acpi_protocol_lengths[] = {
+>>>         ACPI_INVALID_PROTOCOL_ID,       /* 0 - reserved */
+>>>         ACPI_INVALID_PROTOCOL_ID,       /* 1 - reserved */
+>>>         0x00,                   /* 2 - ATTRIB_QUICK */
+>>> --
+>>> 2.17.1
+>>>
+>>>
 
