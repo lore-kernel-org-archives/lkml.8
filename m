@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0968C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCC8C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BBB2137B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE6CE20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645710;
-	bh=bZoCsEb7wD0uIXnpD9U+XVKOmILOUBspGxL7skoOLsU=;
+	s=default; t=1585645713;
+	bh=LUr+Qy3SYx/y4w3WfYIPeBIObF+JeJjDiX67mmvdWiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYo2flfHYBD6t//DQcaw1O/Gmpl/awD844t4L50D0bumB9VkBnbaoO4R5bTcF/gmO
-	 z8/VXQg2pNiOQnCVXlK7Xs82l6u6dPX8Re29Scm5xBEKitinb+lvPKFKgvyHCfbINX
-	 vDSFn5QVJO39B202aNyuhNKL/+uTSTPssN7n6ieQ=
+	b=BTVNlT3xmk8Bh27xZcF/9ngaLmK8S33pVXX5gRI25Jt7f2tWv2hSRG7I/DWW02sWB
+	 xdE4gPVMc5uXB5tZLsRNW5XNjwDpelM6zZzawD/i+Ixr0bZrOq5moc+QKa/fm0/8ln
+	 b82v0jcdWwxPzdso9ZtmfvT5twlqEeBKgtK2Bfcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbgCaJI3 (ORCPT
+        id S1731351AbgCaJI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730679AbgCaJI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 05:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731127AbgCaJIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:08:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B3212072E;
-        Tue, 31 Mar 2020 09:08:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8538A2072E;
+        Tue, 31 Mar 2020 09:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645707;
-        bh=bZoCsEb7wD0uIXnpD9U+XVKOmILOUBspGxL7skoOLsU=;
+        s=default; t=1585645705;
+        bh=LUr+Qy3SYx/y4w3WfYIPeBIObF+JeJjDiX67mmvdWiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHNUeYyry4anYjjtyfOclsYFn14yBgEY1IQ3I6YKYpGuG6vEdf2yFaLAdOZfaxbDj
-         LMNo/nK6E5aiZzVTYyJjt/6sqWfVcK4k0ozELmPvV+INBDooBHfj3aFvSNvsq9mJPj
-         U1uwNQlZGB3L98me39Wfp2dd8b5Ih3tjtLcNAeb8=
+        b=L5n4ExNBQqTVI0W8EnUglYyLDkR9ZTBGaG8VhR5FL86TNVOZOEbH4iQ9AsKfQVPOa
+         nLqYfxQkVIVAoS6rsCeXvK3r0YSpPPPIjSLv7Qs5i5k7gPkYtHe/gWpCY0VBFRj/WC
+         NdhYqhQNINXDsyDw4xYuKTiFjAkiXCbVrskJLtfc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Ajay Gupta <ajayg@nvidia.com>, Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.5 139/170] i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-Date:   Tue, 31 Mar 2020 10:59:13 +0200
-Message-Id: <20200331085438.227950831@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.5 138/170] netfilter: nft_fwd_netdev: allow to redirect to ifb via ingress
+Date:   Tue, 31 Mar 2020 10:59:12 +0200
+Message-Id: <20200331085438.148415210@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -61,66 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit d944b27df121e2ee854a6c2fad13d6c6300792d4 upstream.
+commit bcfabee1afd99484b6ba067361b8678e28bbc065 upstream.
 
-Nvidia card may come with a "phantom" UCSI device, and its driver gets
-stuck in probe routine, prevents any system PM operations like suspend.
+Set skb->tc_redirected to 1, otherwise the ifb driver drops the packet.
+Set skb->tc_from_ingress to 1 to reinject the packet back to the ingress
+path after leaving the ifb egress path.
 
-There's an unaccounted case that the target time can equal to jiffies in
-gpu_i2c_check_status(), let's solve that by using readl_poll_timeout()
-instead of jiffies comparison functions.
+This patch inconditionally sets on these two skb fields that are
+meaningful to the ifb driver. The existing forward action is guaranteed
+to run from ingress path.
 
-Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Ajay Gupta <ajayg@nvidia.com>
-Tested-by: Ajay Gupta <ajayg@nvidia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 39e6dea28adc ("netfilter: nf_tables: add forward expression to the netdev family")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-nvidia-gpu.c |   18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ net/netfilter/nft_fwd_netdev.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/i2c/busses/i2c-nvidia-gpu.c
-+++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
-@@ -8,6 +8,7 @@
- #include <linux/delay.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-@@ -75,20 +76,15 @@ static void gpu_enable_i2c_bus(struct gp
+--- a/net/netfilter/nft_fwd_netdev.c
++++ b/net/netfilter/nft_fwd_netdev.c
+@@ -28,6 +28,10 @@ static void nft_fwd_netdev_eval(const st
+ 	struct nft_fwd_netdev *priv = nft_expr_priv(expr);
+ 	int oif = regs->data[priv->sreg_dev];
  
- static int gpu_i2c_check_status(struct gpu_i2c_dev *i2cd)
- {
--	unsigned long target = jiffies + msecs_to_jiffies(1000);
- 	u32 val;
-+	int ret;
- 
--	do {
--		val = readl(i2cd->regs + I2C_MST_CNTL);
--		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER))
--			break;
--		if ((val & I2C_MST_CNTL_STATUS) !=
--				I2C_MST_CNTL_STATUS_BUS_BUSY)
--			break;
--		usleep_range(500, 600);
--	} while (time_is_after_jiffies(target));
-+	ret = readl_poll_timeout(i2cd->regs + I2C_MST_CNTL, val,
-+				 !(val & I2C_MST_CNTL_CYCLE_TRIGGER) ||
-+				 (val & I2C_MST_CNTL_STATUS) != I2C_MST_CNTL_STATUS_BUS_BUSY,
-+				 500, 1000 * USEC_PER_MSEC);
- 
--	if (time_is_before_jiffies(target)) {
-+	if (ret) {
- 		dev_err(i2cd->dev, "i2c timeout error %x\n", val);
- 		return -ETIMEDOUT;
- 	}
++	/* These are used by ifb only. */
++	pkt->skb->tc_redirected = 1;
++	pkt->skb->tc_from_ingress = 1;
++
+ 	nf_fwd_netdev_egress(pkt, oif);
+ 	regs->verdict.code = NF_STOLEN;
+ }
 
 
