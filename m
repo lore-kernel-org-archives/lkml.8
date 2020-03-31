@@ -2,169 +2,147 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409B8C43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB960C2D0EE
 	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154AB20CC7
+	by mail.kernel.org (Postfix) with ESMTP id B8A3F21473
 	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585670259;
-	bh=Z34pspBhqMJqahd4MffOLhAEomB14DsGzR3OqdRcvaU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H4cxtdnura+h/ecvkXdUY82dTEobrSsNjw3eUCK26lO1vg+l7Hj3MiAxFNWp9a/Tq
-	 4tYDyYaEcy4lhbvaMfvxTyNZQfh4wIa/FnaHndH8K5UomBa587CRgJuQNdEljwwbnu
-	 8IF0ejqzq5E8hpSQACmcbHWtmmFMKAWGMNHa8W7U=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPdMS82Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbgCaP5i (ORCPT
+        id S1731179AbgCaP5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 31 Mar 2020 11:57:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbgCaP5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33620 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730105AbgCaP5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 11:57:37 -0400
-Received: from DESKTOP-GFFITBK.localdomain (218-161-90-76.HINET-IP.hinet.net [218.161.90.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76D4B212CC;
-        Tue, 31 Mar 2020 15:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585670256;
-        bh=Z34pspBhqMJqahd4MffOLhAEomB14DsGzR3OqdRcvaU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BESI4iYI7S4LZ8V9oksT3+mHeXn5MARHjZOFPsanwIhqTA2BoqoTS1zPJkHEPUcMa
-         ONGAMtYGeRtOoOrAHgkK1Flwjbnc9jXxszztSVvlONLW8RSKybN9gFpgwi9gRK9FYH
-         R5jkxCSLv8jpUpgRUUcghlP4JUqvhb0OIF6/TmJM=
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, CK Hu <ck.hu@mediatek.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Subject: [PATCH v3 1/4] drm/mediatek: Move tz_disabled from mtk_hdmi_phy to mtk_hdmi driver
-Date:   Tue, 31 Mar 2020 23:57:25 +0800
-Message-Id: <20200331155728.18032-2-chunkuang.hu@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200331155728.18032-1-chunkuang.hu@kernel.org>
-References: <20200331155728.18032-1-chunkuang.hu@kernel.org>
+Received: by mail-wm1-f65.google.com with SMTP id z14so2370316wmf.0;
+        Tue, 31 Mar 2020 08:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BNFMjtXJfiHlQMR9l7UbxDk1QF+cJZZU1iswPz9+i6o=;
+        b=RPdMS82ZlLssKw9Dkgko5xZa3ImkwSpdhRLHGtlKqP2Rqt8KqzQXeLhnrRudlAXjCS
+         p7XKRqIbS3gD6+uZx0TJ7Ek8Rn5GTVw/xoFy7zaaZWVESd8tf9ARpGUZlhih/Msi+ciQ
+         q5PCQm3kppwX0Sf1zB+DZGgui/OZ3MZ76tsUItZjF7rn+R/aGWRGECmJIcnUPSu5O8Ye
+         X3h4Tsw4u9RAasU20fcFUWoiD6nxChyG3ZmKTWy7VbHlwop4hXLI16oM5MyM/UAl3/E1
+         lXs/57QVL1ZqrwjeQSAz4r0OrZq9R4MBNMXY21rmjKS7q24rSv0vUaTZjTgOsJsWEdBS
+         ZVTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=BNFMjtXJfiHlQMR9l7UbxDk1QF+cJZZU1iswPz9+i6o=;
+        b=tig3bGh4Wd/LppUVkvDFHOjJSzm/3W8iJaQ+nyMD4Qkw8pPoDbYItfdv3vy2ZbD0NC
+         1GbEnRf16uxexwClBDxObWPBhYUvyOwpASQBnBv0GHqQJ3UbN3NSDDdNEtjcWXntLkN6
+         RRMSInDelZQWjBQ8CBeWXzz5vZdzlQTEhbB3xGVkFSBv/YY4jBsvXiK3phBL9c5RHjIt
+         Gkbmf33BSbLy6dWDZ+5YbxtGE28fMwAckRSNkCvLdiWB/9tQ+3icIuzpVq1cUY+3ouh5
+         wx2rEt9oVavwd+942yhnmFGDRxDoCKFQiMiLXCfkhZ47N6k1Zbx5Ckk+FnMcWIvOvEkE
+         e4ow==
+X-Gm-Message-State: ANhLgQ1VNLylwxoQBCvj5qXeRoed+WiKXndcvx+AmmC9wEneTo37OFMR
+        Au/v8b5ih7Rb2PXdt33EVD4=
+X-Google-Smtp-Source: ADFU+vuUo3iYi1QiNUBgHOWtkUNq0FOy4wwadRDrWpieJWPIzSdppOmeXv8LCWNQciex4ictjFt6CQ==
+X-Received: by 2002:a05:600c:2f90:: with SMTP id t16mr4269086wmn.66.1585670255600;
+        Tue, 31 Mar 2020 08:57:35 -0700 (PDT)
+Received: from [10.230.186.223] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id k9sm28456616wrd.74.2020.03.31.08.57.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 08:57:34 -0700 (PDT)
+Subject: Re: [PATCH] net: dsa: ksz: Select KSZ protocol tag
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     woojung.huh@microchip.com, andrew@lunn.ch,
+        vivien.didelot@gmail.com, davem@davemloft.net,
+        Cristian Birsan <cristian.birsan@microchip.com>
+References: <20200331093651.23365-1-codrin.ciubotariu@microchip.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <8455cc8b-a51a-6d39-7e88-7eea2e61524c@gmail.com>
+Date:   Tue, 31 Mar 2020 08:57:31 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200331093651.23365-1-codrin.ciubotariu@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: CK Hu <ck.hu@mediatek.com>
 
-tz_disabled is used to control mtk_hdmi output signal, but this variable
-is stored in mtk_hdmi_phy and mtk_hdmi_phy does not use it. So move
-tz_disabled to mtk_hdmi where it's used.
 
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
----
- drivers/gpu/drm/mediatek/mtk_hdmi.c           | 22 ++++++++++++++++---
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.h       |  1 -
- .../gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c    |  1 -
- 3 files changed, 19 insertions(+), 5 deletions(-)
+On 3/31/2020 2:36 AM, Codrin Ciubotariu wrote:
+> KSZ protocol tag is needed by the KSZ DSA drivers.
+> 
+> Fixes: 0b9f9dfbfab4 ("dsa: Allow tag drivers to be built as modules")
+> Tested-by: Cristian Birsan <cristian.birsan@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 5e4a4dbda443..878433c09c9b 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -144,11 +144,16 @@ struct hdmi_audio_param {
- 	struct hdmi_codec_params codec_params;
- };
- 
-+struct mtk_hdmi_conf {
-+	bool tz_disabled;
-+};
-+
- struct mtk_hdmi {
- 	struct drm_bridge bridge;
- 	struct drm_bridge *next_bridge;
- 	struct drm_connector conn;
- 	struct device *dev;
-+	const struct mtk_hdmi_conf *conf;
- 	struct phy *phy;
- 	struct device *cec_dev;
- 	struct i2c_adapter *ddc_adpt;
-@@ -230,7 +235,6 @@ static void mtk_hdmi_hw_vid_black(struct mtk_hdmi *hdmi, bool black)
- static void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
- {
- 	struct arm_smccc_res res;
--	struct mtk_hdmi_phy *hdmi_phy = phy_get_drvdata(hdmi->phy);
- 
- 	/*
- 	 * MT8173 HDMI hardware has an output control bit to enable/disable HDMI
-@@ -238,7 +242,7 @@ static void mtk_hdmi_hw_make_reg_writable(struct mtk_hdmi *hdmi, bool enable)
- 	 * The ARM trusted firmware provides an API for the HDMI driver to set
- 	 * this control bit to enable HDMI output in supervisor mode.
- 	 */
--	if (hdmi_phy->conf && hdmi_phy->conf->tz_disabled)
-+	if (hdmi->conf->tz_disabled)
- 		regmap_update_bits(hdmi->sys_regmap,
- 				   hdmi->sys_offset + HDMI_SYS_CFG20,
- 				   0x80008005, enable ? 0x80000005 : 0x8000);
-@@ -1688,6 +1692,7 @@ static int mtk_drm_hdmi_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	hdmi->dev = dev;
-+	hdmi->conf = of_device_get_match_data(dev);
- 
- 	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev);
- 	if (ret)
-@@ -1765,8 +1770,19 @@ static int mtk_hdmi_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(mtk_hdmi_pm_ops,
- 			 mtk_hdmi_suspend, mtk_hdmi_resume);
- 
-+static const struct mtk_hdmi_conf mtk_hdmi_conf_mt2701 = {
-+	.tz_disabled = true,
-+};
-+
-+static const struct mtk_hdmi_conf mtk_hdmi_conf_mt8173;
-+
- static const struct of_device_id mtk_drm_hdmi_of_ids[] = {
--	{ .compatible = "mediatek,mt8173-hdmi", },
-+	{ .compatible = "mediatek,mt2701-hdmi",
-+	  .data = &mtk_hdmi_conf_mt2701,
-+	},
-+	{ .compatible = "mediatek,mt8173-hdmi",
-+	  .data = &mtk_hdmi_conf_mt8173,
-+	},
- 	{}
- };
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-index 2d8b3182470d..fc1c2efd1128 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-@@ -20,7 +20,6 @@
- struct mtk_hdmi_phy;
- 
- struct mtk_hdmi_phy_conf {
--	bool tz_disabled;
- 	unsigned long flags;
- 	const struct clk_ops *hdmi_phy_clk_ops;
- 	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
-diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-index d3cc4022e988..99fe05cd3598 100644
---- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-+++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-@@ -237,7 +237,6 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
- }
- 
- struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
--	.tz_disabled = true,
- 	.flags = CLK_SET_RATE_GATE,
- 	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
- 	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.17.1
-
+Florian
