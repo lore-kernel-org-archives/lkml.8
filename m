@@ -2,139 +2,114 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B71C43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F48C2D0EE
 	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB7B20772
+	by mail.kernel.org (Postfix) with ESMTP id 7A59A208FE
 	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 10:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1585651329;
-	bh=IMaARxto1wU2KuadB9baG/GU1gTRr4yDXBIObte9rUE=;
+	bh=MZAU576gyLJO4F4wEGfdDUQTS1+k9BE34i/jleEvrXM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JyWFxZsWptqLEDEn5IJoX4Agwg9RPSLCvadCYaNr6g2DDisa2zplxzBvi8fDuXnAi
-	 icnLpCEQaK/Z3VOwAS9sDck3XguAofjELJ3nqSrDG/6fRmbWmt54B9ICSHBNd/1Q+g
-	 8Kq5U13Ua5d/UytGrDhyRgSlPmfr33fsxaNHyKkc=
+	b=bT5o3QIuHp9S+1D9D+QdgfGISPCbToBMCSh+QteOOsiEEJWpq6q8pLl/Pt7j3n2GU
+	 x4P/atFhomrTqncXXlcSSwjRuEEwx+w3y3VKhgcCcylKdAlaycNLtk2OxUbGWc2g7A
+	 kF/SQ0MNA9mL6rkPHUle73OVkxjfklABLkFwAu8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbgCaKmF (ORCPT
+        id S1730419AbgCaKmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:42:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41268 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 06:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729925AbgCaKmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730358AbgCaKmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 31 Mar 2020 06:42:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35DC9208E0;
-        Tue, 31 Mar 2020 10:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 936A7208E4;
+        Tue, 31 Mar 2020 10:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585651322;
-        bh=IMaARxto1wU2KuadB9baG/GU1gTRr4yDXBIObte9rUE=;
+        s=default; t=1585651325;
+        bh=MZAU576gyLJO4F4wEGfdDUQTS1+k9BE34i/jleEvrXM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QVDUBY08T61oYJnGnL0TYd5PkxZhrsSrplWX1MhZo7JJEuh9dJxaOImZkAvEbAI5J
-         hqGnj93Lfu+MKj1InKmcNS983cH/JEzFzymScBkzf5emnjN9TzSFzc9FPYu+7zIxDs
-         YVtxYf1hxh5Rs16+hwNcZLrkddy47YtFvM+xcMD8=
-Date:   Tue, 31 Mar 2020 12:02:38 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dirk Mueller <dmueller@suse.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5.5 102/170] scripts/dtc: Remove redundant YYLOC global
- declaration
-Message-ID: <20200331100238.GA1204199@kroah.com>
-References: <20200331085423.990189598@linuxfoundation.org>
- <20200331085435.053942582@linuxfoundation.org>
- <20200331095323.GA32667@ubuntu-m2-xlarge-x86>
+        b=R1DaSB+mTncyky8tsYLt/2VbvY124DhWGXSFbkKH/FsUb3sL2o494Xms4GD3EdOfs
+         uWL7HfRO/kMdPHq3Y6acegGr6qNXyYMNd/A0e8MdsotYW0yiJzqm1AAoV6i4o2hUah
+         Nbdgrk4B+T0wUCZQgB/PYSLJv5NQJC1UOcvvzgR0=
+Date:   Tue, 31 Mar 2020 12:04:06 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com,
+        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
+        sanjay.k.kumar@intel.com
+Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
+Message-ID: <20200331100406.GB1204199@kroah.com>
+References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+ <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200331095323.GA32667@ubuntu-m2-xlarge-x86>
+In-Reply-To: <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:53:23AM -0700, Nathan Chancellor wrote:
-> On Tue, Mar 31, 2020 at 10:58:36AM +0200, Greg Kroah-Hartman wrote:
-> > From: Dirk Mueller <dmueller@suse.com>
-> > 
-> > commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
-> > 
-> > gcc 10 will default to -fno-common, which causes this error at link
-> > time:
-> > 
-> >   (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-> > 
-> > This is because both dtc-lexer as well as dtc-parser define the same
-> > global symbol yyloc. Before with -fcommon those were merged into one
-> > defintion. The proper solution would be to to mark this as "extern",
-> > however that leads to:
-> > 
-> >   dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-> >    26 | extern YYLTYPE yylloc;
-> >       |                ^~~~~~
-> > In file included from dtc-lexer.l:24:
-> > dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-> >   127 | extern YYLTYPE yylloc;
-> >       |                ^~~~~~
-> > cc1: all warnings being treated as errors
-> > 
-> > which means the declaration is completely redundant and can just be
-> > dropped.
-> > 
-> > Signed-off-by: Dirk Mueller <dmueller@suse.com>
-> > Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-> > [robh: cherry-pick from upstream]
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > ---
-> >  scripts/dtc/dtc-lexer.l |    1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > --- a/scripts/dtc/dtc-lexer.l
-> > +++ b/scripts/dtc/dtc-lexer.l
-> > @@ -23,7 +23,6 @@ LINECOMMENT	"//".*\n
-> >  #include "srcpos.h"
-> >  #include "dtc-parser.tab.h"
-> >  
-> > -YYLTYPE yylloc;
-> >  extern bool treesource_error;
-> >  
-> >  /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-> > 
-> > 
+On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
+> Since the current accelerator devices do not have standard PCIe capability
+> enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
+> been added to struct pci_dev.  Currently a PCI quirk must be used for the
+> devices that have such cap until the PCI cap is standardized. Add a helper
+> function to provide the check if a device supports the cmdmem capability.
 > 
-> Hi Greg,
+> Such capability is expected to be added to PCIe device cap enumeration in
+> the future.
 > 
-> Replying here simply because I am not subscribed to the stable-commits
-> mailing list and there does not appear to be an easy way to reply to one
-> of those emails through the existing archives because they are not as
-> nice as lore.kernel.org.
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/base/core.c    |   13 +++++++++++++
+>  include/linux/device.h |    2 ++
+>  include/linux/pci.h    |    1 +
+>  3 files changed, 16 insertions(+)
 > 
-> This patch is fine for the current releases in review but 4.4, 4.9, and
-> 4.14 need to have the patch applied to scripts/dtc/dtc-lexer.lex.c_shipped
-> because prior to commit e039139be8c2 ("scripts/dtc: generate lexer and
-> parser during build instead of shipping"), that was the file that was
-> being built. Running the command below in the stable-queue repo works
-> for me and I have tested all of the patches to make sure they still
-> apply (albeit with some fuzz).
-> 
-> $ sed -i 's;scripts/dtc/dtc-lexer.l;scripts/dtc/dtc-lexer.lex.c_shipped;g' \
-> queue-{4.4,4.9,4.14}/scripts-dtc-remove-redundant-yyloc-global-declaration.patch
-> 
-> If you would prefer a set of patches, let me know.
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index dbb0f9130f42..cd9f5b040ed4 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/netdevice.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/pci.h>
+>  
+>  #include "base.h"
+>  #include "power/power.h"
+> @@ -3790,3 +3791,15 @@ int device_match_any(struct device *dev, const void *unused)
+>  	return 1;
+>  }
+>  EXPORT_SYMBOL_GPL(device_match_any);
+> +
+> +bool device_supports_cmdmem(struct device *dev)
+> +{
+> +	struct pci_dev *pdev;
+> +
+> +	if (!dev_is_pci(dev))
+> +		return false;
+> +
+> +	pdev = to_pci_dev(dev);
+> +	return pdev->cmdmem;
+> +}
+> +EXPORT_SYMBOL_GPL(device_supports_cmdmem);
 
-Should I just drop the patch from 4.4, 4.9, and 4.14 instead?
-
-If not, yes, I can run the above script on the patches.
+Why would a pci-specific function like this be ok to have in the driver
+core?  Please keep it in the pci core code instead.
 
 thanks,
 
