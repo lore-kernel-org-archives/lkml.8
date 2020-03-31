@@ -2,137 +2,311 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FD3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A23C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1DB212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBA8206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:05:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+JLJxK7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q0agAYmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbgCaQEc (ORCPT
+        id S1731413AbgCaQE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:04:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36476 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731149AbgCaQE3 (ORCPT
+        Tue, 31 Mar 2020 12:04:59 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38291 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730562AbgCaQE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:04:29 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g2so8286362plo.3;
-        Tue, 31 Mar 2020 09:04:28 -0700 (PDT)
+        Tue, 31 Mar 2020 12:04:59 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f6so3383048wmj.3;
+        Tue, 31 Mar 2020 09:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X1SdScS0pJ3mpXQidkxmuvpGZqOVzChrbcKXKudpDIE=;
-        b=h+JLJxK7CFJYfYvYfWqX5h/pazSbJqr8Ek50GeADQYHW/2KqN4zP/w06oOvbpKlAv3
-         kokFeznSBsgR06ybz8/OAD65dey+GNq2fZ6lHZ5NVrM8Ubb6RaYj5hLjzUUfy7OHrWLt
-         FaPZIIxqk8lMiUNyM822AEjaZAyWg1SMLhhzEEbmlR+RwkYokXWxCEbdMsjmySYboWiS
-         2qpeu6x5sTJ2wsv9IxH53gUCwQrgxqKIQPaYELY56gizC7PUuzAw6FahG9hZVSg/8gGX
-         4fc4ElrvSB8NrTFypCUSeTtRA2Sevqnft/A6U1AwDIo8COjJ1RkJlIivz+uOTyBJ1SGl
-         lk+g==
+        h=from:to:cc:subject:date:message-id;
+        bh=4VKI9AuPhMvUgqTj7z2yAveanc53o7XusIgD/wUX0qM=;
+        b=q0agAYmm/VmDdDcewOukFSDP029eE+dPAyRe1UJebG980+mCCXFDfpDZYsJGXffTI9
+         by1tNoD5G+i/Ffh4pvhmWX3TLLoAMEzIL0+NsQ/Q3ngv8BdhSX5kl5sX/ldWDTuEITlf
+         4CfG/ggwB2NZs56lKww74VrGuLbMtYMZR5wmzOaipMmiozrTIBjFgLAaueoy7F4JYT9l
+         pR+UOHuggwL6Zq3a6PHNYd6Ty+JXTKndlizKODM4acD6ZV1+Agcxn1jadBN0WycrsLqH
+         NtNIirApMeePMh0wQNM4RLnxVBzfURMBSPQ25wes250TigM7rSn830EOpLFZKsTr+BHQ
+         gDWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X1SdScS0pJ3mpXQidkxmuvpGZqOVzChrbcKXKudpDIE=;
-        b=Lu+kFiGm7s4r1xx7miP5dFbd1M6viNuMfURr1jvHfQJRg7gaug7Y5ihswjzD6PLPq9
-         xWlHmjVcrQmfsV/HHIh86d5k3AxM5r4N56NbTDpydMHzu/paq1A+mr2BAiXyrdVfoelX
-         X5BMAyD72rcMD9EIfNLoQCtcDbTU34vkSA1PSE2I/gjYaCH8PP1BW5LI+h+AHwLU622u
-         9qivxF+HTcweZcfL+WiXOytULK00w5GLyv891hwduoyT3KqIXKsHi4onxY1QLCMMBCOY
-         v7bhDKtfxoK1Urq19hg7+TT56vTxpJWEgquCJyuxZXk31oKYMUXWDLjkyZKPYUARwMqI
-         K4jg==
-X-Gm-Message-State: AGi0Pub+x+tpTT3KE0KGw93wctV5cVKpT/4jMkIZ9/6FvJFrDNFmbxq+
-        Nm334VzB8lYH+AryfDc2pUqTxNGv
-X-Google-Smtp-Source: APiQypJrspyRp5umB9TCpbf1jLE5RudoTIIta4kOP3pK2QDOLN/kiqt2GTpeVBzTaLoYy1KFfMJgNw==
-X-Received: by 2002:a17:90b:14cf:: with SMTP id jz15mr4929463pjb.36.1585670667858;
-        Tue, 31 Mar 2020 09:04:27 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k189sm11972590pgc.24.2020.03.31.09.04.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 09:04:27 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:04:26 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Stefan Riedmueller <s.riedmueller@phytec.de>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] watchdog: da9062: Use pre-configured timeout until
- userspace takes over
-Message-ID: <20200331160426.GA41516@roeck-us.net>
-References: <20200326150203.371673-1-s.riedmueller@phytec.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326150203.371673-1-s.riedmueller@phytec.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4VKI9AuPhMvUgqTj7z2yAveanc53o7XusIgD/wUX0qM=;
+        b=p8KlvI7Lsv2DWz+7APdcCrQh4DDlbYNiHjGHCABK8YlUgebBEfO0sIMxp6nJWsTDYb
+         oNYc9h/CvuZJybjoUAujBIiOMgM2hg+V+x6noW3PI05W3sEv6b3ROMztdlSmgR/AlNk7
+         ji/0Po0Ysz1BWLs4NbF76s65z5ndUBKfHVCUJOCR7AlFMFEhKP9QPN/8fbh4njQRyK8V
+         4DwjzX/B2LYcBFwX23nG7rKPb6j1V/p34a/iLMEV+vVxAJ5wTaLhFEKTxEVtVqclsDaN
+         VJBznEO5RnM6mqgyUEwURrr9BQ9CXEIsStUNB98t+zE3EXN1qrKn1UoUm2dFLSaKgv9J
+         H1Mg==
+X-Gm-Message-State: ANhLgQ34RFYe8RrYxOhUSIf0RjM/PjgOEoBe7Bgnq2RkCrcm1Ew+cihU
+        JbjgMpvaApdfdaO6r9pAucM=
+X-Google-Smtp-Source: ADFU+vuRA91pE+w4+dgBDghI6jnabCDYF3dXfWt06pUcEiVsl2Z3RjgW5I01mlHajMa+eP/KDc8jMw==
+X-Received: by 2002:a1c:4987:: with SMTP id w129mr4406106wma.168.1585670696219;
+        Tue, 31 Mar 2020 09:04:56 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id p17sm1651433wmb.30.2020.03.31.09.04.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Mar 2020 09:04:55 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dt-bindings: display: convert rockchip rk3066 hdmi bindings to yaml
+Date:   Tue, 31 Mar 2020 18:04:48 +0200
+Message-Id: <20200331160448.15331-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:02:01PM +0100, Stefan Riedmueller wrote:
-> If the watchdog is already running during probe read back its
-> pre-configured timeout (set e.g. by the bootloader) and use it to ping
-> the watchdog until userspace takes over. Otherwise the default timeout
-> set before might not result in a fast enough ping.
-> 
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> ---
->  drivers/watchdog/da9062_wdt.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-> index 0ad15d55071c..6d81b1276b87 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -35,6 +35,14 @@ struct da9062_watchdog {
->  	bool use_sw_pm;
->  };
->  
-> +static unsigned int da9062_wdt_read_timeout(struct da9062_watchdog *wdt)
-> +{
-> +	int val;
-> +
-> +	regmap_read(wdt->hw->regmap, DA9062AA_CONTROL_D, &val);
-> +	return wdt_timeout[val & DA9062AA_TWDSCALE_MASK];
-> +}
-> +
->  static unsigned int da9062_wdt_timeout_to_sel(unsigned int secs)
->  {
->  	unsigned int i;
-> @@ -184,6 +192,7 @@ static int da9062_wdt_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	int ret;
-> +	int timeout;
->  	struct da9062 *chip;
->  	struct da9062_watchdog *wdt;
->  
-> @@ -213,6 +222,13 @@ static int da9062_wdt_probe(struct platform_device *pdev)
->  	watchdog_set_drvdata(&wdt->wdtdev, wdt);
->  	dev_set_drvdata(dev, &wdt->wdtdev);
->  
-> +	timeout = da9062_wdt_read_timeout(wdt);
-> +	if (timeout > 0) {
-> +		wdt->wdtdev.timeout = timeout;
-> +		set_bit(WDOG_HW_RUNNING, &wdt->wdtdev.status);
-> +		dev_info(wdt->hw->dev, "watchdog is running (%u s)", timeout);
-> +	}
+Current dts files with 'hdmi' nodes for rk3066 are manually verified.
+In order to automate this process rockchip,rk3066-hdmi.txt
+has to be converted to yaml.
 
-Oh, and I agree with the comment made for the da9063 driver: This driver
-should really implement watchdog_init_timeout() and set the default timeout
-accordingly if specified in dt (or, in other words, follow the da9063
-implementation).
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../display/rockchip/rockchip,rk3066-hdmi.txt      |  72 -----------
+ .../display/rockchip/rockchip,rk3066-hdmi.yaml     | 141 +++++++++++++++++++++
+ 2 files changed, 141 insertions(+), 72 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
 
-Guenter
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+deleted file mode 100644
+index d1ad31bca..000000000
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
++++ /dev/null
+@@ -1,72 +0,0 @@
+-Rockchip specific extensions for rk3066 HDMI
+-============================================
+-
+-Required properties:
+-- compatible:
+-	"rockchip,rk3066-hdmi";
+-- reg:
+-	Physical base address and length of the controller's registers.
+-- clocks, clock-names:
+-	Phandle to HDMI controller clock, name should be "hclk".
+-- interrupts:
+-	HDMI interrupt number.
+-- power-domains:
+-	Phandle to the RK3066_PD_VIO power domain.
+-- rockchip,grf:
+-	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
+-- ports:
+-	Contains one port node with two endpoints, numbered 0 and 1,
+-	connected respectively to vop0 and vop1.
+-	Contains one port node with one endpoint
+-	connected to a hdmi-connector node.
+-- pinctrl-0, pinctrl-name:
+-	Switch the iomux for the HPD/I2C pins to HDMI function.
+-
+-Example:
+-	hdmi: hdmi@10116000 {
+-		compatible = "rockchip,rk3066-hdmi";
+-		reg = <0x10116000 0x2000>;
+-		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru HCLK_HDMI>;
+-		clock-names = "hclk";
+-		power-domains = <&power RK3066_PD_VIO>;
+-		rockchip,grf = <&grf>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			hdmi_in: port@0 {
+-				reg = <0>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				hdmi_in_vop0: endpoint@0 {
+-					reg = <0>;
+-					remote-endpoint = <&vop0_out_hdmi>;
+-				};
+-				hdmi_in_vop1: endpoint@1 {
+-					reg = <1>;
+-					remote-endpoint = <&vop1_out_hdmi>;
+-				};
+-			};
+-			hdmi_out: port@1 {
+-				reg = <1>;
+-				hdmi_out_con: endpoint {
+-					remote-endpoint = <&hdmi_con_in>;
+-				};
+-			};
+-		};
+-	};
+-
+-&pinctrl {
+-		hdmi {
+-			hdmi_hpd: hdmi-hpd {
+-				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
+-			};
+-			hdmii2c_xfer: hdmii2c-xfer {
+-				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
+-						<0 RK_PA2 1 &pcfg_pull_none>;
+-			};
+-		};
+-};
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
+new file mode 100644
+index 000000000..8f4acf707
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
+@@ -0,0 +1,141 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3066-hdmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip rk3066 HDMI controller
++
++maintainers:
++  - Sandy Huang <hjc@rock-chips.com>
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    const: rockchip,rk3066-hdmi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: hclk
++
++  pinctrl-0:
++    maxItems: 2
++
++  pinctrl-names:
++    const: default
++    description:
++      Switch the iomux for the HPD/I2C pins to HDMI function.
++
++  power-domains:
++    maxItems: 1
++
++  rockchip,grf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
++
++  ports:
++    type: object
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          Port node with two endpoints, numbered 0 and 1,
++          connected respectively to vop0 and vop1.
++
++      port@1:
++        type: object
++        description:
++          Port node with one endpoint connected to a hdmi-connector node.
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - port@0
++      - port@1
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - pinctrl-0
++  - pinctrl-names
++  - power-domains
++  - rockchip,grf
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3066a-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/pinctrl/rockchip.h>
++    #include <dt-bindings/power/rk3066-power.h>
++    hdmi: hdmi@10116000 {
++      compatible = "rockchip,rk3066-hdmi";
++      reg = <0x10116000 0x2000>;
++      interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru HCLK_HDMI>;
++      clock-names = "hclk";
++      pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
++      pinctrl-names = "default";
++      power-domains = <&power RK3066_PD_VIO>;
++      rockchip,grf = <&grf>;
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        hdmi_in: port@0 {
++          reg = <0>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++          hdmi_in_vop0: endpoint@0 {
++            reg = <0>;
++            remote-endpoint = <&vop0_out_hdmi>;
++          };
++          hdmi_in_vop1: endpoint@1 {
++            reg = <1>;
++            remote-endpoint = <&vop1_out_hdmi>;
++          };
++        };
++        hdmi_out: port@1 {
++          reg = <1>;
++          hdmi_out_con: endpoint {
++            remote-endpoint = <&hdmi_con_in>;
++          };
++        };
++      };
++    };
++
++    pinctrl {
++      hdmi {
++        hdmi_hpd: hdmi-hpd {
++          rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
++        };
++        hdmii2c_xfer: hdmii2c-xfer {
++          rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
++                          <0 RK_PA2 1 &pcfg_pull_none>;
++        };
++      };
++    };
+-- 
+2.11.0
 
-> +
->  	ret = devm_watchdog_register_device(dev, &wdt->wdtdev);
->  	if (ret < 0)
->  		return ret;
