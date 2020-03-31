@@ -2,225 +2,103 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E4BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DBAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3EC20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50AE920842
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 22:32:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="dXRKPE5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731384AbgCaWb1 (ORCPT
+        id S1731386AbgCaWc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:31:27 -0400
-Received: from mga02.intel.com ([134.134.136.20]:30096 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbgCaWb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 18:31:26 -0400
-IronPort-SDR: K67Ri56rCBMZRHxJ/urqElEhdXjZpLYt47TVC/4BkzbmUve9PPqvHbw8mP7SIvUK7o5ekWPtcX
- mQQMqtlPBVMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 15:31:26 -0700
-IronPort-SDR: x7+9+2GyuZdKUoCr0/pqHOp/fiqSXRV71rjcAqWtV2FUjNdlw9068G2QMGr75VCvTgokzQTWXn
- MKVsGTKeb+mA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,329,1580803200"; 
-   d="scan'208";a="249204455"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 31 Mar 2020 15:31:26 -0700
-Date:   Tue, 31 Mar 2020 15:37:13 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH V10 10/11] iommu/vt-d: Enlightened PASID allocation
-Message-ID: <20200331153713.2b53e898@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA10F@SHSMSX104.ccr.corp.intel.com>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1584746861-76386-11-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA10F@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 31 Mar 2020 18:32:26 -0400
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:62014 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaWcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 18:32:25 -0400
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 9EB225E923;
+        Tue, 31 Mar 2020 18:32:23 -0400 (EDT)
+        (envelope-from daniel.santos@pobox.com)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=subject:to:cc
+        :references:from:message-id:date:mime-version:in-reply-to
+        :content-type:content-transfer-encoding; s=sasl; bh=ij8E2mP4qn59
+        jj81vTeQK6B7GHM=; b=dXRKPE5N4m7oXAcItLUINV5/aqGBbNL9+oXl1FMODExK
+        j4cC6UHcXb9i2bFG2Sj19JpkR8aHIlskVH0wbLizueh/UA64CfMqz9tIqDyVIXZN
+        Hr2EHeGpohsN493+2FHsCl9lnoAhc5t9IH7YCeUuG6+ZvUhUF6T7d+PTR92jg1A=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=subject:to:cc
+        :references:from:message-id:date:mime-version:in-reply-to
+        :content-type:content-transfer-encoding; q=dns; s=sasl; b=ikshDs
+        vqIHah/bWJ1uWaMmIWWdFR8pcP3B3w20KKbAT8SH3CEdNn9T6xX5ZNW1+Q/Dndwm
+        x1WY/CAv5Z66KQeIJpGdYxSAdCBxqFur9tboO1FiGDVoX38mEJI1kIMNZOCoBSML
+        Hih51i3nhK/SX3fkHxvHMtxwhgxF4+qgTj/ps=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 955CA5E922;
+        Tue, 31 Mar 2020 18:32:23 -0400 (EDT)
+        (envelope-from daniel.santos@pobox.com)
+Received: from [192.168.0.8] (unknown [76.183.130.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 64C775E921;
+        Tue, 31 Mar 2020 18:32:17 -0400 (EDT)
+        (envelope-from daniel.santos@pobox.com)
+Subject: Re: [PATCH] compiler.h: fix error in BUILD_BUG_ON() reporting
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Joe Perches <joe@perches.com>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Ian Abbott <abbotti@mev.co.uk>
+References: <20200331112637.25047-1-vegard.nossum@oracle.com>
+ <dc53b8704ec674cba636b41d7f55bf507a7bd7aa.camel@perches.com>
+ <123d3606-cebf-4261-4b04-7d53d1fcdb07@prevas.dk>
+From:   Daniel Santos <daniel.santos@pobox.com>
+Message-ID: <7acde2e5-60dd-f384-fda7-1d018608f8e7@pobox.com>
+Date:   Tue, 31 Mar 2020 17:30:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <123d3606-cebf-4261-4b04-7d53d1fcdb07@prevas.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Pobox-Relay-ID: 7D88B43C-739F-11EA-BD69-C28CBED8090B-06139138!pb-smtp1.pobox.com
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Mar 2020 10:08:52 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Saturday, March 21, 2020 7:28 AM
-> > 
-> > From: Lu Baolu <baolu.lu@linux.intel.com>
-> > 
-> > Enabling IOMMU in a guest requires communication with the host
-> > driver for certain aspects. Use of PASID ID to enable Shared Virtual
-> > Addressing (SVA) requires managing PASID's in the host. VT-d 3.0
-> > spec provides a Virtual Command Register (VCMD) to facilitate this.
-> > Writes to this register in the guest are trapped by QEMU which
-> > proxies the call to the host driver.  
-> 
-> Qemu -> vIOMMU
-> 
-Sounds good. Thanks!
-> > 
-> > This virtual command interface consists of a capability register,
-> > a virtual command register, and a virtual response register. Refer
-> > to section 10.4.42, 10.4.43, 10.4.44 for more information.
-> > 
-> > This patch adds the enlightened PASID allocation/free interfaces
-> > via the virtual command interface.
-> > 
-> > Cc: Ashok Raj <ashok.raj@intel.com>
-> > Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> > ---
-> >  drivers/iommu/intel-pasid.c | 57
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/iommu/intel-pasid.h | 13 ++++++++++-
-> >  include/linux/intel-iommu.h |  1 +
-> >  3 files changed, 70 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/intel-pasid.c
-> > b/drivers/iommu/intel-pasid.c index 9f6d07410722..e87ad67aad36
-> > 100644 --- a/drivers/iommu/intel-pasid.c
-> > +++ b/drivers/iommu/intel-pasid.c
-> > @@ -27,6 +27,63 @@
-> >  static DEFINE_SPINLOCK(pasid_lock);
-> >  u32 intel_pasid_max_id = PASID_MAX;
-> > 
-> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid) +{
-> > +	unsigned long flags;
-> > +	u8 status_code;
-> > +	int ret = 0;
-> > +	u64 res;
-> > +
-> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG,
-> > VCMD_CMD_ALLOC);
-> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> > +		      !(res & VCMD_VRSP_IP), res);
-> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> > +
-> > +	status_code = VCMD_VRSP_SC(res);
-> > +	switch (status_code) {
-> > +	case VCMD_VRSP_SC_SUCCESS:
-> > +		*pasid = VCMD_VRSP_RESULT_PASID(res);
-> > +		break;
-> > +	case VCMD_VRSP_SC_NO_PASID_AVAIL:
-> > +		pr_info("IOMMU: %s: No PASID available\n",
-> > iommu->name);
-> > +		ret = -ENOSPC;
-> > +		break;
-> > +	default:
-> > +		ret = -ENODEV;
-> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-> > +			iommu->name, status_code);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned int pasid)
-> > +{
-> > +	unsigned long flags;
-> > +	u8 status_code;
-> > +	u64 res;
-> > +
-> > +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
-> > +	dmar_writeq(iommu->reg + DMAR_VCMD_REG,
-> > +		    VCMD_CMD_OPERAND(pasid) | VCMD_CMD_FREE);
-> > +	IOMMU_WAIT_OP(iommu, DMAR_VCRSP_REG, dmar_readq,
-> > +		      !(res & VCMD_VRSP_IP), res);
-> > +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
-> > +
-> > +	status_code = VCMD_VRSP_SC(res);
-> > +	switch (status_code) {
-> > +	case VCMD_VRSP_SC_SUCCESS:
-> > +		break;
-> > +	case VCMD_VRSP_SC_INVALID_PASID:
-> > +		pr_info("IOMMU: %s: Invalid PASID\n", iommu->name);
-> > +		break;
-> > +	default:
-> > +		pr_warn("IOMMU: %s: Unexpected error code %d\n",
-> > +			iommu->name, status_code);
-> > +	}
-> > +}
-> > +
-> >  /*
-> >   * Per device pasid table management:
-> >   */
-> > diff --git a/drivers/iommu/intel-pasid.h
-> > b/drivers/iommu/intel-pasid.h index 698015ee3f04..cd3d63f3e936
-> > 100644 --- a/drivers/iommu/intel-pasid.h
-> > +++ b/drivers/iommu/intel-pasid.h
-> > @@ -23,6 +23,16 @@
-> >  #define is_pasid_enabled(entry)		(((entry)->lo >> 3)
-> > & 0x1) #define get_pasid_dir_size(entry)	(1 <<
-> > ((((entry)->lo >> 9) & 0x7) + 7))
-> > 
-> > +/* Virtual command interface for enlightened pasid management. */
-> > +#define VCMD_CMD_ALLOC			0x1
-> > +#define VCMD_CMD_FREE			0x2
-> > +#define VCMD_VRSP_IP			0x1
-> > +#define VCMD_VRSP_SC(e)			(((e) >> 1) & 0x3)
-> > +#define VCMD_VRSP_SC_SUCCESS		0
-> > +#define VCMD_VRSP_SC_NO_PASID_AVAIL	1
-> > +#define VCMD_VRSP_SC_INVALID_PASID	1
-> > +#define VCMD_VRSP_RESULT_PASID(e)	(((e) >> 8) & 0xfffff)
-> > +#define VCMD_CMD_OPERAND(e)		((e) << 8)
-> >  /*
-> >   * Domain ID reserved for pasid entries programmed for first-level
-> >   * only and pass-through transfer modes.
-> > @@ -113,5 +123,6 @@ int intel_pasid_setup_nested(struct intel_iommu
-> > *iommu,
-> >  			int addr_width);
-> >  void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
-> >  				 struct device *dev, int pasid);
-> > -
-> > +int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int
-> > *pasid); +void vcmd_free_pasid(struct intel_iommu *iommu, unsigned
-> > int pasid); #endif /* __INTEL_PASID_H */
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index ccbf164fb711..9cbf5357138b
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -169,6 +169,7 @@
-> >  #define ecap_smpwc(e)		(((e) >> 48) & 0x1)
-> >  #define ecap_flts(e)		(((e) >> 47) & 0x1)
-> >  #define ecap_slts(e)		(((e) >> 46) & 0x1)
-> > +#define ecap_vcs(e)		(((e) >> 44) & 0x1)
-> >  #define ecap_smts(e)		(((e) >> 43) & 0x1)
-> >  #define ecap_dit(e)		((e >> 41) & 0x1)
-> >  #define ecap_pasid(e)		((e >> 40) & 0x1)
-> > --
-> > 2.7.4  
-> 
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> 
 
-[Jacob Pan]
+On 3/31/20 1:56 PM, Rasmus Villemoes wrote:
+> On 31/03/2020 20.20, Joe Perches wrote:
+>> On Tue, 2020-03-31 at 13:26 +0200, Vegard Nossum wrote:
+>>>  #define compiletime_assert(condition, msg) \
+>>> -	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__=
+)
+>>> +	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTE=
+R__)
+>> This might be better using something like __LINE__ ## _ ## __COUNTER__
+>>
+>> as line # is somewhat useful to identify the specific assert in a file=
+.
+>>
+> Eh, if the assert fires, doesn't the compiler's diagnostics already
+> contain all kinds of location information?
+>
+> Rasmus
+
+Yes, the diagnostic contains the file name and line in a far more useful
+format that every IDE knows how to read.=C2=A0 __LINE__ is only used for
+uniqueness and was chosen when __COUNTER__ (introduced in gcc 4.3) was
+still somewhat new.
+
+Daniel
