@@ -2,129 +2,94 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F20C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F91C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB29206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585635583;
-	bh=6Vx4aeTRIqYo1ANpywhPKyJBQcH6++/aFqomUYF33mM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C9wnrRcRxQmHktaEQWtcDA/73JivtD27BycFkBTh2n+ebPuEJ9POdBtuD/niiCL6l
-	 4Em5dXET6LZKecNHc9gjUDfiQrl5h2wbveP8W46JnkucfDtV6yIysRtKYUXf0Cu8g4
-	 rlLGLLP+1j8JaQI1j/Fk341mCm26TMVp1yTSjkR8=
+	by mail.kernel.org (Postfix) with ESMTP id 9B8F220781
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 06:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jp6L2Wk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbgCaGTm (ORCPT
+        id S1726554AbgCaGXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:19:42 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34075 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726060AbgCaGTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 02:19:41 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m2so6176307otr.1;
-        Mon, 30 Mar 2020 23:19:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XCdJCbcFAqKbu5o4UMmbzXHaFPJd9Ik8M7QfW5a9gSE=;
-        b=fAdt+P+TSKsLmQG16uvwEgJI6R2W8qSmVKlRVlUuSaL6tK94YZbiGI8cxjtAVgKekF
-         gBo2sOAB/Nmbz1tKSWemDsaDaneA3UEcIfXQTEJu4x9StbilSAnYbevMr02IFJ+u8mcp
-         Vu0NGrTdWmK3DQsuxdz3tDdUOvhvgm+SKS8nZty0ikhxLU/IUU3ZKHCSGqfHgpmRXpYi
-         EcNdnW9kmkFnpB1tKvYNmxVoseeFi/qY731g9G+7d+BtpZKCzNZcslxYjMK1NpnQ5AM+
-         oI0OLSs9osopGxohIgF9OfD3N1XEgCd9nVV7tr+3r5rZiF8VybiKpmsSMfvEc0AgfvEu
-         xOVA==
-X-Gm-Message-State: ANhLgQ3j/2txs4XNjaaDyBFY8lmcGOsC/eDVz9cKYTl7mj9rxLUeN/yD
-        sGDZYN1FMvTp+NI4bckfBrWArAsuRSwSL3BDVlw=
-X-Google-Smtp-Source: ADFU+vsLlPUWVwHlm1MZohs4ZiijuCiA9dRuDMtpcpQVflJWE1hgPv4eVishiq59gAA1qUXFEEGgkbR2+8SmWFBYtRo=
-X-Received: by 2002:a9d:7402:: with SMTP id n2mr12255889otk.262.1585635580865;
- Mon, 30 Mar 2020 23:19:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1585343507.git.gayatri.kammela@intel.com>
- <9359b8e261d69983b1eed2b8e53ef9eabfdfdd51.1585343507.git.gayatri.kammela@intel.com>
- <CAJZ5v0j8OaqM6k52Ar9sYn0Ea_u9+MBB0rcMWv6vGBt5jXCQBQ@mail.gmail.com>
- <20200330172439.GB1922688@smile.fi.intel.com> <BYAPR11MB362459660B914BEF1526AD8DF2CB0@BYAPR11MB3624.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB362459660B914BEF1526AD8DF2CB0@BYAPR11MB3624.namprd11.prod.outlook.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 31 Mar 2020 08:19:29 +0200
-Message-ID: <CAJZ5v0inmWu6_ZYLCKart6F873SqK5AyvVXOCS83Yr=KQAQV_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-To:     "Kammela, Gayatri" <gayatri.kammela@intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Tue, 31 Mar 2020 02:23:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:55061 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbgCaGXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 02:23:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48rzmV3gywz9sR4;
+        Tue, 31 Mar 2020 17:23:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585635818;
+        bh=DKwvoyZfpSqHC0FSx4sxi26RxC3nIH/Csn6E+yW23WY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jp6L2Wk47qXSQiHx7JslvuSVDzijVgX/0XTcNfFchAlwPe2qI9udlRLSdJ2Uafwxx
+         YeQ1AoPTdFcsBxSoGJlCPAfhUrMwojd8Uj7OjSkFUQDvmxDM2aLcBjvtToZ1c3Iwhd
+         6LQBInw7Y1b7cVMLDfTZc+Xb3m4V/Mmzp7wZi+wxilVusnQwFNNoSTbpeAqPdaIE80
+         xKena7+AxZD+GyJI1dCMsNVsu0HinaZmdyMN7Q8FH8/3v45iThDq14JifArzVZtq15
+         XiAyBk+dqDi+0XsILk+7zVXG7zT/DNIT/AIgd1N/nHxNGjd1cYr46rRIOcwTF1/p28
+         5GEdpOBMhu1Fw==
+Date:   Tue, 31 Mar 2020 17:23:35 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Alex Hung <alex.hung@canonical.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "Westerberg, Mika" <mika.westerberg@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
-        "5 . 6+" <stable@vger.kernel.org>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: linux-next: build failure after merge of the hyperv tree
+Message-ID: <20200331172335.2f71021b@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/IkVd2zwsszL6kSNj3g2+w43";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 1:22 AM Kammela, Gayatri
-<gayatri.kammela@intel.com> wrote:
->
-> > -----Original Message-----
-> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Sent: Monday, March 30, 2020 10:25 AM
-> > To: Rafael J. Wysocki <rafael@kernel.org>
-> > Cc: Kammela, Gayatri <gayatri.kammela@intel.com>; Zhang, Rui
-> > <rui.zhang@intel.com>; Linux PM <linux-pm@vger.kernel.org>; Platform
-> > Driver <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing List
-> > <linux-kernel@vger.kernel.org>; Len Brown <lenb@kernel.org>; Darren Hart
-> > <dvhart@infradead.org>; Alex Hung <alex.hung@canonical.com>; Daniel
-> > Lezcano <daniel.lezcano@linaro.org>; Amit Kucheria
-> > <amit.kucheria@verdurent.com>; Westerberg, Mika
-> > <mika.westerberg@intel.com>; Peter Zijlstra <peterz@infradead.org>;
-> > Prestopine, Charles D <charles.d.prestopine@intel.com>; 5 . 6+
-> > <stable@vger.kernel.org>; Pandruvada, Srinivas
-> > <srinivas.pandruvada@intel.com>; Wysocki, Rafael J
-> > <rafael.j.wysocki@intel.com>
-> > Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
-> >
-> > On Mon, Mar 30, 2020 at 06:43:35PM +0200, Rafael J. Wysocki wrote:
-> > > On Fri, Mar 27, 2020 at 10:34 PM Gayatri Kammela
-> > > <gayatri.kammela@intel.com> wrote:
-> >
-> > > > -       {"INT1044"},
-> > > > -       {"INT1047"},
-> > > > +       {"INTC1040"},
-> > > > +       {"INTC1043"},
-> > > > +       {"INTC1044"},
-> > > > +       {"INTC1047"},
-> > > >         {"INT3400"},
-> > > >         {"INT3401", INT3401_DEVICE},
-> > > >         {"INT3402"},
-> > > > --
-> > >
-> > > I can take this along with the other two patches in the series if that
-> > > is fine by Andy and Rui.
-> >
-> > One nit is to fix the ordering to be alphanumeric or close enough (I admit in
-> > some cases it might require unneeded churn) to that.
-> Thanks Andy and Rafael! Should I send v3 for this series with right ordering this time?
+--Sig_/IkVd2zwsszL6kSNj3g2+w43
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No need, I can fix up the ordering just fine.
+Hi all,
 
-> > Otherwise,
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+After merging the hyperv tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Thanks!
+ERROR: modpost: "panic_on_oops" [drivers/hv/hv_vmbus.ko] undefined!
+
+Caused by commit
+
+  a6a5aa4b0179 ("x86/Hyper-V: Report crash data in die() when panic_on_oops=
+ is set")
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/IkVd2zwsszL6kSNj3g2+w43
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6C4ecACgkQAVBC80lX
+0GwU5gf/e+XdKSplUrfXzdUT9h1RQsimOrR38LwqlN4pm3Be6YiaenDGSHvVGn1D
+rrdhcPnbpN/uE4PJ1ZVC2hIlke5vXjKwBl1YaHhdG0G7eIAW8Bpd6pYN6pEZUVwq
+2dcSxZUNyxUQ72rraSATU8ewPXcorG91ntc+umF0yG/lUnuXNa8dY941zY65BpeG
+qGCfZnyVTudqJTIOV5GHwEK0l2/6EHKXgXbNqJ9lLCVOxDIPUbQtFmP8Pg4upSmn
+GA7T3Oh2XzqQzsQCv2TB3tLM7i6h1Dg468jvt+kSImmCNx3GkljQPED5pPDLLg7W
+T/Hmo31Dc6bIECPlbFKpYoyXSmWqyQ==
+=uVjV
+-----END PGP SIGNATURE-----
+
+--Sig_/IkVd2zwsszL6kSNj3g2+w43--
