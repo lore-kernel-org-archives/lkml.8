@@ -2,108 +2,121 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF7FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC87AC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB1F20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:09:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBEAqflk"
+	by mail.kernel.org (Postfix) with ESMTP id 93AB720784
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585689234;
+	bh=LsFdTC5M5kzZT2QaTM9QajQZZxRaSQDiUQpUvCbzXhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fmr/HTvObSbRJE0rAFyKPQ3yw23MTvOHFOaImXlrdxKxJ0v7B6KPydnWiYVX/m/8B
+	 /EfKSJmCNgfQEncuS3kapl2tUwKqERNW1ztNiNO1/cD+NVVR9QNTZJ7K4bjt42LoQX
+	 RVaeG8vxMZV6tmlvaqrhfAECNoqAczBqLE198T6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731169AbgCaVJK (ORCPT
+        id S1731121AbgCaVNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:09:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35424 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgCaVJK (ORCPT
+        Tue, 31 Mar 2020 17:13:53 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:33792 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgCaVNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:09:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d5so27978681wrn.2;
-        Tue, 31 Mar 2020 14:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=B6tP3lr4dsdouoEScHUU6AoHIj/KnpsdHoiuwt2FQlI=;
-        b=QBEAqflkVr4c7Z+EqdZW6V8ozD9wyuQSrtALIOiej8I/g6IzRuBffynog5nlY1htxa
-         uBDowuGrSKGLl001UxXtdVoPzAXK2nu2RdMK35lHBPOMyMXWmCrD7ZL4zgmvgMhPWwdR
-         rEJQwYoci9SL6uCt5aHO7XhhJggFHAaGjP3ReLmQ4o7MXpbbV436n3kFaK+VbGCHMpLt
-         1mcGnGxWGSPn7zqFE2zCivkvXRj6QyeMEMJ9A6UJw4fVAoyny6pZ7ZH49wVlDj1HVLXp
-         HzwNv356YsGxiljki9Pi+k5sATTWWJkfi67qWd1IUG54lJbv8VL/2lujr/WlTi0clv3A
-         gzGg==
+        Tue, 31 Mar 2020 17:13:53 -0400
+Received: by mail-il1-f194.google.com with SMTP id t11so20949620ils.1;
+        Tue, 31 Mar 2020 14:13:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=B6tP3lr4dsdouoEScHUU6AoHIj/KnpsdHoiuwt2FQlI=;
-        b=Mm7OAPtx61ClhUT4e9XA+xfTHvaZXTGEKe93A4qCmtMl1SRaKJiAcmRfr7+w5WsKkW
-         zwZxrCY9cCdJADp7PJoZgFAzzXmss+5dZhu8aaAnOrM1IM/CWDvUrUySJc/ZsX70G4+u
-         74HHB+g9yYsGf36nRxb6OxxvqWhS5tZET0/3Zh93K4KvJTrg6Y1An/3+h3p5m7YmjGJ/
-         E3NDt5pcGs5YPlwkYURGvloEf13XXPt07/nde2RHDUOdTAQazem0aOLAhEVXOFVLHgsq
-         PVd7H8XeqYcd5Eyf/VPpmdRaEjlNCWZ8Qv8A8/R4JCIAegW915CRvpIkQrFsNf5wdOwN
-         omGw==
-X-Gm-Message-State: ANhLgQ359Zmhk5sB/rptHeghlgIyvogeFphp6epvNHaU9Saqznpj/PEn
-        ZEh5ysl2AoXfdDI52AwJcaYzihI=
-X-Google-Smtp-Source: ADFU+vtnP7LYldKA1MpO9AVOo9mamivHtPoJiIQxvAeFNqobXfHXYKShtCmojhQAloJDSOy9tDZBcA==
-X-Received: by 2002:a5d:5045:: with SMTP id h5mr21391859wrt.86.1585688948272;
-        Tue, 31 Mar 2020 14:09:08 -0700 (PDT)
-Received: from avx2 ([46.53.248.81])
-        by smtp.gmail.com with ESMTPSA id g3sm29352194wrm.66.2020.03.31.14.09.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4ULdlzKgkks3OW2EmDmbFExkJ0r2q+fNhmp2tVhb4l8=;
+        b=mBMHN3RgIkb2ey/0pcJknlUmKuQaciIUmzkBGREGKheGptj3Yq7lsefvbQCLr1sxcj
+         LXHN/PyxU5WirqyBwVbB+MGzUd5oJ6NXoghPe0+vtSywVSv3rFBLwgkg+is/TcXM2Z1T
+         XE5rbukpgjSAVT8ZFpz9um+0UpRF61kap/JD8e4QpZlMFxZqjQn4Bs4QTqXxcQvXBpXJ
+         laz0Fpp+1i5BIIj4/yZkmEGezJ/lpr+fVd9GGiySU0Ev1zXWa4bwmeo8bPYGMd8HAfss
+         +UY7NtdPFhpx2gF+5ewGPhRUtxxi7rT/HC5KOycS95OM6kgZiD2XSPjTjub1rIn8wNQs
+         7gNQ==
+X-Gm-Message-State: ANhLgQ3XBkwrLmvJEjocXJevI5ZTEyWvWbAhgF4KaD1UiCXr4dyU0T1i
+        bWzR4e3xdI22pIpTVMElFQ==
+X-Google-Smtp-Source: ADFU+vtI4U220QGuNWyV94ZFCn12h5H69QS17f+/gpWqZrqPKyCEIRebwpyd92V6x0A2F+AHZF0ssA==
+X-Received: by 2002:a92:da4a:: with SMTP id p10mr17457677ilq.34.1585689231749;
+        Tue, 31 Mar 2020 14:13:51 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id f20sm7989ilf.64.2020.03.31.14.13.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 14:09:07 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 00:09:05 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] proc: rename "catch" function argument
-Message-ID: <20200331210905.GA31680@avx2>
+        Tue, 31 Mar 2020 14:13:50 -0700 (PDT)
+Received: (nullmailer pid 29775 invoked by uid 1000);
+        Tue, 31 Mar 2020 21:13:49 -0000
+Date:   Tue, 31 Mar 2020 15:13:49 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+Message-ID: <20200331211349.GA18149@bogus>
+References: <cover.1585117436.git.amit.kucheria@linaro.org>
+ <9c447186008ef2e3f4c3e712458dc0ddcd8a8b03.1585117436.git.amit.kucheria@linaro.org>
+ <81b0cbe1-23c8-b4a3-4775-62e7d6c49b6b@arm.com>
+ <CAP245DWS=yqNQpbk3Y8_0KjcBurSyQbNW9jqepSz8LC=ruFWhA@mail.gmail.com>
+ <CAHLCerMRcPmE70kN1Cyxio4_Dd1OoWT3iZ4vpzYKQVfORS336Q@mail.gmail.com>
+ <693bda26-1eed-a886-2ce0-7b3a2ca410d2@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <693bda26-1eed-a886-2ce0-7b3a2ca410d2@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"catch" is reserved keyword in C++, rename it to something
-both gcc and g++ accept.
+On Mon, Mar 30, 2020 at 03:07:53PM +0200, Daniel Lezcano wrote:
+> 
+> Hi Amit,
+> 
+> On 30/03/2020 12:34, Amit Kucheria wrote:
+> 
+> [ ... ]
+> 
+> >>> I don't know why it's not consistent with the actual code in
+> >>> of-thermal.c, where there is even a comment stated: /* For now,
+> >>> thermal framework supports only 1 sensor per zone */
+> >>>
+> >>> I think this is the place where developers should be informed
+> >>> about the limitation and not even try to put more sensors into
+> >>> the list.
+> >>
+> >> That is a good point. I'm currently "porting" the existing
+> >> binding as described in thermal.txt to yaml. If you look at some
+> >> of the example (c) in there, the bindings allow many sensors to a
+> >> zone mapping but the thermal core doesn't implement that
+> >> functionality.
+> >>
+> >> So should we fix the core code or change the bindings? Thoughts -
+> >> Rob, Daniel, Rui?
+> >
+> > Rob, Daniel: Any comments? We don't have any concerns for Linux
+> > backward compatibility since multiple sensors per zone isn't used
+> > anywhere. But asking since bindings are supposed to be
+> > OS-agnostic.
+> 
+> IMO, we should remove it as it is not used anywhere.
+> 
+> We still have to decide how we aggregate multiple sensors.
 
-Rename "ign" for symmetry.
+The schema only needs to pass what currently exists (assuming no 
+errors), so extending it later is fine with me.
 
-Signed-off-by: _Z6Alexeyv <adobriyan@gmail.com>
----
-
- fs/proc/array.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -248,8 +248,8 @@ void render_sigset_t(struct seq_file *m, const char *header,
- 	seq_putc(m, '\n');
- }
- 
--static void collect_sigign_sigcatch(struct task_struct *p, sigset_t *ign,
--				    sigset_t *catch)
-+static void collect_sigign_sigcatch(struct task_struct *p, sigset_t *sigign,
-+				    sigset_t *sigcatch)
- {
- 	struct k_sigaction *k;
- 	int i;
-@@ -257,9 +257,9 @@ static void collect_sigign_sigcatch(struct task_struct *p, sigset_t *ign,
- 	k = p->sighand->action;
- 	for (i = 1; i <= _NSIG; ++i, ++k) {
- 		if (k->sa.sa_handler == SIG_IGN)
--			sigaddset(ign, i);
-+			sigaddset(sigign, i);
- 		else if (k->sa.sa_handler != SIG_DFL)
--			sigaddset(catch, i);
-+			sigaddset(sigcatch, i);
- 	}
- }
- 
+Rob
