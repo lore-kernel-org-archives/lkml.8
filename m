@@ -2,124 +2,137 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2385C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1772C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C881208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08B02080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQFIT72E"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="dTra5YWd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgCaTwq (ORCPT
+        id S1730699AbgCaTxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:52:46 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:35478 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgCaTwq (ORCPT
+        Tue, 31 Mar 2020 15:53:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43750 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgCaTxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:52:46 -0400
-Received: by mail-qv1-f68.google.com with SMTP id q73so11565577qvq.2;
-        Tue, 31 Mar 2020 12:52:45 -0700 (PDT)
+        Tue, 31 Mar 2020 15:53:06 -0400
+Received: by mail-pf1-f194.google.com with SMTP id f206so10834713pfa.10
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:53:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=koHaz81lhgaXvonX4hggctipHiIr1mGPAtaGs6zrD+k=;
-        b=rQFIT72Et7kZxvV9ZT3qf2ai3odXDA+Rw5lBTGYKfT+zcq9+3mmWUQQTnApBLrQlp9
-         uwfmGPNZNgHrsCE3XwLFl7juRRAwwKRPBWstIv+zzDOY5AK1CaG+jDkC1ILk3+hkvVWx
-         hxgi8aDjdtkbyXlNU5Osjy9hzHjlvYn3flsqGLZ68rJKu6Lc63ucjDBiCJOZqQF0+5rk
-         8CtxZD+4608C2N/bQjEpmxHSq3UZ9zYW1hNjAzNsxoNe7Pio9EYKlcXQ2Voh+9gGXkeN
-         cMe1cLQke6eieaREOjSACS6aRhLYoLetGBF201SPbq8FJr0NLJS/jE8mAJm+X+XXFzXX
-         VIRA==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UnNGbqw4CiU2b1yMc4obIxPTMu+of5pZP5ZU1i5O1Ms=;
+        b=dTra5YWd+la6sJKFy0wsNu7jaNDhqwpkpW9ysYZ2pE14Q4PJtOiawDORBbbuSsyQ1L
+         9L7JTfGaJvaEjUSIImNvxY2NKm4qH9WV0/oUVI1F/wq39tLfZwnaDJAMqj2DHCJrFG1Y
+         e+gbtuh7zBHpFy+3taNZet6/x/rKvgfsxFpL8PoBJseL8OQBebz2p7vlOoTYg7J/mfN6
+         VWbDbR4Oe4K3SdUgwx8ufEHCgHURMYmBVzN55uS3x8tpta2rqElx8+89nF13JrAEC/bi
+         abI2WYfSB5zy6ZCZxK/SgWv4pFXLDeqvg3vi0OEaza47TQ+oYb0MIm9L9mwSBm/+Fg/g
+         ix8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=koHaz81lhgaXvonX4hggctipHiIr1mGPAtaGs6zrD+k=;
-        b=T7AKpf+X7ZRxbvQKkgVvBcf/0+mk4mDWtE38tKPExmIrfsJNQaET6T9MR8aSKkXS3P
-         22aIYHNELXlFrqvwdLdvkGK1+cxWccNH4sZYERR31kpOPyURTUZ/HVX/wQ1WE9oBYJ8D
-         njxUaG1779LMmFvomS6tRGtgBbXXHAyrsIUnl2CmMfajEtz+R4NP0xEzKmAV9kNzy0wR
-         5fFIPsmihkNFhbN40mtkp2BUSdDl/rDzx5qrPhhAWXo+cF7l4FBMgP8CGbLYyRAoMNPY
-         yA1ga/ZZBfBbpWGmf2GaQqlxRhf131zOC2/CeEEYoSGRmn+I+a5DFarAn0kMn2001Wub
-         9MfQ==
-X-Gm-Message-State: ANhLgQ1nQPhHJmCS0uDP9dMdZlqmwgXw/d2vzpj3TUnOCDjShT7ScX45
-        7qJmsUDTXcoP1FnNRI8xxR9m2CisWfJZ1ybCLIG9+el0hqo=
-X-Google-Smtp-Source: ADFU+vt1v6vuUyeI2qgZMpH4ZL3/iH3gkayh1/w7Q3qPbXyl/kgZ71PnSOlm8lwdtt/9c6lhZHQ7qRgfHri9Ixre7Cs=
-X-Received: by 2002:ad4:4182:: with SMTP id e2mr17704518qvp.247.1585684365293;
- Tue, 31 Mar 2020 12:52:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200331164719.15930-1-slava@bacher09.org> <CAEf4BzadnfAwfa1D0jZb=01Ou783GpK_U7PAYeEJca-L9kdnVA@mail.gmail.com>
-In-Reply-To: <CAEf4BzadnfAwfa1D0jZb=01Ou783GpK_U7PAYeEJca-L9kdnVA@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 31 Mar 2020 12:52:34 -0700
-Message-ID: <CAEf4BzaAZ5Qop0z8r+SBNQyPtt0+EpKy9Q0EkcSDkTZw54Bnaw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: disable DEBUG_INFO_SPLIT when BTF is on
-To:     Slava Bacherikov <slava@bacher09.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrii Nakryiko <andriin@fb.com>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=UnNGbqw4CiU2b1yMc4obIxPTMu+of5pZP5ZU1i5O1Ms=;
+        b=Gex6tqSwPUVYXDN0Cr2zKUWYD+m+OBD/mSeOBrXuZ6hkhFTwzYj1nYcO2XYa47U3SS
+         Q+jetUfuvicIMrTRXlFRKzzO0NW8NQMQ5IfaghTQaSB58PE4awcK9CYRdw12DKKUs2UF
+         QcYbXlnae9/XKHk50nRQgRBy/Yb866mW0R4aq9JOsstRX0F8N2Z+Sjel6WTIeqk6VD7q
+         rTGT4RIHWI1OQ06yooJ0jB0TIDca/u0NsVtGAluNx2j8EExsjReyyYWtHdhKS6zctSL2
+         ZH6vWx460FB2hM96fD3L2n9GrK7RSyw0iBCV1QDdSEJJ7bEhkIWfBXnT2Cif6KFvkKRJ
+         ujFQ==
+X-Gm-Message-State: ANhLgQ3vl/YEnNhDkLpz90tKhShphFtim7hICL8JmEopCIPpZvqgRn/m
+        VUHaJRe7vvyu8Or5PUCS5T6UrRrtom8=
+X-Google-Smtp-Source: ADFU+vuZ1BLJd8BKHPIvo35rkVz0sVabGFLtX3UUDd/M40+mOHIamBDa5MFROUCOoU/r45rT+cK53g==
+X-Received: by 2002:a62:7811:: with SMTP id t17mr20111632pfc.268.1585684384593;
+        Tue, 31 Mar 2020 12:53:04 -0700 (PDT)
+Received: from localhost (c-67-161-15-180.hsd1.ca.comcast.net. [67.161.15.180])
+        by smtp.gmail.com with ESMTPSA id a71sm13499762pfa.162.2020.03.31.12.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 12:53:04 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 12:53:04 -0700 (PDT)
+X-Google-Original-Date: Tue, 31 Mar 2020 12:51:33 PDT (-0700)
+Subject:     Re: [RFC PATCH 0/7] Introduce sv48 support 
+In-Reply-To: <20200322110028.18279-1-alex@ghiti.fr>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, zong.li@sifive.com,
+        anup@brainfault.org, Christoph Hellwig <hch@lst.de>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alex@ghiti.fr
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     alex@ghiti.fr
+Message-ID: <mhng-8dbb5aa6-857f-4321-a966-a370c0786a1c@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:45 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Sun, 22 Mar 2020 04:00:21 PDT (-0700), alex@ghiti.fr wrote:
+> This patchset implements sv48 support at runtime. The kernel will try to
+> boot with 4-level page table and will fallback to 3-level if the HW does not
+> support it.
 >
-> On Tue, Mar 31, 2020 at 9:57 AM Slava Bacherikov <slava@bacher09.org> wrote:
-> >
-> > Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
-> > enabled will produce invalid btf file, since gen_btf function in
-> > link-vmlinux.sh script doesn't handle *.dwo files.
-> >
-> > Signed-off-by: Slava Bacherikov <slava@bacher09.org>
-> > ---
-> >  lib/Kconfig.debug | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index f61d834e02fe..a9429ef5eec8 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -223,6 +223,7 @@ config DEBUG_INFO_DWARF4
-> >  config DEBUG_INFO_BTF
-> >         bool "Generate BTF typeinfo"
-> >         depends on DEBUG_INFO
-> > +       depends on !DEBUG_INFO_SPLIT
->
-> Thanks for following up! This looks good, but I think there are more
-> DWARF-related configs that should be banned. See [0] and [1]. If you
-> don't mind, let's use your patch to disable all of them in one go. So
-> can you please update and disable DEBUG_INFO_REDUCED and
-> GCC_PLUGIN_RANDSTRUCT? Thanks!
->
->   [0] https://lore.kernel.org/bpf/202003311110.2B08091E@keescook
->   [1] https://lore.kernel.org/bpf/a2b1a025-6a70-c3a5-fc19-155f0266946a@fb.com
->
+> The biggest advantage is that we only have one kernel for 64bit, which
+> is way easier to maintain.
 
-I guess at this point it should go against bpf tree, so please update
-header to [PATCH v2 bpf]. Please also add Reported-by and Fixes tag:
+Thanks, that's great!  This is something we've been missing for a long time
+now.
 
-Reported-by: Jann Horn <jannh@google.com>
-Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
-Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info
-for vmlinux")
-
-Thanks!
-
+> Folding the 4th level into a 3-level page table has almost no cost at
+> runtime.
 >
-> >         help
-> >           Generate deduplicated BTF type information from DWARF debug info.
-> >           Turning this on expects presence of pahole tool, which will convert
-> > --
-> > 2.24.1
-> >
+> At the moment, there is no way to enforce 3-level if the HW supports
+> 4-level page table: early parameters are parsed after the choice must be
+> made.
+
+This is different than how I'd been considering doing it -- specifically, my
+worry was that 4-level paging would have a meaningful performance hit and
+therefor we'd want to allow users to select 3-level paging somehow.  I'd been
+thinking of having a Kconfig option, so the options would be "3-level only" or
+"3 or 4 level".  That came with a bunch of drawbacks, so I'd be much happier to
+have a single kernel.
+
+Where did you get your performance numbers from?  Appologies in advance if
+there's more info in the patches, I'll look at those now...
+
+> It is based on my relocatable patchset v3 that I have not posted yet,
+> you can try the sv48 support by using the branch
+> int/alex/riscv_sv48_runtime_v1 here:
+>
+> https://github.com/AlexGhiti/riscv-linux
+>
+> Any feedback appreciated,
+>
+> Thanks,
+>
+> Alexandre Ghiti (7):
+>   riscv: Get rid of compile time logic with MAX_EARLY_MAPPING_SIZE
+>   riscv: Allow to dynamically define VA_BITS
+>   riscv: Simplify MAXPHYSMEM config
+>   riscv: Implement sv48 support
+>   riscv: Use pgtable_l4_enabled to output mmu type in cpuinfo
+>   dt-bindings: riscv: Remove "riscv,svXX" property from device-tree
+>   riscv: Explicit comment about user virtual address space size
+>
+>  .../devicetree/bindings/riscv/cpus.yaml       |  13 --
+>  arch/riscv/Kconfig                            |  34 ++---
+>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   4 -
+>  arch/riscv/include/asm/csr.h                  |   3 +-
+>  arch/riscv/include/asm/fixmap.h               |   1 +
+>  arch/riscv/include/asm/page.h                 |  15 +-
+>  arch/riscv/include/asm/pgalloc.h              |  36 +++++
+>  arch/riscv/include/asm/pgtable-64.h           |  98 +++++++++++-
+>  arch/riscv/include/asm/pgtable.h              |  24 ++-
+>  arch/riscv/include/asm/sparsemem.h            |   2 +-
+>  arch/riscv/kernel/cpu.c                       |  24 +--
+>  arch/riscv/kernel/head.S                      |  37 ++++-
+>  arch/riscv/mm/context.c                       |   4 +-
+>  arch/riscv/mm/init.c                          | 142 +++++++++++++++---
+>  14 files changed, 341 insertions(+), 96 deletions(-)
