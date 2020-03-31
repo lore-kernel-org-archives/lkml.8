@@ -2,136 +2,122 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5439EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1A3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E602145D
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645785;
-	bh=eaZtXvrvNclIweD2DXp8T7YbxLOfq85xDuyOa6hnfmY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycPVJkC6iBFMf1C5O/2LZqrxxAKpnhC8sTaXRTYpkrob0u3aiYnV8YzqqUXJ88kwX
-	 ZdXp4TbYRpQ2+nDw7w7rPa3s9ZZeyRfxQsHAwjtj14g6QA9HBZm80RRrVd7lnL1auI
-	 H0f1N5WhoMdxS4D5Xhf8hGhzqCRfeq3tTKW302wA=
+	by mail.kernel.org (Postfix) with ESMTP id 5DE512072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:09:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="hQvltprA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgCaJJn (ORCPT
+        id S1731517AbgCaJJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:09:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52892 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:09:45 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:51023 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731491AbgCaJJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:09:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2CD5208E0;
-        Tue, 31 Mar 2020 09:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645778;
-        bh=eaZtXvrvNclIweD2DXp8T7YbxLOfq85xDuyOa6hnfmY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9wZP8gfvtff0+MP+3b7bGE4GG11jMEXPL/fYHpWjTx+2gh5/Lo7u0k2tMwiWZFSf
-         lwHMMAtz0CW0t/XURS9/0FuvLACApD5ZqPnGRTsRuMAPv6/6cWYa4Fm4LHUcD1o+pe
-         WWXYgPvoxfEx6AWPPWNvV/sD7eLfWkDTXTELaWjM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
-        Bin Liu <b-liu@ti.com>
-Subject: [PATCH 5.5 154/170] usb: musb: fix crash with highmen PIO and usbmon
-Date:   Tue, 31 Mar 2020 10:59:28 +0200
-Message-Id: <20200331085439.415444419@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
-References: <20200331085423.990189598@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1731369AbgCaJJn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:09:43 -0400
+IronPort-SDR: sZB/W3tX2EDNQIDG5CobiUoShToM0PuH8HJmpWULERpmgYPZ8+UaMGWL+b6t98wAYzEUtQDAq/
+ 1eSwGjkW5bpN7ipa/cExrMcyHCEn4QtAibrfBoC6aT9D/JFZXCY9eY7i3KwwDkR8KtBmTcYNjG
+ qkd+rK8faIgwKALGdqKaZcw7CoBUii40SnJLoQAoeKvy9ZO+TyEgtIldlz9Ti7/1f19JVO/+kw
+ c8VWOIrv7rIVB2UnZuSD0X06b/+/CXD8zulySRHvD1Nn0q5om+OpXQ/3V9aQBnFakg210a3og0
+ C0Q=
+X-IronPort-AV: E=Sophos;i="5.72,327,1580770800"; 
+   d="scan'208";a="11620744"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 31 Mar 2020 11:09:41 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 31 Mar 2020 11:09:41 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 31 Mar 2020 11:09:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1585645781; x=1617181781;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=AmNQ70x+U90ksL+IF0QKz+uIkUgY48xR+6uNMkj/fdc=;
+  b=hQvltprAy/j1rGp1rMrdTZlvZEFXSS2U/QgOJYKn3JIr4HGGsCbEqm/e
+   th+E9wxdkGijsprbo/4idy/1ujvsVdBTKEZ5wawX+8pahMq0+hskGngtI
+   a7IPrmdhG7f0m7DZwA+cz9s9I+KlkrKPDOVEv4blt0YVlLhQlZJJOlrF5
+   jPC2cgrWHdXG7b5ghfhhLkHMS/gga86/SnHUhHe1Ptrc5DSY4zBdKbC5x
+   o19t6TsB9m25USCPdocyFqBDh4StyJk6pPT3jeSZCGXpo2S5ry1lqy/mY
+   LfirnNm0mm0wJwbIi5f1Oo0PIyhr+hBwtjS2M2DAn5ObHAqocIIZfxWEy
+   g==;
+IronPort-SDR: BNIMxixaKYbDbaNh/qECj2bdl5U81jLwJ28F61hn/AKoqlxNFn8XZ6uA3Y2g+Md3D3flcA54+w
+ NTKCoH4ywraeauwofQxJd71PozGlxaKy7cSw0wLYgQqGJJhOtGzNjZWcLB+DyJtx/vWs2yEXtU
+ UsB8kEhOewiLKe1y7ppmassKMADNTUgBpnS6IM6+9F6Hh51xgOinshRXhVH4OiBKVpaM2gXgnE
+ gFvI8tjeRDItH2Aa2ah4tbF0EtVHuOuVbzOyu9/iMdIpmy28mbIw8iLMKa/U05NoalZVNy0uQc
+ 110=
+X-IronPort-AV: E=Sophos;i="5.72,327,1580770800"; 
+   d="scan'208";a="11620743"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 31 Mar 2020 11:09:41 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id ACE69280065;
+        Tue, 31 Mar 2020 11:09:46 +0200 (CEST)
+Message-ID: <a796bf7cfb1f72a888522050320624546950c281.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: [PATCH net-next 1/4] net: dsa: allow switch drivers
+ to override default slave PHY addresses
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
+        kuba@kernel.org
+Date:   Tue, 31 Mar 2020 11:09:32 +0200
+In-Reply-To: <6a306ad4-c029-03a3-7a1c-0fdadc13d386@gmail.com>
+References: <20200330135345.4361-1-matthias.schiffer@ew.tq-group.com>
+         <6a306ad4-c029-03a3-7a1c-0fdadc13d386@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mans Rullgard <mans@mansr.com>
+On Mon, 2020-03-30 at 20:04 -0700, Florian Fainelli wrote:
+> 
+> On 3/30/2020 6:53 AM, Matthias Schiffer wrote:
+> > Avoid having to define a PHY for every physical port when PHY
+> > addresses
+> > are fixed, but port index != PHY address.
+> > 
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+> > >
+> 
+> You could do this much more elegantly by doing this with Device Tree
+> and
+> specifying the built-in PHYs to be hanging off the switch's internal
+> MDIO bus and specifying the port to PHY address mapping, you would
+> only
+> patch #4 then.
 
-commit 52974d94a206ce428d9d9b6eaa208238024be82a upstream.
+This does work indeed, but it seems we have different ideas on
+elegance.
 
-When handling a PIO bulk transfer with highmem buffer, a temporary
-mapping is assigned to urb->transfer_buffer.  After the transfer is
-complete, an invalid address is left behind in this pointer.  This is
-not ordinarily a problem since nothing touches that buffer before the
-urb is released.  However, when usbmon is active, usbmon_urb_complete()
-calls (indirectly) mon_bin_get_data() which does access the transfer
-buffer if it is set.  To prevent an invalid memory access here, reset
-urb->transfer_buffer to NULL when finished (musb_host_rx()), or do not
-set it at all (musb_host_tx()).
+I'm not happy about the fact that an implementor needs to study the
+switch manual in great detail to find out about things like the PHY
+address offsets when the driver could just to the right thing by
+default. Requiring this only for some switch configurations, while
+others work fine with the defaults, doesn't make this any less
+confusing (I'd even argue that it would be better if there weren't any
+default PHY and IRQ mappings for the switch ports, but I also
+understand that this can't easily be removed at this point...)
 
-Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Link: https://lore.kernel.org/r/20200316211136.2274-8-b-liu@ti.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In particular when PHY IRQ support is desired (not implemented on the
+PHY driver side for this switch yet; not sure if my current project
+will require it), indices are easy to get wrong - which might not be
+noticed as long as there is no PHY driver with IRQ support for the port
+PHYs, potentially breaking existing Device Trees with future kernel
+updates. For this reason, I think at least patch #2 should be
+considered even if #1 and #3 are rejected.
 
----
- drivers/usb/musb/musb_host.c |   17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
-
---- a/drivers/usb/musb/musb_host.c
-+++ b/drivers/usb/musb/musb_host.c
-@@ -1462,10 +1462,7 @@ done:
- 	 * We need to map sg if the transfer_buffer is
- 	 * NULL.
- 	 */
--	if (!urb->transfer_buffer)
--		qh->use_sg = true;
--
--	if (qh->use_sg) {
-+	if (!urb->transfer_buffer) {
- 		/* sg_miter_start is already done in musb_ep_program */
- 		if (!sg_miter_next(&qh->sg_miter)) {
- 			dev_err(musb->controller, "error: sg list empty\n");
-@@ -1473,9 +1470,8 @@ done:
- 			status = -EINVAL;
- 			goto done;
- 		}
--		urb->transfer_buffer = qh->sg_miter.addr;
- 		length = min_t(u32, length, qh->sg_miter.length);
--		musb_write_fifo(hw_ep, length, urb->transfer_buffer);
-+		musb_write_fifo(hw_ep, length, qh->sg_miter.addr);
- 		qh->sg_miter.consumed = length;
- 		sg_miter_stop(&qh->sg_miter);
- 	} else {
-@@ -1484,11 +1480,6 @@ done:
- 
- 	qh->segsize = length;
- 
--	if (qh->use_sg) {
--		if (offset + length >= urb->transfer_buffer_length)
--			qh->use_sg = false;
--	}
--
- 	musb_ep_select(mbase, epnum);
- 	musb_writew(epio, MUSB_TXCSR,
- 			MUSB_TXCSR_H_WZC_BITS | MUSB_TXCSR_TXPKTRDY);
-@@ -2003,8 +1994,10 @@ finish:
- 	urb->actual_length += xfer_len;
- 	qh->offset += xfer_len;
- 	if (done) {
--		if (qh->use_sg)
-+		if (qh->use_sg) {
- 			qh->use_sg = false;
-+			urb->transfer_buffer = NULL;
-+		}
- 
- 		if (urb->status == -EINPROGRESS)
- 			urb->status = status;
-
+Kind regards,
+Matthias
 
