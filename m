@@ -2,108 +2,98 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4194C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D61C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73B120748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:55:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="Iyto0/u6"
+	by mail.kernel.org (Postfix) with ESMTP id 50DE42072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729929AbgCaDzo (ORCPT
+        id S1729923AbgCaD5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 23:55:44 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17991 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727358AbgCaDzn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 23:55:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585626931;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=rj1HpV3ASlYUkr6huYlVr4mBpcCx559NMpVPDVrG8X4=;
-        b=Iyto0/u6ndyWrImBk52R0ubhmL+eTqkDlRqgBQkMocJUaCNG8fi3zU1WrwOQzDyI
-        GEVVfOEF69iNv98j3/SGMvSkhQYtLbcqBwz+Ti5sK8KCNqnbY26RmfZ7JqcCJBGGZP9
-        MvSgQHgKgdGWpDmDghcIlVeKWyJuEWyKzCf2zxMA=
-Received: from [10.233.233.252] (183.156.33.130 [183.156.33.130]) by mx.zoho.com.cn
-        with SMTPS id 1585626928522601.4005423698948; Tue, 31 Mar 2020 11:55:28 +0800 (CST)
-Date:   Tue, 31 Mar 2020 11:55:26 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <778df899-4dc4-c2be-5b7b-79c16223b0fb@loongson.cn>
-References: <1585557531-18849-1-git-send-email-maobibo@loongson.cn> <53CC90A0-3926-4642-91D4-F4F265F6AE90@flygoat.com> <778df899-4dc4-c2be-5b7b-79c16223b0fb@loongson.cn>
+        Mon, 30 Mar 2020 23:57:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727358AbgCaD5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 23:57:03 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9325F2252625F8F9FCB5;
+        Tue, 31 Mar 2020 11:57:01 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.60) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 31 Mar 2020
+ 11:56:58 +0800
+Subject: Re: [PATCH net] veth: xdp: use head instead of hard_start
+To:     Toshiaki Makita <toshiaki.makita1@gmail.com>,
+        Jesper Dangaard Brouer <jbrouer@redhat.com>
+CC:     <davem@davemloft.net>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <kuba@kernel.org>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
+        <kafai@fb.com>, <songliubraving@fb.com>, <yhs@fb.com>,
+        <andriin@fb.com>, <jwi@linux.ibm.com>, <jianglidong3@jd.com>,
+        <edumazet@google.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20200330102631.31286-1-maowenan@huawei.com>
+ <20200330133442.132bde0c@carbon>
+ <3053de4c-cee6-f6fc-efc2-09c6250f3ef2@gmail.com>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <e7cf1271-2953-a5aa-ab25-c4b4a3843ee1@huawei.com>
+Date:   Tue, 31 Mar 2020 11:56:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 02/39] MIPS: loongson64: Add header files path prefix
-To:     maobibo <maobibo@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <00795E01-070C-4C45-AB33-A41058F6DD37@flygoat.com>
-X-ZohoCNMailClient: External
+In-Reply-To: <3053de4c-cee6-f6fc-efc2-09c6250f3ef2@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.60]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/3/31 7:35, Toshiaki Makita wrote:
+> Hi Mao & Jesper
+> (Resending with plain text...)
+> 
+> On 2020/03/30 20:34, Jesper Dangaard Brouer wrote:
+>> On Mon, 30 Mar 2020 18:26:31 +0800
+>> Mao Wenan <maowenan@huawei.com> wrote:
+>>
+>>> xdp.data_hard_start is mapped to the first
+>>> address of xdp_frame, but the pointer hard_start
+>>> is the offset(sizeof(struct xdp_frame)) of xdp_frame,
+>>> it should use head instead of hard_start to
+>>> set xdp.data_hard_start. Otherwise, if BPF program
+>>> calls helper_function such as bpf_xdp_adjust_head, it
+>>> will be confused for xdp_frame_end.
+>>
+>> I have noticed this[1] and have a patch in my current patchset for
+>> fixing this.  IMHO is is not so important fix right now, as the effect
+>> is that you currently only lose 32 bytes of headroom.
+>>
+I consider that it is needed because bpf_xdp_adjust_head() just a common helper function,
+veth as one driver application should keep the same as 32 bytes of headroom as other driver.
+And convert_to_xdp_frame set() also store info in top of packet, and set:
+	xdp_frame = xdp->data_hard_start;
+
+>> [1] https://lore.kernel.org/netdev/158446621887.702578.17234304084556809684.stgit@firesoul/
+> 
+> You are right, the subtraction is not necessary here.
+I guess you mean that previous subtraction is not necessary ? this line : void *head = hard_start - sizeof(struct xdp_frame); ?
+But in the veth_xdp_rcv_one,below line will use head pointer,
+case XDP_TX:
+                        orig_frame = *frame;
+                        xdp.data_hard_start = head;
 
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=886=
-:00:19, maobibo <maobibo@loongson=2Ecn> =E5=86=99=E5=88=B0:
->
->
->On 03/30/2020 04:55 PM, Jiaxun Yang wrote:
->>=20
->>=20
->> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=884:38:51, bibo mao <maobibo@loongson=2Ecn> =E5=86=99=E5=88=B0:
->>> Remove header files from arch/mips/include/asm/mach-loongson64
->>> to arch/mips/loongson64/include/mach
->>>
->>> Signed-off-by: bibo mao <maobibo@loongson=2Ecn>
->>=20
->> Hi Bibo,
->>=20
->> Thanks for your patch=2E
->>=20
->> What's your intention?
->> Did you meet any problem about headers?
->>=20
->
->Hi Jiaxun,
->
->When I add irqchip support for mips kvm, file virt/kvm/irqchip=2Ec
->requires local header file arch/mips/kvm/irq=2Eh, it fails to compile=2E
->Since there is file with the same name located at:
->  arch/mips/include/asm/mach-generic/irq=2Eh
->  arch/mips/include/asm/mach-loongson64/irq=2Eh
->
->The compiler fails to choose the correct header file irq=2Eh,
+> Thank you for working on this.
+> 
+> Toshiaki Makita
+> 
+> .
 
-btw: I checked Loongson's KVM implementation in their out-of-tree 3=2E10 k=
-ernel and found they're emulating everything
-in Kernel, like csr, irqchip of LS7A, extioi of 3A4000, even cpufreq=2E
 
-This is making the whole thing unnecessarily complex=2E
-
-If you are trying to mainline Loongson KVM support then please avoid do li=
-ke this=2E
-
-Please reference how Arm define their virt machine in QEMU=2E
-
-We're not x86, we don't have to run into historical limitations=2E
-
-Thanks
-
->
->regards
->bibo,mao
->
---=20
-Jiaxun Yang
