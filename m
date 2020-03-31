@@ -2,119 +2,153 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF89C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E126DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E32520748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B462220774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9OR+DCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgCaCiL (ORCPT
+        id S1729776AbgCaCil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:38:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:45459 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727464AbgCaCiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:38:11 -0400
-IronPort-SDR: B6qTxOv3qxFBkrpatBPAt/d61dc8ii3q8sTfS5y1gTxvlgRMhv+p90sp/vnBBLy5elhuBzub38
- vIe1hT1ViQIg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 19:38:10 -0700
-IronPort-SDR: gQqONHGZrVgABLM0UYtvVtd3YvvksEvwewAYtAH1kil4MKCavjAw7fhxHM8buNuoKamN30QltV
- /PgpMt6HxWAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,326,1580803200"; 
-   d="scan'208";a="359364093"
-Received: from yanbingl-mobl2.ccr.corp.intel.com ([10.249.171.104])
-  by fmsmga001.fm.intel.com with ESMTP; 30 Mar 2020 19:38:05 -0700
-Message-ID: <25a7feacbd75821385aa310f3dbd87f70ed3ead2.camel@intel.com>
-Subject: Re: [PATCH v2 3/3] thermal: int340x_thermal: fix: Update Tiger Lake
- ACPI device IDs
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     Gayatri Kammela <gayatri.kammela@intel.com>,
-        linux-pm@vger.kernel.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lenb@kernel.org, dvhart@infradead.org, alex.hung@canonical.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        mika.westerberg@intel.com, peterz@infradead.org,
-        charles.d.prestopine@intel.com, "5 . 6+" <stable@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Date:   Tue, 31 Mar 2020 10:38:04 +0800
-In-Reply-To: <24125c0777458384f5b4449cafb5115b9985e3bd.1585343507.git.gayatri.kammela@intel.com>
-References: <cover.1585343507.git.gayatri.kammela@intel.com>
-         <24125c0777458384f5b4449cafb5115b9985e3bd.1585343507.git.gayatri.kammela@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 30 Mar 2020 22:38:41 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:44419 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729658AbgCaCil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 22:38:41 -0400
+Received: by mail-ua1-f67.google.com with SMTP id r47so7119120uad.11;
+        Mon, 30 Mar 2020 19:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lQkNuHfdbFfCrISunCbd5HE6GiAQV73qbHuCCjJGU+Q=;
+        b=P9OR+DCNnGZCC8QKXk7qtERH2e/a6DlXVss0LKQpzu5ViaB4T2UH5YEYbWe/NYoxSN
+         hlda1Zp9XlzNN87pVQ4X2emIKM0oz7W08fvm2bq+ZUGHAKJMvj8eRi8VrPte+RPsMjbF
+         bFyyz0K+EWz/QEnKEtzV9BcC+Mjgz/Lpem5Hk7zQbN60seN5Jf2GlkCU5VaDpbpg6Tgu
+         0juzcZOgGj522fd+AyTyADUd97z69OpMjkrU0fJRwrCQHK0YczS+hOJFCIx9G4uCEyBg
+         VchFPczefuqsD7aUAt8FWGTEAhZJuA0SFj1GsEoOzNafbCAB8p5uk7J7qUIjf17stdtc
+         B6Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lQkNuHfdbFfCrISunCbd5HE6GiAQV73qbHuCCjJGU+Q=;
+        b=GVph2CJl5gVUbRyUmEjjusqVPvMAWJgelAG8SYLScEqMVlHRLss9fvYZ+cZGjc8dTu
+         XMyhlK7pEdO8yB2WLZ2+J8YIiyilnkQ8sT1XbZyc1ODPXKII7cFVKaxdAHyqlonuxQGm
+         wjNgq+plFTH+uVarLEnD8V0Cb5V5hdAYRj+hLaipgRFvOHTDf01h6LoTmLW9qm3HTmpn
+         nL6NUeO4vueexNYOyyyGfsv+DBuXspLzorXwXVNrMq/ZcS+2a8Q+HYEp1w0PTjuMobNq
+         +taXXuy1l4fIXWCdGBPaTVV/BowQBQjd8jYx/u5F3ShnAi+CIItPzwcMPN3nWratHqJO
+         7FJQ==
+X-Gm-Message-State: AGi0PubeCEHDFaDrYq/fggRP0BAOrIwoB639Qqe5XIjmtkpK9GcBsbuu
+        +3I+gZhXeclolyeQNUBvx7DsNByDZ9z11jT1HPU=
+X-Google-Smtp-Source: APiQypIydMRa8jN5Ea+TWdh9b6HfG5Jo/9+sicel9yiAw+Dkxl7k6OiISRTly3cd4Euc+eYwWxkH0C6wvmibFm7TuUM=
+X-Received: by 2002:ab0:7406:: with SMTP id r6mr1669634uap.22.1585622319702;
+ Mon, 30 Mar 2020 19:38:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <0000000000003d7c1505a2168418@google.com>
+In-Reply-To: <0000000000003d7c1505a2168418@google.com>
+From:   Qiujun Huang <anenbupt@gmail.com>
+Date:   Tue, 31 Mar 2020 10:38:28 +0800
+Message-ID: <CADG63jD_VnBJ-fHfStVq5=4ceAT=nwqkXdWzJPcfu1U=fF657A@mail.gmail.com>
+Subject: Re: KASAN: stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
+To:     syzbot <syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        kvalo@codeaurora.org, LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: multipart/mixed; boundary="0000000000001d68c405a21d7706"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-03-27 at 14:28 -0700, Gayatri Kammela wrote:
-> Tiger Lake's new unique ACPI device IDs for Intel thermal driver are
-> not
-> valid because of missing 'C' in the IDs. Fix the IDs by updating
-> them.
-> 
-> After the update, the new IDs should now look like
-> INT1040 --> INTC1040
-> INT1043 --> INTC1043
-> 
-> Fixes: 9b1b5535dfc9 ("thermal: int340x_thermal: Add Tiger Lake ACPI
-> device IDs")
-> Cc: 5.6+ <stable@vger.kernel.org> # 5.6+
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Suggested-by: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+--0000000000001d68c405a21d7706
+Content-Type: text/plain; charset="UTF-8"
 
-Acked-by: Zhang Rui <rui.zhang@intel.com>
+#syz test: https://github.com/google/kasan.git usb-fuzzer
 
-thanks,
-rui
+On Tue, Mar 31, 2020 at 2:21 AM syzbot
+<syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=159a0583e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a782c087b1f425c6
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d403396d4df67ad0bd5f
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177a266de00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1579f947e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+d403396d4df67ad0bd5f@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
+> BUG: KASAN: stack-out-of-bounds in ath9k_hif_usb_rx_cb+0xdf6/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:666
+> Write of size 8 at addr ffff8881db309a28 by task swapper/1/0
+>
+> CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  <IRQ>
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xef/0x16e lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+>  __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+>  kasan_report+0xe/0x20 mm/kasan/common.c:641
+>  ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:626 [inline]
+>  ath9k_hif_usb_rx_cb+0xdf6/0xf70 drivers/net/wireless/ath/ath9k/hif_usb.c:666
+>  __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1648
+>  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1713
+>  dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+>  call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+>  expire_timers kernel/time/timer.c:1449 [inline]
+>  __run_timers kernel/time/timer.c:1773 [inline]
+>  __run_timers kernel/time/timer.c:1740 [inline]
+>  run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+>
+>
 > ---
->  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
->  drivers/thermal/intel/int340x_thermal/int3403_thermal.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> index efae0c02d898..71a9877b85a5 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> @@ -369,7 +369,7 @@ static int int3400_thermal_remove(struct
-> platform_device *pdev)
->  }
->  
->  static const struct acpi_device_id int3400_thermal_match[] = {
-> -	{"INT1040", 0},
-> +	{"INTC1040", 0},
->  	{"INT3400", 0},
->  	{}
->  };
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> index aeece1e136a5..3849d5869609 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3403_thermal.c
-> @@ -282,7 +282,7 @@ static int int3403_remove(struct platform_device
-> *pdev)
->  }
->  
->  static const struct acpi_device_id int3403_device_ids[] = {
-> -	{"INT1043", 0},
-> +	{"INTC1043", 0},
->  	{"INT3403", 0},
->  	{"", 0},
->  };
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
+--0000000000001d68c405a21d7706
+Content-Type: application/octet-stream; name="hif_usb.patch"
+Content-Disposition: attachment; filename="hif_usb.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8faiqee0>
+X-Attachment-Id: f_k8faiqee0
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2F0aC9hdGg5ay9oaWZfdXNiLmMgYi9k
+cml2ZXJzL25ldC93aXJlbGVzcy9hdGgvYXRoOWsvaGlmX3VzYi5jCmluZGV4IGRkMGMzMjMuLjky
+Yzk0ZmMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2F0aC9hdGg5ay9oaWZfdXNi
+LmMKKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDlrL2hpZl91c2IuYwpAQCAtNjEy
+LDYgKzYxMiwxMCBAQCBzdGF0aWMgdm9pZCBhdGg5a19oaWZfdXNiX3J4X3N0cmVhbShzdHJ1Y3Qg
+aGlmX2RldmljZV91c2IgKmhpZl9kZXYsCiAJCQloaWZfZGV2LT5yZW1haW5fc2tiID0gbnNrYjsK
+IAkJCXNwaW5fdW5sb2NrKCZoaWZfZGV2LT5yeF9sb2NrKTsKIAkJfSBlbHNlIHsKKwkJCWlmIChw
+b29sX2luZGV4ID09IE1BWF9QS1RfTlVNX0lOX1RSQU5TRkVSKSB7CisJCQkJZGV2X2VycigiYXRo
+OWtfaHRjOiBvdmVyIFJYIE1BWF9QS1RfTlVNXG4iKTsKKwkJCQlnb3RvIGVycjsKKwkJCX0KIAkJ
+CW5za2IgPSBfX2Rldl9hbGxvY19za2IocGt0X2xlbiArIDMyLCBHRlBfQVRPTUlDKTsKIAkJCWlm
+ICghbnNrYikgewogCQkJCWRldl9lcnIoJmhpZl9kZXYtPnVkZXYtPmRldiwK
+--0000000000001d68c405a21d7706--
