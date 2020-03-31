@@ -2,318 +2,100 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A1CC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B7AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94BCE20BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FVZ3Ph3d"
+	by mail.kernel.org (Postfix) with ESMTP id 8940121473
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585678859;
+	bh=bVzVLbJpXjT5F8t9zyWMDDK2MOmP4AH52KrfSudbEZc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zj4RgGYqUVoJTde5W6AqtfII/Ch25C6KucaZiERQeyS7x2phbtq43cW9ffqYw6y2/
+	 M0ejkzS8TnFp3Sb745X4/Mkh9jjLgzWwFur7iTGYzCc9dziTxGfTk+zznL1mqml5GV
+	 webzs4BVv+026vlAwAQlxC+vWKyvzRLSa2K4jY6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgCaSOc (ORCPT
+        id S1726402AbgCaSU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:14:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51379 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726208AbgCaSOc (ORCPT
+        Tue, 31 Mar 2020 14:20:58 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35526 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCaSU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:14:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585678470;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TSvrVqyL1Jx5FubyVmhg6f6i8aYPPkfIz/TD3nTqZyI=;
-        b=FVZ3Ph3du9/1mXQ4x5nSIQJAMai81j63BgNGwEPF6rJEgwzGUG5YcgueSUCrDiQAjDUPko
-        fWMwZl1QWY2duRVE9ray2VwLdwfw7NBJ62pyqU7F+t18RfamsEs0JwVJbnHM1rZu9dcVpq
-        2bYQn4IwC05n5rTViTBxJbwQDCnbU0E=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-Evw0rzZ4NkW_V0hpiOSJ1A-1; Tue, 31 Mar 2020 14:14:28 -0400
-X-MC-Unique: Evw0rzZ4NkW_V0hpiOSJ1A-1
-Received: by mail-wr1-f70.google.com with SMTP id d1so13296183wru.15
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:14:28 -0700 (PDT)
+        Tue, 31 Mar 2020 14:20:58 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k21so23085900ljh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:20:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uoULL4HJ/4Fp45aaQk4Hu/7pgyNJbne+Y7btBWjm98M=;
+        b=CmzsV6h6bpJpOjdOqIiordG7PqBedgrJWUslQaSWFFc0PsAmoW2n9Qmm4fjP+rxipj
+         KTlpTC0p6VP22xW/i/jVMikS9NwXnvvz/JiCG+nYjMhKP6k73ZUMogsKMud7bMuFkBpY
+         nQrxqOrO+CKYfRRzCAFGQ+yAFURIBGhmcQJZM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TSvrVqyL1Jx5FubyVmhg6f6i8aYPPkfIz/TD3nTqZyI=;
-        b=XLt8VXyHkeprRFdWYNLmYVcokRyWd/xhYu7MYTUIRl9DpuBFMKa+ArvXmCz8vP82v8
-         3KVotyB0okma1c1PDrkgmCv/poxL43jqvDx3Lqcwb+w6fBL9ZFkRgLMCpypMv0HJqjZT
-         h19DdacKlGELX/FTYg3N0PY4ukscvI83Q1MV+B81tLynu4bjoYHF+mArUc70Y/kNT8dV
-         xdYTtHhgSU1nAnskqykXqDmPwWI7S6goZ7i9bDt5Y2QGXRPhSa8QADWXb4RUkMe2o9sD
-         SwqaCHH29dwMKOUq0qxSZBiqFGWVvLsUwiVTFA8oEwbQuGvSuMrr56gC0qxWxNUpOQx7
-         fwkw==
-X-Gm-Message-State: AGi0Pubi2ACFgbdAosQTmDDdRplY33ZmO4eDfmNHo2oJDzgL2Vb+aSp5
-        f1r5a9LfTegm6lnf706BojdCD3/MfXVA77X2Oa6aY603Cv6dIg7tWSSYrm0Dt4ZIQEiMkUESHP5
-        hX4o3PvQbxCXhYi/poN65RVV+
-X-Received: by 2002:a1c:e904:: with SMTP id q4mr133903wmc.84.1585678467306;
-        Tue, 31 Mar 2020 11:14:27 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLVDQvmChaAxrN9xcoLakoPVPQCDmsEJBfNQTVUIzH6Z20zW9Y/lw5ZL804EkY8DW/XHdDNZg==
-X-Received: by 2002:a1c:e904:: with SMTP id q4mr133880wmc.84.1585678467042;
-        Tue, 31 Mar 2020 11:14:27 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id h81sm5180039wme.42.2020.03.31.11.14.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 11:14:26 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 14:14:23 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH v2 1/8] vhost: Create accessors for virtqueues
- private_data
-Message-ID: <20200331141244-mutt-send-email-mst@kernel.org>
-References: <20200331180006.25829-1-eperezma@redhat.com>
- <20200331180006.25829-2-eperezma@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uoULL4HJ/4Fp45aaQk4Hu/7pgyNJbne+Y7btBWjm98M=;
+        b=UNLoc38tMmWRWIV+mC6H7PxRCncXPyoTSFN2Gk/s7OnAz4n8QSJcBPqDUo1hG8wlY9
+         s0qicL96DLYE+YOsInuhEmnW9btoh+7CTyR2b0Jvx/nBkffB9KPjyIuZ2f5axuwiiNL7
+         7f3NRlvxQ5rxmFSgTu3HvGTB3/m7YQZ4n/Z5Au+wzfXzG130yXiA8py5TgrGgpMEEC2g
+         2PIaTxYyQ98+QAq/4Oi0/XzN8c8LBio5wqbFw4gaW+wLcjs45kcINGf322EKCHHlgxdd
+         c24Fj+I95w/4LqerVBqIcaKByoMzpuJKTCbAQEmjqOrLe71SCj4Z7HLZx8kd/iAPSTPm
+         ukUw==
+X-Gm-Message-State: AGi0Pua9J6PyRWa/cCS7kncndc6S/R7F8lIajl+IQKBmMVzbzfmO8PR4
+        Z3NL006nAWPy3vGsbvi/XVCDAYDJ2sw=
+X-Google-Smtp-Source: APiQypKs2XyH3w24wbpfSlg9nw2StL4cRW9VN5u5eVO7hTwoC98IdlZ3g8YeR32x8/wHwTgTARTHjQ==
+X-Received: by 2002:a2e:8693:: with SMTP id l19mr11603781lji.132.1585678855821;
+        Tue, 31 Mar 2020 11:20:55 -0700 (PDT)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id b193sm10299397lfd.74.2020.03.31.11.20.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 11:20:54 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id q19so22982534ljp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:20:54 -0700 (PDT)
+X-Received: by 2002:a2e:b4cb:: with SMTP id r11mr11392287ljm.201.1585678853923;
+ Tue, 31 Mar 2020 11:20:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200331180006.25829-2-eperezma@redhat.com>
+References: <20200331085308.098696461@linuxfoundation.org> <CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 31 Mar 2020 11:20:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whyW9TXfYxyxUW6hP9e0A=5MnOHrTarr4_k0hiddxq69Q@mail.gmail.com>
+Message-ID: <CAHk-=whyW9TXfYxyxUW6hP9e0A=5MnOHrTarr4_k0hiddxq69Q@mail.gmail.com>
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 07:59:59PM +0200, Eugenio Pérez wrote:
-> Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
-> ---
->  drivers/vhost/net.c   | 28 +++++++++++++++-------------
->  drivers/vhost/vhost.h | 28 ++++++++++++++++++++++++++++
->  drivers/vhost/vsock.c | 14 +++++++-------
->  3 files changed, 50 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> index e158159671fa..6c5e7a6f712c 100644
-> --- a/drivers/vhost/net.c
-> +++ b/drivers/vhost/net.c
-> @@ -424,7 +424,7 @@ static void vhost_net_disable_vq(struct vhost_net *n,
->  	struct vhost_net_virtqueue *nvq =
->  		container_of(vq, struct vhost_net_virtqueue, vq);
->  	struct vhost_poll *poll = n->poll + (nvq - n->vqs);
-> -	if (!vq->private_data)
-> +	if (!vhost_vq_get_backend_opaque(vq))
->  		return;
->  	vhost_poll_stop(poll);
->  }
-> @@ -437,7 +437,7 @@ static int vhost_net_enable_vq(struct vhost_net *n,
->  	struct vhost_poll *poll = n->poll + (nvq - n->vqs);
->  	struct socket *sock;
->  
-> -	sock = vq->private_data;
-> +	sock = vhost_vq_get_backend_opaque(vq);
->  	if (!sock)
->  		return 0;
->  
-> @@ -524,7 +524,7 @@ static void vhost_net_busy_poll(struct vhost_net *net,
->  		return;
->  
->  	vhost_disable_notify(&net->dev, vq);
-> -	sock = rvq->private_data;
-> +	sock = vhost_vq_get_backend_opaque(rvq);
->  
->  	busyloop_timeout = poll_rx ? rvq->busyloop_timeout:
->  				     tvq->busyloop_timeout;
-> @@ -570,8 +570,10 @@ static int vhost_net_tx_get_vq_desc(struct vhost_net *net,
->  
->  	if (r == tvq->num && tvq->busyloop_timeout) {
->  		/* Flush batched packets first */
-> -		if (!vhost_sock_zcopy(tvq->private_data))
-> -			vhost_tx_batch(net, tnvq, tvq->private_data, msghdr);
-> +		if (!vhost_sock_zcopy(vhost_vq_get_backend_opaque(tvq)))
-> +			vhost_tx_batch(net, tnvq,
-> +				       vhost_vq_get_backend_opaque(tvq),
-> +				       msghdr);
->  
->  		vhost_net_busy_poll(net, rvq, tvq, busyloop_intr, false);
->  
-> @@ -685,7 +687,7 @@ static int vhost_net_build_xdp(struct vhost_net_virtqueue *nvq,
->  	struct vhost_virtqueue *vq = &nvq->vq;
->  	struct vhost_net *net = container_of(vq->dev, struct vhost_net,
->  					     dev);
-> -	struct socket *sock = vq->private_data;
-> +	struct socket *sock = vhost_vq_get_backend_opaque(vq);
->  	struct page_frag *alloc_frag = &net->page_frag;
->  	struct virtio_net_hdr *gso;
->  	struct xdp_buff *xdp = &nvq->xdp[nvq->batched_xdp];
-> @@ -952,7 +954,7 @@ static void handle_tx(struct vhost_net *net)
->  	struct socket *sock;
->  
->  	mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_TX);
-> -	sock = vq->private_data;
-> +	sock = vhost_vq_get_backend_opaque(vq);
->  	if (!sock)
->  		goto out;
->  
-> @@ -1121,7 +1123,7 @@ static void handle_rx(struct vhost_net *net)
->  	int recv_pkts = 0;
->  
->  	mutex_lock_nested(&vq->mutex, VHOST_NET_VQ_RX);
-> -	sock = vq->private_data;
-> +	sock = vhost_vq_get_backend_opaque(vq);
->  	if (!sock)
->  		goto out;
->  
-> @@ -1344,9 +1346,9 @@ static struct socket *vhost_net_stop_vq(struct vhost_net *n,
->  		container_of(vq, struct vhost_net_virtqueue, vq);
->  
->  	mutex_lock(&vq->mutex);
-> -	sock = vq->private_data;
-> +	sock = vhost_vq_get_backend_opaque(vq);
->  	vhost_net_disable_vq(n, vq);
-> -	vq->private_data = NULL;
-> +	vhost_vq_set_backend_opaque(vq, NULL);
->  	vhost_net_buf_unproduce(nvq);
->  	nvq->rx_ring = NULL;
->  	mutex_unlock(&vq->mutex);
-> @@ -1528,7 +1530,7 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
->  	}
->  
->  	/* start polling new socket */
-> -	oldsock = vq->private_data;
-> +	oldsock = vhost_vq_get_backend_opaque(vq);
->  	if (sock != oldsock) {
->  		ubufs = vhost_net_ubuf_alloc(vq,
->  					     sock && vhost_sock_zcopy(sock));
-> @@ -1538,7 +1540,7 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
->  		}
->  
->  		vhost_net_disable_vq(n, vq);
-> -		vq->private_data = sock;
-> +		vhost_vq_set_backend_opaque(vq, sock);
->  		vhost_net_buf_unproduce(nvq);
->  		r = vhost_vq_init_access(vq);
->  		if (r)
-> @@ -1575,7 +1577,7 @@ static long vhost_net_set_backend(struct vhost_net *n, unsigned index, int fd)
->  	return 0;
->  
->  err_used:
-> -	vq->private_data = oldsock;
-> +	vhost_vq_set_backend_opaque(vq, oldsock);
->  	vhost_net_enable_vq(n, vq);
->  	if (ubufs)
->  		vhost_net_ubuf_put_wait_and_free(ubufs);
-> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> index a123fd70847e..0808188f7e8f 100644
-> --- a/drivers/vhost/vhost.h
-> +++ b/drivers/vhost/vhost.h
-> @@ -244,6 +244,34 @@ enum {
->  			 (1ULL << VIRTIO_F_VERSION_1)
->  };
->  
-> +/**
-> + * vhost_vq_set_backend_opaque - Set backend opaque.
-> + *
-> + * @vq            Virtqueue.
-> + * @private_data  The private data.
-> + *
-> + * Context: Need to call with vq->mutex acquired.
-> + */
-> +static inline void vhost_vq_set_backend_opaque(struct vhost_virtqueue *vq,
-> +					       void *private_data)
-> +{
-> +	vq->private_data = private_data;
-> +}
-> +
-> +/**
-> + * vhost_vq_get_backend_opaque - Get backend opaque.
-> + *
-> + * @vq            Virtqueue.
-> + * @private_data  The private data.
-> + *
-> + * Context: Need to call with vq->mutex acquired.
-> + * Return: Opaque previously set with vhost_vq_set_backend_opaque.
-> + */
-> +static inline void *vhost_vq_get_backend_opaque(struct vhost_virtqueue *vq)
-> +{
-> +	return vq->private_data;
-> +}
-> +
->  static inline bool vhost_has_feature(struct vhost_virtqueue *vq, int bit)
->  {
->  	return vq->acked_features & (1ULL << bit);
+On Tue, Mar 31, 2020 at 11:08 AM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> Perf build broken on Linux next and mainline and now on stable-rc-5.6 branch.
 
+Strange. What is it that triggers the problem for you? It works fine
+here.. The error looks like some kind of command line quoting error,
+but I don't see the direct cause.
 
-I think I prefer vhost_vq_get_backend and vhost_vq_set_backend.
+Have you bisected the failure? Build failures should be particularly
+easy and quick to bisect.
 
-"opaque" just means that it's void * that is clear from the signature
-anyway.
-
-
-> diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> index c2d7d57e98cf..6e20dbe14acd 100644
-> --- a/drivers/vhost/vsock.c
-> +++ b/drivers/vhost/vsock.c
-> @@ -91,7 +91,7 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
->  
->  	mutex_lock(&vq->mutex);
->  
-> -	if (!vq->private_data)
-> +	if (!vhost_vq_get_backend_opaque(vq))
->  		goto out;
->  
->  	/* Avoid further vmexits, we're already processing the virtqueue */
-> @@ -440,7 +440,7 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
->  
->  	mutex_lock(&vq->mutex);
->  
-> -	if (!vq->private_data)
-> +	if (!vhost_vq_get_backend_opaque(vq))
->  		goto out;
->  
->  	vhost_disable_notify(&vsock->dev, vq);
-> @@ -533,8 +533,8 @@ static int vhost_vsock_start(struct vhost_vsock *vsock)
->  			goto err_vq;
->  		}
->  
-> -		if (!vq->private_data) {
-> -			vq->private_data = vsock;
-> +		if (!vhost_vq_get_backend_opaque(vq)) {
-> +			vhost_vq_set_backend_opaque(vq, vsock);
->  			ret = vhost_vq_init_access(vq);
->  			if (ret)
->  				goto err_vq;
-> @@ -547,14 +547,14 @@ static int vhost_vsock_start(struct vhost_vsock *vsock)
->  	return 0;
->  
->  err_vq:
-> -	vq->private_data = NULL;
-> +	vhost_vq_set_backend_opaque(vq, NULL);
->  	mutex_unlock(&vq->mutex);
->  
->  	for (i = 0; i < ARRAY_SIZE(vsock->vqs); i++) {
->  		vq = &vsock->vqs[i];
->  
->  		mutex_lock(&vq->mutex);
-> -		vq->private_data = NULL;
-> +		vhost_vq_set_backend_opaque(vq, NULL);
->  		mutex_unlock(&vq->mutex);
->  	}
->  err:
-> @@ -577,7 +577,7 @@ static int vhost_vsock_stop(struct vhost_vsock *vsock)
->  		struct vhost_virtqueue *vq = &vsock->vqs[i];
->  
->  		mutex_lock(&vq->mutex);
-> -		vq->private_data = NULL;
-> +		vhost_vq_set_backend_opaque(vq, NULL);
->  		mutex_unlock(&vq->mutex);
->  	}
->  
-> -- 
-> 2.18.1
-
+                Linus
