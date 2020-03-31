@@ -2,199 +2,163 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85348C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAD1C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55164206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FE3206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 19:39:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQqy5z0L"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="i3NpJnHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgCaTft (ORCPT
+        id S1728492AbgCaTjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:35:49 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41290 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaTfs (ORCPT
+        Tue, 31 Mar 2020 15:39:09 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:40404 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgCaTjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 15:35:48 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k9so19995674oia.8;
-        Tue, 31 Mar 2020 12:35:47 -0700 (PDT)
+        Tue, 31 Mar 2020 15:39:08 -0400
+Received: by mail-yb1-f195.google.com with SMTP id a5so8283229ybo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 12:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uNeFtElerLSFNE4HdYEqRaL24eqg7L/VUfNtHETsjEM=;
-        b=XQqy5z0LuJBKyx2+xicoeRY7WIdIo3PJrOF5YRdXwwwWERxSu/DHN8n4u4u1NuRAYz
-         NkCnbGG9I2SMrfziKI9OnMtyxuFdTHdd/BxIhsNU6tEo/k94B8wbcr1N9EzrNAR30NDA
-         dQgWCuaKuE3q7ZhHhU/bCJAAR+r66vDrHfuRNpwK968oEL2DmN1onyY9WBqJWjPNjr0+
-         lUHLYo+LTWYlNAt8CQD1d4MP4+9lwjk0wUzC6hnxDFljV2w/1F/0zPcc8zttLoP56tUO
-         XnFAz4USmLI7mvzvUMySPt+yghToRylbAUsjj6nW3yGXXcy1z1jAJvuLUF2ahtYGjl5b
-         tj/w==
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CmyCyWagylfuKeKB4BO2p4EHeCrzlGpSPlijLTrzQrE=;
+        b=i3NpJnHq4kSwxmmk+3rXgxdW8Wt5LW4Edf8xpVA/myZ6FFGqWy/Sa+cGk5maohkOQg
+         y8WPF8b84LcU2zQHXVM70zuqSL6ixG4qKmAdHZshTqzvgvpH3/x4nny6bJrgYirLw/Xt
+         e+VOU9zfivBrm990mM3EWL29oUt2b6LNVZQEWsmCGkYJhexuUp9A0JbWWyxZM/vQkx03
+         tzyBPfueZyGMUmSjzf8LtNpzxWmqXsIIpiCLUk7f/1CEBepL5tBomiR3cob+FkM33OPo
+         RQSd9hB1ceYDCHxgX2JI6Y03S00SeRYbcs6RihoC5/E9NC8F49Un2sMHlO+AzuTxlQUa
+         PcPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uNeFtElerLSFNE4HdYEqRaL24eqg7L/VUfNtHETsjEM=;
-        b=lUPbTDjgtberl7dzw6qzs9xgynswDdFWbShHHHp/Nwp5WN0XPBJliwDgWH/0pZWkvw
-         OvOEo0rgrU8jkhJZy5LUP3J3dgHvjjpBz+SlS1SNqfPCS9SYjOS7x9ON70qtWuOjnw2M
-         6IBGCWbN23z0EI592sqQ/9MdC8UX5UQLnNs0Oph0FMPJV6lx2Ac7aselmgxtzfwz69TB
-         7Sa1pkLmX6/jxxnqaRoswxA2AzmdnVJswOPkrtSQVMOodgzTjI1X1FNWgH+KpctvkRuU
-         gsOmTB47fuMsneSd9zhTLzbg9xbH+JnD5fklC5CpniZNkE34yk0J45OmkzYbqfM/VaQh
-         1IyQ==
-X-Gm-Message-State: AGi0Puaq2tjGMRwRpjmeCAPzUsqF71IbkZcDKkNPQQQReqLN0KKAiPnb
-        QkmwosTuxyPs/h8fwVEdQyg=
-X-Google-Smtp-Source: APiQypIz7n8mOdCuDICTa//gDlhgfrjnUlbpNUMdtH0EOzE4s6S9eIpdO3pvS8Cr9j1l3qchr/0F8Q==
-X-Received: by 2002:aca:da8b:: with SMTP id r133mr366305oig.81.1585683347441;
-        Tue, 31 Mar 2020 12:35:47 -0700 (PDT)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id d3sm5307075oib.15.2020.03.31.12.35.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 12:35:46 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 12:35:44 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sandeep Patil <sspatil@google.com>
-Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
-Message-ID: <20200331193544.GA55810@ubuntu-m2-xlarge-x86>
-References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86>
- <20200317215515.226917-1-ndesaulniers@google.com>
- <20200327224246.GA12350@ubuntu-m2-xlarge-x86>
- <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
- <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
- <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com>
- <20200330190312.GA32257@ubuntu-m2-xlarge-x86>
- <CAK7LNAT1HoV5wUZRdeU0+P1nYAm2xQ4tpOG+7UtT4947QByakg@mail.gmail.com>
- <CAKwvOd==U6NvvYz8aUz8fUNdvz27pKrn8X5205rFadpGXzRC-Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CmyCyWagylfuKeKB4BO2p4EHeCrzlGpSPlijLTrzQrE=;
+        b=oykf0gKH18iO3XVlh53MBM7G/x5V+5ctjHuQtrwUngh02ZRTy72tR3eaaaAb7cw6kx
+         vkMuTZEnqhYOwH4+iYHtjMI/NubnPY1L14rPcV05K1iJTmqKT4GX2eqv3KqjDsTNdjna
+         m2Rsqv3Za3UIO2F0Kw8aii1ejJxV4XMHX4+s8OzbhxJUeevFkUOr8aG8RJiL3QB24bud
+         7oWYaXkyFpZdwjRVgaEPlRKvHyqhCfcU2QnwKGG8eooi8oLi93whxcSM1LvrAFxI6Pg3
+         JrjTocIFdcgglA56L0hrQPDUNBuG/hB0vhXd+3Wga48i8TOJyJDeSFVVxTZHtBAxbdhv
+         sUkQ==
+X-Gm-Message-State: ANhLgQ1eGKWa6jjlpWYvzPBXSRx1vvaS5G9Y+jO4PEuIjD2z3IOSjn4H
+        irZ5s+6AdLVQe8LYlRVf+JoDtdfaahwRyAGwM04l2w==
+X-Google-Smtp-Source: ADFU+vtC9v29cwTvgQzCRkzqmplSAGo2pfpyc7gBVxRCNiuU28PdpgwpW/Ke6FkwW6/6YGQT2lEDfhOzwI5e3wgwWTc=
+X-Received: by 2002:a25:c482:: with SMTP id u124mr31079143ybf.286.1585683547417;
+ Tue, 31 Mar 2020 12:39:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOd==U6NvvYz8aUz8fUNdvz27pKrn8X5205rFadpGXzRC-Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200330230256.28323-1-vitor@massaru.org> <CAFd5g47hiPf7Xy0f4YER+HzHHXyUV0dhiQ=2ZXfezEHBcrTuEQ@mail.gmail.com>
+In-Reply-To: <CAFd5g47hiPf7Xy0f4YER+HzHHXyUV0dhiQ=2ZXfezEHBcrTuEQ@mail.gmail.com>
+From:   Vitor Massaru Iha <vitor@massaru.org>
+Date:   Tue, 31 Mar 2020 16:38:30 -0300
+Message-ID: <CADQ6JjUUFsJdgeLNA8XUkSF14H=WWF8y2eNTvQPNXHRQ+p_qBw@mail.gmail.com>
+Subject: Re: [PATCH] kunit: Fix kunit.py run --build_dir='<foo>' fails on
+ "unclean" trees
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 11:39:27AM -0700, Nick Desaulniers wrote:
-> On Mon, Mar 30, 2020 at 11:25 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+Hi Brendan,
+
+On Tue, Mar 31, 2020 at 3:27 PM 'Brendan Higgins' via KUnit
+Development <kunit-dev@googlegroups.com> wrote:
+>
+> On Mon, Mar 30, 2020 at 4:03 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
 > >
-> > On Tue, Mar 31, 2020 at 4:03 AM Nathan Chancellor
-> > <natechancellor@gmail.com> wrote:
-> > >
-> > > On Mon, Mar 30, 2020 at 11:58:19AM -0700, Nick Desaulniers wrote:
-> > > > On Sat, Mar 28, 2020 at 6:57 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > > >
-> > > > > I also had planned to provide a single switch to change
-> > > > > all the tool defaults to LLVM.
-> > > > >
-> > > > > So, supporting 'LLVM' is fine, but I'd rather want this
-> > > > > look symmetrical, and easy to understand.
-> > > > >
-> > > > > CPP        = $(CC) -E
-> > > > > ifneq ($(LLVM),)
-> > > >
-> > > > Yes, a simple if statement is much simpler than the overly complex patch I had.
-> > > >
-> > > > > CC         = $(LLVM_DIR)clang
-> > > >
-> > > > Do we need $LLVM_DIR? Shouldn't users just have that in their $PATH?
-> > > >
-> > > > Also, I think we need to support suffixed binaries, as debian
-> > > > distributes these with version suffixes, as Nathan points out.  Or do
-> > > > the debian packages install suffixed binaries AND path versioned
-> > > > non-suffixed binaries?
-> > >
-> > > I think the idea here is that ultimately, the suffixed versions of clang
-> > > that Debian has in /usr/bin are symlinks to binaries in
-> > > /usr/lib/llvm-#/bin; as a result, a user could say
-> > > LLVM_DIR=/usr/lib/llvm-#/bin/ and all of those tools would be picked up
-> > > automatically. I am not really sure what is better.
-> 
-> $ sudo apt install clang-8
-> $ which clang-8
-> /usr/bin/clang-8
-> $ ls -l `!!`
-> /usr/bin/clang-8 -> ../lib/llvm-8/bin/clang
-> $ ls /usr/lib/llvm-8/bin
-> <non suffixed versions>
-> 
-> Ok, so Nathan, it looks like we don't need the version suffixes.
-> Instead, we can be more explicit with our $PATH, and only add the
-> above (and bintutils).  I was thinking supporting the suffix was
-> required for our CI, but it seems like maybe not.
-
-Correct. This should probably be documented though, otherwise people
-might use LLVM=y and be surprised when the latest version of their tools
-are not being picked up.
-
-> > I periodically build the latest llvm from the trunk,
-> > and install it under my home directory.
-> > So, I just thought it would be useful to
-> > allow a user to specify the llvm directory.
-> > Of course, I can do the equivalent by tweaking PATH, but
-> > I hesitate to make the non-released version my default.
-> 
-> Respectfully, I strongly disagree.  This should be handled by
-> modifications to $PATH, either by your shell's .rc file when you
-> always want it, or exported for a session when you want it, or
-> prefixed to an invocation for the duration of that command.  We should
-> not have a new variable just for the path of a few tools.
-> 
-> Rather than `make LLVM_DIR=~/llvm-project LLVM=1`, you can do
-> `PATH=$PATH:~/llvm-project make LLVM=1`. (or export it manually or via
-> your shell .rc, depending on how comfortable you are with that
-> version).
-
-I always do PATH=...:${PATH} make CC=clang...
-
-> > Having both LLVM_DIR and LLVM_SUFFIX seems verbose.
-> 
-> I agree, so maybe just LLVM=y, and we can support both non-standard
-> locations and debian suffixes via modifications to PATH.
-> 
+> > Fix this bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
 > >
-> > In fact, the debian provides multiple versions of GCC.
-> > For example, my machine has
+> > For some reason, the environment variable ARCH is used instead of ARCH
+> > passed as an argument, this patch uses a copy of the env, but using
+> > ARCH=um and CROSS_COMPILER='' to avoid this problem.
 > >
-> > masahiro@pug:~$ ls -1 /usr/bin/gcc-*
-> > /usr/bin/gcc-4.8
-> > /usr/bin/gcc-5
-> > /usr/bin/gcc-7
-> > /usr/bin/gcc-ar
-> > /usr/bin/gcc-ar-4.8
-> > /usr/bin/gcc-ar-5
-> > /usr/bin/gcc-ar-7
-> > /usr/bin/gcc-nm
-> > /usr/bin/gcc-nm-4.8
-> > /usr/bin/gcc-nm-5
-> > /usr/bin/gcc-nm-7
-> > /usr/bin/gcc-ranlib
-> > /usr/bin/gcc-ranlib-4.8
-> > /usr/bin/gcc-ranlib-5
-> > /usr/bin/gcc-ranlib-7
-> >
-> > But, nobody has suggested GCC_SUFFIX.
-> >
-> > So, I guess CROSS_COMPILE was enough to
-> > choose a specific tool version.
-> 
-> Or no one was testing specific versions of gcc with more than one
-> installed.  I can ask the KernelCI folks next week if this is an issue
-> they face or have faced.
+> > This patch doesn't change the user's environment variables, avoiding
+> > side effects.
+>
+> Seems reasonable to me.
 
-Well gcc is just one tool, so specified CC=gcc-5 is not that
-complicated; it would get a lot more gnarly if one had different
-versions of binutils as well.
+There are other problems here, I'll fix it.
 
-Cheers,
-Nathan
+>
+> > Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+>
+> I cannot test this as your patch doesn't apply to our for-next branch
+> (kselftest/kunit). You can find it here:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=kunit
+>
+> > ---
+> >  tools/testing/kunit/kunit_kernel.py | 12 +++++++-----
+> >  1 file changed, 7 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+> > index d99ae75ef72f..0cb1f81ac8f2 100644
+> > --- a/tools/testing/kunit/kunit_kernel.py
+> > +++ b/tools/testing/kunit/kunit_kernel.py
+> > @@ -15,6 +15,7 @@ import kunit_config
+> >
+> >  KCONFIG_PATH = '.config'
+> >  kunitconfig_path = '.kunitconfig'
+> > +env = dict(os.environ.copy(), ARCH='um', CROSS_COMPILE='')
+> >
+> >  class ConfigError(Exception):
+> >         """Represents an error trying to configure the Linux kernel."""
+> > @@ -36,22 +37,22 @@ class LinuxSourceTreeOperations(object):
+> >                         raise ConfigError(e.output)
+> >
+> >         def make_olddefconfig(self, build_dir):
+> > -               command = ['make', 'ARCH=um', 'olddefconfig']
+> > +               command = ['make', 'olddefconfig']
+> >                 if build_dir:
+> >                         command += ['O=' + build_dir]
+> >                 try:
+> > -                       subprocess.check_output(command)
+> > +                       subprocess.check_output(command, env=env)
+> >                 except OSError as e:
+> >                         raise ConfigError('Could not call make command: ' + e)
+> >                 except subprocess.CalledProcessError as e:
+> >                         raise ConfigError(e.output)
+> >
+> >         def make(self, jobs, build_dir):
+> > -               command = ['make', 'ARCH=um', '--jobs=' + str(jobs)]
+> > +               command = ['make', '--jobs=' + str(jobs)]
+> >                 if build_dir:
+> >                         command += ['O=' + build_dir]
+> >                 try:
+> > -                       subprocess.check_output(command)
+> > +                       subprocess.check_output(command, env=env)
+> >                 except OSError as e:
+> >                         raise BuildError('Could not call execute make: ' + e)
+> >                 except subprocess.CalledProcessError as e:
+> > @@ -66,7 +67,8 @@ class LinuxSourceTreeOperations(object):
+> >                         [linux_bin] + params,
+> >                         stdin=subprocess.PIPE,
+> >                         stdout=subprocess.PIPE,
+> > -                       stderr=subprocess.PIPE)
+> > +                       stderr=subprocess.PIPE,
+> > +                       env=env)
+> >                 process.wait(timeout=timeout)
+> >                 return process
+> >
+> > --
+> > 2.21.1
+> >
+>
+> --
+> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/CAFd5g47hiPf7Xy0f4YER%2BHzHHXyUV0dhiQ%3D2ZXfezEHBcrTuEQ%40mail.gmail.com.
