@@ -2,120 +2,101 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6045C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58F6C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D3C2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6212080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 21:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585691331;
+	bh=LBEmz3mpukgzAxBp5M4EnGlHRGUnO84DkIsiOOuXswo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pKr/KJTj9AJ1VMx3X8vaDhxUFUCJJF12iSsCiZmt5HTYKbjx8KLAA4ZMKwqTErarY
+	 jIvoqFFlHlItPk+1AhEe/T/AuuI53IgsB+jI1Vii7UElamXHodC0+tB8zMWsBEC+HH
+	 Gckgjiu4SDjo6Jdf9wR88Lolw2PF0vz7dY4fyrGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731525AbgCaVq1 (ORCPT
+        id S1731305AbgCaVsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:46:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50416 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731429AbgCaVqY (ORCPT
+        Tue, 31 Mar 2020 17:48:50 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39356 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgCaVsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:46:24 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 015C3297173
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     mark.rutland@arm.com, ck.hu@mediatek.com, sboyd@kernel.org,
-        ulrich.hecht+renesas@gmail.com
-Cc:     matthias.bgg@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Matthias Brugger <mbrugger@suse.com>,
-        linux-clk@vger.kernel.org, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        linux-mediatek@lists.infradead.org,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 3/4] clk / soc: mediatek: Bind clock and gpu driver for mt2701
-Date:   Tue, 31 Mar 2020 23:46:08 +0200
-Message-Id: <20200331214609.1742152-3-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200331214609.1742152-1-enric.balletbo@collabora.com>
-References: <20200331214609.1742152-1-enric.balletbo@collabora.com>
+        Tue, 31 Mar 2020 17:48:50 -0400
+Received: by mail-il1-f194.google.com with SMTP id r5so21022084ilq.6;
+        Tue, 31 Mar 2020 14:48:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B+duCudawvbCTKmXyXJ3eOuf7ahuLnq9qxk7sNQ38hY=;
+        b=F0ji6U0UUpLzGf4Vn6+sg/9iTZQ/OFV+rJe6tX3XuR5ujZIvIniBHiwQ+OsrZfBt1a
+         38CX8OwvWfWCNdkv0l1y/zTmDBFouuxQ2sxoAtbp53RFoOonuSzfq9Jw+g4TkHJqMXKl
+         eGPjKmuQuv6UXm3hnP8cfRnqDBfOxcrmtsui3n0x3qB9MDmlVYMhFtrUWHifQkoHGFX1
+         3UfJfFumLWNp2FEnhT1A4o5UMdVeJpzr1g0fCqvy4aATjh0A0NMmDjocuG2d+hQkqbP5
+         0/QG+gFB0AFhP2Kt1JNGCIZppWRrNRTqoA+uKF4uMgMNtEY3qtcmQHeJJoylZ+MKKj1D
+         ePjQ==
+X-Gm-Message-State: ANhLgQ3UmNMfASDfp6GEE7kJFwMvGzs+FcZ3V/UHyN//lCOET9GE0c0s
+        g7kcy78Mx5NLsWKCxJ/Frw==
+X-Google-Smtp-Source: ADFU+vtHHB1tl92aufQ0mANPRYsjwcdU/Os8skfqkgrsqVhrY2o1LqgNd3APlflmiWiOCVZRfjC7aw==
+X-Received: by 2002:a92:8548:: with SMTP id f69mr18533450ilh.20.1585691329472;
+        Tue, 31 Mar 2020 14:48:49 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id d19sm30169iob.30.2020.03.31.14.48.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 14:48:48 -0700 (PDT)
+Received: (nullmailer pid 31436 invoked by uid 1000);
+        Tue, 31 Mar 2020 21:48:47 -0000
+Date:   Tue, 31 Mar 2020 15:48:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     kishon@ti.com, heiko@sntech.de, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: phy: convert phy-rockchip-inno-usb2
+ bindings to yaml
+Message-ID: <20200331214847.GA31349@bogus>
+References: <20200325121335.12249-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325121335.12249-1-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the mmsys driver is the top-level entry point for the
-multimedia subsystem, we could bind the clock and the gpu driver on
-those devices that is expected to work, so the drm driver is
-intantiated by the mmsys driver and display, hopefully, working again.
+On Wed, 25 Mar 2020 13:13:35 +0100, Johan Jonker wrote:
+> Current dts files for Rockchip with 'usb2-phy' subnodes
+> are manually verified. In order to automate this process
+> phy-rockchip-inno-usb2.txt has to be converted to yaml.
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+> Changes v3:
+>   Replace oneOf by enum
+>   Remove allOf phy-provider.yaml
+>   Add "#phy-cells"
+>   Add additionalProperties: false
+> 
+> Changes v2:
+>   Keep "rockchip,rk3366-usb2phy" support.
+>   Add "#phy-cells" to example.
+>   Add allOf phy-provider.yaml
+> ---
+>  .../bindings/phy/phy-rockchip-inno-usb2.txt        |  81 -----------
+>  .../bindings/phy/phy-rockchip-inno-usb2.yaml       | 155 +++++++++++++++++++++
+>  2 files changed, 155 insertions(+), 81 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+> 
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-If you have this hardware, please kindly provide your tested tag. Only
-build tested.
+Applied, thanks.
 
- drivers/clk/mediatek/clk-mt2701-mm.c | 8 ++------
- drivers/soc/mediatek/mtk-mmsys.c     | 8 ++++++++
- 2 files changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clk/mediatek/clk-mt2701-mm.c b/drivers/clk/mediatek/clk-mt2701-mm.c
-index 054b597d4a73..3a4e895a3d0f 100644
---- a/drivers/clk/mediatek/clk-mt2701-mm.c
-+++ b/drivers/clk/mediatek/clk-mt2701-mm.c
-@@ -79,16 +79,12 @@ static const struct mtk_gate mm_clks[] = {
- 	GATE_DISP1(CLK_MM_TVE_FMM, "mm_tve_fmm", "mm_sel", 14),
- };
- 
--static const struct of_device_id of_match_clk_mt2701_mm[] = {
--	{ .compatible = "mediatek,mt2701-mmsys", },
--	{}
--};
--
- static int clk_mt2701_mm_probe(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->parent->of_node;
- 	struct clk_onecell_data *clk_data;
- 	int r;
--	struct device_node *node = pdev->dev.of_node;
- 
- 	clk_data = mtk_alloc_clk_data(CLK_MM_NR);
- 
-diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
-index c7d3b7bcfa32..cacafe23c823 100644
---- a/drivers/soc/mediatek/mtk-mmsys.c
-+++ b/drivers/soc/mediatek/mtk-mmsys.c
-@@ -80,6 +80,10 @@ struct mtk_mmsys_driver_data {
- 	const char *clk_driver;
- };
- 
-+static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
-+	.clk_driver = "clk-mt2701-mm",
-+};
-+
- static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data = {
- 	.clk_driver = "clk-mt2712-mm",
- };
-@@ -323,6 +327,10 @@ static int mtk_mmsys_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id of_match_mtk_mmsys[] = {
-+	{
-+		.compatible = "mediatek,mt2701-mmsys",
-+		.data = &mt2701_mmsys_driver_data,
-+	},
- 	{
- 		.compatible = "mediatek,mt2712-mmsys",
- 		.data = &mt2712_mmsys_driver_data,
--- 
-2.25.1
-
+Rob
