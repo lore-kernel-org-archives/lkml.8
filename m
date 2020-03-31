@@ -2,229 +2,151 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD778C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74D7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1F020748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F4520757
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 05:10:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgCaFCj (ORCPT
+        id S1726323AbgCaFKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 01:02:39 -0400
-Received: from mga11.intel.com ([192.55.52.93]:42556 "EHLO mga11.intel.com"
+        Tue, 31 Mar 2020 01:10:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:43608 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgCaFCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 01:02:39 -0400
-IronPort-SDR: bP8VyzM41dR65H9mjT/N2rXOMgQUUt0CnZkQSJlN8ZMfjQmQhvTL3ixonSDnXXm+ALrQ4ibpIl
- m+p6leDaCu5w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 22:02:38 -0700
-IronPort-SDR: SGkY7AcNeGoks8wjIxO5mQBYElSn5rlPxXqNNGZg787AlYtih96yaAWeKcJlZwXdML1UUJZrpy
- HsqY7Tzjvu2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="267158195"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2020 22:02:36 -0700
-Date:   Tue, 31 Mar 2020 12:41:20 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v3 2/7] fpga: dfl: pci: add irq info for feature devices
- enumeration
-Message-ID: <20200331044120.GB8468@hao-dev>
-References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
- <1585038763-22944-3-git-send-email-yilun.xu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585038763-22944-3-git-send-email-yilun.xu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1725809AbgCaFKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 01:10:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 221741FB;
+        Mon, 30 Mar 2020 22:10:18 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C8F2F3F71E;
+        Mon, 30 Mar 2020 22:09:57 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     robin.murphy@arm.com, dan.j.williams@intel.com, jglisse@redhat.com,
+        jgg@mellanox.com, rcampbell@nvidia.com, aneesh.kumar@linux.ibm.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V3 0/3] arm64: Enable vmemmap mapping from device memory
+Date:   Tue, 31 Mar 2020 10:39:44 +0530
+Message-Id: <1585631387-18819-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 04:32:38PM +0800, Xu Yilun wrote:
-> Some DFL FPGA PCIe cards (e.g. Intel FPGA Programmable Acceleration
-> Card) support MSI-X based interrupts. This patch allows PCIe driver
-> to prepare and pass interrupt resources to DFL via enumeration API.
-> These interrupt resources could then be assigned to actual features
-> which use them.
-> 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> ----
-> v2: put irq resources init code inside cce_enumerate_feature_dev()
->     Some minor changes for Hao's comments.
-> v3: Some minor fix for Hao's comments for v2.
-> ---
->  drivers/fpga/dfl-pci.c | 76 ++++++++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 67 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
-> index 5387550..66027aa 100644
-> --- a/drivers/fpga/dfl-pci.c
-> +++ b/drivers/fpga/dfl-pci.c
-> @@ -39,6 +39,28 @@ static void __iomem *cci_pci_ioremap_bar(struct pci_dev *pcidev, int bar)
->  	return pcim_iomap_table(pcidev)[bar];
->  }
->  
-> +static int cci_pci_alloc_irq(struct pci_dev *pcidev)
-> +{
-> +	int nvec = pci_msix_vec_count(pcidev);
-> +	int ret;
+This series enables vmemmap backing memory allocation from device memory
+ranges on arm64. But before that, it enables vmemmap_populate_basepages()
+and vmemmap_alloc_block_buf() to accommodate struct vmem_altmap based
+alocation requests.
 
-maybe int ret, nvec = pci_msix..
+This series applies after latest (v14) arm64 memory hot remove series
+(https://lkml.org/lkml/2020/3/3/1746) on Linux 5.6.
 
-> +
-> +	if (nvec <= 0) {
-> +		dev_dbg(&pcidev->dev, "fpga interrupt not supported\n");
-> +		return 0;
-> +	}
-> +
-> +	ret = pci_alloc_irq_vectors(pcidev, nvec, nvec, PCI_IRQ_MSIX);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return nvec;
-> +}
-> +
-> +static void cci_pci_free_irq(struct pci_dev *pcidev)
-> +{
-> +	pci_free_irq_vectors(pcidev);
-> +}
-> +
->  /* PCI Device ID */
->  #define PCIE_DEVICE_ID_PF_INT_5_X	0xBCBD
->  #define PCIE_DEVICE_ID_PF_INT_6_X	0xBCC0
-> @@ -78,17 +100,33 @@ static void cci_remove_feature_devs(struct pci_dev *pcidev)
->  
->  	/* remove all children feature devices */
->  	dfl_fpga_feature_devs_remove(drvdata->cdev);
-> +	cci_pci_free_irq(pcidev);
-> +}
-> +
-> +static int *cci_pci_create_irq_table(struct pci_dev *pcidev, unsigned int nvec)
-> +{
-> +	unsigned int i;
-> +	int *table;
-> +
-> +	table = kcalloc(nvec, sizeof(int), GFP_KERNEL);
-> +	if (table) {
-> +		for (i = 0; i < nvec; i++)
-> +			table[i] = pci_irq_vector(pcidev, i);
-> +	}
-> +
-> +	return table;
->  }
->  
->  /* enumerate feature devices under pci device */
->  static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
->  {
->  	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
-> +	int port_num, bar, i, nvec, ret = 0;
->  	struct dfl_fpga_enum_info *info;
->  	struct dfl_fpga_cdev *cdev;
->  	resource_size_t start, len;
-> -	int port_num, bar, i, ret = 0;
->  	void __iomem *base;
-> +	int *irq_table;
->  	u32 offset;
->  	u64 v;
->  
-> @@ -97,11 +135,30 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
->  	if (!info)
->  		return -ENOMEM;
->  
-> +	/* add irq info for enumeration if the device support irq */
-> +	nvec = cci_pci_alloc_irq(pcidev);
-> +	if (nvec < 0) {
-> +		dev_err(&pcidev->dev, "Fail to alloc irq %d.\n", nvec);
-> +		ret = nvec;
-> +		goto enum_info_free_exit;
-> +	} else if (nvec) {
-> +		irq_table = cci_pci_create_irq_table(pcidev, nvec);
-> +		if (!irq_table) {
-> +			ret = -ENOMEM;
-> +			goto irq_free_exit;
-> +		}
-> +
-> +		ret = dfl_fpga_enum_info_add_irq(info, nvec, irq_table);
-> +		kfree(irq_table);
+Pending Question:
 
-i see you create a function for cci_pci_free_irq instead of using kernel api
-directly, to make it more readable, so why not have a remove irq table function
-here too.
+altmap_alloc_block_buf() does not have any other remaining users in the
+tree after this change. Should it be converted into a static function and
+it's declaration be dropped from the header (include/linux/mm.h). Avoided
+doing so because I was not sure if there are any off-tree users or not.
 
-Actually patch looks good to me, with above minor fixes.
+Changes in V3:
 
-Acked-by: Wu Hao <hao.wu@intel.com>
+- Dropped comment from free_hotplug_page_range() per Robin
+- Modified comment in unmap_hotplug_range() per Robin
+- Enabled altmap support in vmemmap_alloc_block_buf() per Robin
 
-Hao
+Changes in V2: (https://lkml.org/lkml/2020/3/4/475)
 
-> +		if (ret)
-> +			goto irq_free_exit;
-> +	}
-> +
->  	/* start to find Device Feature List from Bar 0 */
->  	base = cci_pci_ioremap_bar(pcidev, 0);
->  	if (!base) {
->  		ret = -ENOMEM;
-> -		goto enum_info_free_exit;
-> +		goto irq_free_exit;
->  	}
->  
->  	/*
-> @@ -154,7 +211,7 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
->  		dfl_fpga_enum_info_add_dfl(info, start, len, base);
->  	} else {
->  		ret = -ENODEV;
-> -		goto enum_info_free_exit;
-> +		goto irq_free_exit;
->  	}
->  
->  	/* start enumeration with prepared enumeration information */
-> @@ -162,11 +219,14 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
->  	if (IS_ERR(cdev)) {
->  		dev_err(&pcidev->dev, "Enumeration failure\n");
->  		ret = PTR_ERR(cdev);
-> -		goto enum_info_free_exit;
-> +		goto irq_free_exit;
->  	}
->  
->  	drvdata->cdev = cdev;
->  
-> +irq_free_exit:
-> +	if (ret)
-> +		cci_pci_free_irq(pcidev);
->  enum_info_free_exit:
->  	dfl_fpga_enum_info_free(info);
->  
-> @@ -211,12 +271,10 @@ int cci_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *pcidevid)
->  	}
->  
->  	ret = cci_enumerate_feature_devs(pcidev);
-> -	if (ret) {
-> -		dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
-> -		goto disable_error_report_exit;
-> -	}
-> +	if (!ret)
-> +		return ret;
->  
-> -	return ret;
-> +	dev_err(&pcidev->dev, "enumeration failure %d.\n", ret);
->  
->  disable_error_report_exit:
->  	pci_disable_pcie_error_reporting(pcidev);
-> -- 
-> 2.7.4
+- Rebased on latest hot-remove series (v14) adding P4D page table support
+
+Changes in V1: (https://lkml.org/lkml/2020/1/23/12)
+
+- Added an WARN_ON() in unmap_hotplug_range() when altmap is
+  provided without the page table backing memory being freed
+
+Changes in RFC V2: (https://lkml.org/lkml/2019/10/21/11)
+
+- Changed the commit message on 1/2 patch per Will
+- Changed the commit message on 2/2 patch as well
+- Rebased on arm64 memory hot remove series (v10)
+
+RFC V1: (https://lkml.org/lkml/2019/6/28/32)
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (3):
+  mm/sparsemem: Enable vmem_altmap support in vmemmap_populate_basepages()
+  mm/sparsemem: Enable vmem_altmap support in vmemmap_alloc_block_buf()
+  arm64/mm: Enable vmem_altmap support for vmemmap mappings
+
+ arch/arm64/mm/mmu.c       | 59 ++++++++++++++++++++++++++-------------
+ arch/ia64/mm/discontig.c  |  2 +-
+ arch/powerpc/mm/init_64.c | 10 +++----
+ arch/riscv/mm/init.c      |  2 +-
+ arch/x86/mm/init_64.c     | 12 ++++----
+ include/linux/mm.h        |  8 ++++--
+ mm/sparse-vmemmap.c       | 38 ++++++++++++++++++++-----
+ 7 files changed, 87 insertions(+), 44 deletions(-)
+
+-- 
+2.20.1
+
