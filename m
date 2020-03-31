@@ -2,45 +2,47 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982A4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B422C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9F820772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE7920772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iE1pXpCp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vGofDl1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbgCaNUc (ORCPT
+        id S1730873AbgCaNUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:20:32 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32353 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730464AbgCaNUc (ORCPT
+        Tue, 31 Mar 2020 09:20:43 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:30788 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730464AbgCaNUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:20:32 -0400
+        Tue, 31 Mar 2020 09:20:43 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585660831; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=B2pr044OkgomDYwde9Y8LzCiamd9ay01Cb6O7ZDpSQg=; b=iE1pXpCph/prwUl3Hbd/UJ+Dgur7DIAIiRT2U6eZv3MSD8Z9mkcgYu+twys376WtihZQLWia
- tpH49i5sD+VT85WXh0iLEUVC9MHhhNSP6vi9w72RrwjSqx66bRFpiL6NLx+3ZWawsYi2do+Y
- 7vpcEZMpiedNCcAqVsjL0xIJUDU=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1585660842; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Z43BwKJL/HZB89s/V9T4Drpkuv9POZH784QrMkde+gg=; b=vGofDl1TAUOCQOfiaPu0HtALvkbGGO9l1/yiUeJhzHScHa+Ctdq4nAbKqEAID7Y5Z2qGadDi
+ VFQku4pC9l9eFtue/DYca1iCF+67yDzOTpfXlEISjRq0ZMn/osHaPjV+d45t6WXyzGpaVMFu
+ dcRey/E7R3A5aOVEh6HBIaE29yo=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e834397.7f1ad7beca08-smtp-out-n04;
- Tue, 31 Mar 2020 13:20:23 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8343a4.7f335100e570-smtp-out-n04;
+ Tue, 31 Mar 2020 13:20:36 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CE4A7C4478C; Tue, 31 Mar 2020 13:20:23 +0000 (UTC)
+        id 82A76C43636; Tue, 31 Mar 2020 13:20:36 +0000 (UTC)
 Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A207C433F2;
-        Tue, 31 Mar 2020 13:20:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A207C433F2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 74476C43637;
+        Tue, 31 Mar 2020 13:20:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 74476C43637
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -50,122 +52,108 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
         ilina@codeaurora.org, lsrao@codeaurora.org,
         Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v15 0/7] Invoke rpmh_flush for non OSI targets
-Date:   Tue, 31 Mar 2020 18:49:35 +0530
-Message-Id: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
+Subject: [PATCH v15 3/7] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new data
+Date:   Tue, 31 Mar 2020 18:49:38 +0530
+Message-Id: <1585660782-23416-4-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
+References: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in v15:
-- Address Doug's comments on change 3 of v14 and add Reviewed-by
-- Split change 4 of v14 to save drv->base in a new change
-- Address Doug's comments on change 4, 5, 6 of v14
-- Add missing NOTIFY_OK for rpmh_flush() success case
-- First 5 changes in this series can be merged without change 6 and 7
+TCSes have previously programmed data when rpmh_flush is called.
+This can cause old data to trigger along with newly flushed.
 
-Changes in v14:
-- Address Doug's comments on change 3 from v13
-- Drop new APIs for start and end transaction from change 4 in v13
-- Update change 4 to use cpu pm notifications instead
-- Add [5] as change 5 to enable use of WAKE TCS when ACTIVE TCS count is 0
-- Add change 6 to Allow multiple WAKE TCS to be used as ACTIVE TCSes
-- First 4 changes can be merged even without change 5 and 6.
+Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
 
-Changes in v13:
-- Address Stephen's comment to maintain COMPILE_TEST
-- Address Doug's comments and add new APIs for start and end transaction
+With this there is no need to invoke rpmh_rsc_invalidate() call from
+rpmh_invalidate().
 
-Changes in v12:
-- Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
+Simplify rpmh_invalidate() by moving invalidate_batch() inside.
 
-Changes in v11:
-- Address Doug's comments on change 2 and 3
-- Include change to invalidate TCSes before flush from [4]
+Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+ drivers/soc/qcom/rpmh.c | 41 ++++++++++++++++++-----------------------
+ 1 file changed, 18 insertions(+), 23 deletions(-)
 
-Changes in v10:
-- Address Evan's comments to update commit message on change 2
-- Add Evan's Reviewed by on change 2
-- Remove comment from rpmh_flush() related to last CPU invoking it
-- Rebase all changes on top of next-20200302
-
-Changes in v9:
-- Keep rpmh_flush() to invoke from within cache_lock
-- Remove comments related to only last cpu invoking rpmh_flush()
-
-Changes in v8:
-- Address Stephen's comments on changes 2 and 3
-- Add Reviewed by from Stephen on change 1
-
-Changes in v7:
-- Address Srinivas's comments to update commit text
-- Add Reviewed by from Srinivas
-
-Changes in v6:
-- Drop 1 & 2 changes from v5 as they already landed in maintainer tree
-- Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
-- Rename subject to appropriate since power domain changes are dropped
-- Rebase other changes on top of next-20200221
-
-Changes in v5:
-- Add Rob's Acked by on dt-bindings change
-- Drop firmware psci change
-- Update cpuidle stats in dtsi to follow PC mode
-- Include change to update dirty flag when data is updated from [4]
-- Add change to invoke rpmh_flush when caches are dirty
-
-Changes in v4:
-- Add change to allow hierarchical topology in PC mode
-- Drop hierarchical domain idle states converter from v3
-- Address Merge sc7180 dtsi change to add low power modes
-
-Changes in v3:
-- Address Rob's comment on dt property value
-- Address Stephen's comments on rpmh-rsc driver change
-- Include sc7180 cpuidle low power mode changes from [1]
-- Include hierarchical domain idle states converter change from [2]
-
-Changes in v2:
-- Add Stephen's Reviewed-By to the first three patches
-- Addressed Stephen's comments on fourth patch
-- Include changes to connect rpmh domain to cpuidle and genpds
-
-Resource State Coordinator (RSC) is responsible for powering off/lowering
-the requirements from CPU subsystem for the associated hardware like buses,
-clocks, and regulators when all CPUs and cluster is powered down.
-
-RSC power domain uses last-man activities provided by genpd framework based
-on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
-idle states. As a part of domain poweroff, RSC can lower resource state
-requirements by flushing the cached sleep and wake state votes for various
-resources.
-
-[1] https://patchwork.kernel.org/patch/11218965
-[2] https://patchwork.kernel.org/patch/10941671
-[3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
-[4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
-[5] https://patchwork.kernel.org/patch/10818129
-
-Maulik Shah (6):
-  arm64: dts: qcom: sc7180: Add cpuidle low power states
-  soc: qcom: rpmh: Update dirty flag only when data changes
-  soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new
-    data
-  soc: qcom: rpmh-rsc: Save base address of drv
-  soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
-  soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
-
-Raju P.L.S.S.S.N (1):
-  soc: qcom: rpmh-rsc: Clear active mode configuration for wake TCS
-
- arch/arm64/boot/dts/qcom/sc7180.dtsi |  78 +++++++++++++
- drivers/soc/qcom/rpmh-internal.h     |  27 +++--
- drivers/soc/qcom/rpmh-rsc.c          | 210 ++++++++++++++++++++++++++++-------
- drivers/soc/qcom/rpmh.c              |  76 ++++++-------
- 4 files changed, 299 insertions(+), 92 deletions(-)
-
+diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+index 03630ae..a75f3df 100644
+--- a/drivers/soc/qcom/rpmh.c
++++ b/drivers/soc/qcom/rpmh.c
+@@ -317,19 +317,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
+ 	return ret;
+ }
+ 
+-static void invalidate_batch(struct rpmh_ctrlr *ctrlr)
+-{
+-	struct batch_cache_req *req, *tmp;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&ctrlr->cache_lock, flags);
+-	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
+-		kfree(req);
+-	INIT_LIST_HEAD(&ctrlr->batch_cache);
+-	ctrlr->dirty = true;
+-	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+-}
+-
+ /**
+  * rpmh_write_batch: Write multiple sets of RPMH commands and wait for the
+  * batch to finish.
+@@ -467,6 +454,13 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+ 		return 0;
+ 	}
+ 
++	/* Invalidate the TCSes first to avoid stale data */
++	do {
++		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
++	} while (ret == -EAGAIN);
++	if (ret)
++		return ret;
++
+ 	/* First flush the cached batch requests */
+ 	ret = flush_batch(ctrlr);
+ 	if (ret)
+@@ -498,24 +492,25 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
+ }
+ 
+ /**
+- * rpmh_invalidate: Invalidate all sleep and active sets
+- * sets.
++ * rpmh_invalidate: Invalidate sleep and wake sets in batch_cache
+  *
+  * @dev: The device making the request
+  *
+- * Invalidate the sleep and active values in the TCS blocks.
++ * Invalidate the sleep and wake values in batch_cache.
+  */
+ int rpmh_invalidate(const struct device *dev)
+ {
+ 	struct rpmh_ctrlr *ctrlr = get_rpmh_ctrlr(dev);
+-	int ret;
+-
+-	invalidate_batch(ctrlr);
++	struct batch_cache_req *req, *tmp;
++	unsigned long flags;
+ 
+-	do {
+-		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
+-	} while (ret == -EAGAIN);
++	spin_lock_irqsave(&ctrlr->cache_lock, flags);
++	list_for_each_entry_safe(req, tmp, &ctrlr->batch_cache, list)
++		kfree(req);
++	INIT_LIST_HEAD(&ctrlr->batch_cache);
++	ctrlr->dirty = true;
++	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+ 
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL(rpmh_invalidate);
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
