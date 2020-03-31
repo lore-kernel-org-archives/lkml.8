@@ -2,114 +2,154 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72A8C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776AEC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C01C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KbvvbCuW"
+	by mail.kernel.org (Postfix) with ESMTP id 4D98820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbgCaPPU (ORCPT
+        id S1730688AbgCaPRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:15:20 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52223 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731048AbgCaPPT (ORCPT
+        Tue, 31 Mar 2020 11:17:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41254 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730466AbgCaPRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:15:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z7so241949wmk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 08:15:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ipYWlIFq3tHRPQUnqZtBdxsK4/UyR731/H9eH9PnfT4=;
-        b=KbvvbCuWTnx3deVUNXfh6ZH7/iir2HKLToXknDwo7In/7NB8wHWU62m7SbNHlQK15w
-         NYMV8jhWujQQ7f0S6Ej7AT5Bn2gH8fg/ntDxAxG/2Ml3w1WIM8Eh5GxUxAw2z0TfpFML
-         V4jsubaGezs2z+6lJKnB1kN6/No3ukTNiELuU=
+        Tue, 31 Mar 2020 11:17:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f52so22359819otf.8;
+        Tue, 31 Mar 2020 08:17:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=ipYWlIFq3tHRPQUnqZtBdxsK4/UyR731/H9eH9PnfT4=;
-        b=fbEsuy8Pa+9dh2UKO9v6WdQMbItqqjgcaqVDD88gmX1N67iFkVir9HNC5BK9y4cRVP
-         YEjv/QOXhnLP5789B9+R2qHZhGWLdZQUKc0mEp4hk6cdKQWmryJN0S6fPF4SycGBJFHH
-         5nYNVmqlwpted7SUwXeiyH4MhKUhcuL2KNU/tg4xjC78qCDRlE29785dVy4MlvVKn0wR
-         a/VumyAeY329EDArPiQunfjCRUBwQ1ADeUF95gXORJOt37uy5H0od/RYsU5xHwiOwEUp
-         i+xBfKnLAUuxEtgtxgewZIO5XYqMmIC63XEMr0KDwU221aGguK5fn0IUq5yqQFOdsIwq
-         TRiQ==
-X-Gm-Message-State: ANhLgQ1ifoeqTLnKDIHDc9Tgq8icfXb/+briOot+KKrrk4fezF9fmHO1
-        cYc72dZHY8OcsZS4dsmbelG1Mg==
-X-Google-Smtp-Source: ADFU+vtAGfwopaPt/m4X2IibkfKMGh7X4KlgcFgCC08sXSkC7SEmBbQwoH17zK8HUyK6RhKgz0hjCQ==
-X-Received: by 2002:a1c:63c4:: with SMTP id x187mr3935335wmb.124.1585667717161;
-        Tue, 31 Mar 2020 08:15:17 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id v21sm4140105wmj.8.2020.03.31.08.15.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 08:15:16 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 17:15:14 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Oleksandr Andrushchenko <andr2000@gmail.com>
-Cc:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        oleksandr_andrushchenko@epam.com, airlied@linux.ie,
-        daniel@ffwll.ch, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [Xen-devel] [PATCH] drm/xen: fix passing zero to 'PTR_ERR'
- warning
-Message-ID: <20200331151514.GO2363188@phenom.ffwll.local>
-Mail-Followup-To: Oleksandr Andrushchenko <andr2000@gmail.com>,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        oleksandr_andrushchenko@epam.com, airlied@linux.ie,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <1585562347-30214-1-git-send-email-dingxiang@cmss.chinamobile.com>
- <b4d43b05-8b30-749c-0b60-87b4cdd7b1dd@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EigPugVYmhk/pRUl2H9XjY7fv+LW/feGStO+h6/A098=;
+        b=YHPg/+tOGNcZ7bzSPzvSfr61asCsLhsS5zhehLDzH6JyVetiWt5sGAognwgMVWlHdv
+         1xcCoBVNCZur92XZFvjgop3YDlZmIxMBDshPvN+MM9Z6bOad70Eja0kcKXPrg1EZXiDS
+         v26CXD7FepbdrqQcChX42hKEC2i6sZKW5qPdLUzEy8tF+VZDG3+ZS1KbJWO8L8w8DPGo
+         8ZB8XdPbSht4tqvR5K7FQK30kDAzayz+3PVb9wmcrkxYXQppH8n/aNXoVLe8h4Bngbvd
+         6lYw8y0yvJNK9MUUeieAsEn/6cwgJkr45865axE8JqE1FYVuqs8IBHcW/sBT2DG4W7M1
+         FFCw==
+X-Gm-Message-State: ANhLgQ1njkSzJAUTcHbUV+6APFFBcedDeEIsRhGG5A1KfLI2SxR1PL54
+        K6iScoXUvlYweqbJXKTBCRcV5gJuPSk0SYZuUck=
+X-Google-Smtp-Source: ADFU+vtAW45dGRunEP7yFSpCB6bD3WFANNafSJ0m0zzZDj2x3nTjtq9KiXEMI29dPf0nak4RlzD9VTWyLAn9DXnUx/U=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr2217525otl.145.1585667870554;
+ Tue, 31 Mar 2020 08:17:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4d43b05-8b30-749c-0b60-87b4cdd7b1dd@gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+References: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+In-Reply-To: <1585333048-31828-1-git-send-email-kazuhiro.fujita.jg@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 31 Mar 2020 17:17:39 +0200
+Message-ID: <CAMuHMdW+u5r6zyxFJsVzj21BYDrKCr=Q6Ojk5VeN+mkhvXX9Jw@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Make sure status register SCxSR is read
+ in correct sequence
+To:     Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hao Bui <hao.bui.yg@renesas.com>,
+        KAZUMI HARADA <kazumi.harada.rh@renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:50:10PM +0300, Oleksandr Andrushchenko wrote:
-> On 3/30/20 12:59, Ding Xiang wrote:
-> > Fix a static code checker warning:
-> >      drivers/gpu/drm/xen/xen_drm_front.c:404 xen_drm_drv_dumb_create()
-> >      warn: passing zero to 'PTR_ERR'
-> > 
-> > Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-> Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Hi Fujita-san,
 
-merged to drm-misc-next-fixese.
--Daniel
+CC -stable, +sasha, +seebe
 
-> > ---
-> >   drivers/gpu/drm/xen/xen_drm_front.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
-> > index 4be49c1..3741420 100644
-> > --- a/drivers/gpu/drm/xen/xen_drm_front.c
-> > +++ b/drivers/gpu/drm/xen/xen_drm_front.c
-> > @@ -401,7 +401,7 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
-> >   	obj = xen_drm_front_gem_create(dev, args->size);
-> >   	if (IS_ERR_OR_NULL(obj)) {
-> > -		ret = PTR_ERR(obj);
-> > +		ret = PTR_ERR_OR_ZERO(obj);
-> >   		goto fail;
-> >   	}
+On Fri, Mar 27, 2020 at 7:17 PM Kazuhiro Fujita
+<kazuhiro.fujita.jg@renesas.com> wrote:
+> For SCIF and HSCIF interfaces the SCxSR register holds the status of
+> data that is to be read next from SCxRDR register, But where as for
+> SCIFA and SCIFB interfaces SCxSR register holds status of data that is
+> previously read from SCxRDR register.
+>
+> This patch makes sure the status register is read depending on the port
+> types so that errors are caught accordingly.
+>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Kazuhiro Fujita <kazuhiro.fujita.jg@renesas.com>
+> Signed-off-by: Hao Bui <hao.bui.yg@renesas.com>
+> Signed-off-by: KAZUMI HARADA <kazumi.harada.rh@renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -870,9 +870,16 @@ static void sci_receive_chars(struct uart_port *port)
+>                                 tty_insert_flip_char(tport, c, TTY_NORMAL);
+>                 } else {
+>                         for (i = 0; i < count; i++) {
+> -                               char c = serial_port_in(port, SCxRDR);
+> -
+> -                               status = serial_port_in(port, SCxSR);
+> +                               char c;
+> +
+> +                               if (port->type == PORT_SCIF ||
+> +                                   port->type == PORT_HSCIF) {
+> +                                       status = serial_port_in(port, SCxSR);
+> +                                       c = serial_port_in(port, SCxRDR);
+> +                               } else {
+> +                                       c = serial_port_in(port, SCxRDR);
+> +                                       status = serial_port_in(port, SCxSR);
+> +                               }
+>                                 if (uart_handle_sysrq_char(port, c)) {
+>                                         count--; i--;
+>                                         continue;
+
+I can confirm that the documentation for the Serial Status Register on
+  1. (H)SCIF on R-Car Gen1/2/3 says the framing/error flag applies to
+     the data that is "to be read next" from the FIFO., and that the
+     "Sample Flowchart for Serial Reception (2)" confirms this,
+  2. SCIF[AB] on R-Car Gen2, SH-Mobile AG5, R-Mobile A1 and APE6 says
+     the framing/error flag applies to the receive data that is "read"
+     from the FIFO, and that the "Example of Flow for Serial Reception
+     (2)" confirms this,
+  3. SCIF on RZ/A1H says something similar as for (H)SCIF above, using
+     slightly different wording, also confirmed by the "Sample Flowchart
+     for Receiving Serial Data (2)".
+
+However, the documentation for "SCIFA" on RZ/A2 (for which we use
+PORT_SCIF, not PORT_SCIFA, in the driver) has conflicting information:
+  1. Section 17.2.7 "Serial Status Register (FSR)" says:
+       - A receive framing/parity error occurred in the "next receive
+         data read" from the FIFO,
+       - Indicates whether there is a framing/parity error in the data
+         "read" from the FIFO.
+  2. Figure 17.8 "Sample Flowchart for Receiving Serial Data in
+     Asynchronous Mode (2)".
+       - Whether a framing error or parity error has occurred in the
+         received data that is "read" from the FIFO.
+
+So while the change looks OK for most Renesas ARM SoCs, the situation
+for RZ/A2 is unclear.
+Note that the above does not take into account variants used on SuperH
+SoCs.
+
+Nevertheless, this patch will need some testing on various hardware.
+Do you have a test case to verify the broken/fixed behavior?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
