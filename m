@@ -2,92 +2,102 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B2AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97C9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BCB20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6BE20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 00:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XOXEiEAa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CWOYYkMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgCaABW (ORCPT
+        id S1729283AbgCaAGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:01:22 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:43833 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729398AbgCaABV (ORCPT
+        Mon, 30 Mar 2020 20:06:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47438 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgCaAGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 20:01:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585612880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XWMGIyM+EQlmNpNdyc1krEzJQU9C++X/ouqCdGDz9GY=;
-        b=XOXEiEAaKLL/qWGDodJinds4T46g/a6BWON8Cvzvzytci53i2ANmGaFSRk0bFGAEA+2Soc
-        oPx8rq0/KVVmu7drtENOaWuAgOD0dlYnIdI7FwtYos3tnR8OmfySmLHX/oPL3bEntZGFg1
-        TfJrAHHY5qX0UcjKWxn+H1pj/PoELGE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-9ovAUwVxO5em1mdQuZEQdA-1; Mon, 30 Mar 2020 20:01:16 -0400
-X-MC-Unique: 9ovAUwVxO5em1mdQuZEQdA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4B41800D50;
-        Tue, 31 Mar 2020 00:01:14 +0000 (UTC)
-Received: from elisabeth (unknown [10.36.110.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6D362100EBB6;
-        Tue, 31 Mar 2020 00:01:09 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 02:01:03 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Colin Ian King <colin.king@canonical.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8] staging: vt6656: add error code handling to unused
- variable
-Message-ID: <20200331020103.13008f53@elisabeth>
-In-Reply-To: <20200330233900.36938-1-jbwyatt4@gmail.com>
-References: <20200330233900.36938-1-jbwyatt4@gmail.com>
-Organization: Red Hat
+        Mon, 30 Mar 2020 20:06:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VV89E7/0ITfr47FqhbuzNIICqyct8AhRAZZh1V1ewNo=; b=CWOYYkMN6YxBiPtv3S5YzHn5ld
+        hLNYvpbJBQUngQwAPYD4s2QHupCqMSm+dVq6HNhcMG4eVRibSXgDRSS0u0PhAWyZ4kE9sAx0I2GCl
+        q/6vwf9dZkFEwIHHsEiTehoHe+xHFmI7H2LY8bwoLjA/Y3EQB0fzOuXu5nbrQMtx2+Q3YGP+x29fQ
+        yU0r62kHalK9xz9UcZzNVmG0tcwNfvyImddvgQ4sRbKKOoJTGgmBF7DircAYuDCPlJFFtNi8yVtut
+        /Om7vcvM5DgEgOfXIildUIX2xwBa3U7k0zRFlNJko28n20u0Rb5hZzC9xqNPt5vLsXMNHp1eUTjMH
+        Xe3iBOdw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJ4Qb-0004SG-Lo; Tue, 31 Mar 2020 00:06:49 +0000
+Date:   Mon, 30 Mar 2020 17:06:49 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] XArray: internal node is a xa_node when it is bigger
+ than XA_ZERO_ENTRY
+Message-ID: <20200331000649.GG22483@bombadil.infradead.org>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-7-richard.weiyang@gmail.com>
+ <20200330125006.GZ22483@bombadil.infradead.org>
+ <20200330134519.ykdtqwqxjazqy3jm@master>
+ <20200330134903.GB22483@bombadil.infradead.org>
+ <20200330141350.ey77odenrbvixotb@master>
+ <20200330142708.GC22483@bombadil.infradead.org>
+ <20200330222013.34nkqen2agujhd6j@master>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330222013.34nkqen2agujhd6j@master>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020 16:39:00 -0700
-"John B. Wyatt IV" <jbwyatt4@gmail.com> wrote:
-
-> Add error code handling to unused 'ret' variable that was never used.
-> Return an error code from functions called within vnt_radio_power_on.
+On Mon, Mar 30, 2020 at 10:20:13PM +0000, Wei Yang wrote:
+> On Mon, Mar 30, 2020 at 07:27:08AM -0700, Matthew Wilcox wrote:
+> >On Mon, Mar 30, 2020 at 02:13:50PM +0000, Wei Yang wrote:
+> >> On Mon, Mar 30, 2020 at 06:49:03AM -0700, Matthew Wilcox wrote:
+> >> >On Mon, Mar 30, 2020 at 01:45:19PM +0000, Wei Yang wrote:
+> >> >> On Mon, Mar 30, 2020 at 05:50:06AM -0700, Matthew Wilcox wrote:
+> >> >> >On Mon, Mar 30, 2020 at 12:36:40PM +0000, Wei Yang wrote:
+> >> >> >> As the comment mentioned, we reserved several ranges of internal node
+> >> >> >> for tree maintenance, 0-62, 256, 257. This means a node bigger than
+> >> >> >> XA_ZERO_ENTRY is a normal node.
+> >> >> >> 
+> >> >> >> The checked on XA_ZERO_ENTRY seems to be more meaningful.
+> >> >> >
+> >> >> >257-1023 are also reserved, they just aren't used yet.  XA_ZERO_ENTRY
+> >> >> >is not guaranteed to be the largest reserved entry.
+> >> >> 
+> >> >> Then why we choose 4096?
+> >> >
+> >> >Because 4096 is the smallest page size supported by Linux, so we're
+> >> >guaranteed that anything less than 4096 is not a valid pointer.
+> >> 
 > 
-> Issue reported by coccinelle (coccicheck).
+> So you want to say, the 4096 makes sure XArray will not store an address in
+> first page? If this is the case, I have two suggestions:
 > 
-> Suggested-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> Suggested-by: Stefano Brivio <sbrivio@redhat.com>
-> Reviewed-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-  ^ This should be dropped unless Quentin agrees to this version as well
+>   * use PAGE_SIZE would be more verbose?
 
-> Signed-off-by: John B. Wyatt IV <jbwyatt4@gmail.com>
+But also incorrect, because it'll be different on different architectures.
+It's 4096.  That's all.
 
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+>   * a node is an internal entry, do we need to compare with xa_mk_internal()
+>     instead?
 
--- 
-Stefano
+No.  4096 is better because it's a number which is easily expressible in
+many CPU instruction sets.  4094 is much less likely to be an easy number
+to encode.
 
+> >(it is slightly out of date; the XArray actually supports storing unaligned
+> >pointers now, but that's not relevant to this discussion)
+> 
+> Ok, maybe this document need to update.
+
+Did you want to send a patch?
