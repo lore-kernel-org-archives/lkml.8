@@ -2,125 +2,170 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C36C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982A4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07E2208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9F820772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="w9G5xdSJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iE1pXpCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbgCaNQj (ORCPT
+        id S1730758AbgCaNUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:16:39 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:41905 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730703AbgCaNQi (ORCPT
+        Tue, 31 Mar 2020 09:20:32 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32353 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730464AbgCaNUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:16:38 -0400
-Received: by mail-qv1-f67.google.com with SMTP id t4so6603588qvz.8
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 06:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWOY1a83oyzd8Wyzxobl7iyPgPSxUcv8H4rfgpi9Go0=;
-        b=w9G5xdSJi2pwxLkw+UUYa9uD0cxKepK7FyN8BvxBNr7Qf28I7LNKazNm+grZ85uOZ3
-         YUp0H2DrxVoI8h+nOVinbooeJqV2zQ511twVls7fYGH+dwXNRxXxr3T3VCoRZ5/DGzhD
-         eyZwCzRDkNzu/rI9nxQFLCQ6LvJiGX5snuiD0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lWOY1a83oyzd8Wyzxobl7iyPgPSxUcv8H4rfgpi9Go0=;
-        b=d5wz7cHo3YljJpLZRhAUOdVOBeeYY2dH8r5SK1Ook2b0t6TmBLlVrQ+7MTbkt9gh60
-         vYqS1fWH/Lmt5xrNlyKWg/IXLgGSj3XnggZUrjo8I3MC/2jtNhCuzEu3CZS8KNlIv7LP
-         GE3dcX52IxukTUSugsdCT96o5XTwTWcSPg4M1o4p9a6JOxADTDT9JhW66h+p7k+L8kw8
-         F2a1CaHkMphUeM6QkmBLoyhmIgPABzNvQy/GPyqR/GbPuMc5QYVbM5gi0CKvA+0Nrhad
-         +8xKYcO07hi/2rweSnuVw711jiTRUsLWUopMG78d5aJq9UR6dtx+9bQmHWzCEZeyAb20
-         kQMw==
-X-Gm-Message-State: ANhLgQ3aimPOcQ3c285tFngWg7/6iiO6fpCguYTbbFg7YM6o9xQZbezg
-        4AVvm55oOPFwgwZLLMOcU68lUlQWXok=
-X-Google-Smtp-Source: ADFU+vtXVj0qnZ925oHCMNMkIOnLjNT9wF24VWwCVSa51Qddhb1QgyuPqNP67rntZT+wlEmt8BzhpQ==
-X-Received: by 2002:a0c:f7d0:: with SMTP id f16mr16609830qvo.206.1585660597163;
-        Tue, 31 Mar 2020 06:16:37 -0700 (PDT)
-Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l16sm13731476qtc.73.2020.03.31.06.16.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 06:16:36 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        linux-mm@kvack.org, rcu@vger.kernel.org, willy@infradead.org,
-        peterz@infradead.org, neilb@suse.com, vbabka@suse.cz,
-        mgorman@suse.de, Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free memory pattern
-Date:   Tue, 31 Mar 2020 09:16:28 -0400
-Message-Id: <20200331131628.153118-1-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 31 Mar 2020 09:20:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585660831; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=B2pr044OkgomDYwde9Y8LzCiamd9ay01Cb6O7ZDpSQg=; b=iE1pXpCph/prwUl3Hbd/UJ+Dgur7DIAIiRT2U6eZv3MSD8Z9mkcgYu+twys376WtihZQLWia
+ tpH49i5sD+VT85WXh0iLEUVC9MHhhNSP6vi9w72RrwjSqx66bRFpiL6NLx+3ZWawsYi2do+Y
+ 7vpcEZMpiedNCcAqVsjL0xIJUDU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e834397.7f1ad7beca08-smtp-out-n04;
+ Tue, 31 Mar 2020 13:20:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CE4A7C4478C; Tue, 31 Mar 2020 13:20:23 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7A207C433F2;
+        Tue, 31 Mar 2020 13:20:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7A207C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v15 0/7] Invoke rpmh_flush for non OSI targets
+Date:   Tue, 31 Mar 2020 18:49:35 +0530
+Message-Id: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In kfree_rcu() headless implementation (where the caller need not pass
-an rcu_head, but rather directly pass a pointer to an object), we have
-a fall-back where we allocate a rcu_head wrapper for the caller (not the
-common case). This brings the pattern of needing to allocate some memory
-to free some memory.  Currently we use GFP_ATOMIC flag to try harder for
-this allocation, however the GFP_MEMALLOC flag is more tailored to this
-pattern. We need to try harder not only during atomic context, but also
-during non-atomic context anyway. So use the GFP_MEMALLOC flag instead.
+Changes in v15:
+- Address Doug's comments on change 3 of v14 and add Reviewed-by
+- Split change 4 of v14 to save drv->base in a new change
+- Address Doug's comments on change 4, 5, 6 of v14
+- Add missing NOTIFY_OK for rpmh_flush() success case
+- First 5 changes in this series can be merged without change 6 and 7
 
-Also remove the __GFP_NOWARN flag simply because although we do have a
-synchronize_rcu() fallback for absolutely worst case, we still would
-like to not enter that path and atleast trigger a warning to the user.
+Changes in v14:
+- Address Doug's comments on change 3 from v13
+- Drop new APIs for start and end transaction from change 4 in v13
+- Update change 4 to use cpu pm notifications instead
+- Add [5] as change 5 to enable use of WAKE TCS when ACTIVE TCS count is 0
+- Add change 6 to Allow multiple WAKE TCS to be used as ACTIVE TCSes
+- First 4 changes can be merged even without change 5 and 6.
 
-Cc: linux-mm@kvack.org
-Cc: rcu@vger.kernel.org
-Cc: willy@infradead.org
-Cc: peterz@infradead.org
-Cc: neilb@suse.com
-Cc: vbabka@suse.cz
-Cc: mgorman@suse.de
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
+Changes in v13:
+- Address Stephen's comment to maintain COMPILE_TEST
+- Address Doug's comments and add new APIs for start and end transaction
 
-This patch is based on the (not yet upstream) code in:
-git://git.kernel.org/pub/scm/linux/kernel/git/jfern/linux.git (branch rcu/kfree)
+Changes in v12:
+- Kconfig change to remove COMPILE_TEST was dropped in v11, reinclude it.
 
-It is a follow-up to the posted series:
-https://lore.kernel.org/lkml/20200330023248.164994-1-joel@joelfernandes.org/
+Changes in v11:
+- Address Doug's comments on change 2 and 3
+- Include change to invalidate TCSes before flush from [4]
 
+Changes in v10:
+- Address Evan's comments to update commit message on change 2
+- Add Evan's Reviewed by on change 2
+- Remove comment from rpmh_flush() related to last CPU invoking it
+- Rebase all changes on top of next-20200302
 
- kernel/rcu/tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v9:
+- Keep rpmh_flush() to invoke from within cache_lock
+- Remove comments related to only last cpu invoking rpmh_flush()
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 4be763355c9fb..965deefffdd58 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
- 
- 	if (!ptr)
- 		ptr = kmalloc(sizeof(unsigned long *) +
--				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
-+				sizeof(struct rcu_head), GFP_MEMALLOC);
- 
- 	if (!ptr)
- 		return NULL;
+Changes in v8:
+- Address Stephen's comments on changes 2 and 3
+- Add Reviewed by from Stephen on change 1
+
+Changes in v7:
+- Address Srinivas's comments to update commit text
+- Add Reviewed by from Srinivas
+
+Changes in v6:
+- Drop 1 & 2 changes from v5 as they already landed in maintainer tree
+- Drop 3 & 4 changes from v5 as no user at present for power domain in rsc
+- Rename subject to appropriate since power domain changes are dropped
+- Rebase other changes on top of next-20200221
+
+Changes in v5:
+- Add Rob's Acked by on dt-bindings change
+- Drop firmware psci change
+- Update cpuidle stats in dtsi to follow PC mode
+- Include change to update dirty flag when data is updated from [4]
+- Add change to invoke rpmh_flush when caches are dirty
+
+Changes in v4:
+- Add change to allow hierarchical topology in PC mode
+- Drop hierarchical domain idle states converter from v3
+- Address Merge sc7180 dtsi change to add low power modes
+
+Changes in v3:
+- Address Rob's comment on dt property value
+- Address Stephen's comments on rpmh-rsc driver change
+- Include sc7180 cpuidle low power mode changes from [1]
+- Include hierarchical domain idle states converter change from [2]
+
+Changes in v2:
+- Add Stephen's Reviewed-By to the first three patches
+- Addressed Stephen's comments on fourth patch
+- Include changes to connect rpmh domain to cpuidle and genpds
+
+Resource State Coordinator (RSC) is responsible for powering off/lowering
+the requirements from CPU subsystem for the associated hardware like buses,
+clocks, and regulators when all CPUs and cluster is powered down.
+
+RSC power domain uses last-man activities provided by genpd framework based
+on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
+idle states. As a part of domain poweroff, RSC can lower resource state
+requirements by flushing the cached sleep and wake state votes for various
+resources.
+
+[1] https://patchwork.kernel.org/patch/11218965
+[2] https://patchwork.kernel.org/patch/10941671
+[3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
+[4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
+[5] https://patchwork.kernel.org/patch/10818129
+
+Maulik Shah (6):
+  arm64: dts: qcom: sc7180: Add cpuidle low power states
+  soc: qcom: rpmh: Update dirty flag only when data changes
+  soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new
+    data
+  soc: qcom: rpmh-rsc: Save base address of drv
+  soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+  soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
+
+Raju P.L.S.S.S.N (1):
+  soc: qcom: rpmh-rsc: Clear active mode configuration for wake TCS
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi |  78 +++++++++++++
+ drivers/soc/qcom/rpmh-internal.h     |  27 +++--
+ drivers/soc/qcom/rpmh-rsc.c          | 210 ++++++++++++++++++++++++++++-------
+ drivers/soc/qcom/rpmh.c              |  76 ++++++-------
+ 4 files changed, 299 insertions(+), 92 deletions(-)
+
 -- 
-2.26.0.rc2.310.g2932bb562d-goog
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
