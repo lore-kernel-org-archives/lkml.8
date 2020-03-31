@@ -2,142 +2,97 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B810C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05E2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E681A20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:35:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Pl6wunnF"
+	by mail.kernel.org (Postfix) with ESMTP id CDD5620787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 08:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbgCaIfN (ORCPT
+        id S1730026AbgCaIgg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:35:13 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:32782 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729624AbgCaIfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:35:11 -0400
-Received: by mail-ed1-f67.google.com with SMTP id z65so24131288ede.0
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 01:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2rLFubCEpgldKurlG4URIBkpTK5CEAUrKTvEkFewMCc=;
-        b=Pl6wunnFAOyFrLjRF4MLa/729tmRbfvLqvNbOMvx8XQPOctWtryQtH04K/E5S2+qBC
-         ePAeM6bPzByKY90dlYOUaqZEo+JcCIjCXbWPFBl4qB4tZM4goBwE/hSdS3js5G4lNwXl
-         urTXdaybd2HhJ+bGwiYNbcuzzErWv5XyrqZ9s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2rLFubCEpgldKurlG4URIBkpTK5CEAUrKTvEkFewMCc=;
-        b=id2XG6LZOpr086GJy4LQrD2FjqJCZNAlD4fLs6Mb2Lus21sAgFtCBeYS8hSZ3Xmyjq
-         kKLvTIKmhYEfleslTrlX/UOri4v3pzaMiDvau13/r7XiC+COO/g5Y9NrFTEp1SPQoNtK
-         XP5cbwDLa9Bwx2Mdm70iL85xebb77OQvpZ2e828ax0TXbw9U0dXVqrkt9umdnnp8RjoW
-         RypY5hog42IqCcF5avm0aprRos68kBVyyqpLQKx7TcGOCV8TA8EcyhjPhguFtJE/oIv6
-         EWXmU109GRgDZn55Xq8/MMIeMFBO0AfHudp9z24567UAJL+ggIKZD3XB0mhFqm3QIc32
-         n/6g==
-X-Gm-Message-State: ANhLgQ3sE8ff1TFZxjDCrP6qgiVTNpRvl7uVMe5oMzwXhGa8yKFKENZ5
-        G161134RXP6v0u++v+PQePS22Q7vZ7/pnoAoFQjH8w==
-X-Google-Smtp-Source: ADFU+vtv+tXPNHXP7ARcHQpTkYalP7cBmBf5/XjaaCBBR2f6V6HnH9gs6cBg/IlbBfMiOag3DlBSeZGOqpzpLteyY6k=
-X-Received: by 2002:a17:906:6545:: with SMTP id u5mr5686172ejn.27.1585643707995;
- Tue, 31 Mar 2020 01:35:07 -0700 (PDT)
+        Tue, 31 Mar 2020 04:36:36 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3442 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbgCaIgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:36:36 -0400
+IronPort-SDR: +1I4UM7b8oFDzl5KVG7J3dkaaIAzRDkoyRvbiJjn5Y7kAGPZEkC6Z8X841eJ4SwUhSOlABgPUv
+ Ldzsb0hH6u1A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 01:36:36 -0700
+IronPort-SDR: BCHlBz3w0XARy3CBwHjzOnmOqnDLE+mwxJfDmTj2gLrnQ8UhXMtSFpz9HZdK1Kf8uksteX++wd
+ 2ZgbQX/AXyGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
+   d="scan'208";a="359435393"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by fmsmga001.fm.intel.com with ESMTP; 31 Mar 2020 01:36:35 -0700
+Received: from fmsmsx122.amr.corp.intel.com (10.18.125.37) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 31 Mar 2020 01:36:35 -0700
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+ fmsmsx122.amr.corp.intel.com (10.18.125.37) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 31 Mar 2020 01:36:35 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
+ Tue, 31 Mar 2020 16:36:31 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Index: AQHWAEUbC4GB74LMekup8jIcF6WIFqhh3EqAgACPuLCAAAINQA==
+Date:   Tue, 31 Mar 2020 08:36:32 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A21A9ED@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+ <20200331075331.GA26583@infradead.org>
+ <A2975661238FB949B60364EF0F2C25743A21A9BB@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <A2975661238FB949B60364EF0F2C25743A21A9BB@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <1445647.1585576702@warthog.procyon.org.uk> <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
- <CAJfpegtjmkJUSqORFv6jw-sYbqEMh9vJz64+dmzWhATYiBmzVQ@mail.gmail.com> <20200331081507.f6an4x32cxwpxdpd@wittgenstein>
-In-Reply-To: <20200331081507.f6an4x32cxwpxdpd@wittgenstein>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 31 Mar 2020 10:34:56 +0200
-Message-ID: <CAJfpegsR7Vx1F0DNzoR0=SdNyuT02SWwO5wQRJtiKq_SOv71kw@mail.gmail.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:15 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Tue, Mar 31, 2020 at 07:11:11AM +0200, Miklos Szeredi wrote:
-> > On Mon, Mar 30, 2020 at 11:17 PM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
+> From: Liu, Yi L
+> Sent: Tuesday, March 31, 2020 4:33 PM
+> To: 'Christoph Hellwig' <hch@infradead.org>
+> Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+> 
+> > From: Christoph Hellwig <hch@infradead.org>
+> > Sent: Tuesday, March 31, 2020 3:54 PM
+> > To: Liu, Yi L <yi.l.liu@intel.com>
+> > Subject: Re: [PATCH v1 1/8] vfio: Add
+> > VFIO_IOMMU_PASID_REQUEST(alloc/free)
 > >
-> > > Fwiw, putting down my kernel hat and speaking as someone who maintains
-> > > two container runtimes and various other low-level bits and pieces in
-> > > userspace who'd make heavy use of this stuff I would prefer the fd-based
-> > > fsinfo() approach especially in the light of across namespace
-> > > operations, querying all properties of a mount atomically all-at-once,
-> >
-> > fsinfo(2) doesn't meet the atomically all-at-once requirement.  Sure,
-> > it's possible to check the various change counters before and after a
-> > batch of calls to check that the result is consistent.  Still, that's
-> > not an atomic all-at-once query, if you'd really require that, than
-> > fsinfo(2) as it currently stands would be inadequate.
->
-> It at all that's only true for batch requests.
+> > Who is going to use thse exports?  Please submit them together with a
+> > driver actually using them.
+the user of the symbols are already in this patch. sorry for the split answer..
 
-For example, there's no way to atomically query mount flags, parent,
-and list of children with a single fsinfo() call, you actually need
-three calls and they can reflect different states of the same mount.
-Not saying this is a problem, just that there's no list of
-requirements on what is needed and why.
-
-> > > and safe delegation through fds. Another heavy user of this would be
-> > > systemd (Cced Lennart who I've discussed this with) which would prefer
-> > > the fd-based approach as well. I think pulling this into a filesystem
-> > > and making userspace parse around in a filesystem tree to query mount
-> > > information is the wrong approach and will get messy pretty quickly
-> > > especially in the face of mount and user namespace interactions and
-> > > various other pitfalls.
-> >
-> > Have you actually looked at my proposed patch?   Do you have concrete
->
-> Yes. So have others, Al actively disliked and nacked it and no-one got
-> excited about it.
-
-Al, as far as I remember, nacked several things the patch was doing.
-I fixed those.
-
-> > issues or just vague bad feelings?
->
-> We have had that discussion on-list where I made my "vague bad feelings"
-> clear where you responded with the same dismissive style so I don't see
-> the point in repeating this experience.
->
-> Again, I want to make it clear that here I'm stating my preference as a
-> user of this api and as such I don't want to have to parse through a
-> filesystem to get complex information about filesystems. We've had
-> fruitful discussions [1] around how fsinfo() ties in with supervised
-> mounts and the rest of the mount api and its clear and simple especially
-> in the face of namespaces and implements a nice delegation model. So +1
-> from me.
-
-And you keep ignoring the fact that my patch implements that exact
-same delegation model.  That's why I'm asking if you have looked at it
-or not.
-
-The "I don't want to have to parse through a filesystem to get complex
-information about filesystems" is not a set of requirements that an
-API can be designed from.
-
-Thanks,
-Miklos
+Regards,
+Yi Liu
