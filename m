@@ -2,178 +2,115 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCC3C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3BE20658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:13:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Wh1USzc6"
+	by mail.kernel.org (Postfix) with ESMTP id 27735208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 23:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585696415;
+	bh=9XnDVeLNtXBo+7A+ymbQWmYaZXP1cYS2bkQlhtc03pg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KNmnRvcS6cCMwIUfEx473cHHTPacu89BBXEVhPcCBnuKxsMn2oT9EwStZiIIG284b
+	 geXv44i4gvGFurT87C8OGNSEcNEqDV0EuUH9q1e7aL64/wc/rVLtGapBbxc7VQbVKm
+	 hcyEq7scRhL3NnvO2aROUwvtWaGmm3z61tothkv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbgCaXNc (ORCPT
+        id S1731529AbgCaXNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 19:13:32 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:22904 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731364AbgCaXNc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 19:13:32 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200331231329epoutp0409ef0ce612d8745e0b9b6e5ac64d0da3~BhnudbO5K1873418734epoutp047
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 23:13:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200331231329epoutp0409ef0ce612d8745e0b9b6e5ac64d0da3~BhnudbO5K1873418734epoutp047
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585696409;
-        bh=NT/waN1WxKqs2OMuNZobwvVMLut5DpCIlxECcN/KHs0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Wh1USzc6K5Cq5VY3/SaExiSMwnBKyIG8DR2kf7ozo6wA3l9DtQ/fRy/EpnirIqxZS
-         KuYJDeaaCMDaoMNv/YglOxEFa5FZat69bW/Z7WOBg1c7dtFsMFZR/Pl0IwmUCgNe58
-         7AiZ08UmV4aqT/w+xzFFtoPR2Br9zKlmwMgiypTg=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200331231328epcas1p1983b8a4359a003aaff08e227300747da~BhnttF8Bx0986009860epcas1p1R;
-        Tue, 31 Mar 2020 23:13:28 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48sQ9f1dbpzMqYm2; Tue, 31 Mar
-        2020 23:13:25 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        43.1E.04074.59EC38E5; Wed,  1 Apr 2020 08:13:25 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200331231324epcas1p107bfd3412b713677290a810bbdf776b1~BhnqJCqrN0419604196epcas1p1-;
-        Tue, 31 Mar 2020 23:13:24 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200331231324epsmtrp2bb9b1fac3fa31042f76e8f77007f4b50~BhnqH3Kma1277512775epsmtrp2u;
-        Tue, 31 Mar 2020 23:13:24 +0000 (GMT)
-X-AuditID: b6c32a39-58bff70000000fea-b2-5e83ce956bf4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        96.A5.04158.49EC38E5; Wed,  1 Apr 2020 08:13:24 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200331231324epsmtip2644286e363c458a2eea854e47e02c2d3~Bhnp54owu1925719257epsmtip21;
-        Tue, 31 Mar 2020 23:13:24 +0000 (GMT)
-Subject: Re: [PATCH v1 3/5] PM / devfreq: tegra20: Use
- clk_round_rate_unboundly()
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <8e62e4ac-081c-a1ac-f0a9-b4e882fcd3b5@samsung.com>
-Date:   Wed, 1 Apr 2020 08:22:30 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 31 Mar 2020 19:13:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729647AbgCaXNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 19:13:34 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93B921707;
+        Tue, 31 Mar 2020 23:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585696413;
+        bh=9XnDVeLNtXBo+7A+ymbQWmYaZXP1cYS2bkQlhtc03pg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J7zqVWd/5lRSv44OmqCPe15cyMfA4cypk3PPuwEoI45tJ1YAoTl5Ju1ma924UCJl6
+         Z6ky4U99dLrxKDMwa+PTXGoIyPPfnsUb6LRM8u/KABhxK6I52Zyo/oUkrVgFeiVNOT
+         ND0IQRvtzFnmuXNaM15v5te9g0dWSmNYMudOjc6w=
+Received: by mail-ed1-f53.google.com with SMTP id de14so27406240edb.4;
+        Tue, 31 Mar 2020 16:13:32 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0kEpjM6joDgA2tDHZQgypbnov2wqaCqiv5reWf1k0HTQvvf9Os
+        8SRsWVi7LObTtjSgEosbmgfE9h8PRF51tu0wsg==
+X-Google-Smtp-Source: ADFU+vsI2at//4iAqFj3XbOPyjbjd8Ju2JHJo+yfvuPMtXyncAneKqKuJ3LsmHFRegjrJGdHpUpM711na8maETHC9Bs=
+X-Received: by 2002:a50:ce01:: with SMTP id y1mr18621985edi.47.1585696411284;
+ Tue, 31 Mar 2020 16:13:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200330231617.17079-4-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNJsWRmVeSWpSXmKPExsWy7bCmnu7Uc81xBh/mG1is/viY0aJl1iIW
-        i7NNb9gtPvbcY7W4vGsOm8Xn3iOMFp1fZrFZXDzlanG7cQWbxb9rG1ksfu6ax+LA7fH+Riu7
-        x85Zd9k9Nq3qZPPobX7H5tG3ZRWjx+dNcgFsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZm
-        Boa6hpYW5koKeYm5qbZKLj4Bum6ZOUDnKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVIL
-        UnIKLAv0ihNzi0vz0vWS83OtDA0MjEyBChOyM9b1vmQp2MNfMfvDVpYGxgs8XYwcHBICJhLH
-        Fjp2MXJyCAnsYJQ42svSxcgFZH9ilLi3ciIzROIbo8T05cYgNkj9rHV/WCGK9jJKbPw9A6rj
-        PaPEi+/7wTqEBYIlZvdPYQJJiAgsZpJ4vXkuC0iCWaBEYvfEI0wgNpuAlsT+FzfYQGx+AUWJ
-        qz8eM4LYvAJ2Ev03J4LZLAIqEouXTQKrERUIkzi5rQWqRlDi5MwnYDM5Bcwklk/qZoSYLy5x
-        68l8JghbXmL72znMEGdPZpdoWSUBYbtIHJ7xjhXCFpZ4dXwLO4QtJfH53V42CLtaYuXJI2wg
-        D0gIdDBKbNl/AarBWGL/0slMoLBjFtCUWL9LHyKsKLHz91yoG/gk3n3tYYUEL69ER5sQRImy
-        xOUHd5kgbEmJxe2dbBMYlWYh+WYWkg9mIflgFsKyBYwsqxjFUguKc9NTiw0LTJHjehMjOOFq
-        We5gPHbO5xCjAAejEg+vglVznBBrYllxZe4hRgkOZiURXjb/hjgh3pTEyqrUovz4otKc1OJD
-        jKbAwJ7ILCWanA/MBnkl8YamRsbGxhYmhmamhoZK4rxTr+fECQmkJ5akZqemFqQWwfQxcXBK
-        NTB2N7xUjVhSUN10JsP6wNKeF49nfdZe++4Xd3jZBIlC8z+ZcgwcNTVcKx6ytIUI9/B76y7/
-        s/xjtqfoNt79O7KmJX6ODZKdrjPVb/H3JB65e8bBK6YJpCpt65RfxftvWVlJzcFvR4PqVNg2
-        xh3/fnOC5n3ZbZtObEoI2mQpqaqj1HDLU0TNXVyJpTgj0VCLuag4EQDDSbCnzgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJIsWRmVeSWpSXmKPExsWy7bCSvO6Uc81xBgt+K1us/viY0aJl1iIW
-        i7NNb9gtPvbcY7W4vGsOm8Xn3iOMFp1fZrFZXDzlanG7cQWbxb9rG1ksfu6ax+LA7fH+Riu7
-        x85Zd9k9Nq3qZPPobX7H5tG3ZRWjx+dNcgFsUVw2Kak5mWWpRfp2CVwZ63pfshTs4a+Y/WEr
-        SwPjBZ4uRk4OCQETiVnr/rB2MXJxCAnsZpTYe/4PO0RCUmLaxaPMXYwcQLawxOHDxRA1bxkl
-        rp7dxApSIywQLDG7fwoTSEJEYCmTxIqbX8CamQVKJE48+wc1dSujxLqFc5lAEmwCWhL7X9xg
-        A7H5BRQlrv54zAhi8wrYSfTfnAhmswioSCxeNgmsRlQgTGLnksdMEDWCEidnPmEBsTkFzCSW
-        T+pmhFimLvFn3iVmCFtc4taT+UwQtrzE9rdzmCcwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCc
-        m55bbFhglJdarlecmFtcmpeul5yfu4kRHIFaWjsYT5yIP8QowMGoxMOraNUcJ8SaWFZcmXuI
-        UYKDWUmEl82/IU6INyWxsiq1KD++qDQntfgQozQHi5I4r3z+sUghgfTEktTs1NSC1CKYLBMH
-        p1QDo8qG9Ctqu9TrJ3PohP++qpaVb88aFFIvcetN2J1qZhZZmaMWkqf36zteZ+7w0H1zYdss
-        scXnUoJP+24y/O6iermG62p0RBnn7/4LorNXRmWcfzLp1TTDg5or4q45CoS0HH9voHfWWTa2
-        8eyy8p/83OfePj5w972ar4ndmzjNhgk+BpwXJLY7KbEUZyQaajEXFScCAIZvho+8AgAA
-X-CMS-MailID: 20200331231324epcas1p107bfd3412b713677290a810bbdf776b1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200330232035epcas1p4dc533fd4e30d543a1cd12ebb5c5e80b3
-References: <20200330231617.17079-1-digetx@gmail.com>
-        <CGME20200330232035epcas1p4dc533fd4e30d543a1cd12ebb5c5e80b3@epcas1p4.samsung.com>
-        <20200330231617.17079-4-digetx@gmail.com>
+References: <20200331214609.1742152-1-enric.balletbo@collabora.com> <20200331214609.1742152-4-enric.balletbo@collabora.com>
+In-Reply-To: <20200331214609.1742152-4-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 1 Apr 2020 07:13:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__9rrC3o9sTYKgSZi8n0xHdtSFoNMHOqLfQF6B_4BAGww@mail.gmail.com>
+Message-ID: <CAAOTY__9rrC3o9sTYKgSZi8n0xHdtSFoNMHOqLfQF6B_4BAGww@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: mt8173: Fix mmsys node name
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        ulrich.hecht+renesas@gmail.com, devicetree@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>, hsinyi@chromium.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-mediatek@lists.infradead.org, matthias.bgg@kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+Hi, Enric:
 
-On 3/31/20 8:16 AM, Dmitry Osipenko wrote:
-> The clk_round_rate() doesn't work for us properly if clock rate is bounded
-> by a min/max rate that is requested by some other clk-user because we're
-> building devfreq's OPP table based on the rounding.
-> 
-> In particular this becomes a problem if display driver is probed earlier
-> than devfreq, and thus, display adds a memory bandwidth request using
-> interconnect API, which results in a minimum clock-rate being set for
-> the memory clk. In a result, the lowest devfreq OPP rate is getting
-> limited to the minimum rate imposed by the display driver.
-> 
-> Let's use new clk_round_rate_unboundly() that resolves the problem by
-> rounding clock rate without taking into account min/max limits imposed by
-> active clk users.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B44=E6=9C=881=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:47=E5=AF=AB=
+=E9=81=93=EF=BC=9A
+>
+> Node names are supposed to match the class of the device, mmsys is a
+> system controller (syscon) not a clock controller, so change the node
+> name accordingly.
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->  drivers/devfreq/tegra20-devfreq.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
-> index ff82bac9ee4e..1bb10ef11dfe 100644
-> --- a/drivers/devfreq/tegra20-devfreq.c
-> +++ b/drivers/devfreq/tegra20-devfreq.c
-> @@ -149,10 +149,10 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
->  
->  	tegra->regs = mc->regs;
->  
-> -	max_rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
-> +	max_rate = clk_round_rate_unboundly(tegra->emc_clock, ULONG_MAX);
->  
->  	for (rate = 0; rate <= max_rate; rate++) {
-> -		rate = clk_round_rate(tegra->emc_clock, rate);
-> +		rate = clk_round_rate_unboundly(tegra->emc_clock, rate);
->  
->  		err = dev_pm_opp_add(&pdev->dev, rate, 0);
->  		if (err) {
-> 
-
-Firstly, patch1 have to be reviewed for this patch.
-I have no any objection. It looks good to me.
-
-If patch1 get the confirmation from clock maintainer,
-feel free to add my acked tag:
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+>
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/d=
+ts/mediatek/mt8173.dtsi
+> index 8b4e806d5119..a55e8c177832 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -908,7 +908,7 @@ u2port1: usb-phy@11291000 {
+>                         };
+>                 };
+>
+> -               mmsys: clock-controller@14000000 {
+> +               mmsys: syscon@14000000 {
+>                         compatible =3D "mediatek,mt8173-mmsys", "syscon";
+>                         reg =3D <0 0x14000000 0 0x1000>;
+>                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM=
+>;
+> --
+> 2.25.1
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
