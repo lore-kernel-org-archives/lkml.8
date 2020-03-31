@@ -6,124 +6,106 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7D5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E942C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13332078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2103E20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbgCaPYy (ORCPT
+        id S1730870AbgCaPZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:24:54 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:48790 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730521AbgCaPYx (ORCPT
+        Tue, 31 Mar 2020 11:25:13 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:52749 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730521AbgCaPZM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:24:53 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-        by gardel.0pointer.net (Postfix) with ESMTP id A1BF6E814E3;
-        Tue, 31 Mar 2020 17:24:51 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 4D7F6160704; Tue, 31 Mar 2020 17:24:51 +0200 (CEST)
-Date:   Tue, 31 Mar 2020 17:24:51 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Karel Zak <kzak@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200331152451.GG27959@gardel-login>
-References: <1445647.1585576702@warthog.procyon.org.uk>
- <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
- <CAJfpegtjmkJUSqORFv6jw-sYbqEMh9vJz64+dmzWhATYiBmzVQ@mail.gmail.com>
- <20200331083430.kserp35qabnxvths@ws.net.home>
- <CAJfpegsNpabFwoLL8HffNbi_4DuGMn4eYpFc6n7223UFnEPAbA@mail.gmail.com>
- <20200331122554.GA27469@gardel-login>
- <CAJfpegvo=T0VuXsPnvo83H3RqwHLE-9Q=dTZKWxnBKMykfJcNA@mail.gmail.com>
+        Tue, 31 Mar 2020 11:25:12 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M9Ezx-1jO07V3KvH-006PYC; Tue, 31 Mar 2020 17:25:11 +0200
+Received: by mail-qt1-f178.google.com with SMTP id 10so18660145qtp.1;
+        Tue, 31 Mar 2020 08:25:10 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0WvgddEofi/sD9iSTFdZf1ZFrD+ydZJuI4bP2SBrbgWfC8yZ3s
+        hFDTb+CTcOLkthkc8EdLpwBg3fWU7jGPNLh+SAw=
+X-Google-Smtp-Source: ADFU+vuGxItc+BDKGw2bG/q+aGH1FiI4EuHE9CVQ5PM1NsMHPuQM0rEiioydqcPcPPcfUQl0MjAMFe5xwohyA60jNJM=
+X-Received: by 2002:aed:20e3:: with SMTP id 90mr5499597qtb.142.1585668309499;
+ Tue, 31 Mar 2020 08:25:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegvo=T0VuXsPnvo83H3RqwHLE-9Q=dTZKWxnBKMykfJcNA@mail.gmail.com>
+References: <cover.1584667964.git.gurus@codeaurora.org> <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+ <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com> <20200330204359.GB5107@codeaurora.org>
+In-Reply-To: <20200330204359.GB5107@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 31 Mar 2020 17:24:52 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+Message-ID: <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and function
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GSzAx50iyDLxh24eDIM6aDFhYcEePjipAkmPSKNmdEFbfhwY1GY
+ CGIDdmp+iJOiD90sOyAX2dgQqrmdft4JfTkzwj+kvaeRKetaWW/zxUFso7eY9V9etgWa2bo
+ OkJwLNHNEAGM9qq5zfPJosG4kjZiASYMmpveypIvRqhNsF72jhYoMO28jZcYurWWfV/Y/ju
+ 9IkPVEL2i49Ttnk2mJGBA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GFnIVILSpSI=:WmWVTmzCRM9vjQAnPaDqIZ
+ wYK+GA/Ltn1HLg/5JMw7S8xfF6ki4Vd/fHdv93vGa3ySkHI2uL6cgv48TGHc/eukBax4tsEsD
+ 7QwNaBeuRl0mHymKFGxo9BafQPj25FyJrmm2nC/6x5KRI5Ove/jte01yjDSuBxXWpuXIsFO3w
+ gZIvfMi3Fm34dZjbKg/OLKEtoBUd6d8Rg2k/h483bEHeB/0VRYrGeU6ynb2pgiHGcIWWVEVh8
+ nTJ169BMm7zWb+oa3sXyZhyvf2iRfvzhPHxCaHltVjAIfYx0+JxHwrGGaW3V7BZ5Xys0ILubF
+ +6P5fuLIK39wVIbAvbKYiCFf384d/fV6O22Y3gZ4A7LO0yesWcvvOcoGx777WKHks205+iXsH
+ J83/a+mAFJ/S7VSuU+y8+f3YC8mjodrF/Wv0Z1eoX9cIVioG7ik1owAMRZz6VDmHxHucVnHje
+ rbSLefNJrc3TmVehhWjO0V4So7mDhViq0cNs+7GmtXTAP65HulG/L0eLn9XB6FC8iIj7zlqmH
+ R6/7UE5Em48nLw+l+5wjxzKFiXOVkmBinAncup/1BoDllI26CNiImVQvrkm5jYYGjcT8Dj2hr
+ xEbxZb2NrtyBhx/sNoZlFetiAkXrXvIgc4wZb1HvT799hCUqgu8lB7P8RXcKrF2fB/LWjT7Dt
+ 0e4+P1+zmrgHAxID9cKp6ptvwhXCL658puMxglrGpwJ3qk5OoIEVPm/2D9soptmqmuT6tiCyz
+ IAAC8M23tR8s+BnfSB7Y20cze0fFMRlbhXbriV6VxISyEzKE95JyRWBYxpqRimwPlJhMXWDyM
+ brn6yrm5gqFkXUlFiLU+XW4u6LclSZxC9TtFILcYoPpYqJDjeo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Di, 31.03.20 17:10, Miklos Szeredi (miklos@szeredi.hu) wrote:
-
-> On Tue, Mar 31, 2020 at 2:25 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
-> >
-> > On Di, 31.03.20 10:56, Miklos Szeredi (miklos@szeredi.hu) wrote:
-> >
-> > > On Tue, Mar 31, 2020 at 10:34 AM Karel Zak <kzak@redhat.com> wrote:
-> > > >
-> > > > On Tue, Mar 31, 2020 at 07:11:11AM +0200, Miklos Szeredi wrote:
-> > > > > On Mon, Mar 30, 2020 at 11:17 PM Christian Brauner
-> > > > > <christian.brauner@ubuntu.com> wrote:
-> > > > >
-> > > > > > Fwiw, putting down my kernel hat and speaking as someone who maintains
-> > > > > > two container runtimes and various other low-level bits and pieces in
-> > > > > > userspace who'd make heavy use of this stuff I would prefer the fd-based
-> > > > > > fsinfo() approach especially in the light of across namespace
-> > > > > > operations, querying all properties of a mount atomically all-at-once,
-> > > > >
-> > > > > fsinfo(2) doesn't meet the atomically all-at-once requirement.
-> > > >
-> > > > I guess your /proc based idea have exactly the same problem...
-> > >
-> > > Yes, that's exactly what I wanted to demonstrate: there's no
-> > > fundamental difference between the two API's in this respect.
-> > >
-> > > > I see two possible ways:
-> > > >
-> > > > - after open("/mnt", O_PATH) create copy-on-write object in kernel to
-> > > >   represent mount node -- kernel will able to modify it, but userspace
-> > > >   will get unchanged data from the FD until to close()
-> > > >
-> > > > - improve fsinfo() to provide set (list) of the attributes by one call
-> > >
-> > > I think we are approaching this from the wrong end.   Let's just
-> > > ignore all of the proposed interfaces for now and only concentrate on
-> > > what this will be used for.
-> > >
-> > > Start with a set of use cases by all interested parties.  E.g.
-> > >
-> > >  - systemd wants to keep track attached mounts in a namespace, as well
-> > > as new detached mounts created by fsmount()
-> > >
-> > >  - systemd need to keep information (such as parent, children, mount
-> > > flags, fs options, etc) up to date on any change of topology or
-> > > attributes.
-> >
-> > - We also have code that recursively remounts r/o or unmounts some
-> >   directory tree (with filters),
+On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
+<gurus@codeaurora.org> wrote:
 >
-> Recursive remount-ro is clear.  What is not clear is whether you need
-> to do this for hidden mounts (not possible from userspace without a
-> way to disable mount following on path lookup).  Would it make sense
-> to add a kernel API for recursive setting of mount flags?
+> On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
+> > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
+> >
+> > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > >
+> > >         period_cycles /= prescale;
+> > >         c = (unsigned long long)period_cycles * state->duty_cycle;
+> > > -       do_div(c, state->period);
+> > > -       duty_cycles = c;
+> > > +       duty_cycles = div64_u64(c, state->period);
+> > >
+> >
+> > This change looks fine, but I wonder if the code directly above it
+> >
+> >         c = clk_get_rate(imx->clk_per);
+> >         c *= state->period;
+> >         do_div(c, 1000000000);
+> >         period_cycles = c;
+> >
+> > might run into an overflow when both the clock rate and the period
+> > are large numbers.
+>
+> Hmm. Seems to me like addressing this would be outside the scope of this
+> patch series.
 
-I would be very happy about an explicit kernel API for recursively
-toggling the MS_RDONLY. But for many usecases in systemd we need the
-ability to filter some subdirs and leave them as is, so while helpful
-we'd have to keep the userspace code we currently have anyway.
+I think it should be part of the same series, addressing bugs that
+were introduced
+by the change to 64-bit period. If it's not getting fixed along with
+the other regressions,
+I fear nobody is going to go back and fix it later.
 
-> What exactly is this unmount with filters?  Can you give examples?
-
-Hmm, actually it's only the r/o remount that has filters, not the
-unmount. Sorry for the confusion. And the r/o remount with filters
-just means: "remount everything below X read-only except for X/Y and
-X/Z/A"...
-
-Lennart
-
---
-Lennart Poettering, Berlin
+      Arnd
