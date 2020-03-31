@@ -2,52 +2,53 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9579EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61821C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D42208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EC62072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646017;
-	bh=7JpCD9VtIEeJ6UaCsPkEJZJ8P/6gANcJ4xXWAYDo6/c=;
+	s=default; t=1585646024;
+	bh=ePVB3mhFEyRGGn0YVF44FQkofOhQSp5ciqnPPMTYVzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SooU5b3B59LocLZnRWkbxNipL40IpWF8M3NfNtVyg69JfYMBfGvIG3/uTg1gth1K/
-	 hhckoBshq8yTzImvFqOVU63xjlRRLdCCv12ZSESIp/4K4Zt6zR6y7NUo3XILtonkDo
-	 xREM6r7mu7eP8ugvYS1+R4R6KWa83dp3Btd7QoEM=
+	b=dW9fjnAPIHqB4Qwa9DHAKiU1el0bV80wpJVnEcAX9pJxOj+eX6x2cXg13SlHEHT6h
+	 EDm08QQQLAG0vY0fOoFy1IGzsAL052czHQXdXziFMQxb2pOTASmqVLOcyeFMoB6w/n
+	 nr+41KNMavqnN0yVhoA4UsB1rmmEs+ejHWvrj0rI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgCaJN3 (ORCPT
+        id S1731637AbgCaJNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730519AbgCaJNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:13:25 -0400
+        id S1731560AbgCaJNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:13:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C57220675;
-        Tue, 31 Mar 2020 09:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FE520787;
+        Tue, 31 Mar 2020 09:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646005;
-        bh=7JpCD9VtIEeJ6UaCsPkEJZJ8P/6gANcJ4xXWAYDo6/c=;
+        s=default; t=1585646013;
+        bh=ePVB3mhFEyRGGn0YVF44FQkofOhQSp5ciqnPPMTYVzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pd4CXrD4ZTdF7vdq68hz0tBSPJmkyz/oWDj1DjtjPG8rzfeEBSLqtK23/dMosi/ga
-         v4ut0e2vROdPkdycxEzRm9qCLs8DJHnxhwRsj4rqRtusMClf7/t3/hBk6IuHxKQBpA
-         t5IQbyZhpBaqLKFDC8HmmRZKYvJVwAY6pzCVnOIQ=
+        b=q3keWl6YnAxdU4QBg50QtUfJOgSQhF623DIISTaqpJj28hisAAVxC9TybIMrQreGZ
+         3NywkSm4n+veWsdbQd9DZho8Y7R0m/t2wThKe3VOueBz/8H39ihPyqv/uJ3G2clyO9
+         unhkxEMcAcSBnKvMw4pV8BZZ4OVQdly9ru/OHLJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 052/155] net/mlx5e: Fix ICOSQ recovery flow with Striding RQ
-Date:   Tue, 31 Mar 2020 10:58:12 +0200
-Message-Id: <20200331085424.365457865@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 055/155] nfs: add minor version to nfs_server_key for fscache
+Date:   Tue, 31 Mar 2020 10:58:15 +0200
+Message-Id: <20200331085424.740778825@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -60,105 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit e239c6d686e1c37fb2ab143162dfb57471a8643f ]
+[ Upstream commit 55dee1bc0d72877b99805e42e0205087e98b9edd ]
 
-In striding RQ mode, the buffers of an RX WQE are first
-prepared and posted to the HW using a UMR WQEs via the ICOSQ.
-We maintain the state of these in-progress WQEs in the RQ
-SW struct.
+An NFS client that mounts multiple exports from the same NFS
+server with higher NFSv4 versions disabled (i.e. 4.2) and without
+forcing a specific NFS version results in fscache index cookie
+collisions and the following messages:
+[  570.004348] FS-Cache: Duplicate cookie detected
 
-In the flow of ICOSQ recovery, the corresponding RQ is not
-in error state, hence:
+Each nfs_client structure should have its own fscache index cookie,
+so add the minorversion to nfs_server_key.
 
-- The buffers of the in-progress WQEs must be released
-  and the RQ metadata should reflect it.
-- Existing RX WQEs in the RQ should not be affected.
-
-For this, wrap the dealloc of the in-progress WQEs in
-a function, and use it in the ICOSQ recovery flow
-instead of mlx5e_free_rx_descs().
-
-Fixes: be5323c8379f ("net/mlx5e: Report and recover from CQE error on ICOSQ")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=200145
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h             |    1 
- drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c |    2 
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c        |   31 +++++++++++----
- 3 files changed, 26 insertions(+), 8 deletions(-)
+ fs/nfs/client.c     | 1 +
+ fs/nfs/fscache.c    | 2 ++
+ fs/nfs/nfs4client.c | 1 -
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -1059,6 +1059,7 @@ int mlx5e_modify_rq_state(struct mlx5e_r
- void mlx5e_activate_rq(struct mlx5e_rq *rq);
- void mlx5e_deactivate_rq(struct mlx5e_rq *rq);
- void mlx5e_free_rx_descs(struct mlx5e_rq *rq);
-+void mlx5e_free_rx_in_progress_descs(struct mlx5e_rq *rq);
- void mlx5e_activate_icosq(struct mlx5e_icosq *icosq);
- void mlx5e_deactivate_icosq(struct mlx5e_icosq *icosq);
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 30838304a0bf2..a05f77f9c21ed 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -153,6 +153,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	if ((clp = kzalloc(sizeof(*clp), GFP_KERNEL)) == NULL)
+ 		goto error_0;
  
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
-@@ -90,7 +90,7 @@ static int mlx5e_rx_reporter_err_icosq_c
- 		goto out;
++	clp->cl_minorversion = cl_init->minorversion;
+ 	clp->cl_nfs_mod = cl_init->nfs_mod;
+ 	if (!try_module_get(clp->cl_nfs_mod->owner))
+ 		goto error_dealloc;
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 3800ab6f08fa8..a6dcc2151e779 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -31,6 +31,7 @@ static DEFINE_SPINLOCK(nfs_fscache_keys_lock);
+ struct nfs_server_key {
+ 	struct {
+ 		uint16_t	nfsversion;		/* NFS protocol version */
++		uint32_t	minorversion;		/* NFSv4 minor version */
+ 		uint16_t	family;			/* address family */
+ 		__be16		port;			/* IP port */
+ 	} hdr;
+@@ -55,6 +56,7 @@ void nfs_fscache_get_client_cookie(struct nfs_client *clp)
  
- 	mlx5e_reset_icosq_cc_pc(icosq);
--	mlx5e_free_rx_descs(rq);
-+	mlx5e_free_rx_in_progress_descs(rq);
- 	clear_bit(MLX5E_SQ_STATE_RECOVERING, &icosq->state);
- 	mlx5e_activate_icosq(icosq);
- 	mlx5e_activate_rq(rq);
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -824,6 +824,29 @@ int mlx5e_wait_for_min_rx_wqes(struct ml
- 	return -ETIMEDOUT;
- }
+ 	memset(&key, 0, sizeof(key));
+ 	key.hdr.nfsversion = clp->rpc_ops->version;
++	key.hdr.minorversion = clp->cl_minorversion;
+ 	key.hdr.family = clp->cl_addr.ss_family;
  
-+void mlx5e_free_rx_in_progress_descs(struct mlx5e_rq *rq)
-+{
-+	struct mlx5_wq_ll *wq;
-+	u16 head;
-+	int i;
-+
-+	if (rq->wq_type != MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ)
-+		return;
-+
-+	wq = &rq->mpwqe.wq;
-+	head = wq->head;
-+
-+	/* Outstanding UMR WQEs (in progress) start at wq->head */
-+	for (i = 0; i < rq->mpwqe.umr_in_progress; i++) {
-+		rq->dealloc_wqe(rq, head);
-+		head = mlx5_wq_ll_get_wqe_next_ix(wq, head);
-+	}
-+
-+	rq->mpwqe.actual_wq_head = wq->head;
-+	rq->mpwqe.umr_in_progress = 0;
-+	rq->mpwqe.umr_completed = 0;
-+}
-+
- void mlx5e_free_rx_descs(struct mlx5e_rq *rq)
- {
- 	__be16 wqe_ix_be;
-@@ -831,14 +854,8 @@ void mlx5e_free_rx_descs(struct mlx5e_rq
- 
- 	if (rq->wq_type == MLX5_WQ_TYPE_LINKED_LIST_STRIDING_RQ) {
- 		struct mlx5_wq_ll *wq = &rq->mpwqe.wq;
--		u16 head = wq->head;
--		int i;
- 
--		/* Outstanding UMR WQEs (in progress) start at wq->head */
--		for (i = 0; i < rq->mpwqe.umr_in_progress; i++) {
--			rq->dealloc_wqe(rq, head);
--			head = mlx5_wq_ll_get_wqe_next_ix(wq, head);
--		}
-+		mlx5e_free_rx_in_progress_descs(rq);
- 
- 		while (!mlx5_wq_ll_is_empty(wq)) {
- 			struct mlx5e_rx_wqe_ll *wqe;
+ 	switch (clp->cl_addr.ss_family) {
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index da6204025a2db..914feab64702c 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -216,7 +216,6 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	INIT_LIST_HEAD(&clp->cl_ds_clients);
+ 	rpc_init_wait_queue(&clp->cl_rpcwaitq, "NFS client");
+ 	clp->cl_state = 1 << NFS4CLNT_LEASE_EXPIRED;
+-	clp->cl_minorversion = cl_init->minorversion;
+ 	clp->cl_mvops = nfs_v4_minor_ops[cl_init->minorversion];
+ 	clp->cl_mig_gen = 1;
+ #if IS_ENABLED(CONFIG_NFS_V4_1)
+-- 
+2.20.1
+
 
 
