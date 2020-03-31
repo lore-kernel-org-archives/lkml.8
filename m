@@ -2,216 +2,108 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F002C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CBFC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45AA020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5530620714
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 11:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbgCaLyc convert rfc822-to-8bit (ORCPT
+        id S1730534AbgCaLzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:54:32 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4171 "EHLO mga11.intel.com"
+        Tue, 31 Mar 2020 07:55:04 -0400
+Received: from mga01.intel.com ([192.55.52.88]:3310 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730357AbgCaLyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:54:32 -0400
-IronPort-SDR: FD9P8U211bxNlGXPbKa5c0RAEpvI8ZNAs8UJxVVMz6VBlOuY/LIhRAxNkYu7lJ0y0MUeDwvbgU
- xDPU9RkiIgaQ==
+        id S1729925AbgCaLzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 07:55:03 -0400
+IronPort-SDR: qptgvVR5XEKkpafjV3Qffhf2dIE+DQ6bS9EGfg9AYJg+sHiC4/aJZLJ8CueKhzJqhTMdP0StQu
+ cFkrNidEYT/g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 04:54:31 -0700
-IronPort-SDR: jVzNgoxsBvTeACswyPw0g3F8gBbwAcWBsNPozis+fEdbZAPIf8R5uIU/TJB3wVIQpzJibXb0NN
- agU6zcQmyP5w==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 04:55:03 -0700
+IronPort-SDR: x76DcEdvDe15XUQfjkSFQGaycHeZFzHRQPfcDKVvKInN8DhRXpcnI5zrKvsou97YxQT6ZS2T59
+ HXurVOG+0O5g==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,327,1580803200"; 
-   d="scan'208";a="422268159"
-Received: from unknown (HELO localhost) ([10.249.38.166])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 04:54:27 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Peter Lister <peter@bikeshed.quignogs.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 0/1] Compactly make code examples into literal blocks
-In-Reply-To: <7d7f4cbb-e8e8-411d-62f4-7a32a2ac8d8a@bikeshed.quignogs.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200326192947.GM22483@bombadil.infradead.org> <20200326195156.11858-1-peter@bikeshed.quignogs.org.uk> <87imiqghop.fsf@intel.com> <20200327104126.667b5d5b@lwn.net> <7d7f4cbb-e8e8-411d-62f4-7a32a2ac8d8a@bikeshed.quignogs.org.uk>
-Date:   Tue, 31 Mar 2020 14:54:24 +0300
-Message-ID: <87sghog2of.fsf@intel.com>
+   d="scan'208";a="272720072"
+Received: from tking1-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.59.94])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Mar 2020 04:55:01 -0700
+Date:   Tue, 31 Mar 2020 14:55:00 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] acpi: Extend TPM2 ACPI table with missing log
+ fields
+Message-ID: <20200331115500.GC8295@linux.intel.com>
+References: <20200330151536.871700-1-stefanb@linux.vnet.ibm.com>
+ <20200330151536.871700-2-stefanb@linux.vnet.ibm.com>
+ <20200330192830.GC1384380@linux.intel.com>
+ <fa195dea-205b-fd0e-fb58-8d185a4a13c6@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fa195dea-205b-fd0e-fb58-8d185a4a13c6@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 30 Mar 2020, Peter Lister <peter@bikeshed.quignogs.org.uk> wrote:
-> On 27/03/2020 16:41, Jonathan Corbet wrote:
->
->> On Fri, 27 Mar 2020 13:28:54 +0200
->> Jani Nikula <jani.nikula@linux.intel.com> wrote:
->>
->>> IMHO the real problem is kernel-doc doing too much preprocessing on the
->>> input, preventing us from doing what would be the sensible thing in
->>> rst. The more we try to fix the problem by adding more kernel-doc
->>> processing, the further we dig ourselves into this hole.
->>>
->>> If kernel-doc didn't have its own notion of section headers, such as
->>> "example:", we wouldn't have this problem to begin with. We could just
->>> use the usual rst construct; "example::" followed by an indented block.
->>>
->>> I'm not going to stand in the way of the patch, but I'm telling you,
->>> this is going to get harder, not easier, on this path.
->> I agree with you in principle.  The problem, of course, is that this is a
->> legacy gift from before the RST days and it will be hard to change.
->>
->> A quick grep shows that the pattern:
->>
->> 	* Example:
->>
->> appears nearly 100 times in current kernels.  It is not inconceivable to
->> make a push to get rid of all of those, turning them into ordinary RST
->> syntax - especially since not all of those are actually kerneldoc
->> comments.
->>
->> The same quick grep says that "returns?:" appears about 10,000 times.
->> *That* will be painful to change, and I can only imagine that some
->> resistance would have to be overcome at some point.
->>
->> So what do folks think we should do? :)
->>
->> I want to ponder on this for a bit.  Peter, that may mean that I hold this
->> patch past the 5.7 merge window, which perhaps makes sense at this point
->> anyway, sorry.  But I really would like to push things into a direction
->> that moves us away from gnarly perl hacks and toward something more
->> maintainable in the long term.
->
-> I would have been surprised if it had been accepted as is.
->
-> Matthew and Greg, thanks for reviewing - I have a feeling you might need 
-> to do this a few times more.
->
-> Over the past few days, I too have been pondering, certain thatthis 
-> patch, a mini tweak of the existing kernel-doc, is not theright 
-> answer.Equally, I'm unconvinced that the "right" answer is a wholesale 
-> move to ReST, so where's the happy medium?
->
-> <alert: long email, tldr: "Finding the happy medium on kerneldoc layout 
-> in C source comments">
->
-> A week or two back, I tried to fix doc build "indentation" warnings due 
-> to return value listsin sfb-bus.c. Russell King didn't like my patch 
-> saying "I think it's more important that the documentation interferes to 
-> a minimal degree with the code in the file".[ Mauro's patch to sfb-bus.c 
-> is now in linux-next. He fixed the problem with a bullet list - 
-> thriftier with the line breaks andthe official fix in the kerneldoc 
-> notes - but I'll argue that a simple list or definition list might be 
-> more appropriate. ]
->
-> Russell and Matthew argue that the primary purpose of source annotation 
-> is to aid developers and that any significant detraction (verbosity, 
-> whitespace) is not excused by prettier docs. FWIW, my background is 
-> sysadmin (much perl) and system/kernel programming (mostly C) and I 
-> agree with them.
->
-> Jani, if you see risks of complexity and maintenance problems, then so 
-> do I. But the point of kernel-doc is surely to be a specific semantic 
-> markup which works for developers and maintainers and allows doc authors 
-> access to their annotation.  The format clearly needs thought,perl is 
-> less fashionable than it was and kernel-doc - er - needs work, but I 
-> don't see the *idea* as inherently broken. I suggest that there would be 
-> good developer buy-in to searchable pretty docs if a few compact idioms 
-> reliably did The Right Thing and didn't spit out doc build warnings.
+On Mon, Mar 30, 2020 at 05:26:25PM -0400, Stefan Berger wrote:
+> On 3/30/20 3:28 PM, Jarkko Sakkinen wrote:
+> > On Mon, Mar 30, 2020 at 11:15:34AM -0400, Stefan Berger wrote:
+> > > From: Stefan Berger <stefanb@linux.ibm.com>
+> > > 
+> > > Recent extensions of the TPM2 ACPI table added 3 more fields
+> > > including 12 bytes of start method specific parameters and Log Area
+> > > Minimum Length (u32) and Log Area Start Address (u64). So, we extend
+> > > the existing structure with these fields to allow non-UEFI systems
+> > > to access the TPM2's log.
+> > > 
+> > > The specification that has the new fields is the following:
+> > >    TCG ACPI Specification
+> > >    Family "1.2" and "2.0"
+> > >    Version 1.2, Revision 8
+> > > 
+> > > Adapt all existing table size calculations to use
+> > > offsetof(struct acpi_table_tpm2, start_method_specific)
+> > > [where start_method_specific is a newly added field]
+> > > rather than sizeof(struct acpi_table_tpm2) so that the addition
+> > > of the new fields does not affect current systems that may not
+> > > have them.
+> > > 
+> > Cc: linux-acpi@vger.kernel.org
+> > 
+> > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > You have this comment:
+> > 
+> > /* Platform-specific data follows */
+> 
+> You mean there 'was this comment'? I actually removed this comment because I
+> didn't know what it meant or what it has to do with 'platform':
+> 
+> -
+> -������ /* Platform-specific data follows */
+> +������ u8� start_method_specific[12];
+> +������ u32 log_area_minimum_length;
+> +������ u64 log_area_start_address;
+> 
+> Specs: https://trustedcomputinggroup.org/wp-content/uploads/TCG_ACPIGeneralSpecification_v1.20_r8.pdf
+> 
+> PDF Page 16 / Doc page 10 bottom.
+> 
+> start_method_specific is obviously related to the start_method field. The
+> subsequent two fields are optional and show those 2 filelds we know from the
+> TCPA ACPI table.
 
-Historically the kernel documentation build was a Rube Goldberg machine,
-and if you were lucky, you reached the end. There were failure points
-all over the place. There were "impedance mismatches" in the inputs and
-outputs at various stages. There were *insane* escaping issues to get
-some text passed through as intended.
+You should CC the change to linux-acpi because it touches their files.
+For this reason preferably this change should be commit of its own.
 
-At the high level, we've reduced that to *two*, Sphinx and kernel-doc
-the perl script, we've made kernel-doc emit rst instead of xml/html, and
-we even run the script from within a Sphinx extension to get the error
-reporting and dependency management right.
-
-Being able to throw away a lot of conversion and interpretation from
-kernel-doc was a goal, passing through the kernel-doc comments unchanged
-as much as possible was a feature. This was really the key to making it
-possible to document the kernel with Sphinx to begin with.
-
-I think it's a mistake to add anything to kernel-doc that isn't trying
-to streamline that process even more. Minimize what kernel-doc does as
-much as possible (but not more).
-
-The moment you start adding "a few compact idioms", you start
-introducing more ways to trip over the mismatch between kernel-doc
-syntax and rst. And you end up trying to figure out ways to escape stuff
-in one or the other.
-
-
-BR,
-Jani.
-
-
-PS. The kernel was always going to be held back by insane amounts of
-existing kernel-doc comments, as well as aversion to adding build
-dependencies. My vision of what a minimalistic Sphinx based C code
-documentation system free of those ties might look like is Hawkmoth [1].
-
-[1] https://github.com/jnikula/hawkmoth
-
-
->
-> The build warnings I currently observe do not tell me "the author got it 
-> wrong", but rather "kernel-doc didn't understand the author's intention".
->
-> Consider this excerpt from the kerneldoc comment for bitmap_cut(), 
-> recently added to lib/bitmap.c. (NB - this is an example in the 
-> description section - the parameters, including src, have already been 
-> described).
->
->   * In pictures, example for a big-endian 32-bit architecture:
->   *
->   * @src:
->   * 31                                   63
->   * |                                    |
->   * 10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
->   *                 | |              |                                    |
->   *                16 14             0                                   32
->   *
->
-> This fails because 1) the diagram isn't made literal (and so generates a 
-> indentation build warning) and 2) "@src:" is interpreted as an extra 
-> definition of src which scrunges the first one. I find it hard to assert 
-> that the author's intentions were wrong; it's the kind of good 
-> annotation we should hope for in a newly added function. If "* @src:" 
-> gained an double colon and we guaranteed that, after a description 
-> section header, references to a parameter didn't overwrite the original 
-> definition, this would work fine.
->
-> My instinct is to fix doc build issues with minimal changes: not actual 
-> ReST, but clear idioms reliably generating good ReST. This should be 
-> accompanied by tests for developers and reviewers so that we can have a 
-> fair stab at getting it right first time and (of course) documentation.
->
-> Could I ask anyone who disagrees to suggest their preferred way to lay 
-> out the comment for bitmap_cut()?
->
-> One head-on approachis to literalise *all* kerneldoc comments for 
-> functions and structures. The kerneldoc keywords then serve only to 
-> generate links; the ReST output is minimal but guaranteed validand 
-> warning free. Would any readers of API docs be inconvenienced? The 
-> target readership are presumably programmers, and the searchability of 
-> the sphinx RTD is more useful to me than the formatting.
->
-> All the best,
-> Peter
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+/Jarkko
