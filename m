@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B3BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F111FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D842072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C765C21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646132;
-	bh=+qQRse8RqlkU/6s73AD5+3QBNHW78pnuLWsIUtuDqKs=;
+	s=default; t=1585646134;
+	bh=fo9mx5tUsBvfCAbCxsZ9yogROxnMFHZqmfTbCv2WYIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYezlQbl2yUl2SsFw82PppHEjwb6tJp86LW/m1GFUl/EQQjM2oP2jpF4A+DJZ1Dlp
-	 zV45ieAd9EHedtIwXHn70G5sC+Mj66THtEAzbhDPlgrUNiFmKf8RaXcyZeoKQVeGzA
-	 9q6NxbnR2BBtjKU1KnJbDh3Zsw4uaBfVMwYrvkiw=
+	b=xS99SeM906X8To1C4CE7ld10jhf/VEj1zwHbbTH9vG/+P8DJCTnBhTpICv7LtWTKQ
+	 LTTibcsOxdrENfx4UXP93FRKekz8o+x8CcDIr2Ywo/3z2f49QlLDnE+pzOgRUP0yt4
+	 l6xEO5GZYilq2xIoEUJ8+iz42Z7V0CSfYOAUF7vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgCaJP3 (ORCPT
+        id S1730965AbgCaJPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730547AbgCaJPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:15:20 -0400
+        id S1731903AbgCaJP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:15:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0260220675;
-        Tue, 31 Mar 2020 09:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A3F20772;
+        Tue, 31 Mar 2020 09:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646119;
-        bh=+qQRse8RqlkU/6s73AD5+3QBNHW78pnuLWsIUtuDqKs=;
+        s=default; t=1585646126;
+        bh=fo9mx5tUsBvfCAbCxsZ9yogROxnMFHZqmfTbCv2WYIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dkafwPa6DGLJBnA4PnHYI0YIMULJhsN8pgSDp6yREaHKYpp2flOyM/Yx9M9K3NBgL
-         8eaMwLGjiTeGVMEiycnMrNv5ZVgd0J9tN7wnqUmf3w/LHonJswkU5lpuFPVC8mptGq
-         OxD8cxijCp5UDmQGBRRrQGAWiuXzVjdCyO1ADO5s=
+        b=J9FLQktd7zx6deMYIzVDQ+r5+HPVBtYrEvB1My+CPaSP6HbNMIAIZLiqWiTDy6YZx
+         bRUYHq7pmxk3tCdP3pgz1PPWoDJUMMn5PQW2iAbdSCh2Oax4LbVzmgbg/Cjj50DsTZ
+         nikELKVZBofgc7LQCEYG0uZAW7hGJb3n64i0qBKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hawking Zhang <Hawking.Zhang@amd.com>,
-        Candice Li <Candice.Li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/155] drm/amdgpu: correct ROM_INDEX/DATA offset for VEGA20
-Date:   Tue, 31 Mar 2020 10:58:23 +0200
-Message-Id: <20200331085425.576534719@linuxfoundation.org>
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+        He Zhe <zhe.he@windriver.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH 5.4 091/155] perf probe: Fix to delete multiple probe event
+Date:   Tue, 31 Mar 2020 10:58:51 +0200
+Message-Id: <20200331085428.656190476@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -61,77 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hawking Zhang <Hawking.Zhang@amd.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit f1c2cd3f8fb959123a9beba18c0e8112dcb2e137 ]
+commit 6b8d68f1ce9266b05a55e93c62923ff51daae4c1 upstream.
 
-The ROMC_INDEX/DATA offset was changed to e4/e5 since
-from smuio_v11 (vega20/arcturus).
+When we put an event with multiple probes, perf-probe fails to delete
+with filters. This comes from a failure to list up the event name
+because of overwrapping its name.
 
-Signed-off-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Tested-by: Candice Li <Candice.Li@amd.com>
-Reviewed-by: Candice Li <Candice.Li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/soc15.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+To fix this issue, skip to list up the event which has same name.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index 80934ca172607..c086262cc181d 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -84,6 +84,13 @@
- #define HDP_MEM_POWER_CTRL__RC_MEM_POWER_CTRL_EN_MASK	0x00010000L
- #define HDP_MEM_POWER_CTRL__RC_MEM_POWER_LS_EN_MASK		0x00020000L
- #define mmHDP_MEM_POWER_CTRL_BASE_IDX	0
-+
-+/* for Vega20/arcturus regiter offset change */
-+#define	mmROM_INDEX_VG20				0x00e4
-+#define	mmROM_INDEX_VG20_BASE_IDX			0
-+#define	mmROM_DATA_VG20					0x00e5
-+#define	mmROM_DATA_VG20_BASE_IDX			0
-+
- /*
-  * Indirect registers accessor
-  */
-@@ -304,6 +311,8 @@ static bool soc15_read_bios_from_rom(struct amdgpu_device *adev,
- {
- 	u32 *dw_ptr;
- 	u32 i, length_dw;
-+	uint32_t rom_index_offset;
-+	uint32_t rom_data_offset;
- 
- 	if (bios == NULL)
- 		return false;
-@@ -316,11 +325,23 @@ static bool soc15_read_bios_from_rom(struct amdgpu_device *adev,
- 	dw_ptr = (u32 *)bios;
- 	length_dw = ALIGN(length_bytes, 4) / 4;
- 
-+	switch (adev->asic_type) {
-+	case CHIP_VEGA20:
-+	case CHIP_ARCTURUS:
-+		rom_index_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_INDEX_VG20);
-+		rom_data_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_DATA_VG20);
-+		break;
-+	default:
-+		rom_index_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_INDEX);
-+		rom_data_offset = SOC15_REG_OFFSET(SMUIO, 0, mmROM_DATA);
-+		break;
-+	}
-+
- 	/* set rom index to 0 */
--	WREG32(SOC15_REG_OFFSET(SMUIO, 0, mmROM_INDEX), 0);
-+	WREG32(rom_index_offset, 0);
- 	/* read out the rom data */
- 	for (i = 0; i < length_dw; i++)
--		dw_ptr[i] = RREG32(SOC15_REG_OFFSET(SMUIO, 0, mmROM_DATA));
-+		dw_ptr[i] = RREG32(rom_data_offset);
- 
- 	return true;
- }
--- 
-2.20.1
+Without this patch:
 
+  # perf probe -l \*
+    probe_perf:map__map_ip (on perf_sample__fprintf_brstackoff:21@
+    probe_perf:map__map_ip (on perf_sample__fprintf_brstackoff:25@
+    probe_perf:map__map_ip (on append_inlines:12@util/machine.c in
+    probe_perf:map__map_ip (on unwind_entry:19@util/machine.c in /
+    probe_perf:map__map_ip (on map__map_ip@util/map.h in /home/mhi
+    probe_perf:map__map_ip (on map__map_ip@util/map.h in /home/mhi
+  # perf probe -d \*
+  "*" does not hit any event.
+    Error: Failed to delete events. Reason: No such file or directory (Code: -2)
+
+With it:
+
+  # perf probe -d \*
+  Removed event: probe_perf:map__map_ip
+  #
+
+Fixes: 72363540c009 ("perf probe: Support multiprobe event")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Reported-by: He Zhe <zhe.he@windriver.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/158287666197.16697.7514373548551863562.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index 0f5fda11675f..8c852948513e 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -206,6 +206,9 @@ static struct strlist *__probe_file__get_namelist(int fd, bool include_group)
+ 		} else
+ 			ret = strlist__add(sl, tev.event);
+ 		clear_probe_trace_event(&tev);
++		/* Skip if there is same name multi-probe event in the list */
++		if (ret == -EEXIST)
++			ret = 0;
+ 		if (ret < 0)
+ 			break;
+ 	}
 
 
