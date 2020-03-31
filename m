@@ -7,45 +7,57 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCC8C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A78AC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6CE20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A5C20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645713;
-	bh=LUr+Qy3SYx/y4w3WfYIPeBIObF+JeJjDiX67mmvdWiM=;
+	s=default; t=1585645715;
+	bh=0YWN7uw21TRiOC+QdCdepE6qoKwvoYs7NgnThVS7TJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTVNlT3xmk8Bh27xZcF/9ngaLmK8S33pVXX5gRI25Jt7f2tWv2hSRG7I/DWW02sWB
-	 xdE4gPVMc5uXB5tZLsRNW5XNjwDpelM6zZzawD/i+Ixr0bZrOq5moc+QKa/fm0/8ln
-	 b82v0jcdWwxPzdso9ZtmfvT5twlqEeBKgtK2Bfcs=
+	b=SzX/LUPoLQdDIEDxm1XSa3UxS5XLs8fC0aXi9030LN42tOfZ7xLHnNu2maK3289Qn
+	 EPdNEfaoPz+0WU1umRrxti4t2ilf+z+E2+qr+zQZv0DLXBF8qAKtCS8j56+fBTV+Qm
+	 v8COmJeVUgX2PrT9OH9HkDv/N8Yjd0RzssoYbwoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbgCaJI2 (ORCPT
+        id S1731363AbgCaJId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:08:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:08:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731127AbgCaJIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:08:25 -0400
+        id S1730570AbgCaJIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:08:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8538A2072E;
-        Tue, 31 Mar 2020 09:08:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AB4620787;
+        Tue, 31 Mar 2020 09:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645705;
-        bh=LUr+Qy3SYx/y4w3WfYIPeBIObF+JeJjDiX67mmvdWiM=;
+        s=default; t=1585645711;
+        bh=0YWN7uw21TRiOC+QdCdepE6qoKwvoYs7NgnThVS7TJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L5n4ExNBQqTVI0W8EnUglYyLDkR9ZTBGaG8VhR5FL86TNVOZOEbH4iQ9AsKfQVPOa
-         nLqYfxQkVIVAoS6rsCeXvK3r0YSpPPPIjSLv7Qs5i5k7gPkYtHe/gWpCY0VBFRj/WC
-         NdhYqhQNINXDsyDw4xYuKTiFjAkiXCbVrskJLtfc=
+        b=ikkR2CbCmz25jxnslqQraa/S+8H+9Co9d68kJCFlII/SabMcbt/NNaqwksfcA8CR+
+         FtxSg2gDshXMtHdE9/J6MDVTfKVsCpkGLDvK24mqjB+R3X/xN8DPIYMv3FZWOt14y9
+         5EPXNaVkaFwhIcVFRCvzl04cOmx2HRx5I6xHBXdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 138/170] netfilter: nft_fwd_netdev: allow to redirect to ifb via ingress
-Date:   Tue, 31 Mar 2020 10:59:12 +0200
-Message-Id: <20200331085438.148415210@linuxfoundation.org>
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 113/170] mm/sparse: fix kernel crash with pfn_section_valid check
+Date:   Tue, 31 Mar 2020 10:58:47 +0200
+Message-Id: <20200331085436.185695146@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -58,38 +70,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit bcfabee1afd99484b6ba067361b8678e28bbc065 upstream.
+commit b943f045a9af9fd02f923e43fe8d7517e9961701 upstream.
 
-Set skb->tc_redirected to 1, otherwise the ifb driver drops the packet.
-Set skb->tc_from_ingress to 1 to reinject the packet back to the ingress
-path after leaving the ifb egress path.
+Fix the crash like this:
 
-This patch inconditionally sets on these two skb fields that are
-meaningful to the ifb driver. The existing forward action is guaranteed
-to run from ingress path.
+    BUG: Kernel NULL pointer dereference on read at 0x00000000
+    Faulting instruction address: 0xc000000000c3447c
+    Oops: Kernel access of bad area, sig: 11 [#1]
+    LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+    CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
+    ...
+    NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
+    LR [c000000000088354] vmemmap_free+0x144/0x320
+    Call Trace:
+       section_deactivate+0x220/0x240
+       __remove_pages+0x118/0x170
+       arch_remove_memory+0x3c/0x150
+       memunmap_pages+0x1cc/0x2f0
+       devm_action_release+0x30/0x50
+       release_nodes+0x2f8/0x3e0
+       device_release_driver_internal+0x168/0x270
+       unbind_store+0x130/0x170
+       drv_attr_store+0x44/0x60
+       sysfs_kf_write+0x68/0x80
+       kernfs_fop_write+0x100/0x290
+       __vfs_write+0x3c/0x70
+       vfs_write+0xcc/0x240
+       ksys_write+0x7c/0x140
+       system_call+0x5c/0x68
 
-Fixes: 39e6dea28adc ("netfilter: nf_tables: add forward expression to the netdev family")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+The crash is due to NULL dereference at
+
+	test_bit(idx, ms->usage->subsection_map);
+
+due to ms->usage = NULL in pfn_section_valid()
+
+With commit d41e2f3bd546 ("mm/hotplug: fix hot remove failure in
+SPARSEMEM|!VMEMMAP case") section_mem_map is set to NULL after
+depopulate_section_mem().  This was done so that pfn_page() can work
+correctly with kernel config that disables SPARSEMEM_VMEMMAP.  With that
+config pfn_to_page does
+
+	__section_mem_map_addr(__sec) + __pfn;
+
+where
+
+  static inline struct page *__section_mem_map_addr(struct mem_section *section)
+  {
+	unsigned long map = section->section_mem_map;
+	map &= SECTION_MAP_MASK;
+	return (struct page *)map;
+  }
+
+Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is
+used to check the pfn validity (pfn_valid()).  Since section_deactivate
+release mem_section->usage if a section is fully deactivated,
+pfn_valid() check after a subsection_deactivate cause a kernel crash.
+
+  static inline int pfn_valid(unsigned long pfn)
+  {
+  ...
+	return early_section(ms) || pfn_section_valid(ms, pfn);
+  }
+
+where
+
+  static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+  {
+	int idx = subsection_map_index(pfn);
+
+	return test_bit(idx, ms->usage->subsection_map);
+  }
+
+Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is
+freed.  For architectures like ppc64 where large pages are used for
+vmmemap mapping (16MB), a specific vmemmap mapping can cover multiple
+sections.  Hence before a vmemmap mapping page can be freed, the kernel
+needs to make sure there are no valid sections within that mapping.
+Clearing the section valid bit before depopulate_section_memap enables
+this.
+
+[aneesh.kumar@linux.ibm.com: add comment]
+  Link: http://lkml.kernel.org/r/20200326133235.343616-1-aneesh.kumar@linux.ibm.comLink: http://lkml.kernel.org/r/20200325031914.107660-1-aneesh.kumar@linux.ibm.com
+Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_fwd_netdev.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ mm/sparse.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/netfilter/nft_fwd_netdev.c
-+++ b/net/netfilter/nft_fwd_netdev.c
-@@ -28,6 +28,10 @@ static void nft_fwd_netdev_eval(const st
- 	struct nft_fwd_netdev *priv = nft_expr_priv(expr);
- 	int oif = regs->data[priv->sreg_dev];
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -791,6 +791,12 @@ static void section_deactivate(unsigned
+ 			ms->usage = NULL;
+ 		}
+ 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
++		/*
++		 * Mark the section invalid so that valid_section()
++		 * return false. This prevents code from dereferencing
++		 * ms->usage array.
++		 */
++		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+ 	}
  
-+	/* These are used by ifb only. */
-+	pkt->skb->tc_redirected = 1;
-+	pkt->skb->tc_from_ingress = 1;
-+
- 	nf_fwd_netdev_egress(pkt, oif);
- 	regs->verdict.code = NF_STOLEN;
- }
+ 	if (section_is_early && memmap)
 
 
