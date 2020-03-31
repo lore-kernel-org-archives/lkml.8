@@ -2,122 +2,103 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6497C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AE9C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D2A208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:37:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585669060;
-	bh=ggMm14KxXbY1mqecFv6pjM06I08zLyhqEuowrT/NApQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ujvuBCl5/vWiz2qPiy2vnr4nWotZUxAYjIhDgwonLqnbbkLhSnjvYlbrVk32/G+lI
-	 H4tyCjZHrz0AeU10EzqR7rtdaszzNkFVkUFruOfyXqq6CrFWb4dNIelONeQqyiYeOq
-	 XWJ6SLB2t7g4UGK1CrGQaAyKCUJHzpMswF9a+utw=
+	by mail.kernel.org (Postfix) with ESMTP id 57FB621473
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yx4mVs54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbgCaPhj (ORCPT
+        id S1731038AbgCaPia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbgCaPhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:37:39 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BB6420848;
-        Tue, 31 Mar 2020 15:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585669057;
-        bh=ggMm14KxXbY1mqecFv6pjM06I08zLyhqEuowrT/NApQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mGxhCt07fuJo88YbZTobkEe3mxir9Y88c89S+a3IWrsUceux7kjcXqDx/3NZydT5G
-         5vFmczVbdKf8IpGOlX3+Mm/NEAHVaIG0ejNjlPjvue8c4zRqmyOm0Q+d4Jj2hUanFA
-         yd7KuK/Vq2D2O7Ll3dGhk4HpgSSLabTT2hKfbZuA=
-Date:   Tue, 31 Mar 2020 17:37:35 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 6/9] lockdep: Introduce wait-type checks
-Message-ID: <20200331153734.GA6979@lenoir>
-References: <20200313174701.148376-1-bigeasy@linutronix.de>
- <20200313174701.148376-7-bigeasy@linutronix.de>
- <CAMuHMdU6s1F=DnaguZXrV4sWzEO-EqTaGQ=N7zyhgGq1M+Q1Ug@mail.gmail.com>
- <20200331145515.GR20730@hirez.programming.kicks-ass.net>
- <20200331152850.GI20760@hirez.programming.kicks-ass.net>
+        Tue, 31 Mar 2020 11:38:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41378 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbgCaPia (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:38:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=+gitPeRArdeA4p5pxqRTKKxGvRcHRsv7ZXkWGjwTB3M=; b=Yx4mVs54sJKW+wKK/7UWMK7Dvl
+        mm58Z5IMAkRBe1mjDlvif+ypG91g7ziA5DdWq8WcA2c0cBWfXqtd0JBgq3N8jqVto2VF5hbU7EOwE
+        q0Qc4WAzIpz67Q1v4X5L9PEHTWOj8uHnLc3sp25TooXlmnPpy5YuOONnn/tHaWhzMG8UdjzbRPF7B
+        liboyLjieOJ8z51KkVdDuYq8jYeKRR84WfVNBWCzxS+AM4dAy6Zk1sZl6vZKTFW6PUzq1YMtFVxnZ
+        Lo+POvvHdnUnLls+203QyYxDQKq4tpJdurI0X8ww3okBrX4ApMKOQn3Zp81m4D6VR/ykxOTT49yVd
+        j7n5UqRA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJIy6-0003mK-G1; Tue, 31 Mar 2020 15:38:22 +0000
+Subject: Re: [PATCH v4 7/7] tpm: tpm_tis: add tpm_tis_i2c driver
+To:     amirmizi6@gmail.com, Eyal.Cohen@nuvoton.com,
+        jarkko.sakkinen@linux.intel.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-8-amirmizi6@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a7365e83-06bf-e264-2b4d-3f34cc04ae2f@infradead.org>
+Date:   Tue, 31 Mar 2020 08:38:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331152850.GI20760@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200331113207.107080-8-amirmizi6@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:28:50PM +0200, Peter Zijlstra wrote:
-> On Tue, Mar 31, 2020 at 04:55:15PM +0200, Peter Zijlstra wrote:
-> > On Tue, Mar 31, 2020 at 03:25:21PM +0200, Geert Uytterhoeven wrote:
-> > > On arm64 (e.g. R-Car H3 ES2.0):
-> > > 
-> > > +=============================
-> > > +[ BUG: Invalid wait context ]
-> > > +5.6.0-salvator-x-09423-gb29514ba13a9c459-dirty #679 Not tainted
-> > > +-----------------------------
-> > > +swapper/5/0 is trying to lock:
-> > > +ffffff86ff76f398 (&pool->lock){..-.}-{3:3}, at: __queue_work+0x134/0x430
-> > > +other info that might help us debug this:
-> > > +1 lock held by swapper/5/0:
-> > > + #0: ffffffc01103a4a0 (rcu_read_lock){....}-{1:3}, at:
-> > > rcu_lock_acquire.constprop.59+0x0/0x38
-> > > +stack backtrace:
-> > > +CPU: 5 PID: 0 Comm: swapper/5 Not tainted
-> > > 5.6.0-salvator-x-09423-gb29514ba13a9c459-dirty #679
-> > > +Hardware name: Renesas Salvator-X 2nd version board based on r8a77951 (DT)
-> > > +Call trace:
-> > > + dump_backtrace+0x0/0x180
-> > > + show_stack+0x14/0x1c
-> > > + dump_stack+0xdc/0x12c
-> > > + __lock_acquire+0x37c/0xf9c
-> > > + lock_acquire+0x258/0x288
-> > > + _raw_spin_lock+0x34/0x48
-> > > + __queue_work+0x134/0x430
-> > > + queue_work_on+0x48/0x8c
-> > > + timers_update_nohz+0x24/0x2c
-> > > + tick_nohz_activate.isra.15.part.16+0x5c/0x80
-> > > + tick_setup_sched_timer+0xe0/0xf0
-> > > + hrtimer_run_queues+0x88/0xf8
-> > 
-> > So this is complaining that it cannot take pool->lock, which is
-> > WAIT_CONFIG while holding RCU, which presents a WAIT_CONFIG context.
-> > 
-> > This seems to implicate something is amiss, because that should be
-> > allowed. The thing it doesn't print is the context, which in the above
-> > case is a (hrtimer) interrupt.
-> > 
-> > I suspect this really is a hardirq context and the next patch won't cure
-> > things. It looks nohz (full?) related.
-> > 
-> > Frederic, can you untangle this?
-> 
-> Sebastian is right; I completely forgot the workqueue thing was still
-> pending.
-> 
+Hi--
 
-Ok good, because I had no better answer :)
+On 3/31/20 4:32 AM, amirmizi6@gmail.com wrote:
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index aacdeed..b482bbf 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
+>           If you have a H1 secure module running Cr50 firmware on SPI bus,
+>           say Yes and it will be accessible from within Linux.
+> 
+> +config TCG_TIS_I2C
+> +       tristate "TPM I2C Interface Specification"
+> +       depends on I2C
+> +        depends on CRC_CCITT
+> +       select TCG_TIS_CORE
+> +       ---help---
+> +         If you have a TPM security chip which is connected to a regular
+> +         I2C master (i.e. most embedded platforms) that is compliant with the
+> +         TCG TPM I2C Interface Specification say Yes and it will be accessible from
+> +         within Linux. To compile this driver as a module, choose  M here;
+> +         the module will be called tpm_tis_i2c.
+> +
+
+Please do as Documenatation/process/coding-style.rst says:
+
+"Lines under a ``config`` definition
+are indented with one tab, while help text is indented an additional two
+spaces."
+
+>  config TCG_TIS_I2C_ATMEL
+>         tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+>         depends on I2C
+
+
+thanks.
+-- 
+~Randy
+
