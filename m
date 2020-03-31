@@ -2,123 +2,128 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8962CC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7D5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4672078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:24:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="P8qu2lfT"
+	by mail.kernel.org (Postfix) with ESMTP id E13332078B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbgCaPY1 (ORCPT
+        id S1730781AbgCaPYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:24:27 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38381 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgCaPY1 (ORCPT
+        Tue, 31 Mar 2020 11:24:54 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:48790 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730521AbgCaPYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:24:27 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c7so483175wrx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 08:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=6PtH4wzWMiH5JmxAt904ilpPuqtvXlZEsu04wa6si/k=;
-        b=P8qu2lfTpI9t1V10h5AQtX1pY3rsMg/xWtmYiBZTO8QwsPjlZ48gV9R/FoFJmeJWE0
-         6N9UVOHFvpnOaSH+7UMgcWEAHiG7XS3XGxcYf4DGWJ7JjdHdvf5MBmfs7Auv00Bns8rd
-         7JaAJ9XeB4dUlJrtAGbvmVJaQ85yG05sxP8nA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=6PtH4wzWMiH5JmxAt904ilpPuqtvXlZEsu04wa6si/k=;
-        b=cBI7fcR1wtTPLYoWirbJgSZo5MfMO8RrGCLFCThlNeTLXjo0B/J6F2LtX+DowxGqfS
-         JDbHjD9RXZfYIyYqMkdmJjtWpwoggkrH6vrtxlCMW9cztWjIeQ1LANero4wI9a3KcOjR
-         4F9kwpOD2J3SWiSBJMgxQ9/7PoTmK16hS9a5nMjpMkHxhDWtdAZSHt+Lc/coAt7nrp20
-         H/AfEGdmeom4aedAiWRs9Go+5paWVzx3xvsEnbnljDX70tpVU1HMwpX1clzbC12LR55S
-         ap081BFrEHWOS6o54cuOCICEd4OLQ4sGa7wqZll8w1WffzNuMxf4fKX7M7edaUIF9aIw
-         H4JA==
-X-Gm-Message-State: ANhLgQ088tHxjPkAG8wd+vig1wKSep1T+HZQ+x2wqmcNTMyKNwcRkMSd
-        BH8bbSXfQ9DiJE9PD9H6P5ho2g==
-X-Google-Smtp-Source: ADFU+vtjJzo7Yj3p4RVYdBmh1TnRGKbfJ5JHTuYQ43/PgPGuhocYfvkpQbIjq4OT3R2JrnctZq7ssQ==
-X-Received: by 2002:adf:9465:: with SMTP id 92mr21029231wrq.122.1585668265184;
-        Tue, 31 Mar 2020 08:24:25 -0700 (PDT)
-Received: from localhost ([2620:10d:c092:180::1:27bd])
-        by smtp.gmail.com with ESMTPSA id c7sm27386436wrn.49.2020.03.31.08.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 08:24:24 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 16:24:24 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Jakub Kicinski <kuba@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] mm, memcg: Do not high throttle allocators based on
- wraparound
-Message-ID: <20200331152424.GA1019937@chrisdown.name>
+        Tue, 31 Mar 2020 11:24:53 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by gardel.0pointer.net (Postfix) with ESMTP id A1BF6E814E3;
+        Tue, 31 Mar 2020 17:24:51 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 4D7F6160704; Tue, 31 Mar 2020 17:24:51 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 17:24:51 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Karel Zak <kzak@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200331152451.GG27959@gardel-login>
+References: <1445647.1585576702@warthog.procyon.org.uk>
+ <20200330211700.g7evnuvvjenq3fzm@wittgenstein>
+ <CAJfpegtjmkJUSqORFv6jw-sYbqEMh9vJz64+dmzWhATYiBmzVQ@mail.gmail.com>
+ <20200331083430.kserp35qabnxvths@ws.net.home>
+ <CAJfpegsNpabFwoLL8HffNbi_4DuGMn4eYpFc6n7223UFnEPAbA@mail.gmail.com>
+ <20200331122554.GA27469@gardel-login>
+ <CAJfpegvo=T0VuXsPnvo83H3RqwHLE-9Q=dTZKWxnBKMykfJcNA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAJfpegvo=T0VuXsPnvo83H3RqwHLE-9Q=dTZKWxnBKMykfJcNA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+On Di, 31.03.20 17:10, Miklos Szeredi (miklos@szeredi.hu) wrote:
 
-If a cgroup violates its memory.high constraints, we may end
-up unduly penalising it. For example, for the following hierarchy:
+> On Tue, Mar 31, 2020 at 2:25 PM Lennart Poettering <mzxreary@0pointer.de> wrote:
+> >
+> > On Di, 31.03.20 10:56, Miklos Szeredi (miklos@szeredi.hu) wrote:
+> >
+> > > On Tue, Mar 31, 2020 at 10:34 AM Karel Zak <kzak@redhat.com> wrote:
+> > > >
+> > > > On Tue, Mar 31, 2020 at 07:11:11AM +0200, Miklos Szeredi wrote:
+> > > > > On Mon, Mar 30, 2020 at 11:17 PM Christian Brauner
+> > > > > <christian.brauner@ubuntu.com> wrote:
+> > > > >
+> > > > > > Fwiw, putting down my kernel hat and speaking as someone who maintains
+> > > > > > two container runtimes and various other low-level bits and pieces in
+> > > > > > userspace who'd make heavy use of this stuff I would prefer the fd-based
+> > > > > > fsinfo() approach especially in the light of across namespace
+> > > > > > operations, querying all properties of a mount atomically all-at-once,
+> > > > >
+> > > > > fsinfo(2) doesn't meet the atomically all-at-once requirement.
+> > > >
+> > > > I guess your /proc based idea have exactly the same problem...
+> > >
+> > > Yes, that's exactly what I wanted to demonstrate: there's no
+> > > fundamental difference between the two API's in this respect.
+> > >
+> > > > I see two possible ways:
+> > > >
+> > > > - after open("/mnt", O_PATH) create copy-on-write object in kernel to
+> > > >   represent mount node -- kernel will able to modify it, but userspace
+> > > >   will get unchanged data from the FD until to close()
+> > > >
+> > > > - improve fsinfo() to provide set (list) of the attributes by one call
+> > >
+> > > I think we are approaching this from the wrong end.   Let's just
+> > > ignore all of the proposed interfaces for now and only concentrate on
+> > > what this will be used for.
+> > >
+> > > Start with a set of use cases by all interested parties.  E.g.
+> > >
+> > >  - systemd wants to keep track attached mounts in a namespace, as well
+> > > as new detached mounts created by fsmount()
+> > >
+> > >  - systemd need to keep information (such as parent, children, mount
+> > > flags, fs options, etc) up to date on any change of topology or
+> > > attributes.
+> >
+> > - We also have code that recursively remounts r/o or unmounts some
+> >   directory tree (with filters),
+>
+> Recursive remount-ro is clear.  What is not clear is whether you need
+> to do this for hidden mounts (not possible from userspace without a
+> way to disable mount following on path lookup).  Would it make sense
+> to add a kernel API for recursive setting of mount flags?
 
-A:   max high, 20 usage
-A/B: 9 high, 10 usage
-A/C: max high, 10 usage
+I would be very happy about an explicit kernel API for recursively
+toggling the MS_RDONLY. But for many usecases in systemd we need the
+ability to filter some subdirs and leave them as is, so while helpful
+we'd have to keep the userspace code we currently have anyway.
 
-We would end up doing the following calculation below when calculating
-high delay for A/B:
+> What exactly is this unmount with filters?  Can you give examples?
 
-A/B: 10 - 9 = 1...
-A:   20 - PAGE_COUNTER_MAX = 21, so set max_overage to 21.
+Hmm, actually it's only the r/o remount that has filters, not the
+unmount. Sorry for the confusion. And the r/o remount with filters
+just means: "remount everything below X read-only except for X/Y and
+X/Z/A"...
 
-This gets worse with higher disparities in usage in the parent.
+Lennart
 
-I have no idea how this disappeared from the final version of the patch,
-but it is certainly Not Good(tm). This wasn't obvious in testing
-because, for a simple cgroup hierarchy with only one child, the result
-is usually roughly the same. It's only in more complex hierarchies that
-things go really awry (although still, the effects are limited to a
-maximum of 2 seconds in schedule_timeout_killable at a maximum).
-
-[chris@chrisdown.name: changelog]
-
-Fixes: e26733e0d0ec ("mm, memcg: throttle allocators based on ancestral memory.high")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Chris Down <chris@chrisdown.name>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: stable@vger.kernel.org # 5.4.x
----
- mm/memcontrol.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index eecf003b0c56..75a978307863 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2336,6 +2336,9 @@ static unsigned long calculate_high_delay(struct mem_cgroup *memcg,
- 		usage = page_counter_read(&memcg->memory);
- 		high = READ_ONCE(memcg->high);
- 
-+		if (usage <= high)
-+			continue;
-+
- 		/*
- 		 * Prevent division by 0 in overage calculation by acting as if
- 		 * it was a threshold of 1 page
--- 
-2.26.0
-
+--
+Lennart Poettering, Berlin
