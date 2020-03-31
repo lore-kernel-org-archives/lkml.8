@@ -2,55 +2,52 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5065BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85182C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBC920772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CE12072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646168;
-	bh=QFo3f5dKw0ML/cGTIFXx6DLG5G17WknWZvb9oUuvWnU=;
+	s=default; t=1585646172;
+	bh=FsfqxzjScZhe4FgujMhbEo2vZ75ikspigoZUz49IIUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e2a0RbjgI7P5vQ3tdR0kGxRSXd9oDeuHoPSJfV9Q/soHxahQIANlP7gXKRNs2oTfD
-	 tXDeq05zx6rSs8iC+olDJUiI9zisExDzooBdLI5wXkLH9UP48Q/EtLMur8c3dqCNBs
-	 LT97BFYRjPZTsburH7ai/7rrOpv5Bg5C24dWMX1g=
+	b=0B0a89e18Lh0pPbxnC7RHDAOzwLgWLH2DMxi3/leNTPbZ714XPyejMzKamkf6EAIq
+	 8lo17iN3qStx2ECSc3juYXXCq1ifUn0D00qjRKJaYXFAt6Wfwg2jlq2sZMSf6J194C
+	 OlueKX/fQQ8OuyKhjw9SHSiNuvZUWsCZzEQhaxhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbgCaJQG (ORCPT
+        id S1731626AbgCaJQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36632 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:16:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730302AbgCaJQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:16:03 -0400
+        id S1731324AbgCaJQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:16:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7948F20772;
-        Tue, 31 Mar 2020 09:16:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B52120675;
+        Tue, 31 Mar 2020 09:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585646162;
-        bh=QFo3f5dKw0ML/cGTIFXx6DLG5G17WknWZvb9oUuvWnU=;
+        s=default; t=1585646166;
+        bh=FsfqxzjScZhe4FgujMhbEo2vZ75ikspigoZUz49IIUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/QMxHUXrlOSP70qr8N0kcsQQX7EW8R5+JabZIK77fdxkYq6egBtxVmbeCzfo7Fj6
-         KN7D8Tpzy8KBmbXMFIyZitjZI30+lmpKwBtSnmeZyi3Dzlf9dM3OE7Q+Lu5T6ZM5oH
-         euUb+OYD+5VVGYfuGJ/sLR74XO7vs5Ah/ExxBm/Y=
+        b=YG4SnUUp/dWWgOiuKJbaDIcWl7OXHKMs2n50Wjq210L9ivorVbn99+UfxLoqETo+u
+         WLKrYox5ufSOxurxJy+dv7AOLo9VQi0IbSbCc8U160R4khq9APlQKWZIan0Z9EQn6R
+         g0R8cJcsl/eCApFwa+FKvAbq8HtAibTLXkkoDpgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naohiro Aota <naohiro.aota@wdc.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qais Youef <qais.yousef@arm.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 100/155] mm/swapfile.c: move inode_lock out of claim_swapfile
-Date:   Tue, 31 Mar 2020 10:59:00 +0200
-Message-Id: <20200331085429.725748904@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 065/155] iommu/vt-d: Silence RCU-list debugging warnings
+Date:   Tue, 31 Mar 2020 10:58:25 +0200
+Message-Id: <20200331085425.760016508@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085418.274292403@linuxfoundation.org>
 References: <20200331085418.274292403@linuxfoundation.org>
@@ -63,202 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naohiro Aota <naohiro.aota@wdc.com>
+From: Qian Cai <cai@lca.pw>
 
-commit d795a90e2ba024dbf2f22107ae89c210b98b08b8 upstream.
+[ Upstream commit f5152416528c2295f35dd9c9bd4fb27c4032413d ]
 
-claim_swapfile() currently keeps the inode locked when it is successful,
-or the file is already swapfile (with -EBUSY).  And, on the other error
-cases, it does not lock the inode.
+Similar to the commit 02d715b4a818 ("iommu/vt-d: Fix RCU list debugging
+warnings"), there are several other places that call
+list_for_each_entry_rcu() outside of an RCU read side critical section
+but with dmar_global_lock held. Silence those false positives as well.
 
-This inconsistency of the lock state and return value is quite confusing
-and actually causing a bad unlock balance as below in the "bad_swap"
-section of __do_sys_swapon().
+ drivers/iommu/intel-iommu.c:4288 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1ad/0xb97
 
-This commit fixes this issue by moving the inode_lock() and IS_SWAPFILE
-check out of claim_swapfile().  The inode is unlocked in
-"bad_swap_unlock_inode" section, so that the inode is ensured to be
-unlocked at "bad_swap".  Thus, error handling codes after the locking now
-jumps to "bad_swap_unlock_inode" instead of "bad_swap".
+ drivers/iommu/dmar.c:366 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+  #0: ffffffff935892c8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x125/0xb97
 
-    =====================================
-    WARNING: bad unlock balance detected!
-    5.5.0-rc7+ #176 Not tainted
-    -------------------------------------
-    swapon/4294 is trying to release lock (&sb->s_type->i_mutex_key) at: __do_sys_swapon+0x94b/0x3550
-    but there are no more locks to release!
+ drivers/iommu/intel-iommu.c:5057 RCU-list traversed in non-reader section!!
+ 1 lock held by swapper/0/1:
+  #0: ffffffffa71892c8 (dmar_global_lock){++++}, at: intel_iommu_init+0x61a/0xb13
 
-    other info that might help us debug this:
-    no locks held by swapon/4294.
-
-    stack backtrace:
-    CPU: 5 PID: 4294 Comm: swapon Not tainted 5.5.0-rc7-BTRFS-ZNS+ #176
-    Hardware name: ASUS All Series/H87-PRO, BIOS 2102 07/29/2014
-    Call Trace:
-     dump_stack+0xa1/0xea
-     print_unlock_imbalance_bug.cold+0x114/0x123
-     lock_release+0x562/0xed0
-     up_write+0x2d/0x490
-     __do_sys_swapon+0x94b/0x3550
-     __x64_sys_swapon+0x54/0x80
-     do_syscall_64+0xa4/0x4b0
-     entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    RIP: 0033:0x7f15da0a0dc7
-
-Fixes: 1638045c3677 ("mm: set S_SWAPFILE on blockdev swap devices")
-Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Qais Youef <qais.yousef@arm.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200206090132.154869-1-naohiro.aota@wdc.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/swapfile.c |   39 +++++++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ drivers/iommu/dmar.c | 3 ++-
+ include/linux/dmar.h | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -2892,10 +2892,6 @@ static int claim_swapfile(struct swap_in
- 		p->bdev = inode->i_sb->s_bdev;
- 	}
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index 6a9a1b987520f..9e393b9c50911 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -371,7 +371,8 @@ dmar_find_dmaru(struct acpi_dmar_hardware_unit *drhd)
+ {
+ 	struct dmar_drhd_unit *dmaru;
  
--	inode_lock(inode);
--	if (IS_SWAPFILE(inode))
--		return -EBUSY;
--
- 	return 0;
- }
+-	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list)
++	list_for_each_entry_rcu(dmaru, &dmar_drhd_units, list,
++				dmar_rcu_check())
+ 		if (dmaru->segment == drhd->segment &&
+ 		    dmaru->reg_base_addr == drhd->address)
+ 			return dmaru;
+diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+index d3ea390336f39..f397e52c2d9de 100644
+--- a/include/linux/dmar.h
++++ b/include/linux/dmar.h
+@@ -74,11 +74,13 @@ extern struct list_head dmar_drhd_units;
+ 				dmar_rcu_check())
  
-@@ -3150,17 +3146,22 @@ SYSCALL_DEFINE2(swapon, const char __use
- 	mapping = swap_file->f_mapping;
- 	inode = mapping->host;
+ #define for_each_active_drhd_unit(drhd)					\
+-	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
++	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
++				dmar_rcu_check())			\
+ 		if (drhd->ignored) {} else
  
--	/* If S_ISREG(inode->i_mode) will do inode_lock(inode); */
- 	error = claim_swapfile(p, inode);
- 	if (unlikely(error))
- 		goto bad_swap;
+ #define for_each_active_iommu(i, drhd)					\
+-	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list)		\
++	list_for_each_entry_rcu(drhd, &dmar_drhd_units, list,		\
++				dmar_rcu_check())			\
+ 		if (i=drhd->iommu, drhd->ignored) {} else
  
-+	inode_lock(inode);
-+	if (IS_SWAPFILE(inode)) {
-+		error = -EBUSY;
-+		goto bad_swap_unlock_inode;
-+	}
-+
- 	/*
- 	 * Read the swap header.
- 	 */
- 	if (!mapping->a_ops->readpage) {
- 		error = -EINVAL;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 	page = read_mapping_page(mapping, 0, swap_file);
- 	if (IS_ERR(page)) {
-@@ -3172,14 +3173,14 @@ SYSCALL_DEFINE2(swapon, const char __use
- 	maxpages = read_swap_header(p, swap_header, inode);
- 	if (unlikely(!maxpages)) {
- 		error = -EINVAL;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 
- 	/* OK, set up the swap map and apply the bad block list */
- 	swap_map = vzalloc(maxpages);
- 	if (!swap_map) {
- 		error = -ENOMEM;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 
- 	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
-@@ -3204,7 +3205,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 					GFP_KERNEL);
- 		if (!cluster_info) {
- 			error = -ENOMEM;
--			goto bad_swap;
-+			goto bad_swap_unlock_inode;
- 		}
- 
- 		for (ci = 0; ci < nr_cluster; ci++)
-@@ -3213,7 +3214,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 		p->percpu_cluster = alloc_percpu(struct percpu_cluster);
- 		if (!p->percpu_cluster) {
- 			error = -ENOMEM;
--			goto bad_swap;
-+			goto bad_swap_unlock_inode;
- 		}
- 		for_each_possible_cpu(cpu) {
- 			struct percpu_cluster *cluster;
-@@ -3227,13 +3228,13 @@ SYSCALL_DEFINE2(swapon, const char __use
- 
- 	error = swap_cgroup_swapon(p->type, maxpages);
- 	if (error)
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 
- 	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
- 		cluster_info, maxpages, &span);
- 	if (unlikely(nr_extents < 0)) {
- 		error = nr_extents;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 	/* frontswap enabled? set up bit-per-page map for frontswap */
- 	if (IS_ENABLED(CONFIG_FRONTSWAP))
-@@ -3273,7 +3274,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 
- 	error = init_swap_address_space(p->type, maxpages);
- 	if (error)
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 
- 	/*
- 	 * Flush any pending IO and dirty mappings before we start using this
-@@ -3283,7 +3284,7 @@ SYSCALL_DEFINE2(swapon, const char __use
- 	error = inode_drain_writes(inode);
- 	if (error) {
- 		inode->i_flags &= ~S_SWAPFILE;
--		goto bad_swap;
-+		goto bad_swap_unlock_inode;
- 	}
- 
- 	mutex_lock(&swapon_mutex);
-@@ -3308,6 +3309,8 @@ SYSCALL_DEFINE2(swapon, const char __use
- 
- 	error = 0;
- 	goto out;
-+bad_swap_unlock_inode:
-+	inode_unlock(inode);
- bad_swap:
- 	free_percpu(p->percpu_cluster);
- 	p->percpu_cluster = NULL;
-@@ -3315,6 +3318,7 @@ bad_swap:
- 		set_blocksize(p->bdev, p->old_block_size);
- 		blkdev_put(p->bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
- 	}
-+	inode = NULL;
- 	destroy_swap_extents(p);
- 	swap_cgroup_swapoff(p->type);
- 	spin_lock(&swap_lock);
-@@ -3326,13 +3330,8 @@ bad_swap:
- 	kvfree(frontswap_map);
- 	if (inced_nr_rotate_swap)
- 		atomic_dec(&nr_rotate_swap);
--	if (swap_file) {
--		if (inode) {
--			inode_unlock(inode);
--			inode = NULL;
--		}
-+	if (swap_file)
- 		filp_close(swap_file, NULL);
--	}
- out:
- 	if (page && !IS_ERR(page)) {
- 		kunmap(page);
+ #define for_each_iommu(i, drhd)						\
+-- 
+2.20.1
+
 
 
