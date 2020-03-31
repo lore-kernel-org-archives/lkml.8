@@ -2,165 +2,142 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AA4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8295C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA2120578
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7735020578
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:16:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="f5XXO1Wf"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rMZVZmFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbgCaNO4 (ORCPT
+        id S1730864AbgCaNQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:14:56 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:43248 "EHLO mail.pqgruber.com"
+        Tue, 31 Mar 2020 09:16:15 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60348 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730543AbgCaNO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:14:56 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id DBD62C63E20;
-        Tue, 31 Mar 2020 15:14:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1585660494;
-        bh=KYSATk71pJk6+doq/qSuxOdl/3paQs7CI/Dv0CuLfIU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f5XXO1WfibTi27ZwQixsdR01AyS9C7i8UMmwSOJ10R2wZ8t7Ld8rPtSky+h/eEWIu
-         8SI+msTqXidjZrtr9JtPVh0OU8UiqugqcY10Nx75+5M/V1FipCWy9PsnbpKhUD76Gd
-         DdZAW8ypwyKiAd1EvphKBHMhRSuRuiazwO7xuVaw=
-Date:   Tue, 31 Mar 2020 15:14:52 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com
-Subject: Re: (EXT) Re: [PATCH 2/4] pwm: pca9685: remove ALL_LED PWM channel
-Message-ID: <20200331131452.GA6448@workstation.tuxnet>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226135229.24929-2-matthias.schiffer@ew.tq-group.com>
- <20200330130757.GC2431644@ulmo>
- <20200330133450.GA1530@workstation.tuxnet>
- <20200330154036.GB2817345@ulmo>
- <20200330160744.GA777@workstation.tuxnet>
- <452f4e03cc2a998c7a903251f99931935b1f872f.camel@ew.tq-group.com>
+        id S1730543AbgCaNQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:16:15 -0400
+Received: from zn.tnic (p200300EC2F0C0900E4DD424C85240D45.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:900:e4dd:424c:8524:d45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63FBE1EC0CE4;
+        Tue, 31 Mar 2020 15:16:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585660572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1Scx1x8rSpYx1k4WbB+KFUIoBzS4PNnsA/vPnSnULrY=;
+        b=rMZVZmFDBZFwnZKWPfk/C5wN5xF0oa+6qsyU2v7Dg+Z/ezln4w+3mgXLhZz8x+1/kh9GEH
+        p0c3K9Q8kHzZmGeHrCrfkleWSza5tuw2sJeCNgc6yRcmH/zYgg1rhTQ3BSnY/XS0PT61Ou
+        ywsgbtIHRLfkY4RshaZXzuIeiU3wKBM=
+Date:   Tue, 31 Mar 2020 15:16:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 11/70] x86/boot/compressed/64: Disable red-zone usage
+Message-ID: <20200331131606.GC29131@zn.tnic>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-12-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <452f4e03cc2a998c7a903251f99931935b1f872f.camel@ew.tq-group.com>
+In-Reply-To: <20200319091407.1481-12-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:09:37PM +0200, Matthias Schiffer wrote:
-> On Mon, 2020-03-30 at 18:07 +0200, Clemens Gruber wrote:
-> > On Mon, Mar 30, 2020 at 05:40:36PM +0200, Thierry Reding wrote:
-> > > On Mon, Mar 30, 2020 at 03:34:50PM +0200, Clemens Gruber wrote:
-> > > > Hi,
-> > > > 
-> > > > On Mon, Mar 30, 2020 at 03:07:57PM +0200, Thierry Reding wrote:
-> > > > > On Wed, Feb 26, 2020 at 02:52:27PM +0100, Matthias Schiffer
-> > > > > wrote:
-> > > > > > The interaction of the ALL_LED PWM channel with the other
-> > > > > > channels was
-> > > > > > not well-defined. As the ALL_LED feature does not seem very
-> > > > > > useful and
-> > > > > > it was making the code significantly more complex, simply
-> > > > > > remove it.
-> > > > > > 
-> > > > > > Signed-off-by: Matthias Schiffer <
-> > > > > > matthias.schiffer@ew.tq-group.com>
-> > > > > > ---
-> > > > > >  drivers/pwm/pwm-pca9685.c | 115 ++++++--------------------
-> > > > > > ------------
-> > > > > >  1 file changed, 17 insertions(+), 98 deletions(-)
-> > > > > 
-> > > > > Applied, thanks.
-> > > > > 
-> > > > > Thierry
-> > > > 
-> > > > I was not reading the mailing list in the last weeks, so I only
-> > > > saw the
-> > > > patch today.
-> > > > 
-> > > > We are using the ALL_LED channel in production to reduce the
-> > > > delay when
-> > > > all 16 PWM outputs need to be set to the same duty cycle.
-> > > > 
-> > > > I am not sure it is a good idea to remove this feature.
-> > > 
-> > > Can you specify what platform this is and where the code is that
-> > > does
-> > > this. I can't really find any device tree users of this and I don't
-> > > know
-> > > if there's a good way to find out what other users there are, but
-> > > this
-> > > isn't the first time this driver has created confusion, so please
-> > > help
-> > > collect some more information about it's use so we can avoid this
-> > > in the
-> > > future.
-> > 
-> > The platform is ARM, it's a custom board with an NXP i.MX6. The
-> > device
-> > tree is not upstreamed. As there are multiple companies involved
-> > in changes to this driver, I assume that it is in use, even though
-> > there
-> > are no in-tree users.
-> > Also: As you can set the ALL channel from userspace, it will be very
-> > difficult to find out how often the ALL feature is being used
-> > somewhere.
-> > 
-> > > 
-> > > I'll back out this particular patch since you're using it. Can you
-> > > give
-> > > the other three patches a try to see if they work for you?
-> > 
-> > Thanks! I saw your other mail. Patch 1 looks good to me. I will look
-> > at
-> > the new version of patches 3 and 4 and test them when they appear on
-> > the
-> > list.
-> > 
-> > Clemens
+On Thu, Mar 19, 2020 at 10:13:08AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> Thanks for the feedback, I'll have to respin my cleanup patches without
-> removing this feature.
+> The x86-64 ABI defines a red-zone on the stack:
 > 
-> I wonder if we can come up with a sane semantics of how ALL_LED is
-> supposed to interact with the individual channels? Optimally, changes
-> made via ALL_LED should be reflected in the state of the other channels
-> including their sysfs files, but I'm not sure if current APIs can
-> support this cleanly. It might make sense to make requesting/exporting
-> individual channels and ALL_LED mutually exclusive, so the state of a
-> requested PWM can't change when it's supposed to be under exclusive
-> control of one user. Of course, such a change can break existing users
-> as well...
+>   The 128-byte area beyond the location pointed to by %rsp is
+>   considered to be reserved and shall not be modified by signal or
+>   interrupt handlers. 10 Therefore, functions may use this area for
+			^^
 
-I agree that it would be a good idea to make this exclusive. This change
-would at least not break our application, because we unexport the
-ALL_LED channel before requesting an individual channel.
-Not sure about other users, but using both individual and ALL channels
-at the same time is probably not a reasonable/sane usecase..
+That 10 is the footnote number from the pdf. :)
 
-> And what about state propagation in the other direction - how should
-> the ALL_LED state reflect changes made to the other channels' settings?
-> On the hardware side, the ALL_LED registers are write-only, as there
-> aren't any sane values that could be returned.
+>   temporary data that is not needed across function calls. In
+>   particular, leaf functions may use this area for their entire stack
+>   frame, rather than adjusting the stack pointer in the prologue and
+>   epilogue. This area is known as the red zone.
+> 
+> This is not compatible with exception handling, so disable it for the
 
-According to the datashet (7.3.4) the individual registers are filled if
-the ALL_LED channel is used. However, in .disable, the OFF registers are
-reset to 0. (And the ON registers are not used, except for the FULL_ON
-bit)
-So there should not be any side effects, as long as the access to the
-ALL_LED channel is made exclusive and the user has to free it before he
-can request individual channels.
+I could use some blurb as to what the problem is, for future reference.
 
-Another quirk is the same prescaler/period for all channels. But I am
-not sure what we can do about that. Applications might already depend on
-the fact that the last set period wins.
+> pre-decompression boot code.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/boot/Makefile            | 2 +-
+>  arch/x86/boot/compressed/Makefile | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+> index 012b82fc8617..8f55e4ce1ccc 100644
+> --- a/arch/x86/boot/Makefile
+> +++ b/arch/x86/boot/Makefile
+> @@ -65,7 +65,7 @@ clean-files += cpustr.h
+>  
+>  # ---------------------------------------------------------------------------
+>  
+> -KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
+> +KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -mno-red-zone
+>  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+>  KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+>  GCOV_PROFILE := n
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 26050ae0b27e..e186cc0b628d 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -30,7 +30,7 @@ KBUILD_CFLAGS := -m$(BITS) -O2
+>  KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+>  KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+>  cflags-$(CONFIG_X86_32) := -march=i386
+> -cflags-$(CONFIG_X86_64) := -mcmodel=small
+> +cflags-$(CONFIG_X86_64) := -mcmodel=small -mno-red-zone
+>  KBUILD_CFLAGS += $(cflags-y)
+>  KBUILD_CFLAGS += -mno-mmx -mno-sse
+>  KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
+> @@ -87,7 +87,7 @@ endif
+>  
+>  vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+>  
+> -$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar -mno-red-zone
+> +$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar
+>  
+>  vmlinux-objs-$(CONFIG_EFI_STUB) += $(obj)/eboot.o \
+>  	$(objtree)/drivers/firmware/efi/libstub/lib.a
 
-Clemens
+That last chunk is not needed anymore after
+
+c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into libstub")
+
+AFAICT.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
