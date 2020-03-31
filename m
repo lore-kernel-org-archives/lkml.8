@@ -2,149 +2,67 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFF8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58EAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C68E20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 02:59:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4R7Th8x"
+	by mail.kernel.org (Postfix) with ESMTP id A70CA20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 03:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585623613;
+	bh=hLbfkTwGG4OlxUYGvVI8u+brKn5MuyYEBbDZswRhEs0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=iiXIFo7A9yP8WqiMeDqXFd7pVm+t5q55ZRF9qfXOc7MWHU5WaymRLaQMtbZyVNdAy
+	 qztFdoYBcPs9VchAH2xeqKtZzUkoKXTe8hFIq61xEYkei9valCz/oKQ6aUa3i7YunT
+	 dOFske6wVjniITidgZxvZ0XtAoZ4v25ynMChqKLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbgCaC7N (ORCPT
+        id S1730132AbgCaDAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 30 Mar 2020 22:59:13 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:20008 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730278AbgCaC7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:59:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585623552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jPbiSea3iKmgsPhW5d6VdEOeNmJ89GIMDsuQYNvPcfk=;
-        b=Z4R7Th8xzYuwBVNhPCwjK5yzxrDjv7tjy52oSIfbQTfVnnVv4x5qqMvVSxIcJTraxDWS8T
-        rCtdkFZUrzyARBPtt4Zz7Hbt01RWmvY68KNEjlwZvKklUqEwJcmhiiHlQdybkXkvQoBCWI
-        mt+TaLzaeZcn5dYGx9tfxPabfecjaqA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-wAoZLjByNXaQepDoMefmhw-1; Mon, 30 Mar 2020 22:59:08 -0400
-X-MC-Unique: wAoZLjByNXaQepDoMefmhw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72666800D5B;
-        Tue, 31 Mar 2020 02:59:06 +0000 (UTC)
-Received: from [10.72.12.115] (ovpn-12-115.pek2.redhat.com [10.72.12.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 31DCA19C58;
-        Tue, 31 Mar 2020 02:59:02 +0000 (UTC)
-Subject: Re: [RFC PATCH] tun: Don't put_page() for all negative return values
- from XDP program
-To:     Will Deacon <will@kernel.org>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        kernel-team@android.com, "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <edumazet@google.com>
-References: <20200330161234.12777-1-will@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <fd4d792f-32df-953a-a076-c09ed5dea573@redhat.com>
-Date:   Tue, 31 Mar 2020 10:59:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200330161234.12777-1-will@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Mar 2020 23:00:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729680AbgCaDAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 30 Mar 2020 23:00:12 -0400
+Subject: Re: [GIT pull] irq/core for v5.7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585623611;
+        bh=hLbfkTwGG4OlxUYGvVI8u+brKn5MuyYEBbDZswRhEs0=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=pB4vbyFRfQ8zT3n1+urO4YhF4jYsi6Snv97DHCbd7z1Eur7pR/NtD0kyb6Jpp2gVT
+         ENo1RwQbRuaWYsOVG1xTeOkeOty5pmSP0WCGGkuFnWwZt/YRd7XOD78IxhiEqIP84A
+         gB529RInNDZrkIo0ALumC5abKmVpWhXhrxK1mpjs=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <158557962955.22376.9136086165862170511.tglx@nanos.tec.linutronix.de>
+References: <158557962955.22376.9136086165862170511.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <158557962955.22376.9136086165862170511.tglx@nanos.tec.linutronix.de>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-2020-03-30
+X-PR-Tracked-Commit-Id: 8a13b02a010a743ea0725e9a5454f42cddb65cf0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2d385336afcc43732aef1d51528c03f177ecd54e
+Message-Id: <158562361189.8590.6155892416047441359.pr-tracker-bot@kernel.org>
+Date:   Tue, 31 Mar 2020 03:00:11 +0000
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Mon, 30 Mar 2020 14:47:09 -0000:
 
-On 2020/3/31 =E4=B8=8A=E5=8D=8812:12, Will Deacon wrote:
-> When an XDP program is installed, tun_build_skb() grabs a reference to
-> the current page fragment page if the program returns XDP_REDIRECT or
-> XDP_TX. However, since tun_xdp_act() passes through negative return
-> values from the XDP program, it is possible to trigger the error path b=
-y
-> mistake and accidentally drop a reference to the fragments page without
-> taking one, leading to a spurious free. This is believed to be the caus=
-e
-> of some KASAN use-after-free reports from syzbot [1], although without =
-a
-> reproducer it is not possible to confirm whether this patch fixes the
-> problem.
->
-> Ensure that we only drop a reference to the fragments page if the XDP
-> transmit or redirect operations actually fail.
->
-> [1] https://syzkaller.appspot.com/bug?id=3De76a6af1be4acd727ff6bbca6698=
-33f98cbf5d95
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-core-2020-03-30
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2d385336afcc43732aef1d51528c03f177ecd54e
 
-I think the patch fixes the issue reported. Since I can see the warn of=20
-bad page state in put_page().
+Thank you!
 
-
->
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Jason Wang <jasowang@redhat.com>
-> CC: Eric Dumazet <edumazet@google.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->
-> Sending as RFC because I've not been able to confirm that this fixes an=
-ything.
->
->   drivers/net/tun.c | 10 ++++++----
->   1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> index 650c937ed56b..9de9b7d8aedd 100644
-> --- a/drivers/net/tun.c
-> +++ b/drivers/net/tun.c
-> @@ -1715,8 +1715,12 @@ static struct sk_buff *tun_build_skb(struct tun_=
-struct *tun,
->   			alloc_frag->offset +=3D buflen;
->   		}
->   		err =3D tun_xdp_act(tun, xdp_prog, &xdp, act);
-> -		if (err < 0)
-> -			goto err_xdp;
-> +		if (err < 0) {
-> +			if (act =3D=3D XDP_REDIRECT || act =3D=3D XDP_TX)
-> +				put_page(alloc_frag->page);
-> +			goto out;
-> +		}
-> +
->   		if (err =3D=3D XDP_REDIRECT)
->   			xdp_do_flush();
->   		if (err !=3D XDP_PASS)
-> @@ -1730,8 +1734,6 @@ static struct sk_buff *tun_build_skb(struct tun_s=
-truct *tun,
->  =20
->   	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
->  =20
-> -err_xdp:
-> -	put_page(alloc_frag->page);
->   out:
->   	rcu_read_unlock();
->   	local_bh_enable();
-
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-Thanks
-
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
