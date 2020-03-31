@@ -2,114 +2,89 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84061C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3C4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB0220658
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585646625;
-	bh=vhGI45rn2Ty8tXWcSB2nbLy+mTD6PsHxSUVxyGrjF3c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/++w9ArALt61LHIxwIN+55vLkFaRvD0v0AkJHAj/Wz1nSLgv5lYgUxxImBg4Wv5E
-	 GYjU78jPJBFC/rVcTwjbn7jhVB/BtT6MNYUjY9vPlLNTkEzzzzmWXNocYt8sglTiKv
-	 GssPVVfkfsw2Ml2B5SJa6Z2RsWMgZIMweX+8xSpw=
+	by mail.kernel.org (Postfix) with ESMTP id 50AF820658
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:25:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EGDV7s8g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgCaJBY (ORCPT
+        id S1730458AbgCaJZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:01:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730541AbgCaJBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:01:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 31 Mar 2020 05:25:25 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23220 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729950AbgCaJZY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:25:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585646724; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=kk3gelDtGqtub3FfbL2Y4uYECNKiRmP6VyIqdrBef9Q=; b=EGDV7s8g894/MQ/vGp9KBn1bjNY6Rw3SDR9MBQYCF24hYPeBnxATD5rK80xaCwRb41QajZBy
+ 6bQV8QSwVFTvAAISp8dPmDhTvsHCtjJjt5Re8DUn7TYGFd+ijU4yRGtNKaL6PjrXQtC2uHfn
+ 5QJikL4tzS2lsGtyDKtdgO6Y0qk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e830c7c.7f323232fae8-smtp-out-n03;
+ Tue, 31 Mar 2020 09:25:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8131EC43636; Tue, 31 Mar 2020 09:25:15 +0000 (UTC)
+Received: from [192.168.1.4] (unknown [117.98.150.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA82420B1F;
-        Tue, 31 Mar 2020 09:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645278;
-        bh=vhGI45rn2Ty8tXWcSB2nbLy+mTD6PsHxSUVxyGrjF3c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fltoT55GJNsZfsyN6kV92NsZzltQVtaMKYmxNgIq1R+N//ThBirsSGCyGJohl8Oas
-         wgVG8hJo4TlliqlPRe2gX3vv5cbWhTbdgO04y4qQhyOF53+tVio154OLyfQTyRM/kt
-         jHlTp/7eqNtkrYRKobMODmed9HO+t8OESmcdc7wU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.6 19/23] media: ov519: add missing endpoint sanity checks
-Date:   Tue, 31 Mar 2020 10:59:31 +0200
-Message-Id: <20200331085316.636106929@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
-References: <20200331085308.098696461@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: gkohli)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D7D8C433F2;
+        Tue, 31 Mar 2020 09:25:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D7D8C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject:  Query : Regarding csdb barrier with llvm compiler
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, jannh@google.com
+References: <6ffd3fc0-4d9f-364b-4ab0-b90147689334@codeaurora.org>
+Message-ID: <77aec890-d514-8e13-2322-55e61f587236@codeaurora.org>
+Date:   Tue, 31 Mar 2020 14:55:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <6ffd3fc0-4d9f-364b-4ab0-b90147689334@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+<Resending again, saw some failure messages on previous mail>
 
-commit 998912346c0da53a6dbb71fab3a138586b596b30 upstream.
+Hi ,
 
-Make sure to check that we have at least one endpoint before accessing
-the endpoint array to avoid dereferencing a NULL-pointer on stream
-start.
+Right now we are using array_index_nospec api in linux kernel and using 
+in the place where we think speculative out of bound access may happen.
 
-Note that these sanity checks are not redundant as the driver is mixing
-looking up altsettings by index and by number, which need not coincide.
+This thing is applicable with GCC tool chain, as for GCC we have to use 
+builtin api to place csdb in the required places.
 
-Fixes: 1876bb923c98 ("V4L/DVB (12079): gspca_ov519: add support for the ov511 bridge")
-Fixes: b282d87332f5 ("V4L/DVB (12080): gspca_ov519: Fix ov518+ with OV7620AE (Trust spacecam 320)")
-Cc: stable <stable@vger.kernel.org>     # 2.6.31
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Recently llvm toolchain comes with hardening option which will place 
+csdb in the required places, Do we have any plan to use this thing in 
+linux kernel.
 
----
- drivers/media/usb/gspca/ov519.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Regards
+Gaurav
 
---- a/drivers/media/usb/gspca/ov519.c
-+++ b/drivers/media/usb/gspca/ov519.c
-@@ -3477,6 +3477,11 @@ static void ov511_mode_init_regs(struct
- 		return;
- 	}
- 
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	reg_w(sd, R51x_FIFO_PSIZE, packet_size >> 5);
- 
-@@ -3603,6 +3608,11 @@ static void ov518_mode_init_regs(struct
- 		return;
- 	}
- 
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	ov518_reg_w32(sd, R51x_FIFO_PSIZE, packet_size & ~7, 2);
- 
-
-
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
