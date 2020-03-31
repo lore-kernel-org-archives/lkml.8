@@ -2,136 +2,173 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2572EC2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C6EC2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07070207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7708320838
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 12:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730730AbgCaMUl (ORCPT
+        id S1730761AbgCaMWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:20:41 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33677 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730343AbgCaMUk (ORCPT
+        Tue, 31 Mar 2020 08:22:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43034 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730426AbgCaMWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:20:40 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m14so18751468oic.0;
-        Tue, 31 Mar 2020 05:20:40 -0700 (PDT)
+        Tue, 31 Mar 2020 08:22:02 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g27so21681592ljn.10;
+        Tue, 31 Mar 2020 05:21:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=26HG4zFgugkC6qzQClM9onqv7r2JKUuvQ00Kk/wIJGg=;
-        b=FXONAX0YpRtypaPZSQ3Wl+XD3tf3+JlmJqeg/M7PVGwJ6lhsSmO/xszNzUo0ZFEH7C
-         QjxAU8sb/l/5ym0tVfMZevO3fuPtaEFq85Fyk2lVDUXwUP/HlqVcG48C9u6aavlD558u
-         1Vewn+ET4rtfukpG+ZfadBHSRNXtnrqQn/FtO6yVKF93tL7NSimv4+dkpi2gcW138oCD
-         RQGPOKWeO1w9JBNtgn9C/wdWlI++DmlEZOWM/zvcpmQC7ISgpnQr5lh22R6QvPNXNGjK
-         XrwehwHU6Zw/wm4wf6FDTvQmBI0rS2XsGxCZwcOKeSuMEFIJ/guK4Yd24c+YFUFKVn3F
-         b6mQ==
-X-Gm-Message-State: ANhLgQ2xFzXvel5n+ntHqhCCoNZvzNaqaHADOoajsLlkkhRwQs0b308P
-        JLbe/qqQRP8IMU/ueFHAlEJiAOrh37Wb4DAReH8=
-X-Google-Smtp-Source: ADFU+vvJjq6t9HN5MU6KVtgDmhuo8qjq6hgZzLnrDwNCTZl1iXr18JU6fsxiGfnMFt3tCqOJSDnBy8jyMBNiZHZ3piU=
-X-Received: by 2002:aca:cdd1:: with SMTP id d200mr1719981oig.153.1585657239572;
- Tue, 31 Mar 2020 05:20:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200222014038.180923-1-saravanak@google.com> <20200222014038.180923-6-saravanak@google.com>
-In-Reply-To: <20200222014038.180923-6-saravanak@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 31 Mar 2020 14:20:27 +0200
-Message-ID: <CAMuHMdW_pvt1b6Y8e5j0Q5yDFMsg5z61upOo+gFaq7zf1F0V6w@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] of: property: Delete of_devlink kernel commandline option
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OWA9l6ZKGY8kl5iklzCmzeBR+Ymrqu0e6ctC5uxsn6s=;
+        b=BUzA/q+pExyOKNBtJuMhtdaeYR7HTa6oBLlz2SUET0F8Yg2plnzF45ACM3LyfhesYU
+         nkUEsO4ESWxi5huWQ/jcdtNKzFtREeVcU3wScp5dIMChvFU8aNPrmmL1lqM66rPDESGT
+         W26WT3RHTJ9VNkLrYOwR/Y26X8k/Q9xDZgL8d/WKPhZjqDJt1ujF5YbE4uuA78HdZgia
+         5oPoXSbfgi1oz6lA8Oaep8nHf/Tl9JFOTPc+u4/PJzcLv/Fe81SUspjQTNKr9FStcUT/
+         LmSZSIRVYicmtLIQ1DcJHzPCzz/Tz44u/OOyMKgwvEQ+hJggJ4cTxWuv7FVfSpI9KDbX
+         1RNw==
+X-Gm-Message-State: AGi0PubWWW1MNwQl1SQxuAPqgjkyrHgNstry19f1EuaucLakPmEdd+mU
+        eFm+XVLg1MJ1x9CqujJyMxU=
+X-Google-Smtp-Source: APiQypKSgx7xihoSEmJxYnnKrSIeBwuUI+aQ9UtGTwWyvPhulKprAqOR8L07FgelQAXNT1LTnefgng==
+X-Received: by 2002:a2e:9b41:: with SMTP id o1mr10102642ljj.145.1585657318818;
+        Tue, 31 Mar 2020 05:21:58 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id g18sm7703606lfh.1.2020.03.31.05.21.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 05:21:58 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 15:21:50 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sebastian Reichel <sre@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: [PATCH v7 01/10] dt-bindings: battery: add new battery parameters
+Message-ID: <8827238b51029886dea56ce3141b216361a3f299.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
+Add:
 
-On Sat, Feb 22, 2020 at 2:41 AM Saravana Kannan <saravanak@google.com> wrote:
-> With the addition of fw_devlink kernel commandline option, of_devlink is
-> redundant and not useful anymore. So, delete it.
->
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
+ - trickle-charge-current-microamp:
 
-Thanks for your patch!
+Some chargers have 3 charging stages. First one when battery is almost
+empty is often called as trickle-charge. Last state when battery has been
+"woken up" is usually called as fast-charge. In addition to this some
+chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
+pre-charge. Some batteries can benefit from this 3-phase charging
+[citation needed].
 
-This is now commit e94f62b7140fa3da ("of: property: Delete of_devlink
-kernel commandline option") upstream.
+Introduce trickle-charge-current-microamp so that batteries can give
+charging current limit for all three states.
 
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3299,12 +3299,6 @@
->                         This can be set from sysctl after boot.
->                         See Documentation/admin-guide/sysctl/vm.rst for details.
->
-> -       of_devlink      [OF, KNL] Create device links between consumer and
-> -                       supplier devices by scanning the devictree to infer the
-> -                       consumer/supplier relationships.  A consumer device
-> -                       will not be probed until all the supplier devices have
-> -                       probed successfully.
-> -
->         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
->                         See Documentation/debugging-via-ohci1394.txt for more
->                         info.
+ - precharge-upper-limit-microvolt:
 
-While I agree with the thunk above...
+When battery voltage has reached certain limit we change from
+trickle-charge to next charging state (pre-charge for BD99954). Allow
+battery to specify this limit.
 
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 15fc9315f1a7..f104f15b57fb 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1299,15 +1299,9 @@ static int of_link_to_suppliers(struct device *dev,
->         return ret;
->  }
->
-> -static bool of_devlink;
-> -core_param(of_devlink, of_devlink, bool, 0);
-> -
->  static int of_fwnode_add_links(const struct fwnode_handle *fwnode,
->                                struct device *dev)
->  {
-> -       if (!of_devlink)
-> -               return 0;
-> -
->         if (unlikely(!is_of_node(fwnode)))
->                 return 0;
+ - re-charge-voltage-microvolt:
 
-... I have some reservations about removing the actual code.
-The "of_devlink" kernel parameter was supported in v5.5 and v5.6, so
-removing its support may silently break some setups.
+Allow giving a battery specific voltage limit for chargers which can
+automatically re-start charging when battery has discharghed down to
+this limit.
 
-Is this likely to happen?
-Do we need a compatibility fallback that warns to user to update his kernel
-command line?
+- over-voltage-threshold-microvolt
 
-Gr{oetje,eeting}s,
+Allow specifying voltage threshold after which the battery is assumed to
+be faulty.
 
-                        Geert
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+
+No changes from v6
+
+ Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index 3049cf88bdcf..5e29595edd74 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
+ behavior should a replacement that changes the battery type occur
+ without a corresponding update to the dtb.
+ 
++Please note that not all charger drivers respect all of the properties.
++
+ Required Properties:
+  - compatible: Must be "simple-battery"
+ 
+ Optional Properties:
++ - over-voltage-threshold-microvolt: battery over-voltage limit
++ - re-charge-voltage-microvolt: limit to automatically start charging again
+  - voltage-min-design-microvolt: drained battery voltage
+  - voltage-max-design-microvolt: fully charged battery voltage
+  - energy-full-design-microwatt-hours: battery design energy
+  - charge-full-design-microamp-hours: battery design capacity
++ - trickle-charge-current-microamp: current for trickle-charge phase
+  - precharge-current-microamp: current for pre-charge phase
++ - precharge-upper-limit-microvolt: limit when to change to constant charging
+  - charge-term-current-microamp: current for charge termination phase
+  - constant-charge-current-max-microamp: maximum constant input current
+  - constant-charge-voltage-max-microvolt: maximum constant input voltage
+-- 
+2.21.0
+
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
