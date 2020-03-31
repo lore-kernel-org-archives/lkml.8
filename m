@@ -2,110 +2,121 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9592DC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F68C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 619752072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="aMJKJj34"
+	by mail.kernel.org (Postfix) with ESMTP id B80C92072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgCaHWk (ORCPT
+        id S1729853AbgCaH1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:22:40 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17871 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726216AbgCaHWk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:22:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585639329;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=P8yT1CgxrAul7A4Ou3JPBhH5oCc1p9yACdVHSWJAzlI=;
-        b=aMJKJj3483avgBLx9X6/dYbx5RWYTJJYsVvrbzAuUKIKQkfOEMJI7ijypS0AuytQ
-        sK6U/TF6uQgGc/rt0kM7Q1u6w8Ncxvnr9QT+2Hp7Zs2f0OpAeN0q0d7NWs21jt6lBBC
-        CFHVnQ54CmgdqH8H4z48/3sk9maSg78WZapwCTrU=
-Received: from [10.233.233.252] (183.156.33.130 [183.156.33.130]) by mx.zoho.com.cn
-        with SMTPS id 1585639326353648.5257961231661; Tue, 31 Mar 2020 15:22:06 +0800 (CST)
-Date:   Tue, 31 Mar 2020 15:22:04 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c4520c91-5285-ca8d-c310-5354f3ef3cba@loongson.cn>
-References: <1585638006-19439-1-git-send-email-yangtiezhu@loongson.cn> <6A188705-D65C-4500-BD26-EB944EEF0B21@flygoat.com> <c4520c91-5285-ca8d-c310-5354f3ef3cba@loongson.cn>
+        Tue, 31 Mar 2020 03:27:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48644 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbgCaH1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:27:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 748BCAEA3;
+        Tue, 31 Mar 2020 07:27:28 +0000 (UTC)
+Subject: Re: [PATCH 3/3] kernel/hung_task convert hung_task_panic boot
+ parameter to sysctl
+To:     John Hubbard <jhubbard@nvidia.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-4-vbabka@suse.cz> <202003301042.97F3B00@keescook>
+ <13ae67d8-4b31-db20-7ba4-1602906a291e@nvidia.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <37b42835-6c4a-674b-9731-ecc9d0ff1703@suse.cz>
+Date:   Tue, 31 Mar 2020 09:27:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] MIPS: Loongson: Use CONFIG_NR_CPUS_DEFAULT_64 to support more CPUs
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <F32ABF2B-9FA4-4850-9CD5-70C09C1BBAD1@flygoat.com>
-X-ZohoCNMailClient: External
+In-Reply-To: <13ae67d8-4b31-db20-7ba4-1602906a291e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/31/20 2:34 AM, John Hubbard wrote:
+> On 3/30/20 10:43 AM, Kees Cook wrote:
+> ...
+>>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>>> index 81ff626fc700..e0b8840404a1 100644
+>>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>>> @@ -1457,7 +1457,7 @@
+>>>   			[KNL] Should the hung task detector generate panics.
+>>>   			Format: <integer>
+>>>   
+>>> -			A nonzero value instructs the kernel to panic when a
+>>> +			A value of 1 instructs the kernel to panic when a
+>>>   			hung task is detected. The default value is controlled
+>>>   			by the CONFIG_BOOTPARAM_HUNG_TASK_PANIC build-time
+>>>   			option. The value selected by this boot parameter can
+>>> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+>>> index 97eb0b552bf8..77b1b844b02b 100644
+>>> --- a/fs/proc/proc_sysctl.c
+>>> +++ b/fs/proc/proc_sysctl.c
+>>> @@ -1743,6 +1743,7 @@ struct sysctl_alias {
+>>>    */
+>>>   static const struct sysctl_alias sysctl_aliases[] = {
+>>>   	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+> 
+> 
+> Hi Vlastimil,
+> 
+> Maybe best to delete the above line? Because:
+> 
+>      a) it was added as an example, and now that you have a real use case in this patch,
+>         the example is no longer required, and
+> 
+>      b) numa_zonelist_order is deprecated, as a boot param. Adding support to it in this
+>         brand-new mechanism seems to be going a bit in the opposite direction of deprecation.
 
+Well, this aliases table is not the brand new mechanism, it's just for handling
+sysctls that also have a legacy boot param. numa_zonelist_order is such legacy
+boot param, so we can handle it here instead of its special handler. If we
+decide to remove it later, we can do that, but there is no user-visible effect
+on its deprecation by this series.
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8831=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883=
-:21:00, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->On 03/31/2020 03:05 PM, Jiaxun Yang wrote:
->
->>
->> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8831=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=883:00:06, Tiezhu Yang
-><yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->>> When I update the mainline kernel on the Loongson 2-way platform
->which
->>> has 8 CPUs, it only shows 4 CPUs due to NR_CPUS is 4, this is
->obviously
->>> wrong=2E
->>>
->>> In order to support more CPUs on the Loongson platform, it is better
->>> to use CONFIG_NR_CPUS_DEFAULT_64 instead of CONFIG_NR_CPUS_DEFAULT_4
->>> to specify the maximum number of CPUs which the kernel will support=2E
->>>
->>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
->> Would 16 be a better option?
->> We have only 4 way platform=2E
->
->There maybe have more than 4 cores per CPU or more than 4 ways
->in the future, so I think 64 is better, otherwise we need to
->modify this configuration once more=2E
+> And, I don't think you really want all the sysctls to be enabled as boot params, right? Your
 
-Ok, then
+The point of Patch 1 is very much so that all sysctls can be set using a boot
+param in the form of sysctl.foo.bar=baz
 
-Acked-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+> comment right above sysctl_aliases[] (shown in patch 2) sort of indicates that only some items
+> are meant to be both sysctl's and boot params. And that makes sense.
 
-Thanks=2E
+Patches 2+3 are only about handling the legacy boot params that have a sysctl
+counterpart.
 
->
->>
->>> ---
->>> arch/mips/Kconfig | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->>> index a1f973c=2E=2Ea0b11f5 100644
->>> --- a/arch/mips/Kconfig
->>> +++ b/arch/mips/Kconfig
->>> @@ -475,7 +475,7 @@ config MACH_LOONGSON64
->>> 	select ISA
->>> 	select I8259
->>> 	select IRQ_MIPS_CPU
->>> -	select NR_CPUS_DEFAULT_4
->>> +	select NR_CPUS_DEFAULT_64
->>> 	select USE_GENERIC_EARLY_PRINTK_8250
->>> 	select SYS_HAS_CPU_LOONGSON64
->>> 	select SYS_HAS_EARLY_PRINTK
+> In fact, the sysctl_aliases[] is (or could be) effectively the whitelist that Luis Chamberlain
+> was requesting in another thread. A whitelist makes good sense, for the reasons Luis listed.
+> As such, keeping it limited to items that we want, seems like the way to go, IMHO.
 
---=20
-Jiaxun Yang
+See my reply there once I send it :)
+
+> thanks,
+> 
+
