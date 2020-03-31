@@ -2,52 +2,56 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531EDC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F62BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAFE20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7FC20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645326;
-	bh=Z2eQWQQd09Y24ml54/ptlmTqM1M5MaTLo8/U7dsFmKg=;
+	s=default; t=1585645331;
+	bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dk80gWYbXdTbEu08Q7dqh7FySTAHa8wMB50s8r0QZvfFGKC8C1x6Iw6cekp0NqpeO
-	 Gi/iwy2/lpazXY/vP5msncueYWzQexW8Jopfd3urv7mkuyqpNoH75nIwAp9YRjFKQQ
-	 VgTSJy1KLzANfxxuJrp9ouhQOgOrAaBI5OaGOaOA=
+	b=KFjtbM34o6X0ewGOireOGvwGTc63k90eADv+LQI64QMESXGTBayhYQGaa6LcH3G5A
+	 UE19natdVToM69QyvtC1UZ4n5yAYMupG+Dqj3FPX76dUSdlXyXt6bCVlkzkks0P+Sn
+	 dWry3AJO9HrEGtwu0+GY5PzWZ8rVHK5zMeaplRyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730613AbgCaJCB (ORCPT
+        id S1730669AbgCaJCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41368 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730633AbgCaJB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:01:58 -0400
+        id S1730400AbgCaJCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:02:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F09720787;
-        Tue, 31 Mar 2020 09:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45AA1214DB;
+        Tue, 31 Mar 2020 09:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645318;
-        bh=Z2eQWQQd09Y24ml54/ptlmTqM1M5MaTLo8/U7dsFmKg=;
+        s=default; t=1585645327;
+        bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hh/L+sRinOYlhCRGjzYDq0aq9zJgsvjwoNHRZZKiIslKHhF6hq2myCqjdIOKtxC2s
-         TZJFy9nUETb/YDAYSpjwJtBGqgcMJgbMIC3pJl4gN+4oWCaGSUJgVqv0Bu+vl6ZNCh
-         KWHqBx6LCZpVO1ea4d4CCTvvmQGoBJKqLb/FIwN4=
+        b=R1y64ag5Z8R5SdgOe3Q/Sr4We1yrosBNCrw75/DwmUdT77o7gK6WRjzWQaEv8jCFY
+         oAtdbjz19Gfjwb9S0ykwi/n5razKDUp8UckuOrW3xC2o4n9+MwgVEiaXCoUAyKQ8Mp
+         ccGp9QLgHzqHxfdD5eqJ7o5m/9EJTr/nMyAm2M5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zh-yuan Ye <ye.zh-yuan@socionext.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 017/170] net: cbs: Fix software cbs to consider packet sending time
-Date:   Tue, 31 Mar 2020 10:57:11 +0200
-Message-Id: <20200331085425.913405950@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 002/170] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
+Date:   Tue, 31 Mar 2020 10:56:56 +0200
+Message-Id: <20200331085424.318600914@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -60,65 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zh-yuan Ye <ye.zh-yuan@socionext.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 961d0e5b32946703125964f9f5b6321d60f4d706 ]
+[ Upstream commit 43cc64e5221cc6741252b64bc4531dd1eefb733d ]
 
-Currently the software CBS does not consider the packet sending time
-when depleting the credits. It caused the throughput to be
-Idleslope[kbps] * (Port transmit rate[kbps] / |Sendslope[kbps]|) where
-Idleslope * (Port transmit rate / (Idleslope + |Sendslope|)) = Idleslope
-is expected. In order to fix the issue above, this patch takes the time
-when the packet sending completes into account by moving the anchor time
-variable "last" ahead to the send completion time upon transmission and
-adding wait when the next dequeue request comes before the send
-completion time of the previous packet.
+The busy timeout that is computed for each erase/trim/discard operation,
+can become quite long and may thus exceed the host->max_busy_timeout. If
+that becomes the case, mmc_do_erase() converts from using an R1B response
+to an R1 response, as to prevent the host from doing HW busy detection.
 
-changelog:
-V2->V3:
- - remove unnecessary whitespace cleanup
- - add the checks if port_rate is 0 before division
+However, it has turned out that some hosts requires an R1B response no
+matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
+that, if the R1B gets enforced, the host becomes fully responsible of
+managing the needed busy timeout, in one way or the other.
 
-V1->V2:
- - combine variable "send_completed" into "last"
- - add the comment for estimate of the packet sending
-
-Fixes: 585d763af09c ("net/sched: Introduce Credit Based Shaper (CBS) qdisc")
-Signed-off-by: Zh-yuan Ye <ye.zh-yuan@socionext.com>
-Reviewed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Tested-by: Faiz Abbas <faiz_abbas@ti.com>
+Tested-By: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_cbs.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/mmc/core/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/sched/sch_cbs.c
-+++ b/net/sched/sch_cbs.c
-@@ -181,6 +181,11 @@ static struct sk_buff *cbs_dequeue_soft(
- 	s64 credits;
- 	int len;
- 
-+	/* The previous packet is still being sent */
-+	if (now < q->last) {
-+		qdisc_watchdog_schedule_ns(&q->watchdog, q->last);
-+		return NULL;
-+	}
- 	if (q->credits < 0) {
- 		credits = timediff_to_credits(now - q->last, q->idleslope);
- 
-@@ -212,7 +217,12 @@ static struct sk_buff *cbs_dequeue_soft(
- 	credits += q->credits;
- 
- 	q->credits = max_t(s64, credits, q->locredit);
--	q->last = now;
-+	/* Estimate of the transmission of the last byte of the packet in ns */
-+	if (unlikely(atomic64_read(&q->port_rate) == 0))
-+		q->last = now;
-+	else
-+		q->last = now + div64_s64(len * NSEC_PER_SEC,
-+					  atomic64_read(&q->port_rate));
- 
- 	return skb;
- }
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index abf8f5eb0a1c8..26644b7ec13e3 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -1732,8 +1732,11 @@ static int mmc_do_erase(struct mmc_card *card, unsigned int from,
+ 	 * the erase operation does not exceed the max_busy_timeout, we should
+ 	 * use R1B response. Or we need to prevent the host from doing hw busy
+ 	 * detection, which is done by converting to a R1 response instead.
++	 * Note, some hosts requires R1B, which also means they are on their own
++	 * when it comes to deal with the busy timeout.
+ 	 */
+-	if (card->host->max_busy_timeout &&
++	if (!(card->host->caps & MMC_CAP_NEED_RSP_BUSY) &&
++	    card->host->max_busy_timeout &&
+ 	    busy_timeout > card->host->max_busy_timeout) {
+ 		cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+ 	} else {
+-- 
+2.20.1
+
 
 
