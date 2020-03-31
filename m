@@ -2,104 +2,177 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B54C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A84C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD4B2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99A120787
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:49:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkT9qPlS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgNI6YSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbgCaUrP (ORCPT
+        id S1730105AbgCaUtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:47:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52535 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730829AbgCaUrO (ORCPT
+        Tue, 31 Mar 2020 16:49:39 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37638 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbgCaUtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:47:14 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t8so700922wmi.2;
-        Tue, 31 Mar 2020 13:47:12 -0700 (PDT)
+        Tue, 31 Mar 2020 16:49:39 -0400
+Received: by mail-wm1-f65.google.com with SMTP id j19so4539598wmi.2;
+        Tue, 31 Mar 2020 13:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9pqr4LoLjaDLiZNl5zhVO+6x9Rgi07DZM6v33kTSHwU=;
-        b=mkT9qPlSEyyDPDBiySMwbTeFCtCft4P6CbyCSlSZrsnZQ0x7nybYiQd45J2GYRbKYw
-         QenF2i43dgS7P64TcUVHmb5sG7UaLyEpD8AcEwLhI2WJkzhV1/MuR4ImiV2/FfOGnCr6
-         BLzM8S7t2+EmBSerDbeY/Cp8Lo2plfJcdpd/4rH4K3xSwXTNbOUfITEDiG/6CljjXHu0
-         iNIKNrPCki/FiGrWTzswdtOdzMTYostyAJKuo4kxaj9rUvHl+SAuB+R0BJiUKcjBKqiK
-         xoKzH5rkuvsV076WRBLpnTbMiLIKBJmBkOyuY/C9wjsHzp1DnrodXKUFrLcCKaB3RZRH
-         YQqA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X2GGUtuqPV80x5b5ujQqCYnpRIHjyJKm9Pub6eW25UY=;
+        b=KgNI6YSOTCOMSyctOP/WId8uQxhFnY81WYm/UyoylUkWXdRWYswu073xDZ/VJvuYkC
+         ZRmPLPqvJh1uH7Wj9r3B36fh0oPexN2HByev8izzhSzaYLrJewWUi4WXii/9rfydQwOy
+         EfeomR0eDDw+wXcV03aJXHz8NxVp0FR9M99MP9YBmvM8ZpaKsziRrtVKtQ3h4nCOY5wy
+         ml0/Pr5roUkxLdacGfvDDElt+vwG/Vcx+t1U057WMzW4qii9/nfXeP1p9SMai/IbCo78
+         FuzbnZEVQek52TIj32M2AbY0NRhSmjU1NbzO0qxAKiaiOLqmF+F94Z+80Meh2j6uVr3Z
+         c+8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9pqr4LoLjaDLiZNl5zhVO+6x9Rgi07DZM6v33kTSHwU=;
-        b=RCZ+cpItRoc17V0vA4ldAOpmvGuAQtrSHbKkPQdifeUfcAnKX9p3yL/mCSJVXdz/vk
-         w3GeB7R/vyehL6yQ/kPvg5gyl3nWR+mjJOQkd5wc9e7y81zj7mDkEuELxg6u/ljSY4Qn
-         79ppjwvG1pwxWLYsP38XqvafBNPePhX1GactKBgFlk2C5oLjtYtHT712AT1yNg1Cnzq7
-         V1QvYSqdl2hq7RaJ9dSBd2HBQr7vomlimANgoIO1WNTLbRlqdMQE4Mgyqgok94foUcG+
-         Bk/p6Q0nhoxt+KetgpHvYenXHqSSs8oqNESjVyuyypUKtjp7YdsGSRyP3qLW5aGPWFub
-         WI1g==
-X-Gm-Message-State: AGi0PuYABpJD59AmIOkq/sZmqiqcdiC8T32cA994u1ktAAH8P4s7zbI/
-        ifjLwGaUNsehbJCaTuLizMyGiNu9pQ==
-X-Google-Smtp-Source: APiQypKILmhixo4bPDa+CotQ/wKbhVUvuBuivhTflRw7OPJSHU0jvlpRscLBsW37+C+3wmTAqH2mFQ==
-X-Received: by 2002:a1c:ba04:: with SMTP id k4mr684690wmf.165.1585687631534;
-        Tue, 31 Mar 2020 13:47:11 -0700 (PDT)
-Received: from ninjahost.lan (host-92-23-85-227.as13285.net. [92.23.85.227])
-        by smtp.gmail.com with ESMTPSA id o9sm28335491wrx.48.2020.03.31.13.47.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X2GGUtuqPV80x5b5ujQqCYnpRIHjyJKm9Pub6eW25UY=;
+        b=YI7lTGyK9hxgokJSbOqYn3YcyVcw50XEoGUMudcxFO1VbhrmJDA7kgp5jDB5yfaex0
+         +zGd3qK42LSojVtIY0AM4IuIpsPb59NOLxMkdl1BJBhXHO9bNDxbzNvDTShiZiP77DLu
+         D4PQ+M3vzlnbwgVMLWVRuj1jwaRf9wsGRWKLWmhyHRnd6cmXbVrWe4NATMrfjZacuSDj
+         0HTQ1NYvCaBvrPEMp7NwWLnocMEcfeCCG5P8A6v5NX9XLE8n4KtwVR63NhAUZyd3ty6L
+         zqfGXH+ovstPFqWlJCZrS29hTGBscBaOYGILHs2UaH/epypVF9eyNkNsj7bK2sXLHdWO
+         jd0g==
+X-Gm-Message-State: AGi0Pub4nvAHDwxSoZ4p77cxemI27385THufKw4t/VzFKx81ch+uKtUv
+        FSg+yoQFzQfQMh+LSHQPLbs=
+X-Google-Smtp-Source: APiQypKFgpXradD7Y/oeeIl8Qd75lgtfcDe3ZaaJBMJFR1mcRlrBcuch5uNeJOFa1ZvxT9koqqvepg==
+X-Received: by 2002:a1c:80d3:: with SMTP id b202mr733124wmd.8.1585687775099;
+        Tue, 31 Mar 2020 13:49:35 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id r3sm28241814wrm.35.2020.03.31.13.49.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:47:11 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     boqun.feng@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
-        infrastructure))
-Subject: [PATCH 1/7] fs: Add missing annotation for iput_final()
-Date:   Tue, 31 Mar 2020 21:46:37 +0100
-Message-Id: <20200331204643.11262-2-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200331204643.11262-1-jbi.octave@gmail.com>
-References: <0/7>
- <20200331204643.11262-1-jbi.octave@gmail.com>
+        Tue, 31 Mar 2020 13:49:30 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 22:49:29 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH v11 06/12] pwm: imx27: Use 64-bit division macro and
+ function
+Message-ID: <20200331204929.GC2954599@ulmo>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <5aae102e21c0e63ad2588ae1e174b48b06d25e96.1584667964.git.gurus@codeaurora.org>
+ <CAK8P3a0qUMMMDmbp2FM-7D-U0Ys_zv0paYguFeyifafZurndEw@mail.gmail.com>
+ <20200330204359.GB5107@codeaurora.org>
+ <CAK8P3a1VC6+0Tydm=BoK2NvHB1ZCPjE1Gfi-sTE5O-xnu3Ya3A@mail.gmail.com>
+ <20200331202058.GB25781@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PuGuTyElPB9bOcsM"
+Content-Disposition: inline
+In-Reply-To: <20200331202058.GB25781@codeaurora.org>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at iput_final()
 
-warning: context imbalance in iput_final() - unexpected unlock
+--PuGuTyElPB9bOcsM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The root cause is the missing annotation at input_final()
-Add the missing __releases(&inode->i_lock) annotation
+On Tue, Mar 31, 2020 at 01:20:58PM -0700, Guru Das Srinagesh wrote:
+> On Tue, Mar 31, 2020 at 05:24:52PM +0200, Arnd Bergmann wrote:
+> > On Mon, Mar 30, 2020 at 10:44 PM Guru Das Srinagesh
+> > <gurus@codeaurora.org> wrote:
+> > >
+> > > On Fri, Mar 20, 2020 at 06:09:39PM +0100, Arnd Bergmann wrote:
+> > > > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeauror=
+a.org> wrote:
+> > > >
+> > > > > @@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *c=
+hip, struct pwm_device *pwm,
+> > > > >
+> > > > >         period_cycles /=3D prescale;
+> > > > >         c =3D (unsigned long long)period_cycles * state->duty_cyc=
+le;
+> > > > > -       do_div(c, state->period);
+> > > > > -       duty_cycles =3D c;
+> > > > > +       duty_cycles =3D div64_u64(c, state->period);
+> > > > >
+> > > >
+> > > > This change looks fine, but I wonder if the code directly above it
+> > > >
+> > > >         c =3D clk_get_rate(imx->clk_per);
+> > > >         c *=3D state->period;
+> > > >         do_div(c, 1000000000);
+> > > >         period_cycles =3D c;
+> > > >
+> > > > might run into an overflow when both the clock rate and the period
+> > > > are large numbers.
+> > >
+> > > Hmm. Seems to me like addressing this would be outside the scope of t=
+his
+> > > patch series.
+> >=20
+> > I think it should be part of the same series, addressing bugs that
+> > were introduced
+> > by the change to 64-bit period. If it's not getting fixed along with
+> > the other regressions,
+> > I fear nobody is going to go back and fix it later.
+>=20
+> Makes sense, I agree. Would this be an acceptable fix?
+>=20
+> Instead of multiplying c and state->period first and then dividing by
+> 10^9, first divide state->period by 10^9 and then multiply the quotient
+> of that division with c and assign it to period_cycles. Like so:
+>=20
+> 	c =3D clk_get_rate(imx->clk_per);
+> 	c *=3D div_u64(state->period, 1000000000);
+> 	period_cycles =3D c;
+>=20
+> This should take care of overflow not happening because state->period is
+> converted from nanoseconds to seconds early on and so becomes a small
+> number.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- fs/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+Doesn't that mean that anything below a 1 second period will be clamped
+to just 0?
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 3b06c5c59883..6902e39a4298 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1536,6 +1536,7 @@ EXPORT_SYMBOL(generic_delete_inode);
-  * shutting down.
-  */
- static void iput_final(struct inode *inode)
-+	__releases(&inode->i_lock)
- {
- 	struct super_block *sb = inode->i_sb;
- 	const struct super_operations *op = inode->i_sb->s_op;
--- 
-2.24.1
+Thierry
 
+--PuGuTyElPB9bOcsM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6DrNkACgkQ3SOs138+
+s6F2rRAArLSEhXAhgvFqFz7p1Jyl3a2QkW2gk0K5vu5cqJQzOMB/CGTnJlkpte4r
+OPEsS/IrnNJjMNvLMLZQ/92OqmWdK1ve0y8aFlhLAhGn5KdelcOcnf8Id/rxV2YJ
+BV7oMSVS9dZa5+gNJaFARNkYs+5dWAFQoKKvSxpaTMBMMMzN9TgoKZKa0W7xZQmh
+CbJve7ZWx/MsubZTneoudgf3Vi+SYak6kFEHhw/rqE9lFWb5pfKXwyVxpPHqW0uk
+ooJ1g5VkQxKPnaUtz3N2EK4+K4gUlh87myfPiH0k35FCJ9N+ENOIe9vtepJ33+u9
+UFD/GJUtPimSBDHKAcZyc0Gtvw4Cka4dmDeAgIMe+QviRjEd/pvI4MS+s8KCAYKk
+kn4AG2KDeC0w5bufJQnlXuziYw95gUYQ2nrRPFgI0yJMtdwvd+Pch5skoklz6GSZ
+2Q7Ao5wGRoRpV/cXb28lBNOgD4w0R1upufK/7I4lSwTRMBWXzBK57ItEXfeTO7V7
+2HEiAXYXt6oqM27RxedshqKGe9d5gwvdGLIy6NjfnQkJ4QySu13nLTas4yPlz3Lx
+ZTv+Cl8EElQnC7n2erxOjTcCPQaM14MslHRFhk+wtacQ3+Escb2lPndAzD8lQinS
+ncFajYcMWrIYy3l0rK0o6juMpEqV2vxl7Y8x04xvV/vr88q9OKY=
+=Ht11
+-----END PGP SIGNATURE-----
+
+--PuGuTyElPB9bOcsM--
