@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E032C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68727C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012EF212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F2B320848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645267;
-	bh=i54h0PpoMrZjEXGvANY6FaJbACna+TsoRHILdEn6CI4=;
+	s=default; t=1585645271;
+	bh=6U8niKXaa2tr8wI02bHehJogCmeJNAgYYNWg/cYBrhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVS3L1SuA9jIgb51o/cwAxauHjnnO+MO2/8EX+u+qWHfyvL9vdJqzcoJiGzl6djtZ
-	 RRzERGbsg0tcX8NBv0a5GA70VgV1T4hEMRpPKrT1ex2L0mJXzTCeBlhHSxZ5nBFdGq
-	 uUiGiADheeCxH+DyDZMX2vl7sMCj8z/WFslnFWJo=
+	b=YkuYYQsZKfODCsMlEWI4G2MuTrxibTR+ah9uaXxdBdeCoWBDYIhVKDlrL+tWb75V2
+	 G/DnyOMRbIlOuCeUeW5ky1cZ9867MpHlrpa3qZHYLX3m5mHKO4Jf8rYnKZBQLyLVwv
+	 4YsAZ9LCmY5mgOXzWHee0fsezqPzAjVX77L282Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbgCaJBF (ORCPT
+        id S1730509AbgCaJBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40050 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:01:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgCaJBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:01:00 -0400
+        id S1730308AbgCaJBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:01:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099D720848;
-        Tue, 31 Mar 2020 09:00:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F87120B1F;
+        Tue, 31 Mar 2020 09:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645259;
-        bh=i54h0PpoMrZjEXGvANY6FaJbACna+TsoRHILdEn6CI4=;
+        s=default; t=1585645262;
+        bh=6U8niKXaa2tr8wI02bHehJogCmeJNAgYYNWg/cYBrhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kac2VdeIeEEZNknqs026yMb/tXtTTYrfDn0lu0G/tY7gB741yRzcZiJL2mXHytMVU
-         isKBhUr631iIjJq9/DHOMTmI7KKemYF+4p5gxqURHhdA71rfWj/Uc3FEMyNUr4alk6
-         3eD4BHXHJfvnK2GtiHKLHCz8pI0AGDBoOfOyUUoE=
+        b=RgVcqwQrT2lwMbDkmwf67zNhPLHPwkBUPq8Rtt6hcSAni5r6INFUoZ8V4TPQB42LS
+         9UPVWxfJGCbFHwYKRHIl39TVJ8Q+PWiMFrTO5JwQyG5w6kMJVJYqnbZj449rOaunD3
+         dow4iCAVAU2Ur1H5uDpSdnV3sY5RPN12lUKWW0Mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.6 23/23] media: v4l2-core: fix a use-after-free bug of sd->devnode
-Date:   Tue, 31 Mar 2020 10:59:35 +0200
-Message-Id: <20200331085317.704628095@linuxfoundation.org>
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH 5.6 14/23] staging: wfx: add proper "compatible" string
+Date:   Tue, 31 Mar 2020 10:59:26 +0200
+Message-Id: <20200331085314.775491316@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -62,39 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 6990570f7e0a6078e11b9c5dc13f4b6e3f49a398 upstream.
+commit eec6e3ee636ec3adaa85ebe4b4acaacfcf06277e upstream.
 
-sd->devnode is released after calling
-v4l2_subdev_release. Therefore it should be set
-to NULL so that the subdev won't hold a pointer
-to a released object. This fixes a reference
-after free bug in function
-v4l2_device_unregister_subdev
+Add "compatible" string matching "vendor,chip" template and proper
+GPIO flags handling. Keep support for old name and reset polarity
+for older devicetrees.
 
-Fixes: 0e43734d4c46e ("media: v4l2-subdev: add release() internal op")
-
+Cc: stable@vger.kernel.org   # d3a5bcb4a17f ("gpio: add gpiod_toggle_active_low()")
 Cc: stable@vger.kernel.org
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 0096214a59a7 ("staging: wfx: add support for I/O access")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Link: https://lore.kernel.org/r/0e6dda06f145676861860f073a53dc95987c7ab5.1581416843.git.mirq-linux@rere.qmqm.pl
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/v4l2-device.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt |    7 ++---
+ drivers/staging/wfx/bus_spi.c                                                      |   14 +++++++---
+ 2 files changed, 14 insertions(+), 7 deletions(-)
 
---- a/drivers/media/v4l2-core/v4l2-device.c
-+++ b/drivers/media/v4l2-core/v4l2-device.c
-@@ -179,6 +179,7 @@ static void v4l2_subdev_release(struct v
+--- a/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
++++ b/drivers/staging/wfx/Documentation/devicetree/bindings/net/wireless/siliabs,wfx.txt
+@@ -6,7 +6,7 @@ SPI
+ You have to declare the WFxxx chip in your device tree.
  
- 	if (sd->internal_ops && sd->internal_ops->release)
- 		sd->internal_ops->release(sd);
-+	sd->devnode = NULL;
- 	module_put(owner);
- }
+ Required properties:
+- - compatible: Should be "silabs,wfx-spi"
++ - compatible: Should be "silabs,wf200"
+  - reg: Chip select address of device
+  - spi-max-frequency: Maximum SPI clocking speed of device in Hz
+  - interrupts-extended: Should contain interrupt line (interrupt-parent +
+@@ -15,6 +15,7 @@ Required properties:
+ Optional properties:
+  - reset-gpios: phandle of gpio that will be used to reset chip during probe.
+    Without this property, you may encounter issues with warm boot.
++   (Legacy: when compatible == "silabs,wfx-spi", the gpio is inverted.)
  
+ Please consult Documentation/devicetree/bindings/spi/spi-bus.txt for optional
+ SPI connection related properties,
+@@ -23,12 +24,12 @@ Example:
+ 
+ &spi1 {
+ 	wfx {
+-		compatible = "silabs,wfx-spi";
++		compatible = "silabs,wf200";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&wfx_irq &wfx_gpios>;
+ 		interrupts-extended = <&gpio 16 IRQ_TYPE_EDGE_RISING>;
+ 		wakeup-gpios = <&gpio 12 GPIO_ACTIVE_HIGH>;
+-		reset-gpios = <&gpio 13 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
+ 		reg = <0>;
+ 		spi-max-frequency = <42000000>;
+ 	};
+--- a/drivers/staging/wfx/bus_spi.c
++++ b/drivers/staging/wfx/bus_spi.c
+@@ -27,6 +27,8 @@ MODULE_PARM_DESC(gpio_reset, "gpio numbe
+ #define SET_WRITE 0x7FFF        /* usage: and operation */
+ #define SET_READ 0x8000         /* usage: or operation */
+ 
++#define WFX_RESET_INVERTED 1
++
+ static const struct wfx_platform_data wfx_spi_pdata = {
+ 	.file_fw = "wfm_wf200",
+ 	.file_pds = "wf200.pds",
+@@ -201,9 +203,11 @@ static int wfx_spi_probe(struct spi_devi
+ 	if (!bus->gpio_reset) {
+ 		dev_warn(&func->dev, "try to load firmware anyway\n");
+ 	} else {
+-		gpiod_set_value(bus->gpio_reset, 0);
+-		udelay(100);
++		if (spi_get_device_id(func)->driver_data & WFX_RESET_INVERTED)
++			gpiod_toggle_active_low(bus->gpio_reset);
+ 		gpiod_set_value(bus->gpio_reset, 1);
++		udelay(100);
++		gpiod_set_value(bus->gpio_reset, 0);
+ 		udelay(2000);
+ 	}
+ 
+@@ -244,14 +248,16 @@ static int wfx_spi_remove(struct spi_dev
+  * stripped.
+  */
+ static const struct spi_device_id wfx_spi_id[] = {
+-	{ "wfx-spi", 0 },
++	{ "wfx-spi", WFX_RESET_INVERTED },
++	{ "wf200", 0 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(spi, wfx_spi_id);
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id wfx_spi_of_match[] = {
+-	{ .compatible = "silabs,wfx-spi" },
++	{ .compatible = "silabs,wfx-spi", .data = (void *)WFX_RESET_INVERTED },
++	{ .compatible = "silabs,wf200" },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, wfx_spi_of_match);
 
 
