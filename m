@@ -2,122 +2,258 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31862C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3880C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179EC212CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9495A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 18:06:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PGbHZFmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgCaSCp (ORCPT
+        id S1726466AbgCaSGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:02:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16127 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgCaSCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:02:44 -0400
-IronPort-SDR: j2NZ3SlPxn625hqJet8G8+Vs3jyT3gZveo1kbHBzeVr1Sq3iAHkMkzORzP03etou3Uum/AALkx
- TLEV/skRKVDw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 11:02:44 -0700
-IronPort-SDR: Xmx1u/O6AfpkZBrQjD1Mw4wxecKCMtKYwvOUKO7DlkvZwglVp87aDyPldtXFWEkyA6bcaalHGx
- HGz90nJ1R8Yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="240205398"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 11:02:42 -0700
-Subject: Re: [PATCH 3/6] pci: add PCI quirk cmdmem fixup for Intel DSA device
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, gregkh@linuxfoundation.org,
-        arnd@arndb.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-References: <20200331155906.GA191980@google.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <03073d25-9351-5bc7-e971-8e21b82f122f@intel.com>
-Date:   Tue, 31 Mar 2020 11:02:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200331155906.GA191980@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+        Tue, 31 Mar 2020 14:06:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36096 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgCaSGP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 14:06:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g62so3945292wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 11:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=rdHIFzp6WyS0NijgnSKxc0qBm0w7b6RkFiTqIi5G0RI=;
+        b=PGbHZFmNgek1IF9cb9XkbLzdCxHpn4Gh5pLqY2lNXlPYj2wgdW2tpOyQfxRW+lADlM
+         BMGcDDbQ2/yv6YArqmRRlo7X7B7yryVBNiJbkHmb2bDeEO64PVl/wdpd5zGAvGkTqhtq
+         uYAw9gYLQAyVV8jj+4SPAqa6Ydz5DH9zM2nwcHPyYJq6Qk8Td29I8douEblKObLiexak
+         x1MpLaxLZjIScdnqlbeK0d8rCrxP/0iKBBR2PkGXXWziupX0gRV3DYVXQH+S2RMUoBpJ
+         PSLt9c3LjYT3vExYUvVEmcbD97MSoJhpftyBhiRnQgNH2lIEG+9mHNLTrHR4WN4G/HS7
+         ObIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=rdHIFzp6WyS0NijgnSKxc0qBm0w7b6RkFiTqIi5G0RI=;
+        b=UwwkuQMHjGfofghOd59fNOAPbpwf38oTcn9xF18WgXMn8jkvbk2BrBtXhwTgDoFQ3S
+         8nchDTfZ4+AXDOYDVx621MrIM7TenCcYUThJHtMVY6SYYXEpO1vVKZ23Q/UIndQPWQYn
+         WP8fPhSvP8Wd9eE2Z5MU7wKIeAzoYD9tc4YhGZkZAHtm1x29fpBJg+Y3gh4JSxoberOC
+         2gfasfglAkCF4HiKncBuqkjaqQlvcrugHS2PjTzLBwkvM9sJu1eoYKXWdeArE3abrBDH
+         cE2QefuMtHPAyIIEEOPyRfREF81JqLho9BdYfwvV9A8HDtb8n96siGVpCfWRu+jB9c86
+         RgNw==
+X-Gm-Message-State: AGi0PuY4m443zgQO4KXgpXDB2Bcx5v6PZ/eS81hK8z1GcZdZCoMUFeYO
+        /IQz4ig5vm7q0CxlEtSnZRHUzQ==
+X-Google-Smtp-Source: APiQypID0x6nOClfq+P0TTy8TSQdW9f1BCd93MzMM1F4FQaFe2EeZjymclbKAMKVAxxzX94LrjBXSQ==
+X-Received: by 2002:a05:600c:21d4:: with SMTP id x20mr23109wmj.77.1585677972371;
+        Tue, 31 Mar 2020 11:06:12 -0700 (PDT)
+Received: from [192.168.0.102] ([84.33.138.35])
+        by smtp.gmail.com with ESMTPSA id y11sm4580878wmi.13.2020.03.31.11.06.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Mar 2020 11:06:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 2/2] scsi: core: Fix stall if two threads request budget
+ at the same time
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20200331014109.GA20230@ming.t460p>
+Date:   Tue, 31 Mar 2020 20:07:35 +0200
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>, jejb@linux.ibm.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-scsi@vger.kernel.org, sqazi@google.com,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D38AB98D-7F6A-4C61-8A8F-C22C53671AC8@linaro.org>
+References: <20200330144907.13011-1-dianders@chromium.org>
+ <20200330074856.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200331014109.GA20230@ming.t460p>
+To:     Ming Lei <ming.lei@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/31/2020 8:59 AM, Bjorn Helgaas wrote:
-> Take a look and make yours match (applies to other patches in the
-> series as well):
->
->    $ git log --oneline drivers/pci/quirks.c
->    299bd044a6f3 ("PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports")
->    0325837c51cb ("PCI: Add ACS quirk for Zhaoxin multi-function devices")
->    2880325bda8d ("PCI: Avoid ASMedia XHCI USB PME# from D0 defect")
->    b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism for Xeon chipsets")
->    5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
->    7b90dfc4873b ("PCI: Add DMA alias quirk for PLX PEX NTB")
->    09298542cd89 ("PCI: Add nr_devfns parameter to pci_add_dma_alias()")
->
-> There's no need to mention "PCI" twice.  Also no need for both "quirk"
-> and "fixup".  This is all in the interest of putting more information
-> in the small space of the subject line.
-Ok I'll fix up.
->
-> On Mon, Mar 30, 2020 at 02:27:06PM -0700, Dave Jiang wrote:
->> Since there is no standard way that defines a PCI device that receives
->> descriptors or commands with synchronous write operations, add quirk to set
->> cmdmem for the Intel accelerator device that supports it.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+
+> Il giorno 31 mar 2020, alle ore 03:41, Ming Lei <ming.lei@redhat.com> =
+ha scritto:
+>=20
+> On Mon, Mar 30, 2020 at 07:49:06AM -0700, Douglas Anderson wrote:
+>> It is possible for two threads to be running
+>> blk_mq_do_dispatch_sched() at the same time with the same "hctx".
+>> This is because there can be more than one caller to
+>> __blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() doesn't
+>> prevent more than one thread from entering.
+>>=20
+>> If more than one thread is running blk_mq_do_dispatch_sched() at the
+>> same time with the same "hctx", they may have contention acquiring
+>> budget.  The blk_mq_get_dispatch_budget() can eventually translate
+>> into scsi_mq_get_budget().  If the device's "queue_depth" is 1 (not
+>> uncommon) then only one of the two threads will be the one to
+>> increment "device_busy" to 1 and get the budget.
+>>=20
+>> The losing thread will break out of blk_mq_do_dispatch_sched() and
+>> will stop dispatching requests.  The assumption is that when more
+>> budget is available later (when existing transactions finish) the
+>> queue will be kicked again, perhaps in scsi_end_request().
+>>=20
+>> The winning thread now has budget and can go on to call
+>> dispatch_request().  If dispatch_request() returns NULL here then we
+>> have a potential problem.  Specifically we'll now call
+>=20
+> I guess this problem should be BFQ specific. Now there is definitely
+> requests in BFQ queue wrt. this hctx. However, looks this request is
+> only available from another loser thread, and it won't be retrieved in
+> the winning thread via e->type->ops.dispatch_request().
+>=20
+> Just wondering why BFQ is implemented in this way?
+>=20
+
+BFQ inherited this powerful non-working scheme from CFQ, some age ago.
+
+In more detail: if BFQ has at least one non-empty internal queue, then
+is says of course that there is work to do.  But if the currently
+in-service queue is empty, and is expected to receive new I/O, then
+BFQ plugs I/O dispatch to enforce service guarantees for the
+in-service queue, i.e., BFQ responds NULL to a dispatch request.
+
+It would be very easy to change bfq_has_work so that it returns false
+in case the in-service queue is empty, even if there is I/O
+backlogged.  My only concern is: since everything has worked with the
+current scheme for probably 15 years, are we sure that everything is
+still ok after we change this scheme?
+
+I'm confident it would be ok, because a timer fires if the in-service
+queue does not receive any I/O for too long, and the handler of the
+timer invokes blk_mq_run_hw_queues().
+
+Looking forward to your feedback before proposing a change,
+Paolo
+
+>> blk_mq_put_dispatch_budget() which translates into
+>> scsi_mq_put_budget().  That will mark the device as no longer busy =
+but
+>> doesn't do anything to kick the queue.  This violates the assumption
+>> that the queue would be kicked when more budget was available.
+>>=20
+>> Pictorially:
+>>=20
+>> Thread A                          Thread B
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> blk_mq_get_dispatch_budget() =3D> 1
+>> dispatch_request() =3D> NULL
+>>                                  blk_mq_get_dispatch_budget() =3D> 0
+>>                                  // because Thread A marked
+>>                                  // "device_busy" in scsi_device
+>> blk_mq_put_dispatch_budget()
+>>=20
+>> The above case was observed in reboot tests and caused a task to hang
+>> forever waiting for IO to complete.  Traces showed that in fact two
+>> tasks were running blk_mq_do_dispatch_sched() at the same time with
+>> the same "hctx".  The task that got the budget did in fact see
+>> dispatch_request() return NULL.  Both tasks returned and the system
+>> went on for several minutes (until the hung task delay kicked in)
+>> without the given "hctx" showing up again in traces.
+>>=20
+>> Let's attempt to fix this problem by detecting budget contention.  If
+>> we're in the SCSI code's put_budget() function and we saw that =
+someone
+>> else might have wanted the budget we got then we'll kick the queue.
+>>=20
+>> The mechanism of kicking due to budget contention has the potential =
+to
+>> overcompensate and kick the queue more than strictly necessary, but =
+it
+>> shouldn't hurt.
+>>=20
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 >> ---
->>   drivers/pci/quirks.c |   11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 29f473ebf20f..ba0572b9b9c8 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -5461,3 +5461,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->>   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
->>   			      PCI_CLASS_DISPLAY_VGA, 8,
->>   			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
->> +
->> +/*
->> + * Until the PCI Sig defines a standard capaiblity check that indicates a
->> + * device has cmdmem with synchronous write capability, we'll add a quirk
->> + * for device that supports it.
-> s/PCI Sig/PCI-SIG/
-> s/capaiblity/capability/
->
-> It's not clear why this would need to be in drivers/pci/quirks.c as
-> opposed to being in the driver itself.
-
-That would make the driver to set the PCI device struct cap bit instead 
-of this being set on discovery right? And if the driver isn't loaded, 
-then the cap wouldn't be set. In the future if user space wants to 
-discover this information that may be an issue.
-
-
-
->
->> + */
->> +static void device_cmdmem_fixup(struct pci_dev *pdev)
+>>=20
+>> drivers/scsi/scsi_lib.c    | 27 ++++++++++++++++++++++++---
+>> drivers/scsi/scsi_scan.c   |  1 +
+>> include/scsi/scsi_device.h |  2 ++
+>> 3 files changed, 27 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+>> index 610ee41fa54c..0530da909995 100644
+>> --- a/drivers/scsi/scsi_lib.c
+>> +++ b/drivers/scsi/scsi_lib.c
+>> @@ -344,6 +344,21 @@ static void scsi_dec_host_busy(struct Scsi_Host =
+*shost, struct scsi_cmnd *cmd)
+>> 	rcu_read_unlock();
+>> }
+>>=20
+>> +static void scsi_device_dec_busy(struct scsi_device *sdev)
 >> +{
->> +	pdev->cmdmem = 1;
+>> +	bool was_contention;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&sdev->budget_lock, flags);
+>> +	atomic_dec(&sdev->device_busy);
+>> +	was_contention =3D sdev->budget_contention;
+>> +	sdev->budget_contention =3D false;
+>> +	spin_unlock_irqrestore(&sdev->budget_lock, flags);
+>> +
+>> +	if (was_contention)
+>> +		blk_mq_run_hw_queues(sdev->request_queue, true);
 >> +}
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0b25, device_cmdmem_fixup);
->>
+>> +
+>> void scsi_device_unbusy(struct scsi_device *sdev, struct scsi_cmnd =
+*cmd)
+>> {
+>> 	struct Scsi_Host *shost =3D sdev->host;
+>> @@ -354,7 +369,7 @@ void scsi_device_unbusy(struct scsi_device *sdev, =
+struct scsi_cmnd *cmd)
+>> 	if (starget->can_queue > 0)
+>> 		atomic_dec(&starget->target_busy);
+>>=20
+>> -	atomic_dec(&sdev->device_busy);
+>> +	scsi_device_dec_busy(sdev);
+>> }
+>>=20
+>> static void scsi_kick_queue(struct request_queue *q)
+>> @@ -1624,16 +1639,22 @@ static void scsi_mq_put_budget(struct =
+blk_mq_hw_ctx *hctx)
+>> 	struct request_queue *q =3D hctx->queue;
+>> 	struct scsi_device *sdev =3D q->queuedata;
+>>=20
+>> -	atomic_dec(&sdev->device_busy);
+>> +	scsi_device_dec_busy(sdev);
+>> }
+>>=20
+>> static bool scsi_mq_get_budget(struct blk_mq_hw_ctx *hctx)
+>> {
+>> 	struct request_queue *q =3D hctx->queue;
+>> 	struct scsi_device *sdev =3D q->queuedata;
+>> +	unsigned long flags;
+>>=20
+>> -	if (scsi_dev_queue_ready(q, sdev))
+>> +	spin_lock_irqsave(&sdev->budget_lock, flags);
+>> +	if (scsi_dev_queue_ready(q, sdev)) {
+>> +		spin_unlock_irqrestore(&sdev->budget_lock, flags);
+>> 		return true;
+>> +	}
+>> +	sdev->budget_contention =3D true;
+>> +	spin_unlock_irqrestore(&sdev->budget_lock, flags);
+>=20
+> No, it really hurts performance by adding one per-sdev spinlock in =
+fast path,
+> and we actually tried to kill the atomic variable of =
+'sdev->device_busy'
+> for high performance HBA.
+>=20
+> Thanks,
+> Ming
+
