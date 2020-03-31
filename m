@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5247C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C682AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68B520748
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41FD20757
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 04:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgCaEPN (ORCPT
+        id S1729953AbgCaEPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 00:15:13 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:46708 "EHLO inva021.nxp.com"
+        Tue, 31 Mar 2020 00:15:19 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:46970 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726526AbgCaEPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 00:15:09 -0400
+        id S1729624AbgCaEPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 00:15:18 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 803FC2007C5;
-        Tue, 31 Mar 2020 06:15:07 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C5DB2007AF;
+        Tue, 31 Mar 2020 06:15:17 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B5232007BD;
-        Tue, 31 Mar 2020 06:15:01 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 16AE62007D5;
+        Tue, 31 Mar 2020 06:15:11 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7F540402BB;
-        Tue, 31 Mar 2020 12:14:53 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 27B5F402C8;
+        Tue, 31 Mar 2020 12:14:57 +0800 (SGT)
 From:   Yangbo Lu <yangbo.lu@nxp.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
@@ -40,9 +40,9 @@ Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: [v2, 4/7] net: mscc: ocelot: add wave programming registers definitions
-Date:   Tue, 31 Mar 2020 12:11:10 +0800
-Message-Id: <20200331041113.15873-5-yangbo.lu@nxp.com>
+Subject: [v2, 7/7] net: dsa: felix: enable PTP programmable pin
+Date:   Tue, 31 Mar 2020 12:11:13 +0800
+Message-Id: <20200331041113.15873-8-yangbo.lu@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200331041113.15873-1-yangbo.lu@nxp.com>
 References: <20200331041113.15873-1-yangbo.lu@nxp.com>
@@ -52,71 +52,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add wave programming registers definitions for Ocelot platforms.
+Enable PTP programmable pin.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
-	- None.
+	- Added this patch.
 ---
- drivers/net/dsa/ocelot/felix_vsc9959.c  | 2 ++
- drivers/net/ethernet/mscc/ocelot_regs.c | 2 ++
- include/soc/mscc/ocelot.h               | 2 ++
- include/soc/mscc/ocelot_ptp.h           | 2 ++
- 4 files changed, 8 insertions(+)
+ drivers/net/dsa/ocelot/felix.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index b4078f3..4fe707e 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -313,6 +313,8 @@ static const u32 vsc9959_ptp_regmap[] = {
- 	REG(PTP_PIN_TOD_SEC_MSB,           0x000004),
- 	REG(PTP_PIN_TOD_SEC_LSB,           0x000008),
- 	REG(PTP_PIN_TOD_NSEC,              0x00000c),
-+	REG(PTP_PIN_WF_HIGH_PERIOD,        0x000014),
-+	REG(PTP_PIN_WF_LOW_PERIOD,         0x000018),
- 	REG(PTP_CFG_MISC,                  0x0000a0),
- 	REG(PTP_CLK_CFG_ADJ_CFG,           0x0000a4),
- 	REG(PTP_CLK_CFG_ADJ_FREQ,          0x0000a8),
-diff --git a/drivers/net/ethernet/mscc/ocelot_regs.c b/drivers/net/ethernet/mscc/ocelot_regs.c
-index b88b589..ed4dd01 100644
---- a/drivers/net/ethernet/mscc/ocelot_regs.c
-+++ b/drivers/net/ethernet/mscc/ocelot_regs.c
-@@ -239,6 +239,8 @@ static const u32 ocelot_ptp_regmap[] = {
- 	REG(PTP_PIN_TOD_SEC_MSB,           0x000004),
- 	REG(PTP_PIN_TOD_SEC_LSB,           0x000008),
- 	REG(PTP_PIN_TOD_NSEC,              0x00000c),
-+	REG(PTP_PIN_WF_HIGH_PERIOD,        0x000014),
-+	REG(PTP_PIN_WF_LOW_PERIOD,         0x000018),
- 	REG(PTP_CFG_MISC,                  0x0000a0),
- 	REG(PTP_CLK_CFG_ADJ_CFG,           0x0000a4),
- 	REG(PTP_CLK_CFG_ADJ_FREQ,          0x0000a8),
-diff --git a/include/soc/mscc/ocelot.h b/include/soc/mscc/ocelot.h
-index a588b6372..c7ba83b 100644
---- a/include/soc/mscc/ocelot.h
-+++ b/include/soc/mscc/ocelot.h
-@@ -385,6 +385,8 @@ enum ocelot_reg {
- 	PTP_PIN_TOD_SEC_MSB,
- 	PTP_PIN_TOD_SEC_LSB,
- 	PTP_PIN_TOD_NSEC,
-+	PTP_PIN_WF_HIGH_PERIOD,
-+	PTP_PIN_WF_LOW_PERIOD,
- 	PTP_CFG_MISC,
- 	PTP_CLK_CFG_ADJ_CFG,
- 	PTP_CLK_CFG_ADJ_FREQ,
-diff --git a/include/soc/mscc/ocelot_ptp.h b/include/soc/mscc/ocelot_ptp.h
-index f01b0ce..aae1570 100644
---- a/include/soc/mscc/ocelot_ptp.h
-+++ b/include/soc/mscc/ocelot_ptp.h
-@@ -17,6 +17,8 @@
- #define PTP_PIN_TOD_SEC_MSB_RSZ		PTP_PIN_CFG_RSZ
- #define PTP_PIN_TOD_SEC_LSB_RSZ		PTP_PIN_CFG_RSZ
- #define PTP_PIN_TOD_NSEC_RSZ		PTP_PIN_CFG_RSZ
-+#define PTP_PIN_WF_HIGH_PERIOD_RSZ	PTP_PIN_CFG_RSZ
-+#define PTP_PIN_WF_LOW_PERIOD_RSZ	PTP_PIN_CFG_RSZ
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index e1573bc..bfa4c12 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -504,13 +504,15 @@ static struct ptp_clock_info ocelot_ptp_clock_info = {
+ 	.max_adj	= 0x7fffffff,
+ 	.n_alarm	= 0,
+ 	.n_ext_ts	= 0,
+-	.n_per_out	= 0,
+-	.n_pins		= 0,
++	.n_per_out	= OCELOT_PTP_PINS_NUM,
++	.n_pins		= OCELOT_PTP_PINS_NUM,
+ 	.pps		= 0,
+ 	.gettime64	= ocelot_ptp_gettime64,
+ 	.settime64	= ocelot_ptp_settime64,
+ 	.adjtime	= ocelot_ptp_adjtime,
+ 	.adjfine	= ocelot_ptp_adjfine,
++	.verify		= ocelot_ptp_verify,
++	.enable		= ocelot_ptp_enable,
+ };
  
- #define PTP_PIN_CFG_DOM			BIT(0)
- #define PTP_PIN_CFG_SYNC		BIT(2)
+ /* Hardware initialization done here so that we can allocate structures with
 -- 
 2.7.4
 
