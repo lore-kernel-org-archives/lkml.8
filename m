@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B060C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9295C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075F6208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3B42137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645239;
-	bh=Gyq5CPIWhGyETl7u146YtvZnj20MLETTWKjndr0vl/0=;
+	s=default; t=1585645242;
+	bh=zncLG1BpW20o5h7swQ9wtotTBmv3XKwNQri+2b9dIKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZOMBb8iOORuxaAY9qDIxLbv/b3K/dlWwgFY2au+0AK5mgFd0qX6U/WU1Cqa+loqq
-	 EynpjIVABzAl6tao11hqScSjMD0iH8QuhtwjuIwi3ujw8w3YPsRCMmBhVzgsGp4+CS
-	 jf+D4TyVwdnOomZYW1tLxnVit2KBmcsbWE4e8lBw=
+	b=UgD2+rv9yAyUHNQ3p0GZzs420l3zzC7KAaEVdAbKyZ4OG37POKedI6QQYsDWEEhF1
+	 T3uHbcAIH1iCFGv+D7olHyvlYYrsiru0iYm7edeJrp3WPnlljIXSe71H2X2Yrb9JAz
+	 /q6UxBf4g6smcvcnkW9JKKtMNddTece+YHBggUnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbgCaJAi (ORCPT
+        id S1730435AbgCaJAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39388 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729425AbgCaJAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:00:37 -0400
+        id S1729425AbgCaJAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:00:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00025208E0;
-        Tue, 31 Mar 2020 09:00:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D17E20B80;
+        Tue, 31 Mar 2020 09:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645237;
-        bh=Gyq5CPIWhGyETl7u146YtvZnj20MLETTWKjndr0vl/0=;
+        s=default; t=1585645240;
+        bh=zncLG1BpW20o5h7swQ9wtotTBmv3XKwNQri+2b9dIKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fRMEqYMF049U6BPmtLGXcpeTsy6Vx6Zgc+tVcx/9VbIwVzhc31s1iHj8oF1HCc2/Z
-         MWqcGWSsUsmXIr7gl/r04P99T875W9lfiPWxBnSAh2LqOr5hFIMXh8iBz9iES9TDuq
-         eo73Q4PmzSr/O6NrNDzEUYyVFfoaZcVCNtNLV+kE=
+        b=nuXsKZlXK/XdPi4CNTzhwYffam8N6bqdsE/hYn1NnxXoTGrDTXQmYIHtXiXJS4FVw
+         /E489Xf+MEzVDs359dzHGlM7cClYJ+OrtjZIqAxu15OP0AXiZwXlZOFdEXdasmjYCJ
+         QkmB1l8MmHWqHzNwO4pTobNYasu0gjnzNm+iCS2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
-Subject: [PATCH 5.6 06/23] USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interrupt_callback
-Date:   Tue, 31 Mar 2020 10:59:18 +0200
-Message-Id: <20200331085311.333835590@linuxfoundation.org>
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 5.6 07/23] usb: musb: fix crash with highmen PIO and usbmon
+Date:   Tue, 31 Mar 2020 10:59:19 +0200
+Message-Id: <20200331085311.483267950@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
 References: <20200331085308.098696461@linuxfoundation.org>
@@ -60,36 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Mans Rullgard <mans@mansr.com>
 
-commit 57aa9f294b09463492f604feaa5cc719beaace32 upstream.
+commit 52974d94a206ce428d9d9b6eaa208238024be82a upstream.
 
-Fix slab-out-of-bounds read in the interrupt-URB completion handler.
+When handling a PIO bulk transfer with highmem buffer, a temporary
+mapping is assigned to urb->transfer_buffer.  After the transfer is
+complete, an invalid address is left behind in this pointer.  This is
+not ordinarily a problem since nothing touches that buffer before the
+urb is released.  However, when usbmon is active, usbmon_urb_complete()
+calls (indirectly) mon_bin_get_data() which does access the transfer
+buffer if it is set.  To prevent an invalid memory access here, reset
+urb->transfer_buffer to NULL when finished (musb_host_rx()), or do not
+set it at all (musb_host_tx()).
 
-The boundary condition should be (length - 1) as we access
-data[position + 1].
-
-Reported-and-tested-by: syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200316211136.2274-8-b-liu@ti.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/io_edgeport.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/musb/musb_host.c |   17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -710,7 +710,7 @@ static void edge_interrupt_callback(stru
- 		/* grab the txcredits for the ports if available */
- 		position = 2;
- 		portNumber = 0;
--		while ((position < length) &&
-+		while ((position < length - 1) &&
- 				(portNumber < edge_serial->serial->num_ports)) {
- 			txCredits = data[position] | (data[position+1] << 8);
- 			if (txCredits) {
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -1436,10 +1436,7 @@ done:
+ 	 * We need to map sg if the transfer_buffer is
+ 	 * NULL.
+ 	 */
+-	if (!urb->transfer_buffer)
+-		qh->use_sg = true;
+-
+-	if (qh->use_sg) {
++	if (!urb->transfer_buffer) {
+ 		/* sg_miter_start is already done in musb_ep_program */
+ 		if (!sg_miter_next(&qh->sg_miter)) {
+ 			dev_err(musb->controller, "error: sg list empty\n");
+@@ -1447,9 +1444,8 @@ done:
+ 			status = -EINVAL;
+ 			goto done;
+ 		}
+-		urb->transfer_buffer = qh->sg_miter.addr;
+ 		length = min_t(u32, length, qh->sg_miter.length);
+-		musb_write_fifo(hw_ep, length, urb->transfer_buffer);
++		musb_write_fifo(hw_ep, length, qh->sg_miter.addr);
+ 		qh->sg_miter.consumed = length;
+ 		sg_miter_stop(&qh->sg_miter);
+ 	} else {
+@@ -1458,11 +1454,6 @@ done:
+ 
+ 	qh->segsize = length;
+ 
+-	if (qh->use_sg) {
+-		if (offset + length >= urb->transfer_buffer_length)
+-			qh->use_sg = false;
+-	}
+-
+ 	musb_ep_select(mbase, epnum);
+ 	musb_writew(epio, MUSB_TXCSR,
+ 			MUSB_TXCSR_H_WZC_BITS | MUSB_TXCSR_TXPKTRDY);
+@@ -1977,8 +1968,10 @@ finish:
+ 	urb->actual_length += xfer_len;
+ 	qh->offset += xfer_len;
+ 	if (done) {
+-		if (qh->use_sg)
++		if (qh->use_sg) {
+ 			qh->use_sg = false;
++			urb->transfer_buffer = NULL;
++		}
+ 
+ 		if (urb->status == -EINPROGRESS)
+ 			urb->status = status;
 
 
