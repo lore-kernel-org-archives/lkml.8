@@ -6,39 +6,40 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F96FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E85FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C70920784
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FB12137B
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 13:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731079AbgCaNwQ convert rfc822-to-8bit (ORCPT
+        id S1731096AbgCaNwT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:52:16 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:33876 "EHLO
+        Tue, 31 Mar 2020 09:52:19 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60111 "EHLO
         eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731057AbgCaNwO (ORCPT
+        by vger.kernel.org with ESMTP id S1731056AbgCaNwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:52:14 -0400
+        Tue, 31 Mar 2020 09:52:18 -0400
 Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-167-Tx5hOMWfNXW-RDVHHSlZrA-1; Tue, 31 Mar 2020 14:52:11 +0100
-X-MC-Unique: Tx5hOMWfNXW-RDVHHSlZrA-1
+ uk-mta-226-ATX4BA_lNgOIA-JPowgUSQ-1; Tue, 31 Mar 2020 14:52:14 +0100
+X-MC-Unique: ATX4BA_lNgOIA-JPowgUSQ-1
 Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
  AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:52:10 +0100
+ Server (TLS) id 15.0.1347.2; Tue, 31 Mar 2020 14:52:13 +0100
 Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
  AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 31 Mar 2020 14:52:10 +0100
+ Tue, 31 Mar 2020 14:52:13 +0100
 From:   David Laight <David.Laight@ACULAB.COM>
 To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH 07/12] mm/process_vm_access: Use iovec_import() instead of
+CC:     "'io_uring@vger.kernel.org'" <io_uring@vger.kernel.org>,
+        "'axboe@kernel.de'" <axboe@kernel.de>
+Subject: [RFC PATCH 08/12] fs/io_uring: Use iovec_import() not import_iovec().
+Thread-Topic: [RFC PATCH 08/12] fs/io_uring: Use iovec_import() not
  import_iovec().
-Thread-Topic: [RFC PATCH 07/12] mm/process_vm_access: Use iovec_import()
- instead of import_iovec().
-Thread-Index: AdYHYglIBZNWUXakSjKnMjGogvIqMQ==
-Date:   Tue, 31 Mar 2020 13:52:10 +0000
-Message-ID: <8950a02e53124117aacc56633c00b0ab@AcuMS.aculab.com>
+Thread-Index: AdYHYizbfIRJ197UQ5GBjlxsSM9cgg==
+Date:   Tue, 31 Mar 2020 13:52:13 +0000
+Message-ID: <518953cd20d84fc5b6fc4ab459bf3459@AcuMS.aculab.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -56,128 +57,416 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+This is a mechanical change to this horrid code.
+I think it is correct.
+
 Signed-off-by: David Laight <david.laight@aculab.com>
 ---
- mm/process_vm_access.c | 81 ++++++++++++++++++++++++++------------------------
- 1 file changed, 42 insertions(+), 39 deletions(-)
+ fs/io_uring.c | 165 +++++++++++++++++++++++++++++++---------------------------
+ 1 file changed, 87 insertions(+), 78 deletions(-)
 
-diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-index 2829e26..96fec46 100644
---- a/mm/process_vm_access.c
-+++ b/mm/process_vm_access.c
-@@ -260,10 +260,10 @@ static ssize_t process_vm_rw(pid_t pid,
- 			     unsigned long riovcnt,
- 			     unsigned long flags, int vm_write)
- {
--	struct iovec iovstack_l[UIO_FASTIOV];
--	struct iovec iovstack_r[UIO_FASTIOV];
--	struct iovec *iov_l = iovstack_l;
--	struct iovec *iov_r = iovstack_r;
-+	struct iovec_cache cache_l;
-+	struct iovec_cache cache_r;
-+	struct iovec *iov_l;
-+	struct iovec *iov_r;
- 	struct iov_iter iter_l, iter_r;
- 	ssize_t rc;
- 	int dir = vm_write ? WRITE : READ;
-@@ -272,24 +272,25 @@ static ssize_t process_vm_rw(pid_t pid,
- 		return -EINVAL;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index d8dc2e2..27d66cf 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -77,6 +77,10 @@
+ #include <linux/eventpoll.h>
+ #include <linux/fs_struct.h>
  
- 	/* Check iovecs */
--	rc = import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter_l);
--	if (rc < 0)
--		return rc;
--	if (!iov_iter_count(&iter_l))
--		goto free_iovecs;
--
--	rc = import_iovec(CHECK_IOVEC_ONLY, rvec, riovcnt, UIO_FASTIOV, &iov_r, &iter_r);
--	if (rc <= 0)
--		goto free_iovecs;
--
--	rc = process_vm_rw_core(pid, &iter_l, iter_r.iov, iter_r.nr_segs,
--				flags, vm_write);
-+	iov_l = iovec_import(dir, lvec, liovcnt, &cache_l, &iter_l);
-+	if (IS_ERR(iov_l))
-+		return PTR_ERR(iov_l);
-+	if (!iov_iter_count(&iter_l)) {
-+		rc = 0;
-+		goto free_iovec_l;
-+	}
- 
--free_iovecs:
--	if (iov_r != iovstack_r)
-+	iov_r = iovec_import(CHECK_IOVEC_ONLY, rvec, riovcnt, &cache_r, &iter_r);
-+	if (IS_ERR(iov_r)) {
-+		rc = PTR_ERR(iov_r);
-+	} else {
-+		rc = process_vm_rw_core(pid, &iter_l, iter_r.iov,
-+				iter_r.nr_segs, flags, vm_write);
- 		kfree(iov_r);
--	if (iov_l != iovstack_l)
--		kfree(iov_l);
-+	}
++/* Temporary for commit bisection */
++#define sendmsg_copy_msghdr(a, b, c, d) sendmsg_copy_msghdr(a, b, c, (void *)d)
++#define recvmsg_copy_msghdr(a, b, c, d, e) recvmsg_copy_msghdr(a, b, c, d, (void *)e)
 +
-+free_iovec_l:
-+	kfree(iov_l);
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/io_uring.h>
  
- 	return rc;
- }
-@@ -319,10 +320,10 @@ static ssize_t process_vm_rw(pid_t pid,
- 		     unsigned long riovcnt,
- 		     unsigned long flags, int vm_write)
- {
--	struct iovec iovstack_l[UIO_FASTIOV];
--	struct iovec iovstack_r[UIO_FASTIOV];
--	struct iovec *iov_l = iovstack_l;
--	struct iovec *iov_r = iovstack_r;
-+	struct iovec_cache cache_l;
-+	struct iovec_cache cache_r;
-+	struct iovec *iov_l;
-+	struct iovec *iov_r;
- 	struct iov_iter iter_l, iter_r;
- 	ssize_t rc = -EFAULT;
- 	int dir = vm_write ? WRITE : READ;
-@@ -330,23 +331,25 @@ static ssize_t process_vm_rw(pid_t pid,
- 	if (flags != 0)
- 		return -EINVAL;
+@@ -435,7 +439,7 @@ struct io_async_connect {
+ };
  
--	rc = compat_import_iovec(dir, lvec, liovcnt, UIO_FASTIOV, &iov_l, &iter_l);
--	if (rc < 0)
--		return rc;
--	if (!iov_iter_count(&iter_l))
--		goto free_iovecs;
--	rc = compat_import_iovec(0, rvec, riovcnt, UIO_FASTIOV, &iov_r, &iter_r);
--	if (rc <= 0)
--		goto free_iovecs;
--
--	rc = process_vm_rw_core(pid, &iter_l, iter_r.iov, iter_r.nr_segs,
--				flags, vm_write);
-+	iov_l = compat_iovec_import(dir, lvec, liovcnt, &cache_l, &iter_l);
-+	if (IS_ERR(iov_l))
-+		return PTR_ERR(iov_l);
-+	if (!iov_iter_count(&iter_l)) {
-+		rc = 0;
-+		goto free_iovec_l;
-+	}
+ struct io_async_msghdr {
+-	struct iovec			fast_iov[UIO_FASTIOV];
++	struct iovec_cache		fast_iov;
+ 	struct iovec			*iov;
+ 	struct sockaddr __user		*uaddr;
+ 	struct msghdr			msg;
+@@ -443,7 +447,7 @@ struct io_async_msghdr {
+ };
  
--free_iovecs:
--	if (iov_r != iovstack_r)
-+	iov_r = compat_iovec_import(0, rvec, riovcnt, &cache_r, &iter_r);
-+	if (IS_ERR(iov_r)) {
-+		rc = PTR_ERR(iov_r);
-+	} else {
-+		rc = process_vm_rw_core(pid, &iter_l, iter_r.iov,
-+				iter_r.nr_segs, flags, vm_write);
- 		kfree(iov_r);
--	if (iov_l != iovstack_l)
--		kfree(iov_l);
-+	}
-+
-+free_iovec_l:
-+	kfree(iov_l);
- 	return rc;
+ struct io_async_rw {
+-	struct iovec			fast_iov[UIO_FASTIOV];
++	struct iovec_cache		fast_iov;
+ 	struct iovec			*iov;
+ 	ssize_t				nr_segs;
+ 	ssize_t				size;
+@@ -2052,47 +2056,39 @@ static ssize_t io_import_fixed(struct io_kiocb *req, int rw,
+ 	return len;
  }
  
+-static ssize_t io_import_iovec(int rw, struct io_kiocb *req,
+-			       struct iovec **iovec, struct iov_iter *iter)
++static struct iovec *io_import_iovec(int rw, struct io_kiocb *req,
++			       struct iovec_cache *cache, struct iov_iter *iter)
+ {
+ 	void __user *buf = u64_to_user_ptr(req->rw.addr);
+ 	size_t sqe_len = req->rw.len;
+ 	u8 opcode;
+ 
+ 	opcode = req->opcode;
+-	if (opcode == IORING_OP_READ_FIXED || opcode == IORING_OP_WRITE_FIXED) {
+-		*iovec = NULL;
+-		return io_import_fixed(req, rw, iter);
+-	}
++	if (opcode == IORING_OP_READ_FIXED || opcode == IORING_OP_WRITE_FIXED)
++		return ERR_PTR(io_import_fixed(req, rw, iter));
+ 
+ 	/* buffer index only valid with fixed read/write */
+ 	if (req->rw.kiocb.private)
+-		return -EINVAL;
++		return ERR_PTR(-EINVAL);
+ 
+-	if (opcode == IORING_OP_READ || opcode == IORING_OP_WRITE) {
+-		ssize_t ret;
+-		ret = import_single_range(rw, buf, sqe_len, *iovec, iter);
+-		*iovec = NULL;
+-		return ret < 0 ? ret : sqe_len;
+-	}
++	if (opcode == IORING_OP_READ || opcode == IORING_OP_WRITE)
++		return ERR_PTR(import_single_range(rw, buf, sqe_len, cache->iov, iter));
+ 
+ 	if (req->io) {
+ 		struct io_async_rw *iorw = &req->io->rw;
+ 
+-		*iovec = iorw->iov;
+-		iov_iter_init(iter, rw, *iovec, iorw->nr_segs, iorw->size);
+-		if (iorw->iov == iorw->fast_iov)
+-			*iovec = NULL;
+-		return iorw->size;
++		iov_iter_init(iter, rw, iorw->iov, iorw->nr_segs, iorw->size);
++		if (iorw->iov != iorw->fast_iov.iov)
++			return iorw->iov;
++		return NULL;
+ 	}
+ 
+ #ifdef CONFIG_COMPAT
+ 	if (req->ctx->compat)
+-		return compat_import_iovec(rw, buf, sqe_len, UIO_FASTIOV,
+-						iovec, iter);
++		return compat_iovec_import(rw, buf, sqe_len, cache, iter);
+ #endif
+ 
+-	return import_iovec(rw, buf, sqe_len, UIO_FASTIOV, iovec, iter);
++	return iovec_import(rw, buf, sqe_len, cache, iter);
+ }
+ 
+ /*
+@@ -2154,13 +2150,13 @@ static ssize_t loop_rw_iter(int rw, struct file *file, struct kiocb *kiocb,
+ }
+ 
+ static void io_req_map_rw(struct io_kiocb *req, struct iovec *iovec,
+-			  struct iovec *fast_iov, struct iov_iter *iter)
++			  struct iovec_cache *fast_iov, struct iov_iter *iter)
+ {
+ 	req->io->rw.nr_segs = iter->nr_segs;
+ 	req->io->rw.size = iter->count;
+ 	req->io->rw.iov = iovec;
+ 	if (!req->io->rw.iov) {
+-		req->io->rw.iov = req->io->rw.fast_iov;
++		req->io->rw.iov = req->io->rw.fast_iov.iov;
+ 		memcpy(req->io->rw.iov, fast_iov,
+ 			sizeof(struct iovec) * iter->nr_segs);
+ 	} else {
+@@ -2177,7 +2173,7 @@ static int io_alloc_async_ctx(struct io_kiocb *req)
+ }
+ 
+ static int io_setup_async_rw(struct io_kiocb *req, struct iovec *iovec,
+-			     struct iovec *fast_iov, struct iov_iter *iter)
++			     struct iovec_cache *fast_iov, struct iov_iter *iter)
+ {
+ 	if (!io_op_defs[req->opcode].async_ctx)
+ 		return 0;
+@@ -2195,6 +2191,7 @@ static int io_read_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ {
+ 	struct io_async_ctx *io;
+ 	struct iov_iter iter;
++	struct iovec *iov;
+ 	ssize_t ret;
+ 
+ 	ret = io_prep_rw(req, sqe, force_nonblock);
+@@ -2209,29 +2206,30 @@ static int io_read_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 		return 0;
+ 
+ 	io = req->io;
+-	io->rw.iov = io->rw.fast_iov;
+ 	req->io = NULL;
+-	ret = io_import_iovec(READ, req, &io->rw.iov, &iter);
++	iov = io_import_iovec(READ, req, &io->rw.fast_iov, &iter);
+ 	req->io = io;
+-	if (ret < 0)
+-		return ret;
++	if (IS_ERR(iov))
++		return PTR_ERR(iov);
++	io->rw.iov = iov;
+ 
+-	io_req_map_rw(req, io->rw.iov, io->rw.fast_iov, &iter);
++	io_req_map_rw(req, io->rw.iov, &io->rw.fast_iov, &iter);
+ 	return 0;
+ }
+ 
+ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		   bool force_nonblock)
+ {
+-	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
++	struct iovec_cache cache;
++	struct iovec *iovec;
+ 	struct kiocb *kiocb = &req->rw.kiocb;
+ 	struct iov_iter iter;
+ 	size_t iov_count;
+ 	ssize_t ret;
+ 
+-	ret = io_import_iovec(READ, req, &iovec, &iter);
+-	if (ret < 0)
+-		return ret;
++	iovec = io_import_iovec(READ, req, &cache, &iter);
++	if (IS_ERR(iovec))
++		return PTR_ERR(iovec);
+ 
+ 	/* Ensure we clear previously set non-block flag */
+ 	if (!force_nonblock)
+@@ -2265,7 +2263,7 @@ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			kiocb_done(kiocb, ret2, nxt, req->in_async);
+ 		} else {
+ copy_iov:
+-			ret = io_setup_async_rw(req, iovec, inline_vecs, &iter);
++			ret = io_setup_async_rw(req, iovec, &cache, &iter);
+ 			if (ret)
+ 				goto out_free;
+ 			return -EAGAIN;
+@@ -2282,6 +2280,7 @@ static int io_write_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ {
+ 	struct io_async_ctx *io;
+ 	struct iov_iter iter;
++	struct iovec *iov;
+ 	ssize_t ret;
+ 
+ 	ret = io_prep_rw(req, sqe, force_nonblock);
+@@ -2296,29 +2295,30 @@ static int io_write_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 		return 0;
+ 
+ 	io = req->io;
+-	io->rw.iov = io->rw.fast_iov;
+ 	req->io = NULL;
+-	ret = io_import_iovec(WRITE, req, &io->rw.iov, &iter);
++	iov = io_import_iovec(WRITE, req, &io->rw.fast_iov, &iter);
+ 	req->io = io;
+-	if (ret < 0)
+-		return ret;
++	if (IS_ERR(iov))
++		return PTR_ERR(iov);
++	io->rw.iov = iov;
+ 
+-	io_req_map_rw(req, io->rw.iov, io->rw.fast_iov, &iter);
++	io_req_map_rw(req, io->rw.iov, &io->rw.fast_iov, &iter);
+ 	return 0;
+ }
+ 
+ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		    bool force_nonblock)
+ {
+-	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
++	struct iovec_cache cache;
++	struct iovec *iovec;
+ 	struct kiocb *kiocb = &req->rw.kiocb;
+ 	struct iov_iter iter;
+ 	size_t iov_count;
+ 	ssize_t ret;
+ 
+-	ret = io_import_iovec(WRITE, req, &iovec, &iter);
+-	if (ret < 0)
+-		return ret;
++	iovec = io_import_iovec(WRITE, req, &cache, &iter);
++	if (IS_ERR(iovec))
++		return PTR_ERR(iovec);
+ 
+ 	/* Ensure we clear previously set non-block flag */
+ 	if (!force_nonblock)
+@@ -2376,7 +2376,7 @@ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			kiocb_done(kiocb, ret2, nxt, req->in_async);
+ 		} else {
+ copy_iov:
+-			ret = io_setup_async_rw(req, iovec, inline_vecs, &iter);
++			ret = io_setup_async_rw(req, iovec, &cache, &iter);
+ 			if (ret)
+ 				goto out_free;
+ 			return -EAGAIN;
+@@ -2994,7 +2994,7 @@ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ #if defined(CONFIG_NET)
+ 	struct io_sr_msg *sr = &req->sr_msg;
+ 	struct io_async_ctx *io = req->io;
+-	int ret;
++	struct iovec *iov;
+ 
+ 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
+ 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
+@@ -3011,12 +3011,14 @@ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	if (req->flags & REQ_F_NEED_CLEANUP)
+ 		return 0;
+ 
+-	io->msg.iov = io->msg.fast_iov;
+-	ret = sendmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
+-					&io->msg.iov);
+-	if (!ret)
+-		req->flags |= REQ_F_NEED_CLEANUP;
+-	return ret;
++	iov = sendmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
++					&io->msg.fast_iov);
++	if (IS_ERR(iov))
++		return PTR_ERR(iov);
++
++	io->msg.iov = iov;
++	req->flags |= REQ_F_NEED_CLEANUP;
++	return 0;
+ #else
+ 	return -EOPNOTSUPP;
+ #endif
+@@ -3043,19 +3045,21 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			kmsg->msg.msg_name = &req->io->msg.addr;
+ 			/* if iov is set, it's allocated already */
+ 			if (!kmsg->iov)
+-				kmsg->iov = kmsg->fast_iov;
++				kmsg->iov = kmsg->fast_iov.iov;
+ 			kmsg->msg.msg_iter.iov = kmsg->iov;
+ 		} else {
+ 			struct io_sr_msg *sr = &req->sr_msg;
++			struct iovec *iov;
+ 
+ 			kmsg = &io.msg;
+ 			kmsg->msg.msg_name = &io.msg.addr;
+ 
+-			io.msg.iov = io.msg.fast_iov;
+-			ret = sendmsg_copy_msghdr(&io.msg.msg, sr->msg,
+-					sr->msg_flags, &io.msg.iov);
+-			if (ret)
+-				return ret;
++			iov = sendmsg_copy_msghdr(&io.msg.msg, sr->msg,
++					sr->msg_flags, &io.msg.fast_iov);
++			if (IS_ERR(iov))
++				return PTR_ERR(iov);
++
++			io.msg.iov = iov;
+ 		}
+ 
+ 		flags = req->sr_msg.msg_flags;
+@@ -3069,7 +3073,7 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			if (req->io)
+ 				return -EAGAIN;
+ 			if (io_alloc_async_ctx(req)) {
+-				if (kmsg->iov != kmsg->fast_iov)
++				if (kmsg->iov != kmsg->fast_iov.iov)
+ 					kfree(kmsg->iov);
+ 				return -ENOMEM;
+ 			}
+@@ -3081,7 +3085,7 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			ret = -EINTR;
+ 	}
+ 
+-	if (kmsg && kmsg->iov != kmsg->fast_iov)
++	if (kmsg && kmsg->iov != kmsg->fast_iov.iov)
+ 		kfree(kmsg->iov);
+ 	req->flags &= ~REQ_F_NEED_CLEANUP;
+ 	io_cqring_add_event(req, ret);
+@@ -3151,7 +3155,7 @@ static int io_recvmsg_prep(struct io_kiocb *req,
+ #if defined(CONFIG_NET)
+ 	struct io_sr_msg *sr = &req->sr_msg;
+ 	struct io_async_ctx *io = req->io;
+-	int ret;
++	struct iovec *iov;
+ 
+ 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
+ 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
+@@ -3168,12 +3172,14 @@ static int io_recvmsg_prep(struct io_kiocb *req,
+ 	if (req->flags & REQ_F_NEED_CLEANUP)
+ 		return 0;
+ 
+-	io->msg.iov = io->msg.fast_iov;
+-	ret = recvmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
+-					&io->msg.uaddr, &io->msg.iov);
+-	if (!ret)
+-		req->flags |= REQ_F_NEED_CLEANUP;
+-	return ret;
++	iov = recvmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
++					&io->msg.uaddr, &io->msg.fast_iov);
++	if (IS_ERR(iov))
++		return PTR_ERR(iov);
++
++	io->msg.iov = iov;
++	req->flags |= REQ_F_NEED_CLEANUP;
++	return 0;
+ #else
+ 	return -EOPNOTSUPP;
+ #endif
+@@ -3200,20 +3206,23 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			kmsg->msg.msg_name = &req->io->msg.addr;
+ 			/* if iov is set, it's allocated already */
+ 			if (!kmsg->iov)
+-				kmsg->iov = kmsg->fast_iov;
++				kmsg->iov = kmsg->fast_iov.iov;
+ 			kmsg->msg.msg_iter.iov = kmsg->iov;
+ 		} else {
+ 			struct io_sr_msg *sr = &req->sr_msg;
++			struct iovec *iov;
+ 
+ 			kmsg = &io.msg;
+ 			kmsg->msg.msg_name = &io.msg.addr;
+ 
+-			io.msg.iov = io.msg.fast_iov;
+-			ret = recvmsg_copy_msghdr(&io.msg.msg, sr->msg,
++			io.msg.iov = io.msg.fast_iov.iov;
++			iov = recvmsg_copy_msghdr(&io.msg.msg, sr->msg,
+ 					sr->msg_flags, &io.msg.uaddr,
+-					&io.msg.iov);
+-			if (ret)
+-				return ret;
++					&io.msg.fast_iov);
++			if (IS_ERR(iov))
++				return PTR_ERR(iov);
++
++			io.msg.iov = iov;
+ 		}
+ 
+ 		flags = req->sr_msg.msg_flags;
+@@ -3228,7 +3237,7 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			if (req->io)
+ 				return -EAGAIN;
+ 			if (io_alloc_async_ctx(req)) {
+-				if (kmsg->iov != kmsg->fast_iov)
++				if (kmsg->iov != kmsg->fast_iov.iov)
+ 					kfree(kmsg->iov);
+ 				return -ENOMEM;
+ 			}
+@@ -3240,7 +3249,7 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 			ret = -EINTR;
+ 	}
+ 
+-	if (kmsg && kmsg->iov != kmsg->fast_iov)
++	if (kmsg && kmsg->iov != kmsg->fast_iov.iov)
+ 		kfree(kmsg->iov);
+ 	req->flags &= ~REQ_F_NEED_CLEANUP;
+ 	io_cqring_add_event(req, ret);
+@@ -4269,12 +4278,12 @@ static void io_cleanup_req(struct io_kiocb *req)
+ 	case IORING_OP_WRITEV:
+ 	case IORING_OP_WRITE_FIXED:
+ 	case IORING_OP_WRITE:
+-		if (io->rw.iov != io->rw.fast_iov)
++		if (io->rw.iov != io->rw.fast_iov.iov)
+ 			kfree(io->rw.iov);
+ 		break;
+ 	case IORING_OP_SENDMSG:
+ 	case IORING_OP_RECVMSG:
+-		if (io->msg.iov != io->msg.fast_iov)
++		if (io->msg.iov != io->msg.fast_iov.iov)
+ 			kfree(io->msg.iov);
+ 		break;
+ 	case IORING_OP_OPENAT:
 -- 
 1.8.1.2
 
