@@ -4,148 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2886C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8384C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA5C20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B12C120772
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 20:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCEM7chc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQBKvhc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbgCaUaE (ORCPT
+        id S1729941AbgCaUdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:30:04 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32802 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbgCaUaE (ORCPT
+        Tue, 31 Mar 2020 16:33:16 -0400
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:33505 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbgCaUdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 16:30:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f20so23469483ljm.0;
-        Tue, 31 Mar 2020 13:30:02 -0700 (PDT)
+        Tue, 31 Mar 2020 16:33:16 -0400
+Received: by mail-lj1-f179.google.com with SMTP id f20so23478008ljm.0;
+        Tue, 31 Mar 2020 13:33:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LMMU+s7iMJHk7FqiEPYs8vBGLtrPTwaKOmVYBPS58SI=;
-        b=oCEM7chcd+lHmzehO9870OYGvbHYP+SrlPe8vT9W5h1K/gAO4EB62vGpsYuQvmqsgp
-         y1zHuyXDQc5RL+hpq2GIJAOFI1psotTuSMjwuEe9eQGaMWOVmr1VgqSEDwShH9zLkHns
-         eKe+xUMFNPEgw2bewiNRQSo7aJqlpO9Z8qTwAZasK8fHgvTPHEmlqsudvpDo01ugR5w5
-         ZpN0lDtxTuVSOPz+WunHvxhd2f3DTi47KJSuTSYkHG8ya68xsU75QojO5rfvZgh+BBik
-         AFKdOX9kF6pjG0Xot8xdOr0oBsQaNLKV/s9cLJ70qwbS80L3S1eFoA8QgEa2UsCEoe6y
-         ez3A==
+        bh=lShPZxhYmYKIxn9HZ21opBqSt/h6p0BHD/YYoVt0O6Y=;
+        b=RQBKvhc3u0Nhb2lLvppi4N79yYa944hBQPGlB+L4hj0AEKhvZNVA42PVGAhWv564+d
+         mbM+VCg1x+Wg314JZ0Og11zqSX9EjL1C4ZI/EF/hfm5idRjBecq1sw8eztp1/PGItaeG
+         /mRJwLHzXjtsIITo/Yuh/K4BWeORJddez2OSwuw8912AN2Fw0xJ8yf13CZaSQ76WbPpf
+         +vIvX4Vgho++utEkWjcQkmOeP4ZoxyivL8Qyy98hw0HeDJdpEGa9kZJeWf/gz8lfPFI2
+         OpAY/EOuJkq+8SUhhaXUBVWzjd+phDD1LTX9H8E297XvE+l5vncJnPE5OYdAUnk/yhiT
+         hkvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LMMU+s7iMJHk7FqiEPYs8vBGLtrPTwaKOmVYBPS58SI=;
-        b=hn/QfH1FVeAA6toSJ/U+iJ9k7WV77FWw56hXt5wvnQNEfp8j2V0Uh++jLJuaYSnwU2
-         QxvleV6TlZeklYNfoKERGCAKUcjS6ETYHm75dcOdEai01iXkUkL86kzfZPM8fZFI2tMb
-         nP6McjEmQ0ZX+YRtFFP86U/c82qTzlyUQHafvVEODgF9YzzE8reUGbN3Zo6VD7Xz/1l4
-         IcYLZSr1MlzxlzkQDXgWk2begjZH/nMc4JE1aKn0fCNOgQBpDwVtyknBIk29mrRSkIs5
-         YU4w+kEIzDbfTHzgYtgvE2TbzjZjVpJ+Xlmbt3dLEWxkAPzd/AvFTygyo84FWI9fTnnl
-         JC4A==
-X-Gm-Message-State: AGi0Pua0uaHFpv0UIhOAlEW0Msi0mMpLRngh1UhJHFeWYLDknJtCB6b1
-        p+vp79Pad6gzKee7SKjUOdCWBb5As5NtvnfkKsM=
-X-Google-Smtp-Source: APiQypJndi6nOWadfiPbOYHTode1edEee9bR6lQDxX095dN6jrdJVnUQM8J+A0BuXGOJI40dvo2K8Uy1Df/LML7D+lc=
-X-Received: by 2002:a05:651c:1aa:: with SMTP id c10mr11590837ljn.53.1585686601679;
- Tue, 31 Mar 2020 13:30:01 -0700 (PDT)
+        bh=lShPZxhYmYKIxn9HZ21opBqSt/h6p0BHD/YYoVt0O6Y=;
+        b=D8PhFge/PNVaH6muvzDd7fx1UOzkjydQ9LDMK5o3EgqthbvQG/i7iv+ginKoS26Z5U
+         8HxzGuFmbjyzVVY1JfDJh+AsJCnsmyR+tIK15HQr4agRpLtu7AduANSARmjV4hcJIYwj
+         jbHYhQEMNonoJGV2+7DrErkzPQ+6HwJEdp5Ux1XuUaFvCni0CTMQlzjlRzL01Uo+UrFr
+         2hZdyB2d09343sNuQJw84cEcYeyDb3T9oyCx1d9s/cKYBjgYJhXE0S0YZz9C82hBJaFQ
+         b+eM8eopcgToUZmytgzPEDP0rGL3c3iYrrjX1SBT/8AcbS0R/MLd5QajBtufXfcyTHtz
+         HRvA==
+X-Gm-Message-State: AGi0PuYRNN/b2kdgClA/YkFAnZ8KzK5DXeCy5y9ZgJnDDmK/KI4+BMia
+        /jq0PdwClvmRqF5q/cBzhkq+SfPQqpruZbCqebs=
+X-Google-Smtp-Source: APiQypL9Ipre8TYKspmzX1YW+qdEGC4l1xDR2LSmRhJqreBFH4Gh/aHgcWcKDbJlMwBaSFTyNRo9JoQb/vDfy2wjpWc=
+X-Received: by 2002:a2e:b1c2:: with SMTP id e2mr11666246lja.288.1585686793666;
+ Tue, 31 Mar 2020 13:33:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20191120220559.18914-1-c-robey@ti.com> <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
- <20191212170452.GV35479@atomide.com> <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
- <20200331184647.GF37466@atomide.com>
-In-Reply-To: <20200331184647.GF37466@atomide.com>
-From:   Drew Fustini <pdp7pdp7@gmail.com>
-Date:   Tue, 31 Mar 2020 22:30:30 +0200
-Message-ID: <CAEf4M_BxY0JgWXRRp48gFgWWcN2uJd7q4kXOCmOBziGpWYCvoA@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Caleb Robey <c-robey@ti.com>, linux-omap@vger.kernel.org,
-        Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
+References: <CAHCN7xJSKH-gXA5ncFS3h6_2R28rn70O3HfT=ActS1XVgCFSeg@mail.gmail.com>
+ <DB3PR0402MB39160D3F0D03B968B7CBE25AF5CD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAHCN7xJ2m3LRB3oGBb5QKbacYyTBQK1CdzGcTh3w=hj18H=4Pw@mail.gmail.com> <DB3PR0402MB3916B68A1B0F37EA34825F69F5CA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916B68A1B0F37EA34825F69F5CA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 31 Mar 2020 17:33:03 -0300
+Message-ID: <CAOMZO5ABmK9LLOafmChFeDnTzrDTKgqfwLNe08bR1Yo8iA1G0g@mail.gmail.com>
+Subject: Re: i.MX8MN Errors on 5.6-RC7
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Adam Ford <aford173@gmail.com>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Drew Fustini <drew@beagleboard.org>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 8:46 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Drew Fustini <pdp7pdp7@gmail.com> [200331 18:39]:
-> > On Thu, Dec 12, 2019 at 6:06 PM Tony Lindgren <tony@atomide.com> wrote:
-> > > > On 21/11/2019 00:05, Caleb Robey wrote:
-> > > > > From: Jason Kridner <jdk@ti.com>
-> > > > >
-> > > > > BeagleBoard.org BeagleBone AI is an open source hardware single
-> > > > > board computer based on the Texas Instruments AM5729 SoC featuring
-> > > > > dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-> > > > > signal processor (DSP), quad-core embedded vision engine (EVE),
-> > > > > Arm Cortex-M4 processors, dual programmable realtime unit
-> > > > > industrial control subsystems and more. The board features 1GB
-> > > > > DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-> > > > > 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-> > > > > headers.
-> > > > >
-> > > > > For more information, refer to:
-> > > > > https://beaglebone.ai
-> > > > >
-> > > > > This patch introduces the BeagleBone AI device tree.
-> > > > >
-> > > > > Note that the device use the "ti,tpd12s016" component which is
-> > > > > software compatible with "ti,tpd12s015". Thus we only use the
-> > > > > latter driver.
-> > > >
-> > > > Ah. thanks. I see my comments resolved here.
-> > > > no more comments to net part from my side.
-> > >
-> > > Just FYI, Jason had one pending comment on the earlier version
-> > > about the compatible property to use.
-> > >
-> > > So I'm assuming there will be a new version posted, tagging
-> > > this one as read.
-> >
-> > It came to my attention today when talking with Jason Kridner and
-> > Robert Nelson that we did not get the BeagleBone AI device tree
-> > upstream yet.
-> >
-> > I am having trouble identifying what the pending comment was from the
-> > original patch series.
-> >
-> > Was it related to this compatible string?
-> >
-> > > +       compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
->
-> Yes I think Jason had some comment on the compatible string
-> to use.
+Hi Adam,
 
-Ah, I see it now [1]:
+On Sun, Mar 29, 2020 at 12:29 AM Anson Huang <anson.huang@nxp.com> wrote:
 
-> Probably need to change "beagleboard.org," to "beagle," as of today.
-> With the new yaml stuff for defining device tree entries, having the
-> period (.) in the vendor identifier can be a bit confusing. I altered
-> my submission to avoid this.
+> I am using our latest u-boot and ATF in NXP internal tree, maybe you can get the
+> latest release to have a try.
 
-so I think this should work:
+Here is a complete log that shows U-Boot/ATF version being used.
 
-compatible = "beagleboard-org,am5729-beagleboneai", "ti,am5728",
-
-We'll get it resubmitted.
-
-Thanks,
-Drew
-
-[1] https://lore.kernel.org/linux-devicetree/CA+T6QPm-DNG_QoAMWw_zUDUkZCfhbBTgygnoPAykf3mgK7opaA@mail.gmail.com/
+It successfully boots imx8mn-evk running linux-next:
+https://storage.kernelci.org/next/master/next-20200331/arm64/defconfig/gcc-8/lab-baylibre/boot-imx8mn-ddr4-evk.html
