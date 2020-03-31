@@ -2,115 +2,214 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBFCC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15967C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 034AE2072A
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF97B2072A
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 07:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pRCkdy9D"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dmi4tPnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729982AbgCaHiu (ORCPT
+        id S1730038AbgCaHjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:38:50 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35430 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgCaHiu (ORCPT
+        Tue, 31 Mar 2020 03:39:08 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:38674 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgCaHjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:38:50 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u68so9955026pfb.2;
-        Tue, 31 Mar 2020 00:38:49 -0700 (PDT)
+        Tue, 31 Mar 2020 03:39:08 -0400
+Received: by mail-vs1-f68.google.com with SMTP id x206so12872768vsx.5
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 00:39:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=clEoM1P33ahnu51wVt18VYbNSvCb4pxLGx0VQ1g+QU0=;
-        b=pRCkdy9DweqMPvvEEk43IP8ZmbYGUUIqCEfMRIdUbthVHHA9bdtowzHwyFGfBxtLNP
-         IDJpl5RONrulwcrwj7K49EC35SZDg8qZ/elPFdxdz84Hz4/RTDEFPyva1VFC/p6T2jSs
-         X8oNWrC0YNuYSqYDC5F9eeTEYa/HUdg9+xgtBfFdGjKETd2Q4Yp0sePcZgPwSXAN6wSs
-         u+JpmJcrXf9m/EPCt81lWdSm2vMW2EkLpF4EJNwuA+AUFvd6oAgR3EfM7W1qxwYTwMXg
-         NH1DJLYXn7yua5hxm70FO9lUEuDEjYtw3VWx5b7CN4ZCh8QjwQ0WVcXk505P+dd+y41U
-         X7/w==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mf4BvDmC+BGalJU9mD8gdNB8rFbbjrC+WqY4Crh0V9U=;
+        b=Dmi4tPnjWtoexjKLMIWqLDO5lCj3eQdHzUN071JAVkhCTGW2dViDrf3zad75bGYIPc
+         d0tqnzqL8Bj8qwzVlVzHOjntDEyZw9VhRwUYwJur//Tfk8ueGnJdlsdF2P4u2IE6rzEw
+         5vzDSI7EvnvF1qwMf1GqeACswRLGjCYk2lItk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=clEoM1P33ahnu51wVt18VYbNSvCb4pxLGx0VQ1g+QU0=;
-        b=kHHhvPd4yG2zJjyvUBxHYH3kt5EmfyXlowb1fUc5I7We7RWpzKacwNiuqBIicOjwJa
-         EGDvV9togH6933f8p5Nl7MZ+8wXerqF5iRzayZsmZWfHHySz5tN8/z42EQP34m8hsIkD
-         za4A+NxwMQnoPnbwuZL2gCyXL6Kv3ihkSaKv195AQ1jXtxRby5SIW8fN0weXfV7u+z1P
-         MDp0ZCd9A6kZJMQXH2ZPWDmR0HI/JXuP13ZJPkj19iQAqKZsDv5XgpxfZvaPZxy9GrF5
-         TsQXuPQfGeEIY017TcKCIm09Y6uvGv97WkTVVwARdMbcIuD+OGJXuVqu+FYLy1+29ZCW
-         f1kg==
-X-Gm-Message-State: ANhLgQ22l/faUpRABYVHe+Ag60MZEE0B4Gnqat1c7Ra4tHW/71pVF85V
-        mstZgbuJPMIrdck2TS+moCU=
-X-Google-Smtp-Source: ADFU+vuhhva7xOwu7yBEwCmP/xzU/kqUaZ8k0h4Bh/gTzbtxJDk0jInPIVmzOVXc6R7o4XzoUi4Gdw==
-X-Received: by 2002:a62:2c87:: with SMTP id s129mr17384827pfs.263.1585640329211;
-        Tue, 31 Mar 2020 00:38:49 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([131.107.147.210])
-        by smtp.googlemail.com with ESMTPSA id q80sm9203632pfc.17.2020.03.31.00.38.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 00:38:48 -0700 (PDT)
-From:   ltykernel@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com
-Subject: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-Date:   Tue, 31 Mar 2020 00:38:32 -0700
-Message-Id: <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
-References: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mf4BvDmC+BGalJU9mD8gdNB8rFbbjrC+WqY4Crh0V9U=;
+        b=Nv+ToQaEZDZkL26QX7ojO6iMx9WDSt2U/kNu2mzUY9W/pVx60iNf53qjOXdpVWQbIf
+         vkOkyko917vMnZCtrE0zu+c2hlkBTdtt9znJBXRAfGM3cgsET0zw2ULITb6FPes4B6SO
+         AFbvF2pTRgzTlhkSCMfNzDP9vnjkTl+AvEg16ntruL/NJvHzHYw3mW7thtAFp9dM7tm+
+         iWRjWCTvbTPoBGTW4mKjCa/62jIAbP32g+vXm35uQ2JfU3sICFv+y8j0T5wA35gFuDjc
+         50dZC8f0exSQ37NB7jyBtXlFPCbot8U96APFasxPMBKuVH7VG5K5PnKgfuCuMekueZmR
+         HgXw==
+X-Gm-Message-State: AGi0PuY1yxHH7QgpXjX5o/lSeQSVMLa+PwhSOEdN26NAsGTcpwR7jCO4
+        EiHdlNPze56+ejFexM9O5LWvARORQJVOznF/hzG6ig==
+X-Google-Smtp-Source: APiQypJ8tjSDzNqqzb7QPP0t8s2sSqBWUkMLyEdCd2TJFUnJLO+3bNKncFxIFwNs73XDYJEY31KCmS0oC5Cf+GSpzZw=
+X-Received: by 2002:a67:d45:: with SMTP id 66mr10355355vsn.1.1585640346189;
+ Tue, 31 Mar 2020 00:39:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 31 Mar 2020 15:38:55 +0800
+Message-ID: <CANMq1KAT0x7rLeRVQ7uzxSFbq+g_ef_OCAfAVf3dtYySJwYG2Q@mail.gmail.com>
+Subject: Re: [PATCH v11 4/5] rtc: mt6397: Add support for the MediaTek MT6358 RTC
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On Tue, Mar 31, 2020 at 12:07 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> From: Ran Bi <ran.bi@mediatek.com>
+>
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> driver which only needed by armv7 CPU without ATF.
+>
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 
-When oops happens with panic_on_oops unset, the oops
-thread is killed by die() and system continues to run.
-In such case, guest should not report crash register
-data to host since system still runs. Fix it.
+This looks good to me now, thanks.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
----
-Change since v3:
-	Fix compile error
----
- drivers/hv/vmbus_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 172ceae69abb..4bc02aea2098 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -31,6 +31,7 @@
- #include <linux/kdebug.h>
- #include <linux/efi.h>
- #include <linux/random.h>
-+#include <linux/kernel.h>
- #include <linux/syscore_ops.h>
- #include <clocksource/hyperv_timer.h>
- #include "hyperv_vmbus.h"
-@@ -91,7 +92,7 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
- 	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
- 	 * the notification here.
- 	 */
--	if (hyperv_report_reg())
-+	if (hyperv_report_reg() && panic_on_oops)
- 		hyperv_report_panic(regs, val);
- 	return NOTIFY_DONE;
- }
--- 
-2.14.5
-
+> ---
+>  drivers/power/reset/mt6323-poweroff.c |  2 +-
+>  drivers/rtc/rtc-mt6397.c              | 23 +++++++++++++++++++----
+>  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+>  3 files changed, 28 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
+> index 1caf43d..0532803 100644
+> --- a/drivers/power/reset/mt6323-poweroff.c
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
+>         int ret;
+>
+>         regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> -       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +       regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
+>
+>         ret = regmap_read_poll_timeout(pwrc->regmap,
+>                                         pwrc->base + RTC_BBPU, val,
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index cda238d..7f3dfd2 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/mfd/mt6397/core.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+> @@ -20,7 +21,7 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>         int ret;
+>         u32 data;
+>
+> -       ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +       ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
+>         if (ret < 0)
+>                 return ret;
+>
+> @@ -269,6 +270,8 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         rtc->addr_base = res->start;
+>
+> +       rtc->data = of_device_get_match_data(&pdev->dev);
+> +
+>         rtc->irq = platform_get_irq(pdev, 0);
+>         if (rtc->irq < 0)
+>                 return rtc->irq;
+> @@ -325,10 +328,22 @@ static int mt6397_rtc_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
+>                         mt6397_rtc_resume);
+>
+> +static const struct mtk_rtc_data mt6358_rtc_data = {
+> +       .wrtgr = RTC_WRTGR_MT6358,
+> +};
+> +
+> +static const struct mtk_rtc_data mt6397_rtc_data = {
+> +       .wrtgr = RTC_WRTGR_MT6397,
+> +};
+> +
+>  static const struct of_device_id mt6397_rtc_of_match[] = {
+> -       { .compatible = "mediatek,mt6323-rtc", },
+> -       { .compatible = "mediatek,mt6397-rtc", },
+> -       { }
+> +       { .compatible = "mediatek,mt6323-rtc",
+> +               .data = &mt6397_rtc_data, },
+> +       { .compatible = "mediatek,mt6358-rtc",
+> +               .data = &mt6358_rtc_data, },
+> +       { .compatible = "mediatek,mt6397-rtc",
+> +               .data = &mt6397_rtc_data, },
+> +       {}
+>  };
+>  MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+>
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
+> index 7dfb63b..6200f3b 100644
+> --- a/include/linux/mfd/mt6397/rtc.h
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -18,7 +18,9 @@
+>  #define RTC_BBPU_CBUSY         BIT(6)
+>  #define RTC_BBPU_KEY            (0x43 << 8)
+>
+> -#define RTC_WRTGR              0x003c
+> +#define RTC_WRTGR_MT6358       0x3a
+> +#define RTC_WRTGR_MT6397       0x3c
+> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
+>
+>  #define RTC_IRQ_STA            0x0002
+>  #define RTC_IRQ_STA_AL         BIT(0)
+> @@ -65,6 +67,10 @@
+>  #define MTK_RTC_POLL_DELAY_US  10
+>  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+>
+> +struct mtk_rtc_data {
+> +       u32                     wrtgr;
+> +};
+> +
+>  struct mt6397_rtc {
+>         struct device           *dev;
+>         struct rtc_device       *rtc_dev;
+> @@ -74,6 +80,7 @@ struct mt6397_rtc {
+>         struct regmap           *regmap;
+>         int                     irq;
+>         u32                     addr_base;
+> +       const struct mtk_rtc_data *data;
+>  };
+>
+>  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> --
+> 2.6.4
