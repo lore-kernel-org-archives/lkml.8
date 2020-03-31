@@ -2,143 +2,214 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDAAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B39C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9285F20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:19:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acOi2m3o"
+	by mail.kernel.org (Postfix) with ESMTP id 72E1F20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585671684;
+	bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qzOTsS0JdAfmu2XExeKPZ8SK3mK4yLFYqTQwFNIyx1aqFdd5zMB2DMs+LyScvjpfx
+	 LcfyWqH36WC+UPBmBYnHHZs1mdtc8X+vNHr0mQ0eoXbQ9d7M3spfaVXMN9v0sWAexc
+	 tL/jUB6YpVuoMGRQBxS9LW/LHoBdkXCuoWdIl4/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbgCaQTj (ORCPT
+        id S1730607AbgCaQVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:19:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43452 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730413AbgCaQTj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:19:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585671577;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Knl+J+ncq8iy4lpwl7zts4N74U3gDGfq7AsLaAMdSLI=;
-        b=acOi2m3ojbSQyy1BXLdQGgFXJX1rQmgqxFE7ZdG12ZKEuFsrgzybBNoheJ9V7boFS6Zcbh
-        FHgOCOlnt8jSnBy8DEk7D+DyIyuSOSjxpdfKy9SM7ENh3DKlS00CwocdUy0u2VVVAOanAu
-        CaoO2bbPZiioM4hV6UgKI8875r2kwrc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-3Dsj50QLPnCv2dedz5fYsw-1; Tue, 31 Mar 2020 12:19:33 -0400
-X-MC-Unique: 3Dsj50QLPnCv2dedz5fYsw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 31 Mar 2020 12:21:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730011AbgCaQVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:21:23 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D60C1137840;
-        Tue, 31 Mar 2020 16:19:32 +0000 (UTC)
-Received: from [10.36.112.58] (ovpn-112-58.ams2.redhat.com [10.36.112.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C7DCD5C1A2;
-        Tue, 31 Mar 2020 16:19:28 +0000 (UTC)
-Subject: Re: [PATCH] iommu/vt-d: Fix PASID cache flush
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Raj Ashok <ashok.raj@intel.com>
-References: <1585610725-78316-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <53be1d27-6348-56db-7eac-6734f92f123d@redhat.com>
- <20200331090843.59961e03@jacob-builder>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <2e9fc0f5-6181-0a10-db59-67e0ffca14cd@redhat.com>
-Date:   Tue, 31 Mar 2020 18:19:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id E58DD21473;
+        Tue, 31 Mar 2020 16:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585671682;
+        bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gNLQBrPcq3oyN2Ogv+oTJyFfBNekyyJFE8OMY+ksIRuIUm4Epp9KM6Y1F/8vi0HEK
+         10SfgtgPdKeKpsdZiqQ2ixSx9HcCCrFep4hoh/CePpyQATN8UU/WSDZC0IVmvAP2LT
+         v14r3TcSkQKemqZJ9R1yludBCEJye3nWX1UaBApI=
+Received: by mail-qt1-f175.google.com with SMTP id z12so18836742qtq.5;
+        Tue, 31 Mar 2020 09:21:21 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0eFQXJPHRl5wRowCdEqbAlE5Qup/b60Tefav6tVtVAI01tH+j3
+        jEPDKj3BsjkAHgUdk6rL/n79Yy8651xuJTczsA==
+X-Google-Smtp-Source: ADFU+vtynyRBpHK1zGlgHy3HIyDVqOtqkMP9vtFANRwUVhPPv/eanwLrG9DiWcusvM2HxEgWHSF1cMX0wltfSbKtWIU=
+X-Received: by 2002:ac8:1611:: with SMTP id p17mr5993804qtj.300.1585671680921;
+ Tue, 31 Mar 2020 09:21:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200331090843.59961e03@jacob-builder>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200315191632.12536-1-rentao.bupt@gmail.com> <20200315191632.12536-7-rentao.bupt@gmail.com>
+ <20200330192347.GA6388@bogus> <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
+In-Reply-To: <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 31 Mar 2020 10:21:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
+Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
+ ID/string properties
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+On Mon, Mar 30, 2020 at 6:14 PM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Mon, 2020-03-30 at 13:23 -0600, Rob Herring wrote:
+> > On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
+> > > From: Tao Ren <rentao.bupt@gmail.com>
+> > >
+> > > Update device tree binding document for aspeed vhub's device IDs and
+> > > string properties.
+> > >
+> > > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > > ---
+> > >  No change in v2:
+> > >    - the patch is added into the series since v2.
+> > >
+> > >  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
+> > >  1 file changed, 68 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> > > index 06399ba0d9e4..5b2e8d867219 100644
+> > > --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> > > +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> > > @@ -52,6 +52,59 @@ properties:
+> > >          minimum: 1
+> > >          maximum: 21
+> > >
+> > > +  vhub-vendor-id:
+> > > +    description: vhub Vendor ID
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - maximum: 65535
+> > > +
+> > > +  vhub-product-id:
+> > > +    description: vhub Product ID
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - maximum: 65535
+> >
+> > There's already standard 'vendor-id' and 'device-id' properties. Use
+> > those.
+>
+> So yes and no... I don't fundamentally object but keep in mind that
+> traditionally, the properties are about matching with a physical
+> hardware.
+>
+> In this case however, we are describing a virtual piece of HW and so
+> those IDs are going to be picked up to be exposed as the USB
+> vendor/device of the vhub on the USB bus.
+>
+> Not necessarily an issue but it's more "configuration" than "matching"
+> and as such, it might make sense to expose that with a prefix, though I
+> would prefer something like usb-vendor-id or usb,vendor-id...
 
-On 3/31/20 6:08 PM, Jacob Pan wrote:
-> Actually, this is not a bug. The current code has:
-> #define QI_PC_PASID_SEL             (QI_PC_TYPE | QI_PC_GRAN(1))
-> 
-> Which already has the type and shift.
-> 
-> In my vSVA series, I redefined granu such that I can use them in the 2D
-> table lookup.
-> 
-> -#define QI_PC_ALL_PASIDS       (QI_PC_TYPE | QI_PC_GRAN(0))        
-> -#define QI_PC_PASID_SEL                (QI_PC_TYPE | QI_PC_GRAN(1))
-> +/* PASID cache invalidation granu */                               
-> +#define QI_PC_ALL_PASIDS       0                                   
-> +#define QI_PC_PASID_SEL                1                           
-> 
-> Please ignore this, sorry about the confusion.
-OK I missed that as well, sorry. So that's not a fix but the code will
-become more readable/consistent in your vSVA series.
+For FDT uses, it's pretty much been configuration. It's mostly been
+for PCI that I've seen these properties used.
 
-Thanks
+> > > +
+> > > +  vhub-device-revision:
+> >
+> > Specific to USB, not vhub.
+>
+> Same as the above.
+>
+> > > +    description: vhub Device Revision in binary-coded decimal
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - maximum: 65535
+> > > +
+> > > +  vhub-strings:
+> > > +    type: object
+> > > +
+> > > +    properties:
+> > > +      '#address-cells':
+> > > +        const: 1
+> > > +
+> > > +      '#size-cells':
+> > > +        const: 0
+> > > +
+> > > +    patternProperties:
+> > > +      '^string@[0-9a-f]+$':
+> > > +        type: object
+> > > +        description: string descriptors of the specific language
+> > > +
+> > > +        properties:
+> > > +          reg:
+> > > +            maxItems: 1
+> > > +            description: 16-bit Language Identifier defined by USB-IF
+> > > +
+> > > +          manufacturer:
+> > > +            description: vhub manufacturer
+> > > +            allOf:
+> > > +              - $ref: /schemas/types.yaml#/definitions/string
+> > > +
+> > > +          product:
+> > > +            description: vhub product name
+> > > +            allOf:
+> > > +              - $ref: /schemas/types.yaml#/definitions/string
+> > > +
+> > > +          serial-number:
+> > > +            description: vhub device serial number
+> > > +            allOf:
+> > > +              - $ref: /schemas/types.yaml#/definitions/string
+> >
+> > For all of this, it's USB specific, not vhub specific. I'm not sure this
+> > is the right approach. It might be better to just define properties
+> > which are just raw USB descriptors rather than inventing some DT format
+> > that then has to be converted into USB descriptors.
+>
+> Raw blob in the DT is rather annoying and leads to hard to parse stuff
+> for both humans and scripts. The main strenght of the DT is it's easy
+> to read and manipulate.
 
-Eric
-> 
-> On Tue, 31 Mar 2020 11:28:17 +0200
-> Auger Eric <eric.auger@redhat.com> wrote:
-> 
->> Hi Jacob,
->>
->> On 3/31/20 1:25 AM, Jacob Pan wrote:
->>> PASID cache type and shift of granularity bits are missing in
->>> the current code.
->>>
->>> Fixes: 6f7db75e1c46 ("iommu/vt-d: Add second level page table
->>> interface")
->>>
->>> Cc: Eric Auger <eric.auger@redhat.com>
->>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
->> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->>
->> Thanks
->>
->> Eric
->>
->>> ---
->>>  drivers/iommu/intel-pasid.c | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/iommu/intel-pasid.c
->>> b/drivers/iommu/intel-pasid.c index 22b30f10b396..57d05b0fbafc
->>> 100644 --- a/drivers/iommu/intel-pasid.c
->>> +++ b/drivers/iommu/intel-pasid.c
->>> @@ -365,7 +365,8 @@ pasid_cache_invalidation_with_pasid(struct
->>> intel_iommu *iommu, {
->>>  	struct qi_desc desc;
->>>  
->>> -	desc.qw0 = QI_PC_DID(did) | QI_PC_PASID_SEL |
->>> QI_PC_PASID(pasid);
->>> +	desc.qw0 = QI_PC_DID(did) | QI_PC_GRAN(QI_PC_PASID_SEL) |
->>> +		   QI_PC_PASID(pasid) | QI_PC_TYPE;
->>>  	desc.qw1 = 0;
->>>  	desc.qw2 = 0;
->>>  	desc.qw3 = 0;
->>>   
->>
-> 
-> [Jacob Pan]
-> 
+True, and I'd certainly agree when we're talking about some vendor
+specific blob. but there's already code/tools to parse USB
+descriptors.
 
+> Also not the entire descriptor is configurable this way.
+>
+> That said, it could be that using  the DT for the above is overkill and
+> instead, we should consider a configfs like the rest of USB gadget.
+> Though it isn't obvious how to do that, the current gadget stuff
+> doesn't really "fit" what we need here.
+
+Surely the descriptor building code can be shared at a minimum.
+
+Regardless of whether gadget configfs fits, usually it is pretty clear
+whether something belongs in DT or userspace. That should be decided
+first.
+
+> Maybe we could expose the port as UDCs but not actually expose them on
+> the bus until the hub is "activated" via a special configfs entry...
+
+If control of the hub is done by userspace, I'd think configuration
+should be there too.
+
+Rob
