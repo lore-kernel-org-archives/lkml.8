@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5C9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBD4C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCE920787
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C0C20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 09:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585645534;
-	bh=R4Lc+71PGFMVycjmavRdG/jAUNmy4bDOa660TR9oaVA=;
+	s=default; t=1585645535;
+	bh=eTsrk4rS2oByHAz2G34KbqfNarKNhRueHXowZf1Awo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CUhLrIo8AdttdA0sZG/HTr32fgJFhknAJcaps1M/6Q8G7ncCApTFZejPjFS3FUbTT
-	 3zOIs8FcazvfHkImNsthmpRUBM/Xdk2VmnTH3H8BK/qj7Y+wqrWQSZuI8XOcFo9TKE
-	 /p7cpbqnd3gRMjImnswI0ZR2Fefc+FrXVzq05CY0=
+	b=f7dn5XLenhwKMGn7+tPrXRQTakUEnVQbgWEYxoCf0IPtGHfPlXULCDGOHae46C4x3
+	 S/wyYqqPJJ7B1Mk/wXAFp7QsEjJphMWp8Ify4KFuMv4Uxhi7XzQQ/ARPJrt3HJJCGR
+	 IoA444CRFnKM1kDYely76GTDD5xMaxJyz7+j7I/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbgCaJFc (ORCPT
+        id S1731074AbgCaJFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 05:05:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46560 "EHLO mail.kernel.org"
+        Tue, 31 Mar 2020 05:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730541AbgCaJFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:05:30 -0400
+        id S1730541AbgCaJFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 05:05:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C735720B1F;
-        Tue, 31 Mar 2020 09:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B07120B80;
+        Tue, 31 Mar 2020 09:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585645530;
-        bh=R4Lc+71PGFMVycjmavRdG/jAUNmy4bDOa660TR9oaVA=;
+        s=default; t=1585645532;
+        bh=eTsrk4rS2oByHAz2G34KbqfNarKNhRueHXowZf1Awo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oohEHjE1Tvrb4g4CU4cnzkq8pR/araSZlkWv2AZtnB0U0gk5xXi+MW30/1z44T1mG
-         2b3Ata4Bpf0K6cmgUg1w9UtHCduWaCLHGkvOGGRJrWJLR82WnlrRaKUZ+oFUfB6wAR
-         /sjIjMG4vzQEykXTEfPSIVlzffc5794BCImzHygo=
+        b=DUblurlyG+tcG3+W0+6KPmfCK0nhZvc+Eh4RGS1xxjHZp01BYZ6/UbjYikSSzqa41
+         X7193yhnit7f4cvwq6c/gC3WKuS/Ms019XJIKxQLgkaAPW+vv4oYTQJBXaYDnEmcxg
+         WcGkSIXTZPi1N4xfkl8HX5fziors5R/aNKAjGwk8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org, teika kazura <teika@gmx.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.5 082/170] Input: raydium_i2c_ts - fix error codes in raydium_i2c_boot_trigger()
-Date:   Tue, 31 Mar 2020 10:58:16 +0200
-Message-Id: <20200331085433.024107683@linuxfoundation.org>
+Subject: [PATCH 5.5 083/170] Input: fix stale timestamp on key autorepeat events
+Date:   Tue, 31 Mar 2020 10:58:17 +0200
+Message-Id: <20200331085433.125640559@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200331085423.990189598@linuxfoundation.org>
 References: <20200331085423.990189598@linuxfoundation.org>
@@ -59,57 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 32cf3a610c35cb21e3157f4bbf29d89960e30a36 upstream.
+commit 4134252ab7e2c339a54302b88496cb5a89cdbaec upstream.
 
-These functions are supposed to return negative error codes but instead
-it returns true on failure and false on success.  The error codes are
-eventually propagated back to user space.
+We need to refresh timestamp when emitting key autorepeat events, otherwise
+they will carry timestamp of the original key press event.
 
-Fixes: 48a2b783483b ("Input: add Raydium I2C touchscreen driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200303101306.4potflz7na2nn3od@kili.mountain
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206929
+Fixes: 3b51c44bd693 ("Input: allow drivers specify timestamp for input events")
 Cc: stable@vger.kernel.org
+Reported-by: teika kazura <teika@gmx.com>
+Tested-by: teika kazura <teika@gmx.com>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/touchscreen/raydium_i2c_ts.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/input/input.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/input/touchscreen/raydium_i2c_ts.c
-+++ b/drivers/input/touchscreen/raydium_i2c_ts.c
-@@ -432,7 +432,7 @@ static int raydium_i2c_write_object(stru
- 	return 0;
- }
+--- a/drivers/input/input.c
++++ b/drivers/input/input.c
+@@ -190,6 +190,7 @@ static void input_repeat_key(struct time
+ 			input_value_sync
+ 		};
  
--static bool raydium_i2c_boot_trigger(struct i2c_client *client)
-+static int raydium_i2c_boot_trigger(struct i2c_client *client)
- {
- 	static const u8 cmd[7][6] = {
- 		{ 0x08, 0x0C, 0x09, 0x00, 0x50, 0xD7 },
-@@ -457,10 +457,10 @@ static bool raydium_i2c_boot_trigger(str
- 		}
- 	}
++		input_set_timestamp(dev, ktime_get());
+ 		input_pass_values(dev, vals, ARRAY_SIZE(vals));
  
--	return false;
-+	return 0;
- }
- 
--static bool raydium_i2c_fw_trigger(struct i2c_client *client)
-+static int raydium_i2c_fw_trigger(struct i2c_client *client)
- {
- 	static const u8 cmd[5][11] = {
- 		{ 0, 0x09, 0x71, 0x0C, 0x09, 0x00, 0x50, 0xD7, 0, 0, 0 },
-@@ -483,7 +483,7 @@ static bool raydium_i2c_fw_trigger(struc
- 		}
- 	}
- 
--	return false;
-+	return 0;
- }
- 
- static int raydium_i2c_check_path(struct i2c_client *client)
+ 		if (dev->rep[REP_PERIOD])
 
 
