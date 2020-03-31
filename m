@@ -2,326 +2,142 @@ Return-Path: <SRS0=6o4L=5Q=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EC0C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658ABC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2D420848
-	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375DC20848
+	for <linux-kernel@archiver.kernel.org>; Tue, 31 Mar 2020 15:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IpVx0TfQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npxLREbo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731102AbgCaPig (ORCPT
+        id S1730799AbgCaPk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:38:36 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37933 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaPif (ORCPT
+        Tue, 31 Mar 2020 11:40:28 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38327 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730413AbgCaPk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:38:35 -0400
-Received: by mail-pj1-f67.google.com with SMTP id m15so1230808pje.3;
-        Tue, 31 Mar 2020 08:38:34 -0700 (PDT)
+        Tue, 31 Mar 2020 11:40:27 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e5so25667078edq.5;
+        Tue, 31 Mar 2020 08:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RuP8IPvlcqE2U71M0ePRKjlt8xs7un60IJP4O0uryZQ=;
-        b=IpVx0TfQfbT7InUk9qBDR0CTSaCMN/LK0fdN2wwLeWw30JTQArEn6aUGd3BLBNnevU
-         xKaFCmLw6DX9qFHVzH9YfVojMOQc+HVTexqbkArMbKNK0v7GE3PKjTdZbVDxZQogOD+P
-         rh7mT4iJvOhDv4thB8S2Wy47A/OO7HUUPuKf+ovQjPK6iO03QV2dJY3jPhWrCHzlXpci
-         rQoM7IP4BHbB82jMYyXibZT5zxlQreZ3AHZj5BNSvGCn9zkNpc75LekOq9VmhgV5Mw0Z
-         +G6waTPwdfu7p3PKBT617osa6auHjtM9YTqyoHInxBohkU1YA/JT6PvTmU9LgNL+VHgh
-         MZiQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OxOzUkSFr6Wk07X0rWnPtJzVLAiDlRwjY44J+SEwVCw=;
+        b=npxLREbo59UnWM8carwNx0WfN7TP3zULYz7BwC7Ynn+Jq+Dnu53Dv+BaXolUmXVF9g
+         nsCAA9cvDbvEDrU0il0d06GFVRLsO4ZeCY3QK0z0MFrbXg9tfNRfgcUihUn+TU9oyPRl
+         UjNLWYVFCmcFpq5EjE58+zT2B8XH4hGR+xLJtWveeMzZKG0du2DQQbGQHsRuTSTjvXHn
+         X9fHHGANLRMBcLSONrxC+3wdAX3Rr4fJkSinyyLnim6lI+oTHla3ZYEf9xUku2t4rXt/
+         Dyp+LuXQdME5SUNXfEoqQTkpeZ6IB6c1MtOUQ1lYkhPZiQ+0jqW7XZVhuZ1PfP4aSSXl
+         464w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RuP8IPvlcqE2U71M0ePRKjlt8xs7un60IJP4O0uryZQ=;
-        b=gquemZy614CQ9nVvQv3dWVe7W39PKUvtDxl+BOVCR8uVcuZVCs7Btb3Iuv9QijdaTj
-         BqyHQt5G9L6KjcMLApQcFFKn3rx6EP8N7GlVsEATsIzls21YOZS5SfaDaTAi9sH+b5K0
-         uOdsATdz82SWZHoPA2U70LYKVjTiyVksel64zhXfTfHmMA2aAgb1U78LTPkHmEUPTWpL
-         HgBCr9oG4TIc4JPf0Ojuyax2L8skPenzXQ2zgAtZhGH9EMs9qjwgeq+sl7+rQaP3pyeQ
-         5MrHD6pTLRGGE7fI+nowOW1LAOKRHbTg/dDqQbUAEwecHjhoqd3Ypwo+XbzCAEiK06x+
-         nI4A==
-X-Gm-Message-State: AGi0PuYMGP64Ee7yh6OzR9cOX7ZgEtFNAKG0TwQVwU+k9DiIdIEmvGw2
-        ZC5Gocmb9MLbau7CIL6M+dOQk5co
-X-Google-Smtp-Source: APiQypKdMIgPdLC6+OnkbvFsZxuqvqtBdZmt4WrOGgFdDSFsU7C0LfNkDzn3ccOdehgO+leudiNGzg==
-X-Received: by 2002:a17:90b:23ce:: with SMTP id md14mr4614792pjb.147.1585669113728;
-        Tue, 31 Mar 2020 08:38:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u21sm2252446pjy.8.2020.03.31.08.38.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 08:38:32 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 08:38:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     yuechao.zhao@advantech.com.cn
-Cc:     345351830@qq.com, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        amy.shih@advantech.com.tw, oakley.ding@advantech.com.tw,
-        jia.sui@advantech.com.cn, shengkui.leng@advantech.com.cn
-Subject: Re: [v4,1/1] hwmon: (nct7904) Add watchdog function
-Message-ID: <20200331153831.GA186077@roeck-us.net>
-References: <20200331052850.5419-1-yuechao.zhao@advantech.com.cn>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OxOzUkSFr6Wk07X0rWnPtJzVLAiDlRwjY44J+SEwVCw=;
+        b=KZd4occptj1TMFzS9fDYFupYcmS4C3HDYXekQSybnBHqI1feACpcLMiX4FXE1jFayg
+         g9CsKsWb2KcrGtW+/qBZolOFWnAzhPE/raGKUbFXlLXvuFwszAQn8ZZzSpewrBfSM3s4
+         um6f0APbtWPoGSzCN84dCDYqX/7HeV/mLJxRJmt+ZsV3Q0NP2kcLj0zcO+iq/HxQXxLc
+         tPU+RURbJMNEzzQRXRRnFhEIA/RJ8nIlJM2Bh7lSeJ9Y6KkCRtNqarvjB91OWTmIBS/N
+         gjQxSpn2jtIWM5ELgqDsoVZr4JYi+2b1zGlkzzVCaQlZ0PNtGzoLl6jc7e06RDIhkxgO
+         6oWA==
+X-Gm-Message-State: ANhLgQ0OYrYzd7E838ok1Q0eVMYdmKc8Q6fIF6Wud1tUrj48dsLMpVDd
+        oWxPnvpcgqsGhIMrnBHVUF6fkA3KKl1ZLgp0X0M=
+X-Google-Smtp-Source: ADFU+vt6LDSkh3Kbj3ZORx+m8WoXhjmCqXW1FNMvnKvPhWcMIAT6fxQs69jf3e7PiUbRpFa4wSK7JXazOdRCpMacu2c=
+X-Received: by 2002:a50:9b07:: with SMTP id o7mr16941353edi.139.1585669224465;
+ Tue, 31 Mar 2020 08:40:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331052850.5419-1-yuechao.zhao@advantech.com.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200329110457.4113-1-o.rempel@pengutronix.de>
+ <20200329150854.GA31812@lunn.ch> <20200330052611.2bgu7x4nmimf7pru@pengutronix.de>
+ <40209d08-4acb-75c5-1766-6d39bb826ff9@gmail.com> <20200330174114.GG25745@shell.armlinux.org.uk>
+ <20200331104459.6857474e@erd988> <20200331125433.GA24486@lunn.ch> <20200331151503.GO25745@shell.armlinux.org.uk>
+In-Reply-To: <20200331151503.GO25745@shell.armlinux.org.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 31 Mar 2020 18:40:13 +0300
+Message-ID: <CA+h21hriL_8gGE8iqShuR0h3m2si=MLTuKk12Btx3=XB1RM++g@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: imx: allow to disable board specific PHY fixups
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>, David Jander <david@protonic.nl>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        netdev <netdev@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>, kernel@pengutronix.de,
+        Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 05:28:50AM +0000, yuechao.zhao@advantech.com.cn wrote:
-> From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
-> 
-> implement watchdong functionality into the "hwmon/nct7904.c"
+Hi Russell,
 
-s/watchdong/watchdog/
+On Tue, 31 Mar 2020 at 18:15, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Tue, Mar 31, 2020 at 02:54:33PM +0200, Andrew Lunn wrote:
+> > >  - Disable the SmartEEE feature of the phy. The comment in the code implies
+> > >    that for some reason it doesn't work, but the reason itself is not given.
+> > >    Anyway, disabling SmartEEE should IMHO opinion be controlled by a DT
+> > >    setting. There is no reason to believe this problem is specific to the
+> > >    i.MX6. Besides, it is a feature of the phy, so it seems logical to expose
+> > >    that via the DT. Once that is done, it has no place here.
+> >
+> > The device tree properties are defined:
+> >
+> > bindings/net/ethernet-phy.yaml:  eee-broken-100tx:
+> > bindings/net/ethernet-phy.yaml:  eee-broken-1000t:
+> > bindings/net/ethernet-phy.yaml:  eee-broken-10gt:
+> > bindings/net/ethernet-phy.yaml:  eee-broken-1000kx:
+> > bindings/net/ethernet-phy.yaml:  eee-broken-10gkx4:
+> > bindings/net/ethernet-phy.yaml:  eee-broken-10gkr:
+> >
+> > And there is a helper:
+> >
+> > void of_set_phy_eee_broken(struct phy_device *phydev)
+>
+> Disabling the advertisement may solve it, but that is not known.
+> What the quirk is doing is disabling the SmartEEE feature only
+> (which is where the PHY handles the EEE so-called "transparently"
+> to the MAC).
+>
+> It's all very well waving arms years later and saying we don't
+> like code that was merged, but unless someone can prove that an
+> alternative way is better and doesn't regress anything, there
+> won't be a way forward.
+>
 
-No need to resend; I fixed it up.
+For what it's worth, your position on these device tree bindings for
+broken EEE seems to have changed from the one that you expressed in
+this thread:
+https://www.spinics.net/lists/arm-kernel/msg703453.html
+To quote from that:
 
-> 
-> Signed-off-by: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
+> > There is no "advertisement of SmartEEE" - it's just EEE.  That is
+> > because as far as the link partner is concerned, SmartEEE is just
+> > EEE.
+> > [...]
+> >
+> > Otherwise, using the existing "eee-broken-*" properties to disable the
+> > link modes where EEE fails would be the correct way forward, and should
+> > be used in preference to disabling SmartEEE.
+> >
+> > However, no one has mentioned what the problem that is trying to be
+> > addressed.  Is it data corruption?  Is it that the link fails?  Is it
+> > lost packets?  Is it that the MAC supports EEE?  I think there needs to
+> > be some better understanding of the problem at hand before trying to
+> > address it.
 
-Applied to hwmon-next.
-
-Thanks,
-Guenter
-
-> ---
-> v4:
-> - Set "wdt->timeout" to actual timeout
-> - Modify nct7904_wdt_get_timeleft return value
-> - Remove code 'i2c_set_clientdata(client, data)'
-> 
-> v3:
-> - Delete useless message(noise).
-> - Delete useless variable 'ret'.
-> - Delete 'ping_timeout'.
-> - Use 'wdt->timeout' as basis for setting the chip timeout
-> - Implement a get_timeout function
-> - Use devm_watchdog_register_device() instead of watchdog_register_device().
-> - Use watchdog_stop_on_unregister() when driver remove.
-> - Delete nct7904_remove() function.
-> - Fix typos.
-> 
-> v2:
-> - Modify dependency of NC7904 into "drivers/hwmon/Kconfig".
-> ---
->  drivers/hwmon/Kconfig   |   6 ++-
->  drivers/hwmon/nct7904.c | 138 +++++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 141 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 05a3083..cd0ae82 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1340,10 +1340,12 @@ config SENSORS_NCT7802
->  
->  config SENSORS_NCT7904
->  	tristate "Nuvoton NCT7904"
-> -	depends on I2C
-> +	depends on I2C && WATCHDOG
-> +	select WATCHDOG_CORE
->  	help
->  	  If you say yes here you get support for the Nuvoton NCT7904
-> -	  hardware monitoring chip, including manual fan speed control.
-> +	  hardware monitoring chip, including manual fan speed control
-> +	  and support for the integrated watchdog.
->  
->  	  This driver can also be built as a module. If so, the module
->  	  will be called nct7904.
-> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-> index 1f5743d..571a649 100644
-> --- a/drivers/hwmon/nct7904.c
-> +++ b/drivers/hwmon/nct7904.c
-> @@ -8,6 +8,9 @@
->   * Copyright (c) 2019 Advantech
->   * Author: Amy.Shih <amy.shih@advantech.com.tw>
->   *
-> + * Copyright (c) 2020 Advantech
-> + * Author: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
-> + *
->   * Supports the following chips:
->   *
->   * Chip        #vin  #fan  #pwm  #temp  #dts  chip ID
-> @@ -20,6 +23,7 @@
->  #include <linux/i2c.h>
->  #include <linux/mutex.h>
->  #include <linux/hwmon.h>
-> +#include <linux/watchdog.h>
->  
->  #define VENDOR_ID_REG		0x7A	/* Any bank */
->  #define NUVOTON_ID		0x50
-> @@ -87,18 +91,42 @@
->  #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
->  #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
->  
-> +#define WDT_LOCK_REG		0xE0	/* W/O Lock Watchdog Register */
-> +#define WDT_EN_REG		0xE1	/* R/O Watchdog Enable Register */
-> +#define WDT_STS_REG		0xE2	/* R/O Watchdog Status Register */
-> +#define WDT_TIMER_REG		0xE3	/* R/W Watchdog Timer Register */
-> +#define WDT_SOFT_EN		0x55	/* Enable soft watchdog timer */
-> +#define WDT_SOFT_DIS		0xAA	/* Disable soft watchdog timer */
-> +
->  #define VOLT_MONITOR_MODE	0x0
->  #define THERMAL_DIODE_MODE	0x1
->  #define THERMISTOR_MODE		0x3
->  
->  #define ENABLE_TSI	BIT(1)
->  
-> +#define WATCHDOG_TIMEOUT	1	/* 1 minute default timeout */
-> +
-> +/*The timeout range is 1-255 minutes*/
-> +#define MIN_TIMEOUT		(1 * 60)
-> +#define MAX_TIMEOUT		(255 * 60)
-> +
-> +static int timeout = WATCHDOG_TIMEOUT;
-> +module_param(timeout, int, 0);
-> +MODULE_PARM_DESC(timeout, "Watchdog timeout in minutes. 1 <= timeout <= 255, default="
-> +			__MODULE_STRING(WATCHODOG_TIMEOUT) ".");
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started once started (default="
-> +			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
->  static const unsigned short normal_i2c[] = {
->  	0x2d, 0x2e, I2C_CLIENT_END
->  };
->  
->  struct nct7904_data {
->  	struct i2c_client *client;
-> +	struct watchdog_device wdt;
->  	struct mutex bank_lock;
->  	int bank_sel;
->  	u32 fanin_mask;
-> @@ -889,6 +917,95 @@ static int nct7904_detect(struct i2c_client *client,
->  	.info = nct7904_info,
->  };
->  
-> +/*
-> + * Watchdog Function
-> + */
-> +static int nct7904_wdt_start(struct watchdog_device *wdt)
-> +{
-> +	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-> +
-> +	/* Enable soft watchdog timer */
-> +	return nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_EN);
-> +}
-> +
-> +static int nct7904_wdt_stop(struct watchdog_device *wdt)
-> +{
-> +	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-> +
-> +	return nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-> +}
-> +
-> +static int nct7904_wdt_set_timeout(struct watchdog_device *wdt,
-> +				   unsigned int timeout)
-> +{
-> +	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-> +	/*
-> +	 * The NCT7904 is very special in watchdog function.
-> +	 * Its minimum unit is minutes. And wdt->timeout needs
-> +	 * to match the actual timeout selected. So, this needs
-> +	 * to be: wdt->timeout = timeout / 60 * 60.
-> +	 * For example, if the user configures a timeout of
-> +	 * 119 seconds, the actual timeout will be 60 seconds.
-> +	 * So, wdt->timeout must then be set to 60 seconds.
-> +	 */
-> +	wdt->timeout = timeout / 60 * 60;
-> +
-> +	return nct7904_write_reg(data, BANK_0, WDT_TIMER_REG,
-> +				 wdt->timeout / 60);
-> +}
-> +
-> +static int nct7904_wdt_ping(struct watchdog_device *wdt)
-> +{
-> +	/*
-> +	 * Note:
-> +	 * NCT7904 does not support refreshing WDT_TIMER_REG register when
-> +	 * the watchdog is active. Please disable watchdog before feeding
-> +	 * the watchdog and enable it again.
-> +	 */
-> +	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-> +	int ret;
-> +
-> +	/* Disable soft watchdog timer */
-> +	ret = nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* feed watchdog */
-> +	ret = nct7904_write_reg(data, BANK_0, WDT_TIMER_REG, wdt->timeout / 60);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Enable soft watchdog timer */
-> +	return nct7904_write_reg(data, BANK_0, WDT_TIMER_REG, WDT_SOFT_EN);
-> +}
-> +
-> +static unsigned int nct7904_wdt_get_timeleft(struct watchdog_device *wdt)
-> +{
-> +	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-> +	int ret;
-> +
-> +	ret = nct7904_read_reg(data, BANK_0, WDT_TIMER_REG);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	return ret * 60;
-> +}
-> +
-> +static const struct watchdog_info nct7904_wdt_info = {
-> +	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> +				WDIOF_MAGICCLOSE,
-> +	.identity	= "nct7904 watchdog",
-> +};
-> +
-> +static const struct watchdog_ops nct7904_wdt_ops = {
-> +	.owner		= THIS_MODULE,
-> +	.start		= nct7904_wdt_start,
-> +	.stop		= nct7904_wdt_stop,
-> +	.ping		= nct7904_wdt_ping,
-> +	.set_timeout	= nct7904_wdt_set_timeout,
-> +	.get_timeleft	= nct7904_wdt_get_timeleft,
-> +};
-> +
->  static int nct7904_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -1012,7 +1129,26 @@ static int nct7904_probe(struct i2c_client *client,
->  	hwmon_dev =
->  		devm_hwmon_device_register_with_info(dev, client->name, data,
->  						     &nct7904_chip_info, NULL);
-> -	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +	ret = PTR_ERR_OR_ZERO(hwmon_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Watchdog initialization */
-> +	data->wdt.ops = &nct7904_wdt_ops;
-> +	data->wdt.info = &nct7904_wdt_info;
-> +
-> +	data->wdt.timeout = timeout * 60; /* in seconds */
-> +	data->wdt.min_timeout = MIN_TIMEOUT;
-> +	data->wdt.max_timeout = MAX_TIMEOUT;
-> +	data->wdt.parent = &client->dev;
-> +
-> +	watchdog_init_timeout(&data->wdt, timeout * 60, &client->dev);
-> +	watchdog_set_nowayout(&data->wdt, nowayout);
-> +	watchdog_set_drvdata(&data->wdt, data);
-> +
-> +	watchdog_stop_on_unregister(&data->wdt);
-> +
-> +	return devm_watchdog_register_device(dev, &data->wdt);
->  }
->  
->  static const struct i2c_device_id nct7904_id[] = {
+Regards,
+-Vladimir
