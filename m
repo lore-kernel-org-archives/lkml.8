@@ -2,172 +2,190 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0581C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26504C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B10FD2077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83CD20784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732173AbgDAJml (ORCPT
+        id S1732184AbgDAJnE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:42:41 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41930 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731544AbgDAJml (ORCPT
+        Wed, 1 Apr 2020 05:43:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729662AbgDAJnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:42:41 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f52so25240221otf.8;
-        Wed, 01 Apr 2020 02:42:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9NFB4A2CPVwSz9Sg1U5/CRoks4HY24v+VcMc1LJYhlA=;
-        b=p1WRaOvxvULH8ETXZWUa2OKQudPCObw8EmvnL7gmHglr6xirhDFra5OFJqOh4iP94/
-         l3YFXm2BRljkuXohvkeRMQMMo1k9wohT5Ds3OEShcqfs7hkXHJkfd1YTtJq5X2+hxgNM
-         V19sT2eM4pcmDr24KvWP//l6XaJ3YCKyNSaXcxp3AbUxXAJJVS3667eziHptQVg9UTTA
-         1QWlQ0FbZ7BEkgvdMh+OQzhGKSmbHW4Npte2e5mcE17pnkDQl0gvrOk1cNiHU7hnXdr3
-         pgomRw8EREWcbAk6LY89/zI2J0iRb9/7B7U+NkRqq7pW9t1x2zrEWgTmODmbY3hKvEzR
-         voIg==
-X-Gm-Message-State: ANhLgQ3z56mS8WqiuuPgVFSXvAV/nGlVIbNOJJiuZjdfH4+WNKZDXSP/
-        bsknkJyGroQeuT6wXsN/Q9EwjXMATaAlXUeEeV0=
-X-Google-Smtp-Source: ADFU+vvaJkvIXHbATb21lCcc0MJLscOCEDsiXUahQfh8sCQeWQkEkYa7KZWVyEhPq2xVAduTUBjZdSJVtLeQCzJ8nlk=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr16100426otk.250.1585734160600;
- Wed, 01 Apr 2020 02:42:40 -0700 (PDT)
+        Wed, 1 Apr 2020 05:43:03 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0319X8p9110526
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 05:43:02 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 304h3w43qs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:43:01 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Wed, 1 Apr 2020 10:42:58 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 10:42:56 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0319gu5P42402256
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 09:42:56 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 717ABA404D;
+        Wed,  1 Apr 2020 09:42:56 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14CA6A4057;
+        Wed,  1 Apr 2020 09:42:56 +0000 (GMT)
+Received: from localhost (unknown [9.85.74.146])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 09:42:55 +0000 (GMT)
+Date:   Wed, 01 Apr 2020 15:12:53 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 2/6] powerpc/idle: Add accessor function to always read
+ latest idle PURR
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
+        <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
+In-Reply-To: <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 Apr 2020 11:42:29 +0200
-Message-ID: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
- AISTARVISION MIPI Adapter V2.1
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20040109-0028-0000-0000-000003EFF165
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040109-0029-0000-0000-000024B576E8
+Message-Id: <1585734073.0qmf6bbdoa.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Hi Gautham,
 
-On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
-> to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-> which have the camera endpoint nodes for imx219 and ov5645 so that this can
-> be re-used with other G2x platforms.
->
-> r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
-> default ties ov5645 camera endpoint to CSI2.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> Currently when CPU goes idle, we take a snapshot of PURR via
+> pseries_idle_prolog() which is used at the CPU idle exit to compute
+> the idle PURR cycles via the function pseries_idle_epilog().  Thus,
+> the value of idle PURR cycle thus read before pseries_idle_prolog() and
+> after pseries_idle_epilog() is always correct.
+> 
+> However, if we were to read the idle PURR cycles from an interrupt
+> context between pseries_idle_prolog() and pseries_idle_epilog() (this will
+> be done in a future patch), then, the value of the idle PURR thus read
+> will not include the cycles spent in the most recent idle period.
+> 
+> This patch addresses the issue by providing accessor function to read
+> the idle PURR such such that it includes the cycles spent in the most
+> recent idle period, if we read it between pseries_idle_prolog() and
+> pseries_idle_epilog(). In order to achieve it, the patch saves the
+> snapshot of PURR in pseries_idle_prolog() in a per-cpu variable,
+> instead of on the stack, so that it can be accessed from an interrupt
+> context.
+> 
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 > ---
->  Changes for v2:
->  * Dropped #{address,size}-cells
->  * Dropped unit address and reg for port
-
-Thanks for the update!
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> @@ -0,0 +1,75 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-> + * connected with aistarvision-mipi-v2-adapter board
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
+>  arch/powerpc/include/asm/idle.h        | 47 +++++++++++++++++++++++++++-------
+>  arch/powerpc/platforms/pseries/setup.c |  7 +++--
+>  drivers/cpuidle/cpuidle-pseries.c      | 15 +++++------
+>  3 files changed, 47 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
+> index 32064a4c..d4bfb6a 100644
+> --- a/arch/powerpc/include/asm/idle.h
+> +++ b/arch/powerpc/include/asm/idle.h
+> @@ -5,10 +5,27 @@
+>  #include <asm/paca.h>
+> 
+>  #ifdef CONFIG_PPC_PSERIES
+> -static inline void pseries_idle_prolog(unsigned long *in_purr)
+> +DECLARE_PER_CPU(u64, idle_entry_purr_snap);
 > +
-> +/dts-v1/;
-> +#include "r8a774c0-ek874.dts"
-> +#define MIPI_PARENT_I2C i2c3
-> +#include "aistarvision-mipi-adapter-2.1.dtsi"
+> +static inline void snapshot_purr_idle_entry(void)
+> +{
+> +	*this_cpu_ptr(&idle_entry_purr_snap) = mfspr(SPRN_PURR);
+> +}
 > +
-> +/ {
-> +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-> +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-> +};
+> +static inline void update_idle_purr_accounting(void)
+> +{
+> +	u64 wait_cycles;
+> +	u64 in_purr = *this_cpu_ptr(&idle_entry_purr_snap);
 > +
-> +&i2c3 {
-> +       status = "okay";
-> +};
+> +	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
+> +	wait_cycles += mfspr(SPRN_PURR) - in_purr;
+> +	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
+> +}
 > +
-> +&vin4 {
-> +       status = "okay";
-> +};
+> +static inline void pseries_idle_prolog(void)
+>  {
+>  	ppc64_runlatch_off();
+> -	*in_purr = mfspr(SPRN_PURR);
+> +	snapshot_purr_idle_entry();
+>  	/*
+>  	 * Indicate to the HV that we are idle. Now would be
+>  	 * a good time to find other work to dispatch.
+> @@ -16,16 +33,28 @@ static inline void pseries_idle_prolog(unsigned long *in_purr)
+>  	get_lppaca()->idle = 1;
+>  }
+> 
+> -static inline void pseries_idle_epilog(unsigned long in_purr)
+> +static inline void pseries_idle_epilog(void)
+>  {
+> -	u64 wait_cycles;
+> -
+> -	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
+> -	wait_cycles += mfspr(SPRN_PURR) - in_purr;
+> -	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
+> +	update_idle_purr_accounting();
+>  	get_lppaca()->idle = 0;
+> -
+>  	ppc64_runlatch_on();
+>  }
 > +
-> +&vin5 {
-> +       status = "okay";
-> +};
+> +static inline u64 read_this_idle_purr(void)
+> +{
+> +	/*
+> +	 * If we are reading from an idle context, update the
+> +	 * idle-purr cycles corresponding to the last idle period.
+> +	 * Since the idle context is not yet over, take a fresh
+> +	 * snapshot of the idle-purr.
+> +	 */
+> +	if (unlikely(get_lppaca()->idle == 1)) {
+> +		update_idle_purr_accounting();
+> +		snapshot_purr_idle_entry();
+> +	}
 > +
-> +&csi40 {
-> +       status = "okay";
+> +	return be64_to_cpu(get_lppaca()->wait_state_cycles);
+> +}
 > +
-> +       ports {
-> +               port {
-> +                       csi40_in: endpoint {
-> +                               clock-lanes = <0>;
-> +                               data-lanes = <1 2>;
-> +                               remote-endpoint = <&ov5645_ep>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&ov5645 {
-> +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-> +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-> +
-> +       clocks = <&cpg CPG_MOD 716>;
 
-I'm still a bit puzzled here.
+I think this and read_this_idle_spurr() from the next patch should be 
+moved to Patch 4/6, where they are actually used.
 
-CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
-presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
-by the CSI driver?
-On the MIPI board[*], that signal becomes MIPI1_CP/N.
-However, the MIPI board also has a "Clock Source Selection" header,
-which allows you to choose one of:
-  1. The fixed 24 MHz crystal, which is apparently used for the imx219
-     camera, as described by imx219_clk above, and matches the wanted
-     clock rate specified below?
-  2. CSI1_CLK,
-  3. CSI2_CLK.
-The last two become CLK0/1 on the CAT874 board, which are driven by
-TPU0TO0/1.
+- Naveen
 
-Which setting do you use for the ov5645 camera?
-
-> +       clock-frequency = <24000000>;
-
-After your patch for the ov5645 driver, this should be replaced by
-assigned-clock-rates?
-
-The rest looks good to me, but I'm not a multi-media/camera expert.
-
-[*] https://github.com/Kevin-WSCU/96Boards-Camera
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
