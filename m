@@ -2,102 +2,71 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CA8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEFDC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16D842071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:53:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wtlmw4dp"
+	by mail.kernel.org (Postfix) with ESMTP id 20F4C206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389527AbgDAWxn (ORCPT
+        id S2389599AbgDAWy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:53:43 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55945 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389504AbgDAWxm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:53:42 -0400
-Received: by mail-pj1-f66.google.com with SMTP id fh8so713178pjb.5;
-        Wed, 01 Apr 2020 15:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qukBrnnromGiSCTnyz4L9HyTen8DUq+f4oJWku7HGRc=;
-        b=Wtlmw4dpm0UzBF2ljJcSpqIpYf97R9uDwQrPvVTbaSenQDwQi3zvynD1LIClNrkmgr
-         v32L1eIqgqLy8+C0tdcrFx4NIBZ+wCN4R412gfu4QxRCwZ/sfOT+dVSTGIlEgQDGKtGc
-         Mg2L1WUgME8bLCAaxIKdcIbhbxS3s9IFK/YwjeBMFT7Vb2xPaA7fb+x64nCK4sIPQ7xi
-         OT9fFgOcgErtV+krCWbMjDBk81Ulu08eQ45eeJHeZI25BbvV06cZq4TegLtjkQiD05oj
-         h5vYGZaD//05KrmpM84Jafe7Po1SM+DipPPAjmVtfyugjt6UBeOGQ0szs/M0DCyqRWvN
-         8BtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qukBrnnromGiSCTnyz4L9HyTen8DUq+f4oJWku7HGRc=;
-        b=fsnN4NEthXjtf5VOkHrGrqUOel+mbpR5CBdCVgoHLXzzdxhI/lcS7NKpcFjRx5a5V2
-         WzYpkIVP33JDIrvVRdExZHX3eQfIfEvjvHiuLLuM5rCD1LHrcfx4dWqBRf16Cg69bQRN
-         lp5fhRRFNnzFrSIW/AcCfyWFR3gKP28BWTnOm1yAtK+dw5rJMviEDO/aeUCeODipozUI
-         6NpOktm862h6p+stVd9pTh+xM+dhzb4+lpWR30GI3YAZmeR0hp+MeRAqFD0cjIw6WqAf
-         /KeB3mCfipY9G9INr4N5AoOFyexAViGZBIrBol1232UCVg0bfKNG9Hw4jp/fWtpNcAA1
-         f2kA==
-X-Gm-Message-State: AGi0PuYWyKksAV4lc2Ih5qIytaj+0kXmGkKsDfVGlTNJQA4zYMKHt9U0
-        9xd5IhWPZXwBtOo/526O8juGoCir
-X-Google-Smtp-Source: APiQypKdEp028ZPQjbmb21Al2LBskm5n5yoA6i/WOLkLRtbqs/InmFgJatpLUGky6jX9D+uBLxMQRg==
-X-Received: by 2002:a17:902:242:: with SMTP id 60mr133733plc.245.1585781621214;
-        Wed, 01 Apr 2020 15:53:41 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id m68sm2554947pjb.0.2020.04.01.15.53.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 15:53:40 -0700 (PDT)
-Subject: Re: [PATCH] iommu/vt-d: add NUMA awareness to intel_alloc_coherent()
-To:     Eric Dumazet <edumazet@google.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Benjamin Serebrin <serebrin@google.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, netdev <netdev@vger.kernel.org>
-References: <1517438756.3715.108.camel@gmail.com>
- <20180202185301.GA8232@infradead.org>
- <CANn89i+FBn3fttEyU_znAd-+8BgM7VZogFeeZPA7_zubChFpBA@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <34c70805-44f5-6697-3ebf-2f4d56779454@gmail.com>
-Date:   Wed, 1 Apr 2020 15:53:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 1 Apr 2020 18:54:27 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:42432 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389578AbgDAWy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 18:54:26 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jJmFM-0004QW-J5; Thu, 02 Apr 2020 09:54:09 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 02 Apr 2020 09:54:08 +1100
+Date:   Thu, 2 Apr 2020 09:54:08 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     ayush.sawal@chelsio.com, vinay.yadav@chelsio.com,
+        rohitm@chelsio.com, davem@davemloft.net,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: chtls - Fix build error without IPV6
+Message-ID: <20200401225408.GB16019@gondor.apana.org.au>
+References: <20200401120909.8960-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CANn89i+FBn3fttEyU_znAd-+8BgM7VZogFeeZPA7_zubChFpBA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200401120909.8960-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/2/18 10:59 AM, Eric Dumazet wrote:
-> On Fri, Feb 2, 2018 at 10:53 AM, Christoph Hellwig <hch@infradead.org> wrote:
->> I've got patches pending to replace all that code with
->> dma_direct_alloc, which will do the right thing.  They were
->> submitted for 4.16, and I will resend them after -rc1.
+On Wed, Apr 01, 2020 at 08:09:09PM +0800, YueHaibing wrote:
+> If IPV6 is not set, build fails:
 > 
-> I see, thanks Christoph !
+> drivers/crypto/chelsio/chcr_ktls.c: In function ‘chcr_ktls_act_open_req6’:
+> ./include/net/sock.h:380:37: error: ‘struct sock_common’ has no member named ‘skc_v6_rcv_saddr’; did you mean ‘skc_rcv_saddr’?
+>  #define sk_v6_rcv_saddr __sk_common.skc_v6_rcv_saddr
+>                                      ^
+> drivers/crypto/chelsio/chcr_ktls.c:258:37: note: in expansion of macro ‘sk_v6_rcv_saddr’
+>   cpl->local_ip_hi = *(__be64 *)&sk->sk_v6_rcv_saddr.in6_u.u6_addr8[0];
+>                                      ^~~~~~~~~~~~~~~
 > 
+> Add IPV6 dependency to fix this.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 62370a4f346d ("cxgb4/chcr: Add ipv6 support and statistics")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/crypto/chelsio/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-Hi Christoph 
+Please send these patches via netdev.
 
-It seems 4.16 has shipped ( :) ) , and intel_alloc_coherent() still has no NUMA awareness.
-
-Should I respin https://lore.kernel.org/patchwork/patch/884326/
-
-Thanks !
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
