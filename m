@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602F1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC1AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC86120714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D806E20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759657;
-	bh=Op48cop4jbFJ8CRSjIoNwXhE6DUpal4AaiXbOY4VzOs=;
+	s=default; t=1585759659;
+	bh=GPWmsOrgU4YEfpnUv+XkcoW2ldc03EaRyXFe1u2ekNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpX9tUJm5NAzBVGKTzwoXPnPoRBrQPTjcTWDOKsYv2yg7N5BeItEcgl65SnpwTDHl
-	 tIt2ksJ/qBmlTeze/ETQxjUYBXiThlOLd0lQIG2cQX4R8pUMclaGAR4HO6te07X38S
-	 ACsEDDdmrbqya97jaxQlu/8M9EVI9pYWgYheBShQ=
+	b=r4n1GdURm8uAG1ySLgWCkq6NaWxeG+TNja7RjdXnNXYgPtg9PmY3ZMTlcGerMCWD/
+	 6puQR+GZTiM+EqDnuE5LbPr7gTyk46KXWC3aQb1crujbJDKbVZoE+ZGT6KzfEGqjOC
+	 Jew/lCNoiZfAzItWFZaTi0MVf5zOGQ2aEwcA+jwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390067AbgDAQrf (ORCPT
+        id S2390077AbgDAQri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:47:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49312 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387584AbgDAQrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:47:31 -0400
+        id S2389853AbgDAQrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC9CA206E9;
-        Wed,  1 Apr 2020 16:47:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76227206E9;
+        Wed,  1 Apr 2020 16:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759651;
-        bh=Op48cop4jbFJ8CRSjIoNwXhE6DUpal4AaiXbOY4VzOs=;
+        s=default; t=1585759653;
+        bh=GPWmsOrgU4YEfpnUv+XkcoW2ldc03EaRyXFe1u2ekNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0SWfBJfxujv+yaJJuMWDDHsiKpZtISadF8OI9N+khZMwUQwvI/6SnAnCPtM7vqO/G
-         ZpMgIAHkQN2EiWyhAvkwd2QBnzwccHSMBZYS//AIFG1eBdB/YsmthKPlLmO4nHMYoC
-         hz9Fh24TrqQL+Kw/WWT80FYShXNVURlEP1V/k3Ew=
+        b=dGFHzXsn/zng8ELntQRGJwHoDZSgNOZXbqb/msED9xf4AMhEffCIpUPQcsKni7EnB
+         9EgToCCJcfdoWU3myTfNWspMTrNMaZAi5KyR23LjLHfx4trJnDMG3GTgeCMv7P9BY1
+         Hc4qKUVCrLW6Ts1Qe9e+icRZxxmXs91HQprutXAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 147/148] arm64: dts: ls1043a-rdb: correct RGMII delay mode to rgmii-id
-Date:   Wed,  1 Apr 2020 18:18:59 +0200
-Message-Id: <20200401161606.129079026@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 4.14 121/148] media: usbtv: fix control-message timeouts
+Date:   Wed,  1 Apr 2020 18:18:33 +0200
+Message-Id: <20200401161604.070200253@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,50 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 4022d808c45277693ea86478fab1f081ebf997e8 upstream.
+commit 536f561d871c5781bc33d26d415685211b94032e upstream.
 
-The correct setting for the RGMII ports on LS1043ARDB is to
-enable delay on both Rx and Tx so the interface mode used must
-be PHY_INTERFACE_MODE_RGMII_ID.
+The driver was issuing synchronous uninterruptible control requests
+without using a timeout. This could lead to the driver hanging on
+various user requests due to a malfunctioning (or malicious) device
+until the device is physically disconnected.
 
-Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
-configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
-has control over the RGMII RX delay and it is disabling it for
-RGMII_TXID. The LS1043ARDB uses two such PHYs in RGMII_ID mode but
-in the device tree the mode was described as "rgmii_txid".
-This issue was not apparent at the time as the PHY driver took the
-same action for RGMII_TXID and RGMII_ID back then but it became
-visible (RX no longer working) after the above patch.
+The USB upper limit of five seconds per request should be more than
+enough.
 
-Changing the phy-connection-type to "rgmii-id" to address the issue.
-
-Fixes: bf02f2ffe59c ("arm64: dts: add LS1043A DPAA FMan support")
-Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f3d27f34fdd7 ("[media] usbtv: Add driver for Fushicai USBTV007 video frame grabber")
+Fixes: c53a846c48f2 ("[media] usbtv: add video controls")
+Cc: stable <stable@vger.kernel.org>     # 3.11
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/usb/usbtv/usbtv-core.c  |    2 +-
+ drivers/media/usb/usbtv/usbtv-video.c |    5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -155,12 +155,12 @@
+--- a/drivers/media/usb/usbtv/usbtv-core.c
++++ b/drivers/media/usb/usbtv/usbtv-core.c
+@@ -56,7 +56,7 @@ int usbtv_set_regs(struct usbtv *usbtv,
  
- 	ethernet@e4000 {
- 		phy-handle = <&rgmii_phy1>;
--		phy-connection-type = "rgmii-txid";
-+		phy-connection-type = "rgmii-id";
- 	};
+ 		ret = usb_control_msg(usbtv->udev, pipe, USBTV_REQUEST_REG,
+ 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+-			value, index, NULL, 0, 0);
++			value, index, NULL, 0, USB_CTRL_GET_TIMEOUT);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+--- a/drivers/media/usb/usbtv/usbtv-video.c
++++ b/drivers/media/usb/usbtv/usbtv-video.c
+@@ -720,7 +720,8 @@ static int usbtv_s_ctrl(struct v4l2_ctrl
+ 		ret = usb_control_msg(usbtv->udev,
+ 			usb_rcvctrlpipe(usbtv->udev, 0), USBTV_CONTROL_REG,
+ 			USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+-			0, USBTV_BASE + 0x0244, (void *)data, 3, 0);
++			0, USBTV_BASE + 0x0244, (void *)data, 3,
++			USB_CTRL_GET_TIMEOUT);
+ 		if (ret < 0)
+ 			goto error;
+ 	}
+@@ -771,7 +772,7 @@ static int usbtv_s_ctrl(struct v4l2_ctrl
+ 	ret = usb_control_msg(usbtv->udev, usb_sndctrlpipe(usbtv->udev, 0),
+ 			USBTV_CONTROL_REG,
+ 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+-			0, index, (void *)data, size, 0);
++			0, index, (void *)data, size, USB_CTRL_SET_TIMEOUT);
  
- 	ethernet@e6000 {
- 		phy-handle = <&rgmii_phy2>;
--		phy-connection-type = "rgmii-txid";
-+		phy-connection-type = "rgmii-id";
- 	};
- 
- 	ethernet@e8000 {
+ error:
+ 	if (ret < 0)
 
 
