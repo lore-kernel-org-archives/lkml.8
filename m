@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9B5C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A9DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E311A214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB08420658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758867;
-	bh=tJfTvLthxd3MPNNdu5kwUFJoCWtXlImC1k6Bi9FjK00=;
+	s=default; t=1585758870;
+	bh=ymCo9Ys2kiFW16phIqvg4zSPS6y8FoMsL/L4tAc/Dl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WxtJwkhpDdWN4Q4wbXBScri/KUwCTLlHxSDzw0aS6L4LTS9wvP5osfLZRbG6xQqbI
-	 p1Je/JjtuMitb3LHa+uEs2Zmx1nZlIouz+WCw/BOypRmg828eVhXTPNzqE7w98SlK1
-	 7PyvfUIHb+2qnlVH7ZCdNSTNXAWAtXqNkgEeZJM0=
+	b=ioFPnd3/Edw3ByFBXwmy3/rJSfcwOxmqvR3XrHlmVQ9AMUy7BKsGQPo+QKu8sMebj
+	 8XYSo8lxbHyXG3Pt5LSKXsz98e3P1G8i8W4XQt7tTK8l99l3pe0N8YxudidgfFROxI
+	 FRVn3Ghf4z2FW1w2JqeO1f6ySg/OQHCDwPFr6PqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388644AbgDAQeZ (ORCPT
+        id S2388657AbgDAQe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:34:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32928 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388456AbgDAQeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:34:25 -0400
+        id S2388456AbgDAQe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:34:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB162063A;
-        Wed,  1 Apr 2020 16:34:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6927620658;
+        Wed,  1 Apr 2020 16:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758864;
-        bh=tJfTvLthxd3MPNNdu5kwUFJoCWtXlImC1k6Bi9FjK00=;
+        s=default; t=1585758866;
+        bh=ymCo9Ys2kiFW16phIqvg4zSPS6y8FoMsL/L4tAc/Dl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCA5VAfRA5RcwBqH1lLP9f9YqIJ0JATb8riG5BsHL/9lMZYhIFjlQEu9oTZAnMS7N
-         ZF+vdBsq5/ZcCH4wgRsNGMeu8OkubN8NAG9YuOyi9LyN0C67B67w5dOLA+D1s+ROXF
-         G3iKZSRc63cRKj5n2SH+ysgtthK6YtfPg8LOmcj0=
+        b=eT8Pb5IiADRPxC5YlM0Jv+quZdeylBGQp5+CCRjPflwW9wk1USBtBKELpmaYBcjUD
+         6aRBQPPCujy4Dt7/2lfoHGENJ/EvIJdYEewO/Cuw1ZnhiQWXIRxpfB9d/OZD9bJPAY
+         B1kR9VyeqH7JwB2rTsd1G+HJgRDRZYccxF6QuGxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
         Pawel Dembicki <paweldembicki@gmail.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 67/91] USB: serial: option: add support for ASKEY WWHC050
-Date:   Wed,  1 Apr 2020 18:18:03 +0200
-Message-Id: <20200401161535.891708781@linuxfoundation.org>
+Subject: [PATCH 4.4 68/91] USB: serial: option: add BroadMobi BM806U
+Date:   Wed,  1 Apr 2020 18:18:04 +0200
+Message-Id: <20200401161536.075990068@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -62,41 +62,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pawel Dembicki <paweldembicki@gmail.com>
 
-commit 007d20dca2376a751b1dad03442f118438b7e65e upstream.
+commit 6cb2669cb97fc4fdf526127159ac59caae052247 upstream.
 
-ASKEY WWHC050 is a mcie LTE modem.
-The oem configuration states:
+BroadMobi BM806U is an Qualcomm MDM9225 based 3G/4G modem.
+Tested hardware BM806U is mounted on D-Link DWR-921-C3 router.
 
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
-D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=1690 ProdID=7588 Rev=ff.ff
-S:  Manufacturer=Android
-S:  Product=Android
-S:  SerialNumber=813f0eef6e6e
-C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+T:  Bus=01 Lev=01 Prnt=01 Port=01 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
+D:  Ver= 2.01 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=2020 ProdID=2033 Rev= 2.28
+S:  Manufacturer=Mobile Connect
+S:  Product=Mobile Connect
+S:  SerialNumber=f842866cfd5a
+C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
 I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
 E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
 E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=84(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=86(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E:  Ad=88(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
-E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
-
-Tested on openwrt distribution.
 
 Co-developed-by: Cezary Jackiewicz <cezary@eko.one.pl>
 Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
@@ -111,14 +107,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/usb/serial/option.c
 +++ b/drivers/usb/serial/option.c
-@@ -1983,6 +1983,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
-+	  .driver_info = RSVD(1) | RSVD(4) },
+@@ -1987,6 +1987,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(1) | RSVD(4) },
  	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
  	  .driver_info = RSVD(4) },
++	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2033, 0xff),			/* BroadMobi BM806U */
++	  .driver_info = RSVD(4) },
  	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2060, 0xff),			/* BroadMobi BM818 */
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x4000, 0xff) },			/* OLICARD300 - MT6225 */
 
 
