@@ -2,102 +2,215 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7510BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71628C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4226A20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B07E20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dIM/38LK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d0dPOKW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732984AbgDAUVF (ORCPT
+        id S1733038AbgDAUVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:21:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46212 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732441AbgDAUVF (ORCPT
+        Wed, 1 Apr 2020 16:21:38 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45279 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732385AbgDAUVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 16:21:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WxdFKtsVVN0bQtvpk47mBJIN2dJgsmvYV4GQBky07Qw=; b=dIM/38LKg5HoRDEnEeJwA9h2y4
-        mxrdGtCGcqX/EBOQZBvVXJfUt7U4MESfuywAtG55Th1l7RwBiM90H2N5TjAlw5/YpIkmEB2JpeWrI
-        6U0Frn0/tvrpg34/wGM0V6VCtlkPUjIq1ELus900JnPm4EpSsXhStsnCW1dzuKiUvyTV6Sks7I/Yc
-        NMdqV5yTq9+l+cnNRoBovNT1CphscWmbg8Hf0O9haBg+4K2dZxsJaRANBqraoWSkzegGcS6Ub7PdJ
-        3lGTuW6eYsVS0h7boNbUQPXVRpguSRAyvgINscPkpn8A2CvvFfqWzNHagRZj9rYkudHisJLvhxn42
-        p09M96LA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJjr6-00027S-3f; Wed, 01 Apr 2020 20:20:56 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 92A5E981135; Wed,  1 Apr 2020 22:20:53 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 22:20:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Julien Thierry <jthierry@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz
-Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-Message-ID: <20200401202053.GI2452@worktop.programming.kicks-ass.net>
-References: <20200331202315.zialorhlxmml6ec7@treble>
- <20200331204047.GF2452@worktop.programming.kicks-ass.net>
- <20200331211755.pb7f3wa6oxzjnswc@treble>
- <20200331212040.7lrzmj7tbbx2jgrj@treble>
- <20200331222703.GH2452@worktop.programming.kicks-ass.net>
- <d2cad75e-1708-f0bf-7f88-194bcb29e61d@redhat.com>
- <20200401170910.GX20730@hirez.programming.kicks-ass.net>
- <20200401133303.6773c574@gandalf.local.home>
- <20200401174544.GY20730@hirez.programming.kicks-ass.net>
- <20200401142015.60ac0a28@gandalf.local.home>
+        Wed, 1 Apr 2020 16:21:37 -0400
+Received: by mail-il1-f195.google.com with SMTP id x16so1283091ilp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 13:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NZ7ptwZtc0lwD8ofFzTzdr4FmIeRPKr07pDioEHD4o4=;
+        b=d0dPOKW8rex5FOSqe5KaBMzBgEkYcOP3euVyUUMVUMuVX2TFUfi/mdjcwGJ1kCpNI6
+         TjsUrfnUzUOxvBu/MTscDJobOUJaE1VDz1M2Osp4+QQfW6NYU7RKe9FUvCC7lRWOJG/B
+         Z/C7/xuRBmLAMFukHH64T5VfCFmKskqNg7knxOyRFv2W+ejtAyK6J5P1xsKONWLuqmhR
+         ZOhl3NTW74ZpvVnfLyXB0LJXKmovj5gwnbjHR0hZ15akHcnUBTwXQ8xRQXaTj64XEagd
+         nz1Pz0dJxQ7ciCfXmyz9v1dibe5qPn6RZHfRuiqbg0Yyhz7l0qAEJg0ai0bZxuCkYDUT
+         2QgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NZ7ptwZtc0lwD8ofFzTzdr4FmIeRPKr07pDioEHD4o4=;
+        b=fvNKrxI82L/Tb5HdI3R8ArNBELclmRcR74+7Fx8M1iRYN0IZUKs/CKAluOzc0tLq+C
+         OPU7W695F57hYHYIHhYlY/uqucF2wNyW2Je6ZdiLnPTVx6AeCBUq84iqEuNdsPsoFydX
+         XlnG7yb6KKbvgJWc3zXLZWqTGPRF1rnOoO6FJvmmLpV+EoK9gYkrLpvT/njujfUbjUbk
+         kSTwyMaH04zrzadNppCjDoUMgqMQpD071M/9GefYU53jVMQ+NFxALVyrdjXQsrPo7TXe
+         2LelV4VsuYiu0UkWTri5DzcxukRGPemONYANIrV/ODCxHq+w7Le0Xos0OhEOJ94nMDcf
+         /FXQ==
+X-Gm-Message-State: ANhLgQ3ChCSdSp5fU8KJaT7awQGBrlhcEwrx82wx2+warMz7WMIR7qBS
+        sMfTwClYT7NsQCaVhEfdW5+mQg==
+X-Google-Smtp-Source: ADFU+vsc1fZ+0cuH55zfqwH9e+3XmcFy1wOjslGUdGyb4NfU6OF3tDgPVYRNCMs3LdKmnvGKq8ixLg==
+X-Received: by 2002:a05:6e02:e8c:: with SMTP id t12mr23377868ilj.196.1585772494254;
+        Wed, 01 Apr 2020 13:21:34 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id m70sm990629ilh.84.2020.04.01.13.21.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 13:21:33 -0700 (PDT)
+Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200311024240.26834-1-elder@linaro.org>
+ <20200401173515.142249-1-ndesaulniers@google.com>
+ <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org>
+ <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
+ <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org>
+ <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
+Date:   Wed, 1 Apr 2020 15:21:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401142015.60ac0a28@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:20:15PM -0400, Steven Rostedt wrote:
-> On Wed, 1 Apr 2020 19:45:44 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On 4/1/20 2:54 PM, Nick Desaulniers wrote:
+> On Wed, Apr 1, 2020 at 12:44 PM Alex Elder <elder@linaro.org> wrote:
+>>
+>> On 4/1/20 2:13 PM, Nick Desaulniers wrote:
+>>> On Wed, Apr 1, 2020 at 11:24 AM Alex Elder <elder@linaro.org> wrote:
+>>>>
+>>>> On 4/1/20 12:35 PM, Nick Desaulniers wrote:
+>>>>>> Define FIELD_MAX(), which supplies the maximum value that can be
+>>>>>> represented by a field value.  Define field_max() as well, to go
+>>>>>> along with the lower-case forms of the field mask functions.
+>>>>>>
+>>>>>> Signed-off-by: Alex Elder <elder@linaro.org>
+>>>>>> Acked-by: Jakub Kicinski <kuba@kernel.org>
+>>>>>> ---
+>>>>>> v3: Rebased on latest netdev-next/master.
+>>>>>>
+>>>>>> David, please take this into net-next as soon as possible.  When the
+>>>>>> IPA code was merged the other day this prerequisite patch was not
+>>>>>> included, and as a result the IPA driver fails to build.  Thank you.
+>>>>>>
+>>>>>>   See: https://lkml.org/lkml/2020/3/10/1839
+>>>>>>
+>>>>>>                                      -Alex
+>>>>>
+>>>>> In particular, this seems to now have regressed into mainline for the 5.7
+>>>>> merge window as reported by Linaro's ToolChain Working Group's CI.
+>>>>> Link: https://github.com/ClangBuiltLinux/linux/issues/963
+>>>>
+>>>> Is the problem you're referring to the result of a build done
+>>>> in the midst of a bisect?
+>>>>
+>>>> The fix for this build error is currently present in the
+>>>> torvalds/linux.git master branch:
+>>>>     6fcd42242ebc soc: qcom: ipa: kill IPA_RX_BUFFER_ORDER
+>>>
+>>> Is that right? That patch is in mainline, but looks unrelated to what
+>>> I'm referring to.
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6fcd42242ebcc98ebf1a9a03f5e8cb646277fd78
+>>> From my github link above, the issue I'm referring to is a
+>>> -Wimplicit-function-declaration warning related to field_max.
+>>> 6fcd42242ebc doesn't look related.
+>>
+>> I'm very sorry, I pointed you at the wrong commit.  This one is
+>> also present in torvalds/linux.git master:
+>>
+>>   e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
+>>
+>> It defines field_max() as a macro in <linux/bitfield.h>, and
+>> "gsi.c" includes that header file.
+>>
+>> This was another commit that got added late, after the initial
+>> IPA code was accepted.
 > 
-> > > I believe what Julien is saying is the above logic is equivalent:
-> > > 
-> > > 	if (x != y &&
-> > > 	    !(z && x == y + z))
-> > > 
-> > > is the same as:
-> > > 
-> > > 	if (x != y + z)  
-> > 
-> > It is not, the former will accept either x==y || x==y+z, while the
-> > latter will only accept x==y+z.
-> 
-> No, the former accepts:
-> 
-> 	x==y || (z && x == y + z)
-> 
-> Which is the same as: x == y + z
-> 
-> As the second condition is only tested if z != 0, and x ==  y is the same
-> as x == y + 0
+> Yep, that looks better.
 
-Right, so it accepts both +0 and +z, while the latter will only accept
-+z.
+Sorry about that.  The two actually are related in a way, because
+without the first one I pointed you at, a *different* problem
+involving field_max() gets triggered.  But that's irrelevant to
+this discussion...
 
-( in the iret case I had offset at +0 and stack_size at +40, while with
-  the ftrace case I had both at +8; which is why I wrote the form that
-  accepts +0 and +z )
+>>>> I may be mistaken, but I believe this is the same problem I discussed
+>>>> with Maxim Kuvyrkov this morning.  A different build problem led to
+>>>> an automated bisect, which conluded this was the cause because it
+>>>> landed somewhere between the initial pull of the IPA code and the fix
+>>>> I reference above.
+>>>
+>>> Yes, Maxim runs Linaro's ToolChain Working Group (IIUC, but you work
+>>> there, so you probably know better than I do), that's the CI I was
+>>> referring to.
+>>>
+>>> I'm more concerned when I see reports of regressions *in mainline*.
+>>> The whole point of -next is that warnings reported there get fixed
+>>> BEFORE the merge window opens, so that we don't regress mainline.  Or
+>>> we drop the patches in -next.
+>>
+>> Can you tell me where I can find the commit id of the kernel
+>> that is being built when this error is reported?  I would
+>> like to examine things and build it myself so I can fix it.
+>> But so far haven't found what I need to check out.
+> 
+> From the report: https://groups.google.com/g/clang-built-linux/c/pX-kr_t5l_A
 
-Anyway, I tested it, and for the ftrace case (the only current user of
-the hint) +z is correct for both offset and stack_size. I build both FP
-and ORC variants.
+That link doesn't work for me.
+
+> Configuration details:
+> rr[llvm_url]="https://github.com/llvm/llvm-project.git"
+> rr[linux_url]="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
+> rr[linux_branch]="7111951b8d4973bda27ff663f2cf18b663d15b48"
+
+That commit is just the one in which Linux v5.6 is tagged.
+It doesn't include any of this code (but it's the last
+tagged release that current linus/master is built on).
+
+It doesn't answer my question about what commit id was
+used for this build, unfortunately.
+
+> the linux_branch looks like a SHA of what the latest ToT of mainline
+> was when the CI ran.
+> 
+> I was suspecting that maybe there was a small window between the
+> regression, and the fix, and when the bot happened to sync.  But it
+> seems that: e31a50162feb352147d3fc87b9e036703c8f2636 landed before
+> 7111951b8d4973bda27ff663f2cf18b663d15b48 IIUC.
+
+Yes, this:
+  e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
+landed about 200 commits after the code that needed it.
+
+So there's a chance the kernel that got built was somewhere
+between those two, and I believe the problem you point out
+would happen in that case.  This is why I started by asking
+whether it was something built during a bisect.
+
+It's still not clear to me what happened here.  I can explain
+how this *could* happen, but I don't believe problem exists
+in the latest upstream kernel commit.
+
+Is there something else you think I should do?
+
+					-Alex
+
+> So I think the bot had your change when it ran, so still seeing a
+> failure is curious.  Unless I've misunderstood something.
