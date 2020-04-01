@@ -2,163 +2,77 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382DEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8F4C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFF2206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9FF206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:38:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B0s5qLL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbgDAGiX (ORCPT
+        id S1731905AbgDAGib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:38:23 -0400
-Received: from mout-p-103.mailbox.org ([80.241.56.161]:36526 "EHLO
-        mout-p-103.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731735AbgDAGiW (ORCPT
+        Wed, 1 Apr 2020 02:38:31 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38406 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731791AbgDAGib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:38:22 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Wed, 1 Apr 2020 02:38:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585723110;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FCSSEclj0ae09gTP8bn9O3K6yRcTAt/8Yi29buWbaxw=;
+        b=B0s5qLL2k0eamZOMT6HG7t4kHFL4xZnrfeQI6Q8edEUGKzgoXJ2wz6FGFkhJXzxLea06FD
+        s8D11wtWfps9fzpObRyio/NJiGDk/lGJBf58W6PDOCQBAEXI+x2QYt0DPOrZyRKASfTVxq
+        t6Wi3EF762Ih67Ei7qckrzB+Wpa6SXU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-MkT21KpwPa-iJMpbhwU6pQ-1; Wed, 01 Apr 2020 02:38:28 -0400
+X-MC-Unique: MkT21KpwPa-iJMpbhwU6pQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 48sc301bJ3zKmWQ;
-        Wed,  1 Apr 2020 08:38:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id QA8DmzSK7YH6; Wed,  1 Apr 2020 08:38:13 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 17:38:06 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Ignat Korchagin <ignat@cloudflare.com>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@cloudflare.com,
-        containers@lists.linux-foundation.org, christian.brauner@ubuntu.com
-Subject: Re: [PATCH v2 1/1] mnt: add support for non-rootfs initramfs
-Message-ID: <20200401063806.5crx6pnm6vzuc3la@yavin.dot.cyphar.com>
-References: <20200331124017.2252-1-ignat@cloudflare.com>
- <20200331124017.2252-2-ignat@cloudflare.com>
- <20200401063620.catm73fbp5n4wv5r@yavin.dot.cyphar.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B511A107ACC7;
+        Wed,  1 Apr 2020 06:38:27 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.193.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3800B10002AE;
+        Wed,  1 Apr 2020 06:38:20 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 08:38:17 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>
+Cc:     kvm@vger.kernel.org, pbonzini@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        david@redhat.com
+Subject: Re: [PATCH 2/2] selftests: kvm: Add mem_slot_test test
+Message-ID: <20200401063817.gb5f4ah45qvtqkhw@kamzik.brq.redhat.com>
+References: <20200330204310.21736-1-wainersm@redhat.com>
+ <20200330204310.21736-3-wainersm@redhat.com>
+ <20200331081632.ithcwuzjyjhiwphy@kamzik.brq.redhat.com>
+ <b261aa4f-87d5-2ac8-9f66-9f10e1a0803a@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4oc4mgugrbek3hvd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401063620.catm73fbp5n4wv5r@yavin.dot.cyphar.com>
-X-Rspamd-Queue-Id: ABF571754
-X-Rspamd-Score: -4.40 / 15.00 / 200.00
+In-Reply-To: <b261aa4f-87d5-2ac8-9f66-9f10e1a0803a@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 31, 2020 at 06:42:21PM -0300, Wainer dos Santos Moschetta wrote:
+> It would be nice to exercise the code by adding slots with different page
+> flags. But for this test that simple checks the limit, the use of
+> KVM_MEM_READONLY is enough. I will change it on v2.
 
---4oc4mgugrbek3hvd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It would be good to test more memslot error conditions as well. Do you plan
+to expand on this test?
 
-On 2020-04-01, Aleksa Sarai <cyphar@cyphar.com> wrote:
-> On 2020-03-31, Ignat Korchagin <ignat@cloudflare.com> wrote:
-> > The main need for this is to support container runtimes on stateless Li=
-nux
-> > system (pivot_root system call from initramfs).
-> >=20
-> > Normally, the task of initramfs is to mount and switch to a "real" root
-> > filesystem. However, on stateless systems (booting over the network) it=
- is just
-> > convenient to have your "real" filesystem as initramfs from the start.
-> >=20
-> > This, however, breaks different container runtimes, because they usuall=
-y use
-> > pivot_root system call after creating their mount namespace. But pivot_=
-root does
-> > not work from initramfs, because initramfs runs form rootfs, which is t=
-he root
-> > of the mount tree and can't be unmounted.
-> >=20
-> > One workaround is to do:
-> >=20
-> >   mount --bind / /
-> >=20
-> > However, that defeats one of the purposes of using pivot_root in the cl=
-oned
-> > containers: get rid of host root filesystem, should the code somehow es=
-capes the
-> > chroot.
-> >=20
-> > There is a way to solve this problem from userspace, but it is much more
-> > cumbersome:
-> >   * either have to create a multilayered archive for initramfs, where t=
-he outer
-> >     layer creates a tmpfs filesystem and unpacks the inner layer, switc=
-hes root
-> >     and does not forget to properly cleanup the old rootfs
-> >   * or we need to use keepinitrd kernel cmdline option, unpack initramf=
-s to
-> >     rootfs, run a script to create our target tmpfs root, unpack the sa=
-me
-> >     initramfs there, switch root to it and again properly cleanup the o=
-ld root,
-> >     thus unpacking the same archive twice and also wasting memory, beca=
-use
-> >     the kernel stores compressed initramfs image indefinitely.
-> >=20
-> > With this change we can ask the kernel (by specifying nonroot_initramfs=
- kernel
-> > cmdline option) to create a "leaf" tmpfs mount for us and switch root t=
-o it
-> > before the initramfs handling code, so initramfs gets unpacked directly=
- into
-> > the "leaf" tmpfs with rootfs being empty and no need to clean up anythi=
-ng.
-> >=20
-> > This also bring the behaviour in line with the older style initrd, wher=
-e the
-> > initrd is located on some leaf filesystem in the mount tree and rootfs =
-remaining
-> > empty.
-> >=20
-> > Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
->=20
-> I know this is a bit of a stretch, but I thought I'd ask -- is it
-> possible to solve the problem with pivot_root(2) without requiring this
-> workaround (and an additional cmdline option)?
->=20
-> From the container runtime side of things, most runtimes do support
-> working on initramfs but it requires disabling pivot_root(2) support (in
-> the runc world this is --no-pivot-root). We would love to be able to
-> remove support for disabling pivot_root(2) because lots of projects have
-> been shipping with pivot_root(2) disabled (such as minikube until
-> recently[1]) -- which opens such systems to quite a few breakout and
-> other troubling exploits (obviously they also ship without using user
-> namespaces *sigh*).
->=20
-> But requiring a new cmdline option might dissuade people from switching.
-> If there was a way to fix the underlying restriction on pivot_root(2),
-> I'd be much happier with that as a solution.
->=20
-> Thanks.
->=20
-> [1]: https://github.com/kubernetes/minikube/issues/3512
+Thanks,
+drew
 
-(I forgot to add the kernel containers ML to Cc.)
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---4oc4mgugrbek3hvd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXoQ2ywAKCRCdlLljIbnQ
-Egi+AQDfp2eihiP/85XxCAvh92c9bn1z/Oe0QolgDlMTkH2+YwD+NjJtM8Z1xCZm
-0UJ6F0fERbVGWMYTkjHKzQPNyY4mSw4=
-=PrTF
------END PGP SIGNATURE-----
-
---4oc4mgugrbek3hvd--
