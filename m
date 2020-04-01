@@ -2,193 +2,148 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7DDC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8DEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9282B20776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D4020776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="f237XEM4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mKjNhn91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbgDALiS (ORCPT
+        id S1732401AbgDALi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:38:18 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:26246 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726612AbgDALiS (ORCPT
+        Wed, 1 Apr 2020 07:38:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:15499 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726427AbgDALi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:38:18 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031BVDwh025633;
-        Wed, 1 Apr 2020 04:38:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=pfpt0818;
- bh=75nGljHVFqt0QhvENVD0hJlIui45v+CfwsYhW2bhLLk=;
- b=f237XEM4gvWf4Kr0YkFU547qWp/K/IbSwTsffiq8aHssoZzxHxIs60TGdw1y6JGpe25h
- raSeoG4yfegDaYfW1QjGQIu9CvLOR0QP194JaxefnYdftpxVcDoNy+tz4iZ0BmphN/3o
- PNI4gKNkFldy0weOOd+hFD7FUjP1seWBWQPjgmxG+8h0nDJrmtD8SN4ZPFrkMV9MqFJz
- b4W4By8Eqg2qEofT+9wbTvejvWquF42GVmOhO4B/Mmb9ESfoGNx8nbrkI5f5/atgKf1d
- up0wzSm+8TCPguAmUSlEEd+w4Zdbnmhjecj1+shqHEeJKivhg+AQpDoZ3Rns9yX/h+uD kw== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 3046h5w6ts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 04:38:12 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 1 Apr
- 2020 04:38:10 -0700
-Received: from bbhushan2.marvell.com (10.93.176.43) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 1 Apr 2020 04:38:07 -0700
-From:   Bharat Bhushan <bbhushan2@marvell.com>
-To:     <jean-philippe@linaro.org>, <joro@8bytes.org>, <mst@redhat.com>,
-        <jasowang@redhat.com>, <virtualization@lists.linux-foundation.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <eric.auger.pro@gmail.com>, <eric.auger@redhat.com>
-CC:     Bharat Bhushan <bbhushan2@marvell.com>
-Subject: [RFC PATCH v2] iommu/virtio: Use page size bitmap supported by endpoint
-Date:   Wed, 1 Apr 2020 17:08:04 +0530
-Message-ID: <20200401113804.21616-1-bbhushan2@marvell.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Apr 2020 07:38:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585741139; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=YW8/FHeYpX+Df6fQ7ygxakP05TUdeSDU0PChvj0MqWI=; b=mKjNhn911uhJMuEB2ana0MxgxdRf918hiTxmtHKIMy5ipINfc0Qd9Q+/TfL3RnEAPoXDWjbI
+ 1AQRMeIzlmmiiFhc4BlMScdK9vNFG3BzJjs7ZnDMuSuUMF7C8tEaiD9OZKjPuBgjL5ROtL1t
+ sRzU51uGhs34DqAXEgO4p6QNFRI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e847d43.7f2bb0d2b068-smtp-out-n01;
+ Wed, 01 Apr 2020 11:38:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 566A0C43637; Wed,  1 Apr 2020 11:38:43 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.15.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61562C433F2;
+        Wed,  1 Apr 2020 11:38:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61562C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [RFT PATCH v2 06/10] drivers: qcom: rpmh-rsc: Comment
+ tcs_is_free() + warn if state mismatch
+To:     Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
+        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200311231348.129254-1-dianders@chromium.org>
+ <20200311161104.RFT.v2.6.Icf2213131ea652087f100129359052c83601f8b0@changeid>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <7a6edff1-3916-e802-0441-25b31989619f@codeaurora.org>
+Date:   Wed, 1 Apr 2020 17:08:36 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+In-Reply-To: <20200311161104.RFT.v2.6.Icf2213131ea652087f100129359052c83601f8b0@changeid>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Different endpoint can support different page size, probe
-endpoint if it supports specific page size otherwise use
-global page sizes.
+Hi,
 
-Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
----
- drivers/iommu/virtio-iommu.c      | 33 +++++++++++++++++++++++++++----
- include/uapi/linux/virtio_iommu.h |  7 +++++++
- 2 files changed, 36 insertions(+), 4 deletions(-)
+On 3/12/2020 4:43 AM, Douglas Anderson wrote:
+> tcs_is_free() had two checks in it: does the software think that the
+> TCS is free and does the hardware think that the TCS is free.  Let's
+> comment this and also add a warning in the case that software and
+> hardware disagree, at least for ACTIVE_ONLY TCS.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v2:
+> - Comment tcs_is_free() new for v2; replaces old patch 6.
+>
+>   drivers/soc/qcom/rpmh-rsc.c | 23 +++++++++++++++++++++--
+>   1 file changed, 21 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index 9d2669cbd994..93f5d1fb71ca 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -181,8 +181,27 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
+>    */
+>   static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
+>   {
+> -	return !test_bit(tcs_id, drv->tcs_in_use) &&
+> -	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
+> +	/* If software thinks it's in use then it's definitely in use */
+> +	if (test_bit(tcs_id, drv->tcs_in_use))
+> +		return false;
+> +
+> +	/* If hardware agrees it's free then it's definitely free */
+> +	if (read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id) != 0)
+> +		return true;
+> +
+> +	/*
+> +	 * If we're here then software and hardware disagree about whether
+> +	 * the TCS is free.  Software thinks it is free and hardware thinks
+> +	 * it is not.
+> +	 *
+> +	 * Maybe this should be a warning in all cases, but it's almost
+> +	 * certainly a warning for the ACTIVE_TCS where nobody else should
+> +	 * be doing anything else behind our backs.  For now we'll just
+> +	 * warn there and then still return that we're in use.
+> +	 */
+> +	WARN(drv->tcs[tcs_id].type == ACTIVE_TCS,
+> +	     "Driver thought TCS was free but HW reported busy\n");
+This warning can come for borrowed WAKE_TCS as well.
+> +	return false;
+>   }
 
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index cce329d71fba..c794cb5b7b3e 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -78,6 +78,7 @@ struct viommu_endpoint {
- 	struct viommu_dev		*viommu;
- 	struct viommu_domain		*vdomain;
- 	struct list_head		resv_regions;
-+	u64				pgsize_bitmap;
- };
- 
- struct viommu_request {
-@@ -415,6 +416,20 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
- 	return ret;
- }
- 
-+static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-+				    struct virtio_iommu_probe_pgsize_mask *mask,
-+				    size_t len)
-+
-+{
-+	u64 pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
-+
-+	if (len < sizeof(*mask))
-+		return -EINVAL;
-+
-+	vdev->pgsize_bitmap = pgsize_bitmap;
-+	return 0;
-+}
-+
- static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
- 			       struct virtio_iommu_probe_resv_mem *mem,
- 			       size_t len)
-@@ -494,11 +509,13 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
- 	while (type != VIRTIO_IOMMU_PROBE_T_NONE &&
- 	       cur < viommu->probe_size) {
- 		len = le16_to_cpu(prop->length) + sizeof(*prop);
--
- 		switch (type) {
- 		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
- 			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
- 			break;
-+		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-+			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-+			break;
- 		default:
- 			dev_err(dev, "unknown viommu prop 0x%x\n", type);
- 		}
-@@ -607,16 +624,23 @@ static struct iommu_domain *viommu_domain_alloc(unsigned type)
- 	return &vdomain->domain;
- }
- 
--static int viommu_domain_finalise(struct viommu_dev *viommu,
-+static int viommu_domain_finalise(struct viommu_endpoint *vdev,
- 				  struct iommu_domain *domain)
- {
- 	int ret;
- 	struct viommu_domain *vdomain = to_viommu_domain(domain);
-+	struct viommu_dev *viommu = vdev->viommu;
- 
- 	vdomain->viommu		= viommu;
- 	vdomain->map_flags	= viommu->map_flags;
- 
--	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
-+	/* Devices in same domain must support same size pages */
-+	if ((domain->pgsize_bitmap != viommu->pgsize_bitmap) &&
-+	    (domain->pgsize_bitmap != vdev->pgsize_bitmap))
-+		return -EINVAL;
-+
-+	domain->pgsize_bitmap = vdev->pgsize_bitmap;
-+
- 	domain->geometry	= viommu->geometry;
- 
- 	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
-@@ -657,7 +681,7 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		 * Properly initialize the domain now that we know which viommu
- 		 * owns it.
- 		 */
--		ret = viommu_domain_finalise(vdev->viommu, domain);
-+		ret = viommu_domain_finalise(vdev, domain);
- 	} else if (vdomain->viommu != vdev->viommu) {
- 		dev_err(dev, "cannot attach to foreign vIOMMU\n");
- 		ret = -EXDEV;
-@@ -875,6 +899,7 @@ static int viommu_add_device(struct device *dev)
- 
- 	vdev->dev = dev;
- 	vdev->viommu = viommu;
-+	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
- 	INIT_LIST_HEAD(&vdev->resv_regions);
- 	fwspec->iommu_priv = vdev;
- 
-diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-index 237e36a280cb..dc9d3f40bcd8 100644
---- a/include/uapi/linux/virtio_iommu.h
-+++ b/include/uapi/linux/virtio_iommu.h
-@@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
- 
- #define VIRTIO_IOMMU_PROBE_T_NONE		0
- #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-+#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
- 
- #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
- 
-@@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
- 	__le16					length;
- };
- 
-+struct virtio_iommu_probe_pgsize_mask {
-+	struct virtio_iommu_probe_property	head;
-+	__u8					reserved[4];
-+	__u64					pgsize_bitmap;
-+};
-+
- #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
- #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
- 
+We have a patch on downstream variant to optimize this by only checking 
+tcs_in_use flag (SW check) and HW check is removed.
+
+  static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
+  {
+-       return !test_bit(tcs_id, drv->tcs_in_use) &&
+-              read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id, 0);
++       return !test_bit(tcs_id, drv->tcs_in_use);
+  }
+
+With this we are good and don't require to put above warning as well.
+
+if you want me to upload, i can post it and then you can drop this 
+change from your series.
+
+Or if you want to modify it as above and keep in this series i am ok.
+
+Thanks,
+Maulik
+
+>   
+>   /**
+
 -- 
-2.17.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
