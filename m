@@ -2,151 +2,131 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E321BC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABE1C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCD92063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E6D2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GxDcLOLg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732817AbgDAQ5I convert rfc822-to-8bit (ORCPT
+        id S1733232AbgDAQ6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:57:08 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41323 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733269AbgDAQ5I (ORCPT
+        Wed, 1 Apr 2020 12:58:16 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47822 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732587AbgDAQ6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:57:08 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f52so237893otf.8;
-        Wed, 01 Apr 2020 09:57:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZyTZQ9ScLYyXr8uy25TVZM268D8wsSCH+8ypLUnJOFM=;
-        b=gRytOR6k+DyXweCVLepsCqlAVbnAwqt7RTLVhahoDIJXA1Hm3kdZE3UyDTjNPqNsI1
-         MFBI0/O5sCtjIpogBMNtp0at4CYx00dYBGzvOWDCDNy7iX+6q+gH7ebWh5W3JQfRuG6/
-         1ei3x3pDwHthqTQZe4gvJKkq088yd0ViPuasSfhvLO7NpyFGh98tGJAoCP+xtlmM/aGI
-         TVu+E5wXfROB/cKQ5eLdJTBulrLsexoJqQY5zFgRz+G9On+B1PvHPnmkMxNoUeqBv2Al
-         n5FXSgGrooVcnQ1g7mk1kUsU5te/CO7jJhHPIB9f/5qviHh2U3ZY/+H5eQefilja3MMk
-         5fDA==
-X-Gm-Message-State: ANhLgQ0V8D0fe16BD0lYqPnFZVQVJYJi00RXlU3mc3AuDUAKyLaZpg+u
-        PzOvQUGMAL6LrRNt6PCDC90v9Doo6ACp+b/abPM=
-X-Google-Smtp-Source: ADFU+vufihEvibArYWJjTrCmDu7dXZgc3PqH8LVxCwqiESC/QDCUaa5LpicQzIvHFS3WT4dVXp+EAe0ygrg1OSHe3UQ=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr6414778otl.145.1585760227154;
- Wed, 01 Apr 2020 09:57:07 -0700 (PDT)
+        Wed, 1 Apr 2020 12:58:15 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF489A2A;
+        Wed,  1 Apr 2020 18:58:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1585760293;
+        bh=eQZsIhB1wvrRknfrJZU+LzCKO7pIgPHcWCBsxNQwHzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GxDcLOLgarB3bqbrxyHpH1KddDiIIYq45tDqrelzIWLisQO5vFHgl0/hOVCICbCa1
+         kbV+AC2AcXSFkC90PdrZFVfKZfZuO4oMAph4nJJjRrYquRxZPh8MIMJe/6OPLI6wQc
+         gP4Ora0w+PLrDdpxtdBrtQnlkFw86EpzfvdElmjA=
+Date:   Wed, 1 Apr 2020 19:58:05 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@iki.fi>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, frankc@nvidia.com, helen.koike@collabora.com,
+        digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+Message-ID: <20200401165805.GE4876@pendragon.ideasonboard.com>
+References: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+ <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
+ <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
+ <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
+ <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
+ <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
+ <20200331115221.GA4767@pendragon.ideasonboard.com>
+ <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
+ <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
+ <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
 MIME-Version: 1.0
-References: <20200401153513.423683-1-mylene.josserand@collabora.com> <20200401153513.423683-3-mylene.josserand@collabora.com>
-In-Reply-To: <20200401153513.423683-3-mylene.josserand@collabora.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 Apr 2020 18:56:55 +0200
-Message-ID: <CAMuHMdXvFOKqmZ-MLJV4SAeLN-PDzqPvMvbVpcD=jyip9tbdnA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] clk: rockchip: rk3288: Handle clock tree for rk3288w
-To:     =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@collabora.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        kever.yang@rock-chips.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mylène,
+Hi Sowjanya,
 
-On Wed, Apr 1, 2020 at 5:35 PM Mylène Josserand
-<mylene.josserand@collabora.com> wrote:
-> The revision rk3288w has a different clock tree about
-> "hclk_vio" clock, according to the BSP kernel code.
->
-> This patch handles this difference by detecting which SOC it is
-> and creating the div accordingly. Because we are using
-> soc_device_match function, we need to delay the registration
-> of this clock later than others to have time to get SoC revision.
->
-> Otherwise, because of CLK_OF_DECLARE uses, clock tree will be
-> created too soon to have time to detect SoC's revision.
->
-> Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
+On Wed, Apr 01, 2020 at 09:36:03AM -0700, Sowjanya Komatineni wrote:
+> Hi Sakari/Laurent,
+> 
+> Few questions to confirm my understanding on below discussion.
+> 
+> 1. Some sensors that you are referring as don't work with single devnode 
+> controlling pipeline devices are ISP built-in sensors where setup of 
+> pipeline and subdevices happen separately?
 
-Thanks for your patch!
+Sensors that include ISPs could indeed require to be exposed as multiple
+subdevs, but I was mostly referring to raw Bayer sensors with hardware
+architectures similar to the SMIA++ and MIPI CCS specifications. Those
+sensors can perform cropping in up to three different locations (analog
+crop, digital crop, output crop), and can also scale in up to three
+different locations (binning, skipping and filter-based scaling).
 
-> --- a/drivers/clk/rockchip/clk-rk3288.c
-> +++ b/drivers/clk/rockchip/clk-rk3288.c
-> @@ -914,10 +923,15 @@ static struct syscore_ops rk3288_clk_syscore_ops = {
->         .resume = rk3288_clk_resume,
->  };
->
-> +static const struct soc_device_attribute rk3288w[] = {
-> +       { .soc_id = "RK32xx", .revision = "RK3288w" },
-> +       { /* sentinel */ }
-> +};
-> +
-> +static struct rockchip_clk_provider *ctx;
-> +
->  static void __init rk3288_clk_init(struct device_node *np)
->  {
-> -       struct rockchip_clk_provider *ctx;
-> -
->         rk3288_cru_base = of_iomap(np, 0);
->         if (!rk3288_cru_base) {
->                 pr_err("%s: could not map cru region\n", __func__);
-> @@ -955,3 +969,17 @@ static void __init rk3288_clk_init(struct device_node *np)
->         rockchip_clk_of_add_provider(np, ctx);
->  }
->  CLK_OF_DECLARE(rk3288_cru, "rockchip,rk3288-cru", rk3288_clk_init);
-> +
-> +static int __init rk3288_hclkvio_register(void)
-> +{
+Furthermore, with the V4L2 support for multiplexed streams that we are
+working on, a sensor that can produce both image data and embedded data
+would also need to be split in multiple subdevs.
 
-This function will always be called, even when running a (multi-platform)
-kernel on a non-rk3288 platform.  So you need some protection against
-that.
+> 2. With driver supporting single device node control of entire pipeline 
+> devices compared to MC-based, limitation is with userspace apps for only 
+> these complex camera sensors?
 
-> +       /* Check for the rk3288w revision as clock tree is different */
-> +       if (soc_device_match(rk3288w))
-> +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
-> +                                              ARRAY_SIZE(rk3288w_hclkvio_branch));
-> +       else
-> +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
-> +                                              ARRAY_SIZE(rk3288_hclkvio_branch));
+In those cases, several policy decisions on how to configure the sensor
+(whether to use binning, skipping and/or filter-based scaling for
+instance, or how much cropping and scaling to apply to achieve a certain
+output resolution) will need to be implemented in the kernel, and
+userspace will not have any control on them.
 
-Note that soc_device_match() returns a struct soc_device_attribute
-pointer.  If you would store the rockchip_clk_branch array pointer and
-size in rk3288w[...].data (i.e. a pointer to a struct containing that
-info), for both the r83288w and normal rk3288 variants, you could
-simplify this to:
+> 3. Does all upstream video capture drivers eventually will be moved to 
+> support MC-based?
 
-    attr = soc_device_match(rk3288w);
-    if (attr) {
-            struct rk3288_branch_array *p = attr->data;
-            rockchip_clk_register_branches(ctx, p->branches, p->len);
-    }
+I think we'll see a decrease of the video-node-centric drivers in the
+future for embedded systems, especially the ones that include an ISP.
+When a system has an ISP, even if the ISP is implemented as a
+memory-to-memory device separate from the CSI-2 capture side, userspace
+will likely have a need for fine-grained control of the camera sensor.
 
-That would handle the not-running-on-rk3288 issue as well.
+> 4. Based on libcamera doc looks like it will work with both types of 
+> MC-based and single devnode based pipeline setup drivers for normal 
+> sensors and limitation is when we use ISP built-in sensor or ISP HW 
+> block. Is my understanding correct?
 
-> +
-> +       return 0;
-> +}
-> +subsys_initcall(rk3288_hclkvio_register);
+libcamera supports both, it doesn't put any restriction in that area.
+The pipeline handler (the device-specific code in libcamera that
+configures and control the hardware pipeline) is responsible for
+interfacing with the kernel drivers, and is free to use an MC-centric or
+video-node-centric API depending on what the kernel drivers offer.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+The IPA (image processing algorithms) module is also vendor-specific.
+Although it will not interface directly with kernel drivers, it will
+have requirements on how fine-grained control of the sensor is required.
+For systems that have an ISP in the SoC, reaching a high image quality
+level requires fine-grained control of the sensor, or at the very least
+being able to retrieve fine-grained sensor configuration information
+from the kernel. For systems using a camera sensor with an integrated
+ISP and a CSI-2 receiver without any further processing on the SoC side,
+there will be no such fine-grained control of the sensor by the IPA (and
+there could even be no IPA module at all).
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Laurent Pinchart
