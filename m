@@ -2,43 +2,43 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5A3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9E4C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB2C620705
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A6C2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759458;
-	bh=5MkXauhoehfgF1bchJUtFa+ktvr7TubTgXLAVcWSsPE=;
+	s=default; t=1585759462;
+	bh=fMRsRQ+65f7C+MmvTPcopeURpod73xJ3PavLOx/8fiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O53r4Zb20ZKENhM/hznpyQwZ6NXIqZ9aQLms9cldCsMFK1lCWIQ+hqL9xSfIX+c9b
-	 C/6dqrDxaThjlAiCrRPbUaMz8F3tjRmFRcboiFuiVTHxmKVYEzi28lc6VyIEmn2ZP9
-	 Rv9J1gfU/WU9LNGG1ZqsDJ8d2dj04GPBubRf/4hw=
+	b=CmwcnXcqKRryprEkjN9uAGJa9N5n+8jQBel50Q+owcVXf3vW4fccfgnq9y3EtMFrn
+	 S6hJSAPQfSWQ59eEoXlQ4qlYpmh58v6S5cZg1JTXX2p8AamUaBX63mflgLM0fwe1V2
+	 WAc3vtMP10RSkma+SONWlF+BptupUqrRflNMCaws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389703AbgDAQoQ (ORCPT
+        id S2389713AbgDAQoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389546AbgDAQoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:44:15 -0400
+        id S2389157AbgDAQoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:44:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B6BC2063A;
-        Wed,  1 Apr 2020 16:44:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2E0B206E9;
+        Wed,  1 Apr 2020 16:44:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759454;
-        bh=5MkXauhoehfgF1bchJUtFa+ktvr7TubTgXLAVcWSsPE=;
+        s=default; t=1585759457;
+        bh=fMRsRQ+65f7C+MmvTPcopeURpod73xJ3PavLOx/8fiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMJZCm1PiJ7oGWgVSWFjIT0ICXL8mvjxojEUI2Zw5EQecmonSRVYIPeT929ddyqjE
-         roVOCaErOSJzTeEin7AjOcQSUzoh6SXsIUYdgx6VFGvmXL28zwN62aKojPcmx8QO4F
-         3ay91iZJDYIcL49P6DnD1n6PGunFFIr97tjTStVM=
+        b=FdZBFBN2FPqimWYi6CuuuCDcoaZLo6Weor0VSjVtd4UlhRNVcFP03/sVcjkKs5dN6
+         fnjcsJa9/pkeCQ0FBzio91fPET3TYuxTIFAO3vv1HOCN5OBUv0Vv+75JDPHgNFL5NY
+         lfk9WiTocPbi9Zy4v1H8GnnTa0xKFoY+VzEK/aMg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Suzuki Poulose <suzuki.poulose@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.14 085/148] arm64: ptrace: map SPSR_ELx<->PSR for compat tasks
-Date:   Wed,  1 Apr 2020 18:17:57 +0200
-Message-Id: <20200401161601.264697375@linuxfoundation.org>
+Subject: [PATCH 4.14 086/148] arm64: compat: map SPSR_ELx<->PSR for signals
+Date:   Wed,  1 Apr 2020 18:17:58 +0200
+Message-Id: <20200401161601.333675944@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -64,12 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mark Rutland <mark.rutland@arm.com>
 
-commit 76fc52bd07d3e9cb708f1a50b60c825c96acd606 upstream.
+commit 25dc2c80cfa33153057aa94984855acd57adf92a upstream.
 
-The SPSR_ELx format for exceptions taken from AArch32 is slightly
-different to the AArch32 PSR format.
-
-Map between the two in the compat ptrace code.
+The SPSR_ELx format for exceptions taken from AArch32 differs from the
+AArch32 PSR format. Thus, we must translate between the two when setting
+up a compat sigframe, or restoring context from a compat sigframe.
 
 Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 Fixes: 7206dc93a58fb764 ("arm64: Expose Arm v8.4 features")
@@ -81,26 +80,46 @@ Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/ptrace.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/signal32.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -833,6 +833,7 @@ static int compat_gpr_get(struct task_st
- 			break;
- 		case 16:
- 			reg = task_pt_regs(target)->pstate;
-+			reg = pstate_to_compat_psr(reg);
- 			break;
- 		case 17:
- 			reg = task_pt_regs(target)->orig_x0;
-@@ -900,6 +901,7 @@ static int compat_gpr_set(struct task_st
- 			newregs.pc = reg;
- 			break;
- 		case 16:
-+			reg = compat_psr_to_pstate(reg);
- 			newregs.pstate = reg;
- 			break;
- 		case 17:
+--- a/arch/arm64/kernel/signal32.c
++++ b/arch/arm64/kernel/signal32.c
+@@ -321,6 +321,7 @@ static int compat_restore_sigframe(struc
+ 	int err;
+ 	sigset_t set;
+ 	struct compat_aux_sigframe __user *aux;
++	unsigned long psr;
+ 
+ 	err = get_sigset_t(&set, &sf->uc.uc_sigmask);
+ 	if (err == 0) {
+@@ -344,7 +345,9 @@ static int compat_restore_sigframe(struc
+ 	__get_user_error(regs->compat_sp, &sf->uc.uc_mcontext.arm_sp, err);
+ 	__get_user_error(regs->compat_lr, &sf->uc.uc_mcontext.arm_lr, err);
+ 	__get_user_error(regs->pc, &sf->uc.uc_mcontext.arm_pc, err);
+-	__get_user_error(regs->pstate, &sf->uc.uc_mcontext.arm_cpsr, err);
++	__get_user_error(psr, &sf->uc.uc_mcontext.arm_cpsr, err);
++
++	regs->pstate = compat_psr_to_pstate(psr);
+ 
+ 	/*
+ 	 * Avoid compat_sys_sigreturn() restarting.
+@@ -500,6 +503,7 @@ static int compat_setup_sigframe(struct
+ 				 struct pt_regs *regs, sigset_t *set)
+ {
+ 	struct compat_aux_sigframe __user *aux;
++	unsigned long psr = pstate_to_compat_psr(regs->pstate);
+ 	int err = 0;
+ 
+ 	__put_user_error(regs->regs[0], &sf->uc.uc_mcontext.arm_r0, err);
+@@ -518,7 +522,7 @@ static int compat_setup_sigframe(struct
+ 	__put_user_error(regs->compat_sp, &sf->uc.uc_mcontext.arm_sp, err);
+ 	__put_user_error(regs->compat_lr, &sf->uc.uc_mcontext.arm_lr, err);
+ 	__put_user_error(regs->pc, &sf->uc.uc_mcontext.arm_pc, err);
+-	__put_user_error(regs->pstate, &sf->uc.uc_mcontext.arm_cpsr, err);
++	__put_user_error(psr, &sf->uc.uc_mcontext.arm_cpsr, err);
+ 
+ 	__put_user_error((compat_ulong_t)0, &sf->uc.uc_mcontext.trap_no, err);
+ 	/* set the compat FSR WnR */
 
 
