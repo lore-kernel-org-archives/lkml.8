@@ -2,369 +2,417 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64CFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D25DC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6A62054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6836420784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CaqP/E6L"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cnKABDfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732416AbgDASj0 (ORCPT
+        id S1732557AbgDASjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:39:26 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55850 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgDASj0 (ORCPT
+        Wed, 1 Apr 2020 14:39:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50992 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgDASjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:39:26 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r16so807159wmg.5;
-        Wed, 01 Apr 2020 11:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0NXw4aGj0V8gMorYxhrv+9nn6LYwz2TkaA+ZgOaVdd0=;
-        b=CaqP/E6LWMkL5FtmSQ4U1LSrzJkSof/BU8AYT3KRzsoHauarQi5NHaQD42efOJiDS4
-         +UKBuI8Po55Zcm+5tz0y3nWqj4h2Y4BL88CsMWpA8yrMNMCgNbm/eRiXGY9TffqcwF0c
-         Sbst0w083oMzpUtCm/DO7ANaAfNERClAGP5xBp+doAEHn23k3bMXR9HpAY/UDGzaqNSN
-         lKFf/PbxUGBudh97YhikA3aE09fibbj4hxtFydZXg0fwDO50MrNEiKFpucvRJrvv9ryc
-         eiGaoqKUF4AsrcCaXvhUryz5h73cdmwgc8nSgmgh1xujmuqf4BiuD79YH4vkV506VBol
-         zZlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0NXw4aGj0V8gMorYxhrv+9nn6LYwz2TkaA+ZgOaVdd0=;
-        b=F49534Au5cQ7H79lcXBYmhcaTDltqVmS4L3RH9mkHil2/MhtjQxI3mzagskte4OizD
-         9qFIeeqN0RatCL2HfoJsuUpxH7UEMah6nlMSN4Emie517d2IAzRVo1YWBRT8uwIlhgmJ
-         rTyHYz7rylJk3E1fvwIfu0tgMNPkRIIbE7YnhDhtZHOZ/5TL1EanV/8CEsY30wFBL0uM
-         Op2yhTrWXHq8jH7bhEmqb/mfXhlfCwDi9iGGAe9Hkj0zM0qrHXP//vKDAIX5MIx0S/Bv
-         Fig4AN9xU2KTpRAvWiBIUUbQr9MzCXB5ceh+qeP0irlZQ+oSTprQXCPylNcbNwOJc80H
-         TYIg==
-X-Gm-Message-State: AGi0Pub8+7vmdSOTddfkaF3hWGuw6gZu0JN7NkfVWS5uywBJUGLJ5VjK
-        22IeWnJOaRZgdEsICatHwFM=
-X-Google-Smtp-Source: APiQypI/IwyM5QjA0R/2v2iCOyFE3LEgKgnlrcduAwYMVH0XNHMTNih52a72POtS6CZcD/BEbaN7Aw==
-X-Received: by 2002:a05:600c:21d4:: with SMTP id x20mr5645750wmj.77.1585766361844;
-        Wed, 01 Apr 2020 11:39:21 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id n7sm3762011wmf.4.2020.04.01.11.39.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 11:39:20 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 20:39:19 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200401183919.GC2978178@ulmo>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
- <20200331204559.GB2954599@ulmo>
- <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
- <c1785cf8-4231-feb5-9a54-2374df85c33b@ti.com>
- <20200401114732.cxy3fsluzag7pxff@pengutronix.de>
+        Wed, 1 Apr 2020 14:39:51 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031I9bFE007521;
+        Wed, 1 Apr 2020 18:38:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=naDmY5P24w/JYGCK1eFkRS1tfIUblXQlXV7G9IqlWxk=;
+ b=cnKABDfqYYcBde7gjP8bhk13oAZPlwbuj0+dj9sYbGRaV5qgq1hhMRREWMtphewviflj
+ +hb+CZzsxwisClbJa0qPVo5DMeuuMF7PrJJp1rGQzIJeA66Nsrra/RidoBFgG+Q/n25+
+ UlIUOPHAV9xaRxoSedPbjAzapq2h9CR+MmKJ5kj0Lsl1TM7qwDOtOOiuUkbNs7Y8bY+3
+ fTZYY+oevE8zHLB7DYMlZe0wxrpEyAALas8NT8e0NunJyUlNkP48R6CwPtEUQeXZ2RKK
+ WDfVnzU+mp7JFTWPb6USUDelRFDeIE0LTJFfxo4Ykzs7obKcO+OMOZ8EMG7eT3+mLAuj gA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 303cev75xu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 18:38:46 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031IbJYY191859;
+        Wed, 1 Apr 2020 18:38:46 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 302g2h3bv3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 18:38:45 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 031Ichqk015549;
+        Wed, 1 Apr 2020 18:38:43 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 Apr 2020 11:38:43 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mina Almasry <almasrymina@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v2 4/4] hugetlbfs: clean up command line processing
+Date:   Wed,  1 Apr 2020 11:38:19 -0700
+Message-Id: <20200401183819.20647-5-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200401183819.20647-1-mike.kravetz@oracle.com>
+References: <20200401183819.20647-1-mike.kravetz@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/Uq4LBwYP4y1W6pO"
-Content-Disposition: inline
-In-Reply-To: <20200401114732.cxy3fsluzag7pxff@pengutronix.de>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With all hugetlb page processing done in a single file clean up code.
+- Make code match desired semantics
+  - Update documentation with semantics
+- Make all warnings and errors messages start with 'HugeTLB:'.
+- Consistently name command line parsing routines.
+- Check for hugepages_supported() before processing parameters.
+- Add comments to code
+  - Describe some of the subtle interactions
+  - Describe semantics of command line arguments
 
---/Uq4LBwYP4y1W6pO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+---
+ .../admin-guide/kernel-parameters.txt         | 35 ++++---
+ Documentation/admin-guide/mm/hugetlbpage.rst  | 44 +++++++++
+ mm/hugetlb.c                                  | 96 +++++++++++++++----
+ 3 files changed, 142 insertions(+), 33 deletions(-)
 
-On Wed, Apr 01, 2020 at 01:47:32PM +0200, Uwe Kleine-K=C3=B6nig wrote:
-> On Wed, Apr 01, 2020 at 03:52:21PM +0530, Lokesh Vutla wrote:
-> > Hi Uwe,
-> >=20
-> > On 01/04/20 1:52 PM, Uwe Kleine-K=C3=B6nig wrote:
-> > > Hello Thierry,
-> > >=20
-> > > On Tue, Mar 31, 2020 at 10:45:59PM +0200, Thierry Reding wrote:
-> > >> On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-K=C3=B6nig wrot=
-e:
-> > >>> On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
-> > >>>> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-K=C3=B6nig wr=
-ote:
-> > >>>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
-> > >>>>>> Only the Timer control register(TCLR) cannot be updated when the=
- timer
-> > >>>>>> is running. Registers like Counter register(TCRR), loader regist=
-er(TLDR),
-> > >>>>>> match register(TMAR) can be updated when the counter is running.=
- Since
-> > >>>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
-> > >>>>>> timer for period/duty_cycle update.
-> > >>>>>
-> > >>>>> I'm not sure what is sensible here. Stopping the PWM for a short =
-period
-> > >>>>> is bad, but maybe emitting a wrong period isn't better. You can h=
-owever
-> > >>>>> optimise it if only one of period or duty_cycle changes.
-> > >>>>>
-> > >>>>> @Thierry, what is your position here? I tend to say a short stop =
-is
-> > >>>>> preferable.
-> > >>>>
-> > >>>> It's not clear to me from the above description how exactly the de=
-vice
-> > >>>> behaves, but I suspect that it may latch the values in those regis=
-ters
-> > >>>> and only update the actual signal output once a period has finishe=
-d. I
-> > >>>> know of a couple of other devices that do that, so it wouldn't be
-> > >>>> surprising.
-> > >>>>
-> > >>>> Even if that was not the case, I think this is just the kind of th=
-ing
-> > >>>> that we have to live with. Sometimes it just isn't possible to hav=
-e all
-> > >>>> supported devices adhere strictly to an API. So I think the best w=
-e can
-> > >>>> do is have an API that loosely defines what's supposed to happen a=
-nd
-> > >>>> make a best effort to implement those semantics. If a device devia=
-tes
-> > >>>> slightly from those expectations, we can always cross fingers and =
-hope
-> > >>>> that things still work. And it looks like they are.
-> > >>>>
-> > >>>> So I think if Lokesh and Tony agree that this is the right thing t=
-o do
-> > >>>> and have verified that things still work after this, that's about =
-as
-> > >>>> good as it's going to get.
-> > >>>
-> > >>> I'd say this isn't for the platform people to decide. My position h=
-ere
-> > >>> is that the PWM drivers should behave as uniform as possible to min=
-imize
-> > >>> surprises for consumers. And so it's a "PWM decision" that is to be=
- made
-> > >>> here, not an "omap decision".
-> > >>
-> > >> I think there's a fine line to be walked here. I agree that we should
-> > >> aim to have as much consistency between drivers as possible. At the =
-same
-> > >> time I think we need to be pragmatic. As Lokesh said, the particular=
- use
-> > >> case here requires this type of on-the-fly adjustment of the PWM per=
-iod
-> > >> without stopping and restarting the PWM. It doesn't work otherwise. =
-So
-> > >> th alternative that you're proposing is to say that we don't support
-> > >> that use-case, even though it works just fine given this particular
-> > >> hardware. That's not really an option.
-> > >=20
-> > > I understand your opinion here. The situation now is that in current
-> > > mainline the driver stops the hardware for reconfiguration and it
-> > > doesn't fit Lokesh's use case so he changed to on-the-fly update
-> > > (accepting that maybe a wrong period is emitted). What if someone rel=
-ies
-> > > on the old behaviour? What if in a year someone comes and claims the
-> > > wrong period is bad for their usecase and changes back to
-> > > stop-to-update?
-> > >=20
-> > > When I write a consumer driver, do I have a chance to know how the PW=
-M,
-> > > that I happen to use, behaves? To be able to get my consumer driver
-> > > reliable I might need to know that however.
-> > >=20
-> > >>>> I know this is perhaps cheating a little, or turning a blind eye, =
-but I
-> > >>>> don't know what the alternative would be. Do we want to tell peopl=
-e that
-> > >>>> a given PWM controller can't be used if it doesn't work according =
-to our
-> > >>>> expectations? That's hard to argue if that controller works just f=
-ine
-> > >>>> for all known use-cases.
-> > >>>
-> > >>> I'd like have some official policy here which of the alternatives i=
-s the
-> > >>> preferred cheat.
-> > >>>
-> > >>> The situation here is that period and duty_cycle cannot be updated
-> > >>> atomically. So the two options are:
-> > >>>
-> > >>>  - stop shortly
-> > >>>  - update with hardware running and maybe emit a broken period
-> > >>
-> > >> I think we can already support both of those with the existing API. =
-If
-> > >> a consumer wants to stop the PWM while reconfiguring, they should be
-> > >> able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
-> > >> equivalent) and for the second case they can just do pwm_config() (or
-> > >> the atomic equivalent).
-> > >=20
-> > > Yes, the consumer can force the stop and update. But assume I'm "only=
-" a
-> > > consumer driver author and I want: atomic update and if this is not
-> > > possible I prefer "stop-to-update" over "on-the-fly-and-maybe-faulty".
-> > > So I cannot benefit from a good driver/hardware that can do atomic
-> > > updates? Or I have to patch each driver that I actually use to use
-> > > stop-to-update?
-> > >=20
-> > >> Some hardware may actually require the PWM to be disabled before
-> > >> reconfiguring, so they won't be able to strictly adhere to the second
-> > >> use-case.
-> > >>
-> > >> But as discussed above, I don't want to strive for a lowest common
-> > >> denominator that would preclude some more specific use-cases from
-> > >> working if the hardware supports it.
-> > >>
-> > >> So I think we should aim for drivers to implement the semantics as
-> > >> closely as possible. If the hardware doesn't support some of these
-> > >> requirements strictly while a particular use-case depends on that, t=
-hen
-> > >> that just means that the hardware isn't compatible with that use-cas=
-e.
-> > >> Chances are that the system just isn't going to be designed to suppo=
-rt
-> > >> that use-case in the first place if the hardware can't do it.
-> > >>
-> > >> The sysfs interface is a bit of a special case here because it isn't
-> > >> possible to know what use-cases people are going to come up with.
-> > >=20
-> > > In my eyes the sysfs interface isn't special here. You also don't know
-> > > what the OMAP PWM hardware is used for.
-> > >=20
-> > >> It's most likely that they'll try something and if it doesn't work
-> > >> they can see if a driver patch can improve things.
-> > >=20
-> > > So either the group who prefers "stop-to-update" or the group who
-> > > prefers "on-the-fly-and-maybe-faulty" has to carry a system specific
-> > > driver patch?
-> > >=20
-> > >> One possible extension that I can imagine would be to introduce some
-> > >> sort of capability structure that drivers can fill in to describe the
-> > >> behaviour of the hardware. Drivers like pwm-omap-dmtimer, for exampl=
-e,
-> > >> could describe that they are able to change the period and/or duty c=
-ycle
-> > >> while the PWM is on. There could be another capability bit that says
-> > >> that the current period will finish before new settings are applied.=
- Yet
-> > >> another capability could describe that duty-cycle and period can be
-> > >> applied atomically. Consumers could then check those capabilities to=
- see
-> > >> if they match their requirements.
-> > >>
-> > >> But then again, I think that would just make things overly complicat=
-ed.
-> > >> None of the existing consumers need that, so it doesn't seem like th=
-ere
-> > >> is much demand for that feature. In practice I suspect most consumers
-> > >> work fine despite potentially small deviations in how the PWM behave=
-s.
-> > >=20
-> > > I think the status quo is what I asked about above: People use sysfs =
-and
-> > > if the PWM behaves different than needed, the driver is patched and m=
-ost
-> > > of the time not mainlined. If your focus is to support a certain
-> > > industrial system with a defined use case, this is fine. If however y=
-ou
-> > > target for an universal framework that works for any combination of
-> > > consumer + lowlevel driver without patching (that at least is able to
-> > > diagnose: This PWM cannot provide what my consumer needs), this is ba=
-d.
-> > > Also this means that whenever a system designer changes something on
-> > > their machine (kernel update, different hardware, an new usecase for a
-> > > PWM) they might have to reverify if the given PWM driver behaves as
-> > > needed.
-> > >=20
-> > > My suggestion for now is to start documenting how the drivers behave
-> > > expanding how limitations are documented in some drivers. So maybe
-> > > change from "Limitations" to "Implementation and Hardware Details"?
-> >=20
-> > Does it help if a new DT property is introduced across PWM subsystem,
-> > representing dynamic period/duty-cycle updates. Based on this property =
-driver
-> > can handle the updates. If the property is not present existing behavio=
-ur can be
-> > restored. This way based on the use-case things can be changed and need=
- not
-> > patch the driver :). Does this sound good or you have other thoughts?
->=20
-> That's something that I'd rather see in the pwm API. (Either by a rule
-> that drivers should prefer one or the other, or by making it
-> configurable.) IMHO this property doesn't belong into the hardware
-> description as it is a software property.
->=20
-> That's not constructive though as I don't have an idea how to map this
-> into the API.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 1bd5454b5e5f..de653cfe1726 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -832,12 +832,15 @@
+ 			See also Documentation/networking/decnet.txt.
+ 
+ 	default_hugepagesz=
+-			[same as hugepagesz=] The size of the default
+-			HugeTLB page size. This is the size represented by
+-			the legacy /proc/ hugepages APIs, used for SHM, and
+-			default size when mounting hugetlbfs filesystems.
+-			Defaults to the default architecture's huge page size
+-			if not specified.
++			[HW] The size of the default HugeTLB page size. This
++			is the size represented by the legacy /proc/ hugepages
++			APIs.  In addition, this is the default hugetlb size
++			used for shmget(), mmap() and mounting hugetlbfs
++			filesystems.  If not specified, defaults to the
++			architecture's default huge page size.  Huge page
++			sizes are architecture dependent.  See also
++			Documentation/admin-guide/mm/hugetlbpage.rst.
++			Format: size[KMG]
+ 
+ 	deferred_probe_timeout=
+ 			[KNL] Debugging option to set a timeout in seconds for
+@@ -1480,13 +1483,19 @@
+ 			If enabled, boot-time allocation of gigantic hugepages
+ 			is skipped.
+ 
+-	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
+-	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
+-			On x86-64 and powerpc, this option can be specified
+-			multiple times interleaved with hugepages= to reserve
+-			huge pages of different sizes. Valid pages sizes on
+-			x86-64 are 2M (when the CPU supports "pse") and 1G
+-			(when the CPU supports the "pdpe1gb" cpuinfo flag).
++	hugepages=	[HW] Number of HugeTLB pages to allocate at boot.
++			If this follows hugepagesz (below), it specifies
++			the number of pages of hugepagesz to be allocated.
++			Format: <integer>
++	hugepagesz=
++			[HW] The size of the HugeTLB pages.  This is used in
++			conjunction with hugepages (above) to allocate huge
++			pages of a specific size at boot.  The pair
++			hugepagesz=X hugepages=Y can be specified once for
++			each supported huge page size. Huge page sizes are
++			architecture dependent.  See also
++			Documentation/admin-guide/mm/hugetlbpage.rst.
++			Format: size[KMG]
+ 
+ 	hung_task_panic=
+ 			[KNL] Should the hung task detector generate panics.
+diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
+index 1cc0bc78d10e..de340c586995 100644
+--- a/Documentation/admin-guide/mm/hugetlbpage.rst
++++ b/Documentation/admin-guide/mm/hugetlbpage.rst
+@@ -100,6 +100,50 @@ with a huge page size selection parameter "hugepagesz=<size>".  <size> must
+ be specified in bytes with optional scale suffix [kKmMgG].  The default huge
+ page size may be selected with the "default_hugepagesz=<size>" boot parameter.
+ 
++Hugetlb boot command line parameter semantics
++hugepagesz - Specify a huge page size.  Used in conjunction with hugepages
++	parameter to preallocate a number of huge pages of the specified
++	size.  Hence, hugepagesz and hugepages are typically specified in
++	pairs such as:
++		hugepagesz=2M hugepages=512
++	hugepagesz can only be specified once on the command line for a
++	specific huge page size.  Valid huge page sizes are architecture
++	dependent.
++hugepages - Specify the number of huge pages to preallocate.  This typically
++	follows a valid hugepagesz parameter.  However, if hugepages is the
++	first or only hugetlb command line parameter it specifies the number
++	of huge pages of default size to allocate.  The number of huge pages
++	of default size specified in this manner can be overwritten by a
++	hugepagesz,hugepages parameter pair for the default size.
++	For example, on an architecture with 2M default huge page size:
++		hugepages=256 hugepagesz=2M hugepages=512
++	will result in 512 2M huge pages being allocated.  If a hugepages
++	parameter is preceded by an invalid hugepagesz parameter, it will
++	be ignored.
++default_hugepagesz - Specify the default huge page size.  This parameter can
++	only be specified once on the command line.  No other hugetlb command
++	line parameter is associated with default_hugepagesz.  Therefore, it
++	can appear anywhere on the command line.  If hugepages= is the first
++	hugetlb command line parameter, the specified number of huge pages
++	will apply to the default huge page size specified with
++	default_hugepagesz.  For example,
++		hugepages=512 default_hugepagesz=2M
++	will result in 512 2M huge pages being allocated.  However, specifying
++	the number of default huge pages in this manner will not apply to
++	gigantic huge pages.  For example,
++		hugepages=10 default_hugepagesz=1G
++				or
++		default_hugepagesz=1G hugepages=10
++	will NOT result in the allocation of 10 1G huge pages.  In order to
++	preallocate gigantic huge pages, there must be hugepagesz, hugepages
++	parameter pair.  For example,
++		hugepagesz=1G hugepages=10 default_hugepagesz=1G
++				or
++		default_hugepagesz=1G hugepagesz=1G hugepages=10
++	will result 10 1G huge pages being allocated and the default huge
++	page size will be set to 1G.  Valid default huge page size is
++	architecture dependent.
++
+ When multiple huge page sizes are supported, ``/proc/sys/vm/nr_hugepages``
+ indicates the current number of pre-allocated huge pages of the default size.
+ Thus, one can use the following command to dynamically allocate/deallocate
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 72a4343509d5..74ef53f7c5a7 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3054,7 +3054,7 @@ static void __init hugetlb_sysfs_init(void)
+ 		err = hugetlb_sysfs_add_hstate(h, hugepages_kobj,
+ 					 hstate_kobjs, &hstate_attr_group);
+ 		if (err)
+-			pr_err("Hugetlb: Unable to add hstate %s", h->name);
++			pr_err("HugeTLB: Unable to add hstate %s", h->name);
+ 	}
+ }
+ 
+@@ -3158,7 +3158,7 @@ static void hugetlb_register_node(struct node *node)
+ 						nhs->hstate_kobjs,
+ 						&per_node_hstate_attr_group);
+ 		if (err) {
+-			pr_err("Hugetlb: Unable to add hstate %s for node %d\n",
++			pr_err("HugeTLB: Unable to add hstate %s for node %d\n",
+ 				h->name, node->dev.id);
+ 			hugetlb_unregister_node(node);
+ 			break;
+@@ -3209,19 +3209,35 @@ static int __init hugetlb_init(void)
+ 	if (!hugepages_supported())
+ 		return 0;
+ 
+-	if (!size_to_hstate(default_hstate_size)) {
+-		if (default_hstate_size != 0) {
+-			pr_err("HugeTLB: unsupported default_hugepagesz %lu. Reverting to %lu\n",
+-			       default_hstate_size, HPAGE_SIZE);
+-		}
+-
++	/*
++	 * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
++	 * architectures depend on setup being done here.
++	 *
++	 * If a valid default huge page size was specified on the command line,
++	 * add associated hstate if necessary.  If not, set default_hstate_size
++	 * to default size.  default_hstate_idx is used at runtime to identify
++	 * the default huge page size/hstate.
++	 */
++	hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
++	if (default_hstate_size)
++		hugetlb_add_hstate(ilog2(default_hstate_size) - PAGE_SHIFT);
++	else
+ 		default_hstate_size = HPAGE_SIZE;
+-		hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
+-	}
+ 	default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
++
++	/*
++	 * default_hstate_max_huge_pages != 0 indicates a count (hugepages=)
++	 * specified before a size (hugepagesz=).  Use this count for the
++	 * default huge page size, unless a specific value was specified for
++	 * this size in a hugepagesz/hugepages pair.
++	 */
+ 	if (default_hstate_max_huge_pages) {
+ 		if (!default_hstate.max_huge_pages)
+-			default_hstate.max_huge_pages = default_hstate_max_huge_pages;
++			default_hstate.max_huge_pages =
++				default_hstate_max_huge_pages;
++		else
++			pr_warn("HugeTLB: First hugepages=%lu ignored\n",
++				default_hstate_max_huge_pages);
+ 	}
+ 
+ 	hugetlb_init_hstates();
+@@ -3274,20 +3290,31 @@ void __init hugetlb_add_hstate(unsigned int order)
+ 	parsed_hstate = h;
+ }
+ 
+-static int __init hugetlb_nrpages_setup(char *s)
++/*
++ * hugepages command line processing
++ * hugepages normally follows a valid hugepagsz specification.  If not, ignore
++ * the hugepages value.  hugepages can also be the first huge page command line
++ * option in which case it specifies the number of huge pages for the default
++ * size.
++ */
++static int __init hugepages_setup(char *s)
+ {
+ 	unsigned long *mhp;
+ 	static unsigned long *last_mhp;
+ 
++	if (!hugepages_supported()) {
++		pr_warn("HugeTLB: huge pages not supported, ignoring hugepages = %s\n", s);
++		return 0;
++	}
++
+ 	if (!parsed_valid_hugepagesz) {
+-		pr_warn("hugepages = %s preceded by "
+-			"an unsupported hugepagesz, ignoring\n", s);
++		pr_warn("HugeTLB: hugepages = %s preceded by an unsupported hugepagesz, ignoring\n", s);
+ 		parsed_valid_hugepagesz = true;
+-		return 1;
++		return 0;
+ 	}
+ 	/*
+-	 * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter yet,
+-	 * so this hugepages= parameter goes to the "default hstate".
++	 * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter
++	 * yet, so this hugepages= parameter goes to the "default hstate".
+ 	 */
+ 	else if (!hugetlb_max_hstate)
+ 		mhp = &default_hstate_max_huge_pages;
+@@ -3295,8 +3322,8 @@ static int __init hugetlb_nrpages_setup(char *s)
+ 		mhp = &parsed_hstate->max_huge_pages;
+ 
+ 	if (mhp == last_mhp) {
+-		pr_warn("hugepages= specified twice without interleaving hugepagesz=, ignoring\n");
+-		return 1;
++		pr_warn("HugeTLB: hugepages= specified twice without interleaving hugepagesz=, ignoring hugepages=%s\n", s);
++		return 0;
+ 	}
+ 
+ 	if (sscanf(s, "%lu", mhp) <= 0)
+@@ -3314,12 +3341,24 @@ static int __init hugetlb_nrpages_setup(char *s)
+ 
+ 	return 1;
+ }
+-__setup("hugepages=", hugetlb_nrpages_setup);
++__setup("hugepages=", hugepages_setup);
+ 
++/*
++ * hugepagesz command line processing
++ * A specific huge page size can only be specified once with hugepagesz.
++ * hugepagesz is followed by hugepages on the command line.  The global
++ * variable 'parsed_valid_hugepagesz' is used to determine if prior
++ * hugepagesz argument was valid.
++ */
+ static int __init hugepagesz_setup(char *s)
+ {
+ 	unsigned long size;
+ 
++	if (!hugepages_supported()) {
++		pr_warn("HugeTLB: huge pages not supported, ignoring hugepagesz = %s\n", s);
++		return 0;
++	}
++
+ 	size = (unsigned long)memparse(s, NULL);
+ 
+ 	if (!arch_hugetlb_valid_size(size)) {
+@@ -3329,19 +3368,31 @@ static int __init hugepagesz_setup(char *s)
+ 	}
+ 
+ 	if (size_to_hstate(size)) {
++		parsed_valid_hugepagesz = false;
+ 		pr_warn("HugeTLB: hugepagesz %s specified twice, ignoring\n", s);
+ 		return 0;
+ 	}
+ 
++	parsed_valid_hugepagesz = true;
+ 	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+ 	return 1;
+ }
+ __setup("hugepagesz=", hugepagesz_setup);
+ 
++/*
++ * default_hugepagesz command line input
++ * Only one instance of default_hugepagesz allowed on command line.  Do not
++ * add hstate here as that will confuse hugepagesz/hugepages processing.
++ */
+ static int __init default_hugepagesz_setup(char *s)
+ {
+ 	unsigned long size;
+ 
++	if (!hugepages_supported()) {
++		pr_warn("HugeTLB: huge pages not supported, ignoring default_hugepagesz = %s\n", s);
++		return 0;
++	}
++
+ 	size = (unsigned long)memparse(s, NULL);
+ 
+ 	if (!arch_hugetlb_valid_size(size)) {
+@@ -3349,6 +3400,11 @@ static int __init default_hugepagesz_setup(char *s)
+ 		return 0;
+ 	}
+ 
++	if (default_hstate_size) {
++		pr_err("HugeTLB: default_hugepagesz previously specified, ignoring %s\n", s);
++		return 0;
++	}
++
+ 	default_hstate_size = size;
+ 	return 1;
+ }
+-- 
+2.25.1
 
-We can already enforce disable/config/enable with the existing API. The
-only think that we can't enforce is that a configuration will always be
-applied atomically or without disabling and reenabling the PWM.
-
-One possible solution would be to extend struct pwm_state with a set of
-flags that can be set. For that PTP kind of applications, consumers
-could set some pwm_state.strict (or whatever) flag and then a driver
-could fail ->apply() if it doesn't support changing the period/duty-
-cycle atomically and without disabling the PWM first. Or it could be
-more fine-grained, like:
-
-	state.on_the_fly =3D true;
-	state.consistent =3D true;
-
-To specify that the PWM needs to be changed on the fly (i.e. without
-disabling and reenabling) and duty-cycle and period must be consistent
-(i.e. be applied to the signal at the same time).
-
-Some driver may be able to only respect state.on_the_fly =3D=3D true but not
-state.consistent =3D=3D true.
-
-But then again, I don't think we'll see those cases in practice, since
-no hardware designer is going to make a board for a PTP use-case with a
-PWM that doesn't support it.
-
-That said, if somebody sees value in that and can come up with a good
-series of patches and concrete use-cases to show how this would be
-useful, I'd be willing to take those patches.
-
-Thierry
-
---/Uq4LBwYP4y1W6pO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6E39QACgkQ3SOs138+
-s6HF9g/9GQqSiX1cfKVWYdJdSuQY1Q42mTqYxoJgkJ3d5QFZFpUsxnNPpuxNvTET
-wcpCrCYbitHSkx4JgKtxFzhsvj2hqOQ9HPme+7fXILLVAgrK9X7NeppUG5twuM8R
-nPGAoKq/qXMVbeyKcdpR2wJOSvUCV8Rl5Ib3dg6maundA8NF22aLs6i/1SRSleMw
-UikVEZna3mVAGRhvgn4GQaEnT47reaV7HBk5ncjvfi/kNAcIt/ybgFU7m7HylSVy
-G0F9tu9DnqILLppnkB+mBuPYd568YoaS6MhhBOYBDc+MiU4H/3riktf/PvnVyg3L
-nwniVmcaPvaseBX9cl+fmGrCrOwkNLCXigrzNqs2g4bmpYcoxjoIB35DTvJLKH2v
-y2gz3BBiIiYKRh1lbrCF7gmdpfrQmsYSpwxqAnSpQ1ykHpDwnfCU+pGOzrJzle6u
-jGT0+d4UDXeP7ZqSPVZuEjyKQMYPr0UkVpvGlAbzw9sATixKliUlOdhCw0pZ/CLU
-/rOJmCJ1rsPSnQAHf7PdXToY8oAaCJrZtW9AseqktxA7wQRir7H7uu38lzCCROtI
-A8vRT4YAL+JUR/haDGG2O5/GN01+wcmvALnmhx+zHFkuImJlARB7EuZ4MC36x2Xo
-vagxGMOuHJaJywrmYKhfPJsivjYYngiP+wrAFmDufqp5lqDTsng=
-=lRJV
------END PGP SIGNATURE-----
-
---/Uq4LBwYP4y1W6pO--
