@@ -2,218 +2,145 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C24C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B18C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3AE420772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635CD2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:13:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lR/bbwpN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JIfjUAga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbgDAINX (ORCPT
+        id S1732079AbgDAINz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:13:23 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61817 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726368AbgDAINX (ORCPT
+        Wed, 1 Apr 2020 04:13:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34306 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732052AbgDAINy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:13:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585728802; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
- Subject: From: Sender; bh=Y7tN8F7lpeUt9pwgtqEIWCkC0CCUG+AA20Dj2Z1HeKA=;
- b=lR/bbwpNcSbYI5GzEe20E0v8/VthIL8zbZ3LJo3p/zYXTnPT74CGeRo0vKqJDrKHrrWUoN8V
- RcLNXq2hR0CdwQgy4hAfAHjn7+EYXiSZz3tkyk3dZKNWavS0r7Mt/puYpAL1CVwaZ36ZrNEE
- 5bcKrPbhBS1xLbeQZn6lMKVKkWk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e844d08.7f87da9b5500-smtp-out-n05;
- Wed, 01 Apr 2020 08:12:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EBFEFC43637; Wed,  1 Apr 2020 08:12:55 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.199.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 100FEC433F2;
-        Wed,  1 Apr 2020 08:12:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 100FEC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [RFT PATCH v2 01/10] drivers: qcom: rpmh-rsc: Clean code
- reading/writing regs/cmds
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
+        Wed, 1 Apr 2020 04:13:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585728834;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cU+okLsMKSqHOKUW7pNlWD/YMAsYMmyQn6ZUscB8aaA=;
+        b=JIfjUAgavdfZxV8lDnIxQGpcL30vF1IJ9UKRcvaoOKiemSt/2c/i8oyO3uknY9G9oagel5
+        Kg9CMq5QYzHpP10hUHGuYfHA6x4chazxKSaY59OPZRse7EsNDQpCK1MHKI/wF35Y+vzEYD
+        sq+r5Nh6E1SsV0+jMBXDV5FG1zT2WME=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-77-Xkn_VEFdMLqsvVN1Qz-59w-1; Wed, 01 Apr 2020 04:13:52 -0400
+X-MC-Unique: Xkn_VEFdMLqsvVN1Qz-59w-1
+Received: by mail-wr1-f71.google.com with SMTP id k11so1228434wrm.19
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:13:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cU+okLsMKSqHOKUW7pNlWD/YMAsYMmyQn6ZUscB8aaA=;
+        b=oP1CvHCpeDY5R+GtPtSVA+gtCK4sCQ38JJ5aki7Vy8YhrDNhs2a2im4c08+sTudLSe
+         CSHDthQPoJrVQGwq2D3F3Vy30rPK7S+3ZPKu0w73zWXNX/svl3ab+zWRjfP1hrIeQzcl
+         F9GQh1iqACwTinHqlNsENmvHeypGF8vdah36L5JkZzlxZ8+pdFVyQTHa0VRbhAXBrafV
+         tjb/acRtlGC3m0jrzuv88ws3SpcBDV1WTz4rtweDVyQAckwB/Dgx1N8w/5uzWkaFh4j6
+         EdX5tlVeEppXazjzbQ0PYSwcD1FHJA42P+nHHIECIgXvNb6qwTAlUfci1MGReB6eYY/R
+         vI0g==
+X-Gm-Message-State: ANhLgQ3uGhc/ZslkT3GgHye1+PUmjLtc4dCEuizf1UcNb2pIl38goKBp
+        F/TJ2oH+OUVa4wylJsMjRLD0k8dTJXFGoYP5EU3JXc2k9cIf7/9heXxNqxScGUfmllJTJRKplh1
+        n92HUCjfC6IQNBQERWDz/SO7J
+X-Received: by 2002:adf:82c5:: with SMTP id 63mr24282613wrc.312.1585728831192;
+        Wed, 01 Apr 2020 01:13:51 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vulGMjI4Nsim53ni39KXrS3G3GMQJsPvuNJhEQA50Sov48kj3Pwv0cKCOqLAqS/Et+Hnnw+HQ==
+X-Received: by 2002:adf:82c5:: with SMTP id 63mr24282595wrc.312.1585728830954;
+        Wed, 01 Apr 2020 01:13:50 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id x206sm1662492wmg.17.2020.04.01.01.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 01:13:50 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200311231348.129254-1-dianders@chromium.org>
- <20200311161104.RFT.v2.1.I1b754137e8089e46cf33fc2ea270734ec3847ec4@changeid>
-Message-ID: <6327932f-2f77-f671-69e0-6576873fd399@codeaurora.org>
-Date:   Wed, 1 Apr 2020 13:42:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: [PATCH] KVM: VMX: fix crash cleanup when KVM wasn't used
+Date:   Wed,  1 Apr 2020 10:13:48 +0200
+Message-Id: <20200401081348.1345307-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200311161104.RFT.v2.1.I1b754137e8089e46cf33fc2ea270734ec3847ec4@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+If KVM wasn't used at all before we crash the cleanup procedure fails with
+ BUG: unable to handle page fault for address: ffffffffffffffc8
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 23215067 P4D 23215067 PUD 23217067 PMD 0
+ Oops: 0000 [#8] SMP PTI
+ CPU: 0 PID: 3542 Comm: bash Kdump: loaded Tainted: G      D           5.6.0-rc2+ #823
+ RIP: 0010:crash_vmclear_local_loaded_vmcss.cold+0x19/0x51 [kvm_intel]
 
-nit: can you please change as below, to mention its for TCS
-drivers: qcom: rpmh-rsc: Clean code reading/writing TCS regs/cmds
+The root cause is that loaded_vmcss_on_cpu list is not yet initialized,
+we initialize it in hardware_enable() but this only happens when we start
+a VM.
 
-Reviewed and tested.
+Previously, we used to have a bitmap with enabled CPUs and that was
+preventing [masking] the issue.
 
-Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-Tested-by: Maulik Shah <mkshah@codeaurora.org>
+Initialized loaded_vmcss_on_cpu list earlier, right before we assign
+crash_vmclear_loaded_vmcss pointer. blocked_vcpu_on_cpu list and
+blocked_vcpu_on_cpu_lock are moved altogether for consistency.
 
-Thanks,
-Maulik
+Fixes: 31603d4fc2bb ("KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-On 3/12/2020 4:43 AM, Douglas Anderson wrote:
-> This patch makes two changes, both of which should be no-ops:
->
-> 1. Make read_tcs_reg() / read_tcs_cmd() symmetric to write_tcs_reg() /
->     write_tcs_cmd().
->
-> 2. Change the order of operations in the above functions to make it
->     more obvious to me what the math is doing.  Specifically first you
->     want to find the right TCS, then the right register, and then
->     multiply by the command ID if necessary.
->
-> Signed-off-by: Douglas Anderson<dianders@chromium.org>
-> ---
->
-> Changes in v2: None
->
->   drivers/soc/qcom/rpmh-rsc.c | 31 ++++++++++++++++++-------------
->   1 file changed, 18 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index b71822131f59..b87b79f0347d 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -61,28 +61,33 @@
->   #define CMD_STATUS_ISSUED		BIT(8)
->   #define CMD_STATUS_COMPL		BIT(16)
->   
-> -static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
-> +static u32 read_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id)
->   {
-> -	return readl_relaxed(drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-> +	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
->   			     RSC_DRV_CMD_OFFSET * cmd_id);
->   }
->   
-> +static u32 read_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id)
-> +{
-> +	return readl_relaxed(drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
-> +}
-> +
->   static void write_tcs_cmd(struct rsc_drv *drv, int reg, int tcs_id, int cmd_id,
->   			  u32 data)
->   {
-> -	writel_relaxed(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id +
-> +	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg +
->   		       RSC_DRV_CMD_OFFSET * cmd_id);
->   }
->   
->   static void write_tcs_reg(struct rsc_drv *drv, int reg, int tcs_id, u32 data)
->   {
-> -	writel_relaxed(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id);
-> +	writel_relaxed(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
->   }
->   
->   static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
->   			       u32 data)
->   {
-> -	writel(data, drv->tcs_base + reg + RSC_DRV_TCS_OFFSET * tcs_id);
-> +	writel(data, drv->tcs_base + RSC_DRV_TCS_OFFSET * tcs_id + reg);
->   	for (;;) {
->   		if (data == readl(drv->tcs_base + reg +
->   				  RSC_DRV_TCS_OFFSET * tcs_id))
-> @@ -94,7 +99,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
->   static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
->   {
->   	return !test_bit(tcs_id, drv->tcs_in_use) &&
-> -	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id, 0);
-> +	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
->   }
->   
->   static struct tcs_group *get_tcs_of_type(struct rsc_drv *drv, int type)
-> @@ -212,7 +217,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
->   	const struct tcs_request *req;
->   	struct tcs_cmd *cmd;
->   
-> -	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0, 0);
-> +	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0);
->   
->   	for_each_set_bit(i, &irq_status, BITS_PER_LONG) {
->   		req = get_req_from_tcs(drv, i);
-> @@ -226,7 +231,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
->   			u32 sts;
->   
->   			cmd = &req->cmds[j];
-> -			sts = read_tcs_reg(drv, RSC_DRV_CMD_STATUS, i, j);
-> +			sts = read_tcs_cmd(drv, RSC_DRV_CMD_STATUS, i, j);
->   			if (!(sts & CMD_STATUS_ISSUED) ||
->   			   ((req->wait_for_compl || cmd->wait) &&
->   			   !(sts & CMD_STATUS_COMPL))) {
-> @@ -265,7 +270,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
->   	cmd_msgid |= msg->wait_for_compl ? CMD_MSGID_RESP_REQ : 0;
->   	cmd_msgid |= CMD_MSGID_WRITE;
->   
-> -	cmd_complete = read_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
-> +	cmd_complete = read_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id);
->   
->   	for (i = 0, j = cmd_id; i < msg->num_cmds; i++, j++) {
->   		cmd = &msg->cmds[i];
-> @@ -281,7 +286,7 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
->   	}
->   
->   	write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, cmd_complete);
-> -	cmd_enable |= read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
-> +	cmd_enable |= read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id);
->   	write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, cmd_enable);
->   }
->   
-> @@ -294,7 +299,7 @@ static void __tcs_trigger(struct rsc_drv *drv, int tcs_id)
->   	 * While clearing ensure that the AMC mode trigger is cleared
->   	 * and then the mode enable is cleared.
->   	 */
-> -	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
-> +	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id);
->   	enable &= ~TCS_AMC_MODE_TRIGGER;
->   	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
->   	enable &= ~TCS_AMC_MODE_ENABLE;
-> @@ -319,10 +324,10 @@ static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
->   		if (tcs_is_free(drv, tcs_id))
->   			continue;
->   
-> -		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
-> +		curr_enabled = read_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id);
->   
->   		for_each_set_bit(j, &curr_enabled, MAX_CMDS_PER_TCS) {
-> -			addr = read_tcs_reg(drv, RSC_DRV_CMD_ADDR, tcs_id, j);
-> +			addr = read_tcs_cmd(drv, RSC_DRV_CMD_ADDR, tcs_id, j);
->   			for (k = 0; k < msg->num_cmds; k++) {
->   				if (addr == msg->cmds[k].addr)
->   					return -EBUSY;
-
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 3aba51d782e2..39a5dde12b79 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2257,10 +2257,6 @@ static int hardware_enable(void)
+ 	    !hv_get_vp_assist_page(cpu))
+ 		return -EFAULT;
+ 
+-	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+-	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+-	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+-
+ 	r = kvm_cpu_vmxon(phys_addr);
+ 	if (r)
+ 		return r;
+@@ -8006,7 +8002,7 @@ module_exit(vmx_exit);
+ 
+ static int __init vmx_init(void)
+ {
+-	int r;
++	int r, cpu;
+ 
+ #if IS_ENABLED(CONFIG_HYPERV)
+ 	/*
+@@ -8060,6 +8056,12 @@ static int __init vmx_init(void)
+ 		return r;
+ 	}
+ 
++	for_each_possible_cpu(cpu) {
++		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
++		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
++		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
++	}
++
+ #ifdef CONFIG_KEXEC_CORE
+ 	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
+ 			   crash_vmclear_local_loaded_vmcss);
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.25.1
+
