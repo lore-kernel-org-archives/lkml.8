@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0818C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F325C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7A120857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C0A20857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585757964;
-	bh=7degDOeCs59BBBBJ9Nmvb+EqwBBNDXJkLd6Ox/OUxjc=;
+	s=default; t=1585757971;
+	bh=/9QYk9OVbzZY26ScvUwzpIZOv2gxgJRWE1IW8g7lRxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W3VIYusN3ZP/1Wr8pSr+AE4irwQaMqguUCUCAwa0J7LkR1tZSCN7pjN2R2aV/wxv7
-	 fF6c7Qd0pt1ncHWwWGgkxrqSin6oJ5jfAFkyD3xIA5uM20NoCCLnbnPL76X4JkkZEM
-	 b8aaiL1ml27HfD0OWiiNBYf0FpcutFpG6zeiIRwU=
+	b=W3PfNYzoABR1fVNLbxKwS/u+ihLy46Kj94P1UqWPrHTosrtVtv50eDsLmMtinczLa
+	 SBfOMzkGQNF+cE8A2oNrW+BEDf1Pl+C4xfaeyxOpxYGxW2uDrI128w4wIAldd6YrBZ
+	 QuR3LAhHPgchqOMC3ptozUKNqgzchPsZ5rYdQUNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732296AbgDAQTX (ORCPT
+        id S1732377AbgDAQTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:19:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgDAQTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:19:22 -0400
+        id S1726205AbgDAQT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:19:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F3C120857;
-        Wed,  1 Apr 2020 16:19:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F30A620B1F;
+        Wed,  1 Apr 2020 16:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585757962;
-        bh=7degDOeCs59BBBBJ9Nmvb+EqwBBNDXJkLd6Ox/OUxjc=;
+        s=default; t=1585757968;
+        bh=/9QYk9OVbzZY26ScvUwzpIZOv2gxgJRWE1IW8g7lRxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InVHBjK//tS9W0lMT59ozkiGD0e1mm6Yi2JmpvGtuOXrOdwxpJYhg3+T84HuDwm8U
-         eJEjZiUWHDhqPFenLdW4o5xl1wGdtgfdO74ZOzk8sAj9Df2E06yeJs16nONeJoGhfK
-         5rKD2THZ9T10EKMrx/rjZbj6CXnPXMIISU5J+j3I=
+        b=fp3ox+aA7B4zIgJll+56saBYJ2y03J0J8S9XVXIPGy+GKpSy9SHBNx/O+Xl2WbPxb
+         HwW3/wikN19f054d+oemJ3ahFWztzJNywN+eakxugoOLGeAJnMrFSb9bvdhvprySwc
+         pyIj1MwkNqJmR9vJXs1mxxuVKFTnzg2ksC5fgruY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.6 10/10] platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
-Date:   Wed,  1 Apr 2020 18:17:26 +0200
-Message-Id: <20200401161423.073400358@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Lanqing Liu <liuhhome@gmail.com>
+Subject: [PATCH 5.6 03/10] serial: sprd: Fix a dereference warning
+Date:   Wed,  1 Apr 2020 18:17:19 +0200
+Message-Id: <20200401161417.039813573@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161413.974936041@linuxfoundation.org>
 References: <20200401161413.974936041@linuxfoundation.org>
@@ -61,43 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georg Müller <georgmueller@gmx.net>
+From: Lanqing Liu <liuhhome@gmail.com>
 
-commit 95b31e35239e5e1689e3d965d692a313c71bd8ab upstream.
+commit efc176929a3505a30c3993ddd393b40893649bd2 upstream.
 
-The Lex 2I385SW board has two Intel I211 ethernet controllers. Without
-this patch, only the first port is usable. The second port fails to
-start with the following message:
+We should validate if the 'sup' is NULL or not before freeing DMA
+memory, to fix below warning.
 
-    igb: probe of 0000:02:00.0 failed with error -2
+"drivers/tty/serial/sprd_serial.c:1141 sprd_remove()
+ error: we previously assumed 'sup' could be null (see line 1132)"
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Tested-by: Georg Müller <georgmueller@gmx.net>
-Signed-off-by: Georg Müller <georgmueller@gmx.net>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: f4487db58eb7 ("serial: sprd: Add DMA mode support")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/e2bd92691538e95b04a2c2a728f3292e1617018f.1584325957.git.liuhhome@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/pmc_atom.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/tty/serial/sprd_serial.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -385,6 +385,14 @@ static const struct dmi_system_id critcl
- 	},
- 	{
- 		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Lex 2I385SW",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "2I385SW"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
- 		.ident = "Beckhoff CB3163",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -1132,14 +1132,13 @@ static int sprd_remove(struct platform_d
+ 	if (sup) {
+ 		uart_remove_one_port(&sprd_uart_driver, &sup->port);
+ 		sprd_port[sup->port.line] = NULL;
++		sprd_rx_free_buf(sup);
+ 		sprd_ports_num--;
+ 	}
+ 
+ 	if (!sprd_ports_num)
+ 		uart_unregister_driver(&sprd_uart_driver);
+ 
+-	sprd_rx_free_buf(sup);
+-
+ 	return 0;
+ }
+ 
 
 
