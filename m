@@ -2,227 +2,110 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73D6C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA59DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4E020772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9547120719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPq/FWj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733018AbgDAWHu (ORCPT
+        id S1733085AbgDAWK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:07:50 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58510 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732357AbgDAWHu (ORCPT
+        Wed, 1 Apr 2020 18:10:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50998 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732687AbgDAWK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:07:50 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0D7828030886;
-        Wed,  1 Apr 2020 22:07:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KYpXvjdddVu8; Thu,  2 Apr 2020 01:07:46 +0300 (MSK)
-Date:   Thu, 2 Apr 2020 01:07:50 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Convert
- mti,gic to DT schema
-Message-ID: <20200401220750.wsoxsxr547aewtgt@ubsrv2.baikal.int>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-3-Sergey.Semin@baikalelectronics.ru>
- <20200331210248.GA27684@bogus>
- <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
- <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
+        Wed, 1 Apr 2020 18:10:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t128so1410926wma.0;
+        Wed, 01 Apr 2020 15:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/KipLt+yI4hk4j/cdZ9DjitutZWqDp00pMlHvjB1TpM=;
+        b=HPq/FWj3IdXUZh3MzvrXtferZKJdvTA+AuOD60PC+xEQ9NoDRmW6Ftyx8Ie3v2kFON
+         uSAuACjwsUnL1Csmg25SsZZRzOIxs0JomyoYfebnXkSscZ5or3o5BH3K3P9yD5uTfBqj
+         qpf13Wg+RZ1/jZgIRgd/RIf25eJtxefwO7kLYq55mejjaTMXO6D0ekPxAwrrGp7f8YmQ
+         OiPILd4+Ty3hto7SRanL4SJho8EXi2tPqDMefOOCulXKfac4JEFf8ABNp6XbEFYWSa/5
+         gSLenMqtaj+FUSWuIYEUsgOOvf+tQhzGtbp5N04M60UsrREjSeARTZl0OWvrYNVLBSRg
+         UF0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/KipLt+yI4hk4j/cdZ9DjitutZWqDp00pMlHvjB1TpM=;
+        b=HL7NVGH8vaCoLOT2zw0uRO9Tm8y5BbnLOdHaYi5Swp2YdGeySgD5hWN7D4fneqRmRj
+         i7v7LZh/9T+0F7I6KQ2GF19AcNFaEzI9HxfqT3GleXhqe8EmwaewyyKaSECUj5aEBmml
+         ZXhFaO8X5RHOu6KUPE1mUgbS3wlnEod6FQ7EIpOdrPOK++TXYElwlEKrcZc7Mm3UK1Ni
+         4Ws+o4dyn1zfDDvBft7zhfcdfTZebArdEAnVZN1zA/CwsMqzBxwYQJY7Q3LcLxLn9Ix9
+         5ErBDH9sdaLV1/koXc+Ze7vQSlx2Ycm+oa1Hl1pSG820QxYGnmQ9Q+vQ0tjr71mmg1/B
+         NF2w==
+X-Gm-Message-State: AGi0PuatdTY8OYNkiZWwmoLoPMKLv1GYkp/kBIanrEkZBT64Lr0Z04KN
+        1xUL/c4W7/9f4+qcBQGj/oxJAmJp
+X-Google-Smtp-Source: APiQypLaU4z3yEt8m02m4ZBvHwDsHPORzy2HQwNxRVQLk7wEkQF2kmj0g7SHTTuKTOuRn7VFQ+oDhA==
+X-Received: by 2002:a1c:2007:: with SMTP id g7mr161947wmg.70.1585779022908;
+        Wed, 01 Apr 2020 15:10:22 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 71sm4922515wrc.53.2020.04.01.15.10.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 Apr 2020 15:10:21 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 22:10:21 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
+ node
+Message-ID: <20200401221021.v6igvcpqyeuo2cws@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200330123643.17120-1-richard.weiyang@gmail.com>
+ <20200330123643.17120-6-richard.weiyang@gmail.com>
+ <20200330124842.GY22483@bombadil.infradead.org>
+ <20200330141558.soeqhstone2liqud@master>
+ <20200330142821.GD22483@bombadil.infradead.org>
+ <20200331134208.gfkyym6n3gpgk3x3@master>
+ <20200331164212.GC21484@bombadil.infradead.org>
+ <20200331220440.roq4pv6wk7tq23gx@master>
+ <20200331235912.GD21484@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200331235912.GD21484@bombadil.infradead.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 08:13:58AM -0600, Rob Herring wrote:
-> On Wed, Apr 1, 2020 at 4:19 AM Sergey Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > On Tue, Mar 31, 2020 at 03:02:48PM -0600, Rob Herring wrote:
-> > > On Tue, Mar 24, 2020 at 08:43:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > >
-> > > > Modern device tree bindings are supposed to be created as YAML-files
-> > > > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
-> > > > text binding with YAML file. As before the binding file states that the
-> > > > corresponding dts node is supposed to be compatible with MIPS Global
-> > > > Interrupt Controller indicated by the "mti,gic" compatible string and
-> > > > to provide a mandatory interrupt-controller and '#interrupt-cells'
-> > > > properties. There might be optional registers memory range,
-> > > > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
-> > > > specified.
-> > > >
-> > > > MIPS GIC also includes a free-running global timer, per-CPU count/compare
-> > > > timers, and a watchdog. Since currently the GIC Timer is only supported the
-> > > > DT schema expects an IRQ and clock-phandler charged timer sub-node with
-> > > > "mti,mips-gic-timer" compatible string.
-> > > >
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > > Cc: Paul Burton <paulburton@kernel.org>
-> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > > > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > > > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Cc: linux-rtc@vger.kernel.org
-> > > >
-> > > > ---
-> > > >
-> > > > I don't really know who is the corresponding driver maintainer, so I
-> > > > added to the maintainers schema Paul since he used to be looking for the
-> > > > MIPS arch and Thomas looking after it now. Any idea what email should be
-> > > > specified there instead?
-> > > >
-> > > > Similarly to the previous patch the "oneOf: - required: ..." pattern isn't
-> > > > working here. Supposedly due to the script' dtschema/lib.py
-> > > > interrupts/interrupts-extended fixup.
-> > > > ---
-> > > >  .../interrupt-controller/mips-gic.txt         |  67 --------
-> > > >  .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
-> > > >  2 files changed, 152 insertions(+), 67 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > > deleted file mode 100644
-> > > > index 173595305e26..000000000000
-> > > > --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > > +++ /dev/null
-> > > > @@ -1,67 +0,0 @@
-> > > > -MIPS Global Interrupt Controller (GIC)
-> > > > -
-> > > > -The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> > > > -It also supports local (per-processor) interrupts and software-generated
-> > > > -interrupts which can be used as IPIs.  The GIC also includes a free-running
-> > > > -global timer, per-CPU count/compare timers, and a watchdog.
-> > > > -
-> > > > -Required properties:
-> > > > -- compatible : Should be "mti,gic".
-> > > > -- interrupt-controller : Identifies the node as an interrupt controller
-> > > > -- #interrupt-cells : Specifies the number of cells needed to encode an
-> > > > -  interrupt specifier.  Should be 3.
-> > > > -  - The first cell is the type of interrupt, local or shared.
-> > > > -    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
-> > > > -  - The second cell is the GIC interrupt number.
-> > > > -  - The third cell encodes the interrupt flags.
-> > > > -    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-> > > > -    flags.
-> > > > -
-> > > > -Optional properties:
-> > > > -- reg : Base address and length of the GIC registers.  If not present,
-> > > > -  the base address reported by the hardware GCR_GIC_BASE will be used.
-> > > > -- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
-> > > > -  to which the GIC may not route interrupts.  Valid values are 2 - 7.
-> > > > -  This property is ignored if the CPU is started in EIC mode.
-> > > > -- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
-> > > > -  reserved for IPIs.
-> > > > -  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
-> > > > -  of the reserved range.
-> > > > -  If not specified, the driver will allocate the last 2 * number of VPEs in the
-> > > > -  system.
-> > > > -
-> > > > -Required properties for timer sub-node:
-> > > > -- compatible : Should be "mti,gic-timer".
-> > > > -- interrupts : Interrupt for the GIC local timer.
-> > > > -
-> > > > -Optional properties for timer sub-node:
-> > > > -- clocks : GIC timer operating clock.
-> > > > -- clock-frequency : Clock frequency at which the GIC timers operate.
-> > > > -
-> > > > -Note that one of clocks or clock-frequency must be specified.
-> > > > -
-> > > > -Example:
-> > > > -
-> > > > -   gic: interrupt-controller@1bdc0000 {
-> > > > -           compatible = "mti,gic";
-> > > > -           reg = <0x1bdc0000 0x20000>;
-> > > > -
-> > > > -           interrupt-controller;
-> > > > -           #interrupt-cells = <3>;
-> > > > -
-> > > > -           mti,reserved-cpu-vectors = <7>;
-> > > > -           mti,reserved-ipi-vectors = <40 8>;
-> > > > -
-> > > > -           timer {
-> > > > -                   compatible = "mti,gic-timer";
-> > > > -                   interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > > > -                   clock-frequency = <50000000>;
-> > > > -           };
-> > > > -   };
-> > > > -
-> > > > -   uart@18101400 {
-> > > > -           ...
-> > > > -           interrupt-parent = <&gic>;
-> > > > -           interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-> > > > -           ...
-> > > > -   };
-> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..1e47c0cdc231
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > > @@ -0,0 +1,152 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > >
-> > > Do you have rights to add BSD?
-> > >
-> >
-> > My manager said we can submitted the DT schema bindings under both GPL and
-> > BSD licenses. Though I don't know what license was of the legacy binding file.
-> 
-> Anything in the kernel without an explicit license is GPL-2.0-only.
-> 
-> > BTW Rob, you ask about the license very often whether I set pure GPL-2.0
-> > or dual-license header. Just wondering is it some kind of protocol to make
-> > sure a submitter has got proper rights to submit the binding?
-> 
-> New bindings should be dual GPL/BSD. Converted bindings should be
-> relicensed if the authors of the original agree or you should maintain
-> GPL-2.0-only.
-> 
-> Rob
+On Tue, Mar 31, 2020 at 04:59:12PM -0700, Matthew Wilcox wrote:
+>On Tue, Mar 31, 2020 at 10:04:40PM +0000, Wei Yang wrote:
+>> cc -I. -I../../include -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined   -c -o main.o main.c
+>> In file included from ./linux/../../../../include/linux/radix-tree.h:15,
+>>                  from ./linux/radix-tree.h:5,
+>>                  from main.c:10:
+>> ./linux/rcupdate.h:5:10: fatal error: urcu.h: No such file or directory
+>>     5 | #include <urcu.h>
+>>       |          ^~~~~~~~
+>> compilation terminated.
+>> make: *** [<builtin>: main.o] Error 1
+>
+>Oh, you need liburcu installed.  On Debian, that's liburcu-dev ... probably
+>liburcu-devel on Red Hat style distros.
 
-Ah. ok. I didn't know that the legacy bindings have GPL-2.0 license by
-default. Thanks. I'll keep it in mind in patchsets with bindings conversion.
+The bad news is I didn't find the package on Fedora.
 
-Regards,
--Sergey
+I am trying to build it from source. Is this git repo the correct one?
+
+git clone git://git.liburcu.org/userspace-rcu.git
+
+-- 
+Wei Yang
+Help you, Help me
