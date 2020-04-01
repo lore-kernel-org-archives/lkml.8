@@ -2,83 +2,159 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8367C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8FDC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E083208E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFCA20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbgDAIYP (ORCPT
+        id S1731098AbgDAIZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:24:15 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36328 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgDAIYP (ORCPT
+        Wed, 1 Apr 2020 04:25:52 -0400
+Received: from mail.phytec.co.uk ([217.6.246.34]:52878 "EHLO
+        lws-riedmueller.phytec.de" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726197AbgDAIZw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:24:15 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l23so25070758otf.3;
-        Wed, 01 Apr 2020 01:24:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/vo7v3hANyUdQNEMlcVhlSk/PSBNwxY407hISvnXqDQ=;
-        b=QziwAt3PnjIK9UDHnILAUTBBcYj1gMxTi9iRj51kLZLAU2O0YzxwrykCe4KpG9p+Id
-         mXmn4ZGnq38Ma1Htw+e0WXKvWgQMoRm4gvRK+TMWyIjWUVksup9WENiUNynwqyqdSJMw
-         D2lykltITwJEvz2nTz8BjpRs9A2xmTW9EH3dmyg4V/DeGFJATusfV2IeDJX8cfJS+ZSG
-         Eqce696lqLb/apzI/8sm5kE/xsplVZUIKpmQsBR+iMnzifydyLxQCxSmVFc7hi5UGqgg
-         BC6cdzfsGXRvH4Mi9jv8hHw5/0uV+isQoerlOwT3XBeetrG8/h2rKT8CjC06i1iiplHt
-         39ZQ==
-X-Gm-Message-State: ANhLgQ2mNMnPA6csMlpzWbo34dl2g5VcYGFEwf54gQ9PxoHYYDdpzJt4
-        ETOLRsxLKO4rigFtZmEHDNWwB0ATLPJK7CZYXjU=
-X-Google-Smtp-Source: ADFU+vtF02ulNxvdGpxMJCuYuu0xIf1H76NF2cxxeeRDJLwiAHi86aGGQTy2tH4GSvezo6P1tNSGBkTbYVNjBSZRtZQ=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr4825311otl.145.1585729454391;
- Wed, 01 Apr 2020 01:24:14 -0700 (PDT)
+        Wed, 1 Apr 2020 04:25:52 -0400
+X-Greylist: delayed 353 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Apr 2020 04:25:52 EDT
+Received: by lws-riedmueller.phytec.de (Postfix, from userid 20140)
+        id E13891A1626; Wed,  1 Apr 2020 10:19:57 +0200 (CEST)
+Date:   Wed, 1 Apr 2020 10:19:57 +0200
+From:   Stefan =?iso-8859-1?Q?Riedm=FCller?= <s.riedmueller@phytec.de>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stefan Riedmueller <s.riedmueller@phytec.de>
+Subject: Re: [PATCH 2/3] watchdog: da9063: Use pre configured timeout when
+ watchdog is running
+Message-ID: <20200401081953.GA1585@phytec.de>
+References: <20200326150203.371673-1-s.riedmueller@phytec.de>
+ <20200326150203.371673-2-s.riedmueller@phytec.de>
+ <AM6PR10MB2263A1A76AFFBCE7BCC4B93880CB0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <387fadc6-1eab-ada7-86dd-0e47c5e9cb9f@roeck-us.net>
 MIME-Version: 1.0
-References: <20200401151904.6948af20@canb.auug.org.au> <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
- <CACRpkdbP9gMLDnDSR6czN88Hjwu6HXSZ2jyYOo-iuq0W073Hbg@mail.gmail.com>
-In-Reply-To: <CACRpkdbP9gMLDnDSR6czN88Hjwu6HXSZ2jyYOo-iuq0W073Hbg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 Apr 2020 10:24:03 +0200
-Message-ID: <CAMuHMdXPCwdd2-Hn0_N7nLgBatS8smnvLnxZD06Qsk+qGJKc7A@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the gpio tree
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <387fadc6-1eab-ada7-86dd-0e47c5e9cb9f@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Guenter, Adam,
 
-On Wed, Apr 1, 2020 at 10:19 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Apr 1, 2020 at 9:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > +EXPORT_SYMBOL_GPL(of_pinctrl_get);
-> >
-> > As exporting symbols has its (space) cost, and of_pinctrl_get() is a tiny
-> > function, what about making it an inline function in
-> > include/linux/pinctrl/pinctrl.h instead?
->
-> I'm all for it! :)
+Guenter Roeck <linux@roeck-us.net> wrote on Tue, 31. Mar 20 09:08:
+> On 3/30/20 9:38 AM, Adam Thomson wrote:
+> > On 26 March 2020 15:02, Stefan Riedmueller wrote:
+> > 
+> >> If the watchdog is already running during probe use its pre-configured
+> >> timeout instead of a default timeout to make sure the watchdog is pinged
+> >> in time until userspace takes over.
+> > 
+> > At least for this driver I don't think there's an issue here with regards to
+> > not pinging in time. Calling 'da9063_wdt_update_timeout()', as it currently
+> > does in the probe() when the watchdog is already active, actually disables the
+> > watchdog before then setting a new timeout value, so by that method we're
+> > avoiding a timeout and starting a new timer period.
+> > 
+> > To my mind the timeout value should come from DT if possible, which I would
+> > assume for the most part would match whatever is defined in the bootloader as
+> > well, unless I'm mistaken. If that's not available though then I would maybe
+> > agree on falling back to a value that was already programmed in the bootloader
+> > rather than the driver default which should be the last resort.
+> > 
+> Agreed.
 
-Want me to send a patch?
-Which base?
+Thanks for both your feedback. I'll drop the pre-configured timeout part and
+stick with the default timeout and do the same procedure (init_timeout +
+update_timeout) for the da9062.
 
-Gr{oetje,eeting}s,
+Thanks
+Stefan
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> Guenter
+> 
+> >>
+> >> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+> >> ---
+> >>  drivers/watchdog/da9063_wdt.c | 29 ++++++++++++++++++-----------
+> >>  1 file changed, 18 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/drivers/watchdog/da9063_wdt.c b/drivers/watchdog/da9063_wdt.c
+> >> index 3d65e92a4e3f..34d0c4f03814 100644
+> >> --- a/drivers/watchdog/da9063_wdt.c
+> >> +++ b/drivers/watchdog/da9063_wdt.c
+> >> @@ -46,15 +46,16 @@ static unsigned int da9063_wdt_timeout_to_sel(unsigned
+> >> int secs)
+> >>  }
+> >>
+> >>  /*
+> >> - * Return 0 if watchdog is disabled, else non zero.
+> >> + * Read the currently active timeout.
+> >> + * Zero means the watchdog is disabled.
+> >>   */
+> >> -static unsigned int da9063_wdt_is_running(struct da9063 *da9063)
+> >> +static unsigned int da9063_wdt_read_timeout(struct da9063 *da9063)
+> >>  {
+> >>  	unsigned int val;
+> >>
+> >>  	regmap_read(da9063->regmap, DA9063_REG_CONTROL_D, &val);
+> >>
+> >> -	return val & DA9063_TWDSCALE_MASK;
+> >> +	return wdt_timeout[val & DA9063_TWDSCALE_MASK];
+> >>  }
+> >>
+> >>  static int da9063_wdt_disable_timer(struct da9063 *da9063)
+> >> @@ -191,6 +192,7 @@ static int da9063_wdt_probe(struct platform_device
+> >> *pdev)
+> >>  	struct device *dev = &pdev->dev;
+> >>  	struct da9063 *da9063;
+> >>  	struct watchdog_device *wdd;
+> >> +	int timeout;
+> >>
+> >>  	if (!dev->parent)
+> >>  		return -EINVAL;
+> >> @@ -214,15 +216,20 @@ static int da9063_wdt_probe(struct platform_device
+> >> *pdev)
+> >>  	watchdog_set_restart_priority(wdd, 128);
+> >>  	watchdog_set_drvdata(wdd, da9063);
+> >>
+> >> -	/* Set default timeout, maybe override it with DT value, scale it */
+> >> -	wdd->timeout = DA9063_WDG_TIMEOUT;
+> >> -	watchdog_init_timeout(wdd, 0, dev);
+> >> -	da9063_wdt_set_timeout(wdd, wdd->timeout);
+> >> -
+> >> -	/* Change the timeout to the default value if the watchdog is running */
+> >> -	if (da9063_wdt_is_running(da9063)) {
+> >> -		da9063_wdt_update_timeout(da9063, wdd->timeout);
+> >> +	/*
+> >> +	 * Use pre-configured timeout if watchdog is already running.
+> >> +	 * Otherwise set default timeout, maybe override it with DT value,
+> >> +	 * scale it
+> >> +	 */
+> >> +	timeout = da9063_wdt_read_timeout(da9063);
+> >> +	if (timeout) {
+> >> +		wdd->timeout = timeout;
+> >>  		set_bit(WDOG_HW_RUNNING, &wdd->status);
+> >> +		dev_info(da9063->dev, "watchdog is running (%u s)", timeout);
+> >> +	} else {
+> >> +		wdd->timeout = DA9063_WDG_TIMEOUT;
+> >> +		watchdog_init_timeout(wdd, 0, dev);
+> >> +		da9063_wdt_set_timeout(wdd, wdd->timeout);
+> >>  	}
+> >>
+> >>  	return devm_watchdog_register_device(dev, wdd);
+> >> --
+> >> 2.23.0
+> > 
+> 
