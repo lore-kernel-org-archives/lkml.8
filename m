@@ -2,135 +2,114 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132C2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0A3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D352B20719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585783392;
-	bh=VhzqTsnz/T/+BidZ1A4y3an2jgdEdwLBWXgZ5XzetHY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=p2teuvuHByMTOeV9A9fxWetbK6utYG0bBd3P8RnfaOtKGdT0T3GOR+Jht9KlnX/Zh
-	 02qpzoNJfnyY90eWUvsczV1QfHBfgtBg0pBFZ/zHD8qVRpgn7mwhqsYJl7V0FL6E+Q
-	 hFCxHK9aizjBbbCDG/upjLImKCicq44mgaZT8Uso=
+	by mail.kernel.org (Postfix) with ESMTP id 5E56520719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:24:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E70eYhBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733220AbgDAXXL (ORCPT
+        id S1733290AbgDAXYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:23:11 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51042 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732661AbgDAXXL (ORCPT
+        Wed, 1 Apr 2020 19:24:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40446 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732637AbgDAXYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:23:11 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t128so1538707wma.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:23:10 -0700 (PDT)
+        Wed, 1 Apr 2020 19:24:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585783445;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AUx9a9NcckmBmbGmt8k9ozR5fOJNJ4SVtbmheE+GSig=;
+        b=E70eYhBpdmDCfFB/yyKtMy/HpSVH+Uiz0C3lCATNO3ypdcqTlPjPO8i2nWzW46IWW6I4UX
+        1AtIoDpwQAaiCvt1qq35SXqfpLz8TQIYiPkVBPfFbEtSZBzdU6LxEf/+Fmk7KYVCQW1LZf
+        2E5ibijXGfEj8gYcC1h0tr6OfbF1oK0=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-120-lvLI-nbHP_OveMtOtw4_Nw-1; Wed, 01 Apr 2020 19:24:03 -0400
+X-MC-Unique: lvLI-nbHP_OveMtOtw4_Nw-1
+Received: by mail-qv1-f72.google.com with SMTP id dh19so1074698qvb.23
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:24:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dDAACjP4TIjj9agQcJymjJZ69K6FdetqjWTukZDZNJk=;
-        b=aseFLMWyrjFkgkY1+1sTjRyZrbAOdrcJIsJG7qzoseth81lc8m24+eB4zgCVjRzdyA
-         VgWpn96YQaCnoLviLtEdsn8VwGqoiAXktF6im5uGe/52S61eLCHzdQi6NF0eZgkzck6e
-         jhjoV2mzZmnA7xw+UpGazmPBpxNHq4l0cZT5XvVs+4/1OJxB6KDyXeexr4UzxocV570u
-         PocdppxyLOxQMP2TH+luAQmXz7M5x0UDM3Jw4YVO5BntNMRoYxMd8abHfq010vuHlVpj
-         7wPhqECgh+m3RdmPeY/IM1mHDA5tPPBhTd8NAUiY96m9LkuynV3Scx4xFIDZDpDNvgqg
-         F48A==
-X-Gm-Message-State: AGi0PubKHz9ZWlDcYHhCSOGFbzxMmDZg/1M9gZ+lkotOnLWOzUBPixo7
-        djZaB/TywlLr1kG7LySwkmO00OmZnLItvYpycYVUOA==
-X-Google-Smtp-Source: APiQypJkW+SlTSyISfjFqw954bU3US46peD8uLmsxnEGYY6QEhnbr06G4CGAI/aiWnDgrJ6T8ez26aJWEfN16kEgRFg=
-X-Received: by 2002:a7b:c105:: with SMTP id w5mr371860wmi.168.1585783389504;
- Wed, 01 Apr 2020 16:23:09 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AUx9a9NcckmBmbGmt8k9ozR5fOJNJ4SVtbmheE+GSig=;
+        b=DVr+ILUdcpNLuyojJgdOXQx8zxJvIMxM681AgTOAyR2lFNvc3ucm3h7yAvLp8n+Dhm
+         9eytpFuEXhEWqCBVMpaqIpAgk6TaA8swVfQNYD+OuBcwo2i+7bAhv/sJ9lAXuikZWOwo
+         DuD0lcAWvszBVwvF+RdYh9C3eXhn/SC0o1ezi6xREqXqAaFTXaGfd84t6qz+MLDL6MPq
+         n1G39Sk3A6+u3WdKxbS9bdEqnLkVyy74pRbUyOkp6pLquZxqBn483EENRcMQzVJNv/Jo
+         23m7zhkgK+faNad211znGmE9gM/FoBMCT371HMkVwPlykxJ0157UwKTuqtEmVPaQidRc
+         m2yg==
+X-Gm-Message-State: AGi0PuYh9rze9QRK7TEL+tcwB9ia2nHA3RTGilgV26xlp/H4DGqUbEbj
+        fvI4j5RWcDH+W9O2s0yVyQ+9VgPPTtT9h8b9RGfmCKkmUWtBbSfQSihC8tAUHT+XS2RxEOS0YOl
+        qnqjyBd6koM8QRNeET/ANk+eo
+X-Received: by 2002:ac8:1c17:: with SMTP id a23mr205340qtk.239.1585783443329;
+        Wed, 01 Apr 2020 16:24:03 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKs2sdWLelVFwa5wWDt7NfXNR0nWmfsLZw9a6O+nx9rOQNylkUrMsr/Rn+mFQtaWUda9LkQzA==
+X-Received: by 2002:ac8:1c17:: with SMTP id a23mr205318qtk.239.1585783443115;
+        Wed, 01 Apr 2020 16:24:03 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id y41sm2502266qtc.72.2020.04.01.16.24.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 16:24:02 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 19:24:21 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Kevin Tian <kevin.tian@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v8 11/14] KVM: selftests: Introduce after_vcpu_run hook
+ for dirty log test
+Message-ID: <20200401232421.GA7174@xz-x1>
+References: <20200331190000.659614-1-peterx@redhat.com>
+ <20200331190000.659614-12-peterx@redhat.com>
+ <20200401070322.yqdp5g2amzlbftk6@kamzik.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200325124536.2800725-1-namhyung@kernel.org> <20200325124536.2800725-7-namhyung@kernel.org>
- <20200330163058.GC4576@kernel.org> <20200330164312.GD4576@kernel.org>
-In-Reply-To: <20200330164312.GD4576@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 2 Apr 2020 08:22:58 +0900
-Message-ID: <CAM9d7cgtEXGZL+GZeLy1RmoU=jB4BfLApbsV9F=iDx6cqMh_5A@mail.gmail.com>
-Subject: Re: [PATCH 6/9] perf record: Support synthesizing cgroup events
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200401070322.yqdp5g2amzlbftk6@kamzik.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+On Wed, Apr 01, 2020 at 09:03:22AM +0200, Andrew Jones wrote:
+> On Tue, Mar 31, 2020 at 02:59:57PM -0400, Peter Xu wrote:
+> > Provide a hook for the checks after vcpu_run() completes.  Preparation
+> > for the dirty ring test because we'll need to take care of another
+> > exit reason.
+> > 
+> > Since at it, drop the pages_count because after all we have a better
+> > summary right now with statistics, and clean it up a bit.
+> 
+> I don't see what you mean by "drop the pages_count", because it's still
+> there. But otherwise
+> 
+> Reviewed-by: Andrew Jones <drjones@redhat.com>
 
-On Tue, Mar 31, 2020 at 1:43 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Mon, Mar 30, 2020 at 01:30:58PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Wed, Mar 25, 2020 at 09:45:33PM +0900, Namhyung Kim escreveu:
-> > > Synthesize cgroup events by iterating cgroup filesystem directories.
-> > > The cgroup event only saves the portion of cgroup path after the mount
-> > > point and the cgroup id (which actually is a file handle).
-> >
-> > Breaks the build on alpine linux (musl libc):
-> >
-> >   CC       /tmp/build/perf/util/srccode.o
-> >   CC       /tmp/build/perf/util/synthetic-events.o
-> > util/synthetic-events.c: In function 'perf_event__synthesize_cgroup':
-> > util/synthetic-events.c:427:22: error: field 'fh' has incomplete type
-> >    struct file_handle fh;
-> >                       ^
-> > util/synthetic-events.c:441:6: error: implicit declaration of function 'name_to_handle_at' [-Werror=implicit-function-declaration]
-> >   if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0) {
-> >       ^
-> > util/synthetic-events.c:441:2: error: nested extern declaration of 'name_to_handle_at' [-Werror=nested-externs]
-> >   if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0) {
-> >   ^
-> >   CC       /tmp/build/perf/util/data.o
-> > cc1: all warnings being treated as errors
-> > mv: can't rename '/tmp/build/perf/util/.synthetic-events.o.tmp': No such file or directory
-> >
-> >
-> > I'm trying to fix
->
-> musl libc up to 1.2.21 (IIRC) lacks name_to_handle_at and its structs,
-> then from the one that is in alpine linux 3.10 the error changes to:
->
->   CC       /tmp/build/perf/util/cloexec.o
-> util/synthetic-events.c:427:22: error: field 'fh' with variable sized type 'struct file_handle' not at the end of a struct or class is a GNU
->       extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
->                 struct file_handle fh;
->                                    ^
-> 1 error generated.
-> mv: can't rename '/tmp/build/perf/util/.synthetic-events.o.tmp': No such file or directory
-> make[4]: *** [/git/linux/tools/build/Makefile.build:97: /tmp/build/perf/util/synthetic-events.o] Error 1
-> make[4]: *** Waiting for unfinished jobs....
-> make[3]: *** [/git/linux/tools/build/Makefile.build:139: util] Error 2
-> make[2]: *** [Makefile.perf:617: /tmp/build/perf/perf-in.o] Error 2
-> make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> make: *** [Makefile:70: all] Error 2
-> make: Leaving directory '/git/linux/tools/perf'
-> + exit 1
-> [root@quaco ~]#
->
-> So probably we'll need a feature test to catch this and do some
-> workaround or disable the feature on such systems, providing some
-> warning.
->
-> I left the container build tests running to see if some other system has
-> problems with this, perhaps the ones with uCLibc or some older glibc,
-> we'll see.
->
-> So far all the alpine versions failed with the above problems and ALT
-> Linux p8 and p9 built without problems.
+I think the pages_count was dropped in some versions, at least the 1st
+version when I wrote the commit, but it must have went back during one
+of the rebases upon dirty_log_test.c...  To make it simple, I'll just
+remove this paragraph and pick the r-b (assuming it's valid with that).
 
-Hmm.. right, the CONFIG_FHANDLE can be turned off or old systems
-lack support.  I'll send a patch for the feature test soon.
+Thanks,
 
-Thanks
-Namhyung
+-- 
+Peter Xu
+
