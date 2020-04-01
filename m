@@ -2,55 +2,62 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C174C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B75CC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7F920857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F0E214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758180;
-	bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
+	s=default; t=1585758184;
+	bh=7dvN1NdL/HtOrinW/+c+KVVhJbekjgY1PpNQMIsuZFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePGGCjpJCUq0oOEF0SP1Bvhgr6EZsz3CFPgA572/rtkN0c/Sd63hfr0TdHS0GSlPy
-	 8lImRgsHww3GBhwwmJnJEg1Mw9KsDJp7q+biIx1b1a3b2PnlfvJEnE6ciTtdrVBCT5
-	 Sym9zDsrV2F/s9Tx7+oFx+eY5A+F31fBvITNx83A=
+	b=I5Thk1VUaWFcq5/VYCOhKDJFVnUXaRiiUvA8Viv/IeYV3jrZ/QaVmrwIPYJ9R1OyZ
+	 32lk/M+l2XuMdErYd0VK9aDpBvCEcPPV0/Wz5gcYOBaQbxAZbAxil8vSOqg8XZ4COs
+	 x3vyqFiiSo20qpROhV+8l0KEzq3i+QTGhOPPnnPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387557AbgDAQW7 (ORCPT
+        id S1733274AbgDAQXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46098 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387550AbgDAQWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:55 -0400
+        id S1732817AbgDAQW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E4622137B;
-        Wed,  1 Apr 2020 16:22:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06FAD214D8;
+        Wed,  1 Apr 2020 16:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758174;
-        bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
+        s=default; t=1585758177;
+        bh=7dvN1NdL/HtOrinW/+c+KVVhJbekjgY1PpNQMIsuZFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AU4vf8XgZFooSXLb+4i//KES++C82SRxRjGG+vSAuyRy6V9zlNI6aojRclq4dUBHM
-         LqfExV+3dm+YAfO5mfP7hojbujk+mw2WJczIvWye//4AibwViRZgqSjr/n3z+eg1SC
-         F4qCL8+luPfSmXjmzxmyEAi/zVwn2VMX7O3LIEBU=
+        b=iFSCzSi+AIRJm7sBT+sxI6K7iUy8nHGJt7xIlH1CJqPeJX8tsgWWtvmtv0slZwBru
+         hvht+8NvFWcvD1X3S0/48UPbXiwUPioIqLKyAALfi2JkRh6LJMECMfsoUN4qA1h2Nt
+         sxYMXAVUdqEUeFiFUGLhXbYGIk0CSesJGKrFLiqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 5.4 23/27] ARM: dts: imx6: phycore-som: fix arm and soc minimum voltage
-Date:   Wed,  1 Apr 2020 18:17:51 +0200
-Message-Id: <20200401161433.199490420@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 001/116] mmc: core: Allow host controllers to require R1B for CMD6
+Date:   Wed,  1 Apr 2020 18:16:17 +0200
+Message-Id: <20200401161542.769267371@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
-References: <20200401161414.352722470@linuxfoundation.org>
+In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
+References: <20200401161542.669484650@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,42 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit 636b45b8efa91db05553840b6c0120d6fa6b94fa upstream.
+[ Upstream commit 1292e3efb149ee21d8d33d725eeed4e6b1ade963 ]
 
-The current set minimum voltage of 730000µV seems to be wrong. I don't
-know the document which specifies that but the imx6qdl datasheets says
-that the minimum voltage should be 0.925V for VDD_ARM (LDO bypassed,
-lowest opp) and 1.15V for VDD_SOC (LDO bypassed, lowest opp).
+It has turned out that some host controllers can't use R1B for CMD6 and
+other commands that have R1B associated with them. Therefore invent a new
+host cap, MMC_CAP_NEED_RSP_BUSY to let them specify this.
 
-Fixes: ddec5d1c0047 ("ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In __mmc_switch(), let's check the flag and use it to prevent R1B responses
+from being converted into R1. Note that, this also means that the host are
+on its own, when it comes to manage the busy timeout.
 
+Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Tested-by: Faiz Abbas <faiz_abbas@ti.com>
+Tested-By: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mmc/core/mmc_ops.c | 8 +++++---
+ include/linux/mmc/host.h   | 1 +
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
---- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-@@ -107,14 +107,14 @@
- 		regulators {
- 			vdd_arm: buck1 {
- 				regulator-name = "vdd_arm";
--				regulator-min-microvolt = <730000>;
-+				regulator-min-microvolt = <925000>;
- 				regulator-max-microvolt = <1380000>;
- 				regulator-always-on;
- 			};
+diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+index 873b2aa0c1556..693b99eff74b5 100644
+--- a/drivers/mmc/core/mmc_ops.c
++++ b/drivers/mmc/core/mmc_ops.c
+@@ -536,10 +536,12 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
+ 	 * If the cmd timeout and the max_busy_timeout of the host are both
+ 	 * specified, let's validate them. A failure means we need to prevent
+ 	 * the host from doing hw busy detection, which is done by converting
+-	 * to a R1 response instead of a R1B.
++	 * to a R1 response instead of a R1B. Note, some hosts requires R1B,
++	 * which also means they are on their own when it comes to deal with the
++	 * busy timeout.
+ 	 */
+-	if (timeout_ms && host->max_busy_timeout &&
+-		(timeout_ms > host->max_busy_timeout))
++	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && timeout_ms &&
++	    host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
+ 		use_r1b_resp = false;
  
- 			vdd_soc: buck2 {
- 				regulator-name = "vdd_soc";
--				regulator-min-microvolt = <730000>;
-+				regulator-min-microvolt = <1150000>;
- 				regulator-max-microvolt = <1380000>;
- 				regulator-always-on;
- 			};
+ 	cmd.opcode = MMC_SWITCH;
+diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+index 840462ed1ec7e..7e8e5b20e82b0 100644
+--- a/include/linux/mmc/host.h
++++ b/include/linux/mmc/host.h
+@@ -332,6 +332,7 @@ struct mmc_host {
+ 				 MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR104 | \
+ 				 MMC_CAP_UHS_DDR50)
+ /* (1 << 21) is free for reuse */
++#define MMC_CAP_NEED_RSP_BUSY	(1 << 22)	/* Commands with R1B can't use R1. */
+ #define MMC_CAP_DRIVER_TYPE_A	(1 << 23)	/* Host supports Driver Type A */
+ #define MMC_CAP_DRIVER_TYPE_C	(1 << 24)	/* Host supports Driver Type C */
+ #define MMC_CAP_DRIVER_TYPE_D	(1 << 25)	/* Host supports Driver Type D */
+-- 
+2.20.1
+
 
 
