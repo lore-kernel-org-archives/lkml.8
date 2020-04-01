@@ -2,179 +2,169 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE18C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02818206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8AA4206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="IyNSd6it"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X3JUIwOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732927AbgDAOOD (ORCPT
+        id S1732952AbgDAOOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:14:03 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:48239 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732858AbgDAOOB (ORCPT
+        Wed, 1 Apr 2020 10:14:11 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50890 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732928AbgDAOOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:14:01 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Je7rjWPinBr2bJe7vjkqWT; Wed, 01 Apr 2020 16:13:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585750439; bh=4Z1xsv5MJPNLqbY2JbEN3CWbNZXwsTFDoO6fRUQq8Z8=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=IyNSd6itD/wGS7WzJWs/dM4HUrhm4dr8re8yF3KX4FCoMbbHfexrnHpYLL/AqOn15
-         7Lfo2bscJ5Tv+wtt0xoYuI0IbfO9NGo00WyjUGXOuMePe19bSb+rcaPnHd3sLipLQg
-         5WTK2oPH6Q3jLG8+EpWuCh+vD3EFZdkq95zWUJZ68iSo1U9Jx1dm0Yv4U/LKEniKLv
-         USlJDTN5j3fjSech4lWAie2R6+CcS+eDMlV09WLUE86/Pp4Rm1ejPnuKuhAS67NZsK
-         COwfjQx3JKInzAy8KrHtdfsO/atELkmg3UgVeybrFuPhGh3QnzHe8CcJzDuREe1z7X
-         U7R0WvPawuwTg==
-Subject: Re: [PATCH 1/1] lib/vsprintf: Add support for printing V4L2 and DRM
- fourccs
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Wed, 1 Apr 2020 10:14:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585750449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6fNGqZ5cbqa8gRYbmHJQeoCfCtbovl8FPd5umu3T68A=;
+        b=X3JUIwOpa8t+WJh2TsI2AzYKKwi7pourCLqh1dKnUGDeVddNUviY9uTDkDmLRhO0g5FaGe
+        s5jgL2VKLablw1O8C2Bx4IEAOu09TH3+JAJnoL2lmctxo+24FLDEl9X0Tt2TYqPuFHNLW6
+        sWhm+IP+TC1XQDXwlO+IR6dJusGiZ+o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-i-0dX9cSM1y9opEE-GbX9g-1; Wed, 01 Apr 2020 10:14:07 -0400
+X-MC-Unique: i-0dX9cSM1y9opEE-GbX9g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82D2B1088381;
+        Wed,  1 Apr 2020 14:14:05 +0000 (UTC)
+Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A094496F83;
+        Wed,  1 Apr 2020 14:14:04 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 09:14:02 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz,
         Steven Rostedt <rostedt@goodmis.org>
-References: <20200401140522.966-1-sakari.ailus@linux.intel.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <080ddddf-717e-61dc-8522-fbdbe52da94a@xs4all.nl>
-Date:   Wed, 1 Apr 2020 16:13:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+Message-ID: <20200401141402.m4klvezp5futb7ff@treble>
+References: <20200327010001.i3kebxb4um422ycb@treble>
+ <20200330170200.GU20713@hirez.programming.kicks-ass.net>
+ <20200330190205.k5ssixd5hpshpjjq@treble>
+ <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+ <20200331111652.GH20760@hirez.programming.kicks-ass.net>
+ <20200331202315.zialorhlxmml6ec7@treble>
+ <20200331204047.GF2452@worktop.programming.kicks-ass.net>
+ <20200331211755.pb7f3wa6oxzjnswc@treble>
+ <20200331212040.7lrzmj7tbbx2jgrj@treble>
+ <20200331222703.GH2452@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200401140522.966-1-sakari.ailus@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfMk1IXknwDM4YmvP/lQa3Wn+ijgDMHwhGqoI8aB+utiUiu9Lnc6n4h2UYXu7wz51oBsvbGHGG9TYwjhRmL+0U2byi27gti5Dkl55B8z7c+AVv/Q9XHj1
- o/WnC3Z/PeC0XuFKPI6wwfAhSw0G1DoS9bvK6u0X80y37pJZKxeeRwud/rg0zhMTw4O5OXrISijVnxaVcTi4HtTe0MNdDvmnfWuChnnJFTZ106nv/u6n5/9X
- lMlaHzccOrMOEYV7bCN+/KXb5yNzJcuI/8XsdTD+bjwK+BFN0AaoM0E/ek4zTkHj1Po4DKYE3oSUu+8q7AFoqQtEfRRquooJP7G7QuRmKa3XFvDz08P4XwWf
- x+YpcqQfYb8iFogqPzJVZ92BU/oVR83DeurZ80tQvCmYccUbqZVBvsAHbUGAlBTc9/MH4ygNdo8EamET9yVN5wlRVj4Xb5W6LFrq59KhLOq4KAi9m7IU65vA
- 2FO9WahGnoWuDUL/ObJyXeILYTKOF4oiV1ULv5cUH98wdR1BcfJdlBDcWed+zhkFcO1rIUePwIZzZNv1oX1qEqoAAg2KknknJiVIJPWxNfUcUbD+lfFSjjHc
- BAk=
+Content-Disposition: inline
+In-Reply-To: <20200331222703.GH2452@worktop.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 4:05 PM, Sakari Ailus wrote:
-> Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> the same implementation can be used.
+On Wed, Apr 01, 2020 at 12:27:03AM +0200, Peter Zijlstra wrote:
+> On Tue, Mar 31, 2020 at 04:20:40PM -0500, Josh Poimboeuf wrote:
+> > On Tue, Mar 31, 2020 at 04:17:58PM -0500, Josh Poimboeuf wrote:
+> > > > I'm not against adding a second/separate hint for this. In fact, I
+> > > > almost considered teaching objtool how to interpret the whole IRET frame
+> > > > so that we can do it without hints. It's just that that's too much code
+> > > > for this one case.
+> > > > 
+> > > > HINT_IRET_SELF ?
+> > > 
+> > > Despite my earlier complaint about stack size knowledge, we could just
+> > > forget the hint and make "iretq in C code" equivalent to "reduce stack
+> > > size by arch_exception_stack_size()" and keep going.  There's
+> > > file->c_file which tells you it's a C file.
+> > 
+> > Or maybe "iretq in an STT_FUNC" is better since this pattern could
+> > presumably happen in a callable asm function.
 > 
-> Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  Documentation/core-api/printk-formats.rst | 11 +++++++++
->  lib/vsprintf.c                            | 29 +++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
+> Like so then?
+
+I'd suggest a patch split like:
+
+1) objtool: automagic IRET-in-func
+2) objtool: add RET_OFFSET
+3) ftrace:  re-organize asm (and use RET_OFFSET hint)
+4) objtool: remove now-unused SAVE/RESTORE
+
+> --- a/arch/x86/include/asm/orc_types.h
+> +++ b/arch/x86/include/asm/orc_types.h
+> @@ -58,8 +58,13 @@
+>  #define ORC_TYPE_CALL			0
+>  #define ORC_TYPE_REGS			1
+>  #define ORC_TYPE_REGS_IRET		2
+> -#define UNWIND_HINT_TYPE_SAVE		3
+> -#define UNWIND_HINT_TYPE_RESTORE	4
+> +
+> +/*
+> + * RET_OFFSET: Used on instructions that terminate a function; mostly RETURN
+> + * and sibling calls. On these, sp_offset denotes the expected offset from
+> + * initial_func_cfi.
+> + */
+> +#define UNWIND_HINT_TYPE_RET_OFFSET	3
+
+I think this comment belongs at the UNWIND_HINT_RET_OFFSET macro
+definition.
+
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -282,7 +282,8 @@ static inline void tramp_free(void *tram
 > 
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index 8ebe46b1af39..b6249f513c09 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -545,6 +545,17 @@ For printing netdev_features_t.
->  
->  Passed by reference.
->  
-> +V4L2 and DRM fourcc code (pixel format)
-> +---------------------------------------
-> +
-> +::
-> +
-> +	%ppf
-> +
-> +Print a 4cc code used by V4L2 or DRM.
-
-FourCC appears to be the more-or-less official name (https://en.wikipedia.org/wiki/FourCC)
-
-I would explain about the -BE suffix for bigendian fourcc variants.
-
-> +
-> +Passed by reference.
-> +
->  Thanks
->  ======
->  
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 7c488a1ce318..b39f0ac317c5 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -1721,6 +1721,32 @@ char *netdev_bits(char *buf, char *end, const void *addr,
->  	return special_hex_number(buf, end, num, size);
->  }
->  
-> +static noinline_for_stack
-> +char *pixel_format_string(char *buf, char *end, const u32 *fourcc,
-> +			  struct printf_spec spec, const char *fmt)
-> +{
-> +	char ch[2] = { 0 };
-
-This can just be '{ };'
-
-> +	unsigned int i;
-> +
-> +	if (check_pointer(&buf, end, fourcc, spec))
-> +		return buf;
-> +
-> +	switch (fmt[1]) {
-> +	case 'f':
-> +		for (i = 0; i < sizeof(*fourcc); i++) {
-> +			ch[0] = *fourcc >> (i << 3);
-
-You need to AND with 0x7f, otherwise a big endian fourcc (bit 31 is set)
-will look wrong. Also, each character is standard 7 bit ascii, bit 7 isn't
-used except to indicate a BE variant.
-
-> +			buf = string(buf, end, ch, spec);
-> +		}
-> +
-> +		if (*fourcc & BIT(31))
-> +			buf = string(buf, end, "-BE", spec);
-> +
-> +		return buf;
-> +	default:
-> +		return error_string(buf, end, "(%pp?)", spec);
+>  /* Defined as markers to the end of the ftrace default trampolines */
+>  extern void ftrace_regs_caller_end(void);
+> -extern void ftrace_epilogue(void);
+> +extern void ftrace_regs_caller_ret(void);
+> +extern void ftrace_caller_end(void);
+>  extern void ftrace_caller_op_ptr(void);
+>  extern void ftrace_regs_caller_op_ptr(void);
+> 
+> @@ -334,7 +335,7 @@ create_trampoline(struct ftrace_ops *ops
+>  		call_offset = (unsigned long)ftrace_regs_call;
+>  	} else {
+>  		start_offset = (unsigned long)ftrace_caller;
+> -		end_offset = (unsigned long)ftrace_epilogue;
+> +		end_offset = (unsigned long)ftrace_caller_end;
+>  		op_offset = (unsigned long)ftrace_caller_op_ptr;
+>  		call_offset = (unsigned long)ftrace_call;
+>  	}
+> @@ -366,6 +367,13 @@ create_trampoline(struct ftrace_ops *ops
+>  	if (WARN_ON(ret < 0))
+>  		goto fail;
+> 
+> +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+> +		ip = ftrace_regs_caller_ret;
+> +		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
+> +		if (WARN_ON(ret < 0))
+> +			goto fail;
 > +	}
-> +}
 > +
->  static noinline_for_stack
->  char *address_val(char *buf, char *end, const void *addr,
->  		  struct printf_spec spec, const char *fmt)
-> @@ -2131,6 +2157,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
->   *       correctness of the format string and va_list arguments.
->   * - 'K' For a kernel pointer that should be hidden from unprivileged users
->   * - 'NF' For a netdev_features_t
-> + * - 'pf' V4L2 or DRM pixel format.
 
-I'd say 'FourCC format' instead of 'pixel format'.
+Hm?  This function creates a trampoline but it looks like this change is
+overwriting the original ftrace_64 code itself?
 
->   * - 'h[CDN]' For a variable-length buffer, it prints it as a hex string with
->   *            a certain separator (' ' by default):
->   *              C colon
-> @@ -2223,6 +2250,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->  		return restricted_pointer(buf, end, ptr, spec);
->  	case 'N':
->  		return netdev_bits(buf, end, ptr, spec, fmt);
-> +	case 'p':
-> +		return pixel_format_string(buf, end, ptr, spec, fmt);
->  	case 'a':
->  		return address_val(buf, end, ptr, spec, fmt);
->  	case 'd':
-> 
+> --- a/tools/objtool/Makefile
+> +++ b/tools/objtool/Makefile
+> @@ -31,7 +31,7 @@ INCLUDES := -I$(srctree)/tools/include \
+>  	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+>  	    -I$(srctree)/tools/arch/$(SRCARCH)/include
+>  WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+> -CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+> +CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -ggdb3 $(INCLUDES) $(LIBELF_FLAGS)
+>  LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
 
-Regards,
+Why?  Smells like a separate patch at least.
 
-	Hans
+-- 
+Josh
+
