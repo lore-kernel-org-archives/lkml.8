@@ -2,184 +2,95 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0D8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183E6C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBA62082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:50:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOIhp2xD"
+	by mail.kernel.org (Postfix) with ESMTP id DFAEE20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585734716;
+	bh=+eUndFHgJ1dEXfj+ojdHLS9mWOirogiLA+FqUsv1IgI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ebZvF0nyC4CGJ6otSL4qWFk7HF9aWQ8qeEv8K6QBi1i0Hu4PlAF/klypNqnwU31cp
+	 Nt+ujuXExwhCPKO3DZfS+ttJSuHnl2gChcm0fm0MgrWH+F2fv0jpl4hPkDHfmH6zIK
+	 BFdBDtwHhFJLZFf3z9O74FPST6mr0X3mnHvKmlLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgDAJux (ORCPT
+        id S1731537AbgDAJvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:50:53 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45035 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgDAJuw (ORCPT
+        Wed, 1 Apr 2020 05:51:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40981 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgDAJvy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:50:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id m17so29712578wrw.11;
-        Wed, 01 Apr 2020 02:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=QpphlHZbkZKI1xt9DlaNcP539IgZIFX660uvI5X6A6E=;
-        b=jOIhp2xDLdzr6oZLZ/CYVF9AQ1cjC1SEfwG6EsBGP9j+Vr1ewAvSn/Hv1fENyou5ZI
-         uuwXIaHlJgVeG0VcJoDrX7lZ3ny3cAh6LShpK4DmyC0aOQ0tBXr1wiSXnMkHnrti87Ov
-         OFyuTDA8g3QzeQNex3nGdMX0D56dRqEH6mpixcnKOtbwzWwB/TbVTQ0e36wKVt1/XN4J
-         Up65hbonyiqoULL86aDwgo70dypyJoIzc6YnLZenSVooSOq9MzLggapSGoxJ4y/FkyvU
-         +IUGDR+mpip2uWP718OwSYf3XE+ghVRSnwsfGQzUdkGtQVpd4Fbgcq7pBZjE/4Ydf9eh
-         1cGA==
+        Wed, 1 Apr 2020 05:51:54 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h9so29737142wrc.8;
+        Wed, 01 Apr 2020 02:51:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=QpphlHZbkZKI1xt9DlaNcP539IgZIFX660uvI5X6A6E=;
-        b=OeA/Qd/NRli8/5h5pipUkk2SqDu0ua/ewJtjkqGq3PeI6/GllbAveB3ZFLdjbO9OKl
-         hGE3iiAUTBZgx0n4w3NChDXM4la159sXSUf5F/2P8fvHQdWs4EtRiDjii1RScUZajAmp
-         TLWhGssU4lMG6kh3GpBXxRl8VonheQsB0AEQ3aBGx6ojUq/YyubygL9zPgl+jFaknzpu
-         om2qEdX54/6rXefeYuuqyz74tgOYlFQbJZk8Jkzgxv83h7a6r0GoG7nCZ7NK7gzwwZVU
-         /eW2HEe/QrMpyefJJ93Ie6Fs1tils2BzIHXAUEeV6/tcjcMguti1lv57p4+vM3SfqW2J
-         WkFw==
-X-Gm-Message-State: ANhLgQ2d+km3GtC6gX0BjXVt1ahAIy3G5h5vo54tRMwQVPo0UI4ss+RR
-        HhFaXi2yHiE11rqOwpzIDOD0/r0hefspjCSdDqc=
-X-Google-Smtp-Source: ADFU+vuaIXGJXt/9KoodRrKINwtvRKXbFPJYtpOwFMs78ZT+hGBSqWJm+hrMiLJUaccSTHrkM8C536QRYb97uVguMoQ=
-X-Received: by 2002:adf:dec3:: with SMTP id i3mr26540126wrn.351.1585734648711;
- Wed, 01 Apr 2020 02:50:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZCD5e/zJXmKAX2xCPUbGFpEcZHshYsLsh9gx/j5UW0I=;
+        b=bi80T+giF68sM8ftFWK9bZPS+hpjXMmcYzSpq1NJje2+6fFydWLm51hR3sCeLTwMBl
+         iQuvSilcSJTLG+lxHWSyZPu8UDAma/VLD6BlQAM9PWvHQUpFOiqCkbikf3FAhdxfUkbi
+         kU5NVIKN/ujxtNU/cN8sGuYh4fASqGaAOCDioUVIo4xth3V5AkGdpGdBnIKc9PPl+dq1
+         58ZJK6HQM1Mkurm6xRGDdGaGpMtRkmImZ6LKTGs6AruxtuzivcvaUrjeC3Stq+OGjKTv
+         hFSjBH33xEk2pEkAnNl6whAmroKh6ZGrVjhFAGwdpVbC5btZL++pHHqLMN8CAEy8iCnJ
+         mndg==
+X-Gm-Message-State: ANhLgQ0aZc+4Py+5HwoYOrbbFiez6clMPblPPpdjDZXVMz2/2xP8XYA6
+        6kj0iw5P207lh7r5ovqRtuA=
+X-Google-Smtp-Source: ADFU+vvyLTq9Vwo1E/Y7vOiZ5MDDMqJghjVelLsqU/ox9sZhwAGPZinVWHQpB0MOJ//7Bng3s1r0qw==
+X-Received: by 2002:a5d:630e:: with SMTP id i14mr25120880wru.260.1585734711210;
+        Wed, 01 Apr 2020 02:51:51 -0700 (PDT)
+Received: from piling.lan (80-71-134-83.u.parknet.dk. [80.71.134.83])
+        by smtp.gmail.com with ESMTPSA id d7sm2154635wrr.77.2020.04.01.02.51.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 02:51:50 -0700 (PDT)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH] leds: core: Fix warning message when init_data
+Date:   Wed,  1 Apr 2020 11:51:47 +0200
+Message-Id: <20200401095147.444353-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
- <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com> <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
- <5F9D2C8D-B1DE-4F95-992E-524E02851CF4@fb.com>
-In-Reply-To: <5F9D2C8D-B1DE-4F95-992E-524E02851CF4@fb.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 1 Apr 2020 11:50:51 +0200
-Message-ID: <CA+icZUXxwkPcfKgaaEaV4XhQseK--N3a=ffh=kU-C84BcFuhrw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and initramfs
-To:     Nick Terrell <terrelln@fb.com>
-Cc:     Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        Michael van der Westhuizen <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 4:52 AM Nick Terrell <terrelln@fb.com> wrote:
->
->
->
-> > On Mar 31, 2020, at 8:11 AM, Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > On Tue, Mar 31, 2020 at 6:15 AM Nick Terrell <terrelln@fb.com> wrote:
-> >
-> > [...]
-> >
-> >>> Do you plan to push this for Linux v5.7?
-> >>
-> >> I hope that it will be accepted. From my point of view this patch set =
-is
-> >> ready for merge, except for the maximum window size increase
-> >> requested by Petr.
-> >>
-> >
-> > Hi Nick,
-> >
-> > thanks for your answer.
-> >
-> > Did you send out a pull-request already?
->
-> I haven=E2=80=99t sent out a pull request. If that is something that I ne=
-ed to
-> do, or if it makes the process easier for a maintainer to merge then
-> I can do that.
->
+The warning message when a led is renamed due to name collition can fail
+to show proper original name if init_data is used. Eg:
 
-[ CC  Stephen Rothwell (maintainer of Linux-next) ]
+[    9.073996] leds-gpio a0040000.leds_0: Led (null) renamed to red_led_1 due to name collision
 
-Hi Nick,
+Fixes: bb4e9af0348d ("leds: core: Add support for composing LED class device names")
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+---
+ drivers/leds/led-class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-as Adam pointed out it might be good to ask "Stephen Rothwell"
-<sfr@canb.auug.org.au>
-to include your Git tree into linux-next. Stephen will give you some
-informations about that.
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 1fc40e8af75e..3363a6551a70 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -376,7 +376,7 @@ int led_classdev_register_ext(struct device *parent,
+ 
+ 	if (ret)
+ 		dev_warn(parent, "Led %s renamed to %s due to name collision",
+-				led_cdev->name, dev_name(led_cdev->dev));
++				proposed_name, dev_name(led_cdev->dev));
+ 
+ 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+ 		ret = led_add_brightness_hw_changed(led_cdev);
+-- 
+2.25.1
 
-> > Can you point me to that request or patch of Petr?
-> > Is it relevant or optional for the pull-request?
->
-> The patches from Petr are a parallel implementation of initramfs
-> decompression and are available here [0]. They support initramfs
-> compression well, but are missing some pieces for correct and
-> performant zstd kernel decompression. Namely the equivalent of
-> patch 6 in this series to increase ZO_z_extra_bytes, the
-> performance fix in patch 1 that switches memcpy() to
-> __builtin_memcpy(), and the decompress_single() function in patch 3.
->
-> Without those changes a very compressible kernel may fail to
-> decompress successfully, and will be corrupted. And the performance
-> is about 4x worse on x86_64. My patches took 70 ms to decompress vs
-> 318 ms with Petr=E2=80=99s. See the detailed comparison here [1].
->
-
-Thanks for version 4 of your patchset and these clarifications.
-
-I will try zstd-v4.
-
-Regards,
-- Sedat -
-
-
-
-> >>> Feel free to add credits for the whole series:
-> >>>
-> >>>  Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> >>
-> >> Thanks for testing the patch set Sedat!
-> >>
-> >
-> > I have re-tested zstd-v3 patchset with Linux version 5.6 final and
-> > Clang/LLD version 10.0.0 final (from Debian/unstable repository).
-> >
-> > Is it possible to mention that there might distro-specific changes
-> > needed to initramfs-handling?
-> > For Debian you are welcome to include below Link [1].
-> > Not sure I will send/ask to/on the debian-kernel mailing list in this t=
-opic.
->
-> I don=E2=80=99t expect any distro specific changes are required to contin=
-ue operating
-> as-is. However, if a distro wanted to switch to a zstd compressed initram=
-fs
-> they would need to update their toolchain to compress with zstd.
->
-> > Thanks and bonne chance.
-> >
-> > Regards,
-> > - Sedat -
-> >
-> > [1] LINK: https://lore.kernel.org/lkml/CA+icZUXCn2an9aNDrm+-eneSAOyGibz=
-0W1xYhwkA5k3B3U-5vQ@mail.gmail.com/
->
-> [0] https://lkml.org/lkml/2020/3/16/461
-> [1] https://lkml.org/lkml/2020/3/31/1573
->
