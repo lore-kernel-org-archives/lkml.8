@@ -2,104 +2,338 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B10C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F23C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A8020719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ajSmIzuv"
+	by mail.kernel.org (Postfix) with ESMTP id DF65C2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732509AbgDAR4t (ORCPT
+        id S1732623AbgDAR7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:56:49 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41735 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728419AbgDAR4s (ORCPT
+        Wed, 1 Apr 2020 13:59:51 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59463 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730420AbgDAR7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:56:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d24so225844pll.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 10:56:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yI26ZhrOiIL8spNhsxWYK6f9t1xQ5Sm+6ZAEnI+a28A=;
-        b=ajSmIzuvMD1shcgImPYx+zbZQUz/ByvNut7SSgj1Zj5VgFID/XYOllMEdyF9zUxNN4
-         pSDx1qy16ZUYBGkRqOvP0lUS9ftL4vFF2I+Mk0sCMyBURt4a/PT3RcJzKnmDuBTVlrl1
-         kbOb+x+QYpKku9YOpbaKJLVL8mjFzS0P87/GrHoNcd//AAm6SCh6eem+GQcWNf0x8q93
-         YfEY4/dQuYGU35iS5WKlY3zpkIZFQXDkP9YmfMkUYDIJH7fh2e9/H8/mCPpvMxmS+LXz
-         MgF/DZS7RFJIwuOjdUO+sw/9oI+hDqGSTMGWoVWtef0/8aEynS+VOwP/M8I1zhEZuXnG
-         R8Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yI26ZhrOiIL8spNhsxWYK6f9t1xQ5Sm+6ZAEnI+a28A=;
-        b=Fus6NEQeWbA7zSCppeTIYj2Eb9dcWmD7Ypy8Au9Y9hUlut7VkUIUf1JMPCdc28Y7Bd
-         P9idPrCM+eSxtG/0hChb8YPkjtyZNv5lHHEAJXlCXJvdECZDv2AX7Rt9usXbdn4WPTwI
-         gA/FSGuP0/XFD3KyQFfJAK6Vaw4u36MvFZIyi5ZSlUNm19lJAk1NS/Hdal9KkrlV+0EC
-         AtcNW0q+w4n+kwwMCoNequF+RX88JITTSwWdspAYR27qoTAqsgaEsd0TakqUWjmy8/Qc
-         rh54yYCoN/2TnG7vdOHqFJ1NqChRcGwIIWnQfHJhWhY1CdwJdPbsvYkwhemoE4VUK7P1
-         MawQ==
-X-Gm-Message-State: ANhLgQ2T6qidCuH5AzhZbk3Y6C+XHPM+QmcIvKF3BoW5kgLZTVSyxcwo
-        TumjTkkyKOh6yAlr93dMWhnWQ+NlrgGuzz3mLg0YrA==
-X-Google-Smtp-Source: ADFU+vs+ipW1cSPPz7Aecs3H5dXxYGvmGY+jIwfNg5qKza98ak96RlV4UV94FcsKxYwubYuEFOUTtMzPOsmiBTcT3wQ=
-X-Received: by 2002:a17:902:22e:: with SMTP id 43mr22426728plc.119.1585763807025;
- Wed, 01 Apr 2020 10:56:47 -0700 (PDT)
+        Wed, 1 Apr 2020 13:59:51 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 36c63c6a6212dabb; Wed, 1 Apr 2020 19:59:47 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH] Documentation: PM: sleep: Document system-wide suspend code flows
+Date:   Wed, 01 Apr 2020 19:59:46 +0200
+Message-ID: <2548116.mvXUDI8C0e@kreacher>
 MIME-Version: 1.0
-References: <202004010505.30nygaXZ%lkp@intel.com>
-In-Reply-To: <202004010505.30nygaXZ%lkp@intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 1 Apr 2020 10:56:35 -0700
-Message-ID: <CAKwvOdmaD1c94WFK_GTfm0Egt6=Ck8JcwqnYR2ibsxpvG+o2mw@mail.gmail.com>
-Subject: Re: ld.lld: warning: lld uses blx instruction, no object with
- architecture supporting feature detected
-To:     clang-built-linux <clang-built-linux@googlegroups.com>
-Cc:     Dirk Mueller <dmueller@suse.com>, kbuild-all@lists.01.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Philip Li <philip.li@intel.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 2:20 PM kbuild test robot <lkp@intel.com> wrote:
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   42595ce90b9d4a6b9d8c5a1ea78da4eeaf7e086a
-> commit: e33a814e772cdc36436c8c188d8c42d019fda639 scripts/dtc: Remove redundant YYLOC global declaration
-> date:   4 days ago
-> config: arm-randconfig-a001-20200401 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 5227fa0c72ce55927cf4849160acb00442489937)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout e33a814e772cdc36436c8c188d8c42d019fda639
->         # save the attached .config to linux build tree
->         COMPILER=clang make.cross ARCH=arm
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>):
->
-> >> ld.lld: warning: lld uses blx instruction, no object with architecture supporting feature detected
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Apologies that the bot is repeatedly converging on this patch; it's an
-artifact of us turning on LLD for the first time.  This error looks
-new to me, seems it's a randconfig.  I've filed
-https://github.com/ClangBuiltLinux/linux/issues/964 to follow up on
-it.
--- 
-Thanks,
-~Nick Desaulniers
+Add a document describing high-level system-wide suspend code flows
+in Linux.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ Documentation/admin-guide/pm/suspend-flows.rst |  270 +++++++++++++++++++++++++
+ Documentation/admin-guide/pm/system-wide.rst   |    1 
+ 2 files changed, 271 insertions(+)
+
+Index: linux-pm/Documentation/admin-guide/pm/suspend-flows.rst
+===================================================================
+--- /dev/null
++++ linux-pm/Documentation/admin-guide/pm/suspend-flows.rst
+@@ -0,0 +1,270 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. include:: <isonum.txt>
++
++=========================
++System Suspend Code Flows
++=========================
++
++:Copyright: |copy| 2020 Intel Corporation
++
++:Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
++
++At least one global system-wide transition needs to be carried out for the
++system to get from the working state into one of the supported
++:doc:`sleep states <sleep-states>`.  Hibernation requires more than one
++transition to occur for this purpose, but the other sleep states, commonly
++referred to as *system-wide suspend* (or simply *system suspend*) states, need
++only one.
++
++For those sleep states, the transition from the working state of the system into
++the target sleep state is referred to as *system suspend* too (in the majority
++of cases, whether this means a transition or a sleep state of the system should
++be clear from the context) and the transition back from the sleep state into the
++working state is referred to as *system resume*.
++
++The kernel code flows associated with the syspend and resume transitions for
++different sleep states of the system are quite similar, but there are some
++significant differences between the :ref:`suspend-to-idle <s2idle>` code flows
++and the code flows related to the :ref:`suspend-to-RAM <s2ram>` and
++:ref:`standby <standby>` sleep states.
++
++The :ref:`suspend-to-RAM <s2ram>` and :ref:`standby <standby>` sleep states
++cannot be implemented without platform support and the difference between them
++boils down to the platform-specific actions carried out by the suspend and
++resume hooks that need to be provided by the platform driver to make them
++available.  Apart from that, the suspend and resume code flows for these sleep
++states are mostly identical, so they both together will be referred to as
++*platform-dependent suspend* states in what follows.
++
++
++.. _s2idle_suspend:
++
++Suspend-to-idle Suspend Code Flow
++=================================
++
++The following steps are taken in order to transition the system from the working
++state to the :ref:`suspend-to-idle <s2idle>` sleep state:
++
++ 1. Invoking system-wide suspend notifiers.
++
++    Kernel subsystems can register callbacks to be invoked when the suspend
++    transition is about to occur and when the resume transition has finished.
++
++    That allows them to prepare for the change of the system state and to clean
++    up after getting back to the working state.
++
++ 2. Freezing tasks.
++
++    Tasks are frozen primarily in order to avoid unchecked hardware accesses
++    from user space through MMIO regions or I/O registers exposed directly to
++    it and to prevent user space from entering the kernel while the next step
++    of the transition is in progress (which might have been problematic for
++    various reasons).
++
++    All user space tasks are intercepted as though they were sent a signal and
++    put into uninterruptible sleep until the end of the subsequent system resume
++    transition.
++
++    The kernel threads that choose to be frozen during system suspend for
++    specific reasons are frozen subsequently, but they are not intercepted.
++    Instead, they are expected to periodically check whether or not they need
++    to be frozen and to put themselves into uninterruptible sleep if so.  [Note,
++    however, that kernel threads can use locking and other concurrency controls
++    available in kernel space to synchronize themselves with system suspend and
++    resume, which can be much more precise than the freezing, so the latter is
++    not a recommended option for kernel threads.]
++
++ 3. Suspending devices and reconfiguring IRQs.
++
++    Devices are suspended in four phases called *prepare*, *suspend*,
++    *late suspend* and *noirq suspend* (see :ref:`driverapi_pm_devices` for more
++    information on what exactly happens in each phase).
++
++    Every device is visited in each phase, but typically it is not physically
++    accessed in more than two of them.
++
++    The runtime PM API is disabled for every device during the *late* suspend
++    phase and high-level ("action") interrupt handlers are prevented from being
++    invoked before the *noirq* suspend phase.
++
++    Interrupts are still handled after that, but they are only acknowledged to
++    interrupt controllers without performing any device-specific actions that
++    would be triggered in the working state of the system (those actions are
++    deferred till the subsequent system resume transition as described
++    `below <s2idle_resume_>`_).
++
++    IRQs associated with system wakeup devices are "armed" so that the resume
++    transition of the system is started when one of them signals an event.
++
++ 4. Freezing the scheduler tick and suspending timekeeping.
++
++    When all devices have been suspended, CPUs enter the idle loop and are put
++    into the deepest available idle state.  While doing that, each of them
++    "freezes" its own scheduler tick so that the timer events associated with
++    the tick do not occur until the CPU is woken up by another interrupt source.
++
++    The last CPU to enter the idle state also stops the timekeeping which
++    (among other things) prevents high resolution timers from triggering going
++    forward until the first CPU that is woken up restarts the timekeeping.
++    That allows the CPUs to stay in the deep idle state relatively long in one
++    go.
++
++    From this point on, the CPUs can only be woken up by non-timer hardware
++    interrupts.  If that happens, they go back to the idle state unless the
++    interrupt that woke up one of them comes from an IRQ that has been armed for
++    system wakeup, in which case the system resume transition is started.
++
++
++.. _s2idle_resume:
++
++Suspend-to-idle Resume Code Flow
++================================
++
++The following steps are taken in order to transition the system from the
++:ref:`suspend-to-idle <s2idle>` sleep state into the working state:
++
++ 1. Resuming timekeeping and unfreezing the scheduler tick.
++
++    When one of the CPUs is woken up (by a non-timer hardware interrupt), it
++    leaves the idle state entered in the last step of the preceding suspend
++    transition, restarts the timekeeping (unless it has been restarted already
++    by another CPU that woke up earlier) and the scheduler tick on that CPU is
++    unfrozen.
++
++    If the interrupt that has woken up the CPU was armed for system wakeup,
++    the system resume transition begins.
++
++ 2. Resuming devices and restoring the working-state configuration of IRQs.
++
++    Devices are resumeed in four phases called *noirq resume*, *early resume*,
++    *resume* and *complete* (see :ref:`driverapi_pm_devices` for more
++    information on what exactly happens in each phase).
++
++    Every device is visited in each phase, but typically it is not physically
++    accessed in more than two of them.
++
++    The working-state configuration of IRQs is restored after the *noirq* resume
++    phase and the runtime PM API is re-enabled for every device whose driver
++    supports it during the *early* resume phase.
++
++ 3. Thawing tasks.
++
++    Tasks frozen in step 2 of the preceding `suspend <s2idle_suspend_>`_
++    transition are "thawed", which means that they are woken up from the
++    uninterruptible sleep that they went into at that time and user space tasks
++    are allowed to exit the kernel.
++
++ 4. Invoking system-wide resume notifiers.
++
++    This is analogous to step 1 of the `suspend <s2idle_suspend_>`_ transition
++    and the same set of callbacks is invoked at this point, but a different
++    "notification type" parameter value is passed to them.
++
++
++Platform-dependent Suspend Code Flow
++====================================
++
++The following steps are taken in order to transition the system from the working
++state to platform-dependent suspend state:
++
++ 1. Invoking system-wide suspend notifiers.
++
++    This step is the same as step 1 of the suspend-to-idle suspend transision
++    described `above <s2idle_suspend_>`_.
++
++ 2. Freezing tasks.
++
++    This step is the same as step 2 of the suspend-to-idle suspend transision
++    described `above <s2idle_suspend_>`_.
++
++ 3. Suspending devices and reconfiguring IRQs.
++
++    This step is analogous to step 3 of the suspend-to-idle suspend transision
++    described `above <s2idle_suspend_>`_, but the arming of IRQs for system
++    wakeup generally does not have any effect on the platform.
++
++    There are platforms that can go into a very deep low-power state internally
++    when all CPUs in them are in sufficiently deep idle states and all I/O
++    devices have been put into low-power states.  On those platforms,
++    suspend-to-idle can reduce system power very effectively.
++
++    On the other platforms, however, low-level components (like interrupt
++    controllers) need to be turned off in a platform-specific way (implemented
++    in the hooks provided by the platform driver) to achieve comparable power
++    reduction.
++
++    That usually prevents in-band hardware interrupts from waking up the system,
++    which must be done in a special platform-dependent way.  Then, the
++    configuration of system wakeup sources usually starts when system wakeup
++    devices are suspended and is finalized by the platform suspend hooks later
++    on.
++
++ 4. Disabling non-boot CPUs.
++
++    On some platforms the suspend hooks mentioned above must run in a one-CPU
++    configuration of the system (in particular, the herware cannot be accessed
++    by any code running in parallel with the platform suspend hooks that may,
++    and often do, trap into the platform firmware in order to finalize the
++    suspend transition).
++
++    For this reason, the CPU offline/online (CPU hotplug) framework is used
++    to take all of the CPUs in the system, except for one (the boot CPU),
++    offline (typially, the CPUs that have been taken offline go into deep idle
++    states).
++
++    This means that all tasks are migrated away from those CPUs and all IRQs are
++    rerouted to the only CPU that remains online.
++
++ 5. Suspending core system components.
++
++    This prepares the core system components for (possibly) losing power going
++    forward and suspends the timekeeping.
++
++ 6. Platform-specific power removal.
++
++    This is expected to remove power from all of the system components except
++    for the mamory controller and RAM (in order to preserve the contents of the
++    latter) and some devices designated for system wakeup.
++
++    In many cases control is passed to the platform firmware which is expected
++    to finalize the suspend transition as needed.
++
++
++Platform-dependent Resume Code Flow
++===================================
++
++The following steps are taken in order to transition the system from a
++platform-dependent suspend state into the working state:
++
++ 1. Platform-specific system wakeup.
++
++    The platform is woken up by a signal from one of the designated system
++    wakeup devices (which need not be an in-band hardware interrupt)  and
++    control is passed back to the kernel (the working configuration of the
++    platform may need to be restored by the platform firmware before the
++    kernel gets control again).
++
++ 2. Resuming core system components.
++
++    The suspend-time configuration of the core system components is restored and
++    the timekeeping is resumed.
++
++ 3. Re-enabling non-boot CPUs.
++
++    The CPUs disabled in step 4 of the preceding suspend transition are taken
++    back online and their suspend-time configuration is restored.
++
++ 4. Resuming devices and restoring the working-state configuration of IRQs.
++
++    This step is the same as step 2 of the suspend-to-idle suspend transision
++    described `above <s2idle_resume_>`_.
++
++ 5. Thawing tasks.
++
++    This step is the same as step 3 of the suspend-to-idle suspend transision
++    described `above <s2idle_resume_>`_.
++
++ 6. Invoking system-wide resume notifiers.
++
++    This step is the same as step 4 of the suspend-to-idle suspend transision
++    described `above <s2idle_resume_>`_.
+Index: linux-pm/Documentation/admin-guide/pm/system-wide.rst
+===================================================================
+--- linux-pm.orig/Documentation/admin-guide/pm/system-wide.rst
++++ linux-pm/Documentation/admin-guide/pm/system-wide.rst
+@@ -8,3 +8,4 @@ System-Wide Power Management
+    :maxdepth: 2
+ 
+    sleep-states
++   suspend-flows
+
+
+
