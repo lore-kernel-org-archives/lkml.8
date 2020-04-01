@@ -2,250 +2,112 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4622C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1942C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8357E20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30A120714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:57:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Bh2qGyCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732027AbgDAH4P convert rfc822-to-8bit (ORCPT
+        id S1732044AbgDAH5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:56:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12823 "EHLO mga05.intel.com"
+        Wed, 1 Apr 2020 03:57:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:36853 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730426AbgDAH4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:56:15 -0400
-IronPort-SDR: oLp6RFjmY1BmGxIV8YE+ZGs9Bi2sdZOIOlQW1dDjNE+cI/Nd1f6l+rY6rjAu/4OEs5J4pq9YMK
- GEHYYKKl15/A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 00:56:14 -0700
-IronPort-SDR: v3w9qyLUYek2gptnwh6/vLPLA95sVSH5EJOhDT/oAIVoCrg3zChAIYl9ZgNERTyeSOdGVbbnzT
- GoHHGlMxc7jA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="240416556"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga007.fm.intel.com with ESMTP; 01 Apr 2020 00:56:14 -0700
-Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Apr 2020 00:56:14 -0700
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- FMSMSX112.amr.corp.intel.com (10.18.116.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Apr 2020 00:56:14 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.138]) with mapi id 14.03.0439.000;
- Wed, 1 Apr 2020 15:56:10 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Index: AQHWAEUcrRt83jyTNECgMYM7VBywiqhg9Y6ggAJ0uwCAAIq3IA==
-Date:   Wed, 1 Apr 2020 07:56:09 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D803F42@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF8BC@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21D5C2@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A21D5C2@SHSMSX104.ccr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1731850AbgDAH5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 03:57:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sdnw02FRz9sRf;
+        Wed,  1 Apr 2020 18:57:07 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585727828;
+        bh=uaZXpbcktI4nhxoWwcmc0W6HK6J4xMMOw9PQDeoXi2g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Bh2qGyCg6Bf/4eZ82jvzwDp8FxZPnJyxs5L02gRtLnW8gSDc2SbANbX2Oqp72D/Y2
+         Ru1q8K3YC2PN/exQtn8HyGhq3uI+RkRJk4kmGRz24yd4iPRGR44q/eOlW0dMxZ16uz
+         MvRuRPdQL/PkPMNsjmy0c1U6Kdpvczcxr6rdssQHa/Zt6dCGsND8k17bKN1pouKZot
+         ZZhkFLGBotopTEe7jGmAZ7kQTmep8z5RNRUZQrERPC7pAsvBy9vePShDBJPk6tMSd2
+         QtvXzl1XLzvrls/NknownTosjLDAYgMNCSmp222cDw4LFEcJ552cQG1aoI7IIvBQUq
+         O6JQFQSgBIWpQ==
+Date:   Wed, 1 Apr 2020 18:57:06 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: linux-next: build failure after merge of the gpio tree
+Message-ID: <20200401185706.464bee26@canb.auug.org.au>
+In-Reply-To: <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
+References: <20200401151904.6948af20@canb.auug.org.au>
+        <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/horQwCCD3=O_VL_8S_LhHaQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Wednesday, April 1, 2020 3:38 PM
-> 
->  > From: Tian, Kevin <kevin.tian@intel.com>
-> > Sent: Monday, March 30, 2020 7:49 PM
-> > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
-> > Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
-> > userspace
-> >
-> > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > Sent: Sunday, March 22, 2020 8:32 PM
-> > >
-> > > From: Liu Yi L <yi.l.liu@intel.com>
-> > >
-> > > VFIO exposes IOMMU nesting translation (a.k.a dual stage translation)
-> > > capability to userspace. Thus applications like QEMU could support
-> > > vIOMMU with hardware's nesting translation capability for pass-through
-> > > devices. Before setting up nesting translation for pass-through
-> > > devices, QEMU and other applications need to learn the supported
-> > > 1st-lvl/stage-1 translation structure format like page table format.
-> > >
-> > > Take vSVA (virtual Shared Virtual Addressing) as an example, to
-> > > support vSVA for pass-through devices, QEMU setup nesting translation
-> > > for pass- through devices. The guest page table are configured to host
-> > > as 1st-lvl/
-> > > stage-1 page table. Therefore, guest format should be compatible with
-> > > host side.
-> > >
-> > > This patch reports the supported 1st-lvl/stage-1 page table format on
-> > > the current platform to userspace. QEMU and other alike applications
-> > > should use this format info when trying to setup IOMMU nesting
-> > > translation on host IOMMU.
-> > >
-> > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > ---
-> > >  drivers/vfio/vfio_iommu_type1.c | 56
-> > > +++++++++++++++++++++++++++++++++++++++++
-> > >  include/uapi/linux/vfio.h       |  1 +
-> > >  2 files changed, 57 insertions(+)
-> > >
-> > > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > > b/drivers/vfio/vfio_iommu_type1.c index 9aa2a67..82a9e0b 100644
-> > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > @@ -2234,11 +2234,66 @@ static int
-> vfio_iommu_type1_pasid_free(struct
-> > > vfio_iommu *iommu,
-> > >  	return ret;
-> > >  }
-> > >
-> > > +static int vfio_iommu_get_stage1_format(struct vfio_iommu *iommu,
-> > > +					 u32 *stage1_format)
-> > > +{
-> > > +	struct vfio_domain *domain;
-> > > +	u32 format = 0, tmp_format = 0;
-> > > +	int ret;
-> > > +
-> > > +	mutex_lock(&iommu->lock);
-> > > +	if (list_empty(&iommu->domain_list)) {
-> > > +		mutex_unlock(&iommu->lock);
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	list_for_each_entry(domain, &iommu->domain_list, next) {
-> > > +		if (iommu_domain_get_attr(domain->domain,
-> > > +			DOMAIN_ATTR_PASID_FORMAT, &format)) {
-> > > +			ret = -EINVAL;
-> > > +			format = 0;
-> > > +			goto out_unlock;
-> > > +		}
-> > > +		/*
-> > > +		 * format is always non-zero (the first format is
-> > > +		 * IOMMU_PASID_FORMAT_INTEL_VTD which is 1). For
-> > > +		 * the reason of potential different backed IOMMU
-> > > +		 * formats, here we expect to have identical formats
-> > > +		 * in the domain list, no mixed formats support.
-> > > +		 * return -EINVAL to fail the attempt of setup
-> > > +		 * VFIO_TYPE1_NESTING_IOMMU if non-identical formats
-> > > +		 * are detected.
-> > > +		 */
-> > > +		if (tmp_format && tmp_format != format) {
-> > > +			ret = -EINVAL;
-> > > +			format = 0;
-> > > +			goto out_unlock;
-> > > +		}
-> > > +
-> > > +		tmp_format = format;
-> > > +	}
-> >
-> > this path is invoked only in VFIO_IOMMU_GET_INFO path. If we don't want
-> to
-> > assume the status quo that one container holds only one device w/
-> vIOMMU
-> > (the prerequisite for vSVA), looks we also need check the format
-> > compatibility when attaching a new group to this container?
-> 
-> right. if attaching to a nesting type container (vfio_iommu.nesting bit
-> indicates it), it should check if it is compabile with prior domains in
-> the domain list. But if it is the first one attached to this container,
-> it's fine. is it good?
+--Sig_/horQwCCD3=O_VL_8S_LhHaQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-yes, but my point is whether we should check the format compatibility
-in the attach path...
+Hi Geert,
 
-> 
-> > > +	ret = 0;
-> > > +
-> > > +out_unlock:
-> > > +	if (format)
-> > > +		*stage1_format = format;
-> > > +	mutex_unlock(&iommu->lock);
-> > > +	return ret;
-> > > +}
-> > > +
-> > >  static int vfio_iommu_info_add_nesting_cap(struct vfio_iommu *iommu,
-> > >  					 struct vfio_info_cap *caps)
-> > >  {
-> > >  	struct vfio_info_cap_header *header;
-> > >  	struct vfio_iommu_type1_info_cap_nesting *nesting_cap;
-> > > +	u32 formats = 0;
-> > > +	int ret;
-> > > +
-> > > +	ret = vfio_iommu_get_stage1_format(iommu, &formats);
-> > > +	if (ret) {
-> > > +		pr_warn("Failed to get stage-1 format\n");
-> > > +		return ret;
-> > > +	}
-> > >
-> > >  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
-> > >  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING,
-> > > 1);
-> > > @@ -2254,6 +2309,7 @@ static int
-> > > vfio_iommu_info_add_nesting_cap(struct
-> > > vfio_iommu *iommu,
-> > >  		/* nesting iommu type supports PASID requests (alloc/free)
-> */
-> > >  		nesting_cap->nesting_capabilities |=
-> VFIO_IOMMU_PASID_REQS;
-> > >  	}
-> > > +	nesting_cap->stage1_formats = formats;
-> > >
-> > >  	return 0;
-> > >  }
-> > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > index ed9881d..ebeaf3e 100644
-> > > --- a/include/uapi/linux/vfio.h
-> > > +++ b/include/uapi/linux/vfio.h
-> > > @@ -763,6 +763,7 @@ struct vfio_iommu_type1_info_cap_nesting {
-> > >  	struct	vfio_info_cap_header header;
-> > >  #define VFIO_IOMMU_PASID_REQS	(1 << 0)
-> > >  	__u32	nesting_capabilities;
-> > > +	__u32	stage1_formats;
+On Wed, 1 Apr 2020 09:49:00 +0200 Geert Uytterhoeven <geert@linux-m68k.org>=
+ wrote:
+>
+> Thanks for your patch, which I assume is a quick build fix.
+
+Yep, rather than reverting the other patches again.
+
+> I see LinusW has already applied it...
+>=20
+> > --- a/drivers/pinctrl/devicetree.c
+> > +++ b/drivers/pinctrl/devicetree.c
+> > @@ -103,6 +103,7 @@ struct pinctrl_dev *of_pinctrl_get(struct device_no=
+de *np)
+> >  {
+> >         return get_pinctrl_dev_from_of_node(np);
+> >  }
+> > +EXPORT_SYMBOL_GPL(of_pinctrl_get);
 > >
-> > do you plan to support multiple formats? If not, use singular name.
-> 
-> I do have such plan. e.g. it may be helpful when one day a platform can
-> support multiple formats.
-> 
-> Regards,
-> Yi Liu
+> >  static int dt_to_map_one_config(struct pinctrl *p,
+> >                                 struct pinctrl_dev *hog_pctldev, =20
+>=20
+> As exporting symbols has its (space) cost, and of_pinctrl_get() is a tiny
+> function, what about making it an inline function in
+> include/linux/pinctrl/pinctrl.h instead?
+
+Makes sense to me.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/horQwCCD3=O_VL_8S_LhHaQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6ESVIACgkQAVBC80lX
+0GxUBAf/UF08ITAeC5ymlwSt/bIRk+QQQ4XDhvCh03sypQxzc+5PFaTNanv+nZtS
+OHMSe5343RHvX6FFWO/jh0IRdVicLhWBGJmqWscxbuVs2wepMAz7cVgiW+L75g3Q
+JNOHFLClPWeeIn2RYTGQRPojASMfjUbarGZcUzLgOtV+vjARmGxFILuRXO1lpTck
+urOm1i7Djwa+QdAX8PuYU/z4hI24S7aytnXTtBgqPTDdyUribpPeNipe1P51Ahdi
+KS640N3SdpOktuyld1sk29GgOhaTC+pMYPbwlRJ8Cg7mCIH5pjjPwnAsbvnQhPkv
+WHsNDXy0cUxfPCRx9gSpknQDgZfPDg==
+=gRhl
+-----END PGP SIGNATURE-----
+
+--Sig_/horQwCCD3=O_VL_8S_LhHaQ--
