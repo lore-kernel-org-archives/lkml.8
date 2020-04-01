@@ -2,349 +2,218 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3E0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C877C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E95206D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:53:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LYHBS0tE"
+	by mail.kernel.org (Postfix) with ESMTP id 73EE0206D3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387481AbgDAXxc (ORCPT
+        id S2387485AbgDAXyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:53:32 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:61060 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732989AbgDAXxb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:53:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585785210; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=AxlPvDNFAnlaO5kN8Ue2z7R5/mFEDs7cI6QoEP369TQ=;
- b=LYHBS0tEcWUN0l1GVLTMOp/novz3ZxOsLKMxUOWT6hz0OAOC3SmMS3x+4Ym17/e78M6hnmaA
- g2Vgt0Q6Kl43ToJ31Vi+GhqCCkKXEWG3PXxiTXN73fFljxSkXUhnMN3MSHWS7h83zHHv0hhB
- vdNJnW8tj2NEHtJuFm1Cnf8EMW4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e852976.7fa860237378-smtp-out-n04;
- Wed, 01 Apr 2020 23:53:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9B97DC433BA; Wed,  1 Apr 2020 23:53:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92968C433F2;
-        Wed,  1 Apr 2020 23:53:25 +0000 (UTC)
+        Wed, 1 Apr 2020 19:54:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38802 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732682AbgDAXyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 19:54:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9C669ACE3;
+        Wed,  1 Apr 2020 23:54:14 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>
+Date:   Thu, 02 Apr 2020 10:54:07 +1100
+Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] Deprecate NR_UNSTABLE_NFS, use NR_WRITEBACK
+In-Reply-To: <87sghmyd8v.fsf@notabene.neil.brown.name>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name>
+Message-ID: <87pncqyd7k.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 01 Apr 2020 16:53:25 -0700
-From:   rishabhb@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        sidgup@codeaurora.org
-Subject: Re: [PATCH v2 1/2] remoteproc: Add character device interface
-In-Reply-To: <20200401200827.GF267644@minitux>
-References: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
- <20200401200827.GF267644@minitux>
-Message-ID: <27cae9aae50385f9123cb0987edeec1c@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-01 13:08, Bjorn Andersson wrote:
-> On Tue 31 Mar 17:03 PDT 2020, Rishabh Bhatnagar wrote:
-> 
->> Add the character device interface for userspace applications.
->> This interface can be used in order to boot up and shutdown
->> remote subsystems. Currently there is only a sysfs interface
->> which the userspace clients can use. If a usersapce application
->> crashes after booting the remote processor does not get any
->> indication about the crash. It might still assume that the
->> application is running. For example modem uses remotefs service
->> to fetch data from disk/flash memory. If the remotefs service
->> crashes, modem keeps on requesting data which might lead to a
->> crash. Adding a character device interface makes the remote
->> processor tightly coupled with the user space application.
->> A crash of the application leads to a close on the file descriptors
->> therefore shutting down the remoteproc.
->> 
->> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->> ---
->>  drivers/remoteproc/Kconfig               |   9 +++
->>  drivers/remoteproc/Makefile              |   1 +
->>  drivers/remoteproc/remoteproc_cdev.c     | 100 
->> +++++++++++++++++++++++++++++++
->>  drivers/remoteproc/remoteproc_internal.h |  22 +++++++
->>  include/linux/remoteproc.h               |   2 +
->>  5 files changed, 134 insertions(+)
->>  create mode 100644 drivers/remoteproc/remoteproc_cdev.c
->> 
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index de3862c..6374b79 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -14,6 +14,15 @@ config REMOTEPROC
->> 
->>  if REMOTEPROC
->> 
->> +config REMOTEPROC_CDEV
->> +	bool "Remoteproc character device interface"
->> +	help
->> +	  Say y here to have a character device interface for Remoteproc
->> +	  framework. Userspace can boot/shutdown remote processors through
->> +	  this interface.
->> +
->> +	  It's safe to say N if you don't want to use this interface.
->> +
->>  config IMX_REMOTEPROC
->>  	tristate "IMX6/7 remoteproc support"
->>  	depends on ARCH_MXC
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index e30a1b1..b7d4f77 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
->>  remoteproc-y				+= remoteproc_sysfs.o
->>  remoteproc-y				+= remoteproc_virtio.o
->>  remoteproc-y				+= remoteproc_elf_loader.o
->> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
->>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->>  obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
->>  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->> diff --git a/drivers/remoteproc/remoteproc_cdev.c 
->> b/drivers/remoteproc/remoteproc_cdev.c
->> new file mode 100644
->> index 0000000..8182bd1
->> --- /dev/null
->> +++ b/drivers/remoteproc/remoteproc_cdev.c
->> @@ -0,0 +1,100 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Character device interface driver for Remoteproc framework.
->> + *
->> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/cdev.h>
->> +#include <linux/fs.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/remoteproc.h>
->> +
->> +#include "remoteproc_internal.h"
->> +
->> +#define NUM_RPROC_DEVICES	64
->> +static dev_t rproc_cdev;
->> +static DEFINE_IDA(cdev_minor_ida);
->> +
->> +static int rproc_cdev_open(struct inode *inode, struct file *file)
->> +{
->> +	struct rproc *rproc;
->> +
->> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
-> 
-> I would prefer this to be a on a single line
-> 	struct rproc *rproc = container_of(..);
-> 
->> +
->> +	if (!rproc)
-> 
-> I don't think this is possible.
-> 
->> +		return -EINVAL;
->> +
->> +	if (rproc->state == RPROC_RUNNING)
->> +		return -EBUSY;
->> +
-> 
-> This is racy, it's possible that state wasn't RUNNING, but at the time
-> we're entering rproc_boot() it is - or as Clement correctly points out,
-> the core might be in CRASHED state.
-> 
-I can check for OFFLINE state and only then call rproc_boot.
-But we would need to check inside rproc_boot if the state was OFFLINE as 
-well.
-Same issue we might need to fix for sysfs interface?
->> +	return rproc_boot(rproc);
-> 
-> Feels like we would want a variant of rproc_boot() that doesn't do
-> refcounting... Maybe a rproc_boot_exclusive() that takes the mutex and
-> then fails if the core is refcounted already?
-> 
->> +}
->> +
->> +static int rproc_cdev_release(struct inode *inode, struct file *file)
->> +{
->> +	struct rproc *rproc;
->> +
->> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->> +
->> +	if (!rproc || rproc->state != RPROC_RUNNING)
->> +		return -EINVAL;
-> 
-> rproc can't be NULL here and the core might be in CRASHED state here, 
-> in
-> which case we still want to abort that and shut down the core...
-> 
-> Note that in the event of calling close() the return value is discarded
-> on the way to userspace and in the event that the process is killed we
-> still expect the remoteproc to be shut down (if the refcount hit 0).
-> 
->> +
->> +	rproc_shutdown(rproc);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct file_operations rproc_fops = {
->> +	.open = rproc_cdev_open,
->> +	.release = rproc_cdev_release,
->> +};
->> +
->> +int rproc_char_device_add(struct rproc *rproc)
->> +{
->> +	int ret, minor;
->> +	dev_t cdevt;
->> +
->> +	minor = ida_simple_get(&cdev_minor_ida, 0, NUM_RPROC_DEVICES,
-> 
-> Can't you use rproc->index as minor?
-> 
->> +			       GFP_KERNEL);
->> +	if (minor < 0) {
->> +		dev_err(&rproc->dev, "%s: No more minor numbers left! rc:%d\n",
->> +			__func__, minor);
->> +		return -ENODEV;
->> +	}
->> +
->> +	cdev_init(&rproc->char_dev, &rproc_fops);
->> +	rproc->char_dev.owner = THIS_MODULE;
->> +
->> +	cdevt = MKDEV(MAJOR(rproc_cdev), minor);
->> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
->> +	if (ret < 0)
->> +		ida_simple_remove(&cdev_minor_ida, minor);
->> +
->> +	rproc->dev.devt = cdevt;
->> +	return ret;
->> +}
->> +
->> +void rproc_char_device_remove(struct rproc *rproc)
->> +{
->> +	__unregister_chrdev(MAJOR(rproc->dev.devt), MINOR(rproc->dev.devt), 
->> 1,
->> +			    "rproc");
-> 
-> Shouldn't this be cdev_del()?
-_unregist_chrdev should delete the cdev internally.
-> 
->> +	ida_simple_remove(&cdev_minor_ida, MINOR(rproc->dev.devt));
->> +}
->> +
->> +void __init rproc_init_cdev(void)
->> +{
->> +	int ret;
->> +
->> +	ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES, 
->> "rproc");
->> +	if (ret < 0) {
->> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
->> +		return;
-> 
-> Drop this return, and hence the {}
-> 
->> +	}
->> +}
->> +
->> +void __exit rproc_exit_cdev(void)
->> +{
->> +	__unregister_chrdev(MAJOR(rproc_cdev), 0, NUM_RPROC_DEVICES, 
->> "rproc");
-> 
-> unregister_chrdev_region();
-> 
-we might want to delete character devices as well, which is done by 
-__unregister_chrdev
->> +}
->> diff --git a/drivers/remoteproc/remoteproc_internal.h 
->> b/drivers/remoteproc/remoteproc_internal.h
->> index 493ef92..28d61a1 100644
->> --- a/drivers/remoteproc/remoteproc_internal.h
->> +++ b/drivers/remoteproc/remoteproc_internal.h
->> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char 
->> *name, struct rproc *rproc,
->>  int rproc_init_sysfs(void);
->>  void rproc_exit_sysfs(void);
->> 
->> +#ifdef CONFIG_REMOTEPROC_CDEV
->> +void rproc_init_cdev(void);
->> +void rproc_exit_cdev(void);
->> +int rproc_char_device_add(struct rproc *rproc);
->> +void rproc_char_device_remove(struct rproc *rproc);
->> +#else
->> +static inline void rproc_init_cdev(void)
->> +{
->> +}
->> +static inline void rproc_exit_cdev(void)
->> +{
->> +}
->> +static inline int rproc_char_device_add(struct rproc *rproc)
->> +{
->> +	return 0;
->> +}
->> +static inline void  rproc_char_device_remove(struct rproc *rproc)
->> +{
->> +}
->> +#endif
->> +
->>  void rproc_free_vring(struct rproc_vring *rvring);
->>  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->> 
->> @@ -63,6 +84,7 @@ struct resource_table 
->> *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
->>  struct rproc_mem_entry *
->>  rproc_find_carveout_by_name(struct rproc *rproc, const char *name, 
->> ...);
->> 
->> +
->>  static inline
->>  int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware 
->> *fw)
->>  {
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index 16ad666..c4ca796 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -37,6 +37,7 @@
->> 
->>  #include <linux/types.h>
->>  #include <linux/mutex.h>
->> +#include <linux/cdev.h>
->>  #include <linux/virtio.h>
->>  #include <linux/completion.h>
->>  #include <linux/idr.h>
->> @@ -514,6 +515,7 @@ struct rproc {
->>  	bool auto_boot;
->>  	struct list_head dump_segments;
->>  	int nb_vdev;
->> +	struct cdev char_dev;
->>  };
->> 
->>  /**
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+After an NFS page has been written it is considered "unstable" until a
+COMMIT request succeeds.  If the COMMIT fails, the page will be
+re-written.
+
+These "unstable" pages are currently accounted as "reclaimable",
+either in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
+'reclaimable' count.  This might have made sense when sending the COMMIT
+required a separate action by the VFS/MM (e.g. releasepage() used to
+send a COMMIT).  However now that all writes generated by ->writepages()
+will automatically be followed by a COMMIT, it makes more sense to
+treat them as writeback pages.
+
+So this page deprecates NR_UNSTABLE_NFS and accounts unstable pages in
+NR_WRITEBACK and WB_WRITEBACK.
+
+A particular effect of this change is that when
+wb_check_background_flush() calls wb_over_bg_threshold(), the latter
+will report 'true' a lot less often as the 'unstable' pages are no
+longer considered 'dirty' (and there is nothing that writeback can do
+about them anyway).
+
+Currently wb_check_background_flush() will trigger writeback to NFS even
+when there are relatively few dirty pages (if there are lots of unstable
+pages), this can result in small writes going to the server (10s of
+Kilobytes rather than a Megabyte) which hurts throughput.
+With this that, there are fewer writes which are each larger on average.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ fs/fs-writeback.c      | 1 -
+ fs/nfs/internal.h      | 7 +++++--
+ fs/nfs/write.c         | 4 ++--
+ include/linux/mmzone.h | 2 +-
+ mm/memcontrol.c        | 1 -
+ mm/page-writeback.c    | 7 ++-----
+ 6 files changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index 76ac9c7d32ec..c5bdf46e3b4b 100644
+=2D-- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -1070,7 +1070,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_=
+info *bdi,
+ static unsigned long get_nr_dirty_pages(void)
+ {
+ 	return global_node_page_state(NR_FILE_DIRTY) +
+=2D		global_node_page_state(NR_UNSTABLE_NFS) +
+ 		get_nr_dirty_inodes();
+ }
+=20
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index f80c47d5ff27..ba1ff5adeccd 100644
+=2D-- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -660,8 +660,11 @@ void nfs_mark_page_unstable(struct page *page, struct =
+nfs_commit_info *cinfo)
+ 	if (!cinfo->dreq) {
+ 		struct inode *inode =3D page_file_mapping(page)->host;
+=20
+=2D		inc_node_page_state(page, NR_UNSTABLE_NFS);
+=2D		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_RECLAIMABLE);
++		/* This page is really still in write-back - just that the
++		 * writeback is happening on the server now.
++		 */
++		inc_node_page_state(page, NR_WRITEBACK);
++		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
+ 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
+ 	}
+ }
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index c478b772cc49..2e15a56620b3 100644
+=2D-- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -958,9 +958,9 @@ nfs_mark_request_commit(struct nfs_page *req, struct pn=
+fs_layout_segment *lseg,
+ static void
+ nfs_clear_page_commit(struct page *page)
+ {
+=2D	dec_node_page_state(page, NR_UNSTABLE_NFS);
++	dec_node_page_state(page, NR_WRITEBACK);
+ 	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
+=2D		    WB_RECLAIMABLE);
++		    WB_WRITEBACK);
+ }
+=20
+ /* Called holding the request lock on @req */
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 462f6873905a..227fcb8cd0e6 100644
+=2D-- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -237,7 +237,7 @@ enum node_stat_item {
+ 	NR_FILE_THPS,
+ 	NR_FILE_PMDMAPPED,
+ 	NR_ANON_THPS,
+=2D	NR_UNSTABLE_NFS,	/* NFS unstable pages */
++	NR_UNSTABLE_NFS,	/* NFS unstable pages - DEPRECATED DO NOT USE */
+ 	NR_VMSCAN_WRITE,
+ 	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
+ 	NR_DIRTIED,		/* page dirtyings since bootup */
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 7ddf91c4295f..fad8e8a23235 100644
+=2D-- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4317,7 +4317,6 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, un=
+signed long *pfilepages,
+=20
+ 	*pdirty =3D memcg_exact_page_state(memcg, NR_FILE_DIRTY);
+=20
+=2D	/* this should eventually include NR_UNSTABLE_NFS */
+ 	*pwriteback =3D memcg_exact_page_state(memcg, NR_WRITEBACK);
+ 	*pfilepages =3D memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
+ 			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 2afb09fa2fe0..d1f03c799d11 100644
+=2D-- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -504,7 +504,6 @@ bool node_dirty_ok(struct pglist_data *pgdat)
+ 	unsigned long nr_pages =3D 0;
+=20
+ 	nr_pages +=3D node_page_state(pgdat, NR_FILE_DIRTY);
+=2D	nr_pages +=3D node_page_state(pgdat, NR_UNSTABLE_NFS);
+ 	nr_pages +=3D node_page_state(pgdat, NR_WRITEBACK);
+=20
+ 	return nr_pages <=3D limit;
+@@ -1595,8 +1594,7 @@ static void balance_dirty_pages(struct bdi_writeback =
+*wb,
+ 		 * written to the server's write cache, but has not yet
+ 		 * been flushed to permanent storage.
+ 		 */
+=2D		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY) +
+=2D					global_node_page_state(NR_UNSTABLE_NFS);
++		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY);
+ 		gdtc->avail =3D global_dirtyable_memory();
+ 		gdtc->dirty =3D nr_reclaimable + global_node_page_state(NR_WRITEBACK);
+=20
+@@ -1940,8 +1938,7 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
+ 	 * as we're trying to decide whether to put more under writeback.
+ 	 */
+ 	gdtc->avail =3D global_dirtyable_memory();
+=2D	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY) +
+=2D		      global_node_page_state(NR_UNSTABLE_NFS);
++	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY);
+ 	domain_dirty_limits(gdtc);
+=20
+ 	if (gdtc->dirty > gdtc->bg_thresh)
+=2D-=20
+2.26.0
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6FKZ8ACgkQOeye3VZi
+gblLJA/9Gfox05USaTaiOe2VF+TKwLQmcTQoIIkSD/9KH4RCz4kenbeVDitMuU3G
+0sNCkE6Ug4aWGQtHsJ+o9IhdwuLG8mN+4GfNt1fRoV3/JUEmNyIaE9HB5ZYAyOCK
+ahLPXBkhKW2ISGyweva/ic1FIsEIFz6NmOaUFM5ulFLMfoSRTTMTyUbZGZrUzVbI
+C6S9PXACbOYkVmSXxUOMcO04pleJzhyB0zkykWPkDenwleB4rBCw6I6YOdpf1EXp
+HCMMXwJTfzgFYXuN5wClvRxp3SSsWoyR/do+IR+I7xGRFotHT4f3zdM85f4PhEeI
+LBoGykHo/c38RySt3fnraDiGrokHGM3n8SIxVIHCnu5lssCuZgMW9QEmX3R1NBIs
+3U/fXAbSiGkXYAWscDKQhOMFZFBvLMSdu719EcbsuuRuMMNKvjNyHXiQyLdiX/hn
+veUgBytz/7fio+WfhC2h+xLZKqkLTU0tuO4rSNopADnZfWl9ieQPE4G88eP6LeIS
+/WNgdmY1Mh2/0AsZtny4oWQskpm+T8ahAcS6zz5MlQu9Qtk7hxMEbBIYkHrepH8D
+D6MMJMCEViCF2UZUb+FHNjbqJeVoaD8VvuAQL9PHVL72Kxg1N0HUOI25piszdGmI
+q4Dq9wkeEzMt6KnFivkqRMQJClziBcQe6Qk0/7izZCBdPWTLORk=
+=+oK6
+-----END PGP SIGNATURE-----
+--=-=-=--
