@@ -2,162 +2,116 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D08BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227A1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEE9206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E642320787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:45:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PSP5z55B"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K/gEutRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733083AbgDAOoZ (ORCPT
+        id S1733093AbgDAOpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:44:25 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45168 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732897AbgDAOoW (ORCPT
+        Wed, 1 Apr 2020 10:45:31 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:32832 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732897AbgDAOpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:44:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585752261;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3BPU8cwn4wg2zbZqCCchSQUn3Ax59cAUAtMjE3S7aOY=;
-        b=PSP5z55BGcrTVpl0VbzMHuDmBkFWkSg3KSrqniNJoi+lKEAQ0Xl6xYs/HVudP0WupAlOe0
-        VgL/jFyoImMmFJbid5Mg7/Wu36bsxKKGDkGcm4GRzVycDSY/V0NrKDp0QwtLn9lzip6q8u
-        x6C7wwkR1i+zoTgMiVQfaCK7k186VPE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-bqPjN9Y6N3-rZRk9X2Igbg-1; Wed, 01 Apr 2020 10:44:18 -0400
-X-MC-Unique: bqPjN9Y6N3-rZRk9X2Igbg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DDBF193578B;
-        Wed,  1 Apr 2020 14:44:15 +0000 (UTC)
-Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56B7E98A53;
-        Wed,  1 Apr 2020 14:43:58 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <20200401092004-mutt-send-email-mst@kernel.org>
- <6b4d169a-9962-6014-5423-1507059343e9@redhat.com>
- <20200401100954-mutt-send-email-mst@kernel.org>
- <3dd3b7e7-e3d9-dba4-00fc-868081f95ab7@redhat.com>
- <20200401103659-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <12f0ff8f-cdf2-9aac-883c-48c39138b7ea@redhat.com>
-Date:   Wed, 1 Apr 2020 22:43:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 10:45:31 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031EhrW0070278;
+        Wed, 1 Apr 2020 14:45:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=sCJYoI8k6b3QVvtYdeNl6B+/zvls9nEm6ZlXsvG8LBY=;
+ b=K/gEutRunVUlx7PC8FLrMH7eM0gI0XsGimzCeXdUiKSFF35+aJFQYz/41eLTPOB97Qs3
+ yA01XZTN8BNz2qBLDcjY3dXkURtOSykowTG2tLWcXyZgwbviLvi5bnggPjg6iBhcCmcK
+ cZmspK87XmtK3BXpDXkGaF3RKXLXII90UuDwDX83yrqXCr1JyOzt8TclaJr3AQuvllD3
+ g0GVQzBnB6Ot/xvgUHA8QWWRd6J9JB11N2RPW4SEpirJDST+kbcBP/lfgGNDhJR4Z9bw
+ TnnqmLTnsk01PAgKhHL/OrE4FvEmc0UeVthi46a2iNy6dQGr+zI9NY1Otm/mwJebP6Ei KA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 303yun8gjy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 14:45:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031EgH8F030718;
+        Wed, 1 Apr 2020 14:45:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 302g4tvqvj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 14:45:14 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 031EjAJJ026251;
+        Wed, 1 Apr 2020 14:45:10 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 Apr 2020 07:45:09 -0700
+Date:   Wed, 1 Apr 2020 10:45:29 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Alexander Duyck <alexander.duyck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Yiqian Wei <yiwei@redhat.com>
+Subject: Re: [PATCH v1 0/2] mm/page_alloc: fix stalls/soft lockups with huge
+ VMs
+Message-ID: <20200401144529.7zkqq4rfdnitg32h@ca-dmjordan1.us.oracle.com>
+References: <20200401104156.11564-1-david@redhat.com>
+ <596d593e-7f36-0e24-6c67-311bd6971e89@redhat.com>
+ <CAM9Jb+hYPUZXVLr2T8x6Njcscw_+W0e2SCmr_B1fLZuOwgLZuw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401103659-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9Jb+hYPUZXVLr2T8x6Njcscw_+W0e2SCmr_B1fLZuOwgLZuw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9577 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9577 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 01, 2020 at 04:31:51PM +0200, Pankaj Gupta wrote:
+> > On 01.04.20 12:41, David Hildenbrand wrote:
+> > > Two fixes for misleading stall messages / soft lockups with huge nodes /
+> > > zones during boot without CONFIG_PREEMPT.
+> > >
+> > > David Hildenbrand (2):
+> > >   mm/page_alloc: fix RCU stalls during deferred page initialization
+> > >   mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
+> > >
+> > >  mm/page_alloc.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> >
+> > Patch #1 requires "[PATCH v3] mm: fix tick timer stall during deferred
+> > page init"
+> >
+> > https://lkml.kernel.org/r/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+> 
+> Thanks! Took me some time to figure it out.
 
-On 2020/4/1 =E4=B8=8B=E5=8D=8810:39, Michael S. Tsirkin wrote:
->> >From 9b3a5d23b8bf6b0a11e65e688335d782f8e6aa5c Mon Sep 17 00:00:00 200=
-1
->> From: Jason Wang<jasowang@redhat.com>
->> Date: Wed, 1 Apr 2020 22:17:27 +0800
->> Subject: [PATCH] vhost: let CONFIG_VHOST to be selected by drivers
->>
->> The defconfig on some archs enable vhost_net or vhost_vsock by
->> default. So instead of adding CONFIG_VHOST=3Dm to all of those files,
->> simply letting CONFIG_VHOST to be selected by all of the vhost
->> drivers. This fixes the build on the archs with CONFIG_VHOST_NET=3Dm i=
-n
->> their defconfig.
->>
->> Signed-off-by: Jason Wang<jasowang@redhat.com>
->> ---
->>   drivers/vhost/Kconfig | 15 +++++++++++----
->>   1 file changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
->> index 2523a1d4290a..362b832f5338 100644
->> --- a/drivers/vhost/Kconfig
->> +++ b/drivers/vhost/Kconfig
->> @@ -11,19 +11,23 @@ config VHOST_RING
->>   	  This option is selected by any driver which needs to access
->>   	  the host side of a virtio ring.
->>  =20
->> -menuconfig VHOST
->> -	tristate "Host kernel accelerator for virtio (VHOST)"
->> -	depends on EVENTFD
->> +config VHOST
->> +	tristate
->>   	select VHOST_IOTLB
->>   	help
->>   	  This option is selected by any driver which needs to access
->>   	  the core of vhost.
->>  =20
->> -if VHOST
->> +menuconfig VHOST_MENU
->> +	bool "VHOST drivers"
->> +	default y
->> +
->> +if VHOST_MENU
-> In fact this is similar to VIRTIO, and I wonder whether VIRTIO has also
-> been broken by
-> 	commit 7b95fec6d2ffa53f4a8d637b0f223644d458ea4e
-> 	Author: Vincent Legoll<vincent.legoll@gmail.com>
-> 	Date:   Sun Jan 7 12:33:56 2018 +0100
->
-> 	    virtio: make VIRTIO a menuconfig to ease disabling it all
->
-> I see lots of defconfigs set VIRTIO_PCI but not VIRTIO_MENU ...
-
-
-Probably not since VIRTIO_MENU has "default y"
-
-E.g for powerpc, I got:
-
-# make ARCH=3Dpowerpc defconfig
-*** Default configuration is based on 'ppc64_defconfig'
-#
-# No change to .config
-#
-# grep CONFIG_VIRTIO .config
-CONFIG_VIRTIO_BLK=3Dm
-CONFIG_VIRTIO_NET=3Dm
-CONFIG_VIRTIO_CONSOLE=3Dm
-CONFIG_VIRTIO=3Dm
-CONFIG_VIRTIO_MENU=3Dy
-CONFIG_VIRTIO_PCI=3Dm
-CONFIG_VIRTIO_PCI_LEGACY=3Dy
-# CONFIG_VIRTIO_VDPA is not set
-CONFIG_VIRTIO_BALLOON=3Dm
-# CONFIG_VIRTIO_INPUT is not set
-# CONFIG_VIRTIO_MMIO is not set
-# CONFIG_VIRTIO_FS is not set
-
-Thanks
-
+FYI, I'm planning to post an alternate version of that fix, hopefully today if
+all goes well with my testing.
