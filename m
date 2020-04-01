@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA52C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF444C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A22220784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6002A20784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759604;
-	bh=6QCiJe92C6d7clPEjD79k8RBuhcqQjqzeW6E0U7WrJY=;
+	s=default; t=1585759607;
+	bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VzgmLbfhqbap9xjPDzMynYs4Kvn5IG0amLYjvWU86EeywBDly5LKwv54hTM42gDuF
-	 /b5FyviN6TD9wuX5YviioHVutHcSfdeVgORposguoZ5X9W8zhzkqi4Q4Gk+uj2aRFI
-	 RBc2rOdgRp35NNr07PQ41kpgw+/IjrIzrhIoRWwo=
+	b=1HNyzoQUaJHPTj4EPWObt/mYf0TZZuGvv8Ul4lJvMAzVoKpupQIu9LGBx0I2NoWAx
+	 3UBlVVCON+YX+agO8fqBquojAuhwnEpweanA7SeR3QYx8kaIQNRiAsaL5PHkrX8Ni8
+	 L+9RWCrhgiy7FEFXa9MtfL8f7idup4FDpEhm1JpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388041AbgDAQqm (ORCPT
+        id S2387787AbgDAQqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48062 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389966AbgDAQqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:38 -0400
+        id S2388565AbgDAQqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C23320705;
-        Wed,  1 Apr 2020 16:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 057BF20705;
+        Wed,  1 Apr 2020 16:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759597;
-        bh=6QCiJe92C6d7clPEjD79k8RBuhcqQjqzeW6E0U7WrJY=;
+        s=default; t=1585759603;
+        bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mt+neDx+44BNos/yzhrjsi76b1RSlmb10yVKtT5GTg9WV1J+O+zosF52BuaTldEuZ
-         jKVY+caJOzXJrb2qUppOKMoACKW4RxJvp8L/Q0C2cdYiT5Ga/igTK/7IYlu9kczM8z
-         qQ1ozysE69h2v3WbbV+lewiNso/0sjhsxpDgoRng=
+        b=xcXHaqAHAy+rMT+prPhsJW17ffOTihpAEO6dBOf97CtJS84E6rnlq3sCmqBFRdPF4
+         YhAofT8/Iuyr+T056EJqJbg9J+s0h7Zeunxd0Y2Z0w5xSZFosX2aAWYkY6LQPMulz+
+         nvH6hSsCtwKkazEqzp4bIGY/q7ZWpBGZaZ7nGhoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Woody Suwalski <terraluna977@gmail.com>
-Subject: [PATCH 4.14 131/148] mac80211: fix authentication with iwlwifi/mvm
-Date:   Wed,  1 Apr 2020 18:18:43 +0200
-Message-Id: <20200401161604.952154480@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.14 133/148] vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
+Date:   Wed,  1 Apr 2020 18:18:45 +0200
+Message-Id: <20200401161605.103099023@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,37 +58,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit be8c827f50a0bcd56361b31ada11dc0a3c2fd240 upstream.
+commit e587e8f17433ddb26954f0edf5b2f95c42155ae9 upstream.
 
-The original patch didn't copy the ieee80211_is_data() condition
-because on most drivers the management frames don't go through
-this path. However, they do on iwlwifi/mvm, so we do need to keep
-the condition here.
+These two were macros. Switch them to static inlines, so that it's more
+understandable what they are doing.
 
-Cc: stable@vger.kernel.org
-Fixes: ce2e1ca70307 ("mac80211: Check port authorization in the ieee80211_tx_dequeue() case")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Woody Suwalski <terraluna977@gmail.com>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200219073951.16151-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/tx.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/vt/vt_ioctl.c |   29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -3457,7 +3457,8 @@ begin:
- 		 * Drop unicast frames to unauthorised stations unless they are
- 		 * EAPOL frames from the local station.
- 		 */
--		if (unlikely(!ieee80211_vif_is_mesh(&tx.sdata->vif) &&
-+		if (unlikely(ieee80211_is_data(hdr->frame_control) &&
-+			     !ieee80211_vif_is_mesh(&tx.sdata->vif) &&
- 			     tx.sdata->vif.type != NL80211_IFTYPE_OCB &&
- 			     !is_multicast_ether_addr(hdr->addr1) &&
- 			     !test_sta_flag(tx.sta, WLAN_STA_AUTHORIZED) &&
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -40,10 +40,25 @@
+ #include <linux/selection.h>
+ 
+ char vt_dont_switch;
+-extern struct tty_driver *console_driver;
+ 
+-#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+-#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
++static inline bool vt_in_use(unsigned int i)
++{
++	extern struct tty_driver *console_driver;
++
++	return console_driver->ttys[i] && console_driver->ttys[i]->count;
++}
++
++static inline bool vt_busy(int i)
++{
++	if (vt_in_use(i))
++		return true;
++	if (i == fg_console)
++		return true;
++	if (vc_is_sel(vc_cons[i].d))
++		return true;
++
++	return false;
++}
+ 
+ /*
+  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
+@@ -289,7 +304,7 @@ static int vt_disallocate(unsigned int v
+ 	int ret = 0;
+ 
+ 	console_lock();
+-	if (VT_BUSY(vc_num))
++	if (vt_busy(vc_num))
+ 		ret = -EBUSY;
+ 	else if (vc_num)
+ 		vc = vc_deallocate(vc_num);
+@@ -311,7 +326,7 @@ static void vt_disallocate_all(void)
+ 
+ 	console_lock();
+ 	for (i = 1; i < MAX_NR_CONSOLES; i++)
+-		if (!VT_BUSY(i))
++		if (!vt_busy(i))
+ 			vc[i] = vc_deallocate(i);
+ 		else
+ 			vc[i] = NULL;
+@@ -648,7 +663,7 @@ int vt_ioctl(struct tty_struct *tty,
+ 			state = 1;	/* /dev/tty0 is always open */
+ 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
+ 							++i, mask <<= 1)
+-				if (VT_IS_IN_USE(i))
++				if (vt_in_use(i))
+ 					state |= mask;
+ 			ret = put_user(state, &vtstat->v_state);
+ 		}
+@@ -661,7 +676,7 @@ int vt_ioctl(struct tty_struct *tty,
+ 	case VT_OPENQRY:
+ 		/* FIXME: locking ? - but then this is a stupid API */
+ 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
+-			if (! VT_IS_IN_USE(i))
++			if (!vt_in_use(i))
+ 				break;
+ 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
+ 		goto setint;		 
 
 
