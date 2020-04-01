@@ -2,94 +2,206 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23317C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB50C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34B22071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EAB20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:36:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pyJh3p8R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5JZaFqZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732545AbgDARfT (ORCPT
+        id S1732756AbgDARgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:35:19 -0400
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:44948 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732179AbgDARfT (ORCPT
+        Wed, 1 Apr 2020 13:36:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35172 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732137AbgDARgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:35:19 -0400
-Received: by mail-pj1-f73.google.com with SMTP id t7so682876pjb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 10:35:18 -0700 (PDT)
+        Wed, 1 Apr 2020 13:36:18 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d5so1093703wrn.2;
+        Wed, 01 Apr 2020 10:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=llCpE/mG94XbxehHcS3fpQs9KrEDWRDGRcAjU8ExJ4U=;
-        b=pyJh3p8RNFxDvJu+8EyOfw0HwzsQdsKrm1/g59jSqy3qBfZYhOVFUSj2vHGn0RxbBr
-         CZ921nfgLnwQcGXqh2nSa8URFicaU26aZjpXA59A79Erkmi3SxtxSFNayBBJ3axdaVF8
-         +FBufOynExC0/8Dx9l+nIO4C43a7imucMwVElT50ASuSOzVpF9i2fEeHE29vzdnP3iIC
-         6dhjx/a2Kw6UsLtEa7Dh1pmxz1gcQqVJMcAA2qfUxRfaGII3HpaYHx77bp91xj7Vb/G9
-         efL7biRNwPDgPqWp+W65Clg9EkyL/ojnsZ8r2SJFULs8QbExqfdyvZFCByfo+JUUu7y7
-         HJow==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=hVnY+iUETxvaa53KF+7YlVvPnziBRpZNnbmz4JpnwDM=;
+        b=d5JZaFqZvsBaz5wutHwy1rZca+QVneLtZZWozxNbYfuM2tiqTCszBuWe6nInOEc3rY
+         lizhQAnK4KprShLY0a0l90Q0NiZztyjhvmMS4PtF7S0QGyTvOkmlyIxoHcVH1JjiplXA
+         j+3tdCU0D9BMXbYagczDDHnaKTwIBx4JATf153M6Xdats0fOV/ALmNYVJ2rqrYVb2KSL
+         bQhvuO03+FnQ2ABKfnC2SDfEhwVcZMlQI9NwHqN09RlLmwOHRcVdt8CIWQx7s+m8U+/P
+         67SoOFv8dnNWzuJ9Jn0St6XJYQOLSeE/xyhQW3rIRCxVqzbwM5R/UkIW//dqpkKiTuRM
+         u5oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=llCpE/mG94XbxehHcS3fpQs9KrEDWRDGRcAjU8ExJ4U=;
-        b=tz1v2ix2eU//S8abbVr0bsh8u7OFRCKtLBJwf4yycpjZ+H7zxy/cGAqxlc3WwINSM/
-         12DCtasuWZmXk5Cr848rMzNoHG3nqUtuvs26S23mtTVcgssx8WynYm/1CiY3WMwoaphH
-         eSTpIHis8ajj3My7TTPPUzZosN9dgKUNhAvDpAcVDSpz7pk/dl3wyNFt4cUQw4Fc6rZV
-         o6X/Dd56drVNZ8mkJCxoLbYTeNVQ5E7QghVA7Qj/s5dsj8Y7Mm9cphSEOPsw8TfuC4cd
-         rb7EOMkaXIEp/HCY5zFeovqiuasRyKOUvY621+frWjEY7WVj00KigrEiT4GOvAceaJIh
-         /Qog==
-X-Gm-Message-State: AGi0PuYuMCvxkjZu0lEitZ4aWWb7Z6wSMMll8f+KPWD6sKhuxfsi4+YW
-        0Nxn94Q9u5HDmJqUI8zKJ3gFE2Eu+b+cO5fIo9Q=
-X-Google-Smtp-Source: APiQypJYzX3YC2rPgsuTQR6O2ggyRBoFiWW2pJcsW7nszWoPGrKojOUw/ges8p69MPhlPToU8Ed3Avvg9q/o/xvkHBE=
-X-Received: by 2002:a17:90a:bf03:: with SMTP id c3mr6413183pjs.12.1585762517679;
- Wed, 01 Apr 2020 10:35:17 -0700 (PDT)
-Date:   Wed,  1 Apr 2020 10:35:15 -0700
-In-Reply-To: <20200311024240.26834-1-elder@linaro.org>
-Message-Id: <20200401173515.142249-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200311024240.26834-1-elder@linaro.org>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     elder@linaro.org
-Cc:     arnd@arndb.de, bjorn.andersson@linaro.org, davem@davemloft.net,
-        johannes@sipsolutions.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org,
-        natechancellor@gmail.com, netdev@vger.kernel.org,
-        viro@zeniv.linux.org.uk
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=hVnY+iUETxvaa53KF+7YlVvPnziBRpZNnbmz4JpnwDM=;
+        b=DVMYeNpQDz725h0mcuv2qRNSxUymLAzGxNSHl8CELwfkKGcVhuoHjDKnNVaGeRfFaS
+         Ky1tJa6lca1pT4M7vZVhAzUFzrr1KbquhLsoZCY5xT9DuHQdOQ/OXxgnFc2Y1AjK5WEe
+         YG1KwWa3CCcwPOPpXdi4jYeEwLJUITw6ULfKcSGGr0BvVY8IQr7PLoJTrn7FV5QUIUv3
+         +q9N7RYtTMOz45Svp4BW0bUCKzm228aFmA336fab9tPlJ9cX5Y65USPyWdK99p007t7k
+         OsNPdcck+fdN8djvWkdlVyswBt0sT90R2fi/5dqz+uCPdyiZPNT5HJ83l6OP8Yq/OjFG
+         hxPQ==
+X-Gm-Message-State: ANhLgQ1R79JVW281aInusVNfSAPTkkM0TzwkqdV2VWwPhtLTmE/ycP+Y
+        BRVmN1vLKGCWjfNpRMJEQ7N5h0t4bHzL4qV/Lzw=
+X-Google-Smtp-Source: ADFU+vuHCaEDXrO+7S2ZUFMtSBmkn1kVDPA6g9ATFQebVzqniiUTC1RS/20eGcww7xUVGOka0VrAoCruRq/o7Ksf7wY=
+X-Received: by 2002:adf:a319:: with SMTP id c25mr27093384wrb.197.1585762575967;
+ Wed, 01 Apr 2020 10:36:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200401053913.216783-1-nickrterrell@gmail.com>
+In-Reply-To: <20200401053913.216783-1-nickrterrell@gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 1 Apr 2020 19:36:20 +0200
+Message-ID: <CA+icZUVBqpaeL3KYoasA9nViFEUofA6DUZ5=ZeV48Q19i1QNMQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/8] Add support for ZSTD-compressed kernel and initramfs
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
+        Chris Mason <clm@fb.com>, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, gregkh@linuxfoundation.org,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Define FIELD_MAX(), which supplies the maximum value that can be
-> represented by a field value.  Define field_max() as well, to go
-> along with the lower-case forms of the field mask functions.
-> 
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> Acked-by: Jakub Kicinski <kuba@kernel.org>
-> ---
-> v3: Rebased on latest netdev-next/master.
-> 
-> David, please take this into net-next as soon as possible.  When the
-> IPA code was merged the other day this prerequisite patch was not
-> included, and as a result the IPA driver fails to build.  Thank you.
-> 
->   See: https://lkml.org/lkml/2020/3/10/1839
-> 
-> 					-Alex
+On Wed, Apr 1, 2020 at 7:38 AM Nick Terrell <nickrterrell@gmail.com> wrote:
+>
+> From: Nick Terrell <terrelln@fb.com>
+>
+> Hi all,
+>
+> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+> are supported on all architectures. The ZSTD-compressed kernel is only
+> hooked up to x86 in this patch set.
+>
+> Zstandard requires slightly more memory during the kernel decompression
+> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> window size.
+>
+> Zstandard requires memory proprortional to the window size used during
+> compression for decompressing the ramdisk image, since streaming mode is
+> used. Newer versions of zstd (1.3.2+) list the window size of a file
+> with `zstd -lv <file>'. The absolute maximum amount of memory required
+> is just over 8 MB, but it can be controlled at compression time.
+>
+> This patch set has been boot tested with buildroot and QEMU based off
+> of linux-5.6-rc6.
+>
+> On i386 and x86_64 I have tested the following configurations:
+> * zstd compressed kernel and a separate zstd compressed initramfs
+> * zstd compressed kernel and a built-in zstd compressed initramfs
+> * gzip compressed kernel and a separate gzip compressed initramfs
+> * gzip compressed kernel and a built-in gzip compressed initramfs
+>
+> On arm and aarch64 I tested the same configurations, except that the kernel is
+> always gzip compressed.
+>
+> Facebook has been using v1 of these patches on x86_64 devices for more than 6
+> months. When we switched from a xz compressed initramfs to a zstd compressed
+> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+> seconds of boot time.
+>
+> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+> decompression time shrunk from 27 seconds to 8 seconds.
+>
+> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+> than the xz or lzma compressed kernels, and it decompresses faster than
+> everything except lz4. See the table below for the measurement of an x86_64
+> kernel ordered by compressed size:
+>
+> algo    size
+> xz       6,509,792
+> lzma     6,856,576
+> zstd     7,399,157
+> gzip     8,522,527
+> bzip     8,629,603
+> lzo      9,808,035
+> lz4     10,705,570
+> none    32,565,672
+>
+> v1 -> v2:
+> - Rebase
+>   - usr/Makefile and init/Kconfig were changed so the patches were updated
+> - No functional changes except to rebase
+> - Split the patches up into smaller chunks
+>
+> v2 -> v3:
+> - Add *.zst to the .gitignore in patch 8
+> - Style nits in patch 3
+> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+>   1 through 3
+>
+> v3 -> v4:
+> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+>   With this change I switch from malloc() to large_malloc() for the
+>   buffers.
+> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
+>   the max that zstd in the kernel supports.
+>
 
-In particular, this seems to now have regressed into mainline for the 5.7
-merge window as reported by Linaro's ToolChain Working Group's CI.
-Link: https://github.com/ClangBuiltLinux/linux/issues/963
+Hi Nick,
+
+thanks for version 4.
+
+I have re-tested against Linux v5.6 final and it boots fine with a
+ZSTD-compressed initramfs on Debian/testing AMD64.
+
+Regards,
+- Sedat -
+
+> Best,
+> Nick Terrell
+>
+> Adam Borowski (1):
+>   .gitignore: add ZSTD-compressed files
+>
+> Nick Terrell (7):
+>   lib: prepare zstd for preboot environment
+>   lib: prepare xxhash for preboot environment
+>   lib: add zstd support to decompress
+>   init: add support for zstd compressed kernel
+>   usr: add support for zstd compressed initramfs
+>   x86: bump ZO_z_extra_bytes margin for zstd
+>   x86: Add support for ZSTD compressed kernel
+>
+>  .gitignore                        |   1 +
+>  Documentation/x86/boot.rst        |   6 +-
+>  arch/x86/Kconfig                  |   1 +
+>  arch/x86/boot/compressed/Makefile |   5 +-
+>  arch/x86/boot/compressed/misc.c   |   4 +
+>  arch/x86/boot/header.S            |   8 +-
+>  arch/x86/include/asm/boot.h       |   6 +-
+>  include/linux/decompress/unzstd.h |  11 +
+>  init/Kconfig                      |  15 +-
+>  lib/Kconfig                       |   4 +
+>  lib/Makefile                      |   1 +
+>  lib/decompress.c                  |   5 +
+>  lib/decompress_unzstd.c           | 342 ++++++++++++++++++++++++++++++
+>  lib/xxhash.c                      |  21 +-
+>  lib/zstd/decompress.c             |   2 +
+>  lib/zstd/fse_decompress.c         |   9 +-
+>  lib/zstd/zstd_internal.h          |  14 +-
+>  scripts/Makefile.lib              |  15 ++
+>  usr/Kconfig                       |  20 ++
+>  usr/Makefile                      |   1 +
+>  20 files changed, 464 insertions(+), 27 deletions(-)
+>  create mode 100644 include/linux/decompress/unzstd.h
+>  create mode 100644 lib/decompress_unzstd.c
+>
+> --
+> 2.26.0
+>
