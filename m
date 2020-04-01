@@ -2,185 +2,221 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A88C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439CBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF50F20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E2D320776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="NfKKnWni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbgDANAR (ORCPT
+        id S1732610AbgDANAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:00:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:51222 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732252AbgDANAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:00:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5BCE30E;
-        Wed,  1 Apr 2020 06:00:16 -0700 (PDT)
-Received: from [10.57.60.204] (unknown [10.57.60.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6DF53F71E;
-        Wed,  1 Apr 2020 06:00:14 -0700 (PDT)
-Subject: Re: [RFC PATCH v2] iommu/virtio: Use page size bitmap supported by
- endpoint
-To:     Bharat Bhushan <bbhushan2@marvell.com>, jean-philippe@linaro.org,
-        joro@8bytes.org, mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        eric.auger.pro@gmail.com, eric.auger@redhat.com
-References: <20200401113804.21616-1-bbhushan2@marvell.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <b75beb74-89ce-fd6a-6207-3c0d7f479215@arm.com>
-Date:   Wed, 1 Apr 2020 14:00:13 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        Wed, 1 Apr 2020 09:00:31 -0400
+Received: from mail-mw2nam10on2071.outbound.protection.outlook.com ([40.107.94.71]:57568
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732545AbgDANAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 09:00:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WjQgrx9BpaWzWPXNiNBAjd/iWyx7HJD0+5EZ2hWqFSrffHbo7Wd4ULDTgJccTft/n6I96i0TFkwGzF2dtcdKOqZN5MaF3a43N2OJaStkkP+Ef9L1BCSLv+jYsFrCJdpTx/UeFoFqFfMoG5myP91RR9C4Fig1fxMiKx2j/Cdwvqg7PU/io96HodY/71Oz7/oAfW3Gn6jCtBvXdoi5V8Ty3L9861oO78BKh/kOR5vpl6kUzNS6/E+uG0ZxarZbwc1BEa3khgkItlnXW6YmDFHyfCjrdGEr/LzVB/1fqbY+NMkUcNioZ2B29l0a57phEi8r6Sgs5h//wy0ABUDPfPjJ3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jNHw1Ps+zj1WjyQ+elWAVl3ZvShNW321engzUGiby9s=;
+ b=M+7UtZrCdRjjFVLhR5JqTuJD7ocObLls9VfvoZ4iy9JegZgoHA25utMsQC6nwYkxwyt4vrx2OJgCD7Za5CaBX4RNMr1KYxP0j8cw0CkoscqCPEY+7PoEAhC7plnngdjz+svw4BnaY3EmQNIqYlETaT8PSgzAwWe0Evn7ca43lD+fquER1yNbScXeEzin1Lrd0tG5ayAUnW1akFEpxq0BATJTKZ33Dnx0Zc9/if/JGaq2+gs5EHyTUUgRv3lKl9dbh57VVEZczGRjUusWsY4cd0bVyLnp59MJgWQsuC4qAYns6dttM7F77xeeBWbHPPFCyxUZZmcXJWl2m/kB6x3Umw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jNHw1Ps+zj1WjyQ+elWAVl3ZvShNW321engzUGiby9s=;
+ b=NfKKnWniKsduIVXbAS9O0KP5EUxZG0mxUGhFx6yyBrpTim/8cxQ0S7dbjkRUZvMswE8S0A5GAUlMc7x+83VFv2G27g+ey2TkW7/DY/7dup0meoo3na1ItAvq3HwQdao9PS88kGji+EfCCmpMPLqsrRA+x4YcOxzm/drcLdyyQOI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Nicholas.Kazlauskas@amd.com; 
+Received: from BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
+ by BYAPR12MB3559.namprd12.prod.outlook.com (2603:10b6:a03:d9::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.23; Wed, 1 Apr
+ 2020 13:00:27 +0000
+Received: from BYAPR12MB3560.namprd12.prod.outlook.com
+ ([fe80::e8:c007:9a5:da4d]) by BYAPR12MB3560.namprd12.prod.outlook.com
+ ([fe80::e8:c007:9a5:da4d%5]) with mapi id 15.20.2835.023; Wed, 1 Apr 2020
+ 13:00:27 +0000
+Subject: Re: [PATCH 2/2] drm/amd/dc: Kill dc_conn_log_hex_linux()
+To:     Lyude Paul <lyude@redhat.com>, amd-gfx@lists.freedesktop.org
+Cc:     "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>, Leo Li <sunpeng.li@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Wyatt Wood <wyatt.wood@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20200331212228.139219-1-lyude@redhat.com>
+ <20200331212228.139219-3-lyude@redhat.com>
+From:   "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+Message-ID: <48f2037b-1939-2ad3-750e-4ad4601d88be@amd.com>
+Date:   Wed, 1 Apr 2020 09:00:19 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200401113804.21616-1-bbhushan2@marvell.com>
+In-Reply-To: <20200331212228.139219-3-lyude@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR01CA0035.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01::43)
+ To BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.148.234] (165.204.55.211) by YQBPR01CA0035.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Wed, 1 Apr 2020 13:00:23 +0000
+X-Originating-IP: [165.204.55.211]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 54c15f0f-2ba6-479d-3090-08d7d63ca582
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3559:|BYAPR12MB3559:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR12MB3559808CEA270CE1DEFCF78FECC90@BYAPR12MB3559.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03607C04F0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(66946007)(54906003)(26005)(5660300002)(4326008)(31696002)(86362001)(316002)(186003)(31686004)(478600001)(2616005)(2906002)(16526019)(6666004)(956004)(52116002)(16576012)(53546011)(81156014)(8936002)(36756003)(66476007)(81166006)(8676002)(66556008)(6486002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xOx9PHq0zebnzeU4KHLeFDEnr6P4sVr5/25/SHcKpX+/WUiLbcYZKPhYR9OfPuGyh+HYW0ZilPDdPXKgy6PoaH2wJYdAXrGVlAfGFhmRaOProj6Un4MR6yl6BY11xk+OpMRXFFQX3CA+eiRKJaEJtJ7pI+mXb51KiHwWWg6Y5AyGxJTO+Z5K+x6xT2bChA/cvpSNq3pqa+tOAdVQEps4G9K/8u7AEtweRqVbp66iGTAhaHRFep6F5w54Pd6O4xcGBCq3tVh4KGmUr4C8Fyhusm88LL3XgbURdRVM6aaVt7oXf15BTOHUg3QKVGT8CHwh1T9BjceT1Q5qmu/yHcfgRB6aEQYrpI1Gx1uTvS9j3aS0qKaPYiKYF59in3NIRGAykLm1ImaPbHHUxmyibbFA0Lkr2/XwfXwUzfB/Q9Q22FXn64+VTkY2vQSC87fqyxPT
+X-MS-Exchange-AntiSpam-MessageData: RS9M8KauP4/LZTA8x7k+8WMrJGNeav+93iSFapZbBYwCZFDmuvk9n5hzir2Jwq5G1xIWkkr1/ijWDaTDXUeB4fuXZe6xPtazEfJd8qbjkiYzd6a8j5LcsPUTRZE7MdaE8V2Rvlp06GRmFT9vqBV8VQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54c15f0f-2ba6-479d-3090-08d7d63ca582
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2020 13:00:27.0272
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lb9G4HEIL4az3xhhhw3v0IlS3p5KP6BnT6i56Z0SoKzJL0F4SGXQLe28wQz3vB1D3PmQ3OmM3oaJHRQmMJj9qA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3559
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-01 12:38 pm, Bharat Bhushan wrote:
-> Different endpoint can support different page size, probe
-> endpoint if it supports specific page size otherwise use
-> global page sizes.
+On 2020-03-31 5:22 p.m., Lyude Paul wrote:
+> DRM already supports tracing DPCD transactions, there's no reason for
+> the existence of this function. Also, it prints one byte per-line which
+> is way too loud. So, just remove it.
 > 
-> Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+
+Thanks for helping clean this up!
+
+Series is:
+
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+
+Regards,
+Nicholas Kazlauskas
+
 > ---
->   drivers/iommu/virtio-iommu.c      | 33 +++++++++++++++++++++++++++----
->   include/uapi/linux/virtio_iommu.h |  7 +++++++
->   2 files changed, 36 insertions(+), 4 deletions(-)
+>   .../gpu/drm/amd/display/dc/basics/Makefile    |  3 +-
+>   .../drm/amd/display/dc/basics/log_helpers.c   | 39 -------------------
+>   .../amd/display/include/logger_interface.h    |  4 --
+>   3 files changed, 1 insertion(+), 45 deletions(-)
+>   delete mode 100644 drivers/gpu/drm/amd/display/dc/basics/log_helpers.c
 > 
-> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-> index cce329d71fba..c794cb5b7b3e 100644
-> --- a/drivers/iommu/virtio-iommu.c
-> +++ b/drivers/iommu/virtio-iommu.c
-> @@ -78,6 +78,7 @@ struct viommu_endpoint {
->   	struct viommu_dev		*viommu;
->   	struct viommu_domain		*vdomain;
->   	struct list_head		resv_regions;
-> +	u64				pgsize_bitmap;
->   };
+> diff --git a/drivers/gpu/drm/amd/display/dc/basics/Makefile b/drivers/gpu/drm/amd/display/dc/basics/Makefile
+> index 7ad0cad0f4ef..01b99e0d788e 100644
+> --- a/drivers/gpu/drm/amd/display/dc/basics/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/basics/Makefile
+> @@ -24,8 +24,7 @@
+>   # It provides the general basic services required by other DAL
+>   # subcomponents.
 >   
->   struct viommu_request {
-> @@ -415,6 +416,20 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
->   	return ret;
->   }
+> -BASICS = conversion.o fixpt31_32.o \
+> -	log_helpers.o vector.o dc_common.o
+> +BASICS = conversion.o fixpt31_32.o vector.o dc_common.o
 >   
-> +static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-> +				    struct virtio_iommu_probe_pgsize_mask *mask,
-> +				    size_t len)
-> +
-> +{
-> +	u64 pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
-> +
-> +	if (len < sizeof(*mask))
-> +		return -EINVAL;
-> +
-> +	vdev->pgsize_bitmap = pgsize_bitmap;
-> +	return 0;
-> +}
-> +
->   static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
->   			       struct virtio_iommu_probe_resv_mem *mem,
->   			       size_t len)
-> @@ -494,11 +509,13 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
->   	while (type != VIRTIO_IOMMU_PROBE_T_NONE &&
->   	       cur < viommu->probe_size) {
->   		len = le16_to_cpu(prop->length) + sizeof(*prop);
+>   AMD_DAL_BASICS = $(addprefix $(AMDDALPATH)/dc/basics/,$(BASICS))
+>   
+> diff --git a/drivers/gpu/drm/amd/display/dc/basics/log_helpers.c b/drivers/gpu/drm/amd/display/dc/basics/log_helpers.c
+> deleted file mode 100644
+> index 26583f346c39..000000000000
+> --- a/drivers/gpu/drm/amd/display/dc/basics/log_helpers.c
+> +++ /dev/null
+> @@ -1,39 +0,0 @@
+> -/*
+> - * Copyright 2012-16 Advanced Micro Devices, Inc.
+> - *
+> - * Permission is hereby granted, free of charge, to any person obtaining a
+> - * copy of this software and associated documentation files (the "Software"),
+> - * to deal in the Software without restriction, including without limitation
+> - * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+> - * and/or sell copies of the Software, and to permit persons to whom the
+> - * Software is furnished to do so, subject to the following conditions:
+> - *
+> - * The above copyright notice and this permission notice shall be included in
+> - * all copies or substantial portions of the Software.
+> - *
+> - * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> - * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> - * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+> - * THE COPYRIGHT HOLDER(S) OR AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR
+> - * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+> - * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> - * OTHER DEALINGS IN THE SOFTWARE.
+> - *
+> - * Authors: AMD
+> - *
+> - */
 > -
->   		switch (type) {
->   		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
->   			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
->   			break;
-> +		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-> +			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-> +			break;
->   		default:
->   			dev_err(dev, "unknown viommu prop 0x%x\n", type);
->   		}
-> @@ -607,16 +624,23 @@ static struct iommu_domain *viommu_domain_alloc(unsigned type)
->   	return &vdomain->domain;
->   }
+> -#include "core_types.h"
+> -#include "logger.h"
+> -#include "include/logger_interface.h"
+> -#include "dm_helpers.h"
+> -
+> -void dc_conn_log_hex_linux(const uint8_t *hex_data, int hex_data_count)
+> -{
+> -	int i;
+> -
+> -	if (hex_data)
+> -		for (i = 0; i < hex_data_count; i++)
+> -			DC_LOG_DEBUG("%2.2X ", hex_data[i]);
+> -}
+> -
+> diff --git a/drivers/gpu/drm/amd/display/include/logger_interface.h b/drivers/gpu/drm/amd/display/include/logger_interface.h
+> index 6e008de25629..02c23b04d34b 100644
+> --- a/drivers/gpu/drm/amd/display/include/logger_interface.h
+> +++ b/drivers/gpu/drm/amd/display/include/logger_interface.h
+> @@ -40,8 +40,6 @@ struct dc_state;
+>    *
+>    */
 >   
-> -static int viommu_domain_finalise(struct viommu_dev *viommu,
-> +static int viommu_domain_finalise(struct viommu_endpoint *vdev,
->   				  struct iommu_domain *domain)
->   {
->   	int ret;
->   	struct viommu_domain *vdomain = to_viommu_domain(domain);
-> +	struct viommu_dev *viommu = vdev->viommu;
+> -void dc_conn_log_hex_linux(const uint8_t *hex_data, int hex_data_count);
+> -
+>   void pre_surface_trace(
+>   		struct dc *dc,
+>   		const struct dc_plane_state *const *plane_states,
+> @@ -102,14 +100,12 @@ void context_clock_trace(
+>   #define CONN_DATA_DETECT(link, hex_data, hex_len, ...) \
+>   		do { \
+>   			(void)(link); \
+> -			dc_conn_log_hex_linux(hex_data, hex_len); \
+>   			DC_LOG_EVENT_DETECTION(__VA_ARGS__); \
+>   		} while (0)
 >   
->   	vdomain->viommu		= viommu;
->   	vdomain->map_flags	= viommu->map_flags;
->   
-> -	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
-> +	/* Devices in same domain must support same size pages */
-
-AFAICS what the code appears to do is enforce that the first endpoint 
-attached to any domain has the same pgsize_bitmap as the most recently 
-probed viommu_dev instance, then ignore any subsequent endpoints 
-attached to the same domain. Thus I'm not sure that comment is accurate.
-
-Robin.
-
-> +	if ((domain->pgsize_bitmap != viommu->pgsize_bitmap) &&
-> +	    (domain->pgsize_bitmap != vdev->pgsize_bitmap))
-> +		return -EINVAL;
-> +
-> +	domain->pgsize_bitmap = vdev->pgsize_bitmap;
-> +
->   	domain->geometry	= viommu->geometry;
->   
->   	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
-> @@ -657,7 +681,7 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
->   		 * Properly initialize the domain now that we know which viommu
->   		 * owns it.
->   		 */
-> -		ret = viommu_domain_finalise(vdev->viommu, domain);
-> +		ret = viommu_domain_finalise(vdev, domain);
->   	} else if (vdomain->viommu != vdev->viommu) {
->   		dev_err(dev, "cannot attach to foreign vIOMMU\n");
->   		ret = -EXDEV;
-> @@ -875,6 +899,7 @@ static int viommu_add_device(struct device *dev)
->   
->   	vdev->dev = dev;
->   	vdev->viommu = viommu;
-> +	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
->   	INIT_LIST_HEAD(&vdev->resv_regions);
->   	fwspec->iommu_priv = vdev;
->   
-> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-> index 237e36a280cb..dc9d3f40bcd8 100644
-> --- a/include/uapi/linux/virtio_iommu.h
-> +++ b/include/uapi/linux/virtio_iommu.h
-> @@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
->   
->   #define VIRTIO_IOMMU_PROBE_T_NONE		0
->   #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-> +#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
->   
->   #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
->   
-> @@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
->   	__le16					length;
->   };
->   
-> +struct virtio_iommu_probe_pgsize_mask {
-> +	struct virtio_iommu_probe_property	head;
-> +	__u8					reserved[4];
-> +	__u64					pgsize_bitmap;
-> +};
-> +
->   #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
->   #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
+>   #define CONN_DATA_LINK_LOSS(link, hex_data, hex_len, ...) \
+>   		do { \
+>   			(void)(link); \
+> -			dc_conn_log_hex_linux(hex_data, hex_len); \
+>   			DC_LOG_EVENT_LINK_LOSS(__VA_ARGS__); \
+>   		} while (0)
 >   
 > 
+
