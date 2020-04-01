@@ -2,49 +2,82 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83661C10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88FFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FF220675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E0421556
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1x0ZSoZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732533AbgDAMoi (ORCPT
+        id S1732547AbgDAMov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:44:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:50902 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732396AbgDAMoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:44:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 908AC30E;
-        Wed,  1 Apr 2020 05:44:37 -0700 (PDT)
-Received: from [172.16.1.108] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B43B3F68F;
-        Wed,  1 Apr 2020 05:44:35 -0700 (PDT)
-Subject: Re: [PATCH][V2] ACPI: sysfs: copy ACPI data using io memory copying
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Colin King <colin.king@canonical.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, lorenzo.pieralisi@arm.com
-References: <20200317165409.469013-1-colin.king@canonical.com>
- <20200320131951.GA6555@lakrids.cambridge.arm.com>
-From:   James Morse <james.morse@arm.com>
-Openpgp: preference=signencrypt
-Message-ID: <698da6fc-3334-5420-5c97-4406914e4599@arm.com>
-Date:   Wed, 1 Apr 2020 13:44:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 08:44:51 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34188 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732396AbgDAMov (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:44:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585745090;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tcijslMDnWOfEx2XWs1GjD/Qz1G2+HgOCl78SG26EZw=;
+        b=X1x0ZSoZL+9GmhrjwDFILO8hmbzkGe4I5liQKq+eqRDaTQpm2y01ACi2TP+/GeU3XQeanO
+        yjgvSNduIG7smqIHAVAHO1VZ61FF2oUsBsh4rYOUHQRGkp67N2qYjqu99wa93OthlfP/ia
+        oJcO3OGLWh8eQNk2ojS9Lf6uIy9D6gE=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-mR7k_A5LMp6IPau-SFrA9Q-1; Wed, 01 Apr 2020 08:44:49 -0400
+X-MC-Unique: mR7k_A5LMp6IPau-SFrA9Q-1
+Received: by mail-wm1-f69.google.com with SMTP id o5so2403826wmo.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:44:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tcijslMDnWOfEx2XWs1GjD/Qz1G2+HgOCl78SG26EZw=;
+        b=HXJPeONL9jGadkQjx7bynj+SKaRFNmhOp7p6PQxDYRcILcw0E13XDwflGuGIyCyS7/
+         1NuMkcs9xgsmQBKhtdYA5onRMP5pPEPBnnX0mW1McMFY5/r98pgvxCvlYlTjob6mJuVc
+         UBAcMcriPBY0fOoZh2cSlPXmv95JobkveGCw8SV6Obl9ljMwrlXsUUMe1dAz/oc4DsY+
+         WR4yXyI3/XAx4qP2LKbO1kQVC7azcZ17QkTfqMm/eyEY2Hd7MnuVoSArci2fCvQHXLRR
+         ELRk9u4PXEKjQus5pcDQvM2VxuKcpn5Hy5p/Whp+q7O4Z93EqeBVmK8DXiKhb8CF4sMd
+         DdFA==
+X-Gm-Message-State: AGi0PuZLMQemOpeCpjpyApW1BkeHsHc24IX1KizWia1INItw+1GMda28
+        hpIpteJoopkk0tOu8qn0gyMgcZwjB0gJ245SlGncGcnCe0U86wxvvIkP4SvyNCYNWnMP37Ni1Fw
+        UnhNvbypOV2UJgbZCf8OTBlbk
+X-Received: by 2002:a1c:f407:: with SMTP id z7mr4091925wma.36.1585745088010;
+        Wed, 01 Apr 2020 05:44:48 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJrDTu5ANdvkOMwlFa8K92TqpJBdyWszxi6t6AVZlWfpKsIA3YEL4IQoSasbctxElxVwRUcmA==
+X-Received: by 2002:a1c:f407:: with SMTP id z7mr4091905wma.36.1585745087755;
+        Wed, 01 Apr 2020 05:44:47 -0700 (PDT)
+Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
+        by smtp.gmail.com with ESMTPSA id d21sm2777071wrb.51.2020.04.01.05.44.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 05:44:47 -0700 (PDT)
+Subject: Re: [PATCH v2 01/10] objtool: Move header sync-check ealier in build
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        peterz@infradead.org, raphael.gault@arm.com
+References: <20200327152847.15294-1-jthierry@redhat.com>
+ <20200327152847.15294-2-jthierry@redhat.com>
+ <alpine.LSU.2.21.2004011430120.15809@pobox.suse.cz>
+From:   Julien Thierry <jthierry@redhat.com>
+Message-ID: <315c119a-0986-a3a0-7243-5fe0dd9038ea@redhat.com>
+Date:   Wed, 1 Apr 2020 13:44:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200320131951.GA6555@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <alpine.LSU.2.21.2004011430120.15809@pobox.suse.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,54 +85,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 3/20/20 1:19 PM, Mark Rutland wrote:
-> [adding James and Lorenzo]
-
-(but not actually...)
 
 
-> On Tue, Mar 17, 2020 at 04:54:09PM +0000, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Reading ACPI data on ARM64 at a non-aligned offset from
->> /sys/firmware/acpi/tables/data/BERT will cause a splat because
->> the data is I/O memory mapped
-
-On your platform, on someone else's it may be in memory.
-
-Which platform is this on?
-(I've never seen one generate a BERT!)
-
-
->> and being read with just a memcpy.
->> Fix this by introducing an I/O variant of memory_read_from_buffer
->> and using I/O memory mapped copies instead.
-
-> Just to check, is that correct is it correct to map those tables with
-> Device attributes in the first place, or should we be mapping the tables
-> with Normal Cacheable attributes with memremap()?
+On 4/1/20 1:32 PM, Miroslav Benes wrote:
+> On Fri, 27 Mar 2020, Julien Thierry wrote:
 > 
-> If the FW placed those into memory using cacheavble attributes, reading
-> them using Device attributes could result in stale values, which could
-> be garbage.
+>> Currently, the check of tools files against kernel equivalent is only
+>> done after every object file has been built.
+> 
+>> This means one might fix
+>> build issues against outdated headers without seeing a warning about
+>> this.
+> 
+> Could you explain the above in more detail, please?
+> 
 
-Yes. The BERT code should be using arch_apei_get_mem_attribute() to use the
-correct attributes. See ghes_map() for an example. bert_init() will need to use
-a version of ioremap() that takes the pgprot_t.
+I must admit that this patch is more fixing the issues I've faced while 
+working on the arm64 support and sharing some kernel headers from the 
+arch/arm64 tree.
 
-Always using ioremap_cache() means you get a cacheable mapping, regardless of
-how firmware described this region in the UEFI memory map. This doesn't explain
-why you got an alignment fault.
+The annoying part was:
+- Have build errors in objtool
+- Fix them
+- Objtool build succeeds, but have warning about outdated headers
+- Update headers
+- New errors come up, potentially making obsolete the ealier fixes
 
-Otherwise, looks fine to me.
+So it's not really a "must have" change. But it's nice to have when 
+bringing new kernel headers to objtool.
 
+I hope this makes things clearer.
 
-(N.B. I ignored this patch as it wasn't copied to linux-arm-kernel and the
-subject says its about sysfs<->ACPI, nothing to do with APEI!)
+Cheers,
 
+-- 
+Julien Thierry
 
-Thanks,
-
-James
