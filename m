@@ -2,134 +2,97 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03594C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E61CC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9D720714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759938;
-	bh=DAzNytEKYVDkkCaQNm7J4s7xcEx2wTe7yrYfQJXX7+Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iVdGf1kPrbPEnNONImL+o7U/xwiHzAk1RNH0Agjf8Y9vd/WXh4UQGJFoGWUtDMp5m
-	 zPkLX7dM9NLPLJH9f2vPjF5wrqRAnBq9POfG3RfKBE2FY1qJ/fOUTI9dethBdNlap7
-	 trqYL1sJEa0l1NaahEk3W1To0Od1wktrXEw5ZBys=
+	by mail.kernel.org (Postfix) with ESMTP id 2FFA62063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zofr2vJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388863AbgDAQwR (ORCPT
+        id S2387697AbgDAQwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:52:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388056AbgDAQg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7805420658;
-        Wed,  1 Apr 2020 16:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758987;
-        bh=DAzNytEKYVDkkCaQNm7J4s7xcEx2wTe7yrYfQJXX7+Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWiEoKciTfShtGo0qWfC89EWEnCC7scIDAu/GNVK/d6XNmINvJjZFPehGYBu2Cjyp
-         S/HdYI6BPBXEgPSaobg41gZR8d0y2iGeJLdFr0LWeTTr3lGGWXkpONS+oCdIOumDUS
-         eMPnKvcry/4lI38dcteeF9GoXJ8xLQ8sxuXzFD4E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 006/102] drm/exynos: dsi: fix workaround for the legacy clock name
-Date:   Wed,  1 Apr 2020 18:17:09 +0200
-Message-Id: <20200401161532.691800992@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
-References: <20200401161530.451355388@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 1 Apr 2020 12:52:21 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43130 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388734AbgDAQwT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:52:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id n20so234355lfl.10;
+        Wed, 01 Apr 2020 09:52:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=553GZqyaFPyqL10GOEToovkxhGg1gD8CyFbmDXNpEsw=;
+        b=Zofr2vJFHVCyXWGqu/mMhPG1Xd4CKbNXMtKR8h9hTLZwvQJa88jCBrXU/AcrpoFH5P
+         mYQ/Tlw6KbYvgQSn0qPZAs8VzO2Yt1Zfy+DOR8VCbreI2ylCrtnZGMHo44zaqd7/HYRK
+         sZbb36XpH8kM0/VCRZ3VtA8dn/SNn0GR3oe67wdRFvI0gsI7zhf/uO1usD/eOSQhO7T5
+         KYyosbohxMLYPXQIH2NML5udu4H72k9HOFvW4SORCN7Kk67l28U0U7ZUcJWA4IEn143f
+         fCVYc1fGQMezi07Vr38H3/hv9bpRjXp/9DLeE68o+nXKbDrR3bLT8undI7AlOIHxhqDf
+         BQUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=553GZqyaFPyqL10GOEToovkxhGg1gD8CyFbmDXNpEsw=;
+        b=gNfhVhk9eqOjVZiw18JPvdPabFTb8f6KYY1oNXDSiNjWb1jprP1FckJlMah6XoKXaL
+         egUVbl+gwy2CYkjjZVI5E2wNTL76Bk2k+OYLBvkzvPmNSigfX+j6PYKKHOGHNl316nT0
+         mTOq6lsgaAXxxkSHRinmA0Lhsf/X0XaJgZQxKKR91IDt+lEOnTboOaiwlJyrlKlTBjSH
+         /b7CHqIe0wbxlWnjvaz/E8vjjjldGVzn3fCKjOqgpR06NePpBXh2yEtkNUZdSWMw56nV
+         kZAWNlHiiGw0Ag8lWLcV+ry2lbAA9vGB34jhyjUmUnU65Zu+CMBG7tQ9rb57tfLOGAQ6
+         CWRw==
+X-Gm-Message-State: AGi0PuY3zQqql9fuyEVV/yWM7s7dQKtSFsPt85eIBU5TfBJ7Lc+el8K2
+        0EWK8MJdPEIJhszwqFvSLiwj6XEcmRQQoOVL0Hs=
+X-Google-Smtp-Source: APiQypKpqgYCAmngBbsQvHWSwrN84DODr5lhSm+9neIuBkZf9n631TEe2XQ2wNvQU/b7bVMLuE269O5DFA3DZd1QusM=
+X-Received: by 2002:a19:ec15:: with SMTP id b21mr15311077lfa.28.1585759936420;
+ Wed, 01 Apr 2020 09:52:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191122000926.19408-1-jdk@ti.com> <20191204193421.GA15784@bogus>
+In-Reply-To: <20191204193421.GA15784@bogus>
+From:   Drew Fustini <pdp7pdp7@gmail.com>
+Date:   Wed, 1 Apr 2020 18:52:44 +0200
+Message-ID: <CAEf4M_B31u_0_oLD-1xAJ3YTfJPZYYJnganiHs9=4KqfbGFSPg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: Add vendor prefix for BeagleBoard.org
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jason Kridner <jkridner@gmail.com>, devicetree@vger.kernel.org,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
+        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+On Wed, Dec 4, 2019 at 8:39 PM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Nov 21, 2019 at 07:09:26PM -0500, Jason Kridner wrote:
+> > Add vendor prefix for BeagleBoard.org Foundation
+> >
+> > Signed-off-by: Jason Kridner <jdk@ti.com>
+> > ---
+> > Changes in v2:
+> >   - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
+> >     needing to quote within a yaml regular expression.
+> >   - Assign 'from' to author e-mail address.
+>
+> Still not right...
 
-[ Upstream commit c0fd99d659ba5582e09625c7a985d63fc2ca74b5 ]
+Hi Rob, is the issue that it needs to be sent from "Jason Kridner
+<jdk@ti.com>" if the SoB is " Jason Kridner <jdk@ti.com>"?
 
-Writing to the built-in strings arrays doesn't work if driver is loaded
-as kernel module. This is also considered as a bad pattern. Fix this by
-adding a call to clk_get() with legacy clock name. This fixes following
-kernel oops if driver is loaded as module:
-
-Unable to handle kernel paging request at virtual address bf047978
- pgd = (ptrval)
- [bf047978] *pgd=59344811, *pte=5903c6df, *ppte=5903c65f
- Internal error: Oops: 80f [#1] SMP ARM
- Modules linked in: mc exynosdrm(+) analogix_dp rtc_s3c exynos_ppmu i2c_gpio
- CPU: 1 PID: 212 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200219 #326
- videodev: Linux video capture interface: v2.00
- Hardware name: Samsung Exynos (Flattened Device Tree)
- PC is at exynos_dsi_probe+0x1f0/0x384 [exynosdrm]
- LR is at exynos_dsi_probe+0x1dc/0x384 [exynosdrm]
- ...
- Process systemd-udevd (pid: 212, stack limit = 0x(ptrval))
- ...
- [<bf03cf14>] (exynos_dsi_probe [exynosdrm]) from [<c09b1ca0>] (platform_drv_probe+0x6c/0xa4)
- [<c09b1ca0>] (platform_drv_probe) from [<c09afcb8>] (really_probe+0x210/0x350)
- [<c09afcb8>] (really_probe) from [<c09aff74>] (driver_probe_device+0x60/0x1a0)
- [<c09aff74>] (driver_probe_device) from [<c09b0254>] (device_driver_attach+0x58/0x60)
- [<c09b0254>] (device_driver_attach) from [<c09b02dc>] (__driver_attach+0x80/0xbc)
- [<c09b02dc>] (__driver_attach) from [<c09ade00>] (bus_for_each_dev+0x68/0xb4)
- [<c09ade00>] (bus_for_each_dev) from [<c09aefd8>] (bus_add_driver+0x130/0x1e8)
- [<c09aefd8>] (bus_add_driver) from [<c09b0d64>] (driver_register+0x78/0x110)
- [<c09b0d64>] (driver_register) from [<bf038558>] (exynos_drm_init+0xe8/0x11c [exynosdrm])
- [<bf038558>] (exynos_drm_init [exynosdrm]) from [<c0302fa8>] (do_one_initcall+0x50/0x220)
- [<c0302fa8>] (do_one_initcall) from [<c03dd02c>] (do_init_module+0x60/0x210)
- [<c03dd02c>] (do_init_module) from [<c03dbf44>] (load_module+0x1c0c/0x2310)
- [<c03dbf44>] (load_module) from [<c03dc85c>] (sys_finit_module+0xac/0xbc)
- [<c03dc85c>] (sys_finit_module) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
- Exception stack(0xd979bfa8 to 0xd979bff0)
- ...
- ---[ end trace db16efe05faab470 ]---
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/exynos/exynos_drm_dsi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index 5e202af7fbf53..2b6c04acb24f5 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -1790,9 +1790,10 @@ static int exynos_dsi_probe(struct platform_device *pdev)
- 		dsi->clks[i] = devm_clk_get(dev, clk_names[i]);
- 		if (IS_ERR(dsi->clks[i])) {
- 			if (strcmp(clk_names[i], "sclk_mipi") == 0) {
--				strcpy(clk_names[i], OLD_SCLK_MIPI_CLK_NAME);
--				i--;
--				continue;
-+				dsi->clks[i] = devm_clk_get(dev,
-+							OLD_SCLK_MIPI_CLK_NAME);
-+				if (!IS_ERR(dsi->clks[i]))
-+					continue;
- 			}
- 
- 			dev_info(dev, "failed to get the clock: %s\n",
--- 
-2.20.1
-
-
-
+Thanks,
+Drew
