@@ -2,88 +2,62 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71628C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFCEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B07E20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d0dPOKW8"
+	by mail.kernel.org (Postfix) with ESMTP id 231B420787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585772503;
+	bh=CvBMEziJK6QTVlRs8WBNAwTidyoTQln1TJB/ijH5s8M=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=O6YTOJZjDhvuFfXcipuvQsACiX1uWb/te2HRBMqWkj0AWEkMIOydI3TEUWpda4Xsa
+	 rAE0f4MFs6YabBKwGzxk1z8Yau8LWaZKs/M+sOmrf/i5fkBgLohXaQh99UR/sEKuwt
+	 vkIM5QFzQwWg12UgP+5VU8sbAmNpdYX0QzfZ3e+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733038AbgDAUVi (ORCPT
+        id S1733066AbgDAUVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:21:38 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45279 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732385AbgDAUVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 16:21:37 -0400
-Received: by mail-il1-f195.google.com with SMTP id x16so1283091ilp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 13:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NZ7ptwZtc0lwD8ofFzTzdr4FmIeRPKr07pDioEHD4o4=;
-        b=d0dPOKW8rex5FOSqe5KaBMzBgEkYcOP3euVyUUMVUMuVX2TFUfi/mdjcwGJ1kCpNI6
-         TjsUrfnUzUOxvBu/MTscDJobOUJaE1VDz1M2Osp4+QQfW6NYU7RKe9FUvCC7lRWOJG/B
-         Z/C7/xuRBmLAMFukHH64T5VfCFmKskqNg7knxOyRFv2W+ejtAyK6J5P1xsKONWLuqmhR
-         ZOhl3NTW74ZpvVnfLyXB0LJXKmovj5gwnbjHR0hZ15akHcnUBTwXQ8xRQXaTj64XEagd
-         nz1Pz0dJxQ7ciCfXmyz9v1dibe5qPn6RZHfRuiqbg0Yyhz7l0qAEJg0ai0bZxuCkYDUT
-         2QgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NZ7ptwZtc0lwD8ofFzTzdr4FmIeRPKr07pDioEHD4o4=;
-        b=fvNKrxI82L/Tb5HdI3R8ArNBELclmRcR74+7Fx8M1iRYN0IZUKs/CKAluOzc0tLq+C
-         OPU7W695F57hYHYIHhYlY/uqucF2wNyW2Je6ZdiLnPTVx6AeCBUq84iqEuNdsPsoFydX
-         XlnG7yb6KKbvgJWc3zXLZWqTGPRF1rnOoO6FJvmmLpV+EoK9gYkrLpvT/njujfUbjUbk
-         kSTwyMaH04zrzadNppCjDoUMgqMQpD071M/9GefYU53jVMQ+NFxALVyrdjXQsrPo7TXe
-         2LelV4VsuYiu0UkWTri5DzcxukRGPemONYANIrV/ODCxHq+w7Le0Xos0OhEOJ94nMDcf
-         /FXQ==
-X-Gm-Message-State: ANhLgQ3ChCSdSp5fU8KJaT7awQGBrlhcEwrx82wx2+warMz7WMIR7qBS
-        sMfTwClYT7NsQCaVhEfdW5+mQg==
-X-Google-Smtp-Source: ADFU+vsc1fZ+0cuH55zfqwH9e+3XmcFy1wOjslGUdGyb4NfU6OF3tDgPVYRNCMs3LdKmnvGKq8ixLg==
-X-Received: by 2002:a05:6e02:e8c:: with SMTP id t12mr23377868ilj.196.1585772494254;
-        Wed, 01 Apr 2020 13:21:34 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id m70sm990629ilh.84.2020.04.01.13.21.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 13:21:33 -0700 (PDT)
-Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200311024240.26834-1-elder@linaro.org>
- <20200401173515.142249-1-ndesaulniers@google.com>
- <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org>
- <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
- <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org>
- <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
-Date:   Wed, 1 Apr 2020 15:21:19 -0500
+        Wed, 1 Apr 2020 16:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732385AbgDAUVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 16:21:40 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BECC920784;
+        Wed,  1 Apr 2020 20:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585772500;
+        bh=CvBMEziJK6QTVlRs8WBNAwTidyoTQln1TJB/ijH5s8M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ClLciJ4wwJ2Bi9vwk8jX59vF6SEUrkYu/yLIiIegCQVjYryjiMv7fXJhloDT5ngah
+         cphVBEf+77zGu3G0k8acW0GKXB1EOWMOBG2YT2Qt7kVCoW4WdEf7d/AtQ788wn9/GI
+         2i+SohRFRH3bs9NCYu2mID0Ds7WpuMF0B0EfAyDw=
+Subject: Re: [PATCH 5.6 00/10] 5.6.2-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>,
+        shuah <shuah@kernel.org>
+References: <20200401161413.974936041@linuxfoundation.org>
+ <CAHk-=wiVBvO1b5UzfcHm6y4KLHOp3huFfGMdW21F6g25oUePLw@mail.gmail.com>
+ <20200401172242.GA2582092@kroah.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <e335c0cf-640a-31a9-54fe-45493e006f3e@kernel.org>
+Date:   Wed, 1 Apr 2020 14:21:28 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200401172242.GA2582092@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,126 +65,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 2:54 PM, Nick Desaulniers wrote:
-> On Wed, Apr 1, 2020 at 12:44 PM Alex Elder <elder@linaro.org> wrote:
->>
->> On 4/1/20 2:13 PM, Nick Desaulniers wrote:
->>> On Wed, Apr 1, 2020 at 11:24 AM Alex Elder <elder@linaro.org> wrote:
->>>>
->>>> On 4/1/20 12:35 PM, Nick Desaulniers wrote:
->>>>>> Define FIELD_MAX(), which supplies the maximum value that can be
->>>>>> represented by a field value.  Define field_max() as well, to go
->>>>>> along with the lower-case forms of the field mask functions.
->>>>>>
->>>>>> Signed-off-by: Alex Elder <elder@linaro.org>
->>>>>> Acked-by: Jakub Kicinski <kuba@kernel.org>
->>>>>> ---
->>>>>> v3: Rebased on latest netdev-next/master.
->>>>>>
->>>>>> David, please take this into net-next as soon as possible.  When the
->>>>>> IPA code was merged the other day this prerequisite patch was not
->>>>>> included, and as a result the IPA driver fails to build.  Thank you.
->>>>>>
->>>>>>   See: https://lkml.org/lkml/2020/3/10/1839
->>>>>>
->>>>>>                                      -Alex
->>>>>
->>>>> In particular, this seems to now have regressed into mainline for the 5.7
->>>>> merge window as reported by Linaro's ToolChain Working Group's CI.
->>>>> Link: https://github.com/ClangBuiltLinux/linux/issues/963
->>>>
->>>> Is the problem you're referring to the result of a build done
->>>> in the midst of a bisect?
->>>>
->>>> The fix for this build error is currently present in the
->>>> torvalds/linux.git master branch:
->>>>     6fcd42242ebc soc: qcom: ipa: kill IPA_RX_BUFFER_ORDER
+On 4/1/20 11:22 AM, Greg Kroah-Hartman wrote:
+> On Wed, Apr 01, 2020 at 10:06:47AM -0700, Linus Torvalds wrote:
+>> On Wed, Apr 1, 2020 at 9:19 AM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
 >>>
->>> Is that right? That patch is in mainline, but looks unrelated to what
->>> I'm referring to.
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6fcd42242ebcc98ebf1a9a03f5e8cb646277fd78
->>> From my github link above, the issue I'm referring to is a
->>> -Wimplicit-function-declaration warning related to field_max.
->>> 6fcd42242ebc doesn't look related.
+>>> This is the start of the stable review cycle for the 5.6.2 release.
 >>
->> I'm very sorry, I pointed you at the wrong commit.  This one is
->> also present in torvalds/linux.git master:
->>
->>   e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
->>
->> It defines field_max() as a macro in <linux/bitfield.h>, and
->> "gsi.c" includes that header file.
->>
->> This was another commit that got added late, after the initial
->> IPA code was accepted.
+>> Good. You made 5.6.1 so quickly that I didn't have time to react and
+>> say that it makes little sense without the 802.11 fix, but you're
+>> obviously making 5.6.2 quickly, so..
 > 
-> Yep, that looks better.
 
-Sorry about that.  The two actually are related in a way, because
-without the first one I pointed you at, a *different* problem
-involving field_max() gets triggered.  But that's irrelevant to
-this discussion...
+wifi issue I was seeing on my laptop with 5.6.0 is now resolved.
+Thanks for pulling this in quickly.
 
->>>> I may be mistaken, but I believe this is the same problem I discussed
->>>> with Maxim Kuvyrkov this morning.  A different build problem led to
->>>> an automated bisect, which conluded this was the cause because it
->>>> landed somewhere between the initial pull of the IPA code and the fix
->>>> I reference above.
->>>
->>> Yes, Maxim runs Linaro's ToolChain Working Group (IIUC, but you work
->>> there, so you probably know better than I do), that's the CI I was
->>> referring to.
->>>
->>> I'm more concerned when I see reports of regressions *in mainline*.
->>> The whole point of -next is that warnings reported there get fixed
->>> BEFORE the merge window opens, so that we don't regress mainline.  Or
->>> we drop the patches in -next.
->>
->> Can you tell me where I can find the commit id of the kernel
->> that is being built when this error is reported?  I would
->> like to examine things and build it myself so I can fix it.
->> But so far haven't found what I need to check out.
-> 
-> From the report: https://groups.google.com/g/clang-built-linux/c/pX-kr_t5l_A
-
-That link doesn't work for me.
-
-> Configuration details:
-> rr[llvm_url]="https://github.com/llvm/llvm-project.git"
-> rr[linux_url]="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
-> rr[linux_branch]="7111951b8d4973bda27ff663f2cf18b663d15b48"
-
-That commit is just the one in which Linux v5.6 is tagged.
-It doesn't include any of this code (but it's the last
-tagged release that current linus/master is built on).
-
-It doesn't answer my question about what commit id was
-used for this build, unfortunately.
-
-> the linux_branch looks like a SHA of what the latest ToT of mainline
-> was when the CI ran.
-> 
-> I was suspecting that maybe there was a small window between the
-> regression, and the fix, and when the bot happened to sync.  But it
-> seems that: e31a50162feb352147d3fc87b9e036703c8f2636 landed before
-> 7111951b8d4973bda27ff663f2cf18b663d15b48 IIUC.
-
-Yes, this:
-  e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
-landed about 200 commits after the code that needed it.
-
-So there's a chance the kernel that got built was somewhere
-between those two, and I believe the problem you point out
-would happen in that case.  This is why I started by asking
-whether it was something built during a bisect.
-
-It's still not clear to me what happened here.  I can explain
-how this *could* happen, but I don't believe problem exists
-in the latest upstream kernel commit.
-
-Is there something else you think I should do?
-
-					-Alex
-
-> So I think the bot had your change when it ran, so still seeing a
-> failure is curious.  Unless I've misunderstood something.
+thanks,
+-- Shuah
