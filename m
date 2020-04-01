@@ -2,128 +2,216 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93806C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 727E8C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9A720757
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D3420757
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGtHmylz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0lPMT/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731679AbgDADGL (ORCPT
+        id S1731701AbgDADGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:06:11 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43176 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731565AbgDADGK (ORCPT
+        Tue, 31 Mar 2020 23:06:20 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42474 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731554AbgDADGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:06:10 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g27so24136364ljn.10;
-        Tue, 31 Mar 2020 20:06:07 -0700 (PDT)
+        Tue, 31 Mar 2020 23:06:19 -0400
+Received: by mail-qt1-f195.google.com with SMTP id t9so20449278qto.9;
+        Tue, 31 Mar 2020 20:06:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Cncm8QU/gApJJ/eq3r8THmKymRZL/LY9q5cgRTKRs5I=;
-        b=VGtHmylzeqk02q6/FH1ZxxNVuU3blaX1gcapU99VOoalOqQhhGq5dx/euBjGrVPcz8
-         cG5HoNR42w/6abzq/JT1XUPZFQqOeRHt5gAmsYGFYo8U8qh1U+DT8zVvWrLqsgrbRc0C
-         8c9JyziOiXdH29NqE1kzBou4mae7doLVUd2eTweKZxoWKYRDwZ5uf3oe5RK8HYum9y/H
-         CDtQwUVpie6ONcKdyxxaS/9wxAnZK2SFm71Neoekh8xURrVDIQ12GutJi+OV2H1O0+0A
-         UkpX5tYeqvAvTOUxCAjY2DZsPUFAb8AwxvlN6YDRbYndkCgtg6DUg98GHRz8E1V/Ep6O
-         UIGA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=CTCfa1W35Oc7sDfr9TwTYrOwaj81GSfGfT3RVFEhg1o=;
+        b=R0lPMT/tq1g9OgNl9wLoCJrGyJWRuHsdF6cnIDlh1yvebdw0XGUDyodU4V8KP9Sq4I
+         YKv3FiUl6cNY4UCkp8mR2Wt8wfU+WqNSmuUEF+EDqBboc9w/RMpBL5WrcbJnuTcAOlND
+         +5Vq+se2dtDALPb5pFMCplNmclKDld4TmMszl8qpI3RVb72Ugo1PmLBWmL79nuqPAMa4
+         I0V0Q7tDnwlqT4eZERzjR6Ur68pL2SMfBuj/GC0iH13WYR220z0qKYhkEjpCpC9pRgoE
+         O43ZCk+fSbPsziHhyOeAr76yKfC8KLzjmHKCPb5VvsL9tTC+luZAtLHfgcA621vMMYJC
+         JgcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Cncm8QU/gApJJ/eq3r8THmKymRZL/LY9q5cgRTKRs5I=;
-        b=RM2XvgbNrr7ZzX+2EAoaNTQodPNUWoPDc3hkiTjHOcseSNoJ2zWuVY8GLpKPcmbYyX
-         aUjCkj4+q7CbER0aB8qMsWeAw9kIEXCe33BUZ89vkh+1d6Hri3hiqSHM7xc43/ScTdRU
-         jBug6B29oSly4kdsKKDmA7FO199Qf4vkKKjNi0/OsaaZyfweUwr3sOF6ansoQPtNwSru
-         PX1AYIODDbWo6WaEOFHkY52ERl2RWTcDgnxzI9zyCeVi3DkXToWEYXBnCvpewBOhmCGK
-         XlsAflUfKyIYFkrQxugIkyIx2QZzm0lqBwh/4Q7Mis9W6S99zpqaL9zHtc0AwbZPLuba
-         Y6Sw==
-X-Gm-Message-State: AGi0PuYRoFgtTUP+VVKQpgtdf6wcJHtxVLCJntIZ9AMbl6J8VT6myOH1
-        Fm0GQHUClk/5PCXtG0nXo9if49klu7LrtqwR9Ec=
-X-Google-Smtp-Source: APiQypLI+1TSCwhyI5FaKsxRC08UvwMys/ji4hC4ScQIHFamJxow8zZZfWKmfWcrcTAoFT8MSfsJcfSVAJVGZhOfQc8=
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr11839809lji.150.1585710366578;
- Tue, 31 Mar 2020 20:06:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=CTCfa1W35Oc7sDfr9TwTYrOwaj81GSfGfT3RVFEhg1o=;
+        b=Ld8BULMisyt0Z+zC4Vv3EnrvxKwJZ+YSBdn/GujXN3z8JnOdHAzDLlv0Ii5EgwmfYq
+         FtnuwcU3dH4WPcOLc1hdnBmGZBUlswEFYZUN+pq/omCRca1CtmLVCCZ9qnK4OO2NSQg3
+         HLcK4a9OwwqOQkOHZGbOJejyxYJeCMOxxb38gtDuj928l/UMKpl26WdORrulIGZO+2/a
+         QUQFawCeYvEoUnXZmnhT6rMZZiFmKE3gbA69U30t2hR3mAkLJs3SYqZjV1BojclW10En
+         bL2uEugS787xgaoN5wN/H4T7ejSKgGhisNq2SWmlJ84g9L2ReorxRnU1UzpRsQWXUJhy
+         NVUw==
+X-Gm-Message-State: ANhLgQ0gNSBXcYY7Ft3qM4WGXZ1Uk63CMkzlW6wclZ2MjI7DrXWsjQFD
+        hsDnTkArVuYD3UHKNcAOhDSP1+OFzDZ8
+X-Google-Smtp-Source: ADFU+vt5CF4RVP7oYpSoYFpxD2EQ24jNbHllQ71wiLqdMNUhmmSTaApmj0pYh87G1dxgRCvevv07bw==
+X-Received: by 2002:ac8:376d:: with SMTP id p42mr8510918qtb.378.1585710378432;
+        Tue, 31 Mar 2020 20:06:18 -0700 (PDT)
+Received: from [120.7.1.38] ([184.175.21.212])
+        by smtp.gmail.com with ESMTPSA id p191sm622848qke.6.2020.03.31.20.06.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 20:06:17 -0700 (PDT)
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200331085308.098696461@linuxfoundation.org>
+From:   Woody Suwalski <terraluna977@gmail.com>
+Message-ID: <6cdfe0e5-408f-2d88-cb08-c7675d78637c@gmail.com>
+Date:   Tue, 31 Mar 2020 23:06:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101 Firefox/60.0
+ SeaMonkey/2.53.1
 MIME-Version: 1.0
-From:   "she90122 ." <she90122@gmail.com>
-Date:   Wed, 1 Apr 2020 11:05:55 +0800
-Message-ID: <CAMhTFwk8Ei3o8Zwo+gZHzjv+hHtpfeWeOxFqu2s2QpaH6H2bVA@mail.gmail.com>
-Subject: [v3,1/1] EDAC: (pnd2) Change the return value of function
- apl_check_ecc_active() & dnv_check_ecc_active() when installed the non-ECC
- memory device.
-To:     she90122 <she90122@gmail.com>
-Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Amy.Shih" <Amy.Shih@advantech.com.tw>,
-        "Oakley.Ding" <Oakley.Ding@advantech.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200331085308.098696461@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amy Shih <amy.shih@advantech.com.tw>
+Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.6.1 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+> -------------
+> Pseudo-Shortlog of commits:
+>
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>      Linux 5.6.1-rc1
+>
+> Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>      media: v4l2-core: fix a use-after-free bug of sd->devnode
+>
+> Johan Hovold <johan@kernel.org>
+>      media: xirlink_cit: add missing descriptor sanity checks
+>
+> Johan Hovold <johan@kernel.org>
+>      media: stv06xx: add missing descriptor sanity checks
+>
+> Johan Hovold <johan@kernel.org>
+>      media: dib0700: fix rc endpoint lookup
+>
+> Johan Hovold <johan@kernel.org>
+>      media: ov519: add missing endpoint sanity checks
+>
+> Eric Biggers <ebiggers@google.com>
+>      libfs: fix infoleak in simple_attr_read()
+>
+> Kai-Heng Feng <kai.heng.feng@canonical.com>
+>      ahci: Add Intel Comet Lake H RAID PCI ID
+>
+> Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>      staging: wfx: annotate nested gc_list vs tx queue locking
+>
+> Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>      staging: wfx: fix init/remove vs IRQ race
+>
+> Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>      staging: wfx: add proper "compatible" string
+>
+> Qiujun Huang <hqjagain@gmail.com>
+>      staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
+>
+> Qiujun Huang <hqjagain@gmail.com>
+>      staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
+>
+> Larry Finger <Larry.Finger@lwfinger.net>
+>      staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
+>
+> Dan Carpenter <dan.carpenter@oracle.com>
+>      staging: kpc2000: prevent underflow in cpld_reconfigure()
+>
+> Johan Hovold <johan@kernel.org>
+>      media: usbtv: fix control-message timeouts
+>
+> Johan Hovold <johan@kernel.org>
+>      media: flexcop-usb: fix endpoint sanity check
+>
+> Mans Rullgard <mans@mansr.com>
+>      usb: musb: fix crash with highmen PIO and usbmon
+>
+> Qiujun Huang <hqjagain@gmail.com>
+>      USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interrupt_callback
+>
+> Matthias Reichl <hias@horus.com>
+>      USB: cdc-acm: restore capability check order
+>
+> Pawel Dembicki <paweldembicki@gmail.com>
+>      USB: serial: option: add Wistron Neweb D19Q1
+>
+> Pawel Dembicki <paweldembicki@gmail.com>
+>      USB: serial: option: add BroadMobi BM806U
+>
+> Pawel Dembicki <paweldembicki@gmail.com>
+>      USB: serial: option: add support for ASKEY WWHC050
+>
+> Daniel Borkmann <daniel@iogearbox.net>
+>      bpf: Undo incorrect __reg_bound_offset32 handling
+>
+>
+> -------------
+>
+> Diffstat:
+>
+>   Makefile                                           |  4 +--
+>   drivers/ata/ahci.c                                 |  1 +
+>   drivers/media/usb/b2c2/flexcop-usb.c               |  6 ++--
+>   drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +--
+>   drivers/media/usb/gspca/ov519.c                    | 10 ++++++
+>   drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 +++++++++-
+>   drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +++
+>   drivers/media/usb/gspca/xirlink_cit.c              | 18 +++++++++-
+>   drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
+>   drivers/media/usb/usbtv/usbtv-video.c              |  5 +--
+>   drivers/media/v4l2-core/v4l2-device.c              |  1 +
+>   drivers/staging/kpc2000/kpc2000/core.c             |  4 +--
+>   drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
+>   .../bindings/net/wireless/siliabs,wfx.txt          |  7 ++--
+>   drivers/staging/wfx/bus_sdio.c                     | 15 ++++----
+>   drivers/staging/wfx/bus_spi.c                      | 41 +++++++++++++---------
+>   drivers/staging/wfx/main.c                         | 21 ++++++-----
+>   drivers/staging/wfx/main.h                         |  1 -
+>   drivers/staging/wfx/queue.c                        | 16 ++++-----
+>   drivers/staging/wlan-ng/hfa384x_usb.c              |  2 ++
+>   drivers/staging/wlan-ng/prism2usb.c                |  1 +
+>   drivers/usb/class/cdc-acm.c                        | 18 +++++-----
+>   drivers/usb/musb/musb_host.c                       | 17 +++------
+>   drivers/usb/serial/io_edgeport.c                   |  2 +-
+>   drivers/usb/serial/option.c                        |  6 ++++
+>   fs/libfs.c                                         |  8 +++--
+>   kernel/bpf/verifier.c                              | 19 ----------
+>   27 files changed, 149 insertions(+), 104 deletions(-)
+>
+>
+I think you have missed the
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=be8c827f50a0bcd56361b31ada11dc0a3c2fd240
 
-Set function apl_check_ecc_active() &
-dnv_check_ecc_active() to return -ENXIO when installed the non-ECC
-memory device. And print the message in pnd2_init() accordingly.
+Without it 5.6 is completely broken on iwlwifi.
 
-Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
----
-Changes in v3:
-- Change the return value of function check_ecc when installed the
-non-ECC memory device.
-Changes in v2:
-- Remove the word "error" from output message.
----
- drivers/edac/pnd2_edac.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Thanks, Woody
 
-diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c index
-933f772..27172d7 100644
---- a/drivers/edac/pnd2_edac.c
-+++ b/drivers/edac/pnd2_edac.c
-@@ -1089,7 +1089,7 @@ static int apl_check_ecc_active(void)
-  for (i = 0; i < APL_NUM_CHANNELS; i++)
-  if (chan_mask & BIT(i))
-  ret += check_channel(i);
-- return ret ? -EINVAL : 0;
-+ return ret ? -ENXIO : 0;
- }
-
- #define DIMMS_PRESENT(d) ((d)->rken0 + (d)->rken1 + (d)->rken2 +
-(d)->rken3) @@ -1111,7 +1111,7 @@ static int
-dnv_check_ecc_active(void)
-
-  for (i = 0; i < DNV_NUM_CHANNELS; i++)
-  ret += check_unit(i);
-- return ret ? -EINVAL : 0;
-+ return ret ? -ENXIO : 0;
- }
-
- static int get_memory_error_data(struct mem_ctl_info *mci, u64 addr,
-@@ -1572,7 +1572,12 @@ static int __init pnd2_init(void)
-
-  rc = pnd2_probe();
-  if (rc < 0) {
-- pnd2_printk(KERN_ERR, "Failed to register device with error %d.\n", rc);
-+ if (rc == -ENXIO)
-+ pnd2_printk(KERN_INFO, "System is not using ECC memory\n");
-+ else
-+ pnd2_printk(KERN_ERR,
-+     "Failed to register device with error %d.\n",
-+     rc);
-  return rc;
-  }
-
---
-1.8.3.1
