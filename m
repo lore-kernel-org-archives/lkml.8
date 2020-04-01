@@ -2,52 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC83C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF16C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE2120BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705E720BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758505;
-	bh=MpayfXopxg/rWdzTRI0RFVYc1nBvqXgUxTLUgzl8GvU=;
+	s=default; t=1585758507;
+	bh=r+e9qHmInOQJ47PfeFDi1mAZiHipiVuBXvckxLYW3bU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtqZUCk9XH4Mbzr/CzmInNvOsMRZdUhxm4ju5TlH7XB5FfxErI5U0lRyeFQ8hIbY4
-	 T7sX/NFymeceRnFCBqvMh81aUhM88b2rTQM2O+UJ5EWv85REGXSy2EiMTcXOpXlVqq
-	 4476ly858X4YGwb6gg+cf0ErKZywXqGtx1Q+2SO4=
+	b=f9m/BN6p+RlQqWJitz1+0Tx/41Erhl8rUYDZlVh0rGX+byeTt7m6Pu2mrTPvhMjja
+	 oa+glqWl0UAAbGtDyKt69yUAQWreL8pKjwzE/22SXDq0E2cpRlwTGWhmfB152mn0Fd
+	 uZ8jk6cWqtr2cRalMzw9Czc8UuELWLcwRc8b5/E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388111AbgDAQ2X (ORCPT
+        id S2387720AbgDAQ20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53678 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388100AbgDAQ2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:28:20 -0400
+        id S2388104AbgDAQ2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:28:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8C820BED;
-        Wed,  1 Apr 2020 16:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7833B20857;
+        Wed,  1 Apr 2020 16:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758500;
-        bh=MpayfXopxg/rWdzTRI0RFVYc1nBvqXgUxTLUgzl8GvU=;
+        s=default; t=1585758502;
+        bh=r+e9qHmInOQJ47PfeFDi1mAZiHipiVuBXvckxLYW3bU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V50Ra+LpI2fJqf8lSyT8oXN/COyoWp5SDyBHJYv7/RnY//nDGTASxH1+/Tyntcbmr
-         KK7k24uo+f8a5zbwn/tCkkAZVyG0dkU4+fcdrNB7zYYx+sJdzcKd80x1tHop9pBM0Y
-         tzAbEyXA0KcNSmVMo1LIBIPonjLcp8KSfneA6Y7Y=
+        b=EoQkWr49OAvTdcNGod+6SVFZ9hU4pwKpIgWu6EgFdRcLBcVUT2bLCWG1AeUDfKEuQ
+         qlKKbPMs8apHT8rQxBCqA5QkUmaKtLp7rse6JAOKYRfusNiK6tkrFTiQNCfGv+PWEK
+         nGDP+bxxCmq/US1NMEZmhqEkOiEEyFpOTdWdDwjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Mallet <anthony.mallet@laas.fr>,
-        Oliver Neukum <oneukum@suse.com>,
-        Matthias Reichl <hias@horus.com>
-Subject: [PATCH 4.19 082/116] USB: cdc-acm: restore capability check order
-Date:   Wed,  1 Apr 2020 18:17:38 +0200
-Message-Id: <20200401161553.051896608@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.19 109/116] arm64: alternative: fix build with clang integrated assembler
+Date:   Wed,  1 Apr 2020 18:18:05 +0200
+Message-Id: <20200401161556.080817852@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,56 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Reichl <hias@horus.com>
+From: Ilie Halip <ilie.halip@gmail.com>
 
-commit 62d65bdd9d05158aa2547f8ef72375535f3bc6e3 upstream.
+commit 6f5459da2b8736720afdbd67c4bd2d1edba7d0e3 upstream.
 
-commit b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
-introduced a regression by changing the order of capability and close
-settings change checks. When running with CAP_SYS_ADMIN setting the
-close settings to the values already set resulted in -EOPNOTSUPP.
+Building an arm64 defconfig with clang's integrated assembler, this error
+occurs:
+    <instantiation>:2:2: error: unrecognized instruction mnemonic
+     _ASM_EXTABLE 9999b, 9f
+     ^
+    arch/arm64/mm/cache.S:50:1: note: while in macro instantiation
+    user_alt 9f, "dc cvau, x4", "dc civac, x4", 0
+    ^
 
-Fix this by changing the check order back to how it was before.
+While GNU as seems fine with case-sensitive macro instantiations, clang
+doesn't, so use the actual macro name (_asm_extable) as in the rest of
+the file.
 
-Fixes: b401f8c4f492c ("USB: cdc-acm: fix rounding error in TIOCSSERIAL")
-Cc: Anthony Mallet <anthony.mallet@laas.fr>
-Cc: stable <stable@vger.kernel.org>
-Cc: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Matthias Reichl <hias@horus.com>
-Link: https://lore.kernel.org/r/20200327150350.3657-1-hias@horus.com
+Also checked that the generated assembly matches the GCC output.
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: 290622efc76e ("arm64: fix "dc cvau" cache operation on errata-affected core")
+Link: https://github.com/ClangBuiltLinux/linux/issues/924
+Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/cdc-acm.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm64/include/asm/alternative.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -949,16 +949,16 @@ static int set_serial_info(struct acm *a
+--- a/arch/arm64/include/asm/alternative.h
++++ b/arch/arm64/include/asm/alternative.h
+@@ -221,7 +221,7 @@ alternative_endif
  
- 	mutex_lock(&acm->port.mutex);
+ .macro user_alt, label, oldinstr, newinstr, cond
+ 9999:	alternative_insn "\oldinstr", "\newinstr", \cond
+-	_ASM_EXTABLE 9999b, \label
++	_asm_extable 9999b, \label
+ .endm
  
--	if ((new_serial.close_delay != old_close_delay) ||
--            (new_serial.closing_wait != old_closing_wait)) {
--		if (!capable(CAP_SYS_ADMIN))
-+	if (!capable(CAP_SYS_ADMIN)) {
-+		if ((new_serial.close_delay != old_close_delay) ||
-+	            (new_serial.closing_wait != old_closing_wait))
- 			retval = -EPERM;
--		else {
--			acm->port.close_delay  = close_delay;
--			acm->port.closing_wait = closing_wait;
--		}
--	} else
--		retval = -EOPNOTSUPP;
-+		else
-+			retval = -EOPNOTSUPP;
-+	} else {
-+		acm->port.close_delay  = close_delay;
-+		acm->port.closing_wait = closing_wait;
-+	}
- 
- 	mutex_unlock(&acm->port.mutex);
- 	return retval;
+ /*
 
 
