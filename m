@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02714C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD7BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948C620719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1CEC20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759270;
-	bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
+	s=default; t=1585759275;
+	bh=0jMt3WINiBPNuIRvxABQcYRodklQyBeAydkA/QOnCmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6KzSpkBS4vYl/tkhdTCASxSsj2QeH23bnkHHh5iPHtPt/twk7JSyG/gx506CuwGp
-	 xfLyIAzqgOVzkqUQCMIg+LeVXSTWiQOgVvte8erW5v7ZpczCL0QDuty5z1R8Bxm5mF
-	 Sp/p9EpRXATaYZYtSLxwJDk1Bu8WqqDCqXqujyTQ=
+	b=PtM6mMNUxknWlyZvMbShP0Eh4HggRWURyjSxrXy6nP7y7mAWuXpMkhel9XIfvmaby
+	 /01nntlbASrr3LYVGLNlj116RVSOJuABC2o3oB6wcVkOp7rilZkU3/WKsNg2ozFSri
+	 UT4u8sqNGz+fiTjejYEaMf8ln3FwwQG+ETyj3Geo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389393AbgDAQlJ (ORCPT
+        id S2389409AbgDAQlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:41:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389215AbgDAQlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:41:07 -0400
+        id S2389215AbgDAQlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:41:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26E6A20658;
-        Wed,  1 Apr 2020 16:41:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD3A22063A;
+        Wed,  1 Apr 2020 16:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759266;
-        bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
+        s=default; t=1585759269;
+        bh=0jMt3WINiBPNuIRvxABQcYRodklQyBeAydkA/QOnCmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNx+xDIa2HCv2FytIHtmmQjy6FAUVSHetkv3zPi1O05RM/HBrPwTFJfokX2tRaAAU
-         vEbfd/sgaX7xsY+Wc0nu9v3duHLut48FDTRe7zqOiNvUJ1+NazL3iUkwd5cwPnGlxa
-         YR+QlVZIU6c4fDtde9YT1Py7lQi0z+oyakQEvJik=
+        b=qpJvyBNwJS4TLD+XI7yYrFQQ5XqQH0RizNEkVTjCW8n+4x7m93ROhqmiJY77iFd93
+         crTPCEWe+3S/1YSKqq4bR2/f51olGXljMv/a5Kz+OL6LOAojkodMCjCDUkwQgJTj2Z
+         kongXNd5z+I/irIHuUFjB7oAZ/tNPJnz6aDZlcJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Linus Waleij <linus.walleij@linaro.org>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 026/148] iio: trigger: stm32-timer: disable master mode when stopping
-Date:   Wed,  1 Apr 2020 18:16:58 +0200
-Message-Id: <20200401161555.014527689@linuxfoundation.org>
+Subject: [PATCH 4.14 027/148] iio: magnetometer: ak8974: Fix negative raw values in sysfs
+Date:   Wed,  1 Apr 2020 18:16:59 +0200
+Message-Id: <20200401161555.115008972@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,58 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 29e8c8253d7d5265f58122c0a7902e26df6c6f61 upstream.
+commit b500c086e4110829a308c23e83a7cdc65b26228a upstream.
 
-Master mode should be disabled when stopping. This mainly impacts
-possible other use-case after timer has been stopped. Currently,
-master mode remains set (from start routine).
+At the moment, reading from in_magn_*_raw in sysfs tends to return
+large values around 65000, even though the output of ak8974 is actually
+limited to ±32768. This happens because the value is never converted
+to the signed 16-bit integer variant.
 
-Fixes: 6fb34812c2a2 ("iio: stm32 trigger: Add support for TRGO2 triggers")
+Add an explicit cast to s16 to fix this.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/trigger/stm32-timer-trigger.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/iio/magnetometer/ak8974.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/trigger/stm32-timer-trigger.c
-+++ b/drivers/iio/trigger/stm32-timer-trigger.c
-@@ -161,7 +161,8 @@ static int stm32_timer_start(struct stm3
- 	return 0;
- }
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -563,7 +563,7 @@ static int ak8974_read_raw(struct iio_de
+ 		 * We read all axes and discard all but one, for optimized
+ 		 * reading, use the triggered buffer.
+ 		 */
+-		*val = le16_to_cpu(hw_values[chan->address]);
++		*val = (s16)le16_to_cpu(hw_values[chan->address]);
  
--static void stm32_timer_stop(struct stm32_timer_trigger *priv)
-+static void stm32_timer_stop(struct stm32_timer_trigger *priv,
-+			     struct iio_trigger *trig)
- {
- 	u32 ccer, cr1;
- 
-@@ -179,6 +180,12 @@ static void stm32_timer_stop(struct stm3
- 	regmap_write(priv->regmap, TIM_PSC, 0);
- 	regmap_write(priv->regmap, TIM_ARR, 0);
- 
-+	/* Force disable master mode */
-+	if (stm32_timer_is_trgo2_name(trig->name))
-+		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
-+	else
-+		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
-+
- 	/* Make sure that registers are updated */
- 	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
- }
-@@ -197,7 +204,7 @@ static ssize_t stm32_tt_store_frequency(
- 		return ret;
- 
- 	if (freq == 0) {
--		stm32_timer_stop(priv);
-+		stm32_timer_stop(priv, trig);
- 	} else {
- 		ret = stm32_timer_start(priv, trig, freq);
- 		if (ret)
+ 		ret = IIO_VAL_INT;
+ 	}
 
 
