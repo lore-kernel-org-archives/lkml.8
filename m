@@ -2,163 +2,136 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D106C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BB2C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B86A2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4517A2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:35:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="dJzquYYl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KAywp385"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732674AbgDANer (ORCPT
+        id S1732702AbgDANfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:34:47 -0400
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:40122 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732587AbgDANer (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:34:47 -0400
-Received: by mail-ed1-f43.google.com with SMTP id w26so29590255edu.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 06:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vvMhsyalHgLR7BhFwzAsPtNqVbCXBf3wROS4TZNwS2o=;
-        b=dJzquYYlrEleQ255CNcwNKohJNgWkZ0preJPVYpCjZ+FTERm/igjSD889iQgLotvB1
-         JQTsU14tWQbRa+xx5icx3fWophVuRCJKg4X4IpINCAHbIH15Qx5oUFEtINoXlKljmYRt
-         8kD7k4R6FT5gPp47zwJs/pvfUjM25V9X6ksiw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vvMhsyalHgLR7BhFwzAsPtNqVbCXBf3wROS4TZNwS2o=;
-        b=M4ftegg/5/40vN+TYaBfkCJE6VbeCEpJhnd029Ps9dY/22v+ORJfP0ial4wX+BAqAB
-         IdbfIoNFtJkgBWTT54RpfEqaq8RinT908uolPjOAOwYKNCf2DtgocF0NS5V4eFbl9v+5
-         zdzYiBKYgT538YJPycgaeD2MxhK5sX3aGeGDNT9+nEPV4cGPmRz3SMBYvQS127jH+0b1
-         WXeq4LCBsfOlRRRfhvYPynlGwCuV51mX+g7Y7Hc7mzcftMG5fBOzhg1irZt7mgAtHb8l
-         B3kuMx+v1+Dib19V9TIGGki09FCNbEM+GsNQu8kEAyG4guLFUdwdEBvb5V6BnHfk3XWu
-         dk8Q==
-X-Gm-Message-State: ANhLgQ13ipUAG/GzHWrrlMq/pNtvBeo7D1k4BPyczmLss2Lt1ucqrFCF
-        UpL6sG826E0qtTiHJSDXnW8CmsTl9TcytOsYceyv6A==
-X-Google-Smtp-Source: ADFU+vtrF9QMVj3daT1dm0uQWwcAkf/pmHNzlVbS9TuTi0vF12GbPKTIN11J7V3H+UIvcSUdkirmtjYjIySZ1J7mpqg=
-X-Received: by 2002:a17:906:6545:: with SMTP id u5mr11392194ejn.27.1585748082818;
- Wed, 01 Apr 2020 06:34:42 -0700 (PDT)
+        Wed, 1 Apr 2020 09:35:40 -0400
+Received: from mail-eopbgr40079.outbound.protection.outlook.com ([40.107.4.79]:23694
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732234AbgDANfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 09:35:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SwZrNGASAEIMmi/Fbpp5720fehN0PqrILUst2exxxoCjM/jscohxt7W+rayT9l0kzix/UHaG59tPJxlKmMR9GpcftWJtn9y/NY4oT4omX+8MHsWb/jqfXoZiX8BlxD+061B+vWqvfgUWoM9sfZgyaMnOP6da2/EtOVBsFTw9MNjLzsgN39ZZCJJzCJ1rzEkEy18kjB+rvwGxb+d2bPnKblHFep6t3xhAgtrMVxC82CIDjqF01rWw1JJEymrrNC7/PqxJMaduKutYkZol3aWTZOZin/iYxiPBIlcykxwebwsPc9XU/3qG4QxzznHijd+GBTLAyHj5fkSxOLbXourhtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AeVzIt7CF8mz3KyY0kXWw88dSf23A6KMONTj/JNY7j4=;
+ b=KoRWB+tTRpyDOuyYeaeZSIDOflAQJXvV9/h5giEyPrK+/iIg4viYEEpITHFNIGVA6e0JGCoVSiTbaoFyQlnyrfbUDNwRGwHISQ5bpban9AcwKfO/XJCvOumBRSimTrq0b9fcBEpsp5Fh2JOE3JMgn9Cm3Kw8yYkXNJlqPqyA/4xIuNeF4yD9R8j92TZ8YRRD0AMmm0M66Att8JVY2OVvBHLei/CqIKvgJWXcNe3XfIzL4qeKx6v85LI1uo7FoaoH8/T4YQXPEBU6QV1FmmRv9K9zYaz3GS8X+wl8D5Mg/mMe5iYWPRqo66fb1mywwvlQjbD1tzn4wajJ0DyglNPCjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AeVzIt7CF8mz3KyY0kXWw88dSf23A6KMONTj/JNY7j4=;
+ b=KAywp385sybYlT9YOn+ei49NBVQyX5Xmv0CEg0aSI+qkPgVMhtf73Aukfc9PzTJv05QWwEMehXyANgfO1erz+zQpMntt+/pmT98YaJPGVfGjG7cWZkhp0pGdPC0sKQNcx8oXA8NGav8QujLGqeOaHsHQrbOBJ7lsZgiuSQ2mjmg=
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (20.178.114.161) by
+ AM0PR04MB4162.eurprd04.prod.outlook.com (52.134.95.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Wed, 1 Apr 2020 13:35:36 +0000
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::ccc:be36:aaf0:709a]) by AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::ccc:be36:aaf0:709a%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
+ 13:35:36 +0000
+From:   Florinel Iordache <florinel.iordache@nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florinel Iordache <florinel.iordache@nxp.com>
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+Thread-Topic: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+Thread-Index: AdYIKJUsx3bt4MTYS3+XcE5ss4tWhQ==
+Date:   Wed, 1 Apr 2020 13:35:36 +0000
+Message-ID: <AM0PR04MB5443E8D583734C98C54C519EFBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=florinel.iordache@nxp.com; 
+x-originating-ip: [78.96.99.111]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7dc65ab3-0c72-45bc-2333-08d7d6418f58
+x-ms-traffictypediagnostic: AM0PR04MB4162:|AM0PR04MB4162:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4162D2164C984F7FD0E2920FFBC90@AM0PR04MB4162.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(366004)(376002)(136003)(39860400002)(316002)(66446008)(52536014)(76116006)(86362001)(26005)(33656002)(54906003)(7696005)(2906002)(4326008)(186003)(44832011)(478600001)(6506007)(7416002)(81166006)(66476007)(66946007)(64756008)(6916009)(9686003)(55016002)(71200400001)(8676002)(81156014)(66556008)(8936002)(5660300002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U+VvETLqJzsG0PXejmXRJI3YiO67BEJYZHh9EBnALJZxLoV2OX0q3RbfhL76eIJtenZsKDmGNXn974OIkwAkFn/wv91ng4Tnvajn5mD4UQ5REHCeePtVe/Qdn1qsjfybF3FglcXFGnowCicEdbtjZqVp8pS9QhUAiUKo6qSpFSEg4AIFtCZqyTzT6XPpKEIH6QUPg6F1F1a3f7NWoNPZxKfRwGquOnsBUxXs0FT1alcSTR/oAAlXvq6ZKoC33xKF1l3EUSnK/ONqxjyfsMV2kF3xbiO+ZsZELjJF9sAekd4HW+H2EGBv5tFLLLyAh1s6sp6ZTO7XVDQ+jIOM9bujqHRsyg66mAbQCLc1dMQI7ynN5QrhOlC0wDBH1T9lmudO9u7eVN1pictTaMfqg3FGF/6z+hzHJbKm8ZvZiuuvNX5S+KtyWk+WJfP0VwArJSev
+x-ms-exchange-antispam-messagedata: dN1cRpkFrALDWn4dY7JJ3Z9uOUzfPwbIcnKmMcr/5bCQgPvF8LiX7TJd3f3JOBjlZEJLjG5PDg+iP0miF3Yqm9mvbDnEE0aLUBdh4GuOaKgzIV4ogWcgrTZVPs1ePKXXHPVDpSygWxM64uQBCEvIVA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk>
- <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home>
-In-Reply-To: <20200401090445.6t73dt7gz36bv4rh@ws.net.home>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 1 Apr 2020 15:34:31 +0200
-Message-ID: <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-To:     Karel Zak <kzak@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Content-Type: multipart/mixed; boundary="0000000000002e407205a23abf26"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7dc65ab3-0c72-45bc-2333-08d7d6418f58
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 13:35:36.0721
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: n3Mu8uAD0O44eAQQuicGWFMroX4NsW6uOM4mF6TwdoaXeuoor2GTpuhmi5dSw8tD68fm+JSrQXQNbpviSb7pnMnfth4hWmrNpMy8xHQDTuM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000002e407205a23abf26
-Content-Type: text/plain; charset="UTF-8"
+> On Thu, Mar 26, 2020 at 03:51:19PM +0200, Florinel Iordache wrote:
+> > +static void setup_supported_linkmode(struct phy_device *bpphy) {
+> > +     struct backplane_phy_info *bp_phy =3D bpphy->priv;
+>=20
+> I'm not sure it is a good idea to completely take over phydev->priv like =
+this, in
+> what is just helper code. What if the PHY driver needs memory of its own?=
+ There
+> are a few examples of this already in other PHY drivers. Could a KR PHY c=
+ontain
+> a temperature sensor? Could it contain statistics counters which need
+> accumulating?
+>=20
+>         Andrew
 
-On Wed, Apr 1, 2020 at 11:05 AM Karel Zak <kzak@redhat.com> wrote:
->
-> On Tue, Mar 31, 2020 at 10:52:52PM +0100, David Howells wrote:
-> > Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> >
-> > > querying all properties of a mount atomically all-at-once,
-> >
-> > I don't actually offer that, per se.
-> >
-> > Having an atomic all-at-once query for a single mount is actually quite a
-> > burden on the system.  There's potentially a lot of state involved, much of
-> > which you don't necessarily need.
->
-> If all means "all possible attributes" than it is unnecessary, for
-> example ext4 timestamps or volume uuid/label are rarely necessary.
-> We usually need together (as consistent set):
->
->     source
->     mountpoint
->     FS type
->     FS root (FSINFO_ATTR_MOUNT_PATH)
->     FS options (FSINFO_ATTR_CONFIGURATION)
->     VFS attributes
->     VFS propagation flags
->     mount ID
->     parent ID
->     devno (or maj:min)
+Backplane KR driver allocates memory for structure backplane_phy_info
+which is saved in phydev->priv. After all this is the purpose of priv
+according to its description in phy.h: <<private data pointer For use
+by PHYs to maintain extra state>>. Here the priv is used to maintain
+extra state needed for backplane. This way the backplane specific data
+becomes available for all PHY callbacks (defined in struct phy_driver)
+that receive a pointer to phy_device structure. This initial version
+doesn't include accumulating statistics counters but we have in plan
+to add these in future versions. The counters will be kept in specific
+structures as members of the main backplane data mentioned above
+and entire support will be integrated with ethtool.
 
-This is trivial with mountfs (reuse format of /proc/PID/mountinfo):
-
-# cat /mnt/30/info
-30 20 0:14 / /mnt rw,relatime - mountfs none rw
-
-Attached patch applies against readfile patch.
-
-We might want something more generic, and it won't get any simpler:
-
- mount.h          |    1 +
- mountfs/super.c  |   12 +++++++++++-
- proc_namespace.c |    2 +-
- 3 files changed, 13 insertions(+), 2 deletions(-)
-
-Thanks,
-Miklos
-
---0000000000002e407205a23abf26
-Content-Type: text/x-patch; charset="US-ASCII"; name="mountfs-info.patch"
-Content-Disposition: attachment; filename="mountfs-info.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k8hdan1o0>
-X-Attachment-Id: f_k8hdan1o0
-
-LS0tCiBmcy9tb3VudC5oICAgICAgICAgIHwgICAgMSArCiBmcy9tb3VudGZzL3N1cGVyLmMgIHwg
-ICAxMiArKysrKysrKysrKy0KIGZzL3Byb2NfbmFtZXNwYWNlLmMgfCAgICAyICstCiAzIGZpbGVz
-IGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgotLS0gYS9mcy9tb3Vu
-dC5oCisrKyBiL2ZzL21vdW50LmgKQEAgLTE4NiwzICsxODYsNCBAQCB2b2lkIG1vdW50ZnNfY3Jl
-YXRlKHN0cnVjdCBtb3VudCAqbW50KTsKIGV4dGVybiB2b2lkIG1vdW50ZnNfcmVtb3ZlKHN0cnVj
-dCBtb3VudCAqbW50KTsKIGludCBtb3VudGZzX2xvb2t1cF9pbnRlcm5hbChzdHJ1Y3QgdmZzbW91
-bnQgKm0sIHN0cnVjdCBwYXRoICpwYXRoKTsKIAoraW50IHNob3dfbW91bnRpbmZvKHN0cnVjdCBz
-ZXFfZmlsZSAqbSwgc3RydWN0IHZmc21vdW50ICptbnQpOwotLS0gYS9mcy9tb3VudGZzL3N1cGVy
-LmMKKysrIGIvZnMvbW91bnRmcy9zdXBlci5jCkBAIC0yMiw3ICsyMiw3IEBAIHN0cnVjdCBtb3Vu
-dGZzX2VudHJ5IHsKIAogc3RhdGljIGNvbnN0IGNoYXIgKm1vdW50ZnNfYXR0cnNbXSA9IHsKIAki
-cm9vdCIsICJtb3VudHBvaW50IiwgImlkIiwgInBhcmVudCIsICJvcHRpb25zIiwgImNoaWxkcmVu
-IiwKLQkiZ3JvdXAiLCAibWFzdGVyIiwgInByb3BhZ2F0ZV9mcm9tIiwgImNvdW50ZXIiCisJImdy
-b3VwIiwgIm1hc3RlciIsICJwcm9wYWdhdGVfZnJvbSIsICJjb3VudGVyIiwgImluZm8iCiB9Owog
-CiAjZGVmaW5lIE1PVU5URlNfSU5PKGlkKSAoKCh1bnNpZ25lZCBsb25nKSBpZCArIDEpICogXApA
-QCAtMTI2LDExICsxMjYsMjEgQEAgc3RhdGljIGludCBtb3VudGZzX2F0dHJfc2hvdyhzdHJ1Y3Qg
-c2VxXwogCQlpZiAoSVNfTU5UX1NMQVZFKG1udCkpIHsKIAkJCWdldF9mc19yb290KGN1cnJlbnQt
-PmZzLCAmcm9vdCk7CiAJCQl0bXAgPSBnZXRfZG9taW5hdGluZ19pZChtbnQsICZyb290KTsKKwkJ
-CXBhdGhfcHV0KCZyb290KTsKIAkJCWlmICh0bXApCiAJCQkJc2VxX3ByaW50ZihzZiwgIiVpXG4i
-LCB0bXApOwogCQl9CiAJfSBlbHNlIGlmIChzdHJjbXAobmFtZSwgImNvdW50ZXIiKSA9PSAwKSB7
-CiAJCXNlcV9wcmludGYoc2YsICIldVxuIiwgYXRvbWljX3JlYWQoJm1udC0+bW50X3RvcG9sb2d5
-X2NoYW5nZXMpKTsKKwl9IGVsc2UgaWYgKHN0cmNtcChuYW1lLCAiaW5mbyIpID09IDApIHsKKwkJ
-c3RydWN0IHByb2NfbW91bnRzIHAgPSB7fTsKKworCQlXQVJOX09OKHNmLT5wcml2YXRlKTsKKwkJ
-c2YtPnByaXZhdGUgPSAmcDsKKwkJZ2V0X2ZzX3Jvb3QoY3VycmVudC0+ZnMsICZwLnJvb3QpOwor
-CQllcnIgPSBzaG93X21vdW50aW5mbyhzZiwgbSk7CisJCXBhdGhfcHV0KCZwLnJvb3QpOworCQlz
-Zi0+cHJpdmF0ZSA9IE5VTEw7CiAJfSBlbHNlIHsKIAkJV0FSTl9PTigxKTsKIAkJZXJyID0gLUVJ
-TzsKLS0tIGEvZnMvcHJvY19uYW1lc3BhY2UuYworKysgYi9mcy9wcm9jX25hbWVzcGFjZS5jCkBA
-IC0xMTAsNyArMTEwLDcgQEAgc3RhdGljIGludCBzaG93X3Zmc21udChzdHJ1Y3Qgc2VxX2ZpbGUg
-KgogCXJldHVybiBlcnI7CiB9CiAKLXN0YXRpYyBpbnQgc2hvd19tb3VudGluZm8oc3RydWN0IHNl
-cV9maWxlICptLCBzdHJ1Y3QgdmZzbW91bnQgKm1udCkKK2ludCBzaG93X21vdW50aW5mbyhzdHJ1
-Y3Qgc2VxX2ZpbGUgKm0sIHN0cnVjdCB2ZnNtb3VudCAqbW50KQogewogCXN0cnVjdCBwcm9jX21v
-dW50cyAqcCA9IG0tPnByaXZhdGU7CiAJc3RydWN0IG1vdW50ICpyID0gcmVhbF9tb3VudChtbnQp
-Owo=
---0000000000002e407205a23abf26--
+Florin.
