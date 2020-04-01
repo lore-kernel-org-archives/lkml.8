@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28133C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10995C2BA12
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C983B212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A49206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759068;
-	bh=hftGqCuUIIoAdqQDcd+Mev2Z/qHi/EBRpyd3Yv4Zl9M=;
+	s=default; t=1585759070;
+	bh=+JAAVEF8KYJY+js1qOPD/3WM6MFYxSxtSx/3r8F4uoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iiUjT4qBLJR3aXLgfZOV+APkquuReBVqrbccLSt6ormN1nbkBZWoZnu+kg5rRJY9k
-	 TIJsEHP1kurwsvZtIQhfoSVqz0gNQPcj2cmPaCWsxiGpr1q/U9rwfgbCyWRozgO9zh
-	 Nj6R1DJ6jOMNEZjHOjG5/i9PXDtKuZT6+Lz5YCn0=
+	b=S4mVFJNNS/jRzXnfgZTEpPP3/+1X5DEySvIHLYvlHAiKoAUvFKCj7eyH4En2H/55i
+	 SSWTPbnRdKGe9K82HG5omNfQQKf7c4lNvsvZlSCYXWpBLcj8c0AdhvJM/TsAtYC7KS
+	 61qJt/EFpJIjJ/vBMvYU9dGXPXjH30omyuaHGbuM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388176AbgDAQhr (ORCPT
+        id S2388879AbgDAQhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36928 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:37:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388988AbgDAQhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:37:41 -0400
+        id S2388995AbgDAQho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:37:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B3D220772;
-        Wed,  1 Apr 2020 16:37:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00EC920BED;
+        Wed,  1 Apr 2020 16:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759060;
-        bh=hftGqCuUIIoAdqQDcd+Mev2Z/qHi/EBRpyd3Yv4Zl9M=;
+        s=default; t=1585759063;
+        bh=+JAAVEF8KYJY+js1qOPD/3WM6MFYxSxtSx/3r8F4uoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XT1ofjTExs5KYZPemBI1T65vie3JJrKi74rxDjb+83gYLY92TcKtPy+1RSwpQ80rD
-         X0dfTpTz2eMrFtXscU+IMft2/GuO5qTg79Vikt9bqmI5UmnGd6IW466a1iU3bI76xF
-         jdraH111yOG2nl+mxKbt45fLTygt3CrvSVgCceho=
+        b=Qwdm5gIFLzqBO2AGc0QWIfqejEGVY2+LmsTA9HeUE5SPmsFCTkOXmN4smQyN6++nQ
+         VqQV/BkVdXHBH8EMp4uHuDuSd3/XdNBjV9RR6UfwIdOUmhh0mgVoLlw+AZPhC33m3m
+         Kvjm2ZWZj8ZQ0ynAHUAzftDkYsMvyp5UIn/q2X2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 064/102] genirq: Fix reference leaks on irq affinity notifiers
-Date:   Wed,  1 Apr 2020 18:18:07 +0200
-Message-Id: <20200401161543.662169807@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.9 065/102] vti[6]: fix packet tx through bpf_redirect() in XinY cases
+Date:   Wed,  1 Apr 2020 18:18:08 +0200
+Message-Id: <20200401161543.746725659@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,60 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Cree <ecree@solarflare.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-commit df81dfcfd6991d547653d46c051bac195cd182c1 upstream.
+commit f1ed10264ed6b66b9cd5e8461cffce69be482356 upstream.
 
-The handling of notify->work did not properly maintain notify->kref in two
- cases:
-1) where the work was already scheduled, another irq_set_affinity_locked()
-   would get the ref and (no-op-ly) schedule the work.  Thus when
-   irq_affinity_notify() ran, it would drop the original ref but not the
-   additional one.
-2) when cancelling the (old) work in irq_set_affinity_notifier(), if there
-   was outstanding work a ref had been got for it but was never put.
-Fix both by checking the return values of the work handling functions
- (schedule_work() for (1) and cancel_work_sync() for (2)) and put the
- extra ref if the return value indicates preexisting work.
+I forgot the 4in6/6in4 cases in my previous patch. Let's fix them.
 
-Fixes: cd7eab44e994 ("genirq: Add IRQ affinity notifiers")
-Fixes: 59c39840f5ab ("genirq: Prevent use-after-free and work list corruption")
-Signed-off-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
-Link: https://lkml.kernel.org/r/24f5983f-2ab5-e83a-44ee-a45b5f9300f5@solarflare.com
+Fixes: 95224166a903 ("vti[6]: fix packet tx through bpf_redirect()")
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/manage.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ net/ipv4/Kconfig   |    1 +
+ net/ipv4/ip_vti.c  |   36 +++++++++++++++++++++++++++++-------
+ net/ipv6/ip6_vti.c |   32 +++++++++++++++++++++++++-------
+ 3 files changed, 55 insertions(+), 14 deletions(-)
 
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -233,7 +233,11 @@ int irq_set_affinity_locked(struct irq_d
+--- a/net/ipv4/Kconfig
++++ b/net/ipv4/Kconfig
+@@ -298,6 +298,7 @@ config SYN_COOKIES
  
- 	if (desc->affinity_notify) {
- 		kref_get(&desc->affinity_notify->kref);
--		schedule_work(&desc->affinity_notify->work);
-+		if (!schedule_work(&desc->affinity_notify->work)) {
-+			/* Work was already scheduled, drop our extra ref */
-+			kref_put(&desc->affinity_notify->kref,
-+				 desc->affinity_notify->release);
+ config NET_IPVTI
+ 	tristate "Virtual (secure) IP: tunneling"
++	depends on IPV6 || IPV6=n
+ 	select INET_TUNNEL
+ 	select NET_IP_TUNNEL
+ 	depends on INET_XFRM_MODE_TUNNEL
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -208,17 +208,39 @@ static netdev_tx_t vti_xmit(struct sk_bu
+ 	int mtu;
+ 
+ 	if (!dst) {
+-		struct rtable *rt;
++		switch (skb->protocol) {
++		case htons(ETH_P_IP): {
++			struct rtable *rt;
+ 
+-		fl->u.ip4.flowi4_oif = dev->ifindex;
+-		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
+-		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
+-		if (IS_ERR(rt)) {
++			fl->u.ip4.flowi4_oif = dev->ifindex;
++			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++			if (IS_ERR(rt)) {
++				dev->stats.tx_carrier_errors++;
++				goto tx_error_icmp;
++			}
++			dst = &rt->dst;
++			skb_dst_set(skb, dst);
++			break;
 +		}
++#if IS_ENABLED(CONFIG_IPV6)
++		case htons(ETH_P_IPV6):
++			fl->u.ip6.flowi6_oif = dev->ifindex;
++			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++			if (dst->error) {
++				dst_release(dst);
++				dst = NULL;
++				dev->stats.tx_carrier_errors++;
++				goto tx_error_icmp;
++			}
++			skb_dst_set(skb, dst);
++			break;
++#endif
++		default:
+ 			dev->stats.tx_carrier_errors++;
+ 			goto tx_error_icmp;
+ 		}
+-		dst = &rt->dst;
+-		skb_dst_set(skb, dst);
  	}
- 	irqd_set(data, IRQD_AFFINITY_SET);
  
-@@ -333,7 +337,10 @@ irq_set_affinity_notifier(unsigned int i
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 	dst_hold(dst);
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -454,15 +454,33 @@ vti6_xmit(struct sk_buff *skb, struct ne
+ 	int mtu;
  
- 	if (old_notify) {
--		cancel_work_sync(&old_notify->work);
-+		if (cancel_work_sync(&old_notify->work)) {
-+			/* Pending work had a ref, put that one too */
-+			kref_put(&old_notify->kref, old_notify->release);
+ 	if (!dst) {
+-		fl->u.ip6.flowi6_oif = dev->ifindex;
+-		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
+-		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
+-		if (dst->error) {
+-			dst_release(dst);
+-			dst = NULL;
++		switch (skb->protocol) {
++		case htons(ETH_P_IP): {
++			struct rtable *rt;
++
++			fl->u.ip4.flowi4_oif = dev->ifindex;
++			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++			if (IS_ERR(rt))
++				goto tx_err_link_failure;
++			dst = &rt->dst;
++			skb_dst_set(skb, dst);
++			break;
 +		}
- 		kref_put(&old_notify->kref, old_notify->release);
++		case htons(ETH_P_IPV6):
++			fl->u.ip6.flowi6_oif = dev->ifindex;
++			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++			if (dst->error) {
++				dst_release(dst);
++				dst = NULL;
++				goto tx_err_link_failure;
++			}
++			skb_dst_set(skb, dst);
++			break;
++		default:
+ 			goto tx_err_link_failure;
+ 		}
+-		skb_dst_set(skb, dst);
  	}
  
+ 	dst_hold(dst);
 
 
