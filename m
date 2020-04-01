@@ -2,278 +2,101 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890F3C10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB77C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5984220BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4670B20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xWPkk1Jn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdBQbrgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732408AbgDAMa0 (ORCPT
+        id S1732464AbgDAMam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:30:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:16622 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732354AbgDAMaZ (ORCPT
+        Wed, 1 Apr 2020 08:30:42 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35297 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732352AbgDAMam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:30:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585744225; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=Z0Xp87Y05y0UuIbXR2bnYutLCxiJ/10ostDEHWR1uEI=; b=xWPkk1JnGUSxZogLTg0hGpHB0C1TaYzgrosmeWjBGAogIXvBB79AJ9WtUULoDAyFA8SpnlhJ
- tGRIWPjF6f55K2sFsi1bgVCZOo6cT9kzn9zOWDkNC3GGRxpCiqfhKJiOGHfXfjZXo8gfapGk
- Edf7y/YCO7uBY5yHE5UiG//7yvg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e848952.7effb8087d88-smtp-out-n02;
- Wed, 01 Apr 2020 12:30:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0CB72C44791; Wed,  1 Apr 2020 12:30:09 +0000 (UTC)
-Received: from [192.168.1.227] (unknown [49.204.179.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C624AC433BA;
-        Wed,  1 Apr 2020 12:30:04 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C624AC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
-Subject: Re: [PATCH 3/5] drm: msm: scale DDR BW along with GPU frequency
-To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        sibis@codeaurora.org, saravanak@google.com, viresh.kumar@linaro.org
-References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
- <1585641353-23229-4-git-send-email-smasetty@codeaurora.org>
- <20200331172600.GB11573@jcrouse1-lnx.qualcomm.com>
-From:   Sharat Masetty <smasetty@codeaurora.org>
-Message-ID: <929d84c4-bbb8-0c3f-52c0-c82c2055da46@codeaurora.org>
-Date:   Wed, 1 Apr 2020 18:00:01 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 1 Apr 2020 08:30:42 -0400
+Received: by mail-pj1-f66.google.com with SMTP id g9so2650538pjp.0;
+        Wed, 01 Apr 2020 05:30:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zARPi0DbJME0ZlHxq62XWZIwR42M3zqI8MWHownZMTc=;
+        b=JdBQbrgm4yhTz/TAL9hOMHC8lDUQddSvIeH7bD7dRvymc/gAUose5TGJ0HHkVBsURu
+         uHGy6wvyedinFVKw4wYm+IXEbLNrUTyZLbjC3qw8PmczyVXSVntjCC99AF2Yf/Fr3X4h
+         XZtIPmDCjAdInP6teQZmGu/PqKhr1PW4bw3CsfzmtCC6dgaOgIAfODLcNwlgr1pd3loP
+         +HBNoZS5c0uEme1CzCp9i9pyzQE3YVmKYTvD9ujQFKeYTh1xUSWlw3zSa6sgzYFnmiSJ
+         vfbYuBlak1e1lvWy2hMG816f8xTYjUHnGK2T/x3k3wbWf+ExHFCwD12ccR/BWQlV904z
+         RoBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zARPi0DbJME0ZlHxq62XWZIwR42M3zqI8MWHownZMTc=;
+        b=AjdltjOGP3mzWCVmV8oK6BYRwzpLGfjEklqe0sJZBMZvuy2F5YpdOxVRzkYi6PBmIK
+         PprP72lHnhgMZY1WDyk+VJa9JJwLWBIgZoe+MnQokm2LKk7k7zxphVJlQlQiVzAitrQz
+         GqnDCyNqDfOk/3a10P2BFWMe+Rrp12LcMflqZtDErS7lGE3Fv+Hl5NNfk+7gKnMG3cKb
+         /DHiYCA9IBUAdiLJ0h6RkGXP5aJzfvhRPFopR9pfOF/VbQyOQ0XaGMY23lrBV72gNQN5
+         WzF/4aPAqAffxcsiL3kwm7M72s2mll2LudQFzt5FUN1q2TVmg72UZUxjAFe2PQT4IMUc
+         LcJQ==
+X-Gm-Message-State: AGi0PuYnQAByFfVVi1hsIKus0VEzWOfDznPWkAL18oQmrJSirnVHOPSP
+        Hvbxijjvf5CdH7xBXbbq8lJ0C2SFH+QUTQp60Hc/VPgPurzRBg==
+X-Google-Smtp-Source: APiQypKDCxaUjrkt7jyanGBYlPxDcW9sA+YFWoysWgixJdCh1CcjOs1yfjdHe1qulMcbXeF/OAA6wZ7MxP+OBNLqKY8=
+X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr4665546pjn.8.1585744241051;
+ Wed, 01 Apr 2020 05:30:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200331172600.GB11573@jcrouse1-lnx.qualcomm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200401151904.6948af20@canb.auug.org.au> <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
+ <CACRpkdbP9gMLDnDSR6czN88Hjwu6HXSZ2jyYOo-iuq0W073Hbg@mail.gmail.com>
+ <CAMuHMdXPCwdd2-Hn0_N7nLgBatS8smnvLnxZD06Qsk+qGJKc7A@mail.gmail.com> <CAHp75VfOTVHFWw16XXtuWN64Ug8Bt5AqxBTy_p78fQfknh6tnw@mail.gmail.com>
+In-Reply-To: <CAHp75VfOTVHFWw16XXtuWN64Ug8Bt5AqxBTy_p78fQfknh6tnw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Apr 2020 15:30:34 +0300
+Message-ID: <CAHp75VfnsXZ9YqnU1=9MYwRTQ+gDU_jh4VcNKCQvZDsCgN7AYg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the gpio tree
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 1, 2020 at 3:29 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Wed, Apr 1, 2020 at 11:26 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Wed, Apr 1, 2020 at 10:19 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > On Wed, Apr 1, 2020 at 9:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > +EXPORT_SYMBOL_GPL(of_pinctrl_get);
+> > > >
+> > > > As exporting symbols has its (space) cost, and of_pinctrl_get() is a tiny
+> > > > function, what about making it an inline function in
+> > > > include/linux/pinctrl/pinctrl.h instead?
+> > >
+> > > I'm all for it! :)
+> >
+> > Want me to send a patch?
+> > Which base?
+>
+> Wouldn't we need to export the inside function in that case?
+> If so, we need a better name for it.
 
-On 3/31/2020 10:56 PM, Jordan Crouse wrote:
-> On Tue, Mar 31, 2020 at 01:25:51PM +0530, Sharat Masetty wrote:
->> This patch adds support to parse the OPP tables attached the GPU device,
->> the main opp table and the DDR bandwidth opp table. Additionally, vote
->> for the GPU->DDR bandwidth when setting the GPU frequency by querying
->> the linked DDR BW opp to the GPU opp.
->>
->> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
->> ---
->>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c   | 41 ++++++++++++++++++++++++++----
->>   drivers/gpu/drm/msm/adreno/adreno_gpu.c | 44 +++++++++++++++++++++++++++++----
->>   drivers/gpu/drm/msm/msm_gpu.h           |  9 +++++++
->>   3 files changed, 84 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> index 748cd37..489d9b6 100644
->> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
->> @@ -100,6 +100,40 @@ bool a6xx_gmu_gx_is_on(struct a6xx_gmu *gmu)
->>   		A6XX_GMU_SPTPRAC_PWR_CLK_STATUS_GX_HM_CLK_OFF));
->>   }
->>
->> +void a6xx_gmu_set_icc_vote(struct msm_gpu *gpu, unsigned long gpu_freq)
->> +{
->> +	struct dev_pm_opp *gpu_opp, *ddr_opp;
->> +	struct opp_table **tables = gpu->opp_tables;
->> +	unsigned long peak_bw;
->> +
->> +	if (!gpu->opp_tables[GPU_DDR_OPP_TABLE_INDEX])
->> +		goto done;
->> +
->> +	gpu_opp = dev_pm_opp_find_freq_exact(&gpu->pdev->dev, gpu_freq, true);
->> +	if (IS_ERR_OR_NULL(gpu_opp))
->> +		goto done;
->> +
->> +	ddr_opp = dev_pm_opp_xlate_required_opp(tables[GPU_OPP_TABLE_INDEX],
->> +					    tables[GPU_DDR_OPP_TABLE_INDEX],
->> +					    gpu_opp);
->> +	dev_pm_opp_put(gpu_opp);
->> +
->> +	if (IS_ERR_OR_NULL(ddr_opp))
->> +		goto done;
-> I think that the final approach is still up in the air but either way we're
-> going to pull the bandwidth from an OPP, its just a question of which OPP.
->
->> +	peak_bw = dev_pm_opp_get_bw(ddr_opp, NULL);
->> +	dev_pm_opp_put(ddr_opp);
->> +
->> +	icc_set_bw(gpu->icc_path, 0, peak_bw);
->> +	return;
->> +done:
->> +	/*
->> +	 * If there is a problem, for now leave it at max so that the
->> +	 * performance is nominal.
->> +	 */
->> +	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->> +}
->> +
->>   static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
->>   {
->>   	struct a6xx_gpu *a6xx_gpu = container_of(gmu, struct a6xx_gpu, gmu);
->> @@ -128,11 +162,8 @@ static void __a6xx_gmu_set_freq(struct a6xx_gmu *gmu, int index)
->>
->>   	gmu->freq = gmu->gpu_freqs[index];
->>
->> -	/*
->> -	 * Eventually we will want to scale the path vote with the frequency but
->> -	 * for now leave it at max so that the performance is nominal.
->> -	 */
->> -	icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
->> +	if (gpu->icc_path)
->> +		a6xx_gmu_set_icc_vote(gpu, gmu->freq);
-> This function is annoying because we call it from two different spots, but it
-> feels wasteful that devfreq gives us an OPP pointer and we go out of our way to
-> not use it only to search for it again in the set_icc_vote function. I think
-> maybe we should pass the OPP through from msm_gpu.c.  We could have a helper
-> function to pull the initial opp in a6xx_gmu_resume to make it clean.
+And wouldn't be cost even more expensive in such case due length of
+the function name?
 
-Yes Jordan, it makes sense. I did think about this too, but may be I 
-was  a bit too lazy to change the existing plumbing :)
 
-I will take care of this in the next iteration.
-
->
->>   }
->>
->>   void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
->> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
->> index 2d13694..bbbcc7a 100644
->> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
->> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
->> @@ -882,7 +882,7 @@ static int adreno_get_pwrlevels(struct device *dev,
->>   {
->>   	unsigned long freq = ULONG_MAX;
->>   	struct dev_pm_opp *opp;
->> -	int ret;
->> +	int ret, i;
->>
->>   	gpu->fast_rate = 0;
->>
->> @@ -890,9 +890,29 @@ static int adreno_get_pwrlevels(struct device *dev,
->>   	if (!of_find_property(dev->of_node, "operating-points-v2", NULL))
->>   		ret = adreno_get_legacy_pwrlevels(dev);
->>   	else {
->> -		ret = dev_pm_opp_of_add_table(dev);
->> -		if (ret)
->> -			DRM_DEV_ERROR(dev, "Unable to set the OPP table\n");
->> +		int count = of_count_phandle_with_args(dev->of_node,
->> +				"operating-points-v2", NULL);
->> +
->> +		count = min(count, GPU_DDR_OPP_TABLE_INDEX + 1);
->> +		count = max(count, 1);
->> +
->> +		for (i = 0; i < count; i++) {
->> +			ret = dev_pm_opp_of_add_table_indexed(dev, i);
->> +			if (ret) {
->> +				DRM_DEV_ERROR(dev, "Add OPP table %d: failed %d\n",
->> +						i, ret);
->> +				goto err;
->> +			}
->> +
->> +			gpu->opp_tables[i] =
->> +				dev_pm_opp_get_opp_table_indexed(dev, i);
->> +			if (!gpu->opp_tables[i]) {
->> +				DRM_DEV_ERROR(dev, "Get OPP table failed index %d\n",
->> +						i);
->> +				ret = -EINVAL;
->> +				goto err;
->> +			}
->> +		}
->>   	}
->>
->>   	if (!ret) {
->> @@ -919,12 +939,24 @@ static int adreno_get_pwrlevels(struct device *dev,
->>   		gpu->icc_path = NULL;
->>
->>   	return 0;
->> +err:
->> +	for (; i >= 0; i--) {
->> +		if (gpu->opp_tables[i]) {
->> +			dev_pm_opp_put_opp_table(gpu->opp_tables[i]);
->> +			gpu->opp_tables[i] = NULL;
->> +		}
->> +	}
->> +
->> +	dev_pm_opp_remove_table(dev);
->> +	return ret;
->>   }
->>
->>   int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->>   		struct adreno_gpu *adreno_gpu,
->>   		const struct adreno_gpu_funcs *funcs, int nr_rings)
->>   {
->> +	int ret = 0;
->> +
->>   	struct adreno_platform_config *config = pdev->dev.platform_data;
->>   	struct msm_gpu_config adreno_gpu_config  = { 0 };
->>   	struct msm_gpu *gpu = &adreno_gpu->base;
->> @@ -945,7 +977,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->>
->>   	adreno_gpu_config.nr_rings = nr_rings;
->>
->> -	adreno_get_pwrlevels(&pdev->dev, gpu);
->> +	ret = adreno_get_pwrlevels(&pdev->dev, gpu);
->> +	if (ret)
->> +		return ret;
->>
->>   	pm_runtime_set_autosuspend_delay(&pdev->dev,
->>   		adreno_gpu->info->inactive_period);
->> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
->> index ab8f0f9c..5b98b48 100644
->> --- a/drivers/gpu/drm/msm/msm_gpu.h
->> +++ b/drivers/gpu/drm/msm/msm_gpu.h
->> @@ -66,6 +66,12 @@ struct msm_gpu_funcs {
->>   	void (*gpu_set_freq)(struct msm_gpu *gpu, unsigned long freq);
->>   };
->>
->> +/* opp table indices */
->> +enum {
->> +	GPU_OPP_TABLE_INDEX,
->> +	GPU_DDR_OPP_TABLE_INDEX,
->> +};
->> +
->>   struct msm_gpu {
->>   	const char *name;
->>   	struct drm_device *dev;
->> @@ -113,6 +119,9 @@ struct msm_gpu {
->>
->>   	struct icc_path *icc_path;
->>
->> +	/* gpu/ddr opp tables */
->> +	struct opp_table *opp_tables[2];
-> You don't need an array here. We're not going to have that many tables.
->
-> struct opp_table *gpu_opp_table;
-> struct opp_table *bw_opp_table;
->
-> Is sufficient and we don't need an enum.
->
->> +
->>   	/* Hang and Inactivity Detection:
->>   	 */
->>   #define DRM_MSM_INACTIVE_PERIOD   66 /* in ms (roughly four frames) */
->> --
->> 2.7.4
->>
-> Jordan
->
+-- 
+With Best Regards,
+Andy Shevchenko
