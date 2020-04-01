@@ -2,192 +2,235 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E75C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8E5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0AB20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF02B21775
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G/fvhGKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbgDAIpO (ORCPT
+        id S1731379AbgDAIrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:45:14 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:63120 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730420AbgDAIpN (ORCPT
+        Wed, 1 Apr 2020 04:47:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43303 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728087AbgDAIrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:45:13 -0400
-X-AuditID: c0a8fbf4-489ff70000004419-e4-5e845497715a
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id CD.62.17433.794548E5; Wed,  1 Apr 2020 10:45:11 +0200 (CEST)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Wed, 1 Apr 2020 10:45:06 +0200
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "brendanhiggins@google.com" <brendanhiggins@google.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "talgi@mellanox.com" <talgi@mellanox.com>,
-        "olteanv@gmail.com" <olteanv@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davidgow@google.com" <davidgow@google.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Topic: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Index: AQHWB1c4b3nN1Ux6yEinb5I8a1VXN6hi3q0AgAD00IA=
-Date:   Wed, 1 Apr 2020 08:45:05 +0000
-Message-ID: <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-         <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-         <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com>
-In-Reply-To: <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A534CFF7AF89664891FB30A3EECE47C0@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 1 Apr 2020 04:47:02 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a5so20928232qtw.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tvks17TElncNUVJtHWlwAufDtb+/wKNIhVDLRHPndSE=;
+        b=G/fvhGKI1zMwNmjJy8EIRRXcIpLpmRdjeUF34VN7Aw/YO/naTFPfT8UKbz6Ylv0Kr9
+         WNYecDECUUaYYSb71C8o9j4Euw+Wct6t/Sb5RrAACN/RzMGH93brummTQ3PH1tLghisy
+         hPMwUEBogycy16MHhvBgckKCsmdG56PiRttsl5B0kgA0z39o2YZ5XAZuk5tq50Wra7wm
+         gWLgMo+YVSxbVCrirCWOvtVpNI2GgEFAnL52lEChY8yydGrIbAWGZcF0DbhOJFBSm3z/
+         CYJN2Fpu4VPvThTp2PNUya1GdUWegASVfLPkgRpGOLXf2UfroorzxOP6p14eYcISZeR2
+         rmxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tvks17TElncNUVJtHWlwAufDtb+/wKNIhVDLRHPndSE=;
+        b=jZGtVtLSHBiJOK919SV6dQeVlZjPpDLVCci3LjfOWOsrNGe8gb0jR8nwZawHlxuuWI
+         mJwpXvDiYSMB1e7Fl81fnXPmPs7rP3s8kA/pEYTdTs0p2bgFiMVBZw7X2PQ2/dA2Nosp
+         L17tNG0mAH8Jgs5ce5nezI/v7w7RctMYrpAhJVtA2bZeqpzsMksst0aMxtqW06W6i1DY
+         IjZ5hwzNoGHfU1puPDNVgRV1nqZF1jIxvR2TLoNRoimk5za8FhTAnxBCHqYnBBtGoEIU
+         fa2vOPvbqY+xtkLLGNkasfflwNtJtMMRGbABJefdnMUPvov4t+74z9vVpV625x7rlViH
+         F7xg==
+X-Gm-Message-State: ANhLgQ1iVCySB9u/QGW2ucQcL8/c2YbwBafcAKS/C2338OTxZ8yykTFs
+        BWx0MLCoVImTAHrgdZgveWuCpRDJsnJyzsy2WtU0TQ==
+X-Google-Smtp-Source: ADFU+vuJzKVEqrFtcYrHVE4servT3mRZOdlJclzovoH48jeRg+EodA0GJM72kTcNo3mtjErR7Z/iJ+rpcUTS5pbLg5Q=
+X-Received: by 2002:aed:25f4:: with SMTP id y49mr6628420qtc.50.1585730819858;
+ Wed, 01 Apr 2020 01:46:59 -0700 (PDT)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf1AUZRjH593d211+bL4cGG+EU96UpqVG2cw76TSM4sz2Y5oYqj9gBJbY
-        2Cu4Y3bvCuyPmDidxCQs8PACcY4fml6Ah2NwckbnTSElF4NJOIgxIuNdA5mY16WD7bYq/PU+
-        7/P9fp/P+8fzsqTxGJPGmi02UbYIpSY6nho4ctu7zvmmI//Z6dpk3NTlofHeT5wEDtedAXjf
-        52vwyG9fkrhhaprGzoZfAG4KOSg8eLybwi3BYQOubu2i8Z5IOg6Fuhl86/ynBK6/c5jAo74m
-        Gs/vDQLcPjZC4Kb2QQq3Hl6Fu3uiBJ6dcFJ4pz/IYL+zw4B/OmXD+5v9DO7xNpB47MZFAvsX
-        YhT2T84D/MNfMZD5GO856AH8ia/HCb7PdYnhTw48yR/y2vmeI2v51v4wwXuP7qb5LzrcBn7i
-        Qj/Nzw0PM/xg422Kr3MPAP7g2Wz+u2YPw884zxBvJOcmbC4SbB/kmEssG14qTJDqZ0Nk+czG
-        CnfkHKgCvc/XgDgWwY3o6mzEUAPiWSO8ANC/LQFSv/wI0ORsI10DWJaGm1HNOKMFUuAmdKfq
-        M0rzkHAXh/paoqQmJMNc9M3oNaCb8tCBieP36hfRtdPVjDaHgk+guXC21ubg66hnxEfprD8A
-        8nii/3viYDa625+keQBcgXZXzRFaTcJU5J2JGvRHQ9TWHyL1ejkKX1m411+Jvo12UtoYEq5B
-        Xb4NejQT/TnmovR6JarfM8XoT0hCZw9MU3XgYdcSgmsx7VqSdi1Ju5akDwHDUYDKBHNpiWAT
-        M9bLon29bJXK1OMda5kX6Mt3sxfcDbwcAAQLAuARljAt5yq3OvKNDxVZiyslQZEKZHupqAQA
-        YklTCvdVlqpxxULlDlG23pceZSlTKrd6at92I9RY74tiuSjfV9NZ1oS4La+qwSRZLBEr3jWX
-        2hZlgo3ThsenpSiipViUBbtNKtDWo0BR90OTElVuLEfjKuVCmdrVo0PgabYu3Owm2WBzu5s0
-        UharRUxL5cIaCWpWyW55AIqAVBaYkrlNr6lqovoDH8yJqAhCRfxaUa0hbMKilFYFjJ5n0uce
-        z172Qq0J/l4b+fmSOZHYenXLIFwG+KKnVshmxb5rHTy2P8QULnSskj6+PJ9/+vJYpnPHttX/
-        nDynnL8Za49PyGpsK3Tk5Vy5+NGpt4Od7/moV77vvJHLZP3ddt007ovBjG3X+3a+lXVCgo75
-        xl5xaGj7LfrD56S8yYlRE6VIQsZaUlaE/wBK0x6nPgQAAA==
+References: <000000000000ec257905a21f7415@google.com> <20200331095737.GO20730@hirez.programming.kicks-ass.net>
+ <CGME20200331101907eucas1p1ce5d3f7c49c2c724c4e85f5c19c7108d@eucas1p1.samsung.com>
+ <CACT4Y+bqBCqDPQZ1Nk8G+8y2vu8aaT2S54J4UqRPaFNUcusbYw@mail.gmail.com>
+ <7641fb29-20ec-0963-d04c-bfbf49fd3ebc@samsung.com> <CAKMK7uF5zZH3CaHueWsLR96-AzT==wP8=MpymTqx-T+SRsXWHA@mail.gmail.com>
+In-Reply-To: <CAKMK7uF5zZH3CaHueWsLR96-AzT==wP8=MpymTqx-T+SRsXWHA@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 1 Apr 2020 10:46:48 +0200
+Message-ID: <CACT4Y+Y_i86-MPG_3jo-+_5WTLvcNi6HTR=mQkVdwJb5ATqDsQ@mail.gmail.com>
+Subject: Re: INFO: trying to register non-static key in try_to_wake_up
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        syzkaller <syzkaller@googlegroups.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQnJlbmRhbiwNCg0KVGhhbmtzIGZvciB0YWtpbmcgYSBsb29rIGF0IHRoaXMgOikgTXVj
-aCBhcHByZWNpYXRlZCEgSSBoYXZlIGFsd2F5cw0KYWRtaXJlZCB5b3UgZ3V5cyB3aG8gaGF2ZSB0
-aGUgcGF0aWVuY2UgdG8gZG8gYWxsIHRoZSByZXZpZXdpbmcuLi4gSXQncw0KZGVmaW5pdGVseSBu
-b3QgbXkgZmF2b3VyaXRlIGpvYiA6Lw0KDQpPbiBUdWUsIDIwMjAtMDMtMzEgYXQgMTE6MDggLTA3
-MDAsIEJyZW5kYW4gSGlnZ2lucyB3cm90ZToNCj4gT24gVHVlLCBNYXIgMzEsIDIwMjAgYXQgNToy
-MyBBTSBNYXR0aSBWYWl0dGluZW4NCj4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
-bT4gd3JvdGU6DQo+ID4gICAgIEFkZCBhIEtVbml0IHRlc3QgZm9yIHRoZSBsaW5lYXJfcmFuZ2Vz
-IGhlbHBlci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRp
-LnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gDQo+IE9uZSBtaW5vciBuaXQsIG90aGVy
-IHRoYW4gdGhhdDoNCj4gDQo+IFJldmlld2VkLWJ5OiBCcmVuZGFuIEhpZ2dpbnMgPGJyZW5kYW5o
-aWdnaW5zQGdvb2dsZS5jb20+DQo+IA0KPiA+IC0tLQ0KPiA+IA0KDQovLy8gU25pcA0KDQo+ID4g
-Kw0KPiA+ICsvKiBGaXJzdCB0aGluZ3MgZmlyc3QuIEkgZGVlcGx5IGRpc2xpa2UgdW5pdC10ZXN0
-cy4gSSBoYXZlIHNlZW4NCj4gPiBhbGwgdGhlIGhlbGwNCj4gPiArICogYnJlYWtpbmcgbG9vc2Ug
-d2hlbiBwZW9wbGUgd2hvIHRoaW5rIHRoZSB1bml0IHRlc3RzIGFyZSAidGhlDQo+ID4gc2lsdmVy
-IGJ1bGxldCINCj4gPiArICogdG8ga2lsbCBidWdzIGdldCB0byBkZWNpZGUgaG93IGEgY29tcGFu
-eSBzaG91bGQgaW1wbGVtZW50DQo+ID4gdGVzdGluZyBzdHJhdGVneS4uLg0KPiA+ICsgKg0KPiA+
-ICsgKiBCZWxpZXZlIG1lLCBpdCBtYXkgZ2V0IF9yZWFsbHlfIHJpZGljdWxvdXMuIEl0IGlzIHRl
-bXB0aW5nIHRvDQo+ID4gdGhpbmsgdGhhdA0KPiA+ICsgKiB3YWxraW5nIHRocm91Z2ggYWxsIHRo
-ZSBwb3NzaWJsZSBleGVjdXRpb24gYnJhbmNoZXMgd2lsbCBuYWlsDQo+ID4gZG93biAxMDAlIG9m
-DQo+ID4gKyAqIGJ1Z3MuIFRoaXMgbWF5IGxlYWQgdG8gaWRlYXMgYWJvdXQgZGVtYW5kcyB0byBn
-ZXQgY2VydGFpbiAlIG9mDQo+ID4gInRlc3QNCj4gPiArICogY292ZXJhZ2UiIC0gbWVhc3VyZWQg
-YXMgbGluZSBjb3ZlcmFnZS4gQW5kIHRoYXQgaXMgb25lIG9mIHRoZQ0KPiA+IHdvcnN0IHRoaW5n
-cw0KPiA+ICsgKiB5b3UgY2FuIGRvLg0KPiA+ICsgKg0KPiA+ICsgKiBBc2sgcGVvcGxlIHRvIHBy
-b3ZpZGUgbGluZSBjb3ZlcmFnZSBhbmQgdGhleSBkby4gSSd2ZSBzZWVuDQo+ID4gY2xldmVyIHRv
-b2xzDQo+ID4gKyAqIHdoaWNoIGdlbmVyYXRlIHRlc3QgY2FzZXMgdG8gdGVzdCB0aGUgZXhpc3Rp
-bmcgZnVuY3Rpb25zIC0gYW5kDQo+ID4gYnkgZGVmYXVsdA0KPiA+ICsgKiB0aGVzZSB0b29scyBl
-eHBlY3QgY29kZSB0byBiZSBjb3JyZWN0IGFuZCBqdXN0IGdlbmVyYXRlIGNoZWNrcw0KPiA+IHdo
-aWNoIGFyZQ0KPiA+ICsgKiBwYXNzaW5nIHdoZW4gcmFuIGFnYWluc3QgY3VycmVudCBjb2RlLWJh
-c2UuIFJ1biB0aGlzIGdlbmVyYXRvcg0KPiA+IGFuZCB5b3UnbGwgZ2V0DQo+ID4gKyAqIHRlc3Rz
-IHRoYXQgZG8gbm90IHRlc3QgY29kZSBpcyBjb3JyZWN0IGJ1dCBqdXN0IHZlcmlmeSBub3RoaW5n
-DQo+ID4gY2hhbmdlcy4NCj4gPiArICogUHJvYmxlbSBpcyB0aGF0IHRlc3Rpbmcgd29ya2luZyBj
-b2RlIGlzIHBvaW50bGVzcy4gQW5kIGlmIGl0IGlzDQo+ID4gbm90DQo+ID4gKyAqIHdvcmtpbmcs
-IHlvdXIgdGVzdCBtdXN0IG5vdCBhc3N1bWUgaXQgaXMgd29ya2luZy4gWW91IHdvbid0DQo+ID4g
-Y2F0Y2ggYW55IGJ1Z3MNCj4gPiArICogYnkgc3VjaCB0ZXN0cy4gV2hhdCB5b3UgY2FuIGRvIGlz
-IHRvIGdlbmVyYXRlIGEgaHVnZSBhbW91bnQgb2YNCj4gPiB0ZXN0cy4NCj4gPiArICogRXNwZWNp
-YWxseSBpZiB5b3Ugd2VyZSBhcmUgYXNrZWQgdG8gcHJvaXZkZSAxMDAlIGxpbmUtY292ZXJhZ2UN
-Cj4gPiB4X3guIFNvIHdoYXQNCj4gPiArICogZG9lcyB0aGVzZSB0ZXN0cyAtIHdoaWNoIGFyZSBu
-b3QgZmluZGluZyBhbnkgYnVncyBub3cgLSBkbz8NCj4gDQo+IEkgZG9uJ3QgZW50aXJlbHkgZGlz
-YWdyZWUuIEkgaGF2ZSB3b3JrZWQgb24gcHJvamVjdHMgdGhhdCBkbyB0ZXN0aW5nDQo+IHdlbGwg
-d2hlcmUgaXQgYWN0dWFsbHkgbWFrZXMgZGV2ZWxvcG1lbnQgZmFzdGVyLCBhbmQgSSBoYXZlIHdv
-cmtlZCBvbg0KPiBwcm9qZWN0cyB0aGF0IGRvIHRlc3RpbmcgcG9vcmx5IHdoZXJlIGl0IG5ldmVy
-IGltcHJvdmVzIGNvZGUgcXVhbGl0eQ0KPiBhbmQgaXMganVzdCBhbiBlbmN1bWJyYW5jZSwgYW5k
-IEkgaGF2ZSBuZXZlciBzZWVuIGEgcHJvamVjdCBnZXQgdG8NCj4gMTAwJSBjb3ZlcmFnZSAobm9y
-IHdvdWxkIEkgd2FudCB0bykuDQo+IA0KPiBEbyB5b3UgZmVlbCBkaWZmZXJlbnRseSBhYm91dCBp
-bmNyZW1lbnRhbCBjb3ZlcmFnZSB2cy4gYWJzb2x1dGUNCj4gY292ZXJhZ2U/IEkgaGF2ZSBmb3Vu
-ZCBpbmNyZW1lbnRhbCBjb3ZlcmFnZSB0byBiZSBhIGxvdCBtb3JlIHZhbHVhYmxlDQo+IGluIG15
-IGV4cGVyaWVuY2VzLg0KDQpJIHRoaW5rIEkgaGF2ZSBvbmx5IGJlZW4gZGVhbGluZyB3aXRoIHBy
-b2plY3RzIG1lYXN1cmluZyBhYnNvbHV0ZQ0KY292ZXJhZ2UuIEkgdGhpbmsgc2VlaW5nIGEgY292
-ZXJhZ2UgYXMgJS1udW1iZXIgaXMgbW9zdGx5IG5vdA0KaW50ZXJlc3RpbmcgdG8gbWUuIFdoYXQg
-SSB0aGluayBjb3VsZCBiZSBpbnRlcmVzdGluZyBpcyBzaG93aW5nIHRoZQ0KY29kZS1wYXRocyB0
-ZXN0IGhhcyB3YWxrZWQgdGhyb3VnaC4gSSBiZWxpZXZlIHRoYXQgY29kZSBzcG90cyB0aGF0DQpz
-aG91bGQgYmUgdGVzdGVkIHNob3VsZCBiZSBoYW5kIHBpY2tlZCBieSBhIGh1bWFuLiBXaGVuIHdl
-IGxvb2sgYXQgYW55DQolLW51bWJlciwgd2UgZG8gbm90IGtub3cgd2hhdCBraW5kIG9mIGNvZGUg
-dGhlIHRlc3QgaGFzIHRlc3RlZC4NCg0KPiBZb3Ugc2VlbSBwcmV0dHkgcGFzc2lvbmF0ZSBhYm91
-dCB0aGlzLiBXb3VsZCB5b3UgbGlrZSB0byBiZSBpbmNsdWRlZA0KPiBpbiBvdXIgdW5pdCB0ZXN0
-aW5nIGRpc2N1c3Npb25zIGluIHRoZSBmdXR1cmU/DQoNCkkgdGhpbmsgaXQgd291bGQgYmUgbmlj
-ZSA6KSBJIGRvbid0IGV4cGVjdCBJIHdpbGwgYmUgYWN0aXZlIHRhbGtlcg0KdGhlcmUgYnV0IEkg
-cmVhbGx5IGxpa2UgdG8ga25vdyB3aGF0IGRpcmVjdGlvbiB0aGluZ3MgYXJlIHByb2NlZWRpbmcg
-aW4NCmdlbmVyYWwuIEFuZCB3aG8ga25vd3MsIG1heWJlIEkgd2lsbCBoYXZlIGEgd29yZCB0byBz
-YXkgYXQgdGltZXMgOikgU28NCnBsZWFzZSwgaW5jbHVkZSBtZSBpZiBpdCBpcyBub3QgYSBiaWcg
-dGhpbmcgZm9yIHlvdS4NCg0KLy9TbmlwDQoNCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHJhbmdl
-X3Rlc3RfZ2V0X3ZhbHVlKHN0cnVjdCBrdW5pdCAqdGVzdCkNCj4gPiArew0KPiA+ICsgICAgICAg
-aW50IHJldCwgaTsNCj4gPiArICAgICAgIHVuc2lnbmVkIGludCBzZWwsIHZhbDsNCj4gPiArDQo+
-ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgUkFOR0UxX05VTV9WQUxTOyBpKyspIHsNCj4gPiAr
-ICAgICAgICAgICAgICAgc2VsID0gcmFuZ2UxX3NlbHNbaV07DQo+ID4gKyAgICAgICAgICAgICAg
-IHJldCA9IGxpbmVhcl9yYW5nZV9nZXRfdmFsdWVfYXJyYXkoJnRlc3RyWzBdLCAyLA0KPiA+IHNl
-bCwgJnZhbCk7DQo+ID4gKyAgICAgICAgICAgICAgIEtVTklUX0VYUEVDVF9FUSh0ZXN0LCAwLCBy
-ZXQpOw0KPiANCj4gbml0OiBJdCBsb29rcyBsaWtlIHRoZSBuZXh0IGxpbmUgbWlnaHQgY3Jhc2gg
-aWYgdGhpcyBleHBlY3RhdGlvbg0KPiBmYWlscy4gSWYgdGhpcyBpcyB0aGUgY2FzZSwgeW91IG1p
-Z2h0IHdhbnQgdG8gdXNlIGEgS1VOSVRfQVNTRVJUXyoNCj4gaGVyZS4NCg0KSHVoLiBJIHJlLXJl
-YWQgdGhpcyBhbmQgYWxtb3N0IGFncmVlZCB3aXRoIHlvdS4gVGhlbiBJIHJlLXJlLXJlYWQgdGhp
-cw0KYW5kIGRpc2FncmVlZC4gUGVyaGFwcyB3ZSBzaG91bGQgd3JpdGUgYW4gdW5pdC10ZXN0IHRv
-IHRlc3QgdGhpcyA7KQ0KDQpUaGUgcmFuZ2UxX3NlbHMgYW5kIHJhbmdlMV92YWxzIGFycmF5cyBz
-aG91bGQgYWx3YXlzIGJlIG9mIHNhbWUgc2l6ZS4NClRodXMgdGhlIGNyYXNoIHNob3VsZCBub3Qg
-b2NjdXIgaGVyZS4gSWYgUkFOR0UxX05VTV9WQUxTIHdhcyBiYWQgdGhlbg0Kd2Ugd291bGQgZ2V0
-IHRoZSBjcmFzaCBhbHJlYWR5IGF0DQoNCj4gPiArICAgICAgICAgICAgICAgc2VsID0gcmFuZ2Ux
-X3NlbHNbaV07DQoNClRoZSBsaW5lYXJfcmFuZ2VfZ2V0X3ZhbHVlX2FycmF5KCkgbWF5IHJldHVy
-biBub24gemVybyB2YWx1ZSBpZiB2YWx1ZQ0KY29udGFpbmVkIGluIHJhbmdlMV9zZWxzW2ldIGlz
-IG5vdCBpbiB0aGUgcmFuZ2UgLSBidXQgcmFuZ2UxX3ZhbHNbaV0NCnNob3VsZCBzdGlsbCBiZSB2
-YWxpZCBtZW1vcnkuDQoNCkJlc3QgUmVnYXJkcw0KCS0tTWF0dGkNCg0KDQoNCj4gPiAtLQ0KPiA+
-IE1hdHRpIFZhaXR0aW5lbiwgTGludXggZGV2aWNlIGRyaXZlcnMNCj4gPiBST0hNIFNlbWljb25k
-dWN0b3JzLCBGaW5sYW5kIFNXREMNCj4gPiBLaXZpaGFyanVubGVua2tpIDFFDQo+ID4gOTAyMjAg
-T1VMVQ0KPiA+IEZJTkxBTkQNCj4gPiANCj4gPiB+fn4gIkkgZG9uJ3QgdGhpbmsgc28sIiBzYWlk
-IFJlbmUgRGVzY2FydGVzLiBKdXN0IHRoZW4gaGUgdmFuaXNoZWQNCj4gPiB+fn4NCj4gPiBTaW1v
-biBzYXlzIC0gaW4gTGF0aW4gcGxlYXNlLg0KPiA+IH5+fiAibm9uIGNvZ2l0byBtZSIgZGl4aXQg
-UmVuZSBEZXNjYXJ0ZSwgZGVpbmRlIGV2YW5lc2Nhdml0IH5+fg0KPiA+IFRoYW5rcyB0byBTaW1v
-biBHbGFzcyBmb3IgdGhlIHRyYW5zbGF0aW9uID1dDQoNCg==
+On Tue, Mar 31, 2020 at 2:50 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Tue, Mar 31, 2020 at 2:18 PM Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+> >
+> >
+> > On 3/31/20 12:18 PM, Dmitry Vyukov wrote:
+> > > On Tue, Mar 31, 2020 at 11:57 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > >>
+> > >> On Mon, Mar 30, 2020 at 10:01:12PM -0700, syzbot wrote:
+> > >>> Hello,
+> > >>>
+> > >>> syzbot found the following crash on:
+> > >>>
+> > >>> HEAD commit:    9420e8ad Merge tag 'for-linus' of git://git.kernel.org/pub..
+> > >>> git tree:       upstream
+> > >>> console output: https://protect2.fireeye.com/url?k=0756a78d-5a9a6c49-07572cc2-0cc47a314e9a-e4dc8b657d340686&u=https://syzkaller.appspot.com/x/log.txt?x=1206ed4be00000
+> > >>> kernel config:  https://protect2.fireeye.com/url?k=43211072-1eeddbb6-43209b3d-0cc47a314e9a-3bd45a19932c37c8&u=https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
+> > >>> dashboard link: https://protect2.fireeye.com/url?k=bf7a6153-e2b6aa97-bf7bea1c-0cc47a314e9a-c64073ee605efb7b&u=https://syzkaller.appspot.com/bug?extid=e84d7ebd1361da13c356
+> > >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >>>
+> > >>> Unfortunately, I don't have any reproducer for this crash yet.
+> > >>>
+> > >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > >>> Reported-by: syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com
+> > >>>
+> > >>> INFO: trying to register non-static key.
+> > >>> the code is fine but needs lockdep annotation.
+> > >>> turning off the locking correctness validator.
+> > >>> CPU: 1 PID: 1014 Comm: syz-executor.0 Not tainted 5.6.0-rc7-syzkaller #0
+> > >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > >>> Call Trace:
+> > >>>  <IRQ>
+> > >>>  __dump_stack lib/dump_stack.c:77 [inline]
+> > >>>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> > >>>  assign_lock_key kernel/locking/lockdep.c:880 [inline]
+> > >>>  register_lock_class+0x14c4/0x1540 kernel/locking/lockdep.c:1189
+> > >>>  __lock_acquire+0xfc/0x3ca0 kernel/locking/lockdep.c:3836
+> > >>>  lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
+> > >>>  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+> > >>>  _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
+> > >>>  try_to_wake_up+0x9f/0x17c0 kernel/sched/core.c:2547
+> > >>
+> > >> That's p->pi_lock, which gets initialized in rt_mutex_init_task() in
+> > >> copy_process(). This should be impossible. Very odd.
+> > >
+> > > The stack mentions fbdev, which is a red flag at the moment. There are
+> > > a dozen of bad bugs in fbdev and around. Just few days ago Andy
+> > > pointed to another "impossible" crash "general protection fault in
+> > > do_syscall_64" which is related to dri:
+> > > https://protect2.fireeye.com/url?k=0cb8ad06-517466c2-0cb92649-0cc47a314e9a-a20c11191483c65b&u=https://syzkaller.appspot.com/bug?id=0ec7b2602b1ff40f0d34f38baa4ba1640727c3d9
+> > > https://protect2.fireeye.com/url?k=614292e3-3c8e5927-614319ac-0cc47a314e9a-aeda6d72c01a7b0e&u=https://groups.google.com/forum/#!msg/syzkaller-bugs/ePqhfYx0-8M/Q_Urt97iAAAJ
+> > >
+> > > There are probably more random manifestations of these bugs already,
+> > > and I guess we will be getting more.
+> > >
+> > > +fbdev maintainers
+> >
+> > Thank you for the report.
+> >
+> > fbdev is in the maintenance mode and no new features or drivers are
+> > being added so syzbot reports are not for a new bugs (regressions) and
+> > are not a priority (at least to me).
+>
+> Yup same here, I've seen a pile of syzbot reports for fbdev (and also
+> vt, or combinations of them since fbdev is linked to vt through fbcon)
+> fly by. But I really don't have to deal with these, my recommendation
+> to anyone who cares about security are:
+> - Don't enable vt
+> - Don't enable fbdev
+
+1. How do we deliver this message to relevant people?
+
+Because:
+
+$ grep FBDEV syzkaller/dashboard/config/upstream-kasan.config
+CONFIG_DRM_FBDEV_EMULATION=y
+CONFIG_DRM_FBDEV_OVERALLOC=100
+# CONFIG_DRM_FBDEV_LEAK_PHYS_SMEM is not set
+CONFIG_XEN_FBDEV_FRONTEND=y
+
+and my current work machine:
+
+$ grep FBDEV /boot/config-5.2.17-1-amd64
+CONFIG_DRM_FBDEV_EMULATION=y
+CONFIG_DRM_FBDEV_OVERALLOC=100
+# CONFIG_DRM_FBDEV_LEAK_PHYS_SMEM is not set
+CONFIG_XEN_FBDEV_FRONTEND=y
+
+
+2. What do we do with fbdev testing on syzbot? Is there a way to
+disable all of the unsupported stuff? But if we disable it, we don't
+find any regressions as well. And in the end that's what is in the
+mainline kernel and is still enabled in distros (at least in the 2
+real configs I can grep now).
+
+
+
+> All that code has been developed long ago, in a much more innocent
+> time. If someone wants to fix this you'd not just need to fix all the
+> syzbot stuff, but also ramp up a full testsuite for all the ioctl, and
+> all the corner-cases. Plus also fix some of the horrendous locking in
+> there, probably.
+>
+> Multi-year effort, easily.
+>
+> Regressions I'll obviously try to handle, but none of these are. It's
+> just syzbot has become smarter at hitting bugs in fbdev and vt
+> subsystems (or maybe the hw the virtual machines emulate has become
+> more varied, some of the reports are for fun stuff like vgacon ...).
+>
+> Cheers, Daniel
+>
+> > I have only resources to review/merge pending fbdev patches from time
+> > to time so any help in fixing these syzbot reports is welcomed (there
+> > have been a few fbdev related syzbot reports recently).
+> >
+> > Also please note that fbdev is maintained through drm-misc tree so
+> > patches can also be handled by other drm-misc maintainers in case I'm
+> > not available / busy with other things.
+> >
+> > Best regards,
+> > --
+> > Bartlomiej Zolnierkiewicz
+> > Samsung R&D Institute Poland
+> > Samsung Electronics
+> >
+> > >>>  wake_up_worker kernel/workqueue.c:836 [inline]
+> > >>>  insert_work+0x2ad/0x3a0 kernel/workqueue.c:1337
+> > >>>  __queue_work+0x50d/0x1280 kernel/workqueue.c:1488
+> > >>>  call_timer_fn+0x195/0x760 kernel/time/timer.c:1404
+> > >>>  expire_timers kernel/time/timer.c:1444 [inline]
+> > >>>  __run_timers kernel/time/timer.c:1773 [inline]
+> > >>>  __run_timers kernel/time/timer.c:1740 [inline]
+> > >>>  run_timer_softirq+0x412/0x1600 kernel/time/timer.c:1786
+> > >>>  __do_softirq+0x26c/0x99d kernel/softirq.c:292
+> > >>>  invoke_softirq kernel/softirq.c:373 [inline]
+> > >>>  irq_exit+0x192/0x1d0 kernel/softirq.c:413
+> > >>>  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+> > >>>  smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
+> > >>>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+> > >>>  </IRQ>
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
