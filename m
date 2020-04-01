@@ -2,101 +2,136 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF8DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16945C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD1082080C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3DB20776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585740587;
+	bh=p3ZLhh0dN9C1lu3BaUJGriA50d8YgFtumT6lZS66nNA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tLC2UWHsNBJltGI5t8VLK/0Cox6MCC3ImuqU9rXoBLtkWOEaEJZ9mdUKXxwFbiR0U
+	 buiw9jHlFkOGSuEfm4y/y6GutjjV63Y79CxTNaSCZK7M8/0x2s9N0iP4jRzQhfTqJP
+	 KjX01kYg847JixBkfn9NHhKRhXRkTfDaZKPViESI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732315AbgDAL2A (ORCPT
+        id S1732424AbgDAL3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:28:00 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33182 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732276AbgDAL2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:28:00 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D3D1850F367A102C20A9;
-        Wed,  1 Apr 2020 19:27:46 +0800 (CST)
-Received: from huawei.com (10.175.104.193) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 1 Apr 2020
- 19:27:40 +0800
-From:   Cheng Jian <cj.chengjian@huawei.com>
-To:     <vpillai@digitalocean.com>
-CC:     <aaron.lwe@gmail.com>, <aubrey.intel@gmail.com>,
-        <aubrey.li@linux.intel.com>, <fweisbec@gmail.com>,
-        <jdesfossez@digitalocean.com>, <joel@joelfernandes.org>,
-        <joelaf@google.com>, <keescook@chromium.org>, <kerrnel@google.com>,
-        <linux-kernel@vger.kernel.org>, <mgorman@techsingularity.net>,
-        <mingo@kernel.org>, <naravamudan@digitalocean.com>,
-        <pauld@redhat.com>, <pawan.kumar.gupta@linux.intel.com>,
-        <pbonzini@redhat.com>, <peterz@infradead.org>, <pjt@google.com>,
-        <tglx@linutronix.de>, <tim.c.chen@linux.intel.com>,
-        <torvalds@linux-foundation.org>, <valentin.schneider@arm.com>,
-        <cj.chengjian@huawei.com>, <xiexiuqi@huawei.com>,
-        <huawei.libin@huawei.com>, <w.f@huawei.com>
-Subject: [PATCH] sched/arm64: store cpu topology before notify_cpu_starting
-Date:   Wed, 1 Apr 2020 11:42:15 +0000
-Message-ID: <20200401114215.36640-1-cj.chengjian@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
-References: <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com>
+        Wed, 1 Apr 2020 07:29:46 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39965 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732147AbgDAL3p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 07:29:45 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y71so21833778oia.7;
+        Wed, 01 Apr 2020 04:29:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CMgX5oMxxxpJfDIIfr3hCoL4i8NLmLwWjDXA1GtboKk=;
+        b=hk0tLTaruLS2yYz6mGW2htnOwsUJMzUqrOiydXURx+pRj6hzVwbEtrYMvx//4IKfp2
+         W8KKlSX75/FLlCETr4R80ycWCWuzgDOM5EOwpGVo+gJ+ywq/wX5XOQarp9qxobF8aIPk
+         28tQC2faOF9WachZ+enZwftyGaN7KA5ufdtOkBWzrhhFY8tAhCpY4UPdp/4A+UHoBrwv
+         CHb1bhmNB2bApwovRZuSKOxmJnrD5ARJ2sGZWBouQTLDFXUnpEYwYKItQKEbpsZherBt
+         Tle/2GoEsKOuRA+a06S3dcrvdFKidWsTwZnGkJsxz+uFhR86Hens3pIh4Mbpx70TyLX6
+         FI0Q==
+X-Gm-Message-State: AGi0PuYUavX7xORyjAjivuD3yB+EdZNlenwKKKUCYdxzvEjlJUTv7Z3r
+        h9Ebwd2WxLACAuLWN/ubsXox8+qViQkB8yKdJrA=
+X-Google-Smtp-Source: APiQypImRxqUBTjaUJGqN7kGau0r41uofK6tCeaMoXyqvTB7Txm3lJkXGOpCp4Jon4bK1XPd8wdKH60nR3YeFmhBaic=
+X-Received: by 2002:aca:f07:: with SMTP id 7mr2326913oip.68.1585740584583;
+ Wed, 01 Apr 2020 04:29:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.193]
-X-CFilter-Loop: Reflected
+References: <cover.1585343507.git.gayatri.kammela@intel.com>
+ <9359b8e261d69983b1eed2b8e53ef9eabfdfdd51.1585343507.git.gayatri.kammela@intel.com>
+ <CAJZ5v0j8OaqM6k52Ar9sYn0Ea_u9+MBB0rcMWv6vGBt5jXCQBQ@mail.gmail.com>
+ <20200330172439.GB1922688@smile.fi.intel.com> <BYAPR11MB362459660B914BEF1526AD8DF2CB0@BYAPR11MB3624.namprd11.prod.outlook.com>
+ <CAJZ5v0inmWu6_ZYLCKart6F873SqK5AyvVXOCS83Yr=KQAQV_Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0inmWu6_ZYLCKart6F873SqK5AyvVXOCS83Yr=KQAQV_Q@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 1 Apr 2020 13:29:33 +0200
+Message-ID: <CAJZ5v0gYaZW8ycWQkcymz9W8svtNVnLGxsPZXEf4tP8Tpsmyew@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
+To:     "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "Westerberg, Mika" <mika.westerberg@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        "5 . 6+" <stable@vger.kernel.org>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when SCHED_CORE enabled, sched_cpu_starting() uses thread_sibling as
-SMT_MASK to initialize rq->core, but only after store_cpu_topology(),
-the thread_sibling is ready for use.
+On Tue, Mar 31, 2020 at 8:19 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Tue, Mar 31, 2020 at 1:22 AM Kammela, Gayatri
+> <gayatri.kammela@intel.com> wrote:
+> >
+> > > -----Original Message-----
+> > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Sent: Monday, March 30, 2020 10:25 AM
+> > > To: Rafael J. Wysocki <rafael@kernel.org>
+> > > Cc: Kammela, Gayatri <gayatri.kammela@intel.com>; Zhang, Rui
+> > > <rui.zhang@intel.com>; Linux PM <linux-pm@vger.kernel.org>; Platform
+> > > Driver <platform-driver-x86@vger.kernel.org>; Linux Kernel Mailing List
+> > > <linux-kernel@vger.kernel.org>; Len Brown <lenb@kernel.org>; Darren Hart
+> > > <dvhart@infradead.org>; Alex Hung <alex.hung@canonical.com>; Daniel
+> > > Lezcano <daniel.lezcano@linaro.org>; Amit Kucheria
+> > > <amit.kucheria@verdurent.com>; Westerberg, Mika
+> > > <mika.westerberg@intel.com>; Peter Zijlstra <peterz@infradead.org>;
+> > > Prestopine, Charles D <charles.d.prestopine@intel.com>; 5 . 6+
+> > > <stable@vger.kernel.org>; Pandruvada, Srinivas
+> > > <srinivas.pandruvada@intel.com>; Wysocki, Rafael J
+> > > <rafael.j.wysocki@intel.com>
+> > > Subject: Re: [PATCH v2 1/3] ACPI: fix: Update Tiger Lake ACPI device IDs
+> > >
+> > > On Mon, Mar 30, 2020 at 06:43:35PM +0200, Rafael J. Wysocki wrote:
+> > > > On Fri, Mar 27, 2020 at 10:34 PM Gayatri Kammela
+> > > > <gayatri.kammela@intel.com> wrote:
+> > >
+> > > > > -       {"INT1044"},
+> > > > > -       {"INT1047"},
+> > > > > +       {"INTC1040"},
+> > > > > +       {"INTC1043"},
+> > > > > +       {"INTC1044"},
+> > > > > +       {"INTC1047"},
+> > > > >         {"INT3400"},
+> > > > >         {"INT3401", INT3401_DEVICE},
+> > > > >         {"INT3402"},
+> > > > > --
+> > > >
+> > > > I can take this along with the other two patches in the series if that
+> > > > is fine by Andy and Rui.
+> > >
+> > > One nit is to fix the ordering to be alphanumeric or close enough (I admit in
+> > > some cases it might require unneeded churn) to that.
+> > Thanks Andy and Rafael! Should I send v3 for this series with right ordering this time?
+>
+> No need, I can fix up the ordering just fine.
+>
+> > > Otherwise,
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> Thanks!
 
-	notify_cpu_starting()
-	    -> sched_cpu_starting()	# use thread_sibling
+Now applied as 5.7 material with the changes mentioned above.
 
-	store_cpu_topology(cpu)
-	    -> update_siblings_masks	# set thread_sibling
-
-Fix this by doing notify_cpu_starting later, just like x86 do.
-
-Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
----
- arch/arm64/kernel/smp.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 5407bf5d98ac..a427c14e82af 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -236,13 +236,18 @@ asmlinkage notrace void secondary_start_kernel(void)
- 	cpuinfo_store_cpu();
- 
- 	/*
--	 * Enable GIC and timers.
-+	 * Store cpu topology before notify_cpu_starting,
-+	 * CPUHP_AP_SCHED_STARTING requires SMT topology
-+	 * been initialized for SCHED_CORE.
- 	 */
--	notify_cpu_starting(cpu);
--
- 	store_cpu_topology(cpu);
- 	numa_add_cpu(cpu);
- 
-+	/*
-+	 * Enable GIC and timers.
-+	 */
-+	notify_cpu_starting(cpu);
-+
- 	/*
- 	 * OK, now it's safe to let the boot CPU continue.  Wait for
- 	 * the CPU migration code to notice that the CPU is online
--- 
-2.17.1
-
+Please check the bleeding-edge branch in my tree.
