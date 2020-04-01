@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27045C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393DCC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C077B20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F3820658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759053;
-	bh=+Bubee5EQU1n36vkgo2xupBzeF9rBpZYrdoxdCB6/lw=;
+	s=default; t=1585759055;
+	bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GcXc8XBsn458jcEhkApEezxK9tYzIF6+4Riz8TLWqCAjxdz55LpGTUsMhvycmn1fC
-	 vpfliKir0smpiibjQd5TC4VeDnQXB6rvMso2s971/kxrx/D416TDdk9YSdnnWsn5dJ
-	 ptxmjRvlmbm2KPf9HMsB9qb32QcY9qImvD8vNgpY=
+	b=h98EikIxmTPsVlX6TzcaDizYeUoOQBArVMr3lswBM6UAkuyIvTUeTxQOzcmVdZL/q
+	 nd8Nql2+1wxmebbHahBZRKgOe7YfAZ9REAIrhqt7q8zlf5QtVJuRWa2Immw1o4gCHI
+	 s6QyPT4xvF69oUxn0OIyqZRYKrYUsf7heRPctPZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388980AbgDAQhd (ORCPT
+        id S2388832AbgDAQhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:37:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36646 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:37:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388970AbgDAQh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:37:29 -0400
+        id S2388975AbgDAQhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:37:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41934212CC;
-        Wed,  1 Apr 2020 16:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD1B820658;
+        Wed,  1 Apr 2020 16:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759048;
-        bh=+Bubee5EQU1n36vkgo2xupBzeF9rBpZYrdoxdCB6/lw=;
+        s=default; t=1585759051;
+        bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fWYWO4Spg8YYUUO9YDdjY+7vCB2Y/jj5L536IsqbN8HbxdR9joa2vx+5xzBLrxpg1
-         XCUKle2m8bbUDVaWK3tlPx0suUc9lCzs9e+I18yPnOvsIuHte5oiasBq6Fjh4o3eyl
-         7HFDfaQkCCarVodbe66/sPIP8ScWIHV3+oqVKUOQ=
+        b=YkdqPB2xLgRkRbia/Ghum1Qlt5hbqpM3w01IgePt1lbhbCJsH81HkXkgxSREqUUNQ
+         cJkXT1y1t9NDK5cit1s2fFsDrxXdHt6Xsxmgf7WmqLmhE0QyRGe7Ea91H0KPgzqvz3
+         9nxhaV4NFhBGtrvXa5/4lcN+/jn6MNtUoByUaZ24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 060/102] perf probe: Do not depend on dwfl_module_addrsym()
-Date:   Wed,  1 Apr 2020 18:18:03 +0200
-Message-Id: <20200401161543.306999743@linuxfoundation.org>
+        stable@vger.kernel.org, Dirk Mueller <dmueller@suse.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 4.9 061/102] scripts/dtc: Remove redundant YYLOC global declaration
+Date:   Wed,  1 Apr 2020 18:18:04 +0200
+Message-Id: <20200401161543.380204082@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -65,63 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Dirk Mueller <dmueller@suse.com>
 
-commit 1efde2754275dbd9d11c6e0132a4f09facf297ab upstream.
+commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
 
-Do not depend on dwfl_module_addrsym() because it can fail on user-space
-shared libraries.
+gcc 10 will default to -fno-common, which causes this error at link
+time:
 
-Actually, same bug was fixed by commit 664fee3dc379 ("perf probe: Do not
-use dwfl_module_addrsym if dwarf_diename finds symbol name"), but commit
-07d369857808 ("perf probe: Fix wrong address verification) reverted to
-get actual symbol address from symtab.
+  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
 
-This fixes it again by getting symbol address from DIE, and only if the
-DIE has only address range, it uses dwfl_module_addrsym().
+This is because both dtc-lexer as well as dtc-parser define the same
+global symbol yyloc. Before with -fcommon those were merged into one
+defintion. The proper solution would be to to mark this as "extern",
+however that leads to:
 
-Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
-Reported-by: Alexandre Ghiti <alex@ghiti.fr>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Link: http://lore.kernel.org/lkml/158281812176.476.14164573830975116234.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
+   26 | extern YYLTYPE yylloc;
+      |                ^~~~~~
+In file included from dtc-lexer.l:24:
+dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
+  127 | extern YYLTYPE yylloc;
+      |                ^~~~~~
+cc1: all warnings being treated as errors
+
+which means the declaration is completely redundant and can just be
+dropped.
+
+Signed-off-by: Dirk Mueller <dmueller@suse.com>
+Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+[robh: cherry-pick from upstream]
+Cc: stable@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/probe-finder.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ scripts/dtc/dtc-lexer.l |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -623,14 +623,19 @@ static int convert_to_trace_point(Dwarf_
- 		return -EINVAL;
- 	}
+--- a/scripts/dtc/dtc-lexer.l
++++ b/scripts/dtc/dtc-lexer.l
+@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
+ #include "srcpos.h"
+ #include "dtc-parser.tab.h"
  
--	/* Try to get actual symbol name from symtab */
--	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
-+		/* If the DIE has entrypc, use it. */
-+		symbol = dwarf_diename(sp_die);
-+	} else {
-+		/* Try to get actual symbol name and address from symtab */
-+		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+		eaddr = sym.st_value;
-+	}
- 	if (!symbol) {
- 		pr_warning("Failed to find symbol at 0x%lx\n",
- 			   (unsigned long)paddr);
- 		return -ENOENT;
- 	}
--	eaddr = sym.st_value;
+-YYLTYPE yylloc;
+ extern bool treesource_error;
  
- 	tp->offset = (unsigned long)(paddr - eaddr);
- 	tp->address = (unsigned long)paddr;
+ /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
 
 
