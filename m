@@ -2,92 +2,78 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31810C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D142C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E38BD207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LSe3YHd9"
+	by mail.kernel.org (Postfix) with ESMTP id 2A8AF20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585729250;
+	bh=eFOFzuHnc4zeJvKTIWoh6Ztnd2/Z06wg6wJ16ZTmYaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bNmjCSle1sUZ4mSsUeiCzmeZlhVR/a/xqDYz+bKUnAaFKlvxL+QTQMv0uwjF/QGGo
+	 jZ/lH3bAMTJgddBovHrabsSsX31gMZI+ALv7VhSQ4nZikgfYCnZrGm8NZ+uw9zY6mQ
+	 aKp2VkDisxXV2G3FXFcHcUYKv5+mpbDC/UVarWUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732069AbgDAIUl (ORCPT
+        id S1732085AbgDAIUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:20:41 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43772 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731995AbgDAIUk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:20:40 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g27so24737875ljn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xIxdPs3PCWGrE1rhEKnhI29WwowDoOmXYLKku7/kqhU=;
-        b=LSe3YHd9F0nJBdAnd2M0pbyKcOUuxrYfkAZbfzzavXnm/vf5pui4cy40QMGXuBXw6O
-         PtrWohZnOdZ5krIl66URyEvd+OREL2CCVHPq3aJhrnE7VYL8cTw47hQYwd7LNrnRCavU
-         w5eDZW8jjfLCVT0Qr0E7O62Mi53S6BDadlRiF4lFbbj3gfbQFi33oDyCkfXpM872Rhh+
-         KryuliO0WWpRTdwZgUuuc/rmxL7yAg+ewDy6Oq7ezq+1WpxSooKL86cQgsvUwFNha6Gb
-         6ZTdxkV0KXDMKrvrtH05Rrk7LO04sSRZ4oKfy05jk/m20jxdgdeth3GxA0TMZPVS8zX+
-         g3ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xIxdPs3PCWGrE1rhEKnhI29WwowDoOmXYLKku7/kqhU=;
-        b=WzYeOU08M2HGqJS0dz2iBH+hr7FXHK22NtKFckyO7jie9Q136z1eFNanhE/JDDN8GV
-         Ji4XFVvrdd+baA1lGeBVZeX9FSLixMILkuc8eWwjdspfu+Y2/2ylGjMMJbAqQweHQ8bB
-         RPxXtHF3vjZg2dhrqyKYJmCBU9aYJhe6FoAP4KHZ+ZH8iTxDJro/t30nzpkpW0F73opT
-         mF/1G6m05k74Bq4Zw9Nm1K/9HJq5Lg0JB/lgDaLEcuFkIu3eJLL2DpD+fuuc2MkoVusA
-         eX0jVifdRPT24mD3cSzrQj0SmutnjnqSDKbxnpdkV62a6dK7iHAC7wPHKlqtEwt7+SG0
-         zIfg==
-X-Gm-Message-State: AGi0PuYy2k2PQrUyaORTtrW//yy4pOatWYdI1sV85k7jUoG04hCEz9AV
-        yZTnl9s/Vj7hcEcTTYxYWTMwxWfA6nmMfVzYT8Jadw==
-X-Google-Smtp-Source: APiQypJsnLDmKh1yBBjZBhguP/v9RUaTCpgsNrdRcuHpGcqAeZsCIOj74BvrzWIRMq/PR8riGPHyMNgylYL7/zlVGPE=
-X-Received: by 2002:a2e:9d85:: with SMTP id c5mr998983ljj.168.1585729237735;
- Wed, 01 Apr 2020 01:20:37 -0700 (PDT)
+        Wed, 1 Apr 2020 04:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728087AbgDAIUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:20:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 556D72078B;
+        Wed,  1 Apr 2020 08:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585729248;
+        bh=eFOFzuHnc4zeJvKTIWoh6Ztnd2/Z06wg6wJ16ZTmYaM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=opFNnLLbFU01fOHnCLkpWjgARva/UTy5i9K4ZG/xU4XdLBoZzPuosTpy8G/8K7Fl7
+         cMBQepuPuefqKK8jpgrjQhLUPFu3P0FCFIpA/pmYAoFxEPKMERahwW3P6vQJXBluea
+         j9aPp2j2aPFb6ICrF3pk9F1jSrbjyQ3i8FhLywkU=
+Date:   Wed, 1 Apr 2020 10:20:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+Message-ID: <20200401082046.GC2023509@kroah.com>
+References: <20200331085308.098696461@linuxfoundation.org>
+ <2ae5cda8-b9a7-b498-ef2e-9b5a038ac36a@roeck-us.net>
 MIME-Version: 1.0
-References: <20200401190810.7a2cfa07@canb.auug.org.au> <20200401191810.1c06ead6@canb.auug.org.au>
-In-Reply-To: <20200401191810.1c06ead6@canb.auug.org.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 1 Apr 2020 10:20:26 +0200
-Message-ID: <CACRpkdaHdr_TwVES2+hZ9PMTryybHrbYgi0RL3ihkRERsTmV2Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: turn of_pinctrl_get() into a static inline
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ae5cda8-b9a7-b498-ef2e-9b5a038ac36a@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 10:18 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> On Wed, 1 Apr 2020 19:08:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > This avoids the overheads of an EXPORTed function.
-> >
-> > Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/pinctrl/devicetree.c    | 6 ------
-> >  include/linux/pinctrl/pinctrl.h | 9 +++------
-> >  2 files changed, 3 insertions(+), 12 deletions(-)
-> >
-> > This is not even build tested, but is this what you meant, Geert?
->
-> Actually this won't work because get_pinctrl_dev_from_of_node() is
-> declared in the private header file drivers/pinctrl/core.h :-(
+On Tue, Mar 31, 2020 at 07:25:48PM -0700, Guenter Roeck wrote:
+> On 3/31/20 1:59 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.1 release.
+> > There are 23 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
+> > Anything received after that time might be too late.
+> > 
+> 
+> Build results:
+> 	total: 155 pass: 155 fail: 0
+> Qemu test results:
+> 	total: 428 pass: 428 fail: 0
 
-No big deal. We keep your other fix for now.
+Wonderful, thanks for testing these and letting me know.
 
-Yours,
-Linus Walleij
+greg k-h
