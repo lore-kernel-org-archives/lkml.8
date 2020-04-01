@@ -2,215 +2,99 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A936AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDAAC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C20F20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E93206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585776261;
+	bh=SpscMagTGAG+/VHvh41OMqrZQ5CvygLTC+B3GQz0ogk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=QOywTzsj0/8+4MLlneyISK9m5HUFK6N1+ajwuOeKvkptTS17BVWFzcX8uwn9aa1LR
+	 ukxcDETvCk8D94CYMejr+f8ylSbBbxobMasRjK5g2ippdpjcGcOGT14ZHzlWybGgik
+	 /8oYmXL90Kfx1IV6dgfym+ZwoCIvDlfVBnnYGDzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732904AbgDAVUu (ORCPT
+        id S1732888AbgDAVYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:20:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56668 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732357AbgDAVUu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 17:20:50 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031L2oKF001031;
-        Wed, 1 Apr 2020 17:20:29 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3022r0rau8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 17:20:29 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 031L3UWm004108;
-        Wed, 1 Apr 2020 17:20:28 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3022r0rata-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 17:20:28 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 031LDK0T007137;
-        Wed, 1 Apr 2020 21:20:26 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 301x77mwa9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 21:20:26 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031LKPDt41615756
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 21:20:25 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86484B2065;
-        Wed,  1 Apr 2020 21:20:25 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62E2EB206B;
-        Wed,  1 Apr 2020 21:20:24 +0000 (GMT)
-Received: from [9.70.82.143] (unknown [9.70.82.143])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 21:20:24 +0000 (GMT)
-Subject: [PATCH v9 00/13] powerpc/vas: Page fault handling for user space
- NX requests
-From:   Haren Myneni <haren@linux.ibm.com>
-To:     mpe@ellerman.id.au, npiggin@gmail.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clg@kaod.org, mikey@neuling.org, herbert@gondor.apana.org.au,
-        hch@infradead.org, oohall@gmail.com, sukadev@linux.vnet.ibm.com,
-        ajd@linux.ibm.com, frederic.barrat@fr.ibm.com,
-        srikar@linux.vnet.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Date:   Wed, 01 Apr 2020 14:19:38 -0700
-Message-ID: <1585775978.10664.438.camel@hbabu-laptop>
-Mime-Version: 1.0
-X-Mailer: Evolution 2.28.3 
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=799 impostorscore=0
- suspectscore=2 adultscore=0 clxscore=1011 bulkscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010174
+        Wed, 1 Apr 2020 17:24:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732357AbgDAVYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 17:24:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76EC7206F6;
+        Wed,  1 Apr 2020 21:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585776259;
+        bh=SpscMagTGAG+/VHvh41OMqrZQ5CvygLTC+B3GQz0ogk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=tVgRLcS2kdUtwBo1l6umHNb/ZLd3PjKyaifUwJ/xOhBSMlofuc0U1uiJgfN0BQpaG
+         gp1Y+HCjgEV7x2MOKJKTAdIBFlQT+Fb4savqUbGMk/uYZnDwlc7VVE5a5U/eIl837P
+         2oq9+460OYha2qZ+/LKOXsVWJznHfv2y2T72cyC4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5243735226B3; Wed,  1 Apr 2020 14:24:19 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 14:24:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: What should we be doing to stress-test kfree_rcu()?
+Message-ID: <20200401212419.GN19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200401184415.GA7619@paulmck-ThinkPad-P72>
+ <20200401205012.GC206273@google.com>
+ <20200401211607.GA7531@pc636>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401211607.GA7531@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 01, 2020 at 11:16:07PM +0200, Uladzislau Rezki wrote:
+> On Wed, Apr 01, 2020 at 04:50:12PM -0400, Joel Fernandes wrote:
+> > On Wed, Apr 01, 2020 at 11:44:15AM -0700, Paul E. McKenney wrote:
+> > > Hello!
+> > > 
+> > > What should we be doing to stress-test kfree_rcu(), including its ability
+> > > to cope with OOM conditions?  Yes, rcuperf runs are nice, but they are not
+> > > currently doing much more than testing base functionality, performance,
+> > > and scalability.
+> > 
+> > I already stress kfree_rcu() with rcuperf right now to a point of OOM and
+> > make sure it does not OOM. The way I do this is set my VM to low memory (like
+> > 512MB) and then flood kfree_rcu()s. After the shrinker changes, I don't see
+> > OOM with my current rcuperf settings.
+> > 
+> > Not saying that my testing is sufficient, just saying this is what I do. It
+> > would be good to get a real workload to trigger lot of kfree_rcu() activity
+> > as well especially on low memory systems. Any ideas on that?
+> > 
+> > One idea could be to trigger memory pressure from unrelated allocations (such
+> > as userspace memory hogs), and see how it perform with memory-pressure. For
+> > one, the shrinker should trigger in such situations to force the queue into
+> > waiting for a GP in such situations instead of batching too much.
 
-On power9, Virtual Accelerator Switchboard (VAS) allows user space or
-kernel to communicate with Nest Accelerator (NX) directly using COPY/PASTE
-instructions. NX provides various functionalities such as compression,
-encryption and etc. But only compression (842 and GZIP formats) is
-supported in Linux kernel on power9.
+This would be good!
 
-842 compression driver (drivers/crypto/nx/nx-842-powernv.c)
-is already included in Linux. Only GZIP support will be available from
-user space.
+> > We are also missing vmalloc() tests. I remember Vlad had some clever vmalloc
+> > tests around for his great vmalloc rewrites :). Vlad, any thoughts on getting
+> > to stress kvfree_rcu()?
+> > 
+> Actually i updated(localy for my tests) the lib/test_vmalloc.c module with extra
+> test cases to stress kvfree_rcu() stuff. I think i should add them :)
 
-Applications can issue GZIP compression / decompression requests to NX with
-COPY/PASTE instructions. When NX is processing these requests, can hit
-fault on the request buffer (not in memory). It issues an interrupt and
-pastes fault CRB in fault FIFO. Expects kernel to handle this fault and
-return credits for both send and fault windows after processing.
+As would this!  ;-)
 
-This patch series adds IRQ and fault window setup, and NX fault handling:
-- Alloc IRQ and trigger port address, and configure IRQ per VAS instance.
-- Set port# for each window to generate an interrupt when noticed fault.
-- Set fault window and FIFO on which NX paste fault CRB.
-- Setup IRQ thread fault handler per VAS instance.
-- When receiving an interrupt, Read CRBs from fault FIFO and update
-  coprocessor_status_block (CSB) in the corresponding CRB with translation
-  failure (CSB_CC_TRANSLATION). After issuing NX requests, process polls
-  on CSB address. When it sees translation error, can touch the request
-  buffer to bring the page in to memory and reissue NX request.
-- If copy_to_user fails on user space CSB address, OS sends SEGV signal.
-
-Tested these patches with NX-GZIP enable patches and posted them as separate
-patch series.
-
-Patch 1: Define alloc IRQ per chip which is needed to alloc IRQ per VAS
-	   instance.
-Patch 2: Define nx_fault_stamp on which NX writes fault status for the fault
-         CRB
-Patch 3: Alloc and setup IRQ and trigger port address for each VAS instance
-Patches 4 & 5: Setup fault window and register NX per each VAS instance. This
-	 window is used for NX to paste fault CRB in FIFO.
-Patch 6: Reference to pid and mm so that pid is not used until window closed.
-	 Needed for multi thread application where child can open a window
-	 and can be used by parent it later.
-Patch 7: Setup threaded IRQ handler per VAS
-Patch 8: Process CRBs from fault FIFO and notify tasks by updating CSB or
-	 through signals.
-Patches 9 & 11: Return credits for send and fault windows after handling
-        faults.
-Patches 10 & 13: Dump FIFO / CRB data and messages for error conditions
-Patch 14:Fix closing send window after all credits are returned. This issue
-         happens only for user space requests. No page faults on kernel
-         request buffer.
-
-Changelog:
-
-V2:
-  - Use threaded IRQ instead of own kernel thread handler
-  - Use pswid instead of user space CSB address to find valid CRB
-  - Removed unused macros and other changes as suggested by Christoph Hellwig
-
-V3:
-  - Rebased to 5.5-rc2
-  - Use struct pid * instead of pid_t for vas_window tgid
-  - Code cleanup as suggested by Christoph Hellwig
-
-V4:
-  - Define xive alloc and get IRQ info based on chip ID and use these
-    functions for IRQ setup per VAS instance. It eliminates skiboot
-    dependency as suggested by Oliver.
-
-V5:
-  - Do not update CSB if the process is exiting (patch8)
-
-V6:
-  - Add interrupt handler instead of default one and return IRQ_HANDLED
-    if the fault handling thread is already in progress. (Patch7)
-  - Use platform send window ID and CCW[0] bit to find valid CRB in
-    fault FIFO (Patch7).
-  - Return fault address to user space in BE and other changes as
-    suggested by Michael Neuling. (patch8)
-  - Rebased to 5.6-rc4
-
-V7:
-  - Fixed sparse warnings (patches 4, 9 and 10)
-
-V8:
-  - Moved mm_context_remove_copro() before mmdrop() (patch6)
-  - Moved barrier before csb.flags store and add WARN_ON_ONCE() checks (patch8)
-
-V9:
-  - Rebased to 5.6
-  - Changes based on Cedric's comments
-	- Removed "Define xive_native_alloc_get_irq_info()" patch and used
-	  irq_get_handler_data() (patch3)
-  - Changes based on comments from Nicholas Piggin
-	- Moved "Taking PID reference" patch before setting VAS fault handler
-	  patch
-	- Removed mutex_lock/unlock (patch7)
-	- Other cleanup changes
-
-
-Haren Myneni (13):
-  powerpc/xive: Define xive_native_alloc_irq_on_chip()
-  powerpc/vas: Define nx_fault_stamp in coprocessor_request_block
-  powerpc/vas: Alloc and setup IRQ and trigger port address
-  powerpc/vas: Setup fault window per VAS instance
-  powerpc/vas: Register NX with fault window ID and IRQ port value
-  powerpc/vas: Take reference to PID and mm for user space windows
-  powerpc/vas: Setup thread IRQ handler per VAS instance
-  powerpc/vas: Update CSB and notify process for fault CRBs
-  powerpc/vas: Return credits after handling fault
-  powerpc/vas: Print CRB and FIFO values
-  powerpc/vas: Do not use default credits for receive window
-  powerpc/vas: Display process stuck message
-  powerpc/vas: Free send window in VAS instance after credits returned
-
- arch/powerpc/include/asm/icswx.h            |  20 +-
- arch/powerpc/include/asm/xive.h             |   9 +-
- arch/powerpc/platforms/powernv/Makefile     |   2 +-
- arch/powerpc/platforms/powernv/vas-debug.c  |   2 +-
- arch/powerpc/platforms/powernv/vas-fault.c  | 382 ++++++++++++++++++++++++++++
- arch/powerpc/platforms/powernv/vas-window.c | 204 ++++++++++++++-
- arch/powerpc/platforms/powernv/vas.c        |  85 ++++++-
- arch/powerpc/platforms/powernv/vas.h        |  57 ++++-
- arch/powerpc/sysdev/xive/native.c           |   6 +-
- 9 files changed, 737 insertions(+), 30 deletions(-)
- create mode 100644 arch/powerpc/platforms/powernv/vas-fault.c
-
--- 
-1.8.3.1
-
-
-
+							Thanx, Paul
