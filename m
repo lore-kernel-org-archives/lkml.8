@@ -2,212 +2,108 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA45C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17782C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBE1720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D846D20776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="KEmvZ8Mp"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="JyJ+gy9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbgDADLU (ORCPT
+        id S1731657AbgDADMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:11:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53533 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbgDADLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:11:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sWS43cL6z9sPF;
-        Wed,  1 Apr 2020 14:11:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585710676;
-        bh=RCS6w+XsN2y2Hr3WJXdBqRTPgGg44FN2saBcX6nSQ+c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KEmvZ8Mp87D1322Bw8TBxhvi/MCUlQmMlql4nUF3CqhHFTMMFBVUavMHUH7EatAyT
-         2hUWzJ1+BmWfpdq0+T5aa879I4WAoo2tuKOBVItKSFMUMk0LJQernI0fglZ4s+PYtg
-         3WcPqoRAdKgwFmV8PC0QfGAhP3Tc5CPDiD2YkXydVbI/SBqsxZmVq0+zMyS6QosE6i
-         yQQAIkQ7N1fayiEZrwKEtM9/p8Y0u3Gf7T4WXCyROVgyAww7ip//gQ1qsvBvjOegXU
-         Z+60oJHOn/oozfyxpyjfoXu5nSvVJk8vcdDG31ayl95cK5ryFck2YVleATg8sJmANe
-         oacjOGpV1Qimg==
-Date:   Wed, 1 Apr 2020 14:11:13 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: linux-next: manual merge of the driver-core tree with the
- drivers-x86 tree
-Message-ID: <20200401141113.21014665@canb.auug.org.au>
-In-Reply-To: <20200323143816.345b3d54@canb.auug.org.au>
-References: <20200323143816.345b3d54@canb.auug.org.au>
+        Tue, 31 Mar 2020 23:12:55 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17817 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731608AbgDADMz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 23:12:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585710570;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=KcAzchodFlHrCft8V2AwyHfzu9rilizY3Z6FGXX3y14=;
+        b=JyJ+gy9/NxNNe5zeYbTkc2ynPUYF/KFmz8AqZs/lElhDoux5BlGDaJFZv34m1C15
+        4+6qRl/zGc/SQQs14dizVehpX10ZzA1AbBqVzWIVt3wLgElhOjJrWi+uVGw0s2zYwnR
+        JrYxrCFXwPuihr+cu5Td3xv/hUxF8++r6pZ8k3TI=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1585710568507865.2339431988825; Wed, 1 Apr 2020 11:09:28 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <20200401030658.1174045-5-jiaxun.yang@flygoat.com>
+Subject: [PATCH v2 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
+Date:   Wed,  1 Apr 2020 11:06:48 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
+References: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5cBGlr0KSr6lYUqc=FgqimL";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5cBGlr0KSr6lYUqc=FgqimL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add PCI Host controller node for Loongson64 with RS780E PCH dts.
+Note that PCI interrupts are probed via legacy way, as different
+machine have different interrupt arrangement, we can't cover all
+of them in dt.
 
-Hi all,
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+--
+v2: Clean-up
+---
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-On Mon, 23 Mar 2020 14:38:16 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the driver-core tree got a conflict in:
->=20
->   drivers/platform/x86/Kconfig
->=20
-> between commit:
->=20
->   45a3d578f2ed ("platform/x86: Kconfig: Group modules by companies and fu=
-nctions")
->=20
-> from the drivers-x86 tree and commit:
->=20
->   835e1b86ef8c ("platform/x86: touchscreen_dmi: Add EFI embedded firmware=
- info support")
->=20
-> from the driver-core tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc drivers/platform/x86/Kconfig
-> index ae75b19e8649,cd9e2758c479..000000000000
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@@ -1134,46 -978,54 +1134,47 @@@ config TOPSTAR_LAPTO
->   	depends on ACPI
->   	depends on INPUT
->   	select INPUT_SPARSEKMAP
->  -	help
->  -	  This driver provides support for the Intel Virtual Button interface.
->  -	  Some laptops require this driver for power button support.
->  -
->  -	  To compile this driver as a module, choose M here: the module will
->  -	  be called intel_vbtn.
->  -
->  -config INTEL_SCU_IPC
->  -	bool "Intel SCU IPC Support"
->  -	depends on X86_INTEL_MID
->  -	default y
->  +	select LEDS_CLASS
->  +	select NEW_LEDS
->   	---help---
->  -	  IPC is used to bridge the communications between kernel and SCU on
->  -	  some embedded Intel x86 platforms. This is not needed for PC-type
->  -	  machines.
->  +	  This driver adds support for hotkeys found on Topstar laptops.
->  =20
->  -config INTEL_SCU_IPC_UTIL
->  -	tristate "Intel SCU IPC utility driver"
->  -	depends on INTEL_SCU_IPC
->  -	---help---
->  -	  The IPC Util driver provides an interface with the SCU enabling
->  -	  low level access for debug work and updating the firmware. Say
->  -	  N unless you will be doing this on an Intel MID platform.
->  +	  If you have a Topstar laptop, say Y or M here.
->  =20
->  -config INTEL_MID_POWER_BUTTON
->  -	tristate "power button driver for Intel MID platforms"
->  -	depends on INTEL_SCU_IPC && INPUT
->  +config I2C_MULTI_INSTANTIATE
->  +	tristate "I2C multi instantiate pseudo device driver"
->  +	depends on I2C && ACPI
->   	help
->  -	  This driver handles the power button on the Intel MID platforms.
->  +	  Some ACPI-based systems list multiple i2c-devices in a single ACPI
->  +	  firmware-node. This driver will instantiate separate i2c-clients
->  +	  for each device in the firmware-node.
->  =20
->  -	  If unsure, say N.
->  +	  To compile this driver as a module, choose M here: the module
->  +	  will be called i2c-multi-instantiate.
->  =20
->  -config INTEL_MFLD_THERMAL
->  -       tristate "Thermal driver for Intel Medfield platform"
->  -       depends on MFD_INTEL_MSIC && THERMAL
->  -       help
->  -         Say Y here to enable thermal driver support for the  Intel Med=
-field
->  -         platform.
->  +config MLX_PLATFORM
->  +	tristate "Mellanox Technologies platform support"
->  +	depends on I2C && REGMAP
->  +	---help---
->  +	  This option enables system support for the Mellanox Technologies
->  +	  platform. The Mellanox systems provide data center networking
->  +	  solutions based on Virtual Protocol Interconnect (VPI) technology
->  +	  enable seamless connectivity to 56/100Gb/s InfiniBand or 10/40/56GbE
->  +	  connection.
->  =20
->  -config INTEL_IPS
->  -	tristate "Intel Intelligent Power Sharing"
->  -	depends on ACPI && PCI
->  +	  If you have a Mellanox system, say Y or M here.
->  +
->  +config TOUCHSCREEN_DMI
->  +	bool "DMI based touchscreen configuration info"
->  +	depends on ACPI && DMI && I2C=3Dy && TOUCHSCREEN_SILEAD
-> ++	select EFI_EMBEDDED_FIRMWARE if EFI
->   	---help---
->  -	  Intel Calpella platforms support dynamic power sharing between the
->  -	  CPU and GPU, maximizing performance in a given TDP.  This driver,
->  -	  along with the CPU frequency and i915 drivers, provides that
->  -	  functionality.  If in doubt, say Y here; it will only load on
->  -	  supported platforms.
->  +	  Certain ACPI based tablets with e.g. Silead or Chipone touchscreens
->  +	  do not have enough data in ACPI tables for the touchscreen driver to
->  +	  handle the touchscreen properly, as OEMs expect the data to be baked
->  +	  into the tablet model specific version of the driver shipped with the
->  +	  the OS-image for the device. This option supplies the missing info.
->  +	  Enable this for x86 tablets with Silead or Chipone touchscreens.
->  =20
->   config INTEL_IMR
->   	bool "Intel Isolated Memory Region support"
-
-This is now a conflict between the drivers-x86 tree and Linus' tree.
-
+diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/d=
+ts/loongson/rs780e-pch.dtsi
+index 45c54d555fa4..8766f97306c6 100644
+--- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
++++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+@@ -5,10 +5,25 @@ bus@10000000 {
+ =09=09compatible =3D "simple-bus";
+ =09=09#address-cells =3D <2>;
+ =09=09#size-cells =3D <2>;
+-=09=09ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
++=09=09ranges =3D <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
++=09=09=09=090 0x10000000 0 0x10000000 0 0x10000000
+ =09=09=09=090 0x40000000 0 0x40000000 0 0x40000000
+ =09=09=09=090xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Spa=
+ce */>;
+=20
++=09=09pci@1a000000 {
++=09=09=09compatible =3D "loongson,rs780e-pci";
++=09=09=09device_type =3D "pci";
++=09=09=09#address-cells =3D <3>;
++=09=09=09#size-cells =3D <2>;
++
++=09=09=09reg =3D <0 0x1a000000 0 0x02000000>;
++
++=09=09=09ranges =3D <0x01000000 0 0x00004000 0 0x00004000 0 0x00004000>,
++=09=09=09=09 <0x02000000 0 0x40000000 0 0x40000000 0 0x40000000>;
++
++=09=09=09bus-range =3D <0x00 0xff>;
++=09=09};
++
+ =09=09isa {
+ =09=09=09compatible =3D "isa";
+ =09=09=09#address-cells =3D <2>;
 --=20
-Cheers,
-Stephen Rothwell
+2.26.0.rc2
 
---Sig_/5cBGlr0KSr6lYUqc=FgqimL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6EBlEACgkQAVBC80lX
-0Gx3rwf8C/NMQ4Erny1vLm0SimXyCLep+qkKpsMGe/j76SLAoooPbwij3q8mc6mT
-i1EN+ruVc6M5Ur0jojmXGrjmKE5AUj3qtA1PZqfOemFixinOWPQ0RtCqdKkJpwEP
-oWsczD12KhXCfhNmWfS2KbtK10Bu7Gt4kerGyAjZuMoyuj4+RkFoXtwL+zIiVgk8
-tEArHEdkYEDJCeKdNxxBNRt++vDBRs4AUH3wTueAbHQ87lG7Rkodj2Q4jVs+rxcl
-QlbxV3RBqh02Rb/ciujFERkk/FB9KetovVxeJNy5nHXgfBz+rYXeiJGCjHEDSGII
-TqDEkJiNQvWYhS8JW2D3/rGHBcMiZA==
-=+4l/
------END PGP SIGNATURE-----
-
---Sig_/5cBGlr0KSr6lYUqc=FgqimL--
