@@ -2,130 +2,107 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9763C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A99C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1B22080C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M5vzK71s"
+	by mail.kernel.org (Postfix) with ESMTP id 86DDB20776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732276AbgDALyH (ORCPT
+        id S1732305AbgDAL5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:54:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38488 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgDALyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:54:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AgQFSxEvyQI5c9OqmsGVak2w5TUXqlTckkpw5+VXheM=; b=M5vzK71ssKANYsOooCUYejwb9M
-        oFdPsW/spZQC5r3KOxJ24gq/9mmqZqDcq24c6WgDObLoU7x82DOEM9Z591NQYuzlqoWOyDrZIrC3N
-        Y2w4Uv1JgeP3Itq1l/CvcZCUrIUjikT5OGTkYtR1wHoXIKeD/atEiUrNvgqxUyHp21kxdk1NofMv0
-        vqdUkvpnb2zI8ifnLp6EIa5Kp3YcWBQn2jvMfpSI2WkvTMM7HXKWsb7z82/ESE702oq/wJqtAHPko
-        t7GL4ceAWO04X+sq3uZTN6S78IzPP2temA9jDraixrWqO2dfeIDTrr7a/AiAVxDhsEoyDk1aQRPxV
-        t4A577TQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJbwZ-0006QH-DI; Wed, 01 Apr 2020 11:54:03 +0000
-Date:   Wed, 1 Apr 2020 04:54:03 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     John Mathew <john.mathew@unikie.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
-        lukas.bulwahn@gmail.com, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@basemark.com
-Subject: Re: [RFC PATCH 2/3] docs: scheduler: Add scheduler overview
- documentation
-Message-ID: <20200401115403.GG21484@bombadil.infradead.org>
-References: <20200401100029.1445-1-john.mathew@unikie.com>
- <20200401100029.1445-3-john.mathew@unikie.com>
+        Wed, 1 Apr 2020 07:57:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:49962 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbgDAL5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 07:57:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 398A930E;
+        Wed,  1 Apr 2020 04:57:07 -0700 (PDT)
+Received: from [10.57.60.204] (unknown [10.57.60.204])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9841D3F68F;
+        Wed,  1 Apr 2020 04:57:05 -0700 (PDT)
+Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
+ controller.
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <20200319151646.GC4876@lakrids.cambridge.arm.com>
+ <23AD5E45-15E3-4487-9B0D-0D9554DD9DE8@amperemail.onmicrosoft.com>
+ <20200320105315.GA35932@C02TD0UTHF1T.local>
+ <A50AA800-3F65-4761-9BCF-F86A028E107D@amperemail.onmicrosoft.com>
+ <20200401095226.GA17163@C02TD0UTHF1T.local>
+ <20200401102724.GA17575@willie-the-truck>
+ <4d843ec7-ed74-4431-d8c7-d5aa6bd83c18@arm.com>
+ <20200401112739.GD17163@C02TD0UTHF1T.local>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3efa118a-5c85-6af9-e676-44087f1d398e@arm.com>
+Date:   Wed, 1 Apr 2020 12:57:03 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401100029.1445-3-john.mathew@unikie.com>
+In-Reply-To: <20200401112739.GD17163@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:00:28PM +0300, John Mathew wrote:
-> +====================
-> +CFS Data Structures
-> +====================
-> +
-> +Main parts of the Linux scheduler are:
+On 2020-04-01 12:27 pm, Mark Rutland wrote:
+> On Wed, Apr 01, 2020 at 12:12:23PM +0100, Robin Murphy wrote:
+>> On 2020-04-01 11:27 am, Will Deacon wrote:
+>>> On Wed, Apr 01, 2020 at 10:52:26AM +0100, Mark Rutland wrote:
+>>>> On Tue, Mar 31, 2020 at 03:14:59PM -0700, Tuan Phan wrote:
+>>>>> I looked at the SMMUv3 PMU driver and it also uses IRQF_SHARED. SMMUv3
+>>>>> PMU and DMC620 PMU are very much similar in which counters can be
+>>>>> accessed by any cores using memory map. Any special reasons
+>>>>> IRQF_SHARED works with SMMUv3 PMU driver?
+>>>>
+>>>> No; I believe that is a bug in the SMMUv3 PMU driver. If the IRQ were
+>>>> shared, and another driver that held the IRQ changed the affinity,
+>>>> things would go very wrong.
+>>>
+>>> I *think* the idea is that the SMMUv3 PMU driver manages multiple PMCG
+>>> devices, which may all share an irq line, rather than the irq line being
+>>> shared by some other driver that might change the affinity. So I suspect
+>>> dropping IRQF_SHARED will break things.
+>>
+>> Each PMCG is conceptually a distinct PMU with its own interrupt - for
+>> instance, MMU-600 has one PMCG for its TCU and one for each TBU, each with a
+>> distinct interrupt output signal. Of course, integrators can and will mash
+>> them all together into a single SPI (particularly since they're all part of
+>> "the SMMU"), but that boils down to the same case as here.
+>>
+>> This is going to continue to happen, so we could really do with figuring out
+>> a way to let MMIO system PMU drivers properly cope with shared interrupts in
+>> general :/
+> 
+> It does seem so, but I think we can only reasonably do that where it's
+> only being shared across instances of the same driver, rather than when
+> the IRQ is muxed across completely independent drivers. I'd like to
+> avoid that latter case if we can.
+> 
+> The driver would have to handle migration on a cross-instance basis.
+> e.g. all the contexts need to be migrated before the IRQ is, to avoid a
+> screaming IRQ on the target CPU, or the IRQ handler on the target racing
+> with migration from the source.
+> 
+> Is there a neat way to do that in a driver without using IRQF_SHARED, so
+> that we don't end up accidentally sharing with other drivers? We can
+> probably librify the code to handle this under drivers/pmu/.
 
-The main parts ...
+I can envision a fairly straightforward approach of flipping things 
+upside-down such that we register a hotplug instance for the IRQ rather 
+than the PMU, then handle the association of PMUs to IRQs internally to 
+the driver. I believe I need to support this case in my CMN PMU driver 
+too, so I'll prototype something there and see how it looks.
 
-> +**Running Queue:** This is the central data structure of process scheduling. It
-
-I've never heard anyone call this 'Running Queue'.  It's always called
-'run queue'.
-
-> +the CPU core. The main members of the :c:type:`struct rq <rq>` are:
-> +
-> +:c:member:`nr_running`
-> +    Total number of tasks on the runqueue.
-
-This seems like it should be kernel-doc so the documentation is with the
-code ... meaning it might possibly get updated when the code changes as
-opposed to languishing over here.
-
-> +Each rq struct points to a cfs_rq struct which represents the rb tree. The main
-
-How does a cfs_rq struct represent an rb tree?  I suspect what you intended
-to say is that the cfs_rq structs are stored in an rb tree (I'm not familiar
-with the details of the scheduler implementation).
-
-More generally, you're making a mistake that a lot of documentation
-writers make which is to overdescribe the current implementation.
-The important thing to document is that they're stored in a tree; the
-type of tree used is an irrelevant detail.  If that changes, we shouldn't
-need to update this documentation.
-
-> +Each scheduling entity may be run from its parents runqueue. Scheduler traverses
-
-The scheduler ...
-
-also, please format your line lengths to more like 75 characters; don't go
-all the way to 80.  Just use 'fmt'; its defaults work fine.
-
-> +vruntime is the value by which tasks are ordered on the red-black tree. Tasks are
-> +arranged in increasing order of vruntime which is the amount of time a task has
-> +spent running on the cpu.vruntime of a task is updated periodically based on the
-> +:c:func:`scheduler_tick` function.
-
-This is a backwards explanation.
-
-vruntime is the amount of time a task has spent running on the cpu.  It is
-updated periodically by scheduler_tick().  Tasks are stored in the
-scheduler's tree sorted by vruntime.
-
-> +History
-> +-------
-> +
-> +Linux 2.6.23 introduced a modular scheduler core and a Completely Fair Scheduler
-> +(CFS) implemented as a scheduling module. Scheduler has been improving since
-> +kernel version 2.4. In kernel 2.4  there was one running queue for all processes.
-
-I would drop 'Scheduler has been improving since kernel version 2.4'.  I
-just assume that Linux has been improving.
-
-> +CFS uses a time ordered red-black tree for each CPU. The red-black tree is a type
-> +of self-balancing binary search tree. Every running process, has a node in the
-
-Don't explain what an rbtree is, just link to the rbtree documentation.
-Which, admittedly, hasn't been converted to rst format yet, but link to
-rbtree.txt and someone else can fix that up when they do the conversion.
-
+Robin.
