@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73821C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E169EC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3424F2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD05F206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759977;
-	bh=zI1L8fWuxnVasn0HN2osMoOEJhb/uWGdUVBR50usJHc=;
+	s=default; t=1585759979;
+	bh=+gz3rEvWtbhTtAy+WeUnB6gS9zGckPevAbBr38f1C1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cXXqBcjMXzmWJtJfjkN7asxZ9nLTbuJzi/pYGZ1zoeSZngNdWuUtN2RrhmT4YXQPA
-	 iwxFcgVmybqsiN2029zzHiykwCujl/HcUwU6XsV4ZfSGtH3GdjevZVU4iofqlQ/s12
-	 ZLQ4RLvA9jUO1UG704UqZ8JW7e0gwKnUgA32fwRA=
+	b=dtBso4ecBx4EVF+h1UVo8jyHeWvapJ+tSap9PM8ojBHGuIOugCZWxfJG8jMXcx6vf
+	 hvW+y7QMBe2Hzg8AyTw52e2vNUxU1BoW516BlP2T5mpaIAypZ/zuOzx0C5A/F3j61x
+	 OUQ+Id8ezC9Tk1LU+1MeMS3s6r3AAyCvR+7bXFCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387696AbgDAQw4 (ORCPT
+        id S2387523AbgDAQdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:52:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60362 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:33:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388283AbgDAQdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:33:46 -0400
+        id S2388383AbgDAQdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:33:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22EF120658;
-        Wed,  1 Apr 2020 16:33:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D63620658;
+        Wed,  1 Apr 2020 16:33:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758825;
-        bh=zI1L8fWuxnVasn0HN2osMoOEJhb/uWGdUVBR50usJHc=;
+        s=default; t=1585758816;
+        bh=+gz3rEvWtbhTtAy+WeUnB6gS9zGckPevAbBr38f1C1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dUT3xlbxXxI21O+OXBBVZukXKHsz9beg/darQMDeA5iNrfXVtT7ZTG6ZDw3x6Y8+Y
-         VhjA7+bakiKJJ4RCXDugsA8u1Ru1n0opFkpSVo/IRdpQCPcmbVCNxHJI77ejYC+e2C
-         dGmXT+CJm6b5suAakucdSTmlqqcglRGzJ9QRvb4I=
+        b=DM/C31bBpqACp+3oWc6VTh6spyoCmuz/r79L6GTQTR2lZQBd38JLaXT1etQSAVhIf
+         n+Wwk9AIVHzNmzdqmKYNOlbhoget7HN5f/LyUQZqj3dmWKD6jx5JuL1VYWTp/mq1H6
+         tx97S/OFqUapMgIYqAG7mp4eBV5zTKcyMRYHqA/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 87/91] locking/atomic, kref: Add kref_read()
-Date:   Wed,  1 Apr 2020 18:18:23 +0200
-Message-Id: <20200401161539.844562724@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.4 84/91] vt: switch vt_dont_switch to bool
+Date:   Wed,  1 Apr 2020 18:18:20 +0200
+Message-Id: <20200401161539.220388636@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -64,49 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 2c935bc57221cc2edc787c72ea0e2d30cdcd3d5e upstream.
+commit f400991bf872debffb01c46da882dc97d7e3248e upstream.
 
-Since we need to change the implementation, stop exposing internals.
+vt_dont_switch is pure boolean, no need for whole char.
 
-Provide kref_read() to read the current reference count; typically
-used for debug messages.
-
-Kills two anti-patterns:
-
-	atomic_read(&kref->refcount)
-	kref->refcount.counter
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[only add kref_read() to kref.h for stable backports - gregkh]
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200219073951.16151-6-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/kref.h |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/tty/vt/vt_ioctl.c |    6 +++---
+ include/linux/vt_kern.h   |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/include/linux/kref.h
-+++ b/include/linux/kref.h
-@@ -33,6 +33,11 @@ static inline void kref_init(struct kref
- 	atomic_set(&kref->refcount, 1);
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -38,7 +38,7 @@
+ #include <linux/kbd_diacr.h>
+ #include <linux/selection.h>
+ 
+-char vt_dont_switch;
++bool vt_dont_switch;
+ 
+ static inline bool vt_in_use(unsigned int i)
+ {
+@@ -1035,12 +1035,12 @@ int vt_ioctl(struct tty_struct *tty,
+ 	case VT_LOCKSWITCH:
+ 		if (!capable(CAP_SYS_TTY_CONFIG))
+ 			return -EPERM;
+-		vt_dont_switch = 1;
++		vt_dont_switch = true;
+ 		break;
+ 	case VT_UNLOCKSWITCH:
+ 		if (!capable(CAP_SYS_TTY_CONFIG))
+ 			return -EPERM;
+-		vt_dont_switch = 0;
++		vt_dont_switch = false;
+ 		break;
+ 	case VT_GETHIFONTMASK:
+ 		ret = put_user(vc->vc_hi_font_mask,
+--- a/include/linux/vt_kern.h
++++ b/include/linux/vt_kern.h
+@@ -142,7 +142,7 @@ static inline bool vt_force_oops_output(
+ 	return false;
  }
  
-+static inline int kref_read(const struct kref *kref)
-+{
-+	return atomic_read(&kref->refcount);
-+}
-+
- /**
-  * kref_get - increment refcount for object.
-  * @kref: object.
+-extern char vt_dont_switch;
++extern bool vt_dont_switch;
+ extern int default_utf8;
+ extern int global_cursor_default;
+ 
 
 
