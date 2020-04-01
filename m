@@ -2,64 +2,58 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F1EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84790C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74872214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D6A20857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585757998;
-	bh=/uFLWwHDu9UnM9l2Rzf0l5xvw4/SzBCc5ZNeZVG0iqs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZE1GxcRIP5XfmILfABUCN1ntXe0GO4i7SfJQssaoijaZSW+nvsTPnLrnupi/RVzb5
-	 cbfmTPkTdPvx5AIHj+k+3Ei8L7jgEnty1daraXaGet83GY+EJjA8yMhc7yXywRFaUk
-	 vrglxQoxdHsbFFpDzQYXkrtIt1OOclh6DgWhdWxE=
+	s=default; t=1585758003;
+	bh=7degDOeCs59BBBBJ9Nmvb+EqwBBNDXJkLd6Ox/OUxjc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ya3Cv1vazM4JXUZcmXJo2/V4NZiBJ0XCjsNVSXj1MYtVXZo4X+yc+8YrIeDKSWZV7
+	 ou0p7ECrT89D8CmZvGkrrrHTVTSE0wYR2fTnTsReQvoNtr3OG6gVlkBY3l86rtOr8s
+	 f50bFo4tAzAmQv4kfIK/dDY6ze+3eFpvF2O6cyZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732284AbgDAQTx (ORCPT
+        id S1732655AbgDAQUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:19:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732545AbgDAQTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:19:50 -0400
+        id S1732609AbgDAQUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:20:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2AF620658;
-        Wed,  1 Apr 2020 16:19:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65AAB214D8;
+        Wed,  1 Apr 2020 16:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585757990;
-        bh=/uFLWwHDu9UnM9l2Rzf0l5xvw4/SzBCc5ZNeZVG0iqs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=si1GZGUplI3K0S4JHMyRqkMxc/tYqiazLi/GIhA3o7Pvvm9HxOqsUJR3Mf8McB4yj
-         zYrmRSCtKJAlxaDaVKpaQUakDRhzOXKvKO7CV5NRmhR8IKX9E37lsbKrB7x1Fkk88T
-         YnEBa3XALEUa1dbXjH281dQ/gtrFyNRnctBTjypk=
+        s=default; t=1585757999;
+        bh=7degDOeCs59BBBBJ9Nmvb+EqwBBNDXJkLd6Ox/OUxjc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YQdiTo5nqlzwEMeBbrjAOgfUTsRZFxKEbj7BilNjCq5rNzCNtYB+bPoztYVuSHcx/
+         wlK1W1qdf2D4wrgQTcch9LpeGD5ZQoWU6uqJldUZ5Q55FvVthqwdSqMV90Pd8SVgtH
+         8NSaO+d0+vFFWRMV6LIlZRViugV8Nei1W/FvMjRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.6 00/10] 5.6.2-rc1 review
-Date:   Wed,  1 Apr 2020 18:17:16 +0200
-Message-Id: <20200401161413.974936041@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.5 11/30] platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
+Date:   Wed,  1 Apr 2020 18:17:15 +0200
+Message-Id: <20200401161424.569926362@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
+In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
+References: <20200401161414.345528747@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.6.2-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.6.2-rc1
-X-KernelTest-Deadline: 2020-04-03T16:14+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,75 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.6.2 release.
-There are 10 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Georg Müller <georgmueller@gmx.net>
 
-Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
-Anything received after that time might be too late.
+commit 95b31e35239e5e1689e3d965d692a313c71bd8ab upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.2-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-and the diffstat can be found below.
+The Lex 2I385SW board has two Intel I211 ethernet controllers. Without
+this patch, only the first port is usable. The second port fails to
+start with the following message:
 
-thanks,
+    igb: probe of 0000:02:00.0 failed with error -2
 
-greg k-h
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Tested-by: Georg Müller <georgmueller@gmx.net>
+Signed-off-by: Georg Müller <georgmueller@gmx.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--------------
-Pseudo-Shortlog of commits:
+---
+ drivers/platform/x86/pmc_atom.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.6.2-rc1
-
-Georg Müller <georgmueller@gmx.net>
-    platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: fix use-after-free in vt_in_use()
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: remove unnecessary console allocation checks
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: switch vt_dont_switch to bool
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: selection, introduce vc_is_sel
-
-Lanqing Liu <liuhhome@gmail.com>
-    serial: sprd: Fix a dereference warning
-
-Johannes Berg <johannes.berg@intel.com>
-    mac80211: fix authentication with iwlwifi/mvm
-
-Daniel Borkmann <daniel@iogearbox.net>
-    bpf: update jmp32 test cases to fix range bound deduction
-
-
--------------
-
-Diffstat:
-
- Makefile                                     |  4 +-
- drivers/platform/x86/pmc_atom.c              |  8 +++
- drivers/tty/serial/sprd_serial.c             |  3 +-
- drivers/tty/vt/selection.c                   |  5 ++
- drivers/tty/vt/vt.c                          | 30 +++++++++--
- drivers/tty/vt/vt_ioctl.c                    | 75 +++++++++++++++-------------
- include/linux/selection.h                    |  4 +-
- include/linux/vt_kern.h                      |  2 +-
- net/mac80211/tx.c                            |  3 +-
- tools/testing/selftests/bpf/verifier/jmp32.c |  9 ++--
- 10 files changed, 94 insertions(+), 49 deletions(-)
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -385,6 +385,14 @@ static const struct dmi_system_id critcl
+ 	},
+ 	{
+ 		/* pmc_plt_clk* - are used for ethernet controllers */
++		.ident = "Lex 2I385SW",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "2I385SW"),
++		},
++	},
++	{
++		/* pmc_plt_clk* - are used for ethernet controllers */
+ 		.ident = "Beckhoff CB3163",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
 
 
