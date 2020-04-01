@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784A7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02714C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B832063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948C620719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759268;
-	bh=0vKhX8eqkC4hibNoWu6IOHcT8SXG4FHJa/n34WYhQYA=;
+	s=default; t=1585759270;
+	bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIixtmlHD7iC9EklyttZ5zsH8sda7/BYheoxPivyLDwzmmvsS0lHOBdTPBge4RmEM
-	 M677m/7nQtTNUm9jJTxqe+46ar86tUQN+ZzvMNmpNJKTpLI+XCGQq41AKEy4Yyp2gp
-	 9yJde6V+//3qTaDbvf4n0V7ZmMrT8UEvUxAq0URY=
+	b=w6KzSpkBS4vYl/tkhdTCASxSsj2QeH23bnkHHh5iPHtPt/twk7JSyG/gx506CuwGp
+	 xfLyIAzqgOVzkqUQCMIg+LeVXSTWiQOgVvte8erW5v7ZpczCL0QDuty5z1R8Bxm5mF
+	 Sp/p9EpRXATaYZYtSLxwJDk1Bu8WqqDCqXqujyTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389395AbgDAQlG (ORCPT
+        id S2389393AbgDAQlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41260 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:41:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389382AbgDAQk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:40:58 -0400
+        id S2389215AbgDAQlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:41:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DF92217D8;
-        Wed,  1 Apr 2020 16:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26E6A20658;
+        Wed,  1 Apr 2020 16:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759257;
-        bh=0vKhX8eqkC4hibNoWu6IOHcT8SXG4FHJa/n34WYhQYA=;
+        s=default; t=1585759266;
+        bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEqTYyPLcN2J4yeJwLQotuKyaeUbU3jb9eyuV3EhMgyjHFzSkVM1RGPik2unEqBOX
-         WnR+jGPY9PbQoVATbBh9aCqv6g/1DoAOpNck7/GKQpjAOjXBF5dsw1ok12eFq7fVG8
-         o4aqJm91fjc0kOCNia0WaJfew7oAI9ZWtek7+WYY=
+        b=nNx+xDIa2HCv2FytIHtmmQjy6FAUVSHetkv3zPi1O05RM/HBrPwTFJfokX2tRaAAU
+         vEbfd/sgaX7xsY+Wc0nu9v3duHLut48FDTRe7zqOiNvUJ1+NazL3iUkwd5cwPnGlxa
+         YR+QlVZIU6c4fDtde9YT1Py7lQi0z+oyakQEvJik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 023/148] ALSA: seq: oss: Fix running status after receiving sysex
-Date:   Wed,  1 Apr 2020 18:16:55 +0200
-Message-Id: <20200401161554.698558831@linuxfoundation.org>
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.14 026/148] iio: trigger: stm32-timer: disable master mode when stopping
+Date:   Wed,  1 Apr 2020 18:16:58 +0200
+Message-Id: <20200401161555.014527689@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -58,34 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit 6c3171ef76a0bad892050f6959a7eac02fb16df7 upstream.
+commit 29e8c8253d7d5265f58122c0a7902e26df6c6f61 upstream.
 
-This is a similar bug like the previous case for virmidi: the invalid
-running status is kept after receiving a sysex message.
+Master mode should be disabled when stopping. This mainly impacts
+possible other use-case after timer has been stopped. Currently,
+master mode remains set (from start routine).
 
-Again the fix is to clear the running status after handling the sysex.
+Fixes: 6fb34812c2a2 ("iio: stm32 trigger: Add support for TRGO2 triggers")
 
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/3b4a4e0f232b7afbaf0a843f63d0e538e3029bfd.camel@domdv.de
-Link: https://lore.kernel.org/r/20200316090506.23966-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/oss/seq_oss_midi.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/trigger/stm32-timer-trigger.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/sound/core/seq/oss/seq_oss_midi.c
-+++ b/sound/core/seq/oss/seq_oss_midi.c
-@@ -615,6 +615,7 @@ send_midi_event(struct seq_oss_devinfo *
- 		len = snd_seq_oss_timer_start(dp->timer);
- 	if (ev->type == SNDRV_SEQ_EVENT_SYSEX) {
- 		snd_seq_oss_readq_sysex(dp->readq, mdev->seq_device, ev);
-+		snd_midi_event_reset_decode(mdev->coder);
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -161,7 +161,8 @@ static int stm32_timer_start(struct stm3
+ 	return 0;
+ }
+ 
+-static void stm32_timer_stop(struct stm32_timer_trigger *priv)
++static void stm32_timer_stop(struct stm32_timer_trigger *priv,
++			     struct iio_trigger *trig)
+ {
+ 	u32 ccer, cr1;
+ 
+@@ -179,6 +180,12 @@ static void stm32_timer_stop(struct stm3
+ 	regmap_write(priv->regmap, TIM_PSC, 0);
+ 	regmap_write(priv->regmap, TIM_ARR, 0);
+ 
++	/* Force disable master mode */
++	if (stm32_timer_is_trgo2_name(trig->name))
++		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
++	else
++		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
++
+ 	/* Make sure that registers are updated */
+ 	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
+ }
+@@ -197,7 +204,7 @@ static ssize_t stm32_tt_store_frequency(
+ 		return ret;
+ 
+ 	if (freq == 0) {
+-		stm32_timer_stop(priv);
++		stm32_timer_stop(priv, trig);
  	} else {
- 		len = snd_midi_event_decode(mdev->coder, msg, sizeof(msg), ev);
- 		if (len > 0)
+ 		ret = stm32_timer_start(priv, trig, freq);
+ 		if (ret)
 
 
