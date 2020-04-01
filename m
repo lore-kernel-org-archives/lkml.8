@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21F7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AD2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A211420714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6112063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759514;
-	bh=FJpKdcb6Tyjk/stNLsH5eg81JaWGyK3JQadgmibkM2E=;
+	s=default; t=1585759519;
+	bh=67eFtnoK8AdSWJZIizwLnzcLwf5fazvq02dXq99p830=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9U6/wLQl0FQB5zbW16gJZ5sOSgFcPbbsiwx2abESLfuEUmPCxxf/eUgolxuYHv6B
-	 xinaKNySWGoUQBpu3OLW9NqzWh9SusCrjtB0q+cUJkzBnlPLDHFCtL6Zg0u/v4xnnC
-	 xeSZ+2k7sltRCO6UeSvfKm/DSjgDe6xN1szOj91w=
+	b=FYd2EG6Mk6cgjvmUbQ289DWtH9x+G546AkXRPuYE6UoQGNv1nGs7lvvYPzUsb73FW
+	 d104UnBRagI/Sbv7o4lJHrP1g195oFefEooK7/OKOjiWliDaygOzjlnz53Tbxi99gs
+	 UFUCQBXXZ4ayLUAphM9folK8VIW6UhQhCtz+KDTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389363AbgDAQpM (ORCPT
+        id S2389826AbgDAQpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:45:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389823AbgDAQpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:45:09 -0400
+        id S2389830AbgDAQpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:45:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A964520719;
-        Wed,  1 Apr 2020 16:45:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC942063A;
+        Wed,  1 Apr 2020 16:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759509;
-        bh=FJpKdcb6Tyjk/stNLsH5eg81JaWGyK3JQadgmibkM2E=;
+        s=default; t=1585759513;
+        bh=67eFtnoK8AdSWJZIizwLnzcLwf5fazvq02dXq99p830=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fb871MTD9qPWm2m1d9O/UOo92Kk/52gz+3cu5h4R1lqjqXnEcYYJ4UwxFVWUD7J1/
-         dcQ7KIFrbbtyhGz7NvOLXZSVSNcPndUvZM8IHdP8SYGMJZl0gzGw/NApKM7pyiS+qh
-         y1G2XOXDNdNpFffbSyL1bUraNf79TNEI7hq7g23M=
+        b=gDi2d3Yn4osLpbMuWopTCIoEeryjzL8FcBBLn38DCLUsp8ZjhDIwC0e26CT6a4riP
+         ant3Ne3Wv1QoQ6gyDyWbJC+AK/ApBQdnCgQ753ugbwEiI/VF+xPEUKBTdMHLzwFpNI
+         q7pByaUkOVe/68ILy/g+YDRJ5peqbtgCmlM6mHDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.14 102/148] genirq: Fix reference leaks on irq affinity notifiers
-Date:   Wed,  1 Apr 2020 18:18:14 +0200
-Message-Id: <20200401161602.552704822@linuxfoundation.org>
+        stable@vger.kernel.org, Raed Salem <raeds@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.14 103/148] xfrm: handle NETDEV_UNREGISTER for xfrm device
+Date:   Wed,  1 Apr 2020 18:18:15 +0200
+Message-Id: <20200401161602.625007693@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,60 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edward Cree <ecree@solarflare.com>
+From: Raed Salem <raeds@mellanox.com>
 
-commit df81dfcfd6991d547653d46c051bac195cd182c1 upstream.
+commit 03891f820c2117b19e80b370281eb924a09cf79f upstream.
 
-The handling of notify->work did not properly maintain notify->kref in two
- cases:
-1) where the work was already scheduled, another irq_set_affinity_locked()
-   would get the ref and (no-op-ly) schedule the work.  Thus when
-   irq_affinity_notify() ran, it would drop the original ref but not the
-   additional one.
-2) when cancelling the (old) work in irq_set_affinity_notifier(), if there
-   was outstanding work a ref had been got for it but was never put.
-Fix both by checking the return values of the work handling functions
- (schedule_work() for (1) and cancel_work_sync() for (2)) and put the
- extra ref if the return value indicates preexisting work.
+This patch to handle the asynchronous unregister
+device event so the device IPsec offload resources
+could be cleanly released.
 
-Fixes: cd7eab44e994 ("genirq: Add IRQ affinity notifiers")
-Fixes: 59c39840f5ab ("genirq: Prevent use-after-free and work list corruption")
-Signed-off-by: Edward Cree <ecree@solarflare.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
-Link: https://lkml.kernel.org/r/24f5983f-2ab5-e83a-44ee-a45b5f9300f5@solarflare.com
+Fixes: e4db5b61c572 ("xfrm: policy: remove pcpu policy cache")
+Signed-off-by: Raed Salem <raeds@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/manage.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ net/xfrm/xfrm_device.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -224,7 +224,11 @@ int irq_set_affinity_locked(struct irq_d
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -187,6 +187,7 @@ static int xfrm_dev_event(struct notifie
+ 		return xfrm_dev_feat_change(dev);
  
- 	if (desc->affinity_notify) {
- 		kref_get(&desc->affinity_notify->kref);
--		schedule_work(&desc->affinity_notify->work);
-+		if (!schedule_work(&desc->affinity_notify->work)) {
-+			/* Work was already scheduled, drop our extra ref */
-+			kref_put(&desc->affinity_notify->kref,
-+				 desc->affinity_notify->release);
-+		}
+ 	case NETDEV_DOWN:
++	case NETDEV_UNREGISTER:
+ 		return xfrm_dev_down(dev);
  	}
- 	irqd_set(data, IRQD_AFFINITY_SET);
- 
-@@ -324,7 +328,10 @@ irq_set_affinity_notifier(unsigned int i
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
- 
- 	if (old_notify) {
--		cancel_work_sync(&old_notify->work);
-+		if (cancel_work_sync(&old_notify->work)) {
-+			/* Pending work had a ref, put that one too */
-+			kref_put(&old_notify->kref, old_notify->release);
-+		}
- 		kref_put(&old_notify->kref, old_notify->release);
- 	}
- 
+ 	return NOTIFY_DONE;
 
 
