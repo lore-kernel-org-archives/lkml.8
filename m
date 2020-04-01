@@ -2,216 +2,169 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76620C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB68BC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2514E2071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585757407;
-	bh=bGpyjY27A4ZKEtzuZp4KkH+tVyu/ndpMpxC/F4x24Uc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YzRWszlUfGuuskm6GtlfnxGZr+TAZiqEE7npeT+4CAJy9I1URrLW733yuLvC0eR9C
-	 qaOlrNpuggaYFpgEVW6ygn9tXJoZxvdqbNxZPTkP6si9RjfDhtLqfMtpokX2Wf6EN5
-	 anrZDCEK/c8Z9r/LpqRo49jGiTbJ7BNaz92XVYck=
+	by mail.kernel.org (Postfix) with ESMTP id A475620BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASNduxi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732353AbgDAQKG (ORCPT
+        id S1732362AbgDAQKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgDAQKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:10:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D38F920B1F;
-        Wed,  1 Apr 2020 16:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585757404;
-        bh=bGpyjY27A4ZKEtzuZp4KkH+tVyu/ndpMpxC/F4x24Uc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XZAZM7tdTXq7Egp51IkLtSJjuHsatsztCTQnGpkmwHrpsxxpcmkuTjiSGGDCVDYya
-         lVCqolSl6+m6tO988ROKOTwXcuhFvVN0qtgwPsOoCtArue07hh4rxP4WpGVGcScU26
-         RbNtv0y7lTU6uVQYkr39vyH3GI0KZBJA852Kfrn4=
-Date:   Wed, 1 Apr 2020 18:10:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     Woody Suwalski <terraluna977@gmail.com>,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
-Message-ID: <20200401161001.GA2521917@kroah.com>
-References: <20200331085308.098696461@linuxfoundation.org>
- <6cdfe0e5-408f-2d88-cb08-c7675d78637c@gmail.com>
- <9762570c-c83f-10d4-ecec-0d0427c2d2a3@kernel.org>
+        Wed, 1 Apr 2020 12:10:19 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40643 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgDAQKT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:10:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j17so129253lfe.7;
+        Wed, 01 Apr 2020 09:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HEnB8jHAJMmBnOi3vNk/NoBJPvGBCFUIxb8pJ9DBAwA=;
+        b=ASNduxi7dfvhue+fdAPH75VHF0etBl9hjZxLd+N3PwuMpwGHMxpVX+ld5hDZZaMuwI
+         W2uWlmOmbW+7DcFwRdscE1dokjWGRR2GIPnURnNU+Y2DrkSUfm36PU5Sn6RSgOjKsATM
+         dz1CLLOC3CEIbnAp3+c4rMMksVqVD7RdmoFfIA8Fb7DzmIKZYbB5xXG2aanLHU1gSA+3
+         BungEGlLYiHcsIaK8NPooD1J6f1O6Wrc9+i/xrsZlA7bH1NMT2kERY7znN3dU2KqCx4S
+         h1ThSVasQQJJiHQfnE8wJNtz0BUeXptgidRmuKOGo9hOnBgW368V8J6Hpx1SMGrDyLgg
+         uOzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HEnB8jHAJMmBnOi3vNk/NoBJPvGBCFUIxb8pJ9DBAwA=;
+        b=Iy8hT0OZyHd133JcTK0SEhfPRXB0My9ZFtoZajxPV8yshR6AnNYq5XDGoDK8xEM/W3
+         xutCljTTenfjH0A9+D/eRqg+eKHJtE1Nq5k6SIRW/7vM4DvKgDgfcq0/GhP69z2snmEu
+         u1Q6ThnW1dIiv8mNTEux/K/DmtEtoB0Y1HfvDV5CEIkpn9cBv4k+TE/BfzX3IuWZeWiR
+         BilGzIhRV5DHOcfCRl4t3VxO3a9kpA9+eHLWEFik6VjutiktILdLUJuUqBALg+ToMdlX
+         aMZ/sLKwUkh9n2wGFS6JLBsATbYLi+zoBy6l0OiEMFFzF2Sl5rY+7CE/fipiGV1niNaZ
+         yuoQ==
+X-Gm-Message-State: AGi0PuaFfM9d+bJZQvD7bx1YXZ6T6K6YTHqF6eZ4Sttss7F597I0fer6
+        a37DSeAV2phdVlGAhvnqvUM=
+X-Google-Smtp-Source: APiQypKJeWuLeIeO5b5sxDF70kECni9FjfiY7Ov3YtEiLs9bMfRiOkzgXn4cA3XSQ3HIUtRlScwgxQ==
+X-Received: by 2002:a19:43:: with SMTP id 64mr2378107lfa.67.1585757416576;
+        Wed, 01 Apr 2020 09:10:16 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id b1sm2016187lfb.22.2020.04.01.09.10.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 09:10:15 -0700 (PDT)
+Subject: Re: [PATCH v10 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
+ entry for touchscreen status
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-53-jiada_wang@mentor.com>
+ <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
+ <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
+ <4dd3fa36-6ea7-1d5a-e675-a1a7066207b4@gmail.com>
+Message-ID: <e4c9623c-9ee9-90f9-8251-c36443352072@gmail.com>
+Date:   Wed, 1 Apr 2020 19:10:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <4dd3fa36-6ea7-1d5a-e675-a1a7066207b4@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9762570c-c83f-10d4-ecec-0d0427c2d2a3@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:40:31AM -0600, shuah wrote:
-> On 3/31/20 9:06 PM, Woody Suwalski wrote:
-> > Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 5.6.1 release.
-> > > There are 23 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > > The whole patch series can be found in one patch at:
-> > >     https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
-> > > 
-> > > or in the git tree and branch at:
-> > >     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> > > linux-5.6.y
-> > > and the diffstat can be found below.
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > > 
-> > > -------------
-> > > Pseudo-Shortlog of commits:
-> > > 
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > >      Linux 5.6.1-rc1
-> > > 
-> > > Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> > >      media: v4l2-core: fix a use-after-free bug of sd->devnode
-> > > 
-> > > Johan Hovold <johan@kernel.org>
-> > >      media: xirlink_cit: add missing descriptor sanity checks
-> > > 
-> > > Johan Hovold <johan@kernel.org>
-> > >      media: stv06xx: add missing descriptor sanity checks
-> > > 
-> > > Johan Hovold <johan@kernel.org>
-> > >      media: dib0700: fix rc endpoint lookup
-> > > 
-> > > Johan Hovold <johan@kernel.org>
-> > >      media: ov519: add missing endpoint sanity checks
-> > > 
-> > > Eric Biggers <ebiggers@google.com>
-> > >      libfs: fix infoleak in simple_attr_read()
-> > > 
-> > > Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > >      ahci: Add Intel Comet Lake H RAID PCI ID
-> > > 
-> > > Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > >      staging: wfx: annotate nested gc_list vs tx queue locking
-> > > 
-> > > Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > >      staging: wfx: fix init/remove vs IRQ race
-> > > 
-> > > Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > >      staging: wfx: add proper "compatible" string
-> > > 
-> > > Qiujun Huang <hqjagain@gmail.com>
-> > >      staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
-> > > 
-> > > Qiujun Huang <hqjagain@gmail.com>
-> > >      staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
-> > > 
-> > > Larry Finger <Larry.Finger@lwfinger.net>
-> > >      staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
-> > > 
-> > > Dan Carpenter <dan.carpenter@oracle.com>
-> > >      staging: kpc2000: prevent underflow in cpld_reconfigure()
-> > > 
-> > > Johan Hovold <johan@kernel.org>
-> > >      media: usbtv: fix control-message timeouts
-> > > 
-> > > Johan Hovold <johan@kernel.org>
-> > >      media: flexcop-usb: fix endpoint sanity check
-> > > 
-> > > Mans Rullgard <mans@mansr.com>
-> > >      usb: musb: fix crash with highmen PIO and usbmon
-> > > 
-> > > Qiujun Huang <hqjagain@gmail.com>
-> > >      USB: serial: io_edgeport: fix slab-out-of-bounds read in
-> > > edge_interrupt_callback
-> > > 
-> > > Matthias Reichl <hias@horus.com>
-> > >      USB: cdc-acm: restore capability check order
-> > > 
-> > > Pawel Dembicki <paweldembicki@gmail.com>
-> > >      USB: serial: option: add Wistron Neweb D19Q1
-> > > 
-> > > Pawel Dembicki <paweldembicki@gmail.com>
-> > >      USB: serial: option: add BroadMobi BM806U
-> > > 
-> > > Pawel Dembicki <paweldembicki@gmail.com>
-> > >      USB: serial: option: add support for ASKEY WWHC050
-> > > 
-> > > Daniel Borkmann <daniel@iogearbox.net>
-> > >      bpf: Undo incorrect __reg_bound_offset32 handling
-> > > 
-> > > 
-> > > -------------
-> > > 
-> > > Diffstat:
-> > > 
-> > >   Makefile                                           |  4 +--
-> > >   drivers/ata/ahci.c                                 |  1 +
-> > >   drivers/media/usb/b2c2/flexcop-usb.c               |  6 ++--
-> > >   drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +--
-> > >   drivers/media/usb/gspca/ov519.c                    | 10 ++++++
-> > >   drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 +++++++++-
-> > >   drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +++
-> > >   drivers/media/usb/gspca/xirlink_cit.c              | 18 +++++++++-
-> > >   drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
-> > >   drivers/media/usb/usbtv/usbtv-video.c              |  5 +--
-> > >   drivers/media/v4l2-core/v4l2-device.c              |  1 +
-> > >   drivers/staging/kpc2000/kpc2000/core.c             |  4 +--
-> > >   drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
-> > >   .../bindings/net/wireless/siliabs,wfx.txt          |  7 ++--
-> > >   drivers/staging/wfx/bus_sdio.c                     | 15 ++++----
-> > >   drivers/staging/wfx/bus_spi.c                      | 41
-> > > +++++++++++++---------
-> > >   drivers/staging/wfx/main.c                         | 21 ++++++-----
-> > >   drivers/staging/wfx/main.h                         |  1 -
-> > >   drivers/staging/wfx/queue.c                        | 16 ++++-----
-> > >   drivers/staging/wlan-ng/hfa384x_usb.c              |  2 ++
-> > >   drivers/staging/wlan-ng/prism2usb.c                |  1 +
-> > >   drivers/usb/class/cdc-acm.c                        | 18 +++++-----
-> > >   drivers/usb/musb/musb_host.c                       | 17 +++------
-> > >   drivers/usb/serial/io_edgeport.c                   |  2 +-
-> > >   drivers/usb/serial/option.c                        |  6 ++++
-> > >   fs/libfs.c                                         |  8 +++--
-> > >   kernel/bpf/verifier.c                              | 19 ----------
-> > >   27 files changed, 149 insertions(+), 104 deletions(-)
-> > > 
-> > > 
-> > I think you have missed the
-> > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=be8c827f50a0bcd56361b31ada11dc0a3c2fd240
-> > 
-> > 
-> > Without it 5.6 is completely broken on iwlwifi.
-> > 
-> 
-> I am seeing this on my primary laptop with Linux 5.6. I switched
-> back to Linux 5.6-rc7 for now. Is this issue introduced in 5.6
-> when Dave's networking pull? 5.6-rc7 is just fine.
-> 
-> wifi authentication keeps on failing and can't connect at all.
-> 
-> Just about to report this for 5.6 and saw this thread.
+01.04.2020 17:33, Dmitry Osipenko пишет:
+> 01.04.2020 15:51, Wang, Jiada пишет:
+>> Hi Dmitry
+>>
+>> Thanks for your comments
+>>
+>> On 2020/04/01 0:08, Dmitry Osipenko wrote:
+>>> 31.03.2020 13:50, Jiada Wang пишет:
+>>> ...
+>>>> +static void mxt_watchdog_work(struct work_struct *work)
+>>>> +{
+>>>> +    struct mxt_data *data =
+>>>> +        container_of(work, struct mxt_data, watchdog_work.work);
+>>>> +    u16 info_buf;
+>>>> +    int ret;
+>>>> +
+>>>> +    if (data->suspended || data->in_bootloader ||
+>>>> +        data->mxt_status.intp_triggered)
+>>>> +        goto sched_work;
+>>>
+>>> Won't it become a problem if other thread puts device into suspended /
+>>> bootloader state in the same time?
+>>>
+>> right, I will use mutex lock to prevent such case.
+>> also I think data->mxt_status.intp_triggered isn't necessary,
+>> when lock is used.
 
-It will be in the next 5.6.y release, thanks.
+Won't it be cleaner to stop/start the watchdog instead of messing with
+the locks?
 
-greg k-h
+>>>> +    ret = __mxt_read_reg(data->client, 0, sizeof(info_buf), &info_buf);
+>>>> +
+>>>> +    if (ret) {
+>>>> +        data->mxt_status.error_count++;
+>>>> +        data->mxt_status.dev_status = false;
+>>>> +    } else {
+>>>> +        data->mxt_status.dev_status = true;
+>>>> +    }
+>>>> +
+>>>> +sched_work:
+>>>> +    schedule_delayed_work(&data->watchdog_work,
+>>>> +                  msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
+>>>> +}
+>>> ...
+>>>
+>>>> @@ -4329,6 +4390,12 @@ static int mxt_probe(struct i2c_client
+>>>> *client, const struct i2c_device_id *id)
+>>>>           msleep(MXT_RESET_TIME);
+>>>>       }
+>>>>   +    if (debug_state) {
+>>>> +        INIT_DELAYED_WORK(&data->watchdog_work, mxt_watchdog_work);
+>>>> +        schedule_delayed_work(&data->watchdog_work,
+>>>> +                      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
+>>>> +    }
+>>>> +
+>>>>       error = mxt_initialize(data);
+>>>>       if (error)
+>>>>           goto err_free_object;
+>>>> @@ -4343,6 +4410,8 @@ static int mxt_probe(struct i2c_client *client,
+>>>> const struct i2c_device_id *id)
+>>>>       return 0;
+>>>>     err_free_object:
+>>>> +    if (debug_state)
+>>>> +        cancel_delayed_work_sync(&data->watchdog_work);
+>>>>       mxt_free_input_device(data);
+>>>>       mxt_free_object_table(data);
+>>>>       if (data->reset_gpio) {
+>>>> @@ -4367,6 +4436,9 @@ static int mxt_remove(struct i2c_client *client)
+>>>>       mxt_free_input_device(data);
+>>>>       mxt_free_object_table(data);
+>>>>   +    if (debug_state)
+>>>> +        cancel_delayed_work_sync(&data->watchdog_work);
+>>>
+>>> What will happen if debug_state was false during of mxt_probe() and then
+>>> the debug_state parameter was changed to true via sysfs?
+>>
+>> module_param debug_state is added with permission 0,
+>> so it's value won't change during driver operation
+> 
+> Thank you for the clarification, I didn't realize that setting
+> permission to 0 hides the parameter completely in sysfs.
+
+Anyways, I'm still thinking that the condition removal will make code
+cleaner a tad.
