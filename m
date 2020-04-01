@@ -2,130 +2,198 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6495C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A84C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED0A20787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:48:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHHvm2+E"
+	by mail.kernel.org (Postfix) with ESMTP id 4971620772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 04:52:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731750AbgDAEsK (ORCPT
+        id S1731736AbgDAEwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 00:48:10 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36102 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgDAEsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 00:48:09 -0400
-Received: by mail-il1-f194.google.com with SMTP id p13so21754039ilp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 21:48:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yBNtDDyEZFLUMk99HIbSZunA51hK1hAXkAOVSNWlPhE=;
-        b=gHHvm2+EYiTjiYnXL9ZQC35zh8qy4MzJo/SxFMKVeirEvOXDfWObiT+GJVmi2tHFH1
-         qS8IWcfYxxcJRGfkUR/Tge7RS4pMc6LJa8zxcGgq+Go7O8BsToi+FjD7DQhoYtgWYuj3
-         87S6JMzI1P4zTqoH9LUyQ7Od67OL6v6WqlhtnSdG+NGwxuBbWsp8jBqi17h+vvsWWNbv
-         YRr5WP/8YHqN/S5Upjusaq+c5k80vXOXzw7/CfPf6a+VGT+6i8edQG0xDqoMLO1GC2wJ
-         eleNmILDjveiVyFGQ7bYU5UumjrVsRw8Pd9Yw3T0AEmXh/KID0c12pInY0cynlGPvHwR
-         SlTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yBNtDDyEZFLUMk99HIbSZunA51hK1hAXkAOVSNWlPhE=;
-        b=EMwJqrhVX9ihiguN+nVd+YGzE/+cSaazJtDGpUPw5TgLu7HQQ8n1biVBe0gLxZS/9c
-         eq6GyBuOLUjhdL5KKLyL227ceSlHAuBxpfpiAvOglHn8jo94f2/LQ7+VCPJeQ3a4xrVr
-         j/a5vSxzeAiocIGy9MET8w9xMmyfkeRcTklp90YSzn+7ahMHV1fZARw0QP37ljzZHj3T
-         nCTX63uW2NW1tsWKovmlaRqTmhtGGEgqctPpTWhhRGaEMLBG3xZ3JPmSojA+MP+FObqX
-         +BcbT1+g+UJPRJsRLklySv9acbfzYacETsmQXBgXxIDtyvwF17r36Alf+1aYpylvdubk
-         49JQ==
-X-Gm-Message-State: ANhLgQ217qHlVg7c6c7XYuwH1aw4BpdsLHMt3drILP6+OiLk2sg9m0sM
-        hASfFujJSQPjtezgW6X9/ku8xkECXe6AA/A0rDg=
-X-Google-Smtp-Source: ADFU+vv3ujcF3LXkt0pbsCBwIDFrWPnbm2URgmFYXVqHOeM458ygbF9LTJKfV6jzpTxLc86+wXzKR4a0/jckOotShuM=
-X-Received: by 2002:a92:c787:: with SMTP id c7mr18189425ilk.87.1585716487274;
- Tue, 31 Mar 2020 21:48:07 -0700 (PDT)
+        Wed, 1 Apr 2020 00:52:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45860 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbgDAEwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 00:52:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 649B6AEEA;
+        Wed,  1 Apr 2020 04:52:38 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 01 Apr 2020 15:52:25 +1100
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, rcu@vger.kernel.org, willy@infradead.org,
+        peterz@infradead.org, neilb@suse.com, vbabka@suse.cz,
+        mgorman@suse.de, Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free memory pattern
+In-Reply-To: <20200401032555.GA175966@google.com>
+References: <20200331131628.153118-1-joel@joelfernandes.org> <20200331145806.GB236678@google.com> <20200331153450.GM30449@dhcp22.suse.cz> <20200331160117.GA170994@google.com> <877dz0yxoa.fsf@notabene.neil.brown.name> <20200401032555.GA175966@google.com>
+Message-ID: <874ku3zu2e.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Tue, 31 Mar 2020 23:47:56 -0500
-Message-ID: <CABb+yY0-q+5+pqP-rBHCYpw-LmT+h80+OU26XL34fTrXhO+T3Q@mail.gmail.com>
-Subject: [GIT PULL] Mailbox changes for v5.7
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 6c90b86a745a446717fdf408c4a8a4631a5e8ee3:
+On Tue, Mar 31 2020, Joel Fernandes wrote:
 
-  Merge tag 'mmc-v5.6-rc6' of
-git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc (2020-03-19
-12:45:14 -0700)
+> On Wed, Apr 01, 2020 at 09:19:49AM +1100, NeilBrown wrote:
+>> On Tue, Mar 31 2020, Joel Fernandes wrote:
+>>=20
+>> > On Tue, Mar 31, 2020 at 05:34:50PM +0200, Michal Hocko wrote:
+>> >> On Tue 31-03-20 10:58:06, Joel Fernandes wrote:
+>> >> [...]
+>> >> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+>> >> > > index 4be763355c9fb..965deefffdd58 100644
+>> >> > > --- a/kernel/rcu/tree.c
+>> >> > > +++ b/kernel/rcu/tree.c
+>> >> > > @@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_h=
+ead_to_object(void *obj)
+>> >> > >=20=20
+>> >> > >  	if (!ptr)
+>> >> > >  		ptr =3D kmalloc(sizeof(unsigned long *) +
+>> >> > > -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
+>> >> > > +				sizeof(struct rcu_head), GFP_MEMALLOC);
+>> >> >=20
+>> >> > Just to add, the main requirements here are:
+>> >> > 1. Allocation should be bounded in time.
+>> >> > 2. Allocation should try hard (possibly tapping into reserves)
+>> >> > 3. Sleeping is Ok but should not affect the time bound.
+>> >>=20
+>> >>=20
+>> >> __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
+>> >> memory reserves regarless of the sleeping status.
+>> >>=20
+>> >> Using __GFP_MEMALLOC is quite dangerous because it can deplete _all_ =
+the
+>> >> memory. What does prevent the above code path to do that?
+>> >
+>> > Can you suggest what prevents other users of GFP_MEMALLOC from doing t=
+hat
+>> > also? That's the whole point of having a reserve, in normal usage no o=
+ne will
+>> > use it, but some times you need to use it. Keep in mind this is not a =
+common
+>> > case in this code here, this is triggered only if earlier allocation a=
+ttempts
+>> > failed. Only *then* we try with GFP_MEMALLOC with promises to free add=
+itional
+>> > memory soon.
+>>=20
+>> I think that "soon" is the key point.  Users of __GFP_MEMALLOC certainly
+>> must be working to free other memory, that other memory needs to be freed
+>> "soon".  In particular - sooner than all the reserve is exhausted.  This
+>> can require rate-limiting.  If one allocation can result in one page
+>> being freed, that is good and it is probably OK to have 1000 allocations
+>> resulting in 1000 pages being freed soon.  But 10 million allocation to
+>> gain 10 million pages is not such a good thing and shouldn't be needed.
+>> Once those first 1000 pages have been freed, you won't need
+>> __GFP_MEMALLOC allocations any more, and you must be prepare to wait for
+>> them.
+>>=20
+>> So where does the rate-limiting happen in your proposal?  A GP can be
+>> multiple milliseconds, which is time for lots of memory to be allocated
+>> and for rcu-free queues to grow quite large.
+>>=20
+>> You mention a possible fall-back of calling synchronize_rcu().  I think
+>> that needs to be a fallback that happens well before __GFP_MEMALLOC is
+>> exhausted.   You need to choose some maximum amount that you will
+>> allocate, then use synchronize_rcu() (or probably the _expedited
+>> version) after that.  The pool of reserves are certainly there for you
+>> to use, but not for you to exhaust.
+>>=20
+>> If you have your own rate-limiting, then I think __GFP_MEMALLOC is
+>> probably OK, and also you *don't* want the memalloc to wait.  If memory
+>> cannot be allocated immediately, you need to use your own fallback.
+>
+> Thanks a lot for explaining in detail, the RFC patch has served its purpo=
+se
+> well ;-)
+>
+> On discussing with RCU comrades, we agreed to not use GFP_MEMALLOC. But
+> instead pre-allocate a cache (we do have a cache but it is not yet
+> pre-allocated, just allocated on demand).
+>
+> About the rate limiting, we would fallback to synchronize_rcu() instead of
+> sleeping in case of trobule. However I would like to add a warning if we =
+ever
+> hit the troublesome path mainly because that means we depleted the
+> pre-allocated cache and perhaps the user should switch to adding an rcu_h=
+ead
+> in their structure to reduce latency. I'm adding that warning to my tree:
 
-are available in the Git repository at:
+If this warning is only interesting to developers, I think you should
+only show it to developers, not to end-users. i.e. protect it with
+CONFIG_DEBUG_RCU or something like that.
 
-  git://git.linaro.org/landing-teams/working/fujitsu/integration.git
-tags/mailbox-v5.7
+NeilBrown
 
-for you to fetch changes up to 0a67003b1985c79811160af1b01aca07cd5fbc53:
 
-  mailbox: imx: add SCU MU support (2020-03-19 23:04:32 -0500)
+>
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 4be763355c9fb..6172e6296dd7d 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -110,6 +110,10 @@ module_param(rcu_fanout_exact, bool, 0444);
+>  static int rcu_fanout_leaf =3D RCU_FANOUT_LEAF;
+>  module_param(rcu_fanout_leaf, int, 0444);
+>  int rcu_num_lvls __read_mostly =3D RCU_NUM_LVLS;
+> +/* Silence the kvfree_rcu() complaint (warning) that it blocks */
+> +int rcu_kfree_nowarn;
+> +module_param(rcu_kfree_nowarn, int, 0444);
+> +
+>  /* Number of rcu_nodes at specified level. */
+>  int num_rcu_lvl[] =3D NUM_RCU_LVL_INIT;
+>  int rcu_num_nodes __read_mostly =3D NUM_RCU_NODES; /* Total # rcu_nodes =
+in use. */
+> @@ -3266,6 +3270,12 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_ca=
+llback_t func)
+>  	 * state.
+>  	 */
+>  	if (!success) {
+> +		/*
+> +		 * Please embed an rcu_head and pass it along if you hit this
+> +		 * warning. Doing so would avoid long kfree_rcu() latencies.
+> +		 */
+> +		if (!rcu_kfree_nowarn)
+> +			WARN_ON_ONCE(1);
+>  		debug_rcu_head_unqueue(ptr);
+>  		synchronize_rcu();
+>  		kvfree(ptr);
 
-----------------------------------------------------------------
-- imx: add support for i.MX8/8X to existing driver
-- mediatek: drop the atomix execution feature, add flush
-- allwinner: new 'msgbox' controller driver
-- armada: misc: drop redundant error print
-- bcm: misc: catch error in probe and snprintf buffer overflow
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-----------------------------------------------------------------
-Bibby Hsieh (3):
-      dt-binding: gce: remove atomic_exec in mboxes property
-      mailbox: mediatek: implement flush function
-      mailbox: mediatek: remove implementation related to atomic_exec
+-----BEGIN PGP SIGNATURE-----
 
-Peng Fan (3):
-      dt-bindings: mailbox: imx-mu: add SCU MU support
-      mailbox: imx: restructure code to make easy for new MU
-      mailbox: imx: add SCU MU support
-
-Rayagonda Kokatanur (1):
-      maillbox: bcm-flexrm-mailbox: handle cmpl_pool dma allocation failure
-
-Samuel Holland (2):
-      dt-bindings: mailbox: Add a binding for the sun6i msgbox
-      mailbox: sun6i-msgbox: Add a new mailbox driver
-
-Takashi Iwai (1):
-      mailbox: bcm-pdc: Use scnprintf() for avoiding potential buffer overflow
-
-Tang Bin (1):
-      mailbox:armada-37xx-rwtm:remove duplicate print in
-armada_37xx_mbox_probe()
-
- .../mailbox/allwinner,sun6i-a31-msgbox.yaml        |  80 +++++
- .../devicetree/bindings/mailbox/fsl,mu.txt         |   2 +
- .../devicetree/bindings/mailbox/mtk-gce.txt        |  10 +-
- drivers/mailbox/Kconfig                            |   9 +
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/armada-37xx-rwtm-mailbox.c         |   8 +-
- drivers/mailbox/bcm-flexrm-mailbox.c               |   2 +
- drivers/mailbox/bcm-pdc-mailbox.c                  |  20 +-
- drivers/mailbox/imx-mailbox.c                      | 288 ++++++++++++++----
- drivers/mailbox/mtk-cmdq-mailbox.c                 | 128 ++++----
- drivers/mailbox/sun6i-msgbox.c                     | 326 +++++++++++++++++++++
- 11 files changed, 733 insertions(+), 142 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
- create mode 100644 drivers/mailbox/sun6i-msgbox.c
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6EHgoACgkQOeye3VZi
+gbkm2w//fdZ+L31EJT6f/eM53SBbDzDAxkF0FocZ0ScJk4OLbo6kvFWVE8YToX0N
+dDoKJMy7QALVFa+sLy1LSuy7h2MxSHUvRiGXVeDnzJXDjQiz4KWD4F1JzVacaICD
+5cIQd8KaDNQjC92wWKHFnhtCoTSY/KAb45J96jdst+rWvRsSyRx8chXPs/Oljg+e
+15W9ph8o346FvaY0q4AuA6feK2F/OxENv5+b89Y9kWd+UlTpLQWMj0nRkygK7igM
+IgA/FvcqT0KOtkc3o8lTSKcci0eTbI+tNLNbwNanwyQ0tYKJCCdXfTGa8cWb9lhl
+AOB3sxIkZbQl16MtH1WzCBZL1B4tDfjan8YxWCvi2lX5iaBQz/zUKQr/bth0hf93
+Z/0dQNnMjjonICewh7xzjaezlkgu7GSfnOFiXQpHIhCA1qgFLGrmq/SMlnSi4XCV
+l2zdWUmvAIJBQtCmT05jCBqbUWobvJm7otMuBv9hygxRGOWC+fkEUnvLEAZSdv2K
+srbNgwsS09D3qL+KZ9loOgFzn9glJqOb4d2paEwn/4Z2G3MjqoM6yzkcJvYrKUBg
+KHbnYHhLtVrRzvb8vE0WS3Y55MmGDhMHOjbWcWewiPGdIGUGSKeVx38TmukZ+DmY
+vkUIIAD6txSrh+0pwG2+ElNvH4Q6mZmuMgteFq7dhuJdyk3dcUQ=
+=JV7+
+-----END PGP SIGNATURE-----
+--=-=-=--
