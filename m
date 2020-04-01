@@ -2,116 +2,123 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A5DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED093C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78BC320BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6C4206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MzmEe8Wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732840AbgDAN7s (ORCPT
+        id S1732845AbgDAOAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:59:48 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:52204 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732808AbgDAN7r (ORCPT
+        Wed, 1 Apr 2020 10:00:17 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32783 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732783AbgDAOAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:59:47 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TuK-7Fh_1585749544;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TuK-7Fh_1585749544)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 01 Apr 2020 21:59:04 +0800
-Subject: Re: [PATCH v1 2/2] mm/page_alloc: fix watchdog soft lockups during
- set_zone_contiguous()
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Baoquan He <bhe@redhat.com>, Oscar Salvador <osalvador@suse.de>
-References: <20200401104156.11564-1-david@redhat.com>
- <20200401104156.11564-3-david@redhat.com>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <2b2408eb-9695-08af-3e6f-a4c88ee505fc@linux.alibaba.com>
-Date:   Wed, 1 Apr 2020 21:59:04 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        Wed, 1 Apr 2020 10:00:17 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a25so208474wrd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7rS/8GAVkEamS2Iw0cTDnTD2JAlO3q0kknKABrOv+d8=;
+        b=MzmEe8Wb1f4sYGiJmM/FaLWztqC5DpKffgfWvkmSMbDUSKl/5csxUbFnp2rh1rRYxs
+         ab0BaMovVvXe39LftLGa1bpjTKqwju0QfjYj7kH/IRXTrKVr0BH9wuz73PVUigZya9ta
+         uyMfaAKFZ0V8HqWLCbSlP5VfjdSwHhWfcIBlqSH64R9bOD+8VyLK4n47eFxqf038ci/Q
+         VTZ5qrtE3sRpWzx5GwWyhtoqRm3lsODzbMD/NL0mhfeOQihZpbpsSbD44GqA0Mclmx1M
+         XMlYygz8TatBnLWtDdPQOn/XuCMST+rR4XvKbnqZCKFRqtbLOaRsmp4Q/uiEzqhvtRTO
+         B6DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7rS/8GAVkEamS2Iw0cTDnTD2JAlO3q0kknKABrOv+d8=;
+        b=YupN+1OsVBjw8f0L1eiBCs++TW1B000CvE9bx32uF1FhWiQrbg9grkk3D2lPoh8FkE
+         rgWGkCNBlb98EnH+fZXbT+ShwxoeObdJ3bHZNeegBMD1Af85lBSBCpWuR+0S8zpH2DEC
+         IDOPd6c4mbBlEgAgakQEyGiUW/NlvMUJdMKUWcRgE1Q6i8W4ngE9mhVAGt+WpVowauv7
+         nMqpYcKQwvIqbFN06shvHy43yAuyQyjdxuHguYfPY/UT8YRwGnDmVbRSXbqszpI9aU80
+         9NToCgUfMvlG16ZlVVYnYrUHs3NSW5kXOyY4jIp/TRAl0KCacYwIJyJJfb3qYZW5LjgQ
+         C54g==
+X-Gm-Message-State: ANhLgQ0/H4ycrFdrA4gyMh3NwMmcJRC+Wz2NkdHwyu7NVFFRAiyeKe1u
+        WJoMGaWar9beFaUwqs3Xt786UB2Zd9E=
+X-Google-Smtp-Source: ADFU+vveXkKZf5++LKfsqGZzL6IVUMB7L+TaJuGsujpDR3D5zTli+cX5tEZUdUtZJLYdCR8P3IaCPQ==
+X-Received: by 2002:a5d:604a:: with SMTP id j10mr25552947wrt.126.1585749615283;
+        Wed, 01 Apr 2020 07:00:15 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
+        by smtp.gmail.com with ESMTPSA id 19sm2765896wmi.32.2020.04.01.07.00.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 07:00:14 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 16:00:06 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 08/10] iommu/ioasid: Introduce notifier APIs
+Message-ID: <20200401140006.GI882512@myrica>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585158931-1825-9-git-send-email-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401104156.11564-3-david@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585158931-1825-9-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 25, 2020 at 10:55:29AM -0700, Jacob Pan wrote:
+> IOASID users fit into the publisher-subscriber pattern, a system wide
+> blocking notifier chain can be used to inform subscribers of state
+> changes. Notifier mechanism also abstracts publisher from knowing the
+> private context each subcriber may have.
+> 
+> This patch adds APIs and a global notifier chain, a further optimization
+> might be per set notifier for ioasid_set aware users.
+> 
+> Usage example:
+> KVM register notifier block such that it can keep its guest-host PASID
+> translation table in sync with any IOASID updates.
 
+When you talk about KVM, is it for
 
-On 2020/4/1 18:41, David Hildenbrand wrote:
-> Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
-> e.g., while booting up.
->
-> [  105.608900] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]
-> [  105.608933] Modules linked in:
-> [  105.608933] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200331+ #4
-> [  105.608933] Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4066+0f1aadab 04/01/2014
-> [  105.608933] RIP: 0010:__pageblock_pfn_to_page+0x134/0x1c0
-> [  105.608933] Code: 85 c0 74 71 4a 8b 04 d0 48 85 c0 74 68 48 01 c1 74 63 f6 01 04 74 5e 48 c1 e7 06 4c 8b 05 cc 991
-> [  105.608933] RSP: 0000:ffffb6d94000fe60 EFLAGS: 00010286 ORIG_RAX: ffffffffffffff13
-> [  105.608933] RAX: fffff81953250000 RBX: 000000000a4c9600 RCX: ffff8fe9ff7c1990
-> [  105.608933] RDX: ffff8fe9ff7dab80 RSI: 000000000a4c95ff RDI: 0000000293250000
-> [  105.608933] RBP: ffff8fe9ff7dab80 R08: fffff816c0000000 R09: 0000000000000008
-> [  105.608933] R10: 0000000000000014 R11: 0000000000000014 R12: 0000000000000000
-> [  105.608933] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> [  105.608933] FS:  0000000000000000(0000) GS:ffff8fe1ff400000(0000) knlGS:0000000000000000
-> [  105.608933] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  105.608933] CR2: 000000000f613000 CR3: 00000088cf20a000 CR4: 00000000000006f0
-> [  105.608933] Call Trace:
-> [  105.608933]  set_zone_contiguous+0x56/0x70
-> [  105.608933]  page_alloc_init_late+0x166/0x176
-> [  105.608933]  kernel_init_freeable+0xfa/0x255
-> [  105.608933]  ? rest_init+0xaa/0xaa
-> [  105.608933]  kernel_init+0xa/0x106
-> [  105.608933]  ret_from_fork+0x35/0x40
->
-> The issue becomes visible when having a lot of memory (e.g., 4TB)
-> assigned to a single NUMA node - a system that can easily be created
-> using QEMU. Inside VMs on a hypervisor with quite some memory
-> overcommit, this is fairly easy to trigger.
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Alexander Duyck <alexander.duyck@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->   mm/page_alloc.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 084cabffc90d..cc4f07d52939 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1607,6 +1607,7 @@ void set_zone_contiguous(struct zone *zone)
->   		if (!__pageblock_pfn_to_page(block_start_pfn,
->   					     block_end_pfn, zone))
->   			return;
-> +		cond_resched();
->   	}
->   
->   	/* We confirm that there is no hole */
+  [PATCH 0/7] x86: tag application address space for devices
 
-Reviewed-by: Shile Zhang<shile.zhang@linux.alibaba.com>
+or something else as well? (I don't see mentions of KVM in that series)
 
+> 
+> VFIO publish IOASID change by performing alloc/free, bind/unbind
+> operations.
+
+I was rather seeing IOASID as the end of the VFIO-IOMMU-IOASID chain,
+putting it in the middle complicates locking. If you only need to FREE
+notifier for this calse, maybe VFIO could talk directly to the IOMMU
+driver before freeing an IOASID?  gpasid_unbind() should already clear the
+PASID contexts, no?
+
+Thanks,
+Jean
+
+> IOMMU driver gets notified when IOASID is freed by VFIO or core mm code
+> such that PASID context can be cleaned up.
+> 
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
