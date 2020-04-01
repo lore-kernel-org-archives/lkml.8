@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B03CC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0853C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE9A20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F99520BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758528;
-	bh=5JqrpdjqLIuWIOjEGpjTuL1YlPVL+BNI/ZpNl79kbkE=;
+	s=default; t=1585758535;
+	bh=VJu4QYTi6OUJ0thSb1ipp7/N0aGjZyGyy/gIYPdiCmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgrYh5TUMMD41Lv8dBVicrDTruoRV+Y3MfrKe6JiteZCTQvgYbjAmENtApFzNGTct
-	 WfI6a0FbHaP4C2qbDwodoRAtw8+rGZqHP1zgSJA5IqVB20wB2ckMmlGH+QUNq/J7uT
-	 6Nl9JXMhaM2KcLKxqCxtPdK14hbYOJEUW7qWI9io=
+	b=DFRrFOQpZrex4PosQFyOdM/3E5sul4PxpulOvmWkLbPtKRUV2VwimUKy0VCYD7sno
+	 Fb27aKomKyOGWLlmLg9lXK0UzEvTeNJqneszqZSc7n8wShog7S2dBgFtpU8LOVrJd0
+	 He4e9l68u7cT4Sz6/Va04GjXAV3E6YLv9cbRa+iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbgDAQ2r (ORCPT
+        id S2388140AbgDAQ2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:28:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54166 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:28:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387659AbgDAQ2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:28:45 -0400
+        id S2387543AbgDAQ2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:28:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9D782137B;
-        Wed,  1 Apr 2020 16:28:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7002220BED;
+        Wed,  1 Apr 2020 16:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758524;
-        bh=5JqrpdjqLIuWIOjEGpjTuL1YlPVL+BNI/ZpNl79kbkE=;
+        s=default; t=1585758531;
+        bh=VJu4QYTi6OUJ0thSb1ipp7/N0aGjZyGyy/gIYPdiCmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aHw8idb90JtFRWkRqfXHRgw4qMN/WLsBpTHflHW3W/IZ0aIUMS90MU6lTTOGihHT+
-         8HsULRNnauHk9esA31Jr9VWY/Hl0PgmNTLU/x5ULYvetR0xLaiV0Zt1Wl+653o0DIS
-         2hJs//cyVSrXbQJkhiUDsjkAfJ6rnpAp7BzQh74w=
+        b=c3K9pPGYJxDtfbgO4NuZpjKk7F4K7wK7zn2zC4seuQ17RhzCuT90IMs9ji6kqTINO
+         i+RX6lWiGF8xLfRR93Rnoz6FzPfxcolK0LJR52ZjCpN6ktvmoLbC1xOH4lX0Q6bC5F
+         NJptXLUs9qAZ+5G1dsRxpq4OkTOTFwA0kAGtAZSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.19 114/116] ARM: dts: N900: fix onenand timings
-Date:   Wed,  1 Apr 2020 18:18:10 +0200
-Message-Id: <20200401161556.667067117@linuxfoundation.org>
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 115/116] arm64: dts: ls1043a-rdb: correct RGMII delay mode to rgmii-id
+Date:   Wed,  1 Apr 2020 18:18:11 +0200
+Message-Id: <20200401161556.792387965@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,92 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Demchenkov <spinal.by@gmail.com>
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
-commit 0c5220a3c1242c7a2451570ed5f5af69620aac75 upstream.
+commit 4022d808c45277693ea86478fab1f081ebf997e8 upstream.
 
-Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-started using DT specified timings for GPMC, and as a result the
-OneNAND stopped working on N900 as we had wrong values in the DT.
-Fix by updating the values to bootloader timings that have been tested
-to be working on Nokia N900 with OneNAND manufacturers: Samsung,
-Numonyx.
+The correct setting for the RGMII ports on LS1043ARDB is to
+enable delay on both Rx and Tx so the interface mode used must
+be PHY_INTERFACE_MODE_RGMII_ID.
 
-Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-Reviewed-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
+configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
+has control over the RGMII RX delay and it is disabling it for
+RGMII_TXID. The LS1043ARDB uses two such PHYs in RGMII_ID mode but
+in the device tree the mode was described as "rgmii_txid".
+This issue was not apparent at the time as the PHY driver took the
+same action for RGMII_TXID and RGMII_ID back then but it became
+visible (RX no longer working) after the above patch.
+
+Changing the phy-connection-type to "rgmii-id" to address the issue.
+
+Fixes: bf02f2ffe59c ("arm64: dts: add LS1043A DPAA FMan support")
+Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/omap3-n900.dts |   44 ++++++++++++++++++++++++---------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -852,34 +852,46 @@
- 		compatible = "ti,omap2-onenand";
- 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+@@ -118,12 +118,12 @@
  
-+		/*
-+		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
-+		 * bootloader set values when booted with v5.1
-+		 * (OneNAND Manufacturer: Samsung):
-+		 *
-+		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
-+		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
-+		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
-+		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
-+		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
-+		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
-+		 */
- 		gpmc,sync-read;
- 		gpmc,sync-write;
- 		gpmc,burst-length = <16>;
- 		gpmc,burst-read;
- 		gpmc,burst-wrap;
- 		gpmc,burst-write;
--		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
--		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
-+		gpmc,device-width = <2>;
-+		gpmc,mux-add-data = <2>;
- 		gpmc,cs-on-ns = <0>;
--		gpmc,cs-rd-off-ns = <87>;
--		gpmc,cs-wr-off-ns = <87>;
-+		gpmc,cs-rd-off-ns = <102>;
-+		gpmc,cs-wr-off-ns = <102>;
- 		gpmc,adv-on-ns = <0>;
--		gpmc,adv-rd-off-ns = <10>;
--		gpmc,adv-wr-off-ns = <10>;
--		gpmc,oe-on-ns = <15>;
--		gpmc,oe-off-ns = <87>;
-+		gpmc,adv-rd-off-ns = <12>;
-+		gpmc,adv-wr-off-ns = <12>;
-+		gpmc,oe-on-ns = <12>;
-+		gpmc,oe-off-ns = <102>;
- 		gpmc,we-on-ns = <0>;
--		gpmc,we-off-ns = <87>;
--		gpmc,rd-cycle-ns = <112>;
--		gpmc,wr-cycle-ns = <112>;
--		gpmc,access-ns = <81>;
--		gpmc,page-burst-access-ns = <15>;
-+		gpmc,we-off-ns = <102>;
-+		gpmc,rd-cycle-ns = <132>;
-+		gpmc,wr-cycle-ns = <132>;
-+		gpmc,access-ns = <96>;
-+		gpmc,page-burst-access-ns = <18>;
- 		gpmc,bus-turnaround-ns = <0>;
- 		gpmc,cycle2cycle-delay-ns = <0>;
- 		gpmc,wait-monitoring-ns = <0>;
--		gpmc,clk-activation-ns = <5>;
--		gpmc,wr-data-mux-bus-ns = <30>;
--		gpmc,wr-access-ns = <81>;
-+		gpmc,clk-activation-ns = <6>;
-+		gpmc,wr-data-mux-bus-ns = <36>;
-+		gpmc,wr-access-ns = <96>;
- 		gpmc,sync-clk-ps = <15000>;
+ 	ethernet@e4000 {
+ 		phy-handle = <&rgmii_phy1>;
+-		phy-connection-type = "rgmii-txid";
++		phy-connection-type = "rgmii-id";
+ 	};
  
- 		/*
+ 	ethernet@e6000 {
+ 		phy-handle = <&rgmii_phy2>;
+-		phy-connection-type = "rgmii-txid";
++		phy-connection-type = "rgmii-id";
+ 	};
+ 
+ 	ethernet@e8000 {
 
 
