@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8B1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE868C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9482E2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE8F20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759407;
-	bh=+4TU2j85QaBbPTyUaEv5pNZ13HPIguW05u2KrMkHw/w=;
+	s=default; t=1585759410;
+	bh=oLOFW+1+YpmZ/GdNPoMFJoF4xFvKbGjf2wFL4yaJxQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oeAcO6RJKzLPxMZGOFMoGTrGyQwdIAp5wVuwHl6nqIxdIdDfemfojSvrH+O+9xwTI
-	 VHv2cl1dhka6yR7XDrJuDFjZ39TifH6uxjXozw5uc4r6QIp5n3X5cy+SlozwZ+/7Aq
-	 mzlE+6zJyq1oOECFi1rJYDobq9GdVDXFjCYysiu4=
+	b=cBblWUEPIhY2SKd4qyg4JjksQHpcBmPk/suQv3XzDqYyE/WDMZhBkG0Wi1NT7tYws
+	 dE5OGr32siOzWpKNMoDrRP4nkc9XhA1WqvWHEETb0Jkke30vx1rlOA9YHgSEc5W/8f
+	 dZnIxMUbLiDGzmmlDp9v+RKUqda9R8bXv/kxcxqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389620AbgDAQn0 (ORCPT
+        id S2389412AbgDAQn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:43:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44164 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:43:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389459AbgDAQnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:43:24 -0400
+        id S2389459AbgDAQn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:43:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 122302063A;
-        Wed,  1 Apr 2020 16:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BD2206F8;
+        Wed,  1 Apr 2020 16:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759403;
-        bh=+4TU2j85QaBbPTyUaEv5pNZ13HPIguW05u2KrMkHw/w=;
+        s=default; t=1585759406;
+        bh=oLOFW+1+YpmZ/GdNPoMFJoF4xFvKbGjf2wFL4yaJxQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uMN/i5A+XGiVHPr6o4RABs2aYLIgShs6j5Z6Cj5nCSx2Q8rjVpY52/b4FkzrkeaQ0
-         bHBxCAxg/8jaDvmSSr8+aD+VhvLzfHAvbfPfd4FclsSK+g8mJGE71V/uYsX43GZMln
-         jPUtVBfYp+sSdsVqEFY62lOqqSpPOlJEpuUnknD4=
+        b=2GuCZV9X4OyhYrWo0rNvJ++YDrLXSjT9tiT6Q8EkAnumLlwKMLwFdVAQidoLxlqOW
+         /OK89TaUFBaqR1ZxlE8sdXYBHyMW25/S2Z4IF8RKTl2hvMxAHjShde2yUzL7l4wZ+Y
+         +A/hVNTLLp9Nm7LuVWSdrhw/4lnuYS+8CUdWjsXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Smith <andrew.smith@digi.com>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 068/148] net: dsa: mt7530: Change the LINK bit to reflect the link status
-Date:   Wed,  1 Apr 2020 18:17:40 +0200
-Message-Id: <20200401161600.097576252@linuxfoundation.org>
+Subject: [PATCH 4.14 069/148] vxlan: check return value of gro_cells_init()
+Date:   Wed,  1 Apr 2020 18:17:41 +0200
+Message-Id: <20200401161600.166994286@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -62,47 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "René van Dorst" <opensource@vdorst.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 22259471b51925353bd7b16f864c79fdd76e425e ]
+[ Upstream commit 384d91c267e621e0926062cfb3f20cb72dc16928 ]
 
-Andrew reported:
+gro_cells_init() returns error if memory allocation is failed.
+But the vxlan module doesn't check the return value of gro_cells_init().
 
-After a number of network port link up/down changes, sometimes the switch
-port gets stuck in a state where it thinks it is still transmitting packets
-but the cpu port is not actually transmitting anymore. In this state you
-will see a message on the console
-"mtk_soc_eth 1e100000.ethernet eth0: transmit timed out" and the Tx counter
-in ifconfig will be incrementing on virtual port, but not incrementing on
-cpu port.
-
-The issue is that MAC TX/RX status has no impact on the link status or
-queue manager of the switch. So the queue manager just queues up packets
-of a disabled port and sends out pause frames when the queue is full.
-
-Change the LINK bit to reflect the link status.
-
-Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
-Reported-by: Andrew Smith <andrew.smith@digi.com>
-Signed-off-by: RenÃ© van Dorst <opensource@vdorst.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")`
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mt7530.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/vxlan.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -549,7 +549,7 @@ mt7530_mib_reset(struct dsa_switch *ds)
- static void
- mt7530_port_set_status(struct mt7530_priv *priv, int port, int enable)
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2454,10 +2454,19 @@ static void vxlan_vs_add_dev(struct vxla
+ /* Setup stats when device is created */
+ static int vxlan_init(struct net_device *dev)
  {
--	u32 mask = PMCR_TX_EN | PMCR_RX_EN;
-+	u32 mask = PMCR_TX_EN | PMCR_RX_EN | PMCR_FORCE_LNK;
++	struct vxlan_dev *vxlan = netdev_priv(dev);
++	int err;
++
+ 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+ 	if (!dev->tstats)
+ 		return -ENOMEM;
  
- 	if (enable)
- 		mt7530_set(priv, MT7530_PMCR_P(port), mask);
++	err = gro_cells_init(&vxlan->gro_cells, dev);
++	if (err) {
++		free_percpu(dev->tstats);
++		return err;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -2717,8 +2726,6 @@ static void vxlan_setup(struct net_devic
+ 
+ 	vxlan->dev = dev;
+ 
+-	gro_cells_init(&vxlan->gro_cells, dev);
+-
+ 	for (h = 0; h < FDB_HASH_SIZE; ++h)
+ 		INIT_HLIST_HEAD(&vxlan->fdb_head[h]);
+ }
 
 
