@@ -2,52 +2,53 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60591C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61F7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC942063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B3A206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585760050;
-	bh=AL7hoBSzUmkmWDlkQMwp9cp9Ui5kceVTauOdV7/oyJ4=;
+	s=default; t=1585760053;
+	bh=ZimnssbihiT/CUcvGjrmtWm5fbdnfn+B5wH6DVTDZMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d+gX8oLfvzxsf3nQbTgzLfCyeAL9apl8rRx25kvKIqxk8EQdPosKdWgJNvcLkAXNp
-	 Ju/1prVhnB8TjQnR+1puzyhpn0v6w8lKIHC8K4dC0iNBASafAkl5CJgGOd+W+jbkHK
-	 lmnpCBjcWkGBAJPXPR77AYfSBugc7jD1/lsqBwps=
+	b=aNhW7HJv11Ex4/FP1jlPJMMLSFhhJNjJq0HxwO+wme35YqqN7G9d5K8kGdLetAr/X
+	 Py3VGEkflz20VXeKob/f54OYDygCwPDzCKa56Kkvz4U6dVXN1qmpAilXMo82un+hA0
+	 pL1fRD965mNvOLGa1rnO3km1yHoe+9rGXQWjbL0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387982AbgDAQ35 (ORCPT
+        id S2388299AbgDAQyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:29:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55498 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:54:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388192AbgDAQ3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:29:48 -0400
+        id S2388192AbgDAQ35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:29:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E32A20658;
-        Wed,  1 Apr 2020 16:29:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D09D20658;
+        Wed,  1 Apr 2020 16:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758587;
-        bh=AL7hoBSzUmkmWDlkQMwp9cp9Ui5kceVTauOdV7/oyJ4=;
+        s=default; t=1585758596;
+        bh=ZimnssbihiT/CUcvGjrmtWm5fbdnfn+B5wH6DVTDZMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ia6on8FRD+wLdah6cR5OG1DMG6OFnE9IUWlf0x6SzYUKleJBokAoknBylwMAMN0r6
-         v/Zh1vpfv8RTCb26TjHB5qaDLq6h/Ih+zq/wGniv6v94e+lmMLqOykPiDHP4xMcZXV
-         e9svlA3L+6gR4q4/wKAH1DSwwPrUNFjpFM9aX0Ng=
+        b=Bkl0e3MQ+Y8Injaby/swcnOzVm5JBff5wxo3r9w+iA9QiKz4m/UTEr+R57/Br6ejv
+         LX4K7vsUTsz2vPch3bVShxAwDZS0Gqg1XnYBIrSFCc4UekljvJr7CwTwv771PP5DXh
+         76CDi3/vW4l73UplbuFk0K6sRm/5A2A8KE7X12l0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 16/91] ALSA: pcm: oss: Avoid plugin buffer overflow
-Date:   Wed,  1 Apr 2020 18:17:12 +0200
-Message-Id: <20200401161518.639084136@linuxfoundation.org>
+        stable@vger.kernel.org, Thommy Jakobsson <thommyj@gmail.com>,
+        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 04/91] spi/zynqmp: remove entry that causes a cs glitch
+Date:   Wed,  1 Apr 2020 18:17:00 +0200
+Message-Id: <20200401161514.491966420@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -60,70 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Thommy Jakobsson <thommyj@gmail.com>
 
-commit f2ecf903ef06eb1bbbfa969db9889643d487e73a upstream.
+[ Upstream commit 5dd8304981ecffa77bb72b1c57c4be5dfe6cfae9 ]
 
-Each OSS PCM plugins allocate its internal buffer per pre-calculation
-of the max buffer size through the chain of plugins (calling
-src_frames and dst_frames callbacks).  This works for most plugins,
-but the rate plugin might behave incorrectly.  The calculation in the
-rate plugin involves with the fractional position, i.e. it may vary
-depending on the input position.  Since the buffer size
-pre-calculation is always done with the offset zero, it may return a
-shorter size than it might be; this may result in the out-of-bound
-access as spotted by fuzzer.
+In the public interface for chipselect, there is always an entry
+commented as "Dummy generic FIFO entry" pushed down to the fifo right
+after the activate/deactivate command. The dummy entry is 0x0,
+irregardless if the intention was to activate or deactive the cs. This
+causes the cs line to glitch rather than beeing activated in the case
+when there was an activate command.
 
-This patch addresses those possible buffer overflow accesses by simply
-setting the upper limit per the given buffer size for each plugin
-before src_frames() and after dst_frames() calls.
+This has been observed on oscilloscope, and have caused problems for at
+least one specific flash device type connected to the qspi port. After
+the change the glitch is gone and cs goes active when intended.
 
-Reported-by: syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000b25ea005a02bcf21@google.com
-Link: https://lore.kernel.org/r/20200309082148.19855-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The reason why this worked before (except for the glitch) was because
+when sending the actual data, the CS bits are once again set. Since
+most flashes uses mode 0, there is always a half clk period anyway for
+cs to clk active setup time. If someone would rely on timing from a
+chip_select call to a transfer_one, it would fail though.
 
+It is unknown why the dummy entry was there in the first place, git log
+seems to be of no help in this case. The reference manual gives no
+indication of the necessity of this. In fact the lower 8 bits are a
+setup (or hold in case of deactivate) time expressed in cycles. So this
+should not be needed to fulfill any setup/hold timings.
+
+Signed-off-by: Thommy Jakobsson <thommyj@gmail.com>
+Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Link: https://lore.kernel.org/r/20200224162643.29102-1-thommyj@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/oss/pcm_plugin.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/spi/spi-zynqmp-gqspi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
- 				drv_frames = plugin->src_frames(plugin, drv_frames);
-@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
- 			plugin_next = plugin->next;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else
-@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_siz
- 				if (frames < 0)
- 					return frames;
- 			}
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
- 				frames = plugin->src_frames(plugin, frames);
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index f23f36ebaf3dc..bd3945a5660a5 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -414,9 +414,6 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
+ 
+ 	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
+ 
+-	/* Dummy generic FIFO entry */
+-	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, 0x0);
+-
+ 	/* Manually start the generic FIFO command */
+ 	zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
+ 			zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
+-- 
+2.20.1
+
 
 
