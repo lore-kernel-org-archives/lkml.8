@@ -2,209 +2,376 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76BDC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295ADC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D0E2054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC202054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aly7ulvt"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="GV5w2wQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbgDAVBx (ORCPT
+        id S1732737AbgDAVFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:01:53 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42123 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732441AbgDAVBx (ORCPT
+        Wed, 1 Apr 2020 17:05:55 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43874 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732337AbgDAVFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 17:01:53 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q19so944768ljp.9
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 14:01:48 -0700 (PDT)
+        Wed, 1 Apr 2020 17:05:55 -0400
+Received: by mail-qk1-f196.google.com with SMTP id o10so1629296qki.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 14:05:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kZZLw38OvfX0LdWZiTiDgV/9bUny0StnlwiaNs/2Ufc=;
-        b=aly7ulvt+vfPUTikm4mltTkCbIZstebjkVao345asWRzgWwNr8HXzV9jvOV7qGfvlv
-         UShoBmXhYLIDKE25KPNXRT3UYhD9ms32o+X2UsiGs7IVWDcUlmAveM5vTn3hox+wRzrj
-         +6g3z+A2EulG+uY85yfZmgAuVmP8aMoXv7Av3iExS/HEjdAxDOu8N03VSkGIV2DsrPPN
-         /aPw2Y6KLq1biHJFmaxinaPrVzFEBYkVcvRsTSg6B1skCt92JIZrn8HBKG3aj40G1f+g
-         XMRw/JUp5To7tjRdK/WcREvMxKWN5WVPrYT53f+O6xhXut+ZBK8KmQCrycPFZ4Da0X+Q
-         FAzQ==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AX9Rz/HwK/QFFU6WTDfK5mPahRxlZ3SB8lpx6pSVVEY=;
+        b=GV5w2wQriB90xuWR6DprTQLxpxKDXCph1SjFU4SIynG3aYtliyotiYJu7tvMJaJaPl
+         nbQIuLs/Af+6ckMY9mUmTmCaAzvoPs3IhF0r16Cti0ZE78ZvZ01QxwBvEqOuUJAfjo2U
+         KKPgwSmNrPuQb29aEl2UCLDXJgjxyA3ulZj+TqMIYJyGqliYATymA5v04G4+fyNa5iAG
+         61PgOducIaaBKstEM1n4kCIWl1BcLqnKf8UqKumC5dhIv2WmO7Hdf6PYsXeM7pzN2HO9
+         xxTPEsfvBX33n9VlHRP8R8+IxRMqOYayOsXxlZDqlQwrfEw+E0drlgKd1pAw1z8MgfKj
+         uTjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kZZLw38OvfX0LdWZiTiDgV/9bUny0StnlwiaNs/2Ufc=;
-        b=P/Fg+feY+6XIrddpLCF4tGmRe9tJz6+TibS0HNNBiOLWyUu+GoN67MKpf1TSCPD5LB
-         W7YojX6AaYoYcmzbzLxYgH4wG6GIm2kRHwuu9zCxr9FdAP6owR0t/GGTk96a9KsWLJ9a
-         Yfo1Nft/d70vQV+VLoF7pyYUyqvSwmw/726eNsFCRQZEgSOS8E8qpr3NYYFGkVFAVThB
-         A8pdVsGBfGhLpnqDSFP12Xysf4NL/025cvGralOj5pBslmDk0rvA/svfgxkjhknQl3z6
-         FZ1mHz0REs+s0z3aKQLSNEczSOJzXkJh3grV3km35uzR4DURersPfbVnqwEvWpmCaHsG
-         Y/SA==
-X-Gm-Message-State: AGi0PuboQ94sl7dtBeR8w0rwjldVTnKH/U40i5Z+Pid5E8MLD+k914OP
-        VCoOHa0NS8KeSGz1pK4kW0ZbYBUVScUUZgpAHV+6RA==
-X-Google-Smtp-Source: APiQypLuReragKbcrqSe+rqgG3qRRihsgQSHTzTSOLa5Yu/J0N6qri7PBN+y0fmZ3DegD+ZCs5PqSYhGIcO4IBpg4dI=
-X-Received: by 2002:a2e:8410:: with SMTP id z16mr75114ljg.197.1585774907722;
- Wed, 01 Apr 2020 14:01:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
- <20200401202937.GA130497@google.com>
-In-Reply-To: <20200401202937.GA130497@google.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 1 Apr 2020 14:01:36 -0700
-Message-ID: <CABEDWGxTifrvYVF7B2geN7K4Uhor-JcHK95L60T_xQar4XTqBQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=AX9Rz/HwK/QFFU6WTDfK5mPahRxlZ3SB8lpx6pSVVEY=;
+        b=FRGhawSEOvdO2KnOCHVIhb2cwQWJNr8yGkx4mPN8FLB2n9MAraUYdPpdsiEqJni22m
+         vCuvBaLClMfyVrLSusWXjr8EdPpIxdzqIbMWS4rdZe8m9KRWi1G3JQtnjnsTVGyin3E/
+         DfAzAlMNalJQh6rzndPWDKMJDDM4Aydem+JN+bm7WgHrIbDUv2pFyun810fypCiEHShX
+         IDV2zHg10DCBt98mLK8qVQ0DZMC6wOrHrbRa/Yd2za7WxWoH8v8kwRmj6EwJQqsTm6CL
+         0vrwluwWCQgnihHOh54OptG7MvygDh4BZXStJJI78JWwgxW+15qprHcDeKtjRqhQPzB4
+         +qCw==
+X-Gm-Message-State: AGi0PuY09s6Uk0l2IzlRsw1KN1t4A8k18q9MEBieEKtpwPDixXFtNaTZ
+        GfM6CNfOmCpUQm/U4ziUAr8RgA==
+X-Google-Smtp-Source: APiQypLFNSqP7FQmxpniGnttOtvYpJRaeCli7lZh3reyb5XrFRAt0FIkGol/8l6ZH1LRFw4oJj9K0g==
+X-Received: by 2002:a37:aa4c:: with SMTP id t73mr257490qke.300.1585775152488;
+        Wed, 01 Apr 2020 14:05:52 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q8sm1401516qkq.122.2020.04.01.14.05.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 14:05:51 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <5FC8821F-833D-4EE8-B6BD-F8ADB5F29A77@lca.pw>
+Date:   Wed, 1 Apr 2020 17:05:50 -0400
+Cc:     Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        bsegall@google.com, mgorman@suse.de,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C6D3C929-C2FF-4F0B-8095-801995B8F525@lca.pw>
+References: <20200120101652.GM14879@hirez.programming.kicks-ass.net>
+ <F96BF662-BB11-4AFB-BF05-CB1720441A92@lca.pw>
+ <20200121103506.GH14914@hirez.programming.kicks-ass.net>
+ <5FC8821F-833D-4EE8-B6BD-F8ADB5F29A77@lca.pw>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 1:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Mar 31, 2020 at 01:36:04PM -0700, Alan Mikhak wrote:
-> > On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
-> > > > Output a warning for MEM resource size with
-> > > > non-zero upper 32-bits.
-> > > >
-> > > > ATU programming functions limit the size of
-> > > > the translated region to 4GB by using a u32 size
-> > > > parameter. Function dw_pcie_prog_outbound_atu()
-> > > > does not program the upper 32-bit ATU limit
-> > > > register. This may result in undefined behavior
-> > > > for resource sizes with non-zero upper 32-bits.
-> > > >
-> > > > For example, a 128GB address space starting at
-> > > > physical CPU address of 0x2000000000 with size of
-> > > > 0x2000000000 needs the following values programmed
-> > > > into the lower and upper 32-bit limit registers:
-> > > >  0x3fffffff in the upper 32-bit limit register
-> > > >  0xffffffff in the lower 32-bit limit register
-> > > >
-> > > > Currently, only the lower 32-bit limit register is
-> > > > programmed with a value of 0xffffffff but the upper
-> > > > 32-bit limit register is not being programmed.
-> > > > As a result, the upper 32-bit limit register remains
-> > > > at its default value after reset of 0x0. This would
-> > > > be a problem for a 128GB PCIe space because in
-> > > > effect its size gets reduced to 4GB.
-> > > >
-> > > > ATU programming functions can be changed to
-> > > > specify a u64 size parameter for the translated
-> > > > region. Along with this change, the internal
-> > > > calculation of the limit address, the address of
-> > > > the last byte in the translated region, needs to
-> > > > change such that both the lower 32-bit and upper
-> > > > 32-bit limit registers can be programmed correctly.
-> > > >
-> > > > Changing the ATU programming functions is high
-> > > > impact. Without change, this issue can go
-> > > > unnoticed. A warning may prompt the user to
-> > > > look into possible issues.
-> > >
-> > > So this is basically a warning, and we could actually *fix* the
-> > > problem with more effort?  I vote for the fix.
-> >
-> > The fix would impact all PCIe drivers that depend on dwc.
->
-> Is that another way of saying "the fix would *fix* all the drivers
-> that depend on dwc"?
 
-Thanks Bjorn for your comments.
 
-Not at all. I'm not suggesting that. I'm just stating the dilemma.
+> On Mar 29, 2020, at 10:42 PM, Qian Cai <cai@lca.pw> wrote:
+>=20
+>=20
+>=20
+>> On Jan 21, 2020, at 5:35 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>>=20
+>> On Mon, Jan 20, 2020 at 03:35:09PM -0500, Qian Cai wrote:
+>>>> On Jan 20, 2020, at 5:17 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>>>>=20
+>>>> Bah.. that's horrible. Surely we can find a better place to do this =
+in
+>>>> the whole hotplug machinery.
+>>>>=20
+>>>> Perhaps you can have takedown_cpu() do the mmdrop()?
+>>>=20
+>>> The problem is that no all arch_cpu_idle_dead() will call
+>>> idle_task_exit(). For example, alpha and parisc are not, so it needs
+>>=20
+>> How is that not broken? If the idle thread runs on an active_mm, we =
+need
+>> to drop that reference. This needs fixing regardless.
+>=20
+> It turns out alpha does not support cpu hotplug (no =
+CONFIG_HOTPLUG_CPU),
+> and parisc will use &init_mm for idle tasks of secondary CPUs as in,
+>=20
+> smp_callin()
+>  smp_cpu_init()
+>=20
+> /* Initialise the idle task for this CPU */=09
+> mmgrab(&init_mm);
+> current->active_mm =3D &init_mm;
+> BUG_ON(current->mm);
+> enter_lazy_tlb(&init_mm, current);
+>=20
+>>=20
+>>> to deal with some kind of ifdef dance in takedown_cpu() to
+>>> conditionally call mmdrop() which sounds even more horrible?
+>>>=20
+>>> If you really prefer it anyway, maybe something like touching every =
+arch=E2=80=99s __cpu_die() to also call mmdrop() depends on arches?
+>>>=20
+>>> BTW, how to obtain the other CPU=E2=80=99s current task mm? Is that =
+cpu_rq(cpu)->curr->active_mm?
+>>=20
+>> Something like this; except you'll need to go audit archs to make =
+sure
+>> they all call idle_task_exit() and/or put in comments on why they =
+don't
+>> have to (perhaps their bringup switches them to &init_mm =
+unconditionally
+>> and the switch_mm() is not required).
+>=20
+> I have to modify your code slightly (below) to pass compilation, but =
+then it will
+> panic during cpu offline for some reasons,
 
-One option is, as you may be alluding, the *fix* would include
-modification to all drivers that depend on dwc to at least not break
-the build.. Whoever embarks on such a *fix* would have to take
-that on before submitting the patch.
+OK, I found this little thing on powerpc needs to flip. I=E2=80=99ll =
+post an v2 with Peter
+as an author. Thus, need your signed-off.
 
-Another option is to produce an alternate ATU programming
-API for the Linux PCI sub-system to support u64 size. That
-way individual driver owners can choose if and when to migrate
-their drivers to the new API on their own timeline. Such an
-alternative API can also be generic to support not only
-Designware PCIe controllers but others.
+>=20
+> [  258.972625][ T9006] Faulting instruction address: =
+0xc00000000010afc4
+> [  258.972640][ T9006] Oops: Kernel access of bad area, sig: 11 [#1]
+> [  258.972651][ T9006] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+> [  258.972675][ T9006] Modules linked in: kvm_hv kvm ip_tables =
+x_tables xfs sd_mod bnx2x ahci mdio libahci tg3 libata libphy =
+firmware_class dm_mirror dm_region_hash dm_log dm_mod
+> [  258.972716][ T9006] CPU: 84 PID: 9006 Comm: cpuhotplug04.sh Not =
+tainted 5.6.0-rc7-next-20200327+ #7
+> [  258.972741][ T9006] NIP:  c00000000010afc4 LR: c00000000010afa0 =
+CTR: fffffffffffffffd
+> [  258.972775][ T9006] REGS: c000201a54def7f0 TRAP: 0300   Not tainted =
+ (5.6.0-rc7-next-20200327+)
+> [  258.972809][ T9006] MSR:  900000000280b033 =
+<SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 28224824  XER: 20040000
+> [  258.972839][ T9006] CFAR: c00000000015951c DAR: 0000000000000050 =
+DSISR: 40000000 IRQMASK: 0=20
+> [  258.972839][ T9006] GPR00: c00000000010afa0 c000201a54defa80 =
+c00000000165bd00 c000000001604180=20
+> [  258.972839][ T9006] GPR04: c00000008160496f 0000000000000000 =
+ffff0a01ffffff10 0000000000000020=20
+> [  258.972839][ T9006] GPR08: 0000000000000050 0000000000000000 =
+c00000000162c0e0 0000000000000002=20
+> [  258.972839][ T9006] GPR12: 0000000088224428 c000201fff69a900 =
+0000000040000000 000000011a029798=20
+> [  258.972839][ T9006] GPR16: 000000011a029724 0000000119fc6968 =
+0000000119f5f230 000000011a02d568=20
+> [  258.972839][ T9006] GPR20: 00000001554c66f0 0000000000000000 =
+c000001ffc957820 c00000000010af80=20
+> [  258.972839][ T9006] GPR24: 0000001ffb8a0000 c0000000014f34a8 =
+0000000000000056 c0000000010b7820=20
+> [  258.972839][ T9006] GPR28: c00000000168c654 0000000000000000 =
+c00000000168c3a8 0000000000000000=20
+> [  258.973070][ T9006] NIP [c00000000010afc4] finish_cpu+0x44/0x90
+> atomic_dec_return_relaxed at arch/powerpc/include/asm/atomic.h:179
+> (inlined by) atomic_dec_return at include/linux/atomic-fallback.h:518
+> (inlined by) atomic_dec_and_test at =
+include/linux/atomic-fallback.h:1035
+> (inlined by) mmdrop at include/linux/sched/mm.h:48
+> (inlined by) finish_cpu at kernel/cpu.c:579
+> [  258.973092][ T9006] LR [c00000000010afa0] finish_cpu+0x20/0x90
+> [  258.973113][ T9006] Call Trace:
+> [  258.973132][ T9006] [c000201a54defa80] [c00000000010afa0] =
+finish_cpu+0x20/0x90 (unreliable)
+> [  258.973166][ T9006] [c000201a54defaa0] [c00000000010cd34] =
+cpuhp_invoke_callback+0x194/0x15f0
+> cpuhp_invoke_callback at kernel/cpu.c:173
+> [  258.973202][ T9006] [c000201a54defb50] [c000000000111acc] =
+_cpu_down.constprop.15+0x17c/0x410
+> [  258.973237][ T9006] [c000201a54defbc0] [c00000000010ff84] =
+cpu_down+0x64/0xb0
+> [  258.973263][ T9006] [c000201a54defc00] [c000000000754760] =
+cpu_subsys_offline+0x20/0x40
+> [  258.973299][ T9006] [c000201a54defc20] [c00000000074ab10] =
+device_offline+0x100/0x140
+> [  258.973344][ T9006] [c000201a54defc60] [c00000000074ace0] =
+online_store+0xa0/0x110
+> [  258.973378][ T9006] [c000201a54defcb0] [c000000000744508] =
+dev_attr_store+0x38/0x60
+> [  258.973414][ T9006] [c000201a54defcd0] [c0000000005df770] =
+sysfs_kf_write+0x70/0xb0
+> [  258.973438][ T9006] [c000201a54defd10] [c0000000005de92c] =
+kernfs_fop_write+0x11c/0x270
+> [  258.973463][ T9006] [c000201a54defd60] [c0000000004c09bc] =
+__vfs_write+0x3c/0x70
+> [  258.973487][ T9006] [c000201a54defd80] [c0000000004c3dbc] =
+vfs_write+0xcc/0x200
+> [  258.973522][ T9006] [c000201a54defdd0] [c0000000004c415c] =
+ksys_write+0x7c/0x140
+> [  258.973557][ T9006] [c000201a54defe20] [c00000000000b3f8] =
+system_call+0x5c/0x68
+> [  258.973579][ T9006] Instruction dump:
+> [  258.973598][ T9006] f8010010 f821ffe1 4804e4ed 60000000 3d42fffd =
+394a03e0 e9230560 7fa95000=20
+> [  258.973636][ T9006] 419e0030 f9430560 39090050 7c0004ac <7d404028> =
+314affff 7d40412d 40c2fff4=20
+> [  258.973675][ T9006] ---[ end trace 4f72c711066ac397 ]---
+> [  259.076271][ T9006]=20
+> [  260.076362][ T9006] Kernel panic - not syncing: Fatal exception
+>=20
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index c49257a3b510..bc782562ae93 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
+> 		__mmdrop(mm);
+> }
+>=20
+> +extern void mmdrop(struct mm_struct *mm);
+> +
+> /*
+>  * This has to be called after a get_task_mm()/mmget_not_zero()
+>  * followed by taking the mmap_sem for writing before modifying the
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 0cca1a2b4930..302007a602a5 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -3,6 +3,7 @@
+>  *
+>  * This code is licenced under the GPL.
+>  */
+> +#include <linux/sched/mm.h>
+> #include <linux/proc_fs.h>
+> #include <linux/smp.h>
+> #include <linux/init.h>
+> @@ -564,6 +565,22 @@ static int bringup_cpu(unsigned int cpu)
+> 	return bringup_wait_for_ap(cpu);
+> }
+>=20
+> +static int finish_cpu(unsigned int cpu)
+> +{
+> +	struct task_struct *idle =3D idle_thread_get(cpu);
+> +	struct mm_struct *mm =3D idle->active_mm;
+> +
+> +	/*
+> +	 * idle_task_exit() will have switched to &init_mm, now
+> +	 * clean up any remaining active_mm state.
+> +	 */
+> +	if (mm !=3D &init_mm) {
+> +		idle->active_mm =3D &init_mm;
+> +		mmdrop(mm);
+> +	}
+> +	return 0;
+> +}
+> +
+> /*
+>  * Hotplug state machine related functions
+>  */
+> @@ -1549,7 +1566,7 @@ static struct cpuhp_step cpuhp_hp_states[] =3D {
+> 	[CPUHP_BRINGUP_CPU] =3D {
+> 		.name			=3D "cpu:bringup",
+> 		.startup.single		=3D bringup_cpu,
+> -		.teardown.single	=3D NULL,
+> +		.teardown.single	=3D finish_cpu,
+> 		.cant_stop		=3D true,
+> 	},
+> 	/* Final state before CPU kills itself */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index ac8b65298774..16aad39216a2 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -6248,13 +6248,14 @@ void idle_task_exit(void)
+> 	struct mm_struct *mm =3D current->active_mm;
+>=20
+> 	BUG_ON(cpu_online(smp_processor_id()));
+> +	BUG_ON(current !=3D this_rq()->idle);
+>=20
+> 	if (mm !=3D &init_mm) {
+> 		switch_mm(mm, &init_mm, current);
+> -		current->active_mm =3D &init_mm;
+> 		finish_arch_post_lock_switch();
+> 	}
+> -	mmdrop(mm);
+> +
+> +	/* finish_cpu(), as ran on the BP, will clean up the active_mm =
+state */
+> }
+>=20
+> /*
+>=20
+>=20
+>>=20
+>> ---
+>> diff --git a/kernel/cpu.c b/kernel/cpu.c
+>> index 9c706af713fb..2b4d8a69e8d9 100644
+>> --- a/kernel/cpu.c
+>> +++ b/kernel/cpu.c
+>> @@ -564,6 +564,23 @@ static int bringup_cpu(unsigned int cpu)
+>> 	return bringup_wait_for_ap(cpu);
+>> }
+>>=20
+>> +static int finish_cpu(unsigned int cpu)
+>> +{
+>> +	struct task_struct *idle =3D idle_thread_get(cpu);
+>> +	struct mm_struct *mm =3D idle->active_mm;
+>> +
+>> +	/*
+>> +	 * idle_task_exit() will have switched to &init_mm, now
+>> +	 * clean up any remaining active_mm state.
+>> +	 */
+>> +
+>> +	if (mm =3D=3D &init_mm)
+>> +		return;
+>> +
+>> +	idle->active_mm =3D &init_mm;
+>> +	mmdrop(mm);
+>> +}
+>> +
+>> /*
+>> * Hotplug state machine related functions
+>> */
+>> @@ -1434,7 +1451,7 @@ static struct cpuhp_step cpuhp_hp_states[] =3D =
+{
+>> 	[CPUHP_BRINGUP_CPU] =3D {
+>> 		.name			=3D "cpu:bringup",
+>> 		.startup.single		=3D bringup_cpu,
+>> -		.teardown.single	=3D NULL,
+>> +		.teardown.single	=3D finish_cpu,
+>> 		.cant_stop		=3D true,
+>> 	},
+>> 	/* Final state before CPU kills itself */
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index fc1dfc007604..8f049fb77a3d 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -6188,13 +6188,14 @@ void idle_task_exit(void)
+>> 	struct mm_struct *mm =3D current->active_mm;
+>>=20
+>> 	BUG_ON(cpu_online(smp_processor_id()));
+>> +	BUG_ON(current !=3D this_rq()->idle);
+>>=20
+>> 	if (mm !=3D &init_mm) {
+>> 		switch_mm(mm, &init_mm, current);
+>> -		current->active_mm =3D &init_mm;
+>> 		finish_arch_post_lock_switch();
+>> 	}
+>> -	mmdrop(mm);
+>> +
+>> +	/* finish_cpu(), as ran on the BP, will clean up the active_mm =
+state */
+>> }
+>>=20
+>> /*
 
->
-> > I would have no way of validating such a fix without
-> > breaking it for everyone let alone the bandwidth it needs.
-> > All drivers that depend on dwc seem to be currently happy
-> > with the u32 size limit. I suggest we add the warning but
-> > keep this issue in mind for a solution that allows existing
-> > PCe drivers to phase into the fix on their own individual
-> > schedules, if they need to.
->
-> Obviously it would *nice* to test all the drivers that depend on dwc,
-> but if you're fixing a problem, you verify the fix on your system, and
-> the relevant people review it, I don't think exhaustive testing is a
-> hard requirement, and I certainly wouldn't expect you to do it.
-
-That is a relief for whoever commits to take this on.
-
->
-> If we want to live with a 32-bit limit, I think we should change the
-> relevant interfaces to use u32 so there's not a way to venture into
-> this region of undefined behavior.  I don't think "warning + undefined
-> behavior" is a very maintainable situation.
-
-I cannot live with the 32-bit limit. I need a 64-bit solution. I had
-to implement a solution that suits my needs. I have worked
-out some of the issue. It is generic enough for my use with PCIe
-controllers from more than one vendor. But, it requires pulling a
-lot of code from Designware layer into a separate framework
-which I believe can become common for Linux PCI subsystem.
-If it gets in, others who need 64-bit can migrate over to it without
-being migrated involuntarily.
-
->
-> > > > This limitation also means that multiple ATUs
-> > > > would need to be used to map larger regions.
-> > > >
-> > > > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
-> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > index 395feb8ca051..37a8c71ef89a 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >       struct pci_bus *child;
-> > > >       struct pci_host_bridge *bridge;
-> > > >       struct resource *cfg_res;
-> > > > +     resource_size_t mem_size;
-> > > >       u32 hdr_type;
-> > > >       int ret;
-> > > >
-> > > > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > >               case IORESOURCE_MEM:
-> > > >                       pp->mem = win->res;
-> > > >                       pp->mem->name = "MEM";
-> > > > -                     pp->mem_size = resource_size(pp->mem);
-> > > > +                     mem_size = resource_size(pp->mem);
-> > > > +                     if (upper_32_bits(mem_size))
-> > > > +                             dev_warn(dev, "MEM resource size too big\n");
-> > > > +                     pp->mem_size = mem_size;
-> > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> > > >                       break;
-> > > >               case 0:
-> > > > --
-> > > > 2.7.4
-> > > >
