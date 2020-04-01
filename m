@@ -2,64 +2,57 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF93C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F06C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE451214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FEA21582
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758163;
-	bh=Lo6aLleuc8gQtoccgiwhgbjbh0eEiciV2V5nIHfa410=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=df/qn3z7PPpkcTrh+XWnAXKjih8vNZo71w5PmoymrGp84Zwpmz0fpzVRi/VyurFfF
-	 Xa6oMU0n3lNHQocB9t6V25SCaqN4IhpgRdZWBQ93fV2NYkXuaRLBmPfpow7PYdEJP3
-	 ofWpfAPhqZ0euuaszHOgvjtDHLMRywoQTzKjNG+s=
+	s=default; t=1585758167;
+	bh=PIZTE+EIbLccDU1QGRu3mlihSm17nSu7NpAVqp4qfqM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UkWJ0Lpy7nuGEP7CxM8DVRK5EwKQvbHT07UFBWJ6EDBMUMD9NtEjQTacDer29eizK
+	 lWV0GuCkmkrT6BK1OXMSaUw3UJYR4j29ocVXsMvkXLmzxwr0mOAIlyswNxrRNnBncW
+	 PfLy5m6m//qi/mn+JkVSJg1y130qX/hv248+T0VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387524AbgDAQWm (ORCPT
+        id S2387533AbgDAQWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45748 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387515AbgDAQWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:40 -0400
+        id S1732328AbgDAQWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1692D20857;
-        Wed,  1 Apr 2020 16:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7654212CC;
+        Wed,  1 Apr 2020 16:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758159;
-        bh=Lo6aLleuc8gQtoccgiwhgbjbh0eEiciV2V5nIHfa410=;
-        h=From:To:Cc:Subject:Date:From;
-        b=S+f0xe6fY8cszvWt1LlYQUKN3ackRE1/Bx2VWDrQVhPIfuWOWRdJVmqN12u9ybo15
-         iyMGBCK+eozpl15QPzdoLB+jckGuwdjxHks3LXzaV5vNyo+CMzvYfQ+q+bW2n3UL8S
-         CVpHpWR2yHKMeJOgcZRScdEqQjV0eB+W9SyRBru8=
+        s=default; t=1585758162;
+        bh=PIZTE+EIbLccDU1QGRu3mlihSm17nSu7NpAVqp4qfqM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WlZryx18NzHhbNaUW8Op+UMrw6qqSheOYMKcDXewrRvEIOkNC7dQm9d7ikL7lI4pL
+         2dDb4F1T6qHtYDjhzLSpvgA6KHDbwyHiBbKIUkN7y0ybtQsGn/iwoq/PDcx6Auhq4d
+         PggTX1ZCU44Nls22iRlKFXPvnuEXkDgpMuh5NPLA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.4 00/27] 5.4.30-rc1 review
-Date:   Wed,  1 Apr 2020 18:17:28 +0200
-Message-Id: <20200401161414.352722470@linuxfoundation.org>
+        stable@vger.kernel.org, Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.4 24/27] ARM: dts: N900: fix onenand timings
+Date:   Wed,  1 Apr 2020 18:17:52 +0200
+Message-Id: <20200401161433.837031632@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
+In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
+References: <20200401161414.352722470@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.4.30-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.30-rc1
-X-KernelTest-Deadline: 2020-04-03T16:14+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,144 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 5.4.30 release.
-There are 27 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Arthur Demchenkov <spinal.by@gmail.com>
 
-Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
-Anything received after that time might be too late.
+commit 0c5220a3c1242c7a2451570ed5f5af69620aac75 upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.30-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
+Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+started using DT specified timings for GPMC, and as a result the
+OneNAND stopped working on N900 as we had wrong values in the DT.
+Fix by updating the values to bootloader timings that have been tested
+to be working on Nokia N900 with OneNAND manufacturers: Samsung,
+Numonyx.
 
-thanks,
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: Arthur Demchenkov <spinal.by@gmail.com>
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Reviewed-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-greg k-h
+---
+ arch/arm/boot/dts/omap3-n900.dts |   44 ++++++++++++++++++++++++---------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.30-rc1
-
-Madalin Bucur <madalin.bucur@oss.nxp.com>
-    arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
-
-Madalin Bucur <madalin.bucur@oss.nxp.com>
-    arm64: dts: ls1043a-rdb: correct RGMII delay mode to rgmii-id
-
-Chen-Yu Tsai <wens@csie.org>
-    ARM: dts: sun8i: r40: Move AHCI device node based on address order
-
-Arthur Demchenkov <spinal.by@gmail.com>
-    ARM: dts: N900: fix onenand timings
-
-Marco Felsch <m.felsch@pengutronix.de>
-    ARM: dts: imx6: phycore-som: fix arm and soc minimum voltage
-
-Nick Hudson <skrll@netbsd.org>
-    ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
-
-Sungbo Eo <mans0n@gorani.run>
-    ARM: dts: oxnas: Fix clear-mask property
-
-disconnect3d <dominik.b.czarnota@gmail.com>
-    perf map: Fix off by one in strncpy() size argument
-
-Ilie Halip <ilie.halip@gmail.com>
-    arm64: alternative: fix build with clang integrated assembler
-
-Ilya Dryomov <idryomov@gmail.com>
-    libceph: fix alloc_msg_with_page_vector() memory leaks
-
-Tony Lindgren <tony@atomide.com>
-    clk: ti: am43xx: Fix clock parent for RTC clock
-
-Leonard Crestez <leonard.crestez@nxp.com>
-    clk: imx: Align imx sc clock parent msg structs to 4
-
-Leonard Crestez <leonard.crestez@nxp.com>
-    clk: imx: Align imx sc clock msg structs to 4
-
-Marek Vasut <marex@denx.de>
-    net: ks8851-ml: Fix IO operations, again
-
-Hans de Goede <hdegoede@redhat.com>
-    gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT + AXP288 model
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    bpf: Explicitly memset some bpf info structures declared on the stack
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    bpf: Explicitly memset the bpf_attr structure
-
-Georg Müller <georgmueller@gmx.net>
-    platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: fix use-after-free in vt_in_use()
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: remove unnecessary console allocation checks
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: switch vt_dont_switch to bool
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: selection, introduce vc_is_sel
-
-Lanqing Liu <liuhhome@gmail.com>
-    serial: sprd: Fix a dereference warning
-
-Johannes Berg <johannes.berg@intel.com>
-    mac80211: fix authentication with iwlwifi/mvm
-
-Jouni Malinen <jouni@codeaurora.org>
-    mac80211: Check port authorization in the ieee80211_tx_dequeue() case
-
-
--------------
-
-Diffstat:
-
- Makefile                                          |  4 +-
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts          |  1 +
- arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi |  4 +-
- arch/arm/boot/dts/omap3-n900.dts                  | 44 ++++++++-----
- arch/arm/boot/dts/ox810se.dtsi                    |  4 +-
- arch/arm/boot/dts/ox820.dtsi                      |  4 +-
- arch/arm/boot/dts/sun8i-r40.dtsi                  | 21 +++----
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts |  4 +-
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts |  4 +-
- arch/arm64/include/asm/alternative.h              |  2 +-
- drivers/clk/imx/clk-scu.c                         |  8 +--
- drivers/clk/ti/clk-43xx.c                         |  2 +-
- drivers/gpio/gpiolib-acpi.c                       | 15 +++++
- drivers/net/ethernet/micrel/ks8851_mll.c          | 56 +++++++++++++++--
- drivers/platform/x86/pmc_atom.c                   |  8 +++
- drivers/tty/serial/sprd_serial.c                  |  3 +-
- drivers/tty/vt/selection.c                        |  5 ++
- drivers/tty/vt/vt.c                               | 30 +++++++--
- drivers/tty/vt/vt_ioctl.c                         | 75 ++++++++++++-----------
- include/linux/ceph/messenger.h                    |  7 ++-
- include/linux/selection.h                         |  4 +-
- include/linux/vt_kern.h                           |  2 +-
- kernel/bpf/btf.c                                  |  3 +-
- kernel/bpf/syscall.c                              |  9 ++-
- net/ceph/messenger.c                              |  9 ++-
- net/ceph/osd_client.c                             | 14 +----
- net/mac80211/tx.c                                 | 20 +++++-
- tools/perf/util/map.c                             |  2 +-
- 28 files changed, 250 insertions(+), 114 deletions(-)
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -849,34 +849,46 @@
+ 		compatible = "ti,omap2-onenand";
+ 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+ 
++		/*
++		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
++		 * bootloader set values when booted with v5.1
++		 * (OneNAND Manufacturer: Samsung):
++		 *
++		 *   cs0 GPMC_CS_CONFIG1: 0xfb001202
++		 *   cs0 GPMC_CS_CONFIG2: 0x00111100
++		 *   cs0 GPMC_CS_CONFIG3: 0x00020200
++		 *   cs0 GPMC_CS_CONFIG4: 0x11001102
++		 *   cs0 GPMC_CS_CONFIG5: 0x03101616
++		 *   cs0 GPMC_CS_CONFIG6: 0x90060000
++		 */
+ 		gpmc,sync-read;
+ 		gpmc,sync-write;
+ 		gpmc,burst-length = <16>;
+ 		gpmc,burst-read;
+ 		gpmc,burst-wrap;
+ 		gpmc,burst-write;
+-		gpmc,device-width = <2>; /* GPMC_DEVWIDTH_16BIT */
+-		gpmc,mux-add-data = <2>; /* GPMC_MUX_AD */
++		gpmc,device-width = <2>;
++		gpmc,mux-add-data = <2>;
+ 		gpmc,cs-on-ns = <0>;
+-		gpmc,cs-rd-off-ns = <87>;
+-		gpmc,cs-wr-off-ns = <87>;
++		gpmc,cs-rd-off-ns = <102>;
++		gpmc,cs-wr-off-ns = <102>;
+ 		gpmc,adv-on-ns = <0>;
+-		gpmc,adv-rd-off-ns = <10>;
+-		gpmc,adv-wr-off-ns = <10>;
+-		gpmc,oe-on-ns = <15>;
+-		gpmc,oe-off-ns = <87>;
++		gpmc,adv-rd-off-ns = <12>;
++		gpmc,adv-wr-off-ns = <12>;
++		gpmc,oe-on-ns = <12>;
++		gpmc,oe-off-ns = <102>;
+ 		gpmc,we-on-ns = <0>;
+-		gpmc,we-off-ns = <87>;
+-		gpmc,rd-cycle-ns = <112>;
+-		gpmc,wr-cycle-ns = <112>;
+-		gpmc,access-ns = <81>;
+-		gpmc,page-burst-access-ns = <15>;
++		gpmc,we-off-ns = <102>;
++		gpmc,rd-cycle-ns = <132>;
++		gpmc,wr-cycle-ns = <132>;
++		gpmc,access-ns = <96>;
++		gpmc,page-burst-access-ns = <18>;
+ 		gpmc,bus-turnaround-ns = <0>;
+ 		gpmc,cycle2cycle-delay-ns = <0>;
+ 		gpmc,wait-monitoring-ns = <0>;
+-		gpmc,clk-activation-ns = <5>;
+-		gpmc,wr-data-mux-bus-ns = <30>;
+-		gpmc,wr-access-ns = <81>;
++		gpmc,clk-activation-ns = <6>;
++		gpmc,wr-data-mux-bus-ns = <36>;
++		gpmc,wr-access-ns = <96>;
+ 		gpmc,sync-clk-ps = <15000>;
+ 
+ 		/*
 
 
