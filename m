@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD17DC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF36C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB0A2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37ABB2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759424;
-	bh=VqqyroAfWhyQOvnteSX/FAKaG6w+Qak3m5q11T6oLKM=;
+	s=default; t=1585759432;
+	bh=GToXniXT+TcobdymTSjFYMLoF1tRlgZ/NIKKH8vjf6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wY634HwqYJsKyBQsZMJLufvIFIyhvb4TIi5ih5WH/1KYNN6h6gJGx/1DIVBwLWb+B
-	 tk+47JC7GaPZW6aq5kzwd788UWNd88FqfJpSCq2KU1ecGMLEMOwfrh6z+2jRYCdMcQ
-	 vVuaz2HtW+m7Kw+Ah0orYuMUHeiODD1Wex01KeVI=
+	b=mo3tM/ES8dq725fqxXft5CBK2NeMS1jX4H9MpwuUI+jlQZbjBfDW0pYSGlP1awIFa
+	 fm5nmC//ZV6ROGKaZ8WvRCjbIiraIrvzwR2nljEarp8+pcHZZLqKbzUYiXwmtgx/w1
+	 SbkTQnBG1oL3qU6ciVq8CrllTGD/mcp66dCWV6fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389659AbgDAQnm (ORCPT
+        id S2389650AbgDAQnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:43:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44562 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:43:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389650AbgDAQnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:43:41 -0400
+        id S1732793AbgDAQnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:43:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E81D62063A;
-        Wed,  1 Apr 2020 16:43:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E3732063A;
+        Wed,  1 Apr 2020 16:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759421;
-        bh=VqqyroAfWhyQOvnteSX/FAKaG6w+Qak3m5q11T6oLKM=;
+        s=default; t=1585759429;
+        bh=GToXniXT+TcobdymTSjFYMLoF1tRlgZ/NIKKH8vjf6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fIfJYyBegzHN6gozLHT6GJPpg5IY/Gohq4OEXBjiSwPgUxV0TcBzC3a761FaNKrvi
-         dejak29f/cyzG/VjJJLw9bkUbYVwnqe5AesEHiNfx95ceWBJSQqg4yCF7oNYOgV4X1
-         4Rzi+/xbrG1g9h9VCk91Pge7KZFR6hmSO9MMMngo=
+        b=H1muohoGadTXyeSADhBPRKxPcrC1PPFoGASneYb6ZUKNvjORL+lKh71EAB4MnoCla
+         z/gQRhLIZqN4/AdfCE1AX4btJrvLsYcMn0a23o7a5+PKEAVvvJeQT7yUJZ1/IUuCG/
+         M/fv8skUvb/zANp7RiIgIdVnxat5RMi2qEW4Bucw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 073/148] net: ipv4: dont let PMTU updates increase route MTU
-Date:   Wed,  1 Apr 2020 18:17:45 +0200
-Message-Id: <20200401161600.427535721@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 074/148] cgroup-v1: cgroup_pidlist_next should update position index
+Date:   Wed,  1 Apr 2020 18:17:46 +0200
+Message-Id: <20200401161600.483221116@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,61 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 28d35bcdd3925e7293408cdb8aa5f2aac5f0d6e3 ]
+[ Upstream commit db8dd9697238be70a6b4f9d0284cd89f59c0e070 ]
 
-When an MTU update with PMTU smaller than net.ipv4.route.min_pmtu is
-received, we must clamp its value. However, we can receive a PMTU
-exception with PMTU < old_mtu < ip_rt_min_pmtu, which would lead to an
-increase in PMTU.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-To fix this, take the smallest of the old MTU and ip_rt_min_pmtu.
+ # mount | grep cgroup
+ # dd if=/mnt/cgroup.procs bs=1  # normal output
+...
+1294
+1295
+1296
+1304
+1382
+584+0 records in
+584+0 records out
+584 bytes copied
 
-Before this patch, in case of an update, the exception's MTU would
-always change. Now, an exception can have only its lock flag updated,
-but not the MTU, so we need to add a check on locking to the following
-"is this exception getting updated, or close to expiring?" test.
+dd: /mnt/cgroup.procs: cannot skip to specified offset
+83  <<< generates end of last line
+1383  <<< ... and whole last line once again
+0+1 records in
+0+1 records out
+8 bytes copied
 
-Fixes: d52e5a7e7ca4 ("ipv4: lock mtu in fnhe when received PMTU < net.ipv4.route.min_pmtu")
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+dd: /mnt/cgroup.procs: cannot skip to specified offset
+1386  <<< generates last line anyway
+0+1 records in
+0+1 records out
+5 bytes copied
+
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/route.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/cgroup/cgroup-v1.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index 8b855d3eec9e7..05fe1d0075444 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1014,21 +1014,22 @@ out:	kfree_skb(skb);
- static void __ip_rt_update_pmtu(struct rtable *rt, struct flowi4 *fl4, u32 mtu)
- {
- 	struct dst_entry *dst = &rt->dst;
-+	u32 old_mtu = ipv4_mtu(dst);
- 	struct fib_result res;
- 	bool lock = false;
- 
- 	if (ip_mtu_locked(dst))
- 		return;
- 
--	if (ipv4_mtu(dst) < mtu)
-+	if (old_mtu < mtu)
- 		return;
- 
- 	if (mtu < ip_rt_min_pmtu) {
- 		lock = true;
--		mtu = ip_rt_min_pmtu;
-+		mtu = min(old_mtu, ip_rt_min_pmtu);
- 	}
- 
--	if (rt->rt_pmtu == mtu &&
-+	if (rt->rt_pmtu == mtu && !lock &&
- 	    time_before(jiffies, dst->expires - ip_rt_mtu_expires / 2))
- 		return;
- 
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index a2c05d2476ac5..d148965180893 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -501,6 +501,7 @@ static void *cgroup_pidlist_next(struct seq_file *s, void *v, loff_t *pos)
+ 	 */
+ 	p++;
+ 	if (p >= end) {
++		(*pos)++;
+ 		return NULL;
+ 	} else {
+ 		*pos = *p;
 -- 
 2.20.1
 
