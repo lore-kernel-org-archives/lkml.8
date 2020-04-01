@@ -2,190 +2,135 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26504C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474EDC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83CD20784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130B020787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585734245;
+	bh=Zd05QGuWdYEmB3k5+Q5MBVsFJE7NodXcguEaNu1A40Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GPBK5MRTKyXTTWgtZv9Ah6aODFZ4SA6HCpHDsO7+FnjeQJlRZ0r1sIUhAdmomtCuB
+	 kiisz8SzbttHtivqGhNRtXESJdspkre9wxSRORb/Zsy7YaALuBdqQkERKbQl7Y9xNL
+	 b8xXUTJcZ6vvE+l1OcKWAPWTsjUcUkPAU8WRTJzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbgDAJnE convert rfc822-to-8bit (ORCPT
+        id S1732195AbgDAJoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:43:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32236 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729662AbgDAJnD (ORCPT
+        Wed, 1 Apr 2020 05:44:04 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46153 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731608AbgDAJoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:43:03 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0319X8p9110526
-        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 05:43:02 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304h3w43qs-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:43:01 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Wed, 1 Apr 2020 10:42:58 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 Apr 2020 10:42:56 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0319gu5P42402256
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 09:42:56 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 717ABA404D;
-        Wed,  1 Apr 2020 09:42:56 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14CA6A4057;
-        Wed,  1 Apr 2020 09:42:56 +0000 (GMT)
-Received: from localhost (unknown [9.85.74.146])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 09:42:55 +0000 (GMT)
-Date:   Wed, 01 Apr 2020 15:12:53 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 2/6] powerpc/idle: Add accessor function to always read
- latest idle PURR
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
-        <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
-In-Reply-To: <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
+        Wed, 1 Apr 2020 05:44:03 -0400
+Received: by mail-oi1-f193.google.com with SMTP id q204so21580958oia.13;
+        Wed, 01 Apr 2020 02:44:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tc/XOc5/LK1Q2z5fURAPBVNdJRpf3W6JCMUDG26GjAA=;
+        b=ppLeAwfEvUJnGL9KZATgfL72F6SWFf6GmzF2TwLZ1/r05alfHZ8ArydD2z8ryt1VKy
+         PMmxoeHjVekvT+U5bBiG6mVxfWiaPL2O4wQ5J3J55e3U8YEE1bY6nyisx7PcQW9K1chs
+         1RhSGVwJ7C0O1Bp5c9LgYAJ6Ft06x3CpBnKnN9k/SksL2etKhXQkdpTxvojZT6DkZgtn
+         dJo6y+oHWxY1/P8crUXyR+tbhBIQMs0Hf+366aaWaamB+GXs6Pm0+A0AK1PmVk2fdwC1
+         f3az4ajEWHbrT0oGTax/6VM3htyNFVP913+TbobQdH2o++7HRRy0cpH/itvjLHUs2rna
+         NXpw==
+X-Gm-Message-State: AGi0PuZGyYdO8ItbzDAtrqbFX5Z07GJdalhc3/nA1iRd2rxL92a/rgXt
+        bnOEss7hSShztx/KAwt8PwBdfy7AYo+W0/Yw3LE=
+X-Google-Smtp-Source: APiQypIx6BXDtcLC1NIBjcSQ0pUhumEFfmetRvP19HCeojek7ZuEzadWynK1exhfGc0EyDZD28JGUbNTXHpM7N81smI=
+X-Received: by 2002:aca:2209:: with SMTP id b9mr2183308oic.103.1585734243209;
+ Wed, 01 Apr 2020 02:44:03 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20040109-0028-0000-0000-000003EFF165
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040109-0029-0000-0000-000024B576E8
-Message-Id: <1585734073.0qmf6bbdoa.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010087
+References: <20200329144640.20536-1-yu.c.chen@intel.com>
+In-Reply-To: <20200329144640.20536-1-yu.c.chen@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 1 Apr 2020 11:43:51 +0200
+Message-ID: <CAJZ5v0gV2Tn_CQoJiuR92gjJ8-xjzLPY8esAkxgy=W8YkvUNyg@mail.gmail.com>
+Subject: Re: [PATCH][v2] PM / sleep: Add pm_debug_messages boot command control
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@ucw.cz>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gautham,
-
-Gautham R. Shenoy wrote:
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> 
-> Currently when CPU goes idle, we take a snapshot of PURR via
-> pseries_idle_prolog() which is used at the CPU idle exit to compute
-> the idle PURR cycles via the function pseries_idle_epilog().  Thus,
-> the value of idle PURR cycle thus read before pseries_idle_prolog() and
-> after pseries_idle_epilog() is always correct.
-> 
-> However, if we were to read the idle PURR cycles from an interrupt
-> context between pseries_idle_prolog() and pseries_idle_epilog() (this will
-> be done in a future patch), then, the value of the idle PURR thus read
-> will not include the cycles spent in the most recent idle period.
-> 
-> This patch addresses the issue by providing accessor function to read
-> the idle PURR such such that it includes the cycles spent in the most
-> recent idle period, if we read it between pseries_idle_prolog() and
-> pseries_idle_epilog(). In order to achieve it, the patch saves the
-> snapshot of PURR in pseries_idle_prolog() in a per-cpu variable,
-> instead of on the stack, so that it can be accessed from an interrupt
-> context.
-> 
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+On Sun, Mar 29, 2020 at 4:48 PM Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> Debug messages from the system suspend/hibernation infrastructure
+> is disabled by default, and can only be enabled after the system
+> has boot up via /sys/power/pm_debug_messages. This makes the hibernation
+> resume hard to track as it involves system boot up across hibernation.
+> There's no chance for software_resume() to track the resume process,
+> eg.
+>
+> Turning on the pm_debug_messages during boot up by appending
+> 'pm_debug_message'.
+>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 > ---
->  arch/powerpc/include/asm/idle.h        | 47 +++++++++++++++++++++++++++-------
->  arch/powerpc/platforms/pseries/setup.c |  7 +++--
->  drivers/cpuidle/cpuidle-pseries.c      | 15 +++++------
->  3 files changed, 47 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
-> index 32064a4c..d4bfb6a 100644
-> --- a/arch/powerpc/include/asm/idle.h
-> +++ b/arch/powerpc/include/asm/idle.h
-> @@ -5,10 +5,27 @@
->  #include <asm/paca.h>
-> 
->  #ifdef CONFIG_PPC_PSERIES
-> -static inline void pseries_idle_prolog(unsigned long *in_purr)
-> +DECLARE_PER_CPU(u64, idle_entry_purr_snap);
+> v2: According to Randy's suggestion, add the command line
+>     option to Documentation/admin-guide/kernel-parameters.txt
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 3 +++
+>  kernel/power/main.c                             | 7 +++++++
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c07815d230bc..105ec73743d7 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3698,6 +3698,9 @@
+>                         Override pmtimer IOPort with a hex value.
+>                         e.g. pmtmr=0x508
+>
+> +       pm_debug_message        [SUSPEND,KNL]
+> +                       Enable suspend/resume debug messages during boot up.
 > +
-> +static inline void snapshot_purr_idle_entry(void)
+>         pnp.debug=1     [PNP]
+>                         Enable PNP debug messages (depends on the
+>                         CONFIG_PNP_DEBUG_MESSAGES option).  Change at run-time
+> diff --git a/kernel/power/main.c b/kernel/power/main.c
+> index 69b7a8aeca3b..1da3d7c15e03 100644
+> --- a/kernel/power/main.c
+> +++ b/kernel/power/main.c
+> @@ -535,6 +535,13 @@ static ssize_t pm_debug_messages_store(struct kobject *kobj,
+>
+>  power_attr(pm_debug_messages);
+>
+> +static int __init pm_debug_message_setup(char *str)
 > +{
-> +	*this_cpu_ptr(&idle_entry_purr_snap) = mfspr(SPRN_PURR);
+> +       pm_debug_messages_on = true;
+> +       return 1;
 > +}
-> +
-> +static inline void update_idle_purr_accounting(void)
-> +{
-> +	u64 wait_cycles;
-> +	u64 in_purr = *this_cpu_ptr(&idle_entry_purr_snap);
-> +
-> +	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
-> +	wait_cycles += mfspr(SPRN_PURR) - in_purr;
-> +	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
-> +}
-> +
-> +static inline void pseries_idle_prolog(void)
->  {
->  	ppc64_runlatch_off();
-> -	*in_purr = mfspr(SPRN_PURR);
-> +	snapshot_purr_idle_entry();
->  	/*
->  	 * Indicate to the HV that we are idle. Now would be
->  	 * a good time to find other work to dispatch.
-> @@ -16,16 +33,28 @@ static inline void pseries_idle_prolog(unsigned long *in_purr)
->  	get_lppaca()->idle = 1;
->  }
-> 
-> -static inline void pseries_idle_epilog(unsigned long in_purr)
-> +static inline void pseries_idle_epilog(void)
->  {
-> -	u64 wait_cycles;
-> -
-> -	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
-> -	wait_cycles += mfspr(SPRN_PURR) - in_purr;
-> -	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
-> +	update_idle_purr_accounting();
->  	get_lppaca()->idle = 0;
-> -
->  	ppc64_runlatch_on();
->  }
-> +
-> +static inline u64 read_this_idle_purr(void)
-> +{
-> +	/*
-> +	 * If we are reading from an idle context, update the
-> +	 * idle-purr cycles corresponding to the last idle period.
-> +	 * Since the idle context is not yet over, take a fresh
-> +	 * snapshot of the idle-purr.
-> +	 */
-> +	if (unlikely(get_lppaca()->idle == 1)) {
-> +		update_idle_purr_accounting();
-> +		snapshot_purr_idle_entry();
-> +	}
-> +
-> +	return be64_to_cpu(get_lppaca()->wait_state_cycles);
-> +}
-> +
+> +__setup("pm_debug_message", pm_debug_message_setup);
 
-I think this and read_this_idle_spurr() from the next patch should be 
-moved to Patch 4/6, where they are actually used.
+I'd call this "pm_debug_messages" (just like the sysfs knob) and
+rename the rest accordingly.
 
-- Naveen
-
+> +
+>  /**
+>   * __pm_pr_dbg - Print a suspend debug message to the kernel log.
+>   * @defer: Whether or not to use printk_deferred() to print the message.
+> --
