@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74A9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB63C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8FC206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C7720658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759131;
-	bh=nhJQxQCFLz20+3m0GlqbdNdv+16PiSrAntecgskSFgI=;
+	s=default; t=1585759133;
+	bh=SZ2hbU+lcMoW+bQFY1RvJSyW+H+et5QDyAcGJi3xasQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N0ttpMH4pGYl54g1WM+Jk5uuT/rupTBR+tXolBAcxU19ZmQd70au1Z9yaJf5TYIhX
-	 WnVN2Cb82XCZDkgzEc+gcoE7tUNLlBeBbPkC0hjXrv93jTBw+fUwu+O43yF2e8MZVT
-	 9V7V00DKiyr0BE74DhLOssjw2MTl/y6iCHhhXC+w=
+	b=LKyllWaErY4rPRjACktX+zhUuGw5xyNXElNaUzxN9ztS5IIpgpMGtp5Wb4qpKSlBp
+	 7lD20JwRYOHp/WGgXjRMFNq1IJuAE3NRYGFLmeGGFXtR5U188i7+exqYpEArUbGGht
+	 g8IqidQEDjLRv3UOXVWUcbCIsFpO62qSxeY87A3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388842AbgDAQiu (ORCPT
+        id S2389134AbgDAQiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38544 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:38:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389114AbgDAQio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:38:44 -0400
+        id S2387828AbgDAQir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:38:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B4C020658;
-        Wed,  1 Apr 2020 16:38:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2E00206F8;
+        Wed,  1 Apr 2020 16:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759124;
-        bh=nhJQxQCFLz20+3m0GlqbdNdv+16PiSrAntecgskSFgI=;
+        s=default; t=1585759127;
+        bh=SZ2hbU+lcMoW+bQFY1RvJSyW+H+et5QDyAcGJi3xasQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sq5GEn8dffsbC8X6ak0/EbluNk5CuednwJafdSosUNFbdxqsjFE8PPt3b/Zb1Ii9p
-         hW6Ykg3MQl8qJKFh0IHeb6Tadau0O4gbHDH0cLOe1vnnFOMP+IPc+Jti4fZO5ADkyx
-         ryly0M+Bi6s+lh+cJ33AOIPW75QIMpdAhQcbDPAQ=
+        b=AwqJ09O3UHCnP/yO8zjSjb1sNvbRljbjEGKkq0APkIeWIaCFSJGCyfI2tm6FwFsvE
+         ODZ1MghCui1DS4WMEFWjSo5PtldAG3BKGH/gStmp0Ir7c0DsczG+32w69KEjcGruZ2
+         F2BosoPs/2dIpncUn/MQ8cDvU3OYhkryFtvJ7uHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 044/102] slcan: not call free_netdev before rtnl_unlock in slcan_open
-Date:   Wed,  1 Apr 2020 18:17:47 +0200
-Message-Id: <20200401161541.094258753@linuxfoundation.org>
+Subject: [PATCH 4.9 045/102] vxlan: check return value of gro_cells_init()
+Date:   Wed,  1 Apr 2020 18:17:48 +0200
+Message-Id: <20200401161541.347699626@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,36 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Hartkopp <socketcan@hartkopp.net>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 2091a3d42b4f339eaeed11228e0cbe9d4f92f558 ]
+[ Upstream commit 384d91c267e621e0926062cfb3f20cb72dc16928 ]
 
-As the description before netdev_run_todo, we cannot call free_netdev
-before rtnl_unlock, fix it by reorder the code.
+gro_cells_init() returns error if memory allocation is failed.
+But the vxlan module doesn't check the return value of gro_cells_init().
 
-This patch is a 1:1 copy of upstream slip.c commit f596c87005f7
-("slip: not call free_netdev before rtnl_unlock in slip_open").
-
-Reported-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")`
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/can/slcan.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/vxlan.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/net/can/slcan.c
-+++ b/drivers/net/can/slcan.c
-@@ -621,7 +621,10 @@ err_free_chan:
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
- 	slc_free_netdev(sl->dev);
-+	/* do not call free_netdev before rtnl_unlock */
-+	rtnl_unlock();
- 	free_netdev(sl->dev);
-+	return err;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2354,10 +2354,19 @@ static void vxlan_vs_add_dev(struct vxla
+ /* Setup stats when device is created */
+ static int vxlan_init(struct net_device *dev)
+ {
++	struct vxlan_dev *vxlan = netdev_priv(dev);
++	int err;
++
+ 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+ 	if (!dev->tstats)
+ 		return -ENOMEM;
  
- err_exit:
- 	rtnl_unlock();
++	err = gro_cells_init(&vxlan->gro_cells, dev);
++	if (err) {
++		free_percpu(dev->tstats);
++		return err;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -2623,8 +2632,6 @@ static void vxlan_setup(struct net_devic
+ 
+ 	vxlan->dev = dev;
+ 
+-	gro_cells_init(&vxlan->gro_cells, dev);
+-
+ 	for (h = 0; h < FDB_HASH_SIZE; ++h)
+ 		INIT_HLIST_HEAD(&vxlan->fdb_head[h]);
+ }
 
 
