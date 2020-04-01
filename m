@@ -2,93 +2,141 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712B5C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FE1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 441CA20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758929;
-	bh=F/Gy3fZ+eLJ73Pa8V1RLGOH2/lFrLfrdt909e5D8MEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YjL0bQ/JnRM5MLK3gBsFe6Xg/n8ViJsdSq9nf2DuxIn0hEWv6UoI4BI7coF9vrKhU
-	 8LZ0JM1VzRNwflpi8PyMjBbQwa6FDYpzR/CmPml+37mj6gvfVdGwkfAJAV2lAKcUnZ
-	 XV2Xc81EZ2bFTL1+n67HvrZiHG0FPPQFBUEk1E7A=
+	by mail.kernel.org (Postfix) with ESMTP id 7589020BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lneG3+by"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388492AbgDAQf1 (ORCPT
+        id S2387860AbgDAQfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 1 Apr 2020 12:35:30 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36007 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388749AbgDAQf1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Apr 2020 12:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388738AbgDAQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:35:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47ED7206F8;
-        Wed,  1 Apr 2020 16:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758924;
-        bh=F/Gy3fZ+eLJ73Pa8V1RLGOH2/lFrLfrdt909e5D8MEY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PgU+RgIrdkTP2OLVBZjqPG+C4HCrBlvp2FkucLmQph7dS0xYxpcCxAUJo3oWJxuBC
-         ts61/416kLxkRh19bvVhn/5OszSNCe6fdjzUvbUjrcnK5nV8xye22p5Uhu39XJ6bzj
-         IckYKHHxs3Yu44oK6A6TF08OyrXkKSpqfOlKpGPo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 023/102] rtc: max8907: add missing select REGMAP_IRQ
-Date:   Wed,  1 Apr 2020 18:17:26 +0200
-Message-Id: <20200401161537.427316084@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
-References: <20200401161530.451355388@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-pf1-f193.google.com with SMTP id n10so198199pff.3;
+        Wed, 01 Apr 2020 09:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nv0PB7OQMBhmTUY0yfkOYmQ8lz6lTwWj9RPSvbAhmZg=;
+        b=lneG3+bylYOe+VWYyx4URUoJhBOrtwSx6J84qh6JImO1KXK/y81BfpHS4Nk6jmrx6f
+         FwQKNwiRF3ngj47XOZFQOlKHuobZfGkexsOKYMu7HCsMKMxgSTAtSQaoEAm4Gh9YxNEX
+         GLYGo2iIEac6fJtC9JZJmUUYPwPBoI6ATPHgnT4YGLXqWydHtqaVR879GefrAbQ919Yc
+         3FQgClxUMNncLsRQfiyCg5EyGg+5Npvbi7xzcXRdQ7tRjKxdTHLmsCn/1lIn44HWaUlF
+         dNOgBL/Hg5vUKGc/7Ve/y8ao6GKTalXDk5WU2q6bJPMQ9PoC/wqQqj0wzfGWB8IujmLm
+         +dXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nv0PB7OQMBhmTUY0yfkOYmQ8lz6lTwWj9RPSvbAhmZg=;
+        b=Wc/Y7/PMd/bq/1DMeR7iS81uSq+B38hPcLIV0Ne9V6fNhVfn0XMlHFroP1aWVrGRLC
+         /fPF+za3A1LadFrKbBLRKsoI4gcwlgkqRda7BMeot/fs0DeYKUS+HDiwg77Ln5kHWksj
+         r6eRY9Afdx+vCtyq+E/0DyyjX3SHKS5LkOYh0k8VIdIZL7njwO3yHPN/GehN9lGSU8rY
+         XxWesk4uJqMsj1inApwrJQ2IUtAN2kh+5oKdNReHaf/EIpB11wdBpi44xhLz9/OFgBly
+         yeth6APBaXONaotyhDF8KbeIp5z7KJ1LRuj038TmIpXqYmStoqaRbsp/ouzu6nieFttf
+         /JcQ==
+X-Gm-Message-State: AGi0PuZHvsVup4LfqluyGZHeia6uu28491FAQQ5puog08m88VNCtm2ig
+        DmoZYKD57DaaMJWaNDluQKg/btUFmrNN+KtxPrE=
+X-Google-Smtp-Source: APiQypIYInYnpmxVEVR4+As3ewJkYDPICTo9pnPQ8lnEBYfZhcIldzFXAraLEALorMmUdTYnZ6YizL46WjW0pqghLyM=
+X-Received: by 2002:a63:5859:: with SMTP id i25mr9501810pgm.74.1585758926434;
+ Wed, 01 Apr 2020 09:35:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200401162416.24474-1-i.mikhaylov@yadro.com> <20200401162416.24474-3-i.mikhaylov@yadro.com>
+In-Reply-To: <20200401162416.24474-3-i.mikhaylov@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Apr 2020 19:35:19 +0300
+Message-ID: <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+>
+> Proximity sensor driver based on light/vcnl4000.c code.
+> For now supports only the single on-demand measurement.
+>
+> The VCNL3020 is a fully integrated proximity sensor. Fully
+> integrated means that the infrared emitter is included in the
+> package. It has 16-bit resolution. It includes a signal
+> processing IC and features standard I2C communication
+> interface. It features an interrupt function.
 
-commit 5d892919fdd0cefd361697472d4e1b174a594991 upstream.
+Thank you for an update, my comments below.
 
-I have hit the following build error:
+...
 
-  armv7a-hardfloat-linux-gnueabi-ld: drivers/rtc/rtc-max8907.o: in function `max8907_rtc_probe':
-  rtc-max8907.c:(.text+0x400): undefined reference to `regmap_irq_get_virq'
+> +static int get_and_apply_property(struct vcnl3020_data *data, const char *prop,
+> +                                 u32 reg)
+> +{
+> +       int rc;
+> +       u32 val;
+> +
+> +       rc = device_property_read_u32(data->dev, prop, &val);
+> +       if (rc)
+> +               return 0;
+> +
+> +       rc = regmap_write(data->regmap, reg, val);
+> +       if (rc)
 
-max8907 should select REGMAP_IRQ
+> +               dev_err(data->dev, "Error (%d) setting property (%s)",
+> +                       rc, prop);
 
-Fixes: 94c01ab6d7544 ("rtc: add MAX8907 RTC driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This requires {} according to the coding style.
 
----
- drivers/rtc/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+> +       return rc;
+> +}
 
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -304,6 +304,7 @@ config RTC_DRV_MAX6900
- config RTC_DRV_MAX8907
- 	tristate "Maxim MAX8907"
- 	depends on MFD_MAX8907
-+	select REGMAP_IRQ
- 	help
- 	  If you say yes here you will get support for the
- 	  RTC of Maxim MAX8907 PMIC.
+...
 
+> +static int vcnl3020_probe(struct i2c_client *client)
+> +{
 
+> +       indio_dev->name = VCNL_DRV_NAME;
+
+It's definitely not a driver name. You have to put part number here.
+
+> +}
+
+...
+
+> +static struct i2c_driver vcnl3020_driver = {
+> +       .driver = {
+
+> +               .name   = VCNL_DRV_NAME,
+
+Better to spell it explicitly.
+
+> +               .of_match_table = vcnl3020_of_match,
+> +       },
+> +       .probe_new  = vcnl3020_probe,
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
