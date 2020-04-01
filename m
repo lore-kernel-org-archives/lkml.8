@@ -2,149 +2,142 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13602C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87810C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31CE20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJV/KHbn"
+	by mail.kernel.org (Postfix) with ESMTP id 59D6421556
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585756635;
+	bh=tioNAsS3DXtvfdYJuukfF3Fr46kSHb9D2ocEQNKzcF0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=sG+YUNuHDiDsE9SiJZmG1U3DflBlQ+qZwwDe4ot2jkX6X1GMS4Ps9wZghkK9JKXPZ
+	 T1jNxBmmdj/PCqO/JBLnU1R2SjG9udO2MsN5+TMViECAsbfXADCxXD9/C1HgPICKSe
+	 WSDrOR6MEzphhOYAj2wn5rdcCthtTV5lhTnNB08A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733179AbgDAPzK (ORCPT
+        id S1733160AbgDAP5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:55:10 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37781 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732683AbgDAPzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:55:10 -0400
-Received: by mail-pj1-f66.google.com with SMTP id k3so153964pjj.2;
-        Wed, 01 Apr 2020 08:55:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+Km3731noZ/bccDDjKdEx7MdqueB2skGZv0K/hQ6Vew=;
-        b=BJV/KHbnvn+nA6yj9WtSx8WTykWAIDILXBgOS9jZ7KxdEAzeoseqtjbubWxweYibee
-         53d2CKtbNNRXuxEHaoJ6UDylgN+u+RaI4uaTYIYOIKvpJytBM4sXJu5lHHYDas5lWiQT
-         aPgLcA1b8r5ZO15PzOTKCAU76Lbf9vE+vH2ygBJKFXt6uy3BA1/12T8nGviLkmG7Wf/B
-         fwRWi+UF2onEv6s683/c1ZgT6heCWQ1jwSV60cSypE5C1QfCXgg3n4hJZM7eKzOGRpwC
-         ZKZBHv7/aSbXDNjxk6N+R5x2VyhM6Qaw57JksUgX81dIYJiYj3gdcTAdKVxOfVZilNDC
-         HkmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+Km3731noZ/bccDDjKdEx7MdqueB2skGZv0K/hQ6Vew=;
-        b=oFNRDGP97AjRvL3HnAH55zDkCVSE8BQkBIj0XyalTVZK1MtV3e/DM6BFLJOQY+pI96
-         jhu2Zz1K9sNNk9VR6xh+4TqdimgBIgsd7KE2cRbh3mPVWmxniTXfJ8BvHv4ZkXMWbd3F
-         wtT6iI5lWGdTRvy+eiXHAJB2nyVDKSRSsCFz4x5JukMilLC3dHEqvVTRro5fIe+3hXnz
-         9QmOdT3+a5iqebcAxMUV2C56QaYtwjFuP65VMSAGwvJ7NHl2ZPaj9LTlcL74U7aGpLgv
-         5OT5EHu3rAZmWybl8A462PDxnbkMX7rRJH6+kM8rwQkP+tLPRFuGif07gYV7y4khKJff
-         UAhg==
-X-Gm-Message-State: ANhLgQ0Wk/txrIwa6pBgFYQoi+UkRdg73GCP94TREYC2W+63OUQQovY9
-        CF87IPMNLQ33+X+s3ALXRtW92IBn
-X-Google-Smtp-Source: ADFU+vvC1CIuWPtuvDnv3Tcn6KmU7rLai1w298X4+Zi4Vp6R3a7T2Lyf0x4v+8i+PIOAn1+pn7bmUg==
-X-Received: by 2002:a17:902:b7cb:: with SMTP id v11mr24197650plz.307.1585756508054;
-        Wed, 01 Apr 2020 08:55:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f129sm1844099pfb.190.2020.04.01.08.55.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 08:55:07 -0700 (PDT)
-Subject: Re: [PATCHv3 3/4] watchdog: Add K3 RTI watchdog support
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <aed89814-a78b-4a59-7673-bce5de34022d@roeck-us.net>
- <20200304104214.8625-1-t-kristo@ti.com> <20200304220648.GA31640@roeck-us.net>
- <ac261582-a101-c7c7-66e4-4ef20d037c7d@ti.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <422f7335-9774-9ec1-6b0f-f22f811746cf@roeck-us.net>
-Date:   Wed, 1 Apr 2020 08:55:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 1 Apr 2020 11:57:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732799AbgDAP5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:57:14 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87A3120658;
+        Wed,  1 Apr 2020 15:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585756632;
+        bh=tioNAsS3DXtvfdYJuukfF3Fr46kSHb9D2ocEQNKzcF0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=mhVtctcEFPKIgGEO5NcxHa5nQMx3qy67dZeIj82TsBe05rJ1G3dORpVK6cBkf+fq5
+         0IOTxy98mC5CBVeTR8gsrMotfLxi6PsUyFd+QtX3Jhgwv24fPmhB7yqG7FxyO1XnmQ
+         2lJd80/FLGziLJzCZkYkkS0D+Ckpt/z+u/xmcJGI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 58D173522887; Wed,  1 Apr 2020 08:57:12 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 08:57:12 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401155712.GA15147@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200331145806.GB236678@google.com>
+ <20200331153450.GM30449@dhcp22.suse.cz>
+ <20200331161215.GA27676@pc636>
+ <20200401070958.GB22681@dhcp22.suse.cz>
+ <20200401123230.GB32593@pc636>
+ <20200401125503.GJ22681@dhcp22.suse.cz>
+ <20200401130816.GA1320@pc636>
+ <20200401131528.GK22681@dhcp22.suse.cz>
+ <20200401132258.GA1953@pc636>
+ <20200401152805.GN22681@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <ac261582-a101-c7c7-66e4-4ef20d037c7d@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401152805.GN22681@dhcp22.suse.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 5:44 AM, Tero Kristo wrote:
-> On 05/03/2020 00:06, Guenter Roeck wrote:
->> On Wed, Mar 04, 2020 at 12:42:14PM +0200, Tero Kristo wrote:
->>> Texas Instruments K3 SoCs contain an RTI (Real Time Interrupt) module
->>> which can be used as a watchdog. This IP provides a support for
->>> windowed watchdog mode, in which the watchdog must be petted within
->>> a certain time window. If it is petted either too soon, or too late,
->>> a watchdog error will be triggered.
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On Wed, Apr 01, 2020 at 05:28:05PM +0200, Michal Hocko wrote:
+> On Wed 01-04-20 15:22:58, Uladzislau Rezki wrote:
+> > > > We call it from atomic context, so we can not sleep, also we do not have
+> > > > any existing context coming from the caller. I see that GFP_ATOMIC is high-level
+> > > > flag and is differ from __GFP_ATOMIC. It is defined as:
+> > > > 
+> > > > #define GFP_ATOMIC (__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
+> > > > 
+> > > > so basically we would like to have __GFP_KSWAPD_RECLAIM that is included in it,
+> > > > because it will also help in case of high memory pressure and wake-up kswapd to
+> > > > reclaim memory.
+> > > > 
+> > > > We also can extract:
+> > > > 
+> > > > __GFP_ATOMIC | __GFP_HIGH | __GFP_RETRY_MAYFAIL | __GFP_KSWAPD_RECLAIM
+> > > > 
+> > > > but that is longer then
+> > > > 
+> > > > GFP_ATMOC |  __GFP_RETRY_MAYFAIL
+> > > 
+> > > OK, if you are always in the atomic context then GFP_ATOMIC is
+> > > sufficient. __GFP_RETRY_MAYFAIL will make no difference for allocations
+> > > which do not reclaim (and thus not retry). Sorry this was not clear to
+> > > me from the previous description.
+> > > 
+> > Ahh. OK. Then adding __GFP_RETRY_MAYFAIL to GFP_ATOMIC will not make any effect.
+> > 
+> > Thank you for your explanation!
 > 
-> Whats the plan for merging this one + the DT binding doc? I can't see this in linux-next yet at least, I do see the watchdog core change from this series though.
+> Welcome. I wish all those gfp flags were really clear but I fully
+> understand that people who are not working with MM regurarly might find
+> it confusing. Btw. have __GFP_RETRY_MAYFAIL is documented in gfp.h and
+> it is documented as the reclaim modifier which should imply that it has
+> no effect when the reclaim is not allowed which is the case for any non
+> sleeping allocation. If that relation was not immediately obvious then I
+> think we need to make it explicit. Would you find it useful?
 > 
+> E.g.
 
-It is in my watchdog-next branch at
-git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git.
+One nit below, but either way:
 
-Wim usually picks it up from there.
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-The core patch didn't depend on DT approval, so I (and Wim) picked it up
-earlier.
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index e3ab1c0d9140..8f09cefdfa7b 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -127,6 +127,8 @@ struct vm_area_struct;
+>   *
+>   * Reclaim modifiers
+>   * ~~~~~~~~~~~~~~~~~
+> + * Please note that all the folloging flags are only applicable to sleepable
 
-Guenter
+s/folloging/following/
+
+> + * allocations (e.g. %GFP_NOWAIT and %GFP_ATOMIC will ignore them).
+>   *
+>   * %__GFP_IO can start physical IO.
+>   *
+> -- 
+> Michal Hocko
+> SUSE Labs
