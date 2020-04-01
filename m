@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B28C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D97C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F6520714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068102063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759471;
-	bh=/iKgduoUkNVKU9ZrPkIW5sERPFZkvrGAQfa5/ot1PG8=;
+	s=default; t=1585759474;
+	bh=P7eaBlYz4GzVkyvhowH9g6w/cqbHD7kEmXW8Sh3FLOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPND9d1IEPgt0BWZZlFuIooPmjk46cuvV8DvneqFyavCA6Tf4hD4yqqmK9SbgF+2/
-	 BO0pN/KfOEXSacLCtburYislEZUv60prS7FuSTKxEizZbPS1MDpGdJQaZMcCoG5/fq
-	 4arnFctJxxaYmOObVzf0CKYZHmr6LF74Crz+d41Q=
+	b=xGQWbK2+cykrn99sR7goMtu2iYq8Ln9o4mkP6hgPk9VKuIWo/EhcxSjM8tmAGTvxZ
+	 3zIU/d3GnS9mWHq5UdW7pjWu4ayd+vzucv+w3AqSs06ngmIu1YcvzDRkmngQJ00wvO
+	 2lpme2CVyKVZ+4ia7tHyo5y5L1v4Ou/nIMMIRvXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389730AbgDAQo3 (ORCPT
+        id S2389740AbgDAQoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:44:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45460 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389332AbgDAQoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:44:25 -0400
+        id S2389253AbgDAQoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:44:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7849F2071A;
-        Wed,  1 Apr 2020 16:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C64832078C;
+        Wed,  1 Apr 2020 16:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759464;
-        bh=/iKgduoUkNVKU9ZrPkIW5sERPFZkvrGAQfa5/ot1PG8=;
+        s=default; t=1585759469;
+        bh=P7eaBlYz4GzVkyvhowH9g6w/cqbHD7kEmXW8Sh3FLOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVfi/NlC+iuameqyOInwkXf8r6f4aERlBJXlHN6uqiXMjllOH5RxoK1E26fPGwxjz
-         mB7IhEzlxdNbQ8YDbrvZWuswKHYpA2MKK6pHL2w8e7gs7emhYjxttxQ3Faf3itgkXd
-         x22cFEXda0JnlroJNE3FSkHExABmvdUyio55DSVc=
+        b=16s3s06Bj4qT/JP0Ci8pQ5ru/uEiUwS3Avqzb7Upwn/7Oo2RT8CAdsHpDBLjQrdvo
+         4pEh+mXBYWBSzkVI4VhBbMW0NTMUmYDuw1IwaA37uc/l6xv4QVKGsKkbg07FEsuBh6
+         9jux8fKpt+IF/n2Wm4bQqF3/OJFX2voNZQGGrtsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yussuf Khalil <dev@pp3345.net>,
+        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 089/148] Input: synaptics - enable RMI on HP Envy 13-ad105ng
-Date:   Wed,  1 Apr 2020 18:18:01 +0200
-Message-Id: <20200401161601.558458533@linuxfoundation.org>
+Subject: [PATCH 4.14 090/148] Input: avoid BIT() macro usage in the serio.h UAPI header
+Date:   Wed,  1 Apr 2020 18:18:02 +0200
+Message-Id: <20200401161601.648921885@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,34 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yussuf Khalil <dev@pp3345.net>
+From: Eugene Syromiatnikov <esyr@redhat.com>
 
-commit 1369d0abe469fb4cdea8a5bce219d38cb857a658 upstream.
+commit 52afa505a03d914081f40cb869a3248567a57573 upstream.
 
-This laptop (and perhaps other variants of the same model) reports an
-SMBus-capable Synaptics touchpad. Everything (including suspend and
-resume) works fine when RMI is enabled via the kernel command line, so
-let's add it to the whitelist.
+The commit 19ba1eb15a2a ("Input: psmouse - add a custom serio protocol
+to send extra information") introduced usage of the BIT() macro
+for SERIO_* flags; this macro is not provided in UAPI headers.
+Replace if with similarly defined _BITUL() macro defined
+in <linux/const.h>.
 
-Signed-off-by: Yussuf Khalil <dev@pp3345.net>
-Link: https://lore.kernel.org/r/20200307213508.267187-1-dev@pp3345.net
-Cc: stable@vger.kernel.org
+Fixes: 19ba1eb15a2a ("Input: psmouse - add a custom serio protocol to send extra information")
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+Cc: <stable@vger.kernel.org> # v5.0+
+Link: https://lore.kernel.org/r/20200324041341.GA32335@asgard.redhat.com
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/synaptics.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/uapi/linux/serio.h |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -189,6 +189,7 @@ static const char * const smbus_pnp_ids[
- 	"SYN3052", /* HP EliteBook 840 G4 */
- 	"SYN3221", /* HP 15-ay000 */
- 	"SYN323d", /* HP Spectre X360 13-w013dx */
-+	"SYN3257", /* HP Envy 13-ad105ng */
- 	NULL
- };
+--- a/include/uapi/linux/serio.h
++++ b/include/uapi/linux/serio.h
+@@ -9,7 +9,7 @@
+ #ifndef _UAPI_SERIO_H
+ #define _UAPI_SERIO_H
  
+-
++#include <linux/const.h>
+ #include <linux/ioctl.h>
+ 
+ #define SPIOCSTYPE	_IOW('q', 0x01, unsigned long)
+@@ -18,10 +18,10 @@
+ /*
+  * bit masks for use in "interrupt" flags (3rd argument)
+  */
+-#define SERIO_TIMEOUT	BIT(0)
+-#define SERIO_PARITY	BIT(1)
+-#define SERIO_FRAME	BIT(2)
+-#define SERIO_OOB_DATA	BIT(3)
++#define SERIO_TIMEOUT	_BITUL(0)
++#define SERIO_PARITY	_BITUL(1)
++#define SERIO_FRAME	_BITUL(2)
++#define SERIO_OOB_DATA	_BITUL(3)
+ 
+ /*
+  * Serio types
 
 
