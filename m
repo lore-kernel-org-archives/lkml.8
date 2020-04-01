@@ -2,130 +2,92 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C44CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C215EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5B92063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856E92063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="ugZWMCya"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="iQ8P0o5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733054AbgDAQv7 (ORCPT
+        id S2388798AbgDAQwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:51:59 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:57474 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388555AbgDAQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:44 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id C530EC425A3;
-        Wed,  1 Apr 2020 18:36:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1585759002;
-        bh=IPYAP+Th3gWr6c1GcWqNIip3jHxnwVBTe6y78MvI8lk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ugZWMCyav4coGCw7rKKWrZ9FiyO4+kuMLcOtv4VI+dX6Ydn8s6iUO/XwnBHf9iBW7
-         0ZpFzHUamm3Ku5foVMNFg4SZOHqzxnK7n+KcwmIRZFzBRHw2CCtMGFAs3+8DHwACGl
-         btyHxOyEQhQSKy+IH63DzU4cwLr8YFpWW7ENiLYk=
-Date:   Wed, 1 Apr 2020 18:36:40 +0200
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sven Van Asbroeck <TheSven73@gmail.com>
-Subject: Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle struct element
-Message-ID: <20200401163640.GA91358@workstation.tuxnet>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200330130743.GB2431644@ulmo>
- <CAHp75Vc_=czuRtyqgnmnYfie50gDnzrNqq3Bt+Gp_42MikX6VA@mail.gmail.com>
- <20200330160238.GD2817345@ulmo>
+        Wed, 1 Apr 2020 12:52:11 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43749 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387444AbgDAQwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:52:09 -0400
+Received: by mail-ed1-f67.google.com with SMTP id bd14so691283edb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 09:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zxAHZMB3P7yemdxIkt4vzJJqSZh7+SRQmJTgBhu3ZC4=;
+        b=iQ8P0o5Lcw3JW6EArdliAxxbSUsS53/a5RuXf6cPfLAgAB3HtdBre2hHs9UVqpeY+8
+         Ls7Xo6o2CkvGoZeX9P9GymfYDZu/XQiV6feOl9/iKR5+dP5RI68em61mqQEaO07tO/xF
+         DhjBHgnb+eSXwn3bqvdtEKt1WCdXQlX9StQDkAQqSGPR4/Rq9pE40qYhwj69RYWYOuqH
+         hhYojVv/EPXQ6dX6rSacTwnYRnjGQS7st1sPiuh4/tRAcaxGhVUud9sxV7gI1yF/t8Zq
+         KyOb9hR8h5nrjs+7+gSJbmX88/nfQfHhvZzKSkhKyZP6n5/8OPw4N5VUT1hvGt+k4JRM
+         NaaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zxAHZMB3P7yemdxIkt4vzJJqSZh7+SRQmJTgBhu3ZC4=;
+        b=Cz4P/z4K/CYHooDzPjBvTkU72sewP4e+64IZwkxNs63wiTIJQvl00RKmbYG97/47PI
+         PW+GQTIzJQyFQKiOzKSMFYh1EjIE79PlJDGyLSs7TR3UEWaMaDm9v0SqsnYEjGU0wCHh
+         eDRNFGgEyzQDkfsQDg0iUmRZ8Ep0f4bi3TuoPQyRfWmFx7YBjEKSSYPSq6VkpINAhf7c
+         FxaopszutBaoycCo1DbMNA1JifYbLorX6zP9YlB44LL3eorwVKB8UpM1CfQnJs7PjGos
+         N0bpIJE8+4nVNCauyfiLznwSVULnCOjUXiLXmG1sqaJFtmWRRMKKWTY+nz2TDimuhkLK
+         NExA==
+X-Gm-Message-State: ANhLgQ3arCI1Kaf46vdInQVSqT3C1vxO5bRF7kgd4iCCct+WooMCSuMX
+        FC5mbU8hZRkOkPZJuFgJRsVmCVis5bsGZtxVyEXVqA==
+X-Google-Smtp-Source: ADFU+vuVpMe/hjYycPBUcJTSJrMd3zMxZKNcPfopDiEvgMF/laDQbj3sNMjztAxqNc/bUeFitH6ag3fui6K9vZtu0Zc=
+X-Received: by 2002:a17:906:65ca:: with SMTP id z10mr20461333ejn.368.1585759927596;
+ Wed, 01 Apr 2020 09:52:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330160238.GD2817345@ulmo>
+References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
+ <20200401154217.GQ22681@dhcp22.suse.cz> <dfc0014a-9b85-5eeb-70ea-d622ccf5d988@redhat.com>
+ <20200401160048.GU22681@dhcp22.suse.cz> <20200401160929.jwekhr24tb44odea@ca-dmjordan1.us.oracle.com>
+ <20200401161243.GW22681@dhcp22.suse.cz> <20200401161810.xvqikca2x46yqrlx@ca-dmjordan1.us.oracle.com>
+ <20200401162655.GX22681@dhcp22.suse.cz> <CA+CK2bCGpG6kBjkGd-QP06kNtwezj8mW13Jdvbxs6ExzRaJSpQ@mail.gmail.com>
+ <20200401164654.GY22681@dhcp22.suse.cz>
+In-Reply-To: <20200401164654.GY22681@dhcp22.suse.cz>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 1 Apr 2020 12:51:56 -0400
+Message-ID: <CA+CK2bCKxok9Ho2NJd0kWR=YCi+eQqyfv6fg1Je3Lmov9PqzwQ@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 06:02:38PM +0200, Thierry Reding wrote:
-> On Mon, Mar 30, 2020 at 04:18:22PM +0300, Andy Shevchenko wrote:
-> > On Mon, Mar 30, 2020 at 4:09 PM Thierry Reding <thierry.reding@gmail.com> wrote:
-> > >
-> > > On Wed, Feb 26, 2020 at 02:52:26PM +0100, Matthias Schiffer wrote:
-> > > > duty_cycle was only set, never read.
-> > > >
-> > > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > > > ---
-> > > >  drivers/pwm/pwm-pca9685.c | 4 ----
-> > > >  1 file changed, 4 deletions(-)
-> > >
-> > > Applied, thanks.
-> > 
-> > I'm not sure this patch is correct.
-> 
-> What makes you say that? If you look at the code, the driver sets this
-> field to either 0 or some duty cycle value but ends up never using it.
-> Why would it be wrong to remove that code?
-> 
-> > We already have broken GPIO in this driver. Do we need more breakage?
-> 
-> My understanding is that nobody was able to pinpoint exactly when this
-> regressed, or if this only worked by accident to begin with. It sounds
-> like Clemens has a way of testing this driver, so perhaps we can solve
-> that GPIO issue while we're at it.
-> 
-> The last discussion on this seems to have been around the time when you
-> posted a fix for it:
-> 
->     https://patchwork.ozlabs.org/patch/1156012/
-> 
-> But then Sven had concerns that that also wasn't guaranteed to work:
-> 
->     https://lkml.org/lkml/2019/6/2/73
-> 
-> So I think we could either apply your patch to restore the old behaviour
-> which I assume you tested, so at least it seems to work in practice,
-> even if there's still a potential race that Sven pointed out in the
-> above link.
-> 
-> I'd prefer something alternative because it's obviously confusing and
-> completely undocumented. Mika had already proposed something that's a
-> little bit better, though still somewhat confusing.
-> 
-> Oh... actually reading further through those threads there seems to be a
-> patch from Sven that was reviewed by Mika but then nothing happened:
-> 
-> 	https://lkml.org/lkml/2019/6/4/1039
-> 
-> with the corresponding patchwork URL:
-> 
-> 	https://patchwork.ozlabs.org/patch/1110083/
-> 
-> Andy, Clemens, do you have a way of testing the GPIO functionality of
-> this driver? If so, it'd be great if you could check the above patch
-> from Sven to fix PWM/GPIO interop.
+> > I do not remember seeing any real failures, this was a theoretical
+> > window. So, we could potentially simply remove these locks until we
+> > see a real boot failure in some interrupt thread. The allocation has
+> > to be rather large as well.
+>
+> Yes please! We are really great at over complicating and over
+> engineering stuff based on theoretical issues and build on top of that
+> and make the code even more complex because nobody dares to re-evaluate
+> and so on.
 
-Looks good. Tested it today and I can no longer reproduce the issues
-when switching between PWM and GPIO modes.
-It did not apply cleanly on the current mainline or for-next branch, so
-I'll send a fixed up version of the patch with my Tested-by tag shortly.
+I will submit a patch (or revert) whichever is cleaner.
 
-I noticed an unrelated issue when disabling and enabling the channel
-though, for which I will either send a patch or maybe try to convert the
-driver to the atomic API first and then look if it is still a problem.
-(Issue is that if you disable the channel, the LED_OFF counter is
-cleared, which means you have to reconfigure the duty cycle after
-reenabling. It's probably better if only the FULL_OFF bit is toggled in
-enable/disable as it has precedence over the others anyway and then the
-previous state would not be changed..?)
-
-Clemens
+Pasha
