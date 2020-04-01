@@ -2,58 +2,54 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD1CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9036EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8546D20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2533820772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758875;
-	bh=6Pe8o5i5K3qDvVX/UzNEoLD4bmR+7YYriviwdr0EBk8=;
+	s=default; t=1585758878;
+	bh=EHPeh3/HEfGb5wb72riPyFo6xa6/CpxZftTAu6tRUDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PGR8kCBcO6ogsPZVg3t7nn/Gn+aEZ7ILJvSW661qvrvY6ygTezNUQx0H2eV/nvc72
-	 HL+obxfiBuE5y7wWt8sYzfv3Px4lDLY81iwhixB6o6qF/iC3mH+85igRDgmmu/wdzg
-	 /r+5nkI0wwkw4WrGYgJU/BRZRD2vG2nUMNPuQ0/c=
+	b=cmX+srJcCgOokN8kuJVQfumG6CKyV+o2go7l+fcZMFVP5NTCHtgIBWJ/rX0xlbkbL
+	 XY/v+KgYI8/WZNM2MkwwuLr+jZu6F7Szg3yoqTb/aboaWJkBVcJnLqtOeb/8hpi/Iw
+	 pnTbxvjQSoaU4g6NZ891j2n/kmDSkbRj3Gf5LUvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388681AbgDAQee (ORCPT
+        id S2388673AbgDAQed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388670AbgDAQed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Apr 2020 12:34:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388456AbgDAQea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:34:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE422063A;
-        Wed,  1 Apr 2020 16:34:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4732063A;
+        Wed,  1 Apr 2020 16:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758872;
-        bh=6Pe8o5i5K3qDvVX/UzNEoLD4bmR+7YYriviwdr0EBk8=;
+        s=default; t=1585758870;
+        bh=EHPeh3/HEfGb5wb72riPyFo6xa6/CpxZftTAu6tRUDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BniWwC+C1++o99nqY9lW7oQfAI1D51flj/Uw47crdYNCXuWLMdnlV8Dyly5+oh1Z9
-         ZFiOvwkFiAz9xxs4HpODtWGYhcd6qmemz9JsdNMBYi0hMicYTDQy3gCFKlZwVUER7R
-         bKy45UhUztHnbcgMg1pKnFhC+8IBAwys8JP7TFBY=
+        b=o9aHwxHekxwTLbmUO1oiHHcIUzr4UWMtLe6SpGawMGNkSSxLECMSPi0PtH4hKrQq5
+         bzpbQz2fUSueq/lC0h+Q34uJPaKHE1T+1sDpeHdm1TtBfTDMG/nD7YsFwKCvApaAjw
+         j5mAF4nDsNSqzCqEppogz4ARU+ysCg9brJtwdGi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuji sasaki <sasakiy@chromium.org>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 001/102] spi: qup: call spi_qup_pm_resume_runtime before suspending
-Date:   Wed,  1 Apr 2020 18:17:04 +0200
-Message-Id: <20200401161530.999915465@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 59/91] mac80211: mark station unauthorized before key removal
+Date:   Wed,  1 Apr 2020 18:17:55 +0200
+Message-Id: <20200401161533.422920304@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
-References: <20200401161530.451355388@linuxfoundation.org>
+In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
+References: <20200401161512.917494101@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,55 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuji Sasaki <sasakiy@chromium.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 136b5cd2e2f97581ae560cff0db2a3b5369112da ]
+commit b16798f5b907733966fd1a558fca823b3c67e4a1 upstream.
 
-spi_qup_suspend() will cause synchronous external abort when
-runtime suspend is enabled and applied, as it tries to
-access SPI controller register while clock is already disabled
-in spi_qup_pm_suspend_runtime().
+If a station is still marked as authorized, mark it as no longer
+so before removing its keys. This allows frames transmitted to it
+to be rejected, providing additional protection against leaking
+plain text data during the disconnection flow.
 
-Signed-off-by: Yuji sasaki <sasakiy@chromium.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200214074340.2286170-1-vkoul@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200326155133.ccb4fb0bb356.If48f0f0504efdcf16b8921f48c6d3bb2cb763c99@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/spi/spi-qup.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ net/mac80211/sta_info.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 1bfa889b8427a..88b108e1c85fe 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -974,6 +974,11 @@ static int spi_qup_suspend(struct device *device)
- 	struct spi_qup *controller = spi_master_get_devdata(master);
- 	int ret;
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -2,6 +2,7 @@
+  * Copyright 2002-2005, Instant802 Networks, Inc.
+  * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
++ * Copyright (C) 2018-2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -904,6 +905,11 @@ static void __sta_info_destroy_part2(str
+ 	might_sleep();
+ 	lockdep_assert_held(&local->sta_mtx);
  
-+	if (pm_runtime_suspended(device)) {
-+		ret = spi_qup_pm_resume_runtime(device);
-+		if (ret)
-+			return ret;
++	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
++		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
++		WARN_ON_ONCE(ret);
 +	}
- 	ret = spi_master_suspend(master);
- 	if (ret)
- 		return ret;
-@@ -982,10 +987,8 @@ static int spi_qup_suspend(struct device *device)
- 	if (ret)
- 		return ret;
++
+ 	/* now keys can no longer be reached */
+ 	ieee80211_free_sta_keys(local, sta);
  
--	if (!pm_runtime_suspended(device)) {
--		clk_disable_unprepare(controller->cclk);
--		clk_disable_unprepare(controller->iclk);
--	}
-+	clk_disable_unprepare(controller->cclk);
-+	clk_disable_unprepare(controller->iclk);
- 	return 0;
- }
- 
--- 
-2.20.1
-
 
 
