@@ -2,62 +2,92 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045FFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CEEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D191020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD7720784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:02:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KZlZh+R/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733148AbgDAQB0 (ORCPT
+        id S1733149AbgDAQCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:01:26 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48082 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732651AbgDAQB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:01:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 907C7ACB1;
-        Wed,  1 Apr 2020 16:01:24 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 7F097DA727; Wed,  1 Apr 2020 18:00:50 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 18:00:50 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>, osandov@fb.com
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] btrfs: inode: Fix uninitialized variable bug
-Message-ID: <20200401160050.GV5920@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>, osandov@fb.com,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200327200135.GA3472@embeddedor>
+        Wed, 1 Apr 2020 12:02:04 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44889 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732651AbgDAQCE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:02:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585756923;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3IEKCG99baNCbafEulLN6+2Rt6IoYWudMh1yldt5er4=;
+        b=KZlZh+R/FsRvVyTZHDdTMVFkNdqFVLcS3BhQF0etkASKB0T1UKkTKOeJYeBqGHL3bAPlNS
+        +U4JYC3CfZmLdzyeexb3YZCm+gefCqUjt6KzJLnmDTtpWILYOFTjehHmr4ys3QSdb4pUpH
+        I/beFHLxv+zbmyULCxnu0l6bJaMfHAI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-VLCnjMyyPRqhR4Fz7w4wig-1; Wed, 01 Apr 2020 12:02:01 -0400
+X-MC-Unique: VLCnjMyyPRqhR4Fz7w4wig-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C005D100551A;
+        Wed,  1 Apr 2020 16:01:58 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D0CC5C3F8;
+        Wed,  1 Apr 2020 16:01:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com>
+References: <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com> <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com> <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk> <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home> <2488530.1585749351@warthog.procyon.org.uk> <2488734.1585749502@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327200135.GA3472@embeddedor>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2590275.1585756914.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 01 Apr 2020 17:01:54 +0100
+Message-ID: <2590276.1585756914@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:01:35PM -0500, Gustavo A. R. Silva wrote:
-> geom.len is being used without being properly initialized, previously.
-> 
-> Fix this by placing ASSERT(geom.len <= INT_MAX); after geom.len has been
-> initialized.
-> 
-> Addresses-Coverity-ID: 1491912 ("Uninitialized scalar variable")
-> Fixes: 1eb52c8bd8d6 ("btrfs: get rid of one layer of bios in direct I/O")
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-Thanks.  This is in a development branch so the fixup can be folded in,
-we're expecting more revisions of the patchset anyway. CCing Omar.
+> > > But doesn't actually do what Karel asked for.  show_mountinfo() itse=
+lf does
+> > > not give you what Karel asked for.
+> =
+
+> Not sure what you mean.  I think it shows precisely the information
+> Karel asked for.
+
+It's not atomic.
+
+David
+
