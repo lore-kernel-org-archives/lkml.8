@@ -2,113 +2,107 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAB2C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB83C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E181D2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A78C2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585744027;
+	bh=eXd3Vs0wNSdsPSapWx3TL2HK2zt58Vodt7QDkASU47g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TF30CtwN1SvPTcyxsmvr+NBP/Dt93aYnBcXPrI4rkwNRVm7nl3uond1OsEh9QI/u5
+	 dxeXyRuCGstSJALxmEerT7bpdxHUrH1oSGN2OhZtvVdQKeFwC6Eywvim2YWXJIblHs
+	 7SmP/RDZeS57dXaRNlPZ5NEclxXuLb2Bl0ZoSqOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732502AbgDAM1E (ORCPT
+        id S1732515AbgDAM1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:27:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:50510 "EHLO foss.arm.com"
+        Wed, 1 Apr 2020 08:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbgDAM1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:27:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A7B730E;
-        Wed,  1 Apr 2020 05:27:03 -0700 (PDT)
-Received: from [10.37.12.63] (unknown [10.37.12.63])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A85E53F68F;
-        Wed,  1 Apr 2020 05:27:00 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] dt-bindings: thermal: Add yaml bindings for
- thermal zones
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <cover.1585738725.git.amit.kucheria@linaro.org>
- <af3625a9cdf1a8f0e433d67e3d785b03aae7bc82.1585738725.git.amit.kucheria@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <d4b8bf55-e240-6181-4976-880846cee413@arm.com>
-Date:   Wed, 1 Apr 2020 13:26:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726804AbgDAM1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:27:04 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 471C920776;
+        Wed,  1 Apr 2020 12:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585744024;
+        bh=eXd3Vs0wNSdsPSapWx3TL2HK2zt58Vodt7QDkASU47g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wXHCAc29m0daGI9FMUQtSjz41unxyUtqY556CihAgR4e1EJjg8LGCNiu/btU8qce1
+         rgCyK03XxUUXK5EggqdNqR5DuDkueggfpOcqGM6zW2qF6CnThOtsOJ/3ecYJiNugBi
+         jA10D5RAJW3H0vEN1hdt87SBlx3LJFPemEFeSjYI=
+Date:   Wed, 1 Apr 2020 15:26:59 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     George Spelvin <lkml@sdf.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        linux-rdma@vger.kernel.org
+Subject: Re: [RFC PATCH v1 01/50] IB/qib: Delete struct qib_ivdev.qp_rnd
+Message-ID: <20200401122659.GA80989@unreal>
+References: <202003281643.02SGh6eG002694@sdf.org>
+ <20200329141710.GE20941@ziepe.ca>
+ <20200329160825.GA4675@SDF.ORG>
+ <20200330132808.GB20969@lakrids.cambridge.arm.com>
+ <20200330164333.GB2459@SDF.ORG>
+ <20200330164912.GK20941@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <af3625a9cdf1a8f0e433d67e3d785b03aae7bc82.1585738725.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330164912.GK20941@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
+On Mon, Mar 30, 2020 at 01:49:12PM -0300, Jason Gunthorpe wrote:
+> On Mon, Mar 30, 2020 at 04:43:33PM +0000, George Spelvin wrote:
+> > On Mon, Mar 30, 2020 at 02:28:08PM +0100, Mark Rutland wrote:
+> > > Also, if you do send a series, *please* add a cover-letter explaining
+> > > what the overall purpose of the series is, and have all patches chained
+> > > in-reply-to that rather than patch 1. Otherwise reviewers have to
+> > > reverse-engineer the intent of the author.
+> > >
+> > > You can generate the cover letter with:
+> > >
+> > > $ git format-patch --cover $FROM..$TO
+> > >
+> > > ... and IIRC git send-email does the right thing by default if you hand
+> > > it all of the patches at once.
+> >
+> > Er, I *did* send a cover letter.  Cc:ed to the union of everyone
+> > Cc:ed on any of the individual patches.  It's appended.  (I left in
+> > the full Cc: list so you can see you're on it.)
+> >
+> > My problem is I don't have git on my e-mail machine, so I fed them to
+> > sendmail manually, and that does some strange things.
+>
+> The problem is that none of the patches had a in-reply-to header to
+> the cover letter so it is very difficult to find it.
+>
+> Things work best if you can use git send-email :) I've never tried it,
+> bu I wonder if you can tell git that the sendmail is 'ssh foo-server
+> /usr/bin/sendmail' ?
 
-Apart from small mistake during probably copy-paste (please check
-below), looks good.
+I don't know if it is possible to do directly, but such feature is
+achievable through custom script.
 
-On 4/1/20 12:15 PM, Amit Kucheria wrote:
-> As part of moving the thermal bindings to YAML, split it up into 3
-> bindings: thermal sensors, cooling devices and thermal zones.
-> 
-> The thermal-zone binding is a software abstraction to capture the
-> properties of each zone - how often they should be checked, the
-> temperature thresholds (trips) at which mitigation actions need to be
-> taken and the level of mitigation needed at those thresholds.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes since v3:
->   - Clarify example by using cooling state numbers and a comment
->   - Restrict thermal-sensors to a single reference to reflect actual code
->     where there is a one-to-one mapping between sensors and thermal zones
->   - Add two optional properties that were missed in earlier submissions:
->     coefficients and sustainable-power
->   - Improve description of hysteresis and contribution properties
-> 
->   .../bindings/thermal/thermal-zones.yaml       | 341 ++++++++++++++++++
->   1 file changed, 341 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-> 
+I'm doing it to be able to send emails with git-send-email in offline
+mode too.
 
-[snip]
+In my .gitconfig:
+ 28 [sendemail]
+ 29         smtpserver = /usr/local/bin/msmtp-enqueue.sh
 
-> +                    cooling-maps {
-> +                            map0 {
-> +                                    trip = <&cpu0_alert0>;
-> +                                    /* Corresponds to 1400MHz in OPP table */
-> +                                    cooling-device = <&CPU0 3 3>, <&CPU1 3 3>,
-> +                                                     <&CPU2 3 3>, <&CPU3 3 3>;
-> +                            };
-> +
-> +                            map1 {
-> +                                    trip = <&cpu0_alert1>;
-> +                                    /* Corresponds to 1400MHz in OPP table */
+Thanks
 
-s/1400MHz/1000MHz/
-1400MHZ is used in map0 as <&CPUx 3 3>, here we have '5 5'.
-
-
-> +                                    cooling-device = <&CPU0 5 5>, <&CPU1 5 5>,
-> +                                                     <&CPU2 5 5>, <&CPU3 5 5>;
-> +                            };
-> +                    };
-> +            };
-
-
-Apart from that, looks good:
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
-Regards,
-Lukasz
+>
+> Jason
