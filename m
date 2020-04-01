@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0945C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279D2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFD62077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4C72077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732291AbgDAKSC (ORCPT
+        id S1732309AbgDAKSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:18:02 -0400
+        Wed, 1 Apr 2020 06:18:06 -0400
 Received: from mga01.intel.com ([192.55.52.88]:34152 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732278AbgDAKR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:17:58 -0400
-IronPort-SDR: 5VVJi+pA4XWT5qW1w7ORkcVq8QN5OLFopRWMr96DgZj9zULMtASJvhm8G+jKcoHc5CZ2c1MKw/
- iDYVoaxy6/og==
+        id S1732278AbgDAKSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 06:18:02 -0400
+IronPort-SDR: ClEis5qiTC/ulO5tuSDIfqPcTTYdV28b+S5hjBfCBSp0t1KUetIIAafl8IYy3i1qc8XfSS656X
+ klCpfTeE+XFw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 03:17:56 -0700
-IronPort-SDR: yIlEM3giXfDAYSBPIFAGuF1w10PDSK7kJqChFTpXPM2N/TyhnbUOd6rFPaPhziwlpUPKdWgi66
- Ribw1YHC6D5Q==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 03:18:00 -0700
+IronPort-SDR: eUFn/Xh1WQ8Rvifyj8FpGCsUDnbXQ+XErkDi6dfoCC3lpXetd5RIkEabet5U3O0bkbKNKPyvGD
+ LxyjHsXsFoxQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
-   d="scan'208";a="395925581"
+   d="scan'208";a="395925610"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.87])
-  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2020 03:17:56 -0700
+  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2020 03:18:00 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         linux-kernel@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 13/16] perf tools: Move leader-sampling configuration
-Date:   Wed,  1 Apr 2020 13:16:10 +0300
-Message-Id: <20200401101613.6201-14-adrian.hunter@intel.com>
+Subject: [PATCH 15/16] perf tools: Allow multiple read formats
+Date:   Wed,  1 Apr 2020 13:16:12 +0300
+Message-Id: <20200401101613.6201-16-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200401101613.6201-1-adrian.hunter@intel.com>
 References: <20200401101613.6201-1-adrian.hunter@intel.com>
@@ -49,92 +49,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move leader-sampling configuration in preparation for adding support for
-leader sampling with AUX area events.
+Tools find the correct evsel, and therefore read format, using the event
+ID, so it isn't necessary for all read formats to be the same. In the case
+of leader-sampling of AUX area events, dummy tracking events will have
+a different read format, so relax the validation to become a debug message
+only.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/evsel.c  | 19 -------------------
- tools/perf/util/record.c | 29 +++++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 19 deletions(-)
+ tools/perf/util/evlist.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d4ab073c9fe7..8ddcb95396ac 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1022,25 +1022,6 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		}
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 1548237b6558..82d9f9bb8975 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1131,8 +1131,10 @@ bool perf_evlist__valid_read_format(struct evlist *evlist)
+ 	u64 sample_type = first->core.attr.sample_type;
+ 
+ 	evlist__for_each_entry(evlist, pos) {
+-		if (read_format != pos->core.attr.read_format)
+-			return false;
++		if (read_format != pos->core.attr.read_format) {
++			pr_debug("Read format differs %#" PRIx64 " vs %#" PRIx64 "\n",
++				 read_format, (u64)pos->core.attr.read_format);
++		}
  	}
  
--	/*
--	 * Disable sampling for all group members other
--	 * than leader in case leader 'leads' the sampling.
--	 */
--	if ((leader != evsel) && leader->sample_read) {
--		attr->freq           = 0;
--		attr->sample_freq    = 0;
--		attr->sample_period  = 0;
--		attr->write_backward = 0;
--
--		/*
--		 * We don't get sample for slave events, we make them
--		 * when delivering group leader sample. Set the slave
--		 * event to follow the master sample_type to ease up
--		 * report.
--		 */
--		attr->sample_type = leader->core.attr.sample_type;
--	}
--
- 	if (opts->no_samples)
- 		attr->sample_freq = 0;
- 
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 7def66168503..ce383fc1bbbc 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -167,6 +167,31 @@ bool perf_can_aux_sample(void)
- 	return true;
- }
- 
-+static void perf_evsel__config_leader_sampling(struct evsel *evsel)
-+{
-+	struct perf_event_attr *attr = &evsel->core.attr;
-+	struct evsel *leader = evsel->leader;
-+
-+	/*
-+	 * Disable sampling for all group members other
-+	 * than leader in case leader 'leads' the sampling.
-+	 */
-+	if (leader != evsel && leader->sample_read) {
-+		attr->freq           = 0;
-+		attr->sample_freq    = 0;
-+		attr->sample_period  = 0;
-+		attr->write_backward = 0;
-+
-+		/*
-+		 * We don't get sample for slave events, we make them
-+		 * when delivering group leader sample. Set the slave
-+		 * event to follow the master sample_type to ease up
-+		 * report.
-+		 */
-+		attr->sample_type = leader->core.attr.sample_type;
-+	}
-+}
-+
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain)
- {
-@@ -193,6 +218,10 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			evsel->core.attr.comm_exec = 1;
- 	}
- 
-+	/* Configure leader sampling here now that the sample type is known */
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__config_leader_sampling(evsel, evlist);
-+
- 	if (opts->full_auxtrace) {
- 		/*
- 		 * Need to be able to synthesize and parse selected events with
+ 	/* PERF_SAMPLE_READ imples PERF_FORMAT_ID. */
 -- 
 2.17.1
 
