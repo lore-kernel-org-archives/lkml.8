@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3427BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB11C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0625A206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B467206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759349;
-	bh=BrD0Wz+N8Jr3H8OgAyOyvPdUQvi6rQhn4MI94zk6Jik=;
+	s=default; t=1585759353;
+	bh=cuxX1JFcg9dUi9x7TC1NK+SvhULhF55NA76HG+4K9so=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktqZ3tSzLmpPA33qg4dhSAoZ8nzmXgkM1m8t70CcEh4AQtVoEN6IwFZVSNtdU8KwQ
-	 kpgpegZkfVX5uXvuFyEHyty1Ad7US4aIrq+kaa58dRpcPcdG06CLExr/brLKoRSjlw
-	 uM8sAR+evxXCZZR3xKYaOUqiGQ/ySL3QbpX3J45s=
+	b=h6AchOR7iROjf5aAcrMG09XZY3Dslq8JIdSngBtCTkOYZMWfxEoZvEllI8UhZgnUX
+	 l4olu2vialkWFTSI4iKF+yJtO8GKyZRwEtnYqSsM0XAmnR5z84rTLlm4dMLQAsGknh
+	 QOiD/rxEGOWyxep/Jyslu4VeKX6ft6hE7QGsoNew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389379AbgDAQm1 (ORCPT
+        id S2388335AbgDAQmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:42:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42958 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:42:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389098AbgDAQmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:42:20 -0400
+        id S2389532AbgDAQm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:42:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D28D32063A;
-        Wed,  1 Apr 2020 16:42:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85B9420658;
+        Wed,  1 Apr 2020 16:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759340;
-        bh=BrD0Wz+N8Jr3H8OgAyOyvPdUQvi6rQhn4MI94zk6Jik=;
+        s=default; t=1585759348;
+        bh=cuxX1JFcg9dUi9x7TC1NK+SvhULhF55NA76HG+4K9so=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u8kj4pvDZFxrDNYvj1lLEJ/Mi1nMwU491j2c5hsXDd1CipxoXBWgXIYASjm3l4Mf2
-         5gMxbAZe0hCg8cwVu/wtsEDHHbdrIFePE7PTZenXnLN/KegLppGkRCgxqtyoO/Oc7z
-         0pTlI/icCK8P31RtDlFc67L5pfZXpmvkdwPuJao4=
+        b=gpYDQsYZscuFv1/BmzyfEq8S94L0ApXtXbKy556dn/ecX4/oAIcgQTgZJhq56mrcl
+         iF6cBMFBsP+LgsgCBUOQPlWn3QHpF/0AoL0ga7Qcu+vmzEVMoU6Ar2mHgn/ViOHqN9
+         SCKVDYhzLwe3oJ1pLy4g6E/YBjgdN0JAO0okxNp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 034/148] xhci: Do not open code __print_symbolic() in xhci trace events
-Date:   Wed,  1 Apr 2020 18:17:06 +0200
-Message-Id: <20200401161555.930656316@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH 4.14 052/148] drm/bridge: dw-hdmi: fix AVI frame colorimetry
+Date:   Wed,  1 Apr 2020 18:17:24 +0200
+Message-Id: <20200401161558.011736998@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,69 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-commit 045706bff837ee89c13f1ace173db71922c1c40b upstream.
+commit e8dca30f7118461d47e1c3510d0e31b277439151 upstream.
 
-libtraceevent (used by perf and trace-cmd) failed to parse the
-xhci_urb_dequeue trace event. This is because the user space trace
-event format parsing is not a full C compiler. It can handle some basic
-logic, but is not meant to be able to handle everything C can do.
+CTA-861-F explicitly states that for RGB colorspace colorimetry should
+be set to "none". Fix that.
 
-In cases where a trace event field needs to be converted from a number
-to a string, there's the __print_symbolic() macro that should be used:
-
- See samples/trace_events/trace-events-sample.h
-
-Some xhci trace events open coded the __print_symbolic() causing the
-user spaces tools to fail to parse it. This has to be replaced with
-__print_symbolic() instead.
-
-CC: stable@vger.kernel.org
-Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206531
-Fixes: 5abdc2e6e12ff ("usb: host: xhci: add urb_enqueue/dequeue/giveback tracers")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200306150858.21904-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: def23aa7e982 ("drm: bridge: dw-hdmi: Switch to V4L bus format and encodings")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200304232512.51616-2-jernej.skrabec@siol.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-trace.h |   23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c |   46 ++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
 
---- a/drivers/usb/host/xhci-trace.h
-+++ b/drivers/usb/host/xhci-trace.h
-@@ -276,23 +276,12 @@ DECLARE_EVENT_CLASS(xhci_log_urb,
- 	),
- 	TP_printk("ep%d%s-%s: urb %p pipe %u slot %d length %d/%d sgs %d/%d stream %d flags %08x",
- 			__entry->epnum, __entry->dir_in ? "in" : "out",
--			({ char *s;
--			switch (__entry->type) {
--			case USB_ENDPOINT_XFER_INT:
--				s = "intr";
--				break;
--			case USB_ENDPOINT_XFER_CONTROL:
--				s = "control";
--				break;
--			case USB_ENDPOINT_XFER_BULK:
--				s = "bulk";
--				break;
--			case USB_ENDPOINT_XFER_ISOC:
--				s = "isoc";
--				break;
--			default:
--				s = "UNKNOWN";
--			} s; }), __entry->urb, __entry->pipe, __entry->slot_id,
-+			__print_symbolic(__entry->type,
-+				   { USB_ENDPOINT_XFER_INT,	"intr" },
-+				   { USB_ENDPOINT_XFER_CONTROL,	"control" },
-+				   { USB_ENDPOINT_XFER_BULK,	"bulk" },
-+				   { USB_ENDPOINT_XFER_ISOC,	"isoc" }),
-+			__entry->urb, __entry->pipe, __entry->slot_id,
- 			__entry->actual, __entry->length, __entry->num_mapped_sgs,
- 			__entry->num_sgs, __entry->stream, __entry->flags
- 		)
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1348,28 +1348,34 @@ static void hdmi_config_AVI(struct dw_hd
+ 		frame.colorspace = HDMI_COLORSPACE_RGB;
+ 
+ 	/* Set up colorimetry */
+-	switch (hdmi->hdmi_data.enc_out_encoding) {
+-	case V4L2_YCBCR_ENC_601:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
++	if (!hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
++		switch (hdmi->hdmi_data.enc_out_encoding) {
++		case V4L2_YCBCR_ENC_601:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		case V4L2_YCBCR_ENC_709:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
++			break;
++		default: /* Carries no data */
+ 			frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		}
++	} else {
++		frame.colorimetry = HDMI_COLORIMETRY_NONE;
+ 		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
+-	case V4L2_YCBCR_ENC_709:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
+-			frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
+-		break;
+-	default: /* Carries no data */
+-		frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
++			HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+ 	}
+ 
+ 	frame.scan_mode = HDMI_SCAN_MODE_NONE;
 
 
