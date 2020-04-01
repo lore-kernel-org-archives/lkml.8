@@ -2,103 +2,138 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1417FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EB3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6F5206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:47:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiscXnX5"
+	by mail.kernel.org (Postfix) with ESMTP id D0ADA206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731937AbgDAGrd (ORCPT
+        id S1731957AbgDAGru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:47:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40533 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731850AbgDAGrd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:47:33 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c20so9101131pfi.7;
-        Tue, 31 Mar 2020 23:47:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mMQk64903L6tAck8jm35O7g6g92Bgi88bu7w7mbPreY=;
-        b=UiscXnX5l8+lKeHueM4pXQbIyNerEXuTPIhWKDBzq4J6OTms3t1UH1t8clofuh7i0N
-         F9gwbrZZx3IAqDNu2DtUaWVwtODmnJIz2VFwou2jSeIYTq5uLVPgRhcR7/H95zwOKw4e
-         H8B9EgsX96oX9tcN/i0qTVOePLyLshIzWr8v+M+MVTAyfDbEPNqvzZCdm9kV46WppGcn
-         byZev4rjSNX3yEZU1OFrD7C1aIVWnKERtN0VjXHMpq0s4QdA+jYsEP0etyyCnJEfcHsc
-         AfUaJ6n8Y43qF1zqUBB+3g0dTalj/KUxa3CphKf3vufnEN7nFJBzZA6L1z7SjKygcDwo
-         SUBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mMQk64903L6tAck8jm35O7g6g92Bgi88bu7w7mbPreY=;
-        b=EJ5Aozpb3m9O0BioZy+wVI+ytAGIe43fwGWuUXXTzt/gVGacU34oi4atr8rzUwbOHs
-         wk6wgY1FvXAWx4OYZv1DfOSGADsGbhcG/26v0wynZH0AXDjp4Q8VPGTvX8TrL7eeaaXP
-         njaGX+oP1WNE+aTtLFlVwoE4O5BBJF+sajONaExrMTFG9gjn7ZN02k20jDjusPVm/5f6
-         GDcnXl7Yg3utHtCZDeFCRR7pqywePQg3oqXtKH2DCOSphfwcwcgXlMue3vMP2AFG9Dob
-         Gfmg5Ubt7SmKpC1+pIhi3Fh06HXIA15X1yPUrlmni8cJckJEychTm/xXx9yocWBdUsJJ
-         mbsA==
-X-Gm-Message-State: AGi0PuZqPdXxa6pVfuVlkBG/C0FZQOMnUB1BtL64+ZByo2uKk4oUSNZQ
-        fc9FTrWUgd4CJW8xtRq7OSqc9zUigID/nH5FxFwl+7Ypju0=
-X-Google-Smtp-Source: APiQypLYG7FDIzRj/aLjkhU5KlG0qqqrJEap+/dgRs8SECciM8BH7fFrpvPVsrEy/R354lCAVwMcSmLlQ21DVrlW4CU=
-X-Received: by 2002:a63:5859:: with SMTP id i25mr7460690pgm.74.1585723652026;
- Tue, 31 Mar 2020 23:47:32 -0700 (PDT)
+        Wed, 1 Apr 2020 02:47:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53974 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731889AbgDAGru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:47:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 43A4DAAC7;
+        Wed,  1 Apr 2020 06:47:48 +0000 (UTC)
+Subject: Re: [PATCH] btrfs: re-instantiate the removed
+ BTRFS_SUBVOL_CREATE_ASYNC definition
+To:     Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        David Sterba <dsterba@suse.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+References: <20200401032650.GA24378@asgard.redhat.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e2dfba81-e6c6-b04f-7260-281c29808327@suse.com>
+Date:   Wed, 1 Apr 2020 09:47:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200323143816.345b3d54@canb.auug.org.au> <20200401141113.21014665@canb.auug.org.au>
-In-Reply-To: <20200401141113.21014665@canb.auug.org.au>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Apr 2020 09:47:20 +0300
-Message-ID: <CAHp75VdoMpA4tDg57UND5hnWXV60EGaThPxLnTpKT6wG7bdYYQ@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the driver-core tree with the
- drivers-x86 tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Darren Hart <dvhart@infradead.org>, Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200401032650.GA24378@asgard.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 6:11 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> On Mon, 23 Mar 2020 14:38:16 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > Today's linux-next merge of the driver-core tree got a conflict in:
-> >
-> >   drivers/platform/x86/Kconfig
-> >
-> > between commit:
-> >
-> >   45a3d578f2ed ("platform/x86: Kconfig: Group modules by companies and functions")
-> >
-> > from the drivers-x86 tree and commit:
-> >
-> >   835e1b86ef8c ("platform/x86: touchscreen_dmi: Add EFI embedded firmware info support")
-> >
-> > from the driver-core tree.
-> >
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
 
-> This is now a conflict between the drivers-x86 tree and Linus' tree.
 
-PDx86 is in Linus tree already with conflict resolutions.
+On 1.04.20 г. 6:26 ч., Eugene Syromiatnikov wrote:
+> The commit 9c1036fdb1d1ff1b ("btrfs: Remove BTRFS_SUBVOL_CREATE_ASYNC
+> support") breaks strace build with the kernel headers from git:
+> 
+>     btrfs.c: In function "btrfs_test_subvol_ioctls":
+>     btrfs.c:531:23: error: "BTRFS_SUBVOL_CREATE_ASYNC" undeclared (first use
+>     in this function)
+>        vol_args_v2.flags = BTRFS_SUBVOL_CREATE_ASYNC;
+> 
+> Moreover, it is improper to break UAPI anyway.
+> 
+> Restore the macro definition and put it under "#ifndef __KERNEL__"
+> in order to prevent inadvertent in-kernel usage.
+> 
+> Fixes: 9c1036fdb1d1ff1b ("btrfs: Remove BTRFS_SUBVOL_CREATE_ASYNC support")
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Ops, sorry about that:
+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+
+> ---
+>  include/uapi/linux/btrfs.h | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
+> index 8134924..e6b6cb0f 100644
+> --- a/include/uapi/linux/btrfs.h
+> +++ b/include/uapi/linux/btrfs.h
+> @@ -36,12 +36,10 @@ struct btrfs_ioctl_vol_args {
+>  #define BTRFS_DEVICE_PATH_NAME_MAX	1024
+>  #define BTRFS_SUBVOL_NAME_MAX 		4039
+>  
+> -/*
+> - * Deprecated since 5.7:
+> - *
+> - * BTRFS_SUBVOL_CREATE_ASYNC	(1ULL << 0)
+> - */
+> -
+> +#ifndef __KERNEL__
+> +/* Deprecated since 5.7 */
+> +# define BTRFS_SUBVOL_CREATE_ASYNC	(1ULL << 0)
+> +#endif
+>  #define BTRFS_SUBVOL_RDONLY		(1ULL << 1)
+>  #define BTRFS_SUBVOL_QGROUP_INHERIT	(1ULL << 2)
+>  
+> 
