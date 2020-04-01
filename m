@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FCAC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F0DC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D25D206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF05206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759576;
-	bh=4/QgQEeTLg2cONn6lXbKFlYdnrgyJb7/r7FCCAFagzs=;
+	s=default; t=1585759580;
+	bh=zQXaz5RDG5zZ9BxRu11qDDNdjxUHAfWHlvQG92LbasQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAo+0U6XdpPozbSlSDYT/zKJe+r1sxSncPGCI7NRHxmIKabIQEKIB+ZqdP87yBlNO
-	 RzkXw+BD6F7SBvFsZJA3JnAj+BtiZDsyRYIfBnfHpxBbvfKuCZt5gbCjukzbX9/EMM
-	 KHCjhuIRwoZcTjBeCQutK6omr1NgqoGgvqt5Eeng=
+	b=a5xzawXtX923UhaeDfTquXggkl6OIImPYz0WpftJ7TRf007YBMZOq89VGSTRwbxzv
+	 qsQ/pdmS/7chQH8aLP6Et8/nZV6oUt+rKVEyEYjSwsqWPOH/BpmMcF47Vdx5kxYJ8O
+	 jYBDY/4Ix2bHJFU9i5FvDarFPqLuR/liNocQ7Ux0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389914AbgDAQqP (ORCPT
+        id S2389333AbgDAQqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389899AbgDAQqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:13 -0400
+        id S2389665AbgDAQqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 010A02071A;
-        Wed,  1 Apr 2020 16:46:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B09120784;
+        Wed,  1 Apr 2020 16:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759572;
-        bh=4/QgQEeTLg2cONn6lXbKFlYdnrgyJb7/r7FCCAFagzs=;
+        s=default; t=1585759574;
+        bh=zQXaz5RDG5zZ9BxRu11qDDNdjxUHAfWHlvQG92LbasQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d8HuDyiyvr1zLa/ZfwEXyNsUyW/hgT7wE9bwlt/yZp9TIQvlAha7SzWf+pwsI/Hlv
-         vWuJ1EPYsSqdRxMznzWBVP30YZGihPn9jUtR1s51okqaWxpLoLNE7gVJV8MHbOv/MU
-         Z+XNpGFrrEBWyGn2YBA/iF4d6U9GVXAluDnFmg4w=
+        b=CRa4lr7fwD7S+DihRR++mrOg95Qa+1Zj621LAeIOIsy36NwDFMT+eiK0r+MoBf1T6
+         9DpVn0NQq4Z8yufWGln1RnNMZKfA6TV9H7hbtdceLTbDMrkfjnCwkmHwYk9tDcFsoI
+         lb5HrJGYQXut/MNHRY0VH++oKkbaAuEs+tN8kYv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Xiong <wenxiong@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 081/148] scsi: ipr: Fix softlockup when rescanning devices in petitboot
-Date:   Wed,  1 Apr 2020 18:17:53 +0200
-Message-Id: <20200401161600.989273159@linuxfoundation.org>
+Subject: [PATCH 4.14 082/148] mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
+Date:   Wed,  1 Apr 2020 18:17:54 +0200
+Message-Id: <20200401161601.057702558@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,105 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Xiong <wenxiong@linux.vnet.ibm.com>
+From: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
 
-[ Upstream commit 394b61711f3ce33f75bf70a3e22938464a13b3ee ]
+[ Upstream commit ba32679cac50c38fdf488296f96b1f3175532b8e ]
 
-When trying to rescan disks in petitboot shell, we hit the following
-softlockup stacktrace:
+When trying to transmit to an unknown destination, the mesh code would
+unconditionally transmit a HWMP PREQ even if HWMP is not the current
+path selection algorithm.
 
-Kernel panic - not syncing: System is deadlocked on memory
-[  241.223394] CPU: 32 PID: 693 Comm: sh Not tainted 5.4.16-openpower1 #1
-[  241.223406] Call Trace:
-[  241.223415] [c0000003f07c3180] [c000000000493fc4] dump_stack+0xa4/0xd8 (unreliable)
-[  241.223432] [c0000003f07c31c0] [c00000000007d4ac] panic+0x148/0x3cc
-[  241.223446] [c0000003f07c3260] [c000000000114b10] out_of_memory+0x468/0x4c4
-[  241.223461] [c0000003f07c3300] [c0000000001472b0] __alloc_pages_slowpath+0x594/0x6d8
-[  241.223476] [c0000003f07c3420] [c00000000014757c] __alloc_pages_nodemask+0x188/0x1a4
-[  241.223492] [c0000003f07c34a0] [c000000000153e10] alloc_pages_current+0xcc/0xd8
-[  241.223508] [c0000003f07c34e0] [c0000000001577ac] alloc_slab_page+0x30/0x98
-[  241.223524] [c0000003f07c3520] [c0000000001597fc] new_slab+0x138/0x40c
-[  241.223538] [c0000003f07c35f0] [c00000000015b204] ___slab_alloc+0x1e4/0x404
-[  241.223552] [c0000003f07c36c0] [c00000000015b450] __slab_alloc+0x2c/0x48
-[  241.223566] [c0000003f07c36f0] [c00000000015b754] kmem_cache_alloc_node+0x9c/0x1b4
-[  241.223582] [c0000003f07c3760] [c000000000218c48] blk_alloc_queue_node+0x34/0x270
-[  241.223599] [c0000003f07c37b0] [c000000000226574] blk_mq_init_queue+0x2c/0x78
-[  241.223615] [c0000003f07c37e0] [c0000000002ff710] scsi_mq_alloc_queue+0x28/0x70
-[  241.223631] [c0000003f07c3810] [c0000000003005b8] scsi_alloc_sdev+0x184/0x264
-[  241.223647] [c0000003f07c38a0] [c000000000300ba0] scsi_probe_and_add_lun+0x288/0xa3c
-[  241.223663] [c0000003f07c3a00] [c000000000301768] __scsi_scan_target+0xcc/0x478
-[  241.223679] [c0000003f07c3b20] [c000000000301c64] scsi_scan_channel.part.9+0x74/0x7c
-[  241.223696] [c0000003f07c3b70] [c000000000301df4] scsi_scan_host_selected+0xe0/0x158
-[  241.223712] [c0000003f07c3bd0] [c000000000303f04] store_scan+0x104/0x114
-[  241.223727] [c0000003f07c3cb0] [c0000000002d5ac4] dev_attr_store+0x30/0x4c
-[  241.223741] [c0000003f07c3cd0] [c0000000001dbc34] sysfs_kf_write+0x64/0x78
-[  241.223756] [c0000003f07c3cf0] [c0000000001da858] kernfs_fop_write+0x170/0x1b8
-[  241.223773] [c0000003f07c3d40] [c0000000001621fc] __vfs_write+0x34/0x60
-[  241.223787] [c0000003f07c3d60] [c000000000163c2c] vfs_write+0xa8/0xcc
-[  241.223802] [c0000003f07c3db0] [c000000000163df4] ksys_write+0x70/0xbc
-[  241.223816] [c0000003f07c3e20] [c00000000000b40c] system_call+0x5c/0x68
-
-As a part of the scan process Linux will allocate and configure a
-scsi_device for each target to be scanned. If the device is not present,
-then the scsi_device is torn down. As a part of scsi_device teardown a
-workqueue item will be scheduled and the lockups we see are because there
-are 250k workqueue items to be processed.  Accoding to the specification of
-SIS-64 sas controller, max_channel should be decreased on SIS-64 adapters
-to 4.
-
-The patch fixes softlockup issue.
-
-Thanks for Oliver Halloran's help with debugging and explanation!
-
-Link: https://lore.kernel.org/r/1583510248-23672-1-git-send-email-wenxiong@linux.vnet.ibm.com
-Signed-off-by: Wen Xiong <wenxiong@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
+Link: https://lore.kernel.org/r/20200305140409.12204-1-cavallar@lri.fr
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ipr.c | 3 ++-
- drivers/scsi/ipr.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ net/mac80211/mesh_hwmp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
-index 35d54ee1c5c74..b172f0a020834 100644
---- a/drivers/scsi/ipr.c
-+++ b/drivers/scsi/ipr.c
-@@ -9962,6 +9962,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
- 	ioa_cfg->max_devs_supported = ipr_max_devs;
- 
- 	if (ioa_cfg->sis64) {
-+		host->max_channel = IPR_MAX_SIS64_BUSES;
- 		host->max_id = IPR_MAX_SIS64_TARGETS_PER_BUS;
- 		host->max_lun = IPR_MAX_SIS64_LUNS_PER_TARGET;
- 		if (ipr_max_devs > IPR_MAX_SIS64_DEVS)
-@@ -9970,6 +9971,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
- 					   + ((sizeof(struct ipr_config_table_entry64)
- 					       * ioa_cfg->max_devs_supported)));
- 	} else {
-+		host->max_channel = IPR_VSET_BUS;
- 		host->max_id = IPR_MAX_NUM_TARGETS_PER_BUS;
- 		host->max_lun = IPR_MAX_NUM_LUNS_PER_TARGET;
- 		if (ipr_max_devs > IPR_MAX_PHYSICAL_DEVS)
-@@ -9979,7 +9981,6 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
- 					       * ioa_cfg->max_devs_supported)));
+diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
+index 994dde6e5f9d9..986e9b6b961d2 100644
+--- a/net/mac80211/mesh_hwmp.c
++++ b/net/mac80211/mesh_hwmp.c
+@@ -1137,7 +1137,8 @@ int mesh_nexthop_resolve(struct ieee80211_sub_if_data *sdata,
+ 		}
  	}
  
--	host->max_channel = IPR_VSET_BUS;
- 	host->unique_id = host->host_no;
- 	host->max_cmd_len = IPR_MAX_CDB_LEN;
- 	host->can_queue = ioa_cfg->max_cmds;
-diff --git a/drivers/scsi/ipr.h b/drivers/scsi/ipr.h
-index 085e6c90f9e6a..89b36987ff309 100644
---- a/drivers/scsi/ipr.h
-+++ b/drivers/scsi/ipr.h
-@@ -1306,6 +1306,7 @@ struct ipr_resource_entry {
- #define IPR_ARRAY_VIRTUAL_BUS			0x1
- #define IPR_VSET_VIRTUAL_BUS			0x2
- #define IPR_IOAFP_VIRTUAL_BUS			0x3
-+#define IPR_MAX_SIS64_BUSES			0x4
+-	if (!(mpath->flags & MESH_PATH_RESOLVING))
++	if (!(mpath->flags & MESH_PATH_RESOLVING) &&
++	    mesh_path_sel_is_hwmp(sdata))
+ 		mesh_queue_preq(mpath, PREQ_Q_F_START);
  
- #define IPR_GET_RES_PHYS_LOC(res) \
- 	(((res)->bus << 24) | ((res)->target << 8) | (res)->lun)
+ 	if (skb_queue_len(&mpath->frame_queue) >= MESH_FRAME_QUEUE_LEN)
 -- 
 2.20.1
 
