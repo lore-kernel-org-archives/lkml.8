@@ -2,111 +2,120 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABABC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21954C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9224E2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2852073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732719AbgDANXo (ORCPT
+        id S1732666AbgDAN0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:23:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:51680 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732703AbgDANXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:23:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A67C430E;
-        Wed,  1 Apr 2020 06:23:43 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D8643F71E;
-        Wed,  1 Apr 2020 06:23:40 -0700 (PDT)
-References: <855831b59e1b3774b11c3e33050eac4cc4639f06.1583332765.git.vpillai@digitalocean.com> <20200401114215.36640-1-cj.chengjian@huawei.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Cheng Jian <cj.chengjian@huawei.com>
-Cc:     vpillai@digitalocean.com, aaron.lwe@gmail.com,
-        aubrey.intel@gmail.com, aubrey.li@linux.intel.com,
-        fweisbec@gmail.com, jdesfossez@digitalocean.com,
-        joel@joelfernandes.org, joelaf@google.com, keescook@chromium.org,
-        kerrnel@google.com, linux-kernel@vger.kernel.org,
-        mgorman@techsingularity.net, mingo@kernel.org,
-        naravamudan@digitalocean.com, pauld@redhat.com,
-        pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
-        peterz@infradead.org, pjt@google.com, tglx@linutronix.de,
-        tim.c.chen@linux.intel.com, torvalds@linux-foundation.org,
-        xiexiuqi@huawei.com, huawei.libin@huawei.com, w.f@huawei.com,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] sched/arm64: store cpu topology before notify_cpu_starting
-In-reply-to: <20200401114215.36640-1-cj.chengjian@huawei.com>
-Date:   Wed, 01 Apr 2020 14:23:33 +0100
-Message-ID: <jhjwo6zjq5m.mognet@arm.com>
+        Wed, 1 Apr 2020 09:26:22 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:43290 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732166AbgDAN0V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 09:26:21 -0400
+Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
+        with ESMTP id S23992512AbgDAN0QR3HMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 15:26:16 +0200
+Date:   Wed, 1 Apr 2020 14:26:16 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@linux-mips.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        "jailhouse-dev@googlegroups.com" <jailhouse-dev@googlegroups.com>
+Subject: RE: [PATCH] x86/smpboot: Remove 486-isms from the modern AP boot
+ path
+In-Reply-To: <23147db6f0c548259357babfc22a87d3@AcuMS.aculab.com>
+Message-ID: <alpine.LFD.2.21.2004011354050.3939520@eddie.linux-mips.org>
+References: <20200325101431.12341-1-andrew.cooper3@citrix.com> <601E644A-B046-4030-B3BD-280ABF15BF53@zytor.com> <87r1xgxzy6.fsf@nanos.tec.linutronix.de> <alpine.LFD.2.21.2004010001460.3939520@eddie.linux-mips.org>
+ <23147db6f0c548259357babfc22a87d3@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 1 Apr 2020, David Laight wrote:
 
-(+LAKML, +Sudeep)
+> >  Even though we supported them by spec I believe we never actually ran MP
+> > on any 486 SMP system (Alan Cox might be able to straighten me out on
+> > this); none that I know of implemented the MPS even though actual hardware
+> > might have used the APIC architecture.  Compaq had its competing solution
+> > for 486 and newer SMP, actually deployed, the name of which I long forgot.
+> > We never supported it due to the lack of documentation combined with the
+> > lack of enough incentive for someone to reverse-engineer it.
+> 
+> I also remember one of those Compaq dual 486 boxes.
+> We must have has SVR4/Unixware running on it.
+> 
+> I suspect that any such systems would also be too slow and not have
+> enough memory to actually run anything recent.
 
-On Wed, Apr 01 2020, Cheng Jian wrote:
-> when SCHED_CORE enabled, sched_cpu_starting() uses thread_sibling as
-> SMT_MASK to initialize rq->core, but only after store_cpu_topology(),
-> the thread_sibling is ready for use.
->
->       notify_cpu_starting()
->           -> sched_cpu_starting()	# use thread_sibling
->
->       store_cpu_topology(cpu)
->           -> update_siblings_masks	# set thread_sibling
->
-> Fix this by doing notify_cpu_starting later, just like x86 do.
->
+ For reasons mentioned above I cannot speak about 486 SMP systems.
 
-I haven't been following the sched core stuff closely; can't this
-rq->core assignment be done in sched_cpu_activate() instead? We already
-look at the cpu_smt_mask() in there, and it is valid (we go through the
-entirety of secondary_start_kernel() before getting anywhere near
-CPUHP_AP_ACTIVE).
+ However I have a nice Dolch PAC 60 machine, which is a somewhat rugged 
+luggable computer with an embedded LCD display and a detachable keyboard, 
+built around a pure EISA 486 baseboard (wiring to an external display is 
+also supported).  Its original purpose was an FDDI network sniffer with a 
+DOS application meant to assist a field engineer with fault isolation, and 
+as you may know FDDI used to have rings up to ~100km/60mi in length, so 
+people often had to travel quite a distance to get a problem tracked down.
 
-I don't think this breaks anything, but without this dependency in
-sched_cpu_starting() then there isn't really a reason for this move.
+ It used to boot current Linux with somewhat dated userland until its PSU, 
+an industrial unit, failed a couple years back, taking the hard disk with 
+itself due to an overvoltage condition (its +12V output went up to +18V).  
+I failed to repair the PSU (I suspect a fault in the transformer causing 
+its windings to short-circuit intermittently, and only the +5V output is 
+regulated with the remaining ones expected to maintain fixed correlation), 
+which the box has been designed around, making it difficult to be replaced 
+with a different PSU.
 
-> Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
-> ---
->  arch/arm64/kernel/smp.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 5407bf5d98ac..a427c14e82af 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -236,13 +236,18 @@ asmlinkage notrace void secondary_start_kernel(void)
->       cpuinfo_store_cpu();
->
->       /*
-> -	 * Enable GIC and timers.
-> +	 * Store cpu topology before notify_cpu_starting,
-> +	 * CPUHP_AP_SCHED_STARTING requires SMT topology
-> +	 * been initialized for SCHED_CORE.
->        */
-> -	notify_cpu_starting(cpu);
-> -
->       store_cpu_topology(cpu);
->       numa_add_cpu(cpu);
->
-> +	/*
-> +	 * Enable GIC and timers.
-> +	 */
-> +	notify_cpu_starting(cpu);
-> +
->       /*
->        * OK, now it's safe to let the boot CPU continue.  Wait for
->        * the CPU migration code to notice that the CPU is online
+ However I have since managed to track down and install a compatible 
+replacement PSU from the same manufacturer whose only difference are 
+slightly higher power ratings, and I have a replacement hard disk for it 
+too, so I plan to get it back in service soon.
+
+ With 16MiB originally installed the machine is somewhat little usable 
+with current Linux indeed, however the baseboard supports up to 512MiB of 
+RAM and suitable modules are still available for purchase, even brand new 
+ones.  Once expanded so that constant swapping stops I expect the machine 
+to perform quite well, as the performance of the CPU/RAM didn't seem to be 
+a problem with this machine.  We actually keep supporting slower systems 
+in the non-x86 ports.
+
+ And as I say, the userland is not (much of) our business and can be 
+matched to actual hardware; not everyone needs a heavyweight graphical 
+environment with all the bells and whistles burning machine cycles.
+
+ Again, FWIW,
+
+  Maciej
