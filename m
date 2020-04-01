@@ -2,154 +2,233 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URI_WP_DIRINDEX autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F43C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9D6C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B0E20787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pkfQ/rTh";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ITytz5uZ"
+	by mail.kernel.org (Postfix) with ESMTP id E10E120787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732005AbgDAHvE (ORCPT
+        id S1732032AbgDAHwF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:51:04 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:55120 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbgDAHvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:51:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1585727463; x=1617263463;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=xyOGMOkFbFXBYV/0h98KFIzzgltfZyPCzPOGrobzedg=;
-  b=pkfQ/rThTO3pxU/8dZZcGxh3Tn0Eni8epfF2rPwPvZfI1ikTgak5695/
-   xnF3v3KwEvNHtWA+kTfQh9NPEE662gcP/sCPdRvXN7T4feoYTgnAlBtdp
-   md4QHGqSRCpfm6NX3RXy0nOm5kh3S3MCZu3jUtA5xX2DL0n7SR6NfXf1F
-   oafSkRUiELjdv+tqnwWPv3dIpq/bTuQCEmbp5jn9Hf/qL4B6kzJhLPA3y
-   GVpeKMg8jRRMSwoUZOQEU7s/z02ERJvfMwfBv1KHbjdojfymiRg61y2lY
-   GTI9RphfqHQlxGKZlj7wTiIVaQDMcNegizoTk1kBdwJxXltO9zfCe4agL
-   A==;
-IronPort-SDR: o4UZu/PqwrW1/ckZK4vf1XrQZPdpcV0xAXPqv4WjMKg4XKCEXz0dXp4fHQevCjSZ8ZJbTb6+Wo
- OHMSmwHO3i8LtyRzxQwRNg52YC/nIWV9TJqfhEv4PXF48iulYX3M/FHoryofOoQxq/QrSQ2lJn
- TZQyrbE6u0mc0lkftSkn8Vp3Q4hGhJp+zBgrAecYKOBRBPrvvjss2/YnZbJXWggrkL0IP2QiR/
- /uExEnGv/l7+UIGQTc/nXlhmNFuT/vyV5c2zQzxPZeOpGMX6ivCGfuNE9CZweQcxTqpQxYelOS
- nVI=
-X-IronPort-AV: E=Sophos;i="5.72,330,1580799600"; 
-   d="scan'208";a="7695485"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 00:51:02 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+        Wed, 1 Apr 2020 03:52:05 -0400
+Received: from mga02.intel.com ([134.134.136.20]:62820 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731680AbgDAHwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 03:52:04 -0400
+IronPort-SDR: F6CSRIpF5bD5ZQ9zrep8BW6lnpHHABPR5cJHsIIXzKF6HvB2zwKWzVqh/+xWk9GA157pV6i0pT
+ DiNhhugw7Ikg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 00:52:04 -0700
+IronPort-SDR: qjalB6i8rzSE1cNafZFtUEwCxr3AD+Ct8Vt4cK9JUv1EJgQwpxJlbROb+h7ao7o/id78UvK6qb
+ ahaUhs5mco5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
+   d="scan'208";a="359774634"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga001.fm.intel.com with ESMTP; 01 Apr 2020 00:52:03 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 00:52:03 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 1 Apr 2020 00:51:01 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Wed, 1 Apr 2020 00:51:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vh9T3dSFem7xA2/q4mEgS4KEOgeymQvn08JQ96RQdvdmDzpEv4KIxBdkffm5HKDKdGiOYmjfXeiJco2hmH8H3mO94dfP3rXuvNS0EjA9PFwk5pdLizD+QhDg7g2XzIyfwqLEPxvCGs9CE0Z6U4ngZ/1Hgjd1fQL6G2eRTgtXzHcK6NJEOa6JuTf+NylAZ4X/XdW+Ur9thjM0ug+9/dnCKcusLiE/bIzsbjLQds/7uKKxBh+i3/SJXiCyFawYCwQyfrDm/EZuNExmdGpeEDYEnsd5q9vsf2OFOPoau2zNnCWGemEkKbfxstDjQzrx/1eguuwlCHUDEVPRs7ZsGtfaGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xyOGMOkFbFXBYV/0h98KFIzzgltfZyPCzPOGrobzedg=;
- b=TU0ByHmNjHFdQg3PkNsqaLPQHuhqVOqsfx218uSOLxRlFYmoE9qqWG0tJMEricH4+FnDLSIt874+yuWRooWmS/Y1nn7s+VZAMuT95fVVVUBt2RXzrGxStF6wHdbp4/B+9Rydrnii17rq+KE+iAKX6UgJrw3rIawN8eJCYsuFGxWHzXEQMbfsAlIXXSGSVlM9XPp6/1qVsp49r03/xo0GkGZ1MqVwJbCMNzyWt6NKFYCcsc9fcFOBz1Sjsz1XphrWJlRGRU5Afw7Eokwqr2t7e6HCIhDmbdRqpPU20PGHMeJdTc7y6XTyLF5qk1dxIlgI3JtT7aWCBsUC379byvVOKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xyOGMOkFbFXBYV/0h98KFIzzgltfZyPCzPOGrobzedg=;
- b=ITytz5uZ21USFEv7k+6xKqqs03hurcLRS1TnuRDjVsIY7FLxEy50a6oBvJz7jmDvgC0hFxIsCwo6TgME9IPSvuGbTsjQA83keyR716FrgiuF9J3tlxWKEgfCd473xa3E96g85O3ZTtjtoae9363Hb0rQyIcU2zjIinpO6K3OfX4=
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com (2603:10b6:a03:1cc::28)
- by BY5PR11MB4021.namprd11.prod.outlook.com (2603:10b6:a03:191::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Wed, 1 Apr
- 2020 07:50:58 +0000
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::114b:fdb3:5bf5:2694]) by BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::114b:fdb3:5bf5:2694%5]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 07:50:58 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
-        <davem@davemloft.net>
-Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
-Thread-Topic: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
-Thread-Index: AQHWBqykuJ0v/jHHYESe6xUz4L35r6hhU7EAgAAOiACAAQRNgIAARHUAgAE8MwA=
-Date:   Wed, 1 Apr 2020 07:50:58 +0000
-Message-ID: <12cdbe77-b932-9194-5d5e-5058622cef6c@microchip.com>
-References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
- <20200330163028.GE23477@lunn.ch>
- <9bbbe2ed-985b-49e7-cc16-8b6bae3e8e8e@gmail.com>
- <bd9f2507-958e-50bf-2b84-c21adf6ab588@microchip.com>
- <20200331125908.GB24486@lunn.ch>
-In-Reply-To: <20200331125908.GB24486@lunn.ch>
+ 15.1.1713.5; Wed, 1 Apr 2020 00:52:03 -0700
+Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 1 Apr 2020 00:52:03 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
+ Wed, 1 Apr 2020 15:51:59 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
+ mdevs
+Thread-Topic: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
+ mdevs
+Thread-Index: AQHWAEUdm3FJ38v7KEeZ+HXvm2TTUKhgpNwAgANOv6A=
+Date:   Wed, 1 Apr 2020 07:51:58 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A21D71A@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-9-git-send-email-yi.l.liu@intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FFA90@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FFA90@SHSMSX104.ccr.corp.intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Codrin.Ciubotariu@microchip.com; 
-x-originating-ip: [86.121.14.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ba4cd23a-87b5-45ba-7aab-08d7d6116a4d
-x-ms-traffictypediagnostic: BY5PR11MB4021:
-x-microsoft-antispam-prvs: <BY5PR11MB4021EB29B488801AC9068C57E7C90@BY5PR11MB4021.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4497.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(366004)(136003)(346002)(396003)(39860400002)(66476007)(53546011)(86362001)(8676002)(6916009)(478600001)(6506007)(81156014)(36756003)(5660300002)(81166006)(2906002)(76116006)(71200400001)(54906003)(66946007)(91956017)(4744005)(26005)(66446008)(66556008)(8936002)(186003)(6486002)(2616005)(6512007)(31686004)(64756008)(31696002)(4326008)(316002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3X0VObii2iflKf9PLl9ATGIcA/SgQDPRq+kr5mUVa5QJK3KoX0yV+haGavbFcgpGwN8e0E4n3WR4RhI3xEZt8ZHNzaSnuLdArqtb2lAiQDzy3odeGDl1EAVEHmRlxjATEIq2poVYAeDYktpURWiX/LYrINAXeuW6V4ljlb4RJCVtZpzPudQrA0BhFuqR3F89GvfpdsfpiCeeoPEkpeapw/GWP5wjmcLKCp2ALIXN4VUNB6t5VmYspbd22xTnSMk2WEpwdME22cLKVpgOO0+glYKP0UdIzygkRoQFH2+5TV8Kp4vSKf1stawKTnWw3Af6KhPbQ+BbNYXKwpnIWlg3XVhfGRnxp9aD1v+wKmykBpXHHwvbGN9spx1r9j6jDj/lC/WHNlPk3rU16xjqF12IV0mM3pTi9y1yvQxaJSGA3apW9IDHOwfeQ8bMIyeZe9gv
-x-ms-exchange-antispam-messagedata: RgfE5n3CUlf2+GGAB4mejdKYJ3/sBsYAJUnkqOTfZ0j0CeJhxjxlH/4dh1dq9SWe+Nlu/nqRIW+EMFUgSrxd8IVVZVxWL3V8CmdC9mAIkVhfWm0aaPpBShTJVtAa7v/vutCJBrun5hMR2Hzj75clQg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E32D10737FCB4540921FDE0399F08610@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba4cd23a-87b5-45ba-7aab-08d7d6116a4d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 07:50:58.0466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v9Och2DVSxi0zaaLl3GBZvPouuy8cyR4dODVnCYyyKs0B6YFUSRgUPqTgpfJwT1GZW2iRzSDYvYQRd1UHDwlYhVfmDyeDClXkuvUjqyBvRs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4021
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMzEuMDMuMjAyMCAxNTo1OSwgQW5kcmV3IEx1bm4gd3JvdGU6DQo+IEVYVEVSTkFMIEVNQUlM
-OiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGtub3cg
-dGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiANCj4+IFRoYW5rcyBndXlzLiBJIHRob3VnaHQgdGhlcmUg
-bWlnaHQgYmUgb3RoZXIgY29udHJvbGxlcnMgdGhhdCBoYXZlIHRoZQ0KPj4gUEhZIG5vZGVzIGlu
-c2lkZSB0aGUgZXRoZXJuZXQgbm9kZS4NCj4gDQo+IEhpIENvZHJpbg0KDQpIaSBBbmRyZXcNCg0K
-PiANCj4gVGhlcmUgYXJlIHNvbWUgc3RpbGwgdXNpbmcgdGhpcyBkZXByZWNhdGVkIGZlYXR1cmUu
-IEJ1dCBtYWNiIGlzIHRoZQ0KPiBvbmx5IG9uZSBkb2luZyB0aGlzIG9kZCBsb29waW5nIG92ZXIg
-Y2hpbGQgbm9kZXMuIEl0IGlzIHRoaXMgbG9vcGluZw0KPiB3aGljaCBpcyBicmVha2luZyB0aGlu
-Z3MsIG5vdCB0aGUgdXNlIG9mIHRoZSBkZXByZWNhdGVkIGZlYXR1cmUNCj4gaXRzZWxmLg0KDQpZ
-ZXMsIGl0cyBkdWUgdG8gdGhlIGZhY3QgdGhhdCB0aGUgTURJTyBub2RlIGlzIG1pc3NpbmcuIFNo
-b3VsZCB3ZSBoYXZlIA0KaW4gbWluZCB0byBhZGQgYW4gTURJTyBub2RlIHVuZGVyIHRoZSBtYWNi
-IG5vZGUsIHdoZXJlIHdlIGNvdWxkIGFkZCB0aGUgDQpQSFkgbm9kZXM/IFRoZSBtYWNiIGJpbmRp
-bmdzIGRvbid0IHNlZW0gdG8gcmVxdWlyZSB0aGUgUEhZIG5vZGVzIA0KZGlyZWN0bHkgdW5kZXIg
-dGhlIG1hY2Igbm9kZSwgYnV0IHRoZSBjb21wYXRpYmlsaXR5IHdpdGggdGhlIGRlcHJlY2F0ZWQg
-DQpmZWF0dXJlIG5lZWRzIHRvIGJlIG1haW50YWluZWQuDQoNCkJlc3QgcmVnYXJkcywNCkNvZHJp
-bg==
+> From: Tian, Kevin <kevin.tian@intel.com>
+> Sent: Monday, March 30, 2020 9:19 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> Subject: RE: [PATCH v1 8/8] vfio/type1: Add vSVA support for IOMMU-backed
+> mdevs
+> 
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Sunday, March 22, 2020 8:32 PM
+> >
+> > From: Liu Yi L <yi.l.liu@intel.com>
+> >
+> > Recent years, mediated device pass-through framework (e.g. vfio-mdev)
+> > are used to achieve flexible device sharing across domains (e.g. VMs).
+> 
+> are->is
+
+got it.
+
+> > Also there are hardware assisted mediated pass-through solutions from
+> > platform vendors. e.g. Intel VT-d scalable mode which supports Intel
+> > Scalable I/O Virtualization technology. Such mdevs are called IOMMU-
+> > backed mdevs as there are IOMMU enforced DMA isolation for such mdevs.
+> > In kernel, IOMMU-backed mdevs are exposed to IOMMU layer by aux-
+> > domain concept, which means mdevs are protected by an iommu domain
+> > which is aux-domain of its physical device. Details can be found in
+> > the KVM
+> 
+> "by an iommu domain which is auxiliary to the domain that the kernel driver
+> primarily uses for DMA API"
+
+yep.
+
+> > presentation from Kevin Tian. IOMMU-backed equals to IOMMU-capable.
+> >
+> > https://events19.linuxfoundation.org/wp-content/uploads/2017/12/\
+> > Hardware-Assisted-Mediated-Pass-Through-with-VFIO-Kevin-Tian-Intel.pdf
+> >
+> > This patch supports NESTING IOMMU for IOMMU-backed mdevs by figuring
+> > out the physical device of an IOMMU-backed mdev and then invoking
+> > IOMMU requests to IOMMU layer with the physical device and the mdev's
+> > aux domain info.
+> 
+> "and then calling into the IOMMU layer to complete the vSVA operations on the aux
+> domain associated with that mdev"
+
+got it.
+> >
+> > With this patch, vSVA (Virtual Shared Virtual Addressing) can be used
+> > on IOMMU-backed mdevs.
+> >
+> > Cc: Kevin Tian <kevin.tian@intel.com>
+> > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > CC: Jun Tian <jun.j.tian@intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Eric Auger <eric.auger@redhat.com>
+> > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > ---
+> >  drivers/vfio/vfio_iommu_type1.c | 23 ++++++++++++++++++++---
+> >  1 file changed, 20 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > b/drivers/vfio/vfio_iommu_type1.c index 937ec3f..d473665 100644
+> > --- a/drivers/vfio/vfio_iommu_type1.c
+> > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > @@ -132,6 +132,7 @@ struct vfio_regions {
+> >
+> >  struct domain_capsule {
+> >  	struct iommu_domain *domain;
+> > +	struct vfio_group *group;
+> >  	void *data;
+> >  };
+> >
+> > @@ -148,6 +149,7 @@ static int vfio_iommu_for_each_dev(struct
+> > vfio_iommu *iommu,
+> >  	list_for_each_entry(d, &iommu->domain_list, next) {
+> >  		dc.domain = d->domain;
+> >  		list_for_each_entry(g, &d->group_list, next) {
+> > +			dc.group = g;
+> >  			ret = iommu_group_for_each_dev(g->iommu_group,
+> >  						       &dc, fn);
+> >  			if (ret)
+> > @@ -2347,7 +2349,12 @@ static int vfio_bind_gpasid_fn(struct device
+> > *dev, void *data)
+> >  	struct iommu_gpasid_bind_data *gbind_data =
+> >  		(struct iommu_gpasid_bind_data *) dc->data;
+> >
+> > -	return iommu_sva_bind_gpasid(dc->domain, dev, gbind_data);
+> > +	if (dc->group->mdev_group)
+> > +		return iommu_sva_bind_gpasid(dc->domain,
+> > +			vfio_mdev_get_iommu_device(dev), gbind_data);
+> > +	else
+> > +		return iommu_sva_bind_gpasid(dc->domain,
+> > +						dev, gbind_data);
+> >  }
+> >
+> >  static int vfio_unbind_gpasid_fn(struct device *dev, void *data) @@
+> > -2356,8 +2363,13 @@ static int vfio_unbind_gpasid_fn(struct device
+> > *dev, void *data)
+> >  	struct iommu_gpasid_bind_data *gbind_data =
+> >  		(struct iommu_gpasid_bind_data *) dc->data;
+> >
+> > -	return iommu_sva_unbind_gpasid(dc->domain, dev,
+> > +	if (dc->group->mdev_group)
+> > +		return iommu_sva_unbind_gpasid(dc->domain,
+> > +					vfio_mdev_get_iommu_device(dev),
+> >  					gbind_data->hpasid);
+> > +	else
+> > +		return iommu_sva_unbind_gpasid(dc->domain, dev,
+> > +						gbind_data->hpasid);
+> >  }
+> >
+> >  /**
+> > @@ -2429,7 +2441,12 @@ static int vfio_cache_inv_fn(struct device
+> > *dev, void *data)
+> >  	struct iommu_cache_invalidate_info *cache_inv_info =
+> >  		(struct iommu_cache_invalidate_info *) dc->data;
+> >
+> > -	return iommu_cache_invalidate(dc->domain, dev, cache_inv_info);
+> > +	if (dc->group->mdev_group)
+> > +		return iommu_cache_invalidate(dc->domain,
+> > +			vfio_mdev_get_iommu_device(dev), cache_inv_info);
+> > +	else
+> > +		return iommu_cache_invalidate(dc->domain,
+> > +						dev, cache_inv_info);
+> >  }
+> 
+> possibly above could be simplified, e.g.
+> 
+> static struct device *vfio_get_iommu_device(struct vfio_group *group,
+> 	struct device *dev)
+> {
+> 	if  (group->mdev_group)
+> 		return vfio_mdev_get_iommu_device(dev);
+> 	else
+> 		return dev;
+> }
+> 
+> Then use it to replace plain 'dev' in all three places.
+
+yes, better for reading. thanks.
+
+Regards,
+Yi Liu
