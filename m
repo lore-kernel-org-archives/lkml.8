@@ -2,142 +2,121 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7FEC10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BC4C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14CFE2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B486720784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:37:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZTEDs2BQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="DCWoZP8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731594AbgDAIhg (ORCPT
+        id S1731729AbgDAIhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:37:36 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44224 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730420AbgDAIhf (ORCPT
+        Wed, 1 Apr 2020 04:37:39 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:37750 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgDAIhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:37:35 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i16so27718924edy.11
+        Wed, 1 Apr 2020 04:37:37 -0400
+Received: by mail-ed1-f67.google.com with SMTP id de14so28644991edb.4
         for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FyEhiVQqCC0n6tZWozoPFO5HZtdSk1NEpUldzxKhYN4=;
-        b=ZTEDs2BQyN8yoxD7A5h1aiqNIAWemIBANASqEaV0nOkgN043uKgdnMoNMFNVvdWhYW
-         iFcvU6YirVUBRdBNdJ3aSOQeWtN9e3dW4IIVsAWFS7TBEmBSWjaxLPJTz5WRnegy/8ZW
-         QCy8BmMOTKyQyfEFzAFmg91p5izsezVbwT3yZjYKuX1WtXuruELJ1sCx4R5AJer2wOfL
-         MeS/MywUilRVPPFV9DHMSdzlobFLDl0+eA5N+o7scVJycty8/lY3yqLTfn8YYcecYOqp
-         iWqwny1YvJB0NacacNBG5WWUj6HLGt6JzfU8djxL4guCmxPl8id2/bLf7SgQTofZdggv
-         dsWw==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Pb5WxXo01OUrPYKfuGBoAi7COZxVQpsVUvg17nkA6w=;
+        b=DCWoZP8f/dOkjW5uYoUFpfMxBGbKeZuXpLeJJK8mTpafT0iBm07aAautrwxGNxNPuH
+         kwa+oyklRAFDRmQ9G/64ndypZ3iC1AQSMWoHkTRNK/CJ98o+a+FWbDoEu0LWLRzfWA12
+         BQCicYA5Tma7uC+qkVwM5zNRNQOh9LLVhWIgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FyEhiVQqCC0n6tZWozoPFO5HZtdSk1NEpUldzxKhYN4=;
-        b=nhVz/XA+aT3Ja7NJwD1M8aoJh11GhvsOShbhJuO3mLDAnfaRq+YC4wvEK7WDKYXrMA
-         wDRt8v7iaj3EfVk72O4kqwGdmida3T7xRbphfsDJmzm0lYCTbCx17EcY/Zdsq/4HU9fL
-         fhKq4OoVujGApM3VfMOmU2PPs0HpNGBW+QxAj6Riu/9JNsJjwiTYMoKN1p2ey0pEKla+
-         //h7dw8r/R4Q6QzTMoqE+MR3xNiuuhg9hChQFVuN3OK7pgRwTZMwMEIgWuwUF1knvY7B
-         nuQe2sH3Shk5i5U56iNF5IudhjDsWPZOSv8Geq8TdzXOylwN+kSMxp1uq1N3+zq6EaMs
-         MCPw==
-X-Gm-Message-State: ANhLgQ06Yq0WWsNIOss/ll2DP7VnTSb4RNAqlT0+AZLpJ0BgAsKYaDgO
-        OQ0j7UXeFEzY+vjHHqT7MKNg28JwGQ4=
-X-Google-Smtp-Source: ADFU+vsEN+s8QxK70fXDxbR3lYOgf1JF4FPA31mNI6F2POdUZYpThQRmL3S6XfZBnxVykWgtSYYkDg==
-X-Received: by 2002:a17:906:1952:: with SMTP id b18mr18407508eje.216.1585730253512;
-        Wed, 01 Apr 2020 01:37:33 -0700 (PDT)
-Received: from [192.168.1.4] (212-5-158-119.ip.btc-net.bg. [212.5.158.119])
-        by smtp.googlemail.com with ESMTPSA id l62sm274693edl.89.2020.04.01.01.37.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 01:37:32 -0700 (PDT)
-Subject: Re: [PATCH][next] media: venus: hfi_cmds.h: Replace zero-length array
- with flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200319222105.GA19104@embeddedor.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <849ddb2c-d022-bd13-89c2-b0c1a4363a23@linaro.org>
-Date:   Wed, 1 Apr 2020 11:37:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Pb5WxXo01OUrPYKfuGBoAi7COZxVQpsVUvg17nkA6w=;
+        b=aEEjsl5ngHPFo/RGWQEI5bxD+PDrQGWmYrnKYLvpcnlkDmWiK1pTR0e6S4WD7ZMPy2
+         ITgzSSXV9NFqIBIrICdRhPmyM8PfHO+QUDPZ3O26BrMDxoZAd2EJx3kgAXtpveSJ1HBl
+         E3L2TPQYeqzyAWMk54cxvmYH83tLN3rSlIVXpROEs9jMdIbyu0ewLJFgh6DEaH4EGeEU
+         XeILceECd3VtYZIleRRh7HWk4peMBHsYdzWxlsmzABR+/7f+U0lTgpVFx9FL4mKYPVfa
+         AO7JIIt2R3ggWZ2dvfEjcoKpKS/LS9hwCq2HhvIvdZNcD94wFwxl0ReQl0GturOAxIGw
+         SnJQ==
+X-Gm-Message-State: ANhLgQ0FahesWZoetHNXB4QISGvKvvHRffQa9i4oWCvAHZCaeGc1uFBC
+        CSEnuQBxjFXGl3MmUnaD+EWJbOJ/rPKWMCgFiLIO/g==
+X-Google-Smtp-Source: ADFU+vv25aObxVqudxs/b4t6TUDhdA8HhF0PuGfXX6HSZBIvhctUM+bsT6LQzuUGvDuTHabWaoYU8+dr8sw8QJ3EQ4c=
+X-Received: by 2002:a50:8326:: with SMTP id 35mr19766368edh.134.1585730253359;
+ Wed, 01 Apr 2020 01:37:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200319222105.GA19104@embeddedor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+ <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
+ <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
+ <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com> <2465266.1585729649@warthog.procyon.org.uk>
+In-Reply-To: <2465266.1585729649@warthog.procyon.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 1 Apr 2020 10:37:22 +0200
+Message-ID: <CAJfpegsyeJmH3zJuseaAAY06fzgavSzpOtYr-1Mw8GR0cLcQbA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Ian Kent <raven@themaw.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+On Wed, Apr 1, 2020 at 10:27 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> > According to dhowell's measurements processing 100k mounts would take
+> > about a few seconds of system time (that's the time spent by the
+> > kernel to retrieve the data,
+>
+> But the inefficiency of mountfs - at least as currently implemented - scales
+> up with the number of individual values you want to retrieve, both in terms of
+> memory usage and time taken.
 
-Thanks for the patch!
+I've taken that into account when guesstimating a "few seconds per
+100k entries".  My guess is that there's probably an order of
+magnitude difference between the performance of a fs based interface
+and a binary syscall based interface.  That could be reduced somewhat
+with a readfile(2) type API.
 
-On 3/20/20 12:21 AM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+But the point is: this does not matter.  Whether it's .5s or 5s is
+completely irrelevant, as neither is going to take down the system,
+and userspace processing is probably going to take as much, if not
+more time.  And remember, we are talking about stopping and starting
+the automount daemon, which is something that happens, but it should
+not happen often by any measure.
 
-Acked-by: Stanimir Varbanov <staninmir.varbanov@linaro.org>
+> With fsinfo(), I've tried to batch values together where it makes sense - and
+> there's no lingering memory overhead - no extra inodes, dentries and files
+> required.
 
-> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> index cae9d5d61c0c..83705e237f1c 100644
-> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> @@ -107,7 +107,7 @@ struct hfi_session_abort_pkt {
->  struct hfi_session_set_property_pkt {
->  	struct hfi_session_hdr_pkt shdr;
->  	u32 num_properties;
-> -	u32 data[0];
-> +	u32 data[];
->  };
->  
->  struct hfi_session_set_buffers_pkt {
-> 
+The dentries, inodes and files in your test are single use (except the
+root dentry) and can be made ephemeral if that turns out to be better.
+My guess is that dentries belonging to individual attributes should be
+deleted on final put, while the dentries belonging to the mount
+directory can be reclaimed normally.
 
--- 
-regards,
-Stan
+Thanks,
+Miklos
