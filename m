@@ -2,133 +2,82 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E51C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872F7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCCB207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548F621582
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U3heV/E0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e0LTts26"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbgDAISq (ORCPT
+        id S1732078AbgDAITC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:18:46 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:48510 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731729AbgDAISp (ORCPT
+        Wed, 1 Apr 2020 04:19:02 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43390 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731870AbgDAITB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:18:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585729125; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=7PsHfH50Qa4x11/cHlqtR7JN55Rk0n8ciHDiIs770ho=; b=U3heV/E05kY6b5H1kHmQdYKYC1zucWlQB60xSdgjZbSVUKcjZ4V4j801oAi1k2ZlEorYAuW+
- rLKuSPlgSmczwM7+jvoCSIBc6m2/8Uoz9URwJBFateSbKSY3bpO1qfvrwYwSEYiBDR1Whder
- V/wvYZsOP1PuFhclzq+fpmDLoT4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e844e63.7f9b87da01b8-smtp-out-n02;
- Wed, 01 Apr 2020 08:18:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 49461C4478C; Wed,  1 Apr 2020 08:18:42 +0000 (UTC)
-Received: from [192.168.43.137] (unknown [106.213.199.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4056AC433D2;
-        Wed,  1 Apr 2020 08:18:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4056AC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [RFT PATCH v2 04/10] drivers: qcom: rpmh-rsc: Remove
- get_tcs_of_type() abstraction
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200311231348.129254-1-dianders@chromium.org>
- <20200311161104.RFT.v2.4.Ia348ade7c6ed1d0d952ff2245bc854e5834c8d9a@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <24620fdc-4ac7-b54a-45aa-906da3dc3fa9@codeaurora.org>
-Date:   Wed, 1 Apr 2020 13:48:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 1 Apr 2020 04:19:01 -0400
+Received: by mail-lf1-f68.google.com with SMTP id n20so19630976lfl.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:19:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3X5Ui3kFF/VqVsswCk+H6N1aAGKj9/qFdOpQH7o/fX0=;
+        b=e0LTts26IJz9re0PtsdlTkKxXPqOwfZhRTuSGc4FDNgszP3/5igArFPJjoOgRLWGnZ
+         tMQslUL+bzRbsSxpZxhnRq9vjS+Cl7Z1h/uamQ+GXW8A1+9+Wp7yqZsp9MRHRgXoW2a3
+         S7RsG1hkx+GMFXkxuZ1P8NxXMd/DweplNQJwWJQGRaaJvqcPZTuNnp/OgjEpLUR7TIsM
+         6dPemupP2KRzepkssvDiA8KVBzkPqBDk+VUd0PgoTHQ5gmnQuBHSGIceuuiY1r4EXI5L
+         1WsUqU/LD3pxYP66SnCFNyj15lAAfVTu/kKm0YebFbhad5JpLwZyY81BXtMmBgtgovKs
+         +1jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3X5Ui3kFF/VqVsswCk+H6N1aAGKj9/qFdOpQH7o/fX0=;
+        b=b3lUlDaraO6F89ZP3lpM51vgCo7mf9RQVAnmBv3XE3dGZbiM5WbZbNRK4kqFbbIhcQ
+         NwmnXZvic3I165bfl1D6aKe9/r30bjY6wfvhmzUJpszHGZgrSLprz2kgIbiGduRzvEZR
+         OOvWWnT3K+qUQGqe12qcdvlnJeG2Wmisa611t67E4dXpUX9NDpiT6xqSY8pvt7l4haQF
+         +wCWBMF9I44Caw7nLIPdUpcteTNNvRg4GJAFNR3FrKvCuFqZxGG7a4ZXPPZlphktxnSH
+         s4/xIX+T3wV3c4gOzZi+fpWhUTbK4giaXsCJo87NoXpLkiCLsK8i/mZ2gLKU3yHISwjW
+         QBEg==
+X-Gm-Message-State: AGi0PuatYuU8qSKJijePDhheVLyYDik00aghvV9UJs00EWyEwvFgPWnT
+        HrB4v6br3ls3aKv+pKljIHBNDj2WlSA2XK7tmSCbDg==
+X-Google-Smtp-Source: APiQypIYt3HrVsUkJtt4Lm7oBM6f91bGNlBigjePb0aD8ENBx7WoHbbUlepDmqvOoaHvzYsmvLVS/FZ09CwwE4zAyyA=
+X-Received: by 2002:ac2:5f75:: with SMTP id c21mr13715722lfc.194.1585729139654;
+ Wed, 01 Apr 2020 01:18:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200311161104.RFT.v2.4.Ia348ade7c6ed1d0d952ff2245bc854e5834c8d9a@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <20200401151904.6948af20@canb.auug.org.au> <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 1 Apr 2020 10:18:48 +0200
+Message-ID: <CACRpkdbP9gMLDnDSR6czN88Hjwu6HXSZ2jyYOo-iuq0W073Hbg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the gpio tree
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Apr 1, 2020 at 9:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-Tested-by: Maulik Shah <mkshah@codeaurora.org>
+> > +EXPORT_SYMBOL_GPL(of_pinctrl_get);
+>
+> As exporting symbols has its (space) cost, and of_pinctrl_get() is a tiny
+> function, what about making it an inline function in
+> include/linux/pinctrl/pinctrl.h instead?
 
-Thanks,
-Maulik
+I'm all for it! :)
 
-On 3/12/2020 4:43 AM, Douglas Anderson wrote:
-> The get_tcs_of_type() function doesn't provide any value.  It's not
-> conceptually difficult to access a value in an array, even if that
-> value is in a structure and we want a pointer to the value.  Having
-> the function in there makes me feel like it's doing something fancier
-> like looping or searching.  Remove it.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->
-> Changes in v2: None
->
->   drivers/soc/qcom/rpmh-rsc.c | 13 +++----------
->   1 file changed, 3 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 799847b08038..c9f29cbd5ee5 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -170,17 +170,10 @@ static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
->   	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
->   }
->   
-> -static struct tcs_group *get_tcs_of_type(struct rsc_drv *drv, int type)
-> -{
-> -	return &drv->tcs[type];
-> -}
-> -
->   static int tcs_invalidate(struct rsc_drv *drv, int type)
->   {
->   	int m;
-> -	struct tcs_group *tcs;
-> -
-> -	tcs = get_tcs_of_type(drv, type);
-> +	struct tcs_group *tcs = &drv->tcs[type];
->   
->   	spin_lock(&tcs->lock);
->   	if (bitmap_empty(tcs->slots, MAX_TCS_SLOTS)) {
-> @@ -246,9 +239,9 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
->   	 * dedicated AMC, and therefore would invalidate the sleep and wake
->   	 * TCSes before making an active state request.
->   	 */
-> -	tcs = get_tcs_of_type(drv, type);
-> +	tcs = &drv->tcs[type];
->   	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
-> -		tcs = get_tcs_of_type(drv, WAKE_TCS);
-> +		tcs = &drv->tcs[WAKE_TCS];
->   		if (tcs->num_tcs) {
->   			ret = rpmh_rsc_invalidate(drv);
->   			if (ret)
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Yours,
+Linus Walleij
