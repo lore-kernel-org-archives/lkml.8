@@ -2,52 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D97DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463B3C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272DC21582
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF2820BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758332;
-	bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
+	s=default; t=1585758336;
+	bh=pTje8JevO8hky0yu/c5rIpXSo7NwPeqN2f90xj8XFmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fBiUyXbaH0mcixtmZXHgiol9RCy/eHyfmRrrLqI0dav2MiECmwOya4WixK5ean+65
-	 A2VblmYR8r/39lHkGaOIVykDT7nulvBfFmKOTOi2EReXttOtXWk9b7sYiaLwLwpIrR
-	 XQO5BP2zozpUkrwEF4DDIWpgYdDcCFSmpEJYjpuY=
+	b=dbqCMlSz1WbZ9X3rvQrBUD2ZKBDLI/+Aej1qzme7jloWhhg1sn2ytsH/xRb9PGI7B
+	 sHSdzW0BlPabnukT4e8GaR5VNOx+BlQQmlPwCIInXPRgETQ4a+S9KjiyJXRrjNh/Eg
+	 gzfCrEtlUshw2RsKVbMyIG2GQwf8y1GnzsL6sGtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387836AbgDAQZb (ORCPT
+        id S2387840AbgDAQZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387601AbgDAQZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:25:30 -0400
+        id S1732376AbgDAQZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:25:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 433BD20BED;
-        Wed,  1 Apr 2020 16:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD899212CC;
+        Wed,  1 Apr 2020 16:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758329;
-        bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
+        s=default; t=1585758332;
+        bh=pTje8JevO8hky0yu/c5rIpXSo7NwPeqN2f90xj8XFmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKaEej/WHmV696O3WjwH06E+n8BeFp+TPcFado4wjXB8hv4Fd94o8/CadOFbxkdSj
-         5ETEgWgC8uS4JIoJa9wriLCYqkVkj6lJCTmzWkEClsJdNpVmtWwlWmD+AMwHFPPi21
-         gY/gcq+E5iCFqJmNKkLfejaI+gWe4B26CbY5EpiQ=
+        b=QESgrBC+huZxh0HxYt+JcVQUpc+7kCanh8sPtaQ0MivGP49w95ZkPrhkXqE9mVLxK
+         fMwqP1rbyZbaVITi8G8yzgg4tHNh+WlGhhDR/DZLT44yGcUSgq2lqoBr4bumFuuqE5
+         J3ofN+RvllnMYD/f5VL9V6wNjVqd/JA2eHqCPYko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 039/116] arm64: dts: ls1043a: FMan erratum A050385
-Date:   Wed,  1 Apr 2020 18:16:55 +0200
-Message-Id: <20200401161547.420888040@linuxfoundation.org>
+        stable@vger.kernel.org, Bryan Gurney <bgurney@redhat.com>,
+        Bernhard Sulzer <micraft.b@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 057/116] scsi: sd: Fix optimal I/O size for devices that change reported values
+Date:   Wed,  1 Apr 2020 18:17:13 +0200
+Message-Id: <20200401161549.957448642@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,36 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Martin K. Petersen <martin.petersen@oracle.com>
 
-[ Upstream commit b54d3900862374e1bb2846e6b39d79c896c0b200 ]
+commit ea697a8bf5a4161e59806fab14f6e4a46dc7dcb0 upstream.
 
-The LS1043A SoC is affected by the A050385 erratum stating that
-FMAN DMA read or writes under heavy traffic load may cause FMAN
-internal resource leak thus stopping further packet processing.
+Some USB bridge devices will return a default set of characteristics during
+initialization. And then, once an attached drive has spun up, substitute
+the actual parameters reported by the drive. According to the SCSI spec,
+the device should return a UNIT ATTENTION in case any reported parameters
+change. But in this case the change is made silently after a small window
+where default values are reported.
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Commit a83da8a4509d ("scsi: sd: Optimal I/O size should be a multiple of
+physical block size") validated the reported optimal I/O size against the
+physical block size to overcome problems with devices reporting nonsensical
+transfer sizes. However, this validation did not account for the fact that
+aforementioned devices will return default values during a brief window
+during spin-up. The subsequent change in reported characteristics would
+invalidate the checking that had previously been performed.
+
+Unset a previously configured optimal I/O size should the sanity checking
+fail on subsequent revalidate attempts.
+
+Link: https://lore.kernel.org/r/33fb522e-4f61-1b76-914f-c9e6a3553c9b@gmail.com
+Cc: Bryan Gurney <bgurney@redhat.com>
+Cc: <stable@vger.kernel.org>
+Reported-by: Bernhard Sulzer <micraft.b@gmail.com>
+Tested-by: Bernhard Sulzer <micraft.b@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/sd.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-index 6082ae0221364..d237162a87446 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
-@@ -20,6 +20,8 @@
- };
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3210,9 +3210,11 @@ static int sd_revalidate_disk(struct gen
+ 	if (sd_validate_opt_xfer_size(sdkp, dev_max)) {
+ 		q->limits.io_opt = logical_to_bytes(sdp, sdkp->opt_xfer_blocks);
+ 		rw_max = logical_to_sectors(sdp, sdkp->opt_xfer_blocks);
+-	} else
++	} else {
++		q->limits.io_opt = 0;
+ 		rw_max = min_not_zero(logical_to_sectors(sdp, dev_max),
+ 				      (sector_t)BLK_DEF_MAX_SECTORS);
++	}
  
- &fman0 {
-+	fsl,erratum-a050385;
-+
- 	/* these aliases provide the FMan ports mapping */
- 	enet0: ethernet@e0000 {
- 	};
--- 
-2.20.1
-
+ 	/* Do not exceed controller limit */
+ 	rw_max = min(rw_max, queue_max_hw_sectors(q));
 
 
