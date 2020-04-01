@@ -2,100 +2,150 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6163CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9E4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3756C2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFCC2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbgDAWkD (ORCPT
+        id S2387869AbgDAWkJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:40:03 -0400
-Received: from mga12.intel.com ([192.55.52.136]:35883 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387854AbgDAWkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:40:03 -0400
-IronPort-SDR: pmx6LV7zty16kp3d743RranwYvgRwX5OojLt0wSaTlh1Ga2PaVlvGLQ/zcQDfcIjyA3k9McFGH
- 2xWaFZf1ewrQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 15:40:02 -0700
-IronPort-SDR: wON8Mv2Y7vmNMgxffq6zVTWfkWxEp8c5nNy1rnrGL8PZHtpcaJbZ8VCC4w+pQacKjCPq0zOzu2
- 5Jrbr6onsAug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,333,1580803200"; 
-   d="scan'208";a="328616975"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 01 Apr 2020 15:40:02 -0700
-Date:   Wed, 1 Apr 2020 15:45:50 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 06/10] iommu/ioasid: Convert to set aware allocations
-Message-ID: <20200401154550.3775be8f@jacob-builder>
-In-Reply-To: <20200401135525.GG882512@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585158931-1825-7-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200401135525.GG882512@myrica>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 1 Apr 2020 18:40:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35878 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387876AbgDAWkH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 18:40:07 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJm1c-0001q4-RA; Thu, 02 Apr 2020 00:39:57 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id DC17E100D52; Thu,  2 Apr 2020 00:39:55 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: linux-next: build warning after merge of the tip tree
+In-Reply-To: <20200402090051.741905cd@canb.auug.org.au>
+References: <20200330134746.627dcd93@canb.auug.org.au> <20200401085753.617c1636@canb.auug.org.au> <877dyzv6y2.fsf@nanos.tec.linutronix.de> <20200402090051.741905cd@canb.auug.org.au>
+Date:   Thu, 02 Apr 2020 00:39:55 +0200
+Message-ID: <874ku2q18k.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 15:55:25 +0200
-Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+Stephen,
 
-> On Wed, Mar 25, 2020 at 10:55:27AM -0700, Jacob Pan wrote:
-> > The current ioasid_alloc function takes a token/ioasid_set then
-> > record it on the IOASID being allocated. There is no alloc/free on
-> > the ioasid_set.
-> > 
-> > With the IOASID set APIs, callers must allocate an ioasid_set before
-> > allocate IOASIDs within the set. Quota and other ioasid_set level
-> > activities can then be enforced.
-> > 
-> > This patch converts existing API to the new ioasid_set model.
-> > 
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
-> 
-> [...]
-> 
-> > @@ -379,6 +391,9 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
-> > ioasid_t min, ioasid_t max, }
-> >  	data->id = id;
-> >  
-> > +	/* Store IOASID in the per set data */
-> > +	xa_store(&sdata->xa, id, data, GFP_KERNEL);  
-> 
-> I couldn't figure out why you're maintaining an additional xarray for
-> each set. We're already storing that data in active_allocator->xa,
-> why the duplication?  If it's for the gPASID -> hPASID translation
-> mentioned by the cover letter, maybe you could add this xa when
-> introducing that change?
-> 
-Sounds good. I will add that later. I was hoping to get common code in
-place.
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
+> On Wed, 01 Apr 2020 12:25:25 +0200 Thomas Gleixner <tglx@linutronix.de> wrote:
+>> Me neither. Which compiler version?
+>
+> arm-linux-gnueabi-gcc (Debian 9.2.1-21) 9.2.1 20191130
+>
+>> I'm using arm-linux-gnueabi-gcc (Debian 8.3.0-2) 8.3.0 which does not
+>> show that oddity.
+>
+> I assume it is because of the change to arch_futex_atomic_op_inuser()
+> for arm and the compiler is not clever enough to work out that the early
+> return from arch_futex_atomic_op_inuser() means that oldval is not
+> referenced in its caller.
+
+Actually no. It's the ASM part which causes this. With the following
+hack applied it compiles:
+
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index e133da303a98..2c6b40f71009 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -132,7 +132,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
+ static inline int
+ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ {
+-	int oldval = 0, ret, tmp;
++	int oldval = 0, ret;
+ 
+ 	if (!access_ok(uaddr, sizeof(u32)))
+ 		return -EFAULT;
+@@ -142,6 +142,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ #endif
+ 
+ 	switch (op) {
++#if 0
+ 	case FUTEX_OP_SET:
+ 		__futex_atomic_op("mov	%0, %4", ret, oldval, tmp, uaddr, oparg);
+ 		break;
+@@ -157,6 +158,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	case FUTEX_OP_XOR:
+ 		__futex_atomic_op("eor	%0, %1, %4", ret, oldval, tmp, uaddr, oparg);
+ 		break;
++#endif
+ 	default:
+ 		ret = -ENOSYS;
+ 	}
+
+but with this is emits the warning:
+
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index e133da303a98..5191d7b61b83 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -145,6 +145,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	case FUTEX_OP_SET:
+ 		__futex_atomic_op("mov	%0, %4", ret, oldval, tmp, uaddr, oparg);
+ 		break;
++#if 0
+ 	case FUTEX_OP_ADD:
+ 		__futex_atomic_op("add	%0, %1, %4", ret, oldval, tmp, uaddr, oparg);
+ 		break;
+@@ -157,6 +158,7 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	case FUTEX_OP_XOR:
+ 		__futex_atomic_op("eor	%0, %1, %4", ret, oldval, tmp, uaddr, oparg);
+ 		break;
++#endif
+ 	default:
+ 		ret = -ENOSYS;
+ 	}
+
+and the below proves it:
+
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index e133da303a98..a9151884bc85 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -165,8 +165,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	preempt_enable();
+ #endif
+ 
+-	if (!ret)
+-		*oval = oldval;
++	/*
++	 * Store unconditionally. If ret != 0 the extra store is the least
++	 * of the worries but GCC cannot figure out that __futex_atomic_op()
++	 * is either setting ret to -EFAULT or storing the old value in
++	 * oldval which results in a uninitialized warning at the call site.
++	 */
++	*oval = oldval;
+ 
+ 	return ret;
+ }
+
+I think that's the right thing to do anyway. The conditional is pointless.
+
+Thanks,
+
+        tglx
