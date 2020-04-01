@@ -2,247 +2,219 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6C6C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422C5C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C9520776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCA620776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bcgYQlZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732255AbgDALqe (ORCPT
+        id S1732313AbgDALrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:46:34 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55491 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgDALqe (ORCPT
+        Wed, 1 Apr 2020 07:47:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33041 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732262AbgDALrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:46:34 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jJbp7-0004aH-Db; Wed, 01 Apr 2020 11:46:21 +0000
-Date:   Wed, 1 Apr 2020 13:46:20 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Adrian Reber <areber@redhat.com>, Andrei Vagin <avagin@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: clone3: allow creation of time namespace with offset
-Message-ID: <20200401114620.465d3zw7nymqgqww@wittgenstein>
-References: <20200319081137.GC223854@dcbz.redhat.com>
- <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
- <20200319102955.i7slokibkkysz6g6@wittgenstein>
- <20200320183355.GA118769@gmail.com>
- <20200324160945.orcm75avj2ol3eop@wittgenstein>
- <20200324162546.GG358599@dcbz.redhat.com>
- <20200324175649.fqkwiuvs2drk26ln@wittgenstein>
- <20200325075836.GK358599@dcbz.redhat.com>
- <20200325112652.sx66bhad7cqdsatm@wittgenstein>
- <78979e3f-293e-998a-0d7b-40da2616afcf@gmail.com>
+        Wed, 1 Apr 2020 07:47:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585741637;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jtQiMLUrObG2ZqOqqL0sf6vOhLO3JFeraOf9+M5iTFs=;
+        b=bcgYQlZeiDo8uHq6qYCqXuX0XOp4Sxuee9lMBqjxAUKJUS0QBpTVIR4oM5KJxqnFkWua85
+        cJjSORyGoy8JDaxavEalWmFglAdPDAac6EbTuLuBJpJMIHAi6jFgSylEcufhmdspwNpffk
+        pKFvGwQUbxJJeM3EN6nsZ0CJPUGyEQQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-r4_k9DPBMTSss_CLRd1laA-1; Wed, 01 Apr 2020 07:47:08 -0400
+X-MC-Unique: r4_k9DPBMTSss_CLRd1laA-1
+Received: by mail-wr1-f72.google.com with SMTP id y1so13325039wrp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 04:47:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jtQiMLUrObG2ZqOqqL0sf6vOhLO3JFeraOf9+M5iTFs=;
+        b=c/7l1xJfaRwipeQcU1mtxwBmId5a/QfkWocCNJWY8R159MX6uYTxfsPVC//JSjscUT
+         yuqRgmCnyT82OYWK+J+Y19apXOV/BTxkkLG30YsdmJhJyfCiaAi7Z32aXJzzfq/qOcOl
+         oZO4VpPIeSG7j4AvTrVJc4C9VRIbtBdlIUk3XKQs/D0QiYL/oaptkhdAi8QMI8IW8ONX
+         HQQB46hc/SBDmHViFzW8Bt1IkVQWBX9pCIYSOku+/bSIztrFx93imSkVpwO9XwCQL/G1
+         Sjmfh1vqOsWY9A1iPDpitM50vVwBk2agofAL6Pzdsv0DarzmaMIeR236qUkFJoOgeiyB
+         sGog==
+X-Gm-Message-State: ANhLgQ2i1d++qc9VFftSZRfYzUu2+P7IFJbJNCXBB6tCEOlGJgzs+qZE
+        EfaiqpElOJXZQsDpkVLeaTa4nORadyTiVw9Bl+O1dKSYGFhbQ5yjVdLeJzOs1P1xvyS0r4dIvuj
+        VJmvkVOi78Z3WJ5JVx0VgcJqV
+X-Received: by 2002:adf:ea8e:: with SMTP id s14mr25597593wrm.206.1585741627313;
+        Wed, 01 Apr 2020 04:47:07 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs2V9GcpkSj0M42BT9Akh267wU4WB50noGdCC1E3oybQPVuSb1g9wyC8ImkOIZvR+7USqbBPw==
+X-Received: by 2002:adf:ea8e:: with SMTP id s14mr25597563wrm.206.1585741627069;
+        Wed, 01 Apr 2020 04:47:07 -0700 (PDT)
+Received: from x1.bristot.me ([87.19.200.153])
+        by smtp.gmail.com with ESMTPSA id d206sm2282983wmf.29.2020.04.01.04.47.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 04:47:06 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/3] docs: scheduler: Add scheduler overview
+ documentation
+To:     Peter Zijlstra <peterz@infradead.org>,
+        John Mathew <john.mathew@unikie.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        tsbogend@alpha.franken.de, lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@basemark.com
+References: <20200401100029.1445-1-john.mathew@unikie.com>
+ <20200401100029.1445-3-john.mathew@unikie.com>
+ <20200401103520.GA20713@hirez.programming.kicks-ass.net>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <9614b346-a848-3e01-eea7-6237b759dad6@redhat.com>
+Date:   Wed, 1 Apr 2020 13:47:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200401103520.GA20713@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <78979e3f-293e-998a-0d7b-40da2616afcf@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:40:25PM +0200, Michael Kerrisk (man-pages) wrote:
-> On 3/25/20 12:26 PM, Christian Brauner wrote:
-> > On Wed, Mar 25, 2020 at 08:58:36AM +0100, Adrian Reber wrote:
-> >> On Tue, Mar 24, 2020 at 06:56:49PM +0100, Christian Brauner wrote:
-> >>> On Tue, Mar 24, 2020 at 05:25:46PM +0100, Adrian Reber wrote:
-> >>>> On Tue, Mar 24, 2020 at 05:09:45PM +0100, Christian Brauner wrote:
-> >>>>> On Fri, Mar 20, 2020 at 11:33:55AM -0700, Andrei Vagin wrote:
-> >>>>>> On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
-> >>>>>>> On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
-> >>>>>>>> On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
-> >>>>>>>>
-> >>>>>>>>> With Arnd's idea of only using nanoseconds, timens_offset would then
-> >>>>>>>>> contain something like this:
-> >>>>>>>>>
-> >>>>>>>>> struct timens_offset {
-> >>>>>>>>>         __aligned_s64 monotonic_offset_ns;
-> >>>>>>>>>         __aligned_s64 boottime_offset_ns;
-> >>>>>>>>> };
-> >>>>>>>>>
-> >>>>>>>>> I kind of prefer adding boottime and monotonic directly to struct clone_args
-> >>>>>>>>>
-> >>>>>>>>>         __aligned_u64 tls;
-> >>>>>>>>>         __aligned_u64 set_tid;
-> >>>>>>>>>         __aligned_u64 set_tid_size;
-> >>>>>>>>> +       __aligned_s64 monotonic_offset_ns;
-> >>>>>>>>> +       __aligned_s64 boottime_offset_ns;
-> >>>>>>>>>  };
-> >>>>>>>>
-> >>>>>>>> I would also prefer the second approach using two 64-bit integers
-> >>>>>>>> instead of a pointer, as it keeps the interface simpler to implement
-> >>>>>>>> and simpler to interpret by other tools.
-> >>>>>>>
-> >>>>>>> Why I don't like has two reasons. There's the scenario where we have
-> >>>>>>> added new extensions after the new boottime member and then we introduce
-> >>>>>>> another offset. Then you'd be looking at:
-> >>>>>>>
-> >>>>>>> __aligned_u64 tls;
-> >>>>>>> __aligned_u64 set_tid;
-> >>>>>>> __aligned_u64 set_tid_size;
-> >>>>>>> + __aligned_s64 monotonic_offset_ns;
-> >>>>>>> + __aligned_s64 boottime_offset_ns;
-> >>>>>>> __aligned_s64 something_1
-> >>>>>>> __aligned_s64 anything_2
-> >>>>>>> + __aligned_s64 sometime_offset_ns
-> >>>>>>>
-> >>>>>>> which bothers me just by looking at it. That's in addition to adding two
-> >>>>>>> new members to the struct when most people will never set CLONE_NEWTIME.
-> >>>>>>> We'll also likely have more features in the future that will want to
-> >>>>>>> pass down more info than we want to directly expose in struct
-> >>>>>>> clone_args, e.g. for a long time I have been thinking about adding a
-> >>>>>>> struct for CLONE_NEWUSER that allows you to specify the id mappings you
-> >>>>>>> want the new user namespace to get. We surely don't want to force all
-> >>>>>>> new info into the uppermost struct. So I'm not convinced we should here.
-> >>>>>>
-> >>>>>> I think here we can start thinking about a netlink-like interface.
-> >>>>>
-> >>>>> I think netlink is just not a great model for an API and I would not
-> >>>>> want us to go down that route.
-> >>>>>
-> >>>>> I kept thinking about this for a bit and I think that we will end up
-> >>>>> growing more namespace-related functionality. So one thing that came to
-> >>>>> my mind is the following layout:
-> >>>>>
-> >>>>> struct {
-> >>>>> 	struct {
-> >>>>> 		__s64 monotonic;
-> >>>>> 		__s64 boot;
-> >>>>> 	} time;
-> >>>>> } namespaces;
-> >>>>>
-> >>>>> struct _clone_args {
-> >>>>> 	__aligned_u64 flags;
-> >>>>> 	__aligned_u64 pidfd;
-> >>>>> 	__aligned_u64 child_tid;
-> >>>>> 	__aligned_u64 parent_tid;
-> >>>>> 	__aligned_u64 exit_signal;
-> >>>>> 	__aligned_u64 stack;
-> >>>>> 	__aligned_u64 stack_size;
-> >>>>> 	__aligned_u64 tls;
-> >>>>> 	__aligned_u64 set_tid;
-> >>>>> 	__aligned_u64 set_tid_size;
-> >>>>> 	__aligned_u64 namespaces;
-> >>>>> 	__aligned_u64 namespaces_size;
-> >>>>> };
-> >>>>>
-> >>>>> Then when we end up adding id mapping support for CLONE_NEWUSER we can
-> >>>>> extend this with:
-> >>>>>
-> >>>>> struct {
-> >>>>> 	struct {
-> >>>>> 		__aligned_u64 monotonic;
-> >>>>> 		__aligned_u64 boot;
-> >>>
-> >>> s/__aligned_u64/__s64/g
-> >>>
-> >>> Sorry, leftover from my first draft.
-> >>>
-> >>>>> 	} time;
-> >>>>>
-> >>>>> 	struct {
-> >>>>> 		/* id mapping members */
-> >>>>> 	} user;
-> >>>>> } namespaces;
-> >>>>>
-> >>>>> Thoughts? Other ideas?
-> >>>>
-> >>>> Works for me.
-> >>>>
-> >>>> If we add the user namespace id mappings and then at some point a third
-> >>>> element for the time namespace appears it would also start to be mixed.
-> >>>> Just as you mentioned that a few mails ago.
-> >>>
-> >>> I think you misunderstand me or I'm misunderstanding you. That new time
-> >>> namespace member would go into struct time {} so
-> >>>
-> >>> struct {
-> >>> 	struct {
-> >>> 		__s64 monotonic;
-> >>> 		__s64 boot;
-> >>> 		__s64 someothertime;
-> >>> 	} time;
-> >>>
-> >>> 	struct {
-> >>> 		/* id mapping members */
-> >>> 	} user;
-> >>> } namespaces;
-> 
-> So far, this seems like the least worst approach to me :-).
-> 
-> I think it's reasonable to assume that there will be another
-> time NS offset to add one day. I don't think anyone expected
-> CLOCK_BOOTIME (added in 2011) at the time that CLOCK_MONOTONIC
-> appeared (as part of the POSIX timers API in Linux 2.6.0 2003);
-> similarly, we probably can't conceive now what clock might be
-> added in the future that should also be governed by time
-> namespaces.
-> 
-> 
-> But...
-> 
-> >> My question was about how does the kernel know how 'struct namespaces'
-> >> is structured. How can an older kernel (which only is aware of two
-> >> clocks) deal with a, like in this example, third clock. Will the size
-> >> '__aligned_u64 namespaces_size' be used for versioning?
-> > 
-> > Yes, that would be the idea.
-> 
-> The idea implied here (if I understand correctly) of "binary chop
-> on the structure size to see what your kernel supports" is pretty
-> clunky, IMO. It's worth at least considering alternatives. 
-> For example, seccomp has a number of interesting interfaces to
-> discover what the running kernel supports [1]. Maybe it is worth
-> considering something similar for clone3()?
+On 4/1/20 12:35 PM, Peter Zijlstra wrote:
+>> +Scheduler State Transition
+>> +==========================
+>> +
+>> +A very high level scheduler state transition flow with a few states can be
+>> +depicted as follows.
+>> +
+>> +.. kernel-render:: DOT
+>> +   :alt: DOT digraph of Scheduler state transition
+>> +   :caption: Scheduler state transition
+>> +
+>> +   digraph sched_transition {
+>> +      node [shape = point,  label="exisiting task\n calls fork()"]; fork
+>> +      node [shape = box, label="TASK_NEW\n(Ready to run)"] tsk_new;
+>> +      node [shape = box, label="TASK_RUNNING\n(Ready to run)"] tsk_ready_run;
+>> +      node [shape = box, label="TASK_RUNNING\n(Running)"] tsk_running;
+>> +      node [shape = box, label="TASK_DEAD\nEXIT_ZOMBIE"] exit_zombie;
+>> +      node [shape = box, label="TASK_INTERRUPTIBLE\nTASK_UNINTERRUPTIBLE\nTASK_WAKEKILL"] tsk_int;
+>> +      fork -> tsk_new [ label = "task\nforks" ];
+>> +      tsk_new -> tsk_ready_run;
+>> +      tsk_ready_run -> tsk_running [ label = "schedule() calls context_switch()" ];
+>> +      tsk_running -> tsk_ready_run [ label = "task is pre-empted" ];
+>> +      subgraph int {
+>> +         tsk_running -> tsk_int [ label = "task needs to wait for event" ];
+>> +         tsk_int ->  tsk_ready_run [ label = "event occurred" ];
+>> +      }
+>> +      tsk_int ->  exit_zombie [ label = "task exits via do_exit()" ];
+>> +   }
+> And that is a prime example of why I hates RST, it pretty much mandates
+> you view this with something other than a text editor.
 
-Yes, that's definitely something I've been thinking about and I've also
-discussed this publicly on the libc-alpha mailing list since Florian
-(Weimer) wants this for glibc. _But_ I didn't want to simply go my own
-way and so Aleksa and I stuck our heads together and tried to come up
-with a generic way that e.g. would work for both openat2() and for
-clone3(), in fact we tried to come up with a generic way that could
-potentially be used by any syscall that makes use of the new
-copy_struct_from_user() helper that Aleksa and I pushed upstream. We
-haven't yet gotten around to actually try and implementing our ideas.
-I'll try to get around to this during this cycle (/me makes note to "sit
-down" with Aleksa). We'll definitely take a look at seccomp and cgroups
-too.
+The good thing about the dot format is that we can convert it to many other
+formats, including text:
 
-Christian
+[bristot@x1 ~]$ cat sched_transition.dot | graph-easy 
 
-> 
-> Cheers,
-> 
-> Michael
-> 
-> [1]
-> /proc/sys/kernel/seccomp/actions_avail (see seccomp(2))
-> SECCOMP_GET_ACTION_AVAIL (see secommp(2))
-> cgroups also provides something similar in the form of
-> /sys/kernel/cgroup/features (see cgroups(7))
-> 
-> -- 
-> Michael Kerrisk
-> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-> Linux/UNIX System Programming Training: http://man7.org/training/
+                       *
+
+                       |
+                       | task
+                       | forks
+                       v
+                     +------------------------------------+
+                     |              TASK_NEW              |
+                     |           (Ready to run)           |
+                     +------------------------------------+
+                       |
+                       |
+                       v
++ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -+
+'                                     int                                            '
+'                                                                                    '
+'                    +------------------------------------+                          '
+'                    |            TASK_RUNNING            |                          '
+'   +--------------> |           (Ready to run)           | <--+                     '
+'   |                +------------------------------------+    |                     '
+'   |                  |                                       |                     '
+'   |                  | schedule() calls context_switch()     | task is pre-empted  '
+'   |                  v                                       |                     '
+'   |                +------------------------------------+    |                     '
+'   |                |            TASK_RUNNING            |    |                     '
+'   |                |             (Running)              | ---+                     '
+'   | event occurred +------------------------------------+                          '
+'   |                  |                                                             '
+'   |                  |                                      - - - - - - - - - - - -+
+'   |                  |                                    '
+'   |                  | task needs to wait for event       '
+'   |                  v                                    '
+'   |                +------------------------------------+ '
+'   |                |         TASK_INTERRUPTIBLE         | '
+'   |                |        TASK_UNINTERRUPTIBLE        | '
+'   +--------------- |           TASK_WAKEKILL            | '
+'                    +------------------------------------+ '
+'                                                           '
++ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+                       |
+                       | task exits via do_exit()
+                       v
+                     +------------------------------------+
+                     |             TASK_DEAD              |
+                     |            EXIT_ZOMBIE             |
+                     +------------------------------------+
+
+
+Is there a way to also add this representation, while hiding it
+when using a graphical reader?
+
+PS: I know nothing about rst, only about rts - real-time systems...
+yeah, it is a bad joke haha.
+
+> Also, Daniel, you modeled all this, is the above anywhere close?
+
+hum... let's say that we modeled things we a different goal. Here the
+idea is to explain, document... not to create an explicit model.
+
+For instance, there is the context switch _in_, but not the _out_ in the
+above example.
+
+But, well, if the goal is to document, it is nice to have graphical
+representations.
+
+>> +Scheduler provides trace points tracing all major events of the scheduler.
+>> +The tracepoints are defined in ::
+>> +
+>> +  include/trace/events/sched.h
+>> +
+>> +Using these treacepoints it is possible to model the scheduler state transition
+>> +in an automata model. The following conference paper discusses such modeling.
+
+this is a workshop paper.
+
+>> +
+>> +https://www.researchgate.net/publication/332440267_Modeling_the_Behavior_of_Threads_in_the_PREEMPT_RT_Linux_Kernel_Using_Automata
+> Ah, you've found Daniel ;-)
+
+:-)
+
+This is a better reference (a journal paper).
+
+Daniel B. de Oliveira, Rômulo S. de Oliveira, Tommaso Cucinotta, **A thread
+synchronization model for the PREEMPT_RT Linux kernel**, *Journal of Systems
+Architecture*, Volume 107, 2020, 101729, ISSN 1383-7621,
+https://doi.org/10.1016/j.sysarc.2020.101729.
+
+-- Daniel
+
