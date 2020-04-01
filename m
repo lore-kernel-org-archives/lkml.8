@@ -2,164 +2,111 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5797C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631EDC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B57206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A29A206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+n5pwj8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="y6eQIehs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732733AbgDANqI (ORCPT
+        id S1732741AbgDANqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:46:08 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41536 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732504AbgDANqH (ORCPT
+        Wed, 1 Apr 2020 09:46:53 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57622 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732205AbgDANqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:46:07 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n17so25810112lji.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 06:46:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=id2LgVdX5Zbt9LUjt9m/iHuBybgTZCyiEkTXJT43HH0=;
-        b=a+n5pwj80vxevLVnTRMIx4qWSuxW3589cCII700Sn26rl8XSxthgUsEG6dTmoGB7vt
-         0k53FXKC/jOR9z2QXlU3tsKSJ35NYNtKx0sSec158mg+VDWseor1rT7oGZQnGhDj1iE7
-         XtW44XqLXjZAyJjvwPC2tTk3pkr4PdMBMK4tjgDwkBBmR/ctr995EOcjxt20GxFuvOmm
-         VZ+WJ/oO5vcaHLJiZYz3yTdPieEqBiNfOY6ryPLv6bpjvI2hvsz4VPQ2600QHjtzbvMY
-         qhe4mY58TpGb31ulHf/AuWe4vuJLJhWUXYeKs7xaAl8nK7RND5J4gsN48ZZJl7yeksGW
-         Hj6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=id2LgVdX5Zbt9LUjt9m/iHuBybgTZCyiEkTXJT43HH0=;
-        b=be1Pj0EGqJAeXyc19plSu6ANLBfN+oLjgzJDxF3r2camWQ2x6R2pWF0+YzrzfzHJE+
-         z2tL3FiojUvf87T63fztcMbz+xjp0UU3RLItkwEiMVh9mUTuOhddzsMMEk/Ds0bZZ2Om
-         WvmIDybOarocbcH3DUyk3+QWv1jxmuXYqRajPpWs9WM7xw0uRzJlnQvZH+eoOMpyLAAG
-         j3oDzCl4HlzlvT+YKr1Ko7DbR7BqRc8jd7gJ7fVMn/tk/J5Pd+MkDRDjd2Km5Owx8mcx
-         6Ct2jz63W+zOBkylai5JUoJNRcrnlBNtPDRVBOxpssZ7Oz/6pPaesZNvOijqweLK9DR1
-         maGw==
-X-Gm-Message-State: AGi0PuboB15FwXnoD5zlynJxH5XsuiUzXEvYagoQoJ3tVSsH6oBZaOJ9
-        699uP4pe5wcqYA+1VkCfxy9/oN9fkUIlVMPjziV0eA==
-X-Google-Smtp-Source: APiQypL5fQIT3NYdmUUYCoB3bNsaYBvOwXo555DW5cy8GjYmcdui0/psmUX23p16XcJsMoObjMXsCJ96gbNf1YQPmjY=
-X-Received: by 2002:a2e:868b:: with SMTP id l11mr13154273lji.247.1585748765088;
- Wed, 01 Apr 2020 06:46:05 -0700 (PDT)
+        Wed, 1 Apr 2020 09:46:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bTIg9/frqj0tTmLnxet1vx3Kwof9z52T8v82iLta588=; b=y6eQIehsd2lZKBw1GndVjHgXhl
+        vWkm5POiPtUDt57kOlC7uLCeVBM6X1K7RdasXLf2u8Njydm09956qElYR5pDt15OJtr+bZs5y74tO
+        XApkXUNA98fOOyXuKaDa+sAZ+kZYdKTafno0qXG2AHWhEETysieDAZpfYo2PigDDCcV6d3ZPAZlkK
+        fcsDaG/9FI8an+McCvzI/hfHmtPr1IGBN6kpiFwgfQygtv/uS69LKENzXhyGEC5RSGDNFcpFqqT4C
+        7KRhSsAHCG6qFH5yQ+IeC0ObsAwoSf0HWQQ9HFcGskVEqKjd8z7EdqBgynfsz1Gk2BvGtTB5e9aGi
+        LTgdf+cQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJdhU-0005xz-CH; Wed, 01 Apr 2020 13:46:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1AF6930610E;
+        Wed,  1 Apr 2020 15:46:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0456F29D86172; Wed,  1 Apr 2020 15:46:33 +0200 (CEST)
+Date:   Wed, 1 Apr 2020 15:46:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michel Lespinasse <walken@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH v3 07/10] mmap locking API: add mmap_read_release() and
+ mmap_read_unlock_non_owner()
+Message-ID: <20200401134633.GS20696@hirez.programming.kicks-ass.net>
+References: <20200327225102.25061-1-walken@google.com>
+ <20200327225102.25061-8-walken@google.com>
 MIME-Version: 1.0
-References: <20200331085308.098696461@linuxfoundation.org> <CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com>
- <CAHk-=whyW9TXfYxyxUW6hP9e0A=5MnOHrTarr4_k0hiddxq69Q@mail.gmail.com>
- <20200331192949.GN9917@kernel.org> <CAEUSe7_f8m0dLQT1jdU+87fNThnxMKuoGJkFuGpbT4OmpmE4iA@mail.gmail.com>
- <20200401124037.GA12534@kernel.org>
-In-Reply-To: <20200401124037.GA12534@kernel.org>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Wed, 1 Apr 2020 07:45:53 -0600
-Message-ID: <CAEUSe7-ercqbofx93m-d0RNW_dQqr1U7F7JYQ5X81CHSkq4KDw@mail.gmail.com>
-Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327225102.25061-8-walken@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Fri, Mar 27, 2020 at 03:50:59PM -0700, Michel Lespinasse wrote:
+> Add a couple APIs to allow splitting mmap_read_unlock() into two calls:
+> - mmap_read_release(), called by the task that had taken the mmap lock;
+> - mmap_read_unlock_non_owner(), called from a work queue.
+> 
+> These apis are used by kernel/bpf/stackmap.c only.
 
+That code is an absolute abomination and should never have gotten
+merged.
 
-On Wed, 1 Apr 2020 at 06:40, Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
-> Can you please try the one-liner at the end of this message?
-[...]
->
-> From 2a88ba6ddf54a4340f5a5f896705d5e42561e210 Mon Sep 17 00:00:00 2001
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date: Wed, 1 Apr 2020 09:33:59 -0300
-> Subject: [PATCH 1/1] perf python: Fix clang detection to strip out option=
-s
->  passed in $CC
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=3DUTF-8
-> Content-Transfer-Encoding: 8bit
->
-> The clang check in the python setup.py file expected $CC to be just the
-> name of the compiler, not the compiler + options, i.e. all options were
-> expected to be passed in $CFLAGS, this ends up making it fail in systems
-> where CC is set to, e.g.:
->
->  "aarch64-linaro-linux-gcc --sysroot=3D/oe/build/tmp/work/juno-linaro-lin=
-ux/perf/1.0-r9/recipe-sysroot"
->
-> Like this:
->
->   $ python3
->   >>> from subprocess import Popen
->   >>> a =3D Popen(["aarch64-linux-gnu-gcc --sysroot=3D/oe/build/tmp/work/=
-juno-linaro-linux/perf/1.0-r9/recipe-sysroot", "-v"])
->   Traceback (most recent call last):
->     File "<stdin>", line 1, in <module>
->     File "/usr/lib/python3.6/subprocess.py", line 729, in __init__
->       restore_signals, start_new_session)
->     File "/usr/lib/python3.6/subprocess.py", line 1364, in _execute_child
->       raise child_exception_type(errno_num, err_msg, err_filename)
->   FileNotFoundError: [Errno 2] No such file or directory: 'aarch64-linux-=
-gnu-gcc --sysroot=3D/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe=
--sysroot': 'aarch64-linux-gnu-gcc --sysroot=3D/oe/build/tmp/work/juno-linar=
-o-linux/perf/1.0-r9/recipe-sysroot'
->   >>>
->
-> Make it more robust, covering this case, by passing cc.split()[0] as the
-> first arg to popen().
->
-> Reported-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+That said; I would prefer a mmap_read_trylock_nonowner() over
+mmap_read_release() existing.
+
+> Signed-off-by: Michel Lespinasse <walken@google.com>
 > ---
->  tools/perf/util/setup.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-> index 8a065a6f9713..347b2c0789e4 100644
-> --- a/tools/perf/util/setup.py
-> +++ b/tools/perf/util/setup.py
-> @@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
->  from re import sub
->
->  cc =3D getenv("CC")
-> -cc_is_clang =3D b"clang version" in Popen([cc, "-v"], stderr=3DPIPE).std=
-err.readline()
-> +cc_is_clang =3D b"clang version" in Popen([cc.split()[0], "-v"], stderr=
-=3DPIPE).stderr.readline()
->
->  def clang_has_option(option):
->      return [o for o in Popen([cc, option], stderr=3DPIPE).stderr.readlin=
-es() if b"unknown argument" in o] =3D=3D [ ]
-> --
-> 2.21.1
-
-This worked on top of torvalds/master and linux-stable-rc/linux-5.6.y.
-
-Thanks and greetings!
-
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+>  include/linux/mmap_lock.h | 10 ++++++++++
+>  kernel/bpf/stackmap.c     |  9 ++++-----
+>  2 files changed, 14 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+> index 36fb758401d6..a80cf9695514 100644
+> --- a/include/linux/mmap_lock.h
+> +++ b/include/linux/mmap_lock.h
+> @@ -62,4 +62,14 @@ static inline void mmap_read_unlock(struct mm_struct *mm)
+>  	up_read(&mm->mmap_sem);
+>  }
+>  
+> +static inline void mmap_read_release(struct mm_struct *mm, unsigned long ip)
+> +{
+> +	rwsem_release(&mm->mmap_sem.dep_map, ip);
+> +}
+> +
+> +static inline void mmap_read_unlock_non_owner(struct mm_struct *mm)
+> +{
+> +	up_read_non_owner(&mm->mmap_sem);
+> +}
+> +
+>  #endif /* _LINUX_MMAP_LOCK_H */
