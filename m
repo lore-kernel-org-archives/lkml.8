@@ -2,101 +2,92 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F40EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8878C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB3282063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUYzm9tQ"
+	by mail.kernel.org (Postfix) with ESMTP id 738DC20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585759192;
+	bh=DahiHw5H4HO3q92hreQmS6hEroRFGFzccqXJwM9Tv3A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zH6NdmEwvrD7CJWf4eWsOT+XSUuvIEucgCOK433sjPSlMDL51uxsVgu2Rm3NxaNlO
+	 ezZzxrQavlNZub4NjU/KmY0SR59AAUS6FvlxE7AdPsEpuoSXENum+fWb0z53xAMs7t
+	 /f/lJmnf+kT8Euc+AB7qWjPwhPZZov3eGMitA2Kg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389251AbgDAQjt (ORCPT
+        id S2388614AbgDAQju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:39:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35338 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389029AbgDAQjr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:39:47 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k5so328018pga.2;
-        Wed, 01 Apr 2020 09:39:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1KvnqiTwTwGyUVWVo1ohp05PHzyr/fqOgpGS9E5cA/I=;
-        b=nUYzm9tQjevOeNPGsLPIZsXkgwuQB0F7C9QXza/hqHM4+Q78jMvLHkYf9EtNeHY5R9
-         WkoostobMpjq7Lk411c7WOtNozsD6ImrzVjQdjYla6cCHnxOqSPVFQFthX88L9j+X261
-         HbOlNVWW6FqZ4CGKJEG3O5cQQBUZxQe7iYVu7RAurGXWam04lRgFvi2XwZOP+r0VBPNT
-         UQj+7L6BCrI13vG+2IUZWOpvPxdB+0nOk9oKQuolcqONcdtQf31Sa0a1O1WuFCyMkQc3
-         rg7ASPgLiNSA6mmFKFyuUQ7pX+vZt3y2twspIQKzmDOa36JzJiqLVCgI8T/qKHzD+5d+
-         ufKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1KvnqiTwTwGyUVWVo1ohp05PHzyr/fqOgpGS9E5cA/I=;
-        b=Z4pP4gVI1wywvLY8ON3/uBbVcUbt87HfFzTAGWbkMYli61uVXafq5pFocdhZyN33ek
-         atD0yyfmz0mzrRWHsC0MRGZUXOUv3ChD8CXVBB/tJPCfIangxwJ8GVKaS3mjVOuoig2s
-         ssZvak1vCvB4CN1vkY37zIvukbYwWvtZR87bVpZM7euKMy8OmbinwwWB4N8lgKYdwGwC
-         BZPNJpUGLpsQOGkrMS+8QYxott65WoqdN1+5f3B+SfnaRSa26n/PsWK/rm3DvJdLsxJ7
-         tfgurw8LnNmyi3NAfeqai3p+CE/rMi6WOFeMxMW1udY6PV2QlaJNQ90kW6hVpTRpEKy4
-         sAKQ==
-X-Gm-Message-State: AGi0PuZofVR38SLIdAhBzY9g9afMoGZYRVUoCUuMTMIXmxraxImdKfcD
-        ZGbcxWUCK9E9UZz5ZT8INEXibFf2
-X-Google-Smtp-Source: APiQypJFjgmkwYIWKxDW0nJltQbosUObrioPcvFAkb+CWEJtYbERVyIpfynLOm0BaHxU1+HaXCFJGw==
-X-Received: by 2002:a62:1648:: with SMTP id 69mr10810975pfw.14.1585759186075;
-        Wed, 01 Apr 2020 09:39:46 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q91sm2006250pjb.11.2020.04.01.09.39.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Apr 2020 09:39:45 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 09:39:44 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Grant Peltier <grantpeltier93@gmail.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        adam.vaughn.xh@renesas.com
-Subject: Re: [PATCH v3 1/2] hwmon: (pmbus) add support for 2nd Gen Renesas
- digital multiphase
-Message-ID: <20200401163944.GA111856@roeck-us.net>
-References: <cover.1584720563.git.grantpeltier93@gmail.com>
- <62c000adf0108aeb65d3f275f28eb26b690384aa.1584720563.git.grantpeltier93@gmail.com>
+        Wed, 1 Apr 2020 12:39:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389243AbgDAQjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:39:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B28D2063A;
+        Wed,  1 Apr 2020 16:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585759188;
+        bh=DahiHw5H4HO3q92hreQmS6hEroRFGFzccqXJwM9Tv3A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=haBkFEXMYV/UQ0N4+yDp6AQL25QKukc11bN8hZ4F4aJK3zpccN2DakBMajd+8b5W7
+         ppYBigLfftWqXci1PkM0KfByTW83XOaCGHvS2DaqLFxiJ61xM4IjWEDUSKX1gcN3eA
+         XOvR80mr7sLT/tgZsDTd5EeL63wO/Jnpu8EMslX0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 084/102] staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
+Date:   Wed,  1 Apr 2020 18:18:27 +0200
+Message-Id: <20200401161546.521375881@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
+References: <20200401161530.451355388@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62c000adf0108aeb65d3f275f28eb26b690384aa.1584720563.git.grantpeltier93@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:16:21AM -0500, Grant Peltier wrote:
-> Extend the isl68137 driver to provide support for 2nd generation Renesas
-> digital multiphase voltage regulators.
-> 
-> Signed-off-by: Grant Peltier <grantpeltier93@gmail.com>
-> ---
-[ ... ]
+From: Qiujun Huang <hqjagain@gmail.com>
 
->  
-> -static const struct i2c_device_id isl68137_id[] = {
-> -	{"isl68137", 0},
-> +static const struct i2c_device_id raa_dmpvr_id[] = {
-> +	{"isl68137", isl68137},
-> +	{"raa_dmpvr2_1rail", raa_dmpvr2_1rail},
-> +	{"raa_dmpvr2_2rail", raa_dmpvr2_2rail},
-> +	{"raa_dmpvr2_3rail", raa_dmpvr2_3rail},
-> +	{"raa_dmpvr2_hv", raa_dmpvr2_hv},
->  	{}
+commit 1165dd73e811a07d947aee218510571f516081f6 upstream.
 
-I clearly didn't pay attention. I2C device IDs need to match chip names,
-not functionality. Unfortunately I only realized that when I wrote the
-pull request, and I didn't want to drop the patch. I'll send a fixup
-patch later.
+We can't handle the case length > WLAN_DATA_MAXLEN.
+Because the size of rxfrm->data is WLAN_DATA_MAXLEN(2312), and we can't
+read more than that.
 
-Guenter
+Thanks-to: Hillf Danton <hdanton@sina.com>
+Reported-and-tested-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326131850.17711-1-hqjagain@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/staging/wlan-ng/hfa384x_usb.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/staging/wlan-ng/hfa384x_usb.c
++++ b/drivers/staging/wlan-ng/hfa384x_usb.c
+@@ -3443,6 +3443,8 @@ static void hfa384x_int_rxmonitor(struct
+ 	     WLAN_HDR_A4_LEN + WLAN_DATA_MAXLEN + WLAN_CRC_LEN)) {
+ 		pr_debug("overlen frm: len=%zd\n",
+ 			 skblen - sizeof(struct p80211_caphdr));
++
++		return;
+ 	}
+ 
+ 	skb = dev_alloc_skb(skblen);
+
+
