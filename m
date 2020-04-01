@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60D6C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84605214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07C8C21556
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758138;
-	bh=2m4phitjhFbrsAJcF3uiJiiQDobncxewRiAT1Y8YfC0=;
+	s=default; t=1585758142;
+	bh=XUZVInl2yIRIheP1ctm3J4tTtc4UpxGu/clhuSn6aSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ib4KYvIIlUN29FzSntFHj9HtN4bA75GDSpO+X0S1CxCIdVbEdPdQmVAcWHOOvL5e6
-	 Z0BWk5RxUey103ByjjscELXpD6wDARqcWVAsYePPLqQPL16DouOdG6nzC1VobD4Nwg
-	 8azjqLLqYpyVmnc+moHVxQ/bqWU91nnw2IQ+dXXA=
+	b=SR0cXt2L43K+Kcgdwt6yJQ2cMTjlBHofmU87nAb7RVTgsAQdKSHOYbEc3pSEa4rxd
+	 CPDWZeZN2gfmz1jIx5XInZdZxxbs3Ye/KlQ80mySu/P4Nk9lIPDqm8Oyd/aWuGR+wy
+	 CKlw0XeCGa/OIg9hiL2yaL5gxV0pMyXAkI229X1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387457AbgDAQWQ (ORCPT
+        id S2387462AbgDAQWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45278 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733043AbgDAQWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:14 -0400
+        id S2387476AbgDAQWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6757E20658;
-        Wed,  1 Apr 2020 16:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7455E20857;
+        Wed,  1 Apr 2020 16:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758133;
-        bh=2m4phitjhFbrsAJcF3uiJiiQDobncxewRiAT1Y8YfC0=;
+        s=default; t=1585758137;
+        bh=XUZVInl2yIRIheP1ctm3J4tTtc4UpxGu/clhuSn6aSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wcutdLpxv+kIJcaJEpnhfUrJceuSobl4nNV9tzxFe/TgOPMMnNr8aP7wxHYdPLE0j
-         m+pXtmqm3NyJ58MhE7AROjPwtTtE2BvGNNfNlYujk3lQmuzoG0Tubz4rss4c9zPgyb
-         k7i4RGixgcQrUAey/OLHjUHMozvzLKSsXPydX7H8=
+        b=1eSwn0hVygkN5PHSnUwXRueo80NKEJsq+VVMLJ4f3ec2dqCcb9mhUbNa3npYjN/0N
+         il1ePRJrC7Dl12/mr/Ndgu09jQA+FUFIYCib5kWjWOGPF4UEfALQaZufbcezmo46eE
+         Mu/yC0RrWZPqSQE5ChV62TEcs90Ts2FwmoeRRQNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Hudson <skrll@netbsd.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 5.4 22/27] ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
-Date:   Wed,  1 Apr 2020 18:17:50 +0200
-Message-Id: <20200401161432.262458405@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Lanqing Liu <liuhhome@gmail.com>
+Subject: [PATCH 5.4 03/27] serial: sprd: Fix a dereference warning
+Date:   Wed,  1 Apr 2020 18:17:31 +0200
+Message-Id: <20200401161417.599861325@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 References: <20200401161414.352722470@linuxfoundation.org>
@@ -59,31 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Hudson <skrll@netbsd.org>
+From: Lanqing Liu <liuhhome@gmail.com>
 
-commit 6687c201fdc3139315c2ea7ef96c157672805cdc upstream.
+commit efc176929a3505a30c3993ddd393b40893649bd2 upstream.
 
-Define the sdhci pinctrl state as "default" so it gets applied
-correctly and to match all other RPis.
+We should validate if the 'sup' is NULL or not before freeing DMA
+memory, to fix below warning.
 
-Fixes: 2c7c040c73e9 ("ARM: dts: bcm2835: Add Raspberry Pi Zero W")
-Signed-off-by: Nick Hudson <skrll@netbsd.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+"drivers/tty/serial/sprd_serial.c:1141 sprd_remove()
+ error: we previously assumed 'sup' could be null (see line 1132)"
+
+Fixes: f4487db58eb7 ("serial: sprd: Add DMA mode support")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/e2bd92691538e95b04a2c2a728f3292e1617018f.1584325957.git.liuhhome@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/sprd_serial.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -112,6 +112,7 @@
- &sdhci {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
- 	bus-width = <4>;
- 	mmc-pwrseq = <&wifi_pwrseq>;
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -1103,14 +1103,13 @@ static int sprd_remove(struct platform_d
+ 	if (sup) {
+ 		uart_remove_one_port(&sprd_uart_driver, &sup->port);
+ 		sprd_port[sup->port.line] = NULL;
++		sprd_rx_free_buf(sup);
+ 		sprd_ports_num--;
+ 	}
+ 
+ 	if (!sprd_ports_num)
+ 		uart_unregister_driver(&sprd_uart_driver);
+ 
+-	sprd_rx_free_buf(sup);
+-
+ 	return 0;
+ }
+ 
 
 
