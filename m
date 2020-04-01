@@ -2,153 +2,107 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4F3C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40BDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8901F20719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585769647;
-	bh=1ziAwZyWgAC9dJ1aazSpPutT4RCKJC3VTwgJQkvvvyw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=TqY7PiUQ4uqv8zaPysbflsJ0Xpa/od6WX+rxickqnZRdxdDu3EETMhtTIdlr3Al/3
-	 AC3wrzvhdgS9Mqey/Pq1v0vXRJM/OiG8dhz56Hxey1xs+2zeOQGhviG6sn4JIkRCVL
-	 OkxwMbL5XalrzMhCkX6pwJ7w4JsdP+gsgrou+1bQ=
+	by mail.kernel.org (Postfix) with ESMTP id B269620714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:35:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="re/SlJNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732731AbgDATeG (ORCPT
+        id S1732748AbgDATe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732148AbgDATeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:34:06 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6309220714;
-        Wed,  1 Apr 2020 19:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585769645;
-        bh=1ziAwZyWgAC9dJ1aazSpPutT4RCKJC3VTwgJQkvvvyw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=MXP/dCzeEguEmqrUkbR0Lc9vwOEIXHDkxr40tpnGwm6DWP0BF5auzVcjxwSUn8wgK
-         by661+RJU8b8/bzQaFMLLtPqCDK2qJlBfEYvarJuFYngvS4g15pdFM0IfFiOo1P5VV
-         Ouj6X8nHQNDF3vDf/nuWVXjxMOwj8L2WWOW3HOGE=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2877335226B3; Wed,  1 Apr 2020 12:34:05 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 12:34:05 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200401193405.GH19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200331150911.GC236678@google.com>
- <20200331160119.GA27614@pc636>
- <20200331183000.GD236678@google.com>
- <20200401122550.GA32593@pc636>
- <20200401134745.GV19865@paulmck-ThinkPad-P72>
- <20200401181601.GA4042@pc636>
- <20200401182615.GE19865@paulmck-ThinkPad-P72>
- <20200401183745.GA5960@pc636>
- <20200401185439.GG19865@paulmck-ThinkPad-P72>
- <20200401190548.GA6360@pc636>
+        Wed, 1 Apr 2020 15:34:59 -0400
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:38053 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732148AbgDATe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 15:34:59 -0400
+Received: by mail-lf1-f41.google.com with SMTP id c5so720527lfp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 12:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4k3vO/gmHNH9BUyuJdIiMLOYo/c54ufu3YUkaQPTZh0=;
+        b=re/SlJNSwxj4p7FegGdRYaiRGHLXkQdVNLPVVld1YPr2vq1CxKdQn3AovLURrdbajn
+         3Xo6b8vWorZ6qc+3hhX90ygDdQ95BBHcEpgZnx2YMbAbz5zp0UO5tDrBC09IV0Rz0AQZ
+         mHZhB0f7sc10ksckpD7nlQp53AvGIdEHvhacVwZjkNxIQMn72xmomeUMQrrZtpmwlLob
+         chVEzDTJ1uY9xDFRk4n3MOdVtR/MREJq1jjenkZl2XQfjkavvMyNIv34TYyipOR+TWl8
+         EoevKS+PUTr6mOau0aAQqzcNLxYILGS/uuB+QHlBCvZiTRGPfgIPLXxw3wufoeWYLpT1
+         SKDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4k3vO/gmHNH9BUyuJdIiMLOYo/c54ufu3YUkaQPTZh0=;
+        b=JLjQiLMz7rz3VpP+sxmcNvHIplpjNQVLTI7W1fJtYNMJ9VdaznFTeGVsNoLaqYfH99
+         ScuFljbJio2U4AACvAxzAYBrCkr0zL7q7TrXazmvsov4YJX76tAgkQ4CpXFJV1aGXElN
+         fCcm0dd9QeJ1KNHddbNn6R98gsZahZFrTfZrC/HgjMIHiuWUW0CT1NZDsai+DfC48TQ0
+         w+qM3r/+d/GO4zjRrWbJBer670sxZ8LEVxZfUl8UeU8eHBDdnihJfm3adZejVz9CJBzD
+         gAPPQGiJ3BaD2cgH3ozAysBt5Nu4QTr6EpxFt5wiVeemfSR48n9NG1hosC0BWO0zrJ/x
+         LnOg==
+X-Gm-Message-State: AGi0PuaSEdpWOEK2xp+1PtSDTTzeW0YI7n90oncXDgMFHmi8td4UVjg9
+        3blN3iC5bAALzpYChvtG5Sk++1tVV8eBjEhfX27dpb6X
+X-Google-Smtp-Source: APiQypJ8XJQCJ4boN+oW9h87APr/SKiu3bMdgxZnNdJDZgjwA8jABTpUka1Eb6Qy0WwSq0am9RhCXWirrwmjQrFSe14=
+X-Received: by 2002:a19:6e47:: with SMTP id q7mr12252555lfk.164.1585769696172;
+ Wed, 01 Apr 2020 12:34:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401190548.GA6360@pc636>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200303113002.63089-1-sergey.senozhatsky@gmail.com>
+In-Reply-To: <20200303113002.63089-1-sergey.senozhatsky@gmail.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 1 Apr 2020 21:34:29 +0200
+Message-ID: <CAG48ez3iiN6Y77F_7Rdba6_obhAMaTQ+M0YfGMV2Fk762-5PZg@mail.gmail.com>
+Subject: Re: [PATCHv2] printk: queue wake_up_klogd irq_work only if per-CPU
+ areas are ready
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Lech Perczak <l.perczak@camlintechnologies.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        John Ogness <john.ogness@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:05:48PM +0200, Uladzislau Rezki wrote:
-> On Wed, Apr 01, 2020 at 11:54:39AM -0700, Paul E. McKenney wrote:
-> > On Wed, Apr 01, 2020 at 08:37:45PM +0200, Uladzislau Rezki wrote:
-> > > On Wed, Apr 01, 2020 at 11:26:15AM -0700, Paul E. McKenney wrote:
-> > > > On Wed, Apr 01, 2020 at 08:16:01PM +0200, Uladzislau Rezki wrote:
-> > > > > > > > 
-> > > > > > > > Right. Per discussion with Paul, we discussed that it is better if we
-> > > > > > > > pre-allocate N number of array blocks per-CPU and use it for the cache.
-> > > > > > > > Default for N being 1 and tunable with a boot parameter. I agree with this.
-> > > > > > > > 
-> > > > > > > As discussed before, we can make use of memory pool API for such
-> > > > > > > purpose. But i am not sure if it should be one pool per CPU or
-> > > > > > > one pool per NR_CPUS, that would contain NR_CPUS * N pre-allocated
-> > > > > > > blocks.
-> > > > > > 
-> > > > > > There are advantages and disadvantages either way.  The advantage of the
-> > > > > > per-CPU pool is that you don't have to worry about something like lock
-> > > > > > contention causing even more pain during an OOM event.  One potential
-> > > > > > problem wtih the per-CPU pool can happen when callbacks are offloaded,
-> > > > > > in which case the CPUs needing the memory might never be getting it,
-> > > > > > because in the offloaded case (RCU_NOCB_CPU=y) the CPU posting callbacks
-> > > > > > might never be invoking them.
-> > > > > > 
-> > > > > > But from what I know now, systems built with CONFIG_RCU_NOCB_CPU=y
-> > > > > > either don't have heavy callback loads (HPC systems) or are carefully
-> > > > > > configured (real-time systems).  Plus large systems would probably end
-> > > > > > up needing something pretty close to a slab allocator to keep from dying
-> > > > > > from lock contention, and it is hard to justify that level of complexity
-> > > > > > at this point.
-> > > > > > 
-> > > > > > Or is there some way to mark a specific slab allocator instance as being
-> > > > > > able to keep some amount of memory no matter what the OOM conditions are?
-> > > > > > If not, the current per-CPU pre-allocated cache is a better choice in the
-> > > > > > near term.
-> > > > > > 
-> > > > > As for mempool API:
-> > > > > 
-> > > > > mempool_alloc() just tries to make regular allocation taking into
-> > > > > account passed gfp_t bitmask. If it fails due to memory pressure,
-> > > > > it uses reserved preallocated pool that consists of number of
-> > > > > desirable elements(preallocated when a pool is created).
-> > > > > 
-> > > > > mempoll_free() returns an element to to pool, if it detects that
-> > > > > current reserved elements are lower then minimum allowed elements,
-> > > > > it will add an element to reserved pool, i.e. refill it. Otherwise
-> > > > > just call kfree() or whatever we define as "element-freeing function."
-> > > > 
-> > > > Unless I am missing something, mempool_alloc() acquires a per-mempool
-> > > > lock on each invocation under OOM conditions.  For our purposes, this
-> > > > is essentially a global lock.  This will not be at all acceptable on a
-> > > > large system.
-> > > > 
-> > > It uses pool->lock to access to reserved objects, so if we have one memory
-> > > pool per one CPU then it would be serialized.
-> > 
-> > I am having difficulty parsing your sentence.  It looks like your thought
-> > is to invoke mempool_create() for each CPU, so that the locking would be
-> > on a per-CPU basis, as in 128 invocations of mempool_init() on a system
-> > having 128 hardware threads.  Is that your intent?
-> > 
-> In order to serialize it, you need to have it per CPU. So if you have 128
-> cpus, it means:
-> 
-> <snip>
-> for_each_possible_cpu(...)
->     cpu_pool = mempool_create();
-> <snip>
-> 
-> but please keep in mind that it is not my intention, but i had a though
-> about mempool API. Because it has pre-reserve logic inside.
+On Tue, Mar 3, 2020 at 12:30 PM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
+> printk_deferred(), similarly to printk_safe/printk_nmi,
+> does not immediately attempt to print a new message on
+> the consoles, avoiding calls into non-reentrant kernel
+> paths, e.g. scheduler or timekeeping, which potentially
+> can deadlock the system. Those printk() flavors, instead,
+> rely on per-CPU flush irq_work to print messages from
+> safer contexts. For same reasons (recursive scheduler or
+> timekeeping calls) printk() uses per-CPU irq_work in
+> order to wake up user space syslog/kmsg readers.
+>
+> However, only printk_safe/printk_nmi do make sure that
+> per-CPU areas have been initialised and that it's safe
+> to modify per-CPU irq_work. This means that, for instance,
+> should printk_deferred() be invoked "too early", that
+> is before per-CPU areas are initialised, printk_deferred()
+> will perform illegal per-CPU access.
+>
+> Lech Perczak [0] reports that after commit 1b710b1b10ef
+> ("char/random: silence a lockdep splat with printk()")
+> user-space syslog/kmsg readers are not able to read new
+> kernel messages. The reason is printk_deferred() being
+> called too early (as was pointed out by Petr and John).
+>
+> Fix printk_deferred() and do not queue per-CPU irq_work
+> before per-CPU areas are initialized.
 
-OK, fair point on use of mempool API, but my guess is that extending
-the current kfree_rcu() logic will be simpler.
+I ran into the same issue during some development work, and Sergey
+directed me to this patch. It fixes the problem for me. Thanks!
 
-							Thanx, Paul
+Tested-by: Jann Horn <jannh@google.com>
