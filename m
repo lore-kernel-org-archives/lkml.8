@@ -2,261 +2,160 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559A2C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46873C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8AC20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130FF20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vERgFZtS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jsHHYk7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732058AbgDAHsS (ORCPT
+        id S1732033AbgDAHsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:48:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34665 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731870AbgDAHsR (ORCPT
+        Wed, 1 Apr 2020 03:48:30 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:35588 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731870AbgDAHs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:48:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 65so29349217wrl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 00:48:15 -0700 (PDT)
+        Wed, 1 Apr 2020 03:48:29 -0400
+Received: by mail-qk1-f201.google.com with SMTP id q198so20432171qke.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 00:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Lqlo+Tn7Tg2M14wJLKEZDcQDoUNo94atXFdRfztlgjI=;
-        b=vERgFZtShKXGk8+XcSyKqRHMttP9ThUnz6Q1c5KyJ43+hp5MJhYniufdVrCsJ5nxQd
-         FU4AaMAx+O/kg3pW6PRx0AJgey+OyXMqP34/UFKXnb0QAzAfCz5DdTCxG31/Ob8iL+dV
-         FTSi15SZWQ9PYPpUodVPfYb3wMV/MMQCL6R8PMoh8EgW6+6hYO2YgRJuTD37qWAQmBpJ
-         x/M+gqmYGBGuQE2j3jcg3q6QWwJEY/EAgeb/IgLDsGGLMdpzvsNtXJvbgVrshtLnESgJ
-         GZNO/P/UCqDIfDdEiFiY6o5OdYRSdJ20imQVICakjcKcjilXHoVf59AfKeonjgFofSnB
-         ubMg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9Kyv0prcq9XMUnz5AhbcrUNUlnYWKeEXqgffzhkXFWA=;
+        b=jsHHYk7dPh8l3V65PglhCNfzdfr4ELueU70iRPAREdQ94vaaPDGDJ6aWjYOKyFeStd
+         dYwOG4IYk1dr5KBEHNeTBMRQTCUKpEeDHeges7/7DVUAW7V5yIFdHAzlBRRM6xjNFQ4C
+         7DwdjO51OlM/AeHSMNwQRwkITLyQGJ//2rwTFpn/iQL/PJT7T3LlZ0bPaciCn0xB81rx
+         bLqkxvrfnqY9xFudLMOgEmtrTYGM5YtXQuYI3mEl07U60jMXw2hhqXFFjf6Tv3wQOI5l
+         iQJkX7RcyBC4VnEiU3BRPzPfxKL6znpEbzrn0BEP/IiDOBfK9DGr0GQ22sGcMHY3eTc2
+         Otzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Lqlo+Tn7Tg2M14wJLKEZDcQDoUNo94atXFdRfztlgjI=;
-        b=j78LSyqpeQm44TD9istYRL561w7xABdbNQkmfbNliZb9wX1Q7tPMctJfStlx1yirMt
-         Ynkye1EGK7la1pwulBQwmSDpe4ep0dF4jbaBmVIYr8unqHyyd++h7SpA+oROQXsP1GNx
-         WTE79JBuUlDy/Ncx5iMFUT3VMeXNU/zj50F1O/I76FgfW0DEuol2pWxgfzV2Rt4XUSbY
-         dzmijMK2W5IuHjq7Ek5MviHtjChBDLeDyVgGof2K/gnJ3BlBboPZd17n9lfHDEoBpvBA
-         rmFTrjRCxisGvpj45751xr8CBoSogxVwomC2wQC2X5Ua2zJGf+pSHTL+wiR33EqJrUjC
-         9mxw==
-X-Gm-Message-State: ANhLgQ1PKExVFx0ExYuRMpyLTSTjlnHrL+OF+xcvwQ3JrqRhP/dMdeIO
-        GFJrDRLgDtJg+QpC14h65kTBbQ==
-X-Google-Smtp-Source: ADFU+vu0BnN/UnzvN+DA+awjDremMq0c6GPFHN6sR1QaGITUYep+z/MlmIANQsTbRBvIoKXdZkabfQ==
-X-Received: by 2002:adf:97c8:: with SMTP id t8mr24370675wrb.319.1585727294449;
-        Wed, 01 Apr 2020 00:48:14 -0700 (PDT)
-Received: from [192.168.0.102] ([84.33.172.71])
-        by smtp.gmail.com with ESMTPSA id n2sm1891553wro.25.2020.04.01.00.48.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 00:48:13 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] scsi: core: Fix stall if two threads request budget
- at the same time
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <02968c1d-bd3a-af9c-77e7-23a9d9aa9af4@kernel.dk>
-Date:   Wed, 1 Apr 2020 09:49:40 +0200
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-scsi@vger.kernel.org, Salman Qazi <sqazi@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1D4B63FC-FA4B-4C73-B70F-6639CC41D3A6@linaro.org>
-References: <20200330144907.13011-1-dianders@chromium.org>
- <20200330074856.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
- <20200331014109.GA20230@ming.t460p>
- <D38AB98D-7F6A-4C61-8A8F-C22C53671AC8@linaro.org>
- <d6af2344-11f7-5862-daed-e21cbd496d92@kernel.dk>
- <CAD=FV=WHYFDoUKLnwMCm-o=gEQDCzZFeMAvia3wpJzm9XX7Bow@mail.gmail.com>
- <02968c1d-bd3a-af9c-77e7-23a9d9aa9af4@kernel.dk>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9Kyv0prcq9XMUnz5AhbcrUNUlnYWKeEXqgffzhkXFWA=;
+        b=tiXa7m1kek/S5lgXWzEk6Zq6djRKu+2aBQTzwRC/WTCE4ymIbjyxVnnQRJhKbgy102
+         zxyhGoStcH15SdPBH2dtKjN7ftCYyZ4N9U80NqLn6yZ8mi3lNS2KOCgxtwZNJ7n3D0Qz
+         rCBKm68cBZarUQDOLsQ7G9Zm5U7EpWfA90oPKLxX9vuViDANrvTqZNbIql2QLaDMcVaN
+         avXV8Y6ko2UcvBawSEvwPY4VX8WHgGqCSNFJ5LU0bwX7GX9E8S8fR5q0ZeVL47cTlw4k
+         ro+Cim7D9QldYOqMHL5+0i++0peMw+uG0N1BaJtivkcZcAu6Q+ArYcrYkaePHNtW2rVz
+         ++bw==
+X-Gm-Message-State: ANhLgQ0Jl/IgL9AYrPf4YW1ghrKvqdzWLl02nFpHrBlr97GMGevOrxRW
+        dyJuPziYRumZtasiC8QbncyW1z9MmQ==
+X-Google-Smtp-Source: ADFU+vs0J+dnV0qXZSaE6dsczISxwq2tsmQhXz2c/IezSINTsy/Wi7PsMw/WL+Sz8BHmSE64GhoPwYjikA==
+X-Received: by 2002:a37:8503:: with SMTP id h3mr8333290qkd.499.1585727308291;
+ Wed, 01 Apr 2020 00:48:28 -0700 (PDT)
+Date:   Wed,  1 Apr 2020 09:46:19 +0200
+Message-Id: <20200401074619.8024-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH] USB: early: Handle AMD's spec-compliant identifiers, too
+From:   Jann Horn <jannh@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This fixes a bug that causes the USB3 early console to freeze after
+printing a single line on AMD machines because it can't parse the
+Transfer TRB properly.
 
+The spec at
+https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/extensible-host-controler-interface-usb-xhci.pdf
+says in section "4.5.1 Device Context Index" that the Context Index,
+also known as Endpoint ID according to
+section "1.6 Terms and Abbreviations", is normally computed as
+`DCI = (Endpoint Number * 2) + Direction`, which matches the current
+definitions of XDBC_EPID_OUT and XDBC_EPID_IN.
 
-> Il giorno 1 apr 2020, alle ore 03:21, Jens Axboe <axboe@kernel.dk> ha =
-scritto:
->=20
-> On 3/31/20 5:51 PM, Doug Anderson wrote:
->> Hi,
->>=20
->> On Tue, Mar 31, 2020 at 11:26 AM Jens Axboe <axboe@kernel.dk> wrote:
->>>=20
->>> On 3/31/20 12:07 PM, Paolo Valente wrote:
->>>>> Il giorno 31 mar 2020, alle ore 03:41, Ming Lei =
-<ming.lei@redhat.com> ha scritto:
->>>>>=20
->>>>> On Mon, Mar 30, 2020 at 07:49:06AM -0700, Douglas Anderson wrote:
->>>>>> It is possible for two threads to be running
->>>>>> blk_mq_do_dispatch_sched() at the same time with the same "hctx".
->>>>>> This is because there can be more than one caller to
->>>>>> __blk_mq_run_hw_queue() with the same "hctx" and hctx_lock() =
-doesn't
->>>>>> prevent more than one thread from entering.
->>>>>>=20
->>>>>> If more than one thread is running blk_mq_do_dispatch_sched() at =
-the
->>>>>> same time with the same "hctx", they may have contention =
-acquiring
->>>>>> budget.  The blk_mq_get_dispatch_budget() can eventually =
-translate
->>>>>> into scsi_mq_get_budget().  If the device's "queue_depth" is 1 =
-(not
->>>>>> uncommon) then only one of the two threads will be the one to
->>>>>> increment "device_busy" to 1 and get the budget.
->>>>>>=20
->>>>>> The losing thread will break out of blk_mq_do_dispatch_sched() =
-and
->>>>>> will stop dispatching requests.  The assumption is that when more
->>>>>> budget is available later (when existing transactions finish) the
->>>>>> queue will be kicked again, perhaps in scsi_end_request().
->>>>>>=20
->>>>>> The winning thread now has budget and can go on to call
->>>>>> dispatch_request().  If dispatch_request() returns NULL here then =
-we
->>>>>> have a potential problem.  Specifically we'll now call
->>>>>=20
->>>>> I guess this problem should be BFQ specific. Now there is =
-definitely
->>>>> requests in BFQ queue wrt. this hctx. However, looks this request =
-is
->>>>> only available from another loser thread, and it won't be =
-retrieved in
->>>>> the winning thread via e->type->ops.dispatch_request().
->>>>>=20
->>>>> Just wondering why BFQ is implemented in this way?
->>>>>=20
->>>>=20
->>>> BFQ inherited this powerful non-working scheme from CFQ, some age =
-ago.
->>>>=20
->>>> In more detail: if BFQ has at least one non-empty internal queue, =
-then
->>>> is says of course that there is work to do.  But if the currently
->>>> in-service queue is empty, and is expected to receive new I/O, then
->>>> BFQ plugs I/O dispatch to enforce service guarantees for the
->>>> in-service queue, i.e., BFQ responds NULL to a dispatch request.
->>>=20
->>> What BFQ is doing is fine, IFF it always ensures that the queue is =
-run
->>> at some later time, if it returns "yep I have work" yet returns NULL
->>> when attempting to retrieve that work. Generally this should happen =
-from
->>> subsequent IO completion, or whatever else condition will resolve =
-the
->>> issue that is currently preventing dispatch of that request. Last =
-resort
->>> would be a timer, but that can happen if you're slicing your =
-scheduling
->>> somehow.
->>=20
->> I've been poking more at this today trying to understand why the idle
->> timer that Paolo says is in BFQ isn't doing what it should be doing.
->> I've been continuing to put most of my stream-of-consciousness at
->> <https://crbug.com/1061950> to avoid so much spamming of this thread.
->> In the trace I looked at most recently it looks like BFQ does try to
->> ensure that the queue is run at a later time, but at least in this
->> trace the later time is not late enough.  Specifically the quick
->> summary of my recent trace:
->>=20
->> 28977309us - PID 2167 got the budget.
->> 28977518us - BFQ told PID 2167 that there was nothing to dispatch.
->> 28977702us - BFQ idle timer fires.
->> 28977725us - We start to try to dispatch as a result of BFQ's idle =
-timer.
->> 28977732us - Dispatching that was a result of BFQ's idle timer can't =
-get
->>             budget and thus does nothing.
->> 28977780us - PID 2167 put the budget and exits since there was =
-nothing
->>             to dispatch.
->>=20
->> This is only one particular trace, but in this case BFQ did attempt =
-to
->> rerun the queue after it returned NULL, but that ran almost
->> immediately after it returned NULL and thus ran into the race.  :(
->=20
-> OK, and then it doesn't trigger again? It's key that it keeps doing =
-this
-> timeout and re-dispatch if it fails, not just once.
->=20
+However, the numbering in a Debug Capability Context data structure is
+supposed to be different:
+Section "7.6.3.2 Endpoint Contexts and Transfer Rings" explains that a
+Debug Capability Context data structure has the endpoints mapped to indices
+0 and 1.
 
-The goal of BFQ's timer is to make BFQ switch from non-work-conserving
-to work-conserving mode, just because not doing so would cause a
-stall.  In contrast, it sounds a little weird that an I/O scheduler
-systematically kicks I/O periodically (how can BFQ know when no more
-kicking is needed?).  IOW, it doesn't seem very robust that blk-mq may
-need a series of periodic kicks to finally restart, like a flooded
-engine.
+Change XDBC_EPID_OUT/XDBC_EPID_IN to the spec-compliant values, add
+XDBC_EPID_OUT_INTEL/XDBC_EPID_IN_INTEL with Intel's incorrect values, and
+let xdbc_handle_tx_event() handle both.
 
-Compared with this solution, I'd still prefer one where BFQ doesn't
-trigger this blk-mq stall at all.
+I have verified that with this patch applied, the USB3 early console works
+on both an Intel and an AMD machine.
 
-Paolo
+Fixes: aeb9dd1de98c ("usb/early: Add driver for xhci debug capability")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ drivers/usb/early/xhci-dbc.c |  8 ++++----
+ drivers/usb/early/xhci-dbc.h | 18 ++++++++++++++++--
+ 2 files changed, 20 insertions(+), 6 deletions(-)
 
-> But BFQ really should be smarter here. It's the same caller etc that
-> asks whether it has work and whether it can dispatch, yet the answer =
-is
-> different. That's just kind of silly, and it'd make more sense if BFQ
-> actually implemented the ->has_work() as a "would I actually dispatch
-> for this guy, now".
->=20
->>>> It would be very easy to change bfq_has_work so that it returns =
-false
->>>> in case the in-service queue is empty, even if there is I/O
->>>> backlogged.  My only concern is: since everything has worked with =
-the
->>>> current scheme for probably 15 years, are we sure that everything =
-is
->>>> still ok after we change this scheme?
->>>=20
->>> You're comparing apples to oranges, CFQ never worked within the =
-blk-mq
->>> scheduling framework.
->>>=20
->>> That said, I don't think such a change is needed. If we currently =
-have a
->>> hang due to this discrepancy between has_work and gets_work, then it
->>> sounds like we're not always re-running the queue as we should. =46rom=
- the
->>> original patch, the budget putting is not something the scheduler is
->>> involved with. Do we just need to ensure that if we put budget =
-without
->>> having dispatched a request, we need to kick off dispatching again?
->>=20
->> By this you mean a change like this in blk_mq_do_dispatch_sched()?
->>=20
->>  if (!rq) {
->>    blk_mq_put_dispatch_budget(hctx);
->> +    ret =3D true;
->>    break;
->>  }
->>=20
->> I'm pretty sure that would fix the problems and I'd be happy to test,
->> but it feels like a heavy hammer.  IIUC we're essentially going to go
->> into a polling loop and keep calling has_work() and =
-dispatch_request()
->> over and over again until has_work() returns false or we manage to
->> dispatch something...
->=20
-> We obviously have to be careful not to introduce a busy-loop, where we
-> just keep scheduling dispatch, only to fail.
->=20
-> --=20
-> Jens Axboe
+diff --git a/drivers/usb/early/xhci-dbc.c b/drivers/usb/early/xhci-dbc.c
+index cac991173ac0..5a462a1d1896 100644
+--- a/drivers/usb/early/xhci-dbc.c
++++ b/drivers/usb/early/xhci-dbc.c
+@@ -728,19 +728,19 @@ static void xdbc_handle_tx_event(struct xdbc_trb *evt_trb)
+ 	case COMP_USB_TRANSACTION_ERROR:
+ 	case COMP_STALL_ERROR:
+ 	default:
+-		if (ep_id == XDBC_EPID_OUT)
++		if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL)
+ 			xdbc.flags |= XDBC_FLAGS_OUT_STALL;
+-		if (ep_id == XDBC_EPID_IN)
++		if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL)
+ 			xdbc.flags |= XDBC_FLAGS_IN_STALL;
+ 
+ 		xdbc_trace("endpoint %d stalled\n", ep_id);
+ 		break;
+ 	}
+ 
+-	if (ep_id == XDBC_EPID_IN) {
++	if (ep_id == XDBC_EPID_IN || ep_id == XDBC_EPID_IN_INTEL) {
+ 		xdbc.flags &= ~XDBC_FLAGS_IN_PROCESS;
+ 		xdbc_bulk_transfer(NULL, XDBC_MAX_PACKET, true);
+-	} else if (ep_id == XDBC_EPID_OUT) {
++	} else if (ep_id == XDBC_EPID_OUT || ep_id == XDBC_EPID_OUT_INTEL) {
+ 		xdbc.flags &= ~XDBC_FLAGS_OUT_PROCESS;
+ 	} else {
+ 		xdbc_trace("invalid endpoint id %d\n", ep_id);
+diff --git a/drivers/usb/early/xhci-dbc.h b/drivers/usb/early/xhci-dbc.h
+index 673686eeddd7..6e2b7266a695 100644
+--- a/drivers/usb/early/xhci-dbc.h
++++ b/drivers/usb/early/xhci-dbc.h
+@@ -120,8 +120,22 @@ struct xdbc_ring {
+ 	u32			cycle_state;
+ };
+ 
+-#define XDBC_EPID_OUT		2
+-#define XDBC_EPID_IN		3
++/*
++ * These are the "Endpoint ID" (also known as "Context Index") values for the
++ * OUT Transfer Ring and the IN Transfer Ring of a Debug Capability Context data
++ * structure.
++ * According to the "eXtensible Host Controller Interface for Universal Serial
++ * Bus (xHCI)" specification, section "7.6.3.2 Endpoint Contexts and Transfer
++ * Rings", these should be 0 and 1, and those are the values AMD machines give
++ * you; but Intel machines seem to use the formula from section "4.5.1 Device
++ * Context Index", which is supposed to be used for the Device Context only.
++ * Luckily the values from Intel don't overlap with those from AMD, so we can
++ * just test for both.
++ */
++#define XDBC_EPID_OUT		0
++#define XDBC_EPID_IN		1
++#define XDBC_EPID_OUT_INTEL	2
++#define XDBC_EPID_IN_INTEL	3
+ 
+ struct xdbc_state {
+ 	u16			vendor;
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
 
