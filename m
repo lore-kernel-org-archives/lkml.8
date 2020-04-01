@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EB8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957C2C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320D62063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F9220658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759177;
-	bh=RozGLdAyNS5qY69xcQRIDv3RdavXVgjOktEZjz26je4=;
+	s=default; t=1585759180;
+	bh=+QjJUEGMxz7btAbAYm/jsWclNxRzd5u/I7HJPsrbUmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P2nLHhwCscdcuo/YeTsEtQn0YbP3zFN83CH103wya1EmylYDWSLH1Zaj16Ylbqjiv
-	 Qf9pzJK1jTIqRj2yRb2u116HdbBFLCk8B/Lq9VDagT+UdCunfFMeBm/Av8m3uloJ3C
-	 ZvKyp5qQjbTZPiJCxxMrM4V9Tqer9HhwW1O0Gn/k=
+	b=Aatd0n5Z34JUw8U/iYj07nbRr04xA6PlAr9DYhW4jUWgkpUfbcZ4DI3MWpehRHJl+
+	 iVQsA8BP98Q1ujQG0P/VBPvu11LFva3rSdi7u+bXj7VHcr19gTeeHU/KOvB4wDMhln
+	 cgiIO7TR8WaaMJ3c1RwpGs+bZHOLGtymJPAyKHCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389213AbgDAQjf (ORCPT
+        id S2389220AbgDAQji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:39:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387927AbgDAQj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:39:29 -0400
+        id S2389206AbgDAQjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:39:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A64D720658;
-        Wed,  1 Apr 2020 16:39:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16D7820772;
+        Wed,  1 Apr 2020 16:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759169;
-        bh=RozGLdAyNS5qY69xcQRIDv3RdavXVgjOktEZjz26je4=;
+        s=default; t=1585759174;
+        bh=+QjJUEGMxz7btAbAYm/jsWclNxRzd5u/I7HJPsrbUmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a4J97ivJt+VD9k+svJ1S+6NCNlYNRkpIgJm5LB7KVgQDS7R8nODmhRbgJYdMClcD4
-         VpA2TYJWEpUSIxP0djvzoXaUrYD+Q6/oPz+n9NuBlrR0yKqJYcxD263u1c0wOpPpKC
-         5AswxUxdvoB89Ase2dY6rgF56issdBUkI/vR/EVY=
+        b=TA2wrM4Cxaxm1pvH3sln+hbdhZiEB3LzaSSSmT1Ac5l1MJXFK3fgSCaywibGd3g8Z
+         eVLFRbQb7AEX65xlSlHy3dor2WU5jPURNuOoFRV2rLTzj6XlMuKIZ+ttpIMYUD2PPI
+         T4wJqvFCfQzIuIngxb9d5cuSldqFd0/octEqdcjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: [PATCH 4.9 099/102] bpf: Explicitly memset the bpf_attr structure
-Date:   Wed,  1 Apr 2020 18:18:42 +0200
-Message-Id: <20200401161548.607606712@linuxfoundation.org>
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 4.9 100/102] net: ks8851-ml: Fix IO operations, again
+Date:   Wed,  1 Apr 2020 18:18:43 +0200
+Message-Id: <20200401161548.762755367@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -64,51 +61,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Marek Vasut <marex@denx.de>
 
-commit 8096f229421f7b22433775e928d506f0342e5907 upstream.
+commit 8262e6f9b1034ede34548a04dec4c302d92c9497 upstream.
 
-For the bpf syscall, we are relying on the compiler to properly zero out
-the bpf_attr union that we copy userspace data into. Unfortunately that
-doesn't always work properly, padding and other oddities might not be
-correctly zeroed, and in some tests odd things have been found when the
-stack is pre-initialized to other values.
+This patch reverts 58292104832f ("net: ks8851-ml: Fix 16-bit IO operation")
+and edacb098ea9c ("net: ks8851-ml: Fix 16-bit data access"), because it
+turns out these were only necessary due to buggy hardware. This patch adds
+a check for such a buggy hardware to prevent any such mistakes again.
 
-Fix this by explicitly memsetting the structure to 0 before using it.
+While working further on the KS8851 driver, it came to light that the
+KS8851-16MLL is capable of switching bus endianness by a hardware strap,
+EESK pin. If this strap is incorrect, the IO accesses require such endian
+swapping as is being reverted by this patch. Such swapping also impacts
+the performance significantly.
 
-Reported-by: Maciej Żenczykowski <maze@google.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Reported-by: Alexander Potapenko <glider@google.com>
-Reported-by: Alistair Delva <adelva@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://android-review.googlesource.com/c/kernel/common/+/1235490
-Link: https://lore.kernel.org/bpf/20200320094813.GA421650@kroah.com
+Hence, in addition to removing it, detect that the hardware is broken,
+report to user, and fail to bind with such hardware.
+
+Fixes: 58292104832f ("net: ks8851-ml: Fix 16-bit IO operation")
+Fixes: edacb098ea9c ("net: ks8851-ml: Fix 16-bit data access")
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/syscall.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c |   56 ++++++++++++++++++++++++++++---
+ 1 file changed, 52 insertions(+), 4 deletions(-)
 
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -802,7 +802,7 @@ static int bpf_obj_get(const union bpf_a
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -475,6 +475,50 @@ static int msg_enable;
+  */
  
- SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
+ /**
++ * ks_check_endian - Check whether endianness of the bus is correct
++ * @ks	  : The chip information
++ *
++ * The KS8851-16MLL EESK pin allows selecting the endianness of the 16bit
++ * bus. To maintain optimum performance, the bus endianness should be set
++ * such that it matches the endianness of the CPU.
++ */
++
++static int ks_check_endian(struct ks_net *ks)
++{
++	u16 cider;
++
++	/*
++	 * Read CIDER register first, however read it the "wrong" way around.
++	 * If the endian strap on the KS8851-16MLL in incorrect and the chip
++	 * is operating in different endianness than the CPU, then the meaning
++	 * of BE[3:0] byte-enable bits is also swapped such that:
++	 *    BE[3,2,1,0] becomes BE[1,0,3,2]
++	 *
++	 * Luckily for us, the byte-enable bits are the top four MSbits of
++	 * the address register and the CIDER register is at offset 0xc0.
++	 * Hence, by reading address 0xc0c0, which is not impacted by endian
++	 * swapping, we assert either BE[3:2] or BE[1:0] while reading the
++	 * CIDER register.
++	 *
++	 * If the bus configuration is correct, reading 0xc0c0 asserts
++	 * BE[3:2] and this read returns 0x0000, because to read register
++	 * with bottom two LSbits of address set to 0, BE[1:0] must be
++	 * asserted.
++	 *
++	 * If the bus configuration is NOT correct, reading 0xc0c0 asserts
++	 * BE[1:0] and this read returns non-zero 0x8872 value.
++	 */
++	iowrite16(BE3 | BE2 | KS_CIDER, ks->hw_addr_cmd);
++	cider = ioread16(ks->hw_addr);
++	if (!cider)
++		return 0;
++
++	netdev_err(ks->netdev, "incorrect EESK endian strap setting\n");
++
++	return -EINVAL;
++}
++
++/**
+  * ks_rdreg16 - read 16 bit register from device
+  * @ks	  : The chip information
+  * @offset: The register address
+@@ -484,7 +528,7 @@ static int msg_enable;
+ 
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  {
--	union bpf_attr attr = {};
-+	union bpf_attr attr;
- 	int err;
+-	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	return ioread16(ks->hw_addr);
+ }
+@@ -499,7 +543,7 @@ static u16 ks_rdreg16(struct ks_net *ks,
  
- 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
-@@ -838,6 +838,7 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
+ }
+@@ -515,7 +559,7 @@ static inline void ks_inblk(struct ks_ne
+ {
+ 	len >>= 1;
+ 	while (len--)
+-		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
++		*wptr++ = (u16)ioread16(ks->hw_addr);
+ }
+ 
+ /**
+@@ -529,7 +573,7 @@ static inline void ks_outblk(struct ks_n
+ {
+ 	len >>= 1;
+ 	while (len--)
+-		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
++		iowrite16(*wptr++, ks->hw_addr);
+ }
+ 
+ static void ks_disable_int(struct ks_net *ks)
+@@ -1535,6 +1579,10 @@ static int ks8851_probe(struct platform_
+ 		goto err_free;
  	}
  
- 	/* copy attributes from user space, may be less than sizeof(bpf_attr) */
-+	memset(&attr, 0, sizeof(attr));
- 	if (copy_from_user(&attr, uattr, size) != 0)
- 		return -EFAULT;
++	err = ks_check_endian(ks);
++	if (err)
++		goto err_free;
++
+ 	netdev->irq = platform_get_irq(pdev, 0);
  
+ 	if ((int)netdev->irq < 0) {
 
 
