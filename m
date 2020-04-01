@@ -2,263 +2,128 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1371DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93806C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D695520757
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9A720757
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:06:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGtHmylz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbgDADGA (ORCPT
+        id S1731679AbgDADGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:06:00 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49927 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731565AbgDADF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:05:59 -0400
-IronPort-SDR: N3j0UQPwa+2JrOlRnVgVhmdfH8bn502TNfu9UxoqI4Qx8MCdura+MfQhplywpJoiBYzYyWHPhZ
- qDIhB+4LtjxQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 20:05:59 -0700
-IronPort-SDR: I0JJPtP4Yx+0IkJM/4uzkhouL04OAB80OeHtIX6qTRvym5cwmsKkb2CSmU1dTNJBkCKmYiWSF3
- EsnTwGXk4FIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="249272195"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga003.jf.intel.com with ESMTP; 31 Mar 2020 20:05:57 -0700
-Date:   Wed, 1 Apr 2020 11:03:33 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v3 3/7] fpga: dfl: introduce interrupt trigger setting API
-Message-ID: <20200401030333.GB4212@yilunxu-OptiPlex-7050>
-References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
- <1585038763-22944-4-git-send-email-yilun.xu@intel.com>
- <20200331050141.GC8468@hao-dev>
+        Tue, 31 Mar 2020 23:06:11 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43176 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731565AbgDADGK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 23:06:10 -0400
+Received: by mail-lj1-f193.google.com with SMTP id g27so24136364ljn.10;
+        Tue, 31 Mar 2020 20:06:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Cncm8QU/gApJJ/eq3r8THmKymRZL/LY9q5cgRTKRs5I=;
+        b=VGtHmylzeqk02q6/FH1ZxxNVuU3blaX1gcapU99VOoalOqQhhGq5dx/euBjGrVPcz8
+         cG5HoNR42w/6abzq/JT1XUPZFQqOeRHt5gAmsYGFYo8U8qh1U+DT8zVvWrLqsgrbRc0C
+         8c9JyziOiXdH29NqE1kzBou4mae7doLVUd2eTweKZxoWKYRDwZ5uf3oe5RK8HYum9y/H
+         CDtQwUVpie6ONcKdyxxaS/9wxAnZK2SFm71Neoekh8xURrVDIQ12GutJi+OV2H1O0+0A
+         UkpX5tYeqvAvTOUxCAjY2DZsPUFAb8AwxvlN6YDRbYndkCgtg6DUg98GHRz8E1V/Ep6O
+         UIGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Cncm8QU/gApJJ/eq3r8THmKymRZL/LY9q5cgRTKRs5I=;
+        b=RM2XvgbNrr7ZzX+2EAoaNTQodPNUWoPDc3hkiTjHOcseSNoJ2zWuVY8GLpKPcmbYyX
+         aUjCkj4+q7CbER0aB8qMsWeAw9kIEXCe33BUZ89vkh+1d6Hri3hiqSHM7xc43/ScTdRU
+         jBug6B29oSly4kdsKKDmA7FO199Qf4vkKKjNi0/OsaaZyfweUwr3sOF6ansoQPtNwSru
+         PX1AYIODDbWo6WaEOFHkY52ERl2RWTcDgnxzI9zyCeVi3DkXToWEYXBnCvpewBOhmCGK
+         XlsAflUfKyIYFkrQxugIkyIx2QZzm0lqBwh/4Q7Mis9W6S99zpqaL9zHtc0AwbZPLuba
+         Y6Sw==
+X-Gm-Message-State: AGi0PuYRoFgtTUP+VVKQpgtdf6wcJHtxVLCJntIZ9AMbl6J8VT6myOH1
+        Fm0GQHUClk/5PCXtG0nXo9if49klu7LrtqwR9Ec=
+X-Google-Smtp-Source: APiQypLI+1TSCwhyI5FaKsxRC08UvwMys/ji4hC4ScQIHFamJxow8zZZfWKmfWcrcTAoFT8MSfsJcfSVAJVGZhOfQc8=
+X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr11839809lji.150.1585710366578;
+ Tue, 31 Mar 2020 20:06:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331050141.GC8468@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+From:   "she90122 ." <she90122@gmail.com>
+Date:   Wed, 1 Apr 2020 11:05:55 +0800
+Message-ID: <CAMhTFwk8Ei3o8Zwo+gZHzjv+hHtpfeWeOxFqu2s2QpaH6H2bVA@mail.gmail.com>
+Subject: [v3,1/1] EDAC: (pnd2) Change the return value of function
+ apl_check_ecc_active() & dnv_check_ecc_active() when installed the non-ECC
+ memory device.
+To:     she90122 <she90122@gmail.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Amy.Shih" <Amy.Shih@advantech.com.tw>,
+        "Oakley.Ding" <Oakley.Ding@advantech.com.tw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:01:41PM +0800, Wu Hao wrote:
-> On Tue, Mar 24, 2020 at 04:32:39PM +0800, Xu Yilun wrote:
-> > FPGA user applications may be interested in interrupts generated by
-> > DFL features. For example, users can implement their own FPGA
-> > logics with interrupts enabled in AFU (Accelerated Function Unit,
-> > dynamic region of DFL based FPGA). So user applications need to be
-> > notified to handle these interrupts.
-> > 
-> > In order to allow userspace applications to monitor interrupts,
-> > driver requires userspace to provide eventfds as interrupt
-> > notification channels. Applications then poll/select on the eventfds
-> > to get notified.
-> > 
-> > This patch introduces a generic helper function for sub features to
-> > do eventfds binding with given interrupts.
-> > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > ----
-> > v2: use unsigned int instead of int for irq array indexes in
-> >     dfl_fpga_set_irq_triggers()
-> >     Improves comments for NULL fds param in dfl_fpga_set_irq_triggers()
-> > v3: Improve comments of dfl_fpga_set_irq_triggers()
-> >     refines code for dfl_fpga_set_irq_triggers, delete local variable j
-> > ---
-> >  drivers/fpga/dfl.c | 97 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/fpga/dfl.h | 11 +++++++
-> >  2 files changed, 108 insertions(+)
-> > 
-> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> > index bc8d966..80805e5 100644
-> > --- a/drivers/fpga/dfl.c
-> > +++ b/drivers/fpga/dfl.c
-> > @@ -535,6 +535,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  		unsigned int i;
-> >  
-> >  		/* save resource information for each feature */
-> > +		feature->dev = fdev;
-> >  		feature->id = finfo->fid;
-> >  		feature->resource_index = index;
-> >  		feature->ioaddr = finfo->ioaddr;
-> > @@ -1389,6 +1390,102 @@ int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vfs)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dfl_fpga_cdev_config_ports_vf);
-> >  
-> > +static irqreturn_t dfl_irq_handler(int irq, void *arg)
-> > +{
-> > +	struct eventfd_ctx *trigger = arg;
-> > +
-> > +	eventfd_signal(trigger, 1);
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int do_set_irq_trigger(struct dfl_feature *feature, unsigned int idx,
-> > +			      int fd)
-> > +{
-> > +	struct platform_device *pdev = feature->dev;
-> > +	struct eventfd_ctx *trigger;
-> > +	int irq, ret;
-> > +
-> > +	if (idx >= feature->nr_irqs)
-> > +		return -EINVAL;
-> > +
-> > +	irq = feature->irq_ctx[idx].irq;
-> > +
-> > +	if (feature->irq_ctx[idx].trigger) {
-> > +		free_irq(irq, feature->irq_ctx[idx].trigger);
-> > +		kfree(feature->irq_ctx[idx].name);
-> > +		eventfd_ctx_put(feature->irq_ctx[idx].trigger);
-> > +		feature->irq_ctx[idx].trigger = NULL;
-> > +	}
-> > +
-> > +	if (fd < 0)
-> > +		return 0;
-> > +
-> > +	feature->irq_ctx[idx].name =
-> > +		kasprintf(GFP_KERNEL, "fpga-irq[%u](%s-%llx)", idx,
-> > +			  dev_name(&pdev->dev),
-> > +			  (unsigned long long)feature->id);
-> > +	if (!feature->irq_ctx[idx].name)
-> > +		return -ENOMEM;
-> > +
-> > +	trigger = eventfd_ctx_fdget(fd);
-> > +	if (IS_ERR(trigger)) {
-> > +		ret = PTR_ERR(trigger);
-> > +		goto free_name;
-> > +	}
-> > +
-> > +	ret = request_irq(irq, dfl_irq_handler, 0,
-> > +			  feature->irq_ctx[idx].name, trigger);
-> > +	if (!ret) {
-> > +		feature->irq_ctx[idx].trigger = trigger;
-> > +		return ret;
-> > +	}
-> > +
-> > +	eventfd_ctx_put(trigger);
-> > +free_name:
-> > +	kfree(feature->irq_ctx[idx].name);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +/**
-> > + * dfl_fpga_set_irq_triggers - set eventfd triggers for dfl feature interrupts
-> > + *
-> > + * @feature: dfl sub feature.
-> > + * @start: start of irq index in this dfl sub feature.
-> > + * @count: number of irqs.
-> > + * @fds: eventfds to bind with irqs. unbind related irq if fds[n] is negative.
-> > + *	 unbind "count" specified number of irqs if fds ptr is NULL.
-> > + *
-> > + * Bind given eventfds with irqs in this dfl sub feature. Unbind related irq if
-> > + * fds[n] is negative. Unbind "count" specified number of irqs if fds ptr is
-> > + * NULL.
-> > + *
-> > + * Return: 0 on success, negative error code otherwise.
-> > + */
-> > +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
-> > +			      unsigned int count, int32_t *fds)
-> > +{
-> > +	unsigned int i;
-> > +	int ret = 0;
-> > +
-> > +	if (start + count < start || start + count > feature->nr_irqs)
-> > +		return -EINVAL;
-> > +
-> > +	for (i = 0; i < count; i++) {
-> > +		int fd = fds ? fds[i] : -1;
-> > +
-> > +		ret = do_set_irq_trigger(feature, start + i, fd);
-> > +		if (ret) {
-> > +			while (i--)
-> > +				do_set_irq_trigger(feature, start + i, -1);
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dfl_fpga_set_irq_triggers);
-> 
-> When i looked into patch 4, 5, 6. I found the ioctl handling functions to set
-> irq triggers are exact the same. Do you think is it possible to share more
-> common code then?
+From: Amy Shih <amy.shih@advantech.com.tw>
 
-Yes, I think the common code could be added in Patch #4.
+Set function apl_check_ecc_active() &
+dnv_check_ecc_active() to return -ENXIO when installed the non-ECC
+memory device. And print the message in pnd2_init() accordingly.
 
-> 
-> Other place looks good to me.
-> 
-> Thanks
-> Hao
-> 
-> > +
-> >  static void __exit dfl_fpga_exit(void)
-> >  {
-> >  	dfl_chardev_uinit();
-> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> > index 4bc165f..63eacef 100644
-> > --- a/drivers/fpga/dfl.h
-> > +++ b/drivers/fpga/dfl.h
-> > @@ -24,6 +24,8 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/uuid.h>
-> >  #include <linux/fpga/fpga-region.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/eventfd.h>
-> >  
-> >  /* maximum supported number of ports */
-> >  #define MAX_DFL_FPGA_PORT_NUM 4
-> > @@ -213,14 +215,19 @@ struct dfl_feature_driver {
-> >   * struct dfl_feature_irq_ctx - dfl private feature interrupt context
-> >   *
-> >   * @irq: Linux IRQ number of this interrupt.
-> > + * @trigger: eventfd context to signal when interrupt happens.
-> > + * @name: irq name needed when requesting irq.
-> >   */
-> >  struct dfl_feature_irq_ctx {
-> >  	int irq;
-> > +	struct eventfd_ctx *trigger;
-> > +	char *name;
-> >  };
-> >  
-> >  /**
-> >   * struct dfl_feature - sub feature of the feature devices
-> >   *
-> > + * @dev: ptr to pdev of the feature device which has the sub feature.
-> >   * @id: sub feature id.
-> >   * @resource_index: each sub feature has one mmio resource for its registers.
-> >   *		    this index is used to find its mmio resource from the
-> > @@ -231,6 +238,7 @@ struct dfl_feature_irq_ctx {
-> >   * @ops: ops of this sub feature.
-> >   */
-> >  struct dfl_feature {
-> > +	struct platform_device *dev;
-> >  	u64 id;
-> >  	int resource_index;
-> >  	void __iomem *ioaddr;
-> > @@ -506,4 +514,7 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id);
-> >  int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id);
-> >  void dfl_fpga_cdev_config_ports_pf(struct dfl_fpga_cdev *cdev);
-> >  int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vf);
-> > +
-> > +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
-> > +			      unsigned int count, int32_t *fds);
-> >  #endif /* __FPGA_DFL_H */
-> > -- 
-> > 2.7.4
+Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
+---
+Changes in v3:
+- Change the return value of function check_ecc when installed the
+non-ECC memory device.
+Changes in v2:
+- Remove the word "error" from output message.
+---
+ drivers/edac/pnd2_edac.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c index
+933f772..27172d7 100644
+--- a/drivers/edac/pnd2_edac.c
++++ b/drivers/edac/pnd2_edac.c
+@@ -1089,7 +1089,7 @@ static int apl_check_ecc_active(void)
+  for (i = 0; i < APL_NUM_CHANNELS; i++)
+  if (chan_mask & BIT(i))
+  ret += check_channel(i);
+- return ret ? -EINVAL : 0;
++ return ret ? -ENXIO : 0;
+ }
+
+ #define DIMMS_PRESENT(d) ((d)->rken0 + (d)->rken1 + (d)->rken2 +
+(d)->rken3) @@ -1111,7 +1111,7 @@ static int
+dnv_check_ecc_active(void)
+
+  for (i = 0; i < DNV_NUM_CHANNELS; i++)
+  ret += check_unit(i);
+- return ret ? -EINVAL : 0;
++ return ret ? -ENXIO : 0;
+ }
+
+ static int get_memory_error_data(struct mem_ctl_info *mci, u64 addr,
+@@ -1572,7 +1572,12 @@ static int __init pnd2_init(void)
+
+  rc = pnd2_probe();
+  if (rc < 0) {
+- pnd2_printk(KERN_ERR, "Failed to register device with error %d.\n", rc);
++ if (rc == -ENXIO)
++ pnd2_printk(KERN_INFO, "System is not using ECC memory\n");
++ else
++ pnd2_printk(KERN_ERR,
++     "Failed to register device with error %d.\n",
++     rc);
+  return rc;
+  }
+
+--
+1.8.3.1
