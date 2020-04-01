@@ -2,309 +2,267 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0E4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51004C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5789C20776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1361820776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6roFE5d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7pN0ek8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732437AbgDALja (ORCPT
+        id S1732465AbgDALkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:39:30 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35094 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgDALja (ORCPT
+        Wed, 1 Apr 2020 07:40:33 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41287 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgDALkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:39:30 -0400
-Received: by mail-io1-f68.google.com with SMTP id o3so19690321ioh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 04:39:28 -0700 (PDT)
+        Wed, 1 Apr 2020 07:40:32 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h9so30121320wrc.8;
+        Wed, 01 Apr 2020 04:40:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B6LtkV31Mx0Wb2yWk+q4vycLOOPy+wzd4O74v4uZk5c=;
-        b=n6roFE5dLAi4JKjmSsulf2z+8Omo6kkxYtrR1zQC48clYebJV3t5LbN0FcqhYZ9rLp
-         Q9qu6iMTDaVaWr5jo9STCgs6GkqQK0qdL5jaReYmYfpMUzSfh8LDdo6rOrfIN6yoz+7T
-         NBZnggh28MMaUluimTxJt44ZWOBkSv60Q/j0ms1mrozVASJhJOqjnKwIkjrOOf6NGABN
-         qF0VWNuJ7QL3LAEbzWipYJZLowk9oMHyjaKxmFr4j20JgvPR6wBwlSMaIepoEJPnWPKE
-         PrkT+PZIc1T8jXG270hT9KQr3X7Y9zDRNtH0DjYLe0Da8lxtpY7Vq4CD67KAa7KAABkM
-         P/6g==
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UXj4S2N8S3pxWzpMeRPF1iXT9UA7smU70spz8e6MUnk=;
+        b=N7pN0ek87q9YNigLOf8kJDNhDHph0lL3WKcmTYMGA/HY4SChCXS3S6rcQc6pLl0wy0
+         T53L4L8mJCIaShprsYUjEvC0qsbk8Voonz2H0pZ8Ff+xbGfK/9hjX8cry0/Bzz4hyKdX
+         WoBM2+YyzcvuS0htasHYfVsOU5SqqzH5pjVfzzUpf046r2ul7sEMn9ens/Ni6ExpbTWd
+         ywDKRf8yT8pex6S2hpitGXOolL4/644AJUUalAcKwwfUecm2xiHRpjpdE2Mqg2GOVxWs
+         LuiFgPAbDvEXgFu8bwuv1Px4v+iS5Gi3ySX14a/298NjTW/JQgEYYoOjymit9yp73ykz
+         9JSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B6LtkV31Mx0Wb2yWk+q4vycLOOPy+wzd4O74v4uZk5c=;
-        b=d1/bj2dhCDGiBE2pxJuPYjObGbzPcYdUspuzmewyC3nL5AIIiikFtQePMrAtJdCX2X
-         ZnhIe1FP3lB7+7Spp0ZcVe6Df8z9WjOWuxzIs3YrhuqvOrYqu64q1aEoLM3obko+dO3x
-         mJkTj9hgxuU+rSeF7vyBWl5j33EEEKA6qbC9JtVJAxJtXtjv+X3BJfb4oONJ4UlguH9+
-         lLJbGOKB8yaFICSEr/KO4ouij/Cs7MkK10S6OfDk9VJDjBiP62gE78hri59PGj016ZrX
-         8n3hZD4kinfUb5HZtaO2k/X+GiVyVny/UFLVTKZZXykzQluPLZGJdYI1ZktuH0qf0sa/
-         c+XA==
-X-Gm-Message-State: ANhLgQ0Ynw3P+w3wO33FdEeyVkC/VW9LVq3A9AInMSO3/IksSZjZfTCE
-        cBlftK6bcnAGi0+bEJqQuzhQGxD6iIHNMcfXWQ==
-X-Google-Smtp-Source: ADFU+vvUtYp5erv69vCz5C7zMJFuQoYTx5bIquJakLPUKHJ9s2Ui++AVwJabmaFX5DajcUrRg9nMPrjN76MTMFJGkyY=
-X-Received: by 2002:a05:6602:2242:: with SMTP id o2mr19807209ioo.22.1585741167864;
- Wed, 01 Apr 2020 04:39:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200325101431.12341-1-andrew.cooper3@citrix.com>
- <20200331175810.30204-1-andrew.cooper3@citrix.com> <CAMzpN2i6Nf0VDZ82mXyFixN879FC4eZfqe-LzWGkvygcz1gH_Q@mail.gmail.com>
- <c46bcb6d-4256-2d65-9cd9-33e010846de4@citrix.com> <CAMzpN2gdkmYYbQatFk66QMpiuZSfnUQUVtJ30VYF7nsX_+XVgA@mail.gmail.com>
- <bdf7995d-2d50-9bb9-8066-6c4ccfaa5b52@citrix.com>
-In-Reply-To: <bdf7995d-2d50-9bb9-8066-6c4ccfaa5b52@citrix.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Wed, 1 Apr 2020 07:39:16 -0400
-Message-ID: <CAMzpN2g0LS5anGc7CXco4pgBHhGzc8hw+shMOg8WEWGsx+BHpg@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/smpboot: Remove 486-isms from the modern AP boot path
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Josh Boyer <jwboyer@redhat.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UXj4S2N8S3pxWzpMeRPF1iXT9UA7smU70spz8e6MUnk=;
+        b=cyV5ra0F8M9STcf/LY0hdt4JJvveCQa1Ltol7pPNiH+CoSQLEN6gULfkY95BKVT7/q
+         CpmaAomkQxtbn4hhEF0XVx3qqrlHSrhvYe/c4wnSn9A7FOdNgyuBZrnRscKs8l6R4CvI
+         Aa+BSRsOUqfyP0/xC+HdA449Si2PEEl/XOnSh70EpWWZCAhK6dvhZe4OQpNUSWOrKnrG
+         DViipL1GFAR7nroFMt8HD0gcYnrmVNDOMzxJc86/EJH8DOzbsViYFfsifnTTv1UHBNm7
+         L9h4S2JqjV3p5yrENEj45PiTQ8bUHbILvIokensL8WI5oG7uzcjnJ2Aa+UMDftc4ffIW
+         93iA==
+X-Gm-Message-State: ANhLgQ3jZlW4lfrhOGddIhxFFlzpOdOrr500orb4W8sB8c3AJqS8scZE
+        zUWru1Weo4uNpqx5AWsbI6IXPET7
+X-Google-Smtp-Source: ADFU+vtsd8wIQgkU92uTrK154XkBblfZv/jo5vdU8FNH6NB1B1TEqHw9G2BRiHwvNm6bJAL4hKvlOg==
+X-Received: by 2002:a5d:630e:: with SMTP id i14mr25578113wru.260.1585741229669;
+        Wed, 01 Apr 2020 04:40:29 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id f12sm2334746wmh.4.2020.04.01.04.40.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 04:40:29 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, Andrei Vagin <avagin@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Len Brown <len.brown@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Martin Molnar <martin.molnar.programming@gmail.com>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        jailhouse-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: clone3: allow creation of time namespace with offset
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Adrian Reber <areber@redhat.com>
+References: <20200317083043.226593-1-areber@redhat.com>
+ <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+ <20200319081137.GC223854@dcbz.redhat.com>
+ <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
+ <20200319102955.i7slokibkkysz6g6@wittgenstein>
+ <20200320183355.GA118769@gmail.com>
+ <20200324160945.orcm75avj2ol3eop@wittgenstein>
+ <20200324162546.GG358599@dcbz.redhat.com>
+ <20200324175649.fqkwiuvs2drk26ln@wittgenstein>
+ <20200325075836.GK358599@dcbz.redhat.com>
+ <20200325112652.sx66bhad7cqdsatm@wittgenstein>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <78979e3f-293e-998a-0d7b-40da2616afcf@gmail.com>
+Date:   Wed, 1 Apr 2020 13:40:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200325112652.sx66bhad7cqdsatm@wittgenstein>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 5:22 AM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
->
-> On 31/03/2020 23:53, Brian Gerst wrote:
-> > On Tue, Mar 31, 2020 at 6:44 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
-> >> On 31/03/2020 23:23, Brian Gerst wrote:
-> >>> On Tue, Mar 31, 2020 at 1:59 PM Andrew Cooper <andrew.cooper3@citrix.com> wrote:
-> >>>> Linux has an implementation of the Universal Start-up Algorithm (MP spec,
-> >>>> Appendix B.4, Application Processor Startup), which includes unconditionally
-> >>>> writing to the Bios Data Area and CMOS registers.
-> >>>>
-> >>>> The warm reset vector is only necessary in the non-integrated Local APIC case.
-> >>>> UV and Jailhouse already have an opt-out for this behaviour, but blindly using
-> >>>> the BDA and CMOS on a UEFI or other reduced hardware system isn't clever.
-> >>>>
-> >>>> We could make this conditional on the integrated-ness of the Local APIC, but
-> >>>> 486-era SMP isn't supported.  Drop the logic completely, tidying up the includ
-> >>>> list and header files as appropriate.
-> >>>>
-> >>>> CC: Thomas Gleixner <tglx@linutronix.de>
-> >>>> CC: Ingo Molnar <mingo@redhat.com>
-> >>>> CC: Borislav Petkov <bp@alien8.de>
-> >>>> CC: "H. Peter Anvin" <hpa@zytor.com>
-> >>>> CC: x86@kernel.org
-> >>>> CC: Jan Kiszka <jan.kiszka@siemens.com>
-> >>>> CC: James Morris <jmorris@namei.org>
-> >>>> CC: David Howells <dhowells@redhat.com>
-> >>>> CC: Andrew Cooper <andrew.cooper3@citrix.com>
-> >>>> CC: Matthew Garrett <mjg59@google.com>
-> >>>> CC: Josh Boyer <jwboyer@redhat.com>
-> >>>> CC: Steve Wahl <steve.wahl@hpe.com>
-> >>>> CC: Mike Travis <mike.travis@hpe.com>
-> >>>> CC: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-> >>>> CC: Arnd Bergmann <arnd@arndb.de>
-> >>>> CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> >>>> CC: Giovanni Gherdovich <ggherdovich@suse.cz>
-> >>>> CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> >>>> CC: Len Brown <len.brown@intel.com>
-> >>>> CC: Kees Cook <keescook@chromium.org>
-> >>>> CC: Martin Molnar <martin.molnar.programming@gmail.com>
-> >>>> CC: Pingfan Liu <kernelfans@gmail.com>
-> >>>> CC: linux-kernel@vger.kernel.org
-> >>>> CC: jailhouse-dev@googlegroups.com
-> >>>> Suggested-by: "H. Peter Anvin" <hpa@zytor.com>
-> >>>> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
-> >>>> ---
-> >>>> v2:
-> >>>>  * Drop logic entirely, rather than retaining support in 32bit builds.
-> >>>> ---
-> >>>>  arch/x86/include/asm/apic.h        |  6 -----
-> >>>>  arch/x86/include/asm/x86_init.h    |  1 -
-> >>>>  arch/x86/kernel/apic/x2apic_uv_x.c |  1 -
-> >>>>  arch/x86/kernel/jailhouse.c        |  1 -
-> >>>>  arch/x86/kernel/platform-quirks.c  |  1 -
-> >>>>  arch/x86/kernel/smpboot.c          | 50 --------------------------------------
-> >>>>  6 files changed, 60 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> >>>> index 19e94af9cc5d..5c33f9374b28 100644
-> >>>> --- a/arch/x86/include/asm/apic.h
-> >>>> +++ b/arch/x86/include/asm/apic.h
-> >>>> @@ -472,12 +472,6 @@ static inline unsigned default_get_apic_id(unsigned long x)
-> >>>>                 return (x >> 24) & 0x0F;
-> >>>>  }
-> >>>>
-> >>>> -/*
-> >>>> - * Warm reset vector position:
-> >>>> - */
-> >>>> -#define TRAMPOLINE_PHYS_LOW            0x467
-> >>>> -#define TRAMPOLINE_PHYS_HIGH           0x469
-> >>>> -
-> >>>>  extern void generic_bigsmp_probe(void);
-> >>>>
-> >>>>  #ifdef CONFIG_X86_LOCAL_APIC
-> >>>> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-> >>>> index 96d9cd208610..006a5d7fd7eb 100644
-> >>>> --- a/arch/x86/include/asm/x86_init.h
-> >>>> +++ b/arch/x86/include/asm/x86_init.h
-> >>>> @@ -229,7 +229,6 @@ enum x86_legacy_i8042_state {
-> >>>>  struct x86_legacy_features {
-> >>>>         enum x86_legacy_i8042_state i8042;
-> >>>>         int rtc;
-> >>>> -       int warm_reset;
-> >>>>         int no_vga;
-> >>>>         int reserve_bios_regions;
-> >>>>         struct x86_legacy_devices devices;
-> >>>> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-> >>>> index ad53b2abc859..5afcfd193592 100644
-> >>>> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
-> >>>> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-> >>>> @@ -343,7 +343,6 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
-> >>>>         } else if (!strcmp(oem_table_id, "UVH")) {
-> >>>>                 /* Only UV1 systems: */
-> >>>>                 uv_system_type = UV_NON_UNIQUE_APIC;
-> >>>> -               x86_platform.legacy.warm_reset = 0;
-> >>>>                 __this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
-> >>>>                 uv_set_apicid_hibit();
-> >>>>                 uv_apic = 1;
-> >>>> diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-> >>>> index 6eb8b50ea07e..d628fe92d6af 100644
-> >>>> --- a/arch/x86/kernel/jailhouse.c
-> >>>> +++ b/arch/x86/kernel/jailhouse.c
-> >>>> @@ -210,7 +210,6 @@ static void __init jailhouse_init_platform(void)
-> >>>>         x86_platform.calibrate_tsc      = jailhouse_get_tsc;
-> >>>>         x86_platform.get_wallclock      = jailhouse_get_wallclock;
-> >>>>         x86_platform.legacy.rtc         = 0;
-> >>>> -       x86_platform.legacy.warm_reset  = 0;
-> >>>>         x86_platform.legacy.i8042       = X86_LEGACY_I8042_PLATFORM_ABSENT;
-> >>>>
-> >>>>         legacy_pic                      = &null_legacy_pic;
-> >>>> diff --git a/arch/x86/kernel/platform-quirks.c b/arch/x86/kernel/platform-quirks.c
-> >>>> index b348a672f71d..d922c5e0c678 100644
-> >>>> --- a/arch/x86/kernel/platform-quirks.c
-> >>>> +++ b/arch/x86/kernel/platform-quirks.c
-> >>>> @@ -9,7 +9,6 @@ void __init x86_early_init_platform_quirks(void)
-> >>>>  {
-> >>>>         x86_platform.legacy.i8042 = X86_LEGACY_I8042_EXPECTED_PRESENT;
-> >>>>         x86_platform.legacy.rtc = 1;
-> >>>> -       x86_platform.legacy.warm_reset = 1;
-> >>>>         x86_platform.legacy.reserve_bios_regions = 0;
-> >>>>         x86_platform.legacy.devices.pnpbios = 1;
-> >>>>
-> >>>> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> >>>> index fe3ab9632f3b..a9f5b511d0b4 100644
-> >>>> --- a/arch/x86/kernel/smpboot.c
-> >>>> +++ b/arch/x86/kernel/smpboot.c
-> >>>> @@ -72,7 +72,6 @@
-> >>>>  #include <asm/fpu/internal.h>
-> >>>>  #include <asm/setup.h>
-> >>>>  #include <asm/uv/uv.h>
-> >>>> -#include <linux/mc146818rtc.h>
-> >>>>  #include <asm/i8259.h>
-> >>>>  #include <asm/misc.h>
-> >>>>  #include <asm/qspinlock.h>
-> >>>> @@ -119,34 +118,6 @@ int arch_update_cpu_topology(void)
-> >>>>         return retval;
-> >>>>  }
-> >>>>
-> >>>> -static inline void smpboot_setup_warm_reset_vector(unsigned long start_eip)
-> >>>> -{
-> >>>> -       unsigned long flags;
-> >>>> -
-> >>>> -       spin_lock_irqsave(&rtc_lock, flags);
-> >>>> -       CMOS_WRITE(0xa, 0xf);
-> >>>> -       spin_unlock_irqrestore(&rtc_lock, flags);
-> >>>> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_HIGH)) =
-> >>>> -                                                       start_eip >> 4;
-> >>>> -       *((volatile unsigned short *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) =
-> >>>> -                                                       start_eip & 0xf;
-> >>>> -}
-> >>>> -
-> >>>> -static inline void smpboot_restore_warm_reset_vector(void)
-> >>>> -{
-> >>>> -       unsigned long flags;
-> >>>> -
-> >>>> -       /*
-> >>>> -        * Paranoid:  Set warm reset code and vector here back
-> >>>> -        * to default values.
-> >>>> -        */
-> >>>> -       spin_lock_irqsave(&rtc_lock, flags);
-> >>>> -       CMOS_WRITE(0, 0xf);
-> >>>> -       spin_unlock_irqrestore(&rtc_lock, flags);
-> >>>> -
-> >>>> -       *((volatile u32 *)phys_to_virt(TRAMPOLINE_PHYS_LOW)) = 0;
-> >>>> -}
-> >>>> -
-> >>>>  static void init_freq_invariance(void);
-> >>>>
-> >>>>  /*
-> >>>> @@ -1049,20 +1020,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
-> >>>>          * the targeted processor.
-> >>>>          */
-> >>>>
-> >>>> -       if (x86_platform.legacy.warm_reset) {
-> >>>> -
-> >>>> -               pr_debug("Setting warm reset code and vector.\n");
-> >>>> -
-> >>>> -               smpboot_setup_warm_reset_vector(start_ip);
-> >>>> -               /*
-> >>>> -                * Be paranoid about clearing APIC errors.
-> >>>> -               */
-> >>>> -               if (APIC_INTEGRATED(boot_cpu_apic_version)) {
-> >>>> -                       apic_write(APIC_ESR, 0);
-> >>>> -                       apic_read(APIC_ESR);
-> >>>> -               }
-> >>>> -       }
-> >>>> -
-> >>>>         /*
-> >>>>          * AP might wait on cpu_callout_mask in cpu_init() with
-> >>>>          * cpu_initialized_mask set if previous attempt to online
-> >>>> @@ -1118,13 +1075,6 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
-> >>>>                 }
-> >>>>         }
-> >>>>
-> >>>> -       if (x86_platform.legacy.warm_reset) {
-> >>>> -               /*
-> >>>> -                * Cleanup possible dangling ends...
-> >>>> -                */
-> >>>> -               smpboot_restore_warm_reset_vector();
-> >>>> -       }
-> >>>> -
-> >>>>         return boot_error;
-> >>>>  }
-> >>> You removed x86_platform.legacy.warm_reset in the original patch, but
-> >>> that is missing in V2.
-> >> Second hunk?  Or are you referring to something different?
-> > Removing the warm_reset field from struct x86_legacy_features.
->
-> Ok, but that is still present as the 2nd hunk of the patch.
+On 3/25/20 12:26 PM, Christian Brauner wrote:
+> On Wed, Mar 25, 2020 at 08:58:36AM +0100, Adrian Reber wrote:
+>> On Tue, Mar 24, 2020 at 06:56:49PM +0100, Christian Brauner wrote:
+>>> On Tue, Mar 24, 2020 at 05:25:46PM +0100, Adrian Reber wrote:
+>>>> On Tue, Mar 24, 2020 at 05:09:45PM +0100, Christian Brauner wrote:
+>>>>> On Fri, Mar 20, 2020 at 11:33:55AM -0700, Andrei Vagin wrote:
+>>>>>> On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
+>>>>>>> On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
+>>>>>>>> On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
+>>>>>>>>
+>>>>>>>>> With Arnd's idea of only using nanoseconds, timens_offset would then
+>>>>>>>>> contain something like this:
+>>>>>>>>>
+>>>>>>>>> struct timens_offset {
+>>>>>>>>>         __aligned_s64 monotonic_offset_ns;
+>>>>>>>>>         __aligned_s64 boottime_offset_ns;
+>>>>>>>>> };
+>>>>>>>>>
+>>>>>>>>> I kind of prefer adding boottime and monotonic directly to struct clone_args
+>>>>>>>>>
+>>>>>>>>>         __aligned_u64 tls;
+>>>>>>>>>         __aligned_u64 set_tid;
+>>>>>>>>>         __aligned_u64 set_tid_size;
+>>>>>>>>> +       __aligned_s64 monotonic_offset_ns;
+>>>>>>>>> +       __aligned_s64 boottime_offset_ns;
+>>>>>>>>>  };
+>>>>>>>>
+>>>>>>>> I would also prefer the second approach using two 64-bit integers
+>>>>>>>> instead of a pointer, as it keeps the interface simpler to implement
+>>>>>>>> and simpler to interpret by other tools.
+>>>>>>>
+>>>>>>> Why I don't like has two reasons. There's the scenario where we have
+>>>>>>> added new extensions after the new boottime member and then we introduce
+>>>>>>> another offset. Then you'd be looking at:
+>>>>>>>
+>>>>>>> __aligned_u64 tls;
+>>>>>>> __aligned_u64 set_tid;
+>>>>>>> __aligned_u64 set_tid_size;
+>>>>>>> + __aligned_s64 monotonic_offset_ns;
+>>>>>>> + __aligned_s64 boottime_offset_ns;
+>>>>>>> __aligned_s64 something_1
+>>>>>>> __aligned_s64 anything_2
+>>>>>>> + __aligned_s64 sometime_offset_ns
+>>>>>>>
+>>>>>>> which bothers me just by looking at it. That's in addition to adding two
+>>>>>>> new members to the struct when most people will never set CLONE_NEWTIME.
+>>>>>>> We'll also likely have more features in the future that will want to
+>>>>>>> pass down more info than we want to directly expose in struct
+>>>>>>> clone_args, e.g. for a long time I have been thinking about adding a
+>>>>>>> struct for CLONE_NEWUSER that allows you to specify the id mappings you
+>>>>>>> want the new user namespace to get. We surely don't want to force all
+>>>>>>> new info into the uppermost struct. So I'm not convinced we should here.
+>>>>>>
+>>>>>> I think here we can start thinking about a netlink-like interface.
+>>>>>
+>>>>> I think netlink is just not a great model for an API and I would not
+>>>>> want us to go down that route.
+>>>>>
+>>>>> I kept thinking about this for a bit and I think that we will end up
+>>>>> growing more namespace-related functionality. So one thing that came to
+>>>>> my mind is the following layout:
+>>>>>
+>>>>> struct {
+>>>>> 	struct {
+>>>>> 		__s64 monotonic;
+>>>>> 		__s64 boot;
+>>>>> 	} time;
+>>>>> } namespaces;
+>>>>>
+>>>>> struct _clone_args {
+>>>>> 	__aligned_u64 flags;
+>>>>> 	__aligned_u64 pidfd;
+>>>>> 	__aligned_u64 child_tid;
+>>>>> 	__aligned_u64 parent_tid;
+>>>>> 	__aligned_u64 exit_signal;
+>>>>> 	__aligned_u64 stack;
+>>>>> 	__aligned_u64 stack_size;
+>>>>> 	__aligned_u64 tls;
+>>>>> 	__aligned_u64 set_tid;
+>>>>> 	__aligned_u64 set_tid_size;
+>>>>> 	__aligned_u64 namespaces;
+>>>>> 	__aligned_u64 namespaces_size;
+>>>>> };
+>>>>>
+>>>>> Then when we end up adding id mapping support for CLONE_NEWUSER we can
+>>>>> extend this with:
+>>>>>
+>>>>> struct {
+>>>>> 	struct {
+>>>>> 		__aligned_u64 monotonic;
+>>>>> 		__aligned_u64 boot;
+>>>
+>>> s/__aligned_u64/__s64/g
+>>>
+>>> Sorry, leftover from my first draft.
+>>>
+>>>>> 	} time;
+>>>>>
+>>>>> 	struct {
+>>>>> 		/* id mapping members */
+>>>>> 	} user;
+>>>>> } namespaces;
+>>>>>
+>>>>> Thoughts? Other ideas?
+>>>>
+>>>> Works for me.
+>>>>
+>>>> If we add the user namespace id mappings and then at some point a third
+>>>> element for the time namespace appears it would also start to be mixed.
+>>>> Just as you mentioned that a few mails ago.
+>>>
+>>> I think you misunderstand me or I'm misunderstanding you. That new time
+>>> namespace member would go into struct time {} so
+>>>
+>>> struct {
+>>> 	struct {
+>>> 		__s64 monotonic;
+>>> 		__s64 boot;
+>>> 		__s64 someothertime;
+>>> 	} time;
+>>>
+>>> 	struct {
+>>> 		/* id mapping members */
+>>> 	} user;
+>>> } namespaces;
 
-My apologies, Gmail was hiding that section of the patch because it
-was a reply to the original patch.  For future reference, add the
-version number to the title when resubmitting a patch (ie. [PATCH
-v2]).
+So far, this seems like the least worst approach to me :-).
 
---
-Brian Gerst
+I think it's reasonable to assume that there will be another
+time NS offset to add one day. I don't think anyone expected
+CLOCK_BOOTIME (added in 2011) at the time that CLOCK_MONOTONIC
+appeared (as part of the POSIX timers API in Linux 2.6.0 2003);
+similarly, we probably can't conceive now what clock might be
+added in the future that should also be governed by time
+namespaces.
+
+
+But...
+
+>> My question was about how does the kernel know how 'struct namespaces'
+>> is structured. How can an older kernel (which only is aware of two
+>> clocks) deal with a, like in this example, third clock. Will the size
+>> '__aligned_u64 namespaces_size' be used for versioning?
+> 
+> Yes, that would be the idea.
+
+The idea implied here (if I understand correctly) of "binary chop
+on the structure size to see what your kernel supports" is pretty
+clunky, IMO. It's worth at least considering alternatives. 
+For example, seccomp has a number of interesting interfaces to
+discover what the running kernel supports [1]. Maybe it is worth
+considering something similar for clone3()?
+
+Cheers,
+
+Michael
+
+[1]
+/proc/sys/kernel/seccomp/actions_avail (see seccomp(2))
+SECCOMP_GET_ACTION_AVAIL (see secommp(2))
+cgroups also provides something similar in the form of
+/sys/kernel/cgroup/features (see cgroups(7))
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
