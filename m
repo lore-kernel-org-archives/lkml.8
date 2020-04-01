@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F953C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5432AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A909206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18010206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g8Eg8jv3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FVv4cRBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbgDAMPe (ORCPT
+        id S1732481AbgDAMPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 1 Apr 2020 08:15:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40252 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732288AbgDAMPe (ORCPT
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33262 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727439AbgDAMPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Apr 2020 08:15:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585743333;
+        s=mimecast20190719; t=1585743332;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=p7VGwf4cuRJgF3sKdibEsjbhU2tO6rj8LiLsxk+nJEk=;
-        b=g8Eg8jv3GjWq9+IoMFISolg1CgvyE7TxElpg7ARTLEORSn6wvXirqQqTLog7kCUOEBbU4K
-        qJil1BndQqhGmhvcANx9UKGg9dQ8BCRGydz18eRPdEy4z1JQF28O5k+XzSh6G9VpzcD925
-        R9ZFhNqxNCAwyASUBN4IakRSz5XGBNM=
+         references:references; bh=dMRXdlkqaWAJr6EkBSZ3lz8D5ceOHGNbk9wL55ZxWV4=;
+        b=FVv4cRBu9hX+eBF4HJ2lYhSrg677ZTP1zPmWhC04IrY5U0kyhNZqRpbNEqVondP774jkPM
+        byn3pERDIUpkstdO8i4aIIQtsLHkreuC/J+F7QiklyaE7IuH4A9HaAkOYfQRgvXjgq/8Q2
+        T3ccSgHLNZBa4s37aQXWwNN9eLnMerk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-FoKro0ZhOA-jK-Wgq_veyg-1; Wed, 01 Apr 2020 08:15:31 -0400
-X-MC-Unique: FoKro0ZhOA-jK-Wgq_veyg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-67-s4pZ_xONOt2KeyqqukBeWA-1; Wed, 01 Apr 2020 08:15:31 -0400
+X-MC-Unique: s4pZ_xONOt2KeyqqukBeWA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B52A21005516;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B56B4800D5F;
         Wed,  1 Apr 2020 12:15:29 +0000 (UTC)
 Received: from fuller.cnet (ovpn-116-11.gru2.redhat.com [10.97.116.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C5EA99DEA;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C8ECDA0F2;
         Wed,  1 Apr 2020 12:15:29 +0000 (UTC)
 Received: by fuller.cnet (Postfix, from userid 1000)
-        id B4DBC42FDD12; Wed,  1 Apr 2020 09:15:03 -0300 (-03)
-Message-ID: <20200401121342.883941670@redhat.com>
+        id B7B7142FDD16; Wed,  1 Apr 2020 09:15:03 -0300 (-03)
+Message-ID: <20200401121342.930480720@redhat.com>
 User-Agent: quilt/0.66
-Date:   Wed, 01 Apr 2020 09:10:19 -0300
+Date:   Wed, 01 Apr 2020 09:10:20 -0300
 From:   Marcelo Tosatti <mtosatti@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
@@ -59,50 +59,36 @@ Cc:     Frederic Weisbecker <fweisbec@gmail.com>,
         Christoph Lameter <cl@linux.com>,
         Frederic Weisbecker <frederic@kernel.org>,
         Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [patch 1/4] kthread: switch to cpu_possible_mask
+Subject: [patch 2/4] isolation: set HK_FLAG_SCHED on nohz_full CPUs
 References: <20200401121018.104226700@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Next patch will switch unbound kernel threads mask to 
-housekeeping_cpumask(), a subset of cpu_possible_mask.
+Avoid idle load balancing on nohz_full CPUs.
 
-Switch from cpu_all_mask to cpu_possible_mask separately,
-to ease bisection.
+This avoids assigning tasks to such CPUs, when they enter idle.
 
 Suggested-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 
----
- kernel/kthread.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-Index: linux-2.6/kernel/kthread.c
+Index: linux-2.6/kernel/sched/isolation.c
 ===================================================================
---- linux-2.6.orig/kernel/kthread.c
-+++ linux-2.6/kernel/kthread.c
-@@ -347,7 +347,7 @@ struct task_struct *__kthread_create_on_
- 		 * The kernel thread should not inherit these properties.
- 		 */
- 		sched_setscheduler_nocheck(task, SCHED_NORMAL, &param);
--		set_cpus_allowed_ptr(task, cpu_all_mask);
-+		set_cpus_allowed_ptr(task, cpu_possible_mask);
- 	}
- 	kfree(create);
- 	return task;
-@@ -572,7 +572,7 @@ int kthreadd(void *unused)
- 	/* Setup a clean context for our children to inherit. */
- 	set_task_comm(tsk, "kthreadd");
- 	ignore_signals(tsk);
--	set_cpus_allowed_ptr(tsk, cpu_all_mask);
-+	set_cpus_allowed_ptr(tsk, cpu_possible_mask);
- 	set_mems_allowed(node_states[N_MEMORY]);
+--- linux-2.6.orig/kernel/sched/isolation.c
++++ linux-2.6/kernel/sched/isolation.c
+@@ -140,7 +140,8 @@ static int __init housekeeping_nohz_full
+ {
+ 	unsigned int flags;
  
- 	current->flags |= PF_NOFREEZE;
+-	flags = HK_FLAG_TICK | HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU | HK_FLAG_MISC;
++	flags = HK_FLAG_TICK | HK_FLAG_WQ | HK_FLAG_TIMER | HK_FLAG_RCU |
++		HK_FLAG_MISC | HK_FLAG_SCHED;
+ 
+ 	return housekeeping_setup(str, flags);
+ }
 
 
