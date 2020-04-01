@@ -2,112 +2,122 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1942C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14118C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30A120714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Bh2qGyCg"
+	by mail.kernel.org (Postfix) with ESMTP id DD29B2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585728040;
+	bh=im9NhckjMhp6IuKXAiwXCPVbJm/9/jk8yEApnbmzIgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1nqcYmjxYzHRb53KtEXslxLwaWfa1fx5UFJogqDA+mWjEWZmgElOZ1yUmIZTcaxY0
+	 DVRSSS0Fl7C475lrQ2Ff1r94uKjz5fP7Vzp5xO51FEbAbqrYt1lcszDBhcWt6opWzP
+	 dNTcaLtDVHWivWd36jjaWCiQ+bJ93trjtyEgnlVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732044AbgDAH5K (ORCPT
+        id S1731992AbgDAIAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:57:10 -0400
-Received: from ozlabs.org ([203.11.71.1]:36853 "EHLO ozlabs.org"
+        Wed, 1 Apr 2020 04:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731850AbgDAH5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:57:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1731850AbgDAIAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:00:39 -0400
+Received: from linux-8ccs (p5B2810DC.dip0.t-ipconnect.de [91.40.16.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sdnw02FRz9sRf;
-        Wed,  1 Apr 2020 18:57:07 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585727828;
-        bh=uaZXpbcktI4nhxoWwcmc0W6HK6J4xMMOw9PQDeoXi2g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Bh2qGyCg6Bf/4eZ82jvzwDp8FxZPnJyxs5L02gRtLnW8gSDc2SbANbX2Oqp72D/Y2
-         Ru1q8K3YC2PN/exQtn8HyGhq3uI+RkRJk4kmGRz24yd4iPRGR44q/eOlW0dMxZ16uz
-         MvRuRPdQL/PkPMNsjmy0c1U6Kdpvczcxr6rdssQHa/Zt6dCGsND8k17bKN1pouKZot
-         ZZhkFLGBotopTEe7jGmAZ7kQTmep8z5RNRUZQrERPC7pAsvBy9vePShDBJPk6tMSd2
-         QtvXzl1XLzvrls/NknownTosjLDAYgMNCSmp222cDw4LFEcJ552cQG1aoI7IIvBQUq
-         O6JQFQSgBIWpQ==
-Date:   Wed, 1 Apr 2020 18:57:06 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Subject: Re: linux-next: build failure after merge of the gpio tree
-Message-ID: <20200401185706.464bee26@canb.auug.org.au>
-In-Reply-To: <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
-References: <20200401151904.6948af20@canb.auug.org.au>
-        <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 38CBD20772;
+        Wed,  1 Apr 2020 08:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585728039;
+        bh=im9NhckjMhp6IuKXAiwXCPVbJm/9/jk8yEApnbmzIgs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mM7o4/Xi38CVA5xh9o6QlLEVPe3IbxkThzhk1h5UQnzvQXgvOlgOiVhNgJyYr5yto
+         wCyLOPe+KrWXJjfiG0DxmPcwk/nCM9/2Dhsc82DF0AVrszXZMN8DsXq1YqthgDsIzr
+         dUkoL+0ahXpIBA9kt4U7WQygpErH5algqY2klaVw=
+Date:   Wed, 1 Apr 2020 10:00:34 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] modpost: move the namespace field in Module.symvers
+ last
+Message-ID: <20200401080033.GA12505@linux-8ccs>
+References: <20200311170120.12641-1-jeyu@kernel.org>
+ <CANcMJZDhSUV8CU_ixOSxstVVBMW3rVrrQVYMmy1fz=OdhxA_GQ@mail.gmail.com>
+ <CANcMJZD9Lz-J_idL5i225VR_3Mo6PcTRsYBBrGsMByX6W4jepQ@mail.gmail.com>
+ <20200331095802.GA3026@linux-8ccs>
+ <CALAqxLWZ8aET=gHpYUi_v0ez-gDT5nPEnAEb+2uxebFU8D9RXg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/horQwCCD3=O_VL_8S_LhHaQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CALAqxLWZ8aET=gHpYUi_v0ez-gDT5nPEnAEb+2uxebFU8D9RXg@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/horQwCCD3=O_VL_8S_LhHaQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Geert,
-
-On Wed, 1 Apr 2020 09:49:00 +0200 Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
++++ John Stultz [31/03/20 15:09 -0700]:
+>On Tue, Mar 31, 2020 at 2:58 AM Jessica Yu <jeyu@kernel.org> wrote:
+>> +++ John Stultz [30/03/20 23:25 -0700]:
+>> >On Mon, Mar 30, 2020 at 10:49 PM John Stultz <john.stultz@linaro.org> wrote:
+>> >> The only difference I can find is that the Module.symvers in the
+>> >> external module project doesn't seem to have a tab at the end of each
+>> >> line (where as Module.symvers for the kernel - which doesn't seem to
+>> >> have any namespace names - does).
+>> >>
+>> >> Is there something I need to tweak on the external Kbuild to get
+>> >> Module.symvers to be generated properly (with the empty tab at the
+>> >> end) for this new change?
+>> >> Or does the parser need to be a bit more flexible?
+>> >>
+>> >
+>> >One extra clue on this: I noticed the external module Makefile had
+>> >KBUILD_EXTRA_SYMBOLS="$(EXTRA_SYMBOLS)"  in the $(MAKE) string, where
+>> >EXTRA_SYMBOLS pointed to some files that no longer exist.  I removed
+>> >the KBUILD_EXTRA_SYMBOLS= argument, and magically, the generated
+>> >Module.symvers now had tabs at the end of each line.
+>> >
+>> >I wonder if there some path in the KBUILD_EXTRA_SYMBOLS= handling that
+>> >isn't generating the output in the same way?
+>>
+>> I'm afraid we're going to need some specifics on reproducing this
+>> issue. Could you provide a reproducer or steps on how to reproduce? I
+>> have not been able to trigger this problem even with
+>> KBUILD_EXTRA_SYMBOLS pointing to an invalid path (I also tested with
+>> valid paths).
+>>
+>> I tested with a skeleton external module that exports two functions,
+>> one with a namespace and one without. I built this module against the
+>> latest v5.6 kernel. The generated Module.symvers was correct - the
+>> namespaced function had the namespace at the end and the other
+>> function without a namespace had a tab at the end.
+>>
+>> I also tested with two external modules, one with a symbol dependency
+>> on the other, so KBUILD_EXTRA_SYMBOLS usage is required here. The
+>> generated Module.symvers was also correct here.
+>>
+>> The only advice I can offer at this time is that all external modules
+>> must be built against the new kernel to generate a correctly formated
+>> Module.symvers file. If you have any KBUILD_EXTRA_SYMBOLS pointing to
+>> an outdated Module.symvers file for example, you will see the "FATAL:
+>> parse error in symbol dump file" error.
 >
-> Thanks for your patch, which I assume is a quick build fix.
+>Well, my apologies.  :(  In the light of day, this isn't reproducing
+>anymore. I'm a bit at a loss as to why I was tripping over it so
+>regularly before, but I suspect something in the build is leaving a
+>stale Modules.symvers around from before this patch landed.
+>
+>Terribly sorry for the noise.
 
-Yep, rather than reverting the other patches again.
+No problem, thank for reporting back!
 
-> I see LinusW has already applied it...
->=20
-> > --- a/drivers/pinctrl/devicetree.c
-> > +++ b/drivers/pinctrl/devicetree.c
-> > @@ -103,6 +103,7 @@ struct pinctrl_dev *of_pinctrl_get(struct device_no=
-de *np)
-> >  {
-> >         return get_pinctrl_dev_from_of_node(np);
-> >  }
-> > +EXPORT_SYMBOL_GPL(of_pinctrl_get);
-> >
-> >  static int dt_to_map_one_config(struct pinctrl *p,
-> >                                 struct pinctrl_dev *hog_pctldev, =20
->=20
-> As exporting symbols has its (space) cost, and of_pinctrl_get() is a tiny
-> function, what about making it an inline function in
-> include/linux/pinctrl/pinctrl.h instead?
-
-Makes sense to me.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/horQwCCD3=O_VL_8S_LhHaQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6ESVIACgkQAVBC80lX
-0GxUBAf/UF08ITAeC5ymlwSt/bIRk+QQQ4XDhvCh03sypQxzc+5PFaTNanv+nZtS
-OHMSe5343RHvX6FFWO/jh0IRdVicLhWBGJmqWscxbuVs2wepMAz7cVgiW+L75g3Q
-JNOHFLClPWeeIn2RYTGQRPojASMfjUbarGZcUzLgOtV+vjARmGxFILuRXO1lpTck
-urOm1i7Djwa+QdAX8PuYU/z4hI24S7aytnXTtBgqPTDdyUribpPeNipe1P51Ahdi
-KS640N3SdpOktuyld1sk29GgOhaTC+pMYPbwlRJ8Cg7mCIH5pjjPwnAsbvnQhPkv
-WHsNDXy0cUxfPCRx9gSpknQDgZfPDg==
-=gRhl
------END PGP SIGNATURE-----
-
---Sig_/horQwCCD3=O_VL_8S_LhHaQ--
+Jessica
