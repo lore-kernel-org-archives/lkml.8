@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E38C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76132C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7201620857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CB572137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758148;
-	bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
+	s=default; t=1585758152;
+	bh=5XjkFM5wyNFBP6SLOe9dlSinzdyO5temJPYtDJ7S7Ak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UhGRDV3yIqb8GJuJky6b+ySwuzJOBU/q6acDsLlcpJvOWun+7g5MAZmH47lmq1c2L
-	 py+bZaLqLdy7tB5i6/7frgh2+8ZyNSyQYROQ/ZzB4hfTECnBO2B4Rq/Jvi8wyjwG6h
-	 YCjTgn8BgdvxBi4ehQmDLttE5I6lgRaoOyHHGLCY=
+	b=xF5a61z4VoYkuMPTO8EA5LN3qMZ1X5icXHgiwfktwlciiZHI6knO3htenUPzLoIPQ
+	 aaqpAD46AM0lyvQsxnLrLGqZxdDkUjZsYhCzoVTt4FJ1DBP7mWIQuJqRNsEZhVfiVW
+	 21xG5EdAwZ8oAJJdXWXO/iLQwIbXAoE9a91p/Tn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387492AbgDAQW1 (ORCPT
+        id S2387498AbgDAQWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45452 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387477AbgDAQWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:23 -0400
+        id S2387490AbgDAQW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 791B4214D8;
-        Wed,  1 Apr 2020 16:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09DA320857;
+        Wed,  1 Apr 2020 16:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758142;
-        bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
+        s=default; t=1585758146;
+        bh=5XjkFM5wyNFBP6SLOe9dlSinzdyO5temJPYtDJ7S7Ak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xhZRbZqp5WX2wFoxg3mxHJ+E/Y6NBqte2REwMy+IMYywOL5c0LvV7jhjD6z+LUsFF
-         JRyGTIJF+XJHTbiDTGxYLy7x8RbBv73YrpbJa9HdSsVsRLM1ObbKbbDbMUpqjRvyDd
-         +T/ziMgQRE3G7fxc8TnR+6Jm/nkwM9rng/70JmrU=
+        b=Bsn7Pm3GzV/N+m5bk9rqQUBd/osEuMiYExqV9l3+a3ib/352fz3GyPpmbSLoSu0tB
+         zrJu+ITtz8iqNtWQciYopXlp2na3o5AggTmYxyujVJYIVIbSQsY/RD+rdzvTzbNAy6
+         Jeh1dmAZ4nTWwkX4HrvYJ9fdBHq1Q1NVa6C/DPpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 5.4 05/27] vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
-Date:   Wed,  1 Apr 2020 18:17:33 +0200
-Message-Id: <20200401161419.358817229@linuxfoundation.org>
+Subject: [PATCH 5.4 06/27] vt: switch vt_dont_switch to bool
+Date:   Wed,  1 Apr 2020 18:17:34 +0200
+Message-Id: <20200401161420.251719596@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 References: <20200401161414.352722470@linuxfoundation.org>
@@ -60,85 +60,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Slaby <jslaby@suse.cz>
 
-commit e587e8f17433ddb26954f0edf5b2f95c42155ae9 upstream.
+commit f400991bf872debffb01c46da882dc97d7e3248e upstream.
 
-These two were macros. Switch them to static inlines, so that it's more
-understandable what they are doing.
+vt_dont_switch is pure boolean, no need for whole char.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200219073951.16151-2-jslaby@suse.cz
+Link: https://lore.kernel.org/r/20200219073951.16151-6-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt_ioctl.c |   29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/tty/vt/vt_ioctl.c |    6 +++---
+ include/linux/vt_kern.h   |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 --- a/drivers/tty/vt/vt_ioctl.c
 +++ b/drivers/tty/vt/vt_ioctl.c
-@@ -40,10 +40,25 @@
+@@ -39,7 +39,7 @@
+ #include <linux/kbd_diacr.h>
  #include <linux/selection.h>
  
- char vt_dont_switch;
--extern struct tty_driver *console_driver;
+-char vt_dont_switch;
++bool vt_dont_switch;
  
--#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
--#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
-+static inline bool vt_in_use(unsigned int i)
-+{
-+	extern struct tty_driver *console_driver;
-+
-+	return console_driver->ttys[i] && console_driver->ttys[i]->count;
-+}
-+
-+static inline bool vt_busy(int i)
-+{
-+	if (vt_in_use(i))
-+		return true;
-+	if (i == fg_console)
-+		return true;
-+	if (vc_is_sel(vc_cons[i].d))
-+		return true;
-+
-+	return false;
-+}
+ static inline bool vt_in_use(unsigned int i)
+ {
+@@ -1026,12 +1026,12 @@ int vt_ioctl(struct tty_struct *tty,
+ 	case VT_LOCKSWITCH:
+ 		if (!capable(CAP_SYS_TTY_CONFIG))
+ 			return -EPERM;
+-		vt_dont_switch = 1;
++		vt_dont_switch = true;
+ 		break;
+ 	case VT_UNLOCKSWITCH:
+ 		if (!capable(CAP_SYS_TTY_CONFIG))
+ 			return -EPERM;
+-		vt_dont_switch = 0;
++		vt_dont_switch = false;
+ 		break;
+ 	case VT_GETHIFONTMASK:
+ 		ret = put_user(vc->vc_hi_font_mask,
+--- a/include/linux/vt_kern.h
++++ b/include/linux/vt_kern.h
+@@ -135,7 +135,7 @@ extern int do_unbind_con_driver(const st
+ 			     int deflt);
+ int vty_init(const struct file_operations *console_fops);
  
- /*
-  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
-@@ -289,7 +304,7 @@ static int vt_disallocate(unsigned int v
- 	int ret = 0;
+-extern char vt_dont_switch;
++extern bool vt_dont_switch;
+ extern int default_utf8;
+ extern int global_cursor_default;
  
- 	console_lock();
--	if (VT_BUSY(vc_num))
-+	if (vt_busy(vc_num))
- 		ret = -EBUSY;
- 	else if (vc_num)
- 		vc = vc_deallocate(vc_num);
-@@ -311,7 +326,7 @@ static void vt_disallocate_all(void)
- 
- 	console_lock();
- 	for (i = 1; i < MAX_NR_CONSOLES; i++)
--		if (!VT_BUSY(i))
-+		if (!vt_busy(i))
- 			vc[i] = vc_deallocate(i);
- 		else
- 			vc[i] = NULL;
-@@ -648,7 +663,7 @@ int vt_ioctl(struct tty_struct *tty,
- 			state = 1;	/* /dev/tty0 is always open */
- 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
- 							++i, mask <<= 1)
--				if (VT_IS_IN_USE(i))
-+				if (vt_in_use(i))
- 					state |= mask;
- 			ret = put_user(state, &vtstat->v_state);
- 		}
-@@ -661,7 +676,7 @@ int vt_ioctl(struct tty_struct *tty,
- 	case VT_OPENQRY:
- 		/* FIXME: locking ? - but then this is a stupid API */
- 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
--			if (! VT_IS_IN_USE(i))
-+			if (!vt_in_use(i))
- 				break;
- 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
- 		goto setint;		 
 
 
