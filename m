@@ -2,83 +2,98 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE1BC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025B5C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 499F720719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:29:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m/yww7rD"
+	by mail.kernel.org (Postfix) with ESMTP id CDB6F20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733112AbgDAV3F (ORCPT
+        id S1733171AbgDAV3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:29:05 -0400
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:40625 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732527AbgDAV3F (ORCPT
+        Wed, 1 Apr 2020 17:29:10 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:40657 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732527AbgDAV3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 17:29:05 -0400
-Received: by mail-pj1-f54.google.com with SMTP id kx8so618626pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 14:29:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cTFpqA5tG+WWT9sTreQ1YOunwJV7A8zTcn5uhSzjIZ8=;
-        b=m/yww7rDfQ3kktZhAjrnmc6g3M4Vsz4wORWt61gOe6FYkfHbNCzUioxpSDF3MPmBdV
-         Wz+TOWpWbgLz2bg1u9mPRpg/hmCCA6zHm4OXJnKbK+jRgPKHnQZcf9KXcaH2m7MmbV/r
-         RdUAXoiZP27scBBR04rsv7Id1hAiTQjJ2EeYg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cTFpqA5tG+WWT9sTreQ1YOunwJV7A8zTcn5uhSzjIZ8=;
-        b=FI7hRMacKDu8TE+SNsy2zt/PPXt7cGGoZY+pDInxl6AioRZDEpKLvMCNvkLJGlvt+a
-         zJG3X2z3vGemAdNF9mIOvti2gEevyr3VfNTRPlGPAcsNMzmOMAIIlweGikhaUQPJ5d9b
-         ksDTj9hL8lymZKHrq14EwtVzTGTo+o/VWWpB89FjfCu7YQVkQTBC828TamERXZWulslf
-         XMfClfUmZNKs04wBuXgmZuUawZoADtWBboQY2k47mBt3cw+g8fHQZYyljgCV8sIzbCUJ
-         1BE+IpcQzuzlQzbiLbybDqQQsFM21UyT1K9nou0fH0zWMaO7CYvFuZCEFhHtEBKiZRQj
-         vxqw==
-X-Gm-Message-State: AGi0PuYJxBR9Rq0BQaTefRyTGxokaDd+6RJTGCVyq3rvb/o6VTX1RV8Y
-        D26TjKQr17IdrPLcTFCRctS0dw==
-X-Google-Smtp-Source: APiQypLQF/i0d5RT+vCgKNX8CwUXkL5ru4KsrEREbSGlX8uxuXDitKjdh2D609gtDGT9DRBZaS55xw==
-X-Received: by 2002:a17:90b:4910:: with SMTP id kr16mr5297pjb.142.1585776543567;
-        Wed, 01 Apr 2020 14:29:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id d3sm2337317pjz.2.2020.04.01.14.29.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 14:29:03 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 14:29:01 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [v1 3/3] arm64: dts: sc7180: define interconnects for sc7180
- target
-Message-ID: <20200401212901.GN199755@google.com>
-References: <1585732665-29492-1-git-send-email-mkrishn@codeaurora.org>
- <1585732665-29492-2-git-send-email-mkrishn@codeaurora.org>
+        Wed, 1 Apr 2020 17:29:09 -0400
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 031LSxHP027325
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 1 Apr 2020 17:29:00 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 5D1AB420EBA; Wed,  1 Apr 2020 17:28:59 -0400 (EDT)
+Date:   Wed, 1 Apr 2020 17:28:59 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ext4: Fix build error while CONFIG_PRINTK is n
+Message-ID: <20200401212859.GN768293@mit.edu>
+References: <20200401073038.33076-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1585732665-29492-2-git-send-email-mkrishn@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200401073038.33076-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:47:45PM +0530, Krishna Manikandan wrote:
+On Wed, Apr 01, 2020 at 03:30:38PM +0800, YueHaibing wrote:
+> fs/ext4/balloc.c: In function ‘ext4_wait_block_bitmap’:
+> fs/ext4/balloc.c:519:3: error: implicit declaration of function ‘ext4_error_err’; did you mean ‘ext4_error’? [-Werror=implicit-function-declaration]
+>    ext4_error_err(sb, EIO, "Cannot read block bitmap - "
+>    ^~~~~~~~~~~~~~
+> 
+> Add missing stub helper and fix ext4_abort.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 2ea2fc775321 ("ext4: save all error info in save_error_info() and drop ext4_set_errno()")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-> Subject: arm64: dts: sc7180: define interconnects for sc7180 target
+Thanks; the patch isn't quite correct, though.  This is what I merged
+into my tree's version of the "save all error info..." commit.
 
-Please be more specific about which interconnect entries are added.
-Also no need to repeat 'sc7180', it is already clear from the prefix.
+     	       	       	      	    	      - Ted
+
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index eacd2f9cc833..91eb4381cae5 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -2848,6 +2848,11 @@ do {									\
+ 	no_printk(fmt, ##__VA_ARGS__);					\
+ 	__ext4_error_inode(inode, "", 0, block, 0, " ");		\
+ } while (0)
++#define ext4_error_inode_err(inode, func, line, block, err, fmt, ...)	\
++do {									\
++	no_printk(fmt, ##__VA_ARGS__);					\
++	__ext4_error_inode(inode, "", 0, block, err, " ");		\
++} while (0)
+ #define ext4_error_file(file, func, line, block, fmt, ...)		\
+ do {									\
+ 	no_printk(fmt, ##__VA_ARGS__);					\
+@@ -2858,10 +2863,15 @@ do {									\
+ 	no_printk(fmt, ##__VA_ARGS__);					\
+ 	__ext4_error(sb, "", 0, 0, 0, " ");				\
+ } while (0)
+-#define ext4_abort(sb, fmt, ...)					\
++#define ext4_error_err(sb, err, fmt, ...)				\
++do {									\
++	no_printk(fmt, ##__VA_ARGS__);					\
++	__ext4_error(sb, "", 0, err, 0, " ");				\
++} while (0)
++#define ext4_abort(sb, err, fmt, ...)					\
+ do {									\
+ 	no_printk(fmt, ##__VA_ARGS__);					\
+-	__ext4_abort(sb, "", 0, " ");					\
++	__ext4_abort(sb, "", 0, err, " ");				\
+ } while (0)
+ #define ext4_warning(sb, fmt, ...)					\
+ do {									\
