@@ -2,114 +2,74 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0A3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E56520719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E70eYhBp"
+	by mail.kernel.org (Postfix) with ESMTP id DEB5420BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733290AbgDAXYH (ORCPT
+        id S1733302AbgDAX1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:24:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40446 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732637AbgDAXYG (ORCPT
+        Wed, 1 Apr 2020 19:27:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48608 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732503AbgDAX1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:24:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585783445;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AUx9a9NcckmBmbGmt8k9ozR5fOJNJ4SVtbmheE+GSig=;
-        b=E70eYhBpdmDCfFB/yyKtMy/HpSVH+Uiz0C3lCATNO3ypdcqTlPjPO8i2nWzW46IWW6I4UX
-        1AtIoDpwQAaiCvt1qq35SXqfpLz8TQIYiPkVBPfFbEtSZBzdU6LxEf/+Fmk7KYVCQW1LZf
-        2E5ibijXGfEj8gYcC1h0tr6OfbF1oK0=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-120-lvLI-nbHP_OveMtOtw4_Nw-1; Wed, 01 Apr 2020 19:24:03 -0400
-X-MC-Unique: lvLI-nbHP_OveMtOtw4_Nw-1
-Received: by mail-qv1-f72.google.com with SMTP id dh19so1074698qvb.23
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:24:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AUx9a9NcckmBmbGmt8k9ozR5fOJNJ4SVtbmheE+GSig=;
-        b=DVr+ILUdcpNLuyojJgdOXQx8zxJvIMxM681AgTOAyR2lFNvc3ucm3h7yAvLp8n+Dhm
-         9eytpFuEXhEWqCBVMpaqIpAgk6TaA8swVfQNYD+OuBcwo2i+7bAhv/sJ9lAXuikZWOwo
-         DuD0lcAWvszBVwvF+RdYh9C3eXhn/SC0o1ezi6xREqXqAaFTXaGfd84t6qz+MLDL6MPq
-         n1G39Sk3A6+u3WdKxbS9bdEqnLkVyy74pRbUyOkp6pLquZxqBn483EENRcMQzVJNv/Jo
-         23m7zhkgK+faNad211znGmE9gM/FoBMCT371HMkVwPlykxJ0157UwKTuqtEmVPaQidRc
-         m2yg==
-X-Gm-Message-State: AGi0PuYh9rze9QRK7TEL+tcwB9ia2nHA3RTGilgV26xlp/H4DGqUbEbj
-        fvI4j5RWcDH+W9O2s0yVyQ+9VgPPTtT9h8b9RGfmCKkmUWtBbSfQSihC8tAUHT+XS2RxEOS0YOl
-        qnqjyBd6koM8QRNeET/ANk+eo
-X-Received: by 2002:ac8:1c17:: with SMTP id a23mr205340qtk.239.1585783443329;
-        Wed, 01 Apr 2020 16:24:03 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKs2sdWLelVFwa5wWDt7NfXNR0nWmfsLZw9a6O+nx9rOQNylkUrMsr/Rn+mFQtaWUda9LkQzA==
-X-Received: by 2002:ac8:1c17:: with SMTP id a23mr205318qtk.239.1585783443115;
-        Wed, 01 Apr 2020 16:24:03 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id y41sm2502266qtc.72.2020.04.01.16.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 16:24:02 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 19:24:21 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v8 11/14] KVM: selftests: Introduce after_vcpu_run hook
- for dirty log test
-Message-ID: <20200401232421.GA7174@xz-x1>
-References: <20200331190000.659614-1-peterx@redhat.com>
- <20200331190000.659614-12-peterx@redhat.com>
- <20200401070322.yqdp5g2amzlbftk6@kamzik.brq.redhat.com>
+        Wed, 1 Apr 2020 19:27:40 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jJmlk-0007s0-IS; Wed, 01 Apr 2020 23:27:36 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Igor Russkikh <irusskikh@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Mark Starovoytov <mstarovoitov@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net: atlantic: fix missing | operator when assigning rec->llc
+Date:   Thu,  2 Apr 2020 00:27:36 +0100
+Message-Id: <20200401232736.410028-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200401070322.yqdp5g2amzlbftk6@kamzik.brq.redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:03:22AM +0200, Andrew Jones wrote:
-> On Tue, Mar 31, 2020 at 02:59:57PM -0400, Peter Xu wrote:
-> > Provide a hook for the checks after vcpu_run() completes.  Preparation
-> > for the dirty ring test because we'll need to take care of another
-> > exit reason.
-> > 
-> > Since at it, drop the pages_count because after all we have a better
-> > summary right now with statistics, and clean it up a bit.
-> 
-> I don't see what you mean by "drop the pages_count", because it's still
-> there. But otherwise
-> 
-> Reviewed-by: Andrew Jones <drjones@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-I think the pages_count was dropped in some versions, at least the 1st
-version when I wrote the commit, but it must have went back during one
-of the rebases upon dirty_log_test.c...  To make it simple, I'll just
-remove this paragraph and pick the r-b (assuming it's valid with that).
+rec->llc is currently being assigned twice, once with the lower 8 bits
+from packed_record[8] and then re-assigned afterwards with data from
+packed_record[9].  This looks like a type, I believe the second assignment
+should be using the |= operator rather than a direct assignment.
 
-Thanks,
+Addresses-Coverity: ("Unused value")
+Fixes: b8f8a0b7b5cb ("net: atlantic: MACSec ingress offload HW bindings")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
+index 97901c114bfa..fbe9d88b13c7 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
++++ b/drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c
+@@ -491,7 +491,7 @@ get_ingress_preclass_record(struct aq_hw_s *hw,
+ 	rec->snap[1] = packed_record[8] & 0xFF;
+ 
+ 	rec->llc = (packed_record[8] >> 8) & 0xFF;
+-	rec->llc = packed_record[9] << 8;
++	rec->llc |= packed_record[9] << 8;
+ 
+ 	rec->mac_sa[0] = packed_record[10];
+ 	rec->mac_sa[0] |= packed_record[11] << 16;
 -- 
-Peter Xu
+2.25.1
 
