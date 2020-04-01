@@ -2,96 +2,106 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C10C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D5BC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA72120705
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585750724;
-	bh=Ooe27YGnrMmmUWDeyh5IfImb651q5z6Sfxb+JkXYB9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nf73jBa0h4EqCjrcZ+xIPez7yoly0qdG0lRpSr4VCWU5P2Xh2oeYHpd2O2YxjF4sQ
-	 BNiaOEZdPVQgktAoiyieDQhlI9TT04nASpC/wVy6G6NeiZgBW06UGJlpHZ94coUHF+
-	 ADNi/1HxK9cbTb3qC/pzkUvZsRghmvPRDksDo0HI=
+	by mail.kernel.org (Postfix) with ESMTP id 61CFA2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732985AbgDAOSn (ORCPT
+        id S1732914AbgDAOVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:18:43 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44636 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732823AbgDAOSn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:18:43 -0400
-Received: by mail-io1-f65.google.com with SMTP id r25so13994801ioc.11;
-        Wed, 01 Apr 2020 07:18:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DrAUNTNOb+nS86WKDNkg7IGqQKQheDQgfBvXH6+K3YY=;
-        b=fMaQLhc7vjvK44eFNORxvMeUmaOzz07bDvKu3KQ2p3SPqgsQti4Kd9AtivNa1cUvqh
-         0lAosbw397LNb/McU5xV1Hd1netW7/AXVXemnXoDyUOsGgrtI9WqYOQEmu9P+KsmRU/H
-         g6pccF3S8PD9nCh/U5UQIN6foq6dlDEl8ojuvS3tpHe0NXO1BdZgfhdcyqP91Tie5QIw
-         oJLIY5c8FZ+1Q+6Pw5plKtUbCBo2P46PeaXdu4EMqKfxnTYFy+KSuuFRNX+O6PVLi4ZN
-         /ISyaajD0Cg6bXhbXNa0czm9zs+ad1TCPxeySEHQuigsrQlRNyXbMWkWLJagz7NuCxZ6
-         ybeg==
-X-Gm-Message-State: ANhLgQ0TkLdO+iyH8SQbhKEb8p97JIHqkCW3Y+M1SurNR9JUPRrWTOiX
-        4khwcGX7B/dZsYBOQRpB2RF0c2Y=
-X-Google-Smtp-Source: ADFU+vtTwR3SB801fBjpsX0NGxMyX9AE4SJJQgaUk8UNcP2AQfCZmaqz6P0qia4Kb4WvYiBEVO7O0g==
-X-Received: by 2002:a6b:db01:: with SMTP id t1mr20172381ioc.150.1585750722085;
-        Wed, 01 Apr 2020 07:18:42 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id x10sm742190ili.88.2020.04.01.07.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 07:18:41 -0700 (PDT)
-Received: (nullmailer pid 24537 invoked by uid 1000);
-        Wed, 01 Apr 2020 14:18:38 -0000
-Date:   Wed, 1 Apr 2020 08:18:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] dt-bindings: Document Loongson PCI Host Controller
-Message-ID: <20200401141838.GA7686@bogus>
-References: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
- <20200401030658.1174045-4-jiaxun.yang@flygoat.com>
+        Wed, 1 Apr 2020 10:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732781AbgDAOVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 10:21:17 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D1F020705;
+        Wed,  1 Apr 2020 14:21:15 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 10:21:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>,
+        lkp@lists.01.org
+Subject: Re: [tracing] cd8f62b481:
+ BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
+Message-ID: <20200401102112.35036490@gandalf.local.home>
+In-Reply-To: <20200401230700.d9ddb42b3459dca98144b55c@kernel.org>
+References: <20200319232731.799117803@goodmis.org>
+        <20200326091256.GR11705@shao2-debian>
+        <20200401230700.d9ddb42b3459dca98144b55c@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401030658.1174045-4-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  1 Apr 2020 11:06:47 +0800, Jiaxun Yang wrote:
+On Wed, 1 Apr 2020 23:07:00 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi Steve,
 > 
-> PCI host controller found on Loongson PCHs and SoCs.
+> On Thu, 26 Mar 2020 17:12:56 +0800
+> kernel test robot <rong.a.chen@intel.com> wrote:
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../devicetree/bindings/pci/loongson.yaml     | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
+> > FYI, we noticed the following commit (built with gcc-7):
+> > 
+> > commit: cd8f62b481530fafbeacee0d3283b60bcf42d854 ("[PATCH 02/12 v2] tracing: Save off entry when peeking at next entry")
+> > url: https://github.com/0day-ci/linux/commits/Steven-Rostedt/ring-buffer-tracing-Remove-disabling-of-ring-buffer-while-reading-trace-file/20200320-073240
+> >   
+> 
+> Hmm, this seems that we can not call kmalloc() in ftrace_dump().
+> Maybe we can fix it by
+> - Use GFP_ATOMIC.
+>  or
+> - Do not use iter->temp if it is NULL. (it is safe since ftrace_dump() stops tracing)
+> 
+> What would you think?
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Thanks for the reminder, I knew there was something that I had to deal with
+and forgot to mark this report!
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/loongson.example.dt.yaml: pcie@40000000: ranges: [[33554432, 0, 1073741824, 0, 1073741824, 0, 1073741824]] is too short
+I already looked at it, and yes, this is an issue, but for PREEMPT_RT even
+GFP_ATOMIC will fail. As it's not critical to record it, we can just check
+for in atomic and not bother with the allocation.
 
-See https://patchwork.ozlabs.org/patch/1265000
+-- Steve
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6519b7afc499..7f1466253ca8 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3487,6 +3487,14 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+ 	 */
+ 	if (iter->ent && iter->ent != iter->temp) {
+ 		if (!iter->temp || iter->temp_size < iter->ent_size) {
++			/*
++			 * This function is only used to add markers between
++			 * events that are far apart (see trace_print_lat_context()),
++			 * but if this is called in an atomic context (like NMIs)
++			 * we can't call kmalloc(), thus just return NULL.
++			 */
++			if (in_atomic() || irqs_disabled())
++				return NULL;
+ 			kfree(iter->temp);
+ 			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
+ 			if (!iter->temp)
