@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2667AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74E3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C072220714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DB1920714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759539;
-	bh=Zb7mzK58iMv/f7Em5bU4RrsDulMKPlH00x6d3hoe/4s=;
+	s=default; t=1585759542;
+	bh=IpskLDqHHZRm9edhwLu30IHxKAr24vBmtaA+c2F/oaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RX2xsCl8d432BRfINynLW1P/oVZo01xAAnMqSb65f5nbyyHOukn+ZdNrXRRBGyL8l
-	 +Kvqy7Ed5A2wmU6Ad3ivwNxW/dHTsnnINYkLt2/dLOxCfw5ztuBkZ0bFE6UUrza8xx
-	 aSneLQNQ+NExpz+4XXIYHQB/cLe/3fDXCdHWcsB0=
+	b=KcQNSTNp9yU6NMZF2LyDjluBw8ioGoLoAi+Ek1TkRk/LyCOMQ9w05Ah3syBsGoQiq
+	 wy+z4oCK3hnUuOQAgjIfJ/kPDW9duqE3zm3I+qU7DthXgaTbWb8rJzzjbdsWh4h3ww
+	 bqpR3Xkx6RW9Miar7i2SgfyzOhvs89mCfUCDE5t8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389439AbgDAQpi (ORCPT
+        id S2389866AbgDAQpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:45:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389673AbgDAQpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:45:32 -0400
+        id S2389853AbgDAQpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:45:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6863B206E9;
-        Wed,  1 Apr 2020 16:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F5C720719;
+        Wed,  1 Apr 2020 16:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759530;
-        bh=Zb7mzK58iMv/f7Em5bU4RrsDulMKPlH00x6d3hoe/4s=;
+        s=default; t=1585759535;
+        bh=IpskLDqHHZRm9edhwLu30IHxKAr24vBmtaA+c2F/oaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V03KuGmVyUzxkPrhKVi6WUHd1GrOzGSEdBwPfvKXvd6JzDjZ+jWwEbWsQU4kdZX7V
-         lI1o0JB6/VM3cxhmZeZArqa/W8DZZabhKKywutk6X8U8pI4Av984TTQGFImjDSFu0D
-         wicv7KFjavUQwoVy4EWMjzRjNBuWfzqVjOERnlv0=
+        b=g5GEzTVlcRPUCaG7dcH4QeS0vjTsEIXR27Er+tg7L9+DlcZUb1q2XOiUsJR062rq3
+         b0a9ex/hMgE1R1XlCXL7FJPSYIhUXq7kVJX4Aljk9UtKCkf7Zza+rMAds4u1ip1LQo
+         8Mlp6Im8MQj6RsUYJgNH+3wF2gheba1z4PCWutHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        =?UTF-8?q?Timo=20Ter=C3=A4s?= <timo.teras@iki.fi>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.14 108/148] xfrm: policy: Fix doulbe free in xfrm_policy_timer
-Date:   Wed,  1 Apr 2020 18:18:20 +0200
-Message-Id: <20200401161602.993586076@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.14 109/148] netfilter: nft_fwd_netdev: validate family and chain type
+Date:   Wed,  1 Apr 2020 18:18:21 +0200
+Message-Id: <20200401161603.061574431@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,70 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 4c59406ed00379c8663f8663d82b2537467ce9d7 upstream.
+commit 76a109fac206e158eb3c967af98c178cff738e6a upstream.
 
-After xfrm_add_policy add a policy, its ref is 2, then
+Make sure the forward action is only used from ingress.
 
-                             xfrm_policy_timer
-                               read_lock
-                               xp->walk.dead is 0
-                               ....
-                               mod_timer()
-xfrm_policy_kill
-  policy->walk.dead = 1
-  ....
-  del_timer(&policy->timer)
-    xfrm_pol_put //ref is 1
-  xfrm_pol_put  //ref is 0
-    xfrm_policy_destroy
-      call_rcu
-                                 xfrm_pol_hold //ref is 1
-                               read_unlock
-                               xfrm_pol_put //ref is 0
-                                 xfrm_policy_destroy
-                                  call_rcu
-
-xfrm_policy_destroy is called twice, which may leads to
-double free.
-
-Call Trace:
-RIP: 0010:refcount_warn_saturate+0x161/0x210
-...
- xfrm_policy_timer+0x522/0x600
- call_timer_fn+0x1b3/0x5e0
- ? __xfrm_decode_session+0x2990/0x2990
- ? msleep+0xb0/0xb0
- ? _raw_spin_unlock_irq+0x24/0x40
- ? __xfrm_decode_session+0x2990/0x2990
- ? __xfrm_decode_session+0x2990/0x2990
- run_timer_softirq+0x5c5/0x10e0
-
-Fix this by use write_lock_bh in xfrm_policy_kill.
-
-Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing policy->walk.dead")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Timo Teräs <timo.teras@iki.fi>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 39e6dea28adc ("netfilter: nf_tables: add forward expression to the netdev family")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_policy.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/netfilter/nft_fwd_netdev.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -301,7 +301,9 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
+--- a/net/netfilter/nft_fwd_netdev.c
++++ b/net/netfilter/nft_fwd_netdev.c
+@@ -62,6 +62,13 @@ nla_put_failure:
+ 	return -1;
+ }
  
- static void xfrm_policy_kill(struct xfrm_policy *policy)
- {
-+	write_lock_bh(&policy->lock);
- 	policy->walk.dead = 1;
-+	write_unlock_bh(&policy->lock);
++static int nft_fwd_validate(const struct nft_ctx *ctx,
++			    const struct nft_expr *expr,
++			    const struct nft_data **data)
++{
++	return nft_chain_validate_hooks(ctx->chain, (1 << NF_NETDEV_INGRESS));
++}
++
+ static struct nft_expr_type nft_fwd_netdev_type;
+ static const struct nft_expr_ops nft_fwd_netdev_ops = {
+ 	.type		= &nft_fwd_netdev_type,
+@@ -69,6 +76,7 @@ static const struct nft_expr_ops nft_fwd
+ 	.eval		= nft_fwd_netdev_eval,
+ 	.init		= nft_fwd_netdev_init,
+ 	.dump		= nft_fwd_netdev_dump,
++	.validate	= nft_fwd_validate,
+ };
  
- 	atomic_inc(&policy->genid);
- 
+ static struct nft_expr_type nft_fwd_netdev_type __read_mostly = {
 
 
