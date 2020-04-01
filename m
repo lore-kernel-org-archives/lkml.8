@@ -2,417 +2,159 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D272C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E998C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010B6206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79FE2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WHaZY029"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="fZ3KoR9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbgDAOrN (ORCPT
+        id S1733130AbgDAOr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:47:13 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:1674 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732749AbgDAOrM (ORCPT
+        Wed, 1 Apr 2020 10:47:26 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:52142 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732749AbgDAOr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:47:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1585752430; x=1617288430;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=r4kaP1g9ydc931rh9WZY44gwmZpvivnJSjRJ0w13h+0=;
-  b=WHaZY029JBp6Y3qOxi+LQF/95ZAfiW3m0CFjEMbz70rFKWlL/5ZhqBke
-   BC6GKdQq1ekoZ3gC+2QhuFm1lS6IwLFGQbp4LDS0Wp+rbR/olJOBEV5Qc
-   ou+cmNJHE+xtk5FJx4Q6haQtDSrJzf4aNvezxwdm8ww1xtJlmzA4qVc5c
-   c=;
-IronPort-SDR: Ucggg3Cl3jIBS18VYfkbhyrvYWv7VyhhW5tLeS43Z72qm93ztpmmJFLhC3VM66klsUWPnI496M
- A9JcH4k16smA==
-X-IronPort-AV: E=Sophos;i="5.72,332,1580774400"; 
-   d="scan'208";a="36069543"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 01 Apr 2020 14:47:04 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id 1CB161415E0;
-        Wed,  1 Apr 2020 14:46:54 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 1 Apr 2020 14:46:53 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.78) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 1 Apr 2020 14:46:37 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <aarcange@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v7 04/15] mm/damon: Implement region based sampling
-Date:   Wed, 1 Apr 2020 16:46:02 +0200
-Message-ID: <20200401144602.22615-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200401152456.00006406@Huawei.com> (raw)
+        Wed, 1 Apr 2020 10:47:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1585752446;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=5lpXtxQo/+BW9i4IsA0t1c5kZDYQrEHSE0Zt9frttU8=;
+  b=fZ3KoR9CSn8LSTYFYSThIaU1+RpOQ6LayE+Wn666Pdc6uU7HMjb2LK1R
+   Qwdo11wB2ckPWwRmg5n2DggxzKBx6YCkEukZd9kXF1EesA85Fx1m5cPsT
+   WaflGo+s43ksrfeNbdur9eHzheMVPOLf5EW0VF6tOzLu3MA/SO8Pt0FbZ
+   k=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: qGuEcadWZ4+4r3BUt94OBTAasnNsLwdE4ZHx/AdIbJyLqMuLH+k06nUg5eDKzlLozHdJs8V/B6
+ NhoJsLL3aE0qTxCtaqPg9EW0yOYinYK15G/AQZ/pLVsuUPjOxyxfFGCT0ObbGMTyMokioZuIG6
+ sCpiui3I/uZti4luZwmvlEJ+oIRXKbca5CbzK4W+i0FYQ5Ym4OQWFCq3ReLkO11Lt+Rd8DJf6w
+ jrg/nn6Q2k0eRfw3vcLE9ciMnafSeR4pohtlUj3XnkL0cyDhaVay6VMGzQwjGg7RwBz7KgkWiQ
+ 4AU=
+X-SBRS: 2.7
+X-MesageID: 15226252
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,332,1580792400"; 
+   d="scan'208";a="15226252"
+Subject: Re: [PATCH v2] x86/smpboot: Remove 486-isms from the modern AP boot
+ path
+To:     Brian Gerst <brgerst@gmail.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        <jailhouse-dev@googlegroups.com>
+References: <20200325101431.12341-1-andrew.cooper3@citrix.com>
+ <20200331175810.30204-1-andrew.cooper3@citrix.com>
+ <CAMzpN2i6Nf0VDZ82mXyFixN879FC4eZfqe-LzWGkvygcz1gH_Q@mail.gmail.com>
+ <c46bcb6d-4256-2d65-9cd9-33e010846de4@citrix.com>
+ <CAMzpN2gdkmYYbQatFk66QMpiuZSfnUQUVtJ30VYF7nsX_+XVgA@mail.gmail.com>
+ <bdf7995d-2d50-9bb9-8066-6c4ccfaa5b52@citrix.com>
+ <CAMzpN2g0LS5anGc7CXco4pgBHhGzc8hw+shMOg8WEWGsx+BHpg@mail.gmail.com>
+ <b1aa5cdf-b446-17b0-6d31-fa8947f67592@citrix.com>
+ <CAMzpN2h5u3gbRFfew-BSUH_=E509QirQaopiTBrVQc6Oq2AcvA@mail.gmail.com>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <b15b8cf2-a579-10ec-06b1-fb674295c993@citrix.com>
+Date:   Wed, 1 Apr 2020 15:47:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.78]
-X-ClientProxiedBy: EX13D10UWA002.ant.amazon.com (10.43.160.228) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <CAMzpN2h5u3gbRFfew-BSUH_=E509QirQaopiTBrVQc6Oq2AcvA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 15:24:56 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On 01/04/2020 15:38, Brian Gerst wrote:
+>>>>>>> You removed x86_platform.legacy.warm_reset in the original patch, but
+>>>>>>> that is missing in V2.
+>>>>>> Second hunk?  Or are you referring to something different?
+>>>>> Removing the warm_reset field from struct x86_legacy_features.
+>>>> Ok, but that is still present as the 2nd hunk of the patch.
+>>> My apologies, Gmail was hiding that section of the patch because it
+>>> was a reply to the original patch.  For future reference, add the
+>>> version number to the title when resubmitting a patch (ie. [PATCH
+>>> v2]).
+>> Erm... is Gmail hiding that too?
+>>
+>> Lore thinks it is there:
+>> https://lore.kernel.org/lkml/CAMzpN2g0LS5anGc7CXco4pgBHhGzc8hw+shMOg8WEWGsx+BHpg@mail.gmail.com/
+> Ugh, yes.  I thought it was the title that Gmail threaded on, but it
+> must be the In-Reply-To: header.  Sorry for the confusion.
+>
+> That said, I think the v1 patch is probably the better way to go (but
+> adjusting the comments to include early Pentium-era systems without
+> integrated APICs).
 
-> On Wed, 1 Apr 2020 10:22:22 +0200
-> SeongJae Park <sjpark@amazon.com> wrote:
-> 
-> > On Tue, 31 Mar 2020 17:02:33 +0100 Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > 
-> > > On Wed, 18 Mar 2020 12:27:11 +0100
-> > > SeongJae Park <sjpark@amazon.com> wrote:
-> > >   
-> > > > From: SeongJae Park <sjpark@amazon.de>
-> > > > 
-> > > > This commit implements DAMON's basic access check and region based
-> > > > sampling mechanisms.  This change would seems make no sense, mainly
-> > > > because it is only a part of the DAMON's logics.  Following two commits
-> > > > will make more sense.
-> > > > 
-> > > > Basic Access Check
-> > > > ------------------
-> > > > 
-> > > > DAMON basically reports what pages are how frequently accessed.  Note
-> > > > that the frequency is not an absolute number of accesses, but a relative
-> > > > frequency among the pages of the target workloads.
-> > > > 
-> > > > Users can control the resolution of the reports by setting two time
-> > > > intervals, ``sampling interval`` and ``aggregation interval``.  In
-> > > > detail, DAMON checks access to each page per ``sampling interval``,
-> > > > aggregates the results (counts the number of the accesses to each page),
-> > > > and reports the aggregated results per ``aggregation interval``.  For
-> > > > the access check of each page, DAMON uses the Accessed bits of PTEs.
-> > > > 
-> > > > This is thus similar to common periodic access checks based access
-> > > > tracking mechanisms, which overhead is increasing as the size of the
-> > > > target process grows.
-> > > > 
-> > > > Region Based Sampling
-> > > > ---------------------
-> > > > 
-> > > > To avoid the unbounded increase of the overhead, DAMON groups a number
-> > > > of adjacent pages that assumed to have same access frequencies into a
-> > > > region.  As long as the assumption (pages in a region have same access
-> > > > frequencies) is kept, only one page in the region is required to be
-> > > > checked.  Thus, for each ``sampling interval``, DAMON randomly picks one
-> > > > page in each region and clears its Accessed bit.  After one more
-> > > > ``sampling interval``, DAMON reads the Accessed bit of the page and
-> > > > increases the access frequency of the region if the bit has set
-> > > > meanwhile.  Therefore, the monitoring overhead is controllable by
-> > > > setting the number of regions.
-> > > > 
-> > > > Nonetheless, this scheme cannot preserve the quality of the output if
-> > > > the assumption is not kept.  Following commit will introduce how we can
-> > > > make the guarantee with best effort.
-> > > > 
-> > > > Signed-off-by: SeongJae Park <sjpark@amazon.de>  
-> > > 
-> > > Hi.
-> > > 
-> > > A few comments inline.
-> > > 
-> > > I've still not replicated your benchmarks so may well have some more
-> > > feedback once I've managed that on one of our servers.  
-> > 
-> > Appreciate your comments.  If you need any help for the replication, please let
-> > me know.  I basically use my parsec3 wrapper scripts[1] to run parsec3 and
-> > splash2x workloads and `damo` tool, which resides in the kernel tree at
-> > `/tools/damon/`.
-> > 
-> > For example, below commands will reproduce ethp applied splash2x/fft run.
-> >     
-> >     $ echo "2M      null    5       null    null    null    hugepage
-> >     2M      null    null    5       1s      null    nohugepage" > ethp
-> >     $ parsec3_on_ubuntu/run.sh splash2x.fft
-> >     $ linux/tools/damon/damo schemes -c ethp `pidof fft`
-> > 
-> > [1] https://github.com/sjp38/parsec3_on_ubuntu
-> 
-> 
-> No significant problem, more a case of fitting this in between other things :)
-> + some fixes needed for parsec3 to build for arm64.
+Yes - I'm afraid I'm showing my age here, being the same vintage as the 486.
 
-Cool :)
+I'll happily rephrase as suggested.
 
-> 
-> > 
-> > > 
-> > > Thanks,
-> > > 
-> > > Jonathan
-> > >   
-> > > > ---
-> > > >  include/linux/damon.h |  24 ++
-> > > >  mm/damon.c            | 553 ++++++++++++++++++++++++++++++++++++++++++
-> > > >  2 files changed, 577 insertions(+)
-> > > >   
-> > [...]
-> > > > diff --git a/mm/damon.c b/mm/damon.c
-> > > > index d7e6226ab7f1..018016793555 100644
-> > > > --- a/mm/damon.c
-> > > > +++ b/mm/damon.c
-> > > > @@ -10,8 +10,14 @@
-> > > >  #define pr_fmt(fmt) "damon: " fmt
-> > > >  
-> > > >  #include <linux/damon.h>
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/kthread.h>
-> > > >  #include <linux/mm.h>
-> > > >  #include <linux/module.h>
-> > > > +#include <linux/page_idle.h>
-> > > > +#include <linux/random.h>
-> > > > +#include <linux/sched/mm.h>
-> > > > +#include <linux/sched/task.h>
-> > > >  #include <linux/slab.h>
-> > > >    
-> > [...]
-> > > > +/*
-> > > > + * Size-evenly split a region into 'nr_pieces' small regions
-> > > > + *
-> > > > + * Returns 0 on success, or negative error code otherwise.
-> > > > + */
-> > > > +static int damon_split_region_evenly(struct damon_ctx *ctx,
-> > > > +		struct damon_region *r, unsigned int nr_pieces)
-> > > > +{
-> > > > +	unsigned long sz_orig, sz_piece, orig_end;
-> > > > +	struct damon_region *piece = NULL, *next;
-> > > > +	unsigned long start;
-> > > > +
-> > > > +	if (!r || !nr_pieces)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	orig_end = r->vm_end;
-> > > > +	sz_orig = r->vm_end - r->vm_start;
-> > > > +	sz_piece = sz_orig / nr_pieces;
-> > > > +
-> > > > +	if (!sz_piece)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	r->vm_end = r->vm_start + sz_piece;
-> 
-> This is the end where it is unlikely the sampling address is
-> still in region.
+> Then the decision to drop support for external
+> APICs could be a separate patch.
 
-Ah, now I got your point!
+I have no vested interest.
 
-> 
-> (see below)
-> 
-> > > > +	next = damon_next_region(r);
-> > > > +	for (start = r->vm_end; start + sz_piece <= orig_end;
-> > > > +			start += sz_piece) {
-> > > > +		piece = damon_new_region(ctx, start, start + sz_piece);  
-> > > piece may be n  
-> > 
-> > Yes, that name is short and more intuitive.  I will rename so.
-> > 
-> > > > +		damon_insert_region(piece, r, next);
-> > > > +		r = piece;
-> > > > +	}
-> > > > +	/* complement last region for possible rounding error */
-> > > > +	if (piece)
-> > > > +		piece->vm_end = orig_end;  
-> > > 
-> > > Update the sampling address to ensure it's in the region?  
-> > 
-> > I think `piece->vm_end` should be equal or smaller than `orig_end` and
-> > therefore the sampling address of `piece` will be still in the region.
-> 
-> Good point.  The one above however is more of an issue I think..
-> So the region we modify before adding the new regions.
+This was a fix from Xen that I tried to upstream (if you can really call
+it that, seeing as the common point in history was the Linux 2.4 days),
+given the rather rude UEFI behaviour.
 
-Yes, you're right.  I will fix it in next spin.
+Ultimately, this will be down to the maintainers for which approach to take.
 
-> 
-> > 
-> > >   
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +  
-> > [...]
-> > > > +static void damon_pte_pmd_mkold(pte_t *pte, pmd_t *pmd)
-> > > > +{
-> > > > +	if (pte) {
-> > > > +		if (pte_young(*pte)) {
-> > > > +			clear_page_idle(pte_page(*pte));
-> > > > +			set_page_young(pte_page(*pte));
-> > > > +		}
-> > > > +		*pte = pte_mkold(*pte);
-> > > > +		return;
-> > > > +	}
-> > > > +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> > > > +	if (pmd) {
-> > > > +		if (pmd_young(*pmd)) {
-> > > > +			clear_page_idle(pmd_page(*pmd));
-> > > > +			set_page_young(pmd_page(*pmd));
-> > > > +		}
-> > > > +		*pmd = pmd_mkold(*pmd);
-> > > > +	}
-> > > > +#endif /* CONFIG_TRANSPARENT_HUGEPAGE */  
-> > > 
-> > > No need to flush the TLBs?  
-> > 
-> > Good point!
-> > 
-> > I have intentionally skipped TLB flushing here to minimize the performance
-> > effect to the target workload.  I also thought this might not degrade the
-> > monitoring accuracy so much because we are targetting for the DRAM level
-> > accesses of memory-intensive workloads, which might make TLB flood frequently.
-> > 
-> > However, your comment makes me thinking differently now.  By flushing the TLB
-> > here, we will increase up to `number_of_regions` TLB misses for sampling
-> > interval.  This might be not a huge overhead.  Also, improving the monitoring
-> > accuracy makes no harm at all.  I even didn't measured the overhead.
-> > 
-> > I will test the overhead and if it is not significant, I will make this code to
-> > flush TLB, in the next spin.
-> > 
-> > >   
-> > > > +}
-> > > > +  
-> > [...]
-> > > > +/*
-> > > > + * The monitoring daemon that runs as a kernel thread
-> > > > + */
-> > > > +static int kdamond_fn(void *data)
-> > > > +{
-> > > > +	struct damon_ctx *ctx = data;
-> > > > +	struct damon_task *t;
-> > > > +	struct damon_region *r, *next;
-> > > > +	struct mm_struct *mm;
-> > > > +
-> > > > +	pr_info("kdamond (%d) starts\n", ctx->kdamond->pid);
-> > > > +	kdamond_init_regions(ctx);  
-> > > 
-> > > We haven't called mkold on the initial regions so first check will
-> > > get us fairly random state.  
-> > 
-> > Yes, indeed.  However, the early results will not be accurate anyway because
-> > the adaptive regions adjustment algorithm will not take effect yet.  I would
-> > like to leave this part as is but add some comments about this point to keep
-> > the code simple.
-> 
-> I'd argue in favour of it being a low overhead and better to put them
-> in for 'correctness'.  It's much easier to discuss code that conforms to
-> a simple model (even if that makes the code more complex!)
-
-Agreed!  Will do so in next spin.
-
-> 
-> 
-> > 
-> > >   
-> > > > +	while (!kdamond_need_stop(ctx)) {
-> > > > +		damon_for_each_task(ctx, t) {
-> > > > +			mm = damon_get_mm(t);
-> > > > +			if (!mm)
-> > > > +				continue;
-> > > > +			damon_for_each_region(r, t)
-> > > > +				kdamond_check_access(ctx, mm, r);
-> > > > +			mmput(mm);
-> > > > +		}
-> > > > +
-> > > > +		if (kdamond_aggregate_interval_passed(ctx))
-> > > > +			kdamond_reset_aggregated(ctx);
-> > > > +
-> > > > +		usleep_range(ctx->sample_interval, ctx->sample_interval + 1);
-> > > > +	}
-> > > > +	damon_for_each_task(ctx, t) {
-> > > > +		damon_for_each_region_safe(r, next, t)
-> > > > +			damon_destroy_region(r);
-> > > > +	}
-> > > > +	pr_debug("kdamond (%d) finishes\n", ctx->kdamond->pid);
-> > > > +	mutex_lock(&ctx->kdamond_lock);
-> > > > +	ctx->kdamond = NULL;
-> > > > +	mutex_unlock(&ctx->kdamond_lock);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +  
-> > [...]
-> > > > +/*
-> > > > + * Start or stop the kdamond
-> > > > + *
-> > > > + * Returns 0 if success, negative error code otherwise.
-> > > > + */
-> > > > +static int damon_turn_kdamond(struct damon_ctx *ctx, bool on)
-> > > > +{
-> > > > +	int err = -EBUSY;
-> > > > +
-> > > > +	mutex_lock(&ctx->kdamond_lock);
-> > > > +	if (!ctx->kdamond && on) {  
-> > > 
-> > > Given there is very little shared code between on and off, I would
-> > > suggest just splitting it into two functions.  
-> > 
-> > Good point, I will do so in next spin.
-> > 
-> > >   
-> > > > +		err = 0;
-> > > > +		ctx->kdamond = kthread_run(kdamond_fn, ctx, "kdamond");
-> > > > +		if (IS_ERR(ctx->kdamond))
-> > > > +			err = PTR_ERR(ctx->kdamond);
-> > > > +	} else if (ctx->kdamond && !on) {
-> > > > +		mutex_unlock(&ctx->kdamond_lock);
-> > > > +		kthread_stop(ctx->kdamond);
-> > > > +		while (damon_kdamond_running(ctx))
-> > > > +			usleep_range(ctx->sample_interval,
-> > > > +					ctx->sample_interval * 2);
-> > > > +		return 0;
-> > > > +	}
-> > > > +	mutex_unlock(&ctx->kdamond_lock);
-> > > > +
-> > > > +	return err;
-> > > > +}
-> > > > +  
-> > [...]
-> > > > +
-> > > > +/*  
-> > > 
-> > > Why not make these actual kernel-doc?  That way you can use the
-> > > kernel-doc scripts to sanity check them.  
-> > 
-> > Oops, I just forgot that it should start with '/**'.  Will fix it in next spin.
-> 
-> cool.
-> 
-> Thanks,
-> 
-> Jonathan
-
-:)
-
-
-Thanks,
-SeongJae Park
-[...]
+~Andrew
