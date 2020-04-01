@@ -2,107 +2,144 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5F4C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE8FC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43AB2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6gySMu1"
+	by mail.kernel.org (Postfix) with ESMTP id 23E02206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585767222;
+	bh=Z/I58kAsf2loPOKpP6nkhNL2ksb0uvC8QtWB9TjHfjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JnJTO37pYf6aXNZmGHv4POfA21pPGHPu/gd0qfmjuoKxQxbpnlo1d/psPbJWNHOgg
+	 chpHEhiDuvpRyeg4YC7BcXYqeUOsorZlARf1KAip/Iat2NcT2d2MF4UFxavCRZXvW3
+	 WWjU3R2m8Qka+4LZY/V+bTSWSJbyuBS38pW/j/YI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732519AbgDASxM (ORCPT
+        id S1732551AbgDASxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:53:12 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37492 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgDASxL (ORCPT
+        Wed, 1 Apr 2020 14:53:41 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33930 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgDASxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:53:11 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t11so611339lfe.4;
-        Wed, 01 Apr 2020 11:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VQyVAIIzutwqkyfYTNBDUtxgmiM5XluCAPUUzt8tYzA=;
-        b=f6gySMu1/KZQldaiJU0HZJUMHNrOnxP9JYzubf0ZtdqHGg17TYXOEPnL2zzm6i60z+
-         fyvd+zeJaDcjjpP063I5iap8UpVQ/W6MlvDFoz5f3Pqu3bVS2ILx5LlQcy8vv8BqFgGe
-         P8e59Mx99j2zmRknwfwagy6FdFytVtcFDuZwl33FQY0hQo7yxEK2iabBX4JPOJK8naoz
-         3mAnrOUHLaPHKH3zkGwpDDrwP8DaKxRum47ipUBYKF4ZFrdDUFwqj8Xu9ZBZZJqk56UJ
-         G/EvoiOxAA9DA6YC6QpSaa0i3U85CfZtWtxWUxyUIoRYNjIAHbmHmr+jmpC/39TtX6gI
-         cVFg==
+        Wed, 1 Apr 2020 14:53:40 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c195so4188293wme.1;
+        Wed, 01 Apr 2020 11:53:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VQyVAIIzutwqkyfYTNBDUtxgmiM5XluCAPUUzt8tYzA=;
-        b=oxVEsRdxDSsuvnJlSRvLlpRKSRq9iAICd9dm9vqSTZo5Wr8hyHqoskF/Rm0A3kLVqV
-         LEgqRku+mhdQgp37/Ci63l5wROlE5astNjLr/AXG8FikMvlDUeISbvSqfgVvYZuIb8U1
-         t4cogiZmgjq22l/Bv6W6U0C0E8R/lVkYsA5kdecK62ymlL991xgvtHJcbLpd0YdZfWT1
-         z/3xE1SqYs15x/KsXO/L+EoSSTRQX/rHiw9sbH9jOmpSp3j/2JZicW/nM2mIlqFnqd9q
-         aUHRCJKGPAy80jg5BSnkjoa0muyY427hqkvbsAc0ZXea4W/8jiYRKI3E3ifjYKsp3RUp
-         LCMQ==
-X-Gm-Message-State: AGi0PuZVlTlCY8Fct5/ypKloHrFUsEu2wp2anu47X4C1l/6ffZVurGKX
-        5lOp/3RWB3H/6gxpRokJVRGSCiY/
-X-Google-Smtp-Source: APiQypIV05zgsqDTXLVW5bZguap7w/VMZhzPsGkTPE9hu+3T5hqetEJ2wZ/8yhmmfTcgVkqrD50d/Q==
-X-Received: by 2002:a05:6512:66:: with SMTP id i6mr15684865lfo.48.1585767188616;
-        Wed, 01 Apr 2020 11:53:08 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id t144sm2224533lff.94.2020.04.01.11.53.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 11:53:08 -0700 (PDT)
-Subject: Re: [PATCH v1 5/5] PM / devfreq: tegra30: Make CPUFreq notifier to
- take into account boosting
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200330231617.17079-1-digetx@gmail.com>
- <CGME20200330232026epcas1p2234ae241b9693555b4df74aab3d8aee9@epcas1p2.samsung.com>
- <20200330231617.17079-6-digetx@gmail.com>
- <afcc9f80-c102-da42-8f7f-9b66417a9d4d@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9b79b19d-3cd2-6ea1-1e86-dd008ded3d3f@gmail.com>
-Date:   Wed, 1 Apr 2020 21:53:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gABD0nQMKQ+AayjxHslKqozn5LgoJ0N6roIyuryx81M=;
+        b=NXEWtNr0W+1Z6G7PgZVmAnAHWnbpfJtpnmkbtu76pd/ueWaYnh0jWUETLUXXzmXyP6
+         ibmyp/Pjalh95x6mLMfXRZ9L28yuNwc+ndq18+ggb4p0rZS0BYwxg49rUU2STuDC5yga
+         HzLZlP2BiHJYMJ6QrQvV5PwE3JT++lNBdvRv+q/3CkqXhmSW9/xhUKEME5wo8bNrMkIm
+         kCxpehG3OyuR8kJOsrTROI8CciI/XcfvOvuVCTaXe/MoBj1LYix++Gve9rZRDxYhY3/w
+         rQe3Ev6Y6+AqLEayJnae7rM4nLHssS+fvjj8nI22fUcpiT34yc56wfxghOBPhuNu2KlH
+         4dKw==
+X-Gm-Message-State: AGi0PuanXjKWOe3gM7FDEqgshbzVh/At2HUto62PeJxPxPft2O2YTi2g
+        kcHa4A2920qOd4prOtZ+f4M=
+X-Google-Smtp-Source: APiQypLYYrp2fUjosqz6TqlRn2Br/HKN0fbVC9t7zSABK/GBt5LHLk8cLtpJr6pH5BRTkiAE+C/aaQ==
+X-Received: by 2002:a7b:c050:: with SMTP id u16mr6117812wmc.68.1585767219131;
+        Wed, 01 Apr 2020 11:53:39 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id h132sm3977863wmf.18.2020.04.01.11.53.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 11:53:38 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 19:53:36 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH V4 6/6] x86/Hyper-V: Report crash data in die() when
+ panic_on_oops is set
+Message-ID: <20200401185336.fsnwxejwn3nd5lhx@debian>
+References: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
+ <20200331073832.12204-1-Tianyu.Lan@microsoft.com>
+ <MW2PR2101MB1052A8FEF85F381B3EAF7D36D7C80@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <9eb81216-8e00-64e5-ab1c-b363983b245e@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <afcc9f80-c102-da42-8f7f-9b66417a9d4d@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9eb81216-8e00-64e5-ab1c-b363983b245e@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.04.2020 02:29, Chanwoo Choi пишет:
-> Hi Dmitry,
+On Tue, Mar 31, 2020 at 10:26:06PM +0800, Tianyu Lan wrote:
 > 
-> On 3/31/20 8:16 AM, Dmitry Osipenko wrote:
->> MCCPU frequency boosting needs to be taken into account in order to avoid
->> scheduling of unnecessary devfreq updates.
 > 
-> "in order to avoid scheduling of unnecessary devfreq updates."
-> I don't understand the correct meaning of following description.
-> Could you explain it more detailed?
+> On 3/31/2020 9:51 PM, Michael Kelley wrote:
+> > From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 31, 2020 12:39 AM
+> > > 
+> > > When oops happens with panic_on_oops unset, the oops
+> > > thread is killed by die() and system continues to run.
+> > > In such case, guest should not report crash register
+> > > data to host since system still runs. Fix it.
+> > > 
+> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > > ---
+> > > Change since v3:
+> > > 	Fix compile error
+> > > ---
+> > >   drivers/hv/vmbus_drv.c | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > > index 172ceae69abb..4bc02aea2098 100644
+> > > --- a/drivers/hv/vmbus_drv.c
+> > > +++ b/drivers/hv/vmbus_drv.c
+> > > @@ -31,6 +31,7 @@
+> > >   #include <linux/kdebug.h>
+> > >   #include <linux/efi.h>
+> > >   #include <linux/random.h>
+> > > +#include <linux/kernel.h>
+> > 
+> > Unfortunately, adding the #include doesn't solve the problem.  The error occurs when
+> > CONFIG_HYPERV=m, because panic_on_oops is not exported.  I haven't thought it
+> > through, but hopefully there's a solution where panic_on_oops can be tested in
+> > hyperv_report_panic() or some other Hyper-V specific function that's never in a
+> > module, so that we don't need to export panic_on_oops.
+> 
+> Yes, I don't consider modules case. I think we may introduce a check
+> function of panic_on_oops in the mshyperv.c and expose it to module.
+> 
 
-Hello Chanwoo,
+Why expose something new? You can just test panic_on_oops in
+hyperv_report_panic and bail if it is false, right?
 
-I'll update the commit message with a more detailed description and make
-this patch standalone in v2. Thank you very much for taking a look at
-the patches.
+Something like the following (not compiled) diff:
 
-BTW, please also take a look at this patch
-https://patchwork.kernel.org/patch/11409037/
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index b0da5320bcff..0dc229a9142c 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -424,6 +424,9 @@ void hyperv_report_panic(struct pt_regs *regs, long err)
+        static bool panic_reported;
+        u64 guest_id;
+
++       if (!panic_on_oops)
++               return;
++
+        /*
+         * We prefer to report panic on 'die' chain as we have proper
+         * registers to report, but if we miss it (e.g. on BUG()) we need
+
+I haven't checked all the error reporting paths and don't know if this
+works or not though.
+
+Wei.
