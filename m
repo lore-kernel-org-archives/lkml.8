@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BD0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9194BC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6363F20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376F020857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758988;
-	bh=T7EptmKtFcmwZNYtW2NJwIhPk4hbrAUxmdJ1+Wx/nAc=;
+	s=default; t=1585758992;
+	bh=/o1Xr498tkQFQ/oFiaM4/uN7/67/7a1kWePFN3V31LI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t009SwpuLwJZU0M11KgrQFBeFKO8fU7DYAwHL8Vkb/npM4t1QMrLDvWsJqiKdzYLK
-	 ufcxg9dPL7ifYNOyWVYXM8WusolSBrtpqGJ54rKPHbGT07HxWJkDQ1ZB5yoUY2jzA8
-	 T1kisNuPGupELIaGOdqKIKIp2Q1fRRiK4K8gkp58=
+	b=n4G3kS1mHlqPaBWVd9wEiJrLC3jXpsZ8nrHEN7RfnUE/F0+IR7ORHvPkJQvc0G0Oq
+	 J1VB5EPa8y/ZrPm/iqvTKIllCtROBNOoJ6i9X+fCbbzb7XlV/po7VXHswnVMHubS6/
+	 4YsjCA28pkveXHhPF+M4OFKtO9ktyU0MgSFMjGqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbgDAQg1 (ORCPT
+        id S2388848AbgDAQgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:36:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388056AbgDAQgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:22 -0400
+        id S2388245AbgDAQgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34AD220772;
-        Wed,  1 Apr 2020 16:36:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD8620658;
+        Wed,  1 Apr 2020 16:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758981;
-        bh=T7EptmKtFcmwZNYtW2NJwIhPk4hbrAUxmdJ1+Wx/nAc=;
+        s=default; t=1585758984;
+        bh=/o1Xr498tkQFQ/oFiaM4/uN7/67/7a1kWePFN3V31LI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jG6/C39TasmKGfKX4F0sY9t3CfSrgWPg3eo7jz0EtwZjDgl00NR78treVC3US2lfu
-         ZXytUjGouJ9Lq/1wnPEXmIj66AdAZoVY2cI3+VAjvyMRR0W0lZz1Uo4FghuKrnmCtr
-         LaCm+qs8WkGvVdRzdb2itQSoKBM3WhVoh12b+dnY=
+        b=EZDed5gx8v+clylX9tOpRRoQeEjLiUxcBcybCDM3jsGSo/Y1S9tWjWT39cKUZ3vpn
+         iJ59+W4/Fw+BCKNET8rJ/juQivJWL3rd9/Y5SAwkgdToCIvpsL0yPb1SzfYBF10OZP
+         BJyPa0y9Gs/vIEu/vQsqTJ8SAaReWQql9ABdJRiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thommy Jakobsson <thommyj@gmail.com>,
-        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 004/102] spi/zynqmp: remove entry that causes a cs glitch
-Date:   Wed,  1 Apr 2020 18:17:07 +0200
-Message-Id: <20200401161532.417694260@linuxfoundation.org>
+Subject: [PATCH 4.9 005/102] drm/exynos: dsi: propagate error value and silence meaningless warning
+Date:   Wed,  1 Apr 2020 18:17:08 +0200
+Message-Id: <20200401161532.500201686@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -61,56 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thommy Jakobsson <thommyj@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 5dd8304981ecffa77bb72b1c57c4be5dfe6cfae9 ]
+[ Upstream commit 0a9d1e3f3f038785ebc72d53f1c409d07f6b4ff5 ]
 
-In the public interface for chipselect, there is always an entry
-commented as "Dummy generic FIFO entry" pushed down to the fifo right
-after the activate/deactivate command. The dummy entry is 0x0,
-irregardless if the intention was to activate or deactive the cs. This
-causes the cs line to glitch rather than beeing activated in the case
-when there was an activate command.
+Properly propagate error value from devm_regulator_bulk_get() and don't
+confuse user with meaningless warning about failure in getting regulators
+in case of deferred probe.
 
-This has been observed on oscilloscope, and have caused problems for at
-least one specific flash device type connected to the qspi port. After
-the change the glitch is gone and cs goes active when intended.
-
-The reason why this worked before (except for the glitch) was because
-when sending the actual data, the CS bits are once again set. Since
-most flashes uses mode 0, there is always a half clk period anyway for
-cs to clk active setup time. If someone would rely on timing from a
-chip_select call to a transfer_one, it would fail though.
-
-It is unknown why the dummy entry was there in the first place, git log
-seems to be of no help in this case. The reference manual gives no
-indication of the necessity of this. In fact the lower 8 bits are a
-setup (or hold in case of deactivate) time expressed in cycles. So this
-should not be needed to fulfill any setup/hold timings.
-
-Signed-off-by: Thommy Jakobsson <thommyj@gmail.com>
-Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Link: https://lore.kernel.org/r/20200224162643.29102-1-thommyj@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-zynqmp-gqspi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
-index 18aeaceee2862..d26c0eda2d9ea 100644
---- a/drivers/spi/spi-zynqmp-gqspi.c
-+++ b/drivers/spi/spi-zynqmp-gqspi.c
-@@ -415,9 +415,6 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index e07cb1fe48604..5e202af7fbf53 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -1775,8 +1775,9 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
+ 				      dsi->supplies);
+ 	if (ret) {
+-		dev_info(dev, "failed to get regulators: %d\n", ret);
+-		return -EPROBE_DEFER;
++		if (ret != -EPROBE_DEFER)
++			dev_info(dev, "failed to get regulators: %d\n", ret);
++		return ret;
+ 	}
  
- 	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
- 
--	/* Dummy generic FIFO entry */
--	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, 0x0);
--
- 	/* Manually start the generic FIFO command */
- 	zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
- 			zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
+ 	dsi->clks = devm_kzalloc(dev,
 -- 
 2.20.1
 
