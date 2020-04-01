@@ -2,223 +2,111 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1973C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BB6C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3492073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C932077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:23:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="n0crX8Gx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbgDADPf (ORCPT
+        id S1731667AbgDADW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:15:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46902 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731556AbgDADPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:15:35 -0400
-IronPort-SDR: D6EM2iPs4gutHzSlRs5ErJvGYMsJR8ZJEpCqqKnxgQr8RVns6rkDPnvqhEfHj9cQw8GbJDsSOM
- Eyv9kvEKd//w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 20:15:34 -0700
-IronPort-SDR: Bz9l/qJ3e9j56cuDXxGvBSdWPXKTSjwf9jwttxnwvg1pDqPHb1zt7Akgt5Vx+pq9tJOIgBIlVM
- IwlvAhFWk9GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="295196847"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Mar 2020 20:15:32 -0700
-Date:   Wed, 1 Apr 2020 11:13:09 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v3 6/7] fpga: dfl: afu: add user interrupt support
-Message-ID: <20200401031309.GC4212@yilunxu-OptiPlex-7050>
-References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
- <1585038763-22944-7-git-send-email-yilun.xu@intel.com>
- <20200331051550.GE8468@hao-dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331051550.GE8468@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 31 Mar 2020 23:22:59 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:19739 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731593AbgDADW7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 23:22:59 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 0313MSET017333;
+        Wed, 1 Apr 2020 12:22:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 0313MSET017333
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585711350;
+        bh=6cmk4VhYcoiSK0648BJFDTb8WGo1i4aniwWtusevAaQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n0crX8GxExB2dPg/8QhQatWt02gUfaOo6/Q6XF2RR3LPaFrXrpow0/nhIbhk9UaSp
+         a/+rhR9iy+jrfi4TIoRdURW1PVBAGPQ1E0Qbb7appR14bGzqqheIN3+Tx7tsYwceEx
+         mQJxi6OQmpZb6Nar5VNm/dmqec/IsB23ZD5zBEZG7VFGh1uBd2BGZXjlY06PyQGSak
+         7xgUgyNtqdbz+b1rgf6jKiqrYZsw273kOa1j7abnHphGqOx+Ff8e6bVIajur46u3j7
+         LWs5x+R6+Vo36uvL3YHv/n2qz6z9yTXvH54CSJPzjKW07NcFPpKL7LMbISOrkFEyh6
+         924kwGhB0OP7Q==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma: uniphier-xdmac: switch to single reg region
+Date:   Wed,  1 Apr 2020 12:21:50 +0900
+Message-Id: <20200401032150.19767-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:15:50PM +0800, Wu Hao wrote:
-> On Tue, Mar 24, 2020 at 04:32:42PM +0800, Xu Yilun wrote:
-> > AFU (Accelerated Function Unit) is dynamic region of the DFL based FPGA,
-> > and always defined by users. Some DFL based FPGA cards allow users to
-> > implement their own interrupts in AFU. In order to support this,
-> > hardware implements a new UINT (User Interrupt) private feature with
-> 
-> User Interrupt seems a little confusing, maybe we can just call it
-> AFU Interrupt whenever possible. How do you think?
+The reg in the example "<0x5fc10000 0x1000>, <0x5fc20000 0x800>"
+is wrong. The register region of this controller is much smaller,
+and there is no other hardware register interleaved. There is no
+good reason to split it into two regions.
 
-OK. It's more clear. I'll change it.
+Just use a single, contiguous register region.
 
-> 
-> Thanks
-> Hao
-> 
-> > related capability register which describes the number of supported
-> > user interrupts as well as the local index of the interrupts for
-> > software enumeration, and from software side, driver follows the common
-> > DFL interrupt notification and handling mechanism, and it implements
-> > two ioctls below for user to query number of irqs supported and set/unset
-> > interrupt triggers.
-> > 
-> >  Ioctls:
-> >  * DFL_FPGA_PORT_UINT_GET_IRQ_NUM
-> >    get the number of irqs, which is used to determine how many interrupts
-> >    UINT feature supports.
-> > 
-> >  * DFL_FPGA_PORT_UINT_SET_IRQ
-> >    set/unset eventfds as AFU user interrupt triggers.
-> > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > ----
-> > v2: use DFL_FPGA_PORT_UINT_GET_IRQ_NUM instead of
-> >     DFL_FPGA_PORT_UINT_GET_INFO
-> >     Delete flags field for DFL_FPGA_PORT_UINT_SET_IRQ
-> > v3: put_user() instead of copy_to_user()
-> >     improves comments
-> > ---
-> >  drivers/fpga/dfl-afu-main.c   | 70 +++++++++++++++++++++++++++++++++++++++++++
-> >  include/uapi/linux/fpga-dfl.h | 23 ++++++++++++++
-> >  2 files changed, 93 insertions(+)
-> > 
-> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> > index 357cd5d..d2db5b6 100644
-> > --- a/drivers/fpga/dfl-afu-main.c
-> > +++ b/drivers/fpga/dfl-afu-main.c
-> > @@ -529,6 +529,72 @@ static const struct dfl_feature_ops port_stp_ops = {
-> >  	.init = port_stp_init,
-> >  };
-> >  
-> > +static long
-> > +port_uint_get_num_irqs(struct platform_device *pdev,
-> > +		       struct dfl_feature *feature, unsigned long arg)
-> > +{
-> > +	return put_user(feature->nr_irqs, (__u32 __user *)arg);
-> > +}
-> > +
-> > +static long port_uint_set_irq(struct platform_device *pdev,
-> > +			      struct dfl_feature *feature, unsigned long arg)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> > +	struct dfl_fpga_irq_set hdr;
-> > +	s32 *fds;
-> > +	long ret;
-> > +
-> > +	if (!feature->nr_irqs)
-> > +		return -ENOENT;
-> > +
-> > +	if (copy_from_user(&hdr, (void __user *)arg, sizeof(hdr)))
-> > +		return -EFAULT;
-> > +
-> > +	if (!hdr.count || (hdr.start + hdr.count > feature->nr_irqs) ||
-> > +	    (hdr.start + hdr.count < hdr.start))
-> > +		return -EINVAL;
-> > +
-> > +	fds = memdup_user((void __user *)(arg + sizeof(hdr)),
-> > +			  hdr.count * sizeof(s32));
-> > +	if (IS_ERR(fds))
-> > +		return PTR_ERR(fds);
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	ret = dfl_fpga_set_irq_triggers(feature, hdr.start, hdr.count, fds);
-> > +	mutex_unlock(&pdata->lock);
-> > +
-> > +	kfree(fds);
-> > +	return ret;
-> > +}
-> > +
-> > +static long
-> > +port_uint_ioctl(struct platform_device *pdev, struct dfl_feature *feature,
-> > +		unsigned int cmd, unsigned long arg)
-> > +{
-> > +	long ret = -ENODEV;
-> > +
-> > +	switch (cmd) {
-> > +	case DFL_FPGA_PORT_UINT_GET_IRQ_NUM:
-> > +		ret = port_uint_get_num_irqs(pdev, feature, arg);
-> > +		break;
-> > +	case DFL_FPGA_PORT_UINT_SET_IRQ:
-> > +		ret = port_uint_set_irq(pdev, feature, arg);
-> > +		break;
-> > +	default:
-> > +		dev_dbg(&pdev->dev, "%x cmd not handled", cmd);
-> > +	}
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct dfl_feature_id port_uint_id_table[] = {
-> > +	{.id = PORT_FEATURE_ID_UINT,},
-> > +	{0,}
-> > +};
-> > +
-> > +static const struct dfl_feature_ops port_uint_ops = {
-> > +	.ioctl = port_uint_ioctl,
-> > +};
-> > +
-> >  static struct dfl_feature_driver port_feature_drvs[] = {
-> >  	{
-> >  		.id_table = port_hdr_id_table,
-> > @@ -547,6 +613,10 @@ static struct dfl_feature_driver port_feature_drvs[] = {
-> >  		.ops = &port_stp_ops,
-> >  	},
-> >  	{
-> > +		.id_table = port_uint_id_table,
-> > +		.ops = &port_uint_ops,
-> > +	},
-> > +	{
-> >  		.ops = NULL,
-> >  	}
-> >  };
-> > diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.h
-> > index 206bad9..5f885a8 100644
-> > --- a/include/uapi/linux/fpga-dfl.h
-> > +++ b/include/uapi/linux/fpga-dfl.h
-> > @@ -180,6 +180,29 @@ struct dfl_fpga_irq_set {
-> >  					     DFL_PORT_BASE + 6,	\
-> >  					     struct dfl_fpga_irq_set)
-> >  
-> > +/**
-> > + * DFL_FPGA_PORT_UINT_GET_IRQ_NUM - _IOR(DFL_FPGA_MAGIC, DFL_PORT_BASE + 7,
-> > + *								__u32 num_irqs)
-> > + *
-> > + * Get the number of irqs supported by the fpga AFU user interrupt private
-> > + * feature.
-> > + * Return: 0 on success, -errno on failure.
-> > + */
-> > +#define DFL_FPGA_PORT_UINT_GET_IRQ_NUM	_IOR(DFL_FPGA_MAGIC,	\
-> > +					     DFL_PORT_BASE + 7, __u32)
-> > +
-> > +/**
-> > + * DFL_FPGA_PORT_UINT_SET_IRQ - _IOW(DFL_FPGA_MAGIC, DFL_PORT_BASE + 8,
-> > + *						struct dfl_fpga_irq_set)
-> > + *
-> > + * Set fpga afu user interrupt trigger if evtfds[n] is valid.
-> > + * Unset related interrupt trigger if evtfds[n] is a negative value.
-> > + * Return: 0 on success, -errno on failure.
-> > + */
-> > +#define DFL_FPGA_PORT_UINT_SET_IRQ	_IOW(DFL_FPGA_MAGIC,	\
-> > +					     DFL_PORT_BASE + 8,	\
-> > +					     struct dfl_fpga_irq_set)
-> > +
-> >  /* IOCTLs for FME file descriptor */
-> >  
-> >  /**
-> > -- 
-> > 2.7.4
+While I am here, I made the 'dma-channels' property mandatory because
+otherwise there is no way to determine the number of the channels.
+
+Please note the original binding was merged recently. Since there
+is no user yet, this change has no actual impact.
+
+Fixes: b9fb56b6ba8a ("dt-bindings: dmaengine: Add UniPhier external DMA controller bindings")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+We do not need to touch the driver either because the second
+region is not used.
+
+
+ .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml  | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+index 86cfb599256e..371f18773198 100644
+--- a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+@@ -22,9 +22,7 @@ properties:
+     const: socionext,uniphier-xdmac
+ 
+   reg:
+-    items:
+-      - description: XDMAC base register region (offset and length)
+-      - description: XDMAC extension register region (offset and length)
++    maxItems: 1
+ 
+   interrupts:
+     maxItems: 1
+@@ -49,12 +47,13 @@ required:
+   - reg
+   - interrupts
+   - "#dma-cells"
++  - dma-channels
+ 
+ examples:
+   - |
+     xdmac: dma-controller@5fc10000 {
+         compatible = "socionext,uniphier-xdmac";
+-        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
++        reg = <0x5fc10000 0x5300>;
+         interrupts = <0 188 4>;
+         #dma-cells = <2>;
+         dma-channels = <16>;
+-- 
+2.17.1
+
