@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A609EC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69ADC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D422063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 569392063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759841;
-	bh=AemugzAZy1ghfV7RsZpaY/J/vZW9fAqxWNHOVoSlAJE=;
+	s=default; t=1585759852;
+	bh=IIJI3T9tX8Mz15Z7jrfZaEgMh0c9vgMMNhAxjgC02tY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v8FEi5m5kFY3pMcQx9iwPb6fLJWdl6yhdtf1NVKjTMEX+OTfrzS7QEDs1Eh+Ltc/h
-	 um/4c5MlRGPsCmCayKmAnRIuEvVBFSKmE/0cl7gJzOLA3suN45zC7/BslQBXdwevga
-	 HCxT3xXofb2wOC2c5BiI53aBgGrpA4/LZQs5yZQ4=
+	b=QCbXcJu2BCLgVNMIHpqDvhUGcJ0NxnKMOp7ilGc4frUsat0QyMzh8G1mW2VFn+M4s
+	 OL32tbU+cB0CWr1Bu+6Ck/v7l1+cfUx0eeyJQxqYqDfjKKfw/lsv7OGvDJBR3D895Q
+	 Pf1Hw+VVgF8PdESEjylsKtkQyku3qYmtWu6P1Ks8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388688AbgDAQje (ORCPT
+        id S2387918AbgDAQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39530 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388932AbgDAQjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:39:32 -0400
+        id S2389151AbgDAQjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:39:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6359A20719;
-        Wed,  1 Apr 2020 16:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDEA20658;
+        Wed,  1 Apr 2020 16:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759171;
-        bh=AemugzAZy1ghfV7RsZpaY/J/vZW9fAqxWNHOVoSlAJE=;
+        s=default; t=1585759145;
+        bh=IIJI3T9tX8Mz15Z7jrfZaEgMh0c9vgMMNhAxjgC02tY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDDYP0HvqpA2DyeHs7N/B3Y7f2wLUnrqKIXbFLw2mAeQedtU6OG5BlZWdkNzxuDrR
-         5LEL5xUgke4ksDhQnpmw/ujlXQRvNc38bdNc5YK27RJdEFtP4yGJsN09aI0GbuNCjG
-         MyMr7wkqTImJpXR8B42GQDezNO+W8ytrF9oW5KE8=
+        b=bLYGtmtUvIYAtstpbfqoQWeWeJehetkUy5DmqcIo7MLbejLfpSQULIwOj9A1sphob
+         ApIt+ym4/Lz9WWSf51qFEo25FW/NKCUyUVjlFiUDRWzZg0Rib3JHeZhCQZN88eQeJ/
+         jwkzovM+GMuxyvP0kwuw7LuAT+28sLVZKdMuy1KM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        kovi <zraetn@gmail.com>
-Subject: [PATCH 4.9 082/102] staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
-Date:   Wed,  1 Apr 2020 18:18:25 +0200
-Message-Id: <20200401161546.250014045@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.9 092/102] vt: selection, introduce vc_is_sel
+Date:   Wed,  1 Apr 2020 18:18:35 +0200
+Message-Id: <20200401161547.584816193@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -59,32 +58,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 38ef48f7d4b7342f145a1b4f96023bde99aeb245 upstream.
+commit dce05aa6eec977f1472abed95ccd71276b9a3864 upstream.
 
-The ASUS USB-N10 Nano B1 has been reported as a new RTL8188EU device.
-Add it to the device tables.
+Avoid global variables (namely sel_cons) by introducing vc_is_sel. It
+checks whether the parameter is the current selection console. This will
+help putting sel_cons to a struct later.
 
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Reported-by: kovi <zraetn@gmail.com>
-Cc: Stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200321180011.26153-1-Larry.Finger@lwfinger.net
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200219073951.16151-1-jslaby@suse.cz
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/vt/selection.c |    5 +++++
+ drivers/tty/vt/vt.c        |    7 ++++---
+ drivers/tty/vt/vt_ioctl.c  |    2 +-
+ include/linux/selection.h  |    4 +++-
+ 4 files changed, 13 insertions(+), 5 deletions(-)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -40,6 +40,7 @@ static struct usb_device_id rtw_usb_id_t
- 	/****** 8188EUS ********/
- 	{USB_DEVICE(0x056e, 0x4008)}, /* Elecom WDC-150SU2M */
- 	{USB_DEVICE(0x07b8, 0x8179)}, /* Abocom - Abocom */
-+	{USB_DEVICE(0x0B05, 0x18F0)}, /* ASUS USB-N10 Nano B1 */
- 	{USB_DEVICE(0x2001, 0x330F)}, /* DLink DWA-125 REV D1 */
- 	{USB_DEVICE(0x2001, 0x3310)}, /* Dlink DWA-123 REV D1 */
- 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -80,6 +80,11 @@ void clear_selection(void)
+ 	}
+ }
+ 
++bool vc_is_sel(struct vc_data *vc)
++{
++	return vc == sel_cons;
++}
++
+ /*
+  * User settable table: what characters are to be considered alphabetic?
+  * 256 bits. Locked by the console lock.
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -595,8 +595,9 @@ static void hide_softcursor(struct vc_da
+ 
+ static void hide_cursor(struct vc_data *vc)
+ {
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
++
+ 	vc->vc_sw->con_cursor(vc, CM_ERASE);
+ 	hide_softcursor(vc);
+ }
+@@ -606,7 +607,7 @@ static void set_cursor(struct vc_data *v
+ 	if (!con_is_fg(vc) || console_blanked || vc->vc_mode == KD_GRAPHICS)
+ 		return;
+ 	if (vc->vc_deccm) {
+-		if (vc == sel_cons)
++		if (vc_is_sel(vc))
+ 			clear_selection();
+ 		add_softcursor(vc);
+ 		if ((vc->vc_cursor_type & 0x0f) != 1)
+@@ -876,7 +877,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (!newscreen)
+ 		return -ENOMEM;
+ 
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
+ 
+ 	old_rows = vc->vc_rows;
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -42,7 +42,7 @@ char vt_dont_switch;
+ extern struct tty_driver *console_driver;
+ 
+ #define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+-#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_cons[i].d == sel_cons)
++#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
+ 
+ /*
+  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
+--- a/include/linux/selection.h
++++ b/include/linux/selection.h
+@@ -12,8 +12,8 @@
+ 
+ struct tty_struct;
+ 
+-extern struct vc_data *sel_cons;
+ struct tty_struct;
++struct vc_data;
+ 
+ extern void clear_selection(void);
+ extern int set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty);
+@@ -22,6 +22,8 @@ extern int sel_loadlut(char __user *p);
+ extern int mouse_reporting(void);
+ extern void mouse_report(struct tty_struct * tty, int butt, int mrx, int mry);
+ 
++bool vc_is_sel(struct vc_data *vc);
++
+ extern int console_blanked;
+ 
+ extern const unsigned char color_table[];
 
 
