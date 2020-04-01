@@ -2,175 +2,246 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E7BC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B41EC10F26
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B9720772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E9820772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="NvO71/kN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAniw9Sj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732821AbgDAVzR (ORCPT
+        id S1733065AbgDAVzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:55:17 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33086 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732357AbgDAVzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 17:55:17 -0400
-IronPort-SDR: hDrvLfXTRpr7d8ZVKwBKkjlPeoCE50hjSyzuE8hDfhI+BitszEF0TUf0WR55ocfp9wPIfDt7rz
- KzZaOXo/RLWA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 14:55:16 -0700
-IronPort-SDR: SI31RKCH03Ysov5qWPvre2uuILxLP9cHATE/L26X929Gs2tMWByNHH+K7u320bQiUxWs3ZRhkW
- qqI/SWl0GI+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,333,1580803200"; 
-   d="scan'208";a="449377887"
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Apr 2020 14:55:16 -0700
-Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Apr 2020 14:55:16 -0700
-Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
- ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 1 Apr 2020 14:55:15 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 1 Apr 2020 14:55:15 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Apr 2020 14:55:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JPWE7hoUHPzGH8RvOtRYnPPQfHvaFGKkWrPDPG5F/S2Xhv1c4hnNG+aYye1YaAMKf+/zodUBnTRCLxw2yyTr1bgPcMk1O5+Mac8T/PUrrScyzzazQM6WkdHzxDw6gVzNH2E7MZuSdk9DsiP0449fj0IRk+HLS87Ed/YnQMfEz3zg9bjOtMxv3ogPEi88gIuM/PJBT0r2qKho4tL7I/5U3CSMa33qv46orXh4WNHdojJRGA9rC5m/VrCdwVMQOyvNfD4syhXHxezb2ggpS+R00CIetXAlSYGS/3UV6bS0N/U4agWdfrrHH/HPz9mNgDeK0kaMLrHzuxKZBpvmHdCKQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vJDvoaAezW4adzYrGxcBsycGI2MfGbNpsin64ag4K8s=;
- b=K74WECsGDIkrXlUTVr73yWmORawDUjFotQc0aR7F9tVf/FTsMVApttJScVtgdPdSFqBDL268mxlK6hyVGkZBh/vM8CPvLvs0DS7y8oH5H98ZTKl3ulHIXAgNncRb7/38J6JcZqSI6dulmDPjFWchFiQwZjsJGenhQgreRRhaHPFLyYOKmxg1ciHQ/rVc4TcFsJJbmDgTE5Fn0zzlvizshSKe71mCr33WeoNdrUyf1JtKztv0HfzBNB1N5gtfQ6ZjVzejAI0aCfAeIu6tVM7tt5d+bqFqhMTcyeeTLzoKqArOxUuco+45F5rTDmTv8pwNXXsqBfg0Tp/3dxR/Pq7oFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vJDvoaAezW4adzYrGxcBsycGI2MfGbNpsin64ag4K8s=;
- b=NvO71/kNKYTu0dyOMrLLLCyFf0TVeG49oZ76xgd3IA8biE+PZauOTbpCiBiNKAVmg2JRhQBJosweFfIWO2fxGf+y/w8ZpJPVs7KHTGVGwpNp7kuXdI85ZLz4nwKCdYk+Qu+qtSWZYzDggFYpX6R/yixqd7hoCwKIHbjx6gcNF+M=
-Received: from CY4PR11MB1719.namprd11.prod.outlook.com (2603:10b6:903:2d::23)
- by CY4PR11MB1589.namprd11.prod.outlook.com (2603:10b6:910:e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Wed, 1 Apr
- 2020 21:55:07 +0000
-Received: from CY4PR11MB1719.namprd11.prod.outlook.com
- ([fe80::e43e:7b93:3758:44ad]) by CY4PR11MB1719.namprd11.prod.outlook.com
- ([fe80::e43e:7b93:3758:44ad%11]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 21:55:07 +0000
-From:   "Kaneda, Erik" <erik.kaneda@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jan Engelhardt <jengelh@inai.de>,
-        "Moore, Robert" <robert.moore@intel.com>
-CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] acpica: clear global_lock bits at FACS initialization
-Thread-Topic: [PATCH] acpica: clear global_lock bits at FACS initialization
-Thread-Index: AQHWBnGD5Rg0jHRzck+SrWIXSlQtE6hj/kIAgADEq9A=
-Date:   Wed, 1 Apr 2020 21:55:06 +0000
-Message-ID: <CY4PR11MB171939B742CF12CD476E6BCEF0C90@CY4PR11MB1719.namprd11.prod.outlook.com>
-References: <20200330085852.31328-1-jengelh@inai.de>
- <CAJZ5v0iMJYG1ptdoeiHVo21NqhWBVPw691LJ5=3oRMA7OMQ91Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iMJYG1ptdoeiHVo21NqhWBVPw691LJ5=3oRMA7OMQ91Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=erik.kaneda@intel.com; 
-x-originating-ip: [192.55.52.216]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3a80edad-53e1-4e2e-4340-08d7d6875754
-x-ms-traffictypediagnostic: CY4PR11MB1589:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR11MB1589737B63D1ABF741E9368FF0C90@CY4PR11MB1589.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1719.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(376002)(366004)(136003)(346002)(396003)(186003)(4326008)(76116006)(53546011)(316002)(8936002)(66446008)(64756008)(2906002)(66476007)(54906003)(6636002)(66946007)(7696005)(71200400001)(6506007)(52536014)(66556008)(9686003)(966005)(110136005)(33656002)(81156014)(8676002)(478600001)(81166006)(55016002)(26005)(5660300002)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XvfGNJqpDk0+kCJRgvg4ggRdv/XdcLHn3DgveaUZ1gkrUQUoK04zGQIZnhr54dv3x845Ao/HmJs1MRoj/75M/pdZSeK0aidcR/LVoIPUwOnVchYSilL7AWPFhqq+c2kINpLGe5/jb0kcOAkFkw/51E6bJ3LS2+Y8tI3BoD1YGKtJkeCRSYSR7MhuVawp5QF5ftROa7Ax3ExYiet62c84lTgKX7L1XtI0z+P+Wuqsg0nF4rjsmxUYOwCcIgUTFuANDdctWoTIYgPIeDQeB6U/mtwkvhznspvf5s9JoyKVGrrCncKBDdenswxkDIf3yEcLcC7qZfh6gIKjGFEa0KllTmxAAWRRbcQSiNapSn5FALeytXJ+PYWZWQskTEj6RJ3QmaA8hJ17UMiPCG5FC33gXHTrm2c6Q/hTI1Kw+ID92WzVyw3LJNviJ27CT/HInLZ0wT0ZyRD564xPlfcPrPnZBj3CACOwBIS6hcdKqegYIAwY2sHA9tlURTX3bj6cfnK5zsAIBeiRlumb+LmJD5pQ1w==
-x-ms-exchange-antispam-messagedata: IBOJ4kyrksnfT5+v69Xxf1wqWijwe+YG7KmcNSii7reiiSdtyEz8xCLCgZ69WevsiviK+tWHq8YVxVerPJ81vawOMIwY9we2OEghEnbRQZp6wtJu4qNxIICNQHAw9eZGGNNgJ/QB09R6rdoRcDu8Mg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 1 Apr 2020 17:55:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34284 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAVzY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 17:55:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so1922815wrl.1;
+        Wed, 01 Apr 2020 14:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=23XR5mx8Dze93AnMWKyPVY0N8s5g7kVY+bkAn8g7cvA=;
+        b=QAniw9SjKQdOhTQ6+egXHh8NRepoYDY4AiDAN7Uj1eGxSWo4AArd8Xtg/NIoC8BIDL
+         KRShWuizd69H8UwgFcT+nsJPKSweoIyITSUfLUqvs6AofqWK+y3TZRVbbvuiCocT3d34
+         1xYjOdKTWqw5ROCwZLYMo2mLc1wISqW/FV8ZJYhX6FQ0Zx41nYXpV8cU4TL7OIH0yXFx
+         CrPbHQtca7er4Idus89zSrtFbSpzq5cTu9jYKK6a2aDUz+WlTe/yJOVckTa7FPeYaETu
+         kYVOgbRKRj1TDcVlxbf9KMv4jmjmrSGAleN6jEjqAaYebTQCSV/TZw8qeWh8gBmxYEUJ
+         w5Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=23XR5mx8Dze93AnMWKyPVY0N8s5g7kVY+bkAn8g7cvA=;
+        b=UzCXBV4jBvb+BvjLbZRIjSEV11o7/PqfTzzQ1D+GUkknsLSCa4eXFbdZrGddHMjASQ
+         k3hgA9wVw6v+rxGPHQj+9Gzu3eh/HAUFKgyHrIzVv++DbYO+pvhcUc0ozikH3kus4efM
+         w83yczLTX43YvIeq2jk4fx8VYKiqCo0coxJ1VYkmqxfVt//MV5wilCwic/abpeM6GA0o
+         97r7Elfg7Mr4XtJNTk9o90uBW3M3s7PY53aJtRMVeazmtuQO2yOytFcLGV8bboaWdQDH
+         etYuKynoByQzTP6dc1S0RcUV3HZGPwVLHgtqZZu8s9x2UFIj0U9PM/XbLjHiHkpxzioN
+         o8Lg==
+X-Gm-Message-State: AGi0PuaproIXC6WnEqhUwA9vupKblam7oIGZMnOKEwRIqRQmh3Nyg1VU
+        TpI9VP9m/mqVzHuKP5EZZck=
+X-Google-Smtp-Source: APiQypLPNH390ekbgjowk9SJkVwRaMOwDEpGqo7J6aTA93oIuwiRwrzQR7kuqQyKFmyS2KRB8S9NlA==
+X-Received: by 2002:adf:a549:: with SMTP id j9mr39711wrb.183.1585778121081;
+        Wed, 01 Apr 2020 14:55:21 -0700 (PDT)
+Received: from AnsuelXPS (host3-220-static.183-80-b.business.telecomitalia.it. [80.183.220.3])
+        by smtp.gmail.com with ESMTPSA id a186sm4244571wmh.33.2020.04.01.14.55.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 14:55:20 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com> <20200320183455.21311-7-ansuelsmth@gmail.com> <20200401204007.GG254911@minitux>
+In-Reply-To: <20200401204007.GG254911@minitux>
+Subject: R: [PATCH 07/12] pcie: qcom: add tx term offset support
+Date:   Wed, 1 Apr 2020 23:55:17 +0200
+Message-ID: <006501d60870$3cf99fc0$b6ecdf40$@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a80edad-53e1-4e2e-4340-08d7d6875754
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 21:55:06.8994
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nMnLhZF8EGWwd0QGrx5X/mpSXZE/y8ModrHCE9SQ9Qxb2OQ26YP/lisctuNpkiXrhQVth/Pm7O3IdMx/yfMAQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1589
-X-OriginatorOrg: intel.com
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQF7DJ39byRpk4MoIUXZtcQDafvd5gIhNZ99Afu/Pz6o+d5HcA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYWNwaS1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWFjcGktDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4g
-T24gQmVoYWxmIE9mIFJhZmFlbCBKLiBXeXNvY2tpDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwg
-MSwgMjAyMCAyOjEyIEFNDQo+IFRvOiBKYW4gRW5nZWxoYXJkdCA8amVuZ2VsaEBpbmFpLmRlPjsg
-S2FuZWRhLCBFcmlrDQo+IDxlcmlrLmthbmVkYUBpbnRlbC5jb20+OyBNb29yZSwgUm9iZXJ0IDxy
-b2JlcnQubW9vcmVAaW50ZWwuY29tPg0KPiBDYzogV3lzb2NraSwgUmFmYWVsIEogPHJhZmFlbC5q
-Lnd5c29ja2lAaW50ZWwuY29tPjsgQUNQSSBEZXZlbCBNYWxpbmcgTGlzdA0KPiA8bGludXgtYWNw
-aUB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4g
-a2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYWNwaWNhOiBj
-bGVhciBnbG9iYWxfbG9jayBiaXRzIGF0IEZBQ1MgaW5pdGlhbGl6YXRpb24NCj4gDQo+IE9uIE1v
-biwgTWFyIDMwLCAyMDIwIGF0IDEwOjU4IEFNIEphbiBFbmdlbGhhcmR0IDxqZW5nZWxoQGluYWku
-ZGU+IHdyb3RlOg0KPiA+DQpIaSBKYW4sDQoNCkkndmUgYmVlbiByZWFkaW5nIHRoZSBBQ1BJIHNw
-ZWMgYW5kIHRoZXJlJ3Mgbm90aGluZyBzdGF0ZWQgYWJvdXQgd2hhdCB0aGUNCmluaXRpYWwgc3Rh
-dGUgb2YgdGhlIGxvY2sgc2hvdWxkIGJlLi4uIFRoaXMgcGF0Y2ggaXMgYXNzdW1pbmcgdGhhdCB0
-aGUgbG9jayBzaG91bGQNCmJlIGZyZWUgd2hlbiB0aGUgRkFDUyBpcyBiZWluZyBpbml0aWFsaXpl
-ZCBhbmQgSSBkb24ndCB0aGluayB0aGlzIGlzIGEgc2FmZQ0KYXNzdW1wdGlvbiB0byBtYWtlLg0K
-DQpXaGF0IGlmIHRoaXMgaXMgYSBsZWdpdGltYXRlIGFjcXVpc2l0aW9uIGJ5IGFuIFNNSSBoYW5k
-bGVyIHZlcnkgZWFybHkgaW4gT1MgYm9vdD8NCg0KPiA+IFdoZW4gdGhlIGZpcm13YXJlIFJPTSBz
-dXBwbGllcyBhIEZBQ1MgdGFibGUgd2l0aCBnYXJiYWdlLCBhbmQgdGhlDQo+ID4gZmlybXdhcmUg
-Y29kZSBkb2VzIG5vdCBjbGVhciB0aGUgZ2xvYmFsX2xvY2sgZmllbGQgYmVmb3JlIGJvb3Rpbmcg
-dG8gYQ0KPiA+IGxvYWRlci9PUywgdGhlIGdhcmJhZ2UgYnl0ZXMgaW4gdGhhdCBmaWVsZCAobGlr
-ZSAweGZmZmZmZmZmKSBjYW4NCj4gPiBpbmRpY2F0ZSB0aGF0IHRoZSBsb2NrIGlzIHRha2VuIHdo
-ZW4gaXQgaXMgbm90LCB0aGVyZWJ5IHByZXZlbnRpbmcNCj4gPiBvYnRhaW5pbmcgc2FpZCBsb2Nr
-IGV2ZW4gdGhvdWdoIGl0IGlzIG90aGVyd2lzZSBwZXJmZWN0bHkgdXNhYmxlIGlmDQo+ID4gdGhl
-IGZpZWxkIHdlcmUgbm90IHByZXBvcHVsYXRlZCB3aXRoIGdhcmJhZ2UuDQoNCkhvdyBkbyB3ZSBr
-bm93IHRoYXQgdGhlIGxvY2sgaXMgdGFrZW4gd2hlbiBpdCBpcyBub3Q/DQoNCkVyaWsNCj4gPg0K
-PiA+IFJlc2V0IHRoZSBsb2NrIHRvIGEga25vd24gZ29vZCBzdGF0ZSB1cG9uIEFDUEkgaW5pdGlh
-bGl6YXRpb24uDQo+ID4NCj4gPiBSZWZlcmVuY2VzOiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5v
-cmcvc2hvd19idWcuY2dpP2lkPTIwNjU1Mw0KPiA+IFNpZ25lZC1vZmYtYnk6IEphbiBFbmdlbGhh
-cmR0IDxqZW5nZWxoQGluYWkuZGU+DQo+IA0KPiBCb2IsIEVyaWssIHBsZWFzZSBsZXQgbWUga25v
-dyBpZiB5b3Ugd2FudCBtZSB0byBhcHBseSB0aGlzIGRpcmVjdGx5IG9yIHlvdQ0KPiBwcmVmZXIg
-dG8gcm91dGUgaXQgdGhyb3VnaCB0aGUgdXBzdHJlYW0uDQo+IA0KPiA+IC0tLQ0KPiA+DQo+ID4g
-IGRyaXZlcnMvYWNwaS9hY3BpY2EvdGJ1dGlscy5jIHwgMyArKysNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9h
-Y3BpY2EvdGJ1dGlscy5jDQo+ID4gYi9kcml2ZXJzL2FjcGkvYWNwaWNhL3RidXRpbHMuYyBpbmRl
-eCBjNWYwYjhlYzcwY2MuLjI2YmRiYzU4NWQ3ZQ0KPiA+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
-cnMvYWNwaS9hY3BpY2EvdGJ1dGlscy5jDQo+ID4gKysrIGIvZHJpdmVycy9hY3BpL2FjcGljYS90
-YnV0aWxzLmMNCj4gPiBAQCAtNTYsNiArNTYsOSBAQCBhY3BpX3N0YXR1cyBhY3BpX3RiX2luaXRp
-YWxpemVfZmFjcyh2b2lkKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZmYWNzKSk7DQo+ID4gICAgICAgICAg
-ICAgICAgIGFjcGlfZ2JsX0ZBQ1MgPSBmYWNzOw0KPiA+ICAgICAgICAgfQ0KPiA+ICsgICAgICAg
-LyogQ2xlYXIgcG90ZW50aWFsIGdhcmJhZ2UgZnJvbSB0aGUgaW5pdGlhbCBGQUNTIHRhYmxlLiAq
-Lw0KPiA+ICsgICAgICAgaWYgKGZhY3MgIT0gTlVMTCkNCj4gPiArICAgICAgICAgICAgICAgZmFj
-cy0+Z2xvYmFsX2xvY2sgJj0gfjB4MzsNCj4gPg0KPiA+ICAgICAgICAgLyogSWYgdGhlcmUgaXMg
-bm8gRkFDUywganVzdCBjb250aW51ZS4gVGhlcmUgd2FzIGFscmVhZHkgYW4NCj4gPiBlcnJvciBt
-c2cgKi8NCj4gPg0KPiA+IC0tDQo+ID4gMi4yNi4wDQo+ID4NCg==
+> On Fri 20 Mar 11:34 PDT 2020, Ansuel Smith wrote:
+> 
+> > From: Sham Muthayyan <smuthayy@codeaurora.org>
+> >
+> > Add tx term offset support to pcie qcom driver
+> > need in some revision of the ipq806x soc
+> >
+> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 61
+> ++++++++++++++++++++++----
+> >  1 file changed, 52 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index ecc22fd27ea6..8009e3117765 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -45,7 +45,13 @@
+> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+> >
+> >  #define PCIE20_PARF_PHY_CTRL			0x40
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	(0x1f << 16)
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		(x << 16)
+> > +
+> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> > +#define REF_SSP_EN				BIT(16)
+> > +#define REF_USE_PAD				BIT(12)
+> > +
+> >  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+> >  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+> >  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+> > @@ -77,6 +83,18 @@
+> >  #define DBI_RO_WR_EN				1
+> >
+> >  #define PERST_DELAY_US				1000
+> > +/* PARF registers */
+> > +#define PCIE20_PARF_PCS_DEEMPH			0x34
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
+> > +
+> > +#define PCIE20_PARF_PCS_SWING			0x38
+> > +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
+> > +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
+> > +
+> > +#define PCIE20_PARF_CONFIG_BITS			0x50
+> > +#define PHY_RX0_EQ(x)				(x << 24)
+> >
+> >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+> >  #define SLV_ADDR_SPACE_SZ			0x10000000
+> > @@ -97,6 +115,7 @@ struct qcom_pcie_resources_2_1_0 {
+> >  	struct reset_control *phy_reset;
+> >  	struct reset_control *ext_reset;
+> >  	struct regulator_bulk_data
+> supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+> > +	uint8_t phy_tx0_term_offset;
+> >  };
+> >
+> >  struct qcom_pcie_resources_1_0_0 {
+> > @@ -184,6 +203,16 @@ struct qcom_pcie {
+> >
+> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> >
+> > +static inline void
+> > +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
+> > +{
+> > +	u32 val = readl(addr);
+> > +
+> > +	val &= ~clear_mask;
+> > +	val |= set_mask;
+> > +	writel(val, addr);
+> > +}
+> > +
+> >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+> >  {
+> >  	gpiod_set_value_cansleep(pcie->reset, 1);
+> > @@ -277,6 +306,10 @@ static int
+> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+> >  	if (IS_ERR(res->ext_reset))
+> >  		return PTR_ERR(res->ext_reset);
+> >
+> > +	if (of_property_read_u8(dev->of_node, "phy-tx0-term-offset",
+> > +				&res->phy_tx0_term_offset))
+> > +		res->phy_tx0_term_offset = 0;
+> 
+> The appropriate way is to encode differences in hardware is to use
+> different compatibles for the two different versions of the hardware.
+> 
+> Regards,
+> Bjorn
+> 
+
+So a better way to handle this would be to check the SoC compatible?
+AFAIK a different offset is only needed on ipq8064 revision 2 and ipq8065
+but
+it looks bad to add a special code just for that 2 SoC. 
+I would prefer to handle this with the offset definition but If you think
+this would be
+the right way, I will follow that. Waiting for your response about this.
+
+> > +
+> >  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+> >  	return PTR_ERR_OR_ZERO(res->phy_reset);
+> >  }
+> > @@ -304,7 +337,6 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+> >  	struct dw_pcie *pci = pcie->pci;
+> >  	struct device *dev = pci->dev;
+> > -	u32 val;
+> >  	int ret;
+> >
+> >  	ret = reset_control_assert(res->ahb_reset);
+> > @@ -355,15 +387,26 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  		goto err_deassert_ahb;
+> >  	}
+> >
+> > -	/* enable PCIe clocks and resets */
+> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > -	val &= ~BIT(0);
+> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
+> > +
+> > +	/* Set Tx termination offset */
+> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL,
+> > +		      PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
+> > +		      PHY_CTRL_PHY_TX0_TERM_OFFSET(res-
+> >phy_tx0_term_offset));
+> > +
+> > +	/* PARF programming */
+> > +	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
+> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
+> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
+> > +	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
+> > +	writel(PCS_SWING_TX_SWING_FULL(0x78) |
+> > +	       PCS_SWING_TX_SWING_LOW(0x78),
+> > +	       pcie->parf + PCIE20_PARF_PCS_SWING);
+> > +	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+> >
+> > -	/* enable external reference clock */
+> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> > -	val |= BIT(16);
+> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> > +	/* Enable reference clock */
+> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_REFCLK,
+> > +		      REF_USE_PAD, REF_SSP_EN);
+> >
+> >  	ret = reset_control_deassert(res->phy_reset);
+> >  	if (ret) {
+> > --
+> > 2.25.1
+> >
+
