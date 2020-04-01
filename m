@@ -2,53 +2,51 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85A2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA062C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653882063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5016420784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759585;
-	bh=Ueg9Zw03/bC0jrpPrYe2uRa++2Dy+9cvjAOMfNFrvYU=;
+	s=default; t=1585759591;
+	bh=0O5D9Dkk3t9GFEfO8EBfnXX6beU8txtJN3sDPG0bkek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gHIVtJ2+3Dz2xS1s8KSehfFk3pqvIjF+dqWXm0BwILVv2MjH7Ch3ADURBLB1zY6Wy
-	 vqJfPCU0o2hhgEpBbEdHxG641hpj2XQk99a3y3OW6kC/+3WksoTZmZ8gqLJrVOQ7x0
-	 IWaS5w3EVZeOB7rqd9U94teBBJgocQSmnPFayRJ4=
+	b=FXfAodvWWbIWRj/FbuVoY0Br7VmqiTFFj4D9R5ekhw7s7MDIM1sL8ogjct4IvNa72
+	 xc2SnftpLbmYHOm1NgdGiOXYMZ8Xxx2h4eRLKdL0jsLbMix8+XDyqjq2V2D+a94Vo7
+	 Rw5iwrwI6i4kN9QJC2AZdFw1L2mpFdoZC3T5K75U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389766AbgDAQqY (ORCPT
+        id S2389204AbgDAQqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732692AbgDAQqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:21 -0400
+        id S2389944AbgDAQq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABF4520705;
-        Wed,  1 Apr 2020 16:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C94A2063A;
+        Wed,  1 Apr 2020 16:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759581;
-        bh=Ueg9Zw03/bC0jrpPrYe2uRa++2Dy+9cvjAOMfNFrvYU=;
+        s=default; t=1585759586;
+        bh=0O5D9Dkk3t9GFEfO8EBfnXX6beU8txtJN3sDPG0bkek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKB8cuUkB3O9RAKfkIQg8OfyB7FIA9nVzgNBfIawuBwMgdy/MtGTZJZOsxw1ksGtM
-         WMssZsTDsiaYmNryMDmPyhE5hN8xWrd1Gjkb1h5FaZ13+ul0TnEY+AHT0B0/uWl8uc
-         KiK7sf2Cuas4cuf6T5tKpyYVCtdMqfjjFUAd2IyE=
+        b=m8QZDJamqko7S2C4lioWmElvBREf7oYNV3QZP5TlgsYy85Un4yWrcjsHhArO1lNoH
+         EX+4tjCP5EOENzZ+JUwVJDeAc3FiqxplwijTPJcP2Wrku3uaQvm37HSJ0fD3GJHdjw
+         t1RkBR3KJ5gt6sD53bso6iJumhEwf680Ak6SDF80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominik Czarnota <dominik.b.czarnota@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/148] sxgbe: Fix off by one in samsung driver strncpy size arg
-Date:   Wed,  1 Apr 2020 18:17:56 +0200
-Message-Id: <20200401161601.195347861@linuxfoundation.org>
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
+        Bin Liu <b-liu@ti.com>
+Subject: [PATCH 4.14 119/148] usb: musb: fix crash with highmen PIO and usbmon
+Date:   Wed,  1 Apr 2020 18:18:31 +0200
+Message-Id: <20200401161603.893943223@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,44 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dominik Czarnota <dominik.b.czarnota@gmail.com>
+From: Mans Rullgard <mans@mansr.com>
 
-[ Upstream commit f3cc008bf6d59b8d93b4190e01d3e557b0040e15 ]
+commit 52974d94a206ce428d9d9b6eaa208238024be82a upstream.
 
-This patch fixes an off-by-one error in strncpy size argument in
-drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c. The issue is that in:
+When handling a PIO bulk transfer with highmem buffer, a temporary
+mapping is assigned to urb->transfer_buffer.  After the transfer is
+complete, an invalid address is left behind in this pointer.  This is
+not ordinarily a problem since nothing touches that buffer before the
+urb is released.  However, when usbmon is active, usbmon_urb_complete()
+calls (indirectly) mon_bin_get_data() which does access the transfer
+buffer if it is set.  To prevent an invalid memory access here, reset
+urb->transfer_buffer to NULL when finished (musb_host_rx()), or do not
+set it at all (musb_host_tx()).
 
-        strncmp(opt, "eee_timer:", 6)
+Fixes: 8e8a55165469 ("usb: musb: host: Handle highmem in PIO mode")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Bin Liu <b-liu@ti.com>
+Link: https://lore.kernel.org/r/20200316211136.2274-8-b-liu@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-the passed string literal: "eee_timer:" has 10 bytes (without the NULL
-byte) and the passed size argument is 6. As a result, the logic will
-also accept other, malformed strings, e.g. "eee_tiXXX:".
-
-This bug doesn't seem to have any security impact since its present in
-module's cmdline parsing code.
-
-Signed-off-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/musb/musb_host.c |   17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-index 89831adb8eb75..6d27eec85fcef 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-@@ -2284,7 +2284,7 @@ static int __init sxgbe_cmdline_opt(char *str)
- 	if (!str || !*str)
- 		return -EINVAL;
- 	while ((opt = strsep(&str, ",")) != NULL) {
--		if (!strncmp(opt, "eee_timer:", 6)) {
-+		if (!strncmp(opt, "eee_timer:", 10)) {
- 			if (kstrtoint(opt + 10, 0, &eee_timer))
- 				goto err;
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -1494,10 +1494,7 @@ done:
+ 	 * We need to map sg if the transfer_buffer is
+ 	 * NULL.
+ 	 */
+-	if (!urb->transfer_buffer)
+-		qh->use_sg = true;
+-
+-	if (qh->use_sg) {
++	if (!urb->transfer_buffer) {
+ 		/* sg_miter_start is already done in musb_ep_program */
+ 		if (!sg_miter_next(&qh->sg_miter)) {
+ 			dev_err(musb->controller, "error: sg list empty\n");
+@@ -1505,9 +1502,8 @@ done:
+ 			status = -EINVAL;
+ 			goto done;
  		}
--- 
-2.20.1
-
+-		urb->transfer_buffer = qh->sg_miter.addr;
+ 		length = min_t(u32, length, qh->sg_miter.length);
+-		musb_write_fifo(hw_ep, length, urb->transfer_buffer);
++		musb_write_fifo(hw_ep, length, qh->sg_miter.addr);
+ 		qh->sg_miter.consumed = length;
+ 		sg_miter_stop(&qh->sg_miter);
+ 	} else {
+@@ -1516,11 +1512,6 @@ done:
+ 
+ 	qh->segsize = length;
+ 
+-	if (qh->use_sg) {
+-		if (offset + length >= urb->transfer_buffer_length)
+-			qh->use_sg = false;
+-	}
+-
+ 	musb_ep_select(mbase, epnum);
+ 	musb_writew(epio, MUSB_TXCSR,
+ 			MUSB_TXCSR_H_WZC_BITS | MUSB_TXCSR_TXPKTRDY);
+@@ -2038,8 +2029,10 @@ finish:
+ 	urb->actual_length += xfer_len;
+ 	qh->offset += xfer_len;
+ 	if (done) {
+-		if (qh->use_sg)
++		if (qh->use_sg) {
+ 			qh->use_sg = false;
++			urb->transfer_buffer = NULL;
++		}
+ 
+ 		if (urb->status == -EINPROGRESS)
+ 			urb->status = status;
 
 
