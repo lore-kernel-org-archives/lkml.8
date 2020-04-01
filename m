@@ -2,377 +2,176 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F460C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649FAC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C8620787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8212077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KccZaX16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbgDAKTo (ORCPT
+        id S1732165AbgDAKUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:19:44 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:56124 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgDAKTo (ORCPT
+        Wed, 1 Apr 2020 06:20:09 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:34417 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731839AbgDAKUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:19:44 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6F0808030776;
-        Wed,  1 Apr 2020 10:19:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id j0jbirOyuJqB; Wed,  1 Apr 2020 13:19:38 +0300 (MSK)
-Date:   Wed, 1 Apr 2020 13:19:31 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Convert
- mti,gic to DT schema
-Message-ID: <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-3-Sergey.Semin@baikalelectronics.ru>
- <20200331210248.GA27684@bogus>
+        Wed, 1 Apr 2020 06:20:08 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200401102006epoutp011cea6b4bb5932b7019fc60d891068d76~BqtwgVYkT2605626056epoutp01w
+        for <linux-kernel@vger.kernel.org>; Wed,  1 Apr 2020 10:20:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200401102006epoutp011cea6b4bb5932b7019fc60d891068d76~BqtwgVYkT2605626056epoutp01w
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585736406;
+        bh=R+Qqz4SvSjIBQnrlG8V1tWDRdpWKAL9nD7564mXbppM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=KccZaX163/Wa5oKW00i9HJbB7nY0sqAyrEXIAo/wfuSwv0jinhdE+6+fdMdBSPNCw
+         EJSAW0vtpTbpsjAy3pmGIgy/cmX3s8cucgQeGN5bZTFobW/Y4uNM6YEedrootx5fHf
+         vNtToC9EMKFHHQUHa+mzIhG/ciBfQZ0Qauh/kRQo=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200401102005epcas1p3544878acb9a9d84c07b0ab212d24b265~BqtwK_Tfa2884528845epcas1p3R;
+        Wed,  1 Apr 2020 10:20:05 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 48shyp4krVzMqYkc; Wed,  1 Apr
+        2020 10:20:02 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3B.BF.04074.2DA648E5; Wed,  1 Apr 2020 19:20:02 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200401102001epcas1p24d1f256edb0913bd1757d2b964e40068~BqtsP-Bpm1945119451epcas1p2q;
+        Wed,  1 Apr 2020 10:20:01 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200401102001epsmtrp202938eab087c2a4a8857628c28140ee0~BqtsO114z1499614996epsmtrp2Z;
+        Wed,  1 Apr 2020 10:20:01 +0000 (GMT)
+X-AuditID: b6c32a39-58bff70000000fea-21-5e846ad2f3d7
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        20.A5.04024.1DA648E5; Wed,  1 Apr 2020 19:20:01 +0900 (KST)
+Received: from [10.113.113.235] (unknown [10.113.113.235]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200401102001epsmtip2dedecab0015cc44c0f76e474f57cb59f~BqtsCveMW0549205492epsmtip2E;
+        Wed,  1 Apr 2020 10:20:01 +0000 (GMT)
+Subject: Re: [PATCH] brcmfmac: fix wrong location to get firmware feature
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        brcm80211-dev-list@cypress.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>
+From:   Jaehoon Chung <jh80.chung@samsung.com>
+Message-ID: <40b711a5-869b-1dac-0ac9-e6e59d4bcd52@samsung.com>
+Date:   Wed, 1 Apr 2020 19:20:13 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200331210248.GA27684@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <87r1xaf8r7.fsf@codeaurora.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOJsWRmVeSWpSXmKPExsWy7bCmnu6lrJY4g3s3VCxeTjjMaLF96RsW
+        i88tbUwWbyd+YLN42z6NyeLHohdsFj8e3WCxWLRyIZvF5V1z2CzerLjDbjH9x24mB26PWffP
+        snlc7utl8mhryvTYOesuu8fnTXIBrFHZNhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaW
+        FuZKCnmJuam2Si4+AbpumTlAlykplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCiwL
+        9IoTc4tL89L1kvNzrQwNDIxMgQoTsjOOPf/IWPCbp6LlzXnmBsZTXF2MnBwSAiYSTz4uYOti
+        5OIQEtjBKLH54B5mCOcTo8S81ktMIFVCAt8YJWZdU4fpmHNgMlTRXkaJ7VMeMEI47xkl5tw+
+        wgZSJSzgKfH87D1mEFtEIETizP5nYDuYBZ4wS7z89I8FJMEmoCOx/dtxoBUcHLwCdhLzL0qC
+        hFkEVCSa310HC4sKREic/poIEuYVEJQ4OfMJWCcnUGd343qw45gFxCVuPZkPZctLbH87B+w4
+        CYFmdonH28+zQFztItFz8AcrhC0s8er4FnYIW0ri87u9bBB2tcSu5jNQzR2MEre2NTFBJIwl
+        9i+dDHYQs4CmxPpd+hBhRYmdv+cyQizmk3j3tYcVpERCgFeio00IokRF4tLrl0wwq+4++Q91
+        gofE27s72CYwKs5C8tosJO/MQvLOLITFCxhZVjGKpRYU56anFhsWmCJH9iZGcKLVstzBeOyc
+        zyFGAQ5GJR7eioyWOCHWxLLiytxDjBIczEoivLNdgEK8KYmVValF+fFFpTmpxYcYTYEBP5FZ
+        SjQ5H5gF8kriDU2NjI2NLUwMzUwNDZXEeadez4kTEkhPLEnNTk0tSC2C6WPi4JRqYNxwTn3Z
+        9BKxWQ4tB4ylF01favL2eo9rudXS3vZLH/8fb7jIvfCK85QUve7N0o+T7BoT03Jv7Nd2ajrc
+        mnVEUUWk0C+1/ZxSvdKpq+rzVod3vfD9Kyx1m0f7+leGsx0dweL7exssFodP6ou6PUNotdv8
+        raf2JXKs/K+wSY0pWL2sJOpO/YrZb5RYijMSDbWYi4oTAcFThxnKAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsWy7bCSvO7FrJY4g6dXlCxeTjjMaLF96RsW
+        i88tbUwWbyd+YLN42z6NyeLHohdsFj8e3WCxWLRyIZvF5V1z2CzerLjDbjH9x24mB26PWffP
+        snlc7utl8mhryvTYOesuu8fnTXIBrFFcNimpOZllqUX6dglcGceef2Qs+M1T0fLmPHMD4ymu
+        LkZODgkBE4k5ByYzdzFycQgJ7GaUePyxhwUiISXx+elUti5GDiBbWOLw4WKImreMEr8WPGYD
+        qREW8JR4fvYeM4gtIhAisfdNJyNIEbPAC2aJH29fsUF0/GCU2N96H2wqm4COxPZvx5lApvIK
+        2EnMvygJEmYRUJFofnedCcQWFYiQeL79BiOIzSsgKHFy5hOwVk6g1u7G9WA1zALqEn/mXWKG
+        sMUlbj2ZDxWXl9j+dg7zBEahWUjaZyFpmYWkZRaSlgWMLKsYJVMLinPTc4sNCwzzUsv1ihNz
+        i0vz0vWS83M3MYKjS0tzB+PlJfGHGAU4GJV4eCsyWuKEWBPLiitzDzFKcDArifDOdgEK8aYk
+        VlalFuXHF5XmpBYfYpTmYFES532adyxSSCA9sSQ1OzW1ILUIJsvEwSnVwJjypuygo3EDx+6J
+        li2GPBvV+QstpNsWfjS7VSFVlHB2M3Py1VLGKRItl5t/NivUH/idvGvnVKadn5SkPs8ynuCS
+        NcPf4X240fZVF3RkV18snSfv+//iVJWb92fOkjgZrr29z36DZf5Ww+D7Kyf/lWfe3KGiPG+V
+        yjqjZR6bZXleHrUta7c576vEUpyRaKjFXFScCABPJ110qgIAAA==
+X-CMS-MailID: 20200401102001epcas1p24d1f256edb0913bd1757d2b964e40068
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433
+References: <CGME20200330052521epcas1p1eedc926d4b11513f8502cf0c90ecf433@epcas1p1.samsung.com>
+        <20200330052528.10503-1-jh80.chung@samsung.com>
+        <CAHp75Vey9VUSAT6j6NTSXqNUK1vwSqY=aSx3-WPoXgxCK33SDg@mail.gmail.com>
+        <87r1xaf8r7.fsf@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 03:02:48PM -0600, Rob Herring wrote:
-> On Tue, Mar 24, 2020 at 08:43:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
-> > text binding with YAML file. As before the binding file states that the
-> > corresponding dts node is supposed to be compatible with MIPS Global
-> > Interrupt Controller indicated by the "mti,gic" compatible string and
-> > to provide a mandatory interrupt-controller and '#interrupt-cells'
-> > properties. There might be optional registers memory range,
-> > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
-> > specified.
-> > 
-> > MIPS GIC also includes a free-running global timer, per-CPU count/compare
-> > timers, and a watchdog. Since currently the GIC Timer is only supported the
-> > DT schema expects an IRQ and clock-phandler charged timer sub-node with
-> > "mti,mips-gic-timer" compatible string.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-rtc@vger.kernel.org
-> > 
-> > ---
-> > 
-> > I don't really know who is the corresponding driver maintainer, so I
-> > added to the maintainers schema Paul since he used to be looking for the
-> > MIPS arch and Thomas looking after it now. Any idea what email should be
-> > specified there instead?
-> > 
-> > Similarly to the previous patch the "oneOf: - required: ..." pattern isn't
-> > working here. Supposedly due to the script' dtschema/lib.py
-> > interrupts/interrupts-extended fixup.
-> > ---
-> >  .../interrupt-controller/mips-gic.txt         |  67 --------
-> >  .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
-> >  2 files changed, 152 insertions(+), 67 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > deleted file mode 100644
-> > index 173595305e26..000000000000
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > +++ /dev/null
-> > @@ -1,67 +0,0 @@
-> > -MIPS Global Interrupt Controller (GIC)
-> > -
-> > -The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> > -It also supports local (per-processor) interrupts and software-generated
-> > -interrupts which can be used as IPIs.  The GIC also includes a free-running
-> > -global timer, per-CPU count/compare timers, and a watchdog.
-> > -
-> > -Required properties:
-> > -- compatible : Should be "mti,gic".
-> > -- interrupt-controller : Identifies the node as an interrupt controller
-> > -- #interrupt-cells : Specifies the number of cells needed to encode an
-> > -  interrupt specifier.  Should be 3.
-> > -  - The first cell is the type of interrupt, local or shared.
-> > -    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
-> > -  - The second cell is the GIC interrupt number.
-> > -  - The third cell encodes the interrupt flags.
-> > -    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-> > -    flags.
-> > -
-> > -Optional properties:
-> > -- reg : Base address and length of the GIC registers.  If not present,
-> > -  the base address reported by the hardware GCR_GIC_BASE will be used.
-> > -- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
-> > -  to which the GIC may not route interrupts.  Valid values are 2 - 7.
-> > -  This property is ignored if the CPU is started in EIC mode.
-> > -- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
-> > -  reserved for IPIs.
-> > -  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
-> > -  of the reserved range.
-> > -  If not specified, the driver will allocate the last 2 * number of VPEs in the
-> > -  system.
-> > -
-> > -Required properties for timer sub-node:
-> > -- compatible : Should be "mti,gic-timer".
-> > -- interrupts : Interrupt for the GIC local timer.
-> > -
-> > -Optional properties for timer sub-node:
-> > -- clocks : GIC timer operating clock.
-> > -- clock-frequency : Clock frequency at which the GIC timers operate.
-> > -
-> > -Note that one of clocks or clock-frequency must be specified.
-> > -
-> > -Example:
-> > -
-> > -	gic: interrupt-controller@1bdc0000 {
-> > -		compatible = "mti,gic";
-> > -		reg = <0x1bdc0000 0x20000>;
-> > -
-> > -		interrupt-controller;
-> > -		#interrupt-cells = <3>;
-> > -
-> > -		mti,reserved-cpu-vectors = <7>;
-> > -		mti,reserved-ipi-vectors = <40 8>;
-> > -
-> > -		timer {
-> > -			compatible = "mti,gic-timer";
-> > -			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > -			clock-frequency = <50000000>;
-> > -		};
-> > -	};
-> > -
-> > -	uart@18101400 {
-> > -		...
-> > -		interrupt-parent = <&gic>;
-> > -		interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-> > -		...
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > new file mode 100644
-> > index 000000000000..1e47c0cdc231
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > @@ -0,0 +1,152 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+On 3/30/20 7:16 PM, Kalle Valo wrote:
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
 > 
-> Do you have rights to add BSD?
+>> On Mon, Mar 30, 2020 at 8:26 AM Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>>>
+>>> sup_wpa feature is getting after setting feature_disable flag.
+>>> If firmware is supported sup_wpa feature,  it's always enabled
+>>> regardless of feature_disable flag.
+>>>
+>>
+>>> Fixes: b8a64f0e96c2 ("brcmfmac: support 4-way handshake offloading for WPA/WPA2-PSK")
+>>>
+>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>>
+>> No blank line in between. (Dunno if you need to resend, just wait what
+>> maintainer says)
+> 
+> I can fix that during commit, no need to resend because of this.
+
+Thanks!
+
+BTW, I have a question about brcmfmac's firmware feature.
+When i have tested on RPI4, it seems that 4-way handshake offloading feature is using.
+
+If I entered the wrong password, which event is triggered from firmware? 
+And how does wpa_supplicant know about wrong key?
+
+I don't have much knowledge about this..but if my analyzing is correct.
+
+<7>[  119.278494] brcmfmac: brcmf_is_nonetwork Processing failed supplicant state: 8
+...
+<7>[  119.278525] brcmfmac: brcmf_bss_connect_done Report connect result - connection failed
+...
+<7>[  119.278726] brcmfmac: brcmf_fweh_event_worker event DEAUTH_IND (6) ifidx 0 bsscfg 0 addr 70:5d:cc:6e:b5:xx
+
+<7>[  119.280966] brcmfmac: brcmf_fweh_event_worker event DEAUTH (5) ifidx 0 bsscfg 0 addr 70:5d:cc:6e:b5:xx
+
+
+firmware is indicating DEAUTH event and driver will be controlled with it, right?
+Can someone explain to me in more detail, plz? 
+
+Best Regards,
+Jaehoon Chung
+
+
+
 > 
 
-My manager said we can submitted the DT schema bindings under both GPL and
-BSD licenses. Though I don't know what license was of the legacy binding file.
-
-BTW Rob, you ask about the license very often whether I set pure GPL-2.0
-or dual-license header. Just wondering is it some kind of protocol to make
-sure a submitter has got proper rights to submit the binding?
-
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/mti,gic.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: MIPS Global Interrupt Controller
-> > +
-> > +maintainers:
-> > +  - Paul Burton <paulburton@kernel.org>
-> > +  - Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > +
-> > +description: |
-> > +  The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> > +  It also supports local (per-processor) interrupts and software-generated
-> > +  interrupts which can be used as IPIs. The GIC also includes a free-running
-> > +  global timer, per-CPU count/compare timers, and a watchdog.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/interrupt-controller.yaml#
-> 
-> Drop this.
-> 
-
-Ok.
-
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: mti,gic
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 3
-> > +    description: |
-> > +      The 1st cell is the type of interrupt: local or shared defined in the
-> > +      file 'dt-bindings/interrupt-controller/mips-gic.h'. The 2nd cell is the
-> > +      GIC interrupt number. The 3d cell encodes the interrupt flags setting up
-> > +      the IRQ trigger modes, which are defined in the file
-> > +      'dt-bindings/interrupt-controller/irq.h'.
-> > +
-> > +  reg:
-> > +    description: |
-> > +      Base address and length of the GIC registers space. If not present,
-> > +      the base address reported by the hardware GCR_GIC_BASE will be used.
-> > +    maxItems: 1
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  mti,reserved-cpu-vectors:
-> > +    description: |
-> > +      Specifies the list of CPU interrupt vectors to which the GIC may not
-> > +      route interrupts. This property is ignored if the CPU is started in EIC
-> > +      mode.
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#definitions/uint32-array
-> > +      - minItems: 1
-> > +        maxItems: 6
-> > +        uniqueItems: true
-> > +        items:
-> > +          minimum: 2
-> > +          maximum: 7
-> > +
-> > +  mti,reserved-ipi-vectors:
-> > +    description: |
-> > +      Specifies the range of GIC interrupts that are reserved for IPIs.
-> > +      It accepts two values: the 1st is the starting interrupt and the 2nd is
-> > +      the size of the reserved range. If not specified, the driver will
-> > +      allocate the last (2 * number of VPEs in the system).
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#definitions/uint32-array
-> > +      - items:
-> > +          - minimum: 0
-> > +            maximum: 254
-> > +          - minimum: 2
-> > +            maximum: 254
-> > +
-> > +patternProperties:
-> > +  "^timer(@[0-9a-f]+)?$":
-> 
-> If you have an unit-address, then there should be a 'reg' property.
-> 
-> Seems like this can be just 'timer'?
-> 
-
-Ok. reg property isn't supported by the timer sub-node. So I'll make it to
-be just "timer" node with no unit-address number.
-
--Sergey
-
-> > +    type: object
-> > +    description: |
-> > +      MIPS GIC includes a free-running global timer, per-CPU count/compare
-> > +      timers, and a watchdog. Currently only the GIC Timer is supported.
-> > +    properties:
-> > +      compatible:
-> > +        const: mti,gic-timer
-> > +
-> > +      interrupts:
-> > +        description: |
-> > +          Interrupt for the GIC local timer, so normally it's suppose to be of
-> > +          <GIC_LOCAL X IRQ_TYPE_NONE> format.
-> > +        maxItems: 1
-> > +
-> > +      clocks:
-> > +        maxItems: 1
-> > +
-> > +      clock-frequency: true
-> > +
-> > +    required:
-> > +      - compatible
-> > +      - interrupts
-> > +
-> > +    oneOf:
-> > +      - required:
-> > +          - clocks
-> > +      - required:
-> > +          - clock-frequency
-> > +
-> > +    additionalProperties: false
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#interrupt-cells"
-> > +  - interrupt-controller
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    interrupt-controller@1bdc0000 {
-> > +      compatible = "mti,gic";
-> > +      reg = <0x1bdc0000 0x20000>;
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <3>;
-> > +      mti,reserved-cpu-vectors = <7>;
-> > +      mti,reserved-ipi-vectors = <40 8>;
-> > +
-> > +      timer {
-> > +        compatible = "mti,gic-timer";
-> > +        interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > +        clock-frequency = <50000000>;
-> > +      };
-> > +    };
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    interrupt-controller@1bdc0000 {
-> > +      compatible = "mti,gic";
-> > +      reg = <0x1bdc0000 0x20000>;
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <3>;
-> > +
-> > +      timer {
-> > +        compatible = "mti,gic-timer";
-> > +        interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > +        clocks = <&cpu_pll>;
-> > +      };
-> > +    };
-> > +  - |
-> > +    interrupt-controller {
-> > +      compatible = "mti,gic";
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <3>;
-> > +    };
-> > +...
-> > -- 
-> > 2.25.1
-> > 
