@@ -2,169 +2,242 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB68BC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93D1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A475620BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6890E2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASNduxi7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fO/jf8Tu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732362AbgDAQKT (ORCPT
+        id S1732410AbgDAQKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:10:19 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40643 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgDAQKT (ORCPT
+        Wed, 1 Apr 2020 12:10:24 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:3445 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726205AbgDAQKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:10:19 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j17so129253lfe.7;
-        Wed, 01 Apr 2020 09:10:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HEnB8jHAJMmBnOi3vNk/NoBJPvGBCFUIxb8pJ9DBAwA=;
-        b=ASNduxi7dfvhue+fdAPH75VHF0etBl9hjZxLd+N3PwuMpwGHMxpVX+ld5hDZZaMuwI
-         W2uWlmOmbW+7DcFwRdscE1dokjWGRR2GIPnURnNU+Y2DrkSUfm36PU5Sn6RSgOjKsATM
-         dz1CLLOC3CEIbnAp3+c4rMMksVqVD7RdmoFfIA8Fb7DzmIKZYbB5xXG2aanLHU1gSA+3
-         BungEGlLYiHcsIaK8NPooD1J6f1O6Wrc9+i/xrsZlA7bH1NMT2kERY7znN3dU2KqCx4S
-         h1ThSVasQQJJiHQfnE8wJNtz0BUeXptgidRmuKOGo9hOnBgW368V8J6Hpx1SMGrDyLgg
-         uOzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HEnB8jHAJMmBnOi3vNk/NoBJPvGBCFUIxb8pJ9DBAwA=;
-        b=Iy8hT0OZyHd133JcTK0SEhfPRXB0My9ZFtoZajxPV8yshR6AnNYq5XDGoDK8xEM/W3
-         xutCljTTenfjH0A9+D/eRqg+eKHJtE1Nq5k6SIRW/7vM4DvKgDgfcq0/GhP69z2snmEu
-         u1Q6ThnW1dIiv8mNTEux/K/DmtEtoB0Y1HfvDV5CEIkpn9cBv4k+TE/BfzX3IuWZeWiR
-         BilGzIhRV5DHOcfCRl4t3VxO3a9kpA9+eHLWEFik6VjutiktILdLUJuUqBALg+ToMdlX
-         aMZ/sLKwUkh9n2wGFS6JLBsATbYLi+zoBy6l0OiEMFFzF2Sl5rY+7CE/fipiGV1niNaZ
-         yuoQ==
-X-Gm-Message-State: AGi0PuaFfM9d+bJZQvD7bx1YXZ6T6K6YTHqF6eZ4Sttss7F597I0fer6
-        a37DSeAV2phdVlGAhvnqvUM=
-X-Google-Smtp-Source: APiQypKJeWuLeIeO5b5sxDF70kECni9FjfiY7Ov3YtEiLs9bMfRiOkzgXn4cA3XSQ3HIUtRlScwgxQ==
-X-Received: by 2002:a19:43:: with SMTP id 64mr2378107lfa.67.1585757416576;
-        Wed, 01 Apr 2020 09:10:16 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id b1sm2016187lfb.22.2020.04.01.09.10.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 09:10:15 -0700 (PDT)
-Subject: Re: [PATCH v10 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
- entry for touchscreen status
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-53-jiada_wang@mentor.com>
- <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
- <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
- <4dd3fa36-6ea7-1d5a-e675-a1a7066207b4@gmail.com>
-Message-ID: <e4c9623c-9ee9-90f9-8251-c36443352072@gmail.com>
-Date:   Wed, 1 Apr 2020 19:10:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 1 Apr 2020 12:10:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1585757423; x=1617293423;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=f8HUbR5cvKWzDVauqwjQ24njzyfgLggG0ctNNboTQFU=;
+  b=fO/jf8TutCoI43KaS47R5OmNfzsK8mCzhq4H++04EYNb8DmU+U67/W4l
+   TjYCBsuNR3zM3GC34GpRKVxcpULQdFTVuV9ue4qtnq2HNQfdjW18yojaG
+   DQNg1XZT5ZP9fhLOnn1sIjSKPre/8pxGoaBs2bWVZLeEeD23eprbA9GKh
+   UCB7QrUz2ZHVv1xnjrcF4Smv0dE5biZRwYDvSoVyWfL/loTU0DVbfdjp/
+   uZ5L1uht7GYdGs/QO1T7X7NUwTH26jYyRXe1RU6JAF2VtsSvdbt4Boodq
+   KAnjmxv0q0l3oMloPYsfVevpKnumwz/deHJQ8qn8AAXmzP+MM456iReu9
+   Q==;
+IronPort-SDR: nSyJyqtwj8K4LDMJJsAl9jtCU9KdQnPMRWdqG7FtalZmPDMMK8cR9+PqOgSljtwn5oTvWKMhkH
+ H+HGNvrBGM+5ZV5z2P1wQbbRYPK2DNGeBh4VXBQXXT4b8v4tVR0+UW1NWtFawCEZHRCevumLr3
+ OXp8IasiePIWCSU2BFpqVF+eFeZCvVSYHHh1zss1U0yyEr7CsGD4Ej7q1OI9AL7MKI7JLFu4uq
+ qdZ8pEpbgPt/02Qfq0gsR2jyPwQQuqTj+NHLl8BqvwjVoyIvzUpcaNJoWdix3CyS2lfSgquRmq
+ osY=
+X-IronPort-AV: E=Sophos;i="5.72,332,1580799600"; 
+   d="scan'208";a="7756912"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 09:10:22 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 1 Apr 2020 09:10:22 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 1 Apr 2020 09:10:22 -0700
+Date:   Wed, 1 Apr 2020 18:10:21 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     <davem@davemloft.net>, <jiri@resnulli.us>, <ivecera@redhat.com>,
+        <kuba@kernel.org>, <roopa@cumulusnetworks.com>,
+        <olteanv@gmail.com>, <andrew@lunn.ch>,
+        <UNGLinuxDriver@microchip.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>
+Subject: Re: [RFC net-next v4 8/9] bridge: mrp: Integrate MRP into the bridge
+Message-ID: <20200401161021.3s2sqvma7r7wpo7h@soft-dev3.microsemi.net>
+References: <20200327092126.15407-1-horatiu.vultur@microchip.com>
+ <20200327092126.15407-9-horatiu.vultur@microchip.com>
+ <17d9fb2a-cb48-7bb6-cb79-3876ca3a74b2@cumulusnetworks.com>
 MIME-Version: 1.0
-In-Reply-To: <4dd3fa36-6ea7-1d5a-e675-a1a7066207b4@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <17d9fb2a-cb48-7bb6-cb79-3876ca3a74b2@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.04.2020 17:33, Dmitry Osipenko пишет:
-> 01.04.2020 15:51, Wang, Jiada пишет:
->> Hi Dmitry
->>
->> Thanks for your comments
->>
->> On 2020/04/01 0:08, Dmitry Osipenko wrote:
->>> 31.03.2020 13:50, Jiada Wang пишет:
->>> ...
->>>> +static void mxt_watchdog_work(struct work_struct *work)
->>>> +{
->>>> +    struct mxt_data *data =
->>>> +        container_of(work, struct mxt_data, watchdog_work.work);
->>>> +    u16 info_buf;
->>>> +    int ret;
->>>> +
->>>> +    if (data->suspended || data->in_bootloader ||
->>>> +        data->mxt_status.intp_triggered)
->>>> +        goto sched_work;
->>>
->>> Won't it become a problem if other thread puts device into suspended /
->>> bootloader state in the same time?
->>>
->> right, I will use mutex lock to prevent such case.
->> also I think data->mxt_status.intp_triggered isn't necessary,
->> when lock is used.
+Hi Nik,
 
-Won't it be cleaner to stop/start the watchdog instead of messing with
-the locks?
-
->>>> +    ret = __mxt_read_reg(data->client, 0, sizeof(info_buf), &info_buf);
->>>> +
->>>> +    if (ret) {
->>>> +        data->mxt_status.error_count++;
->>>> +        data->mxt_status.dev_status = false;
->>>> +    } else {
->>>> +        data->mxt_status.dev_status = true;
->>>> +    }
->>>> +
->>>> +sched_work:
->>>> +    schedule_delayed_work(&data->watchdog_work,
->>>> +                  msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
->>>> +}
->>> ...
->>>
->>>> @@ -4329,6 +4390,12 @@ static int mxt_probe(struct i2c_client
->>>> *client, const struct i2c_device_id *id)
->>>>           msleep(MXT_RESET_TIME);
->>>>       }
->>>>   +    if (debug_state) {
->>>> +        INIT_DELAYED_WORK(&data->watchdog_work, mxt_watchdog_work);
->>>> +        schedule_delayed_work(&data->watchdog_work,
->>>> +                      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
->>>> +    }
->>>> +
->>>>       error = mxt_initialize(data);
->>>>       if (error)
->>>>           goto err_free_object;
->>>> @@ -4343,6 +4410,8 @@ static int mxt_probe(struct i2c_client *client,
->>>> const struct i2c_device_id *id)
->>>>       return 0;
->>>>     err_free_object:
->>>> +    if (debug_state)
->>>> +        cancel_delayed_work_sync(&data->watchdog_work);
->>>>       mxt_free_input_device(data);
->>>>       mxt_free_object_table(data);
->>>>       if (data->reset_gpio) {
->>>> @@ -4367,6 +4436,9 @@ static int mxt_remove(struct i2c_client *client)
->>>>       mxt_free_input_device(data);
->>>>       mxt_free_object_table(data);
->>>>   +    if (debug_state)
->>>> +        cancel_delayed_work_sync(&data->watchdog_work);
->>>
->>> What will happen if debug_state was false during of mxt_probe() and then
->>> the debug_state parameter was changed to true via sysfs?
->>
->> module_param debug_state is added with permission 0,
->> so it's value won't change during driver operation
+The 03/30/2020 19:16, Nikolay Aleksandrov wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
 > 
-> Thank you for the clarification, I didn't realize that setting
-> permission to 0 hides the parameter completely in sysfs.
+> On 27/03/2020 11:21, Horatiu Vultur wrote:
+> > To integrate MRP into the bridge, the bridge needs to do the following:
+> > - add new flag(BR_MPP_AWARE) to the net bridge ports, this bit will be set when
+> >   the port is added to an MRP instance. In this way it knows if the frame was
+> >   received on MRP ring port
+> > - detect if the MRP frame was received on MRP ring port in that case it would be
+> >   processed otherwise just forward it as usual.
+> > - enable parsing of MRP
+> > - before whenever the bridge was set up, it would set all the ports in
+> >   forwarding state. Add an extra check to not set ports in forwarding state if
+> >   the port is an MRP ring port. The reason of this change is that if the MRP
+> >   instance initially sets the port in blocked state by setting the bridge up it
+> >   would overwrite this setting.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  include/linux/if_bridge.h |  1 +
+> >  net/bridge/br_device.c    |  3 +++
+> >  net/bridge/br_input.c     |  3 +++
+> >  net/bridge/br_netlink.c   |  5 +++++
+> >  net/bridge/br_private.h   | 22 ++++++++++++++++++++++
+> >  net/bridge/br_stp.c       |  6 ++++++
+> >  6 files changed, 40 insertions(+)
+> >
+> > diff --git a/include/linux/if_bridge.h b/include/linux/if_bridge.h
+> > index 9e57c4411734..10baa9efdae8 100644
+> > --- a/include/linux/if_bridge.h
+> > +++ b/include/linux/if_bridge.h
+> > @@ -47,6 +47,7 @@ struct br_ip_list {
+> >  #define BR_BCAST_FLOOD               BIT(14)
+> >  #define BR_NEIGH_SUPPRESS    BIT(15)
+> >  #define BR_ISOLATED          BIT(16)
+> > +#define BR_MRP_AWARE         BIT(17)
+> >
+> >  #define BR_DEFAULT_AGEING_TIME       (300 * HZ)
+> >
+> > diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
+> > index 0e3dbc5f3c34..8ec1362588af 100644
+> > --- a/net/bridge/br_device.c
+> > +++ b/net/bridge/br_device.c
+> > @@ -463,6 +463,9 @@ void br_dev_setup(struct net_device *dev)
+> >       spin_lock_init(&br->lock);
+> >       INIT_LIST_HEAD(&br->port_list);
+> >       INIT_HLIST_HEAD(&br->fdb_list);
+> > +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
+> > +     INIT_LIST_HEAD(&br->mrp_list);
+> > +#endif
+> >       spin_lock_init(&br->hash_lock);
+> >
+> >       br->bridge_id.prio[0] = 0x80;
+> > diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
+> > index fcc260840028..d5c34f36f0f4 100644
+> > --- a/net/bridge/br_input.c
+> > +++ b/net/bridge/br_input.c
+> > @@ -342,6 +342,9 @@ rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
+> >               }
+> >       }
+> >
+> > +     if (unlikely(br_mrp_process(p, skb)))
+> > +             return RX_HANDLER_PASS;
+> > +
+> >  forward:
+> >       switch (p->state) {
+> >       case BR_STATE_FORWARDING:
+> > diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+> > index 43dab4066f91..77bc96745be6 100644
+> > --- a/net/bridge/br_netlink.c
+> > +++ b/net/bridge/br_netlink.c
+> > @@ -669,6 +669,11 @@ static int br_afspec(struct net_bridge *br,
+> >                       if (err)
+> >                               return err;
+> >                       break;
+> > +             case IFLA_BRIDGE_MRP:
+> > +                     err = br_mrp_parse(br, p, attr, cmd);
+> > +                     if (err)
+> > +                             return err;
+> > +                     break;
+> >               }
+> >       }
+> >
+> > diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+> > index 1f97703a52ff..38894f2cf98f 100644
+> > --- a/net/bridge/br_private.h
+> > +++ b/net/bridge/br_private.h
+> > @@ -428,6 +428,10 @@ struct net_bridge {
+> >       int offload_fwd_mark;
+> >  #endif
+> >       struct hlist_head               fdb_list;
+> > +
+> > +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
+> > +     struct list_head                __rcu mrp_list;
+> > +#endif
+> >  };
+> >
+> >  struct br_input_skb_cb {
+> > @@ -1304,6 +1308,24 @@ unsigned long br_timer_value(const struct timer_list *timer);
+> >  extern int (*br_fdb_test_addr_hook)(struct net_device *dev, unsigned char *addr);
+> >  #endif
+> >
+> > +/* br_mrp.c */
+> > +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
+> > +int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+> > +              struct nlattr *attr, int cmd);
+> > +int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb);
+> > +#else
+> > +static inline int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+> > +                            struct nlattr *attr, int cmd)
+> > +{
+> > +     return -1;
+> 
+> You should return proper error here.
 
-Anyways, I'm still thinking that the condition removal will make code
-cleaner a tad.
+It will return -EOPNOTSUPP.
+
+> 
+> > +}
+> > +
+> > +static inline int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb)
+> > +{
+> > +     return -1;
+> 
+> The bridge can't possibly work with MRP disabled with this.
+
+Good catch, it will return 0.
+
+> 
+> > +}
+> > +#endif
+> > +
+> >  /* br_netlink.c */
+> >  extern struct rtnl_link_ops br_link_ops;
+> >  int br_netlink_init(void);
+> > diff --git a/net/bridge/br_stp.c b/net/bridge/br_stp.c
+> > index 1f14b8455345..3e88be7aa269 100644
+> > --- a/net/bridge/br_stp.c
+> > +++ b/net/bridge/br_stp.c
+> > @@ -36,6 +36,12 @@ void br_set_state(struct net_bridge_port *p, unsigned int state)
+> >       };
+> >       int err;
+> >
+> > +     /* Don't change the state of the ports if they are driven by a different
+> > +      * protocol.
+> > +      */
+> > +     if (p->flags & BR_MRP_AWARE)
+> > +             return;
+> > +
+> 
+> Maybe disallow STP type (kernel/user-space/no-stp) changing as well, force it to no-stp.
+
+I am not sure that I understand completely here, do you want me to
+disable STP if MRP is started?
+
+> 
+> >       p->state = state;
+> >       err = switchdev_port_attr_set(p->dev, &attr);
+> >       if (err && err != -EOPNOTSUPP)
+> >
+> 
+
+-- 
+/Horatiu
