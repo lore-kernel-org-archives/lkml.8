@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A478C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511AAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CC720857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF24E21582
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758320;
-	bh=dw8o3de5BvGd20KO6Bg+M2/INwwpY8uUjvmGB7rPYEA=;
+	s=default; t=1585758324;
+	bh=E3+OK2e+IljNMl1G3ZiAqYjHuWye1YDYPvdehK7jh1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsMN17s14PZZae8fSM/hEMMRbZNH7mkIZMbT/Vsv6kT2h6k/bRUl3dNDDX+hF/OSl
-	 TZrT5bMXHbF2c5jcEIGxtFqUhdB6YU3bAILrWS6YXtQ5U5RDFfYlWvy2eAyBAiQoyg
-	 Jz2WHDUS4M15b2Z+QPXKMN/akFBXAHY0n6eW9yyA=
+	b=gQX7429UbPz/e71eh747F2i3Anloi7mTeLoDmWF3O5Gs50cN9HUBFbZ10xub5Tl6G
+	 WBQrt4RSiY66B5mUGgX2iG9CPHtUG1wbFvcAK2aZRlNlkoSZA524ONqLUQ8VTiAab6
+	 jdlX1d/ylPbBb4zSxwCQiVC/UEkCwgwTup1CegvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbgDAQZR (ORCPT
+        id S2387795AbgDAQZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49188 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:25:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733256AbgDAQZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:25:16 -0400
+        id S2387495AbgDAQZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:25:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9259D20857;
-        Wed,  1 Apr 2020 16:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D1BC20857;
+        Wed,  1 Apr 2020 16:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758315;
-        bh=dw8o3de5BvGd20KO6Bg+M2/INwwpY8uUjvmGB7rPYEA=;
+        s=default; t=1585758317;
+        bh=E3+OK2e+IljNMl1G3ZiAqYjHuWye1YDYPvdehK7jh1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZOQ+RHQUq5N2jJ0IOaq/eS4Q2PvMSZWwV3JdVqDdlTZkffi7FKXp5ayj6yvFjO9J
-         1rKNVtGaXYXq73gvE6yxSDxH/siiW9N8OjDIIAxGBpCf0QA7sTop8Vsv3r/MZZfoa6
-         XCZiQsxg/IL9kTWNXYcB94hy25LN06LxqG6gjfMo=
+        b=wCo6Dj7XAgpAIAowgMfx8l63sMVKbLRbPuxwUkyWj5ocN4bTKIh8OONZwgrgJNPo6
+         vbYbv1YFkqrw81mH3Th0fJDmBnpsvFxwB2VoAXAo4J21vjn2qsc3FZvQYSb8+jkwil
+         eQEtB8vXM+Q/UTi9QZfYkECRVYUWr73eAPmcEjaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
-        stable@kernel.org, Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.19 052/116] ARM: dts: dra7: Add bus_dma_limit for L3 bus
-Date:   Wed,  1 Apr 2020 18:17:08 +0200
-Message-Id: <20200401161549.237099317@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 4.19 053/116] ARM: dts: omap5: Add bus_dma_limit for L3 bus
+Date:   Wed,  1 Apr 2020 18:17:09 +0200
+Message-Id: <20200401161549.405131333@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,43 +61,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roger Quadros <rogerq@ti.com>
 
-commit cfb5d65f25959f724081bae8445a0241db606af6 upstream.
+commit dfa7ea303f56a3a8b1ed3b91ef35af2da67ca4ee upstream.
 
 The L3 interconnect's memory map is from 0x0 to
 0xffffffff. Out of this, System memory (SDRAM) can be
 accessed from 0x80000000 to 0xffffffff (2GB)
 
-DRA7 does support 4GB of SDRAM but upper 2GB can only be
+OMAP5 does support 4GB of SDRAM but upper 2GB can only be
 accessed by the MPU subsystem.
 
 Add the dma-ranges property to reflect the physical address limit
 of the L3 bus.
 
-Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
-and CONFIG_ARM_LPAE enabled. This is because the controller
-supports 64-bit DMA and its driver sets the dma_mask to 64-bit
-thus resulting in DMA accesses beyond L3 limit of 2G.
-
-Setting the correct bus_dma_limit fixes the issue.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
 Cc: stable@kernel.org
+Signed-off-by: Roger Quadros <rogerq@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/dra7.dtsi |    1 +
+ arch/arm/boot/dts/omap5.dtsi |    1 +
  1 file changed, 1 insertion(+)
 
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -150,6 +150,7 @@
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -144,6 +144,7 @@
  		#address-cells = <1>;
  		#size-cells = <1>;
- 		ranges = <0x0 0x0 0x0 0xc0000000>;
+ 		ranges = <0 0 0 0xc0000000>;
 +		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
- 		ti,hwmods = "l3_main_1", "l3_main_2";
- 		reg = <0x0 0x44000000 0x0 0x1000000>,
- 		      <0x0 0x45000000 0x0 0x1000>;
+ 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
+ 		reg = <0 0x44000000 0 0x2000>,
+ 		      <0 0x44800000 0 0x3000>,
 
 
