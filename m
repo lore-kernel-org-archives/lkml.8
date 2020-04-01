@@ -2,140 +2,132 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB96C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810E6C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EF020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2978B20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585757467;
-	bh=sdqNCMsXIutp4Q5binKYP979DEqV9uoSaRz85ONNJk0=;
+	s=default; t=1585757569;
+	bh=eG74YUyRGVWLvF3Nw/DW4zo1XuzuqcNT8s5LXQkBqBc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uXUvBIR2nLHP64VXcYvteOYkclDg4Ad0ITQP65FPiwh2cLmfDmvTnolDxvfD9Q4a9
-	 jJZs9s+jeByIzq+9FvG1fIN7SVDN/RhrBWD6KqOpNPy7o7I6bVKpAvwePwgkZMENku
-	 QN0RrKC4AEjV/7Xox0NVE7hCoeYdBT48r8kye1pE=
+	b=t0dxo4ggxv0d2IsnygM+mDmE29gxLsINCRXfW4CwlR+R9uOSEgg+ID9oJpnJbRJ81
+	 zk1oGjke/U1yGx4KtcVPl5kXr7zDvq/BuxN67MPTfcvKC4F3hah64a0XGQZyt3f2q8
+	 HJS5Zw92b2faQV6T01vCiuR8vc1HZD/gFDSVKygc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732426AbgDAQLG (ORCPT
+        id S1732183AbgDAQMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:11:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33594 "EHLO
+        Wed, 1 Apr 2020 12:12:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41462 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgDAQLF (ORCPT
+        with ESMTP id S1730420AbgDAQMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:11:05 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a25so776219wrd.0;
-        Wed, 01 Apr 2020 09:11:02 -0700 (PDT)
+        Wed, 1 Apr 2020 12:12:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h9so719949wrc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 09:12:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6SgSqYLabdht19WsqZYrt1JZCOHPoNOa62kgTyu4dDY=;
-        b=gxPfVNTVtYMFQ72Wu+U1w5wupZXg47CZVJfLSuT0NJ0jVnHykL3jNCSLCz24ZzDsec
-         9LWKCwOdZCL6Yf7gXVq1HRn60jNitQB+5GzsooD76lxpu+JqP+lVWDyqkbDIBcFBm+x+
-         heTcZHKCNhlJuOdHdVytZQvYoupZYFxMJr5Px1C4PDo8eKAlntx87BCuYSCfcFXDf+Co
-         hVnYeWevW4cVWH2OVHNCSC9OXcJ5131SR19f8V97rBTTvEYpyP7H6MEiUu+HeAvUUdvi
-         w42/Mh/sM426P2A2SiYFS1gMPyavd7E0egu8yf9rq1PnbqO4mzI8sKymlBtEOPRq55Uj
-         TXbw==
-X-Gm-Message-State: ANhLgQ093Bf1GrJOAcCnULEY52IoPBrF+htTKUaKMyoKmb40DWfRwgMs
-        iRPeqdfbEfTxMrenztcaVjU=
-X-Google-Smtp-Source: ADFU+vsJ7ptO/+sfU8MVbmxUQXnHszAgWJSKgC0msCpRCKplGfHo1pAnZvZsGDgekyFl//FlRsrmVg==
-X-Received: by 2002:adf:df8a:: with SMTP id z10mr25302935wrl.278.1585757461997;
-        Wed, 01 Apr 2020 09:11:01 -0700 (PDT)
+        bh=8HOz2zhkw4iljGmp422o1/l5fbhE5jqc02RjkyFJxQo=;
+        b=XcWaXowWIcA2N0qxqnlHj49VREUp+x2UZcgFBlARWXgavmUQUuvDkf+X38iTB2A9aW
+         lyJohgMEeALG4OOqxQXsby14V7piibAY/ZDT/E8BYBEBuz5Edev9K5fJuixsY1ZLfNXe
+         cOpa1ve6NtnY29vqDYjveBcR5pWQ0f8eTFC2CPppfQHfvLwDKROTIW376+z1D+PniBVt
+         rqbEHGuWD4bviQk0dMcNCYjKyFck36E0Xq2K1UC8lb2/Y/IsAkhhGmGBw8gGziC6+iGp
+         CpZh3PtiWosa127GKrJuJhF48JXCrM6PCo+5rTPXx2pqZPwGKSFB+uhf/wF4V6+XzVnX
+         4C4g==
+X-Gm-Message-State: ANhLgQ1U3ykz0zEkjSIgWTWSO0lQXoEl8FAUGm/EkNTnEM/8fdiSsU+E
+        TVxcKd5sGyZTo+PCpAgv3v8=
+X-Google-Smtp-Source: ADFU+vt1zKgJs9RiwLMbYZioJpRWOvDXIbqrS9E36qARyrIIrNdJHMbJaJA/cmZ5Cyqg6uzTkfQldg==
+X-Received: by 2002:adf:f304:: with SMTP id i4mr25183059wro.46.1585757565470;
+        Wed, 01 Apr 2020 09:12:45 -0700 (PDT)
 Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id i2sm3499892wrx.22.2020.04.01.09.11.00
+        by smtp.gmail.com with ESMTPSA id g128sm3267892wmf.27.2020.04.01.09.12.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 09:11:01 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 18:10:59 +0200
+        Wed, 01 Apr 2020 09:12:44 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 18:12:43 +0200
 From:   Michal Hocko <mhocko@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200401161059.GV22681@dhcp22.suse.cz>
-References: <20200331153450.GM30449@dhcp22.suse.cz>
- <20200331161215.GA27676@pc636>
- <20200401070958.GB22681@dhcp22.suse.cz>
- <20200401123230.GB32593@pc636>
- <20200401125503.GJ22681@dhcp22.suse.cz>
- <20200401130816.GA1320@pc636>
- <20200401131528.GK22681@dhcp22.suse.cz>
- <20200401132258.GA1953@pc636>
- <20200401152805.GN22681@dhcp22.suse.cz>
- <20200401155712.GA15147@paulmck-ThinkPad-P72>
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
+Message-ID: <20200401161243.GW22681@dhcp22.suse.cz>
+References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
+ <20200401154217.GQ22681@dhcp22.suse.cz>
+ <dfc0014a-9b85-5eeb-70ea-d622ccf5d988@redhat.com>
+ <20200401160048.GU22681@dhcp22.suse.cz>
+ <20200401160929.jwekhr24tb44odea@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401155712.GA15147@paulmck-ThinkPad-P72>
+In-Reply-To: <20200401160929.jwekhr24tb44odea@ca-dmjordan1.us.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01-04-20 08:57:12, Paul E. McKenney wrote:
-[...]
-> > diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> > index e3ab1c0d9140..8f09cefdfa7b 100644
-> > --- a/include/linux/gfp.h
-> > +++ b/include/linux/gfp.h
-> > @@ -127,6 +127,8 @@ struct vm_area_struct;
-> >   *
-> >   * Reclaim modifiers
-> >   * ~~~~~~~~~~~~~~~~~
-> > + * Please note that all the folloging flags are only applicable to sleepable
+On Wed 01-04-20 12:09:29, Daniel Jordan wrote:
+> On Wed, Apr 01, 2020 at 06:00:48PM +0200, Michal Hocko wrote:
+> > On Wed 01-04-20 17:50:22, David Hildenbrand wrote:
+> > > On 01.04.20 17:42, Michal Hocko wrote:
+> > > > I am sorry but I have completely missed this patch.
+> > > > 
+> > > > On Wed 11-03-20 20:38:48, Shile Zhang wrote:
+> > > >> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
+> > > >> initialise the deferred pages with local interrupts disabled. It is
+> > > >> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
+> > > >> initializing deferred pages").
+> > > >>
+> > > >> On machine with NCPUS <= 2, the 'pgdatinit' kthread could be bound to
+> > > >> the boot CPU, which could caused the tick timer long time stall, system
+> > > >> jiffies not be updated in time.
+> > > >>
+> > > >> The dmesg shown that:
+> > > >>
+> > > >>     [    0.197975] node 0 initialised, 32170688 pages in 1ms
+> > > >>
+> > > >> Obviously, 1ms is unreasonable.
+> > > >>
+> > > >> Now, fix it by restore in the pending interrupts for every 32*1204 pages
+> > > >> (128MB) initialized, give the chance to update the systemd jiffies.
+> > > >> The reasonable demsg shown likes:
+> > > >>
+> > > >>     [    1.069306] node 0 initialised, 32203456 pages in 894ms
+> > > >>
+> > > >> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages").
+> > > > 
+> > > > I dislike this solution TBH. It effectivelly conserves the current code
+> > > > and just works around the problem. Why do we hold the IRQ lock here in
+> > > > the first place? This is an early init code and a very limited code is
+> > > > running at this stage. Certainly nothing memory hotplug related which
+> > > > should be the only path really interested in the resize lock AFAIR.
+> > > 
+> > > Yeah, I don't think ACPI and friends are up yet.
+> > 
+> > Just to save somebody time to check. The deferred initialization blocks
+> > the further boot until all workders are done - see page_alloc_init_late
+> > (kernel_init path).
 > 
-> s/folloging/following/
+> Ha, I just finished following all the hotplug paths to check this out, and as
+> you all know there are a *lot* :-) Well at least we're in agreement.
 
-Fixed. I will add it on top of http://lkml.kernel.org/r/20200401120502.GH22681@dhcp22.suse.cz
-and post both later this week to Andrew.
+Good to have it double checked!
+ 
+> > > > This needs a double checking but I strongly believe that the lock can be
+> > > > simply dropped in this path.
+> 
+> This is what my fix does, it limits the time the resize lock is held.
 
-From ce456c2f6c8fe0588c1d743a5b87e283aa4806f8 Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Wed, 1 Apr 2020 18:02:23 +0200
-Subject: [PATCH] mm: make it clear that gfp reclaim modifiers are valid only
- for sleepable allocations
-
-While it might be really clear to MM developers that gfp reclaim
-modifiers are applicable only to sleepable allocations (those with
-__GFP_DIRECT_RECLAIM) it seems that actual users of the API are not
-always sure. Make it explicit that they are not applicable for
-GFP_NOWAIT or GFP_ATOMIC allocations which are the most commonly used
-non-sleepable allocation masks.
-
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- include/linux/gfp.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index e3ab1c0d9140..8040fa944cd8 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -127,6 +127,8 @@ struct vm_area_struct;
-  *
-  * Reclaim modifiers
-  * ~~~~~~~~~~~~~~~~~
-+ * Please note that all the following flags are only applicable to sleepable
-+ * allocations (e.g. %GFP_NOWAIT and %GFP_ATOMIC will ignore them).
-  *
-  * %__GFP_IO can start physical IO.
-  *
--- 
-2.25.1
+Just remove it from the deferred intialization and add a comment that we
+deliberately not taking the lock here because abc
 
 -- 
 Michal Hocko
