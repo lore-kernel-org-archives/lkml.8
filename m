@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B293C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9782137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A092E2137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758009;
-	bh=8V1Zt96sEf5UaGvEGvUpGOTOnIj7KwL1yfKO8xcMVsU=;
+	s=default; t=1585758011;
+	bh=HsCChBE2uN+o3G5hip3xHzTuQMmKXg4EexNwo7TnVJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4lG4z9XGrVXLCebCLZQCRVLqf37/57E6L7xFGyr5ktrBr00SFCyZvzy/VrpXMHnS
-	 Axmb7kBkdW64vqansHser6mhLURCTo3KmZ3MEhw/ZhLbuydsJeFzfeoudt4GcoesHv
-	 lC6doth7VzL2DMgIxi5jJsDqG3IQC9qpQrmgXySA=
+	b=V2FQdsUbscIO4rPS2a57H6RNLTvalrU/GzhIyWnC7mE+KWr5m5AAhoDZYmummsgKe
+	 QG3uteecOzJ7+wAACJ3/MOYioSRJU+rF0/QfIbE7N97XaMkvGxQ0DguKsj8DDAIuIr
+	 iA6aRqYDRxOXV2I4ihrafJzKSZLG5KBtMN/GHvKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732745AbgDAQUI (ORCPT
+        id S1732788AbgDAQUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42572 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:20:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732582AbgDAQUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:20:04 -0400
+        id S1732692AbgDAQUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:20:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A531C20857;
-        Wed,  1 Apr 2020 16:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30FDC212CC;
+        Wed,  1 Apr 2020 16:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758004;
-        bh=8V1Zt96sEf5UaGvEGvUpGOTOnIj7KwL1yfKO8xcMVsU=;
+        s=default; t=1585758006;
+        bh=HsCChBE2uN+o3G5hip3xHzTuQMmKXg4EexNwo7TnVJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pH6sQdMRRvpiZ26IL6b3FwalTZpqze4jyK3NzAX9/uJKVi7uT73n3GVwc/lRVhnd/
-         5J6pfl4lu/lxsCv6tYU6IN78SlvCplkyT4y4D7e3hOeYyZvCGtDkbOXYskfODdxh7B
-         4ZMcHFX1pyoP+/3+KmAu+oYOIk3ZSPwy5FVjDhew=
+        b=EmSZg7PkggpWLdRZZg4U/AkdLRtq2dALHSyCM3SVmvfJeFBs5Ld8cm6nnvuelf0F5
+         niDuBt3TqVIc2malh6W/wksx+TrOTTnE7H7Ev1HlN6RdOZJqLVa2ATpFouwvHBWetZ
+         ocwjaJenowb3FCY8O9J/rpfqQMWLqA8Ogdt+jQQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alexander Potapenko <glider@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
         Yonghong Song <yhs@fb.com>
-Subject: [PATCH 5.5 12/30] bpf: Explicitly memset the bpf_attr structure
-Date:   Wed,  1 Apr 2020 18:17:16 +0200
-Message-Id: <20200401161425.424426025@linuxfoundation.org>
+Subject: [PATCH 5.5 13/30] bpf: Explicitly memset some bpf info structures declared on the stack
+Date:   Wed,  1 Apr 2020 18:17:17 +0200
+Message-Id: <20200401161425.668337924@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
 References: <20200401161414.345528747@linuxfoundation.org>
@@ -66,49 +61,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 8096f229421f7b22433775e928d506f0342e5907 upstream.
+commit 5c6f25887963f15492b604dd25cb149c501bbabf upstream.
 
-For the bpf syscall, we are relying on the compiler to properly zero out
-the bpf_attr union that we copy userspace data into. Unfortunately that
-doesn't always work properly, padding and other oddities might not be
-correctly zeroed, and in some tests odd things have been found when the
-stack is pre-initialized to other values.
+Trying to initialize a structure with "= {};" will not always clean out
+all padding locations in a structure. So be explicit and call memset to
+initialize everything for a number of bpf information structures that
+are then copied from userspace, sometimes from smaller memory locations
+than the size of the structure.
 
-Fix this by explicitly memsetting the structure to 0 before using it.
-
-Reported-by: Maciej Żenczykowski <maze@google.com>
-Reported-by: John Stultz <john.stultz@linaro.org>
-Reported-by: Alexander Potapenko <glider@google.com>
-Reported-by: Alistair Delva <adelva@google.com>
+Reported-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://android-review.googlesource.com/c/kernel/common/+/1235490
-Link: https://lore.kernel.org/bpf/20200320094813.GA421650@kroah.com
+Link: https://lore.kernel.org/bpf/20200320162258.GA794295@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/syscall.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/bpf/btf.c     |    3 ++-
+ kernel/bpf/syscall.c |    6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2988,7 +2988,7 @@ out:
- 
- SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -4218,7 +4218,7 @@ int btf_get_info_by_fd(const struct btf
+ 		       union bpf_attr __user *uattr)
  {
--	union bpf_attr attr = {};
-+	union bpf_attr attr;
- 	int err;
+ 	struct bpf_btf_info __user *uinfo;
+-	struct bpf_btf_info info = {};
++	struct bpf_btf_info info;
+ 	u32 info_copy, btf_copy;
+ 	void __user *ubtf;
+ 	u32 uinfo_len;
+@@ -4227,6 +4227,7 @@ int btf_get_info_by_fd(const struct btf
+ 	uinfo_len = attr->info.info_len;
  
- 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
-@@ -3000,6 +3000,7 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf
- 	size = min_t(u32, size, sizeof(attr));
- 
- 	/* copy attributes from user space, may be less than sizeof(bpf_attr) */
-+	memset(&attr, 0, sizeof(attr));
- 	if (copy_from_user(&attr, uattr, size) != 0)
+ 	info_copy = min_t(u32, uinfo_len, sizeof(info));
++	memset(&info, 0, sizeof(info));
+ 	if (copy_from_user(&info, uinfo, info_copy))
  		return -EFAULT;
  
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2477,7 +2477,7 @@ static int bpf_prog_get_info_by_fd(struc
+ 				   union bpf_attr __user *uattr)
+ {
+ 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
+-	struct bpf_prog_info info = {};
++	struct bpf_prog_info info;
+ 	u32 info_len = attr->info.info_len;
+ 	struct bpf_prog_stats stats;
+ 	char __user *uinsns;
+@@ -2489,6 +2489,7 @@ static int bpf_prog_get_info_by_fd(struc
+ 		return err;
+ 	info_len = min_t(u32, sizeof(info), info_len);
+ 
++	memset(&info, 0, sizeof(info));
+ 	if (copy_from_user(&info, uinfo, info_len))
+ 		return -EFAULT;
+ 
+@@ -2752,7 +2753,7 @@ static int bpf_map_get_info_by_fd(struct
+ 				  union bpf_attr __user *uattr)
+ {
+ 	struct bpf_map_info __user *uinfo = u64_to_user_ptr(attr->info.info);
+-	struct bpf_map_info info = {};
++	struct bpf_map_info info;
+ 	u32 info_len = attr->info.info_len;
+ 	int err;
+ 
+@@ -2761,6 +2762,7 @@ static int bpf_map_get_info_by_fd(struct
+ 		return err;
+ 	info_len = min_t(u32, sizeof(info), info_len);
+ 
++	memset(&info, 0, sizeof(info));
+ 	info.type = map->map_type;
+ 	info.id = map->id;
+ 	info.key_size = map->key_size;
 
 
