@@ -2,99 +2,141 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDAAC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BE4C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E93206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585776261;
-	bh=SpscMagTGAG+/VHvh41OMqrZQ5CvygLTC+B3GQz0ogk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=QOywTzsj0/8+4MLlneyISK9m5HUFK6N1+ajwuOeKvkptTS17BVWFzcX8uwn9aa1LR
-	 ukxcDETvCk8D94CYMejr+f8ylSbBbxobMasRjK5g2ippdpjcGcOGT14ZHzlWybGgik
-	 /8oYmXL90Kfx1IV6dgfym+ZwoCIvDlfVBnnYGDzY=
+	by mail.kernel.org (Postfix) with ESMTP id 27B9A20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:25:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEziVXU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732888AbgDAVYU (ORCPT
+        id S1732841AbgDAVZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:24:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732357AbgDAVYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 17:24:20 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76EC7206F6;
-        Wed,  1 Apr 2020 21:24:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585776259;
-        bh=SpscMagTGAG+/VHvh41OMqrZQ5CvygLTC+B3GQz0ogk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=tVgRLcS2kdUtwBo1l6umHNb/ZLd3PjKyaifUwJ/xOhBSMlofuc0U1uiJgfN0BQpaG
-         gp1Y+HCjgEV7x2MOKJKTAdIBFlQT+Fb4savqUbGMk/uYZnDwlc7VVE5a5U/eIl837P
-         2oq9+460OYha2qZ+/LKOXsVWJznHfv2y2T72cyC4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5243735226B3; Wed,  1 Apr 2020 14:24:19 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 14:24:19 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: What should we be doing to stress-test kfree_rcu()?
-Message-ID: <20200401212419.GN19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200401184415.GA7619@paulmck-ThinkPad-P72>
- <20200401205012.GC206273@google.com>
- <20200401211607.GA7531@pc636>
+        Wed, 1 Apr 2020 17:25:57 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37197 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAVZ5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 17:25:57 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g23so1208183otq.4;
+        Wed, 01 Apr 2020 14:25:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CxmQrvAa8GNHsreDb0m3HDvj3HWhFUiqQ7e9QqtLS8s=;
+        b=vEziVXU+PhPWjGxw/xC7aLHAsGZIYKa2oODtmbkDYY7TjvkqHfsyLFqqjkTbm1bh7a
+         GwIWWfviMwy7KYSNSVmERjfgkfn33VkZu/5gbCl7vj141PeSd8OaL/MhqS2iJ8QHzis3
+         9Jv/7hnzNa1LSMfSIXHDSKB1AlJ7YRthLzf8aDbhYXbHs5e6CgG86Mqm7YyOcwDoQ5ss
+         341M4XgoYS/QTAGPpzsXc0vnHnHx4CkgD9OTCfUiFslaSeNLW1EnMiOZVQ8SO8r5saoP
+         amlmzBtoA4Pm7Cfx0A58OKzucr5E/LKJfRTwf77Q2zsLsCoxY8KxEsSGVIn0BUsMIdLo
+         aDJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CxmQrvAa8GNHsreDb0m3HDvj3HWhFUiqQ7e9QqtLS8s=;
+        b=Pxm2smp+4lQzqJ+6zhqPnSDpiW2V1AzNJVTZzufnwTcUsqj1FhxEBzwkUYIOkDh4QR
+         aCFt7sevIh5XPVa9KM1yFA3y9IFjcxZzyiubcgt0hOcJ4HDajovVMCM19iQLrC3Me5Ja
+         W017RTB79aixqA/87bkXsHIKD0uVS+DYOCW0MHenFMjZKwt2rHJeEa+kwqL1FjNGy7a3
+         uLYVswZuPilRuOBEJBObMvgXtwHQLB7s1umZXEpziXlGJifCO3SJuad6/82KjZBWces5
+         1K5vthwLHxml+Of0TQqss8RKky/zYrRTbrbSnW1euEKZqT7Uj+VCJfY8jwKwZSiMSaUN
+         ZIjA==
+X-Gm-Message-State: ANhLgQ2ew5FHJkBmJsnxNpjKNbRUVz/5SxgLWan5HclY9vs4xYGa3r0k
+        Q9HtGNGDEpE7XelpXL1GjYb1Darg
+X-Google-Smtp-Source: ADFU+vuL72kTYj3uqbOO7/4sMcpiAe9kQNEEsm+0iR0dEGuzJSt4814GqQbDb6W2N/zzsxd0qTA2pw==
+X-Received: by 2002:a05:6830:1413:: with SMTP id v19mr17448119otp.41.1585776355915;
+        Wed, 01 Apr 2020 14:25:55 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id j90sm774717otc.21.2020.04.01.14.25.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 Apr 2020 14:25:55 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 14:25:53 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dirk Mueller <dmueller@suse.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4.9 061/102] scripts/dtc: Remove redundant YYLOC global
+ declaration
+Message-ID: <20200401212553.GA43588@ubuntu-m2-xlarge-x86>
+References: <20200401161530.451355388@linuxfoundation.org>
+ <20200401161543.380204082@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401211607.GA7531@pc636>
+In-Reply-To: <20200401161543.380204082@linuxfoundation.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 11:16:07PM +0200, Uladzislau Rezki wrote:
-> On Wed, Apr 01, 2020 at 04:50:12PM -0400, Joel Fernandes wrote:
-> > On Wed, Apr 01, 2020 at 11:44:15AM -0700, Paul E. McKenney wrote:
-> > > Hello!
-> > > 
-> > > What should we be doing to stress-test kfree_rcu(), including its ability
-> > > to cope with OOM conditions?  Yes, rcuperf runs are nice, but they are not
-> > > currently doing much more than testing base functionality, performance,
-> > > and scalability.
-> > 
-> > I already stress kfree_rcu() with rcuperf right now to a point of OOM and
-> > make sure it does not OOM. The way I do this is set my VM to low memory (like
-> > 512MB) and then flood kfree_rcu()s. After the shrinker changes, I don't see
-> > OOM with my current rcuperf settings.
-> > 
-> > Not saying that my testing is sufficient, just saying this is what I do. It
-> > would be good to get a real workload to trigger lot of kfree_rcu() activity
-> > as well especially on low memory systems. Any ideas on that?
-> > 
-> > One idea could be to trigger memory pressure from unrelated allocations (such
-> > as userspace memory hogs), and see how it perform with memory-pressure. For
-> > one, the shrinker should trigger in such situations to force the queue into
-> > waiting for a GP in such situations instead of batching too much.
+On Wed, Apr 01, 2020 at 06:18:04PM +0200, Greg Kroah-Hartman wrote:
+> From: Dirk Mueller <dmueller@suse.com>
+> 
+> commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
+> 
+> gcc 10 will default to -fno-common, which causes this error at link
+> time:
+> 
+>   (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
+> 
+> This is because both dtc-lexer as well as dtc-parser define the same
+> global symbol yyloc. Before with -fcommon those were merged into one
+> defintion. The proper solution would be to to mark this as "extern",
+> however that leads to:
+> 
+>   dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
+>    26 | extern YYLTYPE yylloc;
+>       |                ^~~~~~
+> In file included from dtc-lexer.l:24:
+> dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
+>   127 | extern YYLTYPE yylloc;
+>       |                ^~~~~~
+> cc1: all warnings being treated as errors
+> 
+> which means the declaration is completely redundant and can just be
+> dropped.
+> 
+> Signed-off-by: Dirk Mueller <dmueller@suse.com>
+> Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+> [robh: cherry-pick from upstream]
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  scripts/dtc/dtc-lexer.l |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> --- a/scripts/dtc/dtc-lexer.l
+> +++ b/scripts/dtc/dtc-lexer.l
+> @@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
+>  #include "srcpos.h"
+>  #include "dtc-parser.tab.h"
+>  
+> -YYLTYPE yylloc;
+>  extern bool treesource_error;
+>  
+>  /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+> 
+> 
 
-This would be good!
+Hi Greg,
 
-> > We are also missing vmalloc() tests. I remember Vlad had some clever vmalloc
-> > tests around for his great vmalloc rewrites :). Vlad, any thoughts on getting
-> > to stress kvfree_rcu()?
-> > 
-> Actually i updated(localy for my tests) the lib/test_vmalloc.c module with extra
-> test cases to stress kvfree_rcu() stuff. I think i should add them :)
+Please see my email on the 5.5 version of this patch:
 
-As would this!  ;-)
+https://lore.kernel.org/stable/20200331192515.GA39354@ubuntu-m2-xlarge-x86/
 
-							Thanx, Paul
+As it stands how, this version of the patch does nothing.
+
+Cheers,
+Nathan
