@@ -2,127 +2,117 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E282C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B0AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD8520787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FDC20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cm6y4LZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732025AbgDAIDZ (ORCPT
+        id S1732063AbgDAID4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:03:25 -0400
-Received: from www62.your-server.de ([213.133.104.62]:40518 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731850AbgDAIDZ (ORCPT
+        Wed, 1 Apr 2020 04:03:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46662 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731850AbgDAIDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:03:25 -0400
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jJYLG-0004VH-1J; Wed, 01 Apr 2020 10:03:18 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jJYLF-000VtC-GV; Wed, 01 Apr 2020 10:03:17 +0200
-Subject: Re: [PATCH 5.5 000/171] 5.5.14-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        john.fastabend@gmail.com, komachi.yoshiki@gmail.com,
-        Andrii Nakryiko <andriin@fb.com>, lukenels@cs.washington.edu,
-        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-References: <20200331141450.035873853@linuxfoundation.org>
- <CA+G9fYuU-5o5DG1VSQuCPx=TSs61-1jBekdGb5yvMRz4ur3BQg@mail.gmail.com>
- <20200401061131.GA1907105@kroah.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <dc2cee11-84fc-70a7-41d8-2de23942697c@iogearbox.net>
-Date:   Wed, 1 Apr 2020 10:03:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 1 Apr 2020 04:03:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585728234;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6VsagWNjkgsWtPqpkfjc3hiHgmMB2HfZJo5AqKd3BnE=;
+        b=Cm6y4LZAvRRq0BLdp+du7umj4ZsrTErEqyfOAL41S48QURnwiqlKwczShKGrdC1bropCEB
+        X9T++AqW0NVbiNYlt1g9+C5MsA8mntPfHPZFMadl1uO1rIOHfiWzc6JxGGNAXmR1Hx1US8
+        Bi+S1uSx6Y9ZC5z2NDsO7Ys/1JQegtc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-GoaCPsPpPQ2_eObd-Ud4Vg-1; Wed, 01 Apr 2020 04:03:53 -0400
+X-MC-Unique: GoaCPsPpPQ2_eObd-Ud4Vg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C62DB104FB68;
+        Wed,  1 Apr 2020 08:03:51 +0000 (UTC)
+Received: from x1-7.localdomain.com (ovpn-114-242.ams2.redhat.com [10.36.114.242])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E615102BD7E;
+        Wed,  1 Apr 2020 08:03:50 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the MP-man MPWIN895CL tablet
+Date:   Wed,  1 Apr 2020 10:03:48 +0200
+Message-Id: <20200401080348.5128-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401061131.GA1907105@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25768/Tue Mar 31 15:08:38 2020)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 8:11 AM, Greg Kroah-Hartman wrote:
-> On Wed, Apr 01, 2020 at 04:18:41AM +0530, Naresh Kamboju wrote:
->> On Tue, 31 Mar 2020 at 21:02, Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->>>
->>> This is the start of the stable review cycle for the 5.5.14 release.
->>> There are 171 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Thu, 02 Apr 2020 14:12:02 +0000.
->>> Anything received after that time might be too late.
->>>
->>> The whole patch series can be found in one patch at:
->>>          https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.14-rc2.gz
->>> or in the git tree and branch at:
->>>          git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
->>> and the diffstat can be found below.
->>>
->>> thanks,
->>>
->>> greg k-h
->>
->> Results from Linaro’s test farm.
->> Regressions on x86_64 and i386.
->>
->> selftests bpf test_verifier reports as failed.
->> This test PASSED on v5.5.13
->>
->> #554/p jgt32: range bound deduction, reg op imm FAIL
->> Failed to load prog 'Success'!
->> R8 unbounded memory access, make sure to bounds check any array access
->> into a map
->> verification time 141 usec
->> stack depth 8
->> processed 16 insns (limit 1000000) max_states_per_insn 0 total_states
->> 1 peak_states 1 mark_read 1
->> #555/p jgt32: range bound deduction, reg1 op reg2, reg1 unknown FAIL
->> Failed to load prog 'Success'!
->> R8 unbounded memory access, make sure to bounds check any array access
->> into a map
->> verification time 94 usec
->> stack depth 8
->> processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
->> 1 peak_states 1 mark_read 1
->> #556/p jle32: range bound deduction, reg1 op reg2, reg2 unknown FAIL
->> Failed to load prog 'Success'!
->> R8 unbounded memory access, make sure to bounds check any array access
->> into a map
->> verification time 68 usec
->> stack depth 8
->> processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
->> 1 peak_states 1 mark_read 1
-> 
-> Can you run 'git bisect' to find the offending patch?
+Add touchscreen info for the MP-man MPWIN895CL tablet.
 
-No need, I'll send you a patch to update the selftests. It's expected that they
-fail now due to the revert we had to do, so if this is the only issue it shouldn't
-hold up the release. In any case, I'll send them over to you next.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Thanks,
-Daniel
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x8=
+6/touchscreen_dmi.c
+index 6ec8923dec1a..931814e62454 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -373,6 +373,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_d=
+ata =3D {
+ 	.properties	=3D jumper_ezpad_mini3_props,
+ };
+=20
++static const struct property_entry mpman_mpwin895cl_props[] =3D {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 3),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-mpman-mpwin895cl.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
++
++static const struct ts_dmi_data mpman_mpwin895cl_data =3D {
++	.acpi_name	=3D "MSSL1680:00",
++	.properties	=3D mpman_mpwin895cl_props,
++};
++
+ static const struct property_entry myria_my8307_props[] =3D {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+@@ -908,6 +925,14 @@ const struct dmi_system_id touchscreen_dmi_table[] =3D=
+ {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
+ 		},
+ 	},
++	{
++		/* MP Man MPWIN895CL */
++		.driver_data =3D (void *)&mpman_mpwin895cl_data,
++		.matches =3D {
++			DMI_MATCH(DMI_SYS_VENDOR, "MPMAN"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
++		},
++	},
+ 	{
+ 		/* Myria MY8307 */
+ 		.driver_data =3D (void *)&myria_my8307_data,
+--=20
+2.26.0
+
