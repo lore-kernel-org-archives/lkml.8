@@ -2,110 +2,99 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AEDC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E92C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95DB22077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cvdIZiUl"
+	by mail.kernel.org (Postfix) with ESMTP id 750DC20784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585733649;
+	bh=ygn69CFIGLehSFM4Xy0zGpVwdoajAhY/hL9FFPbt0lo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gmIWOjuogVYNixleeq1o3VX5Aqqjf0WLrMxe0ZGif/sUELYxz2+gh7+welo1GKy0s
+	 oXYHEvJXy2iZELbfosvMfUAnc6S1s9HNpq5ltFRS+EN5uFPN6fvBCJ+F6SkMrnjNHX
+	 d2OX1nobfyv7XKVTGDz7628T9pJRJ6R25/CVmcmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732102AbgDAJdQ (ORCPT
+        id S1732125AbgDAJeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:33:16 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58780 "EHLO mail.skyhub.de"
+        Wed, 1 Apr 2020 05:34:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727541AbgDAJdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:33:16 -0400
-Received: from zn.tnic (p200300EC2F0BCE001428728FF98D3445.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ce00:1428:728f:f98d:3445])
+        id S1726205AbgDAJeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 05:34:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E4F391EC013F;
-        Wed,  1 Apr 2020 11:33:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585733594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=vUv/lbJ4IeUM8v6YQUNQdmYTTdjt5W9ALsyTWkj5050=;
-        b=cvdIZiUlXVMwZAWWu+rebyz6DuUQgk418JgIURTEFPeDyUFSFYnJyD+nmj204a50rLQH3F
-        an6+bBJyJvt3fWIWgkmrp5vNY8OoluShWL7YZHP5xBMNRjejEerUNZ2i2pihKIU6FEWtrS
-        IM63WzlbD0+JKpoZr3TOVqrwb/4glZI=
-Date:   Wed, 1 Apr 2020 11:33:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, gregkh@linuxfoundation.org,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH v4 6/8] x86: bump ZO_z_extra_bytes margin for zstd
-Message-ID: <20200401093310.GA13748@zn.tnic>
-References: <20200401053913.216783-1-nickrterrell@gmail.com>
- <20200401053913.216783-7-nickrterrell@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BEC52077D;
+        Wed,  1 Apr 2020 09:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585733647;
+        bh=ygn69CFIGLehSFM4Xy0zGpVwdoajAhY/hL9FFPbt0lo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i+K+mEhg28YPwIosrGBMkhDSyyPqqvEw6WedSnnyJDscvEqhp6E93PemYZw8WygxQ
+         naaLmczIieJ8yw16gMF2ArztsQhin1aTuW7WSeW4053ZRZKpfiuF+bwapwEiBFWB0L
+         ZFGWwhJApQOT3uzT0uM7tAT9I4/G2fPOudZsmDVg=
+Date:   Wed, 1 Apr 2020 11:33:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+Message-ID: <20200401093359.GD2055942@kroah.com>
+References: <20200331085308.098696461@linuxfoundation.org>
+ <d0744ad0-40b4-3bea-4d4f-1faf562126ec@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401053913.216783-7-nickrterrell@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d0744ad0-40b4-3bea-4d4f-1faf562126ec@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:39:11PM -0700, Nick Terrell wrote:
-> From: Nick Terrell <terrelln@fb.com>
+On Wed, Apr 01, 2020 at 09:57:37AM +0100, Jon Hunter wrote:
 > 
-> Bump the ZO_z_extra_bytes margin for zstd.
+> On 31/03/2020 09:59, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.1 release.
+> > There are 23 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> Zstd needs 3 bytes per 128 KB, and has a 22 byte fixed overhead.
-> Zstd needs to maintain 128 KB of space at all times, since that is
-> the maximum block size. See the comments regarding in-place
-> decompression added in lib/decompress_unzstd.c for details.
+> All tests are passing for Tegra ...
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Nick Terrell <terrelln@fb.com>
-> ---
->  arch/x86/boot/header.S | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> Test results for stable-v5.6:
+>     13 builds:	13 pass, 0 fail
+>     24 boots:	24 pass, 0 fail
+>     40 tests:	40 pass, 0 fail
 > 
-> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-> index 97d9b6d6c1af..b820875c5c95 100644
-> --- a/arch/x86/boot/header.S
-> +++ b/arch/x86/boot/header.S
-> @@ -536,8 +536,14 @@ pref_address:		.quad LOAD_PHYSICAL_ADDR	# preferred load addr
->  # the size-dependent part now grows so fast.
->  #
->  # extra_bytes = (uncompressed_size >> 8) + 65536
-> +#
-> +# ZSTD compressed data grows by at most 3 bytes per 128K, and only has a 22
-> +# byte fixed overhead but has a maximum block size of 128K, so it needs a
-> +# larger margin.
-> +#
-> +# extra_bytes = (uncompressed_size >> 8) + 131072
->  
-> -#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 65536)
-> +#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 131072)
->  #if ZO_z_output_len > ZO_z_input_len
->  # define ZO_z_extract_offset	(ZO_z_output_len + ZO_z_extra_bytes - \
->  				 ZO_z_input_len)
-> -- 
+> Linux version:	5.6.1-rc1-g579bffceae01
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
+> 
 
-So why is this change unconditional if only this compression alg. needs
-it?
+Thanks for testing all of these and letting me know.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
