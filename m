@@ -2,138 +2,106 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EB3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7115C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0ADA206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BF22071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:50:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ply97Xef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbgDAGru (ORCPT
+        id S1731871AbgDAGuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:47:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53974 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731889AbgDAGru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:47:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 43A4DAAC7;
-        Wed,  1 Apr 2020 06:47:48 +0000 (UTC)
-Subject: Re: [PATCH] btrfs: re-instantiate the removed
- BTRFS_SUBVOL_CREATE_ASYNC definition
-To:     Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        David Sterba <dsterba@suse.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-References: <20200401032650.GA24378@asgard.redhat.com>
-From:   Nikolay Borisov <nborisov@suse.com>
-Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e2dfba81-e6c6-b04f-7260-281c29808327@suse.com>
-Date:   Wed, 1 Apr 2020 09:47:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 1 Apr 2020 02:50:02 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39394 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731741AbgDAGuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:50:02 -0400
+Received: by mail-pf1-f194.google.com with SMTP id k15so6515285pfh.6;
+        Tue, 31 Mar 2020 23:50:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tmKJc7NjnxN20fuxF0kGLk0WWkFLy1YBAKU11CgTRL4=;
+        b=Ply97XefMOgToljx9G/prcmyZ5K+d4DiZkRr5icJcP1YU0B9AOzcIBAPnXaLRb0P1M
+         b0sWz5eRki8aj0w/9YgHdfHjzt/Xuc7GUfdaENJVOD6gZG5jXtgUnBy+jmMerQPPMAeK
+         VibfpN6+N3fd/ThOZbzZsB2PSoiuXFz94YpkGqPhBKpu6ZYanEvWw9uL1ZI45KyYQw6Y
+         3TGM9UJc47Tsc2CggzCBoElod9uu9B18M4aY432KqgZC2jXo0GtjIOW55jnqj8km9eNW
+         Q1QNTOwjFAcF1+sZLfw+cLmqoDhky1fEmMZx8OEnYjhQVdab3x0Nv5m71jjFdk90I5nw
+         yDMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tmKJc7NjnxN20fuxF0kGLk0WWkFLy1YBAKU11CgTRL4=;
+        b=HFFwwyhcVTouufhRJr7qc6U0B08ESAjmMSe8PzF05rleofLvF5xYjmicCpSeF8exJH
+         l6MJ4sPdBorvkSZd7HsSvl56amK4Di6/7ZzsySxG9o8cQ1oDjcjxAeL2EOhBpxwX5DS8
+         ulfiU8cqIpkmWtx1XDAunoNIyYVHZSxHv5ipcL4fa5TTiyBrmsktMgHb1tSYFjwgNfiQ
+         QcxfB86xXC1hkCV63RNrjlTqp/dOJDOIpWCRvpETEGZlK6vRmfWlP/9YNsNsvBEIaLM+
+         4Opjq1TU4FDTy+eowosYfrFHkd4cA6JpjB5+HxcPc9iVc021AfNEnWqGlEIK1fZxOkDQ
+         S6EA==
+X-Gm-Message-State: AGi0PubJodXptgfZYvZbJC+Ycim38dPT/9RU2lUWoVIYslW/KtYqh0C8
+        Dqzt7ENP/Qmyoz14LoH2LpffbKRu0kVd1TIybv4=
+X-Google-Smtp-Source: APiQypJt8Tz9kYfeUxwq4p2WKLozKFChbs8KbZhYo6DlzntkZ3gcahNcIMJwo0Bl0X052O5PcRgloHA8BSrJZ0ywaYc=
+X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr8515775pfs.36.1585723800741;
+ Tue, 31 Mar 2020 23:50:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200401032650.GA24378@asgard.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200326150523.02c4ec48@canb.auug.org.au> <20200401141409.446e989b@canb.auug.org.au>
+In-Reply-To: <20200401141409.446e989b@canb.auug.org.au>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Apr 2020 09:49:48 +0300
+Message-ID: <CAHp75VdaCfEBp0co611O8uCpu9fzOaobcE7EmZyHsX0D=4=neQ@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the drivers-x86 tree with the tip tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 1, 2020 at 6:14 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> On Thu, 26 Mar 2020 15:05:23 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Today's linux-next merge of the drivers-x86 tree got a conflict in:
+> >
+> >   drivers/platform/x86/intel_pmc_core.c
+> >
+> > between commit:
+> >
+> >   a69b3b1d4cf0 ("platform/x86: Convert to new CPU match macros")
+> >
+> > from the tip tree and commit:
+> >
+> >   16292bed9c56 ("platform/x86: intel_pmc_core: Add Atom based Jasper Lake (JSL) platform support")
+> >
+> > from the drivers-x86 tree.
+> >
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
 
+> This is now a conflict between the drivers-x86 tree and Linus' tree.
 
-On 1.04.20 г. 6:26 ч., Eugene Syromiatnikov wrote:
-> The commit 9c1036fdb1d1ff1b ("btrfs: Remove BTRFS_SUBVOL_CREATE_ASYNC
-> support") breaks strace build with the kernel headers from git:
-> 
->     btrfs.c: In function "btrfs_test_subvol_ioctls":
->     btrfs.c:531:23: error: "BTRFS_SUBVOL_CREATE_ASYNC" undeclared (first use
->     in this function)
->        vol_args_v2.flags = BTRFS_SUBVOL_CREATE_ASYNC;
-> 
-> Moreover, it is improper to break UAPI anyway.
-> 
-> Restore the macro definition and put it under "#ifndef __KERNEL__"
-> in order to prevent inadvertent in-kernel usage.
-> 
-> Fixes: 9c1036fdb1d1ff1b ("btrfs: Remove BTRFS_SUBVOL_CREATE_ASYNC support")
-> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+PDx86 is in Linus tree with conflict resolution.
 
-Ops, sorry about that:
-
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-
-> ---
->  include/uapi/linux/btrfs.h | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/uapi/linux/btrfs.h b/include/uapi/linux/btrfs.h
-> index 8134924..e6b6cb0f 100644
-> --- a/include/uapi/linux/btrfs.h
-> +++ b/include/uapi/linux/btrfs.h
-> @@ -36,12 +36,10 @@ struct btrfs_ioctl_vol_args {
->  #define BTRFS_DEVICE_PATH_NAME_MAX	1024
->  #define BTRFS_SUBVOL_NAME_MAX 		4039
->  
-> -/*
-> - * Deprecated since 5.7:
-> - *
-> - * BTRFS_SUBVOL_CREATE_ASYNC	(1ULL << 0)
-> - */
-> -
-> +#ifndef __KERNEL__
-> +/* Deprecated since 5.7 */
-> +# define BTRFS_SUBVOL_CREATE_ASYNC	(1ULL << 0)
-> +#endif
->  #define BTRFS_SUBVOL_RDONLY		(1ULL << 1)
->  #define BTRFS_SUBVOL_QGROUP_INHERIT	(1ULL << 2)
->  
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
