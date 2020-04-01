@@ -2,166 +2,238 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE291C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FA9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833BA2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D198920857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lebedev-lt.20150623.gappssmtp.com header.i=@lebedev-lt.20150623.gappssmtp.com header.b="ejfPSZul"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Oc0gbaNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732238AbgDAK7c (ORCPT
+        id S1732254AbgDAK7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:59:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33957 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgDAK7b (ORCPT
+        Wed, 1 Apr 2020 06:59:38 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51801 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgDAK7i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:59:31 -0400
-Received: by mail-lf1-f67.google.com with SMTP id e7so20088409lfq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 03:59:30 -0700 (PDT)
+        Wed, 1 Apr 2020 06:59:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z7so3399805wmk.1;
+        Wed, 01 Apr 2020 03:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lebedev-lt.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kz/wvvEw8riqfKsZFfaKvWpn4ePkjlhRkXHpb0+VV70=;
-        b=ejfPSZulqW6tvHwp6O4/dUlM1nKpSZnaSH3gKz3lf/dZFBlKJTgeOxGPwCrbLlOp5x
-         sjDvP0MNzNkWS1cmTGAw2bUyaoM4GyZINostLPnrriP2E5Le6XjvyFdo8cTnJWJLUFsf
-         NNdTsdv/zRM7lI439J0JVL64Duxzrg0wGx3L7+65cWU4+UI5a5u8G8W/ZjOcKpXXQQMX
-         cny7dzHBYyLYidmycoljgSzUG0AwqJq+iUOJH638eKjvzJp/LnB9gjzWrM8EJqBx9b66
-         YWD9C9gfcr0zB+8BMDaRU73I7HNWAnk2YtNgyfcCbsXpRSAiS6a9GIeK4x7fOiknpV0s
-         HRIg==
+        d=googlemail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=wpJNSQ+qvNZfAQszetAscK3jOPsIUHw1iOLZd+eUd/k=;
+        b=Oc0gbaNyOsleUS8y2lWADA6BST3xmLEomL8ExTiEGa3HVmSgP6EUlFLNSkICb8Py+n
+         xopTiJNocRdmIJFZ59QukYh4eOfhh27LOwWI1JrHi1NhqUMTD4SmcDAtSPir1FBeTE9I
+         rqAIKJIzEUEHpT6ydFdOo0eL7jeZWEe6m708Dspp5Yui3aBX/f5NUjFb69gdnMUD8SEB
+         2U9OGSBRJBLVkQsdLoywt2dyfqN948JWaeOFnvp/UggSyrY2Urh4JB8lEUUQpzmsO+a4
+         PEnMiT55etdZ1rOj4iQM/wV7/JDBXh7JDpZTIIc6PbJLvQlCZQKtIeD0zgAetfRv9w+n
+         O4/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kz/wvvEw8riqfKsZFfaKvWpn4ePkjlhRkXHpb0+VV70=;
-        b=MnaG+2xUZp4+EBH3sOHVpYvHGaPaRg8o8Ej00jRi4Wu7P9Z1INccGrECgUfyaZrjoh
-         2ik/VmYpbzXlwddabmABjyhLvseeTXFOoGKnvNG4FXZeRAkT2rcsQcjeFqJ5Ho2CpaV/
-         pT/OMkPbgr+U4F1RTr6qcocjOUN7U5pb9/ZMwC/71/KgJDzqyqomFrs4gxHEa6ngiPtk
-         LYFpl44aVgu6Q9vxmn/WGCQRA6n+WWb2KIumoeU0RwP1ks7+0qTSeoaqZtzRC4ZUFMuq
-         TR+wTPQrNhKpbh5CCrKlEUf3RCx4JIDPKhqA+lGkiK8QjhB4trGFSNWALo++o7hmAYeg
-         GCbw==
-X-Gm-Message-State: AGi0PubuIolJaNzCBLc4jAItJ95A7tH54lY0t6ZkYCXdWkQNSGscUgwx
-        rejEc0PuM6omFupTauDPcJFR9A==
-X-Google-Smtp-Source: APiQypL0dcEPevylSoyk56qeZt4wBG2S/JxfVQwOwqYclDb2rWm8vIGL5nT0j4NY6Uk65RKVtRpV6Q==
-X-Received: by 2002:a19:f606:: with SMTP id x6mr14154741lfe.44.1585738768950;
-        Wed, 01 Apr 2020 03:59:28 -0700 (PDT)
-Received: from [192.168.1.108] ([5.20.204.163])
-        by smtp.gmail.com with ESMTPSA id r2sm1312764lfn.35.2020.04.01.03.59.27
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=wpJNSQ+qvNZfAQszetAscK3jOPsIUHw1iOLZd+eUd/k=;
+        b=jxhnD936rzw6FAfZd/XBFbBI5263AjlEI1NQHhqDfsaj355SW6rYbBwkUMRLDeacml
+         o2MsGWD3PA774HHYKzHMSrzcNtwfHaOayyy6WtW7e0FfyQU9NtcmtiFoCjSGq5C7JFUO
+         BN+DtNeYv0Li9X90k6PKO/rlWn2/sDzPA0iLMbagpURECjx30GLv0tn3ZV+FhY2QlCCL
+         Zt8wQBxOsQtAm4enKHQvK31ZzVGA1nzrAciRiFrSQzEWWko9YAsEmMrU2XInwt72Zen7
+         ZIFRWcgvsob46vrlKbLgCAfMbp+vQKylOTKmIAeQ8vBWFocEZ9LXoSgPJteINyDMVdpt
+         1pxg==
+X-Gm-Message-State: AGi0PubTGmXxbmyWgoY3e1/obNWr/N2ct7R6YslaP/JGkWfXSGU4nNr+
+        dVenT63jTAyM/A==
+X-Google-Smtp-Source: APiQypKstB87gbLHuIAAojL50xJ2SpFMLZENza2uTuqOLKTAX01zB76v6RGV1UskaWsn258oALVJHw==
+X-Received: by 2002:a1c:c302:: with SMTP id t2mr3735211wmf.4.1585738775119;
+        Wed, 01 Apr 2020 03:59:35 -0700 (PDT)
+Received: from [192.168.178.40] (business-24-134-37-65.pool2.vodafone-ip.de. [24.134.37.65])
+        by smtp.gmail.com with ESMTPSA id f3sm2268196wmj.24.2020.04.01.03.59.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 03:59:28 -0700 (PDT)
-Subject: Re: [PATCH 5/5] drm/sun4i: tcon: Support LVDS output on Allwinner A20
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Andrey Lebedev <andrey.lebedev@gmail.com>
-Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200210195633.GA21832@kedthinkpad>
- <20200219180858.4806-1-andrey.lebedev@gmail.com>
- <20200219180858.4806-6-andrey.lebedev@gmail.com>
- <20200220172512.dmjtqgyay73x3ubx@gilmour.lan>
-From:   Andrey Lebedev <andrey@lebedev.lt>
-Message-ID: <fa780b70-f1cc-ee4c-e779-089c7e9159ab@lebedev.lt>
-Date:   Wed, 1 Apr 2020 13:59:27 +0300
+        Wed, 01 Apr 2020 03:59:34 -0700 (PDT)
+From:   Gabriel C <nix.or.die@googlemail.com>
+X-Google-Original-From: Gabriel C <nix.or.die@gmail.com>
+Subject: Re: [PATCH v4 0/8] Add support for ZSTD-compressed kernel and
+ initramfs
+To:     Nick Terrell <nickrterrell@gmail.com>,
+        Nick Terrell <terrelln@fb.com>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+References: <20200401053913.216783-1-nickrterrell@gmail.com>
+Message-ID: <e16e279f-d220-3fab-5a11-05829f34f1f7@gmail.com>
+Date:   Wed, 1 Apr 2020 12:59:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200220172512.dmjtqgyay73x3ubx@gilmour.lan>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200401053913.216783-1-nickrterrell@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Maxime,
 
-Since Linus' merge window is now open, do I have to do anything to get 
-this merged into the mainline kernel?
+On 01.04.20 07:39, Nick Terrell wrote:
+> From: Nick Terrell <terrelln@fb.com>
+>
+> Hi all,
 
-On 2/20/20 7:25 PM, Maxime Ripard wrote:
-> On Wed, Feb 19, 2020 at 08:08:58PM +0200, Andrey Lebedev wrote:
->> From: Andrey Lebedev <andrey@lebedev.lt>
->>
->> A20 SoC (found in Cubieboard 2 among others) requires different LVDS set
->> up procedure than A33. Timing controller (tcon) driver only implements
->> sun6i-style procedure, that doesn't work on A20 (sun7i).
->>
->> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
->> ---
->>   drivers/gpu/drm/sun4i/sun4i_tcon.c | 37 +++++++++++++++++++++++++++++-
->>   drivers/gpu/drm/sun4i/sun4i_tcon.h | 11 +++++++++
->>   2 files changed, 47 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> index b7234eef3c7b..09ee6e8c6914 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> @@ -114,6 +114,30 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
->>   	}
->>   }
->>
->> +static void sun4i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
->> +				      const struct drm_encoder *encoder)
->> +{
->> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
->> +		     SUN4I_TCON0_LVDS_ANA0_CK_EN |
->> +		     SUN4I_TCON0_LVDS_ANA0_REG_V |
->> +		     SUN4I_TCON0_LVDS_ANA0_REG_C |
->> +		     SUN4I_TCON0_LVDS_ANA0_EN_MB |
->> +		     SUN4I_TCON0_LVDS_ANA0_PD |
->> +		     SUN4I_TCON0_LVDS_ANA0_DCHS);
->> +
->> +	udelay(2); /* delay at least 1200 ns */
->> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
->> +			   SUN4I_TCON0_LVDS_ANA1_INIT,
->> +			   SUN4I_TCON0_LVDS_ANA1_INIT);
->> +	udelay(1); /* delay at least 120 ns */
->> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
->> +			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
->> +			   SUN4I_TCON0_LVDS_ANA1_UPDATE);
->> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
->> +			   SUN4I_TCON0_LVDS_ANA0_EN_MB,
->> +			   SUN4I_TCON0_LVDS_ANA0_EN_MB);
->> +}
->> +
->>   static void sun6i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
->>   				      const struct drm_encoder *encoder)
->>   {
->> @@ -1455,7 +1479,18 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
->>   	.dclk_min_div		= 1,
->>   };
->>
->> +static const struct sun4i_tcon_quirks sun7i_a20_tcon0_quirks = {
->> +	.supports_lvds		= true,
->> +	.has_channel_0		= true,
->> +	.has_channel_1		= true,
->> +	.dclk_min_div		= 4,
->> +	/* Same display pipeline structure as A10 */
->> +	.set_mux		= sun4i_a10_tcon_set_mux,
->> +	.setup_lvds_phy		= sun4i_tcon_setup_lvds_phy,
->> +};
->> +
->>   static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
->> +	.supports_lvds		= false,
-> 
-> False is already the default here.
-> 
-> I've removed it while applying
-> 
-> Maxime
-> 
 
--- 
-Andrey Lebedev aka -.- . -.. -.. . .-.
-Software engineer
-Homepage: http://lebedev.lt/
+Hi Nick,
+
+
+> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+> are supported on all architectures. The ZSTD-compressed kernel is only
+> hooked up to x86 in this patch set.
+>
+> Zstandard requires slightly more memory during the kernel decompression
+> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> window size.
+>
+> Zstandard requires memory proprortional to the window size used during
+> compression for decompressing the ramdisk image, since streaming mode is
+> used. Newer versions of zstd (1.3.2+) list the window size of a file
+> with `zstd -lv <file>'. The absolute maximum amount of memory required
+> is just over 8 MB, but it can be controlled at compression time.
+>
+> This patch set has been boot tested with buildroot and QEMU based off
+> of linux-5.6-rc6.
+>
+> On i386 and x86_64 I have tested the following configurations:
+> * zstd compressed kernel and a separate zstd compressed initramfs
+> * zstd compressed kernel and a built-in zstd compressed initramfs
+> * gzip compressed kernel and a separate gzip compressed initramfs
+> * gzip compressed kernel and a built-in gzip compressed initramfs
+
+
+I tested this and already v2 and v3 on some boxes without a problem.
+
+
+Also I've tested :
+
+XZ compressed kernel ZSTD compressed initramfs ( XZ compressed modules )
+
+XZ compressed kernel ZSTD compressed initramfs ( ZSTD compressed modules 
+, that need an kmod patch )
+
+ZSTD compressed kernel ZSTD compressed initramfs ( ZSTD compressed 
+modules, that need an kmod patch )
+
+ZSTD compressed kernel XZ compressed initramfs ( ZSTD/XZ compressed 
+modules )
+
+
+> On arm and aarch64 I tested the same configurations, except that the kernel is
+> always gzip compressed.
+>
+> Facebook has been using v1 of these patches on x86_64 devices for more than 6
+> months. When we switched from a xz compressed initramfs to a zstd compressed
+> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+> seconds of boot time.
+
+
+I can confirm that on my server I tested the patches decompression went 
+down
+
+6 secs and 3.1 seconds faster boot time with zstd compressed kernel.
+
+
+Also I see around 2++seconds faster boot across all testing boxes.
+
+
+> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+> decompression time shrunk from 27 seconds to 8 seconds.
+>
+> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+> than the xz or lzma compressed kernels, and it decompresses faster than
+> everything except lz4. See the table below for the measurement of an x86_64
+> kernel ordered by compressed size:
+>
+> algo	size
+> xz  	 6,509,792
+> lzma	 6,856,576
+> zstd	 7,399,157
+> gzip	 8,522,527
+> bzip	 8,629,603
+> lzo 	 9,808,035
+> lz4 	10,705,570
+> none	32,565,672
+>
+> v1 -> v2:
+> - Rebase
+>    - usr/Makefile and init/Kconfig were changed so the patches were updated
+> - No functional changes except to rebase
+> - Split the patches up into smaller chunks
+>
+> v2 -> v3:
+> - Add *.zst to the .gitignore in patch 8
+> - Style nits in patch 3
+> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+>    1 through 3
+>
+> v3 -> v4:
+> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+>    With this change I switch from malloc() to large_malloc() for the
+>    buffers.
+> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
+>    the max that zstd in the kernel supports.
+
+Tested-by: Gabriel Craciunescu <nix.or.die@gmail.com>
+
+> Best,
+> Nick Terrell
+>
+> Adam Borowski (1):
+>    .gitignore: add ZSTD-compressed files//
+>
+> Nick Terrell (7):
+>    lib: prepare zstd for preboot environment
+>    lib: prepare xxhash for preboot environment
+>    lib: add zstd support to decompress
+>    init: add support for zstd compressed kernel
+>    usr: add support for zstd compressed initramfs
+>    x86: bump ZO_z_extra_bytes margin for zstd
+>    x86: Add support for ZSTD compressed kernel
+>
+>   .gitignore                        |   1 +
+>   Documentation/x86/boot.rst        |   6 +-
+>   arch/x86/Kconfig                  |   1 +
+>   arch/x86/boot/compressed/Makefile |   5 +-
+>   arch/x86/boot/compressed/misc.c   |   4 +
+>   arch/x86/boot/header.S            |   8 +-
+>   arch/x86/include/asm/boot.h       |   6 +-
+>   include/linux/decompress/unzstd.h |  11 +
+>   init/Kconfig                      |  15 +-
+>   lib/Kconfig                       |   4 +
+>   lib/Makefile                      |   1 +
+>   lib/decompress.c                  |   5 +
+>   lib/decompress_unzstd.c           | 342 ++++++++++++++++++++++++++++++
+>   lib/xxhash.c                      |  21 +-
+>   lib/zstd/decompress.c             |   2 +
+>   lib/zstd/fse_decompress.c         |   9 +-
+>   lib/zstd/zstd_internal.h          |  14 +-
+>   scripts/Makefile.lib              |  15 ++
+>   usr/Kconfig                       |  20 ++
+>   usr/Makefile                      |   1 +
+>   20 files changed, 464 insertions(+), 27 deletions(-)
+>   create mode 100644 include/linux/decompress/unzstd.h
+>   create mode 100644 lib/decompress_unzstd.c
+>
