@@ -2,51 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0ADEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DA0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873FC2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50C7206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759555;
-	bh=YnotHvaB4DpvW05hOYKcaEFdPBULmNj+Gphpjt+xS1E=;
+	s=default; t=1585759558;
+	bh=r8iU5Iy4fYlaGNEYewB5u6eOHtOt2pAmqw3wcEln2mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3lXbSCYoZsntuhOHHpVicFCgLdHUNIOgPC8Q+rm8MdB6LduzBIQIg3ASl7FPJY7P
-	 fPgwFzq2fh29OQwu1XdisYx7U7J6OAbT2dR0ROMyG+lf6bAlUXQPgcA/S8LJKQS/ml
-	 /sfAMBD9Sy6K2hV6XfvGvdypRtcQKf4RLddQ7K0o=
+	b=GpeZzbvQIDoNr3R1U1AJJqKUlqyiYnRrphhDIH6eOohn4RF0bgfjEBUB3kbNwbT1R
+	 DoGFy771eZi3ghgXecG3iPj+RnPrNqwTP7qCPl9LNBq/WEPnzYZLZcvxbmpxz2cStH
+	 RV+NYvwiCQQe4cJ0br20xk1Ttm+d27oxk3o6xGJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389886AbgDAQpy (ORCPT
+        id S2389893AbgDAQp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:45:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:45:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389878AbgDAQpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:45:51 -0400
+        id S2389884AbgDAQpy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:45:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 011FF206E9;
-        Wed,  1 Apr 2020 16:45:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871332082F;
+        Wed,  1 Apr 2020 16:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759550;
-        bh=YnotHvaB4DpvW05hOYKcaEFdPBULmNj+Gphpjt+xS1E=;
+        s=default; t=1585759553;
+        bh=r8iU5Iy4fYlaGNEYewB5u6eOHtOt2pAmqw3wcEln2mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJh8Ri7AaCJol2aexBSxFRyOcNS2/nzXIkeFp9DRa5baYviyW6FrF9PsKoSNEe4p5
-         D1aSCsYGCRTUwwv1wD3n76vsSzazdm1Z6U0RwToQPcrpZpPu9G4RjpX1UeVtvLytSu
-         jtM8ObUbVZhIrI6Tvv4hS3t624OOJ7kcEnWVpLAo=
+        b=F82IJJaKZqUPNU7ZdBHaxi9rR8JXnBYOyo1RsoZive3PrkXo2c0Kj4gA5vZyEfc7B
+         I6bJ4vfO8f58sZO/nTGNZnUuszlPwYvj0bKy7n2c9XC8v1HQrvXHwgya/KEpbDt8KQ
+         63NaeQeiHlnOOBMdvPb5j3c7hA3+m5mrPNAfg07U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 113/148] afs: Fix some tracing details
-Date:   Wed,  1 Apr 2020 18:18:25 +0200
-Message-Id: <20200401161603.386369320@linuxfoundation.org>
+        stable@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
+        Pawel Dembicki <paweldembicki@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 114/148] USB: serial: option: add support for ASKEY WWHC050
+Date:   Wed,  1 Apr 2020 18:18:26 +0200
+Message-Id: <20200401161603.463671790@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,62 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Pawel Dembicki <paweldembicki@gmail.com>
 
-[ Upstream commit 4636cf184d6d9a92a56c2554681ea520dd4fe49a ]
+commit 007d20dca2376a751b1dad03442f118438b7e65e upstream.
 
-Fix a couple of tracelines to indicate the usage count after the atomic op,
-not the usage count before it to be consistent with other afs and rxrpc
-trace lines.
+ASKEY WWHC050 is a mcie LTE modem.
+The oem configuration states:
 
-Change the wording of the afs_call_trace_work trace ID label from "WORK" to
-"QUEUE" to reflect the fact that it's queueing work, not doing work.
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
+D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1690 ProdID=7588 Rev=ff.ff
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=813f0eef6e6e
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=84(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=86(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=88(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
 
-Fixes: 341f741f04be ("afs: Refcount the afs_call struct")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested on openwrt distribution.
+
+Co-developed-by: Cezary Jackiewicz <cezary@eko.one.pl>
+Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/afs/rxrpc.c             | 4 ++--
- include/trace/events/afs.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index ccc9c708a860a..7dc9c78a1c31c 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -173,7 +173,7 @@ void afs_put_call(struct afs_call *call)
- 	int n = atomic_dec_return(&call->usage);
- 	int o = atomic_read(&afs_outstanding_calls);
- 
--	trace_afs_call(call, afs_call_trace_put, n + 1, o,
-+	trace_afs_call(call, afs_call_trace_put, n, o,
- 		       __builtin_return_address(0));
- 
- 	ASSERTCMP(n, >=, 0);
-@@ -619,7 +619,7 @@ static void afs_wake_up_async_call(struct sock *sk, struct rxrpc_call *rxcall,
- 
- 	u = __atomic_add_unless(&call->usage, 1, 0);
- 	if (u != 0) {
--		trace_afs_call(call, afs_call_trace_wake, u,
-+		trace_afs_call(call, afs_call_trace_wake, u + 1,
- 			       atomic_read(&afs_outstanding_calls),
- 			       __builtin_return_address(0));
- 
-diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
-index 8b95c16b70454..0978bdae2243b 100644
---- a/include/trace/events/afs.h
-+++ b/include/trace/events/afs.h
-@@ -40,7 +40,7 @@ enum afs_call_trace {
- 	EM(afs_call_trace_free,			"FREE ") \
- 	EM(afs_call_trace_put,			"PUT  ") \
- 	EM(afs_call_trace_wake,			"WAKE ") \
--	E_(afs_call_trace_work,			"WORK ")
-+	E_(afs_call_trace_work,			"QUEUE")
- 
- /*
-  * Export enum symbols via userspace.
--- 
-2.20.1
-
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1994,6 +1994,8 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
++	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
++	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2060, 0xff),			/* BroadMobi BM818 */
 
 
