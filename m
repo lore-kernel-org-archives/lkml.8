@@ -2,103 +2,161 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498FDC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1A5C10F26
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1AC20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGfhPHu0"
+	by mail.kernel.org (Postfix) with ESMTP id 8483A2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbgDAMvH (ORCPT
+        id S1732531AbgDAMvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:51:07 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53735 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732252AbgDAMvG (ORCPT
+        Wed, 1 Apr 2020 08:51:35 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:24389 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732166AbgDAMvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:51:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585745465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KZrEIeJJf1z/466R4PTGZhsuBRjfB99OXepaDxzJjTA=;
-        b=QGfhPHu0qbTRlC5zF+G2AnEC3HUuHihNcAiQKacmcqvmBCTXCbvA1WqbfD+rJA8g72p40X
-        PgNMKssEpc6uxf0Mj2l2V70JnFOvmi3N/bi2pmJqGmW1PH0nASvNwuC3gz82wv33rPlmkk
-        u8OSuUFXeP3E4HSKz2msEVV8OsHBCYA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-2txM6OSVP8OwClyVv-NhKQ-1; Wed, 01 Apr 2020 08:50:58 -0400
-X-MC-Unique: 2txM6OSVP8OwClyVv-NhKQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B6AE477;
-        Wed,  1 Apr 2020 12:50:55 +0000 (UTC)
-Received: from [10.72.12.139] (ovpn-12-139.pek2.redhat.com [10.72.12.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 46B9A18A85;
-        Wed,  1 Apr 2020 12:50:37 +0000 (UTC)
-Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
-To:     Christian Borntraeger <borntraeger@de.ibm.com>, mst@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn
-References: <20200326140125.19794-1-jasowang@redhat.com>
- <20200326140125.19794-2-jasowang@redhat.com>
- <fde312a4-56bd-f11f-799f-8aa952008012@de.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <41ee1f6a-3124-d44b-bf34-0f26604f9514@redhat.com>
-Date:   Wed, 1 Apr 2020 20:50:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 08:51:35 -0400
+IronPort-SDR: jRJISy966l80lm/tAYjztwcpmEcae8GLhKxE/NyMtHPCnOvX34HRn5Afdp4X9txVYhKKszMmZb
+ +OJICKt+TYErsSr+SfMvs/r57nJ8KheHGhif0k+mnqMI66xKlfoYWznZ3RqS1sgavfHSomjzoA
+ F1VWZCkeBstmh1g3YFZyAPVD/kYz1RmG6aqk5HliKxQqA26lVn5Zf8axqT7FiTKdfqoOtfOBEE
+ UFVuGQeggzpeuqGr2dgY+hHd+IbSTrYrZdAREOhj1dfkvYMv/Qgo+5Rj6bFnG2/HiRcimujCQn
+ mqI=
+X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
+   d="scan'208";a="47339772"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 01 Apr 2020 04:51:34 -0800
+IronPort-SDR: FH5TaqMIScuQlA4UMm+NWvQaIhpEm+o+vdYX2MNLgbvTrkq3JXWTpFSyg3aHNfg82srUGjm+KE
+ mce1WNZIaFNA7TXajzxLK+INC9nX7oxbm2GjMGPRFD+zJv08UOntCTkHIjxXQvYDs462ySG30a
+ sVC1bAU77r3fs/Ksk69Jtmio5fmMH4n/o2OI7ERdZo4mpfuIDI9v6ww/ITs5lDE5SE8JONXgfQ
+ OtsoOzVJi50XhdotyshISsIfZhMxnvzoyMNzEKbjn9X2e8Hbzo0w1O+d0WFKzhZqfn+ZPbfiyn
+ umU=
+Subject: Re: [PATCH v10 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
+ entry for touchscreen status
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-53-jiada_wang@mentor.com>
+ <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
+Date:   Wed, 1 Apr 2020 21:51:28 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <fde312a4-56bd-f11f-799f-8aa952008012@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dmitry
 
-On 2020/4/1 =E4=B8=8B=E5=8D=887:21, Christian Borntraeger wrote:
-> On 26.03.20 15:01, Jason Wang wrote:
->> Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vhost is
->> not necessarily for VM since it's a generic userspace and kernel
->> communication protocol. Such dependency may prevent archs without
->> virtualization support from using vhost.
+Thanks for your comments
+
+On 2020/04/01 0:08, Dmitry Osipenko wrote:
+> 31.03.2020 13:50, Jiada Wang пишет:
+> ...
+>> +static void mxt_watchdog_work(struct work_struct *work)
+>> +{
+>> +	struct mxt_data *data =
+>> +		container_of(work, struct mxt_data, watchdog_work.work);
+>> +	u16 info_buf;
+>> +	int ret;
+>> +
+>> +	if (data->suspended || data->in_bootloader ||
+>> +	    data->mxt_status.intp_triggered)
+>> +		goto sched_work;
+> 
+> Won't it become a problem if other thread puts device into suspended /
+> bootloader state in the same time?
+> 
+right, I will use mutex lock to prevent such case.
+also I think data->mxt_status.intp_triggered isn't necessary,
+when lock is used.
+
+>> +	ret = __mxt_read_reg(data->client, 0, sizeof(info_buf), &info_buf);
+>> +
+>> +	if (ret) {
+>> +		data->mxt_status.error_count++;
+>> +		data->mxt_status.dev_status = false;
+>> +	} else {
+>> +		data->mxt_status.dev_status = true;
+>> +	}
+>> +
+>> +sched_work:
+>> +	schedule_delayed_work(&data->watchdog_work,
+>> +			      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
+>> +}
+> ...
+> 
+>> @@ -4329,6 +4390,12 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>   		msleep(MXT_RESET_TIME);
+>>   	}
+>>   
+>> +	if (debug_state) {
+>> +		INIT_DELAYED_WORK(&data->watchdog_work, mxt_watchdog_work);
+>> +		schedule_delayed_work(&data->watchdog_work,
+>> +				      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
+>> +	}
+>> +
+>>   	error = mxt_initialize(data);
+>>   	if (error)
+>>   		goto err_free_object;
+>> @@ -4343,6 +4410,8 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>   	return 0;
+>>   
+>>   err_free_object:
+>> +	if (debug_state)
+>> +		cancel_delayed_work_sync(&data->watchdog_work);
+>>   	mxt_free_input_device(data);
+>>   	mxt_free_object_table(data);
+>>   	if (data->reset_gpio) {
+>> @@ -4367,6 +4436,9 @@ static int mxt_remove(struct i2c_client *client)
+>>   	mxt_free_input_device(data);
+>>   	mxt_free_object_table(data);
+>>   
+>> +	if (debug_state)
+>> +		cancel_delayed_work_sync(&data->watchdog_work);
+> 
+> What will happen if debug_state was false during of mxt_probe() and then
+> the debug_state parameter was changed to true via sysfs?
+
+module_param debug_state is added with permission 0,
+so it's value won't change during driver operation
+> 
+> I think the INIT_DELAYED_WORK() and cancel_delayed_work_sync() should be
+> invoked unconditionally.
+> 
+>>   	return 0;
+>>   }
+>>   
+>> @@ -4463,3 +4535,7 @@ module_i2c_driver(mxt_driver);
+>>   MODULE_AUTHOR("Joonyoung Shim <jy0922.shim@samsung.com>");
+>>   MODULE_DESCRIPTION("Atmel maXTouch Touchscreen driver");
+>>   MODULE_LICENSE("GPL");
+>> +
+>> +module_param(debug_state, bool, 0);
+>> +MODULE_PARM_DESC(debug_state, "Enable/Disable watchdog work to check device state (default="
+>> +		 __MODULE_STRING(MXT_DEBUG_STATE) ")");
 >>
->> To solve this, a dedicated vhost menu is created under drivers so
->> CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
-> FWIW, this now results in vhost not being build with defconfig kernels =
-(in todays
-> linux-next).
->
+> 
+> The "default=..." part of MODULE_PARM_DESC() probably isn't really
+> useful and could be omitted, don't you think so?
+> 
+since debug_state can't be updated via sysfs, so I think add it's 
+default in MODULE_PARM_DESC() is useful? what's your opinion?
 
-Hi Christian:
-
-Did you meet it even with this=20
-commit=C2=A0https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
-xt.git/commit/?id=3Da4be40cbcedba9b5b714f3c95182e8a45176e42d?
-
-If yes, what's your build config looks like?
-
-Thanks
-
+Thanks,
+Jiada
