@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB26C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587D5C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF8B2071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC8720678
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Jx3HoFHB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tjv4I0tT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733271AbgDAWP3 (ORCPT
+        id S1733035AbgDAWTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:15:29 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:10819 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbgDAWP0 (ORCPT
+        Wed, 1 Apr 2020 18:19:55 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:60114 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732385AbgDAWTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:15:26 -0400
+        Wed, 1 Apr 2020 18:19:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1585779325; x=1617315325;
+  t=1585779594; x=1617315594;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=q+aU/iQQvfxk55cYhF+FMj4swDv1lcqm+CLLatN93uY=;
-  b=Jx3HoFHBgN5qMeGfO95NCzOgb5W3Fcxc+tJI/W63WpPk+eNnO/slpCiT
-   b+hI5rQ5YndewS/YXStwwC2Rg+cj5Nca6Pu6pYK5gPxSima61wGbDgRjM
-   qRD+AQm6AfYmNIhbCbnkbXsGjSKeo/OwEHuXZV6V0MXZkNueXboEuP9ZP
-   dCGVnBoL6beEEvTKN4KHgjobdST2VJMrQgpnA6e2KqHH6aoOiGUZk2kUm
-   GUQz+kVeYCqBSLwXMjH/Oli2VvdzpK09SJkCBHBS5REbVvaib1Cj7MCch
-   PyWPM33/3gVLm/7qkyy3pCmjGUUokSsFPNKwq68srGsL902+X+WXjXKNe
-   w==;
-IronPort-SDR: VTuWgp/h+Vn0LpBSElgsPr6YWRBP/bAZd9DJJ0BkXaVblqc/GdNoXNmeWXOI9f2NUCbe68SP0w
- d28svC8oc/BX8fb+ZI39q2LVnhOKH2XYQaafLiDY8hf1tvVte3ZqKj7xbO/IZFkutpis1Smyvv
- d3IdXkE283D8g6BHLwqsIYO/bVsRataKpG2Xz8PQ28wXaTKM95KcoLy22YIkVYh4+Lc/Z5Tm/V
- wPFXJM14P3AqTNlKaX9GLSnde9DCPHgkQHVxnKxj/BRhSerWD5sTDQNWaPyKVxiY9MEG6fqtKv
- pEY=
+  bh=BPjNOnkGc0WibCjCNo7i6GUfzGFIqq0ztMrxOHNDZwQ=;
+  b=tjv4I0tTb7+AkNHMr34G4igS48jdklqpLCkJjIsNfL7FyTIxmmWfvGoH
+   znrLyZMpGjA/nqUOISk9CTWUda/soO0Gw0fu+w69yoK0XNOQgKJImYW5z
+   LqfHDoi9LLIQ9wkv4yfd1+oCKPevo0Ux8e2X6XJ42JmF+0HyswGzVob2k
+   yuL2uhdEHtg2qj7uxt5hr2JKWohAeG7p7Sqfl/rASPk7DG8NZPHwHUK3+
+   EIjnVsBSot7urGRERirMCycLw2xijS2NjDJN8kbMog5eIfKURRqQvuVn0
+   JvhgVs3ADs/e+g5/nJFqaLqWTTQ2PsKhUzG1nwt+kqEevRKRpZ/Xo0j3U
+   g==;
+IronPort-SDR: E38uwSDiXzIp38bHPdN0cFgpbIsfXGgCKcIMl8IchKCQ2R6QxytPDUgpf3ndS7QPcQw20eX/JX
+ sXjzZ2edkIYukkCp0VGp1a/4a/cKvyzTiVRsgVRDv80c4Zm+0qFZn9SWU3fpDsuXRhVHLfx1+0
+ 8Es+diZtT2pfxqdiQsjNhp6GWKS2DNkAsPrbyBCZeZWFo9x76Je/QsQh2OjfUHihyoh7AhtCHk
+ 8u1xVWDIt3LtOayQINBa3lqhvfl/a64V3tyfBzwrt1KR8Rmi4JOcB5xWCnMG6TZiOIRLrepZaw
+ zVQ=
 X-IronPort-AV: E=Sophos;i="5.72,333,1580799600"; 
-   d="scan'208";a="72005464"
+   d="scan'208";a="70956797"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 15:15:25 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 15:19:53 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 1 Apr 2020 15:15:31 -0700
+ 15.1.1713.5; Wed, 1 Apr 2020 15:19:53 -0700
 Received: from sekiro.microchip.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 1 Apr 2020 15:15:28 -0700
+ 15.1.1713.5 via Frontend Transport; Wed, 1 Apr 2020 15:19:56 -0700
 From:   Ludovic Desroches <ludovic.desroches@microchip.com>
 To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
         <robh+dt@kernel.org>
@@ -59,13 +59,14 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <Tudor.Ambarus@microchip.com>, <Cristian.Birsan@microchip.com>,
         <Codrin.Ciubotariu@microchip.com>,
-        "Ludovic Desroches" <ludovic.desroches@microchip.com>
-Subject: [PATCH 5/5] ARM: dts: at91: sama5d27_som1_ek: add an alias for i2c0
-Date:   Thu, 2 Apr 2020 00:15:04 +0200
-Message-ID: <20200401221504.41196-5-ludovic.desroches@microchip.com>
+        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
+        <stable@vger.kernel.org>
+Subject: [RESEND PATCH 2/5] ARM: dts: at91: sama5d2_ptc_ek: fix vbus pin
+Date:   Thu, 2 Apr 2020 00:19:47 +0200
+Message-ID: <20200401221947.41502-1-ludovic.desroches@microchip.com>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401221504.41196-1-ludovic.desroches@microchip.com>
-References: <20200401221504.41196-1-ludovic.desroches@microchip.com>
+In-Reply-To: <20200401221504.41196-2-ludovic.desroches@microchip.com>
+References: <20200401221504.41196-2-ludovic.desroches@microchip.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -74,26 +75,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add aliases for i2c devices to not rely on probe order for i2c device
-numbering.
+The gpio property for the vbus pin doesn't match the pinctrl and is
+not correct.
 
 Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes: 42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
+Cc: stable@vger.kernel.org # 4.19 and later
 ---
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-index 1a26e1a129319..535627c6045b6 100644
---- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-@@ -20,6 +20,7 @@ aliases {
- 		serial0 = &uart1;	/* DBGU */
- 		serial1 = &uart4;	/* mikro BUS 1 */
- 		serial2 = &uart2;	/* mikro BUS 2 */
-+		i2c0	= &i2c0;
- 		i2c1	= &i2c1;
- 		i2c2	= &i2c2;
- 	};
+s/watch/match
+
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+index 772809c54c1f3..b803fa1f20391 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+@@ -40,7 +40,7 @@ main_xtal {
+ 
+ 	ahb {
+ 		usb0: gadget@300000 {
+-			atmel,vbus-gpio = <&pioA PIN_PA27 GPIO_ACTIVE_HIGH>;
++			atmel,vbus-gpio = <&pioA PIN_PB11 GPIO_ACTIVE_HIGH>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_usba_vbus>;
+ 			status = "okay";
 -- 
 2.26.0
 
