@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C1FC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F31FC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE8E20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE51F2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759808;
-	bh=m6uTusX3QKM1rf4TxbnopD7lVV6EztOv2sZpf0uTwsE=;
+	s=default; t=1585759819;
+	bh=nApbZ80mXRy/+ibrdVc/TvjMd1UMq5jINCA6FxGD2T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jrhwkeXae906I8KSVoz4+1kdwxzUwfj2AtDeFXw/yyKAXknlXpdkAsQL/r3JzfAVp
-	 DBcRYIK1oCIOtpmIrVAeaaZwyri+t0K/maIc0Ysiiawpj28BW1ruhAlCncYV/gKmlb
-	 HHMd3BvRXw3Tnue/1Mok6DU1gGsI98udcX6Q8uF0=
+	b=L6P/nbus5NSB4CXKNGrXnSPAaTMo65GG1gFtblvrJRaxmgqZON9d2I37zm8Y8+YTP
+	 rQVRX9384s7tQ1L2Ojs24lcG57IUV3yfulNqiAAD/qNZLpZymT8XZsJZibCeogXvKa
+	 M6gw4Vpi+2hBW3FjXPydK+0hd5BJw8EEgsBxVBgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389377AbgDAQk5 (ORCPT
+        id S2388462AbgDAQkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:40:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41034 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:40:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389197AbgDAQkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:40:49 -0400
+        id S1733291AbgDAQka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:40:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3E672063A;
-        Wed,  1 Apr 2020 16:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAF3720719;
+        Wed,  1 Apr 2020 16:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759247;
-        bh=m6uTusX3QKM1rf4TxbnopD7lVV6EztOv2sZpf0uTwsE=;
+        s=default; t=1585759228;
+        bh=nApbZ80mXRy/+ibrdVc/TvjMd1UMq5jINCA6FxGD2T8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZkJUQoc15MrI7IMXEKsW+s4rjUApJBX+PXkgbhq3oFs0khxN7/8DCn2DGlvJhKiR+
-         IkPHNt4GYMDr6TUvqXk6kpD9psXiBWFOxZ/cx6WnOeWnryuEelIMrYnBMSqu33Xizg
-         5g3FZjbnvCUxgWB1IXrJgJoRoapaWatXRtUEEYvo=
+        b=BmiO/JgQGbU/5EyM+g+S+rsoRmthue1W8VWzysxa+DVSqjk7QgDDGYx5ZGe8nZuRB
+         MEcOdy77yHMdU/1aSE9EfYl44Jv6aX2B/R0434eBNRUiwXn9Qf7oWS+0GRr8xasGfd
+         wT3ATAGcSsMb3HdCPuCX65NJynBmCAsxsFKDRumg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alberto Mattea <alberto@mattea.info>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.14 020/148] usb: xhci: apply XHCI_SUSPEND_DELAY to AMD XHCI controller 1022:145c
-Date:   Wed,  1 Apr 2020 18:16:52 +0200
-Message-Id: <20200401161554.357387148@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 4.14 015/148] USB: Disable LPM on WD19s Realtek Hub
+Date:   Wed,  1 Apr 2020 18:16:47 +0200
+Message-Id: <20200401161553.745434925@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,39 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alberto Mattea <alberto@mattea.info>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 16263abc12d09871156a1c8650fb651f0e552f5e upstream.
+commit b63e48fb50e1ca71db301ca9082befa6f16c55c4 upstream.
 
-This controller timeouts during suspend (S3) with
-[  240.521724] xhci_hcd 0000:30:00.3: WARN: xHC save state timeout
-[  240.521729] xhci_hcd 0000:30:00.3: ERROR mismatched command completion event
-thus preventing the system from entering S3.
-Moreover it remains in an undefined state where some connected devices stop
-working until a reboot.
-Apply the XHCI_SUSPEND_DELAY quirk to make it suspend properly.
+Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
+bus when bringing underlying ports from U3 to U0.
 
-CC: stable@vger.kernel.org
-Signed-off-by: Alberto Mattea <alberto@mattea.info>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200306150858.21904-3-mathias.nyman@linux.intel.com
+Disabling LPM on the hub during setting link state is not enough, so
+let's disable LPM completely for this hub.
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200205112633.25995-3-kai.heng.feng@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -140,7 +140,8 @@ static void xhci_pci_quirks(struct devic
- 		xhci->quirks |= XHCI_AMD_PLL_FIX;
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -229,6 +229,9 @@ static const struct usb_device_id usb_qu
+ 	{ USB_DEVICE(0x0b05, 0x17e0), .driver_info =
+ 			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
  
- 	if (pdev->vendor == PCI_VENDOR_ID_AMD &&
--		(pdev->device == 0x15e0 ||
-+		(pdev->device == 0x145c ||
-+		 pdev->device == 0x15e0 ||
- 		 pdev->device == 0x15e1 ||
- 		 pdev->device == 0x43bb))
- 		xhci->quirks |= XHCI_SUSPEND_DELAY;
++	/* Realtek hub in Dell WD19 (Type-C) */
++	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
++
+ 	/* Action Semiconductor flash disk */
+ 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
+ 			USB_QUIRK_STRING_FETCH_255 },
 
 
