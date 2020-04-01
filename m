@@ -2,191 +2,285 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C9FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB50C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FF32082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9482E2082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:07:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="FzSP18HF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CJOJUGJU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbgDALHR (ORCPT
+        id S1732736AbgDALH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:07:17 -0400
-Received: from mail-bn7nam10on2067.outbound.protection.outlook.com ([40.107.92.67]:6024
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732360AbgDALFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:05:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AWOLof8BeUkcAShp8UtzVX3QWAvw0/wvLbjIA/TzzqcE/wA12p1UiPFOKvUvdngvWskKpv4g/A7aMiqqFq+oVGzaKAFJRkq8ky41q8VIom/gOxFZhxtQsqBXA2U4k8AV8n8E+YuAyWWTsCj4IYeyhqe2KRgj6XBm938WrEDUquCwJxHU/Vl1hKYhvPQKSrToRmuxMR8mDbzduVFFQSGt8MByVDVj1vIiYzot5zngZUK++JnY4l74GUt33VJlgN0CyWpKyTT6psTCVNjPtUxkbaDOmlUNAtu6VCVkSXOiEf82BgYl74wxlFr6xaMFdenGxtnMrsVEyVR1+1SkSwj//A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zwnnlp0rg2bPpdzDiOZIrKpP7GITQwa8v5Y5n3ZgLMM=;
- b=gECgh3m+3hzPDMKDxrzUCystlp+oyeEQkJlVjERpR06GgMgMW8mBOEzX5oAI3H+PWKZWNOF6IoEnrlgT/TNyqQo1A39j9H4eDAlZzK1qqbLKXev74g0b6jbB4/oda+fvOtm8V9qVF91u4w/prR96yJ9FpF7EQ8psfh55vOXIrr2WYpgoe8g15d4AxK0ipT/Zb+9paU6pm+kfRBiN7o/7ex4txkyS/ZcJ/x4/arNyAH/S/yIEe1Hzhe4MNFx1/51Nr1gZl0gIyS22EOg9Mn1KBDAD5umgkmijQG8hn34lyCn/gYxfs1QZOMZnCvOONf+qxncBfUd2DFvfkJiIb/JO8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zwnnlp0rg2bPpdzDiOZIrKpP7GITQwa8v5Y5n3ZgLMM=;
- b=FzSP18HFStzfflJ8FOBKnByETLwdMXwvZK1mC+xyPyhj04EnLlOAqdof/b3xkWDQ3iQALZ3Y0i2j+MHiOOzFoIbygH1ElvH8YuWMjECcPNOfBkolQaZox2yXHMPb9pmxDfdks/axDrVRgimE2BdBQ96AxcxC0qBSyYlenXcrr9c=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jerome.Pouiller@silabs.com; 
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
- by MN2PR11MB4285.namprd11.prod.outlook.com (2603:10b6:208:191::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Wed, 1 Apr
- 2020 11:04:50 +0000
-Received: from MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
- ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 11:04:50 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 15/32] staging: wfx: drop useless link_map_cache
-Date:   Wed,  1 Apr 2020 13:03:48 +0200
-Message-Id: <20200401110405.80282-16-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200401110405.80282-1-Jerome.Pouiller@silabs.com>
-References: <20200401110405.80282-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: SN4PR0501CA0156.namprd05.prod.outlook.com
- (2603:10b6:803:2c::34) To MN2PR11MB4063.namprd11.prod.outlook.com
- (2603:10b6:208:13f::22)
+        Wed, 1 Apr 2020 07:07:26 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45598 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732363AbgDALHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 07:07:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4Dqol62wdMFQWr43+PFoe4L05khr2GFOWLbBuj2BrZY=; b=CJOJUGJUbylcX9ljnoFUQM8aok
+        CFkJmums6o9KM90p3OTTH4wV0lUqpZt7d1YqpXOGs9TGwGPGAiSJDc4b2K6upOTHNpkF7KfIwY33r
+        OoDE1MdAH3IS+42t3K+pkn+6ndv2+Yv2P6AA/DmxZQR74eabbbaeEH9hmlwx9g+U2XxAEU3INgaFs
+        qHen1IgpzEVlcWfjxgs7OxTLXz4MjX3QiVSHhVx3/ctCz4fvSJaAgyzu41neVPd/4ZEHfC2gv3Cud
+        MAD2R1rckS2pcFXw0ASFu22V3dI4hKh1JFpL7YoSWJDUQ2N453jCQN+T7Xg76beEQCp3hATrwBCRy
+        x79X/Cpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJbCu-0002HM-PF; Wed, 01 Apr 2020 11:06:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 390B3307112;
+        Wed,  1 Apr 2020 13:06:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2A85629DB2526; Wed,  1 Apr 2020 13:06:49 +0200 (CEST)
+Date:   Wed, 1 Apr 2020 13:06:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     John Mathew <john.mathew@unikie.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@basemark.com
+Subject: Re: [RFC PATCH 3/3] docs: scheduler: Add introduction to scheduler
+ context-switch
+Message-ID: <20200401110649.GB20713@hirez.programming.kicks-ass.net>
+References: <20200401100029.1445-1-john.mathew@unikie.com>
+ <20200401100029.1445-4-john.mathew@unikie.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.silabs.com (2a01:e35:2435:66a0:1265:30ff:fefd:6e7f) by SN4PR0501CA0156.namprd05.prod.outlook.com (2603:10b6:803:2c::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.9 via Frontend Transport; Wed, 1 Apr 2020 11:04:48 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [2a01:e35:2435:66a0:1265:30ff:fefd:6e7f]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f9415d82-8b5a-4082-742f-08d7d62c7f6a
-X-MS-TrafficTypeDiagnostic: MN2PR11MB4285:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR11MB4285510374572324547BA34393C90@MN2PR11MB4285.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
-X-Forefront-PRVS: 03607C04F0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4063.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(366004)(346002)(376002)(39850400004)(396003)(7696005)(8676002)(1076003)(16526019)(186003)(5660300002)(86362001)(4326008)(66574012)(52116002)(478600001)(66946007)(66476007)(54906003)(36756003)(8936002)(316002)(81156014)(6486002)(2906002)(66556008)(107886003)(81166006)(2616005);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: silabs.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KPgPMW7QC/X9UXQ5QF5Mc6H0uFKZs99yEaRKvfc5SaGR5rbgFEykn/7/8P4B5Qb2n9pEXEBlls1/NdhaDLyDHlCPL/r6SyIkg1SczLV2KcSl62N3RrMHqDGbCHHsUvCsFCI8sFcIBQaQP25Yfz9/6rTwb0f6h0bCwbuHae5P3w5nuIeuXfHR96+LfZtIhJ1sPsSqi4oQuQP0Y1HjOc3JYHGOPz0JTp7PqpVJSuNn+AQa42c7MDh5NYyB0WKhDcNzYiOauWHKbWCk5TscHLssoXIgPNA1oFvr9vVGpQvPygCXSNR3Ga1e3m1RCo+GVDIjBRm4FBTMNgKKvAfOLTXr5Kb652x1RfGc8QNQgjwT9Bi/wxO2dISDWL+78R8Uusm0wLKpdCR6kpmq00hRkfwe35Ir/a7S4V333ouCryOLOpnwUG9lXQG2TaKznosSfYw+
-X-MS-Exchange-AntiSpam-MessageData: jOB+flDVkLIzuFuEJkZAvwjzoq3vsb3gGI1FRPUv0qAZ37+LE89JVS2ljsYC3rQG0X95QpKwyBBra9pUT0Ow3rdsN06ffEMbvc3LQC9UqTTZDOvAnOUrKxnem+O1vY9zlqNJKN3nAQfoL7OkqpbfR5/BAalStn65BAeZsVY2FOYT8zXVPSmNAQ1qlnt6kdHgKcoKDkhXLU+VR96AF3lFsQ==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9415d82-8b5a-4082-742f-08d7d62c7f6a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2020 11:04:50.3051
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q/DfLUB9YtTtRUfpAjg3Hjw10HsYiWHvRLX0aO0eF4AO+dU+XZ8TMOskyHH1IeYeDjTERB20O4jobIEh6X6/YQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4285
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401100029.1445-4-john.mathew@unikie.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKRHJp
-dmVyIGRvZXMgbm90IHVzZSBsaW5rX21hcF9jYWNoZSBhbnltb3JlLiBTbyB3ZSBjYW4gZHJvcCBp
-dC4gSW4gYWRkLAp3ZSBkbyBub3QgaGF2ZSB0byBrZWVwIHRoaXMgY291bnRlciBpbiBzeW5jIHdp
-dGggc2tiX3F1ZXVlIGl0ZW0sIHNvIHdlCmNhbiBkcm9wIGV4cGxpY2l0IHNwaW5fbG9ja3MuCgpT
-aWduZWQtb2ZmLWJ5OiBKw6lyw7RtZSBQb3VpbGxlciA8amVyb21lLnBvdWlsbGVyQHNpbGFicy5j
-b20+Ci0tLQogZHJpdmVycy9zdGFnaW5nL3dmeC9xdWV1ZS5jIHwgNjAgKysrKysrKystLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9zdGFnaW5nL3dmeC9xdWV1ZS5oIHwgIDMg
-LS0KIDIgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNTEgZGVsZXRpb25zKC0pCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9xdWV1ZS5jIGIvZHJpdmVycy9zdGFnaW5n
-L3dmeC9xdWV1ZS5jCmluZGV4IDZmYThmNGUwODNkMy4uODJjMjc4MWIxZjc4IDEwMDY0NAotLS0g
-YS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3F1ZXVlLmMKKysrIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9x
-dWV1ZS5jCkBAIC05NCwyMCArOTQsMTAgQEAgdm9pZCB3ZnhfdHhfcXVldWVzX3dhaXRfZW1wdHlf
-dmlmKHN0cnVjdCB3ZnhfdmlmICp3dmlmKQogc3RhdGljIHZvaWQgd2Z4X3R4X3F1ZXVlX2NsZWFy
-KHN0cnVjdCB3ZnhfZGV2ICp3ZGV2LCBzdHJ1Y3Qgd2Z4X3F1ZXVlICpxdWV1ZSwKIAkJCSAgICAg
-ICBzdHJ1Y3Qgc2tfYnVmZl9oZWFkICpnY19saXN0KQogewotCWludCBpOwogCXN0cnVjdCBza19i
-dWZmICppdGVtOwotCXN0cnVjdCB3ZnhfcXVldWVfc3RhdHMgKnN0YXRzID0gJndkZXYtPnR4X3F1
-ZXVlX3N0YXRzOwogCi0Jc3Bpbl9sb2NrX2JoKCZxdWV1ZS0+cXVldWUubG9jayk7Ci0Jd2hpbGUg
-KChpdGVtID0gX19za2JfZGVxdWV1ZSgmcXVldWUtPnF1ZXVlKSkgIT0gTlVMTCkKKwl3aGlsZSAo
-KGl0ZW0gPSBza2JfZGVxdWV1ZSgmcXVldWUtPnF1ZXVlKSkgIT0gTlVMTCkKIAkJc2tiX3F1ZXVl
-X2hlYWQoZ2NfbGlzdCwgaXRlbSk7Ci0Jc3Bpbl9sb2NrX25lc3RlZCgmc3RhdHMtPnBlbmRpbmcu
-bG9jaywgMSk7Ci0JZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoc3RhdHMtPmxpbmtfbWFwX2Nh
-Y2hlKTsgKytpKSB7Ci0JCXN0YXRzLT5saW5rX21hcF9jYWNoZVtpXSAtPSBxdWV1ZS0+bGlua19t
-YXBfY2FjaGVbaV07Ci0JCXF1ZXVlLT5saW5rX21hcF9jYWNoZVtpXSA9IDA7Ci0JfQotCXNwaW5f
-dW5sb2NrKCZzdGF0cy0+cGVuZGluZy5sb2NrKTsKLQlzcGluX3VubG9ja19iaCgmcXVldWUtPnF1
-ZXVlLmxvY2spOwogfQogCiB2b2lkIHdmeF90eF9xdWV1ZXNfY2xlYXIoc3RydWN0IHdmeF9kZXYg
-KndkZXYpCkBAIC0xNjMsMjggKzE1MywxNSBAQCBpbnQgd2Z4X3R4X3F1ZXVlX2dldF9udW1fcXVl
-dWVkKHN0cnVjdCB3ZnhfcXVldWUgKnF1ZXVlKQogdm9pZCB3ZnhfdHhfcXVldWVfcHV0KHN0cnVj
-dCB3ZnhfZGV2ICp3ZGV2LCBzdHJ1Y3Qgd2Z4X3F1ZXVlICpxdWV1ZSwKIAkJICAgICAgc3RydWN0
-IHNrX2J1ZmYgKnNrYikKIHsKLQlzdHJ1Y3Qgd2Z4X3F1ZXVlX3N0YXRzICpzdGF0cyA9ICZ3ZGV2
-LT50eF9xdWV1ZV9zdGF0czsKLQlzdHJ1Y3Qgd2Z4X3R4X3ByaXYgKnR4X3ByaXYgPSB3Znhfc2ti
-X3R4X3ByaXYoc2tiKTsKLQotCVdBUk4odHhfcHJpdi0+bGlua19pZCA+PSBBUlJBWV9TSVpFKHN0
-YXRzLT5saW5rX21hcF9jYWNoZSksICJpbnZhbGlkIGxpbmstaWQgdmFsdWUiKTsKLQlzcGluX2xv
-Y2tfYmgoJnF1ZXVlLT5xdWV1ZS5sb2NrKTsKLQlfX3NrYl9xdWV1ZV90YWlsKCZxdWV1ZS0+cXVl
-dWUsIHNrYik7Ci0KLQkrK3F1ZXVlLT5saW5rX21hcF9jYWNoZVt0eF9wcml2LT5saW5rX2lkXTsK
-LQotCXNwaW5fbG9ja19uZXN0ZWQoJnN0YXRzLT5wZW5kaW5nLmxvY2ssIDEpOwotCSsrc3RhdHMt
-PmxpbmtfbWFwX2NhY2hlW3R4X3ByaXYtPmxpbmtfaWRdOwotCXNwaW5fdW5sb2NrKCZzdGF0cy0+
-cGVuZGluZy5sb2NrKTsKLQlzcGluX3VubG9ja19iaCgmcXVldWUtPnF1ZXVlLmxvY2spOworCXNr
-Yl9xdWV1ZV90YWlsKCZxdWV1ZS0+cXVldWUsIHNrYik7CiB9CiAKIHN0YXRpYyBzdHJ1Y3Qgc2tf
-YnVmZiAqd2Z4X3R4X3F1ZXVlX2dldChzdHJ1Y3Qgd2Z4X2RldiAqd2RldiwKIAkJCQkJc3RydWN0
-IHdmeF9xdWV1ZSAqcXVldWUsCiAJCQkJCXUzMiBsaW5rX2lkX21hcCkKIHsKLQlzdHJ1Y3Qgc2tf
-YnVmZiAqc2tiID0gTlVMTDsKLQlzdHJ1Y3Qgc2tfYnVmZiAqaXRlbTsKIAlzdHJ1Y3Qgd2Z4X3F1
-ZXVlX3N0YXRzICpzdGF0cyA9ICZ3ZGV2LT50eF9xdWV1ZV9zdGF0czsKKwlzdHJ1Y3Qgc2tfYnVm
-ZiAqaXRlbSwgKnNrYiA9IE5VTEw7CiAJc3RydWN0IHdmeF90eF9wcml2ICp0eF9wcml2OwogCiAJ
-c3Bpbl9sb2NrX2JoKCZxdWV1ZS0+cXVldWUubG9jayk7CkBAIC0xOTUsMzkgKzE3MiwyOCBAQCBz
-dGF0aWMgc3RydWN0IHNrX2J1ZmYgKndmeF90eF9xdWV1ZV9nZXQoc3RydWN0IHdmeF9kZXYgKndk
-ZXYsCiAJCQlicmVhazsKIAkJfQogCX0KKwlzcGluX3VubG9ja19iaCgmcXVldWUtPnF1ZXVlLmxv
-Y2spOwogCWlmIChza2IpIHsKKwkJc2tiX3VubGluayhza2IsICZxdWV1ZS0+cXVldWUpOwogCQl0
-eF9wcml2ID0gd2Z4X3NrYl90eF9wcml2KHNrYik7CiAJCXR4X3ByaXYtPnhtaXRfdGltZXN0YW1w
-ID0ga3RpbWVfZ2V0KCk7Ci0JCV9fc2tiX3VubGluayhza2IsICZxdWV1ZS0+cXVldWUpOwotCQkt
-LXF1ZXVlLT5saW5rX21hcF9jYWNoZVt0eF9wcml2LT5saW5rX2lkXTsKLQotCQlzcGluX2xvY2tf
-bmVzdGVkKCZzdGF0cy0+cGVuZGluZy5sb2NrLCAxKTsKLQkJX19za2JfcXVldWVfdGFpbCgmc3Rh
-dHMtPnBlbmRpbmcsIHNrYik7Ci0JCS0tc3RhdHMtPmxpbmtfbWFwX2NhY2hlW3R4X3ByaXYtPmxp
-bmtfaWRdOwotCQlzcGluX3VubG9jaygmc3RhdHMtPnBlbmRpbmcubG9jayk7CisJCXNrYl9xdWV1
-ZV90YWlsKCZzdGF0cy0+cGVuZGluZywgc2tiKTsKKwkJaWYgKHNrYl9xdWV1ZV9lbXB0eSgmcXVl
-dWUtPnF1ZXVlKSkKKwkJCXdha2VfdXAoJnN0YXRzLT53YWl0X2xpbmtfaWRfZW1wdHkpOworCQly
-ZXR1cm4gc2tiOwogCX0KLQlzcGluX3VubG9ja19iaCgmcXVldWUtPnF1ZXVlLmxvY2spOwotCWlm
-IChza2JfcXVldWVfZW1wdHkoJnF1ZXVlLT5xdWV1ZSkpCi0JCXdha2VfdXAoJnN0YXRzLT53YWl0
-X2xpbmtfaWRfZW1wdHkpOwogCXJldHVybiBza2I7CiB9CiAKIGludCB3ZnhfcGVuZGluZ19yZXF1
-ZXVlKHN0cnVjdCB3ZnhfZGV2ICp3ZGV2LCBzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQogewogCXN0cnVj
-dCB3ZnhfcXVldWVfc3RhdHMgKnN0YXRzID0gJndkZXYtPnR4X3F1ZXVlX3N0YXRzOwotCXN0cnVj
-dCB3ZnhfdHhfcHJpdiAqdHhfcHJpdiA9IHdmeF9za2JfdHhfcHJpdihza2IpOwogCXN0cnVjdCB3
-ZnhfcXVldWUgKnF1ZXVlID0gJndkZXYtPnR4X3F1ZXVlW3NrYl9nZXRfcXVldWVfbWFwcGluZyhz
-a2IpXTsKIAogCVdBUk5fT04oc2tiX2dldF9xdWV1ZV9tYXBwaW5nKHNrYikgPiAzKTsKLQlzcGlu
-X2xvY2tfYmgoJnF1ZXVlLT5xdWV1ZS5sb2NrKTsKLQkrK3F1ZXVlLT5saW5rX21hcF9jYWNoZVt0
-eF9wcml2LT5saW5rX2lkXTsKIAotCXNwaW5fbG9ja19uZXN0ZWQoJnN0YXRzLT5wZW5kaW5nLmxv
-Y2ssIDEpOwotCSsrc3RhdHMtPmxpbmtfbWFwX2NhY2hlW3R4X3ByaXYtPmxpbmtfaWRdOwotCV9f
-c2tiX3VubGluayhza2IsICZzdGF0cy0+cGVuZGluZyk7Ci0Jc3Bpbl91bmxvY2soJnN0YXRzLT5w
-ZW5kaW5nLmxvY2spOwotCV9fc2tiX3F1ZXVlX3RhaWwoJnF1ZXVlLT5xdWV1ZSwgc2tiKTsKLQlz
-cGluX3VubG9ja19iaCgmcXVldWUtPnF1ZXVlLmxvY2spOworCXNrYl91bmxpbmsoc2tiLCAmc3Rh
-dHMtPnBlbmRpbmcpOworCXNrYl9xdWV1ZV90YWlsKCZxdWV1ZS0+cXVldWUsIHNrYik7CiAJcmV0
-dXJuIDA7CiB9CiAKQEAgLTIzNSw5ICsyMDEsNyBAQCBpbnQgd2Z4X3BlbmRpbmdfcmVtb3ZlKHN0
-cnVjdCB3ZnhfZGV2ICp3ZGV2LCBzdHJ1Y3Qgc2tfYnVmZiAqc2tiKQogewogCXN0cnVjdCB3Znhf
-cXVldWVfc3RhdHMgKnN0YXRzID0gJndkZXYtPnR4X3F1ZXVlX3N0YXRzOwogCi0Jc3Bpbl9sb2Nr
-X2JoKCZzdGF0cy0+cGVuZGluZy5sb2NrKTsKLQlfX3NrYl91bmxpbmsoc2tiLCAmc3RhdHMtPnBl
-bmRpbmcpOwotCXNwaW5fdW5sb2NrX2JoKCZzdGF0cy0+cGVuZGluZy5sb2NrKTsKKwlza2JfdW5s
-aW5rKHNrYiwgJnN0YXRzLT5wZW5kaW5nKTsKIAl3Znhfc2tiX2R0b3Iod2Rldiwgc2tiKTsKIAog
-CXJldHVybiAwOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zdGFnaW5nL3dmeC9xdWV1ZS5oIGIvZHJp
-dmVycy9zdGFnaW5nL3dmeC9xdWV1ZS5oCmluZGV4IDU4ZGEyMTZkNDdkZC4uZGQxNDFjYjRiZjYz
-IDEwMDY0NAotLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L3F1ZXVlLmgKKysrIGIvZHJpdmVycy9z
-dGFnaW5nL3dmeC9xdWV1ZS5oCkBAIC0xNiwxOCArMTYsMTUgQEAKICNkZWZpbmUgV0ZYX0xJTktf
-SURfTk9fQVNTT0MgICAgICAxNQogI2RlZmluZSBXRlhfTElOS19JRF9BRlRFUl9EVElNICAgIChX
-RlhfTElOS19JRF9OT19BU1NPQyArIDEpCiAjZGVmaW5lIFdGWF9MSU5LX0lEX1VBUFNEICAgICAg
-ICAgKFdGWF9MSU5LX0lEX05PX0FTU09DICsgMikKLSNkZWZpbmUgV0ZYX0xJTktfSURfTUFYICAg
-ICAgICAgICAoV0ZYX0xJTktfSURfTk9fQVNTT0MgKyAzKQogCiBzdHJ1Y3Qgd2Z4X2RldjsKIHN0
-cnVjdCB3ZnhfdmlmOwogCiBzdHJ1Y3Qgd2Z4X3F1ZXVlIHsKIAlzdHJ1Y3Qgc2tfYnVmZl9oZWFk
-CXF1ZXVlOwotCWludAkJCWxpbmtfbWFwX2NhY2hlW1dGWF9MSU5LX0lEX01BWF07CiB9OwogCiBz
-dHJ1Y3Qgd2Z4X3F1ZXVlX3N0YXRzIHsKLQlpbnQJCQlsaW5rX21hcF9jYWNoZVtXRlhfTElOS19J
-RF9NQVhdOwogCXN0cnVjdCBza19idWZmX2hlYWQJcGVuZGluZzsKIAl3YWl0X3F1ZXVlX2hlYWRf
-dAl3YWl0X2xpbmtfaWRfZW1wdHk7CiB9OwotLSAKMi4yNS4xCgo=
+On Wed, Apr 01, 2020 at 01:00:29PM +0300, John Mathew wrote:
+> +Context switching, the switching from a running task to another, is handled by
+> +the :c:func:`context_switch()` function defined in kernel/sched.c . It is called
+
+Per my insitent complaints, :c:func: is now completely redundant,
+anything with '()' on is now automagically treated as a function name.
+
+If it's not readable in a text editor, it's broken.
+
+> +by __schedule() when a new process has been selected to run.
+> +
+> + The execution flow is as follows:
+> +
+> +* Calls prepare_task_switch() to prepare both previous and new task by
+> +  storing or changing some values in their task_struct.
+
+This is wildly inacurate. Take for instance perf_event_task_sched_out(),
+that doesn't just store or change a few values.
+
+> +* Calls macro :c:macro:`arch_start_context_switch()`
+> +  A facility to provide batching of the reload of page tables and  other process
+> +  state with the actual context switch code for  paravirtualized guests.  By
+> +  convention, only one of the batched  update (lazy) modes (CPU, MMU) should be
+> +  active at any given time,  entry should never be nested, and entry and exits
+> +  should always be  paired. This is for sanity of maintaining and reasoning about
+> +  the kernel code.  In this case, the exit (end of the context switch) is  in
+> +  architecture-specific code, and so doesn't need a generic definition.
+> +
+> +
+> +* The next few steps consists of handling the transfer of real and anonymous
+> +  address spaces between the switching tasks.  Four possible context switches are
+> +
+> +  - kernel task switching to another kernel task.
+> +  - user task switching to a kernel task.
+> +  - kernel task switching to user task,
+> +  - user task switching to  user task.
+> +
+> +For a kernel task switching to kernel task :c:func:`enter_lazy_tlb()` is called
+> +which is an architecture specific implementation to handle a context without an
+> +mm. Architectures implement lazy tricks to minimize tlb flushes here.
+> +Then the active address space from the previous task is borrowed (transferred)
+> +to the next task. The active address space of the previous task is set to NULL.
+> +
+> +For a user task switching to kernel task it will have a real address space. This
+> +address space is pinned by calling :c:func:`mmgrab()` . This makes sure that the
+> +address space will not get freed even after the previous task exits.
+> +
+> +For a user task switching to user task the architecture specific
+> +:c:func:`switch_mm_irqs_off()` or :c:func:`switch_mm()` functions. The main
+> +functionality of this calls is to switch the address space between the
+> +user space processes. This includes switching the page table pointers and
+> +ensuring that the new address space has a valid ASID.
+
+That's worded a bit odd; you need an ASID allocated to a process in
+order for it to have an active address space.
+
+> +For a kernel task switching to a user task, the active address space of the
+> +kernel task is transferred to the user task and the active address space of the
+> +kernel task is set to NULL.
+
+That reads odd. The kernel to user transition switches away from
+whatever address space the kernel task borrowed and to the address space
+of the user task (of course hoping they're the same).
+
+But we don't transfer anything to the user task, particularly kernel
+threads don't have an address space to give.
+
+> +
+> +* Next the  :c:func:`prepare_lock_switch()` function is called for a lockdep
+> +  release of the runqueue lock to handle the special case of the scheduler in which
+> +  the runqueue lock will be released by the next task.
+> +
+> +* Then the architecture specific implementation of the :c:func:`switch_to()`
+> +  function is called to switch the register state and the stack. This involves
+> +  saving and restoring stack information and the processor registers and any other
+> +  architecture-specific state that must be managed and restored on a per-process
+> +  basis.
+> +
+> +* Calls finish_task_switch()  must be called after the context switch,
+> +  paired with a prepare_task_switch() call before the context switch.It will
+> +  reconcile locking set up by prepare_task_switch, and do any other
+> +  architecture-specific cleanup actions.
+
+You spend a lot of words on the prepare, but then ignore most of the
+finish_task_switch() magic. That seems unbalanced.
+
+> diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/index.rst
+> index 9772cf81fd96..289e06a68764 100644
+> --- a/Documentation/scheduler/index.rst
+> +++ b/Documentation/scheduler/index.rst
+
+> +MIPS Context Switch
+> +-------------------
+> +
+> +Context switch behavior specific to MIPS begins in the way :c:macro:`switch_to()`
+> +macro is implemented. The main steps in the MIPS implementation of the macro are:
+> +
+> +* Handle the FPU affinity management feature . This feature is enabled by the
+> +  :c:macro:`CONFIG_MIPS_MT_FPAFF` at build time The macro checks if the FPU was
+> +  used in the most recent time slice. In case FPU was not used, the restriction of
+> +  having to run on a cpu with FPU is removed.
+
+Last time I looked at that gunk it was broken, presumably it still is.
+In particular it is racy against userspace changing task affinity
+itself.
+
+> +* For the previous task, disable the fpu and clear the bit indicating the FPU was
+> +  used in this quantum for the task.
+> +* If fpu is enabled in the next task, check FCSR for any unmasked exceptions
+> +  pending, clear them and send a signal.
+> +* if MIPS DSP modules is enabled, save the dsp context of the previous task and
+> +  restore the dsp context of the next task.
+> +* If coprocessor 2 is present set the access allowed field of the coprocessor 2.
+> +* if coprocessor 2 access allowed field was set in previous task, clear it.
+> +* clear the the access allowed field of the coprocessor 2.
+> +* clear the llbit on MIPS release 6 such that instruction eretnc can be used
+> +  unconditionally when returning to userland in entry.S. LLbit is used to specify
+> +  operation for instructions that provide atomic read-modify-write. LLbit is set
+> +  when a linked load occurs and is tested by the conditional store. It is cleared,
+> +  during other CPU operation, when a store to the location would no longer be
+> +  atomic. In particular, it is cleared by exception return instructions.
+> +  eretnc instruction enables to return from interrupt, exception, or error trap
+> +  without clearing the LLbit.
+> +* clear the global variable ll_bit used by mips exception handler.
+> +* write the thread pointer to the mips userlocal register if the cpu supports
+> +  this feature. This register is not interpreted by hardware and can be used to
+> +  share data between privileged and unprivileged software.
+> +* if hardware watchpoint feature is enabled during build the watchpoint registers
+> +  are restored from the next task.
+> +* Finally the mips processor specific implementation of the :c:func:`resume()`
+> +  function is called. It restores the registers of the next task including the
+> +  stack pointer. The implementation is in assembly::
+> +
+> +    arch/mips/kernel/r4k_switch.S
+
+There's also octeon_switch.S r2300_switch.S
+
+> diff --git a/Documentation/scheduler/x86-context-switch.rst b/Documentation/scheduler/x86-context-switch.rst
+> new file mode 100644
+> index 000000000000..ae7b2e09453a
+> --- /dev/null
+> +++ b/Documentation/scheduler/x86-context-switch.rst
+> @@ -0,0 +1,59 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
+> +
+> +X86 Context Switch
+> +------------------
+> +
+> +The x86 architecture context switching logic is as follows.
+> +After the switching of MM in the scheduler :c:func:`context_switch()` the call
+> +to the x86 implementation of :c:macro:`switch_to()`
+> +is made.  For x86 arch it is located at ::
+> +
+> +    arch/x86/include/asm/switch_to.h
+> +
+> +Since 4.9, switch_to() has been broken in to two parts: a :c:func:`prepare_switch_to()`
+> +macro and the inline assembly portion of has been moved to an actual assembly
+> +file ::
+> +
+> +    arch/x86/entry/entry_64.S
+
+and entry_32.S
+
+Although I suspect it will soon move to another file... it has no
+business being in .entry.text
+
+> +
+> +* There is still a C portion of the switch which occurs via a jump in the middle
+> +  of the assembly code. The source is located in arch/x86/kernel/process_64.c
+> +  since 2.6.24
+
+Uhm what? afaict there is no jmp in the middle. There is a jump at the
+end, which is a tail-call optimization.
+
+> +The main function of the prepare_switch_to() is to handle the case when stack
+> +uses virtual memory. This is configured at build time and is mostly enable in
+> +most modern distributions. This function accesses the stack pointer to prevent a
+> +double fault.Switching to a stack that has top-level paging entry that is not
+> +present in the current MM will result in a page fault which will be promoted to
+> +double fault and the result is a panic. So it is necessary to probe the stack now
+> +so that the vmalloc_fault can fix the page tables.
+> +
+> +The main steps of the inline assembly function __switch_to_asm() are:
+> +
+> +* store the callee saved registers to the old stack which will be switched away from.
+> +* swaps the stack pointers between the old and the new task.
+> +* move the stack canary value to the current cpu's interrupt stack.
+> +* if return trampoline is enabled, overwrite all entries in the RSB on exiting
+> +  a guest, to prevent malicious branch target predictions from affecting the host
+> +  kernel.
+> +* restore all registers from the new stack previously pushed in reverse order.
+> +
+> +The main steps of the c function :c:func:`__switch_to()` which the assembly code
+> +jumps to is as follows:
+
+Note that this is effectively the new task running.
+
+> +* retrieve the thread :c:type:`struct thread_struct <thread_struct>` and fpu
+> +  :c:type:`struct fpu <fpu>` structs from the next and previous tasks.
+> +* gets the current cpu TSS :c:type:`struct tss_struct <tss_struct>`
+> +* save the current FPU state while on the old task.
+> +* store the FS and GS segment registers before changing the thread local storage.
+> +* reload the GDT for the new tasks TLS.
+
+You mentioned arch_start_context_switch() previously, this is where
+arch_end_context_switch() lives.
+
+> +* save the ES and DS segments of the previous task and load the same from the
+> +  nest task.
+> +* load the FS and GS segment registers.
+> +* update the current task of the cpu.
+> +* update the top of stack pointer for the CPU for entry trampoline.
+> +* initialize FPU state for next task.
+> +* set sp0 to point to the entry trampoline stack.
+> +* call :c:func:`_switch_to_xtra()` to  handles debug registers, i/o bitmaps and
+> +  speculation mitigation.
+> +* Writes the task's CLOSid/RMID to IA32_PQR_MSR.
