@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCDCC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1CCC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D622137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7637D20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758783;
-	bh=ghDfLd7SVVS3Vf39RZ3MLTXeN9O5LKa3h+M3tjtUbtI=;
+	s=default; t=1585758786;
+	bh=PIrfnSuER25OZ9F/dfyzhTcX/5FOxYCwiej3kBYp+W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P+iFOxNQ6VNMcLEGlCXz9tDD8M9pPDkUvAtZF9gozg+AIqY5/PDM0KT6+b6iLzHYs
-	 aJHl1ITxc08GbG2XbcjRtR4n9SzIk0kxipQQYh3uA9puH9BynGscU866onU1gtHYrb
-	 s5QFsfdk0UMmRDDP5PsMC4Z5Pys2wMJ5bGp49BQQ=
+	b=zu+Dq5iYo8sN8vKpKgfgMnE75+tNCy2ja0BHCEzI1B6HLFDWy6IjjikF6xfqVS4jg
+	 WmNijTkdsMS7hSkLh8xFvyNBFIfYnyo0kdtxkqdx2ELPMC1bd+IMa1VCHyI8ucN8q2
+	 aA6HvG/RqZDcCfewOQv3stIvd7Gvfn/SFdfoG9ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388486AbgDAQdC (ORCPT
+        id S2388495AbgDAQdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59438 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:33:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732540AbgDAQc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:32:57 -0400
+        id S2388479AbgDAQdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:33:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A8120658;
-        Wed,  1 Apr 2020 16:32:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6A9E20658;
+        Wed,  1 Apr 2020 16:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758777;
-        bh=ghDfLd7SVVS3Vf39RZ3MLTXeN9O5LKa3h+M3tjtUbtI=;
+        s=default; t=1585758781;
+        bh=PIrfnSuER25OZ9F/dfyzhTcX/5FOxYCwiej3kBYp+W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLn7O2BmmJspylgr3Bt7qcnU8BEPKHnTMw79KV3+agRIH0U1MGGAXbYnUFkKtG5ea
-         thNvmhxUVqa/dIfdRHWkynUjBPpjCxveFwvVkPSKSFIZSwliVypdRILG98ZmCJpnLL
-         3E9anWjcBvAqYwNxIUbaKxGbtTIXweenVxBAvDW8=
+        b=WtM6x3WRXciJ9e8TrZ1HcAWPPoI7B1pihvd+oPQ3vCJ1s2QC+te3fNF2lr8PlEZuw
+         0OmWeiieZd+oueUpBjv1EEpCebgJ/bzSyISJeHEaJzzY8mliySbKgnfg1xr06sFHah
+         rrEA6H8LnhfCg3nDlp/85ku2xK+dJFlj1mhexvEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Johan Hovold <johan@kernel.org>, Sean Young <sean@mess.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.4 73/91] media: flexcop-usb: fix endpoint sanity check
-Date:   Wed,  1 Apr 2020 18:18:09 +0200
-Message-Id: <20200401161537.231970310@linuxfoundation.org>
+Subject: [PATCH 4.4 74/91] media: usbtv: fix control-message timeouts
+Date:   Wed,  1 Apr 2020 18:18:10 +0200
+Message-Id: <20200401161537.373852922@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -62,48 +63,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit bca243b1ce0e46be26f7c63b5591dfbb41f558e5 upstream.
+commit 536f561d871c5781bc33d26d415685211b94032e upstream.
 
-commit 1b976fc6d684 ("media: b2c2-flexcop-usb: add sanity checking") added
-an endpoint sanity check to address a NULL-pointer dereference on probe.
-Unfortunately the check was done on the current altsetting which was later
-changed.
+The driver was issuing synchronous uninterruptible control requests
+without using a timeout. This could lead to the driver hanging on
+various user requests due to a malfunctioning (or malicious) device
+until the device is physically disconnected.
 
-Fix this by moving the sanity check to after the altsetting is changed.
+The USB upper limit of five seconds per request should be more than
+enough.
 
-Fixes: 1b976fc6d684 ("media: b2c2-flexcop-usb: add sanity checking")
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
+Fixes: f3d27f34fdd7 ("[media] usbtv: Add driver for Fushicai USBTV007 video frame grabber")
+Fixes: c53a846c48f2 ("[media] usbtv: add video controls")
+Cc: stable <stable@vger.kernel.org>     # 3.11
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sean Young <sean@mess.org>
+Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/media/usb/usbtv/usbtv-core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -481,6 +481,9 @@ static int flexcop_usb_init(struct flexc
- 		return ret;
+--- a/drivers/media/usb/usbtv/usbtv-core.c
++++ b/drivers/media/usb/usbtv/usbtv-core.c
+@@ -42,7 +42,7 @@ int usbtv_set_regs(struct usbtv *usbtv,
+ 
+ 		ret = usb_control_msg(usbtv->udev, pipe, USBTV_REQUEST_REG,
+ 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+-			value, index, NULL, 0, 0);
++			value, index, NULL, 0, USB_CTRL_GET_TIMEOUT);
+ 		if (ret < 0)
+ 			return ret;
  	}
- 
-+	if (fc_usb->uintf->cur_altsetting->desc.bNumEndpoints < 1)
-+		return -ENODEV;
-+
- 	switch (fc_usb->udev->speed) {
- 	case USB_SPEED_LOW:
- 		err("cannot handle USB speed because it is too slow.");
-@@ -514,9 +517,6 @@ static int flexcop_usb_probe(struct usb_
- 	struct flexcop_device *fc = NULL;
- 	int ret;
- 
--	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
--		return -ENODEV;
--
- 	if ((fc = flexcop_device_kmalloc(sizeof(struct flexcop_usb))) == NULL) {
- 		err("out of memory\n");
- 		return -ENOMEM;
 
 
