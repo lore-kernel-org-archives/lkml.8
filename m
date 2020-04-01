@@ -2,206 +2,115 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAEAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E75C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673EA2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDF92078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LZuLWFL/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S3CneriJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732247AbgDAKiY (ORCPT
+        id S1731951AbgDAKkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:38:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33759 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727421AbgDAKiX (ORCPT
+        Wed, 1 Apr 2020 06:40:51 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:32889 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgDAKkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:38:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585737502;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vpcr33T8rdYuLn7vVzEewQplJUG3Jh5i1Ca9l3KT2Kg=;
-        b=LZuLWFL/Zr0jYwmvMyUHbZ2lmgCmKfwwplJCdQnK4akIsjLlBAcxenSRKCJl7YaZvQBj8U
-        vBBd0ho0zuysyulQVj/OFbrlMWSdyUpAh6AyGN5fZDGt3eVYh04SZYidzaYl6YA486fo1Z
-        mKBipLdzKBFPs4LSZsoJm5u9m3YTeFg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-F3T0KuNqOJiz55ZE713N8Q-1; Wed, 01 Apr 2020 06:38:21 -0400
-X-MC-Unique: F3T0KuNqOJiz55ZE713N8Q-1
-Received: by mail-wr1-f69.google.com with SMTP id v14so14382716wrq.13
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 03:38:21 -0700 (PDT)
+        Wed, 1 Apr 2020 06:40:51 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d17so11937339pgo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 03:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HA+H7swzhefkPfk6R1gtpHINU9Ey2LI3psCTRPqaPR0=;
+        b=S3CneriJLVSt5R+rdBCFatEshwxsVhUhuAHdGmTBJ7WSS1EL5SCBmF84JBC4+JsGjp
+         WgvJB2p53uGo2uTxl8omyZ6lZKT4hivBCEfIdoWXi2q4WpA7x3r70EkBkLGozbU+uMv7
+         1Xbw1ywiMnR64mg26HKJmvU97vZOFEq61bvMBwmmcR7uy0XdIRrCEEraog4Mc7nbgTxL
+         MrEjo+JN7uJyNdPB+Ahv6sGMc1/IvXIpoGAUaV3aFihi6W/DwHwLAJBnCZwcZ7Iu+6OQ
+         JdSqXkNI1a0407mRqt/aqmrat+LiM8HXj35CJjADPUclaAkY9IiXlTQdrafXbYQosNP1
+         wU0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vpcr33T8rdYuLn7vVzEewQplJUG3Jh5i1Ca9l3KT2Kg=;
-        b=tDZIl4AbRIcBeoN2ZBCqWvC/6360I7Blfl5JHaeNKiHY4G9toLJoet0AOO1txZOkd/
-         JzGbHgwuMJzirCoHFqM3c45yUorsZFapsUQOJJn+C2PH6acSxvU+cw63/grp7FpetzB7
-         GFAM9GqivJSHZG9DmpJn5wqdCVu6YO/ZhQhCscWZtLSxjYA7EJEKaxRN8jK2mWEG5QoU
-         wKDDAuSswhIrdsvnF2H3WCqWibcKnRLBEJdx2FAPTxxOYyN1H8X2sdSfYb4pvlamL7Zn
-         36pBn0x0INqwa9y+J3KlGd53g76imyL1Nlorhs3ykM7XXEgsCDORur5NvVO9unma5KHV
-         rdyQ==
-X-Gm-Message-State: AGi0PubA3Vb594pvCdPD6Qs8pou9JnzQOfksRfwGp4lt/DQ9Zog8gCGq
-        d9HoL8OAmjVjN/wJtvmPpSM+ip2nFeAjCm7S0OK9SHB3qJmYhAZn9kB7EPR+DNBxJVymhUFR60k
-        tAiH0qc4ypR2NpdQmwd7Kudqf
-X-Received: by 2002:a05:600c:21cb:: with SMTP id x11mr3717528wmj.111.1585737500058;
-        Wed, 01 Apr 2020 03:38:20 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI/09ZQOILsbUwfjHlQ3v4i++kt+2dY6I43iMSQ0EpaGIW2mCXDIifdbXrY1VDgOjIo1mV74A==
-X-Received: by 2002:a05:600c:21cb:: with SMTP id x11mr3717508wmj.111.1585737499794;
-        Wed, 01 Apr 2020 03:38:19 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id r3sm2380098wrm.35.2020.04.01.03.38.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 03:38:19 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH 5/5] Drivers: hv: check VMBus messages lengths
-Date:   Wed,  1 Apr 2020 12:38:16 +0200
-Message-Id: <20200401103816.1406642-2-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200401103816.1406642-1-vkuznets@redhat.com>
-References: <20200401103638.1406431-1-vkuznets@redhat.com>
- <20200401103816.1406642-1-vkuznets@redhat.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HA+H7swzhefkPfk6R1gtpHINU9Ey2LI3psCTRPqaPR0=;
+        b=BIMNEfQSAcmHqQsMQ5+6Cq3v1TC/rHYF5R/Zi6wXc+bzcFOFnTIli3gOVS9Q1Hkido
+         DM/KAlAR/rjW8oa4e32M0IAgO2TuMxr0yHsZ+Yh74a4hWwLzSRLnh94Nvk5AL5P+t9qX
+         hNi086nCAvuwohfmpEf8VxyLXsePUbaKjHeBkRYxN1brChpfu10a10ZRY56h6y5pHX36
+         N9G62QuDuMhx4+IhumeORHqb7++XNlhNCBhVlk4nB7E8o85GVMr5sB1P4NbMh73UIWX1
+         bcd1ECWWh5BFMA55G0KkhoiFnAawVPRuiDhcoIEhrGL8YNnzoqB6EB2zQeY6LohuyjGP
+         G1pw==
+X-Gm-Message-State: ANhLgQ1S+w3ce9VbiZHmwkfKFt4wmbNDZWuQ+Od4iOErIW/K2QdFPv/Q
+        EY739/d6FUOh8MWo0/eEzVHI6w==
+X-Google-Smtp-Source: ADFU+vsmg7f+/yXDon1aHVn1vjyaqEQgtyF6ylBpqg7NrT+7Yr8EnfUJhrYGhh8W/xCpSwtIfWo6OA==
+X-Received: by 2002:a63:6346:: with SMTP id x67mr21515451pgb.67.1585737650080;
+        Wed, 01 Apr 2020 03:40:50 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id o5sm1141432pgm.70.2020.04.01.03.40.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 03:40:48 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 16:10:46 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [sched/fair] 3c29e651e1: hackbench.throughput -15.2% regression
+Message-ID: <20200401104046.5f3aou6fvyw4x3ej@vireshk-i7>
+References: <20200205122902.GL12867@shao2-debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205122902.GL12867@shao2-debian>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VMBus message handlers (channel_message_table) receive a pointer to
-'struct vmbus_channel_message_header' and cast it to a structure of their
-choice, which is sometimes longer than the header. We, however, don't check
-that the message is long enough so in case hypervisor screws up we'll be
-accessing memory beyond what was allocated for temporary buffer.
+Hi,
 
-Previously, we used to always allocate and copy 256 bytes from message page
-to temporary buffer but this is hardly better: in case the message is
-shorter than we expect we'll be trying to consume garbage as some real
-data and no memory guarding technique will be able to identify an issue.
+Sorry for getting back to this after a long time :(
 
-Introduce 'min_payload_len' to 'struct vmbus_channel_message_table_entry'
-and check against it in vmbus_on_msg_dpc(). Note, we can't require the
-exact length as new hypervisor versions may add extra fields to messages,
-we only check that the message is not shorter than we expect.
+On 05-02-20, 20:29, kernel test robot wrote:
+> Greeting,
+> 
+> FYI, we noticed a -15.2% regression of hackbench.throughput due to commit:
+> 
+> 
+> commit: 3c29e651e16dd3b3179cfb2d055ee9538e37515c ("sched/fair: Fall back to sched-idle CPU if idle CPU isn't found")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> in testcase: hackbench
+> on test machine: 16 threads Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz with 32G memory
+> with following parameters:
+> 
+> 	nr_threads: 100%
+> 	mode: threads
+> 	ipc: pipe
+> 	cpufreq_governor: performance
+> 	ucode: 0xca
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- drivers/hv/channel_mgmt.c | 54 ++++++++++++++++++++++-----------------
- drivers/hv/hyperv_vmbus.h |  1 +
- drivers/hv/vmbus_drv.c    |  6 +++++
- 3 files changed, 37 insertions(+), 24 deletions(-)
+I tried following command on my x86 box, skylake, 8 CPUs 
 
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index c6bcfee6ac99..d4ccc9b203fa 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -1329,30 +1329,36 @@ static void vmbus_onversion_response(
- /* Channel message dispatch table */
- const struct vmbus_channel_message_table_entry
- channel_message_table[CHANNELMSG_COUNT] = {
--	{ CHANNELMSG_INVALID,			0, NULL },
--	{ CHANNELMSG_OFFERCHANNEL,		0, vmbus_onoffer },
--	{ CHANNELMSG_RESCIND_CHANNELOFFER,	0, vmbus_onoffer_rescind },
--	{ CHANNELMSG_REQUESTOFFERS,		0, NULL },
--	{ CHANNELMSG_ALLOFFERS_DELIVERED,	1, vmbus_onoffers_delivered },
--	{ CHANNELMSG_OPENCHANNEL,		0, NULL },
--	{ CHANNELMSG_OPENCHANNEL_RESULT,	1, vmbus_onopen_result },
--	{ CHANNELMSG_CLOSECHANNEL,		0, NULL },
--	{ CHANNELMSG_GPADL_HEADER,		0, NULL },
--	{ CHANNELMSG_GPADL_BODY,		0, NULL },
--	{ CHANNELMSG_GPADL_CREATED,		1, vmbus_ongpadl_created },
--	{ CHANNELMSG_GPADL_TEARDOWN,		0, NULL },
--	{ CHANNELMSG_GPADL_TORNDOWN,		1, vmbus_ongpadl_torndown },
--	{ CHANNELMSG_RELID_RELEASED,		0, NULL },
--	{ CHANNELMSG_INITIATE_CONTACT,		0, NULL },
--	{ CHANNELMSG_VERSION_RESPONSE,		1, vmbus_onversion_response },
--	{ CHANNELMSG_UNLOAD,			0, NULL },
--	{ CHANNELMSG_UNLOAD_RESPONSE,		1, vmbus_unload_response },
--	{ CHANNELMSG_18,			0, NULL },
--	{ CHANNELMSG_19,			0, NULL },
--	{ CHANNELMSG_20,			0, NULL },
--	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL },
--	{ CHANNELMSG_22,			0, NULL },
--	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL },
-+	{ CHANNELMSG_INVALID,			0, NULL, 0},
-+	{ CHANNELMSG_OFFERCHANNEL,		0, vmbus_onoffer,
-+		sizeof(struct vmbus_channel_offer_channel)},
-+	{ CHANNELMSG_RESCIND_CHANNELOFFER,	0, vmbus_onoffer_rescind,
-+		sizeof(struct vmbus_channel_rescind_offer) },
-+	{ CHANNELMSG_REQUESTOFFERS,		0, NULL, 0},
-+	{ CHANNELMSG_ALLOFFERS_DELIVERED,	1, vmbus_onoffers_delivered, 0},
-+	{ CHANNELMSG_OPENCHANNEL,		0, NULL, 0},
-+	{ CHANNELMSG_OPENCHANNEL_RESULT,	1, vmbus_onopen_result,
-+		sizeof(struct vmbus_channel_open_result)},
-+	{ CHANNELMSG_CLOSECHANNEL,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_HEADER,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_BODY,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_CREATED,		1, vmbus_ongpadl_created,
-+		sizeof(struct vmbus_channel_gpadl_created)},
-+	{ CHANNELMSG_GPADL_TEARDOWN,		0, NULL, 0},
-+	{ CHANNELMSG_GPADL_TORNDOWN,		1, vmbus_ongpadl_torndown,
-+		sizeof(struct vmbus_channel_gpadl_torndown) },
-+	{ CHANNELMSG_RELID_RELEASED,		0, NULL, 0},
-+	{ CHANNELMSG_INITIATE_CONTACT,		0, NULL, 0},
-+	{ CHANNELMSG_VERSION_RESPONSE,		1, vmbus_onversion_response,
-+		sizeof(struct vmbus_channel_version_response)},
-+	{ CHANNELMSG_UNLOAD,			0, NULL, 0},
-+	{ CHANNELMSG_UNLOAD_RESPONSE,		1, vmbus_unload_response, 0},
-+	{ CHANNELMSG_18,			0, NULL, 0},
-+	{ CHANNELMSG_19,			0, NULL, 0},
-+	{ CHANNELMSG_20,			0, NULL, 0},
-+	{ CHANNELMSG_TL_CONNECT_REQUEST,	0, NULL, 0},
-+	{ CHANNELMSG_22,			0, NULL, 0},
-+	{ CHANNELMSG_TL_CONNECT_RESULT,		0, NULL, 0},
- };
- 
- /*
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index f5fa3b3c9baf..7fd66a4e2951 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -317,6 +317,7 @@ struct vmbus_channel_message_table_entry {
- 	enum vmbus_channel_message_type message_type;
- 	enum vmbus_message_handler_type handler_type;
- 	void (*message_handler)(struct vmbus_channel_message_header *msg);
-+	u32 min_payload_len;
- };
- 
- extern const struct vmbus_channel_message_table_entry
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index d684cbee7ae6..7b7229199936 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1048,6 +1048,12 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	if (!entry->message_handler)
- 		goto msg_handled;
- 
-+	if (msg->header.payload_size < entry->min_payload_len) {
-+		WARN_ONCE(1, "message too short: msgtype=%d len=%d\n",
-+			  hdr->msgtype, msg->header.payload_size);
-+		goto msg_handled;
-+	}
-+
- 	if (entry->handler_type	== VMHT_BLOCKING) {
- 		ctx = kmalloc(sizeof(*ctx) + msg->header.payload_size,
- 			      GFP_ATOMIC);
+"/usr/bin/hackbench" "-g" "8" "--threads" "--pipe" "-l" "30000" "-s" "100"
+
+And hackbench mostly reports values from 29.4 to 30.7, with and without my
+patches. I used intel_pstate=passive in command line and chose performance
+governor by default.
+
+I don't see any issues here in hackbench numbers because of my patches.
+
 -- 
-2.25.1
-
+viresh
