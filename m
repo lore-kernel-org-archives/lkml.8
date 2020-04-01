@@ -2,94 +2,237 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E890DC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4EFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493FD2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="lgNDPXVy"
+	by mail.kernel.org (Postfix) with ESMTP id 7F57220658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585758690;
+	bh=F2g/g9a2VGxsZEFsFCJnB8LU4qh3oRDpjMj4MeTstkk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Kcv2jx+JTZ9akmvSe+T95pXBymJqUP6/126ja3xtrwRn8fKh6VQZPRc2dHl2f2ExS
+	 YBrvj+srCoATz9vKopWfQ6q5MMMnfsMN+awXTyFjWQalcHtkkCr9GaSAR/EQpaTF6D
+	 Tl8/MNTCmClnM1tY0cPhafQsSymw0cmYrHmyY7nw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387976AbgDAQbX (ORCPT
+        id S2387817AbgDAQb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:31:23 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43356 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388108AbgDAQbN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:31:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id bd14so612241edb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 09:31:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z5x/eD97YYe+UtsUcQWgKp4y9byY3ksGQkwZWyGAQus=;
-        b=lgNDPXVyyGlYNRnOPf26yaHitf7+pqDoEBpBKrgXIVk39xhYHvjpaLoeMlCbYOOH35
-         gqP+GsjwCSbvRLr0P1EYmVavLSzF91XZxVs0nTVil4/5vneArq4Br9GvtOwNnp+K84fp
-         eeYPrrVySgZo3U4828x7nVKYv0l3frhycdpMM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z5x/eD97YYe+UtsUcQWgKp4y9byY3ksGQkwZWyGAQus=;
-        b=t6DWyxQDuE0JD0RUlZtqeSB19orFX1MMJNm7GknaLLVHHnjX3xxBSHRwr/dKgdHEwX
-         2a2o6bKtbuZQMwpoXggZP7mIVKMMVKCZQ5B3wGwdWYnuG5J8mh/P5ycWoPbpVfPP9/m1
-         aj7v7TkVdYoBXKRtksEBIhkEyAeTlpmGz9yaU2Vwlkq6Kn747lGOraemKxTaZzSyh1XV
-         8CfnmJJ4F7dbzi3WKzJbspjrN/ldIb5f0Mb0kE+y45/2GhULpyS6zqjlOsvaK7viXE2E
-         hnPsRdM4zs60YjvqBjDpNdUOJCNQ88Ip/oN/xec+JkaWX3fU0mJi7VcEP/Mxl2yLWQ4E
-         4tEA==
-X-Gm-Message-State: ANhLgQ23pkZPqCcD83UDq/NlkPkh9OcygxaIt9xzaGnchpf9IuU1FxRv
-        iCZxBvSa1LdpNqGDJEt53Svrvd7D0iBk58H6EL8sYw==
-X-Google-Smtp-Source: ADFU+vuXSy+WOIY1LRGVIsjX6cs7PxeglKy6P6ZhdJuuMLQsyJawyKskAGhJxAk2Obp0S8U3eefwNGGiUrNlnslw5RY=
-X-Received: by 2002:a50:c341:: with SMTP id q1mr22249117edb.247.1585758670968;
- Wed, 01 Apr 2020 09:31:10 -0700 (PDT)
+        Wed, 1 Apr 2020 12:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388109AbgDAQbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:31:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E7C42063A;
+        Wed,  1 Apr 2020 16:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585758676;
+        bh=F2g/g9a2VGxsZEFsFCJnB8LU4qh3oRDpjMj4MeTstkk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rijMlYwi9kZqAvYuWEA7Yoh6siiRq7dPFAwX/3FnVic9mZmhcXwk1UlIA7RREpteh
+         D5upFBlSXAA5SKS+DwLBpcWQzL5azsvpm/b3A1DlSkSVDZE1A+dYFGEKUnbeaTKvhi
+         HXwwnZMU0zUAMvvaLbAwlzS1ouhfx7t4w36Iu2rE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 41/91] hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
+Date:   Wed,  1 Apr 2020 18:17:37 +0200
+Message-Id: <20200401161527.874632679@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
+References: <20200401161512.917494101@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com>
- <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk>
- <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home>
- <2488530.1585749351@warthog.procyon.org.uk> <2488734.1585749502@warthog.procyon.org.uk>
- <CAJfpeguLJcAEgx2JWRNcKMkyFTWB0r4wS6F4fJHK3VHtY=EjXQ@mail.gmail.com> <2590276.1585756914@warthog.procyon.org.uk>
-In-Reply-To: <2590276.1585756914@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 1 Apr 2020 18:30:59 +0200
-Message-ID: <CAJfpeguxDiq3BW94AVFhgY75P+jy_+jk3pdyNZ5z-aJPXNvvGA@mail.gmail.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Karel Zak <kzak@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
-        andres@anarazel.de, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 6:02 PM David Howells <dhowells@redhat.com> wrote:
->
-> Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > > > But doesn't actually do what Karel asked for.  show_mountinfo() itself does
-> > > > not give you what Karel asked for.
-> >
-> > Not sure what you mean.  I think it shows precisely the information
-> > Karel asked for.
->
-> It's not atomic.
+From: Taehee Yoo <ap420073@gmail.com>
 
-Yes it is.
+[ Upstream commit 173756b86803655d70af7732079b3aa935e6ab68 ]
 
-Thanks,
-Miklos
+hsr_get_node_{list/status}() are not under rtnl_lock() because
+they are callback functions of generic netlink.
+But they use __dev_get_by_index() without rtnl_lock().
+So, it would use unsafe data.
+In order to fix it, rcu_read_lock() and dev_get_by_index_rcu()
+are used instead of __dev_get_by_index().
+
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/hsr/hsr_framereg.c |   10 ++--------
+ net/hsr/hsr_netlink.c  |   43 +++++++++++++++++++++----------------------
+ 2 files changed, 23 insertions(+), 30 deletions(-)
+
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -455,13 +455,9 @@ int hsr_get_node_data(struct hsr_priv *h
+ 	struct hsr_port *port;
+ 	unsigned long tdiff;
+ 
+-
+-	rcu_read_lock();
+ 	node = find_node_by_AddrA(&hsr->node_db, addr);
+-	if (!node) {
+-		rcu_read_unlock();
+-		return -ENOENT;	/* No such entry */
+-	}
++	if (!node)
++		return -ENOENT;
+ 
+ 	ether_addr_copy(addr_b, node->MacAddressB);
+ 
+@@ -496,7 +492,5 @@ int hsr_get_node_data(struct hsr_priv *h
+ 		*addr_b_ifindex = -1;
+ 	}
+ 
+-	rcu_read_unlock();
+-
+ 	return 0;
+ }
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -259,17 +259,16 @@ static int hsr_get_node_status(struct sk
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-					nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
+-
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -321,12 +320,10 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF1_SEQ, hsr_node_if1_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_A);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF1_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
+@@ -336,20 +333,22 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF2_SEQ, hsr_node_if2_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_B);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF2_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
++	rcu_read_unlock();
++
+ 	genlmsg_end(skb_out, msg_head);
+ 	genlmsg_unicast(genl_info_net(info), skb_out, info->snd_portid);
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL);
+ 	return 0;
+@@ -359,6 +358,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
+@@ -385,17 +385,16 @@ static int hsr_get_node_list(struct sk_b
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-				     nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
+-
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -415,14 +414,11 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	hsr = netdev_priv(hsr_dev);
+ 
+-	rcu_read_lock();
+ 	pos = hsr_get_next_node(hsr, NULL, addr);
+ 	while (pos) {
+ 		res = nla_put(skb_out, HSR_A_NODE_ADDR, ETH_ALEN, addr);
+-		if (res < 0) {
+-			rcu_read_unlock();
++		if (res < 0)
+ 			goto nla_put_failure;
+-		}
+ 		pos = hsr_get_next_node(hsr, pos, addr);
+ 	}
+ 	rcu_read_unlock();
+@@ -432,6 +428,8 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL);
+ 	return 0;
+@@ -441,6 +439,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
+
+
