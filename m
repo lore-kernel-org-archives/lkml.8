@@ -2,244 +2,111 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211E1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94377C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27CD20787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635E62078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XHbUf6mw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CzwRDrj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgDAHcw (ORCPT
+        id S1731971AbgDAHez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:32:52 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59692 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731861AbgDAHcw (ORCPT
+        Wed, 1 Apr 2020 03:34:55 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40034 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731910AbgDAHez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:32:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585726371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=er5PhZKmj1VjxisaWzK7w2rQSjkemW6KF003piclXVY=;
-        b=XHbUf6mwQwPfGY3QA55NlH4Xo/fBgHcWDBFhOXEhv5s/5/S76Tlpne4h8h6TNXrzcXnKZy
-        5sVA9/MajfwLNGUNxSdu23HvplAGGawo7Iu0cFYrfRifAoBP5Wrq6bAHDzqPboPc7l/MMR
-        SjWLKevsD7KkcEdML3FO1IiBCwZzYog=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-wzVRvjV2M9etq3cxccPC5g-1; Wed, 01 Apr 2020 03:32:47 -0400
-X-MC-Unique: wzVRvjV2M9etq3cxccPC5g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BA841007269;
-        Wed,  1 Apr 2020 07:32:45 +0000 (UTC)
-Received: from [10.36.112.58] (ovpn-112-58.ams2.redhat.com [10.36.112.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33AB85D9CA;
-        Wed,  1 Apr 2020 07:32:39 +0000 (UTC)
-Subject: Re: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
- <3215b83c-81f7-a30f-fe82-a51f29d7b874@redhat.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D800D67@SHSMSX104.ccr.corp.intel.com>
- <20200331135807.4e9976ab@jacob-builder>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D803C33@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21D52E@SHSMSX104.ccr.corp.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <d1cd2852-876a-b072-8576-962a6e61b9a9@redhat.com>
-Date:   Wed, 1 Apr 2020 09:32:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 1 Apr 2020 03:34:55 -0400
+Received: by mail-pj1-f67.google.com with SMTP id kx8so2321964pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 00:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=e9j0gXLS8BiPnG8hg4KhkQMvt4m3nuldxIMCe99NUSM=;
+        b=CzwRDrj2h0sa5kX72PUVDeT6L3fY9qudsdi8KkOaBKK9gQI9Rk35RY8a+tf/7T/90X
+         Zl5oGkGuBSVb657tgNqL16cqTQjKM3o1b6z/xqQcfhcf5YAqC/8MEoQ6vJl0xnuS4T1p
+         bLhOvG+N19w8AdK3xAI90GJXQBJzHg/Idzk0c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=e9j0gXLS8BiPnG8hg4KhkQMvt4m3nuldxIMCe99NUSM=;
+        b=PhVzvr2Z+20McWwCMSAqF5jJGs7W2iiXVpCeqIvalPAXRZ4X8AfRACkBkp2DKOh3YN
+         6rsPD0zyF5hhjWHDAsFk+qLWQvDG/JxAlyr9iWa4FuGBdBGkUgWNzpi6qFp0tqdEjUPx
+         IxbNMX13l1GRncF/ScdUooB99+hD/KBJE7HlFf0G2YE9V+2RyIntQpI9w4ds8HHJYhVr
+         L3uLNzlqxz4gkxOXU8PQCKfQN440PXu3Iz06GyxNp4nHVLDZtVOBEXN3ByqJsdgTtptU
+         eyMul13elqmjzCgCocdJhLBUZnBfIYuvLBCdMqHKLUIbP+4OwkCIHBYlXtaJyigxSUpR
+         aZVg==
+X-Gm-Message-State: AGi0PuZvoe6nHkLtj4Vt+FJizMfAA5vNJWk1tWsIM9BEoaXYUO5dxwZA
+        HM0iOadNSj6JR7IAxsPSYD0YXA==
+X-Google-Smtp-Source: APiQypJDNRDZ33Sc9rxPUXsp2xFXUXbugulWQqiDDPonuNaxSEsO5TuU3WlX80cycoM1zufaEYn2wA==
+X-Received: by 2002:a17:902:6acc:: with SMTP id i12mr7180158plt.61.1585726494195;
+        Wed, 01 Apr 2020 00:34:54 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w74sm948693pfd.112.2020.04.01.00.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 00:34:53 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 00:34:52 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Slava Bacherikov <slava@bacher09.org>
+Cc:     andriin@fb.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jannh@google.com, alexei.starovoitov@gmail.com,
+        daniel@iogearbox.net, kernel-hardening@lists.openwall.com,
+        Liu Yiding <liuyd.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH v2 bpf] kbuild: fix dependencies for DEBUG_INFO_BTF
+Message-ID: <202004010033.A1523890@keescook>
+References: <20200331215536.34162-1-slava@bacher09.org>
 MIME-Version: 1.0
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A21D52E@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331215536.34162-1-slava@bacher09.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Apr 01, 2020 at 12:55:37AM +0300, Slava Bacherikov wrote:
+> Currently turning on DEBUG_INFO_SPLIT when DEBUG_INFO_BTF is also
+> enabled will produce invalid btf file, since gen_btf function in
+> link-vmlinux.sh script doesn't handle *.dwo files.
+> 
+> Enabling DEBUG_INFO_REDUCED will also produce invalid btf file, and
+> using GCC_PLUGIN_RANDSTRUCT with BTF makes no sense.
+> 
+> Signed-off-by: Slava Bacherikov <slava@bacher09.org>
+> Reported-by: Jann Horn <jannh@google.com>
+> Reported-by: Liu Yiding <liuyd.fnst@cn.fujitsu.com>
+> Fixes: e83b9f55448a ("kbuild: add ability to generate BTF type info for vmlinux")
+> ---
+>  lib/Kconfig.debug | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index f61d834e02fe..9ae288e2a6c0 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -223,6 +223,7 @@ config DEBUG_INFO_DWARF4
+>  config DEBUG_INFO_BTF
+>  	bool "Generate BTF typeinfo"
+>  	depends on DEBUG_INFO
+> +	depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED && !GCC_PLUGIN_RANDSTRUCT
+>  	help
+>  	  Generate deduplicated BTF type information from DWARF debug info.
+>  	  Turning this on expects presence of pahole tool, which will convert
 
-On 4/1/20 9:13 AM, Liu, Yi L wrote:
->> From: Tian, Kevin <kevin.tian@intel.com>
->> Sent: Wednesday, April 1, 2020 2:30 PM
->> To: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Subject: RE: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate func=
-tion
->>
->>> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> Sent: Wednesday, April 1, 2020 4:58 AM
->>>
->>> On Tue, 31 Mar 2020 02:49:21 +0000
->>> "Tian, Kevin" <kevin.tian@intel.com> wrote:
->>>
->>>>> From: Auger Eric <eric.auger@redhat.com>
->>>>> Sent: Sunday, March 29, 2020 11:34 PM
->>>>>
->>>>> Hi,
->>>>>
->>>>> On 3/28/20 11:01 AM, Tian, Kevin wrote:
->>>>>>> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>>>>>> Sent: Saturday, March 21, 2020 7:28 AM
->>>>>>>
->>>>>>> When Shared Virtual Address (SVA) is enabled for a guest OS via
->>>>>>> vIOMMU, we need to provide invalidation support at IOMMU API
->>>>>>> and
->>>>> driver
->>>>>>> level. This patch adds Intel VT-d specific function to
->>>>>>> implement iommu passdown invalidate API for shared virtual addres=
-s.
->>>>>>>
->>>>>>> The use case is for supporting caching structure invalidation
->>>>>>> of assigned SVM capable devices. Emulated IOMMU exposes queue
->>>>  [...]
->>>>  [...]
->>>>> to
->>>>>>> + * VT-d granularity. Invalidation is typically included in the
->>>>>>> unmap
->>>>> operation
->>>>>>> + * as a result of DMA or VFIO unmap. However, for assigned
->>>>>>> devices
->>>>> guest
->>>>>>> + * owns the first level page tables. Invalidations of
->>>>>>> translation caches in
->>>>> the
->>>>  [...]
->>>>  [...]
->>>>  [...]
->>>>>
->>> inv_type_granu_map[IOMMU_CACHE_INV_TYPE_NR][IOMMU_INV_GRANU_
->>>>>>> NR] =3D {
->>>>>>> +	/*
->>>>>>> +	 * PASID based IOTLB invalidation: PASID selective (per
->>>>>>> PASID),
->>>>>>> +	 * page selective (address granularity)
->>>>>>> +	 */
->>>>>>> +	{0, 1, 1},
->>>>>>> +	/* PASID based dev TLBs, only support all PASIDs or
->>>>>>> single PASID */
->>>>>>> +	{1, 1, 0},
->>>>>>
->>>>>> Is this combination correct? when single PASID is being
->>>>>> specified, it is essentially a page-selective invalidation since
->>>>>> you need provide Address and Size.
->>>>> Isn't it the same when G=3D1? Still the addr/size is used. Doesn't
->>>>> it
->>>>
->>>> I thought addr/size is not used when G=3D1, but it might be wrong. I=
-'m
->>>> checking with our vt-d spec owner.
->>>>
->>>
->>>>> correspond to IOMMU_INV_GRANU_ADDR with
->> IOMMU_INV_ADDR_FLAGS_PASID
->>>>> flag unset?
->>>>>
->>>>> so {0, 0, 1}?
->>>>
->>> I am not sure I got your logic. The three fields correspond to
->>> 	IOMMU_INV_GRANU_DOMAIN,	/* domain-selective
->>> invalidation */
->>> 	IOMMU_INV_GRANU_PASID,	/* PASID-selective invalidation */
->>> 	IOMMU_INV_GRANU_ADDR,	/* page-selective invalidation *
->>>
->>> For devTLB, we use domain as global since there is no domain. Then I
->>> came up with {1, 1, 0}, which means we could have global and pasid
->>> granu invalidation for PASID based devTLB.
->>>
->>> If the caller also provide addr and S bit, the flush routine will put
->>
->> "also" -> "must", because vt-d requires addr/size must be provided in
->> devtlb
->> descriptor, that is why Eric suggests {0, 0, 1}.
->=20
-> I think it should be {0, 0, 1} :-) addr field and S field are must, pas=
-id
-> field depends on G bit.
+Please make this:
 
-On my side, I understood from the spec that addr/S are always used
-whatever the granularity, hence the above suggestion.
+depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
+depends on COMPILE_TEST || !GCC_PLUGIN_RANDSTRUCT
 
-As a comparison, for PASID based IOTLB invalidation, it is clearly
-stated that if G matches PASID selective invalidation, address field is
-ignored. This is not written that way for PASID-based device TLB inv.
->=20
-> I didn=E2=80=99t read through all comments. Here is a concern with this=
- 2-D table,
-> the iommu cache type is defined as below. I suppose there is a problem =
-here.
-> If I'm using IOMMU_CACHE_INV_TYPE_PASID, it will beyond the 2-D table.
->=20
-> /* IOMMU paging structure cache */
-> #define IOMMU_CACHE_INV_TYPE_IOTLB      (1 << 0) /* IOMMU IOTLB */
-> #define IOMMU_CACHE_INV_TYPE_DEV_IOTLB  (1 << 1) /* Device IOTLB */
-> #define IOMMU_CACHE_INV_TYPE_PASID      (1 << 2) /* PASID cache */
-> #define IOMMU_CACHE_INV_TYPE_NR         (3)
-oups indeed
+-Kees
 
-Thanks
-
-Eric
->=20
->>>
->>>> I have one more open:
->>>>
->>>> How does userspace know which invalidation type/gran is supported?
->>>> I didn't see such capability reporting in Yi's VFIO vSVA patch set.
->>>> Do we want the user/kernel assume the same capability set if they
->>>> are architectural? However the kernel could also do some
->>>> optimization e.g. hide devtlb invalidation capability given that the
->>>> kernel already invalidate devtlb automatically when serving iotlb
->>>> invalidation...
->>>>
->>> In general, we are trending to use VFIO capability chain to expose
->>> iommu capabilities.
->>>
->>> But for architectural features such as type/granu, we have to assume
->>> the same capability between host & guest. Granu and types are not
->>> enumerated on the host IOMMU either.
->>>
->>> For devTLB optimization, I agree we need to expose a capability to th=
-e
->>> guest stating that implicit devtlb invalidation is supported.
->>> Otherwise, if Linux guest runs on other OSes may not support implicit
->>> devtlb invalidation.
->>>
->>> Right Yi?
->>
->> Thanks for explanation. So we are assumed to support all operations
->> defined in spec, so no need to expose them one-by-one. For optimizatio=
-n,
->> I'm fine to do it later.
->=20
-> yes. :-)
->=20
-> Regards,
-> Yi Liu
->=20
-
+-- 
+Kees Cook
