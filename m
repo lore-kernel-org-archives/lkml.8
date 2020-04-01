@@ -2,137 +2,157 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3489AC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9441AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF9820772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:13:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gePLR3I5"
+	by mail.kernel.org (Postfix) with ESMTP id 67EB020784
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732048AbgDAJNK (ORCPT
+        id S1732136AbgDAJN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:13:10 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:36505 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgDAJNJ (ORCPT
+        Wed, 1 Apr 2020 05:13:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58070 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726974AbgDAJNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:13:09 -0400
-Received: by mail-qv1-f68.google.com with SMTP id z13so12444485qvw.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 02:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jkMgyGLx/BAkeNtxDN6Xm/ZbanBZQvNQbU7eOJcnXos=;
-        b=gePLR3I5HlC84w7tgJzEsRDClSwTX0vkukGGPouc74j9tPxnFXOnMxG8zqKusXyLSD
-         P1CXTLsHgRD/S8Q8S5YIH4ka/bNjg1DuR3op0rVEU8qu0/3qvutPbOxc2nl/iI4PR1x3
-         kISWfSQmZqfiL2nFZ6Rb5KCWgl65Wka5UzT/xrbBgOXxVwSphSnqGCN+0f7ErOkgeCzo
-         pdkfIyKq3i2TpWjKqfjvvvBKyxACnt5KZbkN1iV4yOXUi95SDk+EdLX7WIfIWb+0/FFM
-         axOTi9LYHzFUG7NygICZeM4Vfcw9ZoImKssVQE87l7r8QgXtWFHq59KR2dylCJRYjYsK
-         0DmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jkMgyGLx/BAkeNtxDN6Xm/ZbanBZQvNQbU7eOJcnXos=;
-        b=PoZF48U52L8FDdB1zpwdzNB6+Sm2g6DV03Oc7UgRlRh0t2fe6umjqT7YgzLM4A3Eg4
-         iQ0N6/KZoecB8llwxVBGezDJBShZsu/GubP6Zq3EntY+TWcEB9/SHmFguf8Unuz5Lxgi
-         yIAoHdm3JUOb1WlehTrDv6KuMLr7PhgNVAk6R23V4QDpXgrEDL1nWMrjb2j3SZyZQ2nl
-         8uZWxGu9JKItB1ZxkgDsTOgTyXFU0SrbqPmrcsUC9SIDDwVWbJMXP1weZdmvtY4asjaL
-         u5k4Vg7hGR1TzlTtJnOuR5LI01zLTBKD5oK/PQLiYxQrkSU7lhHLuJtgWW1X99IjW/Y3
-         grAA==
-X-Gm-Message-State: ANhLgQ1ad3NTmPEGEGbUHWcHtVyxqBkdtWkkIOCCkqUhQoMgJCR7Uy6V
-        RMCoI4H4kGcM77ZFBEAv+5kw0MsqFnRJt+Zqw269Pg==
-X-Google-Smtp-Source: ADFU+vs06wImJZ2EPBdCY2ie1qh0IX+7CluGHJHL2V6FICU7OeYMC84ibT4JTW0BL1dvRyCt/qMHZuA5ONrD8dluF/U=
-X-Received: by 2002:ad4:49d1:: with SMTP id j17mr21052173qvy.80.1585732387345;
- Wed, 01 Apr 2020 02:13:07 -0700 (PDT)
+        Wed, 1 Apr 2020 05:13:55 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031936qk141565
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 05:13:54 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3022r03ng0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:13:54 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 1 Apr 2020 10:13:38 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 10:13:33 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0319DkEu40173752
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 09:13:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E96194204B;
+        Wed,  1 Apr 2020 09:13:45 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C1EC42041;
+        Wed,  1 Apr 2020 09:13:42 +0000 (GMT)
+Received: from [9.199.48.114] (unknown [9.199.48.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 09:13:42 +0000 (GMT)
+Subject: Re: [PATCH v2 13/16] powerpc/watchpoint: Prepare handler to handle
+ more than one watcnhpoint
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
+ <20200401061309.92442-14-ravi.bangoria@linux.ibm.com>
+ <6b89991b-481a-8cbd-b5b7-559e5e16cf92@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 1 Apr 2020 14:43:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <000000000000da6059059fcfdcf9@google.com> <0000000000005b022005a22a0050@google.com>
- <20200331174116.GA1844017@kroah.com> <CANEJEGuhZChGXFzbwaEwArM4UKjUxZo=WNbREPH3887xtu62Nw@mail.gmail.com>
-In-Reply-To: <CANEJEGuhZChGXFzbwaEwArM4UKjUxZo=WNbREPH3887xtu62Nw@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 1 Apr 2020 11:12:55 +0200
-Message-ID: <CACT4Y+Yk_93iScH6F0hhR2yo+pCx_0J32TaTC-_QfXy69pauMA@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in skb_release_data (2)
-To:     Grant Grundler <grundler@chromium.org>,
-        syzkaller <syzkaller@googlegroups.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        syzbot <syzbot+a66a7c2e996797bb4acb@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, festevam@gmail.com,
-        Hayes Wang <hayeswang@realtek.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>, kernel@pengutronix.de,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>, nishadkamdar@gmail.com,
-        peter.chen@nxp.com, Prashant Malani <pmalani@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6b89991b-481a-8cbd-b5b7-559e5e16cf92@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040109-4275-0000-0000-000003B77F78
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040109-4276-0000-0000-000038CCD1C2
+Message-Id: <cb2c250b-c963-45fe-f3b4-879076c495ab@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ suspectscore=0 adultscore=0 clxscore=1015 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 7:44 PM Grant Grundler <grundler@chromium.org> wrote:
->
-> On Tue, Mar 31, 2020 at 10:41 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 31, 2020 at 10:36:01AM -0700, syzbot wrote:
-> > > syzbot suspects this bug was fixed by commit:
-> > >
-> > > commit d9958306d4be14f4c7466242b38ed3893a7b1386
-> > > Author: Nishad Kamdar <nishadkamdar@gmail.com>
-> > > Date:   Sun Mar 15 10:55:07 2020 +0000
-> > >
-> > >     USB: chipidea: Use the correct style for SPDX License Identifier
-> > >
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16d4940be00000
-> > > start commit:   63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> > > git tree:       upstream
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=a66a7c2e996797bb4acb
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c25a81e00000
-> > >
-> > > If the result looks correct, please mark the bug fixed by replying with:
-> > >
-> > > #syz fix: USB: chipidea: Use the correct style for SPDX License Identifier
-> >
-> > I really doubt a comment change fixed a syzbot bug :)
->
-> Just as I don't believe the bug was caused by pmalani's patch to r8152.
->
-> syzbot is just having trouble automatically bisecting/tracking this
-> bug since it appears only intermittently.
 
-Checking if vmlinux changes after applying the patch looked like a
-smart and simple way to detect all of:
-- Comment-only change
-- Documentation-only change
-- Change to a non-current arch
-- Changed to non-enabled configs
-- Changes to tests only
 
-But it's not working in reality, there is some bug in kernel or compiler:
-https://github.com/google/syzkaller/issues/1271#issuecomment-559093018
+On 4/1/20 12:20 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 01/04/2020 à 08:13, Ravi Bangoria a écrit :
+>> Currently we assume that we have only one watchpoint supported by hw.
+>> Get rid of that assumption and use dynamic loop instead. This should
+>> make supporting more watchpoints very easy.
+>>
+>> With more than one watchpoint, exception handler need to know which
+>> DAWR caused the exception, and hw currently does not provide it. So
+>> we need sw logic for the same. To figure out which DAWR caused the
+>> exception, check all different combinations of user specified range,
+>> dawr address range, actual access range and dawrx constrains. For ex,
+>> if user specified range and actual access range overlaps but dawrx is
+>> configured for readonly watchpoint and the instruction is store, this
+>> DAWR must not have caused exception.
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> ---
+>>   arch/powerpc/include/asm/processor.h |   2 +-
+>>   arch/powerpc/include/asm/sstep.h     |   2 +
+>>   arch/powerpc/kernel/hw_breakpoint.c  | 396 +++++++++++++++++++++------
+>>   arch/powerpc/kernel/process.c        |   3 -
+>>   4 files changed, 313 insertions(+), 90 deletions(-)
+>>
+> 
+> [...]
+> 
+>> -static bool
+>> -dar_range_overlaps(unsigned long dar, int size, struct arch_hw_breakpoint *info)
+>> +static bool dar_user_range_overlaps(unsigned long dar, int size,
+>> +                    struct arch_hw_breakpoint *info)
+>>   {
+>>       return ((dar <= info->address + info->len - 1) &&
+>>           (dar + size - 1 >= info->address));
+>>   }
+> 
+> Here and several other places, I think it would be more clear if you could avoid the - 1 :
+> 
+>      return ((dar < info->address + info->len) &&
+>          (dar + size > info->address));
 
-You may see in this bisection log as well:
-culprit signature:
-85ed07d5a8769c26fa0d170475624841e367ea0d08ea79f55ca450a9e97429a0
-parent  signature:
-2244116b3fcae3bb24003990bcd2b06a03861effee2d94675e527446c3da078f
+Ok. see below...
 
-So this commit somehow does very realistically affect the kernel
-binary. So far nobody figured out why...
+> 
+> 
+>> +static bool dar_in_hw_range(unsigned long dar, struct arch_hw_breakpoint *info)
+>> +{
+>> +    unsigned long hw_start_addr, hw_end_addr;
+>> +
+>> +    hw_start_addr = ALIGN_DOWN(info->address, HW_BREAKPOINT_SIZE);
+>> +    hw_end_addr = ALIGN(info->address + info->len, HW_BREAKPOINT_SIZE) - 1;
+>> +
+>> +    return ((hw_start_addr <= dar) && (hw_end_addr >= dar));
+>> +}
+> 
+>      hw_end_addr = ALIGN(info->address + info->len, HW_BREAKPOINT_SIZE);
+> 
+>      return ((hw_start_addr <= dar) && (hw_end_addr > dar));
 
-Before you ask, syzkaller filters out debug info, etc:
-https://github.com/google/syzkaller/blob/master/pkg/build/linux.go#L168-L178
+I'm using -1 while calculating end address is to make it
+inclusive. If I don't use -1, the end address points to a
+location outside of actual range, i.e. it's not really an
+end address.
+
+Ravi
+
