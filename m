@@ -2,167 +2,263 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C660C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A593DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46323208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F5220787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QjJ6X4ic"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LrhWpXSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbgDAI7D (ORCPT
+        id S1732138AbgDAJAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:59:03 -0400
-Received: from mail-eopbgr60088.outbound.protection.outlook.com ([40.107.6.88]:25664
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727322AbgDAI7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:59:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AwxntRDI7TxZM+zpsLTtSepxEf2ahUXXNizTr2V8Nd+vKnU0HRtgGjlDCS8Xntz43a/VKRYb4Qd889zR3v0LysTCQr+yYseIcW/K6ze6xe1y57gloKfg/TdWpJNXEFVvgsXsjIFNDvdowC65iCGOcnVO11VUp2+PXSNHxUFUVxPI4M109ZUh+BkpBWOKi5gsBcwXrfNhK+ZyW4tEDTc3XyjeoN3PMz8gNFuEiHkxKU0D1o3C3LwRzQBkHTw0J9tG+dP02o+4mrb470MUPpKqVRRlnHTlMtcQac+eqG+B+56chxKw03y/K8DJZJ44O11tpD7sRfuCCUl2yKLaNuf5mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4dCXclmoe09oER1oJZd9I98HtlHBLiKLFEkdikmAuAY=;
- b=j3uBsamZDODSovvhELaCNYw+XFEINiBMMFiCvx9xEhcyfkyNBQWz3I+57MfTN6k6I0tcNrmddyOvNZpgK06I4V5jNWwsNb6VFuUqE7FqXUeUOlRnlEAVAR84ekL2N6GWIn4MzFMHcoPUIq2uTc6+R33V7f7aZyM9YXCHrzgtyhYLVpS38SSSGaW5f+R0DEI6kLQhqUE8ZBKtmqQyCfVT/F9yzaSgRgKzXyGxWLQBDs+GA1gwOHQia/GiDBdiUmzY1Eww+1XNWodjNBKCZbQTziTSbKm2H0JtDjStKowFz5Z7ZBQCFFn/JvFG44k9BDIh0qYmXyakrvIlAy5W/NWRZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4dCXclmoe09oER1oJZd9I98HtlHBLiKLFEkdikmAuAY=;
- b=QjJ6X4icK3kWqTAe992Ein8yi2zz+nKyXEwTl8kW7DIBeQaFyYm6HKuEXzJiIUXelFNWvX5ap7zSXm8E221gDMQDoHh7aKcn+vQ2rJtgMzwOl+U+Kz2JBfvNhT9GKVPdpolr98Relu17ppw6xAJXZJKA/W/myq4fhgRL4wAyebM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3759.eurprd04.prod.outlook.com (52.134.15.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Wed, 1 Apr 2020 08:58:54 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 08:58:54 +0000
-Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-To:     Adam Ford <aford173@gmail.com>
-Cc:     =?UTF-8?Q?Andr=c3=a9_Draszik?= <git@andred.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-References: <20200225161201.1975-1-git@andred.net>
- <20200225161201.1975-6-git@andred.net>
- <VI1PR0402MB3485A743C94442533B6840F298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <CAHCN7x+NJLaKF9SfHw9sDpw6zDUGs_TuD_co7USjQ5hgFDeaHg@mail.gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <fd36d0ae-f3fa-6608-9179-3e7562068433@nxp.com>
-Date:   Wed, 1 Apr 2020 11:58:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-In-Reply-To: <CAHCN7x+NJLaKF9SfHw9sDpw6zDUGs_TuD_co7USjQ5hgFDeaHg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR05CA0074.eurprd05.prod.outlook.com
- (2603:10a6:208:136::14) To VI1PR0402MB3485.eurprd04.prod.outlook.com
- (2603:10a6:803:7::25)
+        Wed, 1 Apr 2020 05:00:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45225 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730333AbgDAJAF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 05:00:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l22so21488524oii.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 02:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tua3ateR5u2S61JvWw0wOYnH9G34YeISa9gzNpfiTsM=;
+        b=LrhWpXSXR+GjELfoDy+MltpvcJP8hquI1b+B+OBmXNrrXFfAYDdNO3PHyN5CahnjA3
+         oKCqnJqB0BscWVWQGEEmAEGTSnkCtxK4VNdZYF+lBHQzkuTsLO2f+zfGjtV9pTSlfEL4
+         Jn5RRq8kuj7uk/gmh5M9Zo7LkD+GxAY3p41yo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tua3ateR5u2S61JvWw0wOYnH9G34YeISa9gzNpfiTsM=;
+        b=MdS3uN3H60aXvzHBDLY6e1ua+KpkOVQQOH8+Wi2b9aD2Q0BOw47Yf1nQZEaaEV83Tl
+         7iv4VI9BfmK+05eh/Z600XfHLQDSuc774sO7ncYLY+x4obcdY6mOS25VvZNRzeEpkqqv
+         g3FYrMW9zjYlIcB1S6fcIEOWdqSC08EvWYlhna2EcT+G5Oldrd1zNVZ7LdR3zYCjsPg/
+         4/xHR4TlC/Rvb3EppizsldT3HP95QqLBB/juSWJyXVKOG9cYipQsDS0ablbWE0i8waHL
+         sE/4SwAqx9gJ2CPtsxsiz2CYW+XfO//Bnui++dIi7OYHAgx2cpmTgPPx6iDA5HGo50hB
+         5XLA==
+X-Gm-Message-State: AGi0PuappSwWpQStfSVro6YU5PAwgZEzeqn+3+N5mkhtujy+eEzZLO7e
+        eUyXGT7bm5Fjjo8zC1cxAmV/uqkOjbLGBJpmQN9Nqg==
+X-Google-Smtp-Source: APiQypJbch+wNP3JvxQ5mDbge7Me82aOIapEem1oPuiKzU4EaoA5Z6UueklCo60T8cD8EA2dAQpmlqPixm/t55ZCY4A=
+X-Received: by 2002:a54:4189:: with SMTP id 9mr2088613oiy.128.1585731602603;
+ Wed, 01 Apr 2020 02:00:02 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR05CA0074.eurprd05.prod.outlook.com (2603:10a6:208:136::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Wed, 1 Apr 2020 08:58:51 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 27305df6-7ca2-470a-24c1-08d7d61ae760
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3759:|VI1PR0402MB3759:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB37592A16063B44B016E8B46598C90@VI1PR0402MB3759.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:635;
-X-Forefront-PRVS: 03607C04F0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(4326008)(186003)(16526019)(8936002)(81156014)(6486002)(26005)(31696002)(86362001)(53546011)(478600001)(6916009)(66946007)(66476007)(66556008)(31686004)(16576012)(7416002)(81166006)(2906002)(36756003)(316002)(52116002)(5660300002)(2616005)(54906003)(8676002)(956004);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JO6pIwXd0qdU6IzMGQtsgDwesKM3UxUCOLdQe0xqgbRIdr+sEEs6w5y1hVgVqJecOq9sGsQSK5BWyPaSMLu1tTWHdGsGcVtDJnKg8CTBloPmAI/ujln1edKRWFHfyjX857H+1EvPHqMazBuM5dfviu4KYMGmefLR8xcl3LUl9qxDc4eeyJ8Hzgazhz7ap+IljkyfNPU1wrsyQv+JCzhKfiA78KEvkMpnACgadIZln2yqG1dM68cS4BarUA9kgWCGy1rp4fvGPB3TwUtEArmCdRiZGfW/b/lqj8pK+Eorrc281O+Txi2jU20uYPtvu7T30/3gSnBvznP28lKpzfhTyiXrSgMN+gm0bCS3fN3flgFrGKTwR/+nPWCbbEpER4nrEoXd4VT2WGdCKzitaWOJtmf4jTWTANKYZJ2Qsg9Jn2dQICITmhA+rZCMysv1q5l4
-X-MS-Exchange-AntiSpam-MessageData: fLfHbKW1xRbXVWKiTgFwa051hZJdfQ/fS0B8G+MqeGYa8W4MzN19imQnmb2g0rjCcnnEAydQmixvPQ5HwuaHZYlEnSjThnJE660FbYoBca5VzN1BVVZGWToy9pXb71tut5ZsHpN05MQ5g++rtZ10eg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27305df6-7ca2-470a-24c1-08d7d61ae760
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2020 08:58:54.0053
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ROF+O8SaSxI/sFxwpD/QQWEHUmCECmlzsMKk5O+AXdhIVFlDbULwLLKIRB/ku5tuE+r7NJtkxu/BdKOSIPhLnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3759
+References: <000000000000ec257905a21f7415@google.com> <20200331095737.GO20730@hirez.programming.kicks-ass.net>
+ <CGME20200331101907eucas1p1ce5d3f7c49c2c724c4e85f5c19c7108d@eucas1p1.samsung.com>
+ <CACT4Y+bqBCqDPQZ1Nk8G+8y2vu8aaT2S54J4UqRPaFNUcusbYw@mail.gmail.com>
+ <7641fb29-20ec-0963-d04c-bfbf49fd3ebc@samsung.com> <CAKMK7uF5zZH3CaHueWsLR96-AzT==wP8=MpymTqx-T+SRsXWHA@mail.gmail.com>
+ <CACT4Y+Y_i86-MPG_3jo-+_5WTLvcNi6HTR=mQkVdwJb5ATqDsQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+Y_i86-MPG_3jo-+_5WTLvcNi6HTR=mQkVdwJb5ATqDsQ@mail.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 1 Apr 2020 10:59:51 +0200
+Message-ID: <CAKMK7uHCZK8L_Ho3yBq-=QnKm9F60KtRTqr8pAHxVjUcFjnd_w@mail.gmail.com>
+Subject: Re: INFO: trying to register non-static key in try_to_wake_up
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Matthew Garrett <mjg59@google.com>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/28/2020 5:43 AM, Adam Ford wrote:
-> On Mon, Mar 2, 2020 at 3:22 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->>
->> On 2/25/2020 6:12 PM, André Draszik wrote:
->>> The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
->>>
->>> This driver here should only return IRQ_HANDLED if the status register
->>> indicates that the event we're handling in the irq handler was genuinely
->>> intended for this driver. Otheriwse the interrupt subsystem will
->>> assume the interrupt was handled successfully even though it wasn't
->>> at all.
->>>
->>> Signed-off-by: André Draszik <git@andred.net>
->>> Cc: "Horia Geantă" <horia.geanta@nxp.com>
->>> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
->>> Cc: Herbert Xu <herbert@gondor.apana.org.au>
->>> Cc: "David S. Miller" <davem@davemloft.net>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Shawn Guo <shawnguo@kernel.org>
->>> Cc: Sascha Hauer <s.hauer@pengutronix.de>
->>> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
->>> Cc: Fabio Estevam <festevam@gmail.com>
->>> Cc: NXP Linux Team <linux-imx@nxp.com>
->>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>> Cc: Anson Huang <Anson.Huang@nxp.com>
->>> Cc: Robin Gong <yibin.gong@nxp.com>
->>> Cc: linux-crypto@vger.kernel.org
->>> Cc: devicetree@vger.kernel.org
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: linux-input@vger.kernel.org
->> For patches 2-6:
->> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
->>
->> Also imx8mn.dtsi and imx8mp.dtsi will have to be updated.
-> 
-> Is there an update coming for the 8mn family?  I am seeing it not wake
-> from the power key, and I was hoping to resolve that before i make a
-> push to submit a new 8MN board for review.
-> 
-Starting with linux-next next-20200320, there's commit
-arm64: dts: imx8mn: Add snvs clock to powerkey
+On Wed, Apr 1, 2020 at 10:47 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Tue, Mar 31, 2020 at 2:50 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Tue, Mar 31, 2020 at 2:18 PM Bartlomiej Zolnierkiewicz
+> > <b.zolnierkie@samsung.com> wrote:
+> > >
+> > >
+> > > On 3/31/20 12:18 PM, Dmitry Vyukov wrote:
+> > > > On Tue, Mar 31, 2020 at 11:57 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >>
+> > > >> On Mon, Mar 30, 2020 at 10:01:12PM -0700, syzbot wrote:
+> > > >>> Hello,
+> > > >>>
+> > > >>> syzbot found the following crash on:
+> > > >>>
+> > > >>> HEAD commit:    9420e8ad Merge tag 'for-linus' of git://git.kernel.org/pub..
+> > > >>> git tree:       upstream
+> > > >>> console output: https://protect2.fireeye.com/url?k=0756a78d-5a9a6c49-07572cc2-0cc47a314e9a-e4dc8b657d340686&u=https://syzkaller.appspot.com/x/log.txt?x=1206ed4be00000
+> > > >>> kernel config:  https://protect2.fireeye.com/url?k=43211072-1eeddbb6-43209b3d-0cc47a314e9a-3bd45a19932c37c8&u=https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
+> > > >>> dashboard link: https://protect2.fireeye.com/url?k=bf7a6153-e2b6aa97-bf7bea1c-0cc47a314e9a-c64073ee605efb7b&u=https://syzkaller.appspot.com/bug?extid=e84d7ebd1361da13c356
+> > > >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > >>>
+> > > >>> Unfortunately, I don't have any reproducer for this crash yet.
+> > > >>>
+> > > >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > >>> Reported-by: syzbot+e84d7ebd1361da13c356@syzkaller.appspotmail.com
+> > > >>>
+> > > >>> INFO: trying to register non-static key.
+> > > >>> the code is fine but needs lockdep annotation.
+> > > >>> turning off the locking correctness validator.
+> > > >>> CPU: 1 PID: 1014 Comm: syz-executor.0 Not tainted 5.6.0-rc7-syzkaller #0
+> > > >>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > >>> Call Trace:
+> > > >>>  <IRQ>
+> > > >>>  __dump_stack lib/dump_stack.c:77 [inline]
+> > > >>>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> > > >>>  assign_lock_key kernel/locking/lockdep.c:880 [inline]
+> > > >>>  register_lock_class+0x14c4/0x1540 kernel/locking/lockdep.c:1189
+> > > >>>  __lock_acquire+0xfc/0x3ca0 kernel/locking/lockdep.c:3836
+> > > >>>  lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
+> > > >>>  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+> > > >>>  _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
+> > > >>>  try_to_wake_up+0x9f/0x17c0 kernel/sched/core.c:2547
+> > > >>
+> > > >> That's p->pi_lock, which gets initialized in rt_mutex_init_task() in
+> > > >> copy_process(). This should be impossible. Very odd.
+> > > >
+> > > > The stack mentions fbdev, which is a red flag at the moment. There are
+> > > > a dozen of bad bugs in fbdev and around. Just few days ago Andy
+> > > > pointed to another "impossible" crash "general protection fault in
+> > > > do_syscall_64" which is related to dri:
+> > > > https://protect2.fireeye.com/url?k=0cb8ad06-517466c2-0cb92649-0cc47a314e9a-a20c11191483c65b&u=https://syzkaller.appspot.com/bug?id=0ec7b2602b1ff40f0d34f38baa4ba1640727c3d9
+> > > > https://protect2.fireeye.com/url?k=614292e3-3c8e5927-614319ac-0cc47a314e9a-aeda6d72c01a7b0e&u=https://groups.google.com/forum/#!msg/syzkaller-bugs/ePqhfYx0-8M/Q_Urt97iAAAJ
+> > > >
+> > > > There are probably more random manifestations of these bugs already,
+> > > > and I guess we will be getting more.
+> > > >
+> > > > +fbdev maintainers
+> > >
+> > > Thank you for the report.
+> > >
+> > > fbdev is in the maintenance mode and no new features or drivers are
+> > > being added so syzbot reports are not for a new bugs (regressions) and
+> > > are not a priority (at least to me).
+> >
+> > Yup same here, I've seen a pile of syzbot reports for fbdev (and also
+> > vt, or combinations of them since fbdev is linked to vt through fbcon)
+> > fly by. But I really don't have to deal with these, my recommendation
+> > to anyone who cares about security are:
+> > - Don't enable vt
+> > - Don't enable fbdev
+>
+> 1. How do we deliver this message to relevant people?
+>
+> Because:
+>
+> $ grep FBDEV syzkaller/dashboard/config/upstream-kasan.config
+> CONFIG_DRM_FBDEV_EMULATION=y
+> CONFIG_DRM_FBDEV_OVERALLOC=100
+> # CONFIG_DRM_FBDEV_LEAK_PHYS_SMEM is not set
+> CONFIG_XEN_FBDEV_FRONTEND=y
+>
+> and my current work machine:
+>
+> $ grep FBDEV /boot/config-5.2.17-1-amd64
+> CONFIG_DRM_FBDEV_EMULATION=y
+> CONFIG_DRM_FBDEV_OVERALLOC=100
+> # CONFIG_DRM_FBDEV_LEAK_PHYS_SMEM is not set
+> CONFIG_XEN_FBDEV_FRONTEND=y
 
-Could you confirm you've tested with a tree including it?
+Yeah I know it's been like this since forever. In theory you could
+build a fbdev/fbcon less distro since years (the last bit for a proof
+of concept was kmscon/systemd-consoled), but the amount of investment
+into classic linux desktop is so little that it's impossible to get
+this funded. CrOS fixed this a while ago iirc though.
 
-Thanks,
-Horia
+I think to fix the syzbot issues all we'd need is a competent intern
+for a few months, that should take care of the worst stuff. Obviously
+wont include getting a test suite going, nor fixing any of the
+fundamental issues. But duct-taping over all the bugs should be
+possible (it's what we've been doing for well over 10 years by now in
+fbdev/fbocn/vt code anyway). I'd be willing to help mentoring, but
+that's about all I can do.
+
+Adding Matthew Garret, I have discussed with him in the past finding
+some funding for linux desktop stuff like this.
+
+> 2. What do we do with fbdev testing on syzbot? Is there a way to
+> disable all of the unsupported stuff? But if we disable it, we don't
+> find any regressions as well. And in the end that's what is in the
+> mainline kernel and is still enabled in distros (at least in the 2
+> real configs I can grep now).
+
+This would be bad I agree, but it's not any worse than the state of
+things the past 10 years. That's roughly for as long as fbdev has been
+in maintainance only mode, meaning "we'll apply patches if they come".
+Without Bart volunteering, we wouldn't even have that much really.
+-Daniel
+
+> > All that code has been developed long ago, in a much more innocent
+> > time. If someone wants to fix this you'd not just need to fix all the
+> > syzbot stuff, but also ramp up a full testsuite for all the ioctl, and
+> > all the corner-cases. Plus also fix some of the horrendous locking in
+> > there, probably.
+> >
+> > Multi-year effort, easily.
+> >
+> > Regressions I'll obviously try to handle, but none of these are. It's
+> > just syzbot has become smarter at hitting bugs in fbdev and vt
+> > subsystems (or maybe the hw the virtual machines emulate has become
+> > more varied, some of the reports are for fun stuff like vgacon ...).
+> >
+> > Cheers, Daniel
+> >
+> > > I have only resources to review/merge pending fbdev patches from time
+> > > to time so any help in fixing these syzbot reports is welcomed (there
+> > > have been a few fbdev related syzbot reports recently).
+> > >
+> > > Also please note that fbdev is maintained through drm-misc tree so
+> > > patches can also be handled by other drm-misc maintainers in case I'm
+> > > not available / busy with other things.
+> > >
+> > > Best regards,
+> > > --
+> > > Bartlomiej Zolnierkiewicz
+> > > Samsung R&D Institute Poland
+> > > Samsung Electronics
+> > >
+> > > >>>  wake_up_worker kernel/workqueue.c:836 [inline]
+> > > >>>  insert_work+0x2ad/0x3a0 kernel/workqueue.c:1337
+> > > >>>  __queue_work+0x50d/0x1280 kernel/workqueue.c:1488
+> > > >>>  call_timer_fn+0x195/0x760 kernel/time/timer.c:1404
+> > > >>>  expire_timers kernel/time/timer.c:1444 [inline]
+> > > >>>  __run_timers kernel/time/timer.c:1773 [inline]
+> > > >>>  __run_timers kernel/time/timer.c:1740 [inline]
+> > > >>>  run_timer_softirq+0x412/0x1600 kernel/time/timer.c:1786
+> > > >>>  __do_softirq+0x26c/0x99d kernel/softirq.c:292
+> > > >>>  invoke_softirq kernel/softirq.c:373 [inline]
+> > > >>>  irq_exit+0x192/0x1d0 kernel/softirq.c:413
+> > > >>>  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+> > > >>>  smp_apic_timer_interrupt+0x19e/0x600 arch/x86/kernel/apic/apic.c:1146
+> > > >>>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+> > > >>>  </IRQ>
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+
+
+
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
