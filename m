@@ -2,108 +2,212 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705F8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863B5C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379972071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 509822071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/fKiL+5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajprIKKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732769AbgDARh1 (ORCPT
+        id S1732789AbgDARhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:37:27 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32985 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726901AbgDARh0 (ORCPT
+        Wed, 1 Apr 2020 13:37:48 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44522 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgDARhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:37:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585762645;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bN9sAxxrxI0QKUe5EmcfAyEAD1O55pPC904an2QRe7s=;
-        b=b/fKiL+5HJaCivkLTAvMjRfEEqi1w643XkH66KOf6RF2imLUmOkPt/cfCWfpgKyCjTiA5B
-        j61klu7et+RwxIJScW2T9034mrYpFIDqhDOA4EwriuNuqmxS1yAKslrBC9uCwVVZ4g6VBW
-        XhB/u3KHULhjh5ViPLMxFDzP3Bf3wl8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-444-5qC2-SH4MpmplGeB9sW4Bw-1; Wed, 01 Apr 2020 13:37:13 -0400
-X-MC-Unique: 5qC2-SH4MpmplGeB9sW4Bw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 541381005055;
-        Wed,  1 Apr 2020 17:37:12 +0000 (UTC)
-Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8627C391;
-        Wed,  1 Apr 2020 17:37:11 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 12:37:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Julien Thierry <jthierry@redhat.com>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-Message-ID: <20200401173709.xzfuwmbz4b6lvsfy@treble>
-References: <20200330190205.k5ssixd5hpshpjjq@treble>
- <20200330200254.GV20713@hirez.programming.kicks-ass.net>
- <20200331111652.GH20760@hirez.programming.kicks-ass.net>
- <20200331202315.zialorhlxmml6ec7@treble>
- <20200331204047.GF2452@worktop.programming.kicks-ass.net>
- <20200331211755.pb7f3wa6oxzjnswc@treble>
- <20200331212040.7lrzmj7tbbx2jgrj@treble>
- <20200331222703.GH2452@worktop.programming.kicks-ass.net>
- <d2cad75e-1708-f0bf-7f88-194bcb29e61d@redhat.com>
- <20200401170910.GX20730@hirez.programming.kicks-ass.net>
+        Wed, 1 Apr 2020 13:37:48 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v134so192760oie.11;
+        Wed, 01 Apr 2020 10:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
+        b=ajprIKKwv+dueHWTPMNqkQe2LuNgg4lh96IinPEFHmrCeJTFtViEZUxW9z2QWE/PDH
+         Sx2D3ZDf1DwThSCl3I+xZUXxOdQM3YS1LnSnwaYyvUYYoH36qP/eq5tzoUwnhHdBX8Yn
+         su38DI78spLbvC8/1PSh6bzXv0uCioZLfkNVZpHiWsYMnzPdt2Clt8yVEXQw1zdIFrRV
+         lvA9OQ5fuHszWv7f+yfgmhzfwTdEK2OwfBNcOVcnM12x5l2e7gDjIcq2isr/61mT7f6U
+         7f9cfk1IiIY4ss1cNbtcbQjYupvAkuPlgDLmbUqg5KQ4+DbjusR80Fpb129eS5AwN/u4
+         1Bsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
+        b=KHYrTz1eVv6O5+hVfSgMtVKGg7+mIuixqY0jb4rIOGU5Bf1Ef/21M+StWaVid2fXaP
+         L9eioU5321tBWAqwBBftu2/IxM5JyZIXYLBrxyOXdFcANZfowbFMMStomE5F4k9XO6/u
+         CeS/MuR2IgHWW48I2MEjwiB1uFtiSRwfwYhRl4SByQ+EMsV2QeWSf+SW1XrHYwQbp/Yb
+         J2uC0de5q+AafCKL9AZr1eX/Qd7ww7mYFx325W8ZZytaLTAS8iq93tRF+15tMffQkjNa
+         G6cDEt3h0asMixRnAkg3SzlTcHBd1QZsrRUuHwAJSDI1jXCsfR92CbIBbJF6awMe8DiM
+         qVTA==
+X-Gm-Message-State: AGi0PubgAEpbnD56REQg/eMudRorwKAP++DGSQgyuQzBL2YEXmVTELnm
+        PkxJKgC0gZKoKxz6oeJ+OY7AO1TMsdDSdW4BXjU=
+X-Google-Smtp-Source: APiQypLVoagopL2LC5fv3WBtfUn4dJ6lfyRk+nZW8iJ4g+qJWR3D3El0wlnEgwGCNQ77KzGiyo/Iso2KZOY63vUG27E=
+X-Received: by 2002:aca:cf0d:: with SMTP id f13mr3508187oig.162.1585762666999;
+ Wed, 01 Apr 2020 10:37:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200401170910.GX20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
+In-Reply-To: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 1 Apr 2020 18:37:20 +0100
+Message-ID: <CA+V-a8ujOD1k+Oc2f+tSHPvt128oO9hT3zEFHghnxq5RAOMb7w@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
+ AISTARVISION MIPI Adapter V2.1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 07:09:10PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 01, 2020 at 04:43:35PM +0100, Julien Thierry wrote:
-> 
-> > > +static bool has_modified_stack_frame(struct instruction *insn, struct insn_state *state)
-> > >   {
-> > > +	u8 ret_offset = insn->ret_offset;
-> > >   	int i;
-> > > 
-> > > -	if (state->cfa.base != initial_func_cfi.cfa.base ||
-> > > -	    state->cfa.offset != initial_func_cfi.cfa.offset ||
-> > > -	    state->stack_size != initial_func_cfi.cfa.offset ||
-> > > -	    state->drap)
-> > > +	if (state->cfa.base != initial_func_cfi.cfa.base || state->drap)
-> > > +		return true;
-> > > +
-> > > +	if (state->cfa.offset != initial_func_cfi.cfa.offset &&
-> > > +	    !(ret_offset && state->cfa.offset == initial_func_cfi.cfa.offset + ret_offset))
-> > 
-> > Isn't that the same thing as "state->cfa.offset !=
-> > initial_func_cfi.cfa.offset + ret_offset" ?
-> 
-> I'm confused on what cfa.offset is, sometimes it increase with
-> stack_size, sometimes it doesn't.
+Hi Geert,
+
+Thank you for the review.
+
+
+On Wed, Apr 1, 2020 at 10:45 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> ISTR that for the ftrace case it was indeed cfa.offset + 8, but for the
-> IRET case below (where it is now not used anymore) it was cfa.offset
-> (not cfa.offset + 40, which I was expecting).
+> Hi Prabhakar,
+>
+> On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
+> > to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
+> > which have the camera endpoint nodes for imx219 and ov5645 so that this can
+> > be re-used with other G2x platforms.
+> >
+> > r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
+> > default ties ov5645 camera endpoint to CSI2.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Changes for v2:
+> >  * Dropped #{address,size}-cells
+> >  * Dropped unit address and reg for port
+>
+> Thanks for the update!
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+> > @@ -0,0 +1,75 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
+> > + * connected with aistarvision-mipi-v2-adapter board
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "r8a774c0-ek874.dts"
+> > +#define MIPI_PARENT_I2C i2c3
+> > +#include "aistarvision-mipi-adapter-2.1.dtsi"
+> > +
+> > +/ {
+> > +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
+> > +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
+> > +};
+> > +
+> > +&i2c3 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&vin4 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&vin5 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&csi40 {
+> > +       status = "okay";
+> > +
+> > +       ports {
+> > +               port {
+> > +                       csi40_in: endpoint {
+> > +                               clock-lanes = <0>;
+> > +                               data-lanes = <1 2>;
+> > +                               remote-endpoint = <&ov5645_ep>;
+> > +                       };
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +&ov5645 {
+> > +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
+> > +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> > +
+> > +       clocks = <&cpg CPG_MOD 716>;
+>
+> I'm still a bit puzzled here.
+>
+> CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
+> presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
+> by the CSI driver?
+> On the MIPI board[*], that signal becomes MIPI1_CP/N.
+> However, the MIPI board also has a "Clock Source Selection" header,
+> which allows you to choose one of:
+>   1. The fixed 24 MHz crystal, which is apparently used for the imx219
+>      camera, as described by imx219_clk above, and matches the wanted
+>      clock rate specified below?
+>   2. CSI1_CLK,
+>   3. CSI2_CLK.
+> The last two become CLK0/1 on the CAT874 board, which are driven by
+> TPU0TO0/1.
+>
+Yes my bad for not looking into this earlier, for both ov5645 and
+imx219 I do short
+pins 3-4 and 5-6 of J14, so for both the sensors the clocks should be
+fixed clock
+of 24Mhz, so I changed it imx219_clk to osc25250_clk and passed the same to
+ov5645 node. (imx219 sensor can take in a external clock from 6-27Mhz [2])
 
-It depends on the value of cfa.base.  If cfa.base is CFI_SP, then
-cfa.offset changes with stack_size.  If cfa.base is CFI_BP (i.e. if the
-function uses a frame pointer), then cfa.offset is constant (the
-distance between RBP on the stack and the previous frame).
+> Which setting do you use for the ov5645 camera?
+>
+> > +       clock-frequency = <24000000>;
+>
+> After your patch for the ov5645 driver, this should be replaced by
+> assigned-clock-rates?
+>
+After v4 [1] it was decided that the frequency should be set by driver itself,
+so I'll be revisiting ov5645 driver.
 
--- 
-Josh
+[1] https://patchwork.linuxtv.org/patch/62185/
+[2] https://publiclab.org/system/images/photos/000/023/294/original/RASPBERRY_PI_CAMERA_V2_DATASHEET_IMX219PQH5_7.0.0_Datasheet_XXX.PDF
 
+Cheers,
+--Prabhakar
+
+> The rest looks good to me, but I'm not a multi-media/camera expert.
+>
+> [*] https://github.com/Kevin-WSCU/96Boards-Camera
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
