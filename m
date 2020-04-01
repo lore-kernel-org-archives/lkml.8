@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E524DC2BA12
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3E9C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9746920658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2301920772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759107;
-	bh=xRdhyKnGuxjusTLw/aAf27RdDFu0veOQA6/4JO0PSEE=;
+	s=default; t=1585759111;
+	bh=zRZCiOpv/kmMlJxQeyRwH+7szgYRurWO+1olXjkYMTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4dFqTs7h4cH8YGA2CGHTgaO02uz1BrLXMTQOdZh3PATMJDW5rvLeB69RVZAyimcS
-	 s0xt6egdk80D8nztk8jibYWPqqklLWQg+e2NtWyRRFt1Ev0ksOltwEPDTrfqsB+yAM
-	 ZxTkCmmouDOF7+U/zRDtrgWMNH8WIzWyEZeS43nM=
+	b=BkuRTTM+eOD/NWi3dY/Yc5wTyXN7gR0HXOFO6Gitr5vuR45IJG3F+neDMlVjv3Gho
+	 TXzlEkB499c+DIXrIcFZit9Rkozufk/dF7eJzugnFm+XjjgNpBr6r2UBLqiCATzMba
+	 nCrJ8803timSooAF9lNfJfGxeF9tCmI62rcmBPbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388904AbgDAQi0 (ORCPT
+        id S2388325AbgDAQia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:38:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388946AbgDAQiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:38:24 -0400
+        id S1732169AbgDAQi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:38:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B891920857;
-        Wed,  1 Apr 2020 16:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F424212CC;
+        Wed,  1 Apr 2020 16:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759104;
-        bh=xRdhyKnGuxjusTLw/aAf27RdDFu0veOQA6/4JO0PSEE=;
+        s=default; t=1585759106;
+        bh=zRZCiOpv/kmMlJxQeyRwH+7szgYRurWO+1olXjkYMTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H0XeqqdDXYeUCKPOMfJAN7XY+WRle0vFFtPp40O0sroXlxC9/Fdug1e4QRzs+rVxX
-         naxTg27XiBOS6YwHhm+UDy8T1ibSE+eob08OoULVkLD+W6vm8eigVuTWXlGC5PV31D
-         tcTZE21+85MUSwoVKlk1y8Dz2UeHVN5zjvQ7Co6M=
+        b=WF/3PfwFXtyRj3HIjx/p1YLDPRp/bfZREr4hTBdP/teyxweL46cTT9y9EP9OSywM2
+         m9qo9VQXBfQPU2Oh4LyLjJwLYiu3OOy6ShCtUsHpuO1HV6Vi/+V9QtgB2QrtaA6BZb
+         ufWj82AKbFX03jUKsaG1WrSskPMyQYvtAbVIhPKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pawel Dembicki <paweldembicki@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 076/102] USB: serial: option: add Wistron Neweb D19Q1
-Date:   Wed,  1 Apr 2020 18:18:19 +0200
-Message-Id: <20200401161545.401319428@linuxfoundation.org>
+        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com,
+        syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com,
+        syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 041/102] net_sched: cls_route: remove the right filter from hashtable
+Date:   Wed,  1 Apr 2020 18:17:44 +0200
+Message-Id: <20200401161540.504958837@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -59,63 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Dembicki <paweldembicki@gmail.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit dfee7e2f478346b12ea651d5c28b069f6a4af563 upstream.
+[ Upstream commit ef299cc3fa1a9e1288665a9fdc8bff55629fd359 ]
 
-This modem is embedded on dlink dwr-960 router.
-The oem configuration states:
+route4_change() allocates a new filter and copies values from
+the old one. After the new filter is inserted into the hash
+table, the old filter should be removed and freed, as the final
+step of the update.
 
-T: Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 2 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs= 1
-P: Vendor=1435 ProdID=d191 Rev=ff.ff
-S: Manufacturer=Android
-S: Product=Android
-S: SerialNumber=0123456789ABCDEF
-C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-E: Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E: Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=84(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=86(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E: Ad=88(I) Atr=03(Int.) MxPS= 8 Ivl=32ms
-E: Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
-E: Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+However, the current code mistakenly removes the new one. This
+looks apparently wrong to me, and it causes double "free" and
+use-after-free too, as reported by syzbot.
 
-Tested on openwrt distribution
-
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported-and-tested-by: syzbot+f9b32aaacd60305d9687@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+2f8c233f131943d6056d@syzkaller.appspotmail.com
+Reported-and-tested-by: syzbot+9c2df9fd5e9445b74e01@syzkaller.appspotmail.com
+Fixes: 1109c00547fc ("net: sched: RCU cls_route")
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sched/cls_route.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1983,6 +1983,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x1435, 0xd191, 0xff),			/* Wistron Neweb D19Q1 */
-+	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
- 	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
+--- a/net/sched/cls_route.c
++++ b/net/sched/cls_route.c
+@@ -542,8 +542,8 @@ static int route4_change(struct net *net
+ 			fp = &b->ht[h];
+ 			for (pfp = rtnl_dereference(*fp); pfp;
+ 			     fp = &pfp->next, pfp = rtnl_dereference(*fp)) {
+-				if (pfp == f) {
+-					*fp = f->next;
++				if (pfp == fold) {
++					rcu_assign_pointer(*fp, fold->next);
+ 					break;
+ 				}
+ 			}
 
 
