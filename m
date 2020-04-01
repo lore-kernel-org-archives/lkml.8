@@ -2,372 +2,98 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D784EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7F9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949DB206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C903206EB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="FN32Obsp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hpVU1R96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731860AbgDAGoF (ORCPT
+        id S1731864AbgDAGpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:44:05 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:35118 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730426AbgDAGoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:44:05 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48sc9Y1N7Lz9tyYt;
-        Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=FN32Obsp; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id LfJ-CBpdfzbp; Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48sc9Y00mcz9tyYB;
-        Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585723441; bh=EJxaAM8iaxCoKvwnCcqzzUCDRBm8vznM2R2KHic5ohw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FN32Obsp1rPQUh1rFzsVLF87dmCSh7UZ51+tKQG3FaXi9kX88VGuU/mZSBaIYgWWo
-         Sxblhq3vUR3mF/P3rJYpIY68eG+gf8hLN+R/v9mS9AMKezaSHGN1mCrUnVCX6knFV5
-         8KJ5kaAsPk8wJdiQ5FabmGL5iamWy0qrJtzy326k=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DA0EB8B7B3;
-        Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 65prwT2dX8la; Wed,  1 Apr 2020 08:44:01 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3C7A08B778;
-        Wed,  1 Apr 2020 08:43:59 +0200 (CEST)
-Subject: Re: [PATCH v2 09/16] powerpc/watchpoint: Convert
- thread_struct->hw_brk to an array
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
- <20200401061309.92442-10-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <e5af5ed7-b9df-e334-1bdb-e7f82ae32697@c-s.fr>
-Date:   Wed, 1 Apr 2020 08:43:57 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200401061309.92442-10-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Wed, 1 Apr 2020 02:45:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38859 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730426AbgDAGpH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:45:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c21so10993567pfo.5
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 23:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=csVYTYfjTqbGWMeGQR9zKoMblf3SbVsagJxZkrL+InA=;
+        b=hpVU1R962Piv0K4jnO+Nr/AyCJsL8pX+aUH0/uLvf4naOP4yDk1SgEF8dtifL2TAaV
+         XoO+3j2sy8c0oETI4zi/3jNj8EUNWpO2LdssXmUC7IRFuV5hWlBXG5rN382pnIQL0lw9
+         hS8wN0zoAGAOG4AEP2nswH0qpG61io4jKa3tAx1IRvzJca22F2O8FE3p/jW3tRU66pFC
+         4kb/WLXY9v+WNRoi4SPjMDGZWmS3LQP6OfnB8oPqTMsWeAGB+GYa7/TyvaCBdf5ouAWX
+         CsQx2Dyav84QOSNvJiUiOvc0A89+28m2ZGHf9xcLdaW88VDrCD+DuCo/zyt0OdgvRsWC
+         Md+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=csVYTYfjTqbGWMeGQR9zKoMblf3SbVsagJxZkrL+InA=;
+        b=Y7R/jYlmKlcNA9QYlaSjLkp0oE0uHVKBQdlF6uoogzkS6evSzY3Gr/52JSsyDHTBLH
+         rXoxUN8xSAucFS3D7ZPX3tSjQlyq+vCOOgHT+XtKTlAWMwBpVe9u/rj+gMIUY7F2yVB/
+         grdT87Nbef2u0/SJdAPCZ8EdzjfGW08rUSCRqHqXj4Nr3ZtIohC64Wnjrtoxt3Fm6rEn
+         JZVlNW3IH7PmY5Hn3s3xrKgH2GTR2u13w9Estzy6QMAR5H/56EAq7sW5iuZu+w5/M4Bu
+         18QmdUADI+BScqj5rewQTLy8Mrf7wscrKAd96tu5l+GoqTIZ3W04tB5/aDaPL7RP6B/I
+         QgAA==
+X-Gm-Message-State: ANhLgQ0WuAsAWHA1rUGP3+7myCsAYGCMnITeADmGfCSlZyTc2Njl/3AH
+        YlgBfVyPnKqNR9cd82A8BIo2
+X-Google-Smtp-Source: ADFU+vvgzMtlpPO2xjjNC3QCrYxppVjHEzjMoYTmj9+Uw43brLLRXBvEMJHpSB+LOOogC10+wWjAVg==
+X-Received: by 2002:a63:f95c:: with SMTP id q28mr20973084pgk.321.1585723505866;
+        Tue, 31 Mar 2020 23:45:05 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:648c:592d:60f5:6f58:e46:db78])
+        by smtp.gmail.com with ESMTPSA id w24sm831962pjn.14.2020.03.31.23.45.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 23:45:05 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org, davem@davemloft.net
+Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/3] MHI bus improvements - Part 2
+Date:   Wed,  1 Apr 2020 12:14:32 +0530
+Message-Id: <20200401064435.12676-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greg,
 
+Here are the remaining patches left from the pervious series. The QRTR MHI
+client driver has gone a bit of refactoring after incorporating comments from
+Bjorn and Chris while the MHI suspend/resume patch is unmodified.
 
-Le 01/04/2020 à 08:13, Ravi Bangoria a écrit :
-> So far powerpc hw supported only one watchpoint. But Future Power
-> architecture is introducing 2nd DAWR. Convert thread_struct->hw_brk
-> into an array.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->   arch/powerpc/include/asm/processor.h      |  2 +-
->   arch/powerpc/kernel/process.c             | 61 ++++++++++++++---------
->   arch/powerpc/kernel/ptrace/ptrace-noadv.c | 40 +++++++++++----
->   arch/powerpc/kernel/ptrace/ptrace32.c     |  4 +-
->   arch/powerpc/kernel/signal.c              |  9 +++-
->   5 files changed, 77 insertions(+), 39 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
-> index 90f6dbc7ff00..65b03162cd67 100644
-> --- a/arch/powerpc/include/asm/processor.h
-> +++ b/arch/powerpc/include/asm/processor.h
-> @@ -187,7 +187,7 @@ struct thread_struct {
->   	 */
->   	struct perf_event *last_hit_ubp;
->   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
-> -	struct arch_hw_breakpoint hw_brk; /* info on the hardware breakpoint */
-> +	struct arch_hw_breakpoint hw_brk[HBP_NUM_MAX]; /* hardware breakpoint info */
->   	unsigned long	trap_nr;	/* last trap # on this thread */
->   	u8 load_slb;			/* Ages out SLB preload cache entries */
->   	u8 load_fp;
-> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-> index e0275fcd0c55..f5b4f21e822b 100644
-> --- a/arch/powerpc/kernel/process.c
-> +++ b/arch/powerpc/kernel/process.c
-> @@ -704,21 +704,50 @@ void switch_booke_debug_regs(struct debug_reg *new_debug)
->   EXPORT_SYMBOL_GPL(switch_booke_debug_regs);
->   #else	/* !CONFIG_PPC_ADV_DEBUG_REGS */
->   #ifndef CONFIG_HAVE_HW_BREAKPOINT
-> -static void set_breakpoint(struct arch_hw_breakpoint *brk)
-> +static void set_breakpoint(struct arch_hw_breakpoint *brk, int i)
->   {
->   	preempt_disable();
-> -	__set_breakpoint(brk, 0);
-> +	__set_breakpoint(brk, i);
->   	preempt_enable();
->   }
->   
->   static void set_debug_reg_defaults(struct thread_struct *thread)
->   {
-> -	thread->hw_brk.address = 0;
-> -	thread->hw_brk.type = 0;
-> -	thread->hw_brk.len = 0;
-> -	thread->hw_brk.hw_len = 0;
-> -	if (ppc_breakpoint_available())
-> -		set_breakpoint(&thread->hw_brk);
-> +	int i;
-> +
-> +	for (i = 0; i < nr_wp_slots(); i++) {
+Dave, can you please look into the QRTR MHI driver and provide some review?
 
-Maybe you could add the following that you added other places:
+Thanks,
+Mani
 
-	struct arch_hw_breakpoint null_brk = {0};
+Manivannan Sadhasivam (3):
+  bus: mhi: core: Add support for MHI suspend and resume
+  net: qrtr: Add MHI transport layer
+  net: qrtr: Do not depend on ARCH_QCOM
 
-Then do
+ drivers/bus/mhi/core/main.c |   3 +-
+ drivers/bus/mhi/core/pm.c   | 143 ++++++++++++++++++++++++++++++++++++
+ include/linux/mhi.h         |  19 +++++
+ net/qrtr/Kconfig            |   8 +-
+ net/qrtr/Makefile           |   2 +
+ net/qrtr/mhi.c              | 126 +++++++++++++++++++++++++++++++
+ 6 files changed, 299 insertions(+), 2 deletions(-)
+ create mode 100644 net/qrtr/mhi.c
 
-	thread->hw_brk[i] = null_brk;
+-- 
+2.17.1
 
-> +		thread->hw_brk[i].address = 0;
-> +		thread->hw_brk[i].type = 0;
-> +		thread->hw_brk[i].len = 0;
-> +		thread->hw_brk[i].hw_len = 0;
-> +		if (ppc_breakpoint_available())
-> +			set_breakpoint(&thread->hw_brk[i], i);
-> +	}
-> +}
-> +
-> +static inline bool hw_brk_match(struct arch_hw_breakpoint *a,
-> +				struct arch_hw_breakpoint *b)
-> +{
-> +	if (a->address != b->address)
-> +		return false;
-> +	if (a->type != b->type)
-> +		return false;
-> +	if (a->len != b->len)
-> +		return false;
-> +	/* no need to check hw_len. it's calculated from address and len */
-> +	return true;
-> +}
-> +
-> +static void switch_hw_breakpoint(struct task_struct *new)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < nr_wp_slots(); i++) {
-> +		if (unlikely(!hw_brk_match(this_cpu_ptr(&current_brk[i]),
-> +					   &new->thread.hw_brk[i]))) {
-> +			__set_breakpoint(&new->thread.hw_brk[i], i);
-> +		}
-
-Or could be:
-
-		if (likely(hw_brk_match(this_cpu_ptr(&current_brk[i]),
-					&new->thread.hw_brk[i])))
-			continue;
-		__set_breakpoint(&new->thread.hw_brk[i], i);
-
-
-> +	}
->   }
->   #endif /* !CONFIG_HAVE_HW_BREAKPOINT */
->   #endif	/* CONFIG_PPC_ADV_DEBUG_REGS */
-> @@ -822,19 +851,6 @@ bool ppc_breakpoint_available(void)
->   }
->   EXPORT_SYMBOL_GPL(ppc_breakpoint_available);
->   
-> -static inline bool hw_brk_match(struct arch_hw_breakpoint *a,
-> -			      struct arch_hw_breakpoint *b)
-> -{
-> -	if (a->address != b->address)
-> -		return false;
-> -	if (a->type != b->type)
-> -		return false;
-> -	if (a->len != b->len)
-> -		return false;
-> -	/* no need to check hw_len. it's calculated from address and len */
-> -	return true;
-> -}
-> -
->   #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
->   
->   static inline bool tm_enabled(struct task_struct *tsk)
-> @@ -1167,8 +1183,7 @@ struct task_struct *__switch_to(struct task_struct *prev,
->    * schedule DABR
->    */
->   #ifndef CONFIG_HAVE_HW_BREAKPOINT
-> -	if (unlikely(!hw_brk_match(this_cpu_ptr(&current_brk[0]), &new->thread.hw_brk)))
-> -		__set_breakpoint(&new->thread.hw_brk, 0);
-> +	switch_hw_breakpoint(new);
->   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
->   #endif
->   
-> diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> index 12962302d6a4..0dbb35392dd2 100644
-> --- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> +++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> @@ -67,11 +67,16 @@ int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
->   	/* We only support one DABR and no IABRS at the moment */
->   	if (addr > 0)
->   		return -EINVAL;
-> -	dabr_fake = ((child->thread.hw_brk.address & (~HW_BRK_TYPE_DABR)) |
-> -		     (child->thread.hw_brk.type & HW_BRK_TYPE_DABR));
-> +	dabr_fake = ((child->thread.hw_brk[0].address & (~HW_BRK_TYPE_DABR)) |
-> +		     (child->thread.hw_brk[0].type & HW_BRK_TYPE_DABR));
->   	return put_user(dabr_fake, datalp);
->   }
->   
-> +/*
-> + * ptrace_set_debugreg() fakes DABR and DABR is only one. So even if
-> + * internal hw supports more than one watchpoint, we support only one
-> + * watchpoint with this interface.
-> + */
->   int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned long data)
->   {
->   #ifdef CONFIG_HAVE_HW_BREAKPOINT
-> @@ -137,7 +142,7 @@ int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned l
->   			return ret;
->   
->   		thread->ptrace_bps[0] = bp;
-> -		thread->hw_brk = hw_brk;
-> +		thread->hw_brk[0] = hw_brk;
->   		return 0;
->   	}
->   
-> @@ -159,12 +164,24 @@ int ptrace_set_debugreg(struct task_struct *task, unsigned long addr, unsigned l
->   	if (set_bp && (!ppc_breakpoint_available()))
->   		return -ENODEV;
->   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
-> -	task->thread.hw_brk = hw_brk;
-> +	task->thread.hw_brk[0] = hw_brk;
->   	return 0;
->   }
->   
-> +static int find_empty_hw_brk(struct thread_struct *thread)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < nr_wp_slots(); i++) {
-> +		if (!thread->hw_brk[i].address)
-> +			return i;
-> +	}
-> +	return -1;
-> +}
-> +
->   long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_info)
->   {
-> +	int i;
->   #ifdef CONFIG_HAVE_HW_BREAKPOINT
->   	int len = 0;
->   	struct thread_struct *thread = &child->thread;
-> @@ -223,15 +240,16 @@ long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_inf
->   	if (bp_info->addr_mode != PPC_BREAKPOINT_MODE_EXACT)
->   		return -EINVAL;
->   
-> -	if (child->thread.hw_brk.address)
-> +	i = find_empty_hw_brk(&child->thread);
-> +	if (i < 0)
->   		return -ENOSPC;
->   
->   	if (!ppc_breakpoint_available())
->   		return -ENODEV;
->   
-> -	child->thread.hw_brk = brk;
-> +	child->thread.hw_brk[i] = brk;
->   
-> -	return 1;
-> +	return i + 1;
->   }
->   
->   long ppc_del_hwdebug(struct task_struct *child, long data)
-> @@ -241,7 +259,7 @@ long ppc_del_hwdebug(struct task_struct *child, long data)
->   	struct thread_struct *thread = &child->thread;
->   	struct perf_event *bp;
->   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
-> -	if (data != 1)
-> +	if (data < 1 || data > nr_wp_slots())
->   		return -EINVAL;
->   
->   #ifdef CONFIG_HAVE_HW_BREAKPOINT
-> @@ -254,11 +272,11 @@ long ppc_del_hwdebug(struct task_struct *child, long data)
->   	}
->   	return ret;
->   #else /* CONFIG_HAVE_HW_BREAKPOINT */
-> -	if (child->thread.hw_brk.address == 0)
-> +	if (child->thread.hw_brk[data - 1].address == 0)
->   		return -ENOENT;
->   
-> -	child->thread.hw_brk.address = 0;
-> -	child->thread.hw_brk.type = 0;
-> +	child->thread.hw_brk[data - 1].address = 0;
-> +	child->thread.hw_brk[data - 1].type = 0;
->   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
->   
->   	return 0;
-> diff --git a/arch/powerpc/kernel/ptrace/ptrace32.c b/arch/powerpc/kernel/ptrace/ptrace32.c
-> index 7976ddf29c0e..7589a9665ffb 100644
-> --- a/arch/powerpc/kernel/ptrace/ptrace32.c
-> +++ b/arch/powerpc/kernel/ptrace/ptrace32.c
-> @@ -259,8 +259,8 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
->   		ret = put_user(child->thread.debug.dac1, (u32 __user *)data);
->   #else
->   		dabr_fake = (
-> -			(child->thread.hw_brk.address & (~HW_BRK_TYPE_DABR)) |
-> -			(child->thread.hw_brk.type & HW_BRK_TYPE_DABR));
-> +			(child->thread.hw_brk[0].address & (~HW_BRK_TYPE_DABR)) |
-> +			(child->thread.hw_brk[0].type & HW_BRK_TYPE_DABR));
->   		ret = put_user(dabr_fake, (u32 __user *)data);
->   #endif
->   		break;
-> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-> index bbf237f072d4..b559b114d03d 100644
-> --- a/arch/powerpc/kernel/signal.c
-> +++ b/arch/powerpc/kernel/signal.c
-> @@ -107,6 +107,9 @@ static void do_signal(struct task_struct *tsk)
->   	struct ksignal ksig = { .sig = 0 };
->   	int ret;
->   	int is32 = is_32bit_task();
-> +#ifndef CONFIG_PPC_ADV_DEBUG_REGS
-> +	int i;
-> +#endif >
->   	BUG_ON(tsk != current);
->   
-> @@ -128,8 +131,10 @@ static void do_signal(struct task_struct *tsk)
->   	 * user space. The DABR will have been cleared if it
->   	 * triggered inside the kernel.
->   	 */
-> -	if (tsk->thread.hw_brk.address && tsk->thread.hw_brk.type)
-> -		__set_breakpoint(&tsk->thread.hw_brk, 0);
-> +	for (i = 0; i < nr_wp_slots(); i++) {
-> +		if (tsk->thread.hw_brk[i].address && tsk->thread.hw_brk[i].type)
-> +			__set_breakpoint(&tsk->thread.hw_brk[i], i);
-> +	}
-
-thread.hwbrk also exists when CONFIG_PPC_ADV_DEBUG_REGS is selected.
-
-You could replace the #ifndef CONFIG_PPC_ADV_DEBUG_REGS by an if 
-(!IS_ENABLED(CONFIG_PPC_ADV_DEBUG_REGS)) and then no need of an ifdef 
-when declaring the int i;
-
->   #endif
->   	/* Re-enable the breakpoints for the signal stack */
->   	thread_change_pc(tsk, tsk->thread.regs);
-> 
-
-Christophe
