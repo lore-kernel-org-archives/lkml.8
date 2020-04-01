@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F2DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7DAC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26728212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D517212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758523;
-	bh=TnaegqLutaCcUAWij8JhdcO3zXmQdHFlD4ZdAEXwmjA=;
+	s=default; t=1585758524;
+	bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwesb/CVnH0zlScZKNS9Ci/1ySrrv9b64HMbx3UsJJKovL7umwGrljY8ejwMlLapY
-	 KjYgojBiy3C3TumLqZ6/lRgm3GIHOA0TDH5N3qQvKaGZAsGLye2I2oKLRKVVq9ClaB
-	 BEprGmsdOJxEkuypTKPXh7poOJT6raMRutXCNhC0=
+	b=gVZFGU6riWJUUg3l5OOXNcM9YBcK1P9IWw4XI1twBEG9pTfCnBO+8n640rbRc0Zid
+	 TAklb1EFr8akyzypeK37z/beYdtF1zZzPVtU4gkI/v9GAp8eDywJbJc0H3VIzy5yFz
+	 JQDJon5PpcEhbT/hXNjRyGtFTvKzNsCuXbo+/Jso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732794AbgDAQ2l (ORCPT
+        id S2388134AbgDAQ2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54028 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:28:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387611AbgDAQ2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:28:38 -0400
+        id S2387942AbgDAQ2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:28:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7164320857;
-        Wed,  1 Apr 2020 16:28:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4C220BED;
+        Wed,  1 Apr 2020 16:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758516;
-        bh=TnaegqLutaCcUAWij8JhdcO3zXmQdHFlD4ZdAEXwmjA=;
+        s=default; t=1585758521;
+        bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x2wWylVxEWjvTNkfpYKyIiPc8pt52lc0mFM2uaoEV+1J2zglbY75PO3U5USbLjm5t
-         ubE8MoTLNg5J/De9TUDeHQ6PydVyh1DtWLiDTx052Sm4VH449bhcvp4ti7mlx+LBfA
-         1TL8xWM30CKcUvA581W2PSfjf2x2yMRF5DGPU+NE=
+        b=NCROqMkvXTUDNl4KfN4923+SZ/Z1137HXBoANebbvfIl5+cdngzk0rGcf1YuWklvt
+         DhQ7tqRFw02HvaRafox+IzCTKUjzSycBViwKuuNolKfJq42RSCSOyDQRvXYwXbsaKw
+         u+wkfH3jBS2G6xzkWRJTzU2f10S/L7nafiGU87+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Hudson <skrll@netbsd.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4.19 112/116] ARM: bcm2835-rpi-zero-w: Add missing pinctrl name
-Date:   Wed,  1 Apr 2020 18:18:08 +0200
-Message-Id: <20200401161556.458997100@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 4.19 113/116] ARM: dts: imx6: phycore-som: fix arm and soc minimum voltage
+Date:   Wed,  1 Apr 2020 18:18:09 +0200
+Message-Id: <20200401161556.559331247@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -59,31 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Hudson <skrll@netbsd.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 6687c201fdc3139315c2ea7ef96c157672805cdc upstream.
+commit 636b45b8efa91db05553840b6c0120d6fa6b94fa upstream.
 
-Define the sdhci pinctrl state as "default" so it gets applied
-correctly and to match all other RPis.
+The current set minimum voltage of 730000µV seems to be wrong. I don't
+know the document which specifies that but the imx6qdl datasheets says
+that the minimum voltage should be 0.925V for VDD_ARM (LDO bypassed,
+lowest opp) and 1.15V for VDD_SOC (LDO bypassed, lowest opp).
 
-Fixes: 2c7c040c73e9 ("ARM: dts: bcm2835: Add Raspberry Pi Zero W")
-Signed-off-by: Nick Hudson <skrll@netbsd.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: ddec5d1c0047 ("ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -118,6 +118,7 @@
- &sdhci {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
- 	mmc-pwrseq = <&wifi_pwrseq>;
- 	non-removable;
+--- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+@@ -107,14 +107,14 @@
+ 		regulators {
+ 			vdd_arm: buck1 {
+ 				regulator-name = "vdd_arm";
+-				regulator-min-microvolt = <730000>;
++				regulator-min-microvolt = <925000>;
+ 				regulator-max-microvolt = <1380000>;
+ 				regulator-always-on;
+ 			};
+ 
+ 			vdd_soc: buck2 {
+ 				regulator-name = "vdd_soc";
+-				regulator-min-microvolt = <730000>;
++				regulator-min-microvolt = <1150000>;
+ 				regulator-max-microvolt = <1380000>;
+ 				regulator-always-on;
+ 			};
 
 
