@@ -2,81 +2,92 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5506AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EBAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164A920842
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B492078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="W4gWmzY+"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LrWXeZee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731642AbgDACQY (ORCPT
+        id S1731582AbgDACS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 22:16:24 -0400
-Received: from ozlabs.org ([203.11.71.1]:39733 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731427AbgDACQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 22:16:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sVDj1rJCz9sSM;
-        Wed,  1 Apr 2020 13:16:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585707381;
-        bh=6H4dJVI9SZD7xHWGgoeySLOGZhVXjnt00eYoMPTKebI=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=W4gWmzY+y/WMKE7YTdt0643Yql+sIBSKLoyp1fQhPwJGYPXwwJrnUE3ZOrVpYI1Td
-         ur+5K1IzUkvFPwx+VF/iKQbxL2rR/te8JrfODxsWvPnJN+QejX3/V/XmaoylMBtj+A
-         +yo2YZO9B2rdynITB+dOFOq4Zkr6H0LKNDB4vmXD5QIeJOmYVCZuJqEg9n1LglsuN7
-         E1GHIi+fN0JntV36kZfV/xFMZd3O1Zxkh5FCbU7pF3EL9nv+IkfaBDf3Pw+GAkgyZR
-         wiNmuIpT98WgG6yiE8RVaqwUynS6KnW3JuqCDwDYd6bM7Cw4TWJBAXhKPIfKU8AFB0
-         3DrD7TWrE18hg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 07/11] powerpc/xmon: Remove PPC403 and PPC405
-In-Reply-To: <CAK8P3a2Q5gmcyjo03QoDMNO-xEWXDjhW8ScUsGGRWVKgVXj5_g@mail.gmail.com>
-References: <698e9a42a06eb856eef4501c3c0a182c034a5d8c.1585640941.git.christophe.leroy@c-s.fr> <38de0c6caceb052a23e039378dc491fe66cea371.1585640942.git.christophe.leroy@c-s.fr> <CAK8P3a2Q5gmcyjo03QoDMNO-xEWXDjhW8ScUsGGRWVKgVXj5_g@mail.gmail.com>
-Date:   Wed, 01 Apr 2020 13:16:30 +1100
-Message-ID: <87ftdouf0h.fsf@mpe.ellerman.id.au>
+        Tue, 31 Mar 2020 22:18:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60163 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731523AbgDACS0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 22:18:26 -0400
+X-UUID: 073f40533d05470783e0566a1a6ce4ae-20200401
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ozChR75QyhnkmzvgkYzHisLoS9xThMPk60TjOXq2y0w=;
+        b=LrWXeZee48NVlpQS5k8wlQhwHKfSKaPXYPbJZKl8dYF3B8LSXXJnuJPo+NKnV/RRT1sM50b7gqxW4ZMz3Qc8SAd16oF7HwdybB/jWwRKlKtbSDpddzwT0RNDgPWFC0R4h1QteteVWzIEL6orgbeZ9yPgiQWav8BI+tvWJXfWd6Y=;
+X-UUID: 073f40533d05470783e0566a1a6ce4ae-20200401
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1675022153; Wed, 01 Apr 2020 10:18:20 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs05n2.mediatek.inc
+ (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 1 Apr
+ 2020 10:18:14 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 1 Apr 2020 10:18:16 +0800
+Message-ID: <1585707503.28859.21.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 3/4] phy: mediatek: Move mtk_hdmi_phy driver into
+ drivers/phy/mediatek folder
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-mediatek@lists.infradead.org>, CK Hu <ck.hu@mediatek.com>
+Date:   Wed, 1 Apr 2020 10:18:23 +0800
+In-Reply-To: <20200331155728.18032-4-chunkuang.hu@kernel.org>
+References: <20200331155728.18032-1-chunkuang.hu@kernel.org>
+         <20200331155728.18032-4-chunkuang.hu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
-> On Tue, Mar 31, 2020 at 9:49 AM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->>
->> xmon has special support for PPC403 and PPC405 which were part
->> of 40x platforms.
->>
->> 40x platforms are gone, remove support of PPC403 and PPC405 in xmon.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>  arch/powerpc/xmon/ppc-opc.c | 277 +++++++-----------------------------
->>  arch/powerpc/xmon/ppc.h     |   6 -
->
-> These files are from binutils, and may get synchronized with changes there
-> in the future. I'd suggest leaving the code in here for now and instead removing
-> it from the binutils version first, if they are ready to drop it, too.
+T24gVHVlLCAyMDIwLTAzLTMxIGF0IDIzOjU3ICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
+PiBGcm9tOiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KPiANCj4gbXRrX2hkbWlfcGh5IGlz
+IGN1cnJlbnRseSBwbGFjZWQgaW5zaWRlIG1lZGlhdGVrIGRybSBkcml2ZXIsIGJ1dCBpdCdzDQo+
+IG1vcmUgc3VpdGFibGUgdG8gcGxhY2UgYSBwaHkgZHJpdmVyIGludG8gcGh5IGRyaXZlciBmb2xk
+ZXIsIHNvIG1vdmUNCj4gbXRrX2hkbWlfcGh5IGRyaXZlciBpbnRvIHBoeSBkcml2ZXIgZm9sZGVy
+Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCj4gU2ln
+bmVkLW9mZi1ieTogQ2h1bi1LdWFuZyBIdSA8Y2h1bmt1YW5nLmh1QGtlcm5lbC5vcmc+DQo+IC0t
+LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL0tjb25maWcgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8IDcgLS0tLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxl
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYgLS0tLS0tDQo+ICBkcml2ZXJzL3BoeS9tZWRp
+YXRlay9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNyArKysrKysrDQo+
+ICBkcml2ZXJzL3BoeS9tZWRpYXRlay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgNyArKysrKysrDQo+ICAuLi4vbWVkaWF0ZWsvcGh5LW10ay1oZG1pLW10MjcwMS5jfSAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgMiArLQ0KPiAgLi4uL21lZGlhdGVrL3BoeS1tdGstaGRt
+aS1tdDgxNzMuY30gICAgICAgICAgICAgICAgICAgICAgICB8IDIgKy0NCj4gIC4uLi9tdGtfaGRt
+aV9waHkuYyA9PiBwaHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLmN9ICAgICAgICAgfCAyICstDQo+
+ICAuLi4vbXRrX2hkbWlfcGh5LmggPT4gcGh5L21lZGlhdGVrL3BoeS1tdGstaGRtaS5ofSAgICAg
+ICAgIHwgMA0KPiAgOCBmaWxlcyBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlv
+bnMoLSkNCj4gIHJlbmFtZSBkcml2ZXJzL3tncHUvZHJtL21lZGlhdGVrL210a19tdDI3MDFfaGRt
+aV9waHkuYyA9PiBwaHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLW10MjcwMS5jfSAoOTklKQ0KPiAg
+cmVuYW1lIGRyaXZlcnMve2dwdS9kcm0vbWVkaWF0ZWsvbXRrX210ODE3M19oZG1pX3BoeS5jID0+
+IHBoeS9tZWRpYXRlay9waHktbXRrLWhkbWktbXQ4MTczLmN9ICg5OSUpDQo+ICByZW5hbWUgZHJp
+dmVycy97Z3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9waHkuYyA9PiBwaHkvbWVkaWF0ZWsvcGh5
+LW10ay1oZG1pLmN9ICg5OSUpDQo+ICByZW5hbWUgZHJpdmVycy97Z3B1L2RybS9tZWRpYXRlay9t
+dGtfaGRtaV9waHkuaCA9PiBwaHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLmh9ICgxMDAlKQ0KPiAN
+ClJldmlld2VkLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQo=
 
-Yes those files are almost direct copies of the binutils versions, and
-we'd like to keep it that way to ease future synchronisation of changes.
-
-cheers
