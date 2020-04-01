@@ -3,92 +3,227 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F36FC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABE4C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A0A2072E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F77A2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731802AbgDAFXB (ORCPT
+        id S1731744AbgDAFc0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 01:23:01 -0400
-Received: from mx.sdf.org ([205.166.94.20]:64868 "EHLO mx.sdf.org"
+        Wed, 1 Apr 2020 01:32:26 -0400
+Received: from mga03.intel.com ([134.134.136.65]:15821 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgDAFXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 01:23:00 -0400
-Received: from sdf.org (IDENT:lkml@faeroes.freeshell.org [205.166.94.9])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 0315I32g012695
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Wed, 1 Apr 2020 05:18:03 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 0315Hxjv027273;
-        Wed, 1 Apr 2020 05:17:59 GMT
-Date:   Wed, 1 Apr 2020 05:17:59 +0000
-From:   George Spelvin <lkml@SDF.ORG>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qian Cai <cai@lca.pw>, Kees Cook <keescook@chromium.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Thomas Garnier <thgarnie@google.com>, lkml@sdf.org
-Subject: lib/random32.c security
-Message-ID: <20200401051759.GA9616@SDF.ORG>
-References: <202003281643.02SGhPmY017434@sdf.org>
- <CAPcyv4iagZy5m3FpMrQqyOi=_uCzqh5MjbW+J_xiHU1Z1BmF=g@mail.gmail.com>
- <20200328182817.GE5859@SDF.ORG>
- <98bd30f23b374ccbb61dd46125dc9669@AcuMS.aculab.com>
- <20200329174122.GD4675@SDF.ORG>
- <20200329214214.GB768293@mit.edu>
+        id S1731683AbgDAFc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 01:32:26 -0400
+IronPort-SDR: gPwUEcifkcx41Vd8cG+0aLxavBDekgLZSOjAL5373185apDzOhglX51omoxjv4X14EfhjgGj7I
+ CNjgqF2Z4A6Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 22:32:25 -0700
+IronPort-SDR: rRNDlEbmxX4+3bAhcoyohLz++3lRP7Sbg19yAvMYAjj8XmOxz4AqLrUH/r8idCM6hvu5OS7vuH
+ O+iRvpjeYmpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
+   d="scan'208";a="240347396"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 22:32:24 -0700
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 31 Mar 2020 22:32:24 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
+ Wed, 1 Apr 2020 13:32:21 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: RE: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
+Thread-Topic: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
+Thread-Index: AQHWAvq+z2SPyfblHkGvV1oKjQsO9ahaFEoAgAB7VgCAAS14gP//zqQAgAEODYCABAXlIIAALvMAgAFssACAACIBAIABY/uQ
+Date:   Wed, 1 Apr 2020 05:32:21 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D803AFF@SHSMSX104.ccr.corp.intel.com>
+References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200326092316.GA31648@infradead.org>
+        <20200326094442.5be042ce@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
+        <20200327074702.GA27959@infradead.org>
+        <20200327165335.397f24a3@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
+        <20200330090746.23c5599c@jacob-builder>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
+ <20200331085444.44bee0bb@jacob-builder>
+In-Reply-To: <20200331085444.44bee0bb@jacob-builder>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329214214.GB768293@mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 05:42:14PM -0400, Theodore Y. Ts'o wrote:
-> If anyone is trying to rely on prandom_u32() as being "strong" in any
-> sense of the word in terms of being reversable by attacker --- they
-> shouldn't be using prandom_u32().  That's going to be true no matter
-> *what* algorithm we use.
+> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Sent: Tuesday, March 31, 2020 11:55 PM
 > 
-> Better distribution?  Sure.  Making prandom_u32() faster?  Absolutely;
-> that's its primary Raison d'Etre.
+> On Tue, 31 Mar 2020 06:06:38 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> 
+> > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > Sent: Tuesday, March 31, 2020 12:08 AM
+> > >
+> > > On Mon, 30 Mar 2020 05:40:40 +0000
+> > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> > >
+> > > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > > Sent: Saturday, March 28, 2020 7:54 AM
+> > > > >
+> > > > > On Fri, 27 Mar 2020 00:47:02 -0700
+> > > > > Christoph Hellwig <hch@infradead.org> wrote:
+> > > > >
+> > > > > > On Fri, Mar 27, 2020 at 02:49:55AM +0000, Tian, Kevin wrote:
+> > > > > > > If those API calls are inter-dependent for composing a
+> > > > > > > feature (e.g. SVA), shouldn't we need a way to check them
+> > > > > > > together before exposing the feature to the guest, e.g.
+> > > > > > > through a iommu_get_uapi_capabilities interface?
+> > > > > >
+> > > > > > Yes, that makes sense.  The important bit is to have a
+> > > > > > capability flags and not version numbers.
+> > > > >
+> > > > > The challenge is that there are two consumers in the kernel for
+> > > > > this. 1. VFIO only look for compatibility, and size of each data
+> > > > > struct such that it can copy_from_user.
+> > > > >
+> > > > > 2. IOMMU driver, the "real consumer" of the content.
+> > > > >
+> > > > > For 2, I agree and we do plan to use the capability flags to
+> > > > > check content and maintain backward compatibility etc.
+> > > > >
+> > > > > For VFIO, it is difficult to do size look up based on capability
+> > > > > flags.
+> > > >
+> > > > Can you elaborate the difficulty in VFIO? if, as Christoph Hellwig
+> > > > pointed out, version number is already avoided everywhere, it is
+> > > > interesting to know whether this work becomes a real exception
+> > > > or just requires a different mindset.
+> > > >
+> > > From VFIO p.o.v. the IOMMU UAPI data is opaque, it only needs to do
+> > > two things:
+> > > 1. is the UAPI compatible?
+> > > 2. what is the size to copy?
+> > >
+> > > If you look at the version number, this is really a "version as
+> > > size" lookup, as provided by the helper function in this patch. An
+> > > example can be the newly introduced clone3 syscall.
+> > > https://lwn.net/Articles/792628/
+> > > In clone3, new version must have new size. The slight difference
+> > > here is that, unlike clone3, we have multiple data structures
+> > > instead of a single struct clone_args {}. And each struct has flags
+> > > to enumerate its contents besides size.
+> >
+> > Thanks for providing that link. However clone3 doesn't include a
+> > version field to do "version as size" lookup. Instead, as you said,
+> > it includes a size parameter which sounds like the option 3 (argsz)
+> > listed below.
+> >
+> Right, there is no version in clone3. size = version. I view this as
+> a 1:1 lookup.
+> 
+> > >
+> > > Besides breaching data abstraction, if VFIO has to check IOMMU
+> > > flags to determine the sizes, it has many combinations.
+> > >
+> > > We also separate the responsibilities into two parts
+> > > 1. compatibility - version, size by VFIO
+> > > 2. sanity check - capability flags - by IOMMU
+> >
+> > I feel argsz+flags approach can perfectly meet above requirement. The
+> > userspace set the size and flags for whatever capabilities it uses,
+> > and VFIO simply copies the parameters by size and pass to IOMMU for
+> > further sanity check. Of course the assumption is that we do provide
+> > an interface for userspace to enumerate all supported capabilities.
+> >
+> You cannot trust user for argsz. the size to be copied from user must
+> be based on knowledge in kernel. That is why we have this version to
+> size lookup.
+> 
+> In VFIO, the size to copy is based on knowledge of each VFIO UAPI
+> structures and VFIO flags. But here the flags are IOMMU UAPI flags. As
+> you pointed out in another thread, VFIO is one user.
 
-I'd like your comments on an idea I had to add a second PRNG state
-for security-interesting applications.
+If that is the case, can we let VFIO only copy its own UAPI fields while 
+simply passing the user pointer of IOMMU UAPI structure to IOMMU
+driver for further size check and copy? Otherwise we are entering a
+dead end that VFIO doesn't want to parse a structure which is not
+defined by him while using version to represent the black box size
+is considered as a discarded scheme and doesn't scale well...
 
-There are some ASLR tasks, notably slab freelist shuffling and
-per-syscall stack offset randomization, which need a Very Fast
-source of random numbers.  No crypto-grade generator qualifies,
-and both currently use very bad ad-hoc generators.
+> 
+> > Is there anything that I overlooked here? I suppose there might be
+> > some difficulties that block you from going the argsz way...
+> >
+> > Thanks
+> > Kevin
+> >
+> > >
+> > > I think the latter matches what Christoph's comments. So we are in
+> > > agreement at the IOMMU level :)
+> > >
+> > > For example:
+> > > During guest PASID bind, IOMMU driver operates on the data passed
+> > > from VFIO and check format & flags to take different code path.
+> > >
+> > > #define IOMMU_PASID_FORMAT_INTEL_VTD	1
+> > > 	__u32 format;
+> > > #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
+> > > 	__u64 flags;
+> > >
+> > > Jacob
+> > >
+> > > > btw the most relevant discussion which I can find out now is here:
+> > > > 	https://lkml.org/lkml/2020/2/3/1126
+> > > >
+> > > > It mentioned 3 options for handling extension:
+> > > > --
+> > > > 1. Disallow adding new members to each structure other than reuse
+> > > > padding bits or adding union members at the end.
+> > > > 2. Allow extension of the structures beyond union, but union size
+> > > > has to be fixed with reserved spaces
+> > > > 3. Adopt VFIO argsz scheme, I don't think we need version for each
+> > > > struct anymore. argsz implies the version that user is using
+> > > > assuming UAPI data is extension only.
+> > > > --
+> > > >
+> > > > the first two are both version-based. Looks most guys agreed with
+> > > > option-1 (in this v2), but Alex didn't give his opinion at the
+> > > > moment. The last response from him was the raise of option-3 using
+> > > > argsz to avoid version. So, we also need hear from him. Alex?
+> > > >
+> > > > Thanks
+> > > > Kevin
+> > >
+> > > [Jacob Pan]
+> 
+> [Jacob Pan]
 
-The per-syscall stack offset code currently uses the lsbits of the
-TSC, which is obviously bad as they're observable by the (presumed
-malicious) userspace immediately before the call and thus highly
-predictable.
-
-Likewise, the slab shuffling currently precomputes a permutation and
-just picks a random starting position for every slab.
-
-Both are saved by the fact that their PRNG outputs are mostly
-unobservable, so an attacker can't start to predict them.
-
-I was thinking that a second PRNG, identical to the prandom_u32()
-one but seeded speartely, could be used for this purpose.  The good
-distribution would preclude trivial patterns in their output, which
-is about all we can hope for.
-
-The difference is that it would only be used for applications which
-both require high speed and are (mostly) unobservable to an attacker.
-
-
-Any opinions, anyone?
+Thanks
+Kevin
