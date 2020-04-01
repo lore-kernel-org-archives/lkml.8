@@ -2,103 +2,96 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69302C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF278C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E27A206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:18:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gqdyRZJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8D385206F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731952AbgDAHSP (ORCPT
+        id S1731978AbgDAHSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:18:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:38405 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731680AbgDAHSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:18:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48scx04fspz9sR4;
-        Wed,  1 Apr 2020 18:18:12 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585725493;
-        bh=GaMxXD0xEK28380G3gYltCDH4MUfZ3GYqHxVk07UhgU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gqdyRZJJViSabetKgIH/gR8d/PZKC3pFKcoxx390awf5m04cnKvwiO9fGfrr9Nurt
-         71XQTeOv4icqFddOxPVwQ0Jnoril2qoLxsEs1lmDLNc19OWUhX1MzFzd6gMYQcOyjq
-         D0EmcXEJBd6bxHq4dcBRdWDv8KNhdg/vDQHBfoCbif0v5Yp5LzDt6WT3F4Ri9DnyZE
-         NfqR7hUsxSVba3hv01NAF2D9WP4X2wBb++SF+3niGzf6oilRsCH41mvC/W8uzqdZWc
-         zq6kcuqdyjHGmv7gw0b8Hi9VO5k+tpjLAs5SNmPDdgEk/Viid8qt2MBYkEx5iCrcQZ
-         y4EZ4lF/o00rQ==
-Date:   Wed, 1 Apr 2020 18:18:10 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>, Greg KH <greg@kroah.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: linux-next: manual merge of the driver-core tree with the
- drivers-x86 tree
-Message-ID: <20200401181810.14792d60@canb.auug.org.au>
-In-Reply-To: <CAHp75VdoMpA4tDg57UND5hnWXV60EGaThPxLnTpKT6wG7bdYYQ@mail.gmail.com>
-References: <20200323143816.345b3d54@canb.auug.org.au>
-        <20200401141113.21014665@canb.auug.org.au>
-        <CAHp75VdoMpA4tDg57UND5hnWXV60EGaThPxLnTpKT6wG7bdYYQ@mail.gmail.com>
+        Wed, 1 Apr 2020 03:18:22 -0400
+Received: from tartarus.angband.pl ([54.37.238.230]:45160 "EHLO
+        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731680AbgDAHSW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 03:18:22 -0400
+Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1jJXdf-0008SI-Nb; Wed, 01 Apr 2020 09:18:15 +0200
+Date:   Wed, 1 Apr 2020 09:18:15 +0200
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Nick Terrell <terrelln@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
+ initramfs
+Message-ID: <20200401071815.GA27371@angband.pl>
+References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
+ <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com>
+ <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//whQZcOwmol39H8h1YR5sz8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
+X-Junkbait: aaron@angband.pl, zzyx@angband.pl
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//whQZcOwmol39H8h1YR5sz8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 31, 2020 at 05:11:35PM +0200, Sedat Dilek wrote:
+> I have re-tested zstd-v3 patchset with Linux version 5.6 final and
+> Clang/LLD version 10.0.0 final (from Debian/unstable repository).
 
-Hi Andy,
+So did I and a bunch of other folks.  I for one run v1 since 2017 on
+a bunch of boxes (amd64/BIOS, amd64/EFI, arm64, armhf), without a glitch
+(not counting trying to boot zstd initrd _without_ the patchset :p).
 
-On Wed, 1 Apr 2020 09:47:20 +0300 Andy Shevchenko <andy.shevchenko@gmail.co=
-m> wrote:
->
-> On Wed, Apr 1, 2020 at 6:11 AM Stephen Rothwell <sfr@canb.auug.org.au> wr=
-ote:
->=20
-> > This is now a conflict between the drivers-x86 tree and Linus' tree. =20
->=20
-> PDx86 is in Linus tree already with conflict resolutions.
+I've tried v2 on all of the above configurations, v3 on all but armhf, v4 on
+amd64/EFI -- all is fine.
 
-Great.
+Back in the days, folks reported success on IIRC ppc64, sparc64 and more.
 
-There is always a bit of a lag with what I see during the merge
-window i.e. Linus continues to merge stuff after I have taken my daily
-snapshot of his tree.
+(Obviously, initrd only on !x86.)
 
---=20
-Cheers,
-Stephen Rothwell
+> Is it possible to mention that there might distro-specific changes
+> needed to initramfs-handling?
+> For Debian you are welcome to include below Link [1].
+> [1] LINK: https://lore.kernel.org/lkml/CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com/
 
---Sig_//whQZcOwmol39H8h1YR5sz8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
++zstd)  compress="zstd -19 -v" ;;
 
------BEGIN PGP SIGNATURE-----
+I'm not sure if hard-coding -19 is always right.  It's good for production
+machines but slows down dev cycles.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6EQDIACgkQAVBC80lX
-0GznXAf/RFdYRWIAQLm/83TP8+AE92ZO2720S56gAOYFGBXncGp7xK9W6wF+e6s3
-5Bha2/KyfnifWlLv+mnuJ1FlKgBP7TXdHNdWJm1ibmPYWQRLS/ufyv2hujmQlL5G
-qNbmc+FNsdhhTsaqnAfCkBoWxg/ZC8DggbeBFjoiM0Y0dHu86qZjRX2tLrMzgyn7
-XNeuj5/as0ZVXLGTHN3BsLdypp9vpXAsp5dH09DEqXOACm7BANvTLraz0fYAh+Ou
-0GmX0j3WDCN3xan7U1u6UA2OyXo3S8D9CeHyplbHFu/wIdyVxNk6jtil+y+IsU1b
-vheBiB/90jlZfYmTSwlFaXQhEs7mmA==
-=631S
------END PGP SIGNATURE-----
+But that's a matter for userland, not a problem with Nick's patchset.
 
---Sig_//whQZcOwmol39H8h1YR5sz8--
+
+Meow!
+-- 
+⢀⣴⠾⠻⢶⣦⠀
+⣾⠁⢠⠒⠀⣿⡁ in the beginning was the boot and root floppies and they were good.
+⢿⡄⠘⠷⠚⠋⠀                                       -- <willmore> on #linux-sunxi
+⠈⠳⣄⠀⠀⠀⠀
