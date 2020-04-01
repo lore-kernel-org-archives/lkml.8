@@ -2,69 +2,96 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7940DC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CC2C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EC52071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5932073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 07:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585725005;
+	bh=kzem1Bc2AHbTTQjVnBgBGysf8SzYnGXPZklGbiFzjso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aQcZGxdRtPmeikyKSis5iE1MEbZFUVQx50pRKsp5uIBLH2WH+4yN8ivUP5n91bN3H
+	 2cVo7sBi1AGc+6y8jdCz+sVydRUznS2NYKjh1DxH2/6Xu506JIyKEX6O3c2p1jy1hy
+	 OBPu124rtvQnbATvZHfJ6N4DL7jp7uzGiSl50UwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731948AbgDAHIf (ORCPT
+        id S1731975AbgDAHKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:08:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44660 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731792AbgDAHIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 03:08:35 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7813F750118036EA1333;
-        Wed,  1 Apr 2020 15:08:28 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 1 Apr 2020 15:08:18 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <casey@schaufler-ca.com>, <jmorris@namei.org>, <serge@hallyn.com>
-CC:     <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
-Subject: [PATCH -next] smack: fix a missing-check bug in smack_sb_eat_lsm_opts()
-Date:   Wed, 1 Apr 2020 15:10:55 +0800
-Message-ID: <20200401071055.8265-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 1 Apr 2020 03:10:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51162 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731823AbgDAHKD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 03:10:03 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t128so5381408wma.0;
+        Wed, 01 Apr 2020 00:10:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tKcCvBkl/5wFmhqyWXdNyuguB+1XgXDUmUQ8zhlCfl0=;
+        b=GimWW9vahLRTeKGDBwlaxrahNw06822ARp9fna0DxzM+KxmbLJ/v2mT1rj5pvcL5w+
+         CyVkT6whSkyl3bLHD74RRKwVnPQEMLY8+9Um0/+A/5KP7p7Z4LhrOEfFS1IrMFE3cRv/
+         OWvTPVIh/5RfN2HFykkj51lqDaL+eeO+ZukJeBf6QFFm8TIAAvAo5a13QJughJrqmxqn
+         o86FhKk4Pv0I+olbesVuwzNe+4lEJlJjFV3M2CZTtjVqVL51NMWv58rRdOAjTPrD6s81
+         fjaA+Zrs1NzykRLoR5SwEcSf5TdpqDWgUcUl+KtTcqHwDC6XD73eORDGsN5vzDmUDF4Z
+         sdWA==
+X-Gm-Message-State: AGi0PuZaSk2bpgbFWYwjRF36q2Sz+AQS9UdNFhHXKwELUEFNjB852Rvz
+        w99NF3o70Y/1Zh6YJNAdIes=
+X-Google-Smtp-Source: APiQypJKzF9JIQqbmrZ1L+OJq9oATJtUV+U+TwMIOVFC0ButeSV7aj/VbyF6MRit5GbMNX5BdI0M+Q==
+X-Received: by 2002:a7b:cb59:: with SMTP id v25mr2931801wmj.13.1585725001425;
+        Wed, 01 Apr 2020 00:10:01 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id f141sm1517974wmf.3.2020.04.01.00.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 00:10:00 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 09:09:58 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401070958.GB22681@dhcp22.suse.cz>
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331145806.GB236678@google.com>
+ <20200331153450.GM30449@dhcp22.suse.cz>
+ <20200331161215.GA27676@pc636>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331161215.GA27676@pc636>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In smack_sb_eat_lsm_opts(), 'arg' is allocated by kmemdup_nul().
-It returns NULL when fails, add check for it.
+On Tue 31-03-20 18:12:15, Uladzislau Rezki wrote:
+> > 
+> > __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
+> > memory reserves regarless of the sleeping status.
+> > 
+> Michal, just one question here regarding proposed flags. Can we also
+> tight it with __GFP_RETRY_MAYFAIL flag? Means it also can repeat a few
+> times in order to increase the chance of being success.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- security/smack/smack_lsm.c | 2 ++
- 1 file changed, 2 insertions(+)
+yes, __GFP_RETRY_MAYFAIL is perfectly valid with __GFP_ATOMIC. Please
+note that __GFP_ATOMIC, despite its name, doesn't imply an atomic
+allocation which cannot sleep. Quite confusing, I know. A much better
+name would be __GFP_RESERVES or something like that.
 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 2862fc3..9ec30f3 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -731,6 +731,8 @@ static int smack_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 		token = match_opt_prefix(from, len, &arg);
- 		if (token != Opt_error) {
- 			arg = kmemdup_nul(arg, from + len - arg, GFP_KERNEL);
-+			if (!arg)
-+				return -ENOMEM;
- 			rc = smack_add_opt(token, arg, mnt_opts);
- 			if (unlikely(rc)) {
- 				kfree(arg);
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
