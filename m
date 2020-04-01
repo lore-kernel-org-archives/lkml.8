@@ -2,163 +2,207 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12605C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283EFC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58D220747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C2C20737
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:46:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u/dmKdJh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGpjzi6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732747AbgDATos (ORCPT
+        id S1732774AbgDATqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:44:48 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46316 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732428AbgDATos (ORCPT
+        Wed, 1 Apr 2020 15:46:13 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38076 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732307AbgDATqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:44:48 -0400
-Received: by mail-il1-f196.google.com with SMTP id i75so1158004ild.13
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 12:44:46 -0700 (PDT)
+        Wed, 1 Apr 2020 15:46:12 -0400
+Received: by mail-ed1-f65.google.com with SMTP id e5so1361521edq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 12:46:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dMitRcdeMSgR41kZoY5zsFRfUziC2C0G3PVuFqFOiLI=;
-        b=u/dmKdJhlfmAN2bTLr3r6kTbcyymnzw9e9+YbKgpSsBwe2ATN8zQJ3vxb/yJxpmxmY
-         dLMVNBaWcC7VxA3WZXCOx6dvXRuhXj3nWYJG++B7GV0T3fZoGvPV2dGNM/oMfe9Di5wm
-         uru2cfNrwaJ57UtsUYADY9Rd9RBsLDQtxRttndz9G/w6Lg0vkWRKxw62dwh4LiQShIvc
-         4OVSVO7seqvcNFTGL796rXFHZKkeM3DEbfWnBIhUxWRPiLGiJUwG9obks03oMW85b0oY
-         yMHerCmf9wrKbYzblUqyARqgnnhaclyhZeCswooOW27VWUHcdHEoSca4sGkBYGd27H5d
-         p9Sw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eDYFWwG5flntp97b88on6sYpgUC/rxAqQ/L1X05Q2Y8=;
+        b=dGpjzi6GwvvCec51TnXDdpXd+0m3oIiwIijO/19xa9UypRtXpTCzMhD7eM+fXIuGtv
+         dFBrg/oyRNH1N9k7vZotCedcwdg7ILb36lEfL4CNo6ixsljQRQAtNEvwncd3D8VkP5Pz
+         Ay5i4z20Xz3sL079o1Fp/91T59OT5lMz6ZLC1AIJOeETeBIKZ/bMZ+rzzwDQ08LXZ9Xh
+         +lC7TC7zPU4KcfkjC9mWroB/JNf8Ow62X4ilmapc6T/oj8293D/rKJD4jDEhNWqk185R
+         VL4vpAZN55wY2jFCuFmuo/kK43Qi5y6pHKu+lBeJ+49i0afGTNULd9mWgGkD+v0PdjND
+         bF1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dMitRcdeMSgR41kZoY5zsFRfUziC2C0G3PVuFqFOiLI=;
-        b=JzA8Wkc871NzLErKbiSt3dT6XEzh+OdWWnZ7rPZo0rh0YSHlp2fiSLGzgi9tntqqTB
-         F5TM5leGDWKg2lhUjczCk/UiMCmeXH+QXeVrJn6Q6CRodJ+1ENpWB3mndUDhBgyd08Xb
-         Ym/1ABqQ6wO6c68aq7or5IBG2LW/SI9PyEJj3Pw8xXeN9L/AbH7jjRnAF0rxzgHqJK25
-         y39BTi8yiIAVceIhuJPN6V9hT2V38UHtgZpK67jATTB5KBL5UBtjJ9W/0qZ0xPmRf+fl
-         sup4z0NOcW6h+60BCx0K6wL2i7ZI9P5bI8HXIU5VOB1eZUPoAh6yQuPvLvVkOgyuKFM8
-         Giag==
-X-Gm-Message-State: ANhLgQ0RHsqzhEnXVE7yQzmbwmw3au5SdVoOIzhzXN5h5g8FC4LP9uuF
-        h+Xu2d09wbCy7gTSl754+FVm/Q==
-X-Google-Smtp-Source: ADFU+vv6gM2W9Al7wSbRGq6lK0fdMsCJr3NrEvCQKv0kVf4YbgNiCh1CoBVCByVfkaCPoLN4WIoSkw==
-X-Received: by 2002:a92:8cc7:: with SMTP id s68mr23999899ill.268.1585770285630;
-        Wed, 01 Apr 2020 12:44:45 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id z13sm830881ioh.16.2020.04.01.12.44.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 12:44:44 -0700 (PDT)
-Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200311024240.26834-1-elder@linaro.org>
- <20200401173515.142249-1-ndesaulniers@google.com>
- <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org>
- <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org>
-Date:   Wed, 1 Apr 2020 14:44:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eDYFWwG5flntp97b88on6sYpgUC/rxAqQ/L1X05Q2Y8=;
+        b=aXz5yCnEVE8FF9OyzaqZgSu9nXuXPkIRdO+hYcIp4rRyevwsEHcfwsvzzIYPRJv6xT
+         ffvlNncKpw+VzrNQ8lTsAug9/fy2Duw5CY4+esBXcNDK+J/QGqtTgSte/DhrU3y/Ksbc
+         NDdqvI0vxelqFqQ7lRT7C0ZIG/JEvTdg6/0yea/cFruFLmu9SvW8UwYSskNAYftAtYew
+         0PxlvvD9W9VzF4KXzH+K8FnfzweLs1si4bQS6NNnAlZFt+xD0Cp983kwpsbBYbbK8SO9
+         HmWYe60J4n4CB9gLE7XXq/CdW88IUWHNRQhlz0rZiyKq7+DZrKBS2VRqH5uF0IKg2q4o
+         M+hA==
+X-Gm-Message-State: ANhLgQ0iqqhtRK2MTP1l4TfofuRi/GBvI2qZOr0kbmW5MBQ/fUA7rGk1
+        4h9Ke2gT5S0SalgIKMqxmqHMGU7qwf0lPmF6lQUJoQ==
+X-Google-Smtp-Source: ADFU+vtFmg+PUX6cVJUPBUJt7yTxhmxMXZBBAh3pFjqIqgMHIsreksLL/Wt7u6Z4D0jOXbmRQ68BJHXIiaU2OQ3l/9A=
+X-Received: by 2002:a05:6402:1c8f:: with SMTP id cy15mr18161415edb.200.1585770370445;
+ Wed, 01 Apr 2020 12:46:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200327170601.18563-1-kirill.shutemov@linux.intel.com>
+ <20200327170601.18563-6-kirill.shutemov@linux.intel.com> <D5721ED6-774B-4CD3-8533-4BF9BDB2401E@nvidia.com>
+ <20200328003920.xvkt3hp65uccsq7b@box> <B8EBF52B-BC6A-4778-81AA-DDEFC9BF6157@nvidia.com>
+ <20200328123336.givyrh5hsscg5cpx@box> <CAHbLzkqU1Aoo+SS3H=i6etT9Njfjk017M3vyCLeTptmGGFGRXw@mail.gmail.com>
+ <20200331140828.zv6ssffwys25d2t4@box>
+In-Reply-To: <20200331140828.zv6ssffwys25d2t4@box>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 1 Apr 2020 12:45:58 -0700
+Message-ID: <CAHbLzkrxOo7LWKBbaTee5QijoM4Ykv44R8aoSjoA=9noorG0vg@mail.gmail.com>
+Subject: Re: [PATCH 5/7] khugepaged: Allow to collapse PTE-mapped compound pages
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Zi Yan <ziy@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 2:13 PM, Nick Desaulniers wrote:
-> On Wed, Apr 1, 2020 at 11:24 AM Alex Elder <elder@linaro.org> wrote:
->>
->> On 4/1/20 12:35 PM, Nick Desaulniers wrote:
->>>> Define FIELD_MAX(), which supplies the maximum value that can be
->>>> represented by a field value.  Define field_max() as well, to go
->>>> along with the lower-case forms of the field mask functions.
->>>>
->>>> Signed-off-by: Alex Elder <elder@linaro.org>
->>>> Acked-by: Jakub Kicinski <kuba@kernel.org>
->>>> ---
->>>> v3: Rebased on latest netdev-next/master.
->>>>
->>>> David, please take this into net-next as soon as possible.  When the
->>>> IPA code was merged the other day this prerequisite patch was not
->>>> included, and as a result the IPA driver fails to build.  Thank you.
->>>>
->>>>   See: https://lkml.org/lkml/2020/3/10/1839
->>>>
->>>>                                      -Alex
->>>
->>> In particular, this seems to now have regressed into mainline for the 5.7
->>> merge window as reported by Linaro's ToolChain Working Group's CI.
->>> Link: https://github.com/ClangBuiltLinux/linux/issues/963
->>
->> Is the problem you're referring to the result of a build done
->> in the midst of a bisect?
->>
->> The fix for this build error is currently present in the
->> torvalds/linux.git master branch:
->>     6fcd42242ebc soc: qcom: ipa: kill IPA_RX_BUFFER_ORDER
-> 
-> Is that right? That patch is in mainline, but looks unrelated to what
-> I'm referring to.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6fcd42242ebcc98ebf1a9a03f5e8cb646277fd78
-> From my github link above, the issue I'm referring to is a
-> -Wimplicit-function-declaration warning related to field_max.
-> 6fcd42242ebc doesn't look related.
+On Tue, Mar 31, 2020 at 7:08 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> On Mon, Mar 30, 2020 at 11:50:41AM -0700, Yang Shi wrote:
+> > On Sat, Mar 28, 2020 at 5:33 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+> > >
+> > > On Fri, Mar 27, 2020 at 09:17:00PM -0400, Zi Yan wrote:
+> > > > > The compound page may be locked here if the function called for the first
+> > > > > time for the page and not locked after that (becouse we've unlocked it we
+> > > > > saw it the first time). The same with LRU.
+> > > > >
+> > > >
+> > > > For the first time, the compound page is locked and not on LRU, so this VM_BUG_ON passes.
+> > > > For the second time and so on, the compound page is unlocked and on the LRU,
+> > > > so this VM_BUG_ON still passes.
+> > > >
+> > > > For base page, VM_BUG_ON passes.
+> > > >
+> > > > Other unexpected situation (a compound page is locked and on LRU) triggers the VM_BU_ON,
+> > > > but your VM_BUG_ON will not detect this situation, right?
+> > >
+> > > Right. I will rework this code. I've just realized it is racy: after
+> > > unlock and putback on LRU the page can be locked by somebody else and this
+> > > code can unlock it which completely borken.
+> > >
+> > > I'll pass down compound_pagelist to release_pte_pages() and handle the
+> > > situation there.
+> > >
+> > > > >>>     if (likely(writable)) {
+> > > > >>>             if (likely(referenced)) {
+> > > > >>
+> > > > >> Do we need a list here? There should be at most one compound page we will see here, right?
+> > > > >
+> > > > > Um? It's outside the pte loop. We get here once per PMD range.
+> > > > >
+> > > > > 'page' argument to trace_mm_collapse_huge_page_isolate() is misleading:
+> > > > > it's just the last page handled in the loop.
+> > > > >
+> > > >
+> > > > Throughout the pte loop, we should only see at most one compound page, right?
+> > >
+> > > No. mremap(2) opens a possibility for HPAGE_PMD_NR compound pages for
+> > > single PMD range.
+> >
+> > Do you mean every PTE in the PMD is mapped by a sub page from different THPs?
+>
+> Yes.
+>
+> Well, it was harder to archive than I expected, but below is a test case,
+> I've come up with. It maps 512 head pages within single PMD range.
 
-I'm very sorry, I pointed you at the wrong commit.  This one is
-also present in torvalds/linux.git master:
+Thanks, this is very helpful.
 
-  e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
-
-It defines field_max() as a macro in <linux/bitfield.h>, and
-"gsi.c" includes that header file.
-
-This was another commit that got added late, after the initial
-IPA code was accepted.
-
->> I may be mistaken, but I believe this is the same problem I discussed
->> with Maxim Kuvyrkov this morning.  A different build problem led to
->> an automated bisect, which conluded this was the cause because it
->> landed somewhere between the initial pull of the IPA code and the fix
->> I reference above.
-> 
-> Yes, Maxim runs Linaro's ToolChain Working Group (IIUC, but you work
-> there, so you probably know better than I do), that's the CI I was
-> referring to.
-> 
-> I'm more concerned when I see reports of regressions *in mainline*.
-> The whole point of -next is that warnings reported there get fixed
-> BEFORE the merge window opens, so that we don't regress mainline.  Or
-> we drop the patches in -next.
-
-Can you tell me where I can find the commit id of the kernel
-that is being built when this error is reported?  I would
-like to examine things and build it myself so I can fix it.
-But so far haven't found what I need to check out.
-
-Thank you.
-
-					-Alex
+>
+> diff --git a/tools/testing/selftests/vm/khugepaged.c b/tools/testing/selftests/vm/khugepaged.c
+> index 3a98d5b2d6d8..9ae119234a39 100644
+> --- a/tools/testing/selftests/vm/khugepaged.c
+> +++ b/tools/testing/selftests/vm/khugepaged.c
+> @@ -703,6 +703,63 @@ static void collapse_full_of_compound(void)
+>         munmap(p, hpage_pmd_size);
+>  }
+>
+> +static void collapse_compound_extreme(void)
+> +{
+> +       void *p;
+> +       int i;
+> +
+> +       p = alloc_mapping();
+> +       for (i = 0; i < hpage_pmd_nr; i++) {
+> +               printf("\rConstruct PTE page table full of different PTE-mapped compound pages %3d/%d...",
+> +                               i + 1, hpage_pmd_nr);
+> +
+> +               madvise(BASE_ADDR, hpage_pmd_size, MADV_HUGEPAGE);
+> +               fill_memory(BASE_ADDR, 0, hpage_pmd_size);
+> +               if (!check_huge(BASE_ADDR)) {
+> +                       printf("Failed to allocate huge page\n");
+> +                       exit(EXIT_FAILURE);
+> +               }
+> +               madvise(BASE_ADDR, hpage_pmd_size, MADV_NOHUGEPAGE);
+> +
+> +               p = mremap(BASE_ADDR - i * page_size,
+> +                               i * page_size + hpage_pmd_size,
+> +                               (i + 1) * page_size,
+> +                               MREMAP_MAYMOVE | MREMAP_FIXED,
+> +                               BASE_ADDR + 2 * hpage_pmd_size);
+> +               if (p == MAP_FAILED) {
+> +                       perror("mremap+unmap");
+> +                       exit(EXIT_FAILURE);
+> +               }
+> +
+> +               p = mremap(BASE_ADDR + 2 * hpage_pmd_size,
+> +                               (i + 1) * page_size,
+> +                               (i + 1) * page_size + hpage_pmd_size,
+> +                               MREMAP_MAYMOVE | MREMAP_FIXED,
+> +                               BASE_ADDR - (i + 1) * page_size);
+> +               if (p == MAP_FAILED) {
+> +                       perror("mremap+alloc");
+> +                       exit(EXIT_FAILURE);
+> +               }
+> +       }
+> +
+> +       munmap(BASE_ADDR, hpage_pmd_size);
+> +       fill_memory(p, 0, hpage_pmd_size);
+> +       if (!check_huge(p))
+> +               success("OK");
+> +       else
+> +               fail("Fail");
+> +
+> +       if (wait_for_scan("Collapse PTE table full of different compound pages", p))
+> +               fail("Timeout");
+> +       else if (check_huge(p))
+> +               success("OK");
+> +       else
+> +               fail("Fail");
+> +
+> +       validate_memory(p, 0, hpage_pmd_size);
+> +       munmap(p, hpage_pmd_size);
+> +}
+> +
+>  static void collapse_fork(void)
+>  {
+>         int wstatus;
+> @@ -916,6 +973,7 @@ int main(void)
+>         collapse_max_ptes_swap();
+>         collapse_signle_pte_entry_compound();
+>         collapse_full_of_compound();
+> +       collapse_compound_extreme();
+>         collapse_fork();
+>         collapse_fork_compound();
+>         collapse_max_ptes_shared();
+> --
+>  Kirill A. Shutemov
