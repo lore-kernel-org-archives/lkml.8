@@ -2,173 +2,118 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCDFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2073C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B331A2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8522F206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758854;
-	bh=uTdpVzB4sMS1kq2S/jZxD1mCnBHts7WJPO28p1TG1uE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=rCaLQEdK1Hek3yyTOCttkSAtjj7n7hZQzrkAgGS+m1ifqT5v1Bytotp3pwBnygby4
-	 WVw5uL/o6gz8mkwuAtK94UzdI2NX+VUFcV0aflYNFfqLdKFeOQXRNo7xGoyum1JIpK
-	 BKNE2QzzUA0xu037hLMLE5+mKtMu2tl+GYd2RMLo=
+	s=default; t=1585758857;
+	bh=D6XO2jVZkyfQ46/D8Ey/p4CwYEdv7SUQHRt2TrQ8e5E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OiwltddYDYMCJCHP3x4REXVkYvSEO2iZgpV/caWZfASSRuSAX2HlWmvNFX8BwTOcB
+	 qijAUdW7fXIQg1nWLHD8o6CWjMfaFUaZyS9vUjso8HAv8+7OCnfrgZB2q3e5yhE2v1
+	 vYOykBau0PU3uWRohZH8PWK+0IKxveTCOJzSm1WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388625AbgDAQeN (ORCPT
+        id S2388298AbgDAQeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60808 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387696AbgDAQeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387945AbgDAQeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Apr 2020 12:34:11 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD3A21582;
-        Wed,  1 Apr 2020 16:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB33C214DB;
+        Wed,  1 Apr 2020 16:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1585758850;
-        bh=uTdpVzB4sMS1kq2S/jZxD1mCnBHts7WJPO28p1TG1uE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=AhSy97Z1a0DxYTbCKWG0HJI/YELNG8gYEXfmmUZX1BJgMC11K9JvlWVCo8nKsaWZo
-         rwIUvsyGwTgmJuZ0vGCLOBluG/GGOsf1rEJ+XnrLIRui/ddMT1j98D8l+VvRDCfvP7
-         I4f/4LTlxHoxJd8X6Ob88mKUCkJblsp80vb0w828=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B64FA3522887; Wed,  1 Apr 2020 09:34:09 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 09:34:09 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] Documentation/litmus-tests: Add litmus tests for
- atomic APIs
-Message-ID: <20200401163409.GZ19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200326024022.7566-1-boqun.feng@gmail.com>
- <20200327221843.GA226939@google.com>
+        bh=D6XO2jVZkyfQ46/D8Ey/p4CwYEdv7SUQHRt2TrQ8e5E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kPLRtIJiFZPCGpGUo2pbU+GKPPbcvBfI7acT/CW+AndN5e0bSuskYRWubWGNtgIMg
+         hNOvuP2/UjlmqZVwJ0AUWUpR5JAaaybE7ZhRwzEtCvx5D3yAQ9vFkPpGE76ePVR5NA
+         0N+88XOKffMdxn5P32221hFoXcRznRYnamHjTQhg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.4 63/91] xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
+Date:   Wed,  1 Apr 2020 18:17:59 +0200
+Message-Id: <20200401161534.574864759@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
+References: <20200401161512.917494101@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327221843.GA226939@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 06:18:43PM -0400, Joel Fernandes wrote:
-> On Thu, Mar 26, 2020 at 10:40:18AM +0800, Boqun Feng wrote:
-> > A recent discussion raises up the requirement for having test cases for
-> > atomic APIs:
-> > 
-> > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
-> > 
-> > , and since we already have a way to generate a test module from a
-> > litmus test with klitmus[1]. It makes sense that we add more litmus
-> > tests for atomic APIs. And based on the previous discussion, I create a
-> > new directory Documentation/atomic-tests and put these litmus tests
-> > here.
-> > 
-> > This patchset starts the work by adding the litmus tests which are
-> > already used in atomic_t.txt, and also improve the atomic_t.txt to make
-> > it consistent with the litmus tests.
-> > 
-> > Previous version:
-> > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
-> > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
-> > v3: https://lore.kernel.org/linux-doc/20200227004049.6853-1-boqun.feng@gmail.com/
-> 
-> For full series:
-> 
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+From: Xin Long <lucien.xin@gmail.com>
 
-Queued in place of the following commits, with Joel's and Alan's tags
-added, thank you all!
+commit a1a7e3a36e01ca6e67014f8cf673cb8e47be5550 upstream.
 
-							Thanx, Paul
+Without doing verify_sec_ctx_len() check in xfrm_add_acquire(), it may be
+out-of-bounds to access uctx->ctx_str with uctx->ctx_len, as noticed by
+syz:
 
-c13c55d4 tools/memory-model: Add an exception for limitations on _unless() family
-59ffd85 Documentation/locking/atomic: Fix atomic-set litmus test
-23c19c8 Documentation/locking/atomic: Introduce atomic-tests directory
-3bd201c Documentation/locking/atomic: Add a litmus test for atomic_set()
-833f53b Documentation/locking/atomic: Add a litmus test smp_mb__after_atomic()
+  BUG: KASAN: slab-out-of-bounds in selinux_xfrm_alloc_user+0x237/0x430
+  Read of size 768 at addr ffff8880123be9b4 by task syz-executor.1/11650
 
-> One question I had was in the existing atomic_set() documentation, it talks
-> about atomic_add_unless() implementation based on locking could have issues.
-> It says the way to fix such cases is:
-> 
-> Quote:
->     the typical solution is to then implement atomic_set{}() with
->     atomic_xchg().
-> 
-> I didn't get how using atomic_xchg() fixes it. Is the assumption there that
-> atomic_xchg() would be implemented using locking to avoid atomic_set() having
-> issues? If so, we could clarify that in the document.
-> 
-> thanks,
-> 
->  - Joel
-> 
-> > 
-> > Changes since v3:
-> > 
-> > *	Merge two patches on atomic-set litmus test into one as per
-> > 	Alan. (Alan, you have acked only one of the two patches, so I
-> > 	don't add you acked-by for the combined patch).
-> > 
-> > *	Move the atomic litmus tests into litmus-tests/atomic to align
-> > 	with Joel's recent patches on RCU litmus tests.
-> > 
-> > I think we still haven't reach to a conclusion for the difference of
-> > atomic_add_unless() in herdtools, and I'm currently reading the source
-> > code of herd to resovle this. This is just an updated version to resolve
-> > ealier comments and react on Joel's RCU litmus tests.
-> > 
-> > Regards,
-> > Boqun
-> > 
-> > [1]: http://diy.inria.fr/doc/litmus.html#klitmus
-> > 
-> > Boqun Feng (4):
-> >   tools/memory-model: Add an exception for limitations on _unless()
-> >     family
-> >   Documentation/litmus-tests: Introduce atomic directory
-> >   Documentation/litmus-tests/atomic: Add a test for atomic_set()
-> >   Documentation/litmus-tests/atomic: Add a test for
-> >     smp_mb__after_atomic()
-> > 
-> >  Documentation/atomic_t.txt                    | 24 +++++++-------
-> >  ...ter_atomic-is-stronger-than-acquire.litmus | 32 +++++++++++++++++++
-> >  ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 ++++++++++++++
-> >  Documentation/litmus-tests/atomic/README      | 16 ++++++++++
-> >  tools/memory-model/README                     | 10 ++++--
-> >  5 files changed, 91 insertions(+), 15 deletions(-)
-> >  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
-> >  create mode 100644 Documentation/litmus-tests/atomic/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-> >  create mode 100644 Documentation/litmus-tests/atomic/README
-> > 
-> > -- 
-> > 2.25.1
-> > 
+  Call Trace:
+   dump_stack+0xe8/0x16e
+   print_address_description.cold.3+0x9/0x23b
+   kasan_report.cold.4+0x64/0x95
+   memcpy+0x1f/0x50
+   selinux_xfrm_alloc_user+0x237/0x430
+   security_xfrm_policy_alloc+0x5c/0xb0
+   xfrm_policy_construct+0x2b1/0x650
+   xfrm_add_acquire+0x21d/0xa10
+   xfrm_user_rcv_msg+0x431/0x6f0
+   netlink_rcv_skb+0x15a/0x410
+   xfrm_netlink_rcv+0x6d/0x90
+   netlink_unicast+0x50e/0x6a0
+   netlink_sendmsg+0x8ae/0xd40
+   sock_sendmsg+0x133/0x170
+   ___sys_sendmsg+0x834/0x9a0
+   __sys_sendmsg+0x100/0x1e0
+   do_syscall_64+0xe5/0x660
+   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+
+So fix it by adding the missing verify_sec_ctx_len check there.
+
+Fixes: 980ebd25794f ("[IPSEC]: Sync series - acquire insert")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/xfrm/xfrm_user.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -2175,6 +2175,9 @@ static int xfrm_add_acquire(struct sk_bu
+ 
+ 	err = verify_newpolicy_info(&ua->policy);
+ 	if (err)
++		goto free_state;
++	err = verify_sec_ctx_len(attrs);
++	if (err)
+ 		goto bad_policy;
+ 
+ 	/*   build an XP */
+
+
