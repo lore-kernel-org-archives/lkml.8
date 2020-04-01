@@ -2,52 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34C4C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF130C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8912063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC07C206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759724;
-	bh=5fy+DpjSqmh99XFyScJ450EPzLn3lYCObsESE/dMIBs=;
+	s=default; t=1585759730;
+	bh=6Bi39iG/QukXkOH4TVbJbROjr1vFC9DWMnCyXdnQ514=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZIcHY4zQmUQ1i1O8LYogiZj5yIT7IGgBICjYdxD5vwFRGGuTDEHGtm7o4kOLGjm3
-	 xS8Njmn4LRhsAYuxu1xnIvR64K6Z2Ummkc0o67IM3SUeqJ3Rv/scHJ44Qwfn6KqKng
-	 hmp8UrIOJJzh8xtmPCbCoWI/dj3dxx3kWmUiew2c=
+	b=nndUWIEXMxIqo7qFUpjZUMCP1XZSBiz3gjmYAd3TBS2i4d64GnhLH9rYuzpSVwXi6
+	 7FYUdvYDZ6mNRT6aXpCELjswLO07RDk1/Q/o2eacrSKYx8DSvPpb86mv+x5Yrwgr8E
+	 GEwhqBnClsbq2nO1Z8OUVz4pJo8PYM7OgcbiZB2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732616AbgDAQsn (ORCPT
+        id S2389539AbgDAQst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:48:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47462 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:48:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389669AbgDAQqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:10 -0400
+        id S2389381AbgDAQpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:45:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738D121D7F;
-        Wed,  1 Apr 2020 16:46:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8E142063A;
+        Wed,  1 Apr 2020 16:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759569;
-        bh=5fy+DpjSqmh99XFyScJ450EPzLn3lYCObsESE/dMIBs=;
+        s=default; t=1585759528;
+        bh=6Bi39iG/QukXkOH4TVbJbROjr1vFC9DWMnCyXdnQ514=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xomS0Lm91rKHPhzjOr7pjVSuiKdRr4XNTIfFqywg+W0skD0LKnG+QaGeratf4pmLI
-         zUjfFwUjVQyLt7VNZDnT7MkmuH07cZ1LjIn99+BwWcDxH+yGHELfX3ptSp5qgs/bSC
-         IHbiCLpjrfhGH+UTqt3aMHgbFc5aEXim8G368SZ4=
+        b=E4LGYD6PjhSEZxK9f7W4xA3SWth2lSLXr2UpIHW8nqqhvt66Mv39YPmXv6GSC3Ktx
+         +Cxnsf0Uht8ImggNamxl9eTzZe9X6pKG/5ReioK0ushBEgWLwyM/qlv8STAsFdVRpe
+         IIo4LzTvuk7/mRfcr6pbdwjIaEdkKLhfWadeQKYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/148] fsl/fman: detect FMan erratum A050385
-Date:   Wed,  1 Apr 2020 18:17:52 +0200
-Message-Id: <20200401161600.921135761@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH 4.14 107/148] xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
+Date:   Wed,  1 Apr 2020 18:18:19 +0200
+Message-Id: <20200401161602.925165134@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,130 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit b281f7b93b258ce1419043bbd898a29254d5c9c7 ]
+commit a1a7e3a36e01ca6e67014f8cf673cb8e47be5550 upstream.
 
-Detect the presence of the A050385 erratum.
+Without doing verify_sec_ctx_len() check in xfrm_add_acquire(), it may be
+out-of-bounds to access uctx->ctx_str with uctx->ctx_len, as noticed by
+syz:
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  BUG: KASAN: slab-out-of-bounds in selinux_xfrm_alloc_user+0x237/0x430
+  Read of size 768 at addr ffff8880123be9b4 by task syz-executor.1/11650
+
+  Call Trace:
+   dump_stack+0xe8/0x16e
+   print_address_description.cold.3+0x9/0x23b
+   kasan_report.cold.4+0x64/0x95
+   memcpy+0x1f/0x50
+   selinux_xfrm_alloc_user+0x237/0x430
+   security_xfrm_policy_alloc+0x5c/0xb0
+   xfrm_policy_construct+0x2b1/0x650
+   xfrm_add_acquire+0x21d/0xa10
+   xfrm_user_rcv_msg+0x431/0x6f0
+   netlink_rcv_skb+0x15a/0x410
+   xfrm_netlink_rcv+0x6d/0x90
+   netlink_unicast+0x50e/0x6a0
+   netlink_sendmsg+0x8ae/0xd40
+   sock_sendmsg+0x133/0x170
+   ___sys_sendmsg+0x834/0x9a0
+   __sys_sendmsg+0x100/0x1e0
+   do_syscall_64+0xe5/0x660
+   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+
+So fix it by adding the missing verify_sec_ctx_len check there.
+
+Fixes: 980ebd25794f ("[IPSEC]: Sync series - acquire insert")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/freescale/fman/Kconfig | 28 +++++++++++++++++++++
- drivers/net/ethernet/freescale/fman/fman.c  | 18 +++++++++++++
- drivers/net/ethernet/freescale/fman/fman.h  |  5 ++++
- 3 files changed, 51 insertions(+)
+ net/xfrm/xfrm_user.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/fman/Kconfig b/drivers/net/ethernet/freescale/fman/Kconfig
-index 8870a9a798ca4..91437b94bfcb6 100644
---- a/drivers/net/ethernet/freescale/fman/Kconfig
-+++ b/drivers/net/ethernet/freescale/fman/Kconfig
-@@ -8,3 +8,31 @@ config FSL_FMAN
- 	help
- 		Freescale Data-Path Acceleration Architecture Frame Manager
- 		(FMan) support
-+
-+config DPAA_ERRATUM_A050385
-+	bool
-+	depends on ARM64 && FSL_DPAA
-+	default y
-+	help
-+		DPAA FMan erratum A050385 software workaround implementation:
-+		align buffers, data start, SG fragment length to avoid FMan DMA
-+		splits.
-+		FMAN DMA read or writes under heavy traffic load may cause FMAN
-+		internal resource leak thus stopping further packet processing.
-+		The FMAN internal queue can overflow when FMAN splits single
-+		read or write transactions into multiple smaller transactions
-+		such that more than 17 AXI transactions are in flight from FMAN
-+		to interconnect. When the FMAN internal queue overflows, it can
-+		stall further packet processing. The issue can occur with any
-+		one of the following three conditions:
-+		1. FMAN AXI transaction crosses 4K address boundary (Errata
-+		A010022)
-+		2. FMAN DMA address for an AXI transaction is not 16 byte
-+		aligned, i.e. the last 4 bits of an address are non-zero
-+		3. Scatter Gather (SG) frames have more than one SG buffer in
-+		the SG list and any one of the buffers, except the last
-+		buffer in the SG list has data size that is not a multiple
-+		of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
-+		With any one of the above three conditions present, there is
-+		likelihood of stalled FMAN packet processing, especially under
-+		stress with multiple ports injecting line-rate traffic.
-diff --git a/drivers/net/ethernet/freescale/fman/fman.c b/drivers/net/ethernet/freescale/fman/fman.c
-index 97425d94e280d..9080d2332d030 100644
---- a/drivers/net/ethernet/freescale/fman/fman.c
-+++ b/drivers/net/ethernet/freescale/fman/fman.c
-@@ -1,5 +1,6 @@
- /*
-  * Copyright 2008-2015 Freescale Semiconductor Inc.
-+ * Copyright 2020 NXP
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -566,6 +567,10 @@ struct fman_cfg {
- 	u32 qmi_def_tnums_thresh;
- };
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -2214,6 +2214,9 @@ static int xfrm_add_acquire(struct sk_bu
+ 	err = verify_newpolicy_info(&ua->policy);
+ 	if (err)
+ 		goto free_state;
++	err = verify_sec_ctx_len(attrs);
++	if (err)
++		goto free_state;
  
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+static bool fman_has_err_a050385;
-+#endif
-+
- static irqreturn_t fman_exceptions(struct fman *fman,
- 				   enum fman_exceptions exception)
- {
-@@ -2517,6 +2522,14 @@ struct fman *fman_bind(struct device *fm_dev)
- }
- EXPORT_SYMBOL(fman_bind);
- 
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+bool fman_has_errata_a050385(void)
-+{
-+	return fman_has_err_a050385;
-+}
-+EXPORT_SYMBOL(fman_has_errata_a050385);
-+#endif
-+
- static irqreturn_t fman_err_irq(int irq, void *handle)
- {
- 	struct fman *fman = (struct fman *)handle;
-@@ -2843,6 +2856,11 @@ static struct fman *read_dts_node(struct platform_device *of_dev)
- 		goto fman_free;
- 	}
- 
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+	fman_has_err_a050385 =
-+		of_property_read_bool(fm_node, "fsl,erratum-a050385");
-+#endif
-+
- 	return fman;
- 
- fman_node_put:
-diff --git a/drivers/net/ethernet/freescale/fman/fman.h b/drivers/net/ethernet/freescale/fman/fman.h
-index bfa02e0014ae0..693401994fa2d 100644
---- a/drivers/net/ethernet/freescale/fman/fman.h
-+++ b/drivers/net/ethernet/freescale/fman/fman.h
-@@ -1,5 +1,6 @@
- /*
-  * Copyright 2008-2015 Freescale Semiconductor Inc.
-+ * Copyright 2020 NXP
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -397,6 +398,10 @@ u16 fman_get_max_frm(void);
- 
- int fman_get_rx_extra_headroom(void);
- 
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+bool fman_has_errata_a050385(void);
-+#endif
-+
- struct fman *fman_bind(struct device *dev);
- 
- #endif /* __FM_H */
--- 
-2.20.1
-
+ 	/*   build an XP */
+ 	xp = xfrm_policy_construct(net, &ua->policy, attrs, &err);
 
 
