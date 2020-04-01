@@ -2,127 +2,144 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2D6C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B9FC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C9A20857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:05:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585742708;
-	bh=NhoPRsRq/YyLa+Vf1+G6SIlFLJ5p1f4hh/gZAzLwVPk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uWGbCLrcQnyI0hFx4fJgMHqjv3g97wzbprLvZs7wSnEecGdEZD9l1WzDuR2cGZSB1
-	 A4Ob73/jO/RJvjdFQx47UDbaXDanqnZh/pK3SUL1piOZjSO+zZrQzSPDfwk9JUkpSE
-	 2RYxtfrVmt6rTcr97MGk+PfJ1Fu/rpmVUSQ2aUdg=
+	by mail.kernel.org (Postfix) with ESMTP id 0AF2A20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsdtFtwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbgDAMFH (ORCPT
+        id S1732344AbgDAMJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:05:07 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35475 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732246AbgDAMFG (ORCPT
+        Wed, 1 Apr 2020 08:09:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:32969 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732273AbgDAMJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:05:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d5so30308548wrn.2;
-        Wed, 01 Apr 2020 05:05:05 -0700 (PDT)
+        Wed, 1 Apr 2020 08:09:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z14so4292095wmf.0;
+        Wed, 01 Apr 2020 05:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=yJOSxzQokynAxKi4OzeFniUvkB0GiW9QTsXtXkXYfZw=;
+        b=LsdtFtwW8To/mYh4WSZE5rXUsiuoAIZ5MGpWszzGyAVvaX2rQpgJ/DLcYQwjqDsk57
+         p3DMC0CzfhUZDpwUbj/O5ScAWg51Lppa+Gh+HBnPpeODozh718gePLGgb7IdOlWIwvsJ
+         GayePqxBWm3Ax88f/5GKKmdlsfU1ss52fFcqUE7cOaxk2opgmBekz9AnmwmwqHGzlcjf
+         YrtqztB8t/yz6nf7qR9vSym3h/3OVT+pLjfJRKAA+Z+koSPWo44hPrMU9podt8Xgyqgg
+         JK2IN6L0vIO7f1/Fmke3uHB1XVvomuqkDkzL8AQm1G0fEm4XhrjnyHgrEpO9irIXVJMw
+         zOXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2qHESkVe3nhbeIsGwZeWdkb1tB2ydLYFVJb0HdBY5Q8=;
-        b=sZdOXshtKPrMdliQmaplnIfrDHfyEt5qZQZcBHJXaYh04rnsOysfI19HxdOyMyqhDl
-         /JsNfA4qQWIWzLTn1ug5HAffO4AWvl2l6R6zRVUnqNT5kEQh9zbVKL3lxs4cQvFJ9/z0
-         17FG592k+FTvwoYa1/Y/rHhxKt7ATH4J0EgiGxKoKIqNlcJbE8RRY7vNJ+rrjM6FINqs
-         4u0hPoCyAPbVzVR1SpGyepJxm7TbZ9iT5jy8wLPa8M6icCpOSmVM+fFLtN5/8/fyGU9a
-         GyDTbhCzAljzwjZToDl4pKMKRP/S6lI8WnUmaa6mGU51fbREPQEJqrijIQap9ay1Itpa
-         shKw==
-X-Gm-Message-State: ANhLgQ3mcdKZ238CBuiWydXFQHLRPnY83537t7v/33H1YbXKrMZaFEBJ
-        bfuYdUpuS9GygNRoPzxyr7lhbTn/
-X-Google-Smtp-Source: ADFU+vtfgdGL9hubYcT6d3Hh/gPXpmGPiuRY7Uj/WWVpV52yieI7MXiVPFLc68WpRZK+6w4X9jUCVw==
-X-Received: by 2002:adf:8187:: with SMTP id 7mr26810166wra.358.1585742704551;
-        Wed, 01 Apr 2020 05:05:04 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id h132sm2546019wmf.18.2020.04.01.05.05.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 05:05:03 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 14:05:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     joel@joelfernandes.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200401120502.GH22681@dhcp22.suse.cz>
-References: <20200331131628.153118-1-joel@joelfernandes.org>
- <20200331145806.GB236678@google.com>
- <20200331153450.GM30449@dhcp22.suse.cz>
- <20200331160117.GA170994@google.com>
- <20200401072359.GC22681@dhcp22.suse.cz>
- <30295C90-34DB-469C-9DCD-55DB91938BA9@joelfernandes.org>
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=yJOSxzQokynAxKi4OzeFniUvkB0GiW9QTsXtXkXYfZw=;
+        b=EGkFFXr9s23b+0wxS3HBmCMxNYJLL8dFvwLiFjB42u+OdkOB7TjdO/cZXlHFTvBpPh
+         GbNuzwUe+iAxSpGxEbYtqpI5w5j9gsvs39oc4ebKFUbn/4+ho2JFGavf8eiq3Krukdbl
+         Mfb5OljKYcfxkPpnBQvfxbKlJN1YM8kf9glmrbu7/u0is175MGFnGRvPVSd7Za9V5Eh/
+         EEP3u3Vm1pNG2aYqTLJLZ5oPhTY88/YXyUVl+DixRRPhqfNs6VnJIeRkIcnqz1HrIRRL
+         wzzA3kWtzZLVh/0Y4ZqloXnkb+ki61Bi6WfRbE2L1SEC3bFxySfEXjjy6oYRpLKys1gq
+         hBXQ==
+X-Gm-Message-State: AGi0PubrbqCSSAb4uPygMI61tFuGWnwm7Z35B7i1bDpZkUckNtQiS26m
+        +DzTdfmfC2t3jEWLWaQSMYk=
+X-Google-Smtp-Source: APiQypJLLOoidedNbKugfpKFfkMSH+KofgB0VFkGy8A3wZENhS0oqgeJrmhw+KqxWy6cKFevCxLDmQ==
+X-Received: by 2002:a1c:de07:: with SMTP id v7mr4128505wmg.79.1585742952654;
+        Wed, 01 Apr 2020 05:09:12 -0700 (PDT)
+Received: from AnsuelXPS (host3-220-static.183-80-b.business.telecomitalia.it. [80.183.220.3])
+        by smtp.gmail.com with ESMTPSA id y11sm2643560wrd.65.2020.04.01.05.09.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 05:09:11 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com> <20200320183455.21311-11-ansuelsmth@gmail.com> <20200331173348.GA28253@bogus>
+In-Reply-To: <20200331173348.GA28253@bogus>
+Subject: R: [PATCH 11/12] devicetree: bindings: pci: add force_gen1 for qcom,pcie
+Date:   Wed, 1 Apr 2020 14:09:09 +0200
+Message-ID: <013a01d6081e$5aa2fb40$0fe8f1c0$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30295C90-34DB-469C-9DCD-55DB91938BA9@joelfernandes.org>
+Content-Type: text/plain;
+        charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQF7DJ39byRpk4MoIUXZtcQDafvd5gGYkj2+AjiIiXOo+5pyYA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01-04-20 07:14:16, joel@joelfernandes.org wrote:
-[...]
-> I am in support of this documentation patch. I would say "consumption of the reserve".
 
-Like this?
 
-From afc9c4e56c6dd5f59c1cf5f95ad42a0e7cd78b2e Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Wed, 1 Apr 2020 14:00:56 +0200
-Subject: [PATCH] mm: clarify __GFP_MEMALLOC usage
+> -----Messaggio originale-----
+> Da: Rob Herring <robh@kernel.org>
+> Inviato: marted=EC 31 marzo 2020 19:34
+> A: Ansuel Smith <ansuelsmth@gmail.com>
+> Cc: Stanimir Varbanov <svarbanov@mm-sol.com>; Andy Gross
+> <agross@kernel.org>; Bjorn Andersson <bjorn.andersson@linaro.org>;
+> Bjorn Helgaas <bhelgaas@google.com>; Mark Rutland
+> <mark.rutland@arm.com>; Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>;
+> Andrew Murray <amurray@thegoodpenguin.co.uk>; Philipp Zabel
+> <p.zabel@pengutronix.de>; linux-arm-msm@vger.kernel.org; linux-
+> pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Oggetto: Re: [PATCH 11/12] devicetree: bindings: pci: add force_gen1 =
+for
+> qcom,pcie
+>=20
+> On Fri, Mar 20, 2020 at 07:34:53PM +0100, Ansuel Smith wrote:
+> > Document force_gen1 optional definition to limit pcie
+> > line to GEN1 speed
+> >
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > index 8c1d014f37b0..766876465c42 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+> > @@ -260,6 +260,11 @@
+> >  	Definition: If not defined is 0. In ipq806x is set to 7. In newer
+> >  				revision (v2.0) the offset is zero.
+> >
+> > +- force_gen1:
+> > +	Usage: optional
+> > +	Value type: <u32>
+> > +	Definition: Set 1 to force the pcie line to GEN1
+> > +
+>=20
+> I believe we have a standard property 'link-speed' for this purpose.
+>=20
 
-It seems that the existing documentation is not explicit about the
-expected usage and potential risks enough. While it is calls out
-that users have to free memory when using this flag it is not really
-apparent that users have to careful to not deplete memory reserves
-and that they should implement some sort of throttling wrt. freeing
-process.
+Yes this will be dropped in v2
 
-This is partly based on Neil's explanation [1].
+> >  * Example for ipq/apq8064
+> >  	pcie@1b500000 {
+> >  		compatible =3D "qcom,pcie-apq8064", "qcom,pcie-ipq8064",
+> "snps,dw-pcie";
+> > --
+> > 2.25.1
+> >
 
-[1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- include/linux/gfp.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index e5b817cb86e7..e3ab1c0d9140 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -110,6 +110,9 @@ struct vm_area_struct;
-  * the caller guarantees the allocation will allow more memory to be freed
-  * very shortly e.g. process exiting or swapping. Users either should
-  * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
-+ * Users of this flag have to be extremely careful to not deplete the reserve
-+ * completely and implement a throttling mechanism which controls the consumption
-+ * of the reserve based on the amount of freed memory.
-  *
-  * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency reserves.
-  * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
--- 
-2.25.1
-
--- 
-Michal Hocko
-SUSE Labs
