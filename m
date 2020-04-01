@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261A7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713DFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F043C212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D752137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758302;
-	bh=VVqiKESmK0JzpP6L6hrIobYwxWE1UL9LyqmMttbagOQ=;
+	s=default; t=1585758309;
+	bh=/iKgduoUkNVKU9ZrPkIW5sERPFZkvrGAQfa5/ot1PG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jyTkeOxQQ/CCb/GNe0bzL/XEUGZ79bhnfa8lDkG6yPkS6KEU2Y5arsarFFMd4Clda
-	 +CjUsjs+RuWINExil09mcnyUFAXSy4+MI+htELEwRn9xrwilvm5xhkbhN2Ik+Vra7c
-	 zoVmM/2vM+ifg61STjZ3czyRle0pPmQ94rtH1TxU=
+	b=BwM8UlvQGOJbK/Xh7Pl+Bi2ML7oGy420fsi0PBKsz/4FQNWqh/JB7cXTD0s8hnxwZ
+	 VC4F9Ls5ITo/8ez+VEIB5dTJJqnXGxQ9na80lK5R2klBYCxCWju3tWBKqjgpYh8QNk
+	 MbNwYwmDB1VNsnFaZkl4d7HQb079LFEYF6INvAvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387769AbgDAQZB (ORCPT
+        id S1733064AbgDAQZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48850 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387553AbgDAQY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:24:59 -0400
+        id S2387764AbgDAQZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:25:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48D12212CC;
-        Wed,  1 Apr 2020 16:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DEED212CC;
+        Wed,  1 Apr 2020 16:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758298;
-        bh=VVqiKESmK0JzpP6L6hrIobYwxWE1UL9LyqmMttbagOQ=;
+        s=default; t=1585758303;
+        bh=/iKgduoUkNVKU9ZrPkIW5sERPFZkvrGAQfa5/ot1PG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bo7lvsEDxxV1dcc0ipcbSrBPikzyENjBEJmoDVQrRT2FLGDbPwAz+YEvqqJrYorRa
-         chlUdNFYbYhOjBx2W/Ca31zBRquVlX3JCY+b/Z44byxfCbaACxGXoi4DTrPjMaV15M
-         u+WSC2K6e0ht9/NkMTajX3tCyyqCw9Eul0jemSLQ=
+        b=Ua2sUK2cINfhm4dXTM6fR88oU6AypLKxT/tUx6emTV1IHiRPcCqipu/zv59+QvdMv
+         WP0QTkZ3wNtxo7BpR1ANf4wV4XKQ50gOMqvXw+LJBXiw5exbBRBvJ9wp7lcu6HYE1d
+         1qgG4Xzrjh35Ml68omCKtfwoCxiZFn++gpKJF4nY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 4.19 047/116] i2c: hix5hd2: add missed clk_disable_unprepare in remove
-Date:   Wed,  1 Apr 2020 18:17:03 +0200
-Message-Id: <20200401161548.544784414@linuxfoundation.org>
+        stable@vger.kernel.org, Yussuf Khalil <dev@pp3345.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 049/116] Input: synaptics - enable RMI on HP Envy 13-ad105ng
+Date:   Wed,  1 Apr 2020 18:17:05 +0200
+Message-Id: <20200401161548.842612542@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -59,31 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Yussuf Khalil <dev@pp3345.net>
 
-commit e1b9f99ff8c40bba6e59de9ad4a659447b1e4112 upstream.
+commit 1369d0abe469fb4cdea8a5bce219d38cb857a658 upstream.
 
-The driver forgets to disable and unprepare clk when remove.
-Add a call to clk_disable_unprepare to fix it.
+This laptop (and perhaps other variants of the same model) reports an
+SMBus-capable Synaptics touchpad. Everything (including suspend and
+resume) works fine when RMI is enabled via the kernel command line, so
+let's add it to the whitelist.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+Signed-off-by: Yussuf Khalil <dev@pp3345.net>
+Link: https://lore.kernel.org/r/20200307213508.267187-1-dev@pp3345.net
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-hix5hd2.c |    1 +
+ drivers/input/mouse/synaptics.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/i2c/busses/i2c-hix5hd2.c
-+++ b/drivers/i2c/busses/i2c-hix5hd2.c
-@@ -482,6 +482,7 @@ static int hix5hd2_i2c_remove(struct pla
- 	i2c_del_adapter(&priv->adap);
- 	pm_runtime_disable(priv->dev);
- 	pm_runtime_set_suspended(priv->dev);
-+	clk_disable_unprepare(priv->clk);
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -189,6 +189,7 @@ static const char * const smbus_pnp_ids[
+ 	"SYN3052", /* HP EliteBook 840 G4 */
+ 	"SYN3221", /* HP 15-ay000 */
+ 	"SYN323d", /* HP Spectre X360 13-w013dx */
++	"SYN3257", /* HP Envy 13-ad105ng */
+ 	NULL
+ };
  
- 	return 0;
- }
 
 
