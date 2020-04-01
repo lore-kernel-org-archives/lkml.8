@@ -2,348 +2,150 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57484C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF751C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6AF12137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZUe4FqCA"
+	by mail.kernel.org (Postfix) with ESMTP id B26EA206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585758984;
+	bh=IoW0UQ7gMuUmvsa4lQ1KLYup5Ho1EcpJce25OdnnrO0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KPaHcRzjyTgP03eGomBDG3sROiuxP6oaA9MbIUj3Kt5RSrY5QTB42x8kOIt8028cL
+	 Q6KXJUnHpMLZ3noHzwoAjorgvg+AbFKU7ermGuAJfy8+uLol1l8gyTNIWaiNI5rhPe
+	 rVG9mXSpSpT4NGDbRvXxC55sfMuXK9qyOXx3p9zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388654AbgDAQgQ (ORCPT
+        id S2388833AbgDAQgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:36:16 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13573 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388529AbgDAQgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e84c2940006>; Wed, 01 Apr 2020 09:34:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 01 Apr 2020 09:36:05 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 01 Apr 2020 09:36:05 -0700
-Received: from [10.2.164.193] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Apr
- 2020 16:36:05 +0000
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Sakari Ailus <sakari.ailus@iki.fi>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
-        <helen.koike@collabora.com>, <digetx@gmail.com>,
-        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
- <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
- <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
- <20200331115221.GA4767@pendragon.ideasonboard.com>
- <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
- <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
-Message-ID: <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
-Date:   Wed, 1 Apr 2020 09:36:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 12:36:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388119AbgDAQgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E3BE206F8;
+        Wed,  1 Apr 2020 16:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585758976;
+        bh=IoW0UQ7gMuUmvsa4lQ1KLYup5Ho1EcpJce25OdnnrO0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1ANlv4IzQxAGX7jGPCUOVxq0/vYTUNEhXq2Og+qL3M8Ht47sUYf1SnVgOOOuvYN5j
+         YKmwDEcWNowXfc3YeHS6LMl7cUCKmLfQaMtuOUrvR5/RNWMDYZTxhrtgIokeiFi1RA
+         4t9K99nooYJhSXYRLWaiROYx8/ONfUziLiAhHqnY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 036/102] staging: greybus: loopback_test: fix potential path truncations
+Date:   Wed,  1 Apr 2020 18:17:39 +0200
+Message-Id: <20200401161539.574614378@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
+References: <20200401161530.451355388@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585758868; bh=jHwXLqC0kgYzsezG911Dkh+Vm7Ms3kIpbjomQTfOJPY=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ZUe4FqCAuAQ4PHLX44ZPmfZCfH6X+TRJhdpjJZ61tgV8QT2tqgvKPQJsEWJEQCcbY
-         fzN/Ime7wqMvgNmMO31yt2YwmcZ+WfJsHGxpI5x+BV66lHndcN7bjWNLukJo7dsWPE
-         vzzFP25NhAFj+FbuDpsM3bzvVkO+KBqBh1BAh1j/vZDPS9XqO1LecPi+eAKKtWw+MP
-         t1r8qAdKF0n6ZUox/5mB/MjGfEVqn2+xVyraECpWOLmt7PNMkVwDY0VsiM2Et03gDP
-         MJjEdrflJjrxElxQSa3P7yvbvExnt89harTpOAdRPyc3tezLiQ9R7RPdedu+h1IKni
-         7rAoV/Yj3/W+g==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari/Laurent,
+From: Johan Hovold <johan@kernel.org>
 
-Few questions to confirm my understanding on below discussion.
+commit ae62cf5eb2792d9a818c2d93728ed92119357017 upstream.
 
-1. Some sensors that you are referring as don't work with single devnode=20
-controlling pipeline devices are ISP built-in sensors where setup of=20
-pipeline and subdevices happen separately?
+Newer GCC warns about possible truncations of two generated path names as
+we're concatenating the configurable sysfs and debugfs path prefixes
+with a filename and placing the results in buffers of the same size as
+the maximum length of the prefixes.
 
-2. With driver supporting single device node control of entire pipeline=20
-devices compared to MC-based, limitation is with userspace apps for only=20
-these complex camera sensors?
+	snprintf(d->name, MAX_STR_LEN, "gb_loopback%u", dev_id);
 
-3. Does all upstream video capture drivers eventually will be moved to=20
-support MC-based?
+	snprintf(d->sysfs_entry, MAX_SYSFS_PATH, "%s%s/",
+		 t->sysfs_prefix, d->name);
 
-4. Based on libcamera doc looks like it will work with both types of=20
-MC-based and single devnode based pipeline setup drivers for normal=20
-sensors and limitation is when we use ISP built-in sensor or ISP HW=20
-block. Is my understanding correct?
+	snprintf(d->debugfs_entry, MAX_SYSFS_PATH, "%sraw_latency_%s",
+		 t->debugfs_prefix, d->name);
 
-Thanks
+Fix this by separating the maximum path length from the maximum prefix
+length and reducing the latter enough to fit the generated strings.
 
-Sowjanya
+Note that we also need to reduce the device-name buffer size as GCC
+isn't smart enough to figure out that we ever only used MAX_STR_LEN
+bytes of it.
+
+Fixes: 6b0658f68786 ("greybus: tools: Add tools directory to greybus repo and add loopback")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200312110151.22028-4-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/staging/greybus/tools/loopback_test.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+--- a/drivers/staging/greybus/tools/loopback_test.c
++++ b/drivers/staging/greybus/tools/loopback_test.c
+@@ -20,6 +20,7 @@
+ #include <signal.h>
+ 
+ #define MAX_NUM_DEVICES 10
++#define MAX_SYSFS_PREFIX 0x80
+ #define MAX_SYSFS_PATH	0x200
+ #define CSV_MAX_LINE	0x1000
+ #define SYSFS_MAX_INT	0x20
+@@ -68,7 +69,7 @@ struct loopback_results {
+ };
+ 
+ struct loopback_device {
+-	char name[MAX_SYSFS_PATH];
++	char name[MAX_STR_LEN];
+ 	char sysfs_entry[MAX_SYSFS_PATH];
+ 	char debugfs_entry[MAX_SYSFS_PATH];
+ 	struct loopback_results results;
+@@ -94,8 +95,8 @@ struct loopback_test {
+ 	int stop_all;
+ 	int poll_count;
+ 	char test_name[MAX_STR_LEN];
+-	char sysfs_prefix[MAX_SYSFS_PATH];
+-	char debugfs_prefix[MAX_SYSFS_PATH];
++	char sysfs_prefix[MAX_SYSFS_PREFIX];
++	char debugfs_prefix[MAX_SYSFS_PREFIX];
+ 	struct timespec poll_timeout;
+ 	struct loopback_device devices[MAX_NUM_DEVICES];
+ 	struct loopback_results aggregate_results;
+@@ -917,10 +918,10 @@ int main(int argc, char *argv[])
+ 			t.iteration_max = atoi(optarg);
+ 			break;
+ 		case 'S':
+-			snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
++			snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
+ 			break;
+ 		case 'D':
+-			snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
++			snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
+ 			break;
+ 		case 'm':
+ 			t.mask = atol(optarg);
+@@ -971,10 +972,10 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	if (!strcmp(t.sysfs_prefix, ""))
+-		snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", sysfs_prefix);
++		snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", sysfs_prefix);
+ 
+ 	if (!strcmp(t.debugfs_prefix, ""))
+-		snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", debugfs_prefix);
++		snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", debugfs_prefix);
+ 
+ 	ret = find_loopback_devices(&t);
+ 	if (ret)
 
 
-On 3/31/20 11:33 AM, Sowjanya Komatineni wrote:
->
-> On 3/31/20 9:40 AM, Sowjanya Komatineni wrote:
->>
->> On 3/31/20 4:52 AM, Laurent Pinchart wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> Hello,
->>>
->>> On Tue, Mar 31, 2020 at 01:27:19PM +0200, Hans Verkuil wrote:
->>>> On 3/31/20 1:10 PM, Sakari Ailus wrote:
->>>>> On Tue, Mar 31, 2020 at 12:56:57PM +0200, Hans Verkuil wrote:
->>>>>> On 3/31/20 12:32 PM, Sakari Ailus wrote:
->>>>>>> On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
->>>>>>>> On 3/25/20 12:03 PM, Sakari Ailus wrote:
->>>>>>>>> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni=20
->>>>>>>>> wrote:
->>>>>>>>>> Tegra210 contains a powerful Video Input (VI) hardware=20
->>>>>>>>>> controller
->>>>>>>>>> which can support up to 6 MIPI CSI camera sensors.
->>>>>>>>>>
->>>>>>>>>> Each Tegra CSI port can be one-to-one mapped to VI channel=20
->>>>>>>>>> and can
->>>>>>>>>> capture from an external camera sensor connected to CSI or from
->>>>>>>>>> built-in test pattern generator.
->>>>>>>>>>
->>>>>>>>>> Tegra210 supports built-in test pattern generator from CSI to=20
->>>>>>>>>> VI.
->>>>>>>>>>
->>>>>>>>>> This patch adds a V4L2 media controller and capture driver=20
->>>>>>>>>> support
->>>>>>>>>> for Tegra210 built-in CSI to VI test pattern generator.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>> ---
->>>>>>>>>> =C2=A0 drivers/staging/media/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +
->>>>>>>>>> =C2=A0 drivers/staging/media/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/Kconfig=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 10 +
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/Makefile=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 8 +
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/TODO=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra-common.h | 263 +++++++
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.c=C2=A0=C2=A0=C2=A0=
- | 522=20
->>>>>>>>>> ++++++++++++++
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra-csi.h=C2=A0=C2=A0=C2=A0=
- | 118 ++++
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.c=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 1058=20
->>>>>>>>>> ++++++++++++++++++++++++++++
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra-vi.h=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 83 +++
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra-video.c=C2=A0 | 129 +++=
-+
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra-video.h=C2=A0 | 32 +
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra210.c=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 754=20
->>>>>>>>>> ++++++++++++++++++++
->>>>>>>>>> =C2=A0 drivers/staging/media/tegra/tegra210.h=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 192 +++++
->>>>>>>>> Why staging? Are there reasons not to aim this to the kernel=20
->>>>>>>>> proper right
->>>>>>>>> away? If you only support TPG, the driver may not have too=20
->>>>>>>>> many (if any)
->>>>>>>>> real users anyway.
->>>>>>>>>
->>>>>>>>>> =C2=A0 14 files changed, 3182 insertions(+)
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Kconfig
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/Makefile
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/TODO
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-comm=
-on.h
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.=
-c
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-csi.=
-h
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.c
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vi.h
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vide=
-o.c
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra-vide=
-o.h
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.c
->>>>>>>>>> =C2=A0 create mode 100644 drivers/staging/media/tegra/tegra210.h
->>>>>>>>>>
->>>>>>>> <snip>
->>>>>>>>
->>>>>>>>>> +static int tegra_channel_g_input(struct file *file, void *priv,
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int *i)
->>>>>>>>>> +{
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *i =3D 0;
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>> +}
->>>>>>>>>> +
->>>>>>>>>> +static int tegra_channel_s_input(struct file *file, void *priv,
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int input)
->>>>>>>>>> +{
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (input > 0)
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -EINVAL;
->>>>>>>>>> +
->>>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>>>>> +}
->>>>>>>>> Please see patchset on topic "v4l2-dev/ioctl: Add=20
->>>>>>>>> V4L2_CAP_IO_MC" on
->>>>>>>>> linux-media; it's relevant here, too.
->>>>>>>> No, it isn't. The pipeline is controlled by the driver, not by=20
->>>>>>>> userspace.
->>>>>>>> This is a regular video capture driver, not an ISP driver.
->>>>>>> I don't think that really makes a difference, whether a device=20
->>>>>>> is an ISP or
->>>>>>> not, but instead what does is whether there is something to=20
->>>>>>> control in its
->>>>>>> pipeline that cannot be generally done through the regular V4L2=20
->>>>>>> interface.
->>>>>>> Even plain CSI-2 receiver drivers should be media device centric=20
->>>>>>> these days
->>>>>>> as doing otherwise excludes using a range of sensor drivers with=20
->>>>>>> them,
->>>>>>> including any possible future support for e.g. sensor embedded=20
->>>>>>> data.
->>>>>>>
->>>>>> We've been back and forth on this before for this driver. I see=20
->>>>>> no reason to make things
->>>>>> complicated, these are simple video pipelines for video capture.=20
->>>>>> Making this media
->>>>>> device centric means that existing software using the BSP version=20
->>>>>> of this driver require
->>>>>> a full rewrite, which is not desirable.
->>>>>>
->>>>>> If we are going to require CSI receiver drivers to be media=20
->>>>>> centric, then that's a
->>>>>> major departure of existing practice. And something that needs to=20
->>>>>> be discussed first,
->>>>> I'd be happy to discuss that.
->>>>>
->>>>> Either way, the current design is problematic as it excludes a=20
->>>>> range of
->>>>> camera sensors being used with the driver --- addressing of which=20
->>>>> requires
->>>>> converting the driver MC centric. If the driver is merged to=20
->>>>> mainline, then
->>>>> the user might face a Kconfig option or a module parameter to choose
->>>>> between the two --- this defines uAPI behaviour after all.
->>>>>
->>>>> The only way to avoid that in the future is to make it MC-centric=20
->>>>> right
->>>>> away.
->>>>>
->>>>>> since that will require that support for each csi receiver driver=20
->>>>>> is added to libcamera.
->>>>>> Is libcamera ready for that? Are common applications using=20
->>>>>> libcamera yet?
->>>>>>
->>>>>> Obviously, if NVIDIA decides that this is worth the effort, then=20
->>>>>> I have no objection.
->>>>>> But I don't think it is something we should require at this stage.
->>>>> Works for me. But in that case NVIDIA should also be aware that=20
->>>>> doing so
->>>>> has consequences.
->>>>>
->>>>> We also haven't discussed what to do with old V4L2-centric drivers=20
->>>>> which
->>>>> you'd use with sensors that expose their own subdevs. The=20
->>>>> proportion of all
->>>>> sensors might not be large currently but it is almost certainly=20
->>>>> bound to
->>>>> grow in the future.
->>>>>
->>>>> FWIW, Intel ipu3-cio2 CSI-2 receiver driver is MC-centric e.g. for=20
->>>>> the
->>>>> above reasons. Libcamera supports it currently. I'll let Laurent=20
->>>>> (cc'd)
->>>>> comment on the details.
->>>> I think it would be good to at least describe in some detail what=20
->>>> you gain
->>>> by taking the media centric route, and what the obstacles are (loss=20
->>>> of compatibility
->>>> with existing applications, requiring libcamera support).
->>> In this case the main gain is control of the camera sensor. Sensors can
->>> appear as simple when you don't look too closely at them, but many
->>> sensors (especially the ones modelled after SMIA++ and the now standard
->>> - and open! - MIPI CCS specification) have 3 locations to perform
->>> cropping (analog, digital and output), and 3 locations to perform
->>> scaling (binning, skipping, and full-featured scaler). All of these=20
->>> need
->>> to be controlled by userspace one way or another if you want to
->>> implement proper camera algorithms, which those platforms target.
->> Thanks Laurent/Sakari/Hans.
->>
->> Based on discussion, seems like its good to change driver now to=20
->> media-centric rather than later.
->>
->> As Jetson is devkit and custom camera sensor module meeting spec can=20
->> be used, its good to let sensor control to user space.
->>
->> Will look into and update to use media-centric APIs.
-> Will discuss this internally and will get back on this...
->>>
->>>> My personal feeling has always been that for ISP drivers the pros=20
->>>> of making
->>>> a media-centric driver outweigh the cons, but that for a standard=20
->>>> video capture
->>>> pipeline without complex processing blocks the cons outweigh the pros.
->>>>
->>>> This might change if libcamera becomes widely used, but we're not=20
->>>> there yet.
->>>>
->>>> To be honest, I am not opposed to having a kernel config option for=20
->>>> drivers
->>>> like this that select the media-centric API vs a regular API, if=20
->>>> that can be
->>>> done without too much work. If you need full control for your=20
->>>> embedded system,
->>>> then you enable the option. If you want full compatibility with=20
->>>> existing
->>>> applications, then disable it.
->>> How would distributions be supposed to handle those ? That could in the
->>> end need to be a per-driver option, and it would be very messy. Maybe
->>> it's unavoidable, I'm trying to figure out a way to avoid such an=20
->>> option
->>> for sensor drivers, to decide to expose them as a single subdev or
->>> multiple subdevs in order to support multiple streams CSI-2 streams,=20
->>> and
->>> I'm not sure I'll succeed.
->>>
->>> --=20
->>> Regards,
->>>
->>> Laurent Pinchart
