@@ -2,117 +2,133 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B128CC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1717BC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E0020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585755959;
-	bh=Ss9ZdTDOkMedWGrrhWeOI7Hi4L677Nmk0j4eRk1smPI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B1woyq6PrtqBagVGq3FBX6gyQRIXPYVRHe8MVRogcUhN43CP8UT3mmwR7RoQ7olNh
-	 /BC4uSNmQYqpcAHfwsWA+Wjv8T9IC9EOE36uFZiRUlX3/wPjQos5fZHAjMws1diLpx
-	 eVTHFFWFTWxySAPAF15L4ye2j/hxu8vyGkkQZLfc=
+	by mail.kernel.org (Postfix) with ESMTP id E1C0720BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZRaDOcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733155AbgDAPp6 (ORCPT
+        id S1733162AbgDAPqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732889AbgDAPp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:45:58 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12D1E20B1F;
-        Wed,  1 Apr 2020 15:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585755957;
-        bh=Ss9ZdTDOkMedWGrrhWeOI7Hi4L677Nmk0j4eRk1smPI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sP9gfIaSRugv6o9DO9ZFmAxLAFkBEaA/RHAEy5jx2b+vYcJMs5jdHVb6gPGqKsNVX
-         tXgvnGniFyqivTQaZVYwkYi/ZPj8RxJjtkKRZ5dvjWpBcZofGjTKF0Urr5MwP6xh7R
-         2Ds7kdYHEC927nwIN4MKJx6kxbDGtZ6z7gkP9kfw=
-Received: by mail-qt1-f174.google.com with SMTP id i3so362710qtv.8;
-        Wed, 01 Apr 2020 08:45:57 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0VhKIv20CWeTy/2bm60L+uxrfSu13cH9l3xpEuv55Mn/Jtv7QM
-        /TgZjR3ZkN3WhbNCv9VSbfuSTzL3CthvlfRvzQ==
-X-Google-Smtp-Source: ADFU+vu2TcmhrkQ3vHdIQJxoR1BX1Dgu/jUbMAzrf7+1PBw12+wOLynHGOuAxLN5XgkMazDn1FGHukH38UsQDdzp6Kc=
-X-Received: by 2002:ac8:1b33:: with SMTP id y48mr11115534qtj.136.1585755956175;
- Wed, 01 Apr 2020 08:45:56 -0700 (PDT)
+        Wed, 1 Apr 2020 11:46:32 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35776 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732889AbgDAPqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:46:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k21so26305401ljh.2;
+        Wed, 01 Apr 2020 08:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eGo2AC3bFo0cX0Y80FNvQpP9bE2/c336JeB41lJRyRE=;
+        b=tZRaDOcYiY6nTed7mYmAPRDObnjaWlOo8msoex1+RLkm5gRTGA7S/T7pIUv688qVWC
+         9KQtH9PEB9F9WD9iur48UFi0rhlm5OlkBh4BC56uASN6dSjf/4yz/puLfcZwm9ovxsMm
+         ZIuNxR4sMs2HNZHIAQ05TJQbaKiy6joyqe0KXFvDo1VW/jpri9RYQJkSWFXp+91cFSO/
+         nOjcwx+pmIYUBonKXicJWR2I/gDWlGfRoOpHFdlRQmcU+llIMqvdV2pCVTPdKOBrTwvF
+         SwC51wSyLqib99jVteWF9BH+lDGytmvrIdEN5YhNrhhnsXiQyvdyOPTo/d1+eJ+0D1Ra
+         4zfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eGo2AC3bFo0cX0Y80FNvQpP9bE2/c336JeB41lJRyRE=;
+        b=mxfUgSQlqy6OdFE19okhc5VNUK5/1i5+knN9Vzd39EcrzlmBsQT1hudey3FsjTliLA
+         T+F0dq/8U6H3b9gozSdEvCK7hroEAiGVIPbzamRO2qfBRkr0wHv6NoSjFZfvR/jxuXme
+         70FZAsBzmzUMMPESH867hD33/ERJTodcHpjklkHSPYyXjyfjNbKiw5AmAeKkAkd1bmhw
+         MYs9s5W/QKOIysNjTolQE6w5V6bU8mk87MgfmPi24U/qn5qZkDCt4DSSuxQKm3b0PYz7
+         PnGHWuTdVlWPV4rtiev+NeyyudnVGqoqW2AGFzwrgNgQmBh1Gq1GQFHx9G2QIXlgSmGm
+         FvhA==
+X-Gm-Message-State: AGi0Pua2b/1NJo4rmcHtwivAt7+NFg95ro+ZN6D8FFur6Kb83ySUIGbR
+        FN3tdvmHStkQXWU+p3sWf9nGfOzyNQU=
+X-Google-Smtp-Source: APiQypL/Qg1CoRp9yBB1IV0crCY7gmXDJZBXEVq3T4dQMlAcRYjXGvdxK6t57DKmKs/y3+6db0r/vQ==
+X-Received: by 2002:a2e:8195:: with SMTP id e21mr13332304ljg.49.1585755989539;
+        Wed, 01 Apr 2020 08:46:29 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id v20sm1839292lfe.52.2020.04.01.08.46.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 08:46:28 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 1 Apr 2020 17:46:18 +0200
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401154618.GA3907@pc636>
+References: <20200331145806.GB236678@google.com>
+ <20200331153450.GM30449@dhcp22.suse.cz>
+ <20200331161215.GA27676@pc636>
+ <20200401070958.GB22681@dhcp22.suse.cz>
+ <20200401123230.GB32593@pc636>
+ <20200401125503.GJ22681@dhcp22.suse.cz>
+ <20200401130816.GA1320@pc636>
+ <20200401131528.GK22681@dhcp22.suse.cz>
+ <20200401132258.GA1953@pc636>
+ <20200401152805.GN22681@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200330164328.2944505-1-robert.marko@sartura.hr>
- <20200330164328.2944505-2-robert.marko@sartura.hr> <20200331163103.GA27585@bogus>
- <CA+HBbNEnH+0g0GK+xMGF48vJbLH3Ud2VY6yDOAxdgbRra3Y25A@mail.gmail.com>
-In-Reply-To: <CA+HBbNEnH+0g0GK+xMGF48vJbLH3Ud2VY6yDOAxdgbRra3Y25A@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 1 Apr 2020 09:45:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
-Message-ID: <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401152805.GN22681@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:39 AM Robert Marko <robert.marko@sartura.hr> wrote:
->
-> On Tue, Mar 31, 2020 at 6:31 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, 30 Mar 2020 18:43:29 +0200, Robert Marko wrote:
-> > > This patch adds the binding documentation for the HS/SS USB PHY found
-> > > inside Qualcom Dakota SoCs.
-> > >
-> > > Signed-off-by: John Crispin <john@phrozen.org>
-> > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > Cc: Luka Perkov <luka.perkov@sartura.hr>
-> > > ---
-> > > Changes from v4 to v5:
-> > > * Replace tabs with whitespaces
-> > > * Add maintainer property
-> > >
-> > >  .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 48 +++++++++++++++++++
-> > >  1 file changed, 48 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
-> > >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > Error: Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dts:21.25-26 syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml' failed
-> > make[1]: *** [Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml] Error 1
-> > make[1]: *** Waiting for unfinished jobs....
-> > Makefile:1262: recipe for target 'dt_binding_check' failed
-> > make: *** [dt_binding_check] Error 2
-> >
-> > See https://patchwork.ozlabs.org/patch/1264091
-> >
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure dt-schema is up to date:
-> >
-> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> >
-> > Please check and re-submit.
-> Hi Rob,
-> I tested locally before submitting and it will pass.
+> > > 
+> > > OK, if you are always in the atomic context then GFP_ATOMIC is
+> > > sufficient. __GFP_RETRY_MAYFAIL will make no difference for allocations
+> > > which do not reclaim (and thus not retry). Sorry this was not clear to
+> > > me from the previous description.
+> > > 
+> > Ahh. OK. Then adding __GFP_RETRY_MAYFAIL to GFP_ATOMIC will not make any effect.
+> > 
+> > Thank you for your explanation!
+> 
+> Welcome. I wish all those gfp flags were really clear but I fully
+> understand that people who are not working with MM regurarly might find
+> it confusing. Btw. have __GFP_RETRY_MAYFAIL is documented in gfp.h and
+> it is documented as the reclaim modifier which should imply that it has
+> no effect when the reclaim is not allowed which is the case for any non
+> sleeping allocation. If that relation was not immediately obvious then I
+> think we need to make it explicit. Would you find it useful?
+> 
+> E.g.
+> 
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index e3ab1c0d9140..8f09cefdfa7b 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -127,6 +127,8 @@ struct vm_area_struct;
+>   *
+>   * Reclaim modifiers
+>   * ~~~~~~~~~~~~~~~~~
+> + * Please note that all the folloging flags are only applicable to sleepable
+> + * allocations (e.g. %GFP_NOWAIT and %GFP_ATOMIC will ignore them).
+>   *
+>   * %__GFP_IO can start physical IO.
+>   *
+That would be definitely clear for me!
 
-Impossible. Your example has defines, but there are no include files listed.
-
-Rob
+--
+Vlad Rezki
