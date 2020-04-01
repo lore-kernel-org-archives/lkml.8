@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E89FC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129E1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC43B2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5292214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758170;
-	bh=mPMg+GIZNgjPNi6MOWo6soVJy6BjBjhd20BrzjGqz2g=;
+	s=default; t=1585758175;
+	bh=HwVePymlaD0LDdi3QetTPfohcwL6L5qYFnhXQ7Z8YvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gLDRf2Xnw2bYiEpxbxVsCGzBSVfRjbtWz5z7StR57R1NbgJCbhNYFgEVAOvqCsbeH
-	 ukr5uO7MW68IGxaJGNmWSIXfxhqvH3aLF5ypLkCTPh0nkLg+RUTzCdkGCTNOpetv8F
-	 DqD3k+pSEN5WmF+QY3hfb34nXB9dM4ip1ccWmrQ8=
+	b=sb1Vj9lqrKsL1H97Za/lgYczIw1Ya1DK4xtbvXDtB8L8O4oeEtkaAw3xnA4G04C5Q
+	 MXWP8SC/Oko7M+vlYYlvpIWhzjOnWWYIxJPkxt8Q1xGVai/6E/Oy9jKOk7jI+gx5Tt
+	 mF+ulTRGmkyeXO/dbKBVHqYRiuojIMC1AttZwnWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbgDAQWt (ORCPT
+        id S2387542AbgDAQWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45924 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387527AbgDAQWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:45 -0400
+        id S1732342AbgDAQWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F4952137B;
-        Wed,  1 Apr 2020 16:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAD2621582;
+        Wed,  1 Apr 2020 16:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758164;
-        bh=mPMg+GIZNgjPNi6MOWo6soVJy6BjBjhd20BrzjGqz2g=;
+        s=default; t=1585758170;
+        bh=HwVePymlaD0LDdi3QetTPfohcwL6L5qYFnhXQ7Z8YvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKJ0qQ1lb5JXgoRmvkfrwJl2xBQbElKnCUQuD/mNmw3tKOFYFkQp7Jg8UqSB9Eyab
-         ydybLfZacxrlu/7ZafjEogWbGX5odBskzX8VYDSyTrSzeecq1Xyf7U9j/7a/mZikMX
-         QIYq85NjFwv5/VsAWSvVWeL6Bm2ONws+SZmnKdHk=
+        b=g7bK4sO6xRjVU0HQsFC39go/CD2VyHgaRQ+DDPF8csS8fJy61JurCfRH8rDJWLsEm
+         vUBNm9OIhtOJQuihZICFZV1c+N95KljyOA1qOaoMkWAGnB40dKv3hZ40NbkNRHCNuQ
+         ACwCA5cuDsr8+5qsq6pH1vohZf9vF6It9sXOE6BM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 5.4 25/27] ARM: dts: sun8i: r40: Move AHCI device node based on address order
-Date:   Wed,  1 Apr 2020 18:17:53 +0200
-Message-Id: <20200401161434.337279705@linuxfoundation.org>
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 27/27] arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
+Date:   Wed,  1 Apr 2020 18:17:55 +0200
+Message-Id: <20200401161436.007336638@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 References: <20200401161414.352722470@linuxfoundation.org>
@@ -60,62 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
-commit fe3a04824f75786e39ed74e82fb6cb2534c95fe4 upstream.
+commit d79e9d7c1e4ba5f95f2ff3541880c40ea9722212 upstream.
 
-When the AHCI device node was added, it was added in the wrong location
-in the device tree file. The device nodes should be sorted by register
-address.
+The correct setting for the RGMII ports on LS1046ARDB is to
+enable delay on both Rx and Tx so the interface mode used must
+be PHY_INTERFACE_MODE_RGMII_ID.
 
-Move the device node to before EHCI1, where it belongs.
+Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
+configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
+has control over the RGMII RX delay and it is disabling it for
+RGMII_TXID. The LS1046ARDB uses two such PHYs in RGMII_ID mode but
+in the device tree the mode was described as "rgmii".
 
-Fixes: 41c64d3318aa ("ARM: dts: sun8i: r40: add sata node")
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Changing the phy-connection-type to "rgmii-id" to address the issue.
+
+Fixes: 3fa395d2c48a ("arm64: dts: add LS1046A DPAA FMan nodes")
+Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -266,6 +266,16 @@
- 			#phy-cells = <1>;
- 		};
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
+@@ -127,12 +127,12 @@
+ &fman0 {
+ 	ethernet@e4000 {
+ 		phy-handle = <&rgmii_phy1>;
+-		phy-connection-type = "rgmii";
++		phy-connection-type = "rgmii-id";
+ 	};
  
-+		ahci: sata@1c18000 {
-+			compatible = "allwinner,sun8i-r40-ahci";
-+			reg = <0x01c18000 0x1000>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
-+			resets = <&ccu RST_BUS_SATA>;
-+			reset-names = "ahci";
-+			status = "disabled";
-+		};
-+
- 		ehci1: usb@1c19000 {
- 			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
- 			reg = <0x01c19000 0x100>;
-@@ -557,17 +567,6 @@
- 			#size-cells = <0>;
- 		};
+ 	ethernet@e6000 {
+ 		phy-handle = <&rgmii_phy2>;
+-		phy-connection-type = "rgmii";
++		phy-connection-type = "rgmii-id";
+ 	};
  
--		ahci: sata@1c18000 {
--			compatible = "allwinner,sun8i-r40-ahci";
--			reg = <0x01c18000 0x1000>;
--			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
--			resets = <&ccu RST_BUS_SATA>;
--			reset-names = "ahci";
--			status = "disabled";
--
--		};
--
- 		gmac: ethernet@1c50000 {
- 			compatible = "allwinner,sun8i-r40-gmac";
- 			syscon = <&ccu>;
+ 	ethernet@e8000 {
 
 
