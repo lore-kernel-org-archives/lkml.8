@@ -2,111 +2,132 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631EDC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA89C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A29A206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:46:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="y6eQIehs"
+	by mail.kernel.org (Postfix) with ESMTP id 21DB220776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585748868;
+	bh=CvwldOZwrOCHacHE+jmnj9rjAqgJ9cJeX4YmgaNFGyQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=g5dTsOke6DplzTHwIj58WUck4zCijs0wgj/P0oGMS4PQu79Le30IADp7h9Jenoai3
+	 JJNpmBEI3M69yl0oGzJqb/jSf6bDqlnEAvgNqMmyZB4ZEvxzOTHhGJR7wLFSej9bP/
+	 1jF5nd/VqdvlUgNvO7YUrXPBZe58L5L7gTao8jj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732741AbgDANqx (ORCPT
+        id S1732751AbgDANrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:46:53 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57622 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732205AbgDANqw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:46:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bTIg9/frqj0tTmLnxet1vx3Kwof9z52T8v82iLta588=; b=y6eQIehsd2lZKBw1GndVjHgXhl
-        vWkm5POiPtUDt57kOlC7uLCeVBM6X1K7RdasXLf2u8Njydm09956qElYR5pDt15OJtr+bZs5y74tO
-        XApkXUNA98fOOyXuKaDa+sAZ+kZYdKTafno0qXG2AHWhEETysieDAZpfYo2PigDDCcV6d3ZPAZlkK
-        fcsDaG/9FI8an+McCvzI/hfHmtPr1IGBN6kpiFwgfQygtv/uS69LKENzXhyGEC5RSGDNFcpFqqT4C
-        7KRhSsAHCG6qFH5yQ+IeC0ObsAwoSf0HWQQ9HFcGskVEqKjd8z7EdqBgynfsz1Gk2BvGtTB5e9aGi
-        LTgdf+cQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJdhU-0005xz-CH; Wed, 01 Apr 2020 13:46:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 1 Apr 2020 09:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732289AbgDANrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 09:47:46 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1AF6930610E;
-        Wed,  1 Apr 2020 15:46:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0456F29D86172; Wed,  1 Apr 2020 15:46:33 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 15:46:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH v3 07/10] mmap locking API: add mmap_read_release() and
- mmap_read_unlock_non_owner()
-Message-ID: <20200401134633.GS20696@hirez.programming.kicks-ass.net>
-References: <20200327225102.25061-1-walken@google.com>
- <20200327225102.25061-8-walken@google.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8DB9206F5;
+        Wed,  1 Apr 2020 13:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585748865;
+        bh=CvwldOZwrOCHacHE+jmnj9rjAqgJ9cJeX4YmgaNFGyQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=n9dQjVEJndzYqA/D9qyvlmeRzljwKA0hKpPcwuwEarzVa+LiZrEsSpVfsP+S8HIDJ
+         mzfj1ojIB7cIlLeirIEAO9Ok5YuWlmxTGha+MxAf7z2o9S93ZZtW4SUNWAVDsTM65t
+         3ijG+Q8QhIylR5xd7VP0XDa0zmWTzp02vPvydJRw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9645535226AC; Wed,  1 Apr 2020 06:47:45 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 06:47:45 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401134745.GV19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331140433.GA26498@pc636>
+ <20200331150911.GC236678@google.com>
+ <20200331160119.GA27614@pc636>
+ <20200331183000.GD236678@google.com>
+ <20200401122550.GA32593@pc636>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200327225102.25061-8-walken@google.com>
+In-Reply-To: <20200401122550.GA32593@pc636>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:50:59PM -0700, Michel Lespinasse wrote:
-> Add a couple APIs to allow splitting mmap_read_unlock() into two calls:
-> - mmap_read_release(), called by the task that had taken the mmap lock;
-> - mmap_read_unlock_non_owner(), called from a work queue.
+On Wed, Apr 01, 2020 at 02:25:50PM +0200, Uladzislau Rezki wrote:
+
+[ . . . ]
+
+> > > > Paul was concerned about following scenario with hitting synchronize_rcu():
+> > > > 1. Consider a system under memory pressure.
+> > > > 2. Consider some other subsystem X depending on another system Y which uses
+> > > >    kfree_rcu(). If Y doesn't complete the operation in time, X accumulates
+> > > >    more memory.
+> > > > 3. Since kfree_rcu() on Y hits synchronize_rcu() a lot, it slows it down.
+> > > >    This causes X to further allocate memory, further causing a chain
+> > > >    reaction.
+> > > > Paul, please correct me if I'm wrong.
+> > > > 
+> > > I see your point and agree that in theory it can happen. So, we should
+> > > make it more tight when it comes to rcu_head attachment logic.
+> > 
+> > Right. Per discussion with Paul, we discussed that it is better if we
+> > pre-allocate N number of array blocks per-CPU and use it for the cache.
+> > Default for N being 1 and tunable with a boot parameter. I agree with this.
+> > 
+> As discussed before, we can make use of memory pool API for such
+> purpose. But i am not sure if it should be one pool per CPU or
+> one pool per NR_CPUS, that would contain NR_CPUS * N pre-allocated
+> blocks.
+
+There are advantages and disadvantages either way.  The advantage of the
+per-CPU pool is that you don't have to worry about something like lock
+contention causing even more pain during an OOM event.  One potential
+problem wtih the per-CPU pool can happen when callbacks are offloaded,
+in which case the CPUs needing the memory might never be getting it,
+because in the offloaded case (RCU_NOCB_CPU=y) the CPU posting callbacks
+might never be invoking them.
+
+But from what I know now, systems built with CONFIG_RCU_NOCB_CPU=y
+either don't have heavy callback loads (HPC systems) or are carefully
+configured (real-time systems).  Plus large systems would probably end
+up needing something pretty close to a slab allocator to keep from dying
+from lock contention, and it is hard to justify that level of complexity
+at this point.
+
+Or is there some way to mark a specific slab allocator instance as being
+able to keep some amount of memory no matter what the OOM conditions are?
+If not, the current per-CPU pre-allocated cache is a better choice in the
+near term.
+
+							Thanx, Paul
+
+> > In current code, we have 1 cache page per CPU, but this is allocated only on
+> > the first kvfree_rcu() request. So we could change this behavior as well to
+> > make it pre-allocated.
+> > 
+> > Does this all sound good to you?
+> > 
+> I think that makes sense :)
 > 
-> These apis are used by kernel/bpf/stackmap.c only.
-
-That code is an absolute abomination and should never have gotten
-merged.
-
-That said; I would prefer a mmap_read_trylock_nonowner() over
-mmap_read_release() existing.
-
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> ---
->  include/linux/mmap_lock.h | 10 ++++++++++
->  kernel/bpf/stackmap.c     |  9 ++++-----
->  2 files changed, 14 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index 36fb758401d6..a80cf9695514 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -62,4 +62,14 @@ static inline void mmap_read_unlock(struct mm_struct *mm)
->  	up_read(&mm->mmap_sem);
->  }
->  
-> +static inline void mmap_read_release(struct mm_struct *mm, unsigned long ip)
-> +{
-> +	rwsem_release(&mm->mmap_sem.dep_map, ip);
-> +}
-> +
-> +static inline void mmap_read_unlock_non_owner(struct mm_struct *mm)
-> +{
-> +	up_read_non_owner(&mm->mmap_sem);
-> +}
-> +
->  #endif /* _LINUX_MMAP_LOCK_H */
+> --
+> Vlad Rezki
