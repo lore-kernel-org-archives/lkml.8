@@ -2,119 +2,156 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C707C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A9AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541AC2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759863;
-	bh=ymCo9Ys2kiFW16phIqvg4zSPS6y8FoMsL/L4tAc/Dl8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LYJJviaHt1u/UgeisDWWFh41XTzJCzr5KVlICxpmtWkIpSLmBdJuCXAHJNfPe6q+o
-	 V7WyXeWf2IVqxLQekW5x8yc65YEJ/LTztqfVm2PkpjpN+II+Nrc/hRp/sTZ1SCkKD1
-	 GoFZ0tiBGAiXqLf0XUXaH1k0etSsnsmxw7PCM5tE=
+	by mail.kernel.org (Postfix) with ESMTP id BE36F2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="t8g4lRjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388247AbgDAQvB (ORCPT
+        id S2388803AbgDAQvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:51:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388631AbgDAQiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:38:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BA220772;
-        Wed,  1 Apr 2020 16:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759100;
-        bh=ymCo9Ys2kiFW16phIqvg4zSPS6y8FoMsL/L4tAc/Dl8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q8fMtUYBDQPB6hRXG0GfvCPQE68+CRa/bnUQfYEJ4QuiOUkEVRKHN471O3whZI9hc
-         K9AhDVdmVXRcuhig8fyDtcEYWDGRfgcPBL6tuTQKeEGK51d9EjZ2BtaiW98niENuf/
-         G1WXmKpjw3/oMXesHHFMycr10hZXgfKPzCEifNJY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
-        Pawel Dembicki <paweldembicki@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 075/102] USB: serial: option: add BroadMobi BM806U
-Date:   Wed,  1 Apr 2020 18:18:18 +0200
-Message-Id: <20200401161545.276670671@linuxfoundation.org>
+        Wed, 1 Apr 2020 12:51:08 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41265 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388875AbgDAQiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:38:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h9so821913wrc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 09:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=43B7TmRxwbH0Kz6LfG5BTdU1pIGsf8HgKKgz0zV5YhQ=;
+        b=t8g4lRjSFxlPhffn+KF0Ov/OJ/X7NMp1BBL1XTnFSCRAblSqCw30mm2ZCXiWToI5/u
+         uQ55QeaBYfR5L8Ro9yETs+vvD2EZc4MyexeAo9U+xh4HovklHxTMo4IUQmEq9BII33W+
+         JtYHbcfmo6dqCOIq42B4xFAUjDUVtSuA+walfIpUwiYy+a5rbDUxgCLqNf6Ms8IxPSFg
+         7gz5vOE57n0jBIJoDROV8lC70N840KzNOxETp1MobF1bbVEDJ2Ork6pr/LsMsvsRT+OI
+         ZwGZ/y9D3xDcD5hAgtc6cz+kdelAI7iLrhzMTNe7jghavldhQgy9VCOlYkRd3SdD+ffL
+         DkIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=43B7TmRxwbH0Kz6LfG5BTdU1pIGsf8HgKKgz0zV5YhQ=;
+        b=ssHc+D1acUykmR/6eB6ipzBxtvX3hRlfXXuKTyvv37+OLm6aXpKhCc0b9BtEamaZGv
+         KLMc7p57QIH7LFzsse+3eN1jWqyEtYLNst4oRs+9P8789n3T80wyJx/JCYkFcE/pYn2f
+         MVAj345UAojbR/EZM3yVRAUiJd9quqodfuxpeQ6sjKUJU3KADUrhnRyXWXNbZ5OnGsa1
+         0+nWRCRwqik15oJd72vtK/5NAhHxfHXEDTbUS7kaKlweXs39l1ylRsoKCPZq88GUAfpm
+         LMmHFplqQubXnW2M8VHKC2pkHkYTHExrg8Rzrxts0mgLXNlyx3wUAaeFZxanfyxYyY27
+         1Igw==
+X-Gm-Message-State: ANhLgQ0LvEEupz/3Xgx627vh182F4Ln0GYP5uAtJOb2LMhMXvZlWvEtT
+        qWH1tZbqcGnwsNY0gnU940o4/Q==
+X-Google-Smtp-Source: ADFU+vsttNZ8z9NKrPfiUCeOaS/Ky/EMaV1rDxbRCMDp1ELAHbDOcyAhwSzyVU7DFhRG3mSKbgXBwg==
+X-Received: by 2002:a05:6000:1251:: with SMTP id j17mr26858172wrx.228.1585759081007;
+        Wed, 01 Apr 2020 09:38:01 -0700 (PDT)
+Received: from localhost.localdomain (dh207-97-209.xnet.hr. [88.207.97.209])
+        by smtp.googlemail.com with ESMTPSA id t5sm3763573wrr.93.2020.04.01.09.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 09:38:00 -0700 (PDT)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH v6 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
+Date:   Wed,  1 Apr 2020 18:35:43 +0200
+Message-Id: <20200401163542.83278-2-robert.marko@sartura.hr>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
-References: <20200401161530.451355388@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200401163542.83278-1-robert.marko@sartura.hr>
+References: <20200401163542.83278-1-robert.marko@sartura.hr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Dembicki <paweldembicki@gmail.com>
+This patch adds the binding documentation for the HS/SS USB PHY found
+inside Qualcom Dakota SoCs.
 
-commit 6cb2669cb97fc4fdf526127159ac59caae052247 upstream.
-
-BroadMobi BM806U is an Qualcomm MDM9225 based 3G/4G modem.
-Tested hardware BM806U is mounted on D-Link DWR-921-C3 router.
-
-T:  Bus=01 Lev=01 Prnt=01 Port=01 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
-D:  Ver= 2.01 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=2020 ProdID=2033 Rev= 2.28
-S:  Manufacturer=Mobile Connect
-S:  Product=Mobile Connect
-S:  SerialNumber=f842866cfd5a
-C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-
-Co-developed-by: Cezary Jackiewicz <cezary@eko.one.pl>
-Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+Changes from v5 to v6:
+* Add missing include for reset defines in example
+* Fix warning for missing # in #phy-cells
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1987,6 +1987,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2033, 0xff),			/* BroadMobi BM806U */
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2060, 0xff),			/* BroadMobi BM818 */
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x4000, 0xff) },			/* OLICARD300 - MT6225 */
+Changes from v4 to v5:
+* Replace tabs with whitespaces
+* Add maintainer property
 
+ .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml b/Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+new file mode 100644
+index 000000000000..1118fe69b611
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom-usb-ipq4019-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Qualcom IPQ40xx Dakota HS/SS USB PHY
++
++maintainers:
++  - Robert Marko <robert.marko@sartura.hr>
++
++properties:
++  compatible:
++    enum:
++      - qcom,usb-ss-ipq4019-phy
++      - qcom,usb-hs-ipq4019-phy
++
++  reg:
++    maxItems: 1
++
++  resets:
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: por_rst
++      - const: srif_rst
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - resets
++  - reset-names
++  - "#phy-cells"
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-ipq4019.h>
++
++    hsphy@a8000 {
++      #phy-cells = <0>;
++      compatible = "qcom,usb-hs-ipq4019-phy";
++      reg = <0xa8000 0x40>;
++      resets = <&gcc USB2_HSPHY_POR_ARES>,
++               <&gcc USB2_HSPHY_S_ARES>;
++      reset-names = "por_rst", "srif_rst";
++    };
+-- 
+2.26.0
 
