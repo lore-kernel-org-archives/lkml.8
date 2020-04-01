@@ -2,102 +2,209 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A781DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76BDC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735C4206CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D0E2054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:01:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ntwMk4Tw"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="aly7ulvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732645AbgDAU6D (ORCPT
+        id S1732805AbgDAVBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:58:03 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39827 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbgDAU6C (ORCPT
+        Wed, 1 Apr 2020 17:01:53 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42123 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732441AbgDAVBx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 16:58:02 -0400
-Received: by mail-pj1-f67.google.com with SMTP id z3so591798pjr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 13:58:02 -0700 (PDT)
+        Wed, 1 Apr 2020 17:01:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q19so944768ljp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 14:01:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fZlAHuk2F4d+ui8wzDEPDHhQjgx4bVSsKz7V3eRN6zU=;
-        b=ntwMk4TwHZyi+YIrdJXmmutszHrw3D7uhGoyvjG2NW3PSTNjpBPD/o95N/ZobQm8FA
-         1Hb7zByes/olaCd6YXvQXBrUNjr8Up3jwlzV6Q6uKUYN0ao4ZqxImWNo04jLaNUVFWMW
-         NSCkQ/2pW97trg4ZMzLo40ocqlIOCq+feXkNcrjNUmrSkxA4REpmd4gq0QwqsnfcUsyu
-         Vv28eiQhjW+k0YaVCzo0cSO1EImshPCELWypCGaLEyt+FeDdhSsYp0i3dIY+cSDsVCVQ
-         TSNAuPsr2Fg4gF5O49xTxuuXxZzEe76tmybptdJEQg1n7WXiG4tJdsok5RsSGYxzjllx
-         pb4A==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kZZLw38OvfX0LdWZiTiDgV/9bUny0StnlwiaNs/2Ufc=;
+        b=aly7ulvt+vfPUTikm4mltTkCbIZstebjkVao345asWRzgWwNr8HXzV9jvOV7qGfvlv
+         UShoBmXhYLIDKE25KPNXRT3UYhD9ms32o+X2UsiGs7IVWDcUlmAveM5vTn3hox+wRzrj
+         +6g3z+A2EulG+uY85yfZmgAuVmP8aMoXv7Av3iExS/HEjdAxDOu8N03VSkGIV2DsrPPN
+         /aPw2Y6KLq1biHJFmaxinaPrVzFEBYkVcvRsTSg6B1skCt92JIZrn8HBKG3aj40G1f+g
+         XMRw/JUp5To7tjRdK/WcREvMxKWN5WVPrYT53f+O6xhXut+ZBK8KmQCrycPFZ4Da0X+Q
+         FAzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fZlAHuk2F4d+ui8wzDEPDHhQjgx4bVSsKz7V3eRN6zU=;
-        b=bryL04FgafyKzrvJEcBH/Q0pJv5CN/jrz0Y3PAldQq6Ouzj6wSpXdTcT7MOF3Ny4kD
-         3XRXQXU8E8VpxkWAx5cqiF084DlYreXZXUUtmgRIMWqDnaEx013Ce5JkQ3VmhkRqSYHB
-         O1eFb8b+nGk6Qm5rV7iAqPTxu9ytzvtIzb2CooaWv3DqGgFdvh3m+eEkWY1/553MzE5l
-         0KYzbwRAMcJbrVV91uMiURq4B6uCYb6wTmPv0QpbcjgeM+/DUlkrAIiGYAwgCbQyGfQV
-         TbSomfyjoo8D0jBLUQrAbwlwDTjVEvtzbVBZSx42EfVW/j0lOEne9fxZ3+iLP6Sv6spF
-         HvUQ==
-X-Gm-Message-State: AGi0PuZNLdXjY3snAExy02XHU4z2NE5w2eZIZ/WQLpfZ5mGT6cD4jFtE
-        uCT6OvC72LTmXbvNCpPHHfvPIA==
-X-Google-Smtp-Source: APiQypIqopE53bk4l6iIo4tURhe7HYELlSR8NaJ5FLGfoJeQhB/tEBql8Fsz+q4b/YN1bwrOzM2+2Q==
-X-Received: by 2002:a17:90a:8d17:: with SMTP id c23mr6753014pjo.187.1585774681993;
-        Wed, 01 Apr 2020 13:58:01 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id d14sm2227724pfq.29.2020.04.01.13.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 13:58:01 -0700 (PDT)
-Subject: Re: [PATCH 2/2] blkcg: don't offline parent blkcg first
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-References: <20190724173517.GA559934@devbig004.ftw2.facebook.com>
- <20190724173722.GA569612@devbig004.ftw2.facebook.com>
- <20190724173755.GB569612@devbig004.ftw2.facebook.com>
- <20200401203551.GV162390@mtj.duckdns.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e9ffddda-80e4-2759-e518-99def5ed8156@kernel.dk>
-Date:   Wed, 1 Apr 2020 14:57:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kZZLw38OvfX0LdWZiTiDgV/9bUny0StnlwiaNs/2Ufc=;
+        b=P/Fg+feY+6XIrddpLCF4tGmRe9tJz6+TibS0HNNBiOLWyUu+GoN67MKpf1TSCPD5LB
+         W7YojX6AaYoYcmzbzLxYgH4wG6GIm2kRHwuu9zCxr9FdAP6owR0t/GGTk96a9KsWLJ9a
+         Yfo1Nft/d70vQV+VLoF7pyYUyqvSwmw/726eNsFCRQZEgSOS8E8qpr3NYYFGkVFAVThB
+         A8pdVsGBfGhLpnqDSFP12Xysf4NL/025cvGralOj5pBslmDk0rvA/svfgxkjhknQl3z6
+         FZ1mHz0REs+s0z3aKQLSNEczSOJzXkJh3grV3km35uzR4DURersPfbVnqwEvWpmCaHsG
+         Y/SA==
+X-Gm-Message-State: AGi0PuboQ94sl7dtBeR8w0rwjldVTnKH/U40i5Z+Pid5E8MLD+k914OP
+        VCoOHa0NS8KeSGz1pK4kW0ZbYBUVScUUZgpAHV+6RA==
+X-Google-Smtp-Source: APiQypLuReragKbcrqSe+rqgG3qRRihsgQSHTzTSOLa5Yu/J0N6qri7PBN+y0fmZ3DegD+ZCs5PqSYhGIcO4IBpg4dI=
+X-Received: by 2002:a2e:8410:: with SMTP id z16mr75114ljg.197.1585774907722;
+ Wed, 01 Apr 2020 14:01:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200401203551.GV162390@mtj.duckdns.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
+ <20200401202937.GA130497@google.com>
+In-Reply-To: <20200401202937.GA130497@google.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Wed, 1 Apr 2020 14:01:36 -0700
+Message-ID: <CABEDWGxTifrvYVF7B2geN7K4Uhor-JcHK95L60T_xQar4XTqBQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/1/20 2:35 PM, Tejun Heo wrote:
-> On Wed, Jul 24, 2019 at 10:37:55AM -0700, Tejun Heo wrote:
->> blkcg->cgwb_refcnt is used to delay blkcg offlining so that blkgs
->> don't get offlined while there are active cgwbs on them.  However, it
->> ends up making offlining unordered sometimes causing parents to be
->> offlined before children.
->>
->> Let's fix this by making child blkcgs pin the parents' online states.
->>
->> Note that pin/unpin names are chosen over get/put intentionally
->> because css uses get/put online for something different.
->>
->> Signed-off-by: Tejun Heo <tj@kernel.org>
-> 
-> Jens, these two patches slipped through the cracks. Can you please take a look
-> at them?
+On Wed, Apr 1, 2020 at 1:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Mar 31, 2020 at 01:36:04PM -0700, Alan Mikhak wrote:
+> > On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
+> > > > Output a warning for MEM resource size with
+> > > > non-zero upper 32-bits.
+> > > >
+> > > > ATU programming functions limit the size of
+> > > > the translated region to 4GB by using a u32 size
+> > > > parameter. Function dw_pcie_prog_outbound_atu()
+> > > > does not program the upper 32-bit ATU limit
+> > > > register. This may result in undefined behavior
+> > > > for resource sizes with non-zero upper 32-bits.
+> > > >
+> > > > For example, a 128GB address space starting at
+> > > > physical CPU address of 0x2000000000 with size of
+> > > > 0x2000000000 needs the following values programmed
+> > > > into the lower and upper 32-bit limit registers:
+> > > >  0x3fffffff in the upper 32-bit limit register
+> > > >  0xffffffff in the lower 32-bit limit register
+> > > >
+> > > > Currently, only the lower 32-bit limit register is
+> > > > programmed with a value of 0xffffffff but the upper
+> > > > 32-bit limit register is not being programmed.
+> > > > As a result, the upper 32-bit limit register remains
+> > > > at its default value after reset of 0x0. This would
+> > > > be a problem for a 128GB PCIe space because in
+> > > > effect its size gets reduced to 4GB.
+> > > >
+> > > > ATU programming functions can be changed to
+> > > > specify a u64 size parameter for the translated
+> > > > region. Along with this change, the internal
+> > > > calculation of the limit address, the address of
+> > > > the last byte in the translated region, needs to
+> > > > change such that both the lower 32-bit and upper
+> > > > 32-bit limit registers can be programmed correctly.
+> > > >
+> > > > Changing the ATU programming functions is high
+> > > > impact. Without change, this issue can go
+> > > > unnoticed. A warning may prompt the user to
+> > > > look into possible issues.
+> > >
+> > > So this is basically a warning, and we could actually *fix* the
+> > > problem with more effort?  I vote for the fix.
+> >
+> > The fix would impact all PCIe drivers that depend on dwc.
+>
+> Is that another way of saying "the fix would *fix* all the drivers
+> that depend on dwc"?
 
-Huh indeed, looks fine to me. I'll add for 5.7, thanks.
+Thanks Bjorn for your comments.
 
--- 
-Jens Axboe
+Not at all. I'm not suggesting that. I'm just stating the dilemma.
 
+One option is, as you may be alluding, the *fix* would include
+modification to all drivers that depend on dwc to at least not break
+the build.. Whoever embarks on such a *fix* would have to take
+that on before submitting the patch.
+
+Another option is to produce an alternate ATU programming
+API for the Linux PCI sub-system to support u64 size. That
+way individual driver owners can choose if and when to migrate
+their drivers to the new API on their own timeline. Such an
+alternative API can also be generic to support not only
+Designware PCIe controllers but others.
+
+>
+> > I would have no way of validating such a fix without
+> > breaking it for everyone let alone the bandwidth it needs.
+> > All drivers that depend on dwc seem to be currently happy
+> > with the u32 size limit. I suggest we add the warning but
+> > keep this issue in mind for a solution that allows existing
+> > PCe drivers to phase into the fix on their own individual
+> > schedules, if they need to.
+>
+> Obviously it would *nice* to test all the drivers that depend on dwc,
+> but if you're fixing a problem, you verify the fix on your system, and
+> the relevant people review it, I don't think exhaustive testing is a
+> hard requirement, and I certainly wouldn't expect you to do it.
+
+That is a relief for whoever commits to take this on.
+
+>
+> If we want to live with a 32-bit limit, I think we should change the
+> relevant interfaces to use u32 so there's not a way to venture into
+> this region of undefined behavior.  I don't think "warning + undefined
+> behavior" is a very maintainable situation.
+
+I cannot live with the 32-bit limit. I need a 64-bit solution. I had
+to implement a solution that suits my needs. I have worked
+out some of the issue. It is generic enough for my use with PCIe
+controllers from more than one vendor. But, it requires pulling a
+lot of code from Designware layer into a separate framework
+which I believe can become common for Linux PCI subsystem.
+If it gets in, others who need 64-bit can migrate over to it without
+being migrated involuntarily.
+
+>
+> > > > This limitation also means that multiple ATUs
+> > > > would need to be used to map larger regions.
+> > > >
+> > > > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
+> > > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > index 395feb8ca051..37a8c71ef89a 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > > >       struct pci_bus *child;
+> > > >       struct pci_host_bridge *bridge;
+> > > >       struct resource *cfg_res;
+> > > > +     resource_size_t mem_size;
+> > > >       u32 hdr_type;
+> > > >       int ret;
+> > > >
+> > > > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > > >               case IORESOURCE_MEM:
+> > > >                       pp->mem = win->res;
+> > > >                       pp->mem->name = "MEM";
+> > > > -                     pp->mem_size = resource_size(pp->mem);
+> > > > +                     mem_size = resource_size(pp->mem);
+> > > > +                     if (upper_32_bits(mem_size))
+> > > > +                             dev_warn(dev, "MEM resource size too big\n");
+> > > > +                     pp->mem_size = mem_size;
+> > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
+> > > >                       break;
+> > > >               case 0:
+> > > > --
+> > > > 2.7.4
+> > > >
