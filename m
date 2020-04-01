@@ -2,178 +2,248 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A78C2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3508C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A654320787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EEB20787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="Q7xd8I9x"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W4b/nAh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732227AbgDAKUl (ORCPT
+        id S1731396AbgDAKWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:20:41 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:46862 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727308AbgDAKUk (ORCPT
+        Wed, 1 Apr 2020 06:22:32 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55526 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgDAKWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:20:40 -0400
-Received: from [100.113.5.83] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id E1/42-35964-5FA648E5; Wed, 01 Apr 2020 10:20:37 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WScVCTdRjH+e19N16J1csY8cg5i6GWxNYwvL3
-  aHZfXH60SDzn7h8R6N97YcBtz76hR2i2BjuAssFBCAdHN00KUeRHBYInEAafOQSBFJQh5IAep
-  ZN1EZ3v3otV/n+/z/b7P73vvPQQmOS9KIBi7jbGaaaNcFIXrn485rbiTX7JDVb+PoIbaD4uo0
-  eauSGqq8YKAGm9vFFCTM0HsJaHmZFOTUBMcy9B897cjUrPgXpmJZwsNZm2B/W2h/pqrGrNcjr
-  J3tqgdaI4oR1EEIl0YDDRcF/CiF4dFV7GQF2cRLO4LiDiBk30Y1BwcCcckZJUAOq7ux3jxC4J
-  f20ZQOVpGiEgKPu8bD38iJVsRBCqrcU5gZCmCAee9cCqWfBM+7poQciwlt8ODg/cxntdBVfMp
-  nGOcXAU1o1dCTBBiMgcujW3mxhLSAp6L9UJuvIxMh2+b8rkxImXw50dfh7dgZDz8PNUg4BhIE
-  pweH8ZzHMxMBoV8noH+vaOIn6fAxStTS5wIfz1YXGIZDDZULHEGTJSdwXlOhvnvD4h4psBZUR
-  puCaHGwe4iHo1wqHkdn1gDC7//uNRgBdS13I3kfgiQh3EYnL6FVSJV7X9a85wCRzpui3h+Do4
-  3zmIci8kY6P9yCj+C8K8QpbUa8vQ2E20wKlJVKkVq6guKNMX6DUr6fYVWyRQqdIzZZqVDppJ+
-  j1WyRSadMVdpZmxuFLqn3F34i21o6NQfym60nBDI48Qn3ijZIXlcW5BbpKdZ/VvWQiPDdqMVB
-  CEH8XVDyIuxMnmM/R2DMXSVD20gouVS8VheyBazFtrEGvJ4awApiMqZuqOYBDcXmJmEeHF66H
-  glJBfSF5ofrXh424NIlhArRhEREZJoC2M1GWz/92+geALJY8VZ3JZog9n26KUboRKCUIlhezF
-  Xwkb/ayU4BIW6LRcwp2CjPq7XmN2RHbj/TE+iSH3u+O4fOp88ce3SaM2erImMc7tcOWq3wn8z
-  Y9P+vczqY56stTnSpLLNe7oTNwqTZy2zQ8WdennpeffOjjv1var01+o2rO+3PNaW9IGfMM15X
-  pXdtXmUx2TTw5SPCNSmxTizF26/7qVbVjK6si2fXNZ8WumH3DR1/7bM7f7dbH7gjK5vte+mex
-  60+QVo4mVteUlc69afPqvUBN2veHdGUGzV1uLannlCq/F+8c1AzYdn53xPd6nx5opWh3TR++y
-  aTOb00QOiovZVmlvLq6cdV9eW9/ijcNf4PbMh5WSS77en3h3Bh7EnvJsmVXKc1dOpyZiVpf8B
-  ZPn5l1YEAAA=
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-4.tower-246.messagelabs.com!1585736436!1095708!1
-X-Originating-IP: [104.47.17.175]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.50.1; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 19265 invoked from network); 1 Apr 2020 10:20:37 -0000
-Received: from mail-vi1eur05lp2175.outbound.protection.outlook.com (HELO EUR05-VI1-obe.outbound.protection.outlook.com) (104.47.17.175)
-  by server-4.tower-246.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 1 Apr 2020 10:20:37 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W6CSgatRBrsxpVvS+BE9i0PPu0aNuZBZEAky9WqriEjXCAkDtsnMlIyNv5sJ4blAQGZYrOpTceiHABNUV467yaywxXnZhNR/tGwb7IB6rZqmDwfep4CYFjheezG7i6m6zuM6dyel/VLRTlEC8GAityPKPPJ+kOuHrKeUKfiJf4jDVY0u69XcYnmCaojsZq97Ry+QSIRAQTW+wxJLlNFVAcOIs9uQWOCdgIvJIVGaNMAoi9bsuTRwQSJPtzbDjiSXSKWv8KXdRVYZBpCKk9QA8ZzIAx7cH4svamCDublJp4WWiuJ+UGqDoG1Y5J25zMOP4mh6ByytHY5KDyUZdgNpdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I5B2QaH1bzl/LWmC6KeB2TKq4+GQSuZPWpfxNSn5CJ4=;
- b=mOJIrF5iYFhuuDq4CPu/am8KOhtL/JdYNDpwMScRu5K+jPVZ8MHkChs+mnLBO5V98PsnKWC6c3QCn59kxZzJItRNm5F1d+J1BQfXLqMfvy+MaJVjDWPaMdTYBSUM8n/VlZ2xbSfa66NP81CQ/tn1+eoNqd6MSTHJ+pyKK2qrwEkF727Vb1j1VlnzYjPluwR88iRmTweHJBGbMlSxgvlg0Azhr8wDoDasiNIH7b9alklsYnQbqg3e8nkO7HCQnO2q6cWHBPHVO20PwHE/88RJe7EAzPFtVXf5UeK7wBZX84KVNt92zA1zVm0AzhBg7LtCp/872wGj59ahLeIvwQwKxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I5B2QaH1bzl/LWmC6KeB2TKq4+GQSuZPWpfxNSn5CJ4=;
- b=Q7xd8I9xANBynOvXKOAr9Wa2byQWAu0okYbWVEONSTSXM0UBSbbGDCjCmrh854c+JUYn2CaM+nvGJ0JsJXV/TB9NPiRoPV+rN1cRD18y9QMdKNpEx/mncfwbM7WSpyYfYKEn669XpqDA+WrYWPe4F+3M4hKYKxx1AeRNcBSP288=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB2120.EURPRD10.PROD.OUTLOOK.COM (52.134.113.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Wed, 1 Apr 2020 10:20:32 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 10:20:32 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Stefan Riedmueller <s.riedmueller@phytec.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Support Opensource <Support.Opensource@diasemi.com>
-CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 3/3] watchdog: da9062: No need to ping manually before
- setting timeout
-Thread-Topic: [PATCH 3/3] watchdog: da9062: No need to ping manually before
- setting timeout
-Thread-Index: AQHWA3+NbV06Uh/Df0mWcPQbot1CmahkF1Ag
-Date:   Wed, 1 Apr 2020 10:20:32 +0000
-Message-ID: <AM6PR10MB226301829B873FFEFE845FE180C90@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <20200326150203.371673-1-s.riedmueller@phytec.de>
- <20200326150203.371673-3-s.riedmueller@phytec.de>
-In-Reply-To: <20200326150203.371673-3-s.riedmueller@phytec.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.64]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 399ec2d5-d0ba-41a1-b63a-08d7d6264f65
-x-ms-traffictypediagnostic: AM6PR10MB2120:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB2120183A9A5F17914E1B41FDA7C90@AM6PR10MB2120.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(376002)(39850400004)(366004)(136003)(346002)(64756008)(54906003)(33656002)(5660300002)(186003)(53546011)(6506007)(6636002)(71200400001)(9686003)(26005)(110136005)(55016002)(4326008)(66556008)(66946007)(86362001)(316002)(52536014)(478600001)(66446008)(76116006)(7696005)(66476007)(2906002)(8676002)(81166006)(8936002)(81156014)(55236004);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wRDkVy4zOxhvI5mpGca/sVQypxAI6//eb5DQv29f1Cu2N7UCC5l6Z3MFqGvRLxDI0QmYABa2PO844t5xGjn1i3xJI/AmiuFVY5MddhH8G6owWH/64s0/lpRFqcqQdwL7bgZz/yjCuWWuzH44Vv83a/tBn86cG6EOxNdGcxNJEYB1kJbhkZMUUGKeLwqfeHxcQJwycTBK3f5a+GKnQdXILcuSzXK6Wu630ePHyHI4MEkSP9ZJ7otqMXeKqbpJ+yTXNmBLU9zimmmvjNcCqFNvQEw0fG8CALKechjhXBg6FRc1638sWfZ5VEXcuNCWxWP9sUu82pTfsoPy7RJw+UW+U1/ykMLjTu1kUHSCYtpkQXGn6ZJGqUIJQuatwBGxafNaA55uTVc2cNH77H5L9/cNNPL5W9EQhGdiv2AOr5jrOVUBXqyCFutEGtsY5EE2uNLW
-x-ms-exchange-antispam-messagedata: aynqdGgbCnm8z8s1r3pOJi7KmilNoeF7OcrMYAMRlnhYhkF/ArRZ8SpdOvO9F/rqJD5w36E+e7LunnLXmfpCJSufh5ojdpZL8Qx0Lpqu3onWs1wM1W5ZNxwEEJqM8fQBov2m/mkM7+fFLMO+xjDVTw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 Apr 2020 06:22:32 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 031AMPZE067197;
+        Wed, 1 Apr 2020 05:22:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585736545;
+        bh=M6/VeKcnhBv84k95Lzjec4JI4B193Souc1axhK/CRBs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=W4b/nAh61qYuuVzSFKGNWK1JhKDRP87AZ1aBMsEGYW5jnyF1Ln7/26R87lIsVqj5t
+         yb4Omro/wgUmMNu/j5oR1OeaFJBZRlu88Tkjk0jPx0SJD4rLpmekM+Ib0DmEtnZhw/
+         TWtDYps0LSTpVoNC7M9mE+9RD0VkkPwXmftzl9Ew=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 031AMPlq080691
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Apr 2020 05:22:25 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 1 Apr
+ 2020 05:22:24 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 1 Apr 2020 05:22:24 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 031AMLRq031175;
+        Wed, 1 Apr 2020 05:22:22 -0500
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
+        <kernel@pengutronix.de>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <20200330141436.GG2431644@ulmo>
+ <20200330191654.waoocllctanh5nk5@pengutronix.de>
+ <20200331204559.GB2954599@ulmo>
+ <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <c1785cf8-4231-feb5-9a54-2374df85c33b@ti.com>
+Date:   Wed, 1 Apr 2020 15:52:21 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 399ec2d5-d0ba-41a1-b63a-08d7d6264f65
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 10:20:32.4582
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vHEYk1ECfNN6HR/kfwPTV8ktzL+YoTUsd6a1p3ciLJM/O0dZdiPic2zxST18HhJfrkctLwFDKeFyV00z7JEr/FfYWnpcNVAD26xid7wkV68=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2120
+In-Reply-To: <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26 March 2020 15:02, Stefan Riedmueller wrote:
+Hi Uwe,
 
-> There is actually no need to ping the watchdog before disabling it
-> during timeout change. Disabling the watchdog already takes care of
-> resetting the counter.
->=20
-> This fixes an issue during boot when the userspace watchdog handler takes
-> over and the watchdog is already running. Opening the watchdog in this ca=
-se
-> leads to the first ping and directly after that without the required
-> heartbeat delay a second ping issued by the set_timeout call. Due to the
-> missing delay this resulted in a reset.
->=20
-> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+On 01/04/20 1:52 PM, Uwe Kleine-König wrote:
+> Hello Thierry,
+> 
+> On Tue, Mar 31, 2020 at 10:45:59PM +0200, Thierry Reding wrote:
+>> On Mon, Mar 30, 2020 at 09:16:54PM +0200, Uwe Kleine-König wrote:
+>>> On Mon, Mar 30, 2020 at 04:14:36PM +0200, Thierry Reding wrote:
+>>>> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
+>>>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
+>>>>>> Only the Timer control register(TCLR) cannot be updated when the timer
+>>>>>> is running. Registers like Counter register(TCRR), loader register(TLDR),
+>>>>>> match register(TMAR) can be updated when the counter is running. Since
+>>>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+>>>>>> timer for period/duty_cycle update.
+>>>>>
+>>>>> I'm not sure what is sensible here. Stopping the PWM for a short period
+>>>>> is bad, but maybe emitting a wrong period isn't better. You can however
+>>>>> optimise it if only one of period or duty_cycle changes.
+>>>>>
+>>>>> @Thierry, what is your position here? I tend to say a short stop is
+>>>>> preferable.
+>>>>
+>>>> It's not clear to me from the above description how exactly the device
+>>>> behaves, but I suspect that it may latch the values in those registers
+>>>> and only update the actual signal output once a period has finished. I
+>>>> know of a couple of other devices that do that, so it wouldn't be
+>>>> surprising.
+>>>>
+>>>> Even if that was not the case, I think this is just the kind of thing
+>>>> that we have to live with. Sometimes it just isn't possible to have all
+>>>> supported devices adhere strictly to an API. So I think the best we can
+>>>> do is have an API that loosely defines what's supposed to happen and
+>>>> make a best effort to implement those semantics. If a device deviates
+>>>> slightly from those expectations, we can always cross fingers and hope
+>>>> that things still work. And it looks like they are.
+>>>>
+>>>> So I think if Lokesh and Tony agree that this is the right thing to do
+>>>> and have verified that things still work after this, that's about as
+>>>> good as it's going to get.
+>>>
+>>> I'd say this isn't for the platform people to decide. My position here
+>>> is that the PWM drivers should behave as uniform as possible to minimize
+>>> surprises for consumers. And so it's a "PWM decision" that is to be made
+>>> here, not an "omap decision".
+>>
+>> I think there's a fine line to be walked here. I agree that we should
+>> aim to have as much consistency between drivers as possible. At the same
+>> time I think we need to be pragmatic. As Lokesh said, the particular use
+>> case here requires this type of on-the-fly adjustment of the PWM period
+>> without stopping and restarting the PWM. It doesn't work otherwise. So
+>> th alternative that you're proposing is to say that we don't support
+>> that use-case, even though it works just fine given this particular
+>> hardware. That's not really an option.
+> 
+> I understand your opinion here. The situation now is that in current
+> mainline the driver stops the hardware for reconfiguration and it
+> doesn't fit Lokesh's use case so he changed to on-the-fly update
+> (accepting that maybe a wrong period is emitted). What if someone relies
+> on the old behaviour? What if in a year someone comes and claims the
+> wrong period is bad for their usecase and changes back to
+> stop-to-update?
+> 
+> When I write a consumer driver, do I have a chance to know how the PWM,
+> that I happen to use, behaves? To be able to get my consumer driver
+> reliable I might need to know that however.
+> 
+>>>> I know this is perhaps cheating a little, or turning a blind eye, but I
+>>>> don't know what the alternative would be. Do we want to tell people that
+>>>> a given PWM controller can't be used if it doesn't work according to our
+>>>> expectations? That's hard to argue if that controller works just fine
+>>>> for all known use-cases.
+>>>
+>>> I'd like have some official policy here which of the alternatives is the
+>>> preferred cheat.
+>>>
+>>> The situation here is that period and duty_cycle cannot be updated
+>>> atomically. So the two options are:
+>>>
+>>>  - stop shortly
+>>>  - update with hardware running and maybe emit a broken period
+>>
+>> I think we can already support both of those with the existing API. If
+>> a consumer wants to stop the PWM while reconfiguring, they should be
+>> able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
+>> equivalent) and for the second case they can just do pwm_config() (or
+>> the atomic equivalent).
+> 
+> Yes, the consumer can force the stop and update. But assume I'm "only" a
+> consumer driver author and I want: atomic update and if this is not
+> possible I prefer "stop-to-update" over "on-the-fly-and-maybe-faulty".
+> So I cannot benefit from a good driver/hardware that can do atomic
+> updates? Or I have to patch each driver that I actually use to use
+> stop-to-update?
+> 
+>> Some hardware may actually require the PWM to be disabled before
+>> reconfiguring, so they won't be able to strictly adhere to the second
+>> use-case.
+>>
+>> But as discussed above, I don't want to strive for a lowest common
+>> denominator that would preclude some more specific use-cases from
+>> working if the hardware supports it.
+>>
+>> So I think we should aim for drivers to implement the semantics as
+>> closely as possible. If the hardware doesn't support some of these
+>> requirements strictly while a particular use-case depends on that, then
+>> that just means that the hardware isn't compatible with that use-case.
+>> Chances are that the system just isn't going to be designed to support
+>> that use-case in the first place if the hardware can't do it.
+>>
+>> The sysfs interface is a bit of a special case here because it isn't
+>> possible to know what use-cases people are going to come up with.
+> 
+> In my eyes the sysfs interface isn't special here. You also don't know
+> what the OMAP PWM hardware is used for.
+> 
+>> It's most likely that they'll try something and if it doesn't work
+>> they can see if a driver patch can improve things.
+> 
+> So either the group who prefers "stop-to-update" or the group who
+> prefers "on-the-fly-and-maybe-faulty" has to carry a system specific
+> driver patch?
+> 
+>> One possible extension that I can imagine would be to introduce some
+>> sort of capability structure that drivers can fill in to describe the
+>> behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
+>> could describe that they are able to change the period and/or duty cycle
+>> while the PWM is on. There could be another capability bit that says
+>> that the current period will finish before new settings are applied. Yet
+>> another capability could describe that duty-cycle and period can be
+>> applied atomically. Consumers could then check those capabilities to see
+>> if they match their requirements.
+>>
+>> But then again, I think that would just make things overly complicated.
+>> None of the existing consumers need that, so it doesn't seem like there
+>> is much demand for that feature. In practice I suspect most consumers
+>> work fine despite potentially small deviations in how the PWM behaves.
+> 
+> I think the status quo is what I asked about above: People use sysfs and
+> if the PWM behaves different than needed, the driver is patched and most
+> of the time not mainlined. If your focus is to support a certain
+> industrial system with a defined use case, this is fine. If however you
+> target for an universal framework that works for any combination of
+> consumer + lowlevel driver without patching (that at least is able to
+> diagnose: This PWM cannot provide what my consumer needs), this is bad.
+> Also this means that whenever a system designer changes something on
+> their machine (kernel update, different hardware, an new usecase for a
+> PWM) they might have to reverify if the given PWM driver behaves as
+> needed.
+> 
+> My suggestion for now is to start documenting how the drivers behave
+> expanding how limitations are documented in some drivers. So maybe
+> change from "Limitations" to "Implementation and Hardware Details"?
 
-Thanks for the update:
+Does it help if a new DT property is introduced across PWM subsystem,
+representing dynamic period/duty-cycle updates. Based on this property driver
+can handle the updates. If the property is not present existing behaviour can be
+restored. This way based on the use-case things can be changed and need not
+patch the driver :). Does this sound good or you have other thoughts?
 
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Thanks and regards,
+Lokesh
 
-> ---
->  drivers/watchdog/da9062_wdt.c | 5 -----
->  1 file changed, 5 deletions(-)
->=20
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.=
-c
-> index 6d81b1276b87..c5bd075c8b14 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -66,11 +66,6 @@ static int da9062_wdt_update_timeout_register(struct
-> da9062_watchdog *wdt,
->  					      unsigned int regval)
->  {
->  	struct da9062 *chip =3D wdt->hw;
-> -	int ret;
-> -
-> -	ret =3D da9062_reset_watchdog_timer(wdt);
-> -	if (ret)
-> -		return ret;
->=20
->  	regmap_update_bits(chip->regmap,
->  				  DA9062AA_CONTROL_D,
-> --
-> 2.23.0
-
+> 
+> Best regards
+> Uwe
+> 
