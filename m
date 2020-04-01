@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4C1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53CAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2507820719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594F720719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:45:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759498;
-	bh=XvHQyiQydphPefD+h6BTBcAHzrhmw4kWpystoqDYjlw=;
+	s=default; t=1585759502;
+	bh=CHBttnsBtGK1uWWbqCGC3uECB8Xas6d7Kytb4dLhd5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyPstqKwtj09/nVtAjPISyq6LI+JXuzMmg0h8cUANIH3N79TZ8xN9UlyOysl5q7X/
-	 y0sTyWcSc/nnzREMxCUP+T29vtnvdW3vnF5iGT+gD5KiG3NYTIUOaSo4L2XKhRS9GO
-	 SiqogcIFULfdW3jEi4IX0957GXXTyBS/BA6lOiEg=
+	b=tdikXabmSiCPbnV64TBVZh7lxouPomY998PjUimrs++1uOj3ohQmse6RBquEAzn7P
+	 4cHmta+YKDyjd7vKCO4kD5hDIo76MX7sV3A0T4N6R+flv1l9gFmBNtHrtHbrpdYa9/
+	 fVo9gavvGMwRsOsdmo+F8/nZrJv1TJadPK3BBKNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389506AbgDAQo4 (ORCPT
+        id S2389803AbgDAQpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46026 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:45:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389786AbgDAQoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:44:54 -0400
+        id S2389621AbgDAQo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:44:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C32C120719;
-        Wed,  1 Apr 2020 16:44:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF782063A;
+        Wed,  1 Apr 2020 16:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759494;
-        bh=XvHQyiQydphPefD+h6BTBcAHzrhmw4kWpystoqDYjlw=;
+        s=default; t=1585759498;
+        bh=CHBttnsBtGK1uWWbqCGC3uECB8Xas6d7Kytb4dLhd5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FmAWbIV539yb03C0gxJmVm/xyCKPHR9hgXcKZ0oCxiGe1ZbrQGIi+V0ADJfK0xj0k
-         j19MFhTA5EkCjZC2EM1fkUY2Ewl06b/4yI6e5u1SECuNe2IbS5CzPRXdpbqOEkQhl0
-         VRKOP0/U1lVL+wZw0KAKOM9Gntj8sgW8Zww8vZl8=
+        b=Nu2RI68bS39GE0218P3id7ay6c2lQbwS9trjxH/ucm7Tm4zBbtNO/4tAiviOLWykZ
+         IIDNRvvKl5Qc0iYcjE1YPoSxucaIFBoYaVgRoxcrsi/+dz2AehtOIxLbrF90TIDF7q
+         yTDWj6/qn+OXB1xAtlOd1S5RFnZ/O3NsUpgRD6uE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 097/148] mac80211: mark station unauthorized before key removal
-Date:   Wed,  1 Apr 2020 18:18:09 +0200
-Message-Id: <20200401161602.187233939@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 4.14 098/148] gpiolib: acpi: Correct comment for HP x2 10 honor_wakeup quirk
+Date:   Wed,  1 Apr 2020 18:18:10 +0200
+Message-Id: <20200401161602.258631106@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -58,45 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit b16798f5b907733966fd1a558fca823b3c67e4a1 upstream.
+commit efaa87fa0947d525cf7c075316adde4e3ac7720b upstream.
 
-If a station is still marked as authorized, mark it as no longer
-so before removing its keys. This allows frames transmitted to it
-to be rejected, providing additional protection against leaking
-plain text data during the disconnection flow.
+Commit aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option +
+quirk mechanism") added a quirk for some models of the HP x2 10 series.
 
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200326155133.ccb4fb0bb356.If48f0f0504efdcf16b8921f48c6d3bb2cb763c99@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+There are 2 issues with the comment describing the quirk:
+1) The comment claims the DMI quirk applies to all Cherry Trail based HP x2
+   10 models. In the mean time I have learned that there are at least 3
+   models of the HP x2 10 models:
+
+   Bay Trail SoC + AXP288 PMIC
+   Cherry Trail SoC + AXP288 PMIC
+   Cherry Trail SoC + TI PMIC
+
+   And this quirk's DMI matches only match the Cherry Trail SoC + TI PMIC
+   SoC, which is good because we want a slightly different quirk for the
+   others. This commit updates the comment to make it clear that the quirk
+   is only for the Cherry Trail SoC + TI PMIC models.
+
+2) The comment says that it is ok to disable wakeup on all ACPI GPIO event
+   handlers, because there is only the one for the embedded-controller
+   events. This is not true, there also is a handler for the special
+   INT0002 device which is related to USB wakeups. We need to also disable
+   wakeups on that one because the device turns of the USB-keyboard built
+   into the dock when closing the lid. The XHCI controller takes a while
+   to notice this, so it only notices it when already suspended, causing
+   a spurious wakeup because of this. So disabling wakeup on all handlers
+   is the right thing to do, but not because there only is the one handler
+   for the EC events. This commit updates the comment to correctly reflect
+   this.
+
+Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200302111225.6641-1-hdegoede@redhat.com
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/sta_info.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpio/gpiolib-acpi.c |   14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -3,6 +3,7 @@
-  * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
-  * Copyright 2013-2014  Intel Mobile Communications GmbH
-  * Copyright (C) 2015 - 2017 Intel Deutschland GmbH
-+ * Copyright (C) 2018-2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -951,6 +952,11 @@ static void __sta_info_destroy_part2(str
- 	might_sleep();
- 	lockdep_assert_held(&local->sta_mtx);
- 
-+	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
-+		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
-+		WARN_ON_ONCE(ret);
-+	}
-+
- 	/* now keys can no longer be reached */
- 	ieee80211_free_sta_keys(local, sta);
- 
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -1348,12 +1348,14 @@ static const struct dmi_system_id gpioli
+ 	},
+ 	{
+ 		/*
+-		 * Various HP X2 10 Cherry Trail models use an external
+-		 * embedded-controller connected via I2C + an ACPI GPIO
+-		 * event handler. The embedded controller generates various
+-		 * spurious wakeup events when suspended. So disable wakeup
+-		 * for its handler (it uses the only ACPI GPIO event handler).
+-		 * This breaks wakeup when opening the lid, the user needs
++		 * HP X2 10 models with Cherry Trail SoC + TI PMIC use an
++		 * external embedded-controller connected via I2C + an ACPI GPIO
++		 * event handler on INT33FF:01 pin 0, causing spurious wakeups.
++		 * When suspending by closing the LID, the power to the USB
++		 * keyboard is turned off, causing INT0002 ACPI events to
++		 * trigger once the XHCI controller notices the keyboard is
++		 * gone. So INT0002 events cause spurious wakeups too. Ignoring
++		 * EC wakes breaks wakeup when opening the lid, the user needs
+ 		 * to press the power-button to wakeup the system. The
+ 		 * alternative is suspend simply not working, which is worse.
+ 		 */
 
 
