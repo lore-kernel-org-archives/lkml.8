@@ -2,117 +2,86 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A79AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FFBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3978E206CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7F21206CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hcyn6fKH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UY2vxnE8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732816AbgDANzg (ORCPT
+        id S1732825AbgDAN4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:55:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35959 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732774AbgDANzf (ORCPT
+        Wed, 1 Apr 2020 09:56:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38103 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732795AbgDAN4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:55:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so160046wrs.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 06:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BokcsbFHdrrz/l4PyjTUoW+8uB/MqRMjCTweSlnNCdg=;
-        b=Hcyn6fKHUAWfyXHU0AQI42LD9l04dXQT2av71U4PkGbjP1d8X5ejQCIr6m6I8zply1
-         y8ng/jzsrvOEIlv8YqJZzMFhcwDwbkuyqlz2yvuRbQVyaqUGswaO9CNCy9IrzGWiN8hT
-         cFE+955zBtH6yc/aEP2P52gHsEhgURQjFPIZpzhw3Hze/Fc5q/uyfnDn8FSctAt65FG9
-         9kM1BSabVwbx+rvRSKTrXaLxMRAyfQNDJ23fZKm86OfAiSB69A6ywoCoKMJHavK0GPO/
-         y6FOyxUw98OPpXYcbhlSDeKwSp23hkf8OsdgmqtEUQoqQguBvFBe70cMzXxajkFcMHGT
-         w23g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BokcsbFHdrrz/l4PyjTUoW+8uB/MqRMjCTweSlnNCdg=;
-        b=cyxkIVmAaep5EyXQuNGSFbjVZMRM+Zhe7jOZuuASwu2xsAxGL7diZTSAkp5AjUWZ3W
-         djf45GAgNYMT/ynKAEYfQYXE9Fq87felyPUq5zpL4QhpxsgMjjoNggGMyNSk+NVHtsYG
-         6L/Xpy+lZjEDzBmJ9wOmQvA5KJy/l3KSZ3Um5SUvryUBPTpseIW3p5JDv4S5LcJ+e0pe
-         fFd270HxBXuTikEIthYPWnQFoRKn9uUAyi+fC5VNzQekr/2ynqw5QfJiLxPIb84gyYmC
-         oj9IpEDawjEV4yM0CH6tPIe/v48sf8AZAUaUA15eEmwysJ+dLbu7tVjxG9p6lm1FIu2s
-         VDyA==
-X-Gm-Message-State: ANhLgQ19+rTrfHykspME2VtJOOVI4HecZUvL9ONDu4GKCayP1LiHmmW6
-        pbS5UjeVs2f8it9SVPribSsQXA==
-X-Google-Smtp-Source: ADFU+vtmh9pjwAtzFVJ9AOztFnbZs+VXIuHpNaBbP7+Bz5tpaP97qcOdEJJmKnjKxhSpeN/c6TG6Bw==
-X-Received: by 2002:adf:bc4a:: with SMTP id a10mr25721435wrh.7.1585749333948;
-        Wed, 01 Apr 2020 06:55:33 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
-        by smtp.gmail.com with ESMTPSA id c189sm2853560wmd.12.2020.04.01.06.55.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 06:55:33 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 15:55:25 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 06/10] iommu/ioasid: Convert to set aware allocations
-Message-ID: <20200401135525.GG882512@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585158931-1825-7-git-send-email-jacob.jun.pan@linux.intel.com>
+        Wed, 1 Apr 2020 09:56:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585749359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xEn+gE4VRk8TYWggth6F8m31ccqZ7h0TBmno4mARF2U=;
+        b=UY2vxnE8BXzSx4fheDie4MB3BaO2KJDgrEtThpR368HjPkc8apFs/3bA1axyiD+Q9j88YV
+        f6AW9EeVEx9g+HaW7uoIyf41Fq0SRJCdapbGuv7krZbT9lX9icrflSJrpBFpGGItEdr4z0
+        tcSqDn4bYf339N1S73Gku1G9d6fCxNQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-297-yShe0qTCMfCJzcONI9NZpA-1; Wed, 01 Apr 2020 09:55:57 -0400
+X-MC-Unique: yShe0qTCMfCJzcONI9NZpA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF3BB19057B0;
+        Wed,  1 Apr 2020 13:55:55 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 60070DA108;
+        Wed,  1 Apr 2020 13:55:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com>
+References: <CAJfpeguu52VuLAzjFH4rJJ7WYLB5ag8y+r3VMb-0bqH8c-uJUg@mail.gmail.com> <20200330211700.g7evnuvvjenq3fzm@wittgenstein> <1445647.1585576702@warthog.procyon.org.uk> <2418286.1585691572@warthog.procyon.org.uk> <20200401090445.6t73dt7gz36bv4rh@ws.net.home>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, Ian Kent <raven@themaw.net>,
+        andres@anarazel.de, keyrings@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585158931-1825-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2488529.1585749351.1@warthog.procyon.org.uk>
+Date:   Wed, 01 Apr 2020 14:55:51 +0100
+Message-ID: <2488530.1585749351@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 10:55:27AM -0700, Jacob Pan wrote:
-> The current ioasid_alloc function takes a token/ioasid_set then record it
-> on the IOASID being allocated. There is no alloc/free on the ioasid_set.
-> 
-> With the IOASID set APIs, callers must allocate an ioasid_set before
-> allocate IOASIDs within the set. Quota and other ioasid_set level
-> activities can then be enforced.
-> 
-> This patch converts existing API to the new ioasid_set model.
-> 
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-[...]
+> Attached patch applies against readfile patch.
 
-> @@ -379,6 +391,9 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  	}
->  	data->id = id;
->  
-> +	/* Store IOASID in the per set data */
-> +	xa_store(&sdata->xa, id, data, GFP_KERNEL);
+But doesn't actually do what Karel asked for.  show_mountinfo() itself does
+not give you what Karel asked for.  Plus there's more information you need to
+add to it.
 
-I couldn't figure out why you're maintaining an additional xarray for each
-set. We're already storing that data in active_allocator->xa, why the
-duplication?  If it's for the gPASID -> hPASID translation mentioned by
-the cover letter, maybe you could add this xa when introducing that
-change?
-
-Thanks,
-Jean
+David
 
