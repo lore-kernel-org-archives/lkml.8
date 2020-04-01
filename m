@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36433C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD1BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDEA20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B21120719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759214;
-	bh=L57iPVKkL097o6qLvQ+L5j2oTFH13RI1AUODGUtvQTY=;
+	s=default; t=1585759220;
+	bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fbVoQnGTxU564EWBY9MS5whmxs2IhI6FcJV0vPCJ2t29vVOqGdkoXj/3+kO95zfMW
-	 EmxHFIxc+T8G5y8yEaaYxIEXiv6RV1FUkK3p53amTxjT96uwUN17e6G5iwjm+Ts4Es
-	 Xn1tfxuYz1fBW1rn8sVE6E/J6NmZmE1HAwY3AjO8=
+	b=It5xpNPvoSSXfFtk4Lt2rhfXca2c/yM6QTBB+flcDfqLgvfm5DAw/gPK+aFNmi40d
+	 +8oTbqOHdzMFqTkFJVrk78VO+JqhM43s8oLW4tx9jq6yu00AahC0JISkc5eHokqENK
+	 mJoFjZ6+GTOt9/+DNkZE3Zgkwc7Xhbb3wlsaJtRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389295AbgDAQkM (ORCPT
+        id S2387956AbgDAQkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:40:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389286AbgDAQkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:40:10 -0400
+        id S2389011AbgDAQkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:40:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC9732063A;
-        Wed,  1 Apr 2020 16:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E0342063A;
+        Wed,  1 Apr 2020 16:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759209;
-        bh=L57iPVKkL097o6qLvQ+L5j2oTFH13RI1AUODGUtvQTY=;
+        s=default; t=1585759213;
+        bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iwnTqUf9S6AK4Y49nVKIfAYmPYSh4mo4uBVZj6YSdXtcJ99DEmJhLJu7fkNhRqoCb
-         F4sztaLEeDpvVtVZsZxEfUFhcevm94WZEXGvGQurS1XkTyoMXaovQ01DJL8pC4/aYj
-         YrXjTTw71wqtwr7+gEoZLfUoVAYWQ0ct2zhE7mGs=
+        b=GorfBjCXuAj3hjbYF0B9nWDhJt6meDrwuOlJgQd7cDEkKOABDRmkMICvKT6Ahv1Q5
+         SCQSkZnVuktSAhJEznUO0jxTat7kW6hKMCYGr5AYv6Gx9p0xcUqbShKJIFjzhmi9pA
+         nPin7yy4yZ53PQDWzec/GeaXAdB4/9hc3Mmcb3P4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuji sasaki <sasakiy@chromium.org>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 001/148] spi: qup: call spi_qup_pm_resume_runtime before suspending
-Date:   Wed,  1 Apr 2020 18:16:33 +0200
-Message-Id: <20200401161552.365293145@linuxfoundation.org>
+Subject: [PATCH 4.14 010/148] dm bio record: save/restore bi_end_io and bi_integrity
+Date:   Wed,  1 Apr 2020 18:16:42 +0200
+Message-Id: <20200401161553.200729576@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,53 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuji Sasaki <sasakiy@chromium.org>
+From: Mike Snitzer <snitzer@redhat.com>
 
-[ Upstream commit 136b5cd2e2f97581ae560cff0db2a3b5369112da ]
+[ Upstream commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b ]
 
-spi_qup_suspend() will cause synchronous external abort when
-runtime suspend is enabled and applied, as it tries to
-access SPI controller register while clock is already disabled
-in spi_qup_pm_suspend_runtime().
+Also, save/restore __bi_remaining in case the bio was used in a
+BIO_CHAIN (e.g. due to blk_queue_split).
 
-Signed-off-by: Yuji sasaki <sasakiy@chromium.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200214074340.2286170-1-vkoul@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-qup.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/md/dm-bio-record.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 974a8ce58b68b..cb74fd1af2053 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -1190,6 +1190,11 @@ static int spi_qup_suspend(struct device *device)
- 	struct spi_qup *controller = spi_master_get_devdata(master);
- 	int ret;
+diff --git a/drivers/md/dm-bio-record.h b/drivers/md/dm-bio-record.h
+index c82578af56a5b..2ea0360108e1d 100644
+--- a/drivers/md/dm-bio-record.h
++++ b/drivers/md/dm-bio-record.h
+@@ -20,8 +20,13 @@
+ struct dm_bio_details {
+ 	struct gendisk *bi_disk;
+ 	u8 bi_partno;
++	int __bi_remaining;
+ 	unsigned long bi_flags;
+ 	struct bvec_iter bi_iter;
++	bio_end_io_t *bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	struct bio_integrity_payload *bi_integrity;
++#endif
+ };
  
-+	if (pm_runtime_suspended(device)) {
-+		ret = spi_qup_pm_resume_runtime(device);
-+		if (ret)
-+			return ret;
-+	}
- 	ret = spi_master_suspend(master);
- 	if (ret)
- 		return ret;
-@@ -1198,10 +1203,8 @@ static int spi_qup_suspend(struct device *device)
- 	if (ret)
- 		return ret;
- 
--	if (!pm_runtime_suspended(device)) {
--		clk_disable_unprepare(controller->cclk);
--		clk_disable_unprepare(controller->iclk);
--	}
-+	clk_disable_unprepare(controller->cclk);
-+	clk_disable_unprepare(controller->iclk);
- 	return 0;
+ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+@@ -30,6 +35,11 @@ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+ 	bd->bi_partno = bio->bi_partno;
+ 	bd->bi_flags = bio->bi_flags;
+ 	bd->bi_iter = bio->bi_iter;
++	bd->__bi_remaining = atomic_read(&bio->__bi_remaining);
++	bd->bi_end_io = bio->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bd->bi_integrity = bio_integrity(bio);
++#endif
  }
  
+ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+@@ -38,6 +48,11 @@ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+ 	bio->bi_partno = bd->bi_partno;
+ 	bio->bi_flags = bd->bi_flags;
+ 	bio->bi_iter = bd->bi_iter;
++	atomic_set(&bio->__bi_remaining, bd->__bi_remaining);
++	bio->bi_end_io = bd->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bio->bi_integrity = bd->bi_integrity;
++#endif
+ }
+ 
+ #endif
 -- 
 2.20.1
 
