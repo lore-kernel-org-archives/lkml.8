@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31C6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5E1C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8519120658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98EF20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758884;
-	bh=zoIs6g3QiQF1Pb10geW1fimpOpcLW6YJQTXtrUPp+rY=;
+	s=default; t=1585758887;
+	bh=fEOfjW17+p7tuKZR1T8zISnvVUvOVly8NRPy3Gac6Jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E3H85L9StoTrA/RrtRIhRG3owzXE4DKbBUtFc5BZGmqSVs3YrPtpwa5nmjc3bxCrR
-	 F3fUBErOh3VKkBlZx+Ct10eqDjn4s7XaDwbszc2jo5/nxJ3XdNunx/Lh+fPHFqIXI3
-	 brOeflLXNJ9oTwguuq2iQBal+xO1a9w8TXR5CveA=
+	b=eak5xDJNUJe/MUQ2PvgFU5xeqex0+pGrgYRdR7IN6lc8/sGgLcHpwQEW7LreAOQAX
+	 zJQgfOAzYf0jpOp4WJ5i/Lt3+0YI0QS657aZURd/JWvECFkv0YKAQJ2+bQ+q+mDrzl
+	 2uQ7QLHtztKfACBDHgxbVGNPw+qTlU7XhXGBNJl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388670AbgDAQen (ORCPT
+        id S2388684AbgDAQep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:34:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33316 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:34:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388529AbgDAQek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:34:40 -0400
+        id S2387470AbgDAQen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:34:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D501A20772;
-        Wed,  1 Apr 2020 16:34:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2680020658;
+        Wed,  1 Apr 2020 16:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758879;
-        bh=zoIs6g3QiQF1Pb10geW1fimpOpcLW6YJQTXtrUPp+rY=;
+        s=default; t=1585758882;
+        bh=fEOfjW17+p7tuKZR1T8zISnvVUvOVly8NRPy3Gac6Jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JOPJD4cGXyePPb+T9EczDJauw5Q/AlmJJOKmNsPPmSGhwXfWjONmaxuSyxoBhsZ1+
-         jtttcTNzGKFO3UP7m5/2im3pZdG4wPLk2B3/U8ZQT9v7S/ZFaV9ovI2cRDcRqUJGj6
-         b3BL0d0ljeRof7ysSeRVItedRtx5YdGWHjt3Ew+Y=
+        b=voDs+qjE/b2fYHaHePQBO2sGwikffAG8R70mkN1AdMA1AW5iFvC+67PHRsQc3jUH8
+         +mNJSUCHEy9TW8Um7yQeYEPSa4hWv4+sttNiWLxlTzuc8U/1udoffaWFDkKpemZIhQ
+         FXNLzlBlCERxDIM1MFy0jHe0o00wM+xtCW03zkZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4.9 011/102] usb: host: xhci-plat: add a shutdown
-Date:   Wed,  1 Apr 2020 18:17:14 +0200
-Message-Id: <20200401161533.922470748@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Chen <scott@labau.com.tw>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 012/102] USB: serial: pl2303: add device-id for HP LD381
+Date:   Wed,  1 Apr 2020 18:17:15 +0200
+Message-Id: <20200401161534.232652458@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,33 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ran Wang <ran.wang_1@nxp.com>
+From: Scott Chen <scott@labau.com.tw>
 
-commit b433e340e7565110b0ce9ca4b3e26f4b97a1decf upstream.
+commit cecc113c1af0dd41ccf265c1fdb84dbd05e63423 upstream.
 
-When loading new kernel via kexec, we need to shutdown host controller to
-avoid any un-expected memory accessing during new kernel boot.
+Add a device id for HP LD381 Display
+LD381:   03f0:0f7f
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Signed-off-by: Scott Chen <scott@labau.com.tw>
 Cc: stable <stable@vger.kernel.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200306092328.41253-1-ran.wang_1@nxp.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-plat.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/pl2303.c |    1 +
+ drivers/usb/serial/pl2303.h |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -335,6 +335,7 @@ MODULE_DEVICE_TABLE(acpi, usb_xhci_acpi_
- static struct platform_driver usb_xhci_driver = {
- 	.probe	= xhci_plat_probe,
- 	.remove	= xhci_plat_remove,
-+	.shutdown = usb_hcd_platform_shutdown,
- 	.driver	= {
- 		.name = "xhci-hcd",
- 		.pm = DEV_PM_OPS,
+--- a/drivers/usb/serial/pl2303.c
++++ b/drivers/usb/serial/pl2303.c
+@@ -88,6 +88,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(SUPERIAL_VENDOR_ID, SUPERIAL_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220TA_PRODUCT_ID) },
++	{ USB_DEVICE(HP_VENDOR_ID, HP_LD381_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960TA_PRODUCT_ID) },
+ 	{ USB_DEVICE(HP_VENDOR_ID, HP_LCM220_PRODUCT_ID) },
+--- a/drivers/usb/serial/pl2303.h
++++ b/drivers/usb/serial/pl2303.h
+@@ -128,6 +128,7 @@
+ #define HP_LM920_PRODUCT_ID	0x026b
+ #define HP_TD620_PRODUCT_ID	0x0956
+ #define HP_LD960_PRODUCT_ID	0x0b39
++#define HP_LD381_PRODUCT_ID	0x0f7f
+ #define HP_LCM220_PRODUCT_ID	0x3139
+ #define HP_LCM960_PRODUCT_ID	0x3239
+ #define HP_LD220_PRODUCT_ID	0x3524
 
 
