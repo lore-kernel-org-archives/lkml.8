@@ -2,221 +2,141 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C75CC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DB4C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 393702071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jl9fwFpC"
+	by mail.kernel.org (Postfix) with ESMTP id ABFF52071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732880AbgDAWCz (ORCPT
+        id S1733069AbgDAWD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:02:55 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34139 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732357AbgDAWCy (ORCPT
+        Wed, 1 Apr 2020 18:03:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732357AbgDAWD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:02:54 -0400
-Received: by mail-lf1-f68.google.com with SMTP id e7so1069198lfq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 15:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K8pDEelmy7xxYp1QwnSMqwTohO6HdXpcoDkiDESxMFY=;
-        b=jl9fwFpCclGippG67yVn6KJ9hwDIFLwwWBO9OjxOceyu0nvj8GddH0nEOpAAUtNawk
-         V2VOz05YaD1F0e21A2+VGL3KOVuebDwIWfAiK1lTlAUMRoI/kdrOR47x9AVO4mPl3Y+q
-         z9yAOPJdMKvz8sJ7NnvJVMr3BypMwW7av9hJqBAL76orlmWMy45r0/qM2nGDDTJypO6F
-         mXC2Z4Q91mIkmTEJ0EQU4/6HWJtAqP9e9u17BIP/wnA5zqMEwZXZfNjaKHWh3NNmYJqT
-         cRQzO+buZANl2K4/W/dA3muGNpZWa+FW2kFCAjEb3w4VKfIIaxrm7oU7K49PFtkB5LgW
-         kBqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K8pDEelmy7xxYp1QwnSMqwTohO6HdXpcoDkiDESxMFY=;
-        b=D72yt+yIkFQRWmLMYSkAreQBBdbDuNCIbDOhFzpn2fdjgq/jXNp0INrfYEzDxw7nuI
-         Q9O1nKNc8HPa/filrVVV6SUOOhb8W0YmjkxsDa4brqmZtysMisjpaqPlNmThh7GgiS4C
-         l1JPPxSGctZj0Kum2SPZAc29b3UKLa0tacrdg68y0j4EYoVSqFtO5ZFxBwKoDOVKqct+
-         ZKDukbaCppTO6Ckn56ntOAtq8dK83VWOCwvBJBuLwIdll7TbMQhchum9Se79WWL+xr0k
-         yKdMpfQ7e/FiAu32UCZuPvIgnGrQUMzSeid8tyv+Z+ij+TFgWHcxE1wJGnoCGQIyr+DV
-         PdNQ==
-X-Gm-Message-State: AGi0PubbQ9GFfWhGtb3SAdmtQxCZs/n0wVe3HN+FuN9BKyuN0ZotgQbd
-        bW4LHwAR/aFagIoUT8swgyyUP2ztQu2Umg8MjUWqqA==
-X-Google-Smtp-Source: APiQypKoTybLfUNW1qMPu5vgA+hvugh8hMuHcuTiOggBEfdGcXxZU8nRmL9C6OxH45u5Z3rN6p0lQcGhRqWNp6gCvdg=
-X-Received: by 2002:a05:6512:685:: with SMTP id t5mr174279lfe.47.1585778569817;
- Wed, 01 Apr 2020 15:02:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
- <20200401202937.GA130497@google.com> <CABEDWGxTifrvYVF7B2geN7K4Uhor-JcHK95L60T_xQar4XTqBQ@mail.gmail.com>
-In-Reply-To: <CABEDWGxTifrvYVF7B2geN7K4Uhor-JcHK95L60T_xQar4XTqBQ@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 1 Apr 2020 15:02:38 -0700
-Message-ID: <CABEDWGxaZMZxkpG1kQX4kKvgv-sJzvKtgyvhuJLSTEzqp50LNw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
+        Wed, 1 Apr 2020 18:03:26 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031M36Km127910
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 18:03:24 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 303uj4tqby-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:03:24 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 1 Apr 2020 23:03:08 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 23:03:05 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031M3JRr52625636
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 22:03:19 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED503A405E;
+        Wed,  1 Apr 2020 22:03:18 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 528B2A4053;
+        Wed,  1 Apr 2020 22:03:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.185.67])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 22:03:18 +0000 (GMT)
+Subject: [GIT PULL] integrity subsystem updates for v5.7
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 01 Apr 2020 18:03:17 -0400
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040122-4275-0000-0000-000003B7D5C7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040122-4276-0000-0000-000038CD29D9
+Message-Id: <1585778597.5188.665.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ impostorscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 2:01 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> On Wed, Apr 1, 2020 at 1:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Tue, Mar 31, 2020 at 01:36:04PM -0700, Alan Mikhak wrote:
-> > > On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
-> > > > > Output a warning for MEM resource size with
-> > > > > non-zero upper 32-bits.
-> > > > >
-> > > > > ATU programming functions limit the size of
-> > > > > the translated region to 4GB by using a u32 size
-> > > > > parameter. Function dw_pcie_prog_outbound_atu()
-> > > > > does not program the upper 32-bit ATU limit
-> > > > > register. This may result in undefined behavior
-> > > > > for resource sizes with non-zero upper 32-bits.
-> > > > >
-> > > > > For example, a 128GB address space starting at
-> > > > > physical CPU address of 0x2000000000 with size of
-> > > > > 0x2000000000 needs the following values programmed
-> > > > > into the lower and upper 32-bit limit registers:
-> > > > >  0x3fffffff in the upper 32-bit limit register
-> > > > >  0xffffffff in the lower 32-bit limit register
-> > > > >
-> > > > > Currently, only the lower 32-bit limit register is
-> > > > > programmed with a value of 0xffffffff but the upper
-> > > > > 32-bit limit register is not being programmed.
-> > > > > As a result, the upper 32-bit limit register remains
-> > > > > at its default value after reset of 0x0. This would
-> > > > > be a problem for a 128GB PCIe space because in
-> > > > > effect its size gets reduced to 4GB.
-> > > > >
-> > > > > ATU programming functions can be changed to
-> > > > > specify a u64 size parameter for the translated
-> > > > > region. Along with this change, the internal
-> > > > > calculation of the limit address, the address of
-> > > > > the last byte in the translated region, needs to
-> > > > > change such that both the lower 32-bit and upper
-> > > > > 32-bit limit registers can be programmed correctly.
-> > > > >
-> > > > > Changing the ATU programming functions is high
-> > > > > impact. Without change, this issue can go
-> > > > > unnoticed. A warning may prompt the user to
-> > > > > look into possible issues.
-> > > >
-> > > > So this is basically a warning, and we could actually *fix* the
-> > > > problem with more effort?  I vote for the fix.
-> > >
-> > > The fix would impact all PCIe drivers that depend on dwc.
-> >
-> > Is that another way of saying "the fix would *fix* all the drivers
-> > that depend on dwc"?
->
-> Thanks Bjorn for your comments.
->
-> Not at all. I'm not suggesting that. I'm just stating the dilemma.
->
-> One option is, as you may be alluding, the *fix* would include
-> modification to all drivers that depend on dwc to at least not break
-> the build.. Whoever embarks on such a *fix* would have to take
-> that on before submitting the patch.
->
-> Another option is to produce an alternate ATU programming
-> API for the Linux PCI sub-system to support u64 size. That
-> way individual driver owners can choose if and when to migrate
-> their drivers to the new API on their own timeline. Such an
-> alternative API can also be generic to support not only
-> Designware PCIe controllers but others.
->
-> >
-> > > I would have no way of validating such a fix without
-> > > breaking it for everyone let alone the bandwidth it needs.
-> > > All drivers that depend on dwc seem to be currently happy
-> > > with the u32 size limit. I suggest we add the warning but
-> > > keep this issue in mind for a solution that allows existing
-> > > PCe drivers to phase into the fix on their own individual
-> > > schedules, if they need to.
-> >
-> > Obviously it would *nice* to test all the drivers that depend on dwc,
-> > but if you're fixing a problem, you verify the fix on your system, and
-> > the relevant people review it, I don't think exhaustive testing is a
-> > hard requirement, and I certainly wouldn't expect you to do it.
->
-> That is a relief for whoever commits to take this on.
->
-> >
-> > If we want to live with a 32-bit limit, I think we should change the
-> > relevant interfaces to use u32 so there's not a way to venture into
-> > this region of undefined behavior.  I don't think "warning + undefined
-> > behavior" is a very maintainable situation.
->
-> I cannot live with the 32-bit limit. I need a 64-bit solution. I had
-> to implement a solution that suits my needs. I have worked
-> out some of the issue. It is generic enough for my use with PCIe
-> controllers from more than one vendor. But, it requires pulling a
-> lot of code from Designware layer into a separate framework
-> which I believe can become common for Linux PCI subsystem.
-> If it gets in, others who need 64-bit can migrate over to it without
-> being migrated involuntarily.
->
+Hi Linus,
 
-The "undefined" behavior part of the problem can be fixed
-separately in the function dw_pcie_prog_outbound_atu_unroll()
-by modifying its internal calculation of the limit address and
-programming the ATU upper limit address register.
+There's just a couple of updates for linux-5.7:
+- A new Kconfig option to enable IMA architecture specific runtime
+policy rules needed for secure and/or trusted boot, as requested.
 
-With the above fix in dw_pcie_prog_outbound_atu_unroll(),
-the total problem reduces to the size issued being reduced
-to 4G max.
+- Some message cleanup (eg. pr_fmt, additional error messages).
 
-> >
-> > > > > This limitation also means that multiple ATUs
-> > > > > would need to be used to map larger regions.
-> > > > >
-> > > > > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > > > > ---
-> > > > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
-> > > > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > index 395feb8ca051..37a8c71ef89a 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > >       struct pci_bus *child;
-> > > > >       struct pci_host_bridge *bridge;
-> > > > >       struct resource *cfg_res;
-> > > > > +     resource_size_t mem_size;
-> > > > >       u32 hdr_type;
-> > > > >       int ret;
-> > > > >
-> > > > > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > >               case IORESOURCE_MEM:
-> > > > >                       pp->mem = win->res;
-> > > > >                       pp->mem->name = "MEM";
-> > > > > -                     pp->mem_size = resource_size(pp->mem);
-> > > > > +                     mem_size = resource_size(pp->mem);
-> > > > > +                     if (upper_32_bits(mem_size))
-> > > > > +                             dev_warn(dev, "MEM resource size too big\n");
-> > > > > +                     pp->mem_size = mem_size;
-> > > > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> > > > >                       break;
-> > > > >               case 0:
-> > > > > --
-> > > > > 2.7.4
-> > > > >
+thanks,
+
+Mimi
+
+
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
+
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+
+for you to fetch changes up to 9e2b4be377f0d715d9d910507890f9620cc22a9d:
+
+  ima: add a new CONFIG for loading arch-specific policies (2020-03-12 07:43:57 -0400)
+
+----------------------------------------------------------------
+Mimi Zohar (1):
+      Merge branch 'next-integrity.logging-cleanup' into next-integrity
+
+Nayna Jain (1):
+      ima: add a new CONFIG for loading arch-specific policies
+
+Tushar Sugandhi (3):
+      IMA: Update KBUILD_MODNAME for IMA files to ima
+      IMA: Add log statements for failure conditions
+      integrity: Remove duplicate pr_fmt definitions
+
+ arch/powerpc/Kconfig                         | 1 +
+ arch/s390/Kconfig                            | 1 +
+ arch/s390/kernel/Makefile                    | 2 +-
+ arch/x86/Kconfig                             | 1 +
+ arch/x86/kernel/Makefile                     | 4 +---
+ include/linux/ima.h                          | 3 +--
+ security/integrity/digsig.c                  | 2 --
+ security/integrity/digsig_asymmetric.c       | 2 --
+ security/integrity/evm/evm_crypto.c          | 2 --
+ security/integrity/evm/evm_main.c            | 2 --
+ security/integrity/evm/evm_secfs.c           | 2 --
+ security/integrity/ima/Kconfig               | 7 +++++++
+ security/integrity/ima/Makefile              | 6 +++---
+ security/integrity/ima/ima_asymmetric_keys.c | 2 --
+ security/integrity/ima/ima_crypto.c          | 2 --
+ security/integrity/ima/ima_fs.c              | 2 --
+ security/integrity/ima/ima_init.c            | 2 --
+ security/integrity/ima/ima_kexec.c           | 1 -
+ security/integrity/ima/ima_main.c            | 5 +++--
+ security/integrity/ima/ima_policy.c          | 2 --
+ security/integrity/ima/ima_queue.c           | 2 --
+ security/integrity/ima/ima_queue_keys.c      | 2 --
+ security/integrity/ima/ima_template.c        | 2 --
+ security/integrity/ima/ima_template_lib.c    | 2 --
+ security/integrity/integrity.h               | 6 ++++++
+ 25 files changed, 25 insertions(+), 40 deletions(-)
+
