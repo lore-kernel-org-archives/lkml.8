@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47B7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263CAC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2B020658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BB5206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759306;
-	bh=x+FTAAyhFq6TVGlwzx7by7EMdoDZnaysRDkXNvrL3Pw=;
+	s=default; t=1585759309;
+	bh=43+7cUiKLkoOj2SVKxaj6tMcNBy8dpXDhSh3pCvkzNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DD0C/d6bmZhH66VTdWkoTh71PSQv7P9QcRJH6UOLZ6jkecZpL437eXHAbOTbprkJG
-	 rESiaiiOBcP3Aehp58bOfmoyAQzIVPhOeSE268XSaFRuQrS+pYKorI+ZrDOkIUU1TL
-	 +FKRu0F77dbK+zz7tbEwPqfbVy4W0ATAX47XZAtQ=
+	b=k4vKOiWNDIe3Kx0SqPACCrZ/+o61gdsnt7fcY4J9l2HZqdCT024py5mm5pd4gIHTQ
+	 bDhEExx/Rm7TZ4T3I+Udu2/GkfGiCkpWkZdLPBK9JENJkY53AGXjoWQRmbmJNTyR6t
+	 CrKlwLMpuGel9+2LqDvUTDWVUUcgzzmSng/HkLfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389441AbgDAQlo (ORCPT
+        id S2389445AbgDAQlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42022 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:41:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389435AbgDAQlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:41:37 -0400
+        id S2388265AbgDAQll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:41:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14A78206F8;
-        Wed,  1 Apr 2020 16:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09AA320719;
+        Wed,  1 Apr 2020 16:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759296;
-        bh=x+FTAAyhFq6TVGlwzx7by7EMdoDZnaysRDkXNvrL3Pw=;
+        s=default; t=1585759300;
+        bh=43+7cUiKLkoOj2SVKxaj6tMcNBy8dpXDhSh3pCvkzNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9UBvzDbPxsyHApsWNSmzFr7KxszYKGUqkP6EcJj9W4syW+rFxiP3tb3w4WqNBpJs
-         dE88GbhJbBg3Uqaem3qqC6Y0Vv0gXY8KbK4EXVord+kOTWjBLoDuv9jesBG8KjJsme
-         Z7y6dFqB/sW4UB72Z0YOAGWOURXdELMeUzHnfn5s=
+        b=1OUMYls6IlWymdjJlSAsUpg5hgq3UZGnJCyC5tetQt661tdE/57aRyXnv9m1blEjd
+         6eDWCpsohDamZ+TqMknDMOgKcI0CPk3Xxe6HcPyQkR/1apEBWBI7QsanXeCJfGOQZJ
+         1rTExxXjOyrAmW/fDIOd7Qry0mRWvuJUxY3A1B3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 007/148] drm/exynos: dsi: fix workaround for the legacy clock name
-Date:   Wed,  1 Apr 2020 18:16:39 +0200
-Message-Id: <20200401161552.910163446@linuxfoundation.org>
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 008/148] drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
+Date:   Wed,  1 Apr 2020 18:16:40 +0200
+Message-Id: <20200401161553.004464575@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -62,72 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: luanshi <zhangliguang@linux.alibaba.com>
 
-[ Upstream commit c0fd99d659ba5582e09625c7a985d63fc2ca74b5 ]
+[ Upstream commit 3ba52ad55b533760a1f65836aa0ec9d35e36bb4f ]
 
-Writing to the built-in strings arrays doesn't work if driver is loaded
-as kernel module. This is also considered as a bad pattern. Fix this by
-adding a call to clk_get() with legacy clock name. This fixes following
-kernel oops if driver is loaded as module:
+Fix bogus NULL checks on the return value of acpi_cpu_get_madt_gicc()
+by checking for a 0 'gicc->performance_interrupt' value instead.
 
-Unable to handle kernel paging request at virtual address bf047978
- pgd = (ptrval)
- [bf047978] *pgd=59344811, *pte=5903c6df, *ppte=5903c65f
- Internal error: Oops: 80f [#1] SMP ARM
- Modules linked in: mc exynosdrm(+) analogix_dp rtc_s3c exynos_ppmu i2c_gpio
- CPU: 1 PID: 212 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200219 #326
- videodev: Linux video capture interface: v2.00
- Hardware name: Samsung Exynos (Flattened Device Tree)
- PC is at exynos_dsi_probe+0x1f0/0x384 [exynosdrm]
- LR is at exynos_dsi_probe+0x1dc/0x384 [exynosdrm]
- ...
- Process systemd-udevd (pid: 212, stack limit = 0x(ptrval))
- ...
- [<bf03cf14>] (exynos_dsi_probe [exynosdrm]) from [<c09b1ca0>] (platform_drv_probe+0x6c/0xa4)
- [<c09b1ca0>] (platform_drv_probe) from [<c09afcb8>] (really_probe+0x210/0x350)
- [<c09afcb8>] (really_probe) from [<c09aff74>] (driver_probe_device+0x60/0x1a0)
- [<c09aff74>] (driver_probe_device) from [<c09b0254>] (device_driver_attach+0x58/0x60)
- [<c09b0254>] (device_driver_attach) from [<c09b02dc>] (__driver_attach+0x80/0xbc)
- [<c09b02dc>] (__driver_attach) from [<c09ade00>] (bus_for_each_dev+0x68/0xb4)
- [<c09ade00>] (bus_for_each_dev) from [<c09aefd8>] (bus_add_driver+0x130/0x1e8)
- [<c09aefd8>] (bus_add_driver) from [<c09b0d64>] (driver_register+0x78/0x110)
- [<c09b0d64>] (driver_register) from [<bf038558>] (exynos_drm_init+0xe8/0x11c [exynosdrm])
- [<bf038558>] (exynos_drm_init [exynosdrm]) from [<c0302fa8>] (do_one_initcall+0x50/0x220)
- [<c0302fa8>] (do_one_initcall) from [<c03dd02c>] (do_init_module+0x60/0x210)
- [<c03dd02c>] (do_init_module) from [<c03dbf44>] (load_module+0x1c0c/0x2310)
- [<c03dbf44>] (load_module) from [<c03dc85c>] (sys_finit_module+0xac/0xbc)
- [<c03dc85c>] (sys_finit_module) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
- Exception stack(0xd979bfa8 to 0xd979bff0)
- ...
- ---[ end trace db16efe05faab470 ]---
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_dsi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/perf/arm_pmu_acpi.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index aef18f807e383..366c975cde5b7 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -1754,9 +1754,10 @@ static int exynos_dsi_probe(struct platform_device *pdev)
- 		dsi->clks[i] = devm_clk_get(dev, clk_names[i]);
- 		if (IS_ERR(dsi->clks[i])) {
- 			if (strcmp(clk_names[i], "sclk_mipi") == 0) {
--				strcpy(clk_names[i], OLD_SCLK_MIPI_CLK_NAME);
--				i--;
--				continue;
-+				dsi->clks[i] = devm_clk_get(dev,
-+							OLD_SCLK_MIPI_CLK_NAME);
-+				if (!IS_ERR(dsi->clks[i]))
-+					continue;
- 			}
+diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+index 3303dd8d8eb57..604e549a9a47d 100644
+--- a/drivers/perf/arm_pmu_acpi.c
++++ b/drivers/perf/arm_pmu_acpi.c
+@@ -25,8 +25,6 @@ static int arm_pmu_acpi_register_irq(int cpu)
+ 	int gsi, trigger;
  
- 			dev_info(dev, "failed to get the clock: %s\n",
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (WARN_ON(!gicc))
+-		return -EINVAL;
+ 
+ 	gsi = gicc->performance_interrupt;
+ 
+@@ -65,11 +63,10 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+ 	int gsi;
+ 
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (!gicc)
+-		return;
+ 
+ 	gsi = gicc->performance_interrupt;
+-	acpi_unregister_gsi(gsi);
++	if (gsi)
++		acpi_unregister_gsi(gsi);
+ }
+ 
+ static int arm_pmu_acpi_parse_irqs(void)
 -- 
 2.20.1
 
