@@ -2,53 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AE8C2BA13
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01585C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D4D20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C86C206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759251;
-	bh=dzLnA4xJpAucqxWtw8vDifDrALC0Ez2vnhKJzda7Id8=;
+	s=default; t=1585759255;
+	bh=ajjAGpsLaJz1GYRmdmBv7oFJ16dgb31logoJ+OLNDd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbOv9Ebx3CODRjKl8NF0j+ui5SuqPx9tRj1CdpCq1fIiPaH8BmgEPt3Eo5vmYzYO+
-	 ToagNZ4d2b3x8Kt6ZKYd2Jm9OXOYdN6+aLPRLvzCTkTUAyh3ic8BZ9/XHd/lGxanUx
-	 lZQxgLxYa+VB6FMLwn/oK6WlVCrBBmiYJ6Y5F3Wc=
+	b=KFw2Ow+uRdi/a2aKfBnr76DIUGcPMRCoLk7KQMTcRlX1AhdPw6yNJzAMFobHtYpIR
+	 VUaUd95oPmVXhPUkOh1hdAy9iJMdo8zfiAH5wtq4HO1LYBHkdQMeqy4AODU+QTOcrV
+	 qq2IOlvTwu3BR6AOxmNNde0gBhdwrL+V3nhxOi9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389364AbgDAQku (ORCPT
+        id S2388831AbgDAQky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:40:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388411AbgDAQkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:40:45 -0400
+        id S2389363AbgDAQku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:40:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6154220719;
-        Wed,  1 Apr 2020 16:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF122206F8;
+        Wed,  1 Apr 2020 16:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759244;
-        bh=dzLnA4xJpAucqxWtw8vDifDrALC0Ez2vnhKJzda7Id8=;
+        s=default; t=1585759250;
+        bh=ajjAGpsLaJz1GYRmdmBv7oFJ16dgb31logoJ+OLNDd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T115GSE9EAcUZetWoz5YzMKLpLE1B04ZD1AKLLoFVL4YX/217k0bjWM06s9o8ExSp
-         cgIdXJd7R4Nn3lqlqYUNVHNZayf0/JiRuQFJK7vv3Uz0nUa3/as2xOW8cQeH+7WCAU
-         cIVpj4GlQePD2JdIlSp1B/fJIi1TyPwfTB8oonjY=
+        b=J9EAaZFcQ54rc6T+LhgwTlQM+TBN98WFFN//VZKVBX2NyHSzlaOHkS/7WrBvKsTBB
+         Mray3RLMVAjdPFxyM44noeheIC5X6zLwyPkJuJwX1SEB6UEMbrhritATUpdW//upwz
+         C01sOXS9SX4i0fU4K8tODsNM3wWFUFHr7MnQZ0Rc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 002/148] powerpc: Include .BTF section
-Date:   Wed,  1 Apr 2020 18:16:34 +0200
-Message-Id: <20200401161552.460512224@linuxfoundation.org>
+        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 021/148] ALSA: line6: Fix endless MIDI read loop
+Date:   Wed,  1 Apr 2020 18:16:53 +0200
+Message-Id: <20200401161554.480454901@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,42 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit cb0cc635c7a9fa8a3a0f75d4d896721819c63add ]
+commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 upstream.
 
-Selecting CONFIG_DEBUG_INFO_BTF results in the below warning from ld:
-  ld: warning: orphan section `.BTF' from `.btf.vmlinux.bin.o' being placed in section `.BTF'
+The MIDI input event parser of the LINE6 driver may enter into an
+endless loop when the unexpected data sequence is given, as it tries
+to continue the secondary bytes without termination.  Also, when the
+input data is too short, the parser returns a negative error, while
+the caller doesn't handle it properly.  This would lead to the
+unexpected behavior as well.
 
-Include .BTF section in vmlinux explicitly to fix the same.
+This patch addresses those issues by checking the return value
+correctly and handling the one-byte event in the parser properly.
 
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200220113132.857132-1-naveen.n.rao@linux.vnet.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The bug was reported by syzkaller.
+
+Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
+Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/kernel/vmlinux.lds.S | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/usb/line6/driver.c  |    2 +-
+ sound/usb/line6/midibuf.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index b0cf4af7ba840..e4da937d6cf91 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -317,6 +317,12 @@ SECTIONS
- 		*(.branch_lt)
- 	}
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -313,7 +313,7 @@ static void line6_data_received(struct u
+ 				line6_midibuf_read(mb, line6->buffer_message,
+ 						LINE6_MIDI_MESSAGE_MAXLEN);
  
-+#ifdef CONFIG_DEBUG_INFO_BTF
-+	.BTF : AT(ADDR(.BTF) - LOAD_OFFSET) {
-+		*(.BTF)
-+	}
-+#endif
-+
- 	.opd : AT(ADDR(.opd) - LOAD_OFFSET) {
- 		*(.opd)
- 	}
--- 
-2.20.1
-
+-			if (done == 0)
++			if (done <= 0)
+ 				break;
+ 
+ 			line6->message_length = done;
+--- a/sound/usb/line6/midibuf.c
++++ b/sound/usb/line6/midibuf.c
+@@ -163,7 +163,7 @@ int line6_midibuf_read(struct midi_buffe
+ 			int midi_length_prev =
+ 			    midibuf_message_length(this->command_prev);
+ 
+-			if (midi_length_prev > 0) {
++			if (midi_length_prev > 1) {
+ 				midi_length = midi_length_prev - 1;
+ 				repeat = 1;
+ 			} else
 
 
