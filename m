@@ -2,151 +2,141 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F7BC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C81DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E46206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS+PKjPZ"
+	by mail.kernel.org (Postfix) with ESMTP id DC951206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:10:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733002AbgDAOKA (ORCPT
+        id S1732987AbgDAOKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:10:00 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46622 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732856AbgDAOJ7 (ORCPT
+        Wed, 1 Apr 2020 10:10:24 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29308 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732856AbgDAOKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:09:59 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j17so141950wru.13
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 07:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3UOCBrsLhDTGLPX2D6iB/6Fd9JweEhJ8isj0WlI9VYo=;
-        b=GS+PKjPZdueEZOw07f8wlD524/gBWG9HptdU97U/RJGApgq2iEgM5G15XbY45x5aCH
-         q9BaQ6f6w7coFGDbNBgcXdy07Ox2kLCqOAchGxx9Oaq+xg6lmlwBlGrbSspoIkd7Du/u
-         BC9Rw/g3x3+t70uwn7d0kBu/gIb/FBgOJwna0bdfCrGrzd2m4DJa6gLLvmZlf6wyW9VU
-         0bhuxZu1yTUIGAbuRNLamD/c5AsPZVDb+9PLz6QXUAv8gFUDSVPLwgJuMsmIlHEsGIbq
-         OAejhv/hrMUXWBBf8YspoMo1TXqx3UC0ziP2qXzMhB8MUCFDZIuPGTrZ81q/5xJu/feP
-         bK7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3UOCBrsLhDTGLPX2D6iB/6Fd9JweEhJ8isj0WlI9VYo=;
-        b=WFH/Gv/RWdIy+SYq+SwLb8aPrKlvAz4qQMsqOrsz0jNzXlKzp7uvlBCU6g9M5WCzKb
-         uX23EL/jKlNhoRwiZj7LX8i3qRJyJ2hs9vL/8bpScUkbAXE1Fo3t+XP1b0HKq5es8qxr
-         CvxvznfFVczfA3KqAPHXM338u/9fcEm8eqTL4vEk+IojXoZiTeFUR7R4DgvxbMhcz0iX
-         RX7avxl18gQO2LcH3gnVjImMyEUNGWXLq2mIHxqIczv/lHqZcLKXWT44AycYuAj0Q5zo
-         URgFk9mwpR4l3hMPrkF9DygsnbOICmJPnnnd0YADduLzAuaNdtvCpQmeXv9LGv635Aku
-         ffcQ==
-X-Gm-Message-State: ANhLgQ3x69TmGS+Sj0REsUgXNrmRJarS+OuPphYRHc9ppKQI8Ckzpiyw
-        MxauJztaArzqzbR/5qhdUW+mH9ED03ceU0fgulQ=
-X-Google-Smtp-Source: ADFU+vsZFudrdRTmHThHRp1Kdwv807i/mSI/kjsy9A0RjL6q27gGUig6/lTGxWoN/1Czr+86omvg0X5J5lrvCkjhok4=
-X-Received: by 2002:a5d:674f:: with SMTP id l15mr25618140wrw.196.1585750197939;
- Wed, 01 Apr 2020 07:09:57 -0700 (PDT)
+        Wed, 1 Apr 2020 10:10:24 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031E4Skn118632
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 10:10:22 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 304gsscjag-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 10:10:22 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Wed, 1 Apr 2020 15:10:13 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 15:10:09 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031EAGio47972532
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 14:10:16 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 489A952054;
+        Wed,  1 Apr 2020 14:10:16 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.206.166.90])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C53A55204E;
+        Wed,  1 Apr 2020 14:10:12 +0000 (GMT)
+Subject: Re: [PATCH 06/16] perf s390-cpumsf: Implement ->evsel_is_auxtrace()
+ callback
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20200401101613.6201-1-adrian.hunter@intel.com>
+ <20200401101613.6201-7-adrian.hunter@intel.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+Date:   Wed, 1 Apr 2020 16:10:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200401104156.11564-1-david@redhat.com> <20200401104156.11564-2-david@redhat.com>
-In-Reply-To: <20200401104156.11564-2-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Wed, 1 Apr 2020 16:09:46 +0200
-Message-ID: <CAM9Jb+hoWTb1NEOzyTpz_cyW7x9cA_3eiGTEfaKO7+w3c5auzQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] mm/page_alloc: fix RCU stalls during deferred page initialization
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Yiqian Wei <yiwei@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Baoquan He <bhe@redhat.com>, Oscar Salvador <osalvador@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200401101613.6201-7-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040114-0012-0000-0000-0000039C5459
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040114-0013-0000-0000-000021D964A2
+Message-Id: <32801161-9e7a-84f9-7d8d-40c17e0b2572@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> With CONFIG_DEFERRED_STRUCT_PAGE_INIT and without CONFIG_PREEMPT, it can
-> happen that we get RCU stalls detected when booting up.
->
-> [   60.474005] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> [   60.475000] rcu:  1-...0: (0 ticks this GP) idle=02a/1/0x4000000000000000 softirq=1/1 fqs=15000
-> [   60.475000] rcu:  (detected by 0, t=60002 jiffies, g=-1199, q=1)
-> [   60.475000] Sending NMI from CPU 0 to CPUs 1:
-> [    1.760091] NMI backtrace for cpu 1
-> [    1.760091] CPU: 1 PID: 20 Comm: pgdatinit0 Not tainted 4.18.0-147.9.1.el8_1.x86_64 #1
-> [    1.760091] Hardware name: Red Hat KVM, BIOS 1.13.0-1.module+el8.2.0+5520+4e5817f3 04/01/2014
-> [    1.760091] RIP: 0010:__init_single_page.isra.65+0x10/0x4f
-> [    1.760091] Code: 48 83 cf 63 48 89 f8 0f 1f 40 00 48 89 c6 48 89 d7 e8 6b 18 80 ff 66 90 5b c3 31 c0 b9 10 00 00 00 49 89 f8 48 c1 e6 33 f3 ab <b8> 07 00 00 00 48 c1 e2 36 41 c7 40 34 01 00 00 00 48 c1 e0 33 41
-> [    1.760091] RSP: 0000:ffffba783123be40 EFLAGS: 00000006
-> [    1.760091] RAX: 0000000000000000 RBX: fffffad34405e300 RCX: 0000000000000000
-> [    1.760091] RDX: 0000000000000000 RSI: 0010000000000000 RDI: fffffad34405e340
-> [    1.760091] RBP: 0000000033f3177e R08: fffffad34405e300 R09: 0000000000000002
-> [    1.760091] R10: 000000000000002b R11: ffff98afb691a500 R12: 0000000000000002
-> [    1.760091] R13: 0000000000000000 R14: 000000003f03ea00 R15: 000000003e10178c
-> [    1.760091] FS:  0000000000000000(0000) GS:ffff9c9ebeb00000(0000) knlGS:0000000000000000
-> [    1.760091] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    1.760091] CR2: 00000000ffffffff CR3: 000000a1cf20a001 CR4: 00000000003606e0
-> [    1.760091] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [    1.760091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [    1.760091] Call Trace:
-> [    1.760091]  deferred_init_pages+0x8f/0xbf
-> [    1.760091]  deferred_init_memmap+0x184/0x29d
-> [    1.760091]  ? deferred_free_pages.isra.97+0xba/0xba
-> [    1.760091]  kthread+0x112/0x130
-> [    1.760091]  ? kthread_flush_work_fn+0x10/0x10
-> [    1.760091]  ret_from_fork+0x35/0x40
-> [   89.123011] node 0 initialised, 1055935372 pages in 88650ms
->
-> The issue becomes visible when having a lot of memory (e.g., 4TB)
-> assigned to a single NUMA node - a system that can easily be created
-> using QEMU. Inside VMs on a hypervisor with quite some memory
-> overcommit, this is fairly easy to trigger.
->
-> Adding the cond_resched() makes RCU happy.
->
-> Reported-by: Yiqian Wei <yiwei@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Alexander Duyck <alexander.duyck@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On 4/1/20 12:16 PM, Adrian Hunter wrote:
+> Implement ->evsel_is_auxtrace() callback.
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
 > ---
->  mm/page_alloc.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index ca1453204e66..084cabffc90d 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1877,6 +1877,7 @@ static int __init deferred_init_memmap(void *data)
->                         prev_nr_pages = nr_pages;
->                         pgdat->first_deferred_pfn = spfn;
->                         pgdat_resize_unlock(pgdat, &flags);
-> +                       cond_resched();
->                         goto again;
->                 }
->         }
-> --
+>  tools/perf/util/s390-cpumcf-kernel.h | 1 +
+>  tools/perf/util/s390-cpumsf.c        | 9 +++++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/tools/perf/util/s390-cpumcf-kernel.h b/tools/perf/util/s390-cpumcf-kernel.h
+> index d4356030b504..f55ca07f3ca1 100644
+> --- a/tools/perf/util/s390-cpumcf-kernel.h
+> +++ b/tools/perf/util/s390-cpumcf-kernel.h
+> @@ -11,6 +11,7 @@
+>  
+>  #define	S390_CPUMCF_DIAG_DEF	0xfeef	/* Counter diagnostic entry ID */
+>  #define	PERF_EVENT_CPUM_CF_DIAG	0xBC000	/* Event: Counter sets */
+> +#define PERF_EVENT_CPUM_SF_DIAG	0xBD000 /* Event: Combined-sampling */
+>  
+>  struct cf_ctrset_entry {	/* CPU-M CF counter set entry (8 byte) */
+>  	unsigned int def:16;	/* 0-15  Data Entry Format */
+> diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+> index 6785cd87aa4d..d7779e48652f 100644
+> --- a/tools/perf/util/s390-cpumsf.c
+> +++ b/tools/perf/util/s390-cpumsf.c
+> @@ -1047,6 +1047,14 @@ static void s390_cpumsf_free(struct perf_session *session)
+>  	free(sf);
+>  }
+>  
+> +static bool
+> +s390_cpumsf_evsel_is_auxtrace(struct perf_session *session __maybe_unused,
+> +			      struct evsel *evsel)
+> +{
+> +	return evsel->core.attr.type == PERF_TYPE_RAW &&
+> +	       evsel->core.attr.config == PERF_EVENT_CPUM_SF_DIAG;
+> +}
+> +
+>  static int s390_cpumsf_get_type(const char *cpuid)
+>  {
+>  	int ret, family = 0;
+> @@ -1142,6 +1150,7 @@ int s390_cpumsf_process_auxtrace_info(union perf_event *event,
+>  	sf->auxtrace.flush_events = s390_cpumsf_flush;
+>  	sf->auxtrace.free_events = s390_cpumsf_free_events;
+>  	sf->auxtrace.free = s390_cpumsf_free;
+> +	sf->auxtrace.evsel_is_auxtrace = s390_cpumsf_evsel_is_auxtrace;
+>  	session->auxtrace = &sf->auxtrace;
+>  
+>  	if (dump_trace)
+> 
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Acked-by: Thomas Richter <tmricht@linux.ibm.com>
 
-> 2.25.1
->
->
+-- 
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
