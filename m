@@ -2,108 +2,203 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0849C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD65CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80EE6215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898F221841
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:48:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="nKT1PI4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbgDAIsy (ORCPT
+        id S1732116AbgDAIs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:48:54 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:8371 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgDAIsx (ORCPT
+        Wed, 1 Apr 2020 04:48:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39831 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgDAIs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:48:53 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65e8455597e4-40731; Wed, 01 Apr 2020 16:48:26 +0800 (CST)
-X-RM-TRANSID: 2ee65e8455597e4-40731
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65e8455580bf-9490d;
-        Wed, 01 Apr 2020 16:48:25 +0800 (CST)
-X-RM-TRANSID: 2ee65e8455580bf-9490d
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     axboe@kernel.dk
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] ata:ahci_xgene:use devm_platform_ioremap_resource() to simplify code
-Date:   Wed,  1 Apr 2020 16:49:52 +0800
-Message-Id: <20200401084952.5828-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Wed, 1 Apr 2020 04:48:56 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a43so28679567edf.6
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:48:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nO7NvYL5YbGkypKxGoWuwxxFk6qjRVPvgK2ifgde8ys=;
+        b=nKT1PI4lZjRkGXA0qoVt39rD6dCkioi4T1wOtFKczerqB7xR37+SXrexLXVaxyRoRZ
+         P/MQ9KkylbCIRFpuT/z2h482ouR713/nq6B9H5/rP7dskLnqLtnramvo665NSX0DmbN8
+         77xpnQ9Sm/oZOinLBRsbN0Aq/CY0nAN421P4ND2RoGjW6GiHNbw4u7zITADs4vFdTR7w
+         mr9q4JNLEUMY3rKgONFt7/nL5sDfFJp+oXDZsgjhTLd41jLz9ChU3YKFsf9/4GiELmlO
+         DUygUUNqRx08PsUj63TKvtq0MTZCMgb+awXdTOjVXo/0Y7HZa/5sHB1KmL2ZXuKtyS1S
+         oDVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nO7NvYL5YbGkypKxGoWuwxxFk6qjRVPvgK2ifgde8ys=;
+        b=XV1mkOl9ut0ZK+yGsY4vHYLIeGDU2R93CBJBqoFty9gv2ccrBa/vqXQItyXVlHzNIL
+         axveVj1zHuIyGtStSxRgIbQ11f/iZWEXQgseLtza2N19s+tC53i0qAwxB4ZwWynfyU5i
+         wb7ADrIxTAjA4Fi6+xgRe07Wbk37vTfs/FZzJGaRrkRnDrwbgtxSw7G6//4guHTBHX8N
+         U/nhBSEzkl/zGggyiuFk3c8xiGnl8OQ/Ydi4BvS1/QoEFiTouj/JwIlEY+BFcVE/Mokd
+         iWKC4iqK9zKiH1zycvIZU48RBFj+YyHy6RJKVBpfv8jjhd9qsK5NinWZG+j4fge2Mztz
+         zBKw==
+X-Gm-Message-State: ANhLgQ0Y/T6NumWp2oor6hHv9IMj1fqWrcdnJ4yW4xibNmF2G63MFzcu
+        0iGDxYUIrn4jZ32jRZbamrpkoUr4L8QyOGtQgFL+Uw==
+X-Google-Smtp-Source: ADFU+vufccZcs61ZBlmuOm7ukHfWC6ZhrwNFAphauzXSa/puB0SAYGjCUbhdXtkYuKjFSx5h5oNBplH8yyO/gpHPw6E=
+X-Received: by 2002:a17:906:4bc4:: with SMTP id x4mr14096929ejv.201.1585730934033;
+ Wed, 01 Apr 2020 01:48:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-5-alastair@d-silva.org>
+In-Reply-To: <20200327071202.2159885-5-alastair@d-silva.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 1 Apr 2020 01:48:42 -0700
+Message-ID: <CAPcyv4hs=4-0UF+bvFFuJb=n-VeMV62-DM_=3LUgMkro6nh2=w@mail.gmail.com>
+Subject: Re: [PATCH v4 04/25] ocxl: Remove unnecessary externs
+To:     "Alastair D'Silva" <alastair@d-silva.org>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In this function, devm_platform_ioremap_resource() should be suitable
-to simplify code.
+On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org> wrote:
+>
+> Function declarations don't need externs, remove the existing ones
+> so they are consistent with newer code
+>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- drivers/ata/ahci_xgene.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 16246c843..061209275 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -739,7 +739,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct ahci_host_priv *hpriv;
- 	struct xgene_ahci_context *ctx;
--	struct resource *res;
- 	const struct of_device_id *of_devid;
- 	enum xgene_ahci_version version = XGENE_AHCI_V1;
- 	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
-@@ -759,32 +758,24 @@ static int xgene_ahci_probe(struct platform_device *pdev)
- 	ctx->dev = dev;
- 
- 	/* Retrieve the IP core resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	ctx->csr_core = devm_ioremap_resource(dev, res);
-+	ctx->csr_core = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(ctx->csr_core))
- 		return PTR_ERR(ctx->csr_core);
- 
- 	/* Retrieve the IP diagnostic resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
--	ctx->csr_diag = devm_ioremap_resource(dev, res);
-+	ctx->csr_diag = devm_platform_ioremap_resource(pdev, 2);
- 	if (IS_ERR(ctx->csr_diag))
- 		return PTR_ERR(ctx->csr_diag);
- 
- 	/* Retrieve the IP AXI resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
--	ctx->csr_axi = devm_ioremap_resource(dev, res);
-+	ctx->csr_axi = devm_platform_ioremap_resource(pdev, 3);
- 	if (IS_ERR(ctx->csr_axi))
- 		return PTR_ERR(ctx->csr_axi);
- 
- 	/* Retrieve the optional IP mux resource */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
--	if (res) {
--		void __iomem *csr = devm_ioremap_resource(dev, res);
--		if (IS_ERR(csr))
--			return PTR_ERR(csr);
--
--		ctx->csr_mux = csr;
--	}
-+	ctx->csr_mux = devm_platform_ioremap_resource(pdev, 4);
-+	if (IS_ERR(ctx->csr_mux))
-+		return PTR_ERR(ctx->csr_mux);
- 
- 	of_devid = of_match_device(xgene_ahci_of_match, dev);
- 	if (of_devid) {
--- 
-2.20.1.windows.1
+Looks good.
 
 
-
+> ---
+>  arch/powerpc/include/asm/pnv-ocxl.h | 40 ++++++++++++++---------------
+>  include/misc/ocxl.h                 |  6 ++---
+>  2 files changed, 22 insertions(+), 24 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
+> index 560a19bb71b7..205efc41a33c 100644
+> --- a/arch/powerpc/include/asm/pnv-ocxl.h
+> +++ b/arch/powerpc/include/asm/pnv-ocxl.h
+> @@ -9,29 +9,27 @@
+>  #define PNV_OCXL_TL_BITS_PER_RATE       4
+>  #define PNV_OCXL_TL_RATE_BUF_SIZE       ((PNV_OCXL_TL_MAX_TEMPLATE+1) * PNV_OCXL_TL_BITS_PER_RATE / 8)
+>
+> -extern int pnv_ocxl_get_actag(struct pci_dev *dev, u16 *base, u16 *enabled,
+> -                       u16 *supported);
+> -extern int pnv_ocxl_get_pasid_count(struct pci_dev *dev, int *count);
+> +int pnv_ocxl_get_actag(struct pci_dev *dev, u16 *base, u16 *enabled, u16 *supported);
+> +int pnv_ocxl_get_pasid_count(struct pci_dev *dev, int *count);
+>
+> -extern int pnv_ocxl_get_tl_cap(struct pci_dev *dev, long *cap,
+> +int pnv_ocxl_get_tl_cap(struct pci_dev *dev, long *cap,
+>                         char *rate_buf, int rate_buf_size);
+> -extern int pnv_ocxl_set_tl_conf(struct pci_dev *dev, long cap,
+> -                       uint64_t rate_buf_phys, int rate_buf_size);
+> -
+> -extern int pnv_ocxl_get_xsl_irq(struct pci_dev *dev, int *hwirq);
+> -extern void pnv_ocxl_unmap_xsl_regs(void __iomem *dsisr, void __iomem *dar,
+> -                               void __iomem *tfc, void __iomem *pe_handle);
+> -extern int pnv_ocxl_map_xsl_regs(struct pci_dev *dev, void __iomem **dsisr,
+> -                               void __iomem **dar, void __iomem **tfc,
+> -                               void __iomem **pe_handle);
+> -
+> -extern int pnv_ocxl_spa_setup(struct pci_dev *dev, void *spa_mem, int PE_mask,
+> -                       void **platform_data);
+> -extern void pnv_ocxl_spa_release(void *platform_data);
+> -extern int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle);
+> -
+> -extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
+> -extern void pnv_ocxl_free_xive_irq(u32 irq);
+> +int pnv_ocxl_set_tl_conf(struct pci_dev *dev, long cap,
+> +                        uint64_t rate_buf_phys, int rate_buf_size);
+> +
+> +int pnv_ocxl_get_xsl_irq(struct pci_dev *dev, int *hwirq);
+> +void pnv_ocxl_unmap_xsl_regs(void __iomem *dsisr, void __iomem *dar,
+> +                            void __iomem *tfc, void __iomem *pe_handle);
+> +int pnv_ocxl_map_xsl_regs(struct pci_dev *dev, void __iomem **dsisr,
+> +                         void __iomem **dar, void __iomem **tfc,
+> +                         void __iomem **pe_handle);
+> +
+> +int pnv_ocxl_spa_setup(struct pci_dev *dev, void *spa_mem, int PE_mask, void **platform_data);
+> +void pnv_ocxl_spa_release(void *platform_data);
+> +int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle);
+> +
+> +int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
+> +void pnv_ocxl_free_xive_irq(u32 irq);
+>  u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size);
+>  void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
+>
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 06dd5839e438..0a762e387418 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -173,7 +173,7 @@ int ocxl_context_detach(struct ocxl_context *ctx);
+>   *
+>   * Returns 0 on success, negative on failure
+>   */
+> -extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
+> +int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
+>
+>  /**
+>   * Frees an IRQ associated with an AFU context
+> @@ -182,7 +182,7 @@ extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
+>   *
+>   * Returns 0 on success, negative on failure
+>   */
+> -extern int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
+> +int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
+>
+>  /**
+>   * Gets the address of the trigger page for an IRQ
+> @@ -193,7 +193,7 @@ extern int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
+>   *
+>   * returns the trigger page address, or 0 if the IRQ is not valid
+>   */
+> -extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id);
+> +u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id);
+>
+>  /**
+>   * Provide a callback to be called when an IRQ is triggered
+> --
+> 2.24.1
+>
