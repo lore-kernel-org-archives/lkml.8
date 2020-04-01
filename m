@@ -2,150 +2,156 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C9CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC43DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 710882071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7B92071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PSwVlgPt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BghTe+Gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732742AbgDAW1G (ORCPT
+        id S1732809AbgDAWaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:27:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38678 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbgDAW1F (ORCPT
+        Wed, 1 Apr 2020 18:30:21 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:17133 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732385AbgDAWaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:27:05 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w3so553094plz.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 15:27:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/5I5n44oluC7i5iMGc1kCApSIMH8aU+TEHJYNftWu74=;
-        b=PSwVlgPtuIY/hJbpB3m2prpdGLQvhpH1sfXsOEzX7CzUuAZ1h/SMVcUjR75F0HJb33
-         F626YuNjcRK4M1QEgz/Ng7ZDyADmtbfWc3sTyqpSM9ZPyRWssvVUAoF2aRXSVlLEpAHU
-         C00grz1kxYmJOgxOpIqsvDI5AVVRLjvNmz121Q96uUIG4WucrydsJsyqD795OU+A1M0C
-         4PxbUycDLk2pWZK5osYG1a14Nj3S3qwp57uxvaueuyLA+1+7GtxBxh3Wukisq5wCDtjo
-         ecL5yRbgh1Le8MvvKJ85oOmDFlXclOrCTjs9BnjOLhtFmNhH8OcPQTH3Z4lSTgKMRwbb
-         eM0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/5I5n44oluC7i5iMGc1kCApSIMH8aU+TEHJYNftWu74=;
-        b=llDXvmLIWIoQfjSVxyWU6OLi4/2UsQAc2TjOuoBsMwrqMEyq//qfwZ6jJ5RRT5WZwi
-         6LMl9On6b8/YUrrr/Zro7e0YIQTMhWj7Dit51ArYUqjlS4c44TsesiA0WZSdnEdJaJfl
-         ptuVkzV9z5IQwxBDaDatTkK+Dbn7tFre529NbVJKXPuUFAvmnURRJLEojZF4gBg9wReC
-         I5b7v0wGiN2frgYzN5xuyc88DJm+buYMb8j5SSTNE9q8L3MLJuBioE2QBjiebLHAj0zE
-         /XSFsXeeoJJR/bVptB7K0y/Pz3xdLPw9aORcgYNyWsVmsuLveIjjPGmhws+iAHvotPAq
-         ce5w==
-X-Gm-Message-State: AGi0Puboae/odOJTSjDJQmbtQ9kL1sTCKXYCXGlYGbcqY/qtJBi2OvS4
-        kdHx1LCIwO7sBn5OJHckeY+FAMmRettmYvH/Qy/H00KT7j0=
-X-Google-Smtp-Source: APiQypKFmS9i5vrVXurU9AIyS4H2bg7yQQ8XLjc9cH4MSta9jqwsJx028ulHFt+NlUrYgc4aJURFgE1cqiSLrH6cnRs=
-X-Received: by 2002:a17:90b:230d:: with SMTP id mt13mr247965pjb.164.1585780024565;
- Wed, 01 Apr 2020 15:27:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200311024240.26834-1-elder@linaro.org> <20200401173515.142249-1-ndesaulniers@google.com>
- <3659efd7-4e72-6bff-5657-c1270e8553f4@linaro.org> <CAKwvOdn7TpsZJ70mRiQARJc9Fy+364PXSAiPnSpc_M9pOaXjGw@mail.gmail.com>
- <3c878065-8d25-8177-b7c4-9813b60c9ff6@linaro.org> <CAKwvOdnZ-QNeYQ_G-aEuo8cC_m68E5mAC4cskwAQpJJQPc1BSg@mail.gmail.com>
- <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
-In-Reply-To: <efd2c8b1-4efd-572e-10c5-c45f705274d0@linaro.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 1 Apr 2020 15:26:53 -0700
-Message-ID: <CAKwvOdnZ9KL1Esmdjvk-BTP2a+C24bOWguNVaU3RSXKi1Ouh+w@mail.gmail.com>
-Subject: Re: [PATCH v3] bitfield.h: add FIELD_MAX() and field_max()
-To:     Alex Elder <elder@linaro.org>
-Cc:     Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Wed, 1 Apr 2020 18:30:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1585780220;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ypBqtZEADdvBfEkNyBIc74TZ0B3GOgvL58CLHWMq3dA=;
+  b=BghTe+GjZGAnkwGOU/afP6eqbI7t2OVc8mMHXiN616OUqI5mOZepMLi2
+   mETUjLEfkFuphaUueaPUW4EzmFbNmPc+CO55K4Va6nH/ETf5YkkdSy/x5
+   b0jLvmQkqd7eAnLUvKZuJv4JafF5S6oxr4lWoh9dZkvA3IxeG/cDTM8ck
+   M=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: SlBOpDVSyfmlaZYloDXfRtyji0AMLQW2ggHFzCnIad2qFJeMl2e6w5vnfnDP1epnj1a35l01GE
+ gJ7p7IE9mrSXq7gTPDtz4HLJaxJsYAKLarA2Put92a64Iob8XDKqpo0/8TG+R+KdS4IwfCptHM
+ 3sa/qfuCnMhgrFOog8P6Z8VQCurgolww554Z39ZPQ4r42ACZAW9vDKaDbgS46pyXIssmpFvjXA
+ JMqF5IT32+YSitByXxOUC0NDPlCySni8S5lfM4ufZGVyGZGgHJW77gz+rXUO1e3O0guDB0wtz/
+ bH0=
+X-SBRS: 2.7
+X-MesageID: 15694073
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,333,1580792400"; 
+   d="scan'208";a="15694073"
+Subject: Re: [PATCH] x86/smpboot: Remove 486-isms from the modern AP boot path
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     <hpa@zytor.com>, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        <x86@kernel.org>, "Jan Kiszka" <jan.kiszka@siemens.com>,
+        James Morris <jmorris@namei.org>,
+        "David Howells" <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        <jailhouse-dev@googlegroups.com>
+References: <20200325101431.12341-1-andrew.cooper3@citrix.com>
+ <601E644A-B046-4030-B3BD-280ABF15BF53@zytor.com>
+ <87r1xgxzy6.fsf@nanos.tec.linutronix.de>
+ <alpine.LFD.2.21.2004010001460.3939520@eddie.linux-mips.org>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <beefca46-ac7c-374b-e80a-4e7c3af2eb2b@citrix.com>
+Date:   Wed, 1 Apr 2020 23:30:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <alpine.LFD.2.21.2004010001460.3939520@eddie.linux-mips.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 1:21 PM Alex Elder <elder@linaro.org> wrote:
+On 01/04/2020 00:35, Maciej W. Rozycki wrote:
+> On Wed, 25 Mar 2020, Thomas Gleixner wrote:
 >
-> On 4/1/20 2:54 PM, Nick Desaulniers wrote:
-> > On Wed, Apr 1, 2020 at 12:44 PM Alex Elder <elder@linaro.org> wrote:
-> >>
-> >> Can you tell me where I can find the commit id of the kernel
-> >> that is being built when this error is reported?  I would
-> >> like to examine things and build it myself so I can fix it.
-> >> But so far haven't found what I need to check out.
-> >
-> > From the report: https://groups.google.com/g/clang-built-linux/c/pX-kr_t5l_A
+>>>> @@ -1118,7 +1121,7 @@ static int do_boot_cpu(int apicid, int cpu,
+>>>> struct task_struct *idle,
+>>>> 		}
+>>>> 	}
+>>>>
+>>>> -	if (x86_platform.legacy.warm_reset) {
+>>>> +	if (!APIC_INTEGRATED(boot_cpu_apic_version)) {
+>>>> 		/*
+>>>> 		 * Cleanup possible dangling ends...
+>>>> 		 */
+>>> We don't support SMP on 486 and haven't for a very long time. Is there
+>>> any reason to retain that code at all?
+>> Not that I'm aware off.
+>  For the record: this code is for Pentium really, covering original P5 
+> systems, which lacked integrated APIC, as well as P54C systems that went 
+> beyond dual (e.g. ALR made quad-SMP P54C systems).  They all used external 
+> i82489DX APICs for SMP support.  Few were ever manufactured and getting 
+> across one let alone running Linux might be tough these days.  I never 
+> managed to get one for myself, which would have been helpful for 
+> maintaining this code.
 >
-> That link doesn't work for me.
+>  Even though we supported them by spec I believe we never actually ran MP 
+> on any 486 SMP system (Alan Cox might be able to straighten me out on 
+> this); none that I know of implemented the MPS even though actual hardware 
+> might have used the APIC architecture.  Compaq had its competing solution 
+> for 486 and newer SMP, actually deployed, the name of which I long forgot.  
+> We never supported it due to the lack of documentation combined with the 
+> lack of enough incentive for someone to reverse-engineer it.
 
-Sigh, second internal bug filed against google groups this
-week...settings look correct but I too see a 404 when in private
-browsing mode.
+:)
 
->
-> > Configuration details:
-> > rr[llvm_url]="https://github.com/llvm/llvm-project.git"
-> > rr[linux_url]="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
-> > rr[linux_branch]="7111951b8d4973bda27ff663f2cf18b663d15b48"
->
-> That commit is just the one in which Linux v5.6 is tagged.
-> It doesn't include any of this code (but it's the last
-> tagged release that current linus/master is built on).
->
-> It doesn't answer my question about what commit id was
-> used for this build, unfortunately.
+I chose "486-ism" based on what the MP spec said about external vs
+integrated Local APICs.  I can't claim to have any experience of those days.
 
-7111951b8d4973bda27ff663f2cf18b663d15b48 *is* the commit id that was
-used for the build.  It sync'd the mainline tree at that commit.
+I guess given v2 of the patch, I guess this should become "Remove
+external-LAPIC support from the AP boot path" ?
 
-> > the linux_branch looks like a SHA of what the latest ToT of mainline
-> > was when the CI ran.
-> >
-> > I was suspecting that maybe there was a small window between the
-> > regression, and the fix, and when the bot happened to sync.  But it
-> > seems that: e31a50162feb352147d3fc87b9e036703c8f2636 landed before
-> > 7111951b8d4973bda27ff663f2cf18b663d15b48 IIUC.
->
-> Yes, this:
->   e31a50162feb bitfield.h: add FIELD_MAX() and field_max()
-> landed about 200 commits after the code that needed it.
->
-> So there's a chance the kernel that got built was somewhere
-> between those two, and I believe the problem you point out
-> would happen in that case.  This is why I started by asking
-> whether it was something built during a bisect.
->
-> It's still not clear to me what happened here.  I can explain
-> how this *could* happen, but I don't believe problem exists
-> in the latest upstream kernel commit.
->
-> Is there something else you think I should do?
-
-mainline is hosed for aarch64 due to some dtc failures.  I'm not sure
-how TCWG's CI chooses the bisection starting point, but if mainline
-was broken, and it jumped back say 300 commits, then the automated
-bisection may have converged on your first patch, but not the second.
-
-I just checked out mainline @ 7111951b8d4973bda27ff663f2cf18b663d15b48
-and couldn't reproduce, so I assume the above is what happened.  So
-sorry for the noise, I'll go investigate the dtc failure.  Not sure
-how that skipped -next coverage.
--- 
-Thanks,
-~Nick Desaulniers
+~Andrew
