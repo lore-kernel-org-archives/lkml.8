@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1878FC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C174C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD99021582
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7F920857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758177;
-	bh=yoXhOL7nTVasZHR6cKwhWMciTV/1jPkQpUjZtocCq3M=;
+	s=default; t=1585758180;
+	bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGKX7zTWiXZbuYQt9m0Y2O7fNqGn42RH2wPXCtUJQ5KxQCCdz9a4vZLq8xRq/MYkx
-	 GhQ1UZkgyIHpnucYHP4t36moz3bQd+U+P+BVcVR+ruuK60FBf7PXykSwcBGqW1vqcs
-	 4ymJVuDBWE9Wgou+yDG2c8pTIzpIBdX9HaR+LQRM=
+	b=ePGGCjpJCUq0oOEF0SP1Bvhgr6EZsz3CFPgA572/rtkN0c/Sd63hfr0TdHS0GSlPy
+	 8lImRgsHww3GBhwwmJnJEg1Mw9KsDJp7q+biIx1b1a3b2PnlfvJEnE6ciTtdrVBCT5
+	 Sym9zDsrV2F/s9Tx7+oFx+eY5A+F31fBvITNx83A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732539AbgDAQW4 (ORCPT
+        id S2387557AbgDAQW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45958 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732328AbgDAQWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:48 -0400
+        id S2387550AbgDAQWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26AD72137B;
-        Wed,  1 Apr 2020 16:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E4622137B;
+        Wed,  1 Apr 2020 16:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758167;
-        bh=yoXhOL7nTVasZHR6cKwhWMciTV/1jPkQpUjZtocCq3M=;
+        s=default; t=1585758174;
+        bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lETU3sk6JxZO84U4Q0RMtaLe1G8jo3NMLX2vMONAY88JvEmyDfw1LFKVT7l5FjXUl
-         jVD43yfuNi9J/TfMBjSfVIJ7tPBP+Gt03+PaD4dx/5IrfzBDuhUd5KF4C4V/p//XKk
-         vMcP8UOIAVlAJYL+Wi/rNE+PO4H3pEEgtmckWXLo=
+        b=AU4vf8XgZFooSXLb+4i//KES++C82SRxRjGG+vSAuyRy6V9zlNI6aojRclq4dUBHM
+         LqfExV+3dm+YAfO5mfP7hojbujk+mw2WJczIvWye//4AibwViRZgqSjr/n3z+eg1SC
+         F4qCL8+luPfSmXjmzxmyEAi/zVwn2VMX7O3LIEBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 26/27] arm64: dts: ls1043a-rdb: correct RGMII delay mode to rgmii-id
-Date:   Wed,  1 Apr 2020 18:17:54 +0200
-Message-Id: <20200401161434.983235078@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.4 23/27] ARM: dts: imx6: phycore-som: fix arm and soc minimum voltage
+Date:   Wed,  1 Apr 2020 18:17:51 +0200
+Message-Id: <20200401161433.199490420@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 References: <20200401161414.352722470@linuxfoundation.org>
@@ -59,50 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 4022d808c45277693ea86478fab1f081ebf997e8 upstream.
+commit 636b45b8efa91db05553840b6c0120d6fa6b94fa upstream.
 
-The correct setting for the RGMII ports on LS1043ARDB is to
-enable delay on both Rx and Tx so the interface mode used must
-be PHY_INTERFACE_MODE_RGMII_ID.
+The current set minimum voltage of 730000µV seems to be wrong. I don't
+know the document which specifies that but the imx6qdl datasheets says
+that the minimum voltage should be 0.925V for VDD_ARM (LDO bypassed,
+lowest opp) and 1.15V for VDD_SOC (LDO bypassed, lowest opp).
 
-Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
-configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
-has control over the RGMII RX delay and it is disabling it for
-RGMII_TXID. The LS1043ARDB uses two such PHYs in RGMII_ID mode but
-in the device tree the mode was described as "rgmii_txid".
-This issue was not apparent at the time as the PHY driver took the
-same action for RGMII_TXID and RGMII_ID back then but it became
-visible (RX no longer working) after the above patch.
-
-Changing the phy-connection-type to "rgmii-id" to address the issue.
-
-Fixes: bf02f2ffe59c ("arm64: dts: add LS1043A DPAA FMan support")
-Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ddec5d1c0047 ("ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts |    4 ++--
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -119,12 +119,12 @@
+--- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+@@ -107,14 +107,14 @@
+ 		regulators {
+ 			vdd_arm: buck1 {
+ 				regulator-name = "vdd_arm";
+-				regulator-min-microvolt = <730000>;
++				regulator-min-microvolt = <925000>;
+ 				regulator-max-microvolt = <1380000>;
+ 				regulator-always-on;
+ 			};
  
- 	ethernet@e4000 {
- 		phy-handle = <&rgmii_phy1>;
--		phy-connection-type = "rgmii-txid";
-+		phy-connection-type = "rgmii-id";
- 	};
- 
- 	ethernet@e6000 {
- 		phy-handle = <&rgmii_phy2>;
--		phy-connection-type = "rgmii-txid";
-+		phy-connection-type = "rgmii-id";
- 	};
- 
- 	ethernet@e8000 {
+ 			vdd_soc: buck2 {
+ 				regulator-name = "vdd_soc";
+-				regulator-min-microvolt = <730000>;
++				regulator-min-microvolt = <1150000>;
+ 				regulator-max-microvolt = <1380000>;
+ 				regulator-always-on;
+ 			};
 
 
