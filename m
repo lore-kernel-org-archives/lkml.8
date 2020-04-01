@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C0DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30033C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD9D206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B532063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759686;
-	bh=IKlBNIhNGOdSwMXMGcHYdw2UJo0lDoL6NaGMlLD0S+M=;
+	s=default; t=1585759701;
+	bh=HDBfyDI3oU4l6pCi6L0fG4nqaOCEBqvamVW1rdWlQQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2fi94/jTWjqxzYJ7R2SqVvYGWf0pNzlL5LDOWbPNdkMCElRdRY8qQs/J+Z5c4Yqm8
-	 89eJkBp6PsyyJGnAIFOJT67YCBQEPlu+8vEM/c+ARHNWNueKlEJT39hVh8rOdhHst1
-	 A9L5vtZB2iBZ8ELKCqRJVENCV9DpsdumQjt8dpns=
+	b=NfHexyaQNH/CjDQbWuJMlWO9eONpb2d0ZpCUljLqAHIx13OOSxmfKRP1cYJfGc2Li
+	 /0JRUSRv2fS5FWcwbjiaq9aY75Ng/kavO7mD3Kaxsr2QKzOP5t4AeAU32ZmbWLvwBc
+	 JhscG6/hTOSfsHGJ5ofGSmoS+IfcQA7ooARoK0/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390118AbgDAQsF (ORCPT
+        id S2389305AbgDAQsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:48:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49952 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390106AbgDAQsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:48:01 -0400
+        id S2390024AbgDAQrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:47:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B84332063A;
-        Wed,  1 Apr 2020 16:47:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C2420705;
+        Wed,  1 Apr 2020 16:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759680;
-        bh=IKlBNIhNGOdSwMXMGcHYdw2UJo0lDoL6NaGMlLD0S+M=;
+        s=default; t=1585759625;
+        bh=HDBfyDI3oU4l6pCi6L0fG4nqaOCEBqvamVW1rdWlQQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bacYpaSu1polefpnhBmbzrniEhuP3dPypknyXcehCZUzk81ofjUAGNT5ThaSX4ox3
-         5U9xO70MwWYvqHk1rQ8YSdH+ZueTvH9Cyh82ud7+W8FvdiWBYxM5SBdYtopJYjfgfA
-         L3O6W6zhdlLaNQJkv+W6oQml/8/o5gVOv5v63ftA=
+        b=kbeDJkFl8auA/6XUm4fa6nGsOSqLNOADuezHhPZfwl5krStoQtR2kngJ1UR+QgLBy
+         FXMMluXD+/md92+2st1LfUPrrMwMewBYsmgrIaz/uL2cyP3xSykL8ovK4SJaoK6QZu
+         jzvsnyFcqbb3flzxC8Rb5GF/gI4rpO96IrghB8bQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 118/148] USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interrupt_callback
-Date:   Wed,  1 Apr 2020 18:18:30 +0200
-Message-Id: <20200401161603.801803678@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alexander Potapenko <glider@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>
+Subject: [PATCH 4.14 139/148] bpf: Explicitly memset the bpf_attr structure
+Date:   Wed,  1 Apr 2020 18:18:51 +0200
+Message-Id: <20200401161605.547925593@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,36 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 57aa9f294b09463492f604feaa5cc719beaace32 upstream.
+commit 8096f229421f7b22433775e928d506f0342e5907 upstream.
 
-Fix slab-out-of-bounds read in the interrupt-URB completion handler.
+For the bpf syscall, we are relying on the compiler to properly zero out
+the bpf_attr union that we copy userspace data into. Unfortunately that
+doesn't always work properly, padding and other oddities might not be
+correctly zeroed, and in some tests odd things have been found when the
+stack is pre-initialized to other values.
 
-The boundary condition should be (length - 1) as we access
-data[position + 1].
+Fix this by explicitly memsetting the structure to 0 before using it.
 
-Reported-and-tested-by: syzbot+37ba33391ad5f3935bbd@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported-by: Maciej Żenczykowski <maze@google.com>
+Reported-by: John Stultz <john.stultz@linaro.org>
+Reported-by: Alexander Potapenko <glider@google.com>
+Reported-by: Alistair Delva <adelva@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://android-review.googlesource.com/c/kernel/common/+/1235490
+Link: https://lore.kernel.org/bpf/20200320094813.GA421650@kroah.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/io_edgeport.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/syscall.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/io_edgeport.c
-+++ b/drivers/usb/serial/io_edgeport.c
-@@ -714,7 +714,7 @@ static void edge_interrupt_callback(stru
- 		/* grab the txcredits for the ports if available */
- 		position = 2;
- 		portNumber = 0;
--		while ((position < length) &&
-+		while ((position < length - 1) &&
- 				(portNumber < edge_serial->serial->num_ports)) {
- 			txCredits = data[position] | (data[position+1] << 8);
- 			if (txCredits) {
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1474,7 +1474,7 @@ static int bpf_obj_get_info_by_fd(const
+ 
+ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
+ {
+-	union bpf_attr attr = {};
++	union bpf_attr attr;
+ 	int err;
+ 
+ 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
+@@ -1486,6 +1486,7 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf
+ 	size = min_t(u32, size, sizeof(attr));
+ 
+ 	/* copy attributes from user space, may be less than sizeof(bpf_attr) */
++	memset(&attr, 0, sizeof(attr));
+ 	if (copy_from_user(&attr, uattr, size) != 0)
+ 		return -EFAULT;
+ 
 
 
