@@ -2,199 +2,126 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7DBC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D296FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EBC20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9C020B1F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:15:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UNdmJIbf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rirqrzEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732201AbgDAQPj (ORCPT
+        id S1732265AbgDAQPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:15:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60889 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728419AbgDAQPi (ORCPT
+        Wed, 1 Apr 2020 12:15:45 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42112 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbgDAQPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:15:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585757736;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C95Q5R2yoRf7nJ/OPhhJaaYPqUp7q75QDzRjhHMzg08=;
-        b=UNdmJIbf8cmKVSeDg4DqyIBPd8SiWXdH/Wp5IooXRMAhAV4M8JnUHRcPYFIoMKAUKmpLvm
-        EZ1dr9YwL+0jexLY/z2tFGYXKugLYsMDYt12gGJW271YoHS1/HvNubFvw9SQdMKnJ748FB
-        UpfDteRughNfvFNkaNmHme1Bbd8REV0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-344-fyKOq8M0PoeYyQlzPZwq1w-1; Wed, 01 Apr 2020 12:15:32 -0400
-X-MC-Unique: fyKOq8M0PoeYyQlzPZwq1w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 906F8477;
-        Wed,  1 Apr 2020 16:15:28 +0000 (UTC)
-Received: from carbon (unknown [10.40.208.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6086110002AE;
-        Wed,  1 Apr 2020 16:15:19 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 18:15:17 +0200
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Toshiaki Makita <toshiaki.makita1@gmail.com>
-Cc:     brouer@redhat.com, Mao Wenan <maowenan@huawei.com>,
-        davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        kuba@kernel.org, hawk@kernel.org, john.fastabend@gmail.com,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        jwi@linux.ibm.com, jianglidong3@jd.com, edumazet@google.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net v2] veth: xdp: use head instead of hard_start
-Message-ID: <20200401181419.7acd2aa6@carbon>
-In-Reply-To: <7a1d55ad-1427-67fe-f204-4d4a0ab2c4b1@gmail.com>
-References: <fb5ab568-9bc8-3145-a8db-3e975ccdf846@gmail.com>
-        <20200331060641.79999-1-maowenan@huawei.com>
-        <7a1d55ad-1427-67fe-f204-4d4a0ab2c4b1@gmail.com>
+        Wed, 1 Apr 2020 12:15:44 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031G9Z4r132264;
+        Wed, 1 Apr 2020 16:10:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=igQpHEyMKJTQgqY+5lVU6UpjVDCEktfMEEUoFi0hzdY=;
+ b=rirqrzEhxiUQjA4Whgg0FsFwpoaHlxZOwChQKYEw30ZadyZYgDq6HwPiLXwva9g8hDl0
+ JYPf85K3A9knnKbMki8AlHxaRhwzkCC8D5OnBTqx/RmadSOBuSMNAbe+4LsasSzGtR0E
+ 2dRImSqjm0aKO0rvUzB2xYeBlb2/tYSbxO0iaxH2uuxZxmsmXtsJ7zehIx3xnNdsJ/40
+ 4yLOlAduuT5vByN2HFFrx8BOgsbqLkv+ellZrWkGE+WVHP/fu5f2usD5kWGVWea5/6Na
+ 9vQ2Ew9fRhYxspuYlghNy6uxF376FvpaNrxM0afzpCVvqv5O8lHX4CmB1ZLRX7c7qODQ IQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 303yun911j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 16:10:21 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031G8DX6040487;
+        Wed, 1 Apr 2020 16:10:20 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 302ga0s8j5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 16:10:20 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 031GAHbs000767;
+        Wed, 1 Apr 2020 16:10:17 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 Apr 2020 09:10:16 -0700
+Date:   Wed, 1 Apr 2020 12:10:36 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Yiqian Wei <yiwei@redhat.com>
+Subject: Re: [PATCH v1 0/2] mm/page_alloc: fix stalls/soft lockups with huge
+ VMs
+Message-ID: <20200401161036.oqk3dakako33bv3o@ca-dmjordan1.us.oracle.com>
+References: <20200401104156.11564-1-david@redhat.com>
+ <596d593e-7f36-0e24-6c67-311bd6971e89@redhat.com>
+ <CAM9Jb+hYPUZXVLr2T8x6Njcscw_+W0e2SCmr_B1fLZuOwgLZuw@mail.gmail.com>
+ <20200401144529.7zkqq4rfdnitg32h@ca-dmjordan1.us.oracle.com>
+ <8d481b8e-7ffc-e9f5-604b-f90856b2b38a@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d481b8e-7ffc-e9f5-604b-f90856b2b38a@redhat.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Mar 2020 15:16:22 +0900
-Toshiaki Makita <toshiaki.makita1@gmail.com> wrote:
-
-> On 2020/03/31 15:06, Mao Wenan wrote:
-> > xdp.data_hard_start is equal to first address of
-> > struct xdp_frame, which is mentioned in
-> > convert_to_xdp_frame(). But the pointer hard_start
-> > in veth_xdp_rcv_one() is 32 bytes offset of frame,
-> > so it should use head instead of hard_start to
-> > set xdp.data_hard_start. Otherwise, if BPF program
-> > calls helper_function such as bpf_xdp_adjust_head, it
-> > will be confused for xdp_frame_end.  
-> 
-> I think you should discuss this more with Jesper before
-> submitting v2.
-> He does not like this to be included now due to merge conflict risk.
-> Basically I agree with him that we don't need to hurry with this fix.
-> 
-> Toshiaki Makita
-> 
+On Wed, Apr 01, 2020 at 05:54:40PM +0200, David Hildenbrand wrote:
+> On 01.04.20 16:45, Daniel Jordan wrote:
+> > On Wed, Apr 01, 2020 at 04:31:51PM +0200, Pankaj Gupta wrote:
+> >>> On 01.04.20 12:41, David Hildenbrand wrote:
+> >>>> Two fixes for misleading stall messages / soft lockups with huge nodes /
+> >>>> zones during boot without CONFIG_PREEMPT.
+> >>>>
+> >>>> David Hildenbrand (2):
+> >>>>   mm/page_alloc: fix RCU stalls during deferred page initialization
+> >>>>   mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
+> >>>>
+> >>>>  mm/page_alloc.c | 2 ++
+> >>>>  1 file changed, 2 insertions(+)
+> >>>>
+> >>>
+> >>> Patch #1 requires "[PATCH v3] mm: fix tick timer stall during deferred
+> >>> page init"
+> >>>
+> >>> https://lkml.kernel.org/r/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+> >>
+> >> Thanks! Took me some time to figure it out.
 > > 
-> > Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-> > Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> > ---
-> >   v2: add fixes tag, as well as commit log.
-> >   drivers/net/veth.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > FYI, I'm planning to post an alternate version of that fix, hopefully today if
+> > all goes well with my testing.
 > > 
-> > diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-> > index d4cbb9e8c63f..5ea550884bf8 100644
-> > --- a/drivers/net/veth.c
-> > +++ b/drivers/net/veth.c
-> > @@ -506,7 +506,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
-> >   		struct xdp_buff xdp;
-> >   		u32 act;
-> >   
-> > -		xdp.data_hard_start = hard_start;
-> > +		xdp.data_hard_start = head;
-> >   		xdp.data = frame->data;
-> >   		xdp.data_end = frame->data + frame->len;
-> >   		xdp.data_meta = frame->data - frame->metasize;
-> >   
+> 
+> Cool, please CC me :)
 
-Below is the patch that I have in my queue.  I've added a Reported-by
-tag to give you some credit, even-though I already had plans to fix
-this, as part of my XDP frame_sz work.
-
-
-[PATCH RFC net-next] veth: adjust hard_start offset on redirect XDP frames
-
-When native XDP redirect into a veth device, the frame arrives in the
-xdp_frame structure. It is then processed in veth_xdp_rcv_one(),
-which can run a new XDP bpf_prog on the packet. Doing so requires
-converting xdp_frame to xdp_buff, but the tricky part is that
-xdp_frame memory area is located in the top (data_hard_start) memory
-area that xdp_buff will point into.
-
-The current code tried to protect the xdp_frame area, by assigning
-xdp_buff.data_hard_start past this memory. This results in 32 bytes
-less headroom to expand into via BPF-helper bpf_xdp_adjust_head().
-
-This protect step is actually not needed, because BPF-helper
-bpf_xdp_adjust_head() already reserve this area, and don't allow
-BPF-prog to expand into it. Thus, it is safe to point data_hard_start
-directly at xdp_frame memory area.
-
-Cc: Toshiaki Makita <makita.toshiaki@lab.ntt.co.jp>
-Fixes: 9fc8d518d9d5 ("veth: Handle xdp_frames in xdp napi ring")
-Reported-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- drivers/net/veth.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index 8cdc4415fa70..2edc04a8ab8e 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -493,13 +493,15 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 					struct veth_xdp_tx_bq *bq)
- {
- 	void *hard_start = frame->data - frame->headroom;
--	void *head = hard_start - sizeof(struct xdp_frame);
- 	int len = frame->len, delta = 0;
- 	struct xdp_frame orig_frame;
- 	struct bpf_prog *xdp_prog;
- 	unsigned int headroom;
- 	struct sk_buff *skb;
- 
-+	/* bpf_xdp_adjust_head() assures BPF cannot access xdp_frame area */
-+	hard_start -= sizeof(struct xdp_frame);
-+
- 	rcu_read_lock();
- 	xdp_prog = rcu_dereference(rq->xdp_prog);
- 	if (likely(xdp_prog)) {
-@@ -521,7 +523,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			break;
- 		case XDP_TX:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (unlikely(veth_xdp_tx(rq->dev, &xdp, bq) < 0)) {
- 				trace_xdp_exception(rq->dev, xdp_prog, act);
-@@ -533,7 +534,6 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 			goto xdp_xmit;
- 		case XDP_REDIRECT:
- 			orig_frame = *frame;
--			xdp.data_hard_start = head;
- 			xdp.rxq->mem = frame->mem;
- 			if (xdp_do_redirect(rq->dev, &xdp, xdp_prog)) {
- 				frame = &orig_frame;
-@@ -555,7 +555,7 @@ static struct sk_buff *veth_xdp_rcv_one(struct veth_rq *rq,
- 	rcu_read_unlock();
- 
- 	headroom = sizeof(struct xdp_frame) + frame->headroom - delta;
--	skb = veth_build_skb(head, headroom, len, 0);
-+	skb = veth_build_skb(hard_start, headroom, len, 0);
- 	if (!skb) {
- 		xdp_return_frame(frame);
- 		goto err;
-
-
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+Sure, in fact you already were! :)
