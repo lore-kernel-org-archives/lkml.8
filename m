@@ -2,339 +2,220 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F75C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAC3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C74720719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A58206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B9MKkhnJ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PvJrMUxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732908AbgDAUIc (ORCPT
+        id S1732895AbgDAUK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:08:32 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35861 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732651AbgDAUIc (ORCPT
+        Wed, 1 Apr 2020 16:10:56 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57758 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732645AbgDAUK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 16:08:32 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c23so678858pgj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 13:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R7eDdx1qelZyEjmG13/wh77DXdQeKNXE0tobEN6ZDRo=;
-        b=B9MKkhnJIwiSLqyk04z7PvShDGSOfDwd4jup49SV2akCRHhK5lWMykJnlxCnljcpu7
-         tT8bgrDh4a792FlKsZD4WsS3g0YD4G5WklUccuG9uDteo9NL1Z/EJwI+VyUpwlCxBbsW
-         1beVk5wXw/mAA4n3ulmPm8iauL9ltHw5NyKS4SGnKPYMT5FJ4a5mNLu3oW6VRZEPBQe7
-         lQTk7bugRJNfDKiWWujoSAK2wqffxr4DQqOaVZrCOFBfsfbpii0SzCln+6uXGp5VYmyw
-         HqzfFieAKAYZLIx0jraT94AlRahVQpVh3Qq5hle0/WSvPmxDfs+SIFOQIn+fX667Fldh
-         pl9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R7eDdx1qelZyEjmG13/wh77DXdQeKNXE0tobEN6ZDRo=;
-        b=s0TKTdFpaPGH9fDiRtmz7Hupvi5K4udVzhs9zYuL8fxwmdngdye8Zyng+HFyfrmAd/
-         3fxeDUyJqCWJzXos3jiooMHnzubJEiBRyI5XBQwsfgElxcHfZZ3OmYjfSSJ/cKIqWZen
-         3mJ9oJ6UFw3USQjgRxaqxjV7GW8KwA+l3uBYvVPm8xKuEy0n3Ii7Ox+3lZCBVwDcAeR3
-         dqkau7vw+ka9bzueSH5megq7g1+X7HuAp2xrJVK77XiiH6JLAr37tOdlPb0GXzDkcbpt
-         IBFTTrhChbIn+oRsOreJZXiusY+vs21HC7krv88/pVFd9ZL3vDZd2FO6Hq5tDxX4dLep
-         d7ZQ==
-X-Gm-Message-State: ANhLgQ0dtZLQ+SL7KshXZpVCgtmHh1DUTsoDtQDpch8ZUVfZiXf5JA6A
-        MDc8Kxv2zDD+K5X9toxSlq0J5/K57SQ=
-X-Google-Smtp-Source: ADFU+vvZpZ30+dH95jIKlKit8eUxIFKJ0pbqc3JKrtLESC+2S8FQXlCxe8nS8iewMey88u4dz619Lg==
-X-Received: by 2002:a62:1894:: with SMTP id 142mr25672341pfy.27.1585771710780;
-        Wed, 01 Apr 2020 13:08:30 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c128sm2145906pfa.11.2020.04.01.13.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 13:08:30 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 13:08:27 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        sidgup@codeaurora.org
-Subject: Re: [PATCH v2 1/2] remoteproc: Add character device interface
-Message-ID: <20200401200827.GF267644@minitux>
-References: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
+        Wed, 1 Apr 2020 16:10:56 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031K9bp3134452;
+        Wed, 1 Apr 2020 20:10:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=wJinjoLAQHZMEzBy4iU8Y9RdUeANodmk/HVw8SZfl+E=;
+ b=PvJrMUxn6vPAXstz4sGR1kKaY3s31uGIFMhupzZPnzAm95W/D95sD0dFQSHcnSQmEn3e
+ 1VgtN9scgbNgA0A8pDX8kVeInZUv45tHzCaX0OdAKReZC/UGs0Qxg+jF7+uckJ/Q0Mc1
+ KoZL3T1WqufEeHt4ack67vBDXZVGES9xndln6Fgnb8cCSFXunnZ98/ex+m5H0L4Imyn/
+ usNR51PqID0ja7N7UwG1M2AWIw95xl7eiP0g9YzvX5xcsMOkJK8Ai3TPMetoPQCPHCHT
+ vTuvBcE7s9GfDwXMm5WmXrBTgTl7lt2tbBl8LZmZhMQXlpVNchUbZFBFmt83Smmvztug nQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 303yuna8yu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 20:10:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031K8NtF062120;
+        Wed, 1 Apr 2020 20:08:39 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 302g4uac7v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Apr 2020 20:08:39 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 031K8ak1022986;
+        Wed, 1 Apr 2020 20:08:36 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 01 Apr 2020 13:08:35 -0700
+Date:   Wed, 1 Apr 2020 16:08:55 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mhocko@suse.com, linux-mm@kvack.org, dan.j.williams@intel.com,
+        shile.zhang@linux.alibaba.com, daniel.m.jordan@oracle.com,
+        ktkhai@virtuozzo.com, david@redhat.com, jmorris@namei.org,
+        sashal@kernel.org
+Subject: Re: [PATCH] mm: initialize deferred pages with interrupts enabled
+Message-ID: <20200401200855.d23xcwznr5cm67p2@ca-dmjordan1.us.oracle.com>
+References: <20200401193238.22544-1-pasha.tatashin@soleen.com>
+ <20200401200027.vsm5roobllewniea@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
+In-Reply-To: <20200401200027.vsm5roobllewniea@ca-dmjordan1.us.oracle.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=2
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ suspectscore=2 mlxscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 31 Mar 17:03 PDT 2020, Rishabh Bhatnagar wrote:
-
-> Add the character device interface for userspace applications.
-> This interface can be used in order to boot up and shutdown
-> remote subsystems. Currently there is only a sysfs interface
-> which the userspace clients can use. If a usersapce application
-> crashes after booting the remote processor does not get any
-> indication about the crash. It might still assume that the
-> application is running. For example modem uses remotefs service
-> to fetch data from disk/flash memory. If the remotefs service
-> crashes, modem keeps on requesting data which might lead to a
-> crash. Adding a character device interface makes the remote
-> processor tightly coupled with the user space application.
-> A crash of the application leads to a close on the file descriptors
-> therefore shutting down the remoteproc.
+On Wed, Apr 01, 2020 at 04:00:27PM -0400, Daniel Jordan wrote:
+> On Wed, Apr 01, 2020 at 03:32:38PM -0400, Pavel Tatashin wrote:
+> > Initializing struct pages is a long task and keeping interrupts disabled
+> > for the duration of this operation introduces a number of problems.
+> > 
+> > 1. jiffies are not updated for long period of time, and thus incorrect time
+> >    is reported. See proposed solution and discussion here:
+> >    lkml/20200311123848.118638-1-shile.zhang@linux.alibaba.com
+> > 2. It prevents farther improving deferred page initialization by allowing
 > 
-> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-> ---
->  drivers/remoteproc/Kconfig               |   9 +++
->  drivers/remoteproc/Makefile              |   1 +
->  drivers/remoteproc/remoteproc_cdev.c     | 100 +++++++++++++++++++++++++++++++
->  drivers/remoteproc/remoteproc_internal.h |  22 +++++++
->  include/linux/remoteproc.h               |   2 +
->  5 files changed, 134 insertions(+)
->  create mode 100644 drivers/remoteproc/remoteproc_cdev.c
+>                                                                    not allowing
+> >    inter-node multi-threading.
 > 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index de3862c..6374b79 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -14,6 +14,15 @@ config REMOTEPROC
->  
->  if REMOTEPROC
->  
-> +config REMOTEPROC_CDEV
-> +	bool "Remoteproc character device interface"
-> +	help
-> +	  Say y here to have a character device interface for Remoteproc
-> +	  framework. Userspace can boot/shutdown remote processors through
-> +	  this interface.
-> +
-> +	  It's safe to say N if you don't want to use this interface.
-> +
->  config IMX_REMOTEPROC
->  	tristate "IMX6/7 remoteproc support"
->  	depends on ARCH_MXC
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index e30a1b1..b7d4f77 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
->  remoteproc-y				+= remoteproc_sysfs.o
->  remoteproc-y				+= remoteproc_virtio.o
->  remoteproc-y				+= remoteproc_elf_loader.o
-> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
->  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
->  obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
->  obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
-> diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
-> new file mode 100644
-> index 0000000..8182bd1
-> --- /dev/null
-> +++ b/drivers/remoteproc/remoteproc_cdev.c
-> @@ -0,0 +1,100 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Character device interface driver for Remoteproc framework.
-> + *
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/cdev.h>
-> +#include <linux/fs.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/remoteproc.h>
-> +
-> +#include "remoteproc_internal.h"
-> +
-> +#define NUM_RPROC_DEVICES	64
-> +static dev_t rproc_cdev;
-> +static DEFINE_IDA(cdev_minor_ida);
-> +
-> +static int rproc_cdev_open(struct inode *inode, struct file *file)
-> +{
-> +	struct rproc *rproc;
-> +
-> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
+>      intra-node
+> 
+> ...
+> > After:
+> > [    1.632580] node 0 initialised, 12051227 pages in 436ms
+> 
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+> Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> 
+> > Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> 
+> Freezing jiffies for a while during boot sounds like stable to me, so
+> 
+> Cc: <stable@vger.kernel.org>    [4.17.x+]
+> 
+> 
+> Can you please add a comment to mmzone.h above node_size_lock, something like
+> 
+>          * Must be held any time you expect node_start_pfn,
+>          * node_present_pages, node_spanned_pages or nr_zones to stay constant.
+> +        * Also synchronizes pgdat->first_deferred_pfn during deferred page
+> +        * init.
+>          ...
+>         spinlock_t node_size_lock;
+> 
+> > @@ -1854,18 +1859,6 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
+> >  		return false;
+> >  
+> >  	pgdat_resize_lock(pgdat, &flags);
+> > -
+> > -	/*
+> > -	 * If deferred pages have been initialized while we were waiting for
+> > -	 * the lock, return true, as the zone was grown.  The caller will retry
+> > -	 * this zone.  We won't return to this function since the caller also
+> > -	 * has this static branch.
+> > -	 */
+> > -	if (!static_branch_unlikely(&deferred_pages)) {
+> > -		pgdat_resize_unlock(pgdat, &flags);
+> > -		return true;
+> > -	}
+> > -
+> 
+> Huh, looks like this wasn't needed even before this change.
+> 
+> 
+> The rest looks fine.
+> 
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
-I would prefer this to be a on a single line
-	struct rproc *rproc = container_of(..);
+...except for I forgot about the touch_nmi_watchdog() calls.  I think you'd
+need something kind of like this before your patch.
 
-> +
-> +	if (!rproc)
+---8<---
 
-I don't think this is possible.
+From: Daniel Jordan <daniel.m.jordan@oracle.com>
+Date: Fri, 27 Mar 2020 17:29:05 -0400
+Subject: [PATCH] mm: call touch_nmi_watchdog() on max order boundaries in
+ deferred init
 
-> +		return -EINVAL;
-> +
-> +	if (rproc->state == RPROC_RUNNING)
-> +		return -EBUSY;
-> +
+deferred_init_memmap() disables interrupts the entire time, so it calls
+touch_nmi_watchdog() periodically to avoid soft lockup splats.  Soon it
+will run with interrupts enabled, at which point cond_resched() should
+be used instead.
 
-This is racy, it's possible that state wasn't RUNNING, but at the time
-we're entering rproc_boot() it is - or as Clement correctly points out,
-the core might be in CRASHED state.
+deferred_grow_zone() makes the same watchdog calls through code shared
+with deferred init but will continue to run with interrupts disabled, so
+it can't call cond_resched().
 
-> +	return rproc_boot(rproc);
+Pull the watchdog calls up to these two places to allow the first to be
+changed later, independently of the second.  The frequency reduces from
+twice per pageblock (init and free) to once per max order block.
 
-Feels like we would want a variant of rproc_boot() that doesn't do
-refcounting... Maybe a rproc_boot_exclusive() that takes the mutex and
-then fails if the core is refcounted already?
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+---
+ mm/page_alloc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> +}
-> +
-> +static int rproc_cdev_release(struct inode *inode, struct file *file)
-> +{
-> +	struct rproc *rproc;
-> +
-> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
-> +
-> +	if (!rproc || rproc->state != RPROC_RUNNING)
-> +		return -EINVAL;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 212734c4f8b0..4cf18c534233 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1639,7 +1639,6 @@ static void __init deferred_free_pages(unsigned long pfn,
+ 		} else if (!(pfn & nr_pgmask)) {
+ 			deferred_free_range(pfn - nr_free, nr_free);
+ 			nr_free = 1;
+-			touch_nmi_watchdog();
+ 		} else {
+ 			nr_free++;
+ 		}
+@@ -1669,7 +1668,6 @@ static unsigned long  __init deferred_init_pages(struct zone *zone,
+ 			continue;
+ 		} else if (!page || !(pfn & nr_pgmask)) {
+ 			page = pfn_to_page(pfn);
+-			touch_nmi_watchdog();
+ 		} else {
+ 			page++;
+ 		}
+@@ -1813,8 +1811,10 @@ static int __init deferred_init_memmap(void *data)
+ 	 * that we can avoid introducing any issues with the buddy
+ 	 * allocator.
+ 	 */
+-	while (spfn < epfn)
++	while (spfn < epfn) {
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++		touch_nmi_watchdog();
++	}
+ zone_empty:
+ 	pgdat_resize_unlock(pgdat, &flags);
+ 
+@@ -1908,6 +1908,7 @@ deferred_grow_zone_locked(pg_data_t *pgdat, struct zone *zone,
+ 		first_deferred_pfn = spfn;
+ 
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++		touch_nmi_watchdog();
+ 
+ 		/* We should only stop along section boundaries */
+ 		if ((first_deferred_pfn ^ spfn) < PAGES_PER_SECTION)
+-- 
+2.25.0
 
-rproc can't be NULL here and the core might be in CRASHED state here, in
-which case we still want to abort that and shut down the core...
-
-Note that in the event of calling close() the return value is discarded
-on the way to userspace and in the event that the process is killed we
-still expect the remoteproc to be shut down (if the refcount hit 0). 
-
-> +
-> +	rproc_shutdown(rproc);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations rproc_fops = {
-> +	.open = rproc_cdev_open,
-> +	.release = rproc_cdev_release,
-> +};
-> +
-> +int rproc_char_device_add(struct rproc *rproc)
-> +{
-> +	int ret, minor;
-> +	dev_t cdevt;
-> +
-> +	minor = ida_simple_get(&cdev_minor_ida, 0, NUM_RPROC_DEVICES,
-
-Can't you use rproc->index as minor?
-
-> +			       GFP_KERNEL);
-> +	if (minor < 0) {
-> +		dev_err(&rproc->dev, "%s: No more minor numbers left! rc:%d\n",
-> +			__func__, minor);
-> +		return -ENODEV;
-> +	}
-> +
-> +	cdev_init(&rproc->char_dev, &rproc_fops);
-> +	rproc->char_dev.owner = THIS_MODULE;
-> +
-> +	cdevt = MKDEV(MAJOR(rproc_cdev), minor);
-> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
-> +	if (ret < 0)
-> +		ida_simple_remove(&cdev_minor_ida, minor);
-> +
-> +	rproc->dev.devt = cdevt;
-> +	return ret;
-> +}
-> +
-> +void rproc_char_device_remove(struct rproc *rproc)
-> +{
-> +	__unregister_chrdev(MAJOR(rproc->dev.devt), MINOR(rproc->dev.devt), 1,
-> +			    "rproc");
-
-Shouldn't this be cdev_del()?
-
-> +	ida_simple_remove(&cdev_minor_ida, MINOR(rproc->dev.devt));
-> +}
-> +
-> +void __init rproc_init_cdev(void)
-> +{
-> +	int ret;
-> +
-> +	ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES, "rproc");
-> +	if (ret < 0) {
-> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
-> +		return;
-
-Drop this return, and hence the {}
-
-> +	}
-> +}
-> +
-> +void __exit rproc_exit_cdev(void)
-> +{
-> +	__unregister_chrdev(MAJOR(rproc_cdev), 0, NUM_RPROC_DEVICES, "rproc");
-
-unregister_chrdev_region();
-
-> +}
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index 493ef92..28d61a1 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char *name, struct rproc *rproc,
->  int rproc_init_sysfs(void);
->  void rproc_exit_sysfs(void);
->  
-> +#ifdef CONFIG_REMOTEPROC_CDEV
-> +void rproc_init_cdev(void);
-> +void rproc_exit_cdev(void);
-> +int rproc_char_device_add(struct rproc *rproc);
-> +void rproc_char_device_remove(struct rproc *rproc);
-> +#else
-> +static inline void rproc_init_cdev(void)
-> +{
-> +}
-> +static inline void rproc_exit_cdev(void)
-> +{
-> +}
-> +static inline int rproc_char_device_add(struct rproc *rproc)
-> +{
-> +	return 0;
-> +}
-> +static inline void  rproc_char_device_remove(struct rproc *rproc)
-> +{
-> +}
-> +#endif
-> +
->  void rproc_free_vring(struct rproc_vring *rvring);
->  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->  
-> @@ -63,6 +84,7 @@ struct resource_table *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
->  struct rproc_mem_entry *
->  rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
->  
-> +
->  static inline
->  int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
->  {
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index 16ad666..c4ca796 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -37,6 +37,7 @@
->  
->  #include <linux/types.h>
->  #include <linux/mutex.h>
-> +#include <linux/cdev.h>
->  #include <linux/virtio.h>
->  #include <linux/completion.h>
->  #include <linux/idr.h>
-> @@ -514,6 +515,7 @@ struct rproc {
->  	bool auto_boot;
->  	struct list_head dump_segments;
->  	int nb_vdev;
-> +	struct cdev char_dev;
->  };
->  
->  /**
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
