@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B73F3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772BDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7751720BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F79920857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758275;
-	bh=8gWxQB1hy2Rs45/USgNRR4m1Ti7GPXXLLt/ZXidVBr0=;
+	s=default; t=1585758279;
+	bh=mZBgjR/pD6ukBMG2z02H5OO7eUO/ErsTQCWK41HoDYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMeqeElqtilMU41Tsm+Rs38Szir6U7FzwEP7hiXFQbi8HbGlTBjTsHlyTRH3N63xG
-	 YKlUi50CdFfBR3iFE+7HaONbZJa6khtdMa604M/OFeBr2cUG11fbfO6rblMDZ95G3y
-	 WSn5kmAyg3W1siZuDlB2SqGKh5JG66tbt48Gyy4A=
+	b=qoETYjStjIMnuTzp+vtGnKyDz6R3Sfa/c1uggSAqSGB9lGVLdi9w3AH0RyexmxyHp
+	 e05Lzddp9pzztf5goskOF8AEIi0WgHwhQXo3aWgam9NLmW/UcoafHaR1ZjcMrLhj0a
+	 Jpomf4sFRxR1oL4gSv37t5dVoDDsz4l+iXCL/Xsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbgDAQYe (ORCPT
+        id S2387706AbgDAQYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:24:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48062 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733249AbgDAQYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:24:25 -0400
+        id S1732888AbgDAQYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:24:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E99212CC;
-        Wed,  1 Apr 2020 16:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A65D0214D8;
+        Wed,  1 Apr 2020 16:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758264;
-        bh=8gWxQB1hy2Rs45/USgNRR4m1Ti7GPXXLLt/ZXidVBr0=;
+        s=default; t=1585758273;
+        bh=mZBgjR/pD6ukBMG2z02H5OO7eUO/ErsTQCWK41HoDYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LBkQb9l7gRHySzXmdYrGh7/x2wp2mkVTR5EH8mrGUQZpjBguWSBNGzBDic9kbfV+y
-         FpZed7AyUayEqvz0uOWws+gkk+mr24f+QVySS904+JDlJ/pD4UwpHjV6HQYDm9YUJc
-         y4jbaU0Bw95w8La64wWbF0cAYNfMLmoXo6eRPnEs=
+        b=0/INsVn9YLEqcCWH6Gihzs2Y57jfRtM5NqDt8gAF2bJM4wGGy214N/5yw+tGwWbsJ
+         w4FULyNyMpj0YcNwhutB+BzuUI+SvSInQ9kdp8jBQIXEnzcaciJIHgxOWwQ0/OLb5R
+         uqhSGZcGryt0ivirWNy6B1xJdnf115H126lILLG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 034/116] nfs: add minor version to nfs_server_key for fscache
-Date:   Wed,  1 Apr 2020 18:16:50 +0200
-Message-Id: <20200401161546.788908370@linuxfoundation.org>
+Subject: [PATCH 4.19 004/116] mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+Date:   Wed,  1 Apr 2020 18:16:20 +0200
+Message-Id: <20200401161542.978611224@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,74 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 55dee1bc0d72877b99805e42e0205087e98b9edd ]
+[ Upstream commit 055e04830d4544c57f2a5192a26c9e25915c29c0 ]
 
-An NFS client that mounts multiple exports from the same NFS
-server with higher NFSv4 versions disabled (i.e. 4.2) and without
-forcing a specific NFS version results in fscache index cookie
-collisions and the following messages:
-[  570.004348] FS-Cache: Duplicate cookie detected
+It has turned out that the sdhci-omap controller requires the R1B response,
+for commands that has this response associated with them. So, converting
+from an R1B to an R1 response for a CMD6 for example, leads to problems
+with the HW busy detection support.
 
-Each nfs_client structure should have its own fscache index cookie,
-so add the minorversion to nfs_server_key.
+Fix this by informing the mmc core about the requirement, via setting the
+host cap, MMC_CAP_NEED_RSP_BUSY.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=200145
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Reported-by: Faiz Abbas <faiz_abbas@ti.com>
+Cc: <stable@vger.kernel.org>
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: Faiz Abbas <faiz_abbas@ti.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/client.c     | 1 +
- fs/nfs/fscache.c    | 2 ++
- fs/nfs/nfs4client.c | 1 -
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-omap.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 0a2b59c1ecb3d..07c5ddd5d6d50 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -157,6 +157,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
- 	if ((clp = kzalloc(sizeof(*clp), GFP_KERNEL)) == NULL)
- 		goto error_0;
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index e9793d8e83a00..05ade7a2dd243 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -1147,6 +1147,9 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+ 	host->mmc_host_ops.execute_tuning = sdhci_omap_execute_tuning;
+ 	host->mmc_host_ops.enable_sdio_irq = sdhci_omap_enable_sdio_irq;
  
-+	clp->cl_minorversion = cl_init->minorversion;
- 	clp->cl_nfs_mod = cl_init->nfs_mod;
- 	if (!try_module_get(clp->cl_nfs_mod->owner))
- 		goto error_dealloc;
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index a7bc4e0494f92..6f45b1a957397 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -35,6 +35,7 @@ static DEFINE_SPINLOCK(nfs_fscache_keys_lock);
- struct nfs_server_key {
- 	struct {
- 		uint16_t	nfsversion;		/* NFS protocol version */
-+		uint32_t	minorversion;		/* NFSv4 minor version */
- 		uint16_t	family;			/* address family */
- 		__be16		port;			/* IP port */
- 	} hdr;
-@@ -59,6 +60,7 @@ void nfs_fscache_get_client_cookie(struct nfs_client *clp)
- 
- 	memset(&key, 0, sizeof(key));
- 	key.hdr.nfsversion = clp->rpc_ops->version;
-+	key.hdr.minorversion = clp->cl_minorversion;
- 	key.hdr.family = clp->cl_addr.ss_family;
- 
- 	switch (clp->cl_addr.ss_family) {
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 86991bcfbeb12..faaabbedc891d 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -210,7 +210,6 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
- 	INIT_LIST_HEAD(&clp->cl_ds_clients);
- 	rpc_init_wait_queue(&clp->cl_rpcwaitq, "NFS client");
- 	clp->cl_state = 1 << NFS4CLNT_LEASE_EXPIRED;
--	clp->cl_minorversion = cl_init->minorversion;
- 	clp->cl_mvops = nfs_v4_minor_ops[cl_init->minorversion];
- 	clp->cl_mig_gen = 1;
- #if IS_ENABLED(CONFIG_NFS_V4_1)
++	/* R1B responses is required to properly manage HW busy detection. */
++	mmc->caps |= MMC_CAP_NEED_RSP_BUSY;
++
+ 	ret = sdhci_setup_host(host);
+ 	if (ret)
+ 		goto err_put_sync;
 -- 
 2.20.1
 
