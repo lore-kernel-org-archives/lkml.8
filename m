@@ -2,64 +2,56 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC24C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCE5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E107020658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A80206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759009;
-	bh=HjNkAYa0nUQX9P1DkfCisQvidgdIi+0kp1Rp+U8Jl6s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=pvGT4E6N7d9vtrng+kRjlRyepkGPZXsBCqOkmfdqL3vZsbc4tZBC4DyXExDOS3Omm
-	 x9+lqIIf/IY51l16laI0hmClFn84uoW+n0KqbnJuHOTakGaDt5vqAUuXTZ1UJPM2bo
-	 IyVrluSp5G4/Z/aDASyuRf4eDdgeMCueYGb+e964=
+	s=default; t=1585759011;
+	bh=KcQDRppZ2VF40zfirse00hJ9t9a1++npF9ADLet5GIQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g3sN0Tnh9f9x8fjb+6d9ooujzJsjukZftI6dTxTqInBPg19ax4SiYHl93QeZYNgmo
+	 NbY7T0hA8lgiBId9I/Yi2nebezF98P/7TgHP6qRo8NRmVee61SOZxo8sjslU8WdMGw
+	 2q1Aylv8XH55EnSRVq0+v9KvkOKypcnygGpf6cNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388884AbgDAQgr (ORCPT
+        id S2388891AbgDAQgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:36:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35708 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388634AbgDAQgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:40 -0400
+        id S2388506AbgDAQgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B41A20857;
-        Wed,  1 Apr 2020 16:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54AAA20BED;
+        Wed,  1 Apr 2020 16:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758999;
-        bh=HjNkAYa0nUQX9P1DkfCisQvidgdIi+0kp1Rp+U8Jl6s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RxSkCOipN4YlMuabwO9eDWrh+U7QXJzB3YyrvdsLCSZHqUoEjUbY13UsznzgW9Akw
-         LsE1n76z6SJf4T+iJVT2cK0tkGc1QSej4YoYNrThA/lLi9YUcYbNzqDwnBcQqsjV+N
-         O2heuDwC9VrujcQrNRGr5OTgbeIo0kcw2rDr1RHA=
+        s=default; t=1585759006;
+        bh=KcQDRppZ2VF40zfirse00hJ9t9a1++npF9ADLet5GIQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f2mPX3djNeMG2jqJw5DvBVFrB6KP9B0fq3wOlTTCfLeofK1kPlXeZZ1GH9YT0nAr2
+         SNXQqvlD0n3La8ycVRtQEOVBqbPUZuh/B8NsT20gmr75GxxR2fOVxme2lHoeqLt2Z8
+         j5Qc7QbxBPSOKLwZM5jzjXw/Mb0bMeiymk4TnJLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.9 000/102] 4.9.218-rc1 review
-Date:   Wed,  1 Apr 2020 18:17:03 +0200
-Message-Id: <20200401161530.451355388@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 047/102] hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
+Date:   Wed,  1 Apr 2020 18:17:50 +0200
+Message-Id: <20200401161541.683370714@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
+In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
+References: <20200401161530.451355388@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.218-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.218-rc1
-X-KernelTest-Deadline: 2020-04-03T16:15+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,443 +59,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.9.218 release.
-There are 102 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.218-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.9.218-rc1
-
-disconnect3d <dominik.b.czarnota@gmail.com>
-    perf map: Fix off by one in strncpy() size argument
-
-Ilie Halip <ilie.halip@gmail.com>
-    arm64: alternative: fix build with clang integrated assembler
-
-Marek Vasut <marex@denx.de>
-    net: ks8851-ml: Fix IO operations, again
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    bpf: Explicitly memset the bpf_attr structure
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: fix use-after-free in vt_in_use()
-
-Peter Zijlstra <peterz@infradead.org>
-    locking/atomic, kref: Add kref_read()
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
-
-Eric Biggers <ebiggers@google.com>
-    vt: vt_ioctl: remove unnecessary console allocation checks
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: switch vt_dont_switch to bool
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
-
-Jiri Slaby <jslaby@suse.cz>
-    vt: selection, introduce vc_is_sel
-
-Johannes Berg <johannes.berg@intel.com>
-    mac80211: fix authentication with iwlwifi/mvm
-
-Jouni Malinen <jouni@codeaurora.org>
-    mac80211: Check port authorization in the ieee80211_tx_dequeue() case
-
-Johan Hovold <johan@kernel.org>
-    media: xirlink_cit: add missing descriptor sanity checks
-
-Johan Hovold <johan@kernel.org>
-    media: stv06xx: add missing descriptor sanity checks
-
-Johan Hovold <johan@kernel.org>
-    media: dib0700: fix rc endpoint lookup
-
-Johan Hovold <johan@kernel.org>
-    media: ov519: add missing endpoint sanity checks
-
-Eric Biggers <ebiggers@google.com>
-    libfs: fix infoleak in simple_attr_read()
-
-Qiujun Huang <hqjagain@gmail.com>
-    staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
-
-Qiujun Huang <hqjagain@gmail.com>
-    staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
-
-Larry Finger <Larry.Finger@lwfinger.net>
-    staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
-
-Johan Hovold <johan@kernel.org>
-    media: usbtv: fix control-message timeouts
-
-Johan Hovold <johan@kernel.org>
-    media: flexcop-usb: fix endpoint sanity check
-
-Mans Rullgard <mans@mansr.com>
-    usb: musb: fix crash with highmen PIO and usbmon
-
-Qiujun Huang <hqjagain@gmail.com>
-    USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interrupt_callback
-
-Matthias Reichl <hias@horus.com>
-    USB: cdc-acm: restore capability check order
-
-Pawel Dembicki <paweldembicki@gmail.com>
-    USB: serial: option: add Wistron Neweb D19Q1
-
-Pawel Dembicki <paweldembicki@gmail.com>
-    USB: serial: option: add BroadMobi BM806U
-
-Pawel Dembicki <paweldembicki@gmail.com>
-    USB: serial: option: add support for ASKEY WWHC050
-
-Masami Hiramatsu <mhiramat@kernel.org>
-    tools: Let O= makes handle a relative path with -C option
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    Input: raydium_i2c_ts - fix error codes in raydium_i2c_boot_trigger()
-
-Gustavo A. R. Silva <gustavo@embeddedor.com>
-    Input: raydium_i2c_ts - use true and false for boolean values
-
-Torsten Hilbrich <torsten.hilbrich@secunet.com>
-    vti6: Fix memory leak of skb if input policy check fails
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nft_fwd_netdev: validate family and chain type
-
-YueHaibing <yuehaibing@huawei.com>
-    xfrm: policy: Fix doulbe free in xfrm_policy_timer
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
-
-Xin Long <lucien.xin@gmail.com>
-    xfrm: fix uctx len check in verify_sec_ctx_len
-
-Nicolas Dichtel <nicolas.dichtel@6wind.com>
-    vti[6]: fix packet tx through bpf_redirect() in XinY cases
-
-Edward Cree <ecree@solarflare.com>
-    genirq: Fix reference leaks on irq affinity notifiers
-
-Johannes Berg <johannes.berg@intel.com>
-    mac80211: mark station unauthorized before key removal
-
-Martin K. Petersen <martin.petersen@oracle.com>
-    scsi: sd: Fix optimal I/O size for devices that change reported values
-
-Dirk Mueller <dmueller@suse.com>
-    scripts/dtc: Remove redundant YYLOC global declaration
-
-Masami Hiramatsu <mhiramat@kernel.org>
-    perf probe: Do not depend on dwfl_module_addrsym()
-
-Roger Quadros <rogerq@ti.com>
-    ARM: dts: omap5: Add bus_dma_limit for L3 bus
-
-Roger Quadros <rogerq@ti.com>
-    ARM: dts: dra7: Add bus_dma_limit for L3 bus
-
-Chuhong Yuan <hslester96@gmail.com>
-    i2c: hix5hd2: add missed clk_disable_unprepare in remove
-
-Dominik Czarnota <dominik.b.czarnota@gmail.com>
-    sxgbe: Fix off by one in samsung driver strncpy size arg
-
-Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
-    mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
-
-Wen Xiong <wenxiong@linux.vnet.ibm.com>
-    scsi: ipr: Fix softlockup when rescanning devices in petitboot
-
-Madalin Bucur <madalin.bucur@nxp.com>
-    dt-bindings: net: FMan erratum A050385
-
-Mike Gilbert <floppym@gentoo.org>
-    cpupower: avoid multiple definition with gcc -fno-common
-
-Sabrina Dubroca <sd@queasysnail.net>
-    net: ipv4: don't let PMTU updates increase route MTU
-
-Sean Christopherson <sean.j.christopherson@intel.com>
-    KVM: VMX: Do not allow reexecute_instruction() when skipping MMIO instr
-
-Taehee Yoo <ap420073@gmail.com>
-    hsr: set .netnsok flag
-
-Taehee Yoo <ap420073@gmail.com>
-    hsr: add restart routine into hsr_get_node_list()
-
-Taehee Yoo <ap420073@gmail.com>
-    hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
-
-Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-    net: mvneta: Fix the case where the last poll did not process all rx
-
-Taehee Yoo <ap420073@gmail.com>
-    vxlan: check return value of gro_cells_init()
-
-Oliver Hartkopp <socketcan@hartkopp.net>
-    slcan: not call free_netdev before rtnl_unlock in slcan_open
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    NFC: fdp: Fix a signedness bug in fdp_nci_send_patch()
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    net_sched: keep alloc_hash updated after hash allocation
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    net_sched: cls_route: remove the right filter from hashtable
-
-Florian Fainelli <f.fainelli@gmail.com>
-    net: dsa: Fix duplicate frames flooded by learning
-
-Willem de Bruijn <willemb@google.com>
-    macsec: restrict to ethernet devices
-
-Taehee Yoo <ap420073@gmail.com>
-    hsr: fix general protection fault in hsr_addr_is_self()
-
-Lyude Paul <lyude@redhat.com>
-    Revert "drm/dp_mst: Skip validating ports during destruction, just ref"
-
-Johan Hovold <johan@kernel.org>
-    staging: greybus: loopback_test: fix potential path truncations
-
-Johan Hovold <johan@kernel.org>
-    staging: greybus: loopback_test: fix potential path truncation
-
-Cristian Marussi <cristian.marussi@arm.com>
-    arm64: smp: fix smp_send_stop() behaviour
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    ALSA: hda/realtek: Fix pop noise on ALC225
-
-Thomas Gleixner <tglx@linutronix.de>
-    futex: Unbreak futex hashing
-
-Peter Zijlstra <peterz@infradead.org>
-    futex: Fix inode life-time issue
-
-Nathan Chancellor <natechancellor@gmail.com>
-    kbuild: Disable -Wpointer-to-enum-cast
-
-Anthony Mallet <anthony.mallet@laas.fr>
-    USB: cdc-acm: fix rounding error in TIOCSSERIAL
-
-Anthony Mallet <anthony.mallet@laas.fr>
-    USB: cdc-acm: fix close_delay and closing_wait units in TIOCSSERIAL
-
-Joerg Roedel <jroedel@suse.de>
-    x86/mm: split vmalloc_sync_all()
-
-Vlastimil Babka <vbabka@suse.cz>
-    mm, slub: prevent kmalloc_node crashes and memory leaks
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    mm: slub: be more careful about the double cmpxchg of freelist
-
-Chunguang Xu <brookxu@tencent.com>
-    memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
-
-Corentin Labbe <clabbe@baylibre.com>
-    rtc: max8907: add missing select REGMAP_IRQ
-
-Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    intel_th: Fix user-visible error codes
-
-Samuel Thibault <samuel.thibault@ens-lyon.org>
-    staging/speakup: fix get_word non-space look-ahead
-
-Michael Straube <straube.linux@gmail.com>
-    staging: rtl8188eu: Add device id for MERCUSYS MW150US v2
-
-Michał Mirosław <mirq-linux@rere.qmqm.pl>
-    mmc: sdhci-of-at91: fix cd-gpios for SAMA5D2
-
-Stephan Gerhold <stephan@gerhold.net>
-    iio: magnetometer: ak8974: Fix negative raw values in sysfs
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: pcm: oss: Avoid plugin buffer overflow
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: seq: oss: Fix running status after receiving sysex
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: seq: virmidi: Fix running status after receiving sysex
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: line6: Fix endless MIDI read loop
-
-Scott Chen <scott@labau.com.tw>
-    USB: serial: pl2303: add device-id for HP LD381
-
-Ran Wang <ran.wang_1@nxp.com>
-    usb: host: xhci-plat: add a shutdown
-
-Daniele Palmas <dnlplm@gmail.com>
-    USB: serial: option: add ME910G1 ECM composition 0x110b
-
-Hans de Goede <hdegoede@redhat.com>
-    usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    USB: Disable LPM on WD19's Realtek Hub
-
-Daniel Axtens <dja@axtens.net>
-    altera-stapl: altera_get_note: prevent write beyond end of 'key'
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    drm/exynos: dsi: fix workaround for the legacy clock name
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    drm/exynos: dsi: propagate error value and silence meaningless warning
-
-Thommy Jakobsson <thommyj@gmail.com>
-    spi/zynqmp: remove entry that causes a cs glitch
-
-Kishon Vijay Abraham I <kishon@ti.com>
-    ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
-
-Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-    powerpc: Include .BTF section
-
-Yuji Sasaki <sasakiy@chromium.org>
-    spi: qup: call spi_qup_pm_resume_runtime before suspending
-
-
--------------
-
-Diffstat:
-
- .../devicetree/bindings/powerpc/fsl/fman.txt       |  7 ++
- Makefile                                           |  4 +-
- arch/arm/boot/dts/dra7.dtsi                        |  3 +
- arch/arm/boot/dts/omap5.dtsi                       |  1 +
- arch/arm64/include/asm/alternative.h               |  2 +-
- arch/arm64/kernel/smp.c                            | 17 +++-
- arch/powerpc/kernel/vmlinux.lds.S                  |  6 ++
- arch/x86/kvm/vmx.c                                 |  4 +-
- arch/x86/mm/fault.c                                | 26 +++++-
- drivers/acpi/apei/ghes.c                           |  2 +-
- drivers/gpu/drm/drm_dp_mst_topology.c              | 15 +---
- drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 12 +--
- drivers/hwtracing/intel_th/msu.c                   |  6 +-
- drivers/i2c/busses/i2c-hix5hd2.c                   |  1 +
- drivers/iio/magnetometer/ak8974.c                  |  2 +-
- drivers/input/touchscreen/raydium_i2c_ts.c         |  4 +-
- drivers/media/usb/b2c2/flexcop-usb.c               |  6 +-
- drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +-
- drivers/media/usb/gspca/ov519.c                    | 10 +++
- drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 ++++-
- drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +
- drivers/media/usb/gspca/xirlink_cit.c              | 18 ++++-
- drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
- drivers/misc/altera-stapl/altera.c                 | 12 +--
- drivers/mmc/host/sdhci-of-at91.c                   |  8 +-
- drivers/net/can/slcan.c                            |  3 +
- drivers/net/ethernet/marvell/mvneta.c              |  3 +-
- drivers/net/ethernet/micrel/ks8851_mll.c           | 56 ++++++++++++-
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    |  2 +-
- drivers/net/macsec.c                               |  3 +
- drivers/net/vxlan.c                                | 11 ++-
- drivers/nfc/fdp/fdp.c                              |  5 +-
- drivers/rtc/Kconfig                                |  1 +
- drivers/scsi/ipr.c                                 |  3 +-
- drivers/scsi/ipr.h                                 |  1 +
- drivers/scsi/sd.c                                  |  4 +-
- drivers/spi/spi-qup.c                              | 11 ++-
- drivers/spi/spi-zynqmp-gqspi.c                     |  3 -
- drivers/staging/greybus/tools/loopback_test.c      | 17 ++--
- drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  2 +
- drivers/staging/speakup/main.c                     |  3 +-
- drivers/staging/wlan-ng/hfa384x_usb.c              |  2 +
- drivers/staging/wlan-ng/prism2usb.c                |  1 +
- drivers/tty/vt/selection.c                         |  5 ++
- drivers/tty/vt/vt.c                                | 30 ++++++-
- drivers/tty/vt/vt_ioctl.c                          | 80 ++++++++++---------
- drivers/usb/class/cdc-acm.c                        | 20 +++--
- drivers/usb/core/quirks.c                          |  6 ++
- drivers/usb/host/xhci-plat.c                       |  1 +
- drivers/usb/musb/musb_host.c                       | 17 ++--
- drivers/usb/serial/io_edgeport.c                   |  2 +-
- drivers/usb/serial/option.c                        |  8 ++
- drivers/usb/serial/pl2303.c                        |  1 +
- drivers/usb/serial/pl2303.h                        |  1 +
- fs/inode.c                                         |  1 +
- fs/libfs.c                                         |  8 +-
- include/linux/fs.h                                 |  1 +
- include/linux/futex.h                              | 17 ++--
- include/linux/kref.h                               |  5 ++
- include/linux/selection.h                          |  4 +-
- include/linux/vmalloc.h                            |  5 +-
- include/linux/vt_kern.h                            |  2 +-
- kernel/bpf/syscall.c                               |  3 +-
- kernel/futex.c                                     | 93 +++++++++++++---------
- kernel/irq/manage.c                                | 11 ++-
- kernel/notifier.c                                  |  2 +-
- mm/memcontrol.c                                    | 10 ++-
- mm/nommu.c                                         | 10 ++-
- mm/slub.c                                          | 32 +++++---
- mm/vmalloc.c                                       | 11 ++-
- net/dsa/tag_brcm.c                                 |  2 +
- net/hsr/hsr_framereg.c                             | 10 +--
- net/hsr/hsr_netlink.c                              | 74 +++++++++--------
- net/hsr/hsr_slave.c                                |  8 +-
- net/ipv4/Kconfig                                   |  1 +
- net/ipv4/ip_vti.c                                  | 38 +++++++--
- net/ipv4/route.c                                   |  7 +-
- net/ipv6/ip6_vti.c                                 | 34 ++++++--
- net/mac80211/mesh_hwmp.c                           |  3 +-
- net/mac80211/sta_info.c                            |  6 ++
- net/mac80211/tx.c                                  | 20 ++++-
- net/netfilter/nft_fwd_netdev.c                     |  8 ++
- net/sched/cls_route.c                              |  4 +-
- net/sched/cls_tcindex.c                            |  1 +
- net/xfrm/xfrm_policy.c                             |  2 +
- net/xfrm/xfrm_user.c                               |  6 +-
- scripts/Makefile.extrawarn                         |  1 +
- scripts/dtc/dtc-lexer.l                            |  1 -
- sound/core/oss/pcm_plugin.c                        | 12 ++-
- sound/core/seq/oss/seq_oss_midi.c                  |  1 +
- sound/core/seq/seq_virmidi.c                       |  1 +
- sound/pci/hda/patch_realtek.c                      |  2 +
- sound/usb/line6/driver.c                           |  2 +-
- sound/usb/line6/midibuf.c                          |  2 +-
- tools/perf/Makefile                                |  2 +-
- tools/perf/util/map.c                              |  2 +-
- tools/perf/util/probe-finder.c                     | 11 ++-
- .../cpupower/utils/idle_monitor/amd_fam14h_idle.c  |  2 +-
- .../cpupower/utils/idle_monitor/cpuidle_sysfs.c    |  2 +-
- .../cpupower/utils/idle_monitor/cpupower-monitor.c |  2 +
- .../cpupower/utils/idle_monitor/cpupower-monitor.h |  2 +-
- tools/scripts/Makefile.include                     |  4 +-
- 102 files changed, 682 insertions(+), 303 deletions(-)
+From: Taehee Yoo <ap420073@gmail.com>
+
+[ Upstream commit 173756b86803655d70af7732079b3aa935e6ab68 ]
+
+hsr_get_node_{list/status}() are not under rtnl_lock() because
+they are callback functions of generic netlink.
+But they use __dev_get_by_index() without rtnl_lock().
+So, it would use unsafe data.
+In order to fix it, rcu_read_lock() and dev_get_by_index_rcu()
+are used instead of __dev_get_by_index().
+
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/hsr/hsr_framereg.c |   10 ++--------
+ net/hsr/hsr_netlink.c  |   43 +++++++++++++++++++++----------------------
+ 2 files changed, 23 insertions(+), 30 deletions(-)
+
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -468,13 +468,9 @@ int hsr_get_node_data(struct hsr_priv *h
+ 	struct hsr_port *port;
+ 	unsigned long tdiff;
+ 
+-
+-	rcu_read_lock();
+ 	node = find_node_by_AddrA(&hsr->node_db, addr);
+-	if (!node) {
+-		rcu_read_unlock();
+-		return -ENOENT;	/* No such entry */
+-	}
++	if (!node)
++		return -ENOENT;
+ 
+ 	ether_addr_copy(addr_b, node->MacAddressB);
+ 
+@@ -509,7 +505,5 @@ int hsr_get_node_data(struct hsr_priv *h
+ 		*addr_b_ifindex = -1;
+ 	}
+ 
+-	rcu_read_unlock();
+-
+ 	return 0;
+ }
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -264,17 +264,16 @@ static int hsr_get_node_status(struct sk
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-					nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
+-
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -326,12 +325,10 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF1_SEQ, hsr_node_if1_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_A);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF1_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
+@@ -341,20 +338,22 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF2_SEQ, hsr_node_if2_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_B);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF2_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
++	rcu_read_unlock();
++
+ 	genlmsg_end(skb_out, msg_head);
+ 	genlmsg_unicast(genl_info_net(info), skb_out, info->snd_portid);
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL);
+ 	return 0;
+@@ -364,6 +363,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
+@@ -390,17 +390,16 @@ static int hsr_get_node_list(struct sk_b
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-				     nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
+-
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -420,14 +419,11 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	hsr = netdev_priv(hsr_dev);
+ 
+-	rcu_read_lock();
+ 	pos = hsr_get_next_node(hsr, NULL, addr);
+ 	while (pos) {
+ 		res = nla_put(skb_out, HSR_A_NODE_ADDR, ETH_ALEN, addr);
+-		if (res < 0) {
+-			rcu_read_unlock();
++		if (res < 0)
+ 			goto nla_put_failure;
+-		}
+ 		pos = hsr_get_next_node(hsr, pos, addr);
+ 	}
+ 	rcu_read_unlock();
+@@ -437,6 +433,8 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL);
+ 	return 0;
+@@ -446,6 +444,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
 
 
