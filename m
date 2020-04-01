@@ -2,287 +2,182 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098E6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C3BC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2F0212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B7D2137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585755743;
+	bh=4/vpXD5xtz7lIUYQ/tf1WcP5BjJDoVhxRF2aKX0WKzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bk5HN9cWN2X4T2yCJ8bjNfhWvgblQjrERauUU00xWCBwMZjR65u5XB5cu9bpCzISS
+	 Kgp6NCf2tvTlnMfAbFXaCU/O6szvB6XiwdoX/+zxBDiqLGlmfX+4U+2HZPiAPsNB8z
+	 /SRCMojtBYo+jT/58Bk7+5A9KQIZBXbp1+kgwbxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbgDAPmM (ORCPT
+        id S1733142AbgDAPmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:42:12 -0400
-Received: from mga05.intel.com ([192.55.52.43]:44580 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732864AbgDAPmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:42:12 -0400
-IronPort-SDR: LwXidoGh19uoLftaXqooDzABiqcExvCcK1FKLzx24g5LvVepMVRbQYm3cLDMJYxDyFlxw0h3XD
- LetWC8QPemBQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 08:42:11 -0700
-IronPort-SDR: rgCl/iz8Ek08zmzuVmldpgZqfvojhQHg1defdVYSXAfYoo4olQfaqbZ1R5j8j90i2P1BvHtIXv
- XhCaL5zD5Xlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,332,1580803200"; 
-   d="scan'208";a="328495700"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 01 Apr 2020 08:42:11 -0700
-Date:   Wed, 1 Apr 2020 08:47:59 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH V10 11/11] iommu/vt-d: Add custom allocator for IOASID
-Message-ID: <20200401084759.575b38c4@jacob-builder>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA146@SHSMSX104.ccr.corp.intel.com>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1584746861-76386-12-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA146@SHSMSX104.ccr.corp.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 1 Apr 2020 11:42:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38099 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732849AbgDAPmW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:42:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f6so215603wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 08:42:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Qh51pqUcxSK1vy6HHAY3PK3fGGZoLe1l0UQDBNVaGW8=;
+        b=MgqrVMHsgPreWBYx9E0FR9r9m2pNuofHguq7cWRktHqq8yLtiHNUFO1oq3xPCyWSRr
+         X8Sya023KPrnSPpKknolCwtzZPbx0CBduJ14CCUZjtFs7VsRLGJcQ/bxjgvx3g2l5pO6
+         IUdRojgcMEPygmhC0UnHKJZbRRA0uj03NQbhg/buh3f1LG3yUnTN2bAibohrvgcDbsSZ
+         0gm1bO3WRo8CHes/nw+Uk58iAYyXpKl6ayd7QMDQqLbo68x0exqt4r84f49qXHJs80gg
+         Hr0PCXHia4VpOBdW1E79Z0rkoVz/bKK00pU5gmAE0U4ok3aNfNE/EhLWCO02UQysLGbe
+         QbBg==
+X-Gm-Message-State: AGi0PuZITlsLLnT6J6ZRr912O9ZPmLk1hJZ/Ch+vYxB2lbGgh8SyeB6w
+        FzvSxQHt1oXMslZQUqFjQ8g=
+X-Google-Smtp-Source: APiQypKfZZzePopjzy6XhMXAehJzcOCmIFHyJEDfDiqCyC+Lo4Awo+YvRWIG0adATkzNq+8IjdVjZw==
+X-Received: by 2002:a7b:c050:: with SMTP id u16mr5284608wmc.68.1585755740307;
+        Wed, 01 Apr 2020 08:42:20 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id g2sm3322729wrs.42.2020.04.01.08.42.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 08:42:19 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 17:42:17 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
+Message-ID: <20200401154217.GQ22681@dhcp22.suse.cz>
+References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 28 Mar 2020 10:22:41 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+I am sorry but I have completely missed this patch.
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Saturday, March 21, 2020 7:28 AM
-> > 
-> > When VT-d driver runs in the guest, PASID allocation must be
-> > performed via virtual command interface. This patch registers a
-> > custom IOASID allocator which takes precedence over the default
-> > XArray based allocator. The resulting IOASID allocation will always
-> > come from the host. This ensures that PASID namespace is system-
-> > wide.
-> > 
-> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/intel-iommu.c | 84
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/intel-iommu.h |  2 ++
-> >  2 files changed, 86 insertions(+)
-> > 
-> > diff --git a/drivers/iommu/intel-iommu.c
-> > b/drivers/iommu/intel-iommu.c index a76afb0fd51a..c1c0b0fb93c3
-> > 100644 --- a/drivers/iommu/intel-iommu.c
-> > +++ b/drivers/iommu/intel-iommu.c
-> > @@ -1757,6 +1757,9 @@ static void free_dmar_iommu(struct intel_iommu
-> > *iommu)
-> >  		if (ecap_prs(iommu->ecap))
-> >  			intel_svm_finish_prq(iommu);
-> >  	}
-> > +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap))
-> > +
-> > ioasid_unregister_allocator(&iommu->pasid_allocator); +
-> >  #endif
-> >  }
-> > 
-> > @@ -3291,6 +3294,84 @@ static int copy_translation_tables(struct
-> > intel_iommu *iommu)
-> >  	return ret;
-> >  }
-> > 
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
-> > void *data)  
+On Wed 11-03-20 20:38:48, Shile Zhang wrote:
+> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
+> initialise the deferred pages with local interrupts disabled. It is
+> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
+> initializing deferred pages").
 > 
-> the name is too generic... can we add vcmd in the name to clarify
-> its purpose, e.g. intel_vcmd_ioasid_alloc?
+> On machine with NCPUS <= 2, the 'pgdatinit' kthread could be bound to
+> the boot CPU, which could caused the tick timer long time stall, system
+> jiffies not be updated in time.
 > 
-I feel the intel_ prefix is a natural extension of a generic API, we do
-that for other IOMMU APIs, right?
+> The dmesg shown that:
+> 
+>     [    0.197975] node 0 initialised, 32170688 pages in 1ms
+> 
+> Obviously, 1ms is unreasonable.
+> 
+> Now, fix it by restore in the pending interrupts for every 32*1204 pages
+> (128MB) initialized, give the chance to update the systemd jiffies.
+> The reasonable demsg shown likes:
+> 
+>     [    1.069306] node 0 initialised, 32203456 pages in 894ms
+> 
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages").
 
-> > +{
-> > +	struct intel_iommu *iommu = data;
-> > +	ioasid_t ioasid;
-> > +
-> > +	if (!iommu)
-> > +		return INVALID_IOASID;
-> > +	/*
-> > +	 * VT-d virtual command interface always uses the full 20
-> > bit
-> > +	 * PASID range. Host can partition guest PASID range based
-> > on
-> > +	 * policies but it is out of guest's control.
-> > +	 */
-> > +	if (min < PASID_MIN || max > intel_pasid_max_id)
-> > +		return INVALID_IOASID;
-> > +
-> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
-> > +		return INVALID_IOASID;
-> > +
-> > +	return ioasid;
-> > +}
-> > +
-> > +static void intel_ioasid_free(ioasid_t ioasid, void *data)
-> > +{
-> > +	struct intel_iommu *iommu = data;
-> > +
-> > +	if (!iommu)
-> > +		return;
-> > +	/*
-> > +	 * Sanity check the ioasid owner is done at upper layer,
-> > e.g. VFIO
-> > +	 * We can only free the PASID when all the devices are
-> > unbound.
-> > +	 */
-> > +	if (ioasid_find(NULL, ioasid, NULL)) {
-> > +		pr_alert("Cannot free active IOASID %d\n", ioasid);
-> > +		return;
-> > +	}  
-> 
-> However the sanity check is not done in default_free. Is there a
-> reason why using vcmd adds such  new requirement?
-> 
-Since we don't support nested guest. This vcmd allocator is only used
-by the guest IOMMU driver not VFIO. We expect IOMMU driver to have
-control of the free()/unbind() ordering.
+I dislike this solution TBH. It effectivelly conserves the current code
+and just works around the problem. Why do we hold the IRQ lock here in
+the first place? This is an early init code and a very limited code is
+running at this stage. Certainly nothing memory hotplug related which
+should be the only path really interested in the resize lock AFAIR.
 
-For default_free, it can come from user space and host VFIO which can
-be out of order. But we will solve that issue with the blocking
-notifier.
+This needs a double checking but I strongly believe that the lock can be
+simply dropped in this path.
+ 
+> Co-developed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> ---
+>  mm/page_alloc.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..a3a47845e150 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1763,12 +1763,17 @@ deferred_init_maxorder(u64 *i, struct zone *zone, unsigned long *start_pfn,
+>  	return nr_pages;
+>  }
+>  
+> +/*
+> + * Release the pending interrupts for every TICK_PAGE_COUNT pages.
+> + */
+> +#define TICK_PAGE_COUNT	(32 * 1024)
+> +
+>  /* Initialise remaining memory on a node */
+>  static int __init deferred_init_memmap(void *data)
+>  {
+>  	pg_data_t *pgdat = data;
+>  	const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+> -	unsigned long spfn = 0, epfn = 0, nr_pages = 0;
+> +	unsigned long spfn = 0, epfn = 0, nr_pages = 0, prev_nr_pages = 0;
+>  	unsigned long first_init_pfn, flags;
+>  	unsigned long start = jiffies;
+>  	struct zone *zone;
+> @@ -1779,6 +1784,7 @@ static int __init deferred_init_memmap(void *data)
+>  	if (!cpumask_empty(cpumask))
+>  		set_cpus_allowed_ptr(current, cpumask);
+>  
+> +again:
+>  	pgdat_resize_lock(pgdat, &flags);
+>  	first_init_pfn = pgdat->first_deferred_pfn;
+>  	if (first_init_pfn == ULONG_MAX) {
+> @@ -1790,7 +1796,6 @@ static int __init deferred_init_memmap(void *data)
+>  	/* Sanity check boundaries */
+>  	BUG_ON(pgdat->first_deferred_pfn < pgdat->node_start_pfn);
+>  	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+> -	pgdat->first_deferred_pfn = ULONG_MAX;
+>  
+>  	/* Only the highest zone is deferred so find it */
+>  	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+> @@ -1809,9 +1814,23 @@ static int __init deferred_init_memmap(void *data)
+>  	 * that we can avoid introducing any issues with the buddy
+>  	 * allocator.
+>  	 */
+> -	while (spfn < epfn)
+> +	while (spfn < epfn) {
+>  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +		/*
+> +		 * Release the interrupts for every TICK_PAGE_COUNT pages
+> +		 * (128MB) to give tick timer the chance to update the
+> +		 * system jiffies.
+> +		 */
+> +		if ((nr_pages - prev_nr_pages) > TICK_PAGE_COUNT) {
+> +			prev_nr_pages = nr_pages;
+> +			pgdat->first_deferred_pfn = spfn;
+> +			pgdat_resize_unlock(pgdat, &flags);
+> +			goto again;
+> +		}
+> +	}
+> +
+>  zone_empty:
+> +	pgdat->first_deferred_pfn = ULONG_MAX;
+>  	pgdat_resize_unlock(pgdat, &flags);
+>  
+>  	/* Sanity check that the next zone really is unpopulated */
+> -- 
+> 2.24.0.rc2
 
-> > +	vcmd_free_pasid(iommu, ioasid);
-> > +}
-> > +
-> > +static void register_pasid_allocator(struct intel_iommu *iommu)
-> > +{
-> > +	/*
-> > +	 * If we are running in the host, no need for custom
-> > allocator
-> > +	 * in that PASIDs are allocated from the host system-wide.
-> > +	 */
-> > +	if (!cap_caching_mode(iommu->cap))
-> > +		return;  
-> 
-> is it more accurate to check against vcmd capability?
-> 
-I think this is sufficient. The spec says if vcmd is present, we must
-use it but not the other way.
-
-> > +
-> > +	if (!sm_supported(iommu)) {
-> > +		pr_warn("VT-d Scalable Mode not enabled, no PASID
-> > allocation\n");
-> > +		return;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Register a custom PASID allocator if we are running in
-> > a guest,
-> > +	 * guest PASID must be obtained via virtual command
-> > interface.
-> > +	 * There can be multiple vIOMMUs in each guest but only one
-> > allocator
-> > +	 * is active. All vIOMMU allocators will eventually be
-> > calling the same  
-> 
-> which one? the first or last?
-> 
-All allocators share the same ops, so first=last. IOASID code will
-inspect the ops function and see if they are shared with others then
-use the same ops.
-
-> > +	 * host allocator.
-> > +	 */
-> > +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap)) {
-> > +		pr_info("Register custom PASID allocator\n");
-> > +		iommu->pasid_allocator.alloc = intel_ioasid_alloc;
-> > +		iommu->pasid_allocator.free = intel_ioasid_free;
-> > +		iommu->pasid_allocator.pdata = (void *)iommu;
-> > +		if
-> > (ioasid_register_allocator(&iommu->pasid_allocator)) {
-> > +			pr_warn("Custom PASID allocator failed,
-> > scalable mode disabled\n");
-> > +			/*
-> > +			 * Disable scalable mode on this IOMMU if
-> > there
-> > +			 * is no custom allocator. Mixing SM
-> > capable vIOMMU
-> > +			 * and non-SM vIOMMU are not supported.
-> > +			 */
-> > +			intel_iommu_sm = 0;  
-> 
-> since you register an allocator for every vIOMMU, means previously
-> registered allocators should also be unregistered here?
-> 
-True, but it is not necessary for two reasons:
-1. This should not happen unless something went seriously wrong.
-All vIOMMU shares the same alloc/free function, so they are put under
-the same bucket by IOASID. So the case for the first vIOMMU to succeed
-then fail in later vIOMMU registration should not happen. Unless kernel
-run out of memory etc.
-
-2. Once SM is disabled, there is no user of ioasid allocator.
-
-> > +		}
-> > +	}
-> > +}
-> > +#endif
-> > +
-> >  static int __init init_dmars(void)
-> >  {
-> >  	struct dmar_drhd_unit *drhd;
-> > @@ -3408,6 +3489,9 @@ static int __init init_dmars(void)
-> >  	 */
-> >  	for_each_active_iommu(iommu, drhd) {
-> >  		iommu_flush_write_buffer(iommu);
-> > +#ifdef CONFIG_INTEL_IOMMU_SVM
-> > +		register_pasid_allocator(iommu);
-> > +#endif
-> >  		iommu_set_root_entry(iommu);
-> >  		iommu->flush.flush_context(iommu, 0, 0, 0,
-> > DMA_CCMD_GLOBAL_INVL);
-> >  		iommu->flush.flush_iotlb(iommu, 0, 0, 0,
-> > DMA_TLB_GLOBAL_FLUSH);
-> > diff --git a/include/linux/intel-iommu.h
-> > b/include/linux/intel-iommu.h index 9cbf5357138b..9c357a325c72
-> > 100644 --- a/include/linux/intel-iommu.h
-> > +++ b/include/linux/intel-iommu.h
-> > @@ -19,6 +19,7 @@
-> >  #include <linux/iommu.h>
-> >  #include <linux/io-64-nonatomic-lo-hi.h>
-> >  #include <linux/dmar.h>
-> > +#include <linux/ioasid.h>
-> > 
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/iommu.h>
-> > @@ -563,6 +564,7 @@ struct intel_iommu {
-> >  #ifdef CONFIG_INTEL_IOMMU_SVM
-> >  	struct page_req_dsc *prq;
-> >  	unsigned char prq_name[16];    /* Name for PRQ interrupt */
-> > +	struct ioasid_allocator_ops pasid_allocator; /* Custom
-> > allocator for PASIDs */
-> >  #endif
-> >  	struct q_inval  *qi;            /* Queued invalidation
-> > info */ u32 *iommu_state; /* Store iommu states between suspend and
-> > resume.*/
-> > --
-> > 2.7.4  
-> 
-
-[Jacob Pan]
+-- 
+Michal Hocko
+SUSE Labs
