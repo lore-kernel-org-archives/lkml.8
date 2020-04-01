@@ -2,187 +2,110 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0232DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13626C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA75520719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF7D20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTrKEuRx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fK3mLwVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbgDAOdO (ORCPT
+        id S1733040AbgDAOed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:33:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37836 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732749AbgDAOdN (ORCPT
+        Wed, 1 Apr 2020 10:34:33 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41768 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732807AbgDAOed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:33:13 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r24so26027941ljd.4;
-        Wed, 01 Apr 2020 07:33:11 -0700 (PDT)
+        Wed, 1 Apr 2020 10:34:33 -0400
+Received: by mail-qk1-f196.google.com with SMTP id q188so15672qke.8;
+        Wed, 01 Apr 2020 07:34:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E7IPP7+FLfHL3BQsCPPNMuBISvBx8a52EyzbSM4UO1E=;
-        b=ZTrKEuRx9E+eNlAU/TU1yLFcIRUoIl05xebAhnZ8nxC/X5yFyH697tcER5tOsRlBkR
-         qWazY86KfM3BXxWzPbflVK1Rwg606WA5/Pu9aR7TrLQ04m63Wmg1gc9iJmlW9MOZYaxs
-         UFjxyWdC6aA6APJ/7G5kCQ9bcSTdddu+vUuaHLPmZB8oZ8+kcDyCxhiDTpagD6Pd5/lv
-         XbmW33ZU44WNdpWAJPl73swzhOKt+iSnxwXJC7Cn1YbXn6gme5Q1R5+V1IMYwiPp7yP7
-         HPUINW7hpUlQFGfUG+H5RNdt7lXtqolsTkBjGgcDPZpSNksydUrf5bKdfHnnfKlruPay
-         LKfg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9uAYoKMGE9PgfUp+bxUEGlyVqoWBakozXuhgR9OnmJo=;
+        b=fK3mLwVpmvWNMNQZIfkorXHF76+WwmMryp1OHVwlSl1O85sIrcNart6MFCEiiWbEhs
+         aytFZnssPwGjnbo94olpF9MfsbX9J1xCSFt2BrENTSHN4vC155UVCk720aGx5WASi60E
+         TscGO7swoEZI/8F5BSwrz7MOLDmVktr79lLuamR8edNuRVAyrDm5YX5hsjDS05joeTQ7
+         YMGTWZNOMgdh7V3Z4DD+luIQEbBk7y6QiTveIR8T3eUl180TbMuKjhcJ5/cp8wFnNNVl
+         xQMfXJ4EMnv917YC7y0dA1ifpMpJSwYENyT3lwQbBIyn6JsLAvlHnPo2sRxtP0UW7cbf
+         1OwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E7IPP7+FLfHL3BQsCPPNMuBISvBx8a52EyzbSM4UO1E=;
-        b=A5UtDAdaCyaGILiaCW/SWFl7h2WoEZMsnujigYKzaoLewn3d7IKVnQRM6zpreNieBn
-         KoEQG5NpCQgdXbIRUNEb0ekeqP0Z6M6/9750LrRB1Cybe36d5yTHSX0wrddxujn/XOZO
-         aDklMkIY/33UBFpIarEwYSuGIBi6g47WdSdgcWwb394YxWIXo2MAgymGrDqmiiJy7TSk
-         2iVEhr3EMVy955b83GRm7X8CLxhoNOqZyyHhtFCvwDUK9pIcWwc2Tehmx8ZCCZsum3Ch
-         GGefsII9wUzcyuz4NxKqfvejCQ1mop3GfSDVVXHDp3wdKvWgUXoyfqVi/ueY8me6hiiV
-         emWg==
-X-Gm-Message-State: AGi0Puaf+579JBRulCki7ATro3q8TekKJmTg4kJJgwJfNXXQ/TVQhf+h
-        B3VqS2y9gU/SQgmDp51paa33k9Pp
-X-Google-Smtp-Source: APiQypKe31q/wTpG9PE1jcJ+/xYt6QbXpuwRGtesNX4P55GMrE5zNOb8zcaKuHnPLsIrA/hRLMQhPw==
-X-Received: by 2002:a2e:6809:: with SMTP id c9mr13037910lja.251.1585751590831;
-        Wed, 01 Apr 2020 07:33:10 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id y16sm1266561ljc.78.2020.04.01.07.33.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 07:33:10 -0700 (PDT)
-Subject: Re: [PATCH v10 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
- entry for touchscreen status
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-53-jiada_wang@mentor.com>
- <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
- <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4dd3fa36-6ea7-1d5a-e675-a1a7066207b4@gmail.com>
-Date:   Wed, 1 Apr 2020 17:33:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9uAYoKMGE9PgfUp+bxUEGlyVqoWBakozXuhgR9OnmJo=;
+        b=Kjf06fnK2Ph3EFyNRO71+w02LEWXoj4rFkVyIgITLMD1GnJTZoixT/BfED0X0T08g+
+         eP7NF9YrGHHGdhpMWYdApn4PWvlE+85+YaOeIzBka/vTtgweYtxDcHCBpnbj2UIVgcol
+         mUeuNdT9asMv+3pL3g42A2Dy2HAA/HqnhEDTOdyAi0zxi6qGteyEgOyCiyv+SStd3oKC
+         UPHvYIaJjSGXPvD0+sRGJC8sx2wmZfT/wmKPtwEqu1eglCodRls9tG90xasE6qwIdQPK
+         +PC+L7B6j5RLNZTwJwi3EyGDdvUlKon4+9hmZoZlpLRAfolbg9iixT3uy+jyzusHmD5Y
+         im+A==
+X-Gm-Message-State: ANhLgQ1RBgD+7OsM3a38Efm3xy8FVjIgDIcVCcVQaCF4m4hFOq6ujd71
+        IQAu4Q6REU4DvHeTp/e43MA=
+X-Google-Smtp-Source: ADFU+vtGOEpjkKIYtf8jHd+3VJ7c6eIOIuhNahnR88YvKxOs9svqhhyOqpuGA3wbHqbp6skYm77mJg==
+X-Received: by 2002:a37:812:: with SMTP id 18mr9637047qki.139.1585751670754;
+        Wed, 01 Apr 2020 07:34:30 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id 199sm1505085qkm.7.2020.04.01.07.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 07:34:29 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 14EAD409A3; Wed,  1 Apr 2020 11:34:27 -0300 (-03)
+Date:   Wed, 1 Apr 2020 11:34:27 -0300
+To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+Message-ID: <20200401143427.GB12534@kernel.org>
+References: <20200331085308.098696461@linuxfoundation.org>
+ <CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com>
+ <CAHk-=whyW9TXfYxyxUW6hP9e0A=5MnOHrTarr4_k0hiddxq69Q@mail.gmail.com>
+ <20200331192949.GN9917@kernel.org>
+ <CAEUSe7_f8m0dLQT1jdU+87fNThnxMKuoGJkFuGpbT4OmpmE4iA@mail.gmail.com>
+ <20200401124037.GA12534@kernel.org>
+ <CAEUSe7-ercqbofx93m-d0RNW_dQqr1U7F7JYQ5X81CHSkq4KDw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEUSe7-ercqbofx93m-d0RNW_dQqr1U7F7JYQ5X81CHSkq4KDw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.04.2020 15:51, Wang, Jiada пишет:
-> Hi Dmitry
+Em Wed, Apr 01, 2020 at 07:45:53AM -0600, Daniel D�az escreveu:
+> This worked on top of torvalds/master and linux-stable-rc/linux-5.6.y.
 > 
-> Thanks for your comments
-> 
-> On 2020/04/01 0:08, Dmitry Osipenko wrote:
->> 31.03.2020 13:50, Jiada Wang пишет:
->> ...
->>> +static void mxt_watchdog_work(struct work_struct *work)
->>> +{
->>> +    struct mxt_data *data =
->>> +        container_of(work, struct mxt_data, watchdog_work.work);
->>> +    u16 info_buf;
->>> +    int ret;
->>> +
->>> +    if (data->suspended || data->in_bootloader ||
->>> +        data->mxt_status.intp_triggered)
->>> +        goto sched_work;
->>
->> Won't it become a problem if other thread puts device into suspended /
->> bootloader state in the same time?
->>
-> right, I will use mutex lock to prevent such case.
-> also I think data->mxt_status.intp_triggered isn't necessary,
-> when lock is used.
-> 
->>> +    ret = __mxt_read_reg(data->client, 0, sizeof(info_buf), &info_buf);
->>> +
->>> +    if (ret) {
->>> +        data->mxt_status.error_count++;
->>> +        data->mxt_status.dev_status = false;
->>> +    } else {
->>> +        data->mxt_status.dev_status = true;
->>> +    }
->>> +
->>> +sched_work:
->>> +    schedule_delayed_work(&data->watchdog_work,
->>> +                  msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
->>> +}
->> ...
->>
->>> @@ -4329,6 +4390,12 @@ static int mxt_probe(struct i2c_client
->>> *client, const struct i2c_device_id *id)
->>>           msleep(MXT_RESET_TIME);
->>>       }
->>>   +    if (debug_state) {
->>> +        INIT_DELAYED_WORK(&data->watchdog_work, mxt_watchdog_work);
->>> +        schedule_delayed_work(&data->watchdog_work,
->>> +                      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
->>> +    }
->>> +
->>>       error = mxt_initialize(data);
->>>       if (error)
->>>           goto err_free_object;
->>> @@ -4343,6 +4410,8 @@ static int mxt_probe(struct i2c_client *client,
->>> const struct i2c_device_id *id)
->>>       return 0;
->>>     err_free_object:
->>> +    if (debug_state)
->>> +        cancel_delayed_work_sync(&data->watchdog_work);
->>>       mxt_free_input_device(data);
->>>       mxt_free_object_table(data);
->>>       if (data->reset_gpio) {
->>> @@ -4367,6 +4436,9 @@ static int mxt_remove(struct i2c_client *client)
->>>       mxt_free_input_device(data);
->>>       mxt_free_object_table(data);
->>>   +    if (debug_state)
->>> +        cancel_delayed_work_sync(&data->watchdog_work);
->>
->> What will happen if debug_state was false during of mxt_probe() and then
->> the debug_state parameter was changed to true via sysfs?
-> 
-> module_param debug_state is added with permission 0,
-> so it's value won't change during driver operation
+> Thanks and greetings!
 
-Thank you for the clarification, I didn't realize that setting
-permission to 0 hides the parameter completely in sysfs.
+Thanks, I'm taking this as a:
 
->> I think the INIT_DELAYED_WORK() and cancel_delayed_work_sync() should be
->> invoked unconditionally.
->>
->>>       return 0;
->>>   }
->>>   @@ -4463,3 +4535,7 @@ module_i2c_driver(mxt_driver);
->>>   MODULE_AUTHOR("Joonyoung Shim <jy0922.shim@samsung.com>");
->>>   MODULE_DESCRIPTION("Atmel maXTouch Touchscreen driver");
->>>   MODULE_LICENSE("GPL");
->>> +
->>> +module_param(debug_state, bool, 0);
->>> +MODULE_PARM_DESC(debug_state, "Enable/Disable watchdog work to check
->>> device state (default="
->>> +         __MODULE_STRING(MXT_DEBUG_STATE) ")");
->>>
->>
->> The "default=..." part of MODULE_PARM_DESC() probably isn't really
->> useful and could be omitted, don't you think so?
->>
-> since debug_state can't be updated via sysfs, so I think add it's
-> default in MODULE_PARM_DESC() is useful? what's your opinion?
+Tested-by: Daniel D�az <daniel.diaz@linaro.org>
 
-If you want to keep the "default" kept in the description, then perhaps
-a simple "default=false" should be enough because nothing would be able
-to change it to true.
+Ok?
+
+- Arnaldo
+ 
+> Daniel D�az
+> daniel.diaz@linaro.org
