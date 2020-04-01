@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79869C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5BAC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160DF20BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F6420BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758312;
-	bh=P7eaBlYz4GzVkyvhowH9g6w/cqbHD7kEmXW8Sh3FLOs=;
+	s=default; t=1585758314;
+	bh=yTCKRj95Bx7h1wcaOR/rFqMuESRhROHSu1rAf99oYIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mo+fboOdaF7HmY7NTrNjCNkWt6h9m3ivIRDBaiKo2IIJ7ZNvka7kHyZ0PfqlzUXtP
-	 MyJLPskjkgRNbW50m7mDnXlPUjeJIM3/gcWE+yASAOX2tbVrUuDlYLoLyfTk2hFPje
-	 9Nh1GpwbgJZGVqU4/jaJRGqTd1RgWXjnJH6+cboo=
+	b=ZFBvjVm3hKHuyTy+dD7SlXpub+IHOvju3Xgw+uD7ULrxFltOrk5+f/V1CeS3ZpTWQ
+	 G+EPq703i8IP87gMsd3/ODnnXd+C7ASmBAv+UCxoxIFBe4JamB0WNCKkh7kisn4JkY
+	 7VHJ+qp2Buj7JKTLagDbrJTQws8JcKgRUzzlTlTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbgDAQZK (ORCPT
+        id S2387804AbgDAQZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49028 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387783AbgDAQZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:25:08 -0400
+        id S2387795AbgDAQZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:25:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CB0120BED;
-        Wed,  1 Apr 2020 16:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E62B42137B;
+        Wed,  1 Apr 2020 16:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758307;
-        bh=P7eaBlYz4GzVkyvhowH9g6w/cqbHD7kEmXW8Sh3FLOs=;
+        s=default; t=1585758310;
+        bh=yTCKRj95Bx7h1wcaOR/rFqMuESRhROHSu1rAf99oYIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dt7NeYoSbpBtC1R+3x3QNYCLqBpjBWwdwFTPAeDwRUHEsGkcnrbaF0YvKOph3WfSs
-         8k6EZ541wHWqDAi6DRAiyaR/Id+d8lf4eb1ajAERkfcKi8qps8KYVMRL4NYee2zM63
-         C4rUNXarZTnYlgb+AYJAWY0VNX36njcB63NrVdBc=
+        b=pWs1d9fFuuk5iPjhPjXj10W8PZYI6bpt8a/iX31DdJgFO61mCSr64rmL598r2Vu7m
+         556I3hvys/aZrntLVITVFXVeCND/mdbTsjiMFBq7Bz9r+KgtBk5UI3xZgksx7hMRY7
+         G4fjr3hIMScZAL9hcMKCu+2h9daei6PBHz/uY+Ng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 050/116] Input: avoid BIT() macro usage in the serio.h UAPI header
-Date:   Wed,  1 Apr 2020 18:17:06 +0200
-Message-Id: <20200401161548.975886443@linuxfoundation.org>
+        stable@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>
+Subject: [PATCH 4.19 051/116] ceph: check POOL_FLAG_FULL/NEARFULL in addition to OSDMAP_FULL/NEARFULL
+Date:   Wed,  1 Apr 2020 18:17:07 +0200
+Message-Id: <20200401161549.104547630@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -59,52 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugene Syromiatnikov <esyr@redhat.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 52afa505a03d914081f40cb869a3248567a57573 upstream.
+commit 7614209736fbc4927584d4387faade4f31444fce upstream.
 
-The commit 19ba1eb15a2a ("Input: psmouse - add a custom serio protocol
-to send extra information") introduced usage of the BIT() macro
-for SERIO_* flags; this macro is not provided in UAPI headers.
-Replace if with similarly defined _BITUL() macro defined
-in <linux/const.h>.
+CEPH_OSDMAP_FULL/NEARFULL aren't set since mimic, so we need to consult
+per-pool flags as well.  Unfortunately the backwards compatibility here
+is lacking:
 
-Fixes: 19ba1eb15a2a ("Input: psmouse - add a custom serio protocol to send extra information")
-Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-Cc: <stable@vger.kernel.org> # v5.0+
-Link: https://lore.kernel.org/r/20200324041341.GA32335@asgard.redhat.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+- the change that deprecated OSDMAP_FULL/NEARFULL went into mimic, but
+  was guarded by require_osd_release >= RELEASE_LUMINOUS
+- it was subsequently backported to luminous in v12.2.2, but that makes
+  no difference to clients that only check OSDMAP_FULL/NEARFULL because
+  require_osd_release is not client-facing -- it is for OSDs
+
+Since all kernels are affected, the best we can do here is just start
+checking both map flags and pool flags and send that to stable.
+
+These checks are best effort, so take osdc->lock and look up pool flags
+just once.  Remove the FIXME, since filesystem quotas are checked above
+and RADOS quotas are reflected in POOL_FLAG_FULL: when the pool reaches
+its quota, both POOL_FLAG_FULL and POOL_FLAG_FULL_QUOTA are set.
+
+Cc: stable@vger.kernel.org
+Reported-by: Yanhu Cao <gmayyyha@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Sage Weil <sage@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/serio.h |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/ceph/file.c              |   14 +++++++++++---
+ include/linux/ceph/osdmap.h |    4 ++++
+ include/linux/ceph/rados.h  |    6 ++++--
+ net/ceph/osdmap.c           |    9 +++++++++
+ 4 files changed, 28 insertions(+), 5 deletions(-)
 
---- a/include/uapi/linux/serio.h
-+++ b/include/uapi/linux/serio.h
-@@ -9,7 +9,7 @@
- #ifndef _UAPI_SERIO_H
- #define _UAPI_SERIO_H
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -1384,9 +1384,12 @@ static ssize_t ceph_write_iter(struct ki
+ 	struct inode *inode = file_inode(file);
+ 	struct ceph_inode_info *ci = ceph_inode(inode);
+ 	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
++	struct ceph_osd_client *osdc = &fsc->client->osdc;
+ 	struct ceph_cap_flush *prealloc_cf;
+ 	ssize_t count, written = 0;
+ 	int err, want, got;
++	u32 map_flags;
++	u64 pool_flags;
+ 	loff_t pos;
+ 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
  
--
-+#include <linux/const.h>
- #include <linux/ioctl.h>
+@@ -1441,8 +1444,12 @@ retry_snap:
+ 			goto out;
+ 	}
  
- #define SPIOCSTYPE	_IOW('q', 0x01, unsigned long)
-@@ -18,10 +18,10 @@
+-	/* FIXME: not complete since it doesn't account for being at quota */
+-	if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_FULL)) {
++	down_read(&osdc->lock);
++	map_flags = osdc->osdmap->flags;
++	pool_flags = ceph_pg_pool_flags(osdc->osdmap, ci->i_layout.pool_id);
++	up_read(&osdc->lock);
++	if ((map_flags & CEPH_OSDMAP_FULL) ||
++	    (pool_flags & CEPH_POOL_FLAG_FULL)) {
+ 		err = -ENOSPC;
+ 		goto out;
+ 	}
+@@ -1532,7 +1539,8 @@ retry_snap:
+ 	}
+ 
+ 	if (written >= 0) {
+-		if (ceph_osdmap_flag(&fsc->client->osdc, CEPH_OSDMAP_NEARFULL))
++		if ((map_flags & CEPH_OSDMAP_NEARFULL) ||
++		    (pool_flags & CEPH_POOL_FLAG_NEARFULL))
+ 			iocb->ki_flags |= IOCB_DSYNC;
+ 		written = generic_write_sync(iocb, written);
+ 	}
+--- a/include/linux/ceph/osdmap.h
++++ b/include/linux/ceph/osdmap.h
+@@ -37,6 +37,9 @@ int ceph_spg_compare(const struct ceph_s
+ #define CEPH_POOL_FLAG_HASHPSPOOL	(1ULL << 0) /* hash pg seed and pool id
+ 						       together */
+ #define CEPH_POOL_FLAG_FULL		(1ULL << 1) /* pool is full */
++#define CEPH_POOL_FLAG_FULL_QUOTA	(1ULL << 10) /* pool ran out of quota,
++							will set FULL too */
++#define CEPH_POOL_FLAG_NEARFULL		(1ULL << 11) /* pool is nearfull */
+ 
+ struct ceph_pg_pool_info {
+ 	struct rb_node node;
+@@ -305,5 +308,6 @@ extern struct ceph_pg_pool_info *ceph_pg
+ 
+ extern const char *ceph_pg_pool_name_by_id(struct ceph_osdmap *map, u64 id);
+ extern int ceph_pg_poolid_by_name(struct ceph_osdmap *map, const char *name);
++u64 ceph_pg_pool_flags(struct ceph_osdmap *map, u64 id);
+ 
+ #endif
+--- a/include/linux/ceph/rados.h
++++ b/include/linux/ceph/rados.h
+@@ -143,8 +143,10 @@ extern const char *ceph_osd_state_name(i
  /*
-  * bit masks for use in "interrupt" flags (3rd argument)
+  * osd map flag bits
   */
--#define SERIO_TIMEOUT	BIT(0)
--#define SERIO_PARITY	BIT(1)
--#define SERIO_FRAME	BIT(2)
--#define SERIO_OOB_DATA	BIT(3)
-+#define SERIO_TIMEOUT	_BITUL(0)
-+#define SERIO_PARITY	_BITUL(1)
-+#define SERIO_FRAME	_BITUL(2)
-+#define SERIO_OOB_DATA	_BITUL(3)
+-#define CEPH_OSDMAP_NEARFULL (1<<0)  /* sync writes (near ENOSPC) */
+-#define CEPH_OSDMAP_FULL     (1<<1)  /* no data writes (ENOSPC) */
++#define CEPH_OSDMAP_NEARFULL (1<<0)  /* sync writes (near ENOSPC),
++					not set since ~luminous */
++#define CEPH_OSDMAP_FULL     (1<<1)  /* no data writes (ENOSPC),
++					not set since ~luminous */
+ #define CEPH_OSDMAP_PAUSERD  (1<<2)  /* pause all reads */
+ #define CEPH_OSDMAP_PAUSEWR  (1<<3)  /* pause all writes */
+ #define CEPH_OSDMAP_PAUSEREC (1<<4)  /* pause recovery */
+--- a/net/ceph/osdmap.c
++++ b/net/ceph/osdmap.c
+@@ -711,6 +711,15 @@ int ceph_pg_poolid_by_name(struct ceph_o
+ }
+ EXPORT_SYMBOL(ceph_pg_poolid_by_name);
  
- /*
-  * Serio types
++u64 ceph_pg_pool_flags(struct ceph_osdmap *map, u64 id)
++{
++	struct ceph_pg_pool_info *pi;
++
++	pi = __lookup_pg_pool(&map->pg_pools, id);
++	return pi ? pi->flags : 0;
++}
++EXPORT_SYMBOL(ceph_pg_pool_flags);
++
+ static void __remove_pg_pool(struct rb_root *root, struct ceph_pg_pool_info *pi)
+ {
+ 	rb_erase(&pi->node, root);
 
 
