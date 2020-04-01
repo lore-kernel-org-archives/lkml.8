@@ -2,309 +2,183 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F30BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24715C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A97F20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:55:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhOqLbtW"
+	by mail.kernel.org (Postfix) with ESMTP id EEF8D20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732617AbgDAMz4 (ORCPT
+        id S1732590AbgDAM4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:55:56 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35853 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732289AbgDAMzz (ORCPT
+        Wed, 1 Apr 2020 08:56:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23830 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732289AbgDAM4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:55:55 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g2so9595866plo.3;
-        Wed, 01 Apr 2020 05:55:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=imztvQkg/OfJphlP/GAnsDsoLdxnN0XJIH9r9Mz1XVY=;
-        b=OhOqLbtWOzKFWAxdLXahqXvU16jQ3KUZNemWuJ4JacyMc4BEIAl5XPhQ07GRBLgPdr
-         +KEIz+iXHrYRKDTFH9T9pDEn8bdFgpmbbE/5ZLZnO9Ub+CnXTpqnHeucf3FyDZ3ODo6s
-         c8lGekoj8gD27Gvy0kjBb0UTVVwfPIZSaNnGf9V8x/wm8YCAMzWJR/o5Ic9Y1EiFwEHl
-         Hz/KFZs7dLyQ41COl582Nr7IMWv/Osb8d6x3hKoU0rcSVWOACR+NzwpqhfjhqmZ6YSBr
-         AFwpHdSnfKU2Ha2k2FgW81HW8VDN9B9LygfkjJijtdOwO1jys6khfmxKNXiFjsSPi0v1
-         1+JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=imztvQkg/OfJphlP/GAnsDsoLdxnN0XJIH9r9Mz1XVY=;
-        b=R+JLLNhTKNwyaIefbbuCVuMJoLXQ8+3GiclTKWsC4Pgi5/7GShwtRYGoKk6/rP9joJ
-         vNWi29mxlCYL8qT7DAg4h64hW1H7TffCA4+p1X+4VJzKwfsE+tlg9Hz2ssUoQvPYj7ih
-         ul7ChYreZcvfoqwHZauxv9TQnD37SBC/91zHJLWVs8ZMMJYT/Ukzo9WgMdKPzbkEbYxc
-         4nGSmPJiwY5cUECDgD5NNdAyi3AqIGwEOLPWlW4G9/v6loRsGULhktomirctVD4lf0Gq
-         GstFDDawScgHOqAwa8jzeYglUe3pO7rMjTi7p+NrVHig4tcL2GTgqpyT/bhfLfTs8fWz
-         Gcow==
-X-Gm-Message-State: AGi0PuaziBGGA8c1tQCqojXNIyaMwbErifnvFUWrlfH1o+QpiKlQ8XhY
-        xGOVj6HjWI9JXxP8JaYSNaEXT7sj
-X-Google-Smtp-Source: APiQypIHrdXxu06Ot6UNjHWrirAAakD8L29/0ar3aOgCEqFzSkqJM1yTy4kwBCAjLgPlL47p2uznmQ==
-X-Received: by 2002:a17:90a:db02:: with SMTP id g2mr4749241pjv.49.1585745753856;
-        Wed, 01 Apr 2020 05:55:53 -0700 (PDT)
-Received: from cnn ([2402:3a80:463:99ca:94f8:dc27:324a:484e])
-        by smtp.gmail.com with ESMTPSA id q80sm1592325pfc.17.2020.04.01.05.55.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 05:55:53 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 18:25:46 +0530
-From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     andrew@aj.id.au, sdasari@fb.com, vijaykhemka@fb.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20200401125546.GA24979@cnn>
-References: <20200401114023.GA29180@cnn>
- <CACPK8Xf+EOUk-HroNmPe5Pjgu6BdP8VU-m6mxQMpTtL1CYBn=A@mail.gmail.com>
+        Wed, 1 Apr 2020 08:56:43 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031CfAa0105846
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 08:56:42 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 303wrxb5tq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 08:56:42 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 1 Apr 2020 13:56:23 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 13:56:14 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031CuTNx53805308
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 12:56:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C359A5205F;
+        Wed,  1 Apr 2020 12:56:29 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.71.143])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5F0E552050;
+        Wed,  1 Apr 2020 12:56:28 +0000 (GMT)
+Subject: Re: [PATCH V9 1/9] vhost: refine vhost and vringh kconfig
+To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
+        vmireyno@marvell.com, zhangweining@ruijie.com.cn
+References: <20200326140125.19794-1-jasowang@redhat.com>
+ <20200326140125.19794-2-jasowang@redhat.com>
+ <fde312a4-56bd-f11f-799f-8aa952008012@de.ibm.com>
+ <41ee1f6a-3124-d44b-bf34-0f26604f9514@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Wed, 1 Apr 2020 14:56:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPK8Xf+EOUk-HroNmPe5Pjgu6BdP8VU-m6mxQMpTtL1CYBn=A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <41ee1f6a-3124-d44b-bf34-0f26604f9514@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040112-0020-0000-0000-000003BF9CC2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040112-0021-0000-0000-000022184284
+Message-Id: <4726da4c-11ec-3b6e-1218-6d6d365d5038@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=842 clxscore=1015 bulkscore=0 malwarescore=0 suspectscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004010109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 12:18:17PM +0000, Joel Stanley wrote:
-> On Wed, 1 Apr 2020 at 11:40, Manikandan Elumalai
-> <manikandan.hcl.ers.epl@gmail.com> wrote:
-> >
-> > The Yosemite V2 is a facebook multi-node server
-> > platform that host four OCP server. The BMC
-> > in the Yosemite V2 platform based on AST2500 SoC.
-> >
-> > This patch adds linux device tree entry related to
-> > Yosemite V2 specific devices connected to BMC SoC.
-> >
-> > Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> > Acked-by     : Andrew Jeffery <andrew@aj.id.au>
-> > Reviewed-by  : Vijay Khemka <vkhemka@fb.com>
-> > ---
-> > ---      v7 - Added multi-host SOL feature.
-> > ---      v6 - Added device tree property for multi-host Mellanox NIC in the ncsi driver.
-> > ---      v5 - Spell and contributor name correction.
-> > ---           - License identifier changed to GPL-2.0-or-later.
-> > ---           - aspeed-gpio.h removed.
-> > ---           - FAN2 tacho channel changed.
-> > ---      v4 - Bootargs removed.
-> > ---      v3 - Uart1 Debug removed .
-> > ---      v2 - LPC and VUART removed .
-> > ---      v1 - Initial draft.
-> > ---
-> > ---
-> >  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 186 +++++++++++++++++++++
+
+On 01.04.20 14:50, Jason Wang wrote:
 > 
-> You need to add the device tree to the makefile.
-    Thanks for review Joel. I will submit another patch with Makefile.
+> On 2020/4/1 下午7:21, Christian Borntraeger wrote:
+>> On 26.03.20 15:01, Jason Wang wrote:
+>>> Currently, CONFIG_VHOST depends on CONFIG_VIRTUALIZATION. But vhost is
+>>> not necessarily for VM since it's a generic userspace and kernel
+>>> communication protocol. Such dependency may prevent archs without
+>>> virtualization support from using vhost.
+>>>
+>>> To solve this, a dedicated vhost menu is created under drivers so
+>>> CONIFG_VHOST can be decoupled out of CONFIG_VIRTUALIZATION.
+>> FWIW, this now results in vhost not being build with defconfig kernels (in todays
+>> linux-next).
+>>
 > 
-> >  1 file changed, 186 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> >
-> > diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> > new file mode 100644
-> > index 0000000..bc83901
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> > @@ -0,0 +1,186 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +// Copyright (c) 2018 Facebook Inc.
-> > +/dts-v1/;
-> > +#include "aspeed-g5.dtsi"
-> > +
-> > +/ {
-> > +       model = "Facebook Yosemitev2 BMC";
-> > +       compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> > +       aliases {
-> > +               serial4 = &uart5;
-> > +       };
-> > +       chosen {
-> > +               stdout-path = &uart5;
-> > +       };
-> > +
-> > +       memory@80000000 {
-> > +               reg = <0x80000000 0x20000000>;
-> > +       };
-> > +
-> > +       iio-hwmon {
-> > +               // VOLATAGE SENSOR
-> > +               compatible = "iio-hwmon";
-> > +               io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> > +               <&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> > +               <&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> > +               <&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> > +       };
-> > +};
-> > +
-> > +&fmc {
-> > +       status = "okay";
-> > +       flash@0 {
-> > +               status = "okay";
-> > +               m25p,fast-read;
-> > +#include "openbmc-flash-layout.dtsi"
-> > +       };
-> > +};
-> > +
-> > +&spi1 {
-> > +       status = "okay";
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_spi1_default>;
-> > +       flash@0 {
-> > +               status = "okay";
-> > +               m25p,fast-read;
-> > +               label = "pnor";
-> > +       };
-> > +};
-> > +&uart1 {
-> > +       // Host1 Console
-> > +       status = "okay";
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_txd1_default
-> > +                    &pinctrl_rxd1_default>;
-> > +};
-> > +
-> > +&uart2 {
-> > +       // Host2 Console
-> > +       status = "okay";
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_txd2_default
-> > +                    &pinctrl_rxd2_default>;
-> > +
-> > +};
-> > +
-> > +&uart3 {
-> > +       // Host3 Console
-> > +       status = "okay";
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_txd3_default
-> > +                    &pinctrl_rxd3_default>;
-> > +};
-> > +
-> > +&uart4 {
-> > +       // Host4 Console
-> > +       status = "okay";
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_txd4_default
-> > +                    &pinctrl_rxd4_default>;
-> > +};
-> > +
-> > +&uart5 {
-> > +       // BMC Console
-> > +       status = "okay";
-> > +};
-> > +
-> > +&vuart {
-> > +       // Virtual UART
-> > +       status = "okay";
-> > +};
-> > +
-> > +&mac0 {
-> > +       status = "okay";
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_rmii1_default>;
-> > +       use-ncsi;
-> > +       mlx,multi-host;
-> > +};
-> > +
-> > +&adc {
-> > +       status = "okay";
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_adc0_default
-> > +                       &pinctrl_adc1_default
-> > +                       &pinctrl_adc2_default
-> > +                       &pinctrl_adc3_default
-> > +                       &pinctrl_adc4_default
-> > +                       &pinctrl_adc5_default
-> > +                       &pinctrl_adc6_default
-> > +                       &pinctrl_adc7_default
-> > +                       &pinctrl_adc8_default
-> > +                       &pinctrl_adc9_default
-> > +                       &pinctrl_adc10_default
-> > +                       &pinctrl_adc11_default
-> > +                       &pinctrl_adc12_default
-> > +                       &pinctrl_adc13_default
-> > +                       &pinctrl_adc14_default
-> > +                       &pinctrl_adc15_default>;
-> > +};
-> > +
-> > +&i2c8 {
-> > +       status = "okay";
-> > +       //FRU EEPROM
-> > +       eeprom@51 {
-> > +               compatible = "atmel,24c64";
-> > +               reg = <0x51>;
-> > +               pagesize = <32>;
-> > +       };
-> > +};
-> > +
-> > +&i2c9 {
-> > +       status = "okay";
-> > +       tmp421@4e {
-> > +       //INLET TEMP
-> > +               compatible = "ti,tmp421";
-> > +               reg = <0x4e>;
-> > +       };
-> > +       //OUTLET TEMP
-> > +       tmp421@4f {
-> > +               compatible = "ti,tmp421";
-> > +               reg = <0x4f>;
-> > +       };
-> > +};
-> > +
-> > +&i2c10 {
-> > +       status = "okay";
-> > +       //HSC
-> > +       adm1278@40 {
-> > +               compatible = "adi,adm1278";
-> > +               reg = <0x40>;
-> > +       };
-> > +};
-> > +
-> > +&i2c11 {
-> > +       status = "okay";
-> > +       //MEZZ_TEMP_SENSOR
-> > +       tmp421@1f {
-> > +               compatible = "ti,tmp421";
-> > +               reg = <0x1f>;
-> > +       };
-> > +};
-> > +
-> > +&i2c12 {
-> > +       status = "okay";
-> > +       //MEZZ_FRU
-> > +       eeprom@51 {
-> > +               compatible = "atmel,24c64";
-> > +               reg = <0x51>;
-> > +               pagesize = <32>;
-> > +       };
-> > +};
-> > +
-> > +&pwm_tacho {
-> > +       status = "okay";
-> > +       //FSC
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> > +       fan@0 {
-> > +               reg = <0x00>;
-> > +               aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> > +       };
-> > +       fan@1 {
-> > +               reg = <0x01>;
-> > +               aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> > +       };
-> > +};
-> > --
-> > 2.7.4
-> >
+> Hi Christian:
+> 
+> Did you meet it even with this commit https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=a4be40cbcedba9b5b714f3c95182e8a45176e42d?
+
+I simply used linux-next. The defconfig does NOT contain CONFIG_VHOST and therefore CONFIG_VHOST_NET and friends
+can not be selected.
+
+$ git checkout next-20200401
+$ make defconfig
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/conf.o
+  HOSTCC  scripts/kconfig/confdata.o
+  HOSTCC  scripts/kconfig/expr.o
+  LEX     scripts/kconfig/lexer.lex.c
+  YACC    scripts/kconfig/parser.tab.[ch]
+  HOSTCC  scripts/kconfig/lexer.lex.o
+  HOSTCC  scripts/kconfig/parser.tab.o
+  HOSTCC  scripts/kconfig/preprocess.o
+  HOSTCC  scripts/kconfig/symbol.o
+  HOSTCC  scripts/kconfig/util.o
+  HOSTLD  scripts/kconfig/conf
+*** Default configuration is based on 'x86_64_defconfig'
+#
+# configuration written to .config
+#
+
+$ grep VHOST .config
+# CONFIG_VHOST is not set
+
+ 
+> If yes, what's your build config looks like?
+> 
+> Thanks
+> 
+
