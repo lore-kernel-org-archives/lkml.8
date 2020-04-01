@@ -2,232 +2,187 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CFDC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0232DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC98220787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA75520719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nsVxmXx2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTrKEuRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733047AbgDAOdF (ORCPT
+        id S1733057AbgDAOdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:33:05 -0400
-Received: from mail-eopbgr50086.outbound.protection.outlook.com ([40.107.5.86]:20231
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732749AbgDAOdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:33:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aC07xilJlTnAq1EiPGxYjQIrvQCzUESpKZTgZPISvcLZSagdpMwuBUHz5iveWcAWtlL+P/G03tHHBIssrq0fGRoJKB7pFeBurhc5CUgaI2NdsXgmPHx2ZmyX1W1EdyKlX+81nw4ybNG76CjAA832Dr5JzAjIJvDhXi7ZMGgR6qqCulDpvJI1Q9xTQ2gjsoqlk4msTZwT4rXg9LczOgkNW6U4wRrqgkjaQZV30DHGbxOw+eqM8NWpFVldUklv+h271hncdDKD7b2NC2WJ23a2NuFXoyMooIE6p4L+Dx11bobpXcXaigtSgxPbSFxqv7ViNLGyxkM/SmiHYWKCCmUdHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ksAsR+/8z7qXZqb3bcEQqgmLCFixSPe1v0Ecs1CDkc=;
- b=lPvuSKQar9UqaJej7wW6119KA0aPJ6zov1r/Hcg+HNo5ANFErad6/8zMCvBUn5fH7buK0VaWudhNDOLE3ABZHi6qz2plPxUycGWhcDh8/b7WWMPG1iVRHB8wGPSuB5w89j2islJPw/N77d63Bwkd5IPeIBc0FG3CcXvHW2MHraHoUAKurPAHAdlFCvH3HqNR5OzRzpguNDCGRgAcDCf43DqErqjnVnE6U8qfU+U+Kb/KYAGbsJJf81Il0o8cJhyDDtml8F2H1QiBZmSZ9JFHFUUYa4/J/9xX43J3Ag/BATxcaQAClwS5dnvLgyR0UgzwBvImFoPG8jv2hKk/rrPF6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ksAsR+/8z7qXZqb3bcEQqgmLCFixSPe1v0Ecs1CDkc=;
- b=nsVxmXx2rmQJhaxn11jfsBs0/Vvc/higfes31vJragyCxSYcTidlQ9d06Om4cuWNVUcrca8bwount55M88Q3cWi4hXn1NIOtUQ3pbGP4W0+uQRFALGsvFG20/PScJ1wkdtCNtX+ll7TJ76xQiEnqbtGSq+edUPhTg+gWtQ/m7j4=
-Received: from VI1PR04MB4960.eurprd04.prod.outlook.com (20.177.49.213) by
- VI1PR04MB5117.eurprd04.prod.outlook.com (20.177.50.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Wed, 1 Apr 2020 14:32:59 +0000
-Received: from VI1PR04MB4960.eurprd04.prod.outlook.com
- ([fe80::b105:1422:4bfa:338e]) by VI1PR04MB4960.eurprd04.prod.outlook.com
- ([fe80::b105:1422:4bfa:338e%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 14:32:59 +0000
-From:   Sherry Sun <sherry.sun@nxp.com>
-To:     Robert Richter <rrichter@marvell.com>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "michal.simek@xilinx.com" <michal.simek@xilinx.com>,
-        "manish.narani@xilinx.com" <manish.narani@xilinx.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Li <frank.li@nxp.com>
-Subject: RE: [PATCH v2 4/4] EDAC: synopsys: Add useful debug and output
- information for 64bit systems
-Thread-Topic: [PATCH v2 4/4] EDAC: synopsys: Add useful debug and output
- information for 64bit systems
-Thread-Index: AQHWB/nL9ePNYAIn50WVBCwbMM/nTqhkGIaAgAA4qYA=
-Date:   Wed, 1 Apr 2020 14:32:58 +0000
-Message-ID: <VI1PR04MB4960BEC8A60876A543A92ED692C90@VI1PR04MB4960.eurprd04.prod.outlook.com>
-References: <1585726749-13039-1-git-send-email-sherry.sun@nxp.com>
- <1585726749-13039-5-git-send-email-sherry.sun@nxp.com>
- <20200401105647.hszgxzt2uedqofth@rric.localdomain>
-In-Reply-To: <20200401105647.hszgxzt2uedqofth@rric.localdomain>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sherry.sun@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 53a12ffe-00d5-4cd9-298b-08d7d6499379
-x-ms-traffictypediagnostic: VI1PR04MB5117:|VI1PR04MB5117:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB51178958C51F6FCF9403B0B992C90@VI1PR04MB5117.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4960.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(376002)(136003)(366004)(76116006)(5660300002)(9686003)(186003)(7696005)(2906002)(71200400001)(8676002)(81166006)(86362001)(66446008)(26005)(4326008)(52536014)(8936002)(64756008)(66556008)(66946007)(478600001)(54906003)(55016002)(6506007)(316002)(6916009)(66476007)(44832011)(81156014)(53546011)(33656002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3QzA49+mP8Gi/6ZnKrj9o3DCH1R3HOrF++nXsRji6wacSa9vBfBix/nsgM61nZd9jS7alnqp0zfIDT/QBs951YVfgjS1PaTcmV6OABIzm+1y8Wz8fVkamSqsZcViNrMsW3ZYcM3ZEZjoIm7/M8zO3Z6MpWPNHSSO2HU2bIxmEZSWo6XaPMTkPhQHFPMAWsx8/s4w7YW938yfDhrwEw+68wgU+9Xv6uS/f2J2tr1CVztRgnl8bffPUEhLwF8Mxb+BqJ62ln+fAetLBwwp2bKGIIZK971G1tyLIVvkqJ20JhepmS39wK+R5hQkua5tLYVGozOIGe8A+t0qEo5He75BBc9+y1bbA19L+RWyxK4gyw2cBd5mVI6qZdFcA8lo788DW2jX9schrh95kB7JmCsc/uSezsvpSfy/mHD6ogKcydnEyunkf7caMKpqiOP+zmfU
-x-ms-exchange-antispam-messagedata: nDbPnI2sYYeFcj3OJ27omAdtPbAkp7wBjHGXwSbHmU38AfniZwaoU2wbXUCw4jmuFBEUpUxmGmhMNEpW8htifd51yAfS1Blb3gCm3YX+Mdxl6lZyXs5hQPSJ46U/5tYBtz0yWbAG9TOXU7QE2C1IzQ==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 1 Apr 2020 10:33:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37836 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732749AbgDAOdN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 10:33:13 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r24so26027941ljd.4;
+        Wed, 01 Apr 2020 07:33:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E7IPP7+FLfHL3BQsCPPNMuBISvBx8a52EyzbSM4UO1E=;
+        b=ZTrKEuRx9E+eNlAU/TU1yLFcIRUoIl05xebAhnZ8nxC/X5yFyH697tcER5tOsRlBkR
+         qWazY86KfM3BXxWzPbflVK1Rwg606WA5/Pu9aR7TrLQ04m63Wmg1gc9iJmlW9MOZYaxs
+         UFjxyWdC6aA6APJ/7G5kCQ9bcSTdddu+vUuaHLPmZB8oZ8+kcDyCxhiDTpagD6Pd5/lv
+         XbmW33ZU44WNdpWAJPl73swzhOKt+iSnxwXJC7Cn1YbXn6gme5Q1R5+V1IMYwiPp7yP7
+         HPUINW7hpUlQFGfUG+H5RNdt7lXtqolsTkBjGgcDPZpSNksydUrf5bKdfHnnfKlruPay
+         LKfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E7IPP7+FLfHL3BQsCPPNMuBISvBx8a52EyzbSM4UO1E=;
+        b=A5UtDAdaCyaGILiaCW/SWFl7h2WoEZMsnujigYKzaoLewn3d7IKVnQRM6zpreNieBn
+         KoEQG5NpCQgdXbIRUNEb0ekeqP0Z6M6/9750LrRB1Cybe36d5yTHSX0wrddxujn/XOZO
+         aDklMkIY/33UBFpIarEwYSuGIBi6g47WdSdgcWwb394YxWIXo2MAgymGrDqmiiJy7TSk
+         2iVEhr3EMVy955b83GRm7X8CLxhoNOqZyyHhtFCvwDUK9pIcWwc2Tehmx8ZCCZsum3Ch
+         GGefsII9wUzcyuz4NxKqfvejCQ1mop3GfSDVVXHDp3wdKvWgUXoyfqVi/ueY8me6hiiV
+         emWg==
+X-Gm-Message-State: AGi0Puaf+579JBRulCki7ATro3q8TekKJmTg4kJJgwJfNXXQ/TVQhf+h
+        B3VqS2y9gU/SQgmDp51paa33k9Pp
+X-Google-Smtp-Source: APiQypKe31q/wTpG9PE1jcJ+/xYt6QbXpuwRGtesNX4P55GMrE5zNOb8zcaKuHnPLsIrA/hRLMQhPw==
+X-Received: by 2002:a2e:6809:: with SMTP id c9mr13037910lja.251.1585751590831;
+        Wed, 01 Apr 2020 07:33:10 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id y16sm1266561ljc.78.2020.04.01.07.33.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 07:33:10 -0700 (PDT)
+Subject: Re: [PATCH v10 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
+ entry for touchscreen status
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-53-jiada_wang@mentor.com>
+ <63336277-8ed2-a097-a983-6e8ac48d776e@gmail.com>
+ <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4dd3fa36-6ea7-1d5a-e675-a1a7066207b4@gmail.com>
+Date:   Wed, 1 Apr 2020 17:33:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53a12ffe-00d5-4cd9-298b-08d7d6499379
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 14:32:59.0572
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g3pAztIVKHzBMwu3Zonjp/60KYWpz0HOONTcgqPBSW5o2k/AHqQ79aJDgPSSdJfUjBvFr1SYAxtmjDG+VYGgMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5117
+In-Reply-To: <1ea292db-d0c3-935e-e74c-7b4afe251edc@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iZXJ0LA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYmVy
-dCBSaWNodGVyIDxycmljaHRlckBtYXJ2ZWxsLmNvbT4NCj4gU2VudDogMjAyMMTqNNTCMcjVIDE4
-OjU3DQo+IFRvOiBTaGVycnkgU3VuIDxzaGVycnkuc3VuQG54cC5jb20+DQo+IENjOiBicEBhbGll
-bjguZGU7IG1jaGVoYWJAa2VybmVsLm9yZzsgdG9ueS5sdWNrQGludGVsLmNvbTsNCj4gamFtZXMu
-bW9yc2VAYXJtLmNvbTsgbWljaGFsLnNpbWVrQHhpbGlueC5jb207DQo+IG1hbmlzaC5uYXJhbmlA
-eGlsaW54LmNvbTsgbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxA
-dmdlci5rZXJuZWwub3JnOyBGcmFuayBMaSA8ZnJhbmsubGlAbnhwLmNvbT4NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2MiA0LzRdIEVEQUM6IHN5bm9wc3lzOiBBZGQgdXNlZnVsIGRlYnVnIGFuZCBv
-dXRwdXQNCj4gaW5mb3JtYXRpb24gZm9yIDY0Yml0IHN5c3RlbXMNCj4gDQo+IE9uIDAxLjA0LjIw
-IDE1OjM5OjA5LCBTaGVycnkgU3VuIHdyb3RlOg0KPiA+IE5vdyB0aGUgc3lub3BzeXNfZWRhYyBk
-cml2ZXIgb25seSBzdXBwb3J0IHRvIG91dHB1dCB0aGUgMzItYml0IGVycm9yDQo+ID4gZGF0YSwg
-YnV0IGZvciA2NCBiaXQgc3lzdGVtcywgc3VjaCBhcyBpLk1YOE1QLCA2NCBiaXQgZXJyb3IgZGF0
-YSBpcw0KPiA+IG5lZWRlZC4gQXQgdGhlIHNhbWUgdGltZSwgd2hlbiBDRS9VRSBoYXBwZW5zLCBz
-eW5kcm9tZSBkYXRhIGlzIGFsc28NCj4gPiB1c2VmdWwgdG8gc2hvd2VkIHRvIHVzZXIuIFNvIGhl
-cmUgYWRkIGRhdGFfaGlnaCBhbmQgc3luZHJvbWUgZGF0YSBmb3INCj4gPiA2NC1iaXQgc3lzdGVt
-cy4NCj4gPg0KPiA+IEFuZCBpbiBvcmRlciB0byBkaXN0aW5ndWlzaCA2NC1iaXQgc3lzdGVtcyBh
-bmQgb3RoZXIgc3lzdGVtcywgaGVyZQ0KPiA+IGFkanVzdCB0aGUgcG9zaXRpb24gb2YgdGhlIHp5
-bnFtcF9nZXRfZHR5cGUoKSwgc28gd2UgY2FuIGNhbGxlZCB0aGlzDQo+ID4gZnVuY3Rpb24gdG8g
-ZGlzdGluZ3Vpc2ggaXQuIFRvIGVuc3VyZSB0aGF0IGZ1bmN0aW9ucyBvZiB0aGUgc2FtZQ0KPiA+
-IGZ1bmN0aW9uIGFyZSBpbiB0aGUgc2FtZSBwb3NpdGlvbiwgaGVyZSBhZGp1c3QgdGhlIHBvc2l0
-aW9uIG9mIHRoZQ0KPiA+IHp5bnFfZ2V0X2R0eXBlKCkgdG9vLg0KPiA+DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogU2hlcnJ5IFN1biA8c2hlcnJ5LnN1bkBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2
-ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jIHwgMTgyDQo+ID4gKysrKysrKysrKysrKysrKysrKyst
-LS0tLS0tLS0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEwMiBpbnNlcnRpb25zKCspLCA4
-MCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2VkYWMvc3lub3Bz
-eXNfZWRhYy5jDQo+ID4gYi9kcml2ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jIGluZGV4IGJmNDIw
-MmEyNDY4My4uZThjMzYzMWRkZmY0DQo+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZWRhYy9z
-eW5vcHN5c19lZGFjLmMNCj4gPiArKysgYi9kcml2ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jDQo+
-ID4gQEAgLTI3OCwxOCArMjc4LDIyIEBADQo+ID4gICAqIEBjb2w6CUNvbHVtbiBudW1iZXIuDQo+
-ID4gICAqIEBiYW5rOglCYW5rIG51bWJlci4NCj4gPiAgICogQGJpdHBvczoJQml0IHBvc2l0aW9u
-Lg0KPiA+IC0gKiBAZGF0YToJRGF0YSBjYXVzaW5nIHRoZSBlcnJvci4NCj4gPiArICogQGRhdGFf
-bG93OglMb3cgYml0IGRhdGEgY2F1c2luZyB0aGUgZXJyb3IuDQo+ID4gKyAqIEBkYXRhX2hpZ2g6
-CUhpZ2ggYml0IGRhdGEgY2F1c2luZyB0aGUgZXJyb3IodXNlZCBmb3IgNjQgYml0DQo+IHN5c3Rl
-bXMpLg0KPiA+ICAgKiBAYmFua2dycG5yOglCYW5rIGdyb3VwIG51bWJlci4NCj4gPiAgICogQGJs
-a25yOglCbG9jayBudW1iZXIuDQo+ID4gKyAqIEBzeW5kcm9tZToJU3luZHJvbWUgb2YgdGhlIGVy
-cm9yLg0KPiA+ICAgKi8NCj4gPiAgc3RydWN0IGVjY19lcnJvcl9pbmZvIHsNCj4gPiAgCXUzMiBy
-b3c7DQo+ID4gIAl1MzIgY29sOw0KPiA+ICAJdTMyIGJhbms7DQo+ID4gIAl1MzIgYml0cG9zOw0K
-PiA+IC0JdTMyIGRhdGE7DQo+ID4gKwl1MzIgZGF0YV9sb3c7DQo+ID4gKwl1MzIgZGF0YV9oaWdo
-Ow0KPiANCj4gV2hlcmUgYXJlIDE2LCAzMiBhbmQgNjQgYml0IHdpZHRocy4gWW91IGNvdWxkIGhh
-bmRsZSB0aGVtIGFsbCB0aGUgc2FtZSBpbiBhDQo+IHU2NC4NCj4gDQo+IElmIEkgYW0gbm90IHdy
-b25nLCB0aGUgd2lkdGggaXMgZml4IGZvciB0aGUgd2hvbGUgbWNpLiBTbyB5b3UgY291bGQgY3Jl
-YXRlDQo+IHZhcmlvdXMgLmdldF9lcnJvcl9pbmZvKCkgZnVuY3Rpb25zIGRlcGVuZGluZyBvbiB0
-aGUgZGF0YSB3aWR0aCB3aXRob3V0IHJ1bg0KPiB0aW1lIHdpZHRoIGNoZWNrcy4NCj4gDQoNClll
-cywgaGVyZSB3ZSBjYW4gdXNlIHU2NC4gV2lsbCBjb3JyZWN0IGl0IGluIHYzLg0KRm9yIHRoZSB6
-eW5xLCBpdCdzIDE2LWJpdCBidXMgd2lkdGgsIGZvciBpbXg4bXAsIGl0J3MgNjQtYml0IGJ1cyB3
-aWR0aC4NCkJ1dCBmb3IgenlucW1wLCBpdCdzIG9wdGlvbmFsIGJldHdlZW4gMzItYml0IGFuZCA2
-NC1iaXQgYnVzIHdpZHRoLA0KU28gd2UgaGFkIGJldHRlciBydW4gdGltZSBjaGVjayB0aGUgYnVz
-IHdpZHRoLCB3aGF0IGRvIHlvdSB0aGluaz8NCg0KPiA+ICAJdTMyIGJhbmtncnBucjsNCj4gPiAg
-CXUzMiBibGtucjsNCj4gPiArCXUzMiBzeW5kcm9tZTsNCj4gPiAgfTsNCj4gPg0KPiA+ICAvKioN
-Cj4gDQo+ID4gQEAgLTM5OSw3ICs0NjcsNyBAQCBzdGF0aWMgaW50IHp5bnFfZ2V0X2Vycm9yX2lu
-Zm8oc3RydWN0DQo+IHN5bnBzX2VkYWNfcHJpdiAqcHJpdikNCj4gPiAgCXAtPnVlaW5mby5yb3cg
-PSAocmVndmFsICYgQUREUl9ST1dfTUFTSykgPj4gQUREUl9ST1dfU0hJRlQ7DQo+ID4gIAlwLT51
-ZWluZm8uY29sID0gcmVndmFsICYgQUREUl9DT0xfTUFTSzsNCj4gPiAgCXAtPnVlaW5mby5iYW5r
-ID0gKHJlZ3ZhbCAmIEFERFJfQkFOS19NQVNLKSA+Pg0KPiBBRERSX0JBTktfU0hJRlQ7DQo+ID4g
-LQlwLT51ZWluZm8uZGF0YSA9IHJlYWRsKGJhc2UgKyBVRV9EQVRBXzMxXzBfT0ZTVCk7DQo+ID4g
-KwlwLT51ZWluZm8uZGF0YV9sb3cgPSByZWFkbChiYXNlICsgVUVfREFUQV8zMV8wX09GU1QpOw0K
-PiA+ICAJY2xlYXJ2YWwgfD0gRUNDX0NUUkxfQ0xSX1VFX0VSUjsNCj4gPg0KPiA+ICBvdXQ6DQo+
-ID4gQEAgLTQ0MywxMCArNTExLDE0IEBAIHN0YXRpYyBpbnQgenlucW1wX2dldF9lcnJvcl9pbmZv
-KHN0cnVjdA0KPiBzeW5wc19lZGFjX3ByaXYgKnByaXYpDQo+ID4gIAlwLT5jZWluZm8uYmFua2dy
-cG5yID0gKHJlZ3ZhbCAmDQo+IAlFQ0NfQ0VBRERSMV9CTktHUlBfTUFTSykgPj4NCj4gPiAgCQkJ
-CQlFQ0NfQ0VBRERSMV9CTktHUlBfU0hJRlQ7DQo+ID4gIAlwLT5jZWluZm8uYmxrbnIgPSAocmVn
-dmFsICYgRUNDX0NFQUREUjFfQkxLTlJfTUFTSyk7DQo+ID4gLQlwLT5jZWluZm8uZGF0YSA9IHJl
-YWRsKGJhc2UgKyBFQ0NfQ1NZTkQwX09GU1QpOw0KPiA+IC0JZWRhY19kYmcoMiwgIkVDQ0NTWU4w
-OiAweCUwOFggRUNDQ1NZTjE6IDB4JTA4WCBFQ0NDU1lOMjoNCj4gMHglMDhYXG4iLA0KPiA+IC0J
-CSByZWFkbChiYXNlICsgRUNDX0NTWU5EMF9PRlNUKSwgcmVhZGwoYmFzZSArDQo+IEVDQ19DU1lO
-RDFfT0ZTVCksDQo+ID4gLQkJIHJlYWRsKGJhc2UgKyBFQ0NfQ1NZTkQyX09GU1QpKTsNCj4gPiAr
-CXAtPmNlaW5mby5kYXRhX2xvdyA9IHJlYWRsKGJhc2UgKyBFQ0NfQ1NZTkQwX09GU1QpOw0KPiA+
-ICsJaWYgKHp5bnFtcF9nZXRfZHR5cGUoYmFzZSkgPT0gREVWX1g4KSB7DQo+ID4gKwkJcC0+Y2Vp
-bmZvLmRhdGFfaGlnaCA9IHJlYWRsKGJhc2UgKyBFQ0NfQ1NZTkQxX09GU1QpOw0KPiA+ICsJCXAt
-PmNlaW5mby5zeW5kcm9tZSA9IHJlYWRsKGJhc2UgKyBFQ0NfQ1NZTkQyX09GU1QpOw0KPiA+ICsJ
-CWVkYWNfZGJnKDIsICJDRSBkYXRhX2xvdzogMHglMDhYIGRhdGFfaGlnaDogMHglMDhYDQo+IHN5
-bmRyb21lOiAweCUwOFhcbiIsDQo+ID4gKwkJCSBwLT5jZWluZm8uZGF0YV9sb3csIHAtPmNlaW5m
-by5kYXRhX2hpZ2gsDQo+ID4gKwkJCSBwLT5jZWluZm8uc3luZHJvbWUpOw0KPiANCj4gWW91IGFy
-ZSBsb29zaW5nIGVkYWNfZGJnKCkgaGVyZSBmb3IgdGhlICE9IERFVl9YOCBjYXNlcy4NCj4gDQo+
-ID4gKwl9DQo+ID4gIHVlX2VycjoNCj4gPiAgCWlmICghcC0+dWVfY250KQ0KPiA+ICAJCWdvdG8g
-b3V0Ow0KPiA+IEBAIC00NTksNyArNTMxLDE0IEBAIHN0YXRpYyBpbnQgenlucW1wX2dldF9lcnJv
-cl9pbmZvKHN0cnVjdA0KPiBzeW5wc19lZGFjX3ByaXYgKnByaXYpDQo+ID4gIAlwLT51ZWluZm8u
-YmFuayA9IChyZWd2YWwgJiBFQ0NfQ0VBRERSMV9CTktOUl9NQVNLKSA+Pg0KPiA+ICAJCQkJCUVD
-Q19DRUFERFIxX0JOS05SX1NISUZUOw0KPiA+ICAJcC0+dWVpbmZvLmJsa25yID0gKHJlZ3ZhbCAm
-IEVDQ19DRUFERFIxX0JMS05SX01BU0spOw0KPiA+IC0JcC0+dWVpbmZvLmRhdGEgPSByZWFkbChi
-YXNlICsgRUNDX1VFU1lORDBfT0ZTVCk7DQo+ID4gKwlwLT51ZWluZm8uZGF0YV9sb3cgPSByZWFk
-bChiYXNlICsgRUNDX1VFU1lORDBfT0ZTVCk7DQo+ID4gKwlpZiAoenlucW1wX2dldF9kdHlwZShi
-YXNlKSA9PSBERVZfWDgpIHsNCj4gPiArCQlwLT51ZWluZm8uZGF0YV9oaWdoID0gcmVhZGwoYmFz
-ZSArIEVDQ19VRVNZTkQxX09GU1QpOw0KPiA+ICsJCXAtPnVlaW5mby5zeW5kcm9tZSA9IHJlYWRs
-KGJhc2UgKyBFQ0NfVUVTWU5EMl9PRlNUKTsNCj4gPiArCQllZGFjX2RiZygyLCAiVUUgZGF0YV9s
-b3c6IDB4JTA4WCBkYXRhX2hpZ2g6IDB4JTA4WA0KPiBzeW5kcm9tZTogMHglMDhYXG4iLA0KPiA+
-ICsJCQkgcC0+dWVpbmZvLmRhdGFfbG93LCBwLT51ZWluZm8uZGF0YV9oaWdoLA0KPiA+ICsJCQkg
-cC0+dWVpbmZvLnN5bmRyb21lKTsNCj4gDQo+IFNpbWlsYXIgaGVyZSwgbm8gZWRhY19kYmcoKSBm
-b3IgIT0gREVWX1g4Lg0KDQpUaGFua3MsIHdpbGwgY29ycmVjdCBpdCBpbiB2My4NCg0KPiANCj4g
-PiArCX0NCj4gPiAgb3V0Og0KPiA+ICAJY2xlYXJ2YWwgPSBFQ0NfQ1RSTF9DTFJfQ0VfRVJSIHwg
-RUNDX0NUUkxfQ0xSX0NFX0VSUkNOVDsNCj4gPiAgCWNsZWFydmFsIHw9IEVDQ19DVFJMX0NMUl9V
-RV9FUlIgfCBFQ0NfQ1RSTF9DTFJfVUVfRVJSQ05UOw0KPiBAQCAtNDgwLDIwDQo+ID4gKzU1OSwy
-NyBAQCBzdGF0aWMgdm9pZCBoYW5kbGVfZXJyb3Ioc3RydWN0IG1lbV9jdGxfaW5mbyAqbWNpLCBz
-dHJ1Y3QNCj4gPiBzeW5wc19lY2Nfc3RhdHVzICpwKSAgew0KPiA+ICAJc3RydWN0IHN5bnBzX2Vk
-YWNfcHJpdiAqcHJpdiA9IG1jaS0+cHZ0X2luZm87DQo+ID4gIAlzdHJ1Y3QgZWNjX2Vycm9yX2lu
-Zm8gKnBpbmY7DQo+ID4gKwlpbnQgbjsNCj4gPg0KPiA+ICAJaWYgKHAtPmNlX2NudCkgew0KPiA+
-ICAJCXBpbmYgPSAmcC0+Y2VpbmZvOw0KPiA+ICAJCWlmIChwcml2LT5wX2RhdGEtPnF1aXJrcyAm
-IEREUl9FQ0NfSU5UUl9TVVBQT1JUKSB7DQo+ID4gLQkJCXNucHJpbnRmKHByaXYtPm1lc3NhZ2Us
-IFNZTlBTX0VEQUNfTVNHX1NJWkUsDQo+ID4gLQkJCQkgIkREUiBFQ0MgZXJyb3IgdHlwZTolcyBS
-b3cgJWQgQmFuayAlZA0KPiBCYW5rR3JvdXAgTnVtYmVyICVkIEJsb2NrIE51bWJlciAlZCBCaXQg
-UG9zaXRpb246ICVkIERhdGE6IDB4JTA4eCIsDQo+ID4gLQkJCQkgIkNFIiwgcGluZi0+cm93LCBw
-aW5mLT5iYW5rLA0KPiA+IC0JCQkJIHBpbmYtPmJhbmtncnBuciwgcGluZi0+YmxrbnIsDQo+ID4g
-LQkJCQkgcGluZi0+Yml0cG9zLCBwaW5mLT5kYXRhKTsNCj4gPiArCQkJbiA9IHNucHJpbnRmKHBy
-aXYtPm1lc3NhZ2UsIFNZTlBTX0VEQUNfTVNHX1NJWkUsDQo+ID4gKwkJCQkgICAgICJERFIgRUND
-IGVycm9yIHR5cGU6JXMgUm93ICVkIEJhbmsgJWQNCj4gQmFua0dyb3VwIE51bWJlciAlZCBCbG9j
-ayBOdW1iZXIgJWQgQml0IFBvc2l0aW9uOiAlZCBEYXRhOiAweCUwOHgiLA0KPiA+ICsJCQkJICAg
-ICAiQ0UiLCBwaW5mLT5yb3csIHBpbmYtPmJhbmssDQo+ID4gKwkJCQkgICAgIHBpbmYtPmJhbmtn
-cnBuciwgcGluZi0+YmxrbnIsDQo+ID4gKwkJCQkgICAgIHBpbmYtPmJpdHBvcywgcGluZi0+ZGF0
-YV9sb3cpOw0KPiA+ICsNCj4gPiArCQkJaWYgKHp5bnFtcF9nZXRfZHR5cGUocHJpdi0+YmFzZWFk
-ZHIpID09IERFVl9YOCkNCj4gDQo+IFRoaXMgaXMgenlucW1wIHNwZWNpZmljLCByaWdodD8gYnV0
-IHlvdSBjYWxsIGl0IGluIHRoZSBnZW5lcmljIGZ1bmN0aW9uDQo+IGhhbmRsZV9lcnJvcigpLg0K
-DQpZZXMsIGFsdGhvdWdoIGhhbmRsZV9lcnJvcigpIGlzIGEgZ2VuZXJpYyBmdW5jdGlvbiwgDQpi
-dXQgdGhpcyBvcGVyYXRpb24gaXMgY2hlY2tlZCBieSBwcml2LT5wX2RhdGEtPnF1aXJrcywNCnNv
-IGhlcmUgaXMgenlucW1wIGFuZCBpbXg4bXAgc3BlY2lmaWMuDQoNCkJlc3QgcmVnYXJkcw0KU2hl
-cnJ5IFN1bg0KDQo+IA0KPiAtUm9iZXJ0DQo+IA0KPiA+ICsJCQkJc25wcmludGYocHJpdi0+bWVz
-c2FnZSArIG4sDQo+ID4gKwkJCQkJIFNZTlBTX0VEQUNfTVNHX1NJWkUgLSBuLA0KPiA+ICsJCQkJ
-CSAiIERhdGFfaGlnaDogMHglMDh4IFN5bmRyb21lOg0KPiAweCUwOHgiLA0KPiA+ICsJCQkJCSBw
-aW5mLT5kYXRhX2hpZ2gsIHBpbmYtPnN5bmRyb21lKTsNCj4gPiAgCQl9IGVsc2Ugew0KPiA+ICAJ
-CQlzbnByaW50Zihwcml2LT5tZXNzYWdlLCBTWU5QU19FREFDX01TR19TSVpFLA0KPiA+ICAJCQkJ
-ICJERFIgRUNDIGVycm9yIHR5cGU6JXMgUm93ICVkIEJhbmsgJWQNCj4gQ29sICVkIEJpdCBQb3Np
-dGlvbjogJWQgRGF0YTogMHglMDh4IiwNCj4gPiAgCQkJCSAiQ0UiLCBwaW5mLT5yb3csIHBpbmYt
-PmJhbmssIHBpbmYtPmNvbCwNCj4gPiAtCQkJCSBwaW5mLT5iaXRwb3MsIHBpbmYtPmRhdGEpOw0K
-PiA+ICsJCQkJIHBpbmYtPmJpdHBvcywgcGluZi0+ZGF0YV9sb3cpOw0KPiA+ICAJCX0NCj4gPg0K
-PiA+ICAJCWVkYWNfbWNfaGFuZGxlX2Vycm9yKEhXX0VWRU5UX0VSUl9DT1JSRUNURUQsIG1jaSwN
-Cg==
+01.04.2020 15:51, Wang, Jiada пишет:
+> Hi Dmitry
+> 
+> Thanks for your comments
+> 
+> On 2020/04/01 0:08, Dmitry Osipenko wrote:
+>> 31.03.2020 13:50, Jiada Wang пишет:
+>> ...
+>>> +static void mxt_watchdog_work(struct work_struct *work)
+>>> +{
+>>> +    struct mxt_data *data =
+>>> +        container_of(work, struct mxt_data, watchdog_work.work);
+>>> +    u16 info_buf;
+>>> +    int ret;
+>>> +
+>>> +    if (data->suspended || data->in_bootloader ||
+>>> +        data->mxt_status.intp_triggered)
+>>> +        goto sched_work;
+>>
+>> Won't it become a problem if other thread puts device into suspended /
+>> bootloader state in the same time?
+>>
+> right, I will use mutex lock to prevent such case.
+> also I think data->mxt_status.intp_triggered isn't necessary,
+> when lock is used.
+> 
+>>> +    ret = __mxt_read_reg(data->client, 0, sizeof(info_buf), &info_buf);
+>>> +
+>>> +    if (ret) {
+>>> +        data->mxt_status.error_count++;
+>>> +        data->mxt_status.dev_status = false;
+>>> +    } else {
+>>> +        data->mxt_status.dev_status = true;
+>>> +    }
+>>> +
+>>> +sched_work:
+>>> +    schedule_delayed_work(&data->watchdog_work,
+>>> +                  msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
+>>> +}
+>> ...
+>>
+>>> @@ -4329,6 +4390,12 @@ static int mxt_probe(struct i2c_client
+>>> *client, const struct i2c_device_id *id)
+>>>           msleep(MXT_RESET_TIME);
+>>>       }
+>>>   +    if (debug_state) {
+>>> +        INIT_DELAYED_WORK(&data->watchdog_work, mxt_watchdog_work);
+>>> +        schedule_delayed_work(&data->watchdog_work,
+>>> +                      msecs_to_jiffies(MXT_WATCHDOG_TIMEOUT));
+>>> +    }
+>>> +
+>>>       error = mxt_initialize(data);
+>>>       if (error)
+>>>           goto err_free_object;
+>>> @@ -4343,6 +4410,8 @@ static int mxt_probe(struct i2c_client *client,
+>>> const struct i2c_device_id *id)
+>>>       return 0;
+>>>     err_free_object:
+>>> +    if (debug_state)
+>>> +        cancel_delayed_work_sync(&data->watchdog_work);
+>>>       mxt_free_input_device(data);
+>>>       mxt_free_object_table(data);
+>>>       if (data->reset_gpio) {
+>>> @@ -4367,6 +4436,9 @@ static int mxt_remove(struct i2c_client *client)
+>>>       mxt_free_input_device(data);
+>>>       mxt_free_object_table(data);
+>>>   +    if (debug_state)
+>>> +        cancel_delayed_work_sync(&data->watchdog_work);
+>>
+>> What will happen if debug_state was false during of mxt_probe() and then
+>> the debug_state parameter was changed to true via sysfs?
+> 
+> module_param debug_state is added with permission 0,
+> so it's value won't change during driver operation
+
+Thank you for the clarification, I didn't realize that setting
+permission to 0 hides the parameter completely in sysfs.
+
+>> I think the INIT_DELAYED_WORK() and cancel_delayed_work_sync() should be
+>> invoked unconditionally.
+>>
+>>>       return 0;
+>>>   }
+>>>   @@ -4463,3 +4535,7 @@ module_i2c_driver(mxt_driver);
+>>>   MODULE_AUTHOR("Joonyoung Shim <jy0922.shim@samsung.com>");
+>>>   MODULE_DESCRIPTION("Atmel maXTouch Touchscreen driver");
+>>>   MODULE_LICENSE("GPL");
+>>> +
+>>> +module_param(debug_state, bool, 0);
+>>> +MODULE_PARM_DESC(debug_state, "Enable/Disable watchdog work to check
+>>> device state (default="
+>>> +         __MODULE_STRING(MXT_DEBUG_STATE) ")");
+>>>
+>>
+>> The "default=..." part of MODULE_PARM_DESC() probably isn't really
+>> useful and could be omitted, don't you think so?
+>>
+> since debug_state can't be updated via sysfs, so I think add it's
+> default in MODULE_PARM_DESC() is useful? what's your opinion?
+
+If you want to keep the "default" kept in the description, then perhaps
+a simple "default=false" should be enough because nothing would be able
+to change it to true.
