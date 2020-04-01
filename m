@@ -2,113 +2,166 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C10C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B3CC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B0C206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31DD206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nj9SP6zN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3p33A/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732316AbgDATF4 (ORCPT
+        id S1732490AbgDATGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:05:56 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36151 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726785AbgDATF4 (ORCPT
+        Wed, 1 Apr 2020 15:06:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43016 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgDATF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:05:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585767955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zFdpcoTA4jsLarYiYPsXrW1fL3hk+7go53WyoZphPvg=;
-        b=Nj9SP6zN8LEExUdAt3HweuJYqgFm+5uacTlTMNkjefikohflmFsdrtgJYNgu/WWSr56fvJ
-        RaWWHNbTSW8CRFyUun4hdAMUaAG5Eo58yAH6zqqDt8i7SqJuskurDZx7SMJsVw6cIkLOaq
-        MLACZEyMqTHnUED1NbUpwCy+eZ9NCMI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-WaMpdmD1Mf2XN1TgppcOtw-1; Wed, 01 Apr 2020 15:05:53 -0400
-X-MC-Unique: WaMpdmD1Mf2XN1TgppcOtw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A35F18A5512;
-        Wed,  1 Apr 2020 19:05:51 +0000 (UTC)
-Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E12E55DA76;
-        Wed,  1 Apr 2020 19:05:49 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 14:05:48 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Julien Thierry <jthierry@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH 3/5] objtool: Support Clang non-section symbols in ORC
- generation
-Message-ID: <20200401190548.rodiauk3iolknvfe@treble>
-References: <cover.1585761021.git.jpoimboe@redhat.com>
- <9a9cae7fcf628843aabe5a086b1a3c5bf50f42e8.1585761021.git.jpoimboe@redhat.com>
- <20200401184953.GZ20730@hirez.programming.kicks-ass.net>
+        Wed, 1 Apr 2020 15:05:59 -0400
+Received: by mail-lj1-f194.google.com with SMTP id g27so607278ljn.10;
+        Wed, 01 Apr 2020 12:05:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f3gOU6KvThAZ/bQ9zaPHgqs0KyrN+k/G9LgmPKVwVsg=;
+        b=C3p33A/BRXhUYLxfrivTHH70/6MyRFvTmN9PTYhjXrj1PQjHhkjQgEpG49zwsezCB9
+         fYD8hwXhwSLYNCF/ueKd1SqJYhP0LYe7mTmXJ1VnNjowibX/9IPL95ig4cJ1fC6zwjYt
+         Y25dqgUr3aATMzAU/qz18lOn8ygfAWTTDphvgHII0MIHni/kfbJfXbtIxT8vFKkkx3S0
+         KzCJioRqizSgK/Co20+D9bK81E7d/HpMVUpINDSlX2phTtqPtsERKdOyGNaq90QbyV/2
+         u51cZ6s6CQDVdYYEhjCjB8NOHd4NjJIZluxN/SWNWXVV/Q0q4w87eqPSTKAxRDCkBAE3
+         jvsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f3gOU6KvThAZ/bQ9zaPHgqs0KyrN+k/G9LgmPKVwVsg=;
+        b=dEqF/owOsji10AJ1Bf9eQRqH84zF+IJAx61MOR7oqLRp92qD6TVHAgSv2yrS4fHuiF
+         M37Pzx/+GYhPXmLEWMjbEYBulU83rNHvRStWhUjO/+qJOpiDzJw0So6zXvSzvNK8uP4f
+         WhcoCpM2JYOS41GNNllSp9G/m33/5MoXgbuz90ZDxlVOfY7UoRE2jUk/TLStIpVZ57Mc
+         pLmAIekIy/gGWhCe2EjNUb379s35HVY8+4B2LvnEE4IS1Wc9Sd2Be5iXMK5AExWBMuOE
+         Fjjt2wyF5SLnrACt+0aC3ywCqnuw7R/8KDW/3W3NfGX4T+vCUJZtpQ+2NzO8GNM8ekDm
+         gRmQ==
+X-Gm-Message-State: AGi0PuYWGA5DfZlrFy8+q5wMb2Bf1tzeUoWNWgt3tK3oZMInxLDvmsX1
+        s258l8jHCKy+HfLsOuWKfDU=
+X-Google-Smtp-Source: APiQypJpxlS6Y1IDkvmvwhV7f/drPoarZ841bQI8pXJPemsMJAjo/zXMT2qjSiPnfb1IjIHBYet/hg==
+X-Received: by 2002:a05:651c:1102:: with SMTP id d2mr14234025ljo.102.1585767956556;
+        Wed, 01 Apr 2020 12:05:56 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id y124sm2245266lff.48.2020.04.01.12.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 12:05:55 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 1 Apr 2020 21:05:48 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
+        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401190548.GA6360@pc636>
+References: <20200331140433.GA26498@pc636>
+ <20200331150911.GC236678@google.com>
+ <20200331160119.GA27614@pc636>
+ <20200331183000.GD236678@google.com>
+ <20200401122550.GA32593@pc636>
+ <20200401134745.GV19865@paulmck-ThinkPad-P72>
+ <20200401181601.GA4042@pc636>
+ <20200401182615.GE19865@paulmck-ThinkPad-P72>
+ <20200401183745.GA5960@pc636>
+ <20200401185439.GG19865@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401184953.GZ20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200401185439.GG19865@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 08:49:53PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 01, 2020 at 01:23:27PM -0500, Josh Poimboeuf wrote:
+On Wed, Apr 01, 2020 at 11:54:39AM -0700, Paul E. McKenney wrote:
+> On Wed, Apr 01, 2020 at 08:37:45PM +0200, Uladzislau Rezki wrote:
+> > On Wed, Apr 01, 2020 at 11:26:15AM -0700, Paul E. McKenney wrote:
+> > > On Wed, Apr 01, 2020 at 08:16:01PM +0200, Uladzislau Rezki wrote:
+> > > > > > > 
+> > > > > > > Right. Per discussion with Paul, we discussed that it is better if we
+> > > > > > > pre-allocate N number of array blocks per-CPU and use it for the cache.
+> > > > > > > Default for N being 1 and tunable with a boot parameter. I agree with this.
+> > > > > > > 
+> > > > > > As discussed before, we can make use of memory pool API for such
+> > > > > > purpose. But i am not sure if it should be one pool per CPU or
+> > > > > > one pool per NR_CPUS, that would contain NR_CPUS * N pre-allocated
+> > > > > > blocks.
+> > > > > 
+> > > > > There are advantages and disadvantages either way.  The advantage of the
+> > > > > per-CPU pool is that you don't have to worry about something like lock
+> > > > > contention causing even more pain during an OOM event.  One potential
+> > > > > problem wtih the per-CPU pool can happen when callbacks are offloaded,
+> > > > > in which case the CPUs needing the memory might never be getting it,
+> > > > > because in the offloaded case (RCU_NOCB_CPU=y) the CPU posting callbacks
+> > > > > might never be invoking them.
+> > > > > 
+> > > > > But from what I know now, systems built with CONFIG_RCU_NOCB_CPU=y
+> > > > > either don't have heavy callback loads (HPC systems) or are carefully
+> > > > > configured (real-time systems).  Plus large systems would probably end
+> > > > > up needing something pretty close to a slab allocator to keep from dying
+> > > > > from lock contention, and it is hard to justify that level of complexity
+> > > > > at this point.
+> > > > > 
+> > > > > Or is there some way to mark a specific slab allocator instance as being
+> > > > > able to keep some amount of memory no matter what the OOM conditions are?
+> > > > > If not, the current per-CPU pre-allocated cache is a better choice in the
+> > > > > near term.
+> > > > > 
+> > > > As for mempool API:
+> > > > 
+> > > > mempool_alloc() just tries to make regular allocation taking into
+> > > > account passed gfp_t bitmask. If it fails due to memory pressure,
+> > > > it uses reserved preallocated pool that consists of number of
+> > > > desirable elements(preallocated when a pool is created).
+> > > > 
+> > > > mempoll_free() returns an element to to pool, if it detects that
+> > > > current reserved elements are lower then minimum allowed elements,
+> > > > it will add an element to reserved pool, i.e. refill it. Otherwise
+> > > > just call kfree() or whatever we define as "element-freeing function."
+> > > 
+> > > Unless I am missing something, mempool_alloc() acquires a per-mempool
+> > > lock on each invocation under OOM conditions.  For our purposes, this
+> > > is essentially a global lock.  This will not be at all acceptable on a
+> > > large system.
+> > > 
+> > It uses pool->lock to access to reserved objects, so if we have one memory
+> > pool per one CPU then it would be serialized.
 > 
-> > @@ -105,8 +100,32 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
-> >  	}
-> >  	memset(rela, 0, sizeof(*rela));
-> >  
-> > -	rela->sym = insn_sec->sym;
-> > -	rela->addend = insn_off;
-> > +	if (insn_sec->sym) {
-> > +		rela->sym = insn_sec->sym;
-> > +		rela->addend = insn_off;
-> > +	} else {
-> > +		/*
-> > +		 * The Clang assembler doesn't produce section symbols, so we
-> > +		 * have to reference the function symbol instead:
-> > +		 */
-> > +		rela->sym = find_symbol_containing(insn_sec, insn_off);
+> I am having difficulty parsing your sentence.  It looks like your thought
+> is to invoke mempool_create() for each CPU, so that the locking would be
+> on a per-CPU basis, as in 128 invocations of mempool_init() on a system
+> having 128 hardware threads.  Is that your intent?
 > 
-> It's a good thing I made that a lot faster I suppose ;-)
+In order to serialize it, you need to have it per CPU. So if you have 128
+cpus, it means:
 
-:-)
+<snip>
+for_each_possible_cpu(...)
+    cpu_pool = mempool_create();
+<snip>
 
-> > +		if (!rela->sym) {
-> > +			/*
-> > +			 * Hack alert.  This happens when we need to reference
-> > +			 * the NOP pad insn immediately after the function.
-> > +			 */
-> > +			rela->sym = find_symbol_containing(insn_sec,
-> > +							   insn_off - 1);
-> 
-> Urgh, when does that happen? 
+but please keep in mind that it is not my intention, but i had a though
+about mempool API. Because it has pre-reserve logic inside.
 
-It happens naturally in the padding between functions, since objtool
-doesn't traverse those instructions.  So they have undefined entries
-like
-
- .text+68: sp:(und) bp:(und) type:call end:0
-
-I suppose those aren't technically necessary.
-
--- 
-Josh
-
+--
+Vlad Rezki
