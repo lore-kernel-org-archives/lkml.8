@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0505C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DD8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9547720658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E410206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759024;
-	bh=JVZfJY6/5ALNIW2gEhKmn1RI1T33U9c2/ocITbeMS4A=;
+	s=default; t=1585759029;
+	bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TFcbtKJPPJaCclYq9RJeE95ucBwU8ENu5KTT63qvDw2vVhEhAmDW+8trDat+fH62z
-	 ZHecYkMvF+n79qwh3bCMYTUsCMpBjT2XMSfNg8Ey1OrmbRQluB0fi/42Y1w2FylMfu
-	 Wlt2RJQ60WP0Ls6pYt0aoGQ12aTxBUhTlvsCP+vo=
+	b=s+lBuwuBb7HczgFxZbNBjuMQDg5ju9c4H4FDx9niFLkw++BDqxo4b4nt9PriXDL8f
+	 MTU6z4MKhLPy3KbbdiN200mWcaEaFN78qzlNT0wIX2EifxshnHKLppoy/PtcC6H2eq
+	 qM/Mn/6BivR0nObNvguXIfpD6uAt/hU6GKErxWl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388915AbgDAQhC (ORCPT
+        id S2388926AbgDAQhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:37:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36048 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:37:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388900AbgDAQg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:57 -0400
+        id S2388914AbgDAQhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:37:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 452D620658;
-        Wed,  1 Apr 2020 16:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CD2F20658;
+        Wed,  1 Apr 2020 16:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759016;
-        bh=JVZfJY6/5ALNIW2gEhKmn1RI1T33U9c2/ocITbeMS4A=;
+        s=default; t=1585759021;
+        bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qv0OYuAg95qks8AoVilkFDDtTtOjvypmvisXDuWOUXFY4zyIYVFHeq5TN0S+hN07i
-         nbxSTnXsPUnIVf4WKV7oQxT1MqBZFdAA4d/PN8BgCcKdgSkanMj0iwC17SwPHgbMlY
-         9LEJ2/v0d+Vu5ohEQUg+rK7PoVKrUwEWpUjD5rYM=
+        b=IZoz8kALSLujuHUwO7UJ63rCQe9xapmefw1R23Is3TW3GEBaS1PCaTqU/meVPZCAm
+         HW3rxOFFwLKpADPmtWwBio8DI+d198DAgXpiTqw8AXAkK8m7Ba4Ugw3UQ1sTOn+RL+
+         sVBjKiDivif55XaxJoECBIdA4vmnP0smb8px2LlA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        stable@vger.kernel.org, Mike Gilbert <floppym@gentoo.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 050/102] KVM: VMX: Do not allow reexecute_instruction() when skipping MMIO instr
-Date:   Wed,  1 Apr 2020 18:17:53 +0200
-Message-Id: <20200401161542.437929623@linuxfoundation.org>
+Subject: [PATCH 4.9 052/102] cpupower: avoid multiple definition with gcc -fno-common
+Date:   Wed,  1 Apr 2020 18:17:55 +0200
+Message-Id: <20200401161542.671959728@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -61,47 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Mike Gilbert <floppym@gentoo.org>
 
-[ Upstream commit c4409905cd6eb42cfd06126e9226b0150e05a715 ]
+[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
 
-Re-execution after an emulation decode failure is only intended to
-handle a case where two or vCPUs race to write a shadowed page, i.e.
-we should never re-execute an instruction as part of MMIO emulation.
-As handle_ept_misconfig() is only used for MMIO emulation, it should
-pass EMULTYPE_NO_REEXECUTE when using the emulator to skip an instr
-in the fast-MMIO case where VM_EXIT_INSTRUCTION_LEN is invalid.
+Building cpupower with -fno-common in CFLAGS results in errors due to
+multiple definitions of the 'cpu_count' and 'start_time' variables.
 
-And because the cr2 value passed to x86_emulate_instruction() is only
-destined for use when retrying or reexecuting, we can simply call
-emulate_instruction().
+./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+multiple definition of `cpu_count';
+./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+first defined here
+...
+./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
+multiple definition of `start_time';
+./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
+first defined here
 
-Fixes: d391f1207067 ("x86/kvm/vmx: do not use vm-exit instruction length
-                      for fast MMIO when running nested")
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+The -fno-common option will be enabled by default in GCC 10.
+
+Bug: https://bugs.gentoo.org/707462
+Signed-off-by: Mike Gilbert <floppym@gentoo.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 8bd336651de52..1fa4545c55e35 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -6564,8 +6564,8 @@ static int handle_ept_misconfig(struct kvm_vcpu *vcpu)
- 			return 1;
- 		}
- 		else
--			return x86_emulate_instruction(vcpu, gpa, EMULTYPE_SKIP,
--						       NULL, 0) == EMULATE_DONE;
-+			return emulate_instruction(vcpu, EMULTYPE_SKIP) ==
-+								EMULATE_DONE;
- 	}
+diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+index 2116df9ad8325..c097a3748674f 100644
+--- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+@@ -83,7 +83,7 @@ static struct pci_access *pci_acc;
+ static struct pci_dev *amd_fam14h_pci_dev;
+ static int nbp1_entered;
  
- 	ret = kvm_mmu_page_fault(vcpu, gpa, PFERR_RSVD_MASK, NULL, 0);
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
+ 
+ #ifdef DEBUG
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+index 5b3205f162174..5277df27191f3 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+@@ -21,7 +21,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
+ 
+ static unsigned long long **previous_count;
+ static unsigned long long **current_count;
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
+ 
+ static int cpuidle_get_count_percent(unsigned int id, double *percent,
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+index 05f953f0f0a0c..80a21cb67d94f 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+@@ -29,6 +29,8 @@ struct cpuidle_monitor *all_monitors[] = {
+ 0
+ };
+ 
++int cpu_count;
++
+ static struct cpuidle_monitor *monitors[MONITORS_MAX];
+ static unsigned int avail_monitors;
+ 
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+index 9e43f3371fbc6..3558bbae2b5dc 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+@@ -18,7 +18,7 @@
+ #define CSTATE_NAME_LEN 5
+ #define CSTATE_DESC_LEN 60
+ 
+-int cpu_count;
++extern int cpu_count;
+ 
+ /* Hard to define the right names ...: */
+ enum power_range_e {
 -- 
 2.20.1
 
