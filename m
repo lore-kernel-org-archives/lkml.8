@@ -2,56 +2,53 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493C5C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7442C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24962063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D133D21655
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758667;
-	bh=zY/lpwFFc0E/HcNDB2+3mezhODwz8ye/Z4MUjJOMAgw=;
+	s=default; t=1585758669;
+	bh=IVevopt4tpFjF//N5RzWcfrUTFmM9C5XwhNWWFkXLCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XXXFuyPrW8O19nPZh9XHy74FX1pT8vWaAmpPybDAQBLsgCh/wy567un5Zb5rJZqNV
-	 pxNYvew4akyfJLMB4VhOBWkz/nMPitkXcgFb0X4YZGQntXB4FR35vXLx8XrkCMhmzm
-	 E3hl6ZXrjwGvzME0Jm9YDZywuQJyluK3LvorsSvU=
+	b=qmhxyG4ysupQDDPziytiAZ4luIwLjOH+1foJS19UhfvizBjLi2vriS/ar9KJPM8Ki
+	 7usu3LndkKeKVoqkoXYxQQoFkzYqqXUg5mvnR9VleeMWFVm/HUifL5yX9UanXuTp6T
+	 DnWL/wktgkvI924jBISRkfFX0p2msx/bNgtivTkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388172AbgDAQbG (ORCPT
+        id S2388168AbgDAQbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387728AbgDAQbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:31:02 -0400
+        id S2387793AbgDAQa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:30:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1441C20658;
-        Wed,  1 Apr 2020 16:31:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E90A212CC;
+        Wed,  1 Apr 2020 16:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758661;
-        bh=zY/lpwFFc0E/HcNDB2+3mezhODwz8ye/Z4MUjJOMAgw=;
+        s=default; t=1585758655;
+        bh=IVevopt4tpFjF//N5RzWcfrUTFmM9C5XwhNWWFkXLCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PORJvEHTlc2Ne/Oc6a/BehK2Az7wP/cP+C5XBrBAuwK9+6Z529hlfFK0CxjowlSBc
-         NA0oBqWYlgMWeCglypQxBfFXCHLq1WkN24+3IExh+Z8P6TEV6vKVEmB7lWdcs4ICvh
-         TJSQkhpMwyKAXikEI2COxp1zdZtzr1zvl6GHAR6U=
+        b=RhjuoKuzWlcecfzvi1jgGzvbfUdugdsqm4879Q/FHzwbP/XgkxZp3qD9S6nqg4Bfj
+         bk2/DCxK/hgNIPwydwmVOruq22MRivI1pPjqGQsFb+Ho3lcpRzWItPGC1CuixHTBOl
+         9hTLm1p9D9g6JgV6gitQGjzM8nqcAE+eGUFEPaQw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirk Reiser <kirk@reisers.ca>,
-        Janina Sajka <janina@rednote.net>,
-        Alexandr Epaneshnikov <aarnaarn2@gmail.com>,
-        Gregory Nowak <greg@gregn.net>,
-        deedra waters <deedra@the-brannons.com>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Michael Taboada <michael@michaels.world>
-Subject: [PATCH 4.4 19/91] staging/speakup: fix get_word non-space look-ahead
-Date:   Wed,  1 Apr 2020 18:17:15 +0200
-Message-Id: <20200401161519.933171668@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Bizon <mbizon@freebox.fr>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 35/91] net: dsa: Fix duplicate frames flooded by learning
+Date:   Wed,  1 Apr 2020 18:17:31 +0200
+Message-Id: <20200401161526.553430929@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -64,44 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Thibault <samuel.thibault@ens-lyon.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 9d32c0cde4e2d1343dfb88a67b2ec6397705b32b upstream.
+[ Upstream commit 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ]
 
-get_char was erroneously given the address of the pointer to the text
-instead of the address of the text, thus leading to random crashes when
-the user requests speaking a word while the current position is on a space
-character and say_word_ctl is not enabled.
+When both the switch and the bridge are learning about new addresses,
+switch ports attached to the bridge would see duplicate ARP frames
+because both entities would attempt to send them.
 
-Reported-on: https://github.com/bytefire/speakup/issues/1
-Reported-by: Kirk Reiser <kirk@reisers.ca>
-Reported-by: Janina Sajka <janina@rednote.net>
-Reported-by: Alexandr Epaneshnikov <aarnaarn2@gmail.com>
-Reported-by: Gregory Nowak <greg@gregn.net>
-Reported-by: deedra waters <deedra@the-brannons.com>
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
-Tested-by: Alexandr Epaneshnikov <aarnaarn2@gmail.com>
-Tested-by: Gregory Nowak <greg@gregn.net>
-Tested-by: Michael Taboada <michael@michaels.world>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200306003047.thijtmqrnayd3dmw@function
+Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
+Reported-by: Maxime Bizon <mbizon@freebox.fr>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/staging/speakup/main.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ net/dsa/tag_brcm.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/staging/speakup/main.c
-+++ b/drivers/staging/speakup/main.c
-@@ -562,8 +562,7 @@ static u_long get_word(struct vc_data *v
- 		return 0;
- 	} else if ((tmpx < vc->vc_cols - 2)
- 		   && (ch == SPACE || ch == 0 || IS_WDLM(ch))
--		   && ((char)get_char(vc, (u_short *) &tmp_pos + 1, &temp) >
--		       SPACE)) {
-+		   && ((char)get_char(vc, (u_short *)tmp_pos + 1, &temp) > SPACE)) {
- 		tmp_pos += 2;
- 		tmpx++;
- 	} else
+--- a/net/dsa/tag_brcm.c
++++ b/net/dsa/tag_brcm.c
+@@ -84,6 +84,8 @@ static struct sk_buff *brcm_tag_xmit(str
+ 		brcm_tag[2] = BRCM_IG_DSTMAP2_MASK;
+ 	brcm_tag[3] = (1 << p->port) & BRCM_IG_DSTMAP1_MASK;
+ 
++	skb->offload_fwd_mark = 1;
++
+ 	return skb;
+ 
+ out_free:
 
 
