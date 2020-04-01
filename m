@@ -2,128 +2,157 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 167A4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4932BC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29D12077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1654B2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585721496;
-	bh=yn4DTjfeYhX/ci/4lfzmZSEl2lrudX8CABrfWhxhOfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xDBP0ZPu2Ay8FDSwwvgXsFYM49J41UPqzXNYgZ7NLZFqAB0EM234D5Ob0oZB90gZJ
-	 GYPH7SJDZvUso3/prFvV49kg86Y+owuf+HUYkIZj0GCx2sKDycIvKEEEYjbUP3htq5
-	 +6EzhrTN8vo8b1k8SscfuOC/eZZlB079b4BIC1t0=
+	s=default; t=1585721499;
+	bh=FmL9NPzCGs0cN2jbZHkOjc+4UUpYprhRe92C5sdUYuI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xttf+fxFFwybYP+3MJNeFL9eqwHIlOOZ3LfxvIdMIMdxagUd6k2i+cfOXkurqY99G
+	 Enc4dA6TfYVu+ghZJzH/LL1NEBO0lATwS4wzO+x+5Ihl+T304/IuJTMinCOEU/zWIq
+	 h96RZCITCpUkk2OQGurJQXbsCZANDmiB1AQwZgtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbgDAGLf (ORCPT
+        id S1731841AbgDAGLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731725AbgDAGLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:11:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20BEA20714;
-        Wed,  1 Apr 2020 06:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585721494;
-        bh=yn4DTjfeYhX/ci/4lfzmZSEl2lrudX8CABrfWhxhOfQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KqsfjQ1qUSENBtF4qSo+lPc+ecgJkVIplngAg0zVs4Xk2KSgQYOGYN4A616YR8J+8
-         JD4lnc+1DSZuafmxq8tEjl6XLRn/ry2RkbpbXTQJDxTYvLcbgb4BP/zlY1QFCkJxtm
-         pfruGQAPd433YTg4khoumDhAr7Zghz4qyb3E9gSo=
-Date:   Wed, 1 Apr 2020 08:11:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        john.fastabend@gmail.com, komachi.yoshiki@gmail.com,
-        Andrii Nakryiko <andriin@fb.com>, lukenels@cs.washington.edu,
-        Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 5.5 000/171] 5.5.14-rc2 review
-Message-ID: <20200401061131.GA1907105@kroah.com>
-References: <20200331141450.035873853@linuxfoundation.org>
- <CA+G9fYuU-5o5DG1VSQuCPx=TSs61-1jBekdGb5yvMRz4ur3BQg@mail.gmail.com>
+        Wed, 1 Apr 2020 02:11:38 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:32349 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbgDAGLg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:11:36 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 0316BTPv029946;
+        Wed, 1 Apr 2020 15:11:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0316BTPv029946
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585721490;
+        bh=R55qrFxMB1D2pHAEH2G7LutEbvVqxktsxI6xh1JrVFw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mPud/LiNMFrwmYfuo2fwsbbvNXUoa/+30gdTMHCLxSs3Uz7N/g14p8NKh7Iw03WTf
+         ccPTqe8q4SusRe/0nxsMJC7IzcZcn3SX3BPBwGPIQNwh/S9KXDnGQn74BpqMiZuk6h
+         /MVbpiGYgb672yJwfIf9kUadM/dLtR1ri3A4uVWC/z8GOAOQn/KdFsYaLeJwTZn+n1
+         DRSVh+5fLGzoCC5couLEE8VMe4q/byJU2y1j5h4KC/SaKyY/VAIM/wYBm//qsEbist
+         mpJJJKnHWHG0slFQ2sQS3OFES7RHnPI/M+VOKIVb7QmbGV/gFgf7FK98JGPfc6hs/8
+         NpKraQMQss2Og==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id e138so15082866vsc.11;
+        Tue, 31 Mar 2020 23:11:30 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZnkZP/RNzF9m2zi/R4zCg96i9lVs+DNc/jpUIHMXX4BXVvFR7u
+        za1ulz8rQZYyZuUV7/mhbFT4ScaGyUSp22eio9c=
+X-Google-Smtp-Source: APiQypKyOsBpcEI5EI0xhWIk2qk00xcoHvAoJ8ZYj0oCranem9XpNrlzg2/Ftttj9LMlPiW2wBCw6sC1z6JjDp+vux4=
+X-Received: by 2002:a67:6542:: with SMTP id z63mr16010836vsb.179.1585721489076;
+ Tue, 31 Mar 2020 23:11:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuU-5o5DG1VSQuCPx=TSs61-1jBekdGb5yvMRz4ur3BQg@mail.gmail.com>
+References: <20200317202404.GA20746@ubuntu-m2-xlarge-x86> <20200317215515.226917-1-ndesaulniers@google.com>
+ <20200327224246.GA12350@ubuntu-m2-xlarge-x86> <CAK7LNAShb1gWuZyycLAGWm19EWn17zeNcmdPyqu1o=K9XrfJbg@mail.gmail.com>
+ <CAK7LNAQ3=jUu4aa=JQB8wErUGDd-Vr=cX_yZSdP_uAP6kWZ=pw@mail.gmail.com>
+ <CAKwvOd=5AG1ARw6JUXmkuiftuShuYHKLk0ZnueuLhvOdMr5dOA@mail.gmail.com>
+ <20200330190312.GA32257@ubuntu-m2-xlarge-x86> <CAK7LNAT1HoV5wUZRdeU0+P1nYAm2xQ4tpOG+7UtT4947QByakg@mail.gmail.com>
+ <CAKwvOd==U6NvvYz8aUz8fUNdvz27pKrn8X5205rFadpGXzRC-Q@mail.gmail.com>
+In-Reply-To: <CAKwvOd==U6NvvYz8aUz8fUNdvz27pKrn8X5205rFadpGXzRC-Q@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 1 Apr 2020 15:10:52 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR0PPxibFVC5F07mytz4J2BbwQkpHcquH56j7=S_Mqj2g@mail.gmail.com>
+Message-ID: <CAK7LNAR0PPxibFVC5F07mytz4J2BbwQkpHcquH56j7=S_Mqj2g@mail.gmail.com>
+Subject: Re: [PATCH v2] Makefile.llvm: simplify LLVM build
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:18:41AM +0530, Naresh Kamboju wrote:
-> On Tue, 31 Mar 2020 at 21:02, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+On Wed, Apr 1, 2020 at 3:39 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> On Mon, Mar 30, 2020 at 11:25 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 > >
-> > This is the start of the stable review cycle for the 5.5.14 release.
-> > There are 171 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 02 Apr 2020 14:12:02 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.14-rc2.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> 
-> Results from Linaro’s test farm.
-> Regressions on x86_64 and i386.
-> 
-> selftests bpf test_verifier reports as failed.
-> This test PASSED on v5.5.13
-> 
-> #554/p jgt32: range bound deduction, reg op imm FAIL
-> Failed to load prog 'Success'!
-> R8 unbounded memory access, make sure to bounds check any array access
-> into a map
-> verification time 141 usec
-> stack depth 8
-> processed 16 insns (limit 1000000) max_states_per_insn 0 total_states
-> 1 peak_states 1 mark_read 1
-> #555/p jgt32: range bound deduction, reg1 op reg2, reg1 unknown FAIL
-> Failed to load prog 'Success'!
-> R8 unbounded memory access, make sure to bounds check any array access
-> into a map
-> verification time 94 usec
-> stack depth 8
-> processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
-> 1 peak_states 1 mark_read 1
-> #556/p jle32: range bound deduction, reg1 op reg2, reg2 unknown FAIL
-> Failed to load prog 'Success'!
-> R8 unbounded memory access, make sure to bounds check any array access
-> into a map
-> verification time 68 usec
-> stack depth 8
-> processed 17 insns (limit 1000000) max_states_per_insn 0 total_states
-> 1 peak_states 1 mark_read 1
+> > On Tue, Mar 31, 2020 at 4:03 AM Nathan Chancellor
+> > <natechancellor@gmail.com> wrote:
+> > >
+> > > On Mon, Mar 30, 2020 at 11:58:19AM -0700, Nick Desaulniers wrote:
+> > > > On Sat, Mar 28, 2020 at 6:57 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > >
+> > > > > I also had planned to provide a single switch to change
+> > > > > all the tool defaults to LLVM.
+> > > > >
+> > > > > So, supporting 'LLVM' is fine, but I'd rather want this
+> > > > > look symmetrical, and easy to understand.
+> > > > >
+> > > > > CPP        = $(CC) -E
+> > > > > ifneq ($(LLVM),)
+> > > >
+> > > > Yes, a simple if statement is much simpler than the overly complex patch I had.
+> > > >
+> > > > > CC         = $(LLVM_DIR)clang
+> > > >
+> > > > Do we need $LLVM_DIR? Shouldn't users just have that in their $PATH?
+> > > >
+> > > > Also, I think we need to support suffixed binaries, as debian
+> > > > distributes these with version suffixes, as Nathan points out.  Or do
+> > > > the debian packages install suffixed binaries AND path versioned
+> > > > non-suffixed binaries?
+> > >
+> > > I think the idea here is that ultimately, the suffixed versions of clang
+> > > that Debian has in /usr/bin are symlinks to binaries in
+> > > /usr/lib/llvm-#/bin; as a result, a user could say
+> > > LLVM_DIR=/usr/lib/llvm-#/bin/ and all of those tools would be picked up
+> > > automatically. I am not really sure what is better.
+>
+> $ sudo apt install clang-8
+> $ which clang-8
+> /usr/bin/clang-8
+> $ ls -l `!!`
+> /usr/bin/clang-8 -> ../lib/llvm-8/bin/clang
+> $ ls /usr/lib/llvm-8/bin
+> <non suffixed versions>
+>
+> Ok, so Nathan, it looks like we don't need the version suffixes.
+> Instead, we can be more explicit with our $PATH, and only add the
+> above (and bintutils).  I was thinking supporting the suffix was
+> required for our CI, but it seems like maybe not.
+>
+> > I periodically build the latest llvm from the trunk,
+> > and install it under my home directory.
+> > So, I just thought it would be useful to
+> > allow a user to specify the llvm directory.
+> > Of course, I can do the equivalent by tweaking PATH, but
+> > I hesitate to make the non-released version my default.
+>
+> Respectfully, I strongly disagree.  This should be handled by
+> modifications to $PATH, either by your shell's .rc file when you
+> always want it, or exported for a session when you want it, or
+> prefixed to an invocation for the duration of that command.  We should
+> not have a new variable just for the path of a few tools.
+>
+> Rather than `make LLVM_DIR=~/llvm-project LLVM=1`, you can do
+> `PATH=$PATH:~/llvm-project make LLVM=1`. (or export it manually or via
+> your shell .rc, depending on how comfortable you are with that
+> version).
+>
+> > Having both LLVM_DIR and LLVM_SUFFIX seems verbose.
+>
+> I agree, so maybe just LLVM=y, and we can support both non-standard
+> locations and debian suffixes via modifications to PATH.
 
-Can you run 'git bisect' to find the offending patch?
 
-thanks,
 
-greg k-h
+OK, so we will start with the boolean switch 'LLVM'.
+
+People can use PATH to cope with directory path and suffixes.
+
+
+-- 
+Best Regards
+Masahiro Yamada
