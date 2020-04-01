@@ -2,114 +2,134 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51274C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B02C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147E52054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:17:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfSswwue"
+	by mail.kernel.org (Postfix) with ESMTP id D553C20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732548AbgDATRz (ORCPT
+        id S1732633AbgDATWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:17:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36228 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732303AbgDATRy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:17:54 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g2so349781plo.3;
-        Wed, 01 Apr 2020 12:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=viGWFCrIxPqDJuQStiywsFxnJG3SDHsHQV6GDzJrJRw=;
-        b=SfSswwueB9nuSrY0D07ks4ZOi7dFotaZMRUFmemgH0arYcUIyQg8gU71qkctQDUM2I
-         Fbp4C3/dabKOGWtTzfzBVsZ0GKomc7QRazdcoQrk6bArtah/KYyA6/UxWp5wYDeyhRIP
-         4D/H1ARsUhnfnj4HI3ivQms5J43peUSbvrTC1YEdEEQG1dzY6RbaLAt62lZ9UmtzFioD
-         fnqi96QuC/qo6QJuR28GJC4D4SO359ZVwkwkPY6qNVfatAJZR7vYTVVqnA58HH3o8Dpt
-         Jf0pUyCDlt+2J6Jv6AozTmTy5PGBEqWiNlK+//3XvO6mafRm6JAXEiF1e08/5NKmc24x
-         gJ0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=viGWFCrIxPqDJuQStiywsFxnJG3SDHsHQV6GDzJrJRw=;
-        b=TGqmi6wKbnuYl4yE7exuHBkKk6FwPEKNsG5o+o6LpKGJbfQ8VBUBMaydpcR2ceT1QV
-         kcNPiHmfCimGLOl0hbM5PPgqtNFYOaHUtUcHWXzinieY7tlJdefgEFN+he1mvTlgvAua
-         pgFB//BBa0Kzawj9YhTvqYjLOsimIrFxncLWEKdw7w5MvklltW67T6nVWRZ9jUTlfTs/
-         Ox/pBAvgWN69juAB+rFHTJRtr9/bK12fvNt+REvNgaeDNSSkM3Mu5TQWqVPYYoEqIAo+
-         1b0sU7RdeP1n9neYNAfjXKj0FoZexiMVBZtbXcMXi+Dq+Fn73t0tkF+zrjWPEG2pUcTv
-         GBcw==
-X-Gm-Message-State: ANhLgQ1oe+tX7m7BvZkgmlbSzLfi/wHUyr1IqEmEVk7SgOPTsO2YKP9D
-        tfhnXcstAKviwr4v8olGJg==
-X-Google-Smtp-Source: ADFU+vt6j6vjN1F+h9jb2txE96Yfm/p5BVJmqPBUL7aMDC0TO+cKWVRJF8d7JBu9t2Dt4avZV0RMew==
-X-Received: by 2002:a17:902:9a8a:: with SMTP id w10mr24025837plp.218.1585768671958;
-        Wed, 01 Apr 2020 12:17:51 -0700 (PDT)
-Received: from localhost.localdomain ([2402:3a80:d0a:ee38:44da:9bb6:388c:6150])
-        by smtp.gmail.com with ESMTPSA id q43sm2257428pjc.40.2020.04.01.12.17.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 12:17:50 -0700 (PDT)
-From:   madhuparnabhowmik10@gmail.com
-To:     gregkh@linuxfoundation.org, hariprasad.kelam@gmail.com,
-        colin.king@canonical.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ldv-project@linuxtesting.org, andrianov@ispras.ru,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] usb: host: u132-hcd: Traverse u132_static_list under mutex lock in u132_hcd_exit
-Date:   Thu,  2 Apr 2020 00:47:35 +0530
-Message-Id: <20200401191735.10809-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Apr 2020 15:22:06 -0400
+Received: from mga17.intel.com ([192.55.52.151]:20532 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732219AbgDATWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 15:22:06 -0400
+IronPort-SDR: x1o7m37ZRsDx/Sa2vHyNYLjhoVjwpEhViaUW7uymRExUog//dIZgb3+0NZv5dtuSaopeZDTGqo
+ sLAQTzhUNC1A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 12:22:05 -0700
+IronPort-SDR: qtPsrkQ0lRXrmF6Vuilo9W369zo4kLv9qx91me8q0u4v3d+nEPkQgfC6yDs1oOpCaVFCv5xbYn
+ p7sqX2CnBetg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,332,1580803200"; 
+   d="scan'208";a="252746300"
+Received: from kmsalzbe-mobl.amr.corp.intel.com (HELO [10.255.230.70]) ([10.255.230.70])
+  by orsmga006.jf.intel.com with ESMTP; 01 Apr 2020 12:22:03 -0700
+Subject: Re: [RFC PATCH v9 09/27] x86/mm: Introduce _PAGE_DIRTY_SW
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-10-yu-cheng.yu@intel.com>
+ <325d3a25-0016-ea19-c0c9-7958066fc94e@intel.com>
+ <6f68d7af6a618c087a85d2db6ad40b346e055452.camel@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <6689281d-b71d-9044-eeb7-09c9228a61e0@intel.com>
+Date:   Wed, 1 Apr 2020 12:22:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <6f68d7af6a618c087a85d2db6ad40b346e055452.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On 4/1/20 12:08 PM, Yu-cheng Yu wrote:
+>>> +/*
+>>> + * This bit indicates a copy-on-write page, and is different from
+>>> + * _PAGE_BIT_SOFT_DIRTY, which tracks which pages a task writes to.
+>>> + */
+>>> +#define _PAGE_BIT_DIRTY_SW	_PAGE_BIT_SOFTW5 /* was written to */
+>> Does it *only* indicate a copy-on-write (or copy-on-access) page?  If
+>> so, haven't we misnamed it?
+> It indicates either a copy-on-write page or a read-only page that has been
+> cow'ed.  What about _PAGE_BIT_COW?
 
-The global list u132_static_list is protected by u132_module_lock.
-Elements are added to this list in the probe function and this list is
-traversed in u132_hcd_exit() to unregister devices.
-
-If probe and exit execute simultaneously there can be a race condition
-between writing to this list in probe and reading the list in exit as
-u132_module_lock is not held in exit function.
-
-Even though u132_exiting variable is used in probe to detect if the module is
-exiting, it is ineffective as the probe function may read the value
-before it is updated in exit and thus leading to a race condition.
-
-Therefore, hold u132_module_lock while traversing u132_static_list in
-exit function.
-
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- drivers/usb/host/u132-hcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/u132-hcd.c b/drivers/usb/host/u132-hcd.c
-index e9209e3e6248..1cadc4e0c9b2 100644
---- a/drivers/usb/host/u132-hcd.c
-+++ b/drivers/usb/host/u132-hcd.c
-@@ -3217,10 +3217,10 @@ static void __exit u132_hcd_exit(void)
- 	struct u132 *temp;
- 	mutex_lock(&u132_module_lock);
- 	u132_exiting += 1;
--	mutex_unlock(&u132_module_lock);
- 	list_for_each_entry_safe(u132, temp, &u132_static_list, u132_list) {
- 		platform_device_unregister(u132->platform_dev);
- 	}
-+	mutex_unlock(&u132_module_lock);
- 	platform_driver_unregister(&u132_platform_driver);
- 	printk(KERN_INFO "u132-hcd driver deregistered\n");
- 	wait_event(u132_hcd_wait, u132_instances == 0);
--- 
-2.17.1
-
+Sounds sane to me.
