@@ -2,95 +2,162 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311E8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FECC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9D72073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEA02077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OZ1GV+zW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QSpSRc4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgDAKNp (ORCPT
+        id S1730333AbgDAKPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:13:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58522 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgDAKNp (ORCPT
+        Wed, 1 Apr 2020 06:15:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57998 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgDAKPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:13:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RbAvhhO0UkE4nBxfFbEQB4F30Y8t6u/Ovo8Wd/HX8/Q=; b=OZ1GV+zWAm/xYvCJ/xNXrnurtu
-        F6P4U3QCJFFppLgCQqOyjE0q+90tTgrtq6WIiOFQ3bMJyUy4uHQOxo232qaMQuzsw1U6tdollpWiI
-        +v8UFM/UPl/JEXSaoQrnXnkyu1Dt/+v7xY36vZCpIuXiyWuF+SodbRrjOMmUP4RFCeIhXwc5wxt3V
-        32OwtFRTnWtHYfDDI9rt4rfkkeCXHPHEzGqpBBo3vFBVJ66FqCK0lMnOurfVyInDVrkBe30T7U8HT
-        SY2KxGlOzJUauTKflh5ICRHo7VtgzbuvQeGBYdcBqSd9UPueZl9zLwfc2aMvBcuRbLGnjt7C88IoL
-        4YR5ScRg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJaNK-0002Iu-5E; Wed, 01 Apr 2020 10:13:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9CCB3301631;
-        Wed,  1 Apr 2020 12:13:31 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 850EC29DA771A; Wed,  1 Apr 2020 12:13:31 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 12:13:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5 05/13] perf/x86: Add perf text poke events for kprobes
-Message-ID: <20200401101331.GZ20713@hirez.programming.kicks-ass.net>
-References: <20200304090633.420-1-adrian.hunter@intel.com>
- <20200304090633.420-6-adrian.hunter@intel.com>
- <20200324122150.GN20696@hirez.programming.kicks-ass.net>
- <20200326105805.0723cd10325ad301de061743@kernel.org>
- <07415abd-5084-f16c-cc62-6c9a237951f3@intel.com>
- <8eb2a113-f90d-856d-8e14-509d690a2989@intel.com>
+        Wed, 1 Apr 2020 06:15:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 031AFB50074640;
+        Wed, 1 Apr 2020 05:15:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585736111;
+        bh=VHWDppBeZMnct+fmlb85sd/m6PVJpfigJspsPqyup8Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QSpSRc4hvstCrq8bCBJgAGMf+nwXD9BVZFiWhDPTG8iTSasO43GTpmRL5uCpgNDOv
+         JQAdqyVILFKk97QretLTYP9rYwnhjv9EH6SxaZszW8Whs6D5mD6zA96DAOTe7hzxY6
+         k3G1CDcHs+GXkYZoiJuUFvlXlAgyt/cOISrEdmAc=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 031AFAVn071292
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Apr 2020 05:15:11 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 1 Apr
+ 2020 05:15:10 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 1 Apr 2020 05:15:10 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 031AF7q6122698;
+        Wed, 1 Apr 2020 05:15:08 -0500
+Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
+ changing period/duty_cycle
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
+References: <20200312042210.17344-1-lokeshvutla@ti.com>
+ <20200312042210.17344-5-lokeshvutla@ti.com>
+ <20200312064042.p7himm3odxjyzroi@pengutronix.de>
+ <20200330141436.GG2431644@ulmo> <638d7136-6a74-8069-5331-b2248c948ed4@ti.com>
+ <20200331201014.GA2954599@ulmo>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <57ce30f0-00e1-cbe6-8412-5461b412b361@ti.com>
+Date:   Wed, 1 Apr 2020 15:45:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8eb2a113-f90d-856d-8e14-509d690a2989@intel.com>
+In-Reply-To: <20200331201014.GA2954599@ulmo>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:36:09AM +0200, Adrian Hunter wrote:
-> Add perf text poke events for kprobes. That includes:
-> 
->  - the replaced instruction(s) which are executed out-of-line
->    i.e. arch_copy_kprobe() and arch_remove_kprobe()
-> 
->  - optimised kprobe function
->    i.e. arch_prepare_optimized_kprobe() and
->       __arch_remove_optimized_kprobe()
-> 
->  - optimised kprobe
->    i.e. arch_optimize_kprobes() and arch_unoptimize_kprobe()
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Hi Thierry,
 
-Looks good, but we had these nice graphs illustrating how the various
-events connect, I'm thinking that would be nice to have in the
-Changelog, perhaps even in a document somewhere.
+On 01/04/20 1:40 AM, Thierry Reding wrote:
+> On Tue, Mar 31, 2020 at 08:59:47PM +0530, Lokesh Vutla wrote:
+>> Hi Thierry,
+>>
+>> On 30/03/20 7:44 PM, Thierry Reding wrote:
+>>> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
+>>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
+>>>>> Only the Timer control register(TCLR) cannot be updated when the timer
+>>>>> is running. Registers like Counter register(TCRR), loader register(TLDR),
+>>>>> match register(TMAR) can be updated when the counter is running. Since
+>>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
+>>>>> timer for period/duty_cycle update.
+>>>>
+>>>> I'm not sure what is sensible here. Stopping the PWM for a short period
+>>>> is bad, but maybe emitting a wrong period isn't better. You can however
+>>>> optimise it if only one of period or duty_cycle changes.
+>>>>
+>>>> @Thierry, what is your position here? I tend to say a short stop is
+>>>> preferable.
+>>>
+>>> It's not clear to me from the above description how exactly the device
+>>> behaves, but I suspect that it may latch the values in those registers
+>>> and only update the actual signal output once a period has finished. I
+>>> know of a couple of other devices that do that, so it wouldn't be
+>>> surprising.
+>>>
+>>> Even if that was not the case, I think this is just the kind of thing
+>>> that we have to live with. Sometimes it just isn't possible to have all
+>>> supported devices adhere strictly to an API. So I think the best we can
+>>> do is have an API that loosely defines what's supposed to happen and
+>>> make a best effort to implement those semantics. If a device deviates
+>>> slightly from those expectations, we can always cross fingers and hope
+>>> that things still work. And it looks like they are.
+>>>
+>>> So I think if Lokesh and Tony agree that this is the right thing to do
+>>> and have verified that things still work after this, that's about as
+>>> good as it's going to get.
+>>
+>> Yes this is needed especially in the use-case[0] that I am trying to enable
+>> using PWM. In this case PWM cannot be stopped in between and needs to be updated
+>> dynamically. Also hardware doesn't provide any restrictions on updating the
+>> period. So IMHO, this might be the right thing to do.
+>>
+>> Tony did provide tested-by and I measured PWM signals on scope with these
+>> changes. Let me know if any thing else is required?
+>>
+>> [0] https://sourceforge.net/p/linuxptp/mailman/message/36943248/
+> 
+> From you measurements, can you tell whether or not the signal actually
+> gets updated in the middle of a period, or does it only get updated at
+> the end of a full period?
 
-These are after all 8 events here that all interplay.
+There is a corner case where period/duty-cycle gets updated in the middle of the
+cycle. So let me give more details on how it works:
+
+OMAP dual-mode timers with a upward  timer counter, can be configured in PWM
+mode. When the timer counter overflows it gets reloaded with the load value(Load
+register) and the pwm output goes up. When counter matches with match register,
+the output goes down. So the load register is used to calculate the period and
+similarly match register for duty cycle.
+
+When PWM is running and changing both duty cycle and period, we cannot prevent
+in software that the output might produce a period with mixed settings.
+Especially when the PWM signal is high the following cases can happen:
+1) When signal is high and new match value is > current timer counter. Then the
+duty cycle gets reflected in the current cycle.(Duty_cycle for current period=
+new match value -  previous load  value).
+2) When signal is high and new match value is < current timer counter. Then the
+period and duty cycle for the current cycle gets effected as well. Because the
+signal is pulled down only when counter matches with match register, and this
+happens only in the next cycle(after timer counter overflows). Then:
+	- new Period for current cycle = (current period + new period)
+	- new duty cycle for current cycle =  (current period + new duty_cycle).
+
+Rest all the cases the values gets reflected in the next cycle.
+
+As advised by Uwe, I have updated all these details in driver.
+
+Thanks and regards,
+Lokesh
+
 
