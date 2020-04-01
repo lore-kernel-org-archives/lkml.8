@@ -2,220 +2,222 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B89C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD52C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C0E20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68A6F20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:07:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SP8Uz1vc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g2ynUNoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbgDAIHE convert rfc822-to-8bit (ORCPT
+        id S1732066AbgDAIHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:07:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:50979 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731879AbgDAIHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:07:04 -0400
-IronPort-SDR: Y2aY5Pb61sPeovwRZ6X+N2bmfI8SJkUyZcNKPVHunkdump2PifmqMaYriWJ0e9sHVPrcpr9Yu5
- YAF/H/cyP0XQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 01:06:56 -0700
-IronPort-SDR: zSn1r4mbwY5Xt5YYcuwz3LnBkIaLSUXz7lfDvoDI/W0wlKDFL6GfpRUYt6qDQZdMmqxEPV4fSf
- fhvJomMIIICA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="249338872"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga003.jf.intel.com with ESMTP; 01 Apr 2020 01:06:56 -0700
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Apr 2020 01:06:55 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 1 Apr 2020 01:06:55 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
- Wed, 1 Apr 2020 16:06:52 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hgi66AgANAF4D//6OWgIAAhkzg
-Date:   Wed, 1 Apr 2020 08:06:51 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A21D793@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF8BC@SHSMSX104.ccr.corp.intel.com>
- <A2975661238FB949B60364EF0F2C25743A21D5C2@SHSMSX104.ccr.corp.intel.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D803F42@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D803F42@SHSMSX104.ccr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 1 Apr 2020 04:07:17 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:54209 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731680AbgDAIHR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:07:17 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id E2CA65C00E9;
+        Wed,  1 Apr 2020 04:07:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 01 Apr 2020 04:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=U3HCAcUKF+4c66Ou0occ9LnJ9Wv
+        Y2iGisn3uD5htmxM=; b=SP8Uz1vciqkp36GeFFlYKm5l1CM5u6FW52ShX/5HesS
+        Xz285oIrLNmML0H+fiTbXSl7K7rBbWpvjUtnTrua+SC+9zsij5R4WGNfKLFNyjMV
+        fvQS79tXiPOe5g0ovgyuwgZuaCySGliBdOrYSdJjI5cC3G+PZo4ev1ZZv/oaOvtc
+        5vclj4/19PwJosdDx3s0tV+pLSKCqwu/2HDkUj1YRiJglRupDfEV6jI7vlfXHg6B
+        fzEr9QRnqVD/T9j3pKwH4WokVbC6ZvmXtAAKRPXnl69AcIZGeF+firlIUIw+ix7w
+        j1yEq8MS9Y4LA10UZP+P7sEmJhEBkFdZw47AF87rVbw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=U3HCAc
+        UKF+4c66Ou0occ9LnJ9WvY2iGisn3uD5htmxM=; b=g2ynUNoi+u1/rT/iuxTpd6
+        TGYyqB1kHtAtI1Om1/l8EiaMbdBatD+0gsTdEQDmnGGmGVKNngLQSdGFcQg6LQtJ
+        65ucXZJSW4F694KemOIKWEI1bh2MwsYfB3gkeWZVXR7D0beenMQv2VnAzoN1H1vW
+        20OPP4RLRsz8TNV6W3Odtd1J2sggm/1bPvRYJAw5Goei8IVER5YiL3gPs/qbzI+q
+        v2HB+UTQM8SSAscaMyN+6uH9FYgt4feiRy2nqmIZ5yAcYSI6u8jz34mlMPBBk/BC
+        D5OcpKIb8p9h4CMMWygDCcJrfItPTzQ48p+7ZUJXgU00sV8i1Wc7xIphdI/dq4xA
+        ==
+X-ME-Sender: <xms:q0uEXveFL0TmZ44yoZ1LdFOMnYhr7b7siaObsJ12XDfWDqCLTADOqA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtddvucetufdoteggodetrfdotffvucfrrh
+    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhmvgcutfhi
+    phgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvg
+    hvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrh
+    hnohdrthgvtghh
+X-ME-Proxy: <xmx:q0uEXlZ59TSToLe17Qqncknm6aKQApp9Zuirgx8jdOZV64JmmDbfhw>
+    <xmx:q0uEXiBXb7P8Pyt2BI6LjG89adNT8k4_PRbAxtYyElXmBObVgIfIrg>
+    <xmx:q0uEXgCOBraRlf-SR-5pbjQOgEEc7MxX3W4JsKhPogl12U3GjrdaUQ>
+    <xmx:skuEXt0AyZkhqnukvpbd9P2rh_H7zwxwXzecpoQQoE6OGuIKHw_d0g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 003A2328005A;
+        Wed,  1 Apr 2020 04:07:06 -0400 (EDT)
+Date:   Wed, 1 Apr 2020 10:07:05 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cyib43ljsdkuwwb5"
+Content-Disposition: inline
+In-Reply-To: <20200331133346.372517-2-robert.foss@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Tian, Kevin <kevin.tian@intel.com>
-> Sent: Wednesday, April 1, 2020 3:56 PM
-> To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
-> Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
-> userspace
-> 
-> > From: Liu, Yi L <yi.l.liu@intel.com>
-> > Sent: Wednesday, April 1, 2020 3:38 PM
-> >
-> >  > From: Tian, Kevin <kevin.tian@intel.com>
-> > > Sent: Monday, March 30, 2020 7:49 PM
-> > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
-> > > Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1
-> > > format to userspace
-> > >
-> > > > From: Liu, Yi L <yi.l.liu@intel.com>
-> > > > Sent: Sunday, March 22, 2020 8:32 PM
-> > > >
-> > > > From: Liu Yi L <yi.l.liu@intel.com>
-> > > >
-> > > > VFIO exposes IOMMU nesting translation (a.k.a dual stage
-> > > > translation) capability to userspace. Thus applications like QEMU
-> > > > could support vIOMMU with hardware's nesting translation
-> > > > capability for pass-through devices. Before setting up nesting
-> > > > translation for pass-through devices, QEMU and other applications
-> > > > need to learn the supported
-> > > > 1st-lvl/stage-1 translation structure format like page table format.
-> > > >
-> > > > Take vSVA (virtual Shared Virtual Addressing) as an example, to
-> > > > support vSVA for pass-through devices, QEMU setup nesting
-> > > > translation for pass- through devices. The guest page table are
-> > > > configured to host as 1st-lvl/
-> > > > stage-1 page table. Therefore, guest format should be compatible
-> > > > with host side.
-> > > >
-> > > > This patch reports the supported 1st-lvl/stage-1 page table format
-> > > > on the current platform to userspace. QEMU and other alike
-> > > > applications should use this format info when trying to setup
-> > > > IOMMU nesting translation on host IOMMU.
-> > > >
-> > > > Cc: Kevin Tian <kevin.tian@intel.com>
-> > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > Cc: Alex Williamson <alex.williamson@redhat.com>
-> > > > Cc: Eric Auger <eric.auger@redhat.com>
-> > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > > > ---
-> > > >  drivers/vfio/vfio_iommu_type1.c | 56
-> > > > +++++++++++++++++++++++++++++++++++++++++
-> > > >  include/uapi/linux/vfio.h       |  1 +
-> > > >  2 files changed, 57 insertions(+)
-> > > >
-> > > > diff --git a/drivers/vfio/vfio_iommu_type1.c
-> > > > b/drivers/vfio/vfio_iommu_type1.c index 9aa2a67..82a9e0b 100644
-> > > > --- a/drivers/vfio/vfio_iommu_type1.c
-> > > > +++ b/drivers/vfio/vfio_iommu_type1.c
-> > > > @@ -2234,11 +2234,66 @@ static int
-> > vfio_iommu_type1_pasid_free(struct
-> > > > vfio_iommu *iommu,
-> > > >  	return ret;
-> > > >  }
-> > > >
-> > > > +static int vfio_iommu_get_stage1_format(struct vfio_iommu *iommu,
-> > > > +					 u32 *stage1_format)
-> > > > +{
-> > > > +	struct vfio_domain *domain;
-> > > > +	u32 format = 0, tmp_format = 0;
-> > > > +	int ret;
-> > > > +
-> > > > +	mutex_lock(&iommu->lock);
-> > > > +	if (list_empty(&iommu->domain_list)) {
-> > > > +		mutex_unlock(&iommu->lock);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	list_for_each_entry(domain, &iommu->domain_list, next) {
-> > > > +		if (iommu_domain_get_attr(domain->domain,
-> > > > +			DOMAIN_ATTR_PASID_FORMAT, &format)) {
-> > > > +			ret = -EINVAL;
-> > > > +			format = 0;
-> > > > +			goto out_unlock;
-> > > > +		}
-> > > > +		/*
-> > > > +		 * format is always non-zero (the first format is
-> > > > +		 * IOMMU_PASID_FORMAT_INTEL_VTD which is 1). For
-> > > > +		 * the reason of potential different backed IOMMU
-> > > > +		 * formats, here we expect to have identical formats
-> > > > +		 * in the domain list, no mixed formats support.
-> > > > +		 * return -EINVAL to fail the attempt of setup
-> > > > +		 * VFIO_TYPE1_NESTING_IOMMU if non-identical formats
-> > > > +		 * are detected.
-> > > > +		 */
-> > > > +		if (tmp_format && tmp_format != format) {
-> > > > +			ret = -EINVAL;
-> > > > +			format = 0;
-> > > > +			goto out_unlock;
-> > > > +		}
-> > > > +
-> > > > +		tmp_format = format;
-> > > > +	}
-> > >
-> > > this path is invoked only in VFIO_IOMMU_GET_INFO path. If we don't
-> > > want
-> > to
-> > > assume the status quo that one container holds only one device w/
-> > vIOMMU
-> > > (the prerequisite for vSVA), looks we also need check the format
-> > > compatibility when attaching a new group to this container?
-> >
-> > right. if attaching to a nesting type container (vfio_iommu.nesting
-> > bit indicates it), it should check if it is compabile with prior
-> > domains in the domain list. But if it is the first one attached to
-> > this container, it's fine. is it good?
-> 
-> yes, but my point is whether we should check the format compatibility
-> in the attach path...
 
-I guess so. Assume a device has been attached to a container, and
-userspace has fetched the nesting cap info. e.g. QEMU will have a
-per-container structure to store the nesting info. And then attach
-another device from a separate group, if its backend iommu supports
-different formats, then it will be a problem. If userspace reads the
-nesting cap info again, it will get a different value. It may affect
-the prior attched device. If userspace doesn't refresh the nesting
-info by re-fetch, then the newly added device may use a format which
-its backend iommu doesn't support.
+--cyib43ljsdkuwwb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Although, the vendor specific iommu driver should ensure all devices
-are backed by iommu units w/ same capability (e.g. format). But it
-would better to have a check in vfio side all the same. how about your
-opinion so far?:-)
+Hi,
 
-Regards,
-Yi Liu
+On Tue, Mar 31, 2020 at 03:33:44PM +0200, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+>
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
+>
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+>
+> - Changes since v5:
+>   * Add assigned-clocks and assigned-clock-rates
+>   * robher: dt-schema errors
+>
+> - Changes since v4:
+>   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+>   * Add clock-lanes property to example
+>   * robher: Fix syntax error in devicetree example
+>
+> - Changes since v3:
+>   * robher: Fix syntax error
+>   * robher: Removed maxItems
+>   * Fixes yaml 'make dt-binding-check' errors
+>
+> - Changes since v2:
+>   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+>   * Convert text documentation to YAML schema.
+>
+> - Changes since v1:
+>   Fixes comments from Sakari, Tomasz
+>   * Add clock-frequency and link-frequencies in DT
+>
+>  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> new file mode 100644
+> index 000000000000..beeddfbb8709
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2019 MediaTek Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ben Kao <ben.kao@intel.com>
+> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> +
+> +description: |-
+> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> +  serial data output (up to 4-lane).
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov8856
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Input clock for the sensor.
+> +    items:
+> +      - const: xvclk
+> +
+> +  clock-frequency:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
+
+We also had that discussion recently for another omnivision sensor
+(ov5645 iirc), but what is clock-frequency useful for?
+
+It seems that the sensor is passed in clocks, so if you need to
+retrieve the clock rate you should use the clock API instead.
+
+Looking at the driver, it looks like it first retrieves the clock, set
+it to clock-frequency, and then checks that this is OV8856_XVCLK_19_2
+(19.2 MHz).
+
+The datasheet says that the sensor can have any frequency in the 6 -
+27 MHz range, so this is a driver limitation and should be set in the
+driver using the clock API, and you can always bail out if it doesn't
+provide a rate that is not acceptable for the drivers assumption.
+
+In any case, you don't need clock-frequency here...
+
+> +  assigned-clocks:
+> +    description:
+> +      Input clock for the sensor.
+> +
+> +  assigned-clock-rates:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
+
+And you don't need assigned-clock-rates either.
+
+Maxime
+
+--cyib43ljsdkuwwb5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoRLqAAKCRDj7w1vZxhR
+xTZUAQD2jZuXcAGddgKgZVErUVHpj/2QR46aWWLx0qVUgCtlcQD/WJPvN3yt7iUv
+JXfc3Ipii5CyHgWsqStgnqMYbiwUJQg=
+=1zlr
+-----END PGP SIGNATURE-----
+
+--cyib43ljsdkuwwb5--
