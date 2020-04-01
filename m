@@ -2,51 +2,55 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF36C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE780C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37ABB2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2332063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759432;
-	bh=GToXniXT+TcobdymTSjFYMLoF1tRlgZ/NIKKH8vjf6Y=;
+	s=default; t=1585759438;
+	bh=jh4q+6jp3bwJQC4FPQjc+xd9xxgENTXWRRQ6FFlQtsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mo3tM/ES8dq725fqxXft5CBK2NeMS1jX4H9MpwuUI+jlQZbjBfDW0pYSGlP1awIFa
-	 fm5nmC//ZV6ROGKaZ8WvRCjbIiraIrvzwR2nljEarp8+pcHZZLqKbzUYiXwmtgx/w1
-	 SbkTQnBG1oL3qU6ciVq8CrllTGD/mcp66dCWV6fk=
+	b=rasFKAVVWWTUd5MK7hrP+xlZYEGCfRRI3mibO0MK8tOsr2T3NEEtjFpAEalhrCy8L
+	 FD5q+Ni9u12CJeVFTTLF2SNY+d7bMHUJyVtwlID88V/gzqhoCLYlggNHPge3PS9HhQ
+	 /c1+genk8NuU9WdwHaCBTCCKvMeMucnT5Th51usA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389650AbgDAQnv (ORCPT
+        id S2389667AbgDAQn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:43:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:43:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732793AbgDAQnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:43:49 -0400
+        id S2389512AbgDAQn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:43:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E3732063A;
-        Wed,  1 Apr 2020 16:43:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF92F2063A;
+        Wed,  1 Apr 2020 16:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759429;
-        bh=GToXniXT+TcobdymTSjFYMLoF1tRlgZ/NIKKH8vjf6Y=;
+        s=default; t=1585759435;
+        bh=jh4q+6jp3bwJQC4FPQjc+xd9xxgENTXWRRQ6FFlQtsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1muohoGadTXyeSADhBPRKxPcrC1PPFoGASneYb6ZUKNvjORL+lKh71EAB4MnoCla
-         z/gQRhLIZqN4/AdfCE1AX4btJrvLsYcMn0a23o7a5+PKEAVvvJeQT7yUJZ1/IUuCG/
-         M/fv8skUvb/zANp7RiIgIdVnxat5RMi2qEW4Bucw=
+        b=thn0UUtJQgFdny3eYszMUNRaruVhHMjCpcdkmqDurpQmeu7GlEE7oF+FzZhLJ0U66
+         p7nfsK4rB/nRBoT2hqBsv5cdDqlNL1NQZ8it4JpJHoOYFioD/9LoX9s9KpaU5COTAH
+         Gs3XvnwAED7JJySc/XLjhZ0Rlg7BRSxs8/ZnGtfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/148] cgroup-v1: cgroup_pidlist_next should update position index
-Date:   Wed,  1 Apr 2020 18:17:46 +0200
-Message-Id: <20200401161600.483221116@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 038/148] page-flags: fix a crash at SetPageError(THP_SWAP)
+Date:   Wed,  1 Apr 2020 18:17:10 +0200
+Message-Id: <20200401161556.412268483@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,60 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit db8dd9697238be70a6b4f9d0284cd89f59c0e070 ]
+commit d72520ad004a8ce18a6ba6cde317f0081b27365a upstream.
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped
+out") supported writing THP to a swap device but forgot to upgrade an
+older commit df8c94d13c7e ("page-flags: define behavior of FS/IO-related
+flags on compound pages") which could trigger a crash during THP
+swapping out with DEBUG_VM_PGFLAGS=y,
 
- # mount | grep cgroup
- # dd if=/mnt/cgroup.procs bs=1  # normal output
-...
-1294
-1295
-1296
-1304
-1382
-584+0 records in
-584+0 records out
-584 bytes copied
+  kernel BUG at include/linux/page-flags.h:317!
 
-dd: /mnt/cgroup.procs: cannot skip to specified offset
-83  <<< generates end of last line
-1383  <<< ... and whole last line once again
-0+1 records in
-0+1 records out
-8 bytes copied
+  page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
+  page:fffff3b2ec3a8000 refcount:512 mapcount:0 mapping:000000009eb0338c index:0x7f6e58200 head:fffff3b2ec3a8000 order:9 compound_mapcount:0 compound_pincount:0
+  anon flags: 0x45fffe0000d8454(uptodate|lru|workingset|owner_priv_1|writeback|head|reclaim|swapbacked)
 
-dd: /mnt/cgroup.procs: cannot skip to specified offset
-1386  <<< generates last line anyway
-0+1 records in
-0+1 records out
-5 bytes copied
+  end_swap_bio_write()
+    SetPageError(page)
+      VM_BUG_ON_PAGE(1 && PageCompound(page))
 
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  <IRQ>
+  bio_endio+0x297/0x560
+  dec_pending+0x218/0x430 [dm_mod]
+  clone_endio+0xe4/0x2c0 [dm_mod]
+  bio_endio+0x297/0x560
+  blk_update_request+0x201/0x920
+  scsi_end_request+0x6b/0x4b0
+  scsi_io_completion+0x509/0x7e0
+  scsi_finish_command+0x1ed/0x2a0
+  scsi_softirq_done+0x1c9/0x1d0
+  __blk_mqnterrupt+0xf/0x20
+  </IRQ>
+
+Fix by checking PF_NO_TAIL in those places instead.
+
+Fixes: bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped out")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: "Huang, Ying" <ying.huang@intel.com>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200310235846.1319-1-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/cgroup/cgroup-v1.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/page-flags.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index a2c05d2476ac5..d148965180893 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -501,6 +501,7 @@ static void *cgroup_pidlist_next(struct seq_file *s, void *v, loff_t *pos)
- 	 */
- 	p++;
- 	if (p >= end) {
-+		(*pos)++;
- 		return NULL;
- 	} else {
- 		*pos = *p;
--- 
-2.20.1
-
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -264,7 +264,7 @@ static inline int TestClearPage##uname(s
+ 
+ __PAGEFLAG(Locked, locked, PF_NO_TAIL)
+ PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
+-PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
++PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
+ PAGEFLAG(Referenced, referenced, PF_HEAD)
+ 	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
+ 	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
 
 
