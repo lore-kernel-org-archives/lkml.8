@@ -2,93 +2,92 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54D6C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31810C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0B3207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38BD207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LSe3YHd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731990AbgDAIUa (ORCPT
+        id S1732069AbgDAIUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:20:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:36715 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgDAIUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:20:30 -0400
-IronPort-SDR: UIN3sk57ourU3eRBAkihcrtyZhMJ77gKNNrXX+398kTeF/Xtv5Qn1SyjZmxm/RM0yW+kwNDQrV
- Fc5vrreDRoFA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 01:20:30 -0700
-IronPort-SDR: gcLKdk5leewbXh2NZqZHf8qkafOI+oTgdm3xH4UEYLpxs9isubzIwwu4awu9+iJuhnz77lD0/8
- tXpKeFVPV4tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
-   d="scan'208";a="242160906"
-Received: from vikasjox-mobl.amr.corp.intel.com (HELO localhost) ([10.249.39.53])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Apr 2020 01:20:21 -0700
-Date:   Wed, 1 Apr 2020 11:20:19 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Christophe Richard <hristophe-h.ricard@st.com>
-Subject: Re: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops in order to check data integrity
-Message-ID: <20200401082019.GB17325@linux.intel.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-3-amirmizi6@gmail.com>
+        Wed, 1 Apr 2020 04:20:41 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43772 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731995AbgDAIUk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:20:40 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g27so24737875ljn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xIxdPs3PCWGrE1rhEKnhI29WwowDoOmXYLKku7/kqhU=;
+        b=LSe3YHd9F0nJBdAnd2M0pbyKcOUuxrYfkAZbfzzavXnm/vf5pui4cy40QMGXuBXw6O
+         PtrWohZnOdZ5krIl66URyEvd+OREL2CCVHPq3aJhrnE7VYL8cTw47hQYwd7LNrnRCavU
+         w5eDZW8jjfLCVT0Qr0E7O62Mi53S6BDadlRiF4lFbbj3gfbQFi33oDyCkfXpM872Rhh+
+         KryuliO0WWpRTdwZgUuuc/rmxL7yAg+ewDy6Oq7ezq+1WpxSooKL86cQgsvUwFNha6Gb
+         6ZTdxkV0KXDMKrvrtH05Rrk7LO04sSRZ4oKfy05jk/m20jxdgdeth3GxA0TMZPVS8zX+
+         g3ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xIxdPs3PCWGrE1rhEKnhI29WwowDoOmXYLKku7/kqhU=;
+        b=WzYeOU08M2HGqJS0dz2iBH+hr7FXHK22NtKFckyO7jie9Q136z1eFNanhE/JDDN8GV
+         Ji4XFVvrdd+baA1lGeBVZeX9FSLixMILkuc8eWwjdspfu+Y2/2ylGjMMJbAqQweHQ8bB
+         RPxXtHF3vjZg2dhrqyKYJmCBU9aYJhe6FoAP4KHZ+ZH8iTxDJro/t30nzpkpW0F73opT
+         mF/1G6m05k74Bq4Zw9Nm1K/9HJq5Lg0JB/lgDaLEcuFkIu3eJLL2DpD+fuuc2MkoVusA
+         eX0jVifdRPT24mD3cSzrQj0SmutnjnqSDKbxnpdkV62a6dK7iHAC7wPHKlqtEwt7+SG0
+         zIfg==
+X-Gm-Message-State: AGi0PuYy2k2PQrUyaORTtrW//yy4pOatWYdI1sV85k7jUoG04hCEz9AV
+        yZTnl9s/Vj7hcEcTTYxYWTMwxWfA6nmMfVzYT8Jadw==
+X-Google-Smtp-Source: APiQypJsnLDmKh1yBBjZBhguP/v9RUaTCpgsNrdRcuHpGcqAeZsCIOj74BvrzWIRMq/PR8riGPHyMNgylYL7/zlVGPE=
+X-Received: by 2002:a2e:9d85:: with SMTP id c5mr998983ljj.168.1585729237735;
+ Wed, 01 Apr 2020 01:20:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331113207.107080-3-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200401190810.7a2cfa07@canb.auug.org.au> <20200401191810.1c06ead6@canb.auug.org.au>
+In-Reply-To: <20200401191810.1c06ead6@canb.auug.org.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 1 Apr 2020 10:20:26 +0200
+Message-ID: <CACRpkdaHdr_TwVES2+hZ9PMTryybHrbYgi0RL3ihkRERsTmV2Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: turn of_pinctrl_get() into a static inline
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:32:02PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> In order to compute the crc over the data sent in lower layer
->  (I2C for instance), tpm_tis_check_data() calls an operation (if available)
->  to check data integrity. If data integrity cannot be verified, a retry
->  attempt to save the sent/received data is implemented.
-> 
-> The current steps are done when sending a command:
->     1. Host writes to TPM_STS.commandReady.
->     2. Host writes command.
->     3. Host checks that TPM received data is valid.
->     4. If data is currupted go to step 1.
-> 
-> When receiving data:
->     1. Host checks that TPM_STS.dataAvail is set.
->     2. Host saves received data.
->     3. Host checks that received data is correct.
->     4. If data is currupted Host writes to TPM_STS.responseRetry and go to
->         step 1.
-> 
-> Co-developed-by: Christophe Richard <hristophe-h.ricard@st.com>
-> Signed-off-by: Christophe Richard <hristophe-h.ricard@st.com>
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+On Wed, Apr 1, 2020 at 10:18 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> On Wed, 1 Apr 2020 19:08:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > This avoids the overheads of an EXPORTed function.
+> >
+> > Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/pinctrl/devicetree.c    | 6 ------
+> >  include/linux/pinctrl/pinctrl.h | 9 +++------
+> >  2 files changed, 3 insertions(+), 12 deletions(-)
+> >
+> > This is not even build tested, but is this what you meant, Geert?
+>
+> Actually this won't work because get_pinctrl_dev_from_of_node() is
+> declared in the private header file drivers/pinctrl/core.h :-(
 
-The email is malformed.
+No big deal. We keep your other fix for now.
 
-So.. How did Christophe participate on writing this patch? I haven't
-seen him shouting anything about the subject and still his SOB is
-there.
-
-/Jarkko
+Yours,
+Linus Walleij
