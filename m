@@ -2,51 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F75C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2076C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1159920719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F5F20705
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759489;
-	bh=BEppHJSF0Q3dBGNXBQdv4LxwkkElFKHdTM/3CINeEuA=;
+	s=default; t=1585759491;
+	bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o4QtlWMmkcS5fRFxkwggimqxOvLfW/Bko5011Ff3m9y/BVksNUf/QLR+xLpkQanyP
-	 vXGyBBtAmSjAWHFvdImtdeZDtQaMJ+TOSNhIpPV2UoRImHxzi0WXYVFepebwavUPl8
-	 uXovtMa3qzg+qkqnBb7WhB6QkgtQ4T1ulKX/rK/I=
+	b=KQOfKdtS2wtI35fwV118tWhRMdBhlsscDkiCe5THcaylUnRgZoEcbg3mFEDRjUz2Z
+	 iWh85qCS/ytXL5gJpn36WKQfzzlF5XMCNeJsu0OmO+lttAmrQuLRnX/0/2CI8chRWG
+	 mhpO6jdhq5g26QWe6NtXHt2YKVry4bX0Zj/LFza0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389771AbgDAQor (ORCPT
+        id S2389779AbgDAQou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:44:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45846 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:44:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388037AbgDAQop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:44:45 -0400
+        id S2388037AbgDAQos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:44:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1E62206E9;
-        Wed,  1 Apr 2020 16:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FD1B206E9;
+        Wed,  1 Apr 2020 16:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759485;
-        bh=BEppHJSF0Q3dBGNXBQdv4LxwkkElFKHdTM/3CINeEuA=;
+        s=default; t=1585759487;
+        bh=/sxCgI7m/KNwNNLDpk1oZ+muSRGWzY76oNLMuJCpNmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVcvjcogbiu63iggfkIesiT2VQG+h8y3SyZ4tqWlTPdsCIvO0lL5kR9PCvuv1wO/h
-         dT947KoB6/fcfuXUWFDTIiygktFs5e6feZdSawzuFg6ZGvqJjHUqwtsPjZQGdVF3XH
-         nBhph4BQWCJGwQGKIJnyLiBEO2Caedd+oy35gkqI=
+        b=JwdJhrl0XYK0ri8Eb/2Fvl7f/sVGD7qaCyApXV/z4PRfgtkARDp5UMwuxEZIXEl3t
+         PI5MUTpLgIeT7wpZwJTQBpxw3TT2tXpypz582Mn8tk74j4oE3v9n+GJBgXq+1KwK/s
+         EcSjxETlxb936o8lrsApYb30C7Kx310yRVsJthdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 077/148] cgroup1: dont call release_agent when it is ""
-Date:   Wed,  1 Apr 2020 18:17:49 +0200
-Message-Id: <20200401161600.703386393@linuxfoundation.org>
+        stable@vger.kernel.org, Dirk Mueller <dmueller@suse.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 4.14 095/148] scripts/dtc: Remove redundant YYLOC global declaration
+Date:   Wed,  1 Apr 2020 18:18:07 +0200
+Message-Id: <20200401161602.043243800@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,43 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: Dirk Mueller <dmueller@suse.com>
 
-[ Upstream commit 2e5383d7904e60529136727e49629a82058a5607 ]
+commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
 
-Older (and maybe current) versions of systemd set release_agent to "" when
-shutting down, but do not set notify_on_release to 0.
+gcc 10 will default to -fno-common, which causes this error at link
+time:
 
-Since 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate
-call_usermodehelper()"), we filter out such calls when the user mode helper
-path is "". However, when used in conjunction with an actual (i.e. non "")
-STATIC_USERMODEHELPER, the path is never "", so the real usermode helper
-will be called with argv[0] == "".
+  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
 
-Let's avoid this by not invoking the release_agent when it is "".
+This is because both dtc-lexer as well as dtc-parser define the same
+global symbol yyloc. Before with -fcommon those were merged into one
+defintion. The proper solution would be to to mark this as "extern",
+however that leads to:
 
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
+   26 | extern YYLTYPE yylloc;
+      |                ^~~~~~
+In file included from dtc-lexer.l:24:
+dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
+  127 | extern YYLTYPE yylloc;
+      |                ^~~~~~
+cc1: all warnings being treated as errors
+
+which means the declaration is completely redundant and can just be
+dropped.
+
+Signed-off-by: Dirk Mueller <dmueller@suse.com>
+Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+[robh: cherry-pick from upstream]
+Cc: stable@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/cgroup/cgroup-v1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/dtc/dtc-lexer.l |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index d148965180893..545f29c5268d7 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -824,7 +824,7 @@ void cgroup1_release_agent(struct work_struct *work)
+--- a/scripts/dtc/dtc-lexer.l
++++ b/scripts/dtc/dtc-lexer.l
+@@ -38,7 +38,6 @@ LINECOMMENT	"//".*\n
+ #include "srcpos.h"
+ #include "dtc-parser.tab.h"
  
- 	pathbuf = kmalloc(PATH_MAX, GFP_KERNEL);
- 	agentbuf = kstrdup(cgrp->root->release_agent_path, GFP_KERNEL);
--	if (!pathbuf || !agentbuf)
-+	if (!pathbuf || !agentbuf || !strlen(agentbuf))
- 		goto out;
+-YYLTYPE yylloc;
+ extern bool treesource_error;
  
- 	spin_lock_irq(&css_set_lock);
--- 
-2.20.1
-
+ /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
 
 
