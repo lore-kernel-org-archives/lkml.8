@@ -2,494 +2,130 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EAEC2BA12
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83677C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A11D2078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:44:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="Q+X9bQgx"
+	by mail.kernel.org (Postfix) with ESMTP id 4B9B120787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585781147;
+	bh=IC4jfBMRmPyPMvnuIoBhvgeO9nc5BkeGIDo25nxH9QA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BPz2Km/8D9Ri4tUcu/G3vSuad9vyiqcTsdW6uJQOYmzCpbxZKsyfr69Y3wGW9O3iB
+	 E7zKDCwq3XjAhTCpU4QgWl3wkaNTmG2SfH8gyoL/6C1ustQ6yeN8LXYHwdar22yKrR
+	 jPp9o3F4TNmlPF9ZwyL7dW3aCQBREQaWJVX/xba8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388419AbgDAWob (ORCPT
+        id S2388543AbgDAWpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:44:31 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:56952 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388386AbgDAWo3 (ORCPT
+        Wed, 1 Apr 2020 18:45:46 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35097 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387467AbgDAWpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:44:29 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 22B052DC3330;
-        Thu,  2 Apr 2020 09:44:27 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1585781068;
-        bh=WUswt0ThdKMOtAdHSGA44cKKcSd3ehspVRkSu90GPuc=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=Q+X9bQgxOtA5bsZVhJSZiti3BRxki0C2mffeI2DXnUE3CkLpmXE+kHLmtH/P46E1P
-         CRNkH9f0LIOdAdxEZvULLLR9giWg7DPYwZcdCmMEAVaoiZf0mpRES3bQ+dIci0dZ6x
-         CVaZX+aQc/i3CyN/22RLJ/4ajJUGOIhqkQUOKBgolmlxwZA9bAlInBjqTXLhoBGPvz
-         MrmXGWiKCh1yXwT8R/cvfIcfpjof2x6il0XWMjXLd9wAhLidMIuUGA9bZ1Ov+W8tYP
-         K184yedXzhaatalU7J8WG1B7/MVjTmz2Eo+8Jij4j2kTfhJfTrS9yjlm/Evk9Ill58
-         qun6TuxLAc8jsopXtUXlTNc/ZEv2T+v/RAFRzhyeGOAzKd6fgRppuL9mXityB/qQ7r
-         GSMJBvNxivd25f6qEbC2bvr/mJ293TsXG5IQWRqqr8utNP719IajcEdC8G4gt6hUHb
-         cjxY3jO0DOvv+7BUAujvJT0hf0iu7LRil/MWCByVAWIdyiOEu+CJ2bDK7IfFA/KOrQ
-         iwNS+i4Mc1HVyv9nnJfGBV5tk5ovsNQfuMikZKT8qtLwU5aSYfTvMTfCLLOE7r8A8F
-         s4RBIGEvKEvI2P7pI93f3BmJcEUa2TiqAsIz/suS0dy9yWHtjBaIc8ZlLIX+bBx35e
-         RDq8iXRDScrTJTbX8OnnWyxg=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id 031MiEaB088120
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 2 Apr 2020 09:44:16 +1100 (AEDT)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'Dan Williams'" <dan.j.williams@intel.com>
-Cc:     "'Aneesh Kumar K . V'" <aneesh.kumar@linux.ibm.com>,
-        "'Oliver O'Halloran'" <oohall@gmail.com>,
-        "'Benjamin Herrenschmidt'" <benh@kernel.crashing.org>,
-        "'Paul Mackerras'" <paulus@samba.org>,
-        "'Michael Ellerman'" <mpe@ellerman.id.au>,
-        "'Frederic Barrat'" <fbarrat@linux.ibm.com>,
-        "'Andrew Donnellan'" <ajd@linux.ibm.com>,
-        "'Arnd Bergmann'" <arnd@arndb.de>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Vishal Verma'" <vishal.l.verma@intel.com>,
-        "'Dave Jiang'" <dave.jiang@intel.com>,
-        "'Ira Weiny'" <ira.weiny@intel.com>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        "'Mauro Carvalho Chehab'" <mchehab+samsung@kernel.org>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Rob Herring'" <robh@kernel.org>,
-        "'Anton Blanchard'" <anton@ozlabs.org>,
-        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Mahesh Salgaonkar'" <mahesh@linux.vnet.ibm.com>,
-        "'Madhavan Srinivasan'" <maddy@linux.vnet.ibm.com>,
-        "=?utf-8?Q?'C=C3=A9dric_Le_Goater'?=" <clg@kaod.org>,
-        "'Anju T Sudhakar'" <anju@linux.vnet.ibm.com>,
-        "'Hari Bathini'" <hbathini@linux.ibm.com>,
-        "'Thomas Gleixner'" <tglx@linutronix.de>,
-        "'Greg Kurz'" <groug@kaod.org>,
-        "'Nicholas Piggin'" <npiggin@gmail.com>,
-        "'Masahiro Yamada'" <yamada.masahiro@socionext.com>,
-        "'Alexey Kardashevskiy'" <aik@ozlabs.ru>,
-        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
-        "'linuxppc-dev'" <linuxppc-dev@lists.ozlabs.org>,
-        "'linux-nvdimm'" <linux-nvdimm@lists.01.org>,
-        "'Linux MM'" <linux-mm@kvack.org>
-References: <20200327071202.2159885-1-alastair@d-silva.org> <CAPcyv4iJYZBVhV1NW7EB6-EwETiUAy6r1iiE+F+HvFXfGZt9Aw@mail.gmail.com>
-In-Reply-To: <CAPcyv4iJYZBVhV1NW7EB6-EwETiUAy6r1iiE+F+HvFXfGZt9Aw@mail.gmail.com>
-Subject: RE: [PATCH v4 00/25] Add support for OpenCAPI Persistent Memory devices
-Date:   Thu, 2 Apr 2020 09:44:13 +1100
-Message-ID: <2d6901d60877$16aa7a90$43ff6fb0$@d-silva.org>
+        Wed, 1 Apr 2020 18:45:45 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k21so1246364ljh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 15:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9c8qE3qcn/L/b5/Y0N7wYbMH02+9//QHBv0eQQ/FuU4=;
+        b=H/wJ4p8U+3BtQeYyXOMSFkuPezkyzi2+f8geb/E5TjtsL26u79zAu4vV+a/MyRvEXG
+         oyifgLlndtUxR5iodJdHnv07AGwyiKZshXBAomJte1RgCuT/uT/vKnDbnJLFfSRbQl75
+         DHD6mW2/OaqjbNNx5KNTt9kenv463q5xVd7Js=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9c8qE3qcn/L/b5/Y0N7wYbMH02+9//QHBv0eQQ/FuU4=;
+        b=Ha6+oKWL8U6j0XM0UL0E6Jkr4tG1jdhXQK0p6a5l35CTaGnMdXp7QF14fgyD47w+Qq
+         OOa+9JkRJsFdWnzFEMFC6dWW0n4RPxCHD19QFoXqE+KoeM7sWOQf9mgj6Y4Q12E1fuM6
+         ofDA8VMI2GoxsQrsDnZZJvDvPs49IhNTbQ/imi9v1anQX1zSpBkZApoRbQJXbShaJs+n
+         kxSOR6l+2xeF9Q7zfVdgxsx0vuEQKdUrsX2KUsa8i02IhzvzbZvM2hAuZyCEbzBCnPIU
+         yMf2XZBp6CBpoF0lhdq5QXqM68jngDLMfyAJfwZJnD1CcZsZkK4WQLmXaxLVaO8PgojA
+         mcsA==
+X-Gm-Message-State: AGi0PubOjPKm92iPCf11PdWunfGUl28uNMASonolvAnmzXzDoAGzf0iZ
+        YQRLInPxcV9W4INeTOyUZS6ZFFyo/Tc=
+X-Google-Smtp-Source: APiQypIw/lstPU0LI6/99LSjehU/+/+hX2zt4dtXX1/i3YjMNa+9td0VhO0yckXMDhubnisrrqoFrg==
+X-Received: by 2002:a2e:8246:: with SMTP id j6mr263484ljh.162.1585781143271;
+        Wed, 01 Apr 2020 15:45:43 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id h9sm1907552ljk.96.2020.04.01.15.45.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 15:45:42 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id g27so1173442ljn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 15:45:41 -0700 (PDT)
+X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr247886ljp.241.1585781141160;
+ Wed, 01 Apr 2020 15:45:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-au
-Thread-Index: AQJ5L4Hn/mp5p0p1jYAFWLJ+xmWSbgGC/kF4pxJ1VcA=
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Thu, 02 Apr 2020 09:44:23 +1100 (AEDT)
+References: <20200331080111.GA20569@gmail.com> <CAHk-=wjpBohNkBSxyPfC7w8165usbU5TuLohdbPs+D0bUYqJhQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wjpBohNkBSxyPfC7w8165usbU5TuLohdbPs+D0bUYqJhQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 1 Apr 2020 15:45:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wijWvUfEkqUZRpvo9FCaJNsioS_qZT+iNWUdqQ6eO8Ozw@mail.gmail.com>
+Message-ID: <CAHk-=wijWvUfEkqUZRpvo9FCaJNsioS_qZT+iNWUdqQ6eO8Ozw@mail.gmail.com>
+Subject: Re: [GIT PULL] x86 cleanups for v5.7
+To:     Ingo Molnar <mingo@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 31, 2020 at 11:09 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Lovely. This now makes my local boot-test tree be much closer to my
+> upstream tree, since I've had my clang asm-goto stuff in my boot tree
+> (and it had that series from Al).
 
-> -----Original Message-----
-> From: Dan Williams <dan.j.williams@intel.com>
-> Sent: Wednesday, 1 April 2020 7:48 PM
-> To: Alastair D'Silva <alastair@d-silva.org>
-> Cc: Aneesh Kumar K . V <aneesh.kumar@linux.ibm.com>; Oliver O'Halloran
-> <oohall@gmail.com>; Benjamin Herrenschmidt
-> <benh@kernel.crashing.org>; Paul Mackerras <paulus@samba.org>; Michael
-> Ellerman <mpe@ellerman.id.au>; Frederic Barrat =
-<fbarrat@linux.ibm.com>;
-> Andrew Donnellan <ajd@linux.ibm.com>; Arnd Bergmann
-> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>;
-> Vishal Verma <vishal.l.verma@intel.com>; Dave Jiang
-> <dave.jiang@intel.com>; Ira Weiny <ira.weiny@intel.com>; Andrew Morton
-> <akpm@linux-foundation.org>; Mauro Carvalho Chehab
-> <mchehab+samsung@kernel.org>; David S. Miller <davem@davemloft.net>;
-> Rob Herring <robh@kernel.org>; Anton Blanchard <anton@ozlabs.org>;
-> Krzysztof Kozlowski <krzk@kernel.org>; Mahesh Salgaonkar
-> <mahesh@linux.vnet.ibm.com>; Madhavan Srinivasan
-> <maddy@linux.vnet.ibm.com>; C=C3=A9dric Le Goater <clg@kaod.org>; Anju =
-T
-> Sudhakar <anju@linux.vnet.ibm.com>; Hari Bathini
-> <hbathini@linux.ibm.com>; Thomas Gleixner <tglx@linutronix.de>; Greg
-> Kurz <groug@kaod.org>; Nicholas Piggin <npiggin@gmail.com>; Masahiro
-> Yamada <yamada.masahiro@socionext.com>; Alexey Kardashevskiy
-> <aik@ozlabs.ru>; Linux Kernel Mailing List =
-<linux-kernel@vger.kernel.org>;
-> linuxppc-dev <linuxppc-dev@lists.ozlabs.org>; linux-nvdimm <linux-
-> nvdimm@lists.01.org>; Linux MM <linux-mm@kvack.org>
-> Subject: Re: [PATCH v4 00/25] Add support for OpenCAPI Persistent =
-Memory
-> devices
->=20
-> On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva =
-<alastair@d-silva.org>
-> wrote:
-> >
-> > This series adds support for OpenCAPI Persistent Memory devices on
-> > bare metal (arch/powernv), exposing them as nvdimms so that we can
-> > make use of the existing infrastructure. There already exists a =
-driver
-> > for the same devices abstracted through PowerVM (arch/pseries):
-> > arch/powerpc/platforms/pseries/papr_scm.c
-> >
-> > These devices are connected via OpenCAPI, and present as LPC (lowest
-> coherence point) memory to the system, practically, that means that
-> memory on these cards could be treated as conventional, cache-coherent
-> memory.
-> >
-> > Since the devices are connected via OpenCAPI, they are not =
-enumerated
-> via ACPI. Instead, OpenCAPI links present as pseudo-PCI bridges, with
-> devices below them.
-> >
-> > This series introduces a driver that exposes the memory on these =
-cards as
-> nvdimms, with each card getting it's own bus. This is somewhat =
-complicated
-> by the fact that the cards do not have out of band persistent storage =
-for
-> metadata, so 1 SECTION_SIZE's (see SPARSEMEM) worth of storage is =
-carved
-> out of the top of the card storage to implement the ndctl_config_* =
-calls.
->=20
-> Is it really tied to section-size? Can't that change based on the =
-configured
-> page-size? It's not clear to me why that would be the choice, but I'll =
-dig into
-> the implementation.
->=20
+Side note: I've extended on the x86 uaccess cleanups a bit with a
+couple of commits:
 
-I had tried using PAGE_SIZE, but ran into problems carving off just 1 =
-page and handing it to the kernel, while leaving the rest as pmem. That =
-was a while ago though, so maybe I should retry it.
+  x86: start using named parameters for low-level uaccess asms
+  x86: get rid of 'rtype' argument to __get_user_asm() macro
+  x86: get rid of 'rtype' argument to __put_user_goto() macro
+  x86: get rid of 'errret' argument to __get_user_xyz() macross
+  x86: remove __put_user_asm() infrastructure
 
-> > The driver is not responsible for configuring the NPU (NVLink =
-Processing
-> Unit) BARs to map the LPC memory from the card into the system's =
-physical
-> address space, instead, it requests this to be done via OPAL calls =
-(typically
-> implemented by Skiboot).
->=20
-> Are OPAL calls similar to ACPI DSMs? I.e. methods for the OS to invoke
-> platform firmware services? What's Skiboot?
->=20
+which I _tried_ to make complete no-ops (comparing code generation
+before and after). Sadly, one of them (the "get rid of 'rtype'
+argument to __get_user_asm" one) causes gcc to pick different
+registers for me because now the temporary variables have different
+sizes.
 
-Yes, OPAL is the interface to firmware for POWER. Skiboot is the =
-open-source (and only) implementation of OPAL.
+(The others cause line number data changes, of course, but I didn't
+see any _code_ changes).
 
-> >
-> > The series is structured as follows:
-> >  - Required infrastructure changes & cleanup
-> >  - A minimal driver implementation
-> >  - Implementing additional features within the driver
->=20
-> Thanks for the intro and the changelog!
->=20
-> >
-> > Changelog:
-> > V4:
-> >   - Rebase on next-20200320
->=20
-> Do you have dependencies on other material that's in -next? Otherwise =
--
-> next is only a viable development baseline if you are going to merge =
-through
-> Andrew's tree.
->=20
-> >   - Bump copyright to 2020
-> >   - Ensure all uapi headers use C89 compatible comments (missed
-> ocxlpmem.h)
-> >   - Move the driver back to drivers/nvdimm/ocxl, after confirmation
-> >     that this location is desirable
-> >   - Rename ocxl.c to ocxlpmem.c (+ support files)
-> >   - Rename all ocxl_pmem to ocxlpmem
-> >   - Address checkpatch --strict issues
-> >   - "powerpc/powernv: Add OPAL calls for LPC memory alloc/release"
-> >         - Pass base address as __be64
-> >   - "ocxl: Tally up the LPC memory on a link & allow it to be =
-mapped"
-> >         - Address checkpatch spacing warnings
-> >         - Reword blurb
-> >         - Reword size description for ocxl_link_add_lpc_mem()
-> >         - Add an early exit in ocxl_link_lpc_release() to avoid =
-triggering
-> >           bogus warnings if called after ocxl_link_lpc_map() fails
-> >   - "powerpc/powernv: Add OPAL calls for LPC memory alloc/release"
-> >         - Reword blurb
-> >   - "powerpc/powernv: Map & release OpenCAPI LPC memory"
-> >         - Reword blurb
-> >   - Move minor_idr init from file_init() to ocxlpmem_init() (fixes =
-runtime
-> error
-> >     in "nvdimm: Add driver for OpenCAPI Persistent Memory")
-> >   - Wrap long lines
-> >   - "nvdimm: Add driver for OpenCAPI Storage Class Memory"
-> >         - Remove '+ 1' workround from serial number->cookie =
-assignment
-> >         - Drop out of memory message for ocxlpmem in probe()
-> >         - Fix leaks of ocxlpmem & ocxlpmem->ocxl_fn in probe()
-> >         - remove struct ocxlpmem_function0, it didn't value add
-> >         - factor out err_unregistered label in probe
-> >         - Address more checkpatch warnings
-> >         - get/put the pci dev on probe/free
-> >         - Drop ocxlpmem_ prefix from static functions
-> >         - Propogate errors up from called functions in probe()
-> >         - Set MODULE_LICENSE to GPLv2
-> >         - Add myself as module author
-> >         - Call nvdimm_bus_unregister() in remove() to release =
-references
-> >         - Don't call devm_memunmap on metadata_address, the release
-> handler on
-> >          the device already deals with this
-> >   - "nvdimm/ocxl: Read the capability registers & wait for device =
-ready"
-> >         - Fix mask for read_latency
-> >         - Fold in is_usable logic into timeout to remove error =
-message race
-> >         - propogate bad rc from read_device_metadata
-> >   - "nvdimm/ocxl: Add register addresses & status values to the =
-header"
-> >         - Add comments for register abbreviations where names have =
-been
-> >           expanded
-> >         - Add missing status for blocked on background task
-> >         - Alias defines for firmware update status to show that the =
-duplication
-> >           of values is intentional
-> >   - "nvdimm/ocxl: Register a character device for userspace to =
-interact with"
-> >         - Add lock around minors IDR, delete the cdev before
-> device_unregister
-> >         - Propogate errors up from called functions in probe()
-> >   - "nvdimm/ocxl: Add support for Admin commands"
-> >         - Fix typo in setup_command_data error message, and drop =
-'ocxl' from
-> it
-> >         - Drop vestigial CHI read from admin_command_request
-> >         - Change command ID mismatch message to dev_err, and return =
-an
-> error
-> >         - Use jiffies to implement admin_command_complete_timeout()
-> >         - Flesh out blurb
-> >         - Create a wrapper to issue the command & wait for timeout
-> >   - "nvdimm/ocxl: Add support for near storage commands"
-> >         - dropped (will submit with the patches for nvdimm =
-overwrite)
-> >   - "nvdimm/ocxl: Implement the Read Error Log command"
-> >         - Remove stray blank line
-> >         - change misplaced goto to an early exit in read_error_log
-> >         - Inline error_log_offset_0x08
-> >         - Read WWID data as LE rather than host endian
-> >         - Move the include of nvdimm/ocxlpmem.h to ocxl.c
-> >         - Add padding after fwrevision in struct =
-ioctl_ocxl_pmem_error_log
-> >         - Register IOCTL magic
-> >         - Coerce pointers to __u64 in IOCTLs
-> >   - "nvdimm/ocxl: Add controller dump IOCTLs"
-> >         - Coerce pointers to __u64 in IOCTLs
-> >         - Document expected IOCTL usage in blurb
-> >         - Add missing rc check
-> >         - Only populate up to the number of bytes returned by the =
-card,
-> >           and return this length to the caller
-> >         - Add missing header check
-> >   - "nvdimm/ocxl: Add an IOCTL to report controller statistics"
-> >         - Update to match the latest version of the spec
-> >         - Verify that parametr block IDs & lengths match what we =
-expect
-> >         - Use defines for offsets
-> >   - "nvdimm/ocxl: Forward events to userspace"
-> >         - Don't enable NSCRA doorbell
-> >         - return -EBUSY if the event context is already used
-> >         - return -ENODEV if IRQs cannot be mapped
-> >         - Tag IRQ pointers with __iomem
-> >         - Drop ocxlpmem_ prefix from static functions
-> >         - Propogate error from eventfd_ctx_fdget
-> >         - Fix error check in copy_to_user
-> >         - Drop GLOBAL_MMIO_CHI_NSCRA (this should be in the =
-overwrite
-> patch)
-> >         - Drop unused irq_pgmap
-> >         - Don't redef BIT_ULL
-> >   - "nvdimm/ocxl: Add debug IOCTLs"
-> >         - Eliminate clearing loop (now done in =
-admin_command_execute()
-> >         - Drop dummy IOCTLs if CONFIG_OCXL_PMEM_DEBUG is not set
-> >         - Group debug IOCTLs together & comment that they may not be
-> available
-> >   - "nvdimm/ocxl: Expose SMART data via ndctl"
-> >         - Drop 'rc =3D 0; goto out;'
-> >         - Propogate errors from ndctl_smart()
-> >   - "nvdimm/ocxl: Expose the serial number in sysfs" & "nvdimm/ocxl:
-> Expose the firmware version in sysfs"
-> >         - Squash these 2 patches together
-> >         - Expose data as a DIMM attribute rather than an ocxlpmem
-> >           attribute
-> >   - "nvdimm/ocxl: Add an IOCTL to request controller health & perf =
-data"
-> >         - Reword blurb
-> >   - "nvdimm/ocxl: Implement the heartbeat command"
-> >         - Propogate rc in probe()
-> >
-> > V3:
-> >   - Rebase against next/next-20200220
-> >   - Move driver to arch/powerpc/platforms/powernv, we now expect =
-this
-> >     driver to go upstream via the powerpc tree
-> >   - "nvdimm/ocxl: Implement the Read Error Log command"
-> >         - Fix bad header path
-> >   - "nvdimm/ocxl: Read the capability registers & wait for device =
-ready"
-> >         - Fix overlapping masks between readiness_timeout &
-> memory_available_timeout
-> >   - "nvdimm: Add driver for OpenCAPI Storage Class Memory"
-> >         - Address minor review comments from Jonathan Cameron
-> >         - Remove attributes
-> >         - Default to module if building LIBNVDIMM
-> >         - Propogate errors up from called functions in probe()
-> >   - "nvdimm/ocxl: Expose SMART data via ndctl"
-> >         - Pack attributes in struct
-> >         - Support different size SMART buffers for compatibility =
-with newer
-> >           ndctls that may want more SMART attribs than we provide
-> >         - Rework to to use ND_CMD_CALL instead of ND_CMD_SMART
-> >   - drop "ocxl: Free detached contexts in ocxl_context_detach_all()"
-> >   - "powerpc: Map & release OpenCAPI LPC memory"
-> >         - Remove 'extern'
-> >         - Only available with CONFIG_MEMORY_HOTPLUG_SPARSE
-> >   - "ocxl: Tally up the LPC memory on a link & allow it to be =
-mapped"
-> >         - Address minor review comments from Jonathan Cameron
-> >   - "ocxl: Add functions to map/unmap LPC memory"
-> >         - Split detected memory message into a separate patch
-> >         - Address minor review comments from Jonathan Cameron
-> >         - Add a comment explaining why unmap_lpc_mem is in
-> deconfigure_afu
-> >   - "nvdimm/ocxl: Add support for Admin commands"
-> >         - use sizeof(u64) rather than 0x08 when iterating u64s
-> >   - "nvdimm/ocxl: Implement the heartbeat command"
-> >         - Fix typo in blurb
-> >   - Address kernel doc issues
-> >   - Ensure all uapi headers use C89 compatible comments
-> >   - Drop patches for firmware update & overwrite, these will be
-> >     submitted later once patches are available for ndctl
-> >   - Rename SCM to OpenCAPI Persistent Memory
-> >
-> > V2:
-> >   - "powerpc: Map & release OpenCAPI LPC memory"
-> >       - Fix #if -> #ifdef
-> >       - use pci_dev_id to get the bdfn
-> >       - use __be64 to hold be data
-> >       - indent check_hotplug_memory_addressable correctly
-> >       - Remove export of check_hotplug_memory_addressable
-> >   - "ocxl: Conditionally bind SCM devices to the generic OCXL =
-driver"
-> >       - Improve patch description and remove redundant default
-> >   - "nvdimm: Add driver for OpenCAPI Storage Class Memory"
-> >       - Mark a few funcs as static as identified by the 0day bot
-> >       - Add OCXL dependancies to OCXL_SCM
-> >       - Use memcpy_mcsafe in scm_ndctl_config_read
-> >       - Rename scm_foo_offset_0x00 to scm_foo_header_parse & add =
-docs
-> >       - Name DIMM attribs "ocxl" rather than "scm"
-> >       - Split out into base + many feature patches
-> >   - "powerpc: Enable OpenCAPI Storage Class Memory driver on bare
-> metal"
-> >       - Build DEV_DAX & friends as modules
-> >   - "ocxl: Conditionally bind SCM devices to the generic OCXL =
-driver"
-> >       - Patch dropped (easy enough to maintain this out of tree for
-> development)
-> >   - "ocxl: Tally up the LPC memory on a link & allow it to be =
-mapped"
-> >       - Add a warning if an unmatched lpc_release is called
-> >   - "ocxl: Add functions to map/unmap LPC memory"
-> >       - Use EXPORT_SYMBOL_GPL
-> >
-> >
-> > Alastair D'Silva (25):
-> >   powerpc/powernv: Add OPAL calls for LPC memory alloc/release
-> >   mm/memory_hotplug: Allow check_hotplug_memory_addressable to be
-> called
-> >     from drivers
-> >   powerpc/powernv: Map & release OpenCAPI LPC memory
-> >   ocxl: Remove unnecessary externs
-> >   ocxl: Address kernel doc errors & warnings
-> >   ocxl: Tally up the LPC memory on a link & allow it to be mapped
-> >   ocxl: Add functions to map/unmap LPC memory
-> >   ocxl: Emit a log message showing how much LPC memory was detected
-> >   ocxl: Save the device serial number in ocxl_fn
-> >   nvdimm: Add driver for OpenCAPI Persistent Memory
-> >   powerpc: Enable the OpenCAPI Persistent Memory driver for
-> >     powernv_defconfig
-> >   nvdimm/ocxl: Add register addresses & status values to the header
-> >   nvdimm/ocxl: Read the capability registers & wait for device ready
-> >   nvdimm/ocxl: Add support for Admin commands
-> >   nvdimm/ocxl: Register a character device for userspace to interact
-> >     with
-> >   nvdimm/ocxl: Implement the Read Error Log command
-> >   nvdimm/ocxl: Add controller dump IOCTLs
-> >   nvdimm/ocxl: Add an IOCTL to report controller statistics
-> >   nvdimm/ocxl: Forward events to userspace
-> >   nvdimm/ocxl: Add an IOCTL to request controller health & perf data
-> >   nvdimm/ocxl: Implement the heartbeat command
-> >   nvdimm/ocxl: Add debug IOCTLs
-> >   nvdimm/ocxl: Expose SMART data via ndctl
-> >   nvdimm/ocxl: Expose the serial number & firmware version in sysfs
-> >   MAINTAINERS: Add myself & nvdimm/ocxl to ocxl
-> >
-> >  .../userspace-api/ioctl/ioctl-number.rst      |    1 +
-> >  MAINTAINERS                                   |    3 +
-> >  arch/powerpc/configs/powernv_defconfig        |    5 +
-> >  arch/powerpc/include/asm/opal-api.h           |    2 +
-> >  arch/powerpc/include/asm/opal.h               |    2 +
-> >  arch/powerpc/include/asm/pnv-ocxl.h           |   42 +-
-> >  arch/powerpc/platforms/powernv/ocxl.c         |   43 +
-> >  arch/powerpc/platforms/powernv/opal-call.c    |    2 +
-> >  drivers/misc/ocxl/config.c                    |   74 +-
-> >  drivers/misc/ocxl/core.c                      |   61 +
-> >  drivers/misc/ocxl/link.c                      |   60 +
-> >  drivers/misc/ocxl/ocxl_internal.h             |   45 +-
-> >  drivers/nvdimm/Kconfig                        |    2 +
-> >  drivers/nvdimm/Makefile                       |    1 +
-> >  drivers/nvdimm/ocxl/Kconfig                   |   21 +
-> >  drivers/nvdimm/ocxl/Makefile                  |    7 +
-> >  drivers/nvdimm/ocxl/main.c                    | 1975 =
-+++++++++++++++++
-> >  drivers/nvdimm/ocxl/ocxlpmem.h                |  197 ++
-> >  drivers/nvdimm/ocxl/ocxlpmem_internal.c       |  280 +++
-> >  include/linux/memory_hotplug.h                |    5 +
-> >  include/misc/ocxl.h                           |  122 +-
-> >  include/uapi/linux/ndctl.h                    |    1 +
-> >  include/uapi/nvdimm/ocxlpmem.h                |  127 ++
-> >  mm/memory_hotplug.c                           |    4 +-
-> >  24 files changed, 2983 insertions(+), 99 deletions(-)  create mode
-> > 100644 drivers/nvdimm/ocxl/Kconfig  create mode 100644
-> > drivers/nvdimm/ocxl/Makefile  create mode 100644
-> > drivers/nvdimm/ocxl/main.c  create mode 100644
-> > drivers/nvdimm/ocxl/ocxlpmem.h  create mode 100644
-> > drivers/nvdimm/ocxl/ocxlpmem_internal.c
-> >  create mode 100644 include/uapi/nvdimm/ocxlpmem.h
-> >
-> > --
-> > 2.24.1
-> >
+So that one commit results in a lot of small noise changes to the
+generated code for me, but the few I looked at closer all looked the
+same (mostly just different register, sometimes odd improvements where
+it avoided doing a stupid "andq $0xffffffff", and in one or two cases
+it seemed to randomly just change the stack frame size, sometimes to
+the better, sometimes to worse).
 
+The others should be purely semantically identical.
 
---=20
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva     msn: alastair@d-silva.org
-blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+It was all just small prep to make the patch I have for "asm goto with
+outputs" have a smaller footprint - particularly when I try to then
+make it work with compilers that don't have the capability, and I need
+to have different output registers for that case.
 
+I'm not planning on actually doing that patch this merge window, it's
+just not ready enough. But just in case somebody (Al?) is still
+working on the uaccess.h file, letting you know about my preparatory
+cleanups.
+
+                Linus
