@@ -2,234 +2,122 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6611C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011BDC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 971DD20784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88AA20787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585732678;
+	bh=NIHCvYzK9YrbTjAdgoNChDbtcnHzDgxI4/uoF9IQ+3A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YA6ywQzXUGmo4YKZ3tdtJHkoS+mugSajcix+OK8xkaMgF9fI/RrKT41BVh2i1KfoX
+	 wlhLyx2VEvUkWTyVLO78UBogZD4bxkMxU9oAPY7MkQYK/Q2ZrN/JmaeCB6XJ+lL/br
+	 E9Wa8yxkBbKeU6DrNmyzCNOGuksb9rfa1LcFJQmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731761AbgDAJRv (ORCPT
+        id S1732106AbgDAJR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:17:51 -0400
-Received: from mx04.melco.co.jp ([192.218.140.144]:60571 "EHLO
-        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgDAJRv (ORCPT
+        Wed, 1 Apr 2020 05:17:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39749 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgDAJR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:17:51 -0400
-Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
-        by mx04.melco.co.jp (Postfix) with ESMTP id 1A8AD3A4497;
-        Wed,  1 Apr 2020 18:17:49 +0900 (JST)
-Received: from mr04.melco.co.jp (unknown [127.0.0.1])
-        by mr04.imss (Postfix) with ESMTP id 48sgb107w0zRkCp;
-        Wed,  1 Apr 2020 18:17:49 +0900 (JST)
-Received: from mf03_second.melco.co.jp (unknown [192.168.20.183])
-        by mr04.melco.co.jp (Postfix) with ESMTP id 48sgb06xV5zRkCT;
-        Wed,  1 Apr 2020 18:17:48 +0900 (JST)
-Received: from mf03.melco.co.jp (unknown [133.141.98.183])
-        by mf03_second.melco.co.jp (Postfix) with ESMTP id 48sgb06qPCzRkHS;
-        Wed,  1 Apr 2020 18:17:48 +0900 (JST)
-Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
-        by mf03.melco.co.jp (Postfix) with ESMTP id 48sgb06M2fzRkHR;
-        Wed,  1 Apr 2020 18:17:48 +0900 (JST)
-Received:  from tux532.tad.melco.co.jp
-        by tux532.tad.melco.co.jp (unknown) with ESMTP id 0319Hm4N005340;
-        Wed, 1 Apr 2020 18:17:48 +0900
-Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
-        by postfix.imss70 (Postfix) with ESMTP id 9DABB17E075;
-        Wed,  1 Apr 2020 18:17:48 +0900 (JST)
-Received: from tux554.tad.melco.co.jp (tux100.tad.melco.co.jp [10.168.7.223])
-        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 9154417E073;
-        Wed,  1 Apr 2020 18:17:48 +0900 (JST)
-Received: from tux554.tad.melco.co.jp
-        by tux554.tad.melco.co.jp (unknown) with ESMTP id 0319HmtE007069;
-        Wed, 1 Apr 2020 18:17:48 +0900
-From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] exfat: Unify access to the boot sector
-Date:   Wed,  1 Apr 2020 18:17:45 +0900
-Message-Id: <20200401091745.107261-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-X-Mailer: git-send-email 2.25.0
+        Wed, 1 Apr 2020 05:17:57 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x11so25216909otp.6;
+        Wed, 01 Apr 2020 02:17:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zvEBEkwz9Sq6aAttX3Rnj82JX5NkQ0CAunYUtFI0KDM=;
+        b=H/ieCdAhv4hrNNIEhvtS4+1k8PawKy65U0Cbk+Hm5RzxFGf610ILMgOZukq/R5PeLZ
+         lUVMqKJvWmp0/5qKwE0yAyovHKPHHv3C2JVrADyUISp2IkzRmYprBDMzPxJPedV+dmyQ
+         h5vMJcOhBxUHZuNKizVKGqu+AbkNZIIt1U90sdfEFdO9vy1aDKf549pkhNsI7BHJ1GdL
+         RvFIi78VewdwiOsgyPnt6sy1Ia4MzrTo3dpgowpXezfuPwUmZqt3WAmNH0EO5zl0ncTO
+         +wPNsKhe3vggpE+erX9uDryOrUkAfQxiSsCRmGHlXHr7IgDebUFlkspLLkFmL2fWQyXv
+         h15w==
+X-Gm-Message-State: ANhLgQ0mXTaiy2u19eJKB+a5xuoZNjocLpOaH2eRDYR/huANcc82FdEZ
+        6tfRijE01eCvvyGFXwTW09UbZ1D9p790/LTYfN2BKw==
+X-Google-Smtp-Source: ADFU+vs3g5x5BswUgDpQqQ/W2DS6rIW6SxR67+ucWdEeArPwNiHvJgBL2Crzi0FMj7cQPLRGHMi8rxw9qnJPJ0sfRm8=
+X-Received: by 2002:a9d:7402:: with SMTP id n2mr16596009otk.262.1585732676649;
+ Wed, 01 Apr 2020 02:17:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <19409af2-f38a-6760-c7b3-aa5794a94df0@infradead.org> <c292826f-0a41-910d-1973-e6b613fbce7e@redhat.com>
+In-Reply-To: <c292826f-0a41-910d-1973-e6b613fbce7e@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 1 Apr 2020 11:17:44 +0200
+Message-ID: <CAJZ5v0iKvivmqmWqgoDM9W35SfMotacP7xP+er+ow7C7=SVkzA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI; update docs for "acpi_backlight" kernel parameter options
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unify access to boot sector via 'sbi>pbr_bh'.
-This fixes vol_flags inconsistency at read failed in fs_set_vol_flags(),
-and buffer_head leak in __exfat_fill_super().
+On Tue, Mar 31, 2020 at 10:16 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 3/31/20 2:17 AM, Randy Dunlap wrote:
+> > From: Randy Dunlap <rdunlap@infradead.org>
+> >
+> > Update the Documentation for "acpi_backlight" by adding
+> > 2 new options (native and none).
+> >
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: linux-acpi@vger.kernel.org
+> > Cc: Zhang Rui <rui.zhang@intel.com>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Len Brown <lenb@kernel.org>
+>
+> Thanks!
+>
+> Patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+> > ---
+> >   Documentation/admin-guide/kernel-parameters.txt |    8 +++++---
+> >   1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > --- linux-next-20200330.orig/Documentation/admin-guide/kernel-parameters.txt
+> > +++ linux-next-20200330/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -22,11 +22,13 @@
+> >                       default: 0
+> >
+> >       acpi_backlight= [HW,ACPI]
+> > -                     acpi_backlight=vendor
+> > -                     acpi_backlight=video
+> > -                     If set to vendor, prefer vendor specific driver
+> > +                     { vendor | video | native | none }
+> > +                     If set to vendor, prefer vendor-specific driver
+> >                       (e.g. thinkpad_acpi, sony_acpi, etc.) instead
+> >                       of the ACPI video.ko driver.
+> > +                     If set to video, use the ACPI video.ko driver.
+> > +                     If set to native, use the device's native backlight mode.
+> > +                     If set to none, disable the ACPI backlight interface.
+> >
+> >       acpi_force_32bit_fadt_addr
+> >                       force FADT to use 32 bit addresses rather than the
+> >
 
-Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
----
- fs/exfat/balloc.c |  3 ---
- fs/exfat/super.c  | 43 ++++++++++++++++---------------------------
- 2 files changed, 16 insertions(+), 30 deletions(-)
-
-diff --git a/fs/exfat/balloc.c b/fs/exfat/balloc.c
-index 6a04cc0256..6774a5a6de 100644
---- a/fs/exfat/balloc.c
-+++ b/fs/exfat/balloc.c
-@@ -91,7 +91,6 @@ static int exfat_allocate_bitmap(struct super_block *sb,
- 		}
- 	}
- 
--	sbi->pbr_bh = NULL;
- 	return 0;
- }
- 
-@@ -137,8 +136,6 @@ void exfat_free_bitmap(struct exfat_sb_info *sbi)
- {
- 	int i;
- 
--	brelse(sbi->pbr_bh);
--
- 	for (i = 0; i < sbi->map_sectors; i++)
- 		__brelse(sbi->vol_amap[i]);
- 
-diff --git a/fs/exfat/super.c b/fs/exfat/super.c
-index 16ed202ef5..2dd62543a4 100644
---- a/fs/exfat/super.c
-+++ b/fs/exfat/super.c
-@@ -49,6 +49,7 @@ static void exfat_put_super(struct super_block *sb)
- 		sync_blockdev(sb->s_bdev);
- 	exfat_set_vol_flags(sb, VOL_CLEAN);
- 	exfat_free_bitmap(sbi);
-+	brelse(sbi->pbr_bh);
- 	mutex_unlock(&sbi->s_lock);
- 
- 	call_rcu(&sbi->rcu, exfat_delayed_free);
-@@ -100,7 +101,7 @@ static int exfat_statfs(struct dentry *dentry, struct kstatfs *buf)
- int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
- {
- 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
--	struct pbr64 *bpb;
-+	struct pbr64 *bpb = (struct pbr64 *)sbi->pbr_bh->b_data;
- 	bool sync = 0;
- 
- 	/* flags are not changed */
-@@ -115,15 +116,6 @@ int exfat_set_vol_flags(struct super_block *sb, unsigned short new_flag)
- 	if (sb_rdonly(sb))
- 		return 0;
- 
--	if (!sbi->pbr_bh) {
--		sbi->pbr_bh = sb_bread(sb, 0);
--		if (!sbi->pbr_bh) {
--			exfat_msg(sb, KERN_ERR, "failed to read boot sector");
--			return -ENOMEM;
--		}
--	}
--
--	bpb = (struct pbr64 *)sbi->pbr_bh->b_data;
- 	bpb->bsx.vol_flags = cpu_to_le16(new_flag);
- 
- 	if (new_flag == VOL_DIRTY && !buffer_dirty(sbi->pbr_bh))
-@@ -355,10 +347,10 @@ static int exfat_read_root(struct inode *inode)
- 	return 0;
- }
- 
--static struct pbr *exfat_read_pbr_with_logical_sector(struct super_block *sb,
--		struct buffer_head **prev_bh)
-+static struct pbr *exfat_read_pbr_with_logical_sector(struct super_block *sb)
- {
--	struct pbr *p_pbr = (struct pbr *) (*prev_bh)->b_data;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	struct pbr *p_pbr = (struct pbr *) (sbi->pbr_bh)->b_data;
- 	unsigned short logical_sect = 0;
- 
- 	logical_sect = 1 << p_pbr->bsx.f64.sect_size_bits;
-@@ -378,26 +370,23 @@ static struct pbr *exfat_read_pbr_with_logical_sector(struct super_block *sb,
- 	}
- 
- 	if (logical_sect > sb->s_blocksize) {
--		struct buffer_head *bh = NULL;
--
--		__brelse(*prev_bh);
--		*prev_bh = NULL;
-+		brelse(sbi->pbr_bh);
-+		sbi->pbr_bh = NULL;
- 
- 		if (!sb_set_blocksize(sb, logical_sect)) {
- 			exfat_msg(sb, KERN_ERR,
- 				"unable to set blocksize %u", logical_sect);
- 			return NULL;
- 		}
--		bh = sb_bread(sb, 0);
--		if (!bh) {
-+		sbi->pbr_bh = sb_bread(sb, 0);
-+		if (!sbi->pbr_bh) {
- 			exfat_msg(sb, KERN_ERR,
- 				"unable to read boot sector (logical sector size = %lu)",
- 				sb->s_blocksize);
- 			return NULL;
- 		}
- 
--		*prev_bh = bh;
--		p_pbr = (struct pbr *) bh->b_data;
-+		p_pbr = (struct pbr *)sbi->pbr_bh->b_data;
- 	}
- 	return p_pbr;
- }
-@@ -408,21 +397,20 @@ static int __exfat_fill_super(struct super_block *sb)
- 	int ret;
- 	struct pbr *p_pbr;
- 	struct pbr64 *p_bpb;
--	struct buffer_head *bh;
- 	struct exfat_sb_info *sbi = EXFAT_SB(sb);
- 
- 	/* set block size to read super block */
- 	sb_min_blocksize(sb, 512);
- 
- 	/* read boot sector */
--	bh = sb_bread(sb, 0);
--	if (!bh) {
-+	sbi->pbr_bh = sb_bread(sb, 0);
-+	if (!sbi->pbr_bh) {
- 		exfat_msg(sb, KERN_ERR, "unable to read boot sector");
- 		return -EIO;
- 	}
- 
- 	/* PRB is read */
--	p_pbr = (struct pbr *)bh->b_data;
-+	p_pbr = (struct pbr *)sbi->pbr_bh->b_data;
- 
- 	/* check the validity of PBR */
- 	if (le16_to_cpu((p_pbr->signature)) != PBR_SIGNATURE) {
-@@ -433,7 +421,7 @@ static int __exfat_fill_super(struct super_block *sb)
- 
- 
- 	/* check logical sector size */
--	p_pbr = exfat_read_pbr_with_logical_sector(sb, &bh);
-+	p_pbr = exfat_read_pbr_with_logical_sector(sb);
- 	if (!p_pbr) {
- 		ret = -EIO;
- 		goto free_bh;
-@@ -514,7 +502,7 @@ static int __exfat_fill_super(struct super_block *sb)
- free_upcase_table:
- 	exfat_free_upcase_table(sbi);
- free_bh:
--	brelse(bh);
-+	brelse(sbi->pbr_bh);
- 	return ret;
- }
- 
-@@ -605,6 +593,7 @@ static int exfat_fill_super(struct super_block *sb, struct fs_context *fc)
- free_table:
- 	exfat_free_upcase_table(sbi);
- 	exfat_free_bitmap(sbi);
-+	brelse(sbi->pbr_bh);
- 
- check_nls_io:
- 	unload_nls(sbi->nls_io);
--- 
-2.25.0
-
+Applied as 5.7-rc material with a slightly modified subject, thanks!
