@@ -2,159 +2,216 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8FDC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B49C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFCA20719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A47320719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:26:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbgDAIZw (ORCPT
+        id S1731545AbgDAI0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:25:52 -0400
-Received: from mail.phytec.co.uk ([217.6.246.34]:52878 "EHLO
-        lws-riedmueller.phytec.de" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726197AbgDAIZw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:25:52 -0400
-X-Greylist: delayed 353 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Apr 2020 04:25:52 EDT
-Received: by lws-riedmueller.phytec.de (Postfix, from userid 20140)
-        id E13891A1626; Wed,  1 Apr 2020 10:19:57 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 10:19:57 +0200
-From:   Stefan =?iso-8859-1?Q?Riedm=FCller?= <s.riedmueller@phytec.de>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefan Riedmueller <s.riedmueller@phytec.de>
-Subject: Re: [PATCH 2/3] watchdog: da9063: Use pre configured timeout when
- watchdog is running
-Message-ID: <20200401081953.GA1585@phytec.de>
-References: <20200326150203.371673-1-s.riedmueller@phytec.de>
- <20200326150203.371673-2-s.riedmueller@phytec.de>
- <AM6PR10MB2263A1A76AFFBCE7BCC4B93880CB0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <387fadc6-1eab-ada7-86dd-0e47c5e9cb9f@roeck-us.net>
+        Wed, 1 Apr 2020 04:26:07 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12596 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726197AbgDAI0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:26:06 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7E093B1E66502C2BA533;
+        Wed,  1 Apr 2020 16:25:56 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 1 Apr 2020
+ 16:25:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <oder_chiou@realtek.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <pierre-louis.bossart@linux.intel.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ASoC: rt5682: Fix build error without CONFIG_I2C
+Date:   Wed, 1 Apr 2020 16:25:40 +0800
+Message-ID: <20200401082540.21876-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <387fadc6-1eab-ada7-86dd-0e47c5e9cb9f@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter, Adam,
+If I2C is n but SoundWire is m, building fails:
 
-Guenter Roeck <linux@roeck-us.net> wrote on Tue, 31. Mar 20 09:08:
-> On 3/30/20 9:38 AM, Adam Thomson wrote:
-> > On 26 March 2020 15:02, Stefan Riedmueller wrote:
-> > 
-> >> If the watchdog is already running during probe use its pre-configured
-> >> timeout instead of a default timeout to make sure the watchdog is pinged
-> >> in time until userspace takes over.
-> > 
-> > At least for this driver I don't think there's an issue here with regards to
-> > not pinging in time. Calling 'da9063_wdt_update_timeout()', as it currently
-> > does in the probe() when the watchdog is already active, actually disables the
-> > watchdog before then setting a new timeout value, so by that method we're
-> > avoiding a timeout and starting a new timer period.
-> > 
-> > To my mind the timeout value should come from DT if possible, which I would
-> > assume for the most part would match whatever is defined in the bootloader as
-> > well, unless I'm mistaken. If that's not available though then I would maybe
-> > agree on falling back to a value that was already programmed in the bootloader
-> > rather than the driver default which should be the last resort.
-> > 
-> Agreed.
+sound/soc/codecs/rt5682.c:3716:1: warning: data definition has no type or storage class
+ module_i2c_driver(rt5682_i2c_driver);
+ ^~~~~~~~~~~~~~~~~
+sound/soc/codecs/rt5682.c:3716:1: error: type defaults to ‘int’ in declaration of ‘module_i2c_driver’ [-Werror=implicit-int]
+sound/soc/codecs/rt5682.c:3716:1: warning: parameter names (without types) in function declaration
 
-Thanks for both your feedback. I'll drop the pre-configured timeout part and
-stick with the default timeout and do the same procedure (init_timeout +
-update_timeout) for the da9062.
+Guard this use #ifdef CONFIG_I2C.
 
-Thanks
-Stefan
+Fixes: 5549ea647997 ("ASoC: rt5682: fix unmet dependencies")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/codecs/rt5682.c | 110 +++++++++++++++++++-------------------
+ 1 file changed, 56 insertions(+), 54 deletions(-)
 
-> 
-> Guenter
-> 
-> >>
-> >> Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
-> >> ---
-> >>  drivers/watchdog/da9063_wdt.c | 29 ++++++++++++++++++-----------
-> >>  1 file changed, 18 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/drivers/watchdog/da9063_wdt.c b/drivers/watchdog/da9063_wdt.c
-> >> index 3d65e92a4e3f..34d0c4f03814 100644
-> >> --- a/drivers/watchdog/da9063_wdt.c
-> >> +++ b/drivers/watchdog/da9063_wdt.c
-> >> @@ -46,15 +46,16 @@ static unsigned int da9063_wdt_timeout_to_sel(unsigned
-> >> int secs)
-> >>  }
-> >>
-> >>  /*
-> >> - * Return 0 if watchdog is disabled, else non zero.
-> >> + * Read the currently active timeout.
-> >> + * Zero means the watchdog is disabled.
-> >>   */
-> >> -static unsigned int da9063_wdt_is_running(struct da9063 *da9063)
-> >> +static unsigned int da9063_wdt_read_timeout(struct da9063 *da9063)
-> >>  {
-> >>  	unsigned int val;
-> >>
-> >>  	regmap_read(da9063->regmap, DA9063_REG_CONTROL_D, &val);
-> >>
-> >> -	return val & DA9063_TWDSCALE_MASK;
-> >> +	return wdt_timeout[val & DA9063_TWDSCALE_MASK];
-> >>  }
-> >>
-> >>  static int da9063_wdt_disable_timer(struct da9063 *da9063)
-> >> @@ -191,6 +192,7 @@ static int da9063_wdt_probe(struct platform_device
-> >> *pdev)
-> >>  	struct device *dev = &pdev->dev;
-> >>  	struct da9063 *da9063;
-> >>  	struct watchdog_device *wdd;
-> >> +	int timeout;
-> >>
-> >>  	if (!dev->parent)
-> >>  		return -EINVAL;
-> >> @@ -214,15 +216,20 @@ static int da9063_wdt_probe(struct platform_device
-> >> *pdev)
-> >>  	watchdog_set_restart_priority(wdd, 128);
-> >>  	watchdog_set_drvdata(wdd, da9063);
-> >>
-> >> -	/* Set default timeout, maybe override it with DT value, scale it */
-> >> -	wdd->timeout = DA9063_WDG_TIMEOUT;
-> >> -	watchdog_init_timeout(wdd, 0, dev);
-> >> -	da9063_wdt_set_timeout(wdd, wdd->timeout);
-> >> -
-> >> -	/* Change the timeout to the default value if the watchdog is running */
-> >> -	if (da9063_wdt_is_running(da9063)) {
-> >> -		da9063_wdt_update_timeout(da9063, wdd->timeout);
-> >> +	/*
-> >> +	 * Use pre-configured timeout if watchdog is already running.
-> >> +	 * Otherwise set default timeout, maybe override it with DT value,
-> >> +	 * scale it
-> >> +	 */
-> >> +	timeout = da9063_wdt_read_timeout(da9063);
-> >> +	if (timeout) {
-> >> +		wdd->timeout = timeout;
-> >>  		set_bit(WDOG_HW_RUNNING, &wdd->status);
-> >> +		dev_info(da9063->dev, "watchdog is running (%u s)", timeout);
-> >> +	} else {
-> >> +		wdd->timeout = DA9063_WDG_TIMEOUT;
-> >> +		watchdog_init_timeout(wdd, 0, dev);
-> >> +		da9063_wdt_set_timeout(wdd, wdd->timeout);
-> >>  	}
-> >>
-> >>  	return devm_watchdog_register_device(dev, wdd);
-> >> --
-> >> 2.23.0
-> > 
-> 
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index c9268a230daa..ff3efad874a4 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -33,12 +33,6 @@
+ #include "rt5682.h"
+ #include "rt5682-sdw.h"
+ 
+-static const char *rt5682_supply_names[RT5682_NUM_SUPPLIES] = {
+-	"AVDD",
+-	"MICVDD",
+-	"VBAT",
+-};
+-
+ static const struct rt5682_platform_data i2s_default_platform_data = {
+ 	.dmic1_data_pin = RT5682_DMIC1_DATA_GPIO2,
+ 	.dmic1_clk_pin = RT5682_DMIC1_CLK_GPIO3,
+@@ -984,25 +978,6 @@ static irqreturn_t rt5682_irq(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static void rt5682_jd_check_handler(struct work_struct *work)
+-{
+-	struct rt5682_priv *rt5682 = container_of(work, struct rt5682_priv,
+-		jd_check_work.work);
+-
+-	if (snd_soc_component_read32(rt5682->component, RT5682_AJD1_CTRL)
+-		& RT5682_JDH_RS_MASK) {
+-		/* jack out */
+-		rt5682->jack_type = rt5682_headset_detect(rt5682->component, 0);
+-
+-		snd_soc_jack_report(rt5682->hs_jack, rt5682->jack_type,
+-				SND_JACK_HEADSET |
+-				SND_JACK_BTN_0 | SND_JACK_BTN_1 |
+-				SND_JACK_BTN_2 | SND_JACK_BTN_3);
+-	} else {
+-		schedule_delayed_work(&rt5682->jd_check_work, 500);
+-	}
+-}
+-
+ static int rt5682_set_jack_detect(struct snd_soc_component *component,
+ 	struct snd_soc_jack *hs_jack, void *data)
+ {
+@@ -3230,35 +3205,6 @@ static const struct i2c_device_id rt5682_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, rt5682_i2c_id);
+ 
+-static int rt5682_parse_dt(struct rt5682_priv *rt5682, struct device *dev)
+-{
+-
+-	device_property_read_u32(dev, "realtek,dmic1-data-pin",
+-		&rt5682->pdata.dmic1_data_pin);
+-	device_property_read_u32(dev, "realtek,dmic1-clk-pin",
+-		&rt5682->pdata.dmic1_clk_pin);
+-	device_property_read_u32(dev, "realtek,jd-src",
+-		&rt5682->pdata.jd_src);
+-	device_property_read_u32(dev, "realtek,btndet-delay",
+-		&rt5682->pdata.btndet_delay);
+-	device_property_read_u32(dev, "realtek,dmic-clk-rate-hz",
+-		&rt5682->pdata.dmic_clk_rate);
+-	device_property_read_u32(dev, "realtek,dmic-delay-ms",
+-		&rt5682->pdata.dmic_delay);
+-
+-	rt5682->pdata.ldo1_en = of_get_named_gpio(dev->of_node,
+-		"realtek,ldo1-en-gpios", 0);
+-
+-	if (device_property_read_string_array(dev, "clock-output-names",
+-					      rt5682->pdata.dai_clk_names,
+-					      RT5682_DAI_NUM_CLKS) < 0)
+-		dev_warn(dev, "Using default DAI clk names: %s, %s\n",
+-			 rt5682->pdata.dai_clk_names[RT5682_DAI_WCLK_IDX],
+-			 rt5682->pdata.dai_clk_names[RT5682_DAI_BCLK_IDX]);
+-
+-	return 0;
+-}
+-
+ static void rt5682_calibrate(struct rt5682_priv *rt5682)
+ {
+ 	int value, count;
+@@ -3526,6 +3472,61 @@ int rt5682_io_init(struct device *dev, struct sdw_slave *slave)
+ EXPORT_SYMBOL_GPL(rt5682_io_init);
+ #endif
+ 
++#ifdef CONFIG_I2C
++static const char *rt5682_supply_names[RT5682_NUM_SUPPLIES] = {
++	"AVDD",
++	"MICVDD",
++	"VBAT",
++};
++
++static void rt5682_jd_check_handler(struct work_struct *work)
++{
++	struct rt5682_priv *rt5682 = container_of(work, struct rt5682_priv,
++		jd_check_work.work);
++
++	if (snd_soc_component_read32(rt5682->component, RT5682_AJD1_CTRL)
++		& RT5682_JDH_RS_MASK) {
++		/* jack out */
++		rt5682->jack_type = rt5682_headset_detect(rt5682->component, 0);
++
++		snd_soc_jack_report(rt5682->hs_jack, rt5682->jack_type,
++				SND_JACK_HEADSET |
++				SND_JACK_BTN_0 | SND_JACK_BTN_1 |
++				SND_JACK_BTN_2 | SND_JACK_BTN_3);
++	} else {
++		schedule_delayed_work(&rt5682->jd_check_work, 500);
++	}
++}
++
++static int rt5682_parse_dt(struct rt5682_priv *rt5682, struct device *dev)
++{
++
++	device_property_read_u32(dev, "realtek,dmic1-data-pin",
++		&rt5682->pdata.dmic1_data_pin);
++	device_property_read_u32(dev, "realtek,dmic1-clk-pin",
++		&rt5682->pdata.dmic1_clk_pin);
++	device_property_read_u32(dev, "realtek,jd-src",
++		&rt5682->pdata.jd_src);
++	device_property_read_u32(dev, "realtek,btndet-delay",
++		&rt5682->pdata.btndet_delay);
++	device_property_read_u32(dev, "realtek,dmic-clk-rate-hz",
++		&rt5682->pdata.dmic_clk_rate);
++	device_property_read_u32(dev, "realtek,dmic-delay-ms",
++		&rt5682->pdata.dmic_delay);
++
++	rt5682->pdata.ldo1_en = of_get_named_gpio(dev->of_node,
++		"realtek,ldo1-en-gpios", 0);
++
++	if (device_property_read_string_array(dev, "clock-output-names",
++					      rt5682->pdata.dai_clk_names,
++					      RT5682_DAI_NUM_CLKS) < 0)
++		dev_warn(dev, "Using default DAI clk names: %s, %s\n",
++			 rt5682->pdata.dai_clk_names[RT5682_DAI_WCLK_IDX],
++			 rt5682->pdata.dai_clk_names[RT5682_DAI_BCLK_IDX]);
++
++	return 0;
++}
++
+ static int rt5682_i2c_probe(struct i2c_client *i2c,
+ 		    const struct i2c_device_id *id)
+ {
+@@ -3714,6 +3715,7 @@ static struct i2c_driver rt5682_i2c_driver = {
+ 	.id_table = rt5682_i2c_id,
+ };
+ module_i2c_driver(rt5682_i2c_driver);
++#endif
+ 
+ MODULE_DESCRIPTION("ASoC RT5682 driver");
+ MODULE_AUTHOR("Bard Liao <bardliao@realtek.com>");
+-- 
+2.17.1
+
+
