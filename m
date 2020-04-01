@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02C8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B054C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDFB20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF19D212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758046;
-	bh=jNN9E+/xTRenIWG5q3qeSRkAywZsGhFOXEpfGwyhp48=;
+	s=default; t=1585758050;
+	bh=QqJtODqh4iafCBejlvKjMTU8UnuGWAdCjG5NA7YuM10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P0/eT7RfaRrO4Qxjipmtr/mKAxigz3e84kaiwJ08PAEEQFK5UPmQ2OtpMJ72oFxfI
-	 j5CgX7q8MsnhNGKhmpFNHnnh7XWISz+VLzb+D7G0c06OVpL9TEUMMDxp1+UdGNUrIP
-	 G44W+7cVTmz4Xlb9TP5mhaaBKu5QrJ5WTw09/tAA=
+	b=qA+SZcILcoJQ036A4ANI8pngVixJsCHGVJVKCnNj2ahEyQ9gJ7ZfZVvJtc/qG4REW
+	 2m3GXH01p99f2PTZALSjpdPNNRhlyVQ6nukRURua6iakRXkLegfzQst1gwRHu0nbg4
+	 WQHV4+j6yxqJ2XjrS59zyqAZu9e0zMFHcNCwC4Yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733154AbgDAQUp (ORCPT
+        id S1733187AbgDAQUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:20:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43414 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733049AbgDAQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:20:42 -0400
+        id S1733168AbgDAQUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:20:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FBDC212CC;
-        Wed,  1 Apr 2020 16:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A8A0212CC;
+        Wed,  1 Apr 2020 16:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758041;
-        bh=jNN9E+/xTRenIWG5q3qeSRkAywZsGhFOXEpfGwyhp48=;
+        s=default; t=1585758047;
+        bh=QqJtODqh4iafCBejlvKjMTU8UnuGWAdCjG5NA7YuM10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NK40FgUlrI0+6oXc5+NsXuCfvHEGDXtjZudjACah+kh2J0GXoZWSyxVnzUS/NW+xs
-         FKCwGXMAItHgJHU7AQQC311Pr6EapaXqZgJ/r8K9oC6RSY4PRGQAfPWlo2L+OxwbF1
-         tYJ6O2t2G1IiahN65lTPp6mz6IA0cgcTDKyg6gL0=
+        b=TX+vrL2tAI2VtzcxkwxWM3y7m5ir3ZnQw1RZoeRx5M299hbbQ3KNYx0F/RNRTtOTd
+         2tmF5mYMa4YdOFioz1Q/gIsXvNx4tG/s0zLdxFxXL+CSGf/7YgwASVx9mBlOIyJGe/
+         h/rUMwAK5ZBe8/z7JrjrpShZ94xFFkDGEfks4LPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 5.5 24/30] ARM: dts: bcm283x: Fix vc4s firmware bus DMA limitations
-Date:   Wed,  1 Apr 2020 18:17:28 +0200
-Message-Id: <20200401161433.172997371@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Lanqing Liu <liuhhome@gmail.com>
+Subject: [PATCH 5.5 04/30] serial: sprd: Fix a dereference warning
+Date:   Wed,  1 Apr 2020 18:17:08 +0200
+Message-Id: <20200401161417.605801573@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
 References: <20200401161414.345528747@linuxfoundation.org>
@@ -60,33 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Lanqing Liu <liuhhome@gmail.com>
 
-commit 55c7c0621078bd73e9d4d2a11eb36e61bc6fe998 upstream.
+commit efc176929a3505a30c3993ddd393b40893649bd2 upstream.
 
-The bus is virtual and devices have to inherit their DMA constraints
-from the underlying interconnect. So add an empty dma-ranges property to
-the bus node, implying the firmware bus' DMA constraints are identical to
-its parent's.
+We should validate if the 'sup' is NULL or not before freeing DMA
+memory, to fix below warning.
 
-Fixes: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi 4 support")
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+"drivers/tty/serial/sprd_serial.c:1141 sprd_remove()
+ error: we previously assumed 'sup' could be null (see line 1132)"
+
+Fixes: f4487db58eb7 ("serial: sprd: Add DMA mode support")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/e2bd92691538e95b04a2c2a728f3292e1617018f.1584325957.git.liuhhome@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/bcm2835-rpi.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/serial/sprd_serial.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -15,6 +15,7 @@
- 		firmware: firmware {
- 			compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
- 			mboxes = <&mailbox>;
-+			dma-ranges;
- 		};
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -1136,14 +1136,13 @@ static int sprd_remove(struct platform_d
+ 	if (sup) {
+ 		uart_remove_one_port(&sprd_uart_driver, &sup->port);
+ 		sprd_port[sup->port.line] = NULL;
++		sprd_rx_free_buf(sup);
+ 		sprd_ports_num--;
+ 	}
  
- 		power: power {
+ 	if (!sprd_ports_num)
+ 		uart_unregister_driver(&sprd_uart_driver);
+ 
+-	sprd_rx_free_buf(sup);
+-
+ 	return 0;
+ }
+ 
 
 
