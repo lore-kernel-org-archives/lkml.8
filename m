@@ -2,136 +2,106 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83EFC10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E85BC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF9120714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YSiPpdaD"
+	by mail.kernel.org (Postfix) with ESMTP id 0919420776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732384AbgDAMUY (ORCPT
+        id S1732469AbgDAMUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:20:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37254 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732169AbgDAMUX (ORCPT
+        Wed, 1 Apr 2020 08:20:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51434 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732169AbgDAMUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:20:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585743622;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WDTPFa8ZURJktfLOzCbfsD4S80g+FQC7hULNIYlAu7Y=;
-        b=YSiPpdaD2AFYP/UwgmCUWPKK59g1V9NyzHfu+50zSp2o/CheNx+h8702hRD8hppTBJO9TZ
-        4P7pM3DIHEg+aEUPd1euyhysdT7K1lDk2sTrjlPaHLLVY2lm4ThbOas3/I3RHQPLLQ143G
-        7Z8tzaCcWp6pT9aTQy0bIPSgd1ASkdQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-d6DRQ9hcPvacWHDTPR7XEQ-1; Wed, 01 Apr 2020 08:20:18 -0400
-X-MC-Unique: d6DRQ9hcPvacWHDTPR7XEQ-1
-Received: by mail-wm1-f69.google.com with SMTP id y1so2384649wmj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:20:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WDTPFa8ZURJktfLOzCbfsD4S80g+FQC7hULNIYlAu7Y=;
-        b=Ikm3DJ8W3ooU26NI20vLykUDQ6JPpmCj4YaIxw6rrEgv5i82EyEETI9tzCdPdWnvH+
-         p3wHkGTCdOzYJnfvUPT2i37UkQOPrAf82/AQABB9ZPaLSEWeqgdTVuBs9pjzhTQGpaqd
-         97+hG07rH6y+C1Wg0gkjOwE8MbIThdkM4gGrKNxzTmbLR6Qqew8S+Acow54KHP52OdBY
-         RB+Oq1DQzjm0eCAX60vaKhpNabMZ7+SNO19yTw9Zy5zUtdvAZbxNbkg5racVHGVWjU1l
-         GsQr0wPSefOWlgGnpqV8XeEa78jrkGUQ/3dwvdE2IctIr2R3m3W8sU8vam3NNj3qyrwB
-         /XqQ==
-X-Gm-Message-State: AGi0PuZTuz9oHK9DfIqjkvWLrz5my67hUljXT19Cu2zJbTn4+CfuALU7
-        gWh7CkYKVB/BKpAZ2ZQyu0Ow/RKkTQtBWCMhlP8V+mptdu7YO9YtVvFjHSMC8TC46THM8c+Nw8T
-        0JTKXa3oew12geRcEHQqe6QvI
-X-Received: by 2002:a1c:7216:: with SMTP id n22mr3957796wmc.41.1585743617458;
-        Wed, 01 Apr 2020 05:20:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJGm9VynkGDD62kpREjFTDmdSlFXsNNAMFtPN11ojKIAP6F3bbB/QcM2CPWq2x/1zd9n90kRw==
-X-Received: by 2002:a1c:7216:: with SMTP id n22mr3957763wmc.41.1585743617216;
-        Wed, 01 Apr 2020 05:20:17 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.194.179])
-        by smtp.gmail.com with ESMTPSA id s15sm2646131wrt.16.2020.04.01.05.20.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 05:20:16 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 14:20:14 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     John Mathew <john.mathew@unikie.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, tsbogend@alpha.franken.de,
-        lukas.bulwahn@gmail.com, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@basemark.com
-Subject: Re: [RFC PATCH 2/3] docs: scheduler: Add scheduler overview
- documentation
-Message-ID: <20200401122014.GW14300@localhost.localdomain>
-References: <20200401100029.1445-1-john.mathew@unikie.com>
- <20200401100029.1445-3-john.mathew@unikie.com>
+        Wed, 1 Apr 2020 08:20:35 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031C3iJE093997;
+        Wed, 1 Apr 2020 08:20:32 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 304h3w8mjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 08:20:31 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 031CJkai024028;
+        Wed, 1 Apr 2020 12:20:31 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 301x77rxtp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 12:20:31 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031CKU9K44499426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 12:20:30 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A3626A05A;
+        Wed,  1 Apr 2020 12:20:30 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D2696A047;
+        Wed,  1 Apr 2020 12:20:28 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 12:20:28 +0000 (GMT)
+Subject: Re: [PATCH v3] tpm: Add support for event log pointer found in TPM2
+ ACPI table
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <20200331215100.883860-1-stefanb@linux.vnet.ibm.com>
+ <20200401084913.GF17325@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <06477336-7ca0-1c72-6881-e443e922a01b@linux.ibm.com>
+Date:   Wed, 1 Apr 2020 08:20:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401100029.1445-3-john.mathew@unikie.com>
+In-Reply-To: <20200401084913.GF17325@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 4/1/20 4:49 AM, Jarkko Sakkinen wrote:
+> On Tue, Mar 31, 2020 at 05:51:00PM -0400, Stefan Berger wrote:
+>> From: Stefan Berger <stefanb@linux.ibm.com>
+>>
+>> In case a TPM2 is attached, search for a TPM2 ACPI table when trying
+>> to get the event log from ACPI. If one is found, use it to get the
+>> start and length of the log area. This allows non-UEFI systems, such
+>> as SeaBIOS, to pass an event log when using a TPM2.
+>>
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Check the kbuild bot complain. I think otherwise this is sustainable.
+> Thank you.
+The kbuild bot did this due to the split of the patch series...
+>
+> Does stock QEMU have all the support to test this?
 
-On 01/04/20 13:00, John Mathew wrote:
-> Add documentation for
->  -scheduler overview
->  -scheduler state transtion
->  -CFS overview
->  -CFS data structs
-> 
-> Add rst for scheduler APIs and modify sched/core.c
-> to add kernel-doc comments.
-> 
-> Suggested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> Co-developed-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
-> Signed-off-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
-> Signed-off-by: John Mathew <john.mathew@unikie.com>
-> ---
 
-[...]
+Yes. You need SeaBIOS.
 
-> +Kernel forwards the tasks to each class based on the scheduling policy assigned
-> +to each task. Tasks assigned with SCHED_NORMAL, SCHED_IDLE and SCHED_BATCH
-> +go to fair_sched_class and tasks assigned with SCHED_RR and SCHED_FIFO go to
-> +rt_sched_class
 
-I think you also need to mention that SCHED_DEADLINE goes to
-dl_sched_class.
+    Stefan
 
-[...]
 
-> +*poicy:* Value for scheduling policy. The possible values are:
-> +
-> +* SCHED_NORMAL: Regular tasks use this policy.
-> +
-> +* SCHED_BATCH:  Tasks which need to run longer  without pre-emption use this
-> +  policy. Suitable for batch jobs.
-> +* SCHED_IDLE: Policy used by background tasks.
-> +
-> +* SCHED_FIFO & SCHED_RR: These policies for real time tasks. Handled by real
-> +  time scheduler.
+>
+> /Jarkko
 
-Here as well. Maybe add also a pointer to related documentation?
-
-Documentation/scheduler/sched-deadline.txt
-
-Thanks,
-
-Juri
 
