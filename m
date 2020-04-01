@@ -2,233 +2,252 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758A9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBFBC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164F121582
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758828;
-	bh=J8Gzh9tpJn04sjEbpPoC6fxUncPAlPvJmJYcD523F9g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSXxjHn4rO2fPPp591rhlwNqLspDSyVIl2ZNHBoCS3g+c+UPb8nnUlHFQ0AGT9ifZ
-	 vAZ9GVqUNDXtaQnxzjrnlJSesT1zSWUJYrbp6lJYyL2s2DU8Cca3mDmqF3+PA6fEb8
-	 KedeW6z5nZFZaLo0p+4rNuD2N6mtj4xvUeLKPclc=
+	by mail.kernel.org (Postfix) with ESMTP id AD5FA21582
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:33:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="Pb4nhMyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388285AbgDAQdq (ORCPT
+        id S2388598AbgDAQdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388583AbgDAQdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:33:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66E5A212CC;
-        Wed,  1 Apr 2020 16:33:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758821;
-        bh=J8Gzh9tpJn04sjEbpPoC6fxUncPAlPvJmJYcD523F9g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aFECOa2yYw+6+JUKT8nRfmoVdgo65/6yotuEqYAvI6wfEOneRAptCzhF5aPRZrtfH
-         dClwybyfG0MiB69RKK6NuFt6am6o5U2+/Jd7LjrAkUIgWGOHWKAhGhG4Tvja+dDHRu
-         hP/vOMjARj41Yu9K5Ya5levX0iIFf658lVl2kEas=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+522643ab5729b0421998@syzkaller.appspotmail.com,
-        Jiri Slaby <jslaby@suse.cz>, Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.4 86/91] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
-Date:   Wed,  1 Apr 2020 18:18:22 +0200
-Message-Id: <20200401161539.531588688@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
-References: <20200401161512.917494101@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 1 Apr 2020 12:33:49 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44209 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388586AbgDAQdr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:33:47 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 131so175091lfh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 09:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Nq8DlIaNNyLF7eWlLEUhD4or4n0rJ1xse7pIIVitJCI=;
+        b=Pb4nhMyuivqt3fOh8k0EuOcVHafLgipojtWH3huNFNONQYto6yNpASBgO2qBOGtTg3
+         a9I866SOtBn9sD35dpgFC4o26HhzfqS77hc1yqs4/cHjH1jvfqgnMQIYfCxahfmvfO11
+         T+s7q1CMmhUb28QuN6Ckl3Rn/kCBqDtu32tGQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Nq8DlIaNNyLF7eWlLEUhD4or4n0rJ1xse7pIIVitJCI=;
+        b=YllzpTC6jjrFnyyz9hgBZlGfKVkYKLnV+EIBRbcVZtz9vouZi8zkArBEV6etuaHY8c
+         JS25bKbUeuTWkA70NTrKicWcSEfSBdmtnAity8mnhmFSO1XkqVjkoyd6m2KP7+9v12ZX
+         YtLvR5c57oIY09NaZeTLzmpzrUFh8BS5neiEsk69n/dmMR/GT9cZ2KACVuu1przY8Sem
+         SJxQjsOsDVSjyWKCOi6yA/FC3qnAtFtvKCEa0CagtqW/Uj8FkWjjT28fzoeI6uKp144W
+         E7N92RkIc5GLgdMHblC8OrykL7c9QfIkcINAS3jdh1ZlQMOFduypsDRcet4ApiTCUOpV
+         hFPw==
+X-Gm-Message-State: AGi0PuZ6P+Tpc1RNDYOX1KePzzqvh+CXKXs1n3WdUhilPLKXcFFw0bQM
+        A4l069Uksx9BO1c6uHJvPeqR5g==
+X-Google-Smtp-Source: APiQypIs0POdVCLsPljB1ug28JxGd5jhOo0cfC9cDy05i6dW4/QI3rmy0jkQvZSQkRvgHGz4vIcTog==
+X-Received: by 2002:a05:6512:3127:: with SMTP id p7mr15067473lfd.108.1585758824954;
+        Wed, 01 Apr 2020 09:33:44 -0700 (PDT)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id g5sm1536033ljl.106.2020.04.01.09.33.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 09:33:44 -0700 (PDT)
+Subject: Re: [RFC net-next v4 8/9] bridge: mrp: Integrate MRP into the bridge
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     davem@davemloft.net, jiri@resnulli.us, ivecera@redhat.com,
+        kuba@kernel.org, roopa@cumulusnetworks.com, olteanv@gmail.com,
+        andrew@lunn.ch, UNGLinuxDriver@microchip.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+References: <20200327092126.15407-1-horatiu.vultur@microchip.com>
+ <20200327092126.15407-9-horatiu.vultur@microchip.com>
+ <17d9fb2a-cb48-7bb6-cb79-3876ca3a74b2@cumulusnetworks.com>
+ <20200401161021.3s2sqvma7r7wpo7h@soft-dev3.microsemi.net>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <d35f44a6-a70f-bc29-afa6-0dd04e331981@cumulusnetworks.com>
+Date:   Wed, 1 Apr 2020 19:33:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200401161021.3s2sqvma7r7wpo7h@soft-dev3.microsemi.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On 01/04/2020 19:10, Horatiu Vultur wrote:
+> Hi Nik,
+> 
+> The 03/30/2020 19:16, Nikolay Aleksandrov wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 27/03/2020 11:21, Horatiu Vultur wrote:
+>>> To integrate MRP into the bridge, the bridge needs to do the following:
+>>> - add new flag(BR_MPP_AWARE) to the net bridge ports, this bit will be set when
+>>>   the port is added to an MRP instance. In this way it knows if the frame was
+>>>   received on MRP ring port
+>>> - detect if the MRP frame was received on MRP ring port in that case it would be
+>>>   processed otherwise just forward it as usual.
+>>> - enable parsing of MRP
+>>> - before whenever the bridge was set up, it would set all the ports in
+>>>   forwarding state. Add an extra check to not set ports in forwarding state if
+>>>   the port is an MRP ring port. The reason of this change is that if the MRP
+>>>   instance initially sets the port in blocked state by setting the bridge up it
+>>>   would overwrite this setting.
+>>>
+>>> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+>>> ---
+>>>  include/linux/if_bridge.h |  1 +
+>>>  net/bridge/br_device.c    |  3 +++
+>>>  net/bridge/br_input.c     |  3 +++
+>>>  net/bridge/br_netlink.c   |  5 +++++
+>>>  net/bridge/br_private.h   | 22 ++++++++++++++++++++++
+>>>  net/bridge/br_stp.c       |  6 ++++++
+>>>  6 files changed, 40 insertions(+)
+>>>
+>>> diff --git a/include/linux/if_bridge.h b/include/linux/if_bridge.h
+>>> index 9e57c4411734..10baa9efdae8 100644
+>>> --- a/include/linux/if_bridge.h
+>>> +++ b/include/linux/if_bridge.h
+>>> @@ -47,6 +47,7 @@ struct br_ip_list {
+>>>  #define BR_BCAST_FLOOD               BIT(14)
+>>>  #define BR_NEIGH_SUPPRESS    BIT(15)
+>>>  #define BR_ISOLATED          BIT(16)
+>>> +#define BR_MRP_AWARE         BIT(17)
+>>>
+>>>  #define BR_DEFAULT_AGEING_TIME       (300 * HZ)
+>>>
+>>> diff --git a/net/bridge/br_device.c b/net/bridge/br_device.c
+>>> index 0e3dbc5f3c34..8ec1362588af 100644
+>>> --- a/net/bridge/br_device.c
+>>> +++ b/net/bridge/br_device.c
+>>> @@ -463,6 +463,9 @@ void br_dev_setup(struct net_device *dev)
+>>>       spin_lock_init(&br->lock);
+>>>       INIT_LIST_HEAD(&br->port_list);
+>>>       INIT_HLIST_HEAD(&br->fdb_list);
+>>> +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
+>>> +     INIT_LIST_HEAD(&br->mrp_list);
+>>> +#endif
+>>>       spin_lock_init(&br->hash_lock);
+>>>
+>>>       br->bridge_id.prio[0] = 0x80;
+>>> diff --git a/net/bridge/br_input.c b/net/bridge/br_input.c
+>>> index fcc260840028..d5c34f36f0f4 100644
+>>> --- a/net/bridge/br_input.c
+>>> +++ b/net/bridge/br_input.c
+>>> @@ -342,6 +342,9 @@ rx_handler_result_t br_handle_frame(struct sk_buff **pskb)
+>>>               }
+>>>       }
+>>>
+>>> +     if (unlikely(br_mrp_process(p, skb)))
+>>> +             return RX_HANDLER_PASS;
+>>> +
+>>>  forward:
+>>>       switch (p->state) {
+>>>       case BR_STATE_FORWARDING:
+>>> diff --git a/net/bridge/br_netlink.c b/net/bridge/br_netlink.c
+>>> index 43dab4066f91..77bc96745be6 100644
+>>> --- a/net/bridge/br_netlink.c
+>>> +++ b/net/bridge/br_netlink.c
+>>> @@ -669,6 +669,11 @@ static int br_afspec(struct net_bridge *br,
+>>>                       if (err)
+>>>                               return err;
+>>>                       break;
+>>> +             case IFLA_BRIDGE_MRP:
+>>> +                     err = br_mrp_parse(br, p, attr, cmd);
+>>> +                     if (err)
+>>> +                             return err;
+>>> +                     break;
+>>>               }
+>>>       }
+>>>
+>>> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
+>>> index 1f97703a52ff..38894f2cf98f 100644
+>>> --- a/net/bridge/br_private.h
+>>> +++ b/net/bridge/br_private.h
+>>> @@ -428,6 +428,10 @@ struct net_bridge {
+>>>       int offload_fwd_mark;
+>>>  #endif
+>>>       struct hlist_head               fdb_list;
+>>> +
+>>> +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
+>>> +     struct list_head                __rcu mrp_list;
+>>> +#endif
+>>>  };
+>>>
+>>>  struct br_input_skb_cb {
+>>> @@ -1304,6 +1308,24 @@ unsigned long br_timer_value(const struct timer_list *timer);
+>>>  extern int (*br_fdb_test_addr_hook)(struct net_device *dev, unsigned char *addr);
+>>>  #endif
+>>>
+>>> +/* br_mrp.c */
+>>> +#if IS_ENABLED(CONFIG_BRIDGE_MRP)
+>>> +int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+>>> +              struct nlattr *attr, int cmd);
+>>> +int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb);
+>>> +#else
+>>> +static inline int br_mrp_parse(struct net_bridge *br, struct net_bridge_port *p,
+>>> +                            struct nlattr *attr, int cmd)
+>>> +{
+>>> +     return -1;
+>>
+>> You should return proper error here.
+> 
+> It will return -EOPNOTSUPP.
+> 
+>>
+>>> +}
+>>> +
+>>> +static inline int br_mrp_process(struct net_bridge_port *p, struct sk_buff *skb)
+>>> +{
+>>> +     return -1;
+>>
+>> The bridge can't possibly work with MRP disabled with this.
+> 
+> Good catch, it will return 0.
+> 
+>>
+>>> +}
+>>> +#endif
+>>> +
+>>>  /* br_netlink.c */
+>>>  extern struct rtnl_link_ops br_link_ops;
+>>>  int br_netlink_init(void);
+>>> diff --git a/net/bridge/br_stp.c b/net/bridge/br_stp.c
+>>> index 1f14b8455345..3e88be7aa269 100644
+>>> --- a/net/bridge/br_stp.c
+>>> +++ b/net/bridge/br_stp.c
+>>> @@ -36,6 +36,12 @@ void br_set_state(struct net_bridge_port *p, unsigned int state)
+>>>       };
+>>>       int err;
+>>>
+>>> +     /* Don't change the state of the ports if they are driven by a different
+>>> +      * protocol.
+>>> +      */
+>>> +     if (p->flags & BR_MRP_AWARE)
+>>> +             return;
+>>> +
+>>
+>> Maybe disallow STP type (kernel/user-space/no-stp) changing as well, force it to no-stp.
+> 
+> I am not sure that I understand completely here, do you want me to
+> disable STP if MRP is started?
+> 
 
-commit ca4463bf8438b403596edd0ec961ca0d4fbe0220 upstream.
+I think it should be one of the two since they can step on each other's toes. If MRP is
+enabled then STP must be already disabled and should not be possible to enable while MRP
+is active and vice-versa.
 
-The VT_DISALLOCATE ioctl can free a virtual console while tty_release()
-is still running, causing a use-after-free in con_shutdown().  This
-occurs because VT_DISALLOCATE considers a virtual console's
-'struct vc_data' to be unused as soon as the corresponding tty's
-refcount hits 0.  But actually it may be still being closed.
-
-Fix this by making vc_data be reference-counted via the embedded
-'struct tty_port'.  A newly allocated virtual console has refcount 1.
-Opening it for the first time increments the refcount to 2.  Closing it
-for the last time decrements the refcount (in tty_operations::cleanup()
-so that it happens late enough), as does VT_DISALLOCATE.
-
-Reproducer:
-	#include <fcntl.h>
-	#include <linux/vt.h>
-	#include <sys/ioctl.h>
-	#include <unistd.h>
-
-	int main()
-	{
-		if (fork()) {
-			for (;;)
-				close(open("/dev/tty5", O_RDWR));
-		} else {
-			int fd = open("/dev/tty10", O_RDWR);
-
-			for (;;)
-				ioctl(fd, VT_DISALLOCATE, 5);
-		}
-	}
-
-KASAN report:
-	BUG: KASAN: use-after-free in con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
-	Write of size 8 at addr ffff88806a4ec108 by task syz_vt/129
-
-	CPU: 0 PID: 129 Comm: syz_vt Not tainted 5.6.0-rc2 #11
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-	Call Trace:
-	 [...]
-	 con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
-	 release_tty+0xa8/0x410 drivers/tty/tty_io.c:1514
-	 tty_release_struct+0x34/0x50 drivers/tty/tty_io.c:1629
-	 tty_release+0x984/0xed0 drivers/tty/tty_io.c:1789
-	 [...]
-
-	Allocated by task 129:
-	 [...]
-	 kzalloc include/linux/slab.h:669 [inline]
-	 vc_allocate drivers/tty/vt/vt.c:1085 [inline]
-	 vc_allocate+0x1ac/0x680 drivers/tty/vt/vt.c:1066
-	 con_install+0x4d/0x3f0 drivers/tty/vt/vt.c:3229
-	 tty_driver_install_tty drivers/tty/tty_io.c:1228 [inline]
-	 tty_init_dev+0x94/0x350 drivers/tty/tty_io.c:1341
-	 tty_open_by_driver drivers/tty/tty_io.c:1987 [inline]
-	 tty_open+0x3ca/0xb30 drivers/tty/tty_io.c:2035
-	 [...]
-
-	Freed by task 130:
-	 [...]
-	 kfree+0xbf/0x1e0 mm/slab.c:3757
-	 vt_disallocate drivers/tty/vt/vt_ioctl.c:300 [inline]
-	 vt_ioctl+0x16dc/0x1e30 drivers/tty/vt/vt_ioctl.c:818
-	 tty_ioctl+0x9db/0x11b0 drivers/tty/tty_io.c:2660
-	 [...]
-
-Fixes: 4001d7b7fc27 ("vt: push down the tty lock so we can see what is left to tackle")
-Cc: <stable@vger.kernel.org> # v3.4+
-Reported-by: syzbot+522643ab5729b0421998@syzkaller.appspotmail.com
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20200322034305.210082-2-ebiggers@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/tty/vt/vt.c       |   23 ++++++++++++++++++++++-
- drivers/tty/vt/vt_ioctl.c |   12 ++++--------
- 2 files changed, 26 insertions(+), 9 deletions(-)
-
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -760,6 +760,17 @@ static void visual_init(struct vc_data *
- 	vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
- }
- 
-+static void vc_port_destruct(struct tty_port *port)
-+{
-+	struct vc_data *vc = container_of(port, struct vc_data, port);
-+
-+	kfree(vc);
-+}
-+
-+static const struct tty_port_operations vc_port_ops = {
-+	.destruct = vc_port_destruct,
-+};
-+
- int vc_allocate(unsigned int currcons)	/* return 0 on success */
- {
- 	WARN_CONSOLE_UNLOCKED();
-@@ -785,6 +796,7 @@ int vc_allocate(unsigned int currcons)	/
- 		return -ENOMEM;
- 	    vc_cons[currcons].d = vc;
- 	    tty_port_init(&vc->port);
-+	    vc->port.ops = &vc_port_ops;
- 	    INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
- 	    visual_init(vc, currcons, 1);
- 	    if (!*vc->vc_uni_pagedir_loc)
-@@ -2894,6 +2906,7 @@ static int con_install(struct tty_driver
- 
- 	tty->driver_data = vc;
- 	vc->port.tty = tty;
-+	tty_port_get(&vc->port);
- 
- 	if (!tty->winsize.ws_row && !tty->winsize.ws_col) {
- 		tty->winsize.ws_row = vc_cons[currcons].d->vc_rows;
-@@ -2929,6 +2942,13 @@ static void con_shutdown(struct tty_stru
- 	console_unlock();
- }
- 
-+static void con_cleanup(struct tty_struct *tty)
-+{
-+	struct vc_data *vc = tty->driver_data;
-+
-+	tty_port_put(&vc->port);
-+}
-+
- static int default_color           = 7; /* white */
- static int default_italic_color    = 2; // green (ASCII)
- static int default_underline_color = 3; // cyan (ASCII)
-@@ -3053,7 +3073,8 @@ static const struct tty_operations con_o
- 	.throttle = con_throttle,
- 	.unthrottle = con_unthrottle,
- 	.resize = vt_resize,
--	.shutdown = con_shutdown
-+	.shutdown = con_shutdown,
-+	.cleanup = con_cleanup,
- };
- 
- static struct cdev vc0_cdev;
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -313,10 +313,8 @@ static int vt_disallocate(unsigned int v
- 		vc = vc_deallocate(vc_num);
- 	console_unlock();
- 
--	if (vc && vc_num >= MIN_NR_CONSOLES) {
--		tty_port_destroy(&vc->port);
--		kfree(vc);
--	}
-+	if (vc && vc_num >= MIN_NR_CONSOLES)
-+		tty_port_put(&vc->port);
- 
- 	return ret;
- }
-@@ -336,10 +334,8 @@ static void vt_disallocate_all(void)
- 	console_unlock();
- 
- 	for (i = 1; i < MAX_NR_CONSOLES; i++) {
--		if (vc[i] && i >= MIN_NR_CONSOLES) {
--			tty_port_destroy(&vc[i]->port);
--			kfree(vc[i]);
--		}
-+		if (vc[i] && i >= MIN_NR_CONSOLES)
-+			tty_port_put(&vc[i]->port);
- 	}
- }
- 
-
+>>
+>>>       p->state = state;
+>>>       err = switchdev_port_attr_set(p->dev, &attr);
+>>>       if (err && err != -EOPNOTSUPP)
+>>>
+>>
+> 
 
