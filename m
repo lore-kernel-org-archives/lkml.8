@@ -2,131 +2,252 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABE1C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D409C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E6D2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB0320719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:01:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GxDcLOLg"
+	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="0b7o4o8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733232AbgDAQ6Q (ORCPT
+        id S1732714AbgDARBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:58:16 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47822 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732587AbgDAQ6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:58:15 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF489A2A;
-        Wed,  1 Apr 2020 18:58:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585760293;
-        bh=eQZsIhB1wvrRknfrJZU+LzCKO7pIgPHcWCBsxNQwHzM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GxDcLOLgarB3bqbrxyHpH1KddDiIIYq45tDqrelzIWLisQO5vFHgl0/hOVCICbCa1
-         kbV+AC2AcXSFkC90PdrZFVfKZfZuO4oMAph4nJJjRrYquRxZPh8MIMJe/6OPLI6wQc
-         gP4Ora0w+PLrDdpxtdBrtQnlkFw86EpzfvdElmjA=
-Date:   Wed, 1 Apr 2020 19:58:05 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@iki.fi>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, frankc@nvidia.com, helen.koike@collabora.com,
-        digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-Message-ID: <20200401165805.GE4876@pendragon.ideasonboard.com>
-References: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
- <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
- <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
- <20200331115221.GA4767@pendragon.ideasonboard.com>
- <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
- <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
- <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
+        Wed, 1 Apr 2020 13:01:36 -0400
+Received: from mail.pqgruber.com ([52.59.78.55]:57696 "EHLO mail.pqgruber.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732304AbgDARBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 13:01:36 -0400
+Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
+        by mail.pqgruber.com (Postfix) with ESMTPSA id 708BCC45B56;
+        Wed,  1 Apr 2020 19:01:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
+        s=mail; t=1585760493;
+        bh=NfVkgcJwROCOa0Gvoa39DfTa9hL2ePWFTZdlOJfOves=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0b7o4o8opumpRq8uti0QY+/V4D9f9CZxr/+OVdWXHS6y6lCGnYY4WrG1x255L6bgW
+         Qs77vBu629FCX61mDhm4DFrnYDaXL0p0vhjTqJLWocA4+eT7uogqDKA9y56w5EbMfW
+         RYcHqBpxnepFTV/QkvqTrMMUVUGpTiJm1HZf5524=
+From:   Clemens Gruber <clemens.gruber@pqgruber.com>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Clemens Gruber <clemens.gruber@pqgruber.com>
+Subject: [PATCH v2 REBASED] pwm: pca9685: fix pwm/gpio inter-operation
+Date:   Wed,  1 Apr 2020 19:01:06 +0200
+Message-Id: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sowjanya,
+From: Sven Van Asbroeck <TheSven73@gmail.com>
 
-On Wed, Apr 01, 2020 at 09:36:03AM -0700, Sowjanya Komatineni wrote:
-> Hi Sakari/Laurent,
-> 
-> Few questions to confirm my understanding on below discussion.
-> 
-> 1. Some sensors that you are referring as don't work with single devnode 
-> controlling pipeline devices are ISP built-in sensors where setup of 
-> pipeline and subdevices happen separately?
+This driver allows pwms to be requested as gpios via gpiolib.
+Obviously, it should not be allowed to request a gpio when its
+corresponding pwm is already requested (and vice versa).
+So it requires some exclusion code.
 
-Sensors that include ISPs could indeed require to be exposed as multiple
-subdevs, but I was mostly referring to raw Bayer sensors with hardware
-architectures similar to the SMIA++ and MIPI CCS specifications. Those
-sensors can perform cropping in up to three different locations (analog
-crop, digital crop, output crop), and can also scale in up to three
-different locations (binning, skipping and filter-based scaling).
+Given that the pwm and gpio cores are not synchronized with
+respect to each other, this exclusion code will also require
+proper synchronization.
 
-Furthermore, with the V4L2 support for multiplexed streams that we are
-working on, a sensor that can produce both image data and embedded data
-would also need to be split in multiple subdevs.
+Such a mechanism was in place, but was inadvertently removed
+by Uwe's clean-up patch.
 
-> 2. With driver supporting single device node control of entire pipeline 
-> devices compared to MC-based, limitation is with userspace apps for only 
-> these complex camera sensors?
+Upon revisiting the synchronization mechanism, we found that
+theoretically, it could allow two threads to successfully
+request conflicting pwms / gpios.
 
-In those cases, several policy decisions on how to configure the sensor
-(whether to use binning, skipping and/or filter-based scaling for
-instance, or how much cropping and scaling to apply to achieve a certain
-output resolution) will need to be implemented in the kernel, and
-userspace will not have any control on them.
+Replace with a bitmap which tracks pwm in-use, plus a mutex.
+As long as pwm and gpio's respective request/free functions
+modify the in-use bitmap while holding the mutex, proper
+synchronization will be guaranteed.
 
-> 3. Does all upstream video capture drivers eventually will be moved to 
-> support MC-based?
+Reported-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Link: https://lkml.org/lkml/2019/5/31/963
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
 
-I think we'll see a decrease of the video-node-centric drivers in the
-future for embedded systems, especially the ones that include an ISP.
-When a system has an ISP, even if the ISP is implemented as a
-memory-to-memory device separate from the CSI-2 capture side, userspace
-will likely have a need for fine-grained control of the camera sensor.
+---
+ drivers/pwm/pwm-pca9685.c | 85 ++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 37 deletions(-)
 
-> 4. Based on libcamera doc looks like it will work with both types of 
-> MC-based and single devnode based pipeline setup drivers for normal 
-> sensors and limitation is when we use ISP built-in sensor or ISP HW 
-> block. Is my understanding correct?
-
-libcamera supports both, it doesn't put any restriction in that area.
-The pipeline handler (the device-specific code in libcamera that
-configures and control the hardware pipeline) is responsible for
-interfacing with the kernel drivers, and is free to use an MC-centric or
-video-node-centric API depending on what the kernel drivers offer.
-
-The IPA (image processing algorithms) module is also vendor-specific.
-Although it will not interface directly with kernel drivers, it will
-have requirements on how fine-grained control of the sensor is required.
-For systems that have an ISP in the SoC, reaching a high image quality
-level requires fine-grained control of the sensor, or at the very least
-being able to retrieve fine-grained sensor configuration information
-from the kernel. For systems using a camera sensor with an integrated
-ISP and a CSI-2 receiver without any further processing on the SoC side,
-there will be no such fine-grained control of the sensor by the IPA (and
-there could even be no IPA module at all).
-
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 20bdc59a0cbb..76cd22bd6614 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -20,6 +20,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/bitmap.h>
+ 
+ /*
+  * Because the PCA9685 has only one prescaler per chip, changing the period of
+@@ -73,6 +74,7 @@ struct pca9685 {
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+ 	struct mutex lock;
+ 	struct gpio_chip gpio;
++	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
+ #endif
+ };
+ 
+@@ -82,51 +84,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
+ }
+ 
+ #if IS_ENABLED(CONFIG_GPIOLIB)
+-static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
++	bool is_inuse;
+ 
+ 	mutex_lock(&pca->lock);
+-
+-	pwm = &pca->chip.pwms[offset];
+-
+-	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
+-		mutex_unlock(&pca->lock);
+-		return -EBUSY;
++	if (pwm_idx >= PCA9685_MAXCHAN) {
++		/*
++		 * "all LEDs" channel:
++		 * pretend already in use if any of the PWMs are requested
++		 */
++		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
++			is_inuse = true;
++			goto out;
++		}
++	} else {
++		/*
++		 * regular channel:
++		 * pretend already in use if the "all LEDs" channel is requested
++		 */
++		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
++			is_inuse = true;
++			goto out;
++		}
+ 	}
+-
+-	pwm_set_chip_data(pwm, (void *)1);
+-
++	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
++out:
+ 	mutex_unlock(&pca->lock);
+-	pm_runtime_get_sync(pca->chip.dev);
+-	return 0;
++	return is_inuse;
+ }
+ 
+-static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
++static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
+ {
+-	bool is_gpio = false;
+-
+ 	mutex_lock(&pca->lock);
++	clear_bit(pwm_idx, pca->pwms_inuse);
++	mutex_unlock(&pca->lock);
++}
+ 
+-	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
+-		unsigned int i;
+-
+-		/*
+-		 * Check if any of the GPIOs are requested and in that case
+-		 * prevent using the "all LEDs" channel.
+-		 */
+-		for (i = 0; i < pca->gpio.ngpio; i++)
+-			if (gpiochip_is_requested(&pca->gpio, i)) {
+-				is_gpio = true;
+-				break;
+-			}
+-	} else if (pwm_get_chip_data(pwm)) {
+-		is_gpio = true;
+-	}
++static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
++{
++	struct pca9685 *pca = gpiochip_get_data(gpio);
+ 
+-	mutex_unlock(&pca->lock);
+-	return is_gpio;
++	if (pca9685_pwm_test_and_set_inuse(pca, offset))
++		return -EBUSY;
++	pm_runtime_get_sync(pca->chip.dev);
++	return 0;
+ }
+ 
+ static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
+@@ -161,6 +163,7 @@ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ 
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
++	pca9685_pwm_clear_inuse(pca, offset);
+ }
+ 
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
+@@ -212,12 +215,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
+ }
+ #else
+-static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
+-				       struct pwm_device *pwm)
++static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
++						  int pwm_idx)
+ {
+ 	return false;
+ }
+ 
++static inline void
++pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
++{
++}
++
+ static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
+ {
+ 	return 0;
+@@ -399,7 +407,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct pca9685 *pca = to_pca(chip);
+ 
+-	if (pca9685_pwm_is_gpio(pca, pwm))
++	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
+ 		return -EBUSY;
+ 	pm_runtime_get_sync(chip->dev);
+ 
+@@ -408,8 +416,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 
+ static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
++	struct pca9685 *pca = to_pca(chip);
++
+ 	pca9685_pwm_disable(chip, pwm);
+ 	pm_runtime_put(chip->dev);
++	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
+ }
+ 
+ static const struct pwm_ops pca9685_pwm_ops = {
 -- 
-Regards,
+2.26.0
 
-Laurent Pinchart
