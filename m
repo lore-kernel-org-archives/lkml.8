@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47E4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7011BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888672077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 434AD2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:17:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732240AbgDAKRw (ORCPT
+        id S1732270AbgDAKR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:17:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:34151 "EHLO mga01.intel.com"
+        Wed, 1 Apr 2020 06:17:57 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34152 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732226AbgDAKRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:17:49 -0400
-IronPort-SDR: YLrfEumNpouf0tf9u8xz1eKMAuWVk63OzrLnlEwrHDt/mA7qiktm+/qD+u0hDDHMzp+pXD9ptT
- LBU058ZRuG3w==
+        id S1732253AbgDAKRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 06:17:55 -0400
+IronPort-SDR: 3UEXDL0Tlf3lrSzz7tiq5J+Gbk7uDoytPn3582k3nP25Rp0eYQTFI5qySDIlKGCvDxnwuA2rJ/
+ jh6tQMbQvNUA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 03:17:47 -0700
-IronPort-SDR: DGYCJ/gbsAgYA3Mo2l41iwmT6bMuQt9B5A7iKrLg6ViDdQDu/OyI1ksGrJUrouJZkddiYXOjrT
- sVuJT+X7o11Q==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 03:17:53 -0700
+IronPort-SDR: FzPB3j7XsD67jKsEIXeGIi2vNfyyCNXvJGJW+OwjvHE9y4/022Ieu4cEJmVuLuu9qiiV8Enqja
+ EhMbcAAiuQRg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
-   d="scan'208";a="395925534"
+   d="scan'208";a="395925565"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.87])
-  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2020 03:17:47 -0700
+  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2020 03:17:52 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         linux-kernel@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 08/16] perf auxtrace: Add an option to synthesize callchains for regular events
-Date:   Wed,  1 Apr 2020 13:16:05 +0300
-Message-Id: <20200401101613.6201-9-adrian.hunter@intel.com>
+Subject: [PATCH 11/16] perf intel-pt: Add support for synthesizing callchains for regular events
+Date:   Wed,  1 Apr 2020 13:16:08 +0300
+Message-Id: <20200401101613.6201-12-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200401101613.6201-1-adrian.hunter@intel.com>
 References: <20200401101613.6201-1-adrian.hunter@intel.com>
@@ -49,116 +49,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, callchains can be synthesized only for synthesized events. Add
-an itrace option to synthesize callchains for regular events.
+Currently, callchains can be synthesized only for synthesized events.
+Support also synthesizing callchains for regular events.
+
+Example:
+
+ # perf record --kcore --aux-sample -e '{intel_pt//,cycles}' -c 10000 uname
+ Linux
+ [ perf record: Woken up 3 times to write data ]
+ [ perf record: Captured and wrote 0.532 MB perf.data ]
+ # perf script --itrace=Ge | head -20
+ uname  4864 2419025.358181:      10000     cycles:
+        ffffffffbba56965 apparmor_bprm_committing_creds+0x35 ([kernel.kallsyms])
+        ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
+        ffffffffbba07422 security_bprm_committing_creds+0x22 ([kernel.kallsyms])
+        ffffffffbb89805d install_exec_creds+0xd ([kernel.kallsyms])
+        ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
+
+ uname  4864 2419025.358185:      10000     cycles:
+        ffffffffbba56db0 apparmor_bprm_committed_creds+0x20 ([kernel.kallsyms])
+        ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
+        ffffffffbba07452 security_bprm_committed_creds+0x22 ([kernel.kallsyms])
+        ffffffffbb89809a install_exec_creds+0x4a ([kernel.kallsyms])
+        ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
+
+ uname  4864 2419025.358189:      10000     cycles:
+        ffffffffbb86fdf6 vma_adjust_trans_huge+0x6 ([kernel.kallsyms])
+        ffffffffbb821660 __vma_adjust+0x160 ([kernel.kallsyms])
+        ffffffffbb897be7 shift_arg_pages+0x97 ([kernel.kallsyms])
+        ffffffffbb897ed9 setup_arg_pages+0x1e9 ([kernel.kallsyms])
+        ffffffffbb90d9f2 load_elf_binary+0x3f2 ([kernel.kallsyms])
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/Documentation/itrace.txt | 1 +
- tools/perf/builtin-report.c         | 3 ++-
- tools/perf/builtin-script.c         | 2 +-
- tools/perf/util/auxtrace.c          | 6 +++++-
- tools/perf/util/auxtrace.h          | 2 ++
- tools/perf/util/s390-cpumsf.c       | 2 +-
- 6 files changed, 12 insertions(+), 4 deletions(-)
+ tools/perf/util/intel-pt.c | 68 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 61 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index 82ff7dad40c2..671e154ede03 100644
---- a/tools/perf/Documentation/itrace.txt
-+++ b/tools/perf/Documentation/itrace.txt
-@@ -10,6 +10,7 @@
- 		e	synthesize error events
- 		d	create a debug log
- 		g	synthesize a call chain (use with i or x)
-+		G	synthesize a call chain on existing event records
- 		l	synthesize last branch entries (use with i or x)
- 		s       skip initial number of events
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index db25c77d82f3..a659b4a1b3f2 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -124,6 +124,8 @@ struct intel_pt {
  
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 26d8fc27e427..c0cebd53ecf9 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -339,6 +339,7 @@ static int report__setup_sample_type(struct report *rep)
- 	bool is_pipe = perf_data__is_pipe(session->data);
+ 	struct range *time_ranges;
+ 	unsigned int range_cnt;
++
++	struct ip_callchain *chain;
+ };
  
- 	if (session->itrace_synth_opts->callchain ||
-+	    session->itrace_synth_opts->add_callchain ||
- 	    (!is_pipe &&
- 	     perf_header__has_feat(&session->header, HEADER_AUXTRACE) &&
- 	     !session->itrace_synth_opts->set))
-@@ -1332,7 +1333,7 @@ int cmd_report(int argc, const char **argv)
- 	if (symbol_conf.cumulate_callchain && !callchain_param.order_set)
- 		callchain_param.order = ORDER_CALLER;
+ enum switch_state {
+@@ -868,6 +870,45 @@ static u64 intel_pt_ns_to_ticks(const struct intel_pt *pt, u64 ns)
+ 		pt->tc.time_mult;
+ }
  
--	if (itrace_synth_opts.callchain &&
-+	if ((itrace_synth_opts.callchain || itrace_synth_opts.add_callchain) &&
- 	    (int)itrace_synth_opts.callchain_sz > report.max_stack)
- 		report.max_stack = itrace_synth_opts.callchain_sz;
++static struct ip_callchain *intel_pt_alloc_chain(struct intel_pt *pt)
++{
++	size_t sz = sizeof(struct ip_callchain);
++
++	/* Add 1 to callchain_sz for callchain context */
++	sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
++	return zalloc(sz);
++}
++
++static int intel_pt_callchain_init(struct intel_pt *pt)
++{
++	struct evsel *evsel;
++
++	evlist__for_each_entry(pt->session->evlist, evsel) {
++		if (!(evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN))
++			evsel->synth_sample_type |= PERF_SAMPLE_CALLCHAIN;
++	}
++
++	pt->chain = intel_pt_alloc_chain(pt);
++	if (!pt->chain)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static void intel_pt_add_callchain(struct intel_pt *pt,
++				   struct perf_sample *sample)
++{
++	struct thread *thread = machine__findnew_thread(pt->machine,
++							sample->pid,
++							sample->tid);
++
++	thread_stack__sample_late(thread, sample->cpu, pt->chain,
++				  pt->synth_opts.callchain_sz + 1, sample->ip,
++				  pt->kernel_start);
++
++	sample->callchain = pt->chain;
++}
++
+ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
+ 						   unsigned int queue_nr)
+ {
+@@ -880,11 +921,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
+ 		return NULL;
  
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 186ebf827fa1..a0dc118e987b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3709,7 +3709,7 @@ int cmd_script(int argc, const char **argv)
- 		return -1;
+ 	if (pt->synth_opts.callchain) {
+-		size_t sz = sizeof(struct ip_callchain);
+-
+-		/* Add 1 to callchain_sz for callchain context */
+-		sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
+-		ptq->chain = zalloc(sz);
++		ptq->chain = intel_pt_alloc_chain(pt);
+ 		if (!ptq->chain)
+ 			goto out_free;
+ 	}
+@@ -1992,7 +2029,8 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
+ 	if (!(state->type & INTEL_PT_BRANCH))
+ 		return 0;
+ 
+-	if (pt->synth_opts.callchain || pt->synth_opts.thread_stack)
++	if (pt->synth_opts.callchain || pt->synth_opts.add_callchain ||
++	    pt->synth_opts.thread_stack)
+ 		thread_stack__event(ptq->thread, ptq->cpu, ptq->flags, state->from_ip,
+ 				    state->to_ip, ptq->insn_len,
+ 				    state->trace_nr);
+@@ -2639,6 +2677,11 @@ static int intel_pt_process_event(struct perf_session *session,
+ 	if (err)
+ 		return err;
+ 
++	if (event->header.type == PERF_RECORD_SAMPLE) {
++		if (pt->synth_opts.add_callchain && !sample->callchain)
++			intel_pt_add_callchain(pt, sample);
++	}
++
+ 	if (event->header.type == PERF_RECORD_AUX &&
+ 	    (event->aux.flags & PERF_AUX_FLAG_TRUNCATED) &&
+ 	    pt->synth_opts.errors) {
+@@ -2710,6 +2753,7 @@ static void intel_pt_free(struct perf_session *session)
+ 	session->auxtrace = NULL;
+ 	thread__put(pt->unknown_thread);
+ 	addr_filters__exit(&pt->filts);
++	zfree(&pt->chain);
+ 	zfree(&pt->filter);
+ 	zfree(&pt->time_ranges);
+ 	free(pt);
+@@ -3348,6 +3392,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		    !session->itrace_synth_opts->inject) {
+ 			pt->synth_opts.branches = false;
+ 			pt->synth_opts.callchain = true;
++			pt->synth_opts.add_callchain = true;
+ 		}
+ 		pt->synth_opts.thread_stack =
+ 				session->itrace_synth_opts->thread_stack;
+@@ -3380,14 +3425,22 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		pt->branches_filter |= PERF_IP_FLAG_RETURN |
+ 				       PERF_IP_FLAG_TRACE_BEGIN;
+ 
+-	if (pt->synth_opts.callchain && !symbol_conf.use_callchain) {
++	if ((pt->synth_opts.callchain || pt->synth_opts.add_callchain) &&
++	    !symbol_conf.use_callchain) {
+ 		symbol_conf.use_callchain = true;
+ 		if (callchain_register_param(&callchain_param) < 0) {
+ 			symbol_conf.use_callchain = false;
+ 			pt->synth_opts.callchain = false;
++			pt->synth_opts.add_callchain = false;
+ 		}
  	}
  
--	if (itrace_synth_opts.callchain &&
-+	if ((itrace_synth_opts.callchain || itrace_synth_opts.add_callchain) &&
- 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
- 		scripting_max_stack = itrace_synth_opts.callchain_sz;
++	if (pt->synth_opts.add_callchain) {
++		err = intel_pt_callchain_init(pt);
++		if (err)
++			goto err_delete_thread;
++	}
++
+ 	err = intel_pt_synth_events(pt, session);
+ 	if (err)
+ 		goto err_delete_thread;
+@@ -3410,6 +3463,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 	return 0;
  
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index b60bae8e395c..809a09e75c55 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1462,8 +1462,12 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 			synth_opts->branches = true;
- 			synth_opts->returns = true;
- 			break;
-+		case 'G':
- 		case 'g':
--			synth_opts->callchain = true;
-+			if (p[-1] == 'G')
-+				synth_opts->add_callchain = true;
-+			else
-+				synth_opts->callchain = true;
- 			synth_opts->callchain_sz =
- 					PERF_ITRACE_DEFAULT_CALLCHAIN_SZ;
- 			while (*p == ' ' || *p == ',')
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index db65aae5c2ea..dd8a4ff8209e 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -74,6 +74,7 @@ enum itrace_period_type {
-  * @calls: limit branch samples to calls (can be combined with @returns)
-  * @returns: limit branch samples to returns (can be combined with @calls)
-  * @callchain: add callchain to 'instructions' events
-+ * @add_callchain: add callchain to existing event records
-  * @thread_stack: feed branches to the thread_stack
-  * @last_branch: add branch context to 'instruction' events
-  * @callchain_sz: maximum callchain size
-@@ -101,6 +102,7 @@ struct itrace_synth_opts {
- 	bool			calls;
- 	bool			returns;
- 	bool			callchain;
-+	bool			add_callchain;
- 	bool			thread_stack;
- 	bool			last_branch;
- 	unsigned int		callchain_sz;
-diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index d7779e48652f..38a942881d1a 100644
---- a/tools/perf/util/s390-cpumsf.c
-+++ b/tools/perf/util/s390-cpumsf.c
-@@ -1079,7 +1079,7 @@ static bool check_auxtrace_itrace(struct itrace_synth_opts *itops)
- 		itops->pwr_events || itops->errors ||
- 		itops->dont_decode || itops->calls || itops->returns ||
- 		itops->callchain || itops->thread_stack ||
--		itops->last_branch;
-+		itops->last_branch || itops->add_callchain;
- 	if (!ison)
- 		return true;
- 	pr_err("Unsupported --itrace options specified\n");
+ err_delete_thread:
++	zfree(&pt->chain);
+ 	thread__zput(pt->unknown_thread);
+ err_free_queues:
+ 	intel_pt_log_disable();
 -- 
 2.17.1
 
