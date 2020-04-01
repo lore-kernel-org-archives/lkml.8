@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CD6C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B744BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A3520BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158D72137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758357;
-	bh=XIYBtugiasciTP7u20DZyWOD6PmoGbNI6j6p7zPtfes=;
+	s=default; t=1585758362;
+	bh=3sWAja9yYmsMF6WwMs3QtzQdolyFgTh6jjQZPUjr8Io=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zYOkxDQj08+l4wDzqcBD44w7x7oEgJ2wAQ7oFaIEeJgJ2sthT3hPf4COz1r0u1XWf
-	 Dp0FKQRHHg+323jNBj9jzbBWdKTcnw/B2ytZPxkibRkeG10MdZQfJcISfc2TcPmbXc
-	 rCB9NunSxUbAmsmnj9Q9uV7w22UaIf34J6PWUYtg=
+	b=TMY1302RjzU795yTgP8IBYmBFd5LSrTzLx648Q757mefDBhcU6QvuUfVBmjtniOvr
+	 hieYuJT/6zDqNznbVnVH15A6ZavLh7O7F5JIt3DqLTvixs9bDkLxXtD/CSpWfHzNxI
+	 022zdIAEa1ynk3BmyMZrNyyczV4lLIeIQmS/gsPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387658AbgDAQZ4 (ORCPT
+        id S2387624AbgDAQ0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50240 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733248AbgDAQZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:25:53 -0400
+        id S2387866AbgDAQZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:25:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BE3120857;
-        Wed,  1 Apr 2020 16:25:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5946A20857;
+        Wed,  1 Apr 2020 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758352;
-        bh=XIYBtugiasciTP7u20DZyWOD6PmoGbNI6j6p7zPtfes=;
+        s=default; t=1585758354;
+        bh=3sWAja9yYmsMF6WwMs3QtzQdolyFgTh6jjQZPUjr8Io=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FFkb+YYE3bhQwhtrzWxhOUsy4QHwUztQJOUgUFSjYlQRKZ94Y3ennIFy1kraEI0QP
-         vwcOJCRuIqyAzGfB6bw9OAGPqFQrKHG5tKoJ7hTuvmjyIGKQTr7+nPKNBUF8CexXV0
-         01DfIaZQhMelNpXoBvCJM6tCwNP6rrEMs00Se8Wg=
+        b=deClLUB87Lhj8TYp58L3iHDkEyCdr1chwuMsMixeCnvkUeGjnJZlILDs/GP9rxeJq
+         nB3HjHLRd2veAF7vEx8ElOJkwWajZdLDvytLZooZMk4k2XgxleqMy8Ate6vVeF5UiK
+         hpi36p36w0DcqOnwbTJIH8p1MuFo6R5FtH0OpkAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kaike Wan <kaike.wan@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.19 063/116] RDMA/core: Ensure security pkey modify is not lost
-Date:   Wed,  1 Apr 2020 18:17:19 +0200
-Message-Id: <20200401161551.604315091@linuxfoundation.org>
+        stable@vger.kernel.org, Edward Cree <ecree@solarflare.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.19 064/116] genirq: Fix reference leaks on irq affinity notifiers
+Date:   Wed,  1 Apr 2020 18:17:20 +0200
+Message-Id: <20200401161551.657808364@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,75 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Edward Cree <ecree@solarflare.com>
 
-commit 2d47fbacf2725a67869f4d3634c2415e7dfab2f4 upstream.
+commit df81dfcfd6991d547653d46c051bac195cd182c1 upstream.
 
-The following modify sequence (loosely based on ipoib) will lose a pkey
-modifcation:
+The handling of notify->work did not properly maintain notify->kref in two
+ cases:
+1) where the work was already scheduled, another irq_set_affinity_locked()
+   would get the ref and (no-op-ly) schedule the work.  Thus when
+   irq_affinity_notify() ran, it would drop the original ref but not the
+   additional one.
+2) when cancelling the (old) work in irq_set_affinity_notifier(), if there
+   was outstanding work a ref had been got for it but was never put.
+Fix both by checking the return values of the work handling functions
+ (schedule_work() for (1) and cancel_work_sync() for (2)) and put the
+ extra ref if the return value indicates preexisting work.
 
-- Modify (pkey index, port)
-- Modify (new pkey index, NO port)
-
-After the first modify, the qp_pps list will have saved the pkey and the
-unit on the main list.
-
-During the second modify, get_new_pps() will fetch the port from qp_pps
-and read the new pkey index from qp_attr->pkey_index.  The state will
-still be zero, or IB_PORT_PKEY_NOT_VALID. Because of the invalid state,
-the new values will never replace the one in the qp pps list, losing the
-new pkey.
-
-This happens because the following if statements will never correct the
-state because the first term will be false. If the code had been executed,
-it would incorrectly overwrite valid values.
-
-  if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
-	  new_pps->main.state = IB_PORT_PKEY_VALID;
-
-  if (!(qp_attr_mask & (IB_QP_PKEY_INDEX | IB_QP_PORT)) && qp_pps) {
-	  new_pps->main.port_num = qp_pps->main.port_num;
-	  new_pps->main.pkey_index = qp_pps->main.pkey_index;
-	  if (qp_pps->main.state != IB_PORT_PKEY_NOT_VALID)
-		  new_pps->main.state = IB_PORT_PKEY_VALID;
-  }
-
-Fix by joining the two if statements with an or test to see if qp_pps is
-non-NULL and in the correct state.
-
-Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
-Link: https://lore.kernel.org/r/20200313124704.14982.55907.stgit@awfm-01.aw.intel.com
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: cd7eab44e994 ("genirq: Add IRQ affinity notifiers")
+Fixes: 59c39840f5ab ("genirq: Prevent use-after-free and work list corruption")
+Signed-off-by: Edward Cree <ecree@solarflare.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Ben Hutchings <ben@decadent.org.uk>
+Link: https://lkml.kernel.org/r/24f5983f-2ab5-e83a-44ee-a45b5f9300f5@solarflare.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/security.c |   11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ kernel/irq/manage.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/core/security.c
-+++ b/drivers/infiniband/core/security.c
-@@ -346,16 +346,11 @@ static struct ib_ports_pkeys *get_new_pp
- 	else if (qp_pps)
- 		new_pps->main.pkey_index = qp_pps->main.pkey_index;
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -283,7 +283,11 @@ int irq_set_affinity_locked(struct irq_d
  
--	if ((qp_attr_mask & IB_QP_PKEY_INDEX) && (qp_attr_mask & IB_QP_PORT))
-+	if (((qp_attr_mask & IB_QP_PKEY_INDEX) &&
-+	     (qp_attr_mask & IB_QP_PORT)) ||
-+	    (qp_pps && qp_pps->main.state != IB_PORT_PKEY_NOT_VALID))
- 		new_pps->main.state = IB_PORT_PKEY_VALID;
+ 	if (desc->affinity_notify) {
+ 		kref_get(&desc->affinity_notify->kref);
+-		schedule_work(&desc->affinity_notify->work);
++		if (!schedule_work(&desc->affinity_notify->work)) {
++			/* Work was already scheduled, drop our extra ref */
++			kref_put(&desc->affinity_notify->kref,
++				 desc->affinity_notify->release);
++		}
+ 	}
+ 	irqd_set(data, IRQD_AFFINITY_SET);
  
--	if (!(qp_attr_mask & (IB_QP_PKEY_INDEX | IB_QP_PORT)) && qp_pps) {
--		new_pps->main.port_num = qp_pps->main.port_num;
--		new_pps->main.pkey_index = qp_pps->main.pkey_index;
--		if (qp_pps->main.state != IB_PORT_PKEY_NOT_VALID)
--			new_pps->main.state = IB_PORT_PKEY_VALID;
--	}
--
- 	if (qp_attr_mask & IB_QP_ALT_PATH) {
- 		new_pps->alt.port_num = qp_attr->alt_port_num;
- 		new_pps->alt.pkey_index = qp_attr->alt_pkey_index;
+@@ -383,7 +387,10 @@ irq_set_affinity_notifier(unsigned int i
+ 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+ 
+ 	if (old_notify) {
+-		cancel_work_sync(&old_notify->work);
++		if (cancel_work_sync(&old_notify->work)) {
++			/* Pending work had a ref, put that one too */
++			kref_put(&old_notify->kref, old_notify->release);
++		}
+ 		kref_put(&old_notify->kref, old_notify->release);
+ 	}
+ 
 
 
