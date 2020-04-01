@@ -2,163 +2,113 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B41C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8AAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9677B20719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:29:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585772982;
-	bh=OlC+pjNqOImVx3sNog54550MPbIAXh6MRIXiUyGaRI8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=VCKfZ/ddNl/xd754Y3S4DRVxpPrN2Fj0iHOMHgdmyfclsTonQ+418U3SpORKTT7VW
-	 WkdPqKLuRu2S8Nsp0bCTPTF7zr8V+W6ghtoJAyqTvmU69YtRv6URZL0W5PGcE2Pl50
-	 UJbWFR+1zShTLRDPvDqmYPnG/bFHp9cyL7tMarKA=
+	by mail.kernel.org (Postfix) with ESMTP id 00C6420737
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732651AbgDAU3l (ORCPT
+        id S1732746AbgDAUaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732337AbgDAU3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 16:29:41 -0400
-Received: from localhost (mobile-166-170-223-166.mycingular.net [166.170.223.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F423206E9;
-        Wed,  1 Apr 2020 20:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585772980;
-        bh=OlC+pjNqOImVx3sNog54550MPbIAXh6MRIXiUyGaRI8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jxNBn1LV5GLPEow67NIpgB2aB7VhkDJXcRVTRY2eH1Lukq7C++VqWPaYwkY86IVZ0
-         U3K5b2fRz9s4Bzr+kORlkX7aEwfQ6bvIU1B7jHl4dxRcdiQmZZaAHkhM+VUSD5Ihgs
-         6nMEE0IHmek+AnjoQFG3KSUCaY1FppPihxG5JrG8=
-Date:   Wed, 1 Apr 2020 15:29:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        lorenzo.pieralisi@arm.com, amurray@thegoodpenguin.co.uk,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH] PCI: Warn about MEM resource size being too big
-Message-ID: <20200401202937.GA130497@google.com>
+        Wed, 1 Apr 2020 16:30:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35770 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732337AbgDAUaP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 16:30:15 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJk01-0000vF-O5; Wed, 01 Apr 2020 22:30:09 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A54DA101177; Wed,  1 Apr 2020 22:30:08 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     peterx@redhat.com, Ming Lei <ming.lei@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>
+Subject: Re: [PATCH] sched/isolation: Allow "isolcpus=" to skip unknown sub-parameters
+In-Reply-To: <20200204161639.267026-1-peterx@redhat.com>
+References: <20200204161639.267026-1-peterx@redhat.com>
+Date:   Wed, 01 Apr 2020 22:30:08 +0200
+Message-ID: <87d08rosof.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABEDWGzfTDtmq==j-GcK3YYbdPX4-Ms=PDuDEiQusV78bUGvDA@mail.gmail.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 01:36:04PM -0700, Alan Mikhak wrote:
-> On Tue, Mar 31, 2020 at 1:12 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, Mar 30, 2020 at 05:19:47PM -0700, Alan Mikhak wrote:
-> > > Output a warning for MEM resource size with
-> > > non-zero upper 32-bits.
-> > >
-> > > ATU programming functions limit the size of
-> > > the translated region to 4GB by using a u32 size
-> > > parameter. Function dw_pcie_prog_outbound_atu()
-> > > does not program the upper 32-bit ATU limit
-> > > register. This may result in undefined behavior
-> > > for resource sizes with non-zero upper 32-bits.
-> > >
-> > > For example, a 128GB address space starting at
-> > > physical CPU address of 0x2000000000 with size of
-> > > 0x2000000000 needs the following values programmed
-> > > into the lower and upper 32-bit limit registers:
-> > >  0x3fffffff in the upper 32-bit limit register
-> > >  0xffffffff in the lower 32-bit limit register
-> > >
-> > > Currently, only the lower 32-bit limit register is
-> > > programmed with a value of 0xffffffff but the upper
-> > > 32-bit limit register is not being programmed.
-> > > As a result, the upper 32-bit limit register remains
-> > > at its default value after reset of 0x0. This would
-> > > be a problem for a 128GB PCIe space because in
-> > > effect its size gets reduced to 4GB.
-> > >
-> > > ATU programming functions can be changed to
-> > > specify a u64 size parameter for the translated
-> > > region. Along with this change, the internal
-> > > calculation of the limit address, the address of
-> > > the last byte in the translated region, needs to
-> > > change such that both the lower 32-bit and upper
-> > > 32-bit limit registers can be programmed correctly.
-> > >
-> > > Changing the ATU programming functions is high
-> > > impact. Without change, this issue can go
-> > > unnoticed. A warning may prompt the user to
-> > > look into possible issues.
-> >
-> > So this is basically a warning, and we could actually *fix* the
-> > problem with more effort?  I vote for the fix.
-> 
-> The fix would impact all PCIe drivers that depend on dwc.
+Peter Xu <peterx@redhat.com> writes:
+> @@ -169,8 +169,12 @@ static int __init housekeeping_isolcpus_setup(char *str)
+>  			continue;
+>  		}
+>  
+> -		pr_warn("isolcpus: Error, unknown flag\n");
+> -		return 0;
+> +		str = strchr(str, ',');
+> +		if (str)
+> +			/* Skip unknown sub-parameter */
+> +			str++;
+> +		else
+> +			return 0;
 
-Is that another way of saying "the fix would *fix* all the drivers
-that depend on dwc"?
+Just looked at it again because I wanted to apply this and contrary to
+last time I figured out that this is broken:
 
-> I would have no way of validating such a fix without
-> breaking it for everyone let alone the bandwidth it needs.
-> All drivers that depend on dwc seem to be currently happy
-> with the u32 size limit. I suggest we add the warning but
-> keep this issue in mind for a solution that allows existing
-> PCe drivers to phase into the fix on their own individual
-> schedules, if they need to.
+     isolcpus=nohz,domain1,3,5
 
-Obviously it would *nice* to test all the drivers that depend on dwc,
-but if you're fixing a problem, you verify the fix on your system, and
-the relevant people review it, I don't think exhaustive testing is a
-hard requirement, and I certainly wouldn't expect you to do it.
+is a malformatted option, but the above will make it "valid" and result
+in:
 
-If we want to live with a 32-bit limit, I think we should change the
-relevant interfaces to use u32 so there's not a way to venture into
-this region of undefined behavior.  I don't think "warning + undefined
-behavior" is a very maintainable situation.
+     HK_FLAG_TICK and a cpumask of 3,5.
 
-> > > This limitation also means that multiple ATUs
-> > > would need to be used to map larger regions.
-> > >
-> > > Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > index 395feb8ca051..37a8c71ef89a 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -325,6 +325,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >       struct pci_bus *child;
-> > >       struct pci_host_bridge *bridge;
-> > >       struct resource *cfg_res;
-> > > +     resource_size_t mem_size;
-> > >       u32 hdr_type;
-> > >       int ret;
-> > >
-> > > @@ -362,7 +363,10 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > >               case IORESOURCE_MEM:
-> > >                       pp->mem = win->res;
-> > >                       pp->mem->name = "MEM";
-> > > -                     pp->mem_size = resource_size(pp->mem);
-> > > +                     mem_size = resource_size(pp->mem);
-> > > +                     if (upper_32_bits(mem_size))
-> > > +                             dev_warn(dev, "MEM resource size too big\n");
-> > > +                     pp->mem_size = mem_size;
-> > >                       pp->mem_bus_addr = pp->mem->start - win->offset;
-> > >                       break;
-> > >               case 0:
-> > > --
-> > > 2.7.4
-> > >
+The flags are required to be is_alpha() only. So you want something like
+the untested below. Hmm?
+
+Thanks,
+
+        tglx
+
+8<---------------
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -149,6 +149,8 @@ static int __init housekeeping_nohz_full
+ static int __init housekeeping_isolcpus_setup(char *str)
+ {
+ 	unsigned int flags = 0;
++	char *par;
++	int len;
+ 
+ 	while (isalpha(*str)) {
+ 		if (!strncmp(str, "nohz,", 5)) {
+@@ -169,8 +171,17 @@ static int __init housekeeping_isolcpus_
+ 			continue;
+ 		}
+ 
+-		pr_warn("isolcpus: Error, unknown flag\n");
+-		return 0;
++		/*
++		 * Skip unknown sub-parameter and validate that it is not
++		 * containing an invalid character.
++		 */
++		for (par = str, len = 0; isalpha(*str); str++, len++);
++		if (*str != ',') {
++			pr_warn("isolcpus: Invalid flag %*s\n", len, par);
++			return 0;
++		}
++		pr_info("isolcpus: Skipped unknown flag %*s\n", len, par);
++		str++;
+ 	}
+ 
+ 	/* Default behaviour for isolcpus without flags */
