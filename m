@@ -2,492 +2,251 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9EBC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B443BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBAD206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59549206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="H+RCy6JH";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CQHr+n8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbgDACmP (ORCPT
+        id S1731623AbgDACqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 22:42:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:39814 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731556AbgDACmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 22:42:15 -0400
-IronPort-SDR: Ae4X+R0gprVtHbl5PnL23R2HmYB6PtoYgm2Y1A37m8WKuQPy7lfC4GNjH8/HQhGcipbcQmDPAr
- THmFcTALlY3g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 19:42:14 -0700
-IronPort-SDR: Y1syHDiqe+SeRWAlS6UzaIvBfqeoet3KWAiYQvjcp0tvAWsGTg3uL5ezkZwOVxrZubHA8OiXWF
- 6zS/WenGTYIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="450381046"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Mar 2020 19:42:11 -0700
-Date:   Wed, 1 Apr 2020 10:39:47 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trix@redhat.com, bhu@redhat.com,
-        Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v3 1/7] fpga: dfl: parse interrupt info for feature
-  devices on enumeration
-Message-ID: <20200401023947.GA13315@yilunxu-OptiPlex-7050>
-References: <1585038763-22944-1-git-send-email-yilun.xu@intel.com>
- <1585038763-22944-2-git-send-email-yilun.xu@intel.com>
- <20200331041834.GA8468@hao-dev>
+        Tue, 31 Mar 2020 22:46:44 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:51530 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731556AbgDACqn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 22:46:43 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0312k2pX026894;
+        Tue, 31 Mar 2020 19:46:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=qk9eFGC6ewe2nneocNntwKsE3dCX3jXGWbBoaC+cW0M=;
+ b=H+RCy6JHzCEboBcjDFlcW+ifLcrz1Kp5MZkJ5XlPDFYjOFfsx2deqofmWSzCvjNLUNTs
+ W8iyWLRtVynClvbrWw+WXibG6jRZpU1RMhz47iIvFYlRvIiwrS8mYvqLoK/2ZXhob+Jl
+ A/e+x/3Fz+fYbKb+40BJWO8R1dy/HNmkhK0= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 302pqwjv2u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 31 Mar 2020 19:46:28 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.230) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 31 Mar 2020 19:46:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T9L+d/1edG1Nx/zWLgSysfGH4jL810edsIMVGgq7GoZJ25wZdGlI85k5V0FUplfBynv87UKVXYkmy9+gIMmQl45eV8Ggr4zG2zKJuCxhM99KzohFI741R96/x1H25GxZV0+nFy3Ow6y9zzmAt3y6NJ3k83wdzG9VKbVzraeEzPYZpw0zv+hpRx/oZJEg+8m9okcOBOfBDLEAzHTQFJJuuICEVuDIuT2P+wbqx9HZTUDth2NeD0nTt5NUh605s4BVjo2aCsTfR+W1RZANFG1zOUezhluWZasZ8Ea4XMSUh/a+eYfP9q9yYHkp95EAQHVxiMHQ6b21TESBNoTO2K5R0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qk9eFGC6ewe2nneocNntwKsE3dCX3jXGWbBoaC+cW0M=;
+ b=ePxKYx01J7IagSSrGumaH0J1pKOzBJqbelg+/xelaRpM18ugdoxfshv6W9MoMG+ieIzKTV+JVya0HyvnoZ6R1JXBdYA/qFR2GFULs/5KcTQxG48IFiGJCql79uulGzI+AeCOoz3csdJlgnEtyP+PgjsWApQ4W4oYV36lP5Sw8yUfs7hNrAOR0QVkHFB0Ye19Bp48lgixH5O9RLYAjF266Zb06PETgXGQOCNfNVv9XMEpOrEfumFZTFBwbdC+87FgMbGdCsbl3eDdxgmwq6kl0Dw32cObBRVuFNcJ7z/CgHkMniQt4cJr5xkHTGIjNRh6KflIQxZZodOsMJaW6JdZwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qk9eFGC6ewe2nneocNntwKsE3dCX3jXGWbBoaC+cW0M=;
+ b=CQHr+n8Lwg8WxEHye6HhuWBt72JrwPTiEDzp28+arhge4+W2zWFWYzVTqFDSFuIjLCFehy4GSPYTNjWfnPgz0jwkZhKfp93ABnEVl2ZRo0deEQKi2oCEyUeD+Rw9C1IGdEpqEAooe2M/Z01sHUOaV5dcWt7T3XDG4yK9jTHC9MM=
+Received: from MW3PR15MB3753.namprd15.prod.outlook.com (2603:10b6:303:50::17)
+ by MW3PR15MB3996.namprd15.prod.outlook.com (2603:10b6:303:41::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Wed, 1 Apr
+ 2020 02:46:16 +0000
+Received: from MW3PR15MB3753.namprd15.prod.outlook.com
+ ([fe80::3517:e69:6e78:4f7c]) by MW3PR15MB3753.namprd15.prod.outlook.com
+ ([fe80::3517:e69:6e78:4f7c%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
+ 02:46:16 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     Petr Malat <oss@malat.biz>
+CC:     Nick Terrell <nickrterrell@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>
+Subject: Re: [PATCH v3 3/8] lib: add zstd support to decompress
+Thread-Topic: [PATCH v3 3/8] lib: add zstd support to decompress
+Thread-Index: AQHWAt/m23+sZPjy5kGvzHRfaAnHI6hbFrwAgAAmGgCAABROAIAISIiA
+Date:   Wed, 1 Apr 2020 02:46:15 +0000
+Message-ID: <1A4F12DD-680A-4665-B48D-3A9395CAAE70@fb.com>
+References: <20200325195849.407900-1-nickrterrell@gmail.com>
+ <20200325195849.407900-4-nickrterrell@gmail.com>
+ <20200326164732.GA17157@ntb.petris.klfree.czf>
+ <611A224B-1CB3-4283-9783-87C184C8983A@fb.com>
+ <20200326201634.GA9948@ntb.petris.klfree.czf>
+In-Reply-To: <20200326201634.GA9948@ntb.petris.klfree.czf>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:400::5:365f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f70be45f-ee81-48ae-1953-08d7d5e6d958
+x-ms-traffictypediagnostic: MW3PR15MB3996:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW3PR15MB39961EF3C206F53CC169240CABC90@MW3PR15MB3996.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB3753.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(346002)(136003)(376002)(366004)(39860400002)(186003)(6512007)(6486002)(66476007)(76116006)(6916009)(966005)(36756003)(2906002)(64756008)(478600001)(54906003)(8676002)(316002)(66946007)(7416002)(66446008)(66556008)(4326008)(86362001)(2616005)(81166006)(71200400001)(81156014)(8936002)(5660300002)(6506007)(53546011)(33656002)(343044003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PU3ik+dEgy9KLaoEDqMdoE69VW+QpRq/gT6NrD44JdOxzhmPF5yWdXoDsSKlCffjrNWpoHKJSENR8nKaGVk5utHb+9IgiJAA1u/aD3fnEkXAeDE+FSO2fDtt+jLGQ3NJ6+NjlLwzCKESt6LI5W8rMySvJXUWt9cEQELoD4RgIpGiny5n3BgsRZAso+suVVflM/H5fovyBlwSilMpuPvQYmFNCirYNDrFyLbEKQP/gKA5o1LzP5VOT1uLp0Y8lTHddMCAcjYn9Wxmdw7CQLnzlF3EEVNWrtp80fFmtvxipOEQWKmB05TAvUEl157mkOChewuTRIhnakvtD9eVAcKx1Q337kAHKqNTHIwbRbsU65kNImLJD2wtVUYTjV4kxm+pNtgFy+P6zK4PLho9ZU05vValGoJnu0uFTbAhRbpuQjaIM2suxJiljSGRzGEDvSZuKiYmqfCjR4nCAgB3ZlEs8vzd5F0lwo2LGGZpJ2kpydTyZzL0UAy7S6r7rG4jyyHsZsy+0Y0445c0BLFnvbIBN2JYOSOqZ/5XIxjevf0dQEcVOCr69l9+TEeWCz0F9x5k15CiPkmow2O/Q17hlbzZ/g==
+x-ms-exchange-antispam-messagedata: Aa2FG58igKtvFFgvCxPy4YmqLbhOSr7meaZ0aRTVpvE7qSxAvpEyl5ewd0FFAn8Nbt5hOuG97sT1tRGB5XtxBSdcXPCYnC24JytHwRTtkkCH0+hLo07oV1cv0e3l2bvkIaPpp1CrylBBVxpg5c2eGTJBfqXHVEN2LanLCK9KiZws2Pp5C0JEAL2cqJnL2aUP
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <55ED55147C71CD419EC55805CB5E3C65@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331041834.GA8468@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f70be45f-ee81-48ae-1953-08d7d5e6d958
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 02:46:15.9677
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8KOKRD12v8dQxUyRUVuquwZyAV3W9YEA7ZM8Gzg68fdsRY9q1w7+Lm1IAoy2/FjL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3996
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010024
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 12:18:34PM +0800, Wu Hao wrote:
-> On Tue, Mar 24, 2020 at 04:32:37PM +0800, Xu Yilun wrote:
-> > DFL based FPGA devices could support interrupts for different purposes,
-> > but current DFL framework only supports feature device enumeration with
-> > given MMIO resources information via common DFL headers. This patch
-> > introduces one new API dfl_fpga_enum_info_add_irq for low level bus
-> > drivers (e.g. PCIe device driver) to pass its interrupt resources
-> > information to DFL framework for enumeration, and also adds interrupt
-> > enumeration code in framework to parse and assign interrupt resources
-> > for enumerated feature devices and their own sub features.
-> > 
-> > With this patch, DFL framework enumerates interrupt resources for core
-> > features, including PORT Error Reporting, FME (FPGA Management Engine)
-> > Error Reporting and also AFU User Interrupts.
-> > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > ----
-> > v2: early validating irq table for each feature in parse_feature_irq().
-> >     Some code improvement and minor fix for Hao's comments.
-> > v3: put parse_feature_irqs() inside create_feature_instance()
-> >     some minor fixes and more comments
-> > ---
-> >  drivers/fpga/dfl.c | 148 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/fpga/dfl.h |  40 +++++++++++++++
-> >  2 files changed, 188 insertions(+)
-> > 
-> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> > index 9909948..bc8d966 100644
-> > --- a/drivers/fpga/dfl.c
-> > +++ b/drivers/fpga/dfl.c
-> > @@ -11,6 +11,7 @@
-> >   *   Xiao Guangrong <guangrong.xiao@linux.intel.com>
-> >   */
-> >  #include <linux/module.h>
-> > +#include <asm/irq.h>
-> 
-> use linux/interrupt.h instead here?
-
-Yes. But linux/interrupt.h is already in dfl.h. So we could just remove
-this line.
-
-> 
-> >  
-> >  #include "dfl.h"
-> >  
-> > @@ -421,6 +422,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
-> >   *
-> >   * @dev: device to enumerate.
-> >   * @cdev: the container device for all feature devices.
-> > + * @nr_irqs: number of irqs for all feature devices.
-> > + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
-> > + *	       this device.
-> >   * @feature_dev: current feature device.
-> >   * @ioaddr: header register region address of feature device in enumeration.
-> >   * @sub_features: a sub features linked list for feature device in enumeration.
-> > @@ -429,6 +433,9 @@ EXPORT_SYMBOL_GPL(dfl_fpga_dev_ops_unregister);
-> >  struct build_feature_devs_info {
-> >  	struct device *dev;
-> >  	struct dfl_fpga_cdev *cdev;
-> > +	unsigned int nr_irqs;
-> > +	int *irq_table;
-> > +
-> >  	struct platform_device *feature_dev;
-> >  	void __iomem *ioaddr;
-> >  	struct list_head sub_features;
-> > @@ -442,12 +449,16 @@ struct build_feature_devs_info {
-> >   * @mmio_res: mmio resource of this sub feature.
-> >   * @ioaddr: mapped base address of mmio resource.
-> >   * @node: node in sub_features linked list.
-> > + * @irq_base: start of irq index in this sub feature.
-> > + * @nr_irqs: number of irqs of this sub feature.
-> >   */
-> >  struct dfl_feature_info {
-> >  	u64 fid;
-> >  	struct resource mmio_res;
-> >  	void __iomem *ioaddr;
-> >  	struct list_head node;
-> > +	unsigned int irq_base;
-> > +	unsigned int nr_irqs;
-> >  };
-> >  
-> >  static void dfl_fpga_cdev_add_port_dev(struct dfl_fpga_cdev *cdev,
-> > @@ -520,6 +531,8 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  	/* fill features and resource information for feature dev */
-> >  	list_for_each_entry_safe(finfo, p, &binfo->sub_features, node) {
-> >  		struct dfl_feature *feature = &pdata->features[index];
-> > +		struct dfl_feature_irq_ctx *ctx;
-> > +		unsigned int i;
-> >  
-> >  		/* save resource information for each feature */
-> >  		feature->id = finfo->fid;
-> > @@ -527,6 +540,20 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
-> >  		feature->ioaddr = finfo->ioaddr;
-> >  		fdev->resource[index++] = finfo->mmio_res;
-> >  
-> > +		if (finfo->nr_irqs) {
-> > +			ctx = devm_kcalloc(binfo->dev, finfo->nr_irqs,
-> > +					   sizeof(*ctx), GFP_KERNEL);
-> > +			if (!ctx)
-> > +				return -ENOMEM;
-> > +
-> > +			for (i = 0; i < finfo->nr_irqs; i++)
-> > +				ctx[i].irq =
-> > +					binfo->irq_table[finfo->irq_base + i];
-> > +
-> > +			feature->irq_ctx = ctx;
-> > +			feature->nr_irqs = finfo->nr_irqs;
-> > +		}
-> > +
-> >  		list_del(&finfo->node);
-> >  		kfree(finfo);
-> >  	}
-> > @@ -639,6 +666,75 @@ static u64 feature_id(void __iomem *start)
-> >  }
-> >  
-> >  /*
-> > + * This function will not return any error. If irq parsing is failed, we still
-> > + * try to support the feature without irq capability.
-> 
-> I am thinking if we have a better choice here, e.g. return error for parsing
-> interrupt failure. This looks alright, just because current feature could
-> work without interrupt support, but if any feature can't work with interrupt,
-> then should we notice user the errors as early as possible. How do you think?
-
-I think different features could have different concerns. If an feature
-can't work without interrupt, it can error out in its own driver. This
-will not affect other features functionality.
-
-The DFL may list some important private features like Flash controller
-which reprograms the static region (DFL is placed here) through pcie.
-If we error out the whole enumeration, then a moderate mistake makes
-card unrecoverable.
-
-> 
-> > + */
-> > +static void parse_feature_irqs(struct build_feature_devs_info *binfo,
-> > +			       resource_size_t ofst, u64 fid,
-> > +			       unsigned int *irq_base, unsigned int *nr_irqs)
-> > +{
-> > +	void __iomem *base = binfo->ioaddr + ofst;
-> > +	unsigned int i;
-> > +	int virq;
-> > +	u64 v;
-> > +
-> > +	/*
-> > +	 * Ideally DFL framework should only read info from DFL header, but
-> > +	 * current version DFL only provides mmio resources information for
-> > +	 * each feature in DFL Header, no field for interrupt resources.
-> > +	 * Some interrupt resources information are provided by specific
-> > +	 * mmio registers of each components(e.g. different private features)
-> > +	 * which supports interrupt. So in order to parse and assign irq
-> > +	 * resources to different components, DFL framework has to look into
-> > +	 * specific capability registers of these core private features.
-> > +	 *
-> > +	 * Once future DFL version supports generic interrupt resources
-> > +	 * information in common DFL headers, some generic interrupt parsing
-> > +	 * code could be added. But in order to be compatible to old version
-> > +	 * DFL, driver may still fall back to these quirks.
-> > +	 */
-> > +	switch (fid) {
-> > +	case PORT_FEATURE_ID_UINT:
-> > +		v = readq(base + PORT_UINT_CAP);
-> > +		*irq_base = FIELD_GET(PORT_UINT_CAP_FST_VECT, v);
-> > +		*nr_irqs = FIELD_GET(PORT_UINT_CAP_INT_NUM, v);
-> > +		break;
-> > +	case PORT_FEATURE_ID_ERROR:
-> > +		v = readq(base + PORT_ERROR_CAP);
-> > +		*irq_base = FIELD_GET(PORT_ERROR_CAP_INT_VECT, v);
-> > +		*nr_irqs = FIELD_GET(PORT_ERROR_CAP_SUPP_INT, v);
-> > +		break;
-> > +	case FME_FEATURE_ID_GLOBAL_ERR:
-> > +		v = readq(base + FME_ERROR_CAP);
-> > +		*irq_base = FIELD_GET(FME_ERROR_CAP_INT_VECT, v);
-> > +		*nr_irqs = FIELD_GET(FME_ERROR_CAP_SUPP_INT, v);
-> > +		break;
-> > +	default:
-> > +		return;
-> > +	}
-> > +
-> > +	dev_dbg(binfo->dev, "feature: 0x%llx, nr_irqs: %u, irq_base: %u\n",
-> > +		(unsigned long long)fid, *nr_irqs, *irq_base);
-> > +
-> > +	if (*irq_base + *nr_irqs > binfo->nr_irqs)
-> > +		goto parse_irq_fail;
-> > +
-> > +	for (i = 0; i < *nr_irqs; i++) {
-> > +		virq = binfo->irq_table[*irq_base + i];
-> > +		if (virq < 0 || virq > NR_IRQS)
-> > +			goto parse_irq_fail;
-> 
-> looks like you may need different error message here and above.
-> 
-> > +	}
-> > +
-> > +	return;
-> > +
-> > +parse_irq_fail:
-> > +	*irq_base = 0;
-> > +	*nr_irqs = 0;
-> > +	dev_warn(binfo->dev, "Invalid interrupt number in feature 0x%llx\n",
-> > +		 (unsigned long long)fid);
-> 
-> What about:
-> 
-> 	u64 ibase, inr;
-> 
-> 	switch () {
-> 	case ...
-> 		ibase = ..;
-> 		inr = ..;
-> 		break;
-> 	default:
-> 		return;
-> 
-> 	}
-> 
-> 	if () {
-> 		error message 1
-> 		return;
-> 	}
-> 
-> 	for {
-> 		error message 2
-> 		return;
-> 	}
-> 
-> 	*irq_base = ibase;
-> 	*nr_irqs = inr;
-> 	return;
-
-It's good optimization. I'll follow it.
-
-> 
-> Other place looks good to me.
-> 
-> Hao
-> 
-> > +}
-> > +
-> > +/*
-> >   * when create sub feature instances, for private features, it doesn't need
-> >   * to provide resource size and feature id as they could be read from DFH
-> >   * register. For afu sub feature, its register region only contains user
-> > @@ -650,6 +746,7 @@ create_feature_instance(struct build_feature_devs_info *binfo,
-> >  			struct dfl_fpga_enum_dfl *dfl, resource_size_t ofst,
-> >  			resource_size_t size, u64 fid)
-> >  {
-> > +	unsigned int irq_base = 0, nr_irqs = 0;
-> >  	struct dfl_feature_info *finfo;
-> >  
-> >  	/* read feature size and id if inputs are invalid */
-> > @@ -659,6 +756,8 @@ create_feature_instance(struct build_feature_devs_info *binfo,
-> >  	if (dfl->len - ofst < size)
-> >  		return -EINVAL;
-> >  
-> > +	parse_feature_irqs(binfo, ofst, fid, &irq_base, &nr_irqs);
-> > +
-> >  	finfo = kzalloc(sizeof(*finfo), GFP_KERNEL);
-> >  	if (!finfo)
-> >  		return -ENOMEM;
-> > @@ -667,6 +766,8 @@ create_feature_instance(struct build_feature_devs_info *binfo,
-> >  	finfo->mmio_res.start = dfl->start + ofst;
-> >  	finfo->mmio_res.end = finfo->mmio_res.start + size - 1;
-> >  	finfo->mmio_res.flags = IORESOURCE_MEM;
-> > +	finfo->irq_base = irq_base;
-> > +	finfo->nr_irqs = nr_irqs;
-> >  	finfo->ioaddr = dfl->ioaddr + ofst;
-> >  
-> >  	list_add_tail(&finfo->node, &binfo->sub_features);
-> > @@ -853,6 +954,10 @@ void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info)
-> >  		devm_kfree(dev, dfl);
-> >  	}
-> >  
-> > +	/* remove irq table */
-> > +	if (info->irq_table)
-> > +		devm_kfree(dev, info->irq_table);
-> > +
-> >  	devm_kfree(dev, info);
-> >  	put_device(dev);
-> >  }
-> > @@ -892,6 +997,45 @@ int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
-> >  }
-> >  EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_dfl);
-> >  
-> > +/**
-> > + * dfl_fpga_enum_info_add_irq - add irq table to enum info
-> > + *
-> > + * @info: ptr to dfl_fpga_enum_info
-> > + * @nr_irqs: number of irqs of the DFL fpga device to be enumerated.
-> > + * @irq_table: Linux IRQ numbers for all irqs, indexed by local irq index of
-> > + *	       this device.
-> > + *
-> > + * One FPGA device may have several interrupts. This function adds irq
-> > + * information of the DFL fpga device to enum info for next step enumeration.
-> > + * This function should be called before dfl_fpga_feature_devs_enumerate().
-> > + * As we only support one irq domain for all DFLs in the same enum info, adding
-> > + * irq table a second time for the same enum info will return error.
-> > + *
-> > + * If we need to enumerate DFLs which belong to different irq domains, we
-> > + * should fill more enum info and enumerate them one by one.
-> > + *
-> > + * Return: 0 on success, negative error code otherwise.
-> > + */
-> > +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
-> > +			       unsigned int nr_irqs, int *irq_table)
-> > +{
-> > +	if (!nr_irqs)
-> > +		return -EINVAL;
-> > +
-> > +	if (info->irq_table)
-> > +		return -EEXIST;
-> > +
-> > +	info->irq_table = devm_kmemdup(info->dev, irq_table,
-> > +				       sizeof(int) * nr_irqs, GFP_KERNEL);
-> > +	if (!info->irq_table)
-> > +		return -ENOMEM;
-> > +
-> > +	info->nr_irqs = nr_irqs;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dfl_fpga_enum_info_add_irq);
-> > +
-> >  static int remove_feature_dev(struct device *dev, void *data)
-> >  {
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> > @@ -959,6 +1103,10 @@ dfl_fpga_feature_devs_enumerate(struct dfl_fpga_enum_info *info)
-> >  	binfo->dev = info->dev;
-> >  	binfo->cdev = cdev;
-> >  
-> > +	binfo->nr_irqs = info->nr_irqs;
-> > +	if (info->nr_irqs)
-> > +		binfo->irq_table = info->irq_table;
-> > +
-> >  	/*
-> >  	 * start enumeration for all feature devices based on Device Feature
-> >  	 * Lists.
-> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> > index 74784d3..4bc165f 100644
-> > --- a/drivers/fpga/dfl.h
-> > +++ b/drivers/fpga/dfl.h
-> > @@ -112,6 +112,13 @@
-> >  #define FME_PORT_OFST_ACC_VF	1
-> >  #define FME_PORT_OFST_IMP	BIT_ULL(60)
-> >  
-> > +/* FME Error Capability Register */
-> > +#define FME_ERROR_CAP		0x70
-> > +
-> > +/* FME Error Capability Register Bitfield */
-> > +#define FME_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
-> > +#define FME_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
-> > +
-> >  /* PORT Header Register Set */
-> >  #define PORT_HDR_DFH		DFH
-> >  #define PORT_HDR_GUID_L		GUID_L
-> > @@ -145,6 +152,20 @@
-> >  #define PORT_STS_PWR_STATE_AP2	2			/* 90% throttling */
-> >  #define PORT_STS_PWR_STATE_AP6	6			/* 100% throttling */
-> >  
-> > +/* Port Error Capability Register */
-> > +#define PORT_ERROR_CAP		0x38
-> > +
-> > +/* Port Error Capability Register Bitfield */
-> > +#define PORT_ERROR_CAP_SUPP_INT	BIT_ULL(0)		/* Interrupt Support */
-> > +#define PORT_ERROR_CAP_INT_VECT	GENMASK_ULL(12, 1)	/* Interrupt vector */
-> > +
-> > +/* Port Uint Capability Register */
-> > +#define PORT_UINT_CAP		0x8
-> > +
-> > +/* Port Uint Capability Register Bitfield */
-> > +#define PORT_UINT_CAP_INT_NUM	GENMASK_ULL(11, 0)	/* Interrupts num */
-> > +#define PORT_UINT_CAP_FST_VECT	GENMASK_ULL(23, 12)	/* First Vector */
-> > +
-> >  /**
-> >   * struct dfl_fpga_port_ops - port ops
-> >   *
-> > @@ -189,6 +210,15 @@ struct dfl_feature_driver {
-> >  };
-> >  
-> >  /**
-> > + * struct dfl_feature_irq_ctx - dfl private feature interrupt context
-> > + *
-> > + * @irq: Linux IRQ number of this interrupt.
-> > + */
-> > +struct dfl_feature_irq_ctx {
-> > +	int irq;
-> > +};
-> > +
-> > +/**
-> >   * struct dfl_feature - sub feature of the feature devices
-> >   *
-> >   * @id: sub feature id.
-> > @@ -196,12 +226,16 @@ struct dfl_feature_driver {
-> >   *		    this index is used to find its mmio resource from the
-> >   *		    feature dev (platform device)'s reources.
-> >   * @ioaddr: mapped mmio resource address.
-> > + * @irq_ctx: interrupt context list.
-> > + * @nr_irqs: number of interrupt contexts.
-> >   * @ops: ops of this sub feature.
-> >   */
-> >  struct dfl_feature {
-> >  	u64 id;
-> >  	int resource_index;
-> >  	void __iomem *ioaddr;
-> > +	struct dfl_feature_irq_ctx *irq_ctx;
-> > +	unsigned int nr_irqs;
-> >  	const struct dfl_feature_ops *ops;
-> >  };
-> >  
-> > @@ -388,10 +422,14 @@ static inline u8 dfl_feature_revision(void __iomem *base)
-> >   *
-> >   * @dev: parent device.
-> >   * @dfls: list of device feature lists.
-> > + * @nr_irqs: number of irqs for all feature devices.
-> > + * @irq_table: Linux IRQ numbers for all irqs, indexed by hw irq numbers.
-> >   */
-> >  struct dfl_fpga_enum_info {
-> >  	struct device *dev;
-> >  	struct list_head dfls;
-> > +	unsigned int nr_irqs;
-> > +	int *irq_table;
-> >  };
-> >  
-> >  /**
-> > @@ -415,6 +453,8 @@ struct dfl_fpga_enum_info *dfl_fpga_enum_info_alloc(struct device *dev);
-> >  int dfl_fpga_enum_info_add_dfl(struct dfl_fpga_enum_info *info,
-> >  			       resource_size_t start, resource_size_t len,
-> >  			       void __iomem *ioaddr);
-> > +int dfl_fpga_enum_info_add_irq(struct dfl_fpga_enum_info *info,
-> > +			       unsigned int nr_irqs, int *irq_table);
-> >  void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info);
-> >  
-> >  /**
-> > -- 
-> > 2.7.4
+PiBPbiBNYXIgMjYsIDIwMjAsIGF0IDE6MTYgUE0sIFBldHIgTWFsYXQgPG9zc0BtYWxhdC5iaXo+
+IHdyb3RlOg0KPiANCj4gSGkhDQo+IE9uIFRodSwgTWFyIDI2LCAyMDIwIGF0IDA3OjAzOjU0UE0g
+KzAwMDAsIE5pY2sgVGVycmVsbCB3cm90ZToNCj4+Pj4gKiBBZGQgdW56c3RkKCkgYW5kIHRoZSB6
+c3RkIGRlY29tcHJlc3MgaW50ZXJmYWNlLg0KPj4+IEhlcmUgSSBkbyBub3QgdW5kZXJzdGFuZCB3
+aHkgeW91IGxpbWl0IHRoZSB3aW5kb3cgc2l6ZSB0byA4TUIgZXZlbiB3aGVuDQo+Pj4geW91IHJl
+YWQgYSBsYXJnZXIgdmFsdWUgZnJvbSB0aGUgaGVhZGVyLiBJIGRvIG5vdCBzZWUgYSByZWFzb24g
+d2h5IHRoZXJlDQo+Pj4gc2hvdWxkIGJlIHN1Y2ggYSBsaW1pdGF0aW9uIGF0IHRoZSBmaXJzdCBw
+bGFjZSBhbmQgaWYgdGhlcmUgc2hvdWxkIGJlLA0KPj4+IHdoeSBpdCBkaWZmZXJzIGZyb20gWlNU
+RF9XSU5ET1dMT0dfTUFYLg0KPj4gDQo+PiBXaGVuIHdlIGFyZSBkb2luZyBzdHJlYW1pbmcgZGVj
+b21wcmVzc2lvbiAoZWl0aGVyIGZsdXNoIG9yIGZpbGwgaXMgcHJvdmlkZWQpDQo+PiB3ZSBoYXZl
+IHRvIGFsbG9jYXRlIG1lbW9yeSBwcm9wb3J0aW9uYWwgdG8gdGhlIHdpbmRvdyBzaXplLiBXZSB3
+YW50IHRvDQo+PiBib3VuZCB0aGF0IG1lbW9yeSBzbyB3ZSBkb24ndCBhY2NpZGVudGFsbHkgYWxs
+b2NhdGUgdG9vIG11Y2ggbWVtb3J5Lg0KPj4gV2hlbiB3ZSBhcmUgZG9pbmcgYSBzaW5nbGUtcGFz
+cyBkZWNvbXByZXNzaW9uIChuZWl0aGVyIGZsdXNoIG5vciBmaWxsDQo+PiBhcmUgcHJvdmlkZWQp
+IHRoZSB3aW5kb3cgc2l6ZSBkb2Vzbid0IG1hdHRlciwgYW5kIHdlIG9ubHkgaGF2ZSB0byBhbGxv
+Y2F0ZQ0KPj4gYSBmaXhlZCBhbW91bnQgb2YgbWVtb3J5IH4xOTIgS0IuDQo+PiANCj4+IFRoZSB6
+c3RkIHNwZWMgWzBdIHNwZWNpZmllcyB0aGF0IGFsbCBkZWNvZGVycyBzaG91bGQgYWxsb3cgd2lu
+ZG93IHNpemVzDQo+PiB1cCB0byA4IE1CLiBBZGRpdGlvbmFsbHksIHRoZSB6c3RkIENMSSB3b24n
+dCBwcm9kdWNlIHdpbmRvdyBzaXplcyBncmVhdGVyDQo+PiB0aGFuIDggTUIgYnkgZGVmYXVsdC4g
+VGhlIHdpbmRvdyBzaXplIGlzIGNvbnRyb2xsZWQgYnkgdGhlIGNvbXByZXNzaW9uDQo+PiBsZXZl
+bCwgYW5kIGNhbiBiZSBleHBsaWNpdGx5IHNldC4NCj4gWWVzLCBvbmUgbmVlZHMgdG8gcGFzcyAt
+LXVsdHJhIG9wdGlvbiB0byB6c3RkIHRvIHByb2R1Y2UgYW4gaW5jb21wYXRpYmxlDQo+IGFyY2hp
+dmUsIGJ1dCB0aGF0IGRvZXNuJ3QganVzdGlmeSB0aGUgcmVhc29uIHRvIGxpbWl0IHRoaXMgaW4g
+dGhlIGtlcm5lbCwNCj4gZXNwZWNpYWxseSBpZiBvbmUgaXMgYWJsZSB0byByZWFkIHRoZSBuZWVk
+ZWQgd2luZG93IHNpemUgZnJvbSB0aGUgaGVhZGVyDQo+IHdoZW4gYWxsb2NhdGluZyB0aGUgbWVt
+b3J5LiBBdCB0aGUgdGltZSB3aGVuIGluaXRyYW1mcyBpcyBleHRyYWN0ZWQsDQo+IHRoZXJlIHVz
+dWFsbHkgaXMgbWVtb3J5IGF2YWlsYWJsZSBhcyBpdCdzIGJlZm9yZSBhbnkgcHJvY2Vzc2VzIGFy
+ZQ0KPiBzdGFydGVkIGFuZCB0aGlzIG1lbW9yeSBpcyByZWNsYWltZWQgYWZ0ZXIgdGhlIGRlY29t
+cHJlc3Npb24uDQo+IA0KPiBJZiwgb24gdGhlIG90aGVyIGhhbmQsIGFuIHVzZXIgbWFrZXMgYW4g
+aW5pdHJhbWZzIGZvciBhIG1lbW9yeSBjb25zdHJhaW5lZA0KPiBzeXN0ZW0sIGhlIGxpbWl0cyB0
+aGUgd2luZG93IHNpemUgd2hpbGUgY29tcHJlc3NpbmcgdGhlIGFyY2hpdmUgYW5kDQo+IHRoZSBz
+bWFsbCB3aW5kb3cgc2l6ZSB3aWxsIGJlIGFubm91bmNlZCBpbiB0aGUgaGVhZGVyLg0KPiANCj4g
+VGhlIG9ubHkgc2NlbmFyaW8gd2hlcmUgdXNpbmcgdGhlIGhhcmQtY29kZWQgbGltaXQgbWFrZXMg
+c2Vuc2UgaXMgaW4gYQ0KPiBjYXNlIHRoZSB3aW5kb3cgc2l6ZSBpcyBub3QgYXZhaWxhYmxlIChJ
+J20gbm90IHN1cmUgaWYgaXQncyBtYW5kYXRvcnkNCj4gdG8gcHJvdmlkZSBpdCkuIFRoYXQncyBo
+b3cgbXkgY29kZSB3b3JrcyAtIGlmIHRoZSBzaXplIGlzIGF2YWlsYWJsZSwNCj4gaXQgdXNlcyB0
+aGUgcHJvdmlkZWQgdmFsdWUsIGlmIG5vdCBpdCB1c2VzIDEgPDwgWlNURF9XSU5ET1dMT0dfTUFY
+Lg0KPiANCj4gSSB3b3VsZCBhbHNvIGFncmVlIGEgZml4ZWQgbGltaXQgd291bGQgbWFrZSBhIHNl
+bnNlIGlmIGEgdXNlciAob3IgbmV0d29yaykNCj4gcHJvdmlkZWQgZGF0YSB3b3VsZCBiZSB1c2Vk
+LCBidXQgaW4gdGhpcyBjYXNlIG9ubHkgdGhlIHN5c3RlbSBvd25lciBpcyBhYmxlDQo+IHRvIHBy
+b3ZpZGUgYW4gaW5pdHJhbWZzLiBJZiBvbmUgaXMgYWJsZSB0byBjaGFuZ2UgaW5pdHJhbWZzLCBo
+ZSBjYW4gcmVuZGVyDQo+IHRoZSBzeXN0ZW0gdW51c2FibGUgc2ltcGx5IGJ5IHByb3ZpZGluZyBh
+IGNvcnJ1cHRlZCBmaWxlLiBIZSBkb2Vzbid0IGhhdmUNCj4gdG8gYm90aGVyIG1ha2luZyB0aGUg
+d2luZG93IGJpZ2dlciB0aGFuIHRoZSBhdmFpbGFibGUgbWVtb3J5Lg0KPiANCj4+IEkgd291bGQg
+ZXhwZWN0IGxhcmdlciB3aW5kb3cgc2l6ZXMgdG8gYmUgYmVuZWZpY2lhbCBmb3IgY29tcHJlc3Np
+b24gcmF0aW8sDQo+PiB0aG91Z2ggdGhlcmUgaXMgZGVtaXNpbmcgcmV0dXJucy4gSSB3b3VsZCBl
+eHBlY3QgdGhhdCBmb3Iga2VybmVsIGltYWdlDQo+PiBjb21wcmVzc2lvbiBsYXJnZXIgd2luZG93
+IHNpemVzIGFyZSBiZW5lZmljaWFsLCBzaW5jZSBpdCBpcyBkZWNvbXByZXNzZWQNCj4+IHdpdGgg
+YSBzaW5nbGUgcGFzcy4gRm9yIGluaXRyYW1mcyBkZWNvbXByZXNzaW9uLCBJIHdvdWxkIGV4cGVj
+dCB0aGF0IGxpbWl0aW5nDQo+PiB0aGUgd2luZG93IHNpemUgY291bGQgaGVscCBkZWNvbXByZXNz
+aW9uIHNwZWVkLCBzaW5jZSBpdCB1c2VzIHN0cmVhbWluZw0KPj4gY29tcHJlc3Npb24sIHNvIHVu
+enN0ZCgpIGhhcyB0byBhbGxvY2F0ZSBhIGJ1ZmZlciBvZiB3aW5kb3cgc2l6ZSBieXRlcy4NCj4g
+WWVzLCBsYXJnZXIgd2luZG93IGltcHJvdmVzIHRoZSBjb21wcmVzc2lvbiByYXRpbywgc2VlIGhl
+cmUgYSBjb21wYXJpc29uDQo+IGJldHdlZW4gbGV2ZWwgMTkgYW5kIDIyIG9uIG15IHRlc3Rpbmcg
+eDg2LTY0IGluaXRyYW1mczoNCj4gIDMwNzc1MDIyIHJvb3Rmcy5jcGlvLnpzdC0xOQ0KPiAgMjg3
+NTU0Mjkgcm9vdGZzLmNwaW8uenN0LTIyDQo+IFRoZXNlIDclIGNhbiBiZSBub3RpY2VhYmxlIHdo
+ZW4gb25lIGhhcyBhIHNsb3cgc3RvcmFnZSwgZS5nLiBhIGZsYXNoIG1lbW9yeQ0KPiBvbiBTUEkg
+YnVzLg0KPiANCj4+PiBJIHJlbW92ZWQgdGhhdCBsaW1pdGF0aW9uIHRvIGJlIGFibGUgdG8gdGVz
+dCBpdCBpbiBteSBlbnZpcm9ubWVudCBhbmQgSQ0KPj4+IGZvdW5kIHRoZSBwZXJmb3JtYW5jZSBp
+cyB3b3JzdCB0aGFuIHdpdGggbXkgcGF0Y2ggYnkgcm91Z2hseSAyMCUgKG9uDQo+Pj4gaTctMzUy
+ME0pLCB3aGljaCBpcyBhIG1ham9yIGRyYXdiYWNrIGNvbnNpZGVyaW5nIHRoZSBtYWluIG1vdGl2
+YXRpb24NCj4+PiB0byB1c2UgenN0ZCBpcyB0aGUgZGVjb21wcmVzc2lvbiBzcGVlZC4gSSB3aWxs
+IHRlc3Qgb24gYXJtIGFzIHdlbGwgYW5kDQo+Pj4gc2hhcmUgdGhlIHJlc3VsdCB0b21vcnJvdy4N
+Cj4+PiBQZXRyDQo+PiANCj4+IFdoYXQgZG8geW91IG1lYW4gYnkgdGhhdD8gQ2FuIHlvdSBzaGFy
+ZSB3aXRoIG1lIHRoZSB0ZXN0IHlvdSByYW4/DQo+PiBJcyB0aGlzIGZvciBrZXJuZWwgZGVjb21w
+cmVzc2lvbiBvciBpbml0cmFtZnMgZGVjb21wcmVzc2lvbj8NCj4gSW5pdHJhbWZzIC0geW91IGNh
+biBhcHBseSBteSB2MiBwYXRjaCBvbiB2NS41IGFuZCB0cnkgd2l0aCB5b3VyIHRlc3QgZGF0YS4N
+Cj4gDQo+IEkgaGF2ZSB0ZXN0ZWQgeW91ciBwYXRjaCBhbHNvIG9uIEFSTXY3IHBsYXRmb3JtIGFu
+ZCB0aGVyZSB0aGUgZGVncmFkYXRpb24NCj4gd2FzIDglLg0KDQpUaGFua3MgYWdhaW4gZm9yIG1l
+YXN1cmluZyB0aGUgc3BlZWQgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUgdHdvIHBhdGNoc2V0cyEN
+CknigJl2ZSBmb3VuZCB0aGF0IHRoZSBkaWZmZXJlbmNlIGluIHBlcmZvcm1hbmNlIGJldHdlZW4g
+b3VyIHR3byBwYXRjaHNldHMgaXMNCmNhdXNlZCBieSB0aGUgb3V0cHV0IGJ1ZmZlciBzaXplLiBJ
+IGV4cGVjdCB0aGlzIGlzIGR1ZSB0byBjYWxsaW5nIGZsdXNoKCkgbW9yZSBvZnRlbiwNCnNpbmNl
+IHRoYXQgaXMgYSBjb21wbGV4IHN0YXRlIG1hY2hpbmUgaW4gaW5pdHJhbWZz4oCZcyB1c2UgY2Fz
+ZS4NCg0KSeKAmXZlIG1lYXN1cmVkIHRoZSBzcGVlZCBvZiB0aGlzIHBhdGNoIHNldCAodjMpLCBj
+b21wYXJlZCBhZ2FpbnN0IHRoaXMgcGF0Y2ggc2V0DQp3aXRoIGEgMTI4IEtCIGJ1ZmZlciBzaXpl
+IChaU1REX0RTdHJlYW1PdXRTaXplKCkpLCB2cyBQZXRy4oCZcyBwYXRjaHNldC4gSeKAmW0NCm1l
+YXN1cmluZyBvbiBhbiBJbnRlbCBpOS05OTAwSyB3aXRoIHR1cmJvIGRpc2FibGVkIG9uIENQVSAw
+LiBJ4oCZbSBib290aW5nIHRoZQ0Ka2VybmVsIHVzaW5nIFFFTVUuDQoNClRvIG1lYXN1cmUgdGhl
+IGluaXRyYW1mcyBkZWNvbXByZXNzaW9uIHNwZWVkIEkgbG9vayBhdCB0aGUgZGlmZmVyZW5jZSBp
+biB0aW1lc3RhbXANCmJldHdlZW4g4oCcVW5wYWNraW5nIGluaXRyYW1mc+KApuKAnSBhbmQg4oCc
+RnJlZWluZyBpZ25pdGVkIG1lbW9yeeKAnS4gVGhlIGluaXRyYW1mcyBpcw0KY29tcHJlc3NlZCB1
+c2luZyBsZXZlbCAxOSwgYnV0IHJlc3VsdHMgZm9yIGxldmVsIDIyIGFyZSBzaW1pbGFyLiBUaW1l
+cyBhcmUgcmVwb3J0ZWQNCmluIHNlY29uZHMuIEkgcmFuIGVhY2ggdGVzdCAzIHRpbWVzIGFuZCB0
+b29rIHRoZSBtZWRpYW4gdGltZSwgYnV0IHRoZSByZXN1bHRzIGFyZQ0KdmVyeSBzdGFibGUuIE9u
+IEFSTSB0aGUgaW5pdHJhbWZzIGlzIDI2IE1CLiBPbiB4ODYtNjQgdGhlIGluaXRyYW1mcyBpcyA5
+NyBNQi4NCg0KQXJjaAl2MwkxMjgJUGV0cg0KQXJtCTEuNjcJMS41MgkxLjU1DQp4NjQJMS43Ngkx
+LjY5CTEuNjYNCg0KVGhlIHJlc3VsdHMgZm9yIG15IHBhdGNoIGFyZSBzbGlnaHRseSBiZXR0ZXIg
+b24gQVJNLCB5b3VycyBhcmUgc2xpZ2h0bHkgYmV0dGVyIG9uIHg4Ni4NCkluIHY0IG9mIG15IHBh
+dGNoc2V0LCB3aGljaCBJIHdpbGwgc2VuZCBvdXQgdG9uaWdodCwgSSB3aWxsIGluY3JlYXNlIFpT
+VERfSU9CVUZfU0laRQ0KdG8gMTI4IEtCIChhcyB3ZWxsIGFzIHJlbW92ZSB0aGUgOCBNQiB3aW5k
+b3cgc2l6ZSBsaW1pdCkuIFBsZWFzZSBsZXQgbWUga25vdyBpZiB5b3VyDQpyZXN1bHRzIGFsaWdu
+IHdpdGggbWluZSBvbiB2NC4NCg0KSeKAmXZlIGFsc28gbWVhc3VyZWQgdGhlIHg4Nl82NCB6c3Rk
+IGtlcm5lbCBkZWNvbXByZXNzaW9uIHNwZWVkIHVzaW5nIG91ciB0d28NCnBhdGNoc2V0cy4gSSBt
+ZWFzdXJlZCBpdCBieSB0aGUgdGltaW5nIGJldHdlZW4gdGhlIOKAnERlY29tcHJlc3NpbmcgTGlu
+dXjigKbigJ0gbWVzc2FnZQ0KYW5kIHRoZSDigJxQYXJzaW5nIEVMRuKAnSBtZXNzYWdlIHdpdGgg
+dGhpcyBzY3JpcHQgWzBdLiBJIHVzZWQgdGhlIHNhbWUgdGVjaG5pcXVlIGZvcg0KbWVhc3VyZW1l
+bnQgYXMgYWJvdmUuIFRoZSBrZXJuZWwgSSBhbSB0ZXN0aW5nIGlzIGNvbXByZXNzZWQgYXQgbGV2
+ZWwgMTkgd2l0aCBteQ0KcGF0Y2hzZXQgYW5kIGF0IGxldmVsIDE5IHdpdGggYSB3aW5kb3cgc2l6
+ZSBvZiA0IE1CIHdpdGggeW91ciBwYXRjaHNldC4NCg0KSSBmb3VuZCB0aGF0IG15IHBhdGNoc2V0
+IHRha2VzIDcwbXMgdG8gZGVjb21wcmVzcyBhbmQgeW91cnMgdGFrZXMgMzE4bXMuIFlvdXINCnBh
+dGNoc2V0IGFsc28gdXNlcyA0IE1CIG9mIGhlYXAgbWVtb3J5LCB3aGVyZSBtaW5lIG9ubHkgbmVl
+ZHMgMTkyIEtCLiBUaGUgZGlmZmVyZW5jZQ0KaXMgY2F1c2VkIGJ5IHR3byB0aGluZ3M6DQoNCjEu
+IG1lbWNweSgpIGlzIHJlcGxhY2VkIGJ5IF9fYnVpbHRpbl9tZW1jcHkoKSBpbiBwYXRjaCAxIG9m
+IG15IHNldC4gVGhpcyBpcyB0aGUNCiAgICBjb3JlIG9mIHRoZSBkZWNvbXByZXNzaW9uIGhvdCBs
+b29wLCBhbmQgd2l0aG91dCBpdCB0aGUgY29tcGlsZXIgY2Fu4oCZdCBpbmxpbmUgbWVtY3B5Lg0K
+Mi4gTXkgcGF0Y2hzZXQgY2FsbHMgZGVjb21wcmVzc19zaW5nbGUoKSB3aGVuIG5laXRoZXIgZmx1
+c2ggbm9yIGZpbGwgYXJlIHByb3ZpZGVkLA0KICAgIGxpa2Ugd2hlbiBkZWNvbXByZXNzaW5nIHRo
+ZSBrZXJuZWwuIFRoaXMgc2F2ZXMgdGhlIDQgTUIgb2YgbWVtb3J5LCBhcyB3ZWxsIGFzDQogICAg
+c3BlZWRzIHVwIGRlY29tcHJlc3Npb24gYSBsaXR0bGUgYml0Lg0KDQpCZXN0LA0KTmljayBUZXJy
+ZWxsDQoNClswXSBodHRwczovL2dpc3QuZ2l0aHViLmNvbS90ZXJyZWxsbi85YmQ1MzMyMWE2Njlm
+NjI2ODNjNjA4YWY4OTQ0ZmJjMg==
