@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5294C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A32C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95AB120658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A31A20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758107;
-	bh=wBrE6gDlyZuwjMqIa3DxaNdN4BzjNwC4Wqm8ffpoJr4=;
+	s=default; t=1585758111;
+	bh=LmBurxMh/Sd9bf9gYej2U7KzARDh0ExFrqIUqgthp0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pW+dNl7guztD7Wn+NpZa1Zih8T56dMkkRk/KEaSjFo5UTdj+55BpSZoP3QsbspCDt
-	 e10jdQNW2LzspPW8mYIBvCTvXejsw8ha26D+U+hLuobS0v3WdE7rPcubXCKifq8e/R
-	 9xQDY+7CSBURFY0vGCsmr5VNBw4f41zVtKA+AkBU=
+	b=LuV5nIeAziZXIKjilnUgBhqFXne/U6n9UkF/awkmo/eWyYRnWiKBOSddbhLcTHkYV
+	 r2jQcByKFXA7fDZzuCrXkDB8xQui7fvod24ZRS9MhaKM2GB012JJ060ICDbkQbHdW1
+	 sopn2kWXIsOX42v+Md531SKoH2+EeqSZqws/fy7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733307AbgDAQVq (ORCPT
+        id S2387409AbgDAQVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44606 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:21:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732355AbgDAQVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:21:42 -0400
+        id S1733249AbgDAQVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:21:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3ABB20857;
-        Wed,  1 Apr 2020 16:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0E3B20658;
+        Wed,  1 Apr 2020 16:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758101;
-        bh=wBrE6gDlyZuwjMqIa3DxaNdN4BzjNwC4Wqm8ffpoJr4=;
+        s=default; t=1585758073;
+        bh=LmBurxMh/Sd9bf9gYej2U7KzARDh0ExFrqIUqgthp0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khK8hUJRfKcRep1gnE3wMDhqRa0f8pg8i06/eKgRceMVox3vUISSJGX81TSzmSuOU
-         lM03EyKc1NizEWw0YyQx6Uat0cgiQfUdjpLu3O7HsJP29Tb5qYpZ/qcaALviRcI9eJ
-         hYtABCm3ekue3twv1SklZINS2jtrrzCKd1LiX7uE=
+        b=Ho4Lk+nC0r01Gf4TDGFJ/ziwLcH19ww4jmbV0ZPQvtECvgJbpE+AuIb4I3M869GAy
+         NqqWtIE225dkqwFNY5fYoxCVRzR+5E0F4iq0Hb8C6EhI97BSvG371DaJY+X7wFRzvO
+         JR/SmcPIxW7mc3wsPdmp4oEwVz/wpPvpnEdkHLl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: [PATCH 5.4 12/27] bpf: Explicitly memset some bpf info structures declared on the stack
-Date:   Wed,  1 Apr 2020 18:17:40 +0200
-Message-Id: <20200401161425.422896494@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 5.5 28/30] ARM: dts: sun8i: r40: Move AHCI device node based on address order
+Date:   Wed,  1 Apr 2020 18:17:32 +0200
+Message-Id: <20200401161435.714652280@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
-References: <20200401161414.352722470@linuxfoundation.org>
+In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
+References: <20200401161414.345528747@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,82 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit 5c6f25887963f15492b604dd25cb149c501bbabf upstream.
+commit fe3a04824f75786e39ed74e82fb6cb2534c95fe4 upstream.
 
-Trying to initialize a structure with "= {};" will not always clean out
-all padding locations in a structure. So be explicit and call memset to
-initialize everything for a number of bpf information structures that
-are then copied from userspace, sometimes from smaller memory locations
-than the size of the structure.
+When the AHCI device node was added, it was added in the wrong location
+in the device tree file. The device nodes should be sorted by register
+address.
 
-Reported-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200320162258.GA794295@kroah.com
+Move the device node to before EHCI1, where it belongs.
+
+Fixes: 41c64d3318aa ("ARM: dts: sun8i: r40: add sata node")
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/btf.c     |    3 ++-
- kernel/bpf/syscall.c |    6 ++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-r40.dtsi |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -3460,7 +3460,7 @@ int btf_get_info_by_fd(const struct btf
- 		       union bpf_attr __user *uattr)
- {
- 	struct bpf_btf_info __user *uinfo;
--	struct bpf_btf_info info = {};
-+	struct bpf_btf_info info;
- 	u32 info_copy, btf_copy;
- 	void __user *ubtf;
- 	u32 uinfo_len;
-@@ -3469,6 +3469,7 @@ int btf_get_info_by_fd(const struct btf
- 	uinfo_len = attr->info.info_len;
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -275,6 +275,16 @@
+ 			resets = <&ccu RST_BUS_CE>;
+ 		};
  
- 	info_copy = min_t(u32, uinfo_len, sizeof(info));
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_copy))
- 		return -EFAULT;
++		ahci: sata@1c18000 {
++			compatible = "allwinner,sun8i-r40-ahci";
++			reg = <0x01c18000 0x1000>;
++			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
++			resets = <&ccu RST_BUS_SATA>;
++			reset-names = "ahci";
++			status = "disabled";
++		};
++
+ 		ehci1: usb@1c19000 {
+ 			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
+ 			reg = <0x01c19000 0x100>;
+@@ -566,17 +576,6 @@
+ 			#size-cells = <0>;
+ 		};
  
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2325,7 +2325,7 @@ static int bpf_prog_get_info_by_fd(struc
- 				   union bpf_attr __user *uattr)
- {
- 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_prog_info info = {};
-+	struct bpf_prog_info info;
- 	u32 info_len = attr->info.info_len;
- 	struct bpf_prog_stats stats;
- 	char __user *uinsns;
-@@ -2337,6 +2337,7 @@ static int bpf_prog_get_info_by_fd(struc
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
- 
-+	memset(&info, 0, sizeof(info));
- 	if (copy_from_user(&info, uinfo, info_len))
- 		return -EFAULT;
- 
-@@ -2600,7 +2601,7 @@ static int bpf_map_get_info_by_fd(struct
- 				  union bpf_attr __user *uattr)
- {
- 	struct bpf_map_info __user *uinfo = u64_to_user_ptr(attr->info.info);
--	struct bpf_map_info info = {};
-+	struct bpf_map_info info;
- 	u32 info_len = attr->info.info_len;
- 	int err;
- 
-@@ -2609,6 +2610,7 @@ static int bpf_map_get_info_by_fd(struct
- 		return err;
- 	info_len = min_t(u32, sizeof(info), info_len);
- 
-+	memset(&info, 0, sizeof(info));
- 	info.type = map->map_type;
- 	info.id = map->id;
- 	info.key_size = map->key_size;
+-		ahci: sata@1c18000 {
+-			compatible = "allwinner,sun8i-r40-ahci";
+-			reg = <0x01c18000 0x1000>;
+-			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
+-			resets = <&ccu RST_BUS_SATA>;
+-			reset-names = "ahci";
+-			status = "disabled";
+-
+-		};
+-
+ 		gmac: ethernet@1c50000 {
+ 			compatible = "allwinner,sun8i-r40-gmac";
+ 			syscon = <&ccu>;
 
 
