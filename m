@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF11EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEBDC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11B020BED
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6603B20BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758488;
-	bh=xEtiESbTIcESJ4xqcCwq5ZZHvMgmrv9aSMzI+0ZLmPo=;
+	s=default; t=1585758491;
+	bh=8pEuoc9ZRvj48bcsQLL6M7O0tuy0wKITKF9T6rgzzdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=keX85jNfhUBI5Ae0CpKf2L4hpbFchPbyuujZxs+iLI5/pes0b6rKkQg3CF/1dzU27
-	 m1X4v5HWDnGdwrXLdVhTo1gfnC3AlSD6Lmd/FzhB876YJuClbwVxNCZQv3KQ27AfHQ
-	 KWzHNh45OBQZR/WvETdXEf2OJIca6fu5z9jzkckQ=
+	b=ZTZeUHDGfurQmGqXAkJWx+NjUFPQU/zZXhJpVmdpyCkTQljkG2E0g7orFkr6bvn66
+	 h18qKlYjDbess7ncOJuGtCSGnKbydx7Txtj0+YH02ngOW0jYMM6JnolQabDXwd52Zo
+	 vQ0WNnAT3O4gMi+IfRV4QHbFhuS/7f5i+AMl1BHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbgDAQ2H (ORCPT
+        id S2388082AbgDAQ2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:28:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53220 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732965AbgDAQ2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:28:05 -0400
+        id S2387799AbgDAQ2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:28:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BFA920857;
-        Wed,  1 Apr 2020 16:28:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D79FC20BED;
+        Wed,  1 Apr 2020 16:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758483;
-        bh=xEtiESbTIcESJ4xqcCwq5ZZHvMgmrv9aSMzI+0ZLmPo=;
+        s=default; t=1585758486;
+        bh=8pEuoc9ZRvj48bcsQLL6M7O0tuy0wKITKF9T6rgzzdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTk7vT381QIIVWIAV5BYGwWaWHHQVBSikKolHiM7vo+gYadwBK+0ALBpsjMg+FXyG
-         l6RRs5j6nkgII71kpM0rJY3SeJ9r8xf3aZ8CBoP1OgBu11LVAW6M37mnwdpDMBufat
-         86XjLJ5ur0D2iryv9gbBT4gqBFE4KSZcJNcOzVrY=
+        b=M9wV/aJYt+KxOxb3R4GFTNswF2NIpo8HWHJg2omrMIu5HkXbHl2awp/HYe819gk0S
+         kos/Nps4AXReJvmeNDuJa3RFIW3eIbjxCKvvou08uNsZtuams3mjRMwVMZ5G7HB7z0
+         xGWYA0+PziWp+GR1cjqiqMfqlsq6aw9klYzVKC7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.19 103/116] vt: vt_ioctl: fix use-after-free in vt_in_use()
-Date:   Wed,  1 Apr 2020 18:17:59 +0200
-Message-Id: <20200401161555.391066531@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 104/116] platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
+Date:   Wed,  1 Apr 2020 18:18:00 +0200
+Message-Id: <20200401161555.507781485@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -59,138 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Georg Müller <georgmueller@gmx.net>
 
-commit 7cf64b18b0b96e751178b8d0505d8466ff5a448f upstream.
+commit 95b31e35239e5e1689e3d965d692a313c71bd8ab upstream.
 
-vt_in_use() dereferences console_driver->ttys[i] without proper locking.
-This is broken because the tty can be closed and freed concurrently.
+The Lex 2I385SW board has two Intel I211 ethernet controllers. Without
+this patch, only the first port is usable. The second port fails to
+start with the following message:
 
-We could fix this by using 'READ_ONCE(console_driver->ttys[i]) != NULL'
-and skipping the check of tty_struct::count.  But, looking at
-console_driver->ttys[i] isn't really appropriate anyway because even if
-it is NULL the tty can still be in the process of being closed.
+    igb: probe of 0000:02:00.0 failed with error -2
 
-Instead, fix it by making vt_in_use() require console_lock() and check
-whether the vt is allocated and has port refcount > 1.  This works since
-following the patch "vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use
-virtual console" the port refcount is incremented while the vt is open.
-
-Reproducer (very unreliable, but it worked for me after a few minutes):
-
-	#include <fcntl.h>
-	#include <linux/vt.h>
-
-	int main()
-	{
-		int fd, nproc;
-		struct vt_stat state;
-		char ttyname[16];
-
-		fd = open("/dev/tty10", O_RDONLY);
-		for (nproc = 1; nproc < 8; nproc *= 2)
-			fork();
-		for (;;) {
-			sprintf(ttyname, "/dev/tty%d", rand() % 8);
-			close(open(ttyname, O_RDONLY));
-			ioctl(fd, VT_GETSTATE, &state);
-		}
-	}
-
-KASAN report:
-
-	BUG: KASAN: use-after-free in vt_in_use drivers/tty/vt/vt_ioctl.c:48 [inline]
-	BUG: KASAN: use-after-free in vt_ioctl+0x1ad3/0x1d70 drivers/tty/vt/vt_ioctl.c:657
-	Read of size 4 at addr ffff888065722468 by task syz-vt2/132
-
-	CPU: 0 PID: 132 Comm: syz-vt2 Not tainted 5.6.0-rc5-00130-g089b6d3654916 #13
-	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-	Call Trace:
-	 [...]
-	 vt_in_use drivers/tty/vt/vt_ioctl.c:48 [inline]
-	 vt_ioctl+0x1ad3/0x1d70 drivers/tty/vt/vt_ioctl.c:657
-	 tty_ioctl+0x9db/0x11b0 drivers/tty/tty_io.c:2660
-	 [...]
-
-	Allocated by task 136:
-	 [...]
-	 kzalloc include/linux/slab.h:669 [inline]
-	 alloc_tty_struct+0x96/0x8a0 drivers/tty/tty_io.c:2982
-	 tty_init_dev+0x23/0x350 drivers/tty/tty_io.c:1334
-	 tty_open_by_driver drivers/tty/tty_io.c:1987 [inline]
-	 tty_open+0x3ca/0xb30 drivers/tty/tty_io.c:2035
-	 [...]
-
-	Freed by task 41:
-	 [...]
-	 kfree+0xbf/0x200 mm/slab.c:3757
-	 free_tty_struct+0x8d/0xb0 drivers/tty/tty_io.c:177
-	 release_one_tty+0x22d/0x2f0 drivers/tty/tty_io.c:1468
-	 process_one_work+0x7f1/0x14b0 kernel/workqueue.c:2264
-	 worker_thread+0x8b/0xc80 kernel/workqueue.c:2410
-	 [...]
-
-Fixes: 4001d7b7fc27 ("vt: push down the tty lock so we can see what is left to tackle")
-Cc: <stable@vger.kernel.org> # v3.4+
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20200322034305.210082-3-ebiggers@kernel.org
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Tested-by: Georg Müller <georgmueller@gmx.net>
+Signed-off-by: Georg Müller <georgmueller@gmx.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt_ioctl.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/platform/x86/pmc_atom.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -43,9 +43,15 @@ bool vt_dont_switch;
- 
- static inline bool vt_in_use(unsigned int i)
- {
--	extern struct tty_driver *console_driver;
-+	const struct vc_data *vc = vc_cons[i].d;
- 
--	return console_driver->ttys[i] && console_driver->ttys[i]->count;
-+	/*
-+	 * console_lock must be held to prevent the vc from being deallocated
-+	 * while we're checking whether it's in-use.
-+	 */
-+	WARN_CONSOLE_UNLOCKED();
-+
-+	return vc && kref_read(&vc->port.kref) > 1;
- }
- 
- static inline bool vt_busy(int i)
-@@ -643,15 +649,16 @@ int vt_ioctl(struct tty_struct *tty,
- 		struct vt_stat __user *vtstat = up;
- 		unsigned short state, mask;
- 
--		/* Review: FIXME: Console lock ? */
- 		if (put_user(fg_console + 1, &vtstat->v_active))
- 			ret = -EFAULT;
- 		else {
- 			state = 1;	/* /dev/tty0 is always open */
-+			console_lock(); /* required by vt_in_use() */
- 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
- 							++i, mask <<= 1)
- 				if (vt_in_use(i))
- 					state |= mask;
-+			console_unlock();
- 			ret = put_user(state, &vtstat->v_state);
- 		}
- 		break;
-@@ -661,10 +668,11 @@ int vt_ioctl(struct tty_struct *tty,
- 	 * Returns the first available (non-opened) console.
- 	 */
- 	case VT_OPENQRY:
--		/* FIXME: locking ? - but then this is a stupid API */
-+		console_lock(); /* required by vt_in_use() */
- 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
- 			if (!vt_in_use(i))
- 				break;
-+		console_unlock();
- 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
- 		goto setint;		 
- 
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -415,6 +415,14 @@ static const struct dmi_system_id critcl
+ 	},
+ 	{
+ 		/* pmc_plt_clk* - are used for ethernet controllers */
++		.ident = "Lex 2I385SW",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "2I385SW"),
++		},
++	},
++	{
++		/* pmc_plt_clk* - are used for ethernet controllers */
+ 		.ident = "Beckhoff CB3163",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
 
 
