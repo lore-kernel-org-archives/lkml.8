@@ -2,97 +2,174 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E61CC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD39AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFA62063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zofr2vJF"
+	by mail.kernel.org (Postfix) with ESMTP id 7F8642063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585759948;
+	bh=A4yrwFSk3OBSP1jAMmIDEeb5DY80CtP/K/m1QWY7pdU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aVPJnXuio6OO0TcKkAsDT815w+l3mXW8Coef+reVyqkgrlEnYRkeJuvFj9SZh2dGv
+	 vjbFxCTRMmUQqmDiik1VyrjbibK/0g/FTSDgKZl642ay2LKmeUtmhtvCvrhyueYCcj
+	 DOttS8luUXyvcf5rJoo9OJs8G2rnmNbFp48O5RfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387697AbgDAQwV (ORCPT
+        id S2389115AbgDAQw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:52:21 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43130 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388734AbgDAQwT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:52:19 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n20so234355lfl.10;
-        Wed, 01 Apr 2020 09:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=553GZqyaFPyqL10GOEToovkxhGg1gD8CyFbmDXNpEsw=;
-        b=Zofr2vJFHVCyXWGqu/mMhPG1Xd4CKbNXMtKR8h9hTLZwvQJa88jCBrXU/AcrpoFH5P
-         mYQ/Tlw6KbYvgQSn0qPZAs8VzO2Yt1Zfy+DOR8VCbreI2ylCrtnZGMHo44zaqd7/HYRK
-         sZbb36XpH8kM0/VCRZ3VtA8dn/SNn0GR3oe67wdRFvI0gsI7zhf/uO1usD/eOSQhO7T5
-         KYyosbohxMLYPXQIH2NML5udu4H72k9HOFvW4SORCN7Kk67l28U0U7ZUcJWA4IEn143f
-         fCVYc1fGQMezi07Vr38H3/hv9bpRjXp/9DLeE68o+nXKbDrR3bLT8undI7AlOIHxhqDf
-         BQUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=553GZqyaFPyqL10GOEToovkxhGg1gD8CyFbmDXNpEsw=;
-        b=gNfhVhk9eqOjVZiw18JPvdPabFTb8f6KYY1oNXDSiNjWb1jprP1FckJlMah6XoKXaL
-         egUVbl+gwy2CYkjjZVI5E2wNTL76Bk2k+OYLBvkzvPmNSigfX+j6PYKKHOGHNl316nT0
-         mTOq6lsgaAXxxkSHRinmA0Lhsf/X0XaJgZQxKKR91IDt+lEOnTboOaiwlJyrlKlTBjSH
-         /b7CHqIe0wbxlWnjvaz/E8vjjjldGVzn3fCKjOqgpR06NePpBXh2yEtkNUZdSWMw56nV
-         kZAWNlHiiGw0Ag8lWLcV+ry2lbAA9vGB34jhyjUmUnU65Zu+CMBG7tQ9rb57tfLOGAQ6
-         CWRw==
-X-Gm-Message-State: AGi0PuY3zQqql9fuyEVV/yWM7s7dQKtSFsPt85eIBU5TfBJ7Lc+el8K2
-        0EWK8MJdPEIJhszwqFvSLiwj6XEcmRQQoOVL0Hs=
-X-Google-Smtp-Source: APiQypKpqgYCAmngBbsQvHWSwrN84DODr5lhSm+9neIuBkZf9n631TEe2XQ2wNvQU/b7bVMLuE269O5DFA3DZd1QusM=
-X-Received: by 2002:a19:ec15:: with SMTP id b21mr15311077lfa.28.1585759936420;
- Wed, 01 Apr 2020 09:52:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191122000926.19408-1-jdk@ti.com> <20191204193421.GA15784@bogus>
-In-Reply-To: <20191204193421.GA15784@bogus>
-From:   Drew Fustini <pdp7pdp7@gmail.com>
-Date:   Wed, 1 Apr 2020 18:52:44 +0200
-Message-ID: <CAEf4M_B31u_0_oLD-1xAJ3YTfJPZYYJnganiHs9=4KqfbGFSPg@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: Add vendor prefix for BeagleBoard.org
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jason Kridner <jkridner@gmail.com>, devicetree@vger.kernel.org,
-        Robert Nelson <robertcnelson@gmail.com>,
+        Wed, 1 Apr 2020 12:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388817AbgDAQgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E238620857;
+        Wed,  1 Apr 2020 16:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585758970;
+        bh=A4yrwFSk3OBSP1jAMmIDEeb5DY80CtP/K/m1QWY7pdU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NdbxcC7wHlMGJg/Xj9jaMTbXBzObd36Oxm98dzkbhPfHV5r/1nwcWwdaJI1vikWyR
+         VwwELRltPuYRZYDC+ZQers1/i+XgDuzaPFL1k+IC5FqneaH4Usa2qePoKhxN8MTjNi
+         bhvfsVE4quowkk5KmS7G0LxgGYjwVjqBNi1FJCLE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org,
-        Caleb Robey <c-robey@ti.com>, Jason Kridner <jdk@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.9 034/102] arm64: smp: fix smp_send_stop() behaviour
+Date:   Wed,  1 Apr 2020 18:17:37 +0200
+Message-Id: <20200401161539.215884848@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
+References: <20200401161530.451355388@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 4, 2019 at 8:39 PM Rob Herring <robh@kernel.org> wrote:
-> On Thu, Nov 21, 2019 at 07:09:26PM -0500, Jason Kridner wrote:
-> > Add vendor prefix for BeagleBoard.org Foundation
-> >
-> > Signed-off-by: Jason Kridner <jdk@ti.com>
-> > ---
-> > Changes in v2:
-> >   - Use 'beagle' rather than 'beagleboard.org' to be shorter and avoid
-> >     needing to quote within a yaml regular expression.
-> >   - Assign 'from' to author e-mail address.
->
-> Still not right...
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-Hi Rob, is the issue that it needs to be sent from "Jason Kridner
-<jdk@ti.com>" if the SoB is " Jason Kridner <jdk@ti.com>"?
+commit d0bab0c39e32d39a8c5cddca72e5b4a3059fe050 upstream.
 
-Thanks,
-Drew
+On a system with only one CPU online, when another one CPU panics while
+starting-up, smp_send_stop() will fail to send any STOP message to the
+other already online core, resulting in a system still responsive and
+alive at the end of the panic procedure.
+
+[  186.700083] CPU3: shutdown
+[  187.075462] CPU2: shutdown
+[  187.162869] CPU1: shutdown
+[  188.689998] ------------[ cut here ]------------
+[  188.691645] kernel BUG at arch/arm64/kernel/cpufeature.c:886!
+[  188.692079] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[  188.692444] Modules linked in:
+[  188.693031] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-rc4-00001-g338d25c35a98 #104
+[  188.693175] Hardware name: Foundation-v8A (DT)
+[  188.693492] pstate: 200001c5 (nzCv dAIF -PAN -UAO)
+[  188.694183] pc : has_cpuid_feature+0xf0/0x348
+[  188.694311] lr : verify_local_elf_hwcaps+0x84/0xe8
+[  188.694410] sp : ffff800011b1bf60
+[  188.694536] x29: ffff800011b1bf60 x28: 0000000000000000
+[  188.694707] x27: 0000000000000000 x26: 0000000000000000
+[  188.694801] x25: 0000000000000000 x24: ffff80001189a25c
+[  188.694905] x23: 0000000000000000 x22: 0000000000000000
+[  188.694996] x21: ffff8000114aa018 x20: ffff800011156a38
+[  188.695089] x19: ffff800010c944a0 x18: 0000000000000004
+[  188.695187] x17: 0000000000000000 x16: 0000000000000000
+[  188.695280] x15: 0000249dbde5431e x14: 0262cbe497efa1fa
+[  188.695371] x13: 0000000000000002 x12: 0000000000002592
+[  188.695472] x11: 0000000000000080 x10: 00400032b5503510
+[  188.695572] x9 : 0000000000000000 x8 : ffff800010c80204
+[  188.695659] x7 : 00000000410fd0f0 x6 : 0000000000000001
+[  188.695750] x5 : 00000000410fd0f0 x4 : 0000000000000000
+[  188.695836] x3 : 0000000000000000 x2 : ffff8000100939d8
+[  188.695919] x1 : 0000000000180420 x0 : 0000000000180480
+[  188.696253] Call trace:
+[  188.696410]  has_cpuid_feature+0xf0/0x348
+[  188.696504]  verify_local_elf_hwcaps+0x84/0xe8
+[  188.696591]  check_local_cpu_capabilities+0x44/0x128
+[  188.696666]  secondary_start_kernel+0xf4/0x188
+[  188.697150] Code: 52805001 72a00301 6b01001f 54000ec0 (d4210000)
+[  188.698639] ---[ end trace 3f12ca47652f7b72 ]---
+[  188.699160] Kernel panic - not syncing: Attempted to kill the idle task!
+[  188.699546] Kernel Offset: disabled
+[  188.699828] CPU features: 0x00004,20c02008
+[  188.700012] Memory Limit: none
+[  188.700538] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+[root@arch ~]# echo Helo
+Helo
+[root@arch ~]# cat /proc/cpuinfo | grep proce
+processor	: 0
+
+Make smp_send_stop() account also for the online status of the calling CPU
+while evaluating how many CPUs are effectively online: this way, the right
+number of STOPs is sent, so enforcing a proper freeze of the system at the
+end of panic even under the above conditions.
+
+Fixes: 08e875c16a16c ("arm64: SMP support")
+Reported-by: Dave Martin <Dave.Martin@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arm64/kernel/smp.c |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -901,11 +901,22 @@ void tick_broadcast(const struct cpumask
+ }
+ #endif
+ 
++/*
++ * The number of CPUs online, not counting this CPU (which may not be
++ * fully online and so not counted in num_online_cpus()).
++ */
++static inline unsigned int num_other_online_cpus(void)
++{
++	unsigned int this_cpu_online = cpu_online(smp_processor_id());
++
++	return num_online_cpus() - this_cpu_online;
++}
++
+ void smp_send_stop(void)
+ {
+ 	unsigned long timeout;
+ 
+-	if (num_online_cpus() > 1) {
++	if (num_other_online_cpus()) {
+ 		cpumask_t mask;
+ 
+ 		cpumask_copy(&mask, cpu_online_mask);
+@@ -919,10 +930,10 @@ void smp_send_stop(void)
+ 
+ 	/* Wait up to one second for other CPUs to stop */
+ 	timeout = USEC_PER_SEC;
+-	while (num_online_cpus() > 1 && timeout--)
++	while (num_other_online_cpus() && timeout--)
+ 		udelay(1);
+ 
+-	if (num_online_cpus() > 1)
++	if (num_other_online_cpus())
+ 		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
+ 			   cpumask_pr_args(cpu_online_mask));
+ }
+
+
