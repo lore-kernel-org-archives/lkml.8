@@ -6,58 +6,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AC1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05CF20675
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F81520675
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732627AbgDAMxV (ORCPT
+        id S1732634AbgDAMxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:53:21 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38087 "EHLO ozlabs.org"
+        Wed, 1 Apr 2020 08:53:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56473 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732579AbgDAMxO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:53:14 -0400
+        id S1732579AbgDAMxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:53:22 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48smMW2J9cz9sTB; Wed,  1 Apr 2020 23:53:11 +1100 (AEDT)
+        id 48smMh3Lm4z9sTP; Wed,  1 Apr 2020 23:53:18 +1100 (AEDT)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 32377bd2cbb62e23ac0a1aaaf0048957c5fd9f02
-In-Reply-To: <1574776274-22355-1-git-send-email-ego@linux.vnet.ibm.com>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Shilpasri G Bhat <shilpa.bhat11@gmail.com>
+X-powerpc-patch-commit: da9a1c10e2c7311e923210b6ccd9fbd1ac9132df
+In-Reply-To: <9ebcbe37834e9d447dd97f4381084795a673260c.1582848567.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, mikey@neuling.org
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-Subject: Re: [PATCH] powernv/opal-sensor-groups: Add documentation for the sysfs interfaces
-Message-Id: <48smMW2J9cz9sTB@ozlabs.org>
-Date:   Wed,  1 Apr 2020 23:53:10 +1100 (AEDT)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/13] powerpc: move ptrace into a subdirectory.
+Message-Id: <48smMh3Lm4z9sTP@ozlabs.org>
+Date:   Wed,  1 Apr 2020 23:53:18 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-26 at 13:51:14 UTC, "Gautham R. Shenoy" wrote:
-> From: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
+On Fri, 2020-02-28 at 00:14:37 UTC, Christophe Leroy wrote:
+> In order to allow splitting of ptrace depending on the
+> different CONFIG_ options, create a subdirectory dedicated to
+> ptrace and move ptrace.c and ptrace32.c into it.
 > 
-> Commit bf9571550f52 ("powerpc/powernv: Add support to clear sensor
-> groups data") added a mechanism to clear sensor-group data via a sysfs
-> interface. However, the ABI for that interface has not been
-> documented.
-> 
-> This patch documents the ABI for the sysfs interface for sensor-groups
-> and clearing the sensor-groups.
-> 
-> This patch was originally sent by Shilpasri G Bhat on the mailing list:
-> https://lkml.org/lkml/2018/8/1/85
-> 
-> Signed-off-by: Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Applied to powerpc next, thanks.
+Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/32377bd2cbb62e23ac0a1aaaf0048957c5fd9f02
+https://git.kernel.org/powerpc/c/da9a1c10e2c7311e923210b6ccd9fbd1ac9132df
 
 cheers
