@@ -2,123 +2,127 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0DEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC27BC2BA12
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D2021655
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758554;
-	bh=o8CUVi0fdWWfvSg6PIN70YV9m5JLDzeptZWGTdWagWU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3dLoFIRAVcKVZssmGl3tP9a5xZQi9d1eXfGx6GH1puIIe2fSyjN7i5W/bn2NCcdX
-	 sxPvSbCQkI+gDJ5ArPSqaDKvPxcZPjGKiepta/+FoxRcMcljYC0SAK+LMatuDD8kMo
-	 HeqABkb/eAwY+a9TVFnN5En4pYFXP7GuMFdb2owE=
+	by mail.kernel.org (Postfix) with ESMTP id 9BC652063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387943AbgDAQ3M (ORCPT
+        id S2387899AbgDAQ3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388005AbgDAQ3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:29:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6766B21655;
-        Wed,  1 Apr 2020 16:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758548;
-        bh=o8CUVi0fdWWfvSg6PIN70YV9m5JLDzeptZWGTdWagWU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TYPSg5VyijlUThJ7eGTY562ApYKMxPCKAEfVBQmxvBTTDRAKQA9QuhS+cHl2SsRU
-         oVxWfQgLNOXiSJXN3ABfLyWZyJUFkN96RGB6icFfZZJbr+5Kk56k2DYhH/cYPjPu3W
-         P+9sJij6S5PNI2w0W2uiZlk3JcOUCN7ogQCb66ww=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 086/116] media: usbtv: fix control-message timeouts
-Date:   Wed,  1 Apr 2020 18:17:42 +0200
-Message-Id: <20200401161553.455218600@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
-References: <20200401161542.669484650@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 1 Apr 2020 12:29:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:58319 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388148AbgDAQ3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:29:11 -0400
+Received: from envy ([82.207.223.251]) by mrelayeu.kundenserver.de (mreue106
+ [212.227.15.183]) with ESMTPSA (Nemesis) id 1N5W0q-1jHt2y0YtW-016w4x; Wed, 01
+ Apr 2020 18:28:54 +0200
+Message-ID: <9aea760f9abdd2f90f36642af77de7bfae719485.camel@richard-neumann.de>
+Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
+ fusion Hub using HID framework
+From:   Richard Neumann <mail@richard-neumann.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>
+Cc:     Sandeep Singh <Sandeep.Singh@amd.com>, Shyam-sundar.S-k@amd.com,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Date:   Wed, 01 Apr 2020 18:28:51 +0200
+In-Reply-To: <CAHp75Vfr6q_H6z6tRFfaKedF7oR7nhmZvRWL4mxx3W7uypUFvA@mail.gmail.com>
+References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com>
+         <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
+         <4fe47b0323c1d65d429ee89b000e8bfcd984495f.camel@richard-neumann.de>
+         <896f84bc-f0d6-59a5-c894-809695aa348f@amd.com>
+         <CAHp75Vfr6q_H6z6tRFfaKedF7oR7nhmZvRWL4mxx3W7uypUFvA@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-JMpIYctbEoNFnW+rx2oI"
+User-Agent: Evolution 3.36.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:/Iuh6Wc2OWUWANhg+i5sa8DX8+N5Q471sfzV1dJZGtvhNgn30bW
+ WFNUEw83jU+/rRD8GACG8t2TGf2kw4Z5QQLxVaB3MvjdmW+0A8XTSl1hI2iTfdflWXmcfYH
+ 1IwhXyqvBX/2rCAP5zojzlREeoMLx4pLRZg6+TbOXwHSofssNiK+0ubQ27EHfVP+wpjgfDE
+ 9haVSMVl1addbBrysAL7w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BEgHpqVQWuA=:eab8Bjm6U04XClhfM96ei2
+ 6eVrEtmoO/i+1Z0ybln3l54Ic5d8P0vyqSGtUqDdZB+rHtFjXTtH07Hz5ZKah2Up5iX5Lo9zx
+ dWBBBxAq3tM2LhPhpwLvl25KM/fiw79mo64WUjY4SLGdy+D2FX7b5mTtRPuBCY+u06nIbBtkd
+ ZdUuVhPde03VpLsKqprLsyBP96JXvcWslukQVjTzJP9/AIaw6Mqqm5rZa/YSxck8aAYoqh5PG
+ 4f+cMMdZU89i2DRM3SAKN5MwZw2WPrRXBKHgiAZByC5834bmS2/WwbmaNjnAUKmfBvYW4VTn8
+ FixF/Of2X2CK3RXKiOx/SitiO5F76BadLahtiLOR7bM++gUyHdkbsm7sKqS2DFh4fUSdBQMNd
+ mZLHzHT9hdqNhIp224x/VeQzByHZwaPegkzUv7xWeU2QNIFAscRqcV1AooEKAAHTEBcBOyNay
+ OniuUrU51qLrVzVRZif/oO4dBoYVaHezOcZo6j8boCuTeCrpoRxqkM01iSNREWvyAc5mX06Sl
+ /kfXvsksupRk669Q08Oi/lMJwXgNaFFWryEs2nNtE/X2/FKmoPXaWhNHy8JGbntNkRovKqt6h
+ kb1ccpgMV5Il06Drok+Vcz0rNjsEMvzl6zMF+8QymF30Voc1Fo1JM7CYP4tPykr5JFhRv4Kr8
+ k9jTU2x8QxkEGuvAs+uSHJeH/Sc4d8uoLnrVw6ZKwzCMZ1qk4tK60ly4fkYe58OLQdBQvO3LX
+ eJyBw2xDeHlfCsiD1ZFPe+SSXskptFLDQ0lgJbwoE52Xkmy+ntyZWo39lQnBJlPLrPqzARLd2
+ sMeTVIZRzPwwOnT4o4/r/iRAAGDDqLL5Tw5Ts01zYC7APWmfooBVR0QejZXowu75yG0HU/d
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
 
-commit 536f561d871c5781bc33d26d415685211b94032e upstream.
+--=-JMpIYctbEoNFnW+rx2oI
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The driver was issuing synchronous uninterruptible control requests
-without using a timeout. This could lead to the driver hanging on
-various user requests due to a malfunctioning (or malicious) device
-until the device is physically disconnected.
+Am Dienstag, den 31.03.2020, 20:24 +0300 schrieb Andy Shevchenko:
+> On Tue, Mar 31, 2020 at 4:26 PM Shah, Nehal-bakulchandra
+> <nehal-bakulchandra.shah@amd.com> wrote:
+> > On 3/31/2020 6:01 PM, Richard Neumann wrote:
+> > > Not a real review, but your patch series seems to be repeating a
+> > > lot
+> > > from drivers/i2c/busses/i2c-amd-mp2*.
+> > > Is there any chance we could re-use the code?
+> > > E.g. the AMD_C2P_* definitions from drivers/i2c/busses/i2c-amd-
+> > > mp2.h?
+> >=20
+> > Thanks for the mail. Yes there are some common structures, however
+> > as of now we have kept separately considering both
+> >=20
+> > are part of different sub systems. But may be will consider this
+> > input for future enhancement.
+>=20
+> It can be done in a form of shared definitions at least in
+> include/linux/platform_data/x86/amd-mp2.h or alike ...
+>=20
 
-The USB upper limit of five seconds per request should be more than
-enough.
+I managed to add support for the AMD SFH PCI device to i2c-amd-mp2* and
+outsourced the headers to include/linux/i2c-amd-mp2.h. [1]
+I also refactored the patch series (excluded the documentation) [2] to
+use the PCI device now provided by i2c_amd_mp2_pci and removed some
+duplicate and unncessary code.
+The driver now consist of just one module (amd_sfhtp_hid).
+Unfortunately I was not able to solve the problem, that I get AMD-Vi
+IO_PAGE_FAULT errors when not booted with amd_iommu=3Doff.
 
-Fixes: f3d27f34fdd7 ("[media] usbtv: Add driver for Fushicai USBTV007 video frame grabber")
-Fixes: c53a846c48f2 ("[media] usbtv: add video controls")
-Cc: stable <stable@vger.kernel.org>     # 3.11
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[1] https://gist.githubusercontent.com/conqp/4d726f86da8a8397d6e70091a124de=
+67/raw/f97e88a0b44d98bfa1258cb73c8afe4dce7afa87/i2c-amd-mp2.patch
+[2] https://gist.githubusercontent.com/conqp/67036e690aca89d08b958971edac28=
+3d/raw/2a1ef122f9c8c8e07164b6d597962ce7bbad6d45/amd-sfhtp.patch
 
----
- drivers/media/usb/usbtv/usbtv-core.c  |    2 +-
- drivers/media/usb/usbtv/usbtv-video.c |    5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+--=-JMpIYctbEoNFnW+rx2oI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
---- a/drivers/media/usb/usbtv/usbtv-core.c
-+++ b/drivers/media/usb/usbtv/usbtv-core.c
-@@ -56,7 +56,7 @@ int usbtv_set_regs(struct usbtv *usbtv,
- 
- 		ret = usb_control_msg(usbtv->udev, pipe, USBTV_REQUEST_REG,
- 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
--			value, index, NULL, 0, 0);
-+			value, index, NULL, 0, USB_CTRL_GET_TIMEOUT);
- 		if (ret < 0)
- 			return ret;
- 	}
---- a/drivers/media/usb/usbtv/usbtv-video.c
-+++ b/drivers/media/usb/usbtv/usbtv-video.c
-@@ -805,7 +805,8 @@ static int usbtv_s_ctrl(struct v4l2_ctrl
- 		ret = usb_control_msg(usbtv->udev,
- 			usb_rcvctrlpipe(usbtv->udev, 0), USBTV_CONTROL_REG,
- 			USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
--			0, USBTV_BASE + 0x0244, (void *)data, 3, 0);
-+			0, USBTV_BASE + 0x0244, (void *)data, 3,
-+			USB_CTRL_GET_TIMEOUT);
- 		if (ret < 0)
- 			goto error;
- 	}
-@@ -856,7 +857,7 @@ static int usbtv_s_ctrl(struct v4l2_ctrl
- 	ret = usb_control_msg(usbtv->udev, usb_sndctrlpipe(usbtv->udev, 0),
- 			USBTV_CONTROL_REG,
- 			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
--			0, index, (void *)data, size, 0);
-+			0, index, (void *)data, size, USB_CTRL_SET_TIMEOUT);
- 
- error:
- 	if (ret < 0)
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQT62wKwhMqSt8WaustMqNUjvThq9wUCXoTBQwAKCRBMqNUjvThq
+95P6AQD2f9/1gcoiIcDpJ/lT+fG8FH3cCnQqUJ7jGkVhNmZuiQD/aPm0aB1ZPd0L
+NzfP2Euf/mdDdd0WMbbsFkX4VhKSxw8=
+=0blY
+-----END PGP SIGNATURE-----
+
+--=-JMpIYctbEoNFnW+rx2oI--
 
