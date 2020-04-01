@@ -2,114 +2,107 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DB8C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A51AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC3E2078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CB22080C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w++wGeiN"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="kFTdCWCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731356AbgDAIUJ (ORCPT
+        id S1731745AbgDAIUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:20:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40971 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgDAIUI (ORCPT
+        Wed, 1 Apr 2020 04:20:19 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34574 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728236AbgDAIUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:20:08 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a24so4918026pfc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:20:07 -0700 (PDT)
+        Wed, 1 Apr 2020 04:20:19 -0400
+Received: by mail-ua1-f67.google.com with SMTP id d23so8495399uak.1
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:20:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QFO0vf8e8DojHzC7YKKnWcjJKYcUUi6BB0Xvkcc0pJc=;
-        b=w++wGeiNVTv/fz8h/D2fQ8RKq8fKC+9Jz+vX6b4AcyL8KRKHNVMEpwShLa5F1frzO1
-         Bda6A2H/HYR2+N2im+kK3SXARA+hI2/nYP3Rg/qjrlotrlctZaoI88a0rMgsB0NjJO2X
-         xRPmXljSIddgZxEaMvWQmrr/1XcL7P3b4dxEQouwsyj+M4J5AtQktI0mOLrBVSgsvfJp
-         4zgqOV4AYLL92YnuNemUsgQAuIkOdFf09marZjFENI3vt2o9eDR8YOTFrdBx/YG5oh2h
-         k91JvSYSOsM/5h40ZdcVC9RkMvm1/UgZzHQhrj89blEtyUzq19O6zUkoJ4Y0Z8uKd9o0
-         0BhA==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jfx+WzxfTIw9109h9/F+uN5ZdtC4CUJc38PHSbeeBtM=;
+        b=kFTdCWCnXWL/FxLIRizE+7P10KR+ftxEYZsICf8C8mqGdKrRQEscI/64vPCXWOyuC9
+         hv1fmKVvX9YZAvVuJ3eM8o3RuurUlQ5aquTKQh0S2A6ICZHE7hjgbois3NK3d53co6sq
+         7nciOYPmbIhWZIv6ATsF1xoYIr0T6KhPhl0VmA4WURRS/qkDk74rO3sf8FvomTCCOcuq
+         POSpjXZ0TQg9bAZVoaz+Xz/k2lCOWOBMBhWHOpRAtpnYuFgPGAxqJ5UKABKMW18QIPIW
+         wHo700tX4cbbOuvDpdRuVG2o3DeYGmjQ6XbVJpMNSdPca0p5LK3UF4iWM61Mu8qz8srV
+         8UQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QFO0vf8e8DojHzC7YKKnWcjJKYcUUi6BB0Xvkcc0pJc=;
-        b=JxtWIcKQRu+l6hY56xqUi60ofw/SMQ0CWN75hIXji8lvUVZnwTxamb2DyYvBmFvWyk
-         1NIKDwrvzi+2g+utS9e+zJ+52K0e1GuERFgDp5WBisvOW1QKWxiarxHmNuFRLkoF53Hb
-         aBQKBoo965YGBljC/mHrs8NCZNKpJgZIHUjpsQ4U91vGcufRzzcF8GO72PbZCnoM1AlL
-         qft1FysGqgHgVSRVvTAz8Oa6VTnjoNb7gxzgdL7/yq/QJQWXGPpxU8qeQSIDkDPwcD2t
-         oC7MYA2NpQ/VV70vSi7eaLeMoDRIwk9jEH6EeYglRg8P2+HS6/wX5OQKYBcAeY6n4mFV
-         j9wg==
-X-Gm-Message-State: ANhLgQ3J3Y7blnQijdY9xCP7L/BIWxJIOUhA35gpVv0lpNwepXkiLIuT
-        KsN0RHkkpsU+0m39VxAe2Dev
-X-Google-Smtp-Source: ADFU+vvjnoX9qATo8Ax3smn2g6ng6pV6THrQwh3JlG3wMQgvz0eNY8mwOCDQ51gAvmtCVFlkWsI+zQ==
-X-Received: by 2002:aa7:962d:: with SMTP id r13mr23217262pfg.244.1585729206901;
-        Wed, 01 Apr 2020 01:20:06 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:648c:592d:1580:e843:709d:f3b5])
-        by smtp.gmail.com with ESMTPSA id j21sm908394pgn.30.2020.04.01.01.20.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 Apr 2020 01:20:06 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 13:50:00 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
-        smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, clew@codeaurora.org
-Subject: Re: [PATCH 2/3] net: qrtr: Add MHI transport layer
-Message-ID: <20200401082000.GA15627@Mani-XPS-13-9360>
-References: <20200401064435.12676-1-manivannan.sadhasivam@linaro.org>
- <20200401064435.12676-3-manivannan.sadhasivam@linaro.org>
- <20200401071023.GD663905@yoga>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jfx+WzxfTIw9109h9/F+uN5ZdtC4CUJc38PHSbeeBtM=;
+        b=tBLDEOfnH/9zXhz78tfGcmZ6Zuk5Q4WOAdJgSLcDDubQhZcOxJRZ3UOYBQyKm6/NyP
+         YG3sJXEZVfIEXtJZLM1LXMxs0WmNjY6HkioOoLKfZCq75btctxp8KxJS7XIrrFYGNuoh
+         /6Y+8wV3F1qRLggMBCW/qPecMnr1UfBSlSTDtfZhglnyv8xOWA7ICdZRBQNxDBIvj2Bz
+         E7FRCXAWdxd7Z2iYhT0rBKayGZfYBc1Bv5NRtca3Uf0KHSTql+uPYTToWwhifKpFesMp
+         sEgdkUaiq3IIxtBst6qh4vaoOVVoarDrAA6amuoIc1zFQQ7yNNRUY2xwDu9HvTpWsqhR
+         nLdw==
+X-Gm-Message-State: AGi0Pubgy46Grq6veR+VtiEs4iMB2pyPgsh1u3M3FXza8gbDDtLeWZGM
+        ThSGkwDVSuHAGemSSp1nCIbuRYLGchsXkUwN3iBkUzltN/7HVw==
+X-Google-Smtp-Source: APiQypJ0UixfKiD4USaplcV9xofH2gdUQll0ySr4YPXyUtqi0iouiSejQj3sS2nAegAhi7IEFT63GHFPOW6QMhDyJRw=
+X-Received: by 2002:ab0:608b:: with SMTP id i11mr14498961ual.94.1585729217782;
+ Wed, 01 Apr 2020 01:20:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401071023.GD663905@yoga>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200331165449.30355-1-daniel.lezcano@linaro.org> <20200331165449.30355-2-daniel.lezcano@linaro.org>
+In-Reply-To: <20200331165449.30355-2-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 1 Apr 2020 13:50:06 +0530
+Message-ID: <CAHLCerOqyy+2H0hsrFZGD87aYpr6-fjimhKXasn=JCTK8An+qg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] thermal: core: Remove pointless debug traces
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 12:10:23AM -0700, Bjorn Andersson wrote:
-> On Tue 31 Mar 23:44 PDT 2020, Manivannan Sadhasivam wrote:
-> > diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
-> [..]
-> > +static void qcom_mhi_qrtr_ul_callback(struct mhi_device *mhi_dev,
-> > +				      struct mhi_result *mhi_res)
-> > +{
-> > +	struct sk_buff *skb = (struct sk_buff *)mhi_res->buf_addr;
-> > +
-> > +	consume_skb(skb);
-> > +	if (skb->sk)
-> > +		sock_put(skb->sk);
-> 
-> Don't you need to do this in opposite order, to avoid a use after free?
-> 
+On Tue, Mar 31, 2020 at 10:27 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> The last temperature and the current temperature are show via a
+> dev_debug. The line before, those temperature are also traced.
+>
+> It is pointless to duplicate the traces for the temperatures,
+> remove the dev_dbg traces.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-I thought about it but the socket refcounting postulates in net/sock.h states:
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-"sk_free is called from any context: process, BH, IRQ. When it is called,
-socket has no references from outside -> sk_free may release descendant
-resources allocated by the socket, but to the time when it is called, socket
-is NOT referenced by any hash tables, lists etc."
-
-Here the sock it still referenced by skb, so I don't exactly know if we can
-release the socket using sock_put() before consume_skb(). But on the other hand,
-once skb is freed then accessing its member is clearly a use after free issue.
-
-Maybe someone can clarify this?
-
-Thanks,
-Mani
-
-> Regards,
-> Bjorn
+> ---
+>  drivers/thermal/thermal_core.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 9a321dc548c8..c06550930979 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -447,12 +447,6 @@ static void update_temperature(struct thermal_zone_device *tz)
+>         mutex_unlock(&tz->lock);
+>
+>         trace_thermal_temperature(tz);
+> -       if (tz->last_temperature == THERMAL_TEMP_INVALID)
+> -               dev_dbg(&tz->device, "last_temperature N/A, current_temperature=%d\n",
+> -                       tz->temperature);
+> -       else
+> -               dev_dbg(&tz->device, "last_temperature=%d, current_temperature=%d\n",
+> -                       tz->last_temperature, tz->temperature);
+>  }
+>
+>  static void thermal_zone_device_init(struct thermal_zone_device *tz)
+> --
+> 2.17.1
+>
