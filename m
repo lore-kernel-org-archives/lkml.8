@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93D8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4901C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB5720857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF5120857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758371;
-	bh=HLkyMYABj1W/nqkEG7+IVskAU2nhYu7XZVp+KIkbBEE=;
+	s=default; t=1585758375;
+	bh=XCxwy+iuvEeXRUIunYRd/AZvIMUpSBS5xe9dF3w4oJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJrGkWKz6L7svtMoSwr9JkMCZOLzuo0kAfdnwaeyKSbXuGW1Pa4Wmggx7MiwcEajD
-	 EpkvcC/a/1O2jCUmd5QJvD9FWBwAxgJm1lQvx3BCIZ2mbn69pgNyAZlo1s54vs8044
-	 l/HZXob57F89M0iJbwbu5j3QzQdfQC/Mdpss1Gxk=
+	b=AfxfR2XLTCMq6jdSKBq7lEczyP9kb9b6C7GKm6YW+gfJLUgw4jluYVYXF2PF3635J
+	 +Nn9gXQGGV/NLIT3R20hR6IEkPTw9xB2GzQ/MvVs0uSQBfORQvVD76F9uJmqZdvSyC
+	 1T8kMkCcnYmpLkS+O54AQZv/cH+gELHz/NCwlLq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387874AbgDAQ0J (ORCPT
+        id S2387883AbgDAQ0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387868AbgDAQ0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:26:04 -0400
+        id S2387869AbgDAQ0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:26:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C45212CC;
-        Wed,  1 Apr 2020 16:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 325EE20857;
+        Wed,  1 Apr 2020 16:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758361;
-        bh=HLkyMYABj1W/nqkEG7+IVskAU2nhYu7XZVp+KIkbBEE=;
+        s=default; t=1585758368;
+        bh=XCxwy+iuvEeXRUIunYRd/AZvIMUpSBS5xe9dF3w4oJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6Mk5FMf3rGDvqj8ovZiQo9A3CnZyvoE88q91N8qFeXmtnAY9bb/PCEhIGtFH5dBF
-         7ZNdqSlmrTGxZ/y8yeqS8kwVzZwuaMpXe1oBX80nbAZs2pRcg3sYRt4YGVX4AiEIk2
-         qeXA1WfkEhzBhrzcDSWuFaZpfjiH244ornpYerVU=
+        b=p222NCM21VJ8xugndEJcPGyI+vKsn2nIMsdogmF4dQA/kGKcfj1PDKS4c8B3c1KD/
+         G7OMJ4BKmQoSydAIq2wMQ1hCXGP0MezT67dXFP6uhhRcv7n80T2qtX1mBRHJjJ6dPB
+         1gsG9aJzUrsulGOIgMvWgBm7Er9lSbzYE277ONfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.19 066/116] vti[6]: fix packet tx through bpf_redirect() in XinY cases
-Date:   Wed,  1 Apr 2020 18:17:22 +0200
-Message-Id: <20200401161551.770608190@linuxfoundation.org>
+        stable@vger.kernel.org, Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 067/116] RDMA/mlx5: Block delay drop to unprivileged users
+Date:   Wed,  1 Apr 2020 18:17:23 +0200
+Message-Id: <20200401161551.826578551@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,124 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Maor Gottlieb <maorg@mellanox.com>
 
-commit f1ed10264ed6b66b9cd5e8461cffce69be482356 upstream.
+commit ba80013fba656b9830ef45cd40a6a1e44707f47a upstream.
 
-I forgot the 4in6/6in4 cases in my previous patch. Let's fix them.
+It has been discovered that this feature can globally block the RX port,
+so it should be allowed for highly privileged users only.
 
-Fixes: 95224166a903 ("vti[6]: fix packet tx through bpf_redirect()")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 03404e8ae652("IB/mlx5: Add support to dropless RQ")
+Link: https://lore.kernel.org/r/20200322124906.1173790-1-leon@kernel.org
+Signed-off-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/Kconfig   |    1 +
- net/ipv4/ip_vti.c  |   36 +++++++++++++++++++++++++++++-------
- net/ipv6/ip6_vti.c |   32 +++++++++++++++++++++++++-------
- 3 files changed, 55 insertions(+), 14 deletions(-)
+ drivers/infiniband/hw/mlx5/qp.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/ipv4/Kconfig
-+++ b/net/ipv4/Kconfig
-@@ -302,6 +302,7 @@ config SYN_COOKIES
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -5524,6 +5524,10 @@ struct ib_wq *mlx5_ib_create_wq(struct i
+ 	if (udata->outlen && udata->outlen < min_resp_len)
+ 		return ERR_PTR(-EINVAL);
  
- config NET_IPVTI
- 	tristate "Virtual (secure) IP: tunneling"
-+	depends on IPV6 || IPV6=n
- 	select INET_TUNNEL
- 	select NET_IP_TUNNEL
- 	depends on INET_XFRM_MODE_TUNNEL
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -208,17 +208,39 @@ static netdev_tx_t vti_xmit(struct sk_bu
- 	int mtu;
- 
- 	if (!dst) {
--		struct rtable *rt;
-+		switch (skb->protocol) {
-+		case htons(ETH_P_IP): {
-+			struct rtable *rt;
- 
--		fl->u.ip4.flowi4_oif = dev->ifindex;
--		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
--		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
--		if (IS_ERR(rt)) {
-+			fl->u.ip4.flowi4_oif = dev->ifindex;
-+			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
-+			if (IS_ERR(rt)) {
-+				dev->stats.tx_carrier_errors++;
-+				goto tx_error_icmp;
-+			}
-+			dst = &rt->dst;
-+			skb_dst_set(skb, dst);
-+			break;
-+		}
-+#if IS_ENABLED(CONFIG_IPV6)
-+		case htons(ETH_P_IPV6):
-+			fl->u.ip6.flowi6_oif = dev->ifindex;
-+			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				dst = NULL;
-+				dev->stats.tx_carrier_errors++;
-+				goto tx_error_icmp;
-+			}
-+			skb_dst_set(skb, dst);
-+			break;
-+#endif
-+		default:
- 			dev->stats.tx_carrier_errors++;
- 			goto tx_error_icmp;
- 		}
--		dst = &rt->dst;
--		skb_dst_set(skb, dst);
- 	}
- 
- 	dst_hold(dst);
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -454,15 +454,33 @@ vti6_xmit(struct sk_buff *skb, struct ne
- 	int mtu;
- 
- 	if (!dst) {
--		fl->u.ip6.flowi6_oif = dev->ifindex;
--		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
--		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
--		if (dst->error) {
--			dst_release(dst);
--			dst = NULL;
-+		switch (skb->protocol) {
-+		case htons(ETH_P_IP): {
-+			struct rtable *rt;
++	if (!capable(CAP_SYS_RAWIO) &&
++	    init_attr->create_flags & IB_WQ_FLAGS_DELAY_DROP)
++		return ERR_PTR(-EPERM);
 +
-+			fl->u.ip4.flowi4_oif = dev->ifindex;
-+			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
-+			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
-+			if (IS_ERR(rt))
-+				goto tx_err_link_failure;
-+			dst = &rt->dst;
-+			skb_dst_set(skb, dst);
-+			break;
-+		}
-+		case htons(ETH_P_IPV6):
-+			fl->u.ip6.flowi6_oif = dev->ifindex;
-+			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
-+			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
-+			if (dst->error) {
-+				dst_release(dst);
-+				dst = NULL;
-+				goto tx_err_link_failure;
-+			}
-+			skb_dst_set(skb, dst);
-+			break;
-+		default:
- 			goto tx_err_link_failure;
- 		}
--		skb_dst_set(skb, dst);
- 	}
- 
- 	dst_hold(dst);
+ 	dev = to_mdev(pd->device);
+ 	switch (init_attr->wq_type) {
+ 	case IB_WQT_RQ:
 
 
