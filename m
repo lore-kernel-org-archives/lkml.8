@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CDFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B1CC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600922063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB13B20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759480;
-	bh=tlBCLzB8KqqSYZkd4B/QOZWltHSyIudbX/rrs3U1giY=;
+	s=default; t=1585759481;
+	bh=PL47H3m46y2ou7/kunfoWvBHfO+TqmJQviVQ9Y3h6/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IAzG9DVWT79h4ifgYGlVb7IsnY/475AUQpgKc6t2/tLhIEj2CwfYo3butdacl3lNL
-	 8Wxb7spIzBvtJPG+htlvM+zWzCrEGqiX4Vau0KQV0jIgAEQQNGy1vThoshFZ2YnGdc
-	 D+5nPZd+pyMgKVbhSzdnM2mypRZ4EnPuh0J35AqM=
+	b=gTizuilThaM1KaOWFgzen003Uw84m9SesZawIY/RF5X6MQXWoEXP6vJEjWyo+s8cs
+	 LtruSPhNx53Oydz0L/0AnJlQUQ7+vg0DSII/OKgmSRqUziiutjsJ+ziLa6Xl7otOZP
+	 400g431WSJfRL3h5Ne0OEk2xiDLjVl0zyZWNQRQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389751AbgDAQoi (ORCPT
+        id S2389759AbgDAQoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45666 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388617AbgDAQoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:44:37 -0400
+        id S2388037AbgDAQoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:44:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03CB22063A;
-        Wed,  1 Apr 2020 16:44:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 845E520714;
+        Wed,  1 Apr 2020 16:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759476;
-        bh=tlBCLzB8KqqSYZkd4B/QOZWltHSyIudbX/rrs3U1giY=;
+        s=default; t=1585759479;
+        bh=PL47H3m46y2ou7/kunfoWvBHfO+TqmJQviVQ9Y3h6/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mDwfyZOCaOVOVlNDPcQqk0D9JY4c8Nd1LcMcJiCEQ0qesunrySGBxdC3M0zp1g9+8
-         vIdENOBqZh7CHepejOqOHLo9c9DnOHqrP0SRESwpoDHTY+Ea29FdLBvHfGRFL1tuM2
-         xyY22BDSNUYhL8d+Chvl28joqzewUGhWlW9kR0Go=
+        b=b+RaT6P4Maw2JuBINBYx+/h7EdpAsFywP6zX9nmqEqRePxuviVI1D/jXfX3W/h4lm
+         l7ba7R1SczaGfGY1ChrZhcGhHrW4maoDtATHznjiSAk4OrLF0mxEm2ZM80KiluzADc
+         HoI7mSBWtlQyBpekpA+qg2HVp5DBTTV2yUXFZc84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Roger Quadros <rogerq@ti.com>, Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4.14 092/148] ARM: dts: omap5: Add bus_dma_limit for L3 bus
-Date:   Wed,  1 Apr 2020 18:18:04 +0200
-Message-Id: <20200401161601.814782206@linuxfoundation.org>
+        stable@vger.kernel.org, Alexandre Ghiti <alex@ghiti.fr>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.14 093/148] perf probe: Do not depend on dwfl_module_addrsym()
+Date:   Wed,  1 Apr 2020 18:18:05 +0200
+Message-Id: <20200401161601.892799411@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -59,38 +65,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Quadros <rogerq@ti.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit dfa7ea303f56a3a8b1ed3b91ef35af2da67ca4ee upstream.
+commit 1efde2754275dbd9d11c6e0132a4f09facf297ab upstream.
 
-The L3 interconnect's memory map is from 0x0 to
-0xffffffff. Out of this, System memory (SDRAM) can be
-accessed from 0x80000000 to 0xffffffff (2GB)
+Do not depend on dwfl_module_addrsym() because it can fail on user-space
+shared libraries.
 
-OMAP5 does support 4GB of SDRAM but upper 2GB can only be
-accessed by the MPU subsystem.
+Actually, same bug was fixed by commit 664fee3dc379 ("perf probe: Do not
+use dwfl_module_addrsym if dwarf_diename finds symbol name"), but commit
+07d369857808 ("perf probe: Fix wrong address verification) reverted to
+get actual symbol address from symtab.
 
-Add the dma-ranges property to reflect the physical address limit
-of the L3 bus.
+This fixes it again by getting symbol address from DIE, and only if the
+DIE has only address range, it uses dwfl_module_addrsym().
 
-Cc: stable@kernel.org
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
+Reported-by: Alexandre Ghiti <alex@ghiti.fr>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Link: http://lore.kernel.org/lkml/158281812176.476.14164573830975116234.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/omap5.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/probe-finder.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -131,6 +131,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0 0 0 0xc0000000>;
-+		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
- 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
- 		reg = <0 0x44000000 0 0x2000>,
- 		      <0 0x44800000 0 0x3000>,
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -626,14 +626,19 @@ static int convert_to_trace_point(Dwarf_
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Try to get actual symbol name from symtab */
+-	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
++	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
++		/* If the DIE has entrypc, use it. */
++		symbol = dwarf_diename(sp_die);
++	} else {
++		/* Try to get actual symbol name and address from symtab */
++		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
++		eaddr = sym.st_value;
++	}
+ 	if (!symbol) {
+ 		pr_warning("Failed to find symbol at 0x%lx\n",
+ 			   (unsigned long)paddr);
+ 		return -ENOENT;
+ 	}
+-	eaddr = sym.st_value;
+ 
+ 	tp->offset = (unsigned long)(paddr - eaddr);
+ 	tp->address = (unsigned long)paddr;
 
 
