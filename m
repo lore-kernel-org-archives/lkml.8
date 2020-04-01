@@ -4,54 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3090C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27D2C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648622137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F8920857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758938;
-	bh=einYLTSBpG4uznAjnAOOIsoBhlfGFMKvf1YfhGMwuB0=;
+	s=default; t=1585758945;
+	bh=Nb0r+HQTy4g3tmCtBYbsXP+gteUn0DVvrhjMF+wHtw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aGKjUll/DRxPnKOAZMO9+CbDNq61SDMtfmO1RPpPoRZOiauG+S/M0nDHyOF3AY3Og
-	 u5S3fJzuSJ/V35kEDvlYsvh2saVsj1Egm7v3YebqysrLHMQ+95ufrVC4o0QBlsut7j
-	 j0RrnM+gXfJFukX6f0vtYAkQD0r0HFBGlOS/Iyto=
+	b=Pos1+65+ijrUzoJn7PX8VvqSZlmQF1xD0rdUGMMV1s1BZwRWKFi6lE7mDpF5BN6Mt
+	 1IMgTEEBHtXA65T910QXfkKDtNHlY+Z/UCEgLIC0jsJDOe6XWfwuVrleapDsEe3lIM
+	 oM8w4UPqlqe4m8VGFBtsO22AljWaY+/stc+XgBrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388600AbgDAQfh (ORCPT
+        id S2388536AbgDAQfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:35:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34276 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388089AbgDAQfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:35:33 -0400
+        id S2388757AbgDAQfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:35:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9314206F8;
-        Wed,  1 Apr 2020 16:35:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AF7420BED;
+        Wed,  1 Apr 2020 16:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758932;
-        bh=einYLTSBpG4uznAjnAOOIsoBhlfGFMKvf1YfhGMwuB0=;
+        s=default; t=1585758938;
+        bh=Nb0r+HQTy4g3tmCtBYbsXP+gteUn0DVvrhjMF+wHtw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5eNlpmD6DBpKd0VJZ2U3L6kwIYBlHnI/6xf/ZnvTb0VkCXzdKoijo9dmB3cBHwFr
-         BqoeS6OQAbntXybSpgaer/W0zjGEu0+yIoPfBTf+s3hBQ4/pqcF421Raew9DxCFp7M
-         iS0fOkvjcCTlCkzIPFk99PzxbLBLRhpMA2uI4grs=
+        b=mt/p+B+q8f3YrrqJDCKhbZiGTeCshTbnDOpaVdd3c1Uq0djz4RHxxXvS9VV/dqoaB
+         zHtDoHpZZ2n2GiNXnowgi32dvHEqhmdnFk1ehkRv8liKLJ1B56JnmNIQoCM092vVvN
+         HyW9S7pmXY4DB+QowJvtD2vKeK9mIDEt0n6Cw3b4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunguang Xu <brookxu@tencent.com>,
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        PUVICHAKRAVARTHY RAMACHANDRAN <puvichakravarthy@in.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 024/102] memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
-Date:   Wed,  1 Apr 2020 18:17:27 +0200
-Message-Id: <20200401161537.685569388@linuxfoundation.org>
+Subject: [PATCH 4.9 026/102] mm, slub: prevent kmalloc_node crashes and memory leaks
+Date:   Wed,  1 Apr 2020 18:17:29 +0200
+Message-Id: <20200401161538.000681014@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -64,120 +74,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunguang Xu <brookxu@tencent.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit 7d36665a5886c27ca4c4d0afd3ecc50b400f3587 upstream.
+commit 0715e6c516f106ed553828a671d30ad9a3431536 upstream.
 
-An eventfd monitors multiple memory thresholds of the cgroup, closes them,
-the kernel deletes all events related to this eventfd.  Before all events
-are deleted, another eventfd monitors the memory threshold of this cgroup,
-leading to a crash:
+Sachin reports [1] a crash in SLUB __slab_alloc():
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000004
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
-  Oops: 0002 [#1] SMP PTI
-  CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
-  Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
-  Workqueue: events memcg_event_remove
-  RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
-  RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
-  RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
-  RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
-  RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
-  R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
-  R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
-  FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
+  BUG: Kernel NULL pointer dereference on read at 0x000073b0
+  Faulting instruction address: 0xc0000000003d55f4
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in:
+  CPU: 19 PID: 1 Comm: systemd Not tainted 5.6.0-rc2-next-20200218-autotest #1
+  NIP:  c0000000003d55f4 LR: c0000000003d5b94 CTR: 0000000000000000
+  REGS: c0000008b37836d0 TRAP: 0300   Not tainted  (5.6.0-rc2-next-20200218-autotest)
+  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24004844  XER: 00000000
+  CFAR: c00000000000dec4 DAR: 00000000000073b0 DSISR: 40000000 IRQMASK: 1
+  GPR00: c0000000003d5b94 c0000008b3783960 c00000000155d400 c0000008b301f500
+  GPR04: 0000000000000dc0 0000000000000002 c0000000003443d8 c0000008bb398620
+  GPR08: 00000008ba2f0000 0000000000000001 0000000000000000 0000000000000000
+  GPR12: 0000000024004844 c00000001ec52a00 0000000000000000 0000000000000000
+  GPR16: c0000008a1b20048 c000000001595898 c000000001750c18 0000000000000002
+  GPR20: c000000001750c28 c000000001624470 0000000fffffffe0 5deadbeef0000122
+  GPR24: 0000000000000001 0000000000000dc0 0000000000000002 c0000000003443d8
+  GPR28: c0000008b301f500 c0000008bb398620 0000000000000000 c00c000002287180
+  NIP ___slab_alloc+0x1f4/0x760
+  LR __slab_alloc+0x34/0x60
   Call Trace:
-    memcg_event_remove+0x32/0x90
-    process_one_work+0x172/0x380
-    worker_thread+0x49/0x3f0
-    kthread+0xf8/0x130
-    ret_from_fork+0x35/0x40
-  CR2: 0000000000000004
+    ___slab_alloc+0x334/0x760 (unreliable)
+    __slab_alloc+0x34/0x60
+    __kmalloc_node+0x110/0x490
+    kvmalloc_node+0x58/0x110
+    mem_cgroup_css_online+0x108/0x270
+    online_css+0x48/0xd0
+    cgroup_apply_control_enable+0x2ec/0x4d0
+    cgroup_mkdir+0x228/0x5f0
+    kernfs_iop_mkdir+0x90/0xf0
+    vfs_mkdir+0x110/0x230
+    do_mkdirat+0xb0/0x1a0
+    system_call+0x5c/0x68
 
-We can reproduce this problem in the following ways:
+This is a PowerPC platform with following NUMA topology:
 
-1. We create a new cgroup subdirectory and a new eventfd, and then we
-   monitor multiple memory thresholds of the cgroup through this eventfd.
+  available: 2 nodes (0-1)
+  node 0 cpus:
+  node 0 size: 0 MB
+  node 0 free: 0 MB
+  node 1 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+  node 1 size: 35247 MB
+  node 1 free: 30907 MB
+  node distances:
+  node   0   1
+    0:  10  40
+    1:  40  10
 
-2.  closing this eventfd, and __mem_cgroup_usage_unregister_event ()
-   will be called multiple times to delete all events related to this
-   eventfd.
+  possible numa nodes: 0-31
 
-The first time __mem_cgroup_usage_unregister_event() is called, the
-kernel will clear all items related to this eventfd in thresholds->
-primary.
+This only happens with a mmotm patch "mm/memcontrol.c: allocate
+shrinker_map on appropriate NUMA node" [2] which effectively calls
+kmalloc_node for each possible node.  SLUB however only allocates
+kmem_cache_node on online N_NORMAL_MEMORY nodes, and relies on
+node_to_mem_node to return such valid node for other nodes since commit
+a561ce00b09e ("slub: fall back to node_to_mem_node() node if allocating
+on memoryless node").  This is however not true in this configuration
+where the _node_numa_mem_ array is not initialized for nodes 0 and 2-31,
+thus it contains zeroes and get_partial() ends up accessing
+non-allocated kmem_cache_node.
 
-Since there is currently only one eventfd, thresholds-> primary becomes
-empty, so the kernel will set thresholds-> primary and hresholds-> spare
-to NULL.  If at this time, the user creates a new eventfd and monitor
-the memory threshold of this cgroup, kernel will re-initialize
-thresholds-> primary.
+A related issue was reported by Bharata (originally by Ramachandran) [3]
+where a similar PowerPC configuration, but with mainline kernel without
+patch [2] ends up allocating large amounts of pages by kmalloc-1k
+kmalloc-512.  This seems to have the same underlying issue with
+node_to_mem_node() not behaving as expected, and might probably also
+lead to an infinite loop with CONFIG_SLUB_CPU_PARTIAL [4].
 
-Then when __mem_cgroup_usage_unregister_event () is called for the
-second time, because thresholds-> primary is not empty, the system will
-access thresholds-> spare, but thresholds-> spare is NULL, which will
-trigger a crash.
+This patch should fix both issues by not relying on node_to_mem_node()
+anymore and instead simply falling back to NUMA_NO_NODE, when
+kmalloc_node(node) is attempted for a node that's not online, or has no
+usable memory.  The "usable memory" condition is also changed from
+node_present_pages() to N_NORMAL_MEMORY node state, as that is exactly
+the condition that SLUB uses to allocate kmem_cache_node structures.
+The check in get_partial() is removed completely, as the checks in
+___slab_alloc() are now sufficient to prevent get_partial() being
+reached with an invalid node.
 
-In general, the longer it takes to delete all events related to this
-eventfd, the easier it is to trigger this problem.
+[1] https://lore.kernel.org/linux-next/3381CD91-AB3D-4773-BA04-E7A072A63968@linux.vnet.ibm.com/
+[2] https://lore.kernel.org/linux-mm/fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com/
+[3] https://lore.kernel.org/linux-mm/20200317092624.GB22538@in.ibm.com/
+[4] https://lore.kernel.org/linux-mm/088b5996-faae-8a56-ef9c-5b567125ae54@suse.cz/
 
-The solution is to check whether the thresholds associated with the
-eventfd has been cleared when deleting the event.  If so, we do nothing.
-
-[akpm@linux-foundation.org: fix comment, per Kirill]
-Fixes: 907860ed381a ("cgroups: make cftype.unregister_event() void-returning")
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+Fixes: a561ce00b09e ("slub: fall back to node_to_mem_node() node if allocating on memoryless node")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reported-by: PUVICHAKRAVARTHY RAMACHANDRAN <puvichakravarthy@in.ibm.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Tested-by: Bharata B Rao <bharata@linux.ibm.com>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Christopher Lameter <cl@linux.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com
+Link: http://lkml.kernel.org/r/20200320115533.9604-1-vbabka@suse.cz
+Debugged-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ mm/slub.c |   26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3481,7 +3481,7 @@ static void __mem_cgroup_usage_unregiste
- 	struct mem_cgroup_thresholds *thresholds;
- 	struct mem_cgroup_threshold_ary *new;
- 	unsigned long usage;
--	int i, j, size;
-+	int i, j, size, entries;
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1909,8 +1909,6 @@ static void *get_partial(struct kmem_cac
  
- 	mutex_lock(&memcg->thresholds_lock);
+ 	if (node == NUMA_NO_NODE)
+ 		searchnode = numa_mem_id();
+-	else if (!node_present_pages(node))
+-		searchnode = node_to_mem_node(node);
  
-@@ -3501,14 +3501,20 @@ static void __mem_cgroup_usage_unregiste
- 	__mem_cgroup_threshold(memcg, type == _MEMSWAP);
+ 	object = get_partial_node(s, get_node(s, searchnode), c, flags);
+ 	if (object || node != NUMA_NO_NODE)
+@@ -2506,17 +2504,27 @@ static void *___slab_alloc(struct kmem_c
+ 	struct page *page;
  
- 	/* Calculate new number of threshold */
--	size = 0;
-+	size = entries = 0;
- 	for (i = 0; i < thresholds->primary->size; i++) {
- 		if (thresholds->primary->entries[i].eventfd != eventfd)
- 			size++;
-+		else
-+			entries++;
- 	}
+ 	page = c->page;
+-	if (!page)
++	if (!page) {
++		/*
++		 * if the node is not online or has no normal memory, just
++		 * ignore the node constraint
++		 */
++		if (unlikely(node != NUMA_NO_NODE &&
++			     !node_state(node, N_NORMAL_MEMORY)))
++			node = NUMA_NO_NODE;
+ 		goto new_slab;
++	}
+ redo:
  
- 	new = thresholds->spare;
- 
-+	/* If no items related to eventfd have been cleared, nothing to do */
-+	if (!entries)
-+		goto unlock;
-+
- 	/* Set thresholds array to NULL if we don't have thresholds */
- 	if (!size) {
- 		kfree(new);
+ 	if (unlikely(!node_match(page, node))) {
+-		int searchnode = node;
+-
+-		if (node != NUMA_NO_NODE && !node_present_pages(node))
+-			searchnode = node_to_mem_node(node);
+-
+-		if (unlikely(!node_match(page, searchnode))) {
++		/*
++		 * same as above but node_match() being false already
++		 * implies node != NUMA_NO_NODE
++		 */
++		if (!node_state(node, N_NORMAL_MEMORY)) {
++			node = NUMA_NO_NODE;
++			goto redo;
++		} else {
+ 			stat(s, ALLOC_NODE_MISMATCH);
+ 			deactivate_slab(s, page, c->freelist);
+ 			c->page = NULL;
 
 
