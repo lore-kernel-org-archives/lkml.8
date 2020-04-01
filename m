@@ -2,236 +2,148 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDDEC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D94C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70184206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585750457;
-	bh=ehjUgVoB1pPIaTbQKrVmGjeYyANB+YHakHSSw4dF4Jw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ixtPvsVi9eFgyOhi3JmEsznE0GhX+GS0WBSAlafE7SyfTnF4F2/Di1Z25dC36FbVu
-	 dfPTfFHdPMGretGLvwPe6C2x++MND2bc/SV+Bsxn9kM2+XE1XkwQ32wNgUoDmnsMn4
-	 LDMp7R+GxHyQlINBWdxWEYRIlqNUith3J3pe0EeA=
+	by mail.kernel.org (Postfix) with ESMTP id 0F61120705
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 14:15:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FLoiFyV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbgDAOOQ (ORCPT
+        id S1732986AbgDAOPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:14:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732826AbgDAOOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:14:15 -0400
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F2CA215A4;
-        Wed,  1 Apr 2020 14:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585750454;
-        bh=ehjUgVoB1pPIaTbQKrVmGjeYyANB+YHakHSSw4dF4Jw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mNrc+atjafoM8ozF4y5TIdwmhFigHse0PwjtshoKd6wA2jRqo5VRp/VjVePZW1BcM
-         miehZh2CfPpyFzRzMQsrq+cgxMDVlauWrdpWgK8o7E0vWpZdeTERghNla31yh/YsAY
-         BYCUZ6OEo2aUL11CiRIUTMQcYExuPfTc5XocLZyQ=
-Received: by mail-qv1-f54.google.com with SMTP id bp12so8845146qvb.7;
-        Wed, 01 Apr 2020 07:14:14 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0Sb1j5O6oOj6wFL3DFSqjvAOvBAnbtKe0REjv9hIMyb+hn4DQW
-        N8oj9ISvayVW2ub944HebT75GR5Ajj0d5C+yjw==
-X-Google-Smtp-Source: ADFU+vvQbdamE50Ixln6DUJDoLxy8s0mcKi5FvNTsz9bq3+wKn1jVYRM4ihFk/474/yHBhU+NAE//LHvJN48JJJxemg=
-X-Received: by 2002:a0c:f207:: with SMTP id h7mr21272843qvk.20.1585750453214;
- Wed, 01 Apr 2020 07:14:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-3-Sergey.Semin@baikalelectronics.ru>
- <20200331210248.GA27684@bogus> <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
-In-Reply-To: <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 1 Apr 2020 08:13:58 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
-Message-ID: <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Convert mti,gic
- to DT schema
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
+        Wed, 1 Apr 2020 10:15:03 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:58452 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732826AbgDAOPD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 10:15:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CG4OmPa/gJjzatQG79XkzsR0JM6D3FtKUESWPgDFYUI=; b=FLoiFyV9GBN4e5K2JSJFsYsLy
+        eQEiCGTHai8I/AIPsdax4gnpxe1sTozOowESIDOeFOHX6PXaLlaOIa1qCKZD2OHOOJ6BP1fQJ3bsG
+        yOmw5xJo828E6kLdA7vqcOoooAnPu+C/dHp2sm21JTA2wlMZmwLqK+GGcOfV8GOGy7s730Q/2meIn
+        I9iPGDwRX4pbJIzxJ2BG9NQl/yXBP59v8n1kQUNFxw1uh/gJoOuvlGRxHByXAnU5Xq4BR9o+H2Hev
+        MHu19blJGnmGCDkaY6T3g9vCEjVUFOjs7ae8+ltAm1ZjPUtbLlL5/ukGo3KKgYK80Q/xmLiTaLpj/
+        VLsSYYRNA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44274)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jJe8r-0006LQ-Nb; Wed, 01 Apr 2020 15:14:53 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jJe8m-0000lb-QQ; Wed, 01 Apr 2020 15:14:48 +0100
+Date:   Wed, 1 Apr 2020 15:14:48 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+Message-ID: <20200401141448.GU25745@shell.armlinux.org.uk>
+References: <AM0PR04MB544326757B0B510C7C3C6417FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB544326757B0B510C7C3C6417FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 4:19 AM Sergey Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> On Tue, Mar 31, 2020 at 03:02:48PM -0600, Rob Herring wrote:
-> > On Tue, Mar 24, 2020 at 08:43:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Wed, Apr 01, 2020 at 02:01:25PM +0000, Florinel Iordache wrote:
+> > On Thu, Mar 26, 2020 at 03:51:19PM +0200, Florinel Iordache wrote:
+> > > Add support for backplane kr generic driver including link training
+> > > (ieee802.3ap/ba) and fixed equalization algorithm
 > > >
-> > > Modern device tree bindings are supposed to be created as YAML-files
-> > > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
-> > > text binding with YAML file. As before the binding file states that the
-> > > corresponding dts node is supposed to be compatible with MIPS Global
-> > > Interrupt Controller indicated by the "mti,gic" compatible string and
-> > > to provide a mandatory interrupt-controller and '#interrupt-cells'
-> > > properties. There might be optional registers memory range,
-> > > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
-> > > specified.
-> > >
-> > > MIPS GIC also includes a free-running global timer, per-CPU count/compare
-> > > timers, and a watchdog. Since currently the GIC Timer is only supported the
-> > > DT schema expects an IRQ and clock-phandler charged timer sub-node with
-> > > "mti,mips-gic-timer" compatible string.
-> > >
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > Cc: Paul Burton <paulburton@kernel.org>
-> > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: linux-rtc@vger.kernel.org
-> > >
-> > > ---
-> > >
-> > > I don't really know who is the corresponding driver maintainer, so I
-> > > added to the maintainers schema Paul since he used to be looking for the
-> > > MIPS arch and Thomas looking after it now. Any idea what email should be
-> > > specified there instead?
-> > >
-> > > Similarly to the previous patch the "oneOf: - required: ..." pattern isn't
-> > > working here. Supposedly due to the script' dtschema/lib.py
-> > > interrupts/interrupts-extended fixup.
-> > > ---
-> > >  .../interrupt-controller/mips-gic.txt         |  67 --------
-> > >  .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
-> > >  2 files changed, 152 insertions(+), 67 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > deleted file mode 100644
-> > > index 173595305e26..000000000000
-> > > --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > +++ /dev/null
-> > > @@ -1,67 +0,0 @@
-> > > -MIPS Global Interrupt Controller (GIC)
-> > > -
-> > > -The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> > > -It also supports local (per-processor) interrupts and software-generated
-> > > -interrupts which can be used as IPIs.  The GIC also includes a free-running
-> > > -global timer, per-CPU count/compare timers, and a watchdog.
-> > > -
-> > > -Required properties:
-> > > -- compatible : Should be "mti,gic".
-> > > -- interrupt-controller : Identifies the node as an interrupt controller
-> > > -- #interrupt-cells : Specifies the number of cells needed to encode an
-> > > -  interrupt specifier.  Should be 3.
-> > > -  - The first cell is the type of interrupt, local or shared.
-> > > -    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
-> > > -  - The second cell is the GIC interrupt number.
-> > > -  - The third cell encodes the interrupt flags.
-> > > -    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-> > > -    flags.
-> > > -
-> > > -Optional properties:
-> > > -- reg : Base address and length of the GIC registers.  If not present,
-> > > -  the base address reported by the hardware GCR_GIC_BASE will be used.
-> > > -- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
-> > > -  to which the GIC may not route interrupts.  Valid values are 2 - 7.
-> > > -  This property is ignored if the CPU is started in EIC mode.
-> > > -- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
-> > > -  reserved for IPIs.
-> > > -  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
-> > > -  of the reserved range.
-> > > -  If not specified, the driver will allocate the last 2 * number of VPEs in the
-> > > -  system.
-> > > -
-> > > -Required properties for timer sub-node:
-> > > -- compatible : Should be "mti,gic-timer".
-> > > -- interrupts : Interrupt for the GIC local timer.
-> > > -
-> > > -Optional properties for timer sub-node:
-> > > -- clocks : GIC timer operating clock.
-> > > -- clock-frequency : Clock frequency at which the GIC timers operate.
-> > > -
-> > > -Note that one of clocks or clock-frequency must be specified.
-> > > -
-> > > -Example:
-> > > -
-> > > -   gic: interrupt-controller@1bdc0000 {
-> > > -           compatible = "mti,gic";
-> > > -           reg = <0x1bdc0000 0x20000>;
-> > > -
-> > > -           interrupt-controller;
-> > > -           #interrupt-cells = <3>;
-> > > -
-> > > -           mti,reserved-cpu-vectors = <7>;
-> > > -           mti,reserved-ipi-vectors = <40 8>;
-> > > -
-> > > -           timer {
-> > > -                   compatible = "mti,gic-timer";
-> > > -                   interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > > -                   clock-frequency = <50000000>;
-> > > -           };
-> > > -   };
-> > > -
-> > > -   uart@18101400 {
-> > > -           ...
-> > > -           interrupt-parent = <&gic>;
-> > > -           interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-> > > -           ...
-> > > -   };
-> > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > new file mode 100644
-> > > index 000000000000..1e47c0cdc231
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > @@ -0,0 +1,152 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >
-> > Do you have rights to add BSD?
-> >
->
-> My manager said we can submitted the DT schema bindings under both GPL and
-> BSD licenses. Though I don't know what license was of the legacy binding file.
+> > > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> > > +/* Read AN Link Status */
+> > > +static int is_an_link_up(struct phy_device *bpphy) {
+> > > +     struct backplane_phy_info *bp_phy = bpphy->priv;
+> > > +     int ret, val = 0;
+> > > +
+> > > +     mutex_lock(&bp_phy->bpphy_lock);
+> > > +
+> > > +     /* Read twice because Link_Status is LL (Latched Low) bit */
+> > > +     val = phy_read_mmd(bpphy, MDIO_MMD_AN, bp_phy-
+> > >bp_dev.mdio.an_status);
+> > > +     val = phy_read_mmd(bpphy, MDIO_MMD_AN,
+> > > + bp_phy->bp_dev.mdio.an_status);
+> > 
+> > Why not just
+> > 
+> > val = phy_read_mmd(bpphy, MDIO_MMD_AN, MDIO_CTRL1);
+> > 
+> > Or is your hardware not actually conformant to the standard?
+> > 
+> > There has also been a lot of discussion of reading the status twice is correct or
+> > not. Don't you care the link has briefly gone down and up again?
+> > 
+> >         Andrew
+> 
+> This could be changed to use directly the MDIO_STAT1 in order to read
+> AN status (and use MDIO_CTRL1 for writing the control register) but this
+> is more flexible and more readable since we defined the structure
+> kr_mdio_info that contains all registers offsets required by backplane
+> driver like: LT(link training) registers, AN registers, PMD registers.
+> So we wanted to put all these together to be clear that all these
+> offsets are essential for backplane driver and they can be setup
+> automatically by calling the function: backplane_setup_mdio_c45.
+> 
+> + void backplane_setup_mdio_c45(struct backplane_kr_info *bpkr)
+> + /* KX/KR AN registers: IEEE802.3 Clause 45 (MMD 7) */
+> + bpkr->mdio.an_control = MDIO_CTRL1;
+> + bpkr->mdio.an_status = MDIO_STAT1;
+> + bpkr->mdio.an_ad_ability_0 = MDIO_PMA_EXTABLE_10GBKR;
+> + bpkr->mdio.an_ad_ability_1 = MDIO_PMA_EXTABLE_10GBKR + 1;
+> + bpkr->mdio.an_lp_base_page_ability_1 = MDIO_PMA_EXTABLE_10GBKR + 4;
 
-Anything in the kernel without an explicit license is GPL-2.0-only.
+Where they are IEEE 802.3 standard registers, just use the standard
+definitions, do not indirect.
 
-> BTW Rob, you ask about the license very often whether I set pure GPL-2.0
-> or dual-license header. Just wondering is it some kind of protocol to make
-> sure a submitter has got proper rights to submit the binding?
+> This approach is more flexible because it lets open the possibility for
+> extension on other non-standard devices (devices non-compliant with
+> clause 45) to still use this driver for backplane operation.
 
-New bindings should be dual GPL/BSD. Converted bindings should be
-relicensed if the authors of the original agree or you should maintain
-GPL-2.0-only.
+That's an entirely false argument.  If something is going to be
+non-standard, why do you think that the only thing they'll do is
+have non-standard register offsets?  Wouldn't they also have
+non-standard register contents as well - and if they do, your
+"flexible" model will no longer work there.
 
-Rob
+This seems to me to be a classic case of over-design.
+
+We have seem some PHYs with multiple different PHY blocks within the
+clause 45 space, but these are merely at offsets and follow the
+standard IEEE 802.3 register sets at various offsets.  The minimum
+that would be required in that case would be to carry a single register
+offset - but there is no point until we encounter a PHY that actually
+requires that for this support.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
