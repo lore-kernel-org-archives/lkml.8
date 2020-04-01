@@ -2,82 +2,86 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872F7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1408C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 548F621582
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:19:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e0LTts26"
+	by mail.kernel.org (Postfix) with ESMTP id 7C3BF207FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585729179;
+	bh=JwjTS3bwTaJDS/riSAQ5aa/vYk0FiIl4EYogUkNM0Ok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CgaCAvDRk4i0YTiUPexsx/xK3bPANDx1rRIh+HGhQLA3v7pR4VPGJmUMwRfhPOq6S
+	 Ont2DBqFOCktZMdE7QAnABETH68GyT6JPZmUSUaSYU4U2U2ObJRxqpZABoasyu3XMi
+	 Z141mJtFK5r2tPI3oAKZ4hBBE5WhmRBzYORRuVO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732078AbgDAITC (ORCPT
+        id S1729142AbgDAITi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:19:02 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43390 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731870AbgDAITB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:19:01 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n20so19630976lfl.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3X5Ui3kFF/VqVsswCk+H6N1aAGKj9/qFdOpQH7o/fX0=;
-        b=e0LTts26IJz9re0PtsdlTkKxXPqOwfZhRTuSGc4FDNgszP3/5igArFPJjoOgRLWGnZ
-         tMQslUL+bzRbsSxpZxhnRq9vjS+Cl7Z1h/uamQ+GXW8A1+9+Wp7yqZsp9MRHRgXoW2a3
-         S7RsG1hkx+GMFXkxuZ1P8NxXMd/DweplNQJwWJQGRaaJvqcPZTuNnp/OgjEpLUR7TIsM
-         6dPemupP2KRzepkssvDiA8KVBzkPqBDk+VUd0PgoTHQ5gmnQuBHSGIceuuiY1r4EXI5L
-         1WsUqU/LD3pxYP66SnCFNyj15lAAfVTu/kKm0YebFbhad5JpLwZyY81BXtMmBgtgovKs
-         +1jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3X5Ui3kFF/VqVsswCk+H6N1aAGKj9/qFdOpQH7o/fX0=;
-        b=b3lUlDaraO6F89ZP3lpM51vgCo7mf9RQVAnmBv3XE3dGZbiM5WbZbNRK4kqFbbIhcQ
-         NwmnXZvic3I165bfl1D6aKe9/r30bjY6wfvhmzUJpszHGZgrSLprz2kgIbiGduRzvEZR
-         OOvWWnT3K+qUQGqe12qcdvlnJeG2Wmisa611t67E4dXpUX9NDpiT6xqSY8pvt7l4haQF
-         +wCWBMF9I44Caw7nLIPdUpcteTNNvRg4GJAFNR3FrKvCuFqZxGG7a4ZXPPZlphktxnSH
-         s4/xIX+T3wV3c4gOzZi+fpWhUTbK4giaXsCJo87NoXpLkiCLsK8i/mZ2gLKU3yHISwjW
-         QBEg==
-X-Gm-Message-State: AGi0PuatYuU8qSKJijePDhheVLyYDik00aghvV9UJs00EWyEwvFgPWnT
-        HrB4v6br3ls3aKv+pKljIHBNDj2WlSA2XK7tmSCbDg==
-X-Google-Smtp-Source: APiQypIYt3HrVsUkJtt4Lm7oBM6f91bGNlBigjePb0aD8ENBx7WoHbbUlepDmqvOoaHvzYsmvLVS/FZ09CwwE4zAyyA=
-X-Received: by 2002:ac2:5f75:: with SMTP id c21mr13715722lfc.194.1585729139654;
- Wed, 01 Apr 2020 01:18:59 -0700 (PDT)
+        Wed, 1 Apr 2020 04:19:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgDAITi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:19:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F302078B;
+        Wed,  1 Apr 2020 08:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585729178;
+        bh=JwjTS3bwTaJDS/riSAQ5aa/vYk0FiIl4EYogUkNM0Ok=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vFMJk6JxojbKWDvRsRVeV4/F37W4Dirv+aht8O0ybrQWer32kQKS4pBeaQFbE9q5r
+         RHuzpBiVE3/y4iQs5a2YkSCmYgBT20C0WTegpXLyrsbbNcMJXVUxxlYLGfDDPERrj6
+         5+Kd/bmhRLV/n5EKMHvHfr25TGu2g91jLj2bgOa0=
+Date:   Wed, 1 Apr 2020 10:19:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+Message-ID: <20200401081935.GA2023509@kroah.com>
+References: <20200331085308.098696461@linuxfoundation.org>
+ <0c4aaa5f-0f85-4b00-e938-4f34c55e3711@kernel.org>
 MIME-Version: 1.0
-References: <20200401151904.6948af20@canb.auug.org.au> <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXFHWFucxZbChxaM6w4q9Gu5pccMBP46N4Av1E2rNKddA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 1 Apr 2020 10:18:48 +0200
-Message-ID: <CACRpkdbP9gMLDnDSR6czN88Hjwu6HXSZ2jyYOo-iuq0W073Hbg@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the gpio tree
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c4aaa5f-0f85-4b00-e938-4f34c55e3711@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 9:49 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Tue, Mar 31, 2020 at 01:32:53PM -0600, shuah wrote:
+> On 3/31/20 2:59 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.1 release.
+> > There are 23 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-> > +EXPORT_SYMBOL_GPL(of_pinctrl_get);
->
-> As exporting symbols has its (space) cost, and of_pinctrl_get() is a tiny
-> function, what about making it an inline function in
-> include/linux/pinctrl/pinctrl.h instead?
+Thanks for testing these and letting me know.
 
-I'm all for it! :)
-
-Yours,
-Linus Walleij
+greg k-h
