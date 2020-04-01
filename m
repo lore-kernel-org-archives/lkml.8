@@ -2,166 +2,113 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77650C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C10C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412A4206EB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B0C206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DESDSzzV";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Bi1EP6hV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nj9SP6zN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732403AbgDATAh (ORCPT
+        id S1732316AbgDATF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:00:37 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:63010 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727661AbgDATAh (ORCPT
+        Wed, 1 Apr 2020 15:05:56 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36151 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726785AbgDATF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:00:37 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 031IwA7p007426;
-        Wed, 1 Apr 2020 12:00:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=mvbQVexcAdK+82bRBGd/HI+MSUPA3JDpm+y+Qzae+CU=;
- b=DESDSzzVr+sKpy+BQq9Uc1UhUo1Pu1+jyHt1ZejBYzpD/OQg4X3MnWeoMSmZt1YV/fBm
- /IY+syzrvWRctC18ljt9KRIDTMMP/7JlnYnNvj0OTHNFu0EDrh7J8FuT0Lrg70DfOLFZ
- doBQZ1YmazBpHuUkvGbHN+TT/HzG48L3dvg= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 304wbb95dv-17
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 01 Apr 2020 12:00:20 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 1 Apr 2020 12:00:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mptgWkzgWc58THdKXb9yeQ/XYJyE+xFjvFiPPL+QLZYOkfIKXqU8H2ryU0YLyxpQv0hM0TQTssFB8RNiV0+SXzY16thOUorZUEYof4NqUTagOfibl0LQpiDajPaFs1QXuwXJbipSD69OT7OQBYIjYajEgN34jXXyl61VKvqhYv6hl7PpVQwz5Gp+p/W7BDbJrfkmVvK1Dx/84qGd1fa9fTvX1dYQv7whHbA08B70Z1vbqRS5FnzZ1/EVsG0t+XeXo+riTthZN0jA4kBCkaGy8HC5aV2Y6/PB0KLClHu0dSGMJjH7RBX/JlywgTT046YGw+retgVy8/jF4dhC+eTuMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mvbQVexcAdK+82bRBGd/HI+MSUPA3JDpm+y+Qzae+CU=;
- b=igDheenVNu3qhmXfDvvluopJ8qVMCkJ5aMnX3M4bV2P2JMU65O4cbmz/MbgF6q2Id38iKMcOMz8iRe5sELTVzqx9RaEdzfnbvHApHpPBtQWz2GtvidDR71q6Td10WcSI09vLbC9jmleV+Lv3yjCwX+noo8uX4jsEwbHOYSaS6cY4PS7bpa/kWrHjsXYPbwVMUwZmcYlK2W1gyozrm3qQtB7X8chB5rt7/OT5YPjHTXQacEYH9Ujv/ly3A77WBgtJE+Uu6/jfwZHT6xyz75VEuYNwgHVgZNm5rjsWGumeRJ0LUL2WGOh7t/LkkuqnZM1L8+ClYe5JLt5sYENr4RrxPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mvbQVexcAdK+82bRBGd/HI+MSUPA3JDpm+y+Qzae+CU=;
- b=Bi1EP6hVVA5FmI9CJqQJUx5ncI9wxauUi3LB7XCObpKA+tGBtvYIX8Ea101crcAosSQBX0NuiTm7MhTsOU+WRcQ+FiJPI9YWQr5+ExstfC4tlTLqlH74lOZV+ZwVSNvsAOi7wQF3t48zCVPLwzC7iVSZV9RAusoHL+XdZU9r/l4=
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com (2603:10b6:303:50::17)
- by MW3PR15MB3755.namprd15.prod.outlook.com (2603:10b6:303:4c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Wed, 1 Apr
- 2020 19:00:04 +0000
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c]) by MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::3517:e69:6e78:4f7c%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 19:00:04 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-CC:     Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        "Michael van der Westhuizen" <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "Patrick Williams" <patrick@stwcx.xyz>,
+        Wed, 1 Apr 2020 15:05:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585767955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zFdpcoTA4jsLarYiYPsXrW1fL3hk+7go53WyoZphPvg=;
+        b=Nj9SP6zN8LEExUdAt3HweuJYqgFm+5uacTlTMNkjefikohflmFsdrtgJYNgu/WWSr56fvJ
+        RaWWHNbTSW8CRFyUun4hdAMUaAG5Eo58yAH6zqqDt8i7SqJuskurDZx7SMJsVw6cIkLOaq
+        MLACZEyMqTHnUED1NbUpwCy+eZ9NCMI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-249-WaMpdmD1Mf2XN1TgppcOtw-1; Wed, 01 Apr 2020 15:05:53 -0400
+X-MC-Unique: WaMpdmD1Mf2XN1TgppcOtw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A35F18A5512;
+        Wed,  1 Apr 2020 19:05:51 +0000 (UTC)
+Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E12E55DA76;
+        Wed,  1 Apr 2020 19:05:49 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 14:05:48 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
+        Julien Thierry <jthierry@redhat.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
- initramfs
-Thread-Topic: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
- initramfs
-Thread-Index: AQHWBeEQDgWL3aTsC0eAZqS0g1IF3qhiGjEAgAC3YoCAAMO5AIAAdP+AgACZcoA=
-Date:   Wed, 1 Apr 2020 19:00:04 +0000
-Message-ID: <CC22D163-BB96-42F5-88DE-BD203860E7C2@fb.com>
-References: <CA+icZUXCn2an9aNDrm+-eneSAOyGibz0W1xYhwkA5k3B3U-5vQ@mail.gmail.com>
- <1A630698-E385-4CDF-9755-ACDAAF60DBB9@fb.com>
- <CA+icZUWBJz6765Szg65HcOfhDh9tyoarJTnZ_kmahqvB5QKU=g@mail.gmail.com>
- <5F9D2C8D-B1DE-4F95-992E-524E02851CF4@fb.com>
- <CA+icZUXxwkPcfKgaaEaV4XhQseK--N3a=ffh=kU-C84BcFuhrw@mail.gmail.com>
-In-Reply-To: <CA+icZUXxwkPcfKgaaEaV4XhQseK--N3a=ffh=kU-C84BcFuhrw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [73.222.55.223]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b0b24aae-4a28-4c84-43c3-08d7d66ee33e
-x-ms-traffictypediagnostic: MW3PR15MB3755:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR15MB3755318509B62D0CB96A8F27ABC90@MW3PR15MB3755.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB3753.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(366004)(376002)(396003)(136003)(346002)(4326008)(7416002)(81156014)(26005)(71200400001)(2906002)(2616005)(33656002)(186003)(36756003)(8936002)(6916009)(86362001)(478600001)(53546011)(76116006)(6512007)(81166006)(316002)(8676002)(5660300002)(66946007)(66476007)(64756008)(66446008)(66556008)(6486002)(91956017)(6506007)(54906003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RM1HjWdXZ/is7bKH3/WSAPmXeNjLLKUvjKuXuyLU1ai48lnw3nYI/3bda9PdYz483g5S8uTbYp+k1wTqsxpBz++DEC4H2GgKRBac0XEtBgQXcb/81JoApDJ0x3DF54pqLUPUrDg+ZF51A7ziji3aioTwsKOYA/FdKGPLU9eHmL24Ct8HNKNkYQThwFmUu+CxHJcnLioZfDdGXBdjrOI/L4JyPreEPEoEN/tHRp9xnj0NWuRL4xuAuuNiiSW/TqEiKgB3TM8+s7EM4PCjxgmeTqn6bVPvJE85Lk4caqfZyrOFhjyo+jU/BF+QAPu9I3vAFUjFZGmyZk0o73XHrCoYJheUYsHukMPaJac0tFVEVpjCyWs03+JamaPKxmOqEaDfpv5pr2MLYC1w815ZplDkPaUlwUT/8wprbB/zUkczcYL9g3+mksQsVamL0R850SxO
-x-ms-exchange-antispam-messagedata: 3pNlW/dSLdv0vHnsW1SxzCQ1VZXX7lQ7iMiDSTVNwa4/zjsWgDXtuBSQyoXxl8Hjl+wuqJ1fCkGxP1MFwO5xb4wnL7W0NHFC8DKT1/Jme0EAGmRNZl6BT4JA65RBb6RVhth3uFIvw7URnD98CZ6SEw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ED8B7B0A0D110C49B3B4C5C4F84AD313@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Dmitry Golovin <dima@golovin.in>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH 3/5] objtool: Support Clang non-section symbols in ORC
+ generation
+Message-ID: <20200401190548.rodiauk3iolknvfe@treble>
+References: <cover.1585761021.git.jpoimboe@redhat.com>
+ <9a9cae7fcf628843aabe5a086b1a3c5bf50f42e8.1585761021.git.jpoimboe@redhat.com>
+ <20200401184953.GZ20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0b24aae-4a28-4c84-43c3-08d7d66ee33e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 19:00:04.1826
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3dSCQ6g1EqW0mjOsevNYuLOvCiXabce26c5WJdWfJjlx2iQ3x1+L5DwXFTUX6itY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB3755
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- mlxlogscore=760 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 clxscore=1011 lowpriorityscore=0 phishscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010155
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200401184953.GZ20730@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBBcHIgMSwgMjAyMCwgYXQgMjo1MCBBTSwgU2VkYXQgRGlsZWsgPHNlZGF0LmRpbGVrQGdt
-YWlsLmNvbT4gd3JvdGU6DQo+IA0KPiBPbiBXZWQsIEFwciAxLCAyMDIwIGF0IDQ6NTIgQU0gTmlj
-ayBUZXJyZWxsIDx0ZXJyZWxsbkBmYi5jb20+IHdyb3RlOg0KPj4gDQo+PiANCj4+IA0KPj4+IE9u
-IE1hciAzMSwgMjAyMCwgYXQgODoxMSBBTSwgU2VkYXQgRGlsZWsgPHNlZGF0LmRpbGVrQGdtYWls
-LmNvbT4gd3JvdGU6DQo+Pj4gDQo+Pj4gT24gVHVlLCBNYXIgMzEsIDIwMjAgYXQgNjoxNSBBTSBO
-aWNrIFRlcnJlbGwgPHRlcnJlbGxuQGZiLmNvbT4gd3JvdGU6DQo+Pj4gDQo+Pj4gWy4uLl0NCj4+
-PiANCj4+Pj4+IERvIHlvdSBwbGFuIHRvIHB1c2ggdGhpcyBmb3IgTGludXggdjUuNz8NCj4+Pj4g
-DQo+Pj4+IEkgaG9wZSB0aGF0IGl0IHdpbGwgYmUgYWNjZXB0ZWQuIEZyb20gbXkgcG9pbnQgb2Yg
-dmlldyB0aGlzIHBhdGNoIHNldCBpcw0KPj4+PiByZWFkeSBmb3IgbWVyZ2UsIGV4Y2VwdCBmb3Ig
-dGhlIG1heGltdW0gd2luZG93IHNpemUgaW5jcmVhc2UNCj4+Pj4gcmVxdWVzdGVkIGJ5IFBldHIu
-DQo+Pj4+IA0KPj4+IA0KPj4+IEhpIE5pY2ssDQo+Pj4gDQo+Pj4gdGhhbmtzIGZvciB5b3VyIGFu
-c3dlci4NCj4+PiANCj4+PiBEaWQgeW91IHNlbmQgb3V0IGEgcHVsbC1yZXF1ZXN0IGFscmVhZHk/
-DQo+PiANCj4+IEkgaGF2ZW7igJl0IHNlbnQgb3V0IGEgcHVsbCByZXF1ZXN0LiBJZiB0aGF0IGlz
-IHNvbWV0aGluZyB0aGF0IEkgbmVlZCB0bw0KPj4gZG8sIG9yIGlmIGl0IG1ha2VzIHRoZSBwcm9j
-ZXNzIGVhc2llciBmb3IgYSBtYWludGFpbmVyIHRvIG1lcmdlIHRoZW4NCj4+IEkgY2FuIGRvIHRo
-YXQuDQo+PiANCj4gDQo+IFsgQ0MgIFN0ZXBoZW4gUm90aHdlbGwgKG1haW50YWluZXIgb2YgTGlu
-dXgtbmV4dCkgXQ0KPiANCj4gSGkgTmljaywNCj4gDQo+IGFzIEFkYW0gcG9pbnRlZCBvdXQgaXQg
-bWlnaHQgYmUgZ29vZCB0byBhc2sgIlN0ZXBoZW4gUm90aHdlbGwiDQo+IDxzZnJAY2FuYi5hdXVn
-Lm9yZy5hdT4NCj4gdG8gaW5jbHVkZSB5b3VyIEdpdCB0cmVlIGludG8gbGludXgtbmV4dC4gU3Rl
-cGhlbiB3aWxsIGdpdmUgeW91IHNvbWUNCj4gaW5mb3JtYXRpb25zIGFib3V0IHRoYXQuDQoNClRo
-YW5rcyBmb3IgdGhlIHBvaW50ZXJzIFNlZGF0IGFuZCBBZGFtISBJIHdpbGwgcmVhY2ggb3V0IGFu
-ZCBhc2sNCmFib3V0IHRoZSBiZXN0IHdheSBmb3J3YXJkLiBJIGRvbuKAmXQgcGFydGljdWxhcmx5
-IGNhcmUgaWYgaXQgbWFrZXMgaXQgaW4NCjUuNyBvciA1LjgsIEkganVzdCB3YW50IHRvIGVuc3Vy
-ZSB0aGF0IGl0IGRvZXMgZ2V0IG1lcmdlZCB0aGlzIHRpbWUuDQoNCkJlc3QsDQpOaWNrDQoNCg==
+On Wed, Apr 01, 2020 at 08:49:53PM +0200, Peter Zijlstra wrote:
+> On Wed, Apr 01, 2020 at 01:23:27PM -0500, Josh Poimboeuf wrote:
+> 
+> > @@ -105,8 +100,32 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
+> >  	}
+> >  	memset(rela, 0, sizeof(*rela));
+> >  
+> > -	rela->sym = insn_sec->sym;
+> > -	rela->addend = insn_off;
+> > +	if (insn_sec->sym) {
+> > +		rela->sym = insn_sec->sym;
+> > +		rela->addend = insn_off;
+> > +	} else {
+> > +		/*
+> > +		 * The Clang assembler doesn't produce section symbols, so we
+> > +		 * have to reference the function symbol instead:
+> > +		 */
+> > +		rela->sym = find_symbol_containing(insn_sec, insn_off);
+> 
+> It's a good thing I made that a lot faster I suppose ;-)
+
+:-)
+
+> > +		if (!rela->sym) {
+> > +			/*
+> > +			 * Hack alert.  This happens when we need to reference
+> > +			 * the NOP pad insn immediately after the function.
+> > +			 */
+> > +			rela->sym = find_symbol_containing(insn_sec,
+> > +							   insn_off - 1);
+> 
+> Urgh, when does that happen? 
+
+It happens naturally in the padding between functions, since objtool
+doesn't traverse those instructions.  So they have undefined entries
+like
+
+ .text+68: sp:(und) bp:(und) type:call end:0
+
+I suppose those aren't technically necessary.
+
+-- 
+Josh
+
