@@ -2,56 +2,64 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D727C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC24C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4990B20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E107020658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759006;
-	bh=1tX4S0+QPibSqEbZo24Qo6tnbpDV2afDLlug35vQ+dI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rd1Zp+osurXtGQIxxI3SDi2Cr+aQt/n4IHZsIul9HC5vWhnY24HZ6hTX+riqxPEUS
-	 6NN3MHN/kNb/0qmYk3Cmx8ZKqUMDXlRW4i/92C2Bl8l7zUVQVKCdPbFu9goPDlqIdJ
-	 1v3brrlKoJxIP3Ry1IB4neWw2CT1Oa16/OsEa0zc=
+	s=default; t=1585759009;
+	bh=HjNkAYa0nUQX9P1DkfCisQvidgdIi+0kp1Rp+U8Jl6s=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pvGT4E6N7d9vtrng+kRjlRyepkGPZXsBCqOkmfdqL3vZsbc4tZBC4DyXExDOS3Omm
+	 x9+lqIIf/IY51l16laI0hmClFn84uoW+n0KqbnJuHOTakGaDt5vqAUuXTZ1UJPM2bo
+	 IyVrluSp5G4/Z/aDASyuRf4eDdgeMCueYGb+e964=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388539AbgDAQgo (ORCPT
+        id S2388884AbgDAQgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:36:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35634 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388864AbgDAQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:36:37 -0400
+        id S2388634AbgDAQgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A07E420772;
-        Wed,  1 Apr 2020 16:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B41A20857;
+        Wed,  1 Apr 2020 16:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758997;
-        bh=1tX4S0+QPibSqEbZo24Qo6tnbpDV2afDLlug35vQ+dI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yY+a9Zrji6MfaFyEKgpiAzUjVloVj/ZPRRWmOeYCrY5AatpYfQOJRr8U4SJkQAueM
-         HeVEwqH1B+nxurWvzV8haKwJjr6jtKQ4/uPhtIHZvNEsCyxbZWlpKZBgCVdtrGRnc6
-         BrOfGBPBR8qEz5gX/KVfD+Qv04Y40Uy9Q2R6d7Xg=
+        s=default; t=1585758999;
+        bh=HjNkAYa0nUQX9P1DkfCisQvidgdIi+0kp1Rp+U8Jl6s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RxSkCOipN4YlMuabwO9eDWrh+U7QXJzB3YyrvdsLCSZHqUoEjUbY13UsznzgW9Akw
+         LsE1n76z6SJf4T+iJVT2cK0tkGc1QSej4YoYNrThA/lLi9YUcYbNzqDwnBcQqsjV+N
+         O2heuDwC9VrujcQrNRGr5OTgbeIo0kcw2rDr1RHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, russianneuromancer@ya.ru,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 4.9 009/102] usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
-Date:   Wed,  1 Apr 2020 18:17:12 +0200
-Message-Id: <20200401161533.421210821@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 000/102] 4.9.218-rc1 review
+Date:   Wed,  1 Apr 2020 18:17:03 +0200
+Message-Id: <20200401161530.451355388@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
-References: <20200401161530.451355388@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.218-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.218-rc1
+X-KernelTest-Deadline: 2020-04-03T16:15+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,52 +67,443 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+This is the start of the stable review cycle for the 4.9.218 release.
+There are 102 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 75d7676ead19b1fbb5e0ee934c9ccddcb666b68c upstream.
+Responses should be made by Fri, 03 Apr 2020 16:09:36 +0000.
+Anything received after that time might be too late.
 
-We have been receiving bug reports that ethernet connections over
-RTL8153 based ethernet adapters stops working after a while with
-errors like these showing up in dmesg when the ethernet stops working:
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.218-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-[12696.189484] r8152 6-1:1.0 enp10s0u1: Tx timeout
-[12702.333456] r8152 6-1:1.0 enp10s0u1: Tx timeout
-[12707.965422] r8152 6-1:1.0 enp10s0u1: Tx timeout
+thanks,
 
-This has been reported on Dell WD15 docks, Belkin USB-C Express Dock 3.1
-docks and with generic USB to ethernet dongles using the RTL8153
-chipsets. Some users have tried adding usbcore.quirks=0bda:8153:k to
-the kernel commandline and all users who have tried this report that
-this fixes this.
+greg k-h
 
-Also note that we already have an existing NO_LPM quirk for the RTL8153
-used in the Microsoft Surface Dock (where it uses a different usb-id).
+-------------
+Pseudo-Shortlog of commits:
 
-This commit adds a NO_LPM quirk for the generic Realtek RTL8153
-0bda:8153 usb-id, fixing the Tx timeout errors on these devices.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.218-rc1
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=198931
-Cc: stable@vger.kernel.org
-Cc: russianneuromancer@ya.ru
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200313120708.100339-1-hdegoede@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+disconnect3d <dominik.b.czarnota@gmail.com>
+    perf map: Fix off by one in strncpy() size argument
 
----
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+Ilie Halip <ilie.halip@gmail.com>
+    arm64: alternative: fix build with clang integrated assembler
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -232,6 +232,9 @@ static const struct usb_device_id usb_qu
- 	/* Realtek hub in Dell WD19 (Type-C) */
- 	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
- 
-+	/* Generic RTL8153 based ethernet adapters */
-+	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
-+
- 	/* Action Semiconductor flash disk */
- 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
- 			USB_QUIRK_STRING_FETCH_255 },
+Marek Vasut <marex@denx.de>
+    net: ks8851-ml: Fix IO operations, again
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    bpf: Explicitly memset the bpf_attr structure
+
+Eric Biggers <ebiggers@google.com>
+    vt: vt_ioctl: fix use-after-free in vt_in_use()
+
+Peter Zijlstra <peterz@infradead.org>
+    locking/atomic, kref: Add kref_read()
+
+Eric Biggers <ebiggers@google.com>
+    vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
+
+Eric Biggers <ebiggers@google.com>
+    vt: vt_ioctl: remove unnecessary console allocation checks
+
+Jiri Slaby <jslaby@suse.cz>
+    vt: switch vt_dont_switch to bool
+
+Jiri Slaby <jslaby@suse.cz>
+    vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
+
+Jiri Slaby <jslaby@suse.cz>
+    vt: selection, introduce vc_is_sel
+
+Johannes Berg <johannes.berg@intel.com>
+    mac80211: fix authentication with iwlwifi/mvm
+
+Jouni Malinen <jouni@codeaurora.org>
+    mac80211: Check port authorization in the ieee80211_tx_dequeue() case
+
+Johan Hovold <johan@kernel.org>
+    media: xirlink_cit: add missing descriptor sanity checks
+
+Johan Hovold <johan@kernel.org>
+    media: stv06xx: add missing descriptor sanity checks
+
+Johan Hovold <johan@kernel.org>
+    media: dib0700: fix rc endpoint lookup
+
+Johan Hovold <johan@kernel.org>
+    media: ov519: add missing endpoint sanity checks
+
+Eric Biggers <ebiggers@google.com>
+    libfs: fix infoleak in simple_attr_read()
+
+Qiujun Huang <hqjagain@gmail.com>
+    staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
+
+Qiujun Huang <hqjagain@gmail.com>
+    staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
+
+Larry Finger <Larry.Finger@lwfinger.net>
+    staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
+
+Johan Hovold <johan@kernel.org>
+    media: usbtv: fix control-message timeouts
+
+Johan Hovold <johan@kernel.org>
+    media: flexcop-usb: fix endpoint sanity check
+
+Mans Rullgard <mans@mansr.com>
+    usb: musb: fix crash with highmen PIO and usbmon
+
+Qiujun Huang <hqjagain@gmail.com>
+    USB: serial: io_edgeport: fix slab-out-of-bounds read in edge_interrupt_callback
+
+Matthias Reichl <hias@horus.com>
+    USB: cdc-acm: restore capability check order
+
+Pawel Dembicki <paweldembicki@gmail.com>
+    USB: serial: option: add Wistron Neweb D19Q1
+
+Pawel Dembicki <paweldembicki@gmail.com>
+    USB: serial: option: add BroadMobi BM806U
+
+Pawel Dembicki <paweldembicki@gmail.com>
+    USB: serial: option: add support for ASKEY WWHC050
+
+Masami Hiramatsu <mhiramat@kernel.org>
+    tools: Let O= makes handle a relative path with -C option
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    Input: raydium_i2c_ts - fix error codes in raydium_i2c_boot_trigger()
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    Input: raydium_i2c_ts - use true and false for boolean values
+
+Torsten Hilbrich <torsten.hilbrich@secunet.com>
+    vti6: Fix memory leak of skb if input policy check fails
+
+Pablo Neira Ayuso <pablo@netfilter.org>
+    netfilter: nft_fwd_netdev: validate family and chain type
+
+YueHaibing <yuehaibing@huawei.com>
+    xfrm: policy: Fix doulbe free in xfrm_policy_timer
+
+Xin Long <lucien.xin@gmail.com>
+    xfrm: add the missing verify_sec_ctx_len check in xfrm_add_acquire
+
+Xin Long <lucien.xin@gmail.com>
+    xfrm: fix uctx len check in verify_sec_ctx_len
+
+Nicolas Dichtel <nicolas.dichtel@6wind.com>
+    vti[6]: fix packet tx through bpf_redirect() in XinY cases
+
+Edward Cree <ecree@solarflare.com>
+    genirq: Fix reference leaks on irq affinity notifiers
+
+Johannes Berg <johannes.berg@intel.com>
+    mac80211: mark station unauthorized before key removal
+
+Martin K. Petersen <martin.petersen@oracle.com>
+    scsi: sd: Fix optimal I/O size for devices that change reported values
+
+Dirk Mueller <dmueller@suse.com>
+    scripts/dtc: Remove redundant YYLOC global declaration
+
+Masami Hiramatsu <mhiramat@kernel.org>
+    perf probe: Do not depend on dwfl_module_addrsym()
+
+Roger Quadros <rogerq@ti.com>
+    ARM: dts: omap5: Add bus_dma_limit for L3 bus
+
+Roger Quadros <rogerq@ti.com>
+    ARM: dts: dra7: Add bus_dma_limit for L3 bus
+
+Chuhong Yuan <hslester96@gmail.com>
+    i2c: hix5hd2: add missed clk_disable_unprepare in remove
+
+Dominik Czarnota <dominik.b.czarnota@gmail.com>
+    sxgbe: Fix off by one in samsung driver strncpy size arg
+
+Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
+    mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
+
+Wen Xiong <wenxiong@linux.vnet.ibm.com>
+    scsi: ipr: Fix softlockup when rescanning devices in petitboot
+
+Madalin Bucur <madalin.bucur@nxp.com>
+    dt-bindings: net: FMan erratum A050385
+
+Mike Gilbert <floppym@gentoo.org>
+    cpupower: avoid multiple definition with gcc -fno-common
+
+Sabrina Dubroca <sd@queasysnail.net>
+    net: ipv4: don't let PMTU updates increase route MTU
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: VMX: Do not allow reexecute_instruction() when skipping MMIO instr
+
+Taehee Yoo <ap420073@gmail.com>
+    hsr: set .netnsok flag
+
+Taehee Yoo <ap420073@gmail.com>
+    hsr: add restart routine into hsr_get_node_list()
+
+Taehee Yoo <ap420073@gmail.com>
+    hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
+
+Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+    net: mvneta: Fix the case where the last poll did not process all rx
+
+Taehee Yoo <ap420073@gmail.com>
+    vxlan: check return value of gro_cells_init()
+
+Oliver Hartkopp <socketcan@hartkopp.net>
+    slcan: not call free_netdev before rtnl_unlock in slcan_open
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    NFC: fdp: Fix a signedness bug in fdp_nci_send_patch()
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: keep alloc_hash updated after hash allocation
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    net_sched: cls_route: remove the right filter from hashtable
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: dsa: Fix duplicate frames flooded by learning
+
+Willem de Bruijn <willemb@google.com>
+    macsec: restrict to ethernet devices
+
+Taehee Yoo <ap420073@gmail.com>
+    hsr: fix general protection fault in hsr_addr_is_self()
+
+Lyude Paul <lyude@redhat.com>
+    Revert "drm/dp_mst: Skip validating ports during destruction, just ref"
+
+Johan Hovold <johan@kernel.org>
+    staging: greybus: loopback_test: fix potential path truncations
+
+Johan Hovold <johan@kernel.org>
+    staging: greybus: loopback_test: fix potential path truncation
+
+Cristian Marussi <cristian.marussi@arm.com>
+    arm64: smp: fix smp_send_stop() behaviour
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    ALSA: hda/realtek: Fix pop noise on ALC225
+
+Thomas Gleixner <tglx@linutronix.de>
+    futex: Unbreak futex hashing
+
+Peter Zijlstra <peterz@infradead.org>
+    futex: Fix inode life-time issue
+
+Nathan Chancellor <natechancellor@gmail.com>
+    kbuild: Disable -Wpointer-to-enum-cast
+
+Anthony Mallet <anthony.mallet@laas.fr>
+    USB: cdc-acm: fix rounding error in TIOCSSERIAL
+
+Anthony Mallet <anthony.mallet@laas.fr>
+    USB: cdc-acm: fix close_delay and closing_wait units in TIOCSSERIAL
+
+Joerg Roedel <jroedel@suse.de>
+    x86/mm: split vmalloc_sync_all()
+
+Vlastimil Babka <vbabka@suse.cz>
+    mm, slub: prevent kmalloc_node crashes and memory leaks
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    mm: slub: be more careful about the double cmpxchg of freelist
+
+Chunguang Xu <brookxu@tencent.com>
+    memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
+
+Corentin Labbe <clabbe@baylibre.com>
+    rtc: max8907: add missing select REGMAP_IRQ
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    intel_th: Fix user-visible error codes
+
+Samuel Thibault <samuel.thibault@ens-lyon.org>
+    staging/speakup: fix get_word non-space look-ahead
+
+Michael Straube <straube.linux@gmail.com>
+    staging: rtl8188eu: Add device id for MERCUSYS MW150US v2
+
+Michał Mirosław <mirq-linux@rere.qmqm.pl>
+    mmc: sdhci-of-at91: fix cd-gpios for SAMA5D2
+
+Stephan Gerhold <stephan@gerhold.net>
+    iio: magnetometer: ak8974: Fix negative raw values in sysfs
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: pcm: oss: Avoid plugin buffer overflow
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: seq: oss: Fix running status after receiving sysex
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: seq: virmidi: Fix running status after receiving sysex
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: line6: Fix endless MIDI read loop
+
+Scott Chen <scott@labau.com.tw>
+    USB: serial: pl2303: add device-id for HP LD381
+
+Ran Wang <ran.wang_1@nxp.com>
+    usb: host: xhci-plat: add a shutdown
+
+Daniele Palmas <dnlplm@gmail.com>
+    USB: serial: option: add ME910G1 ECM composition 0x110b
+
+Hans de Goede <hdegoede@redhat.com>
+    usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    USB: Disable LPM on WD19's Realtek Hub
+
+Daniel Axtens <dja@axtens.net>
+    altera-stapl: altera_get_note: prevent write beyond end of 'key'
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    drm/exynos: dsi: fix workaround for the legacy clock name
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    drm/exynos: dsi: propagate error value and silence meaningless warning
+
+Thommy Jakobsson <thommyj@gmail.com>
+    spi/zynqmp: remove entry that causes a cs glitch
+
+Kishon Vijay Abraham I <kishon@ti.com>
+    ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+
+Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+    powerpc: Include .BTF section
+
+Yuji Sasaki <sasakiy@chromium.org>
+    spi: qup: call spi_qup_pm_resume_runtime before suspending
+
+
+-------------
+
+Diffstat:
+
+ .../devicetree/bindings/powerpc/fsl/fman.txt       |  7 ++
+ Makefile                                           |  4 +-
+ arch/arm/boot/dts/dra7.dtsi                        |  3 +
+ arch/arm/boot/dts/omap5.dtsi                       |  1 +
+ arch/arm64/include/asm/alternative.h               |  2 +-
+ arch/arm64/kernel/smp.c                            | 17 +++-
+ arch/powerpc/kernel/vmlinux.lds.S                  |  6 ++
+ arch/x86/kvm/vmx.c                                 |  4 +-
+ arch/x86/mm/fault.c                                | 26 +++++-
+ drivers/acpi/apei/ghes.c                           |  2 +-
+ drivers/gpu/drm/drm_dp_mst_topology.c              | 15 +---
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 12 +--
+ drivers/hwtracing/intel_th/msu.c                   |  6 +-
+ drivers/i2c/busses/i2c-hix5hd2.c                   |  1 +
+ drivers/iio/magnetometer/ak8974.c                  |  2 +-
+ drivers/input/touchscreen/raydium_i2c_ts.c         |  4 +-
+ drivers/media/usb/b2c2/flexcop-usb.c               |  6 +-
+ drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +-
+ drivers/media/usb/gspca/ov519.c                    | 10 +++
+ drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 ++++-
+ drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +
+ drivers/media/usb/gspca/xirlink_cit.c              | 18 ++++-
+ drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
+ drivers/misc/altera-stapl/altera.c                 | 12 +--
+ drivers/mmc/host/sdhci-of-at91.c                   |  8 +-
+ drivers/net/can/slcan.c                            |  3 +
+ drivers/net/ethernet/marvell/mvneta.c              |  3 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c           | 56 ++++++++++++-
+ drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c    |  2 +-
+ drivers/net/macsec.c                               |  3 +
+ drivers/net/vxlan.c                                | 11 ++-
+ drivers/nfc/fdp/fdp.c                              |  5 +-
+ drivers/rtc/Kconfig                                |  1 +
+ drivers/scsi/ipr.c                                 |  3 +-
+ drivers/scsi/ipr.h                                 |  1 +
+ drivers/scsi/sd.c                                  |  4 +-
+ drivers/spi/spi-qup.c                              | 11 ++-
+ drivers/spi/spi-zynqmp-gqspi.c                     |  3 -
+ drivers/staging/greybus/tools/loopback_test.c      | 17 ++--
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  2 +
+ drivers/staging/speakup/main.c                     |  3 +-
+ drivers/staging/wlan-ng/hfa384x_usb.c              |  2 +
+ drivers/staging/wlan-ng/prism2usb.c                |  1 +
+ drivers/tty/vt/selection.c                         |  5 ++
+ drivers/tty/vt/vt.c                                | 30 ++++++-
+ drivers/tty/vt/vt_ioctl.c                          | 80 ++++++++++---------
+ drivers/usb/class/cdc-acm.c                        | 20 +++--
+ drivers/usb/core/quirks.c                          |  6 ++
+ drivers/usb/host/xhci-plat.c                       |  1 +
+ drivers/usb/musb/musb_host.c                       | 17 ++--
+ drivers/usb/serial/io_edgeport.c                   |  2 +-
+ drivers/usb/serial/option.c                        |  8 ++
+ drivers/usb/serial/pl2303.c                        |  1 +
+ drivers/usb/serial/pl2303.h                        |  1 +
+ fs/inode.c                                         |  1 +
+ fs/libfs.c                                         |  8 +-
+ include/linux/fs.h                                 |  1 +
+ include/linux/futex.h                              | 17 ++--
+ include/linux/kref.h                               |  5 ++
+ include/linux/selection.h                          |  4 +-
+ include/linux/vmalloc.h                            |  5 +-
+ include/linux/vt_kern.h                            |  2 +-
+ kernel/bpf/syscall.c                               |  3 +-
+ kernel/futex.c                                     | 93 +++++++++++++---------
+ kernel/irq/manage.c                                | 11 ++-
+ kernel/notifier.c                                  |  2 +-
+ mm/memcontrol.c                                    | 10 ++-
+ mm/nommu.c                                         | 10 ++-
+ mm/slub.c                                          | 32 +++++---
+ mm/vmalloc.c                                       | 11 ++-
+ net/dsa/tag_brcm.c                                 |  2 +
+ net/hsr/hsr_framereg.c                             | 10 +--
+ net/hsr/hsr_netlink.c                              | 74 +++++++++--------
+ net/hsr/hsr_slave.c                                |  8 +-
+ net/ipv4/Kconfig                                   |  1 +
+ net/ipv4/ip_vti.c                                  | 38 +++++++--
+ net/ipv4/route.c                                   |  7 +-
+ net/ipv6/ip6_vti.c                                 | 34 ++++++--
+ net/mac80211/mesh_hwmp.c                           |  3 +-
+ net/mac80211/sta_info.c                            |  6 ++
+ net/mac80211/tx.c                                  | 20 ++++-
+ net/netfilter/nft_fwd_netdev.c                     |  8 ++
+ net/sched/cls_route.c                              |  4 +-
+ net/sched/cls_tcindex.c                            |  1 +
+ net/xfrm/xfrm_policy.c                             |  2 +
+ net/xfrm/xfrm_user.c                               |  6 +-
+ scripts/Makefile.extrawarn                         |  1 +
+ scripts/dtc/dtc-lexer.l                            |  1 -
+ sound/core/oss/pcm_plugin.c                        | 12 ++-
+ sound/core/seq/oss/seq_oss_midi.c                  |  1 +
+ sound/core/seq/seq_virmidi.c                       |  1 +
+ sound/pci/hda/patch_realtek.c                      |  2 +
+ sound/usb/line6/driver.c                           |  2 +-
+ sound/usb/line6/midibuf.c                          |  2 +-
+ tools/perf/Makefile                                |  2 +-
+ tools/perf/util/map.c                              |  2 +-
+ tools/perf/util/probe-finder.c                     | 11 ++-
+ .../cpupower/utils/idle_monitor/amd_fam14h_idle.c  |  2 +-
+ .../cpupower/utils/idle_monitor/cpuidle_sysfs.c    |  2 +-
+ .../cpupower/utils/idle_monitor/cpupower-monitor.c |  2 +
+ .../cpupower/utils/idle_monitor/cpupower-monitor.h |  2 +-
+ tools/scripts/Makefile.include                     |  4 +-
+ 102 files changed, 682 insertions(+), 303 deletions(-)
 
 
