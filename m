@@ -2,117 +2,220 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B0AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B89C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1FDC20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cm6y4LZA"
+	by mail.kernel.org (Postfix) with ESMTP id 80C0E20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbgDAID4 (ORCPT
+        id S1732021AbgDAIHE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:03:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46662 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731850AbgDAIDz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:03:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585728234;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6VsagWNjkgsWtPqpkfjc3hiHgmMB2HfZJo5AqKd3BnE=;
-        b=Cm6y4LZAvRRq0BLdp+du7umj4ZsrTErEqyfOAL41S48QURnwiqlKwczShKGrdC1bropCEB
-        X9T++AqW0NVbiNYlt1g9+C5MsA8mntPfHPZFMadl1uO1rIOHfiWzc6JxGGNAXmR1Hx1US8
-        Bi+S1uSx6Y9ZC5z2NDsO7Ys/1JQegtc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-GoaCPsPpPQ2_eObd-Ud4Vg-1; Wed, 01 Apr 2020 04:03:53 -0400
-X-MC-Unique: GoaCPsPpPQ2_eObd-Ud4Vg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C62DB104FB68;
-        Wed,  1 Apr 2020 08:03:51 +0000 (UTC)
-Received: from x1-7.localdomain.com (ovpn-114-242.ams2.redhat.com [10.36.114.242])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E615102BD7E;
-        Wed,  1 Apr 2020 08:03:50 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the MP-man MPWIN895CL tablet
-Date:   Wed,  1 Apr 2020 10:03:48 +0200
-Message-Id: <20200401080348.5128-1-hdegoede@redhat.com>
+        Wed, 1 Apr 2020 04:07:04 -0400
+Received: from mga04.intel.com ([192.55.52.120]:50979 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731879AbgDAIHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:07:04 -0400
+IronPort-SDR: Y2aY5Pb61sPeovwRZ6X+N2bmfI8SJkUyZcNKPVHunkdump2PifmqMaYriWJ0e9sHVPrcpr9Yu5
+ YAF/H/cyP0XQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 01:06:56 -0700
+IronPort-SDR: zSn1r4mbwY5Xt5YYcuwz3LnBkIaLSUXz7lfDvoDI/W0wlKDFL6GfpRUYt6qDQZdMmqxEPV4fSf
+ fhvJomMIIICA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
+   d="scan'208";a="249338872"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga003.jf.intel.com with ESMTP; 01 Apr 2020 01:06:56 -0700
+Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 01:06:55 -0700
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 01:06:55 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
+ Wed, 1 Apr 2020 16:06:52 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+CC:     "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+ userspace
+Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hgi66AgANAF4D//6OWgIAAhkzg
+Date:   Wed, 1 Apr 2020 08:06:51 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A21D793@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF8BC@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A21D5C2@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D803F42@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D803F42@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add touchscreen info for the MP-man MPWIN895CL tablet.
+> From: Tian, Kevin <kevin.tian@intel.com>
+> Sent: Wednesday, April 1, 2020 3:56 PM
+> To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
+> userspace
+> 
+> > From: Liu, Yi L <yi.l.liu@intel.com>
+> > Sent: Wednesday, April 1, 2020 3:38 PM
+> >
+> >  > From: Tian, Kevin <kevin.tian@intel.com>
+> > > Sent: Monday, March 30, 2020 7:49 PM
+> > > To: Liu, Yi L <yi.l.liu@intel.com>; alex.williamson@redhat.com;
+> > > Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1
+> > > format to userspace
+> > >
+> > > > From: Liu, Yi L <yi.l.liu@intel.com>
+> > > > Sent: Sunday, March 22, 2020 8:32 PM
+> > > >
+> > > > From: Liu Yi L <yi.l.liu@intel.com>
+> > > >
+> > > > VFIO exposes IOMMU nesting translation (a.k.a dual stage
+> > > > translation) capability to userspace. Thus applications like QEMU
+> > > > could support vIOMMU with hardware's nesting translation
+> > > > capability for pass-through devices. Before setting up nesting
+> > > > translation for pass-through devices, QEMU and other applications
+> > > > need to learn the supported
+> > > > 1st-lvl/stage-1 translation structure format like page table format.
+> > > >
+> > > > Take vSVA (virtual Shared Virtual Addressing) as an example, to
+> > > > support vSVA for pass-through devices, QEMU setup nesting
+> > > > translation for pass- through devices. The guest page table are
+> > > > configured to host as 1st-lvl/
+> > > > stage-1 page table. Therefore, guest format should be compatible
+> > > > with host side.
+> > > >
+> > > > This patch reports the supported 1st-lvl/stage-1 page table format
+> > > > on the current platform to userspace. QEMU and other alike
+> > > > applications should use this format info when trying to setup
+> > > > IOMMU nesting translation on host IOMMU.
+> > > >
+> > > > Cc: Kevin Tian <kevin.tian@intel.com>
+> > > > CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > > > Cc: Eric Auger <eric.auger@redhat.com>
+> > > > Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > > ---
+> > > >  drivers/vfio/vfio_iommu_type1.c | 56
+> > > > +++++++++++++++++++++++++++++++++++++++++
+> > > >  include/uapi/linux/vfio.h       |  1 +
+> > > >  2 files changed, 57 insertions(+)
+> > > >
+> > > > diff --git a/drivers/vfio/vfio_iommu_type1.c
+> > > > b/drivers/vfio/vfio_iommu_type1.c index 9aa2a67..82a9e0b 100644
+> > > > --- a/drivers/vfio/vfio_iommu_type1.c
+> > > > +++ b/drivers/vfio/vfio_iommu_type1.c
+> > > > @@ -2234,11 +2234,66 @@ static int
+> > vfio_iommu_type1_pasid_free(struct
+> > > > vfio_iommu *iommu,
+> > > >  	return ret;
+> > > >  }
+> > > >
+> > > > +static int vfio_iommu_get_stage1_format(struct vfio_iommu *iommu,
+> > > > +					 u32 *stage1_format)
+> > > > +{
+> > > > +	struct vfio_domain *domain;
+> > > > +	u32 format = 0, tmp_format = 0;
+> > > > +	int ret;
+> > > > +
+> > > > +	mutex_lock(&iommu->lock);
+> > > > +	if (list_empty(&iommu->domain_list)) {
+> > > > +		mutex_unlock(&iommu->lock);
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	list_for_each_entry(domain, &iommu->domain_list, next) {
+> > > > +		if (iommu_domain_get_attr(domain->domain,
+> > > > +			DOMAIN_ATTR_PASID_FORMAT, &format)) {
+> > > > +			ret = -EINVAL;
+> > > > +			format = 0;
+> > > > +			goto out_unlock;
+> > > > +		}
+> > > > +		/*
+> > > > +		 * format is always non-zero (the first format is
+> > > > +		 * IOMMU_PASID_FORMAT_INTEL_VTD which is 1). For
+> > > > +		 * the reason of potential different backed IOMMU
+> > > > +		 * formats, here we expect to have identical formats
+> > > > +		 * in the domain list, no mixed formats support.
+> > > > +		 * return -EINVAL to fail the attempt of setup
+> > > > +		 * VFIO_TYPE1_NESTING_IOMMU if non-identical formats
+> > > > +		 * are detected.
+> > > > +		 */
+> > > > +		if (tmp_format && tmp_format != format) {
+> > > > +			ret = -EINVAL;
+> > > > +			format = 0;
+> > > > +			goto out_unlock;
+> > > > +		}
+> > > > +
+> > > > +		tmp_format = format;
+> > > > +	}
+> > >
+> > > this path is invoked only in VFIO_IOMMU_GET_INFO path. If we don't
+> > > want
+> > to
+> > > assume the status quo that one container holds only one device w/
+> > vIOMMU
+> > > (the prerequisite for vSVA), looks we also need check the format
+> > > compatibility when attaching a new group to this container?
+> >
+> > right. if attaching to a nesting type container (vfio_iommu.nesting
+> > bit indicates it), it should check if it is compabile with prior
+> > domains in the domain list. But if it is the first one attached to
+> > this container, it's fine. is it good?
+> 
+> yes, but my point is whether we should check the format compatibility
+> in the attach path...
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+I guess so. Assume a device has been attached to a container, and
+userspace has fetched the nesting cap info. e.g. QEMU will have a
+per-container structure to store the nesting info. And then attach
+another device from a separate group, if its backend iommu supports
+different formats, then it will be a problem. If userspace reads the
+nesting cap info again, it will get a different value. It may affect
+the prior attched device. If userspace doesn't refresh the nesting
+info by re-fetch, then the newly added device may use a format which
+its backend iommu doesn't support.
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x8=
-6/touchscreen_dmi.c
-index 6ec8923dec1a..931814e62454 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -373,6 +373,23 @@ static const struct ts_dmi_data jumper_ezpad_mini3_d=
-ata =3D {
- 	.properties	=3D jumper_ezpad_mini3_props,
- };
-=20
-+static const struct property_entry mpman_mpwin895cl_props[] =3D {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 3),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 9),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1150),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-mpman-mpwin895cl.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data mpman_mpwin895cl_data =3D {
-+	.acpi_name	=3D "MSSL1680:00",
-+	.properties	=3D mpman_mpwin895cl_props,
-+};
-+
- static const struct property_entry myria_my8307_props[] =3D {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1720),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-@@ -908,6 +925,14 @@ const struct dmi_system_id touchscreen_dmi_table[] =3D=
- {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "FlexBook edge11 - M-FBE11"),
- 		},
- 	},
-+	{
-+		/* MP Man MPWIN895CL */
-+		.driver_data =3D (void *)&mpman_mpwin895cl_data,
-+		.matches =3D {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MPMAN"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MPWIN8900CL"),
-+		},
-+	},
- 	{
- 		/* Myria MY8307 */
- 		.driver_data =3D (void *)&myria_my8307_data,
---=20
-2.26.0
+Although, the vendor specific iommu driver should ensure all devices
+are backed by iommu units w/ same capability (e.g. format). But it
+would better to have a check in vfio side all the same. how about your
+opinion so far?:-)
 
+Regards,
+Yi Liu
