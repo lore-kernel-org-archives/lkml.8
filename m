@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE020C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B9AC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7B22137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF07214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758212;
-	bh=6gn4xLYGX2xRiF/UKHOBlbktKkIgVnqW76JdZH6pI3g=;
+	s=default; t=1585758216;
+	bh=IAoZwNTw/LJYfeiRAw+x03kYdpq+o+xNOD7CYcRqTAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I2JPwnKTj5tjYDO1+DnukG70t79EYR7LZSNZEGScf8eZa8d2ZBw7gvMlh8vfskaLQ
-	 z/zqC6oB+71Xv+VK9Xzri7rm3zsrWHMomyHY0DUXMvrRKeZ0KrMqDaoOA4Z66EfgHJ
-	 TAhQEiYipEnP1AUBTHc4s2cEG8fu2AtZH7Z6KpGk=
+	b=IVT4l5WAZVhk+IVP3U9TfTQwG3SsHwoY9eeW/OcDvViw5TTB0mUOTvUM3lRt9bPi0
+	 iIKxa7NxquWWJ1VOVnVH8aqFpPPjK0sSrPFoy1I26f3fCUnrZVmmOg+ogLxMJ6Ck0F
+	 GAj7QcUOwgzO4OKtI8LbSSIBExZRcm1pOpFwTYz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732390AbgDAQXb (ORCPT
+        id S2387606AbgDAQXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46754 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732304AbgDAQX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:23:28 -0400
+        id S1733213AbgDAQXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:23:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D98AD212CC;
-        Wed,  1 Apr 2020 16:23:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE6A6212CC;
+        Wed,  1 Apr 2020 16:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758207;
-        bh=6gn4xLYGX2xRiF/UKHOBlbktKkIgVnqW76JdZH6pI3g=;
+        s=default; t=1585758211;
+        bh=IAoZwNTw/LJYfeiRAw+x03kYdpq+o+xNOD7CYcRqTAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p+0Z86Hn4r7EwLPvueLpWzKXV4hB9nB51wcyPqohOrEsMTXtr4njTTZddfpv24tGt
-         b4e+Qy2WzLTD87KYu4x38WUxnbiX0F7hLvLeNc3NtEuJLssN7PUUnsxgvkk60f5TZS
-         h9te0fenTbLXphXvmovBUw326TGaCgv3hv07olw0=
+        b=v0l2XCgeaypnrteW1ljHhFKYjbyKgTv7JtH31t0J1pBiaxN1ibv5fzkLbFgKKc4yx
+         DQ+K0gYMyWDlQ8aCqoZoyvku2UeHpOdqW2EJZy/5yjSikAxCFxJ6ONGdkZsx5e0IH5
+         wmgKue3APSWn3nkjMazR9b/lfhzNcVLBzkOCywpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Emil Renner Berthing <kernel@esmil.dk>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 018/116] net: stmmac: dwmac-rk: fix error path in rk_gmac_probe
-Date:   Wed,  1 Apr 2020 18:16:34 +0200
-Message-Id: <20200401161544.538296512@linuxfoundation.org>
+Subject: [PATCH 4.19 019/116] NFC: fdp: Fix a signedness bug in fdp_nci_send_patch()
+Date:   Wed,  1 Apr 2020 18:16:35 +0200
+Message-Id: <20200401161544.727136967@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -59,31 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emil Renner Berthing <kernel@esmil.dk>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 9de9aa487daff7a5c73434c24269b44ed6a428e6 ]
+[ Upstream commit 0dcdf9f64028ec3b75db6b691560f8286f3898bf ]
 
-Make sure we clean up devicetree related configuration
-also when clock init fails.
+The nci_conn_max_data_pkt_payload_size() function sometimes returns
+-EPROTO so "max_size" needs to be signed for the error handling to
+work.  We can make "payload_size" an int as well.
 
-Fixes: fecd4d7eef8b ("net: stmmac: dwmac-rk: Add integrated PHY support")
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Fixes: a06347c04c13 ("NFC: Add Intel Fields Peak NFC solution driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/fdp/fdp.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1420,7 +1420,7 @@ static int rk_gmac_probe(struct platform
+--- a/drivers/nfc/fdp/fdp.c
++++ b/drivers/nfc/fdp/fdp.c
+@@ -192,7 +192,7 @@ static int fdp_nci_send_patch(struct nci
+ 	const struct firmware *fw;
+ 	struct sk_buff *skb;
+ 	unsigned long len;
+-	u8 max_size, payload_size;
++	int max_size, payload_size;
+ 	int rc = 0;
  
- 	ret = rk_gmac_clk_init(plat_dat);
- 	if (ret)
--		return ret;
-+		goto err_remove_config_dt;
+ 	if ((type == NCI_PATCH_TYPE_OTP && !info->otp_patch) ||
+@@ -215,8 +215,7 @@ static int fdp_nci_send_patch(struct nci
  
- 	ret = rk_gmac_powerup(plat_dat->bsp_priv);
- 	if (ret)
+ 	while (len) {
+ 
+-		payload_size = min_t(unsigned long, (unsigned long) max_size,
+-				     len);
++		payload_size = min_t(unsigned long, max_size, len);
+ 
+ 		skb = nci_skb_alloc(ndev, (NCI_CTRL_HDR_SIZE + payload_size),
+ 				    GFP_KERNEL);
 
 
