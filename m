@@ -2,339 +2,173 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDB4C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED001C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8581C208FE
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF6820787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IB1PXBe2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3sNiT6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732997AbgDAS0W (ORCPT
+        id S1732918AbgDAS1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:26:22 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53288 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732316AbgDAS0V (ORCPT
+        Wed, 1 Apr 2020 14:27:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41182 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730420AbgDAS1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:26:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585765580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Acn/JRNYZl9LcndQ8j8QhECk/FmgXfJf7w+PhnRfkkA=;
-        b=IB1PXBe2vXZvB0ao2jn1LHyRpqeHO5nCy4v7wNg7gBf4iwWfORC2m13KkbTwiE4RMrZk9X
-        5M1AOBRv6Qz8uDZE/8a7dWkUOvowanfV0whV8FGv1HgqfPw9hXkJ2W0cJcCAbwkUAFh5BM
-        49K5VYJajvMTcN/Hzi8AWLaU3lF/fCY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-19-tR-Kbl1yPEunDSd-p93M3w-1; Wed, 01 Apr 2020 14:26:19 -0400
-X-MC-Unique: tR-Kbl1yPEunDSd-p93M3w-1
-Received: by mail-wr1-f71.google.com with SMTP id y1so250338wrp.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 11:26:19 -0700 (PDT)
+        Wed, 1 Apr 2020 14:27:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id v1so1059839edq.8;
+        Wed, 01 Apr 2020 11:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qc8FdgkWFDlzCGPYLOnP9rFKt+4lOYRHOhNF4lWF83w=;
+        b=h3sNiT6w5xhV7LEni1uXvK3mEPsRMhJkj6EkwmrmqhNJ3+PmaeC4pDLym0QIDqoXxj
+         nXVOWLYT6+vf1kIyr3ySKn3ujiPXPq2GhWRPEWPGYYnJLC5Mt+WFdYo6sJXcQLnLRO4k
+         cymwVaZhmrSxhbS4NuSNUrUvfvOV1QxQ4MTO9EMiEVXDsWSys5BTFov5jWj0n3IeCk1q
+         VF0fOEBc2NIE80cWUxOb5qjfYlaeU6u22H8ao2LiQ9iq1dSAnlM0EWZkMe20+kpwi1tn
+         do56udx2eWFB9Uhfr9Y+4dmYSfAoPG+/Cx2xyRQUOYzKwLTQFX8FkOje8+GLOIF3hFE5
+         OXoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Acn/JRNYZl9LcndQ8j8QhECk/FmgXfJf7w+PhnRfkkA=;
-        b=DOB4OkGoBD0yatNqnFgkvP19rG5byo6Lw0sjYdBUNfEfmBqpAVpenc/kNc0Mc0oeQO
-         /uHH+i+YyLpXQAd9KzF547vzRoaZ0B1l3W3i/LAafvx4LKZMZAcRzY1wY9Be5rlI+mOo
-         Z00fZLFR28LPL6kbd+Mg2p/Old985yWhOVTwvh3iVESky9d5I7FRS3ymOsJpBFL/+WWz
-         2UvO09ofJggkwyDYff0OemoinoarJh7LYAIoZXfhqlqiek1lsoX05BnzvCZcP/2Lfvv4
-         2u7Ukrgrw4dhSzsftcLpqF1MhpXgGg525sPczUaIu+aaCOodILerItxQUx+PLHO8qOSm
-         pzUw==
-X-Gm-Message-State: AGi0Pua9XmoSPRcFgtfgydKdDx8BDZOlDuh3rkjv83S/wVRsydqKC2o2
-        dTx6VzeRF1VM0tNb3pk/jyKxjxsCQNrHVUkdIGls5H6UfhPvwkBtNp2y1t8HRpi3cs7wuwtWiHO
-        pKXdOdTMyI7FCkp3G9tiPg9xX
-X-Received: by 2002:a1c:4805:: with SMTP id v5mr5398249wma.98.1585765577986;
-        Wed, 01 Apr 2020 11:26:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLx23H4C+MO+AA+AAeCfEZ3Mg44k3QvPtK+gZW+sUI+wJitu8GFgVoWhoYiOuzVaD+ha6hNiA==
-X-Received: by 2002:a1c:4805:: with SMTP id v5mr5398218wma.98.1585765577635;
-        Wed, 01 Apr 2020 11:26:17 -0700 (PDT)
-Received: from x1-7.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id c85sm3655872wmd.48.2020.04.01.11.26.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 11:26:17 -0700 (PDT)
-Subject: Re: [PATCH 5.6 regression fix 1/2] ACPI: PM: Add
- acpi_s2idle_register_wake_callback()
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "5 . 4+" <stable@vger.kernel.org>
-References: <20200329223419.122796-1-hdegoede@redhat.com>
- <20200329223419.122796-2-hdegoede@redhat.com>
- <CAJZ5v0iapuqnfsQHhTQTWXdEtzX_MMTBUqdAzCej19AF9rtrNA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <daea7dad-73ac-3f2a-75a1-58017988ec89@redhat.com>
-Date:   Wed, 1 Apr 2020 20:26:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qc8FdgkWFDlzCGPYLOnP9rFKt+4lOYRHOhNF4lWF83w=;
+        b=f8KXIp70mUZhOPD0TvN9ZOLIMGCtjueSsnUVLnY2bLICBwAkgAlAULgRQ2UBEfP9t+
+         P8pFI3lfbeoaa6CHDNZNrmT60ioloHvUjDEp1dYON669QgqCxs++6ueS7MHLevcYhQNV
+         NGqEIl2MljdPXbn5POnpFk2TP3xQsTp4u3FW7r6YaAenrwEsDglTsJNarrSwdBFqzbbC
+         AYh0u/Eyy8e7M88FYdQ11ByVMzTHQXDdQTW7nbc/OU1vSlAXqP5gVGzDsbJycJsWC+2b
+         r6PYpSQ/stXmDce4M20aZGLbSeBkGXhTNA6sKxSHQwfKvH6fSiwAq7W1qK45LttmXbam
+         H/+Q==
+X-Gm-Message-State: ANhLgQ3eRP+L+16frRa4BihcZnZ7seRvBEjPn9lUtJySGg1xl0Xfxz/9
+        gmR5k1rnyxm+DWMPT7Wk+d9ZqrCg6M+5JOEDC8B58wv4ZWI=
+X-Google-Smtp-Source: ADFU+vt4AHASmjNfRn5JQa4Gc3qglj7ra6KhGxH+2qm9C0dVE3Fxo3wYrvhP6p1JqhsehGN7/QhDVsZ76LkLt0jfxCI=
+X-Received: by 2002:aa7:d602:: with SMTP id c2mr22785839edr.118.1585765635929;
+ Wed, 01 Apr 2020 11:27:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0iapuqnfsQHhTQTWXdEtzX_MMTBUqdAzCej19AF9rtrNA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200323225254.12759-1-grygorii.strashko@ti.com>
+ <20200326.200136.1601946994817303021.davem@davemloft.net> <CA+h21hr8G24ddEgAbU_TfoNAe0fqUJ0_Uyp54Gxn5cvPrM6u9g@mail.gmail.com>
+ <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com> <2d305c89-601c-5dee-06be-30257a26a392@ti.com>
+ <cac3d501-cc36-73c5-eea8-aaa2d10105b0@ti.com> <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
+In-Reply-To: <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 1 Apr 2020 21:27:04 +0300
+Message-ID: <CA+h21hpAnWbnQihTVGyB-TyRYad+gWCdF7suzsXRFJg-nsU9xg@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     David Miller <davem@davemloft.net>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        peter.ujfalusi@ti.com, Rob Herring <robh@kernel.org>,
+        netdev <netdev@vger.kernel.org>, rogerq@ti.com,
+        devicetree@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>, kishon@ti.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi David,
 
-On 4/1/20 6:32 PM, Rafael J. Wysocki wrote:
-> On Mon, Mar 30, 2020 at 12:34 AM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
->> waking up the system") the SCI triggering without there being a wakeup
->> cause recognized by the ACPI sleep code will no longer wakeup the system.
->>
->> This works as intended, but this is a problem for devices where the SCI
->> is shared with another device which is also a wakeup source.
->>
->> In the past these, from the pov of the ACPI sleep code, spurious SCIs
->> would still cause a wakeup so the wakeup from the device sharing the
->> interrupt would actually wakeup the system. This now no longer works.
->>
->> This is a problem on e.g. Bay Trail-T and Cherry Trail devices where
->> some peripherals (typically the XHCI controller) can signal a
->> Power Management Event (PME) to the Power Management Controller (PMC)
->> to wakeup the system, this uses the same interrupt as the SCI.
->> These wakeups are handled through a special INT0002 ACPI device which
->> checks for events in the GPE0a_STS for this and takes care of acking
->> the PME so that the shared interrupt stops triggering.
->>
->> The change to the ACPI sleep code to ignore the spurious SCI, causes
->> the system to no longer wakeup on these PME events. To make things
->> worse this means that the INT0002 device driver interrupt handler will
->> no longer run, causing the PME to not get cleared and resulting in the
->> system hanging. Trying to wakeup the system after such a PME through e.g.
->> the power button no longer works.
->>
->> Add an acpi_s2idle_register_wake_callback() function which registers
->> a callback to be called from acpi_s2idle_wake() and when the callback
->> returns true, return true from acpi_s2idle_wake().
->>
->> The INT0002 driver will use this mechanism to check the GPE0a_STS
->> register from acpi_s2idle_wake() and to tell the system to wakeup
->> if a PME is signaled in the register.
->>
->> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
->> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> I generally agree with the approach, but I would make some, mostly
-> cosmetic, changes.
-> 
-> First off, I'd put the new code into drivers/acpi/wakeup.c.
-> 
-> I'd export one function from there to be called from
-> acpi_s2idle_wake() and the install/uninstall routines for the users.
+On Mon, 30 Mar 2020 at 21:14, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+>
+> Hi
+>
+> On 30/03/2020 11:28, Sekhar Nori wrote:
+> > On 30/03/20 1:06 PM, Sekhar Nori wrote:
+> >> On 30/03/20 12:45 PM, Tero Kristo wrote:
+> >>> On 28/03/2020 03:53, Vladimir Oltean wrote:
+> >>>> Hi David,
+> >>>>
+> >>>> On Fri, 27 Mar 2020 at 05:02, David Miller <davem@davemloft.net> wrote:
+> >>>>>
+> >>>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+> >>>>> Date: Tue, 24 Mar 2020 00:52:43 +0200
+> >>>>>
+> >>>>>> This v6 series adds basic networking support support TI K3
+> >>>>>> AM654x/J721E SoC which
+> >>>>>> have integrated Gigabit Ethernet MAC (Media Access Controller) into
+> >>>>>> device MCU
+> >>>>>> domain and named MCU_CPSW0 (CPSW2G NUSS).
+> >>>>>    ...
+> >>>>>
+> >>>>> Series applied, thank you.
+> >>>>
+> >>>> The build is now broken on net-next:
+> >>>>
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+> >>>> (phandle_references):
+> >>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+> >>>>
+> >>>> Reference to non-existent node
+> >>>> or label "mcu_conf"
+> >>>>
+> >>>>     also defined at
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+> >>>> (phandle_references):
+> >>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+> >>>>
+> >>>> Reference to non-existent node
+> >>>> or label "phy_gmii_sel"
+> >>>>
+> >>>>     also defined at
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+> >>>>
+> >>>> As Grygorii said:
+> >>>>
+> >>>> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3
+> >>>> Platform
+> >>>> tree and provided here for testing purposes.
+> >>>
+> >>> Yeah, I think you are missing a dependency that was applied via the K3
+> >>> branch earlier. They are in linux-next now, but I am not so sure how
+> >>> much that is going to help you.
+> >>>
+> >>> You could just drop the DT patches from this merge and let me apply them
+> >>> via the platform branch.
+> >>
+> >> One other option would be that Dave merges your K3 tag which was sent to
+> >> ARM SoC to net-next. Its based on v5.6-rc1, has no other dependencies,
+> >> is already in linux-next, should be immutable and safe to merge. This
+> >> has the advantage that no rebase is necessary on net-next.
+> >>
+> >> git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux
+> >> tags/ti-k3-soc-for-v5.7
+> >
+> > FWIW, I was able to reproduce the build failure reported by Vladimir on
+> > net-next, merge Tero's tag (above) cleanly into it, and see that ARM64
+> > defconfig build on net-next succeeds after the merge.
+>
+> Thank you Sekhar for checking this.
+>
+> I'm very sorry for introducing this issue. I've tried hard to avoid such issue,
+> but still missed it (probably I have had to drop DT patches from last submission
+> and send them separately).
+>
+> Sorry again.
+>
+> --
+> Best regards,
+> grygorii
 
-Ok.
+I think the ARM64 build is now also broken on Linus' master branch,
+after the net-next merge? I am not quite sure if the device tree
+patches were supposed to land in mainline the way they did.
 
->> ---
->>   drivers/acpi/sleep.c | 70 ++++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/acpi.h |  7 +++++
->>   2 files changed, 77 insertions(+)
->>
->> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
->> index e5f95922bc21..e360e51afa8e 100644
->> --- a/drivers/acpi/sleep.c
->> +++ b/drivers/acpi/sleep.c
->> @@ -943,6 +943,65 @@ static struct acpi_scan_handler lps0_handler = {
->>          .attach = lps0_device_attach,
->>   };
->>
->> +struct s2idle_wake_callback {
-> 
-> I'd call this acpi_wakeup_handler.
-> 
->> +       struct list_head list;
-> 
-> list_node?
-> 
->> +       bool (*function)(void *data);
-> 
-> bool (*wakeup)(void *context)?
-> 
->> +       void *user_data;
-> 
-> context?
-
-Sure (for all of the above).
-
-> 
->> +};
->> +
->> +static LIST_HEAD(s2idle_wake_callback_head);
->> +static DEFINE_MUTEX(s2idle_wake_callback_mutex);
->> +
->> +/*
->> + * Drivers which may share an IRQ with the SCI can use this to register
->> + * a callback which returns true when the device they are managing wants
->> + * to trigger a wakeup.
->> + */
->> +int acpi_s2idle_register_wake_callback(
->> +       int wake_irq, bool (*function)(void *data), void *user_data)
->> +{
->> +       struct s2idle_wake_callback *callback;
->> +
->> +       /*
->> +        * If the device is not sharing its IRQ with the SCI, there is no
->> +        * need to register the callback.
->> +        */
->> +       if (!acpi_sci_irq_valid() || wake_irq != acpi_sci_irq)
->> +               return 0;
->> +
->> +       callback = kmalloc(sizeof(*callback), GFP_KERNEL);
->> +       if (!callback)
->> +               return -ENOMEM;
->> +
->> +       callback->function = function;
->> +       callback->user_data = user_data;
->> +
->> +       mutex_lock(&s2idle_wake_callback_mutex);
->> +       list_add(&callback->list, &s2idle_wake_callback_head);
->> +       mutex_unlock(&s2idle_wake_callback_mutex);
->> +
->> +       return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(acpi_s2idle_register_wake_callback);
->> +
->> +void acpi_s2idle_unregister_wake_callback(
->> +       bool (*function)(void *data), void *user_data)
->> +{
->> +       struct s2idle_wake_callback *cb;
->> +
->> +       mutex_lock(&s2idle_wake_callback_mutex);
->> +       list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
->> +               if (cb->function == function &&
->> +                   cb->user_data == user_data) {
->> +                       list_del(&cb->list);
->> +                       kfree(cb);
->> +                       break;
->> +               }
->> +       }
->> +       mutex_unlock(&s2idle_wake_callback_mutex);
->> +}
->> +EXPORT_SYMBOL_GPL(acpi_s2idle_unregister_wake_callback);
->> +
->>   static int acpi_s2idle_begin(void)
->>   {
->>          acpi_scan_lock_acquire();
->> @@ -992,6 +1051,8 @@ static void acpi_s2idle_sync(void)
->>
->>   static bool acpi_s2idle_wake(void)
->>   {
->> +       struct s2idle_wake_callback *cb;
->> +
->>          if (!acpi_sci_irq_valid())
->>                  return pm_wakeup_pending();
->>
->> @@ -1025,6 +1086,15 @@ static bool acpi_s2idle_wake(void)
->>                  if (acpi_any_gpe_status_set() && !acpi_ec_dispatch_gpe())
->>                          return true;
->>
->> +               /*
->> +                * Check callbacks registered by drivers sharing the SCI.
->> +                * Note no need to lock, nothing else is running.
->> +                */
->> +               list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
->> +                       if (cb->function(cb->user_data))
->> +                               return true;
->> +               }
-> 
-> AFAICS this needs to be done in acpi_s2idle_restore() too to clear the
-> status bits in case one of these wakeup sources triggers along with a
-> GPE or a fixed event and the other one wins the race.
-
-The "wakeup" callback does not actually clear the interrupt source, just like
-for normal interrupts it relies on the actual interrupt handling (which at this
-point is still suspended) to do this.
-
-All the wakeup callback does is check if the flag which the shared IRQ handler
-checks to see if it should handle the IRQ (so if it should return IRQ_HANDLED
-vs IRQ_NONE) is set and if the flag is set so that the actual IRQ handler
-would return IRQ_HANDLED (IOW the shared IRQ is relevant for the device)
-then it returns true from the wakeup callback.
-
-The actual handling of the IRQ and clearing of the PME status bit is
-then done by normal IRQ handling.
-
-The idea here is to have the IRQ be handled as any other IRQ even though it
-happens to be shared with the SCI, so in essence we want to behave as
-if the first if check here:
-
-         while (pm_wakeup_pending()) {
-                 /*
-                  * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the
-                  * SCI has not triggered while suspended, so bail out (the
-                  * wakeup is pending anyway and the SCI is not the source of
-                  * it).
-                  */
-                 if (irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq)))
-                         return true;
-
-Is triggering, the idea here is that yes the SCI IRQ is no longer armed,
-but the cause for that is (*) not an actual SCI but another device which
-shares the IRQ line. If any other IRQ is the cause for the wakeup then
-we would exit the loop here, so in this case we want to treat the non SCI
-IRQ event on the shared line the same as any other IRQ.
-
-*) potentially, there could be multiple causes
-
-Does this make sense ?  Note you know this code a lot better then me, so
-you may be right we need to do something extra in s2idle_restore here
-but ATM I'm not seeing what we should do there. As I've tried to explain
-the wakeup callback only checks for events, it does not actually process
-them and as such also does not ack them / clear any flags.
-
-Regards,
-
-Hans
-
-
-
-
-
-> 
->> +
->>                  /*
->>                   * Cancel the wakeup and process all pending events in case
->>                   * there are any wakeup ones in there.
->> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
->> index 0f24d701fbdc..9f06e1dc79c1 100644
->> --- a/include/linux/acpi.h
->> +++ b/include/linux/acpi.h
->> @@ -488,6 +488,13 @@ void __init acpi_nvs_nosave_s3(void);
->>   void __init acpi_sleep_no_blacklist(void);
->>   #endif /* CONFIG_PM_SLEEP */
->>
->> +#ifdef CONFIG_ACPI_SYSTEM_POWER_STATES_SUPPORT
->> +int acpi_s2idle_register_wake_callback(
->> +       int wake_irq, bool (*function)(void *data), void *user_data);
->> +void acpi_s2idle_unregister_wake_callback(
->> +       bool (*function)(void *data), void *user_data);
->> +#endif
->> +
->>   struct acpi_osc_context {
->>          char *uuid_str;                 /* UUID string */
->>          int rev;
->> --
-> 
-> Thanks!
-> 
-
+Thanks,
+-Vladimir
