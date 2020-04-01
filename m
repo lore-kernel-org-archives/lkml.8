@@ -2,137 +2,216 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59CAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76620C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C5F206F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WnPmI+js"
+	by mail.kernel.org (Postfix) with ESMTP id 2514E2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585757407;
+	bh=bGpyjY27A4ZKEtzuZp4KkH+tVyu/ndpMpxC/F4x24Uc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YzRWszlUfGuuskm6GtlfnxGZr+TAZiqEE7npeT+4CAJy9I1URrLW733yuLvC0eR9C
+	 qaOlrNpuggaYFpgEVW6ygn9tXJoZxvdqbNxZPTkP6si9RjfDhtLqfMtpokX2Wf6EN5
+	 anrZDCEK/c8Z9r/LpqRo49jGiTbJ7BNaz92XVYck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732343AbgDAQJe (ORCPT
+        id S1732353AbgDAQKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:09:34 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40936 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgDAQJe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:09:34 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031FvVZF104391;
-        Wed, 1 Apr 2020 16:09:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=uokiotoiiXWiPxukwvDObNN9ROwuv4dXFLRcVdokIVo=;
- b=WnPmI+jsoel6+/wdc22Os+HQPbmpAMD2BOghBRdAyQpo+hcvM57fs1mI5In2nCRGwpLC
- WF0IL50sKla9Ue17E26DW3LFtWaxRM+AwIhDkbVovtUa8yj1csdF10GyjroMzbaENxFP
- S5Hk+6n8J5XASyjd5ulhURBTYcdBJrW05dGNCWUWSCd+8y6psLpk/EUa50PQ4yijVb+m
- jM1VIqSvgj9dPhty1SRAPWEr8Fx1VSmn+LqelKIeFimO+KuZAH+EpXr/OE6kBLYWTtkc
- sUD5gzU3AkH2adOdexpF8uhx57MWnXZ4wSg2GGC0vu6inGArMPCFdds+RQ416aF22Cbx cA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 303cev6dhf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Apr 2020 16:09:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031G72EK180154;
-        Wed, 1 Apr 2020 16:09:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 302g2gw0vx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Apr 2020 16:09:12 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 031G9A9I001656;
-        Wed, 1 Apr 2020 16:09:10 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 01 Apr 2020 09:09:10 -0700
-Date:   Wed, 1 Apr 2020 12:09:29 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
-Message-ID: <20200401160929.jwekhr24tb44odea@ca-dmjordan1.us.oracle.com>
-References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
- <20200401154217.GQ22681@dhcp22.suse.cz>
- <dfc0014a-9b85-5eeb-70ea-d622ccf5d988@redhat.com>
- <20200401160048.GU22681@dhcp22.suse.cz>
+        Wed, 1 Apr 2020 12:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbgDAQKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:10:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D38F920B1F;
+        Wed,  1 Apr 2020 16:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585757404;
+        bh=bGpyjY27A4ZKEtzuZp4KkH+tVyu/ndpMpxC/F4x24Uc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XZAZM7tdTXq7Egp51IkLtSJjuHsatsztCTQnGpkmwHrpsxxpcmkuTjiSGGDCVDYya
+         lVCqolSl6+m6tO988ROKOTwXcuhFvVN0qtgwPsOoCtArue07hh4rxP4WpGVGcScU26
+         RbNtv0y7lTU6uVQYkr39vyH3GI0KZBJA852Kfrn4=
+Date:   Wed, 1 Apr 2020 18:10:01 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     Woody Suwalski <terraluna977@gmail.com>,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+Message-ID: <20200401161001.GA2521917@kroah.com>
+References: <20200331085308.098696461@linuxfoundation.org>
+ <6cdfe0e5-408f-2d88-cb08-c7675d78637c@gmail.com>
+ <9762570c-c83f-10d4-ecec-0d0427c2d2a3@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200401160048.GU22681@dhcp22.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004010139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 adultscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004010138
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9762570c-c83f-10d4-ecec-0d0427c2d2a3@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 06:00:48PM +0200, Michal Hocko wrote:
-> On Wed 01-04-20 17:50:22, David Hildenbrand wrote:
-> > On 01.04.20 17:42, Michal Hocko wrote:
-> > > I am sorry but I have completely missed this patch.
+On Wed, Apr 01, 2020 at 09:40:31AM -0600, shuah wrote:
+> On 3/31/20 9:06 PM, Woody Suwalski wrote:
+> > Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 5.6.1 release.
+> > > There are 23 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
 > > > 
-> > > On Wed 11-03-20 20:38:48, Shile Zhang wrote:
-> > >> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
-> > >> initialise the deferred pages with local interrupts disabled. It is
-> > >> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
-> > >> initializing deferred pages").
-> > >>
-> > >> On machine with NCPUS <= 2, the 'pgdatinit' kthread could be bound to
-> > >> the boot CPU, which could caused the tick timer long time stall, system
-> > >> jiffies not be updated in time.
-> > >>
-> > >> The dmesg shown that:
-> > >>
-> > >>     [    0.197975] node 0 initialised, 32170688 pages in 1ms
-> > >>
-> > >> Obviously, 1ms is unreasonable.
-> > >>
-> > >> Now, fix it by restore in the pending interrupts for every 32*1204 pages
-> > >> (128MB) initialized, give the chance to update the systemd jiffies.
-> > >> The reasonable demsg shown likes:
-> > >>
-> > >>     [    1.069306] node 0 initialised, 32203456 pages in 894ms
-> > >>
-> > >> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages").
+> > > Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
+> > > Anything received after that time might be too late.
 > > > 
-> > > I dislike this solution TBH. It effectivelly conserves the current code
-> > > and just works around the problem. Why do we hold the IRQ lock here in
-> > > the first place? This is an early init code and a very limited code is
-> > > running at this stage. Certainly nothing memory hotplug related which
-> > > should be the only path really interested in the resize lock AFAIR.
+> > > The whole patch series can be found in one patch at:
+> > >     https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz
+> > > 
+> > > or in the git tree and branch at:
+> > >     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> > > linux-5.6.y
+> > > and the diffstat can be found below.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
+> > > 
+> > > -------------
+> > > Pseudo-Shortlog of commits:
+> > > 
+> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >      Linux 5.6.1-rc1
+> > > 
+> > > Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> > >      media: v4l2-core: fix a use-after-free bug of sd->devnode
+> > > 
+> > > Johan Hovold <johan@kernel.org>
+> > >      media: xirlink_cit: add missing descriptor sanity checks
+> > > 
+> > > Johan Hovold <johan@kernel.org>
+> > >      media: stv06xx: add missing descriptor sanity checks
+> > > 
+> > > Johan Hovold <johan@kernel.org>
+> > >      media: dib0700: fix rc endpoint lookup
+> > > 
+> > > Johan Hovold <johan@kernel.org>
+> > >      media: ov519: add missing endpoint sanity checks
+> > > 
+> > > Eric Biggers <ebiggers@google.com>
+> > >      libfs: fix infoleak in simple_attr_read()
+> > > 
+> > > Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > >      ahci: Add Intel Comet Lake H RAID PCI ID
+> > > 
+> > > Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > >      staging: wfx: annotate nested gc_list vs tx queue locking
+> > > 
+> > > Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > >      staging: wfx: fix init/remove vs IRQ race
+> > > 
+> > > Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > >      staging: wfx: add proper "compatible" string
+> > > 
+> > > Qiujun Huang <hqjagain@gmail.com>
+> > >      staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
+> > > 
+> > > Qiujun Huang <hqjagain@gmail.com>
+> > >      staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
+> > > 
+> > > Larry Finger <Larry.Finger@lwfinger.net>
+> > >      staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
+> > > 
+> > > Dan Carpenter <dan.carpenter@oracle.com>
+> > >      staging: kpc2000: prevent underflow in cpld_reconfigure()
+> > > 
+> > > Johan Hovold <johan@kernel.org>
+> > >      media: usbtv: fix control-message timeouts
+> > > 
+> > > Johan Hovold <johan@kernel.org>
+> > >      media: flexcop-usb: fix endpoint sanity check
+> > > 
+> > > Mans Rullgard <mans@mansr.com>
+> > >      usb: musb: fix crash with highmen PIO and usbmon
+> > > 
+> > > Qiujun Huang <hqjagain@gmail.com>
+> > >      USB: serial: io_edgeport: fix slab-out-of-bounds read in
+> > > edge_interrupt_callback
+> > > 
+> > > Matthias Reichl <hias@horus.com>
+> > >      USB: cdc-acm: restore capability check order
+> > > 
+> > > Pawel Dembicki <paweldembicki@gmail.com>
+> > >      USB: serial: option: add Wistron Neweb D19Q1
+> > > 
+> > > Pawel Dembicki <paweldembicki@gmail.com>
+> > >      USB: serial: option: add BroadMobi BM806U
+> > > 
+> > > Pawel Dembicki <paweldembicki@gmail.com>
+> > >      USB: serial: option: add support for ASKEY WWHC050
+> > > 
+> > > Daniel Borkmann <daniel@iogearbox.net>
+> > >      bpf: Undo incorrect __reg_bound_offset32 handling
+> > > 
+> > > 
+> > > -------------
+> > > 
+> > > Diffstat:
+> > > 
+> > >   Makefile                                           |  4 +--
+> > >   drivers/ata/ahci.c                                 |  1 +
+> > >   drivers/media/usb/b2c2/flexcop-usb.c               |  6 ++--
+> > >   drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +--
+> > >   drivers/media/usb/gspca/ov519.c                    | 10 ++++++
+> > >   drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 +++++++++-
+> > >   drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +++
+> > >   drivers/media/usb/gspca/xirlink_cit.c              | 18 +++++++++-
+> > >   drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
+> > >   drivers/media/usb/usbtv/usbtv-video.c              |  5 +--
+> > >   drivers/media/v4l2-core/v4l2-device.c              |  1 +
+> > >   drivers/staging/kpc2000/kpc2000/core.c             |  4 +--
+> > >   drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
+> > >   .../bindings/net/wireless/siliabs,wfx.txt          |  7 ++--
+> > >   drivers/staging/wfx/bus_sdio.c                     | 15 ++++----
+> > >   drivers/staging/wfx/bus_spi.c                      | 41
+> > > +++++++++++++---------
+> > >   drivers/staging/wfx/main.c                         | 21 ++++++-----
+> > >   drivers/staging/wfx/main.h                         |  1 -
+> > >   drivers/staging/wfx/queue.c                        | 16 ++++-----
+> > >   drivers/staging/wlan-ng/hfa384x_usb.c              |  2 ++
+> > >   drivers/staging/wlan-ng/prism2usb.c                |  1 +
+> > >   drivers/usb/class/cdc-acm.c                        | 18 +++++-----
+> > >   drivers/usb/musb/musb_host.c                       | 17 +++------
+> > >   drivers/usb/serial/io_edgeport.c                   |  2 +-
+> > >   drivers/usb/serial/option.c                        |  6 ++++
+> > >   fs/libfs.c                                         |  8 +++--
+> > >   kernel/bpf/verifier.c                              | 19 ----------
+> > >   27 files changed, 149 insertions(+), 104 deletions(-)
+> > > 
+> > > 
+> > I think you have missed the
+> > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=be8c827f50a0bcd56361b31ada11dc0a3c2fd240
 > > 
-> > Yeah, I don't think ACPI and friends are up yet.
+> > 
+> > Without it 5.6 is completely broken on iwlwifi.
+> > 
 > 
-> Just to save somebody time to check. The deferred initialization blocks
-> the further boot until all workders are done - see page_alloc_init_late
-> (kernel_init path).
+> I am seeing this on my primary laptop with Linux 5.6. I switched
+> back to Linux 5.6-rc7 for now. Is this issue introduced in 5.6
+> when Dave's networking pull? 5.6-rc7 is just fine.
+> 
+> wifi authentication keeps on failing and can't connect at all.
+> 
+> Just about to report this for 5.6 and saw this thread.
 
-Ha, I just finished following all the hotplug paths to check this out, and as
-you all know there are a *lot* :-) Well at least we're in agreement.
+It will be in the next 5.6.y release, thanks.
 
-> > > This needs a double checking but I strongly believe that the lock can be
-> > > simply dropped in this path.
-
-This is what my fix does, it limits the time the resize lock is held.
+greg k-h
