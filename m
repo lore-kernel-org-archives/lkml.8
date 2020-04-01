@@ -2,53 +2,51 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B16C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374E7C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6B62063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E562063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585760030;
-	bh=pSzYDhqbXKaw3ZhLbc508OLHR3Hbh840zdWFKzNUWz8=;
+	s=default; t=1585760035;
+	bh=iQ3XSb+1+W70hL2bq3JLGymvdhOzpDA6tBAKKyNBbk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q/BIv1njmpGEcPhn1ou2TDR4m+Ou89Yl8isjQdpMwZlvncEyqskbAj+c2Hx++pwwe
-	 a4vQI9as5c3UQhsLyW2/XvY4U2fQ83yZDsj9GoDVrEIJ1KZTdtlBaYQGGjSXRbSqaT
-	 WOTEFWZdOAy3P8X4U9LpYswbPHrD/86JrlwDkcv4=
+	b=kzd9NMsA9QYcUD07EbxsINhIeTbiPcrf+ht/UljY5gIklhcBMOp+bbtRt4tzbZuZg
+	 7UFcnn3vJAolPgqNWKZtSugR/PAZJbcRVyqvJ47XU2GK//YvDjsfCfCycyZPy+Y9eh
+	 GtPaCHUtfqn6Xo0RlA3CKcTOdnTGQG7ZUYXih2IQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388300AbgDAQxt (ORCPT
+        id S2388306AbgDAQb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57784 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:31:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733229AbgDAQbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:31:33 -0400
+        id S2388284AbgDAQbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:31:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45F8B20658;
-        Wed,  1 Apr 2020 16:31:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D7B02063A;
+        Wed,  1 Apr 2020 16:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758692;
-        bh=pSzYDhqbXKaw3ZhLbc508OLHR3Hbh840zdWFKzNUWz8=;
+        s=default; t=1585758673;
+        bh=iQ3XSb+1+W70hL2bq3JLGymvdhOzpDA6tBAKKyNBbk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ZFVL6WvbS6t0XBgUMCOEex3i65FHg0i9Dc7ZfTvfQwb+3O5ME0DVxMjBVlCeKxKY
-         vSDYo+H8CA1CaQ3NZoDDZYR2zWXTvXkjQTa/hfp4SuRMGAmHd+OAZGJQKpJJpJ8/jn
-         +aWMl3hR8yFOsQcLi3VCiWHulAJW39DQRnbcWLnA=
+        b=aGHOg6CXVBFjbLjLqzGmP/CTPgu9YRHQSr+fV4mhC6javsGZX4ml3fcsM/fd6mBiI
+         D+yZVELrX6B4DEppzy4oI2w5FvIaeENr0WJyqJy9MDspJR5WnKHUON/eS0Rjk4va6p
+         7GmBIZFlkDoqNmTTQpYLurNt4wkHNwhcRWgRLHKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
-        Mikko Rapeli <mikko.rapeli@iki.fi>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 46/91] uapi glibc compat: fix outer guard of net device flags enum
-Date:   Wed,  1 Apr 2020 18:17:42 +0200
-Message-Id: <20200401161529.353085103@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 40/91] vxlan: check return value of gro_cells_init()
+Date:   Wed,  1 Apr 2020 18:17:36 +0200
+Message-Id: <20200401161527.519383441@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -61,53 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Gorski <jonas.gorski@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit efc45154828ae4e49c6b46f59882bfef32697d44 ]
+[ Upstream commit 384d91c267e621e0926062cfb3f20cb72dc16928 ]
 
-Fix a wrong condition preventing the higher net device flags
-IFF_LOWER_UP etc to be defined if net/if.h is included before
-linux/if.h.
+gro_cells_init() returns error if memory allocation is failed.
+But the vxlan module doesn't check the return value of gro_cells_init().
 
-The comment makes it clear the intention was to allow partial
-definition with either parts.
-
-This fixes compilation of userspace programs trying to use
-IFF_LOWER_UP, IFF_DORMANT or IFF_ECHO.
-
-Fixes: 4a91cb61bb99 ("uapi glibc compat: fix compile errors when glibc net/if.h included before linux/if.h")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-Reviewed-by: Mikko Rapeli <mikko.rapeli@iki.fi>
+Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")`
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/uapi/linux/if.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/vxlan.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/if.h b/include/uapi/linux/if.h
-index 752f5dc040a51..0829d6d5e917a 100644
---- a/include/uapi/linux/if.h
-+++ b/include/uapi/linux/if.h
-@@ -31,7 +31,7 @@
- #include <linux/hdlc/ioctl.h>
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2303,10 +2303,19 @@ static void vxlan_vs_add_dev(struct vxla
+ /* Setup stats when device is created */
+ static int vxlan_init(struct net_device *dev)
+ {
++	struct vxlan_dev *vxlan = netdev_priv(dev);
++	int err;
++
+ 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+ 	if (!dev->tstats)
+ 		return -ENOMEM;
  
- /* For glibc compatibility. An empty enum does not compile. */
--#if __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO != 0 && \
-+#if __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO != 0 || \
-     __UAPI_DEF_IF_NET_DEVICE_FLAGS != 0
- /**
-  * enum net_device_flags - &struct net_device flags
-@@ -99,7 +99,7 @@ enum net_device_flags {
- 	IFF_ECHO			= 1<<18, /* volatile */
- #endif /* __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO */
- };
--#endif /* __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO != 0 && __UAPI_DEF_IF_NET_DEVICE_FLAGS != 0 */
-+#endif /* __UAPI_DEF_IF_NET_DEVICE_FLAGS_LOWER_UP_DORMANT_ECHO != 0 || __UAPI_DEF_IF_NET_DEVICE_FLAGS != 0 */
++	err = gro_cells_init(&vxlan->gro_cells, dev);
++	if (err) {
++		free_percpu(dev->tstats);
++		return err;
++	}
++
+ 	return 0;
+ }
  
- /* for compatibility with glibc net/if.h */
- #if __UAPI_DEF_IF_NET_DEVICE_FLAGS
--- 
-2.20.1
-
+@@ -2584,8 +2593,6 @@ static void vxlan_setup(struct net_devic
+ 
+ 	vxlan->dev = dev;
+ 
+-	gro_cells_init(&vxlan->gro_cells, dev);
+-
+ 	for (h = 0; h < FDB_HASH_SIZE; ++h)
+ 		INIT_HLIST_HEAD(&vxlan->fdb_head[h]);
+ }
 
 
