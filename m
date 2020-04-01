@@ -2,51 +2,53 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFAAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A850C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15712063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55B6206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759903;
-	bh=D7cfcTWcDPuK94XUyfReD3ZLUSUdLERf/5iHNX5SLsY=;
+	s=default; t=1585759912;
+	bh=ohqJLmyECEmNlowxB0+bY4WZAdYt+06EO59CPW/sGCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J4KZxqINuU9+F2zaGtZL2HOCzuF3jPdknZHtxJNttfwlUR29oE8vEGBEDTAHH4Tsn
-	 cZUoYbPIfgtwSwsmrge4GKmQdnrIvE/8iXgBBWCPqTwYx7aGdaU/mIA/60VjNbOgj2
-	 nnWx221HNRTP3uDjQ5VfRRqpFZW6+YmRYTrlmFng=
+	b=0sMgXHjlew1O5rfcS17AZuclWPGl5xUBe+CnJcQl8zGemDQuRGXMXVyVfSB32ClNl
+	 WzFLj0OceFU/bycJ8Rtls8M/bDVF0Tb7t340D7K22dysw2YcKnihHiBHn/K9mSxd/b
+	 THR4L92qz1OF55GKMwuxp4BHICZit9FeqlRHjFQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388858AbgDAQvm (ORCPT
+        id S2388919AbgDAQhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:51:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36468 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388689AbgDAQhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:37:20 -0400
+        id S2388909AbgDAQg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:36:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CA2C20772;
-        Wed,  1 Apr 2020 16:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B719C20857;
+        Wed,  1 Apr 2020 16:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759040;
-        bh=D7cfcTWcDPuK94XUyfReD3ZLUSUdLERf/5iHNX5SLsY=;
+        s=default; t=1585759019;
+        bh=ohqJLmyECEmNlowxB0+bY4WZAdYt+06EO59CPW/sGCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D4k1kYw3H3v2zHTCs0nsDMvRbH1XZmmJnPNbc6DpQns9e4JlziSsRG2fsp9vH6nhO
-         FshirCZUKRqLQfnOvMjqwKqfQQZWEahB5brNJIHZH0UFOHzd8Ox0GbOOIGBOj5ZN+6
-         wN4RykOhXr5bY4kk4ZjQq6YOlGkqb5UJulzezQzc=
+        b=tgWApvuTM7faNIeOiLepUeKCLMnIrqi76Oq0GvijGXUWYoIyWL6R8N+yw4E3jlXuh
+         A5KX0ay90nZI7iecRFef9ODlI3B3Pxd9tFv3uq+MIGp5AredU2/pOxl+RveG3bdupV
+         sEdMjX58A8rVqN+aooO6/vOQ26B+6Q2Wo82HPqC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 4.9 057/102] i2c: hix5hd2: add missed clk_disable_unprepare in remove
-Date:   Wed,  1 Apr 2020 18:18:00 +0200
-Message-Id: <20200401161543.072380007@linuxfoundation.org>
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 051/102] net: ipv4: dont let PMTU updates increase route MTU
+Date:   Wed,  1 Apr 2020 18:17:54 +0200
+Message-Id: <20200401161542.614838063@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -59,31 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-commit e1b9f99ff8c40bba6e59de9ad4a659447b1e4112 upstream.
+[ Upstream commit 28d35bcdd3925e7293408cdb8aa5f2aac5f0d6e3 ]
 
-The driver forgets to disable and unprepare clk when remove.
-Add a call to clk_disable_unprepare to fix it.
+When an MTU update with PMTU smaller than net.ipv4.route.min_pmtu is
+received, we must clamp its value. However, we can receive a PMTU
+exception with PMTU < old_mtu < ip_rt_min_pmtu, which would lead to an
+increase in PMTU.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To fix this, take the smallest of the old MTU and ip_rt_min_pmtu.
 
+Before this patch, in case of an update, the exception's MTU would
+always change. Now, an exception can have only its lock flag updated,
+but not the MTU, so we need to add a check on locking to the following
+"is this exception getting updated, or close to expiring?" test.
+
+Fixes: d52e5a7e7ca4 ("ipv4: lock mtu in fnhe when received PMTU < net.ipv4.route.min_pmtu")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-hix5hd2.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/route.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/i2c/busses/i2c-hix5hd2.c
-+++ b/drivers/i2c/busses/i2c-hix5hd2.c
-@@ -498,6 +498,7 @@ static int hix5hd2_i2c_remove(struct pla
- 	i2c_del_adapter(&priv->adap);
- 	pm_runtime_disable(priv->dev);
- 	pm_runtime_set_suspended(priv->dev);
-+	clk_disable_unprepare(priv->clk);
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 6058dbc4e2c19..8f5c6fa54ac09 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -991,21 +991,22 @@ out:	kfree_skb(skb);
+ static void __ip_rt_update_pmtu(struct rtable *rt, struct flowi4 *fl4, u32 mtu)
+ {
+ 	struct dst_entry *dst = &rt->dst;
++	u32 old_mtu = ipv4_mtu(dst);
+ 	struct fib_result res;
+ 	bool lock = false;
  
- 	return 0;
- }
+ 	if (ip_mtu_locked(dst))
+ 		return;
+ 
+-	if (ipv4_mtu(dst) < mtu)
++	if (old_mtu < mtu)
+ 		return;
+ 
+ 	if (mtu < ip_rt_min_pmtu) {
+ 		lock = true;
+-		mtu = ip_rt_min_pmtu;
++		mtu = min(old_mtu, ip_rt_min_pmtu);
+ 	}
+ 
+-	if (rt->rt_pmtu == mtu &&
++	if (rt->rt_pmtu == mtu && !lock &&
+ 	    time_before(jiffies, dst->expires - ip_rt_mtu_expires / 2))
+ 		return;
+ 
+-- 
+2.20.1
+
 
 
