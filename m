@@ -2,32 +2,32 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAABFC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C46EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23C320784
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E1E20857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731999AbgDAIxT (ORCPT
+        id S1732124AbgDAIxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:53:19 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55312 "EHLO inva021.nxp.com"
+        Wed, 1 Apr 2020 04:53:23 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:38162 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgDAIxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:53:19 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 380CC20025F;
-        Wed,  1 Apr 2020 10:53:17 +0200 (CEST)
+        id S1732067AbgDAIxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:53:23 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 47BAB1A0D50;
+        Wed,  1 Apr 2020 10:53:21 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 183ED200CB2;
-        Wed,  1 Apr 2020 10:53:10 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 27CD11A0D44;
+        Wed,  1 Apr 2020 10:53:14 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 477144024E;
-        Wed,  1 Apr 2020 16:53:01 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 58100402D0;
+        Wed,  1 Apr 2020 16:53:05 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, broonie@kernel.org,
@@ -35,66 +35,64 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/7] ASoC: Add new module driver for new ASRC
-Date:   Wed,  1 Apr 2020 16:45:33 +0800
-Message-Id: <cover.1585726761.git.shengjiu.wang@nxp.com>
+Subject: [PATCH v6 3/7] ASoC: fsl-asoc-card: Support new property fsl,asrc-format
+Date:   Wed,  1 Apr 2020 16:45:36 +0800
+Message-Id: <b8d6d9322e865f61f0c9cb17c69a399624e07676.1585726761.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1585726761.git.shengjiu.wang@nxp.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+In-Reply-To: <cover.1585726761.git.shengjiu.wang@nxp.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new module driver for new ASRC in i.MX8MN, several commits
-are added for new property fsl,asrc-format
+In order to align with new ESARC, we add new property fsl,asrc-format.
+The fsl,asrc-format can replace the fsl,asrc-width, driver
+can accept format from devicetree, don't need to convert it to
+format through width.
 
-Shengjiu Wang (7):
-  ASoC: fsl_asrc: rename asrc_priv to asrc
-  ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
-  ASoC: fsl-asoc-card: Support new property fsl,asrc-format
-  ASoC: fsl_asrc: Support new property fsl,asrc-format
-  ASoC: fsl_asrc: Move common definition to fsl_asrc_common
-  ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-  ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl-asoc-card.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-changes in v6
-- updated according to Nicoin's and Rob's comments.
-
-changes in v5
-- Add new property fsl,asrc-format, rather than change fsl,asrc-width
-  to fsl,asrc-formt.
-- code change for above change.
-
-changes in v4
-- Add several commit for changing DT binding asrc-width to asrc-format
-- rename asrc_priv to asrc
-
-changes in v3
-- add new commit "ASoC: fsl_asrc: Change asrc_width to asrc_format"
-- modify binding doc to yaml format
-- remove fsl_easrc_dma.c, make fsl_asrc_dma.c useable for easrc.
-
-changes in v2
-- change i.MX815 to i.MX8MN
-- Add changes in Kconfig and Makefile
-
- .../devicetree/bindings/sound/fsl,asrc.txt    |    4 +
- .../devicetree/bindings/sound/fsl,easrc.yaml  |  101 +
- sound/soc/fsl/Kconfig                         |   11 +
- sound/soc/fsl/Makefile                        |    2 +
- sound/soc/fsl/fsl-asoc-card.c                 |   21 +-
- sound/soc/fsl/fsl_asrc.c                      |  303 +--
- sound/soc/fsl/fsl_asrc.h                      |   74 +-
- sound/soc/fsl/fsl_asrc_common.h               |  105 +
- sound/soc/fsl/fsl_asrc_dma.c                  |   54 +-
- sound/soc/fsl/fsl_easrc.c                     | 2114 +++++++++++++++++
- sound/soc/fsl/fsl_easrc.h                     |  651 +++++
- 11 files changed, 3206 insertions(+), 234 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
- create mode 100644 sound/soc/fsl/fsl_asrc_common.h
- create mode 100644 sound/soc/fsl/fsl_easrc.c
- create mode 100644 sound/soc/fsl/fsl_easrc.h
-
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index bb33601fab84..a0f5eb27d61a 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -680,17 +680,20 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 			goto asrc_fail;
+ 		}
+ 
+-		ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
++		ret = of_property_read_u32(asrc_np, "fsl,asrc-format", &priv->asrc_format);
+ 		if (ret) {
+-			dev_err(&pdev->dev, "failed to get output rate\n");
+-			ret = -EINVAL;
+-			goto asrc_fail;
+-		}
++			/* Fallback to old binding; translate to asrc_format */
++			ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
++			if (ret) {
++				dev_err(&pdev->dev, "failed to get output width\n");
++				return ret;
++			}
+ 
+-		if (width == 24)
+-			priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
+-		else
+-			priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
++			if (width == 24)
++				priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
++			else
++				priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
++		}
+ 	}
+ 
+ 	/* Finish card registering */
 -- 
 2.21.0
 
