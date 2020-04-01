@@ -2,77 +2,61 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16E1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A5AC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4953207FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Cb5oyV75"
+	by mail.kernel.org (Postfix) with ESMTP id E67422071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731909AbgDAGdk (ORCPT
+        id S1731919AbgDAGeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:33:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:25085 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731735AbgDAGdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:33:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48sbxY6r4Xz9txbT;
-        Wed,  1 Apr 2020 08:33:37 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Cb5oyV75; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zYu6vhpDCY0H; Wed,  1 Apr 2020 08:33:37 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48sbxY5JsVz9txbR;
-        Wed,  1 Apr 2020 08:33:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585722817; bh=Wu7Hf+9jIPkGojr6+lEuEJG5F/BNn5V9Djrlob/oB1k=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Cb5oyV75n6MwS+iynLK6NifEgmf7iS8oiMbsGzDJYP6M+CimG8gcDwmrXaVQnkBR5
-         0NkTyWqUYmOsih9w2j8opcqOzvtsvYWWAleV2te74sxesizpoeUi0wDuLkvBc0LC+5
-         xAF9u4BTnHvt7mSwR3hZdmDXf2UB/vKuTo0XJulI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 878D78B7B3;
-        Wed,  1 Apr 2020 08:33:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9DYyir0Z_bBL; Wed,  1 Apr 2020 08:33:38 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1AEAA8B778;
-        Wed,  1 Apr 2020 08:33:36 +0200 (CEST)
-Subject: Re: [PATCH v2 08/16] powerpc/watchpoint: Disable all available
- watchpoints when !dawr_force_enable
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        mikey@neuling.org
-Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
- <20200401061309.92442-9-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <1bef7056-b862-3b20-c3b8-8b161511c60a@c-s.fr>
-Date:   Wed, 1 Apr 2020 08:33:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 1 Apr 2020 02:34:20 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:36434 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731680AbgDAGeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:34:19 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD97TNYRenW8iAA--.27S3;
+        Wed, 01 Apr 2020 14:33:56 +0800 (CST)
+Subject: Re: [PATCH] KVM: MIPS: fix compilation
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <20200331154749.5457-1-pbonzini@redhat.com>
+ <20200331160703.GF30942@linux.ibm.com>
+ <b2d15996-1e8b-02a5-7abd-3eb380442092@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-mips@vger.kernel.org, peterx@redhat.com
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <d9dc4c46-33bc-b3ac-020c-ef0a9931c250@loongson.cn>
+Date:   Wed, 1 Apr 2020 14:33:55 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200401061309.92442-9-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <b2d15996-1e8b-02a5-7abd-3eb380442092@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxD97TNYRenW8iAA--.27S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFWDuryrZr1rJF1DZFyUAwb_yoWrJr4Upr
+        Z7AayrtFW8Xr9xurySvas8tFy3Kw43Kr1Dua17JFyYqF1YqF4fuFn29r1rur18ZrW0yFyx
+        uayYg3y3ur4Iy37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUklb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
+        xK6I8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
+        r21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4U
+        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU56c_DUUUU
+        U==
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -80,50 +64,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 01/04/2020 à 08:13, Ravi Bangoria a écrit :
-> Instead of disabling only first watchpoint, disable all available
-> watchpoints while clearing dawr_force_enable.
+On 04/01/2020 12:33 AM, Paolo Bonzini wrote:
+> On 31/03/20 18:07, Mike Rapoport wrote:
+>> On Tue, Mar 31, 2020 at 11:47:49AM -0400, Paolo Bonzini wrote:
+>>> Commit 31168f033e37 is correct that pud_index() & __pud_offset() are the same
+>>> when pud_index() is actually provided, however it does not take into account
+>>> the __PAGETABLE_PUD_FOLDED case.  Provide kvm_pud_index so that MIPS KVM
+>>> compiles.
+>>>
+>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> ---
+>>>  arch/mips/kvm/mmu.c | 18 ++++++++++++------
+>>>  1 file changed, 12 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/arch/mips/kvm/mmu.c b/arch/mips/kvm/mmu.c
+>>> index 7dad7a293eae..ccf98c22fd2c 100644
+>>> --- a/arch/mips/kvm/mmu.c
+>>> +++ b/arch/mips/kvm/mmu.c
+>>> @@ -25,6 +25,12 @@
+>>>  #define KVM_MMU_CACHE_MIN_PAGES 2
+>>>  #endif
+>>>  
+>>> +#if defined(__PAGETABLE_PUD_FOLDED)
+>>> +#define kvm_pud_index(gva) 0
+>>> +#else
+>>> +#define kvm_pud_index(gva) pud_index(gva)
+>>> +#endif
+>>> +
+>>
+>> I'd prefer simply making pud_index() always defined. When pud level is
+>> folded asm-generic/pgtable-nopud.h will define PTRS_PER_PUD to 1 and
+>> pud_index() will evaluate to 0 anyway.
+> 
+> I won't queue this patch for now, let's wait for the MIPS people to say
+> what they prefer.  Thanks!
+Hi Paolo,
 
-Can you also explain why you change the function name ?
+Thanks for patch, it passes to compile on my loongson64 box. I prefer to
+the second method, since pgd_inde/pmd_index is already defined in
+pgtable-64.h :)
 
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->   arch/powerpc/kernel/dawr.c | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
+> Paolo
+
 > 
-> diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
-> index 311e51ee09f4..5c882f07ac7d 100644
-> --- a/arch/powerpc/kernel/dawr.c
-> +++ b/arch/powerpc/kernel/dawr.c
-> @@ -50,9 +50,13 @@ int set_dawr(struct arch_hw_breakpoint *brk, int nr)
->   	return 0;
->   }
->   
-> -static void set_dawr_cb(void *info)
-> +static void disable_dawrs(void *info)
+>> diff --git a/arch/mips/include/asm/pgtable-64.h b/arch/mips/include/asm/pgtable-64.h
+>> index f92716cfa4f4..ee5dc0c145b9 100644
+>> --- a/arch/mips/include/asm/pgtable-64.h
+>> +++ b/arch/mips/include/asm/pgtable-64.h
+>> @@ -172,6 +172,8 @@
+>>  
+>>  extern pte_t invalid_pte_table[PTRS_PER_PTE];
+>>  
+>> +#define pud_index(address)	(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+>> +
+>>  #ifndef __PAGETABLE_PUD_FOLDED
+>>  /*
+>>   * For 4-level pagetables we defines these ourselves, for 3-level the
+>> @@ -210,8 +212,6 @@ static inline void p4d_clear(p4d_t *p4dp)
+>>  	p4d_val(*p4dp) = (unsigned long)invalid_pud_table;
+>>  }
+>>  
+>> -#define pud_index(address)	(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+>> -
+>>  static inline unsigned long p4d_page_vaddr(p4d_t p4d)
+>>  {
+>>  	return p4d_val(p4d);
+>>
+>>>  static int mmu_topup_memory_cache(struct kvm_mmu_memory_cache *cache,
+>>>  				  int min, int max)
+>>>  {
+>>> @@ -234,8 +240,8 @@ static bool kvm_mips_flush_gpa_pud(pud_t *pud, unsigned long start_gpa,
+>>>  {
+>>>  	pmd_t *pmd;
+>>>  	unsigned long end = ~0ul;
+>>> -	int i_min = pud_index(start_gpa);
+>>> -	int i_max = pud_index(end_gpa);
+>>> +	int i_min = kvm_pud_index(start_gpa);
+>>> +	int i_max = kvm_pud_index(end_gpa);
+>>>  	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PUD - 1);
+>>>  	int i;
+>>>  
+>>> @@ -361,8 +367,8 @@ static int kvm_mips_##name##_pud(pud_t *pud, unsigned long start,	\
+>>>  	int ret = 0;							\
+>>>  	pmd_t *pmd;							\
+>>>  	unsigned long cur_end = ~0ul;					\
+>>> -	int i_min = pud_index(start);				\
+>>> -	int i_max = pud_index(end);					\
+>>> +	int i_min = kvm_pud_index(start);				\
+>>> +	int i_max = kvm_pud_index(end);					\
+>>>  	int i;								\
+>>>  									\
+>>>  	for (i = i_min; i <= i_max; ++i, start = 0) {			\
+>>> @@ -896,8 +902,8 @@ static bool kvm_mips_flush_gva_pud(pud_t *pud, unsigned long start_gva,
+>>>  {
+>>>  	pmd_t *pmd;
+>>>  	unsigned long end = ~0ul;
+>>> -	int i_min = pud_index(start_gva);
+>>> -	int i_max = pud_index(end_gva);
+>>> +	int i_min = kvm_pud_index(start_gva);
+>>> +	int i_max = kvm_pud_index(end_gva);
+>>>  	bool safe_to_remove = (i_min == 0 && i_max == PTRS_PER_PUD - 1);
+>>>  	int i;
+>>>  
+>>> -- 
+>>> 2.18.2
+>>>
+>>
 
-Wouldn't it be better to keep _cb at the end of the function ?
-
->   {
-> -	set_dawr(info, 0);
-> +	struct arch_hw_breakpoint null_brk = {0};
-> +	int i;
-> +
-> +	for (i = 0; i < nr_wp_slots(); i++)
-> +		set_dawr(&null_brk, i);
->   }
->   
->   static ssize_t dawr_write_file_bool(struct file *file,
-> @@ -74,7 +78,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
->   
->   	/* If we are clearing, make sure all CPUs have the DAWR cleared */
->   	if (!dawr_force_enable)
-> -		smp_call_function(set_dawr_cb, &null_brk, 0);
-> +		smp_call_function(disable_dawrs, NULL, 0);
->   
->   	return rc;
->   }
-> 
-
-Christophe
