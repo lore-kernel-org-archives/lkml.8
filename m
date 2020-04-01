@@ -2,112 +2,211 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF81C10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E998CC10F26
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AA420714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:32:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTj9rUoG"
+	by mail.kernel.org (Postfix) with ESMTP id C9C3A20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732478AbgDAMcg (ORCPT
+        id S1732398AbgDAMep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:32:36 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33931 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732166AbgDAMcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:32:35 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p10so25316540ljn.1;
-        Wed, 01 Apr 2020 05:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8L1/PQnaYBXbzEXUweVQSVAcSQPDyAlUiX0T3JYuuFY=;
-        b=WTj9rUoGT58FPH1IwytfIF8RhdaoHlpu/RcEVNmQlRH2NJFfn6hoxF+2xB1d56SnnK
-         SkZwxfmiR21dCYC/Sy0hQbd5OKqPU+IUF9zvQc7vgtNIvWKf2sdBlX27FQf4V7qxpcZ3
-         d3RiayaUKlnU4Mc3IsTfY4R3V3tBt2+eZO/2R1JF4DRFe1aoIGa/yjgShd1KHrB0yhLZ
-         gGryc5zPaSm6VmCTI/+DxVzJLIRvIPtkhvMua38Ja2OCEWr9HRbdCjEC9fq+xL9iakwh
-         g0JwFYpEPuZUxT4aukz2BGVcSXXjoqCUhK/pP5qmDKtjccjgX0+h6jFrJYTqNMR3YynL
-         +PvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8L1/PQnaYBXbzEXUweVQSVAcSQPDyAlUiX0T3JYuuFY=;
-        b=Xk1agpHaHe9ZuVohmLsAVZBf70RHC0Nvt7sHDD3Tnc3Yg/MHb42n2lu7QjuG6WMmr6
-         DCltfY5zhhWZnKJxmi/XZdDeHURITuCe5T/VgUye5Q1beob1y8YZ4KpRKjpfQhjtJY8h
-         q0ozzEaShsQZ06phhb6Lt/SBeB/M+IBo27kWMwAzcV1XDYtMX4XNPktICvdkbXBAIjkf
-         w/pMF1p+wlx1BLczPEB62YZ246Yo8SXiVUkRF/wJdZFFHq/yCiHbFjP22Aw5jNT95sou
-         hylU2SXDSreKR1lQCLuUnrzFJttzwMmzqZJQ1wFEnlDGyPeYtLsZe2rsuU8Ur41XFt/6
-         NJKg==
-X-Gm-Message-State: AGi0PuZ/aw6XZRRXg85nCavXnwcUaP2Rd8zJEpbCKx8Go4wb+wnDWDq6
-        eSXg2aGQgJceOvQUUAH50uw=
-X-Google-Smtp-Source: APiQypJPwFtOAJ2kUBAdMVY1kqthd4AAiL4fiBBSlc6OWULAJhNSrhHxOjfin2SD/kjs0urj7hF1fw==
-X-Received: by 2002:a05:651c:1a5:: with SMTP id c5mr13087568ljn.113.1585744353370;
-        Wed, 01 Apr 2020 05:32:33 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id a10sm1531864lfg.33.2020.04.01.05.32.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 05:32:32 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 1 Apr 2020 14:32:30 +0200
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200401123230.GB32593@pc636>
-References: <20200331131628.153118-1-joel@joelfernandes.org>
- <20200331145806.GB236678@google.com>
- <20200331153450.GM30449@dhcp22.suse.cz>
- <20200331161215.GA27676@pc636>
- <20200401070958.GB22681@dhcp22.suse.cz>
+        Wed, 1 Apr 2020 08:34:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:50672 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726974AbgDAMeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:34:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 128C130E;
+        Wed,  1 Apr 2020 05:34:44 -0700 (PDT)
+Received: from [10.37.12.63] (unknown [10.37.12.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89A7A3F68F;
+        Wed,  1 Apr 2020 05:34:41 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] dt-bindings: thermal: Add yaml bindings for
+ thermal cooling-devices
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <cover.1585738725.git.amit.kucheria@linaro.org>
+ <d1884aed542fdd5ac1178f7195fb7c189179c631.1585738725.git.amit.kucheria@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <44bef00a-ffd1-4154-1b8c-77aae9ccc20d@arm.com>
+Date:   Wed, 1 Apr 2020 13:34:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401070958.GB22681@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d1884aed542fdd5ac1178f7195fb7c189179c631.1585738725.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:09:58AM +0200, Michal Hocko wrote:
-> On Tue 31-03-20 18:12:15, Uladzislau Rezki wrote:
-> > > 
-> > > __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
-> > > memory reserves regarless of the sleeping status.
-> > > 
-> > Michal, just one question here regarding proposed flags. Can we also
-> > tight it with __GFP_RETRY_MAYFAIL flag? Means it also can repeat a few
-> > times in order to increase the chance of being success.
-> 
-> yes, __GFP_RETRY_MAYFAIL is perfectly valid with __GFP_ATOMIC. Please
-> note that __GFP_ATOMIC, despite its name, doesn't imply an atomic
-> allocation which cannot sleep. Quite confusing, I know. A much better
-> name would be __GFP_RESERVES or something like that.
-> 
-OK. Then we can use GFP_ATOMIC | __GFP_RETRY_MAYFAIL to try in more harder
-way.
 
-Thanks!
 
---
-Vlad Rezki
+On 4/1/20 12:15 PM, Amit Kucheria wrote:
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
+> 
+> The property #cooling-cells is required in each device that acts as a
+> cooling device - whether active or passive. So any device that can
+> throttle its performance to passively reduce heat dissipation (e.g.
+> cpus, gpus) and any device that can actively dissipate heat at different
+
+maybe CPUs, GPUs
+
+> levels (e.g. fans) will contain this property.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v3:
+>   - Clarify example by using cooling state numbers and a comment
+> 
+>   .../thermal/thermal-cooling-devices.yaml      | 116 ++++++++++++++++++
+>   1 file changed, 116 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> new file mode 100644
+> index 0000000000000..0dc4a743a1351
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> @@ -0,0 +1,116 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
+> +# Copyright 2020 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/thermal-cooling-devices.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Thermal cooling device binding
+> +
+> +maintainers:
+> +  - Amit Kucheria <amitk@kernel.org>
+> +
+> +description: |
+> +  Thermal management is achieved in devicetree by describing the sensor hardware
+> +  and the software abstraction of cooling devices and thermal zones required to
+> +  take appropriate action to mitigate thermal overload.
+> +
+> +  The following node types are used to completely describe a thermal management
+> +  system in devicetree:
+> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> +   - cooling-device: device used to dissipate heat either passively or artively
+
+s/artively/actively
+
+> +   - thermal-zones: a container of the following node types used to describe all
+> +     thermal data for the platform
+> +
+> +  This binding describes the cooling devices.
+> +
+> +  There are essentially two ways to provide control on power dissipation:
+> +    - Passive cooling: by means of regulating device performance. A typical
+> +      passive cooling mechanism is a CPU that has dynamic voltage and frequency
+> +      scaling (DVFS), and uses lower frequencies as cooling states.
+> +    - Active cooling: by means of activating devices in order to remove the
+> +      dissipated heat, e.g. regulating fan speeds.
+> +
+> +  Any cooling device has a range of cooling states (i.e. different levels of
+> +  heat dissipation). They also have a way to determine the state of cooling in
+> +  which the device is. For example, a fan's cooling states correspond to the
+> +  different fan speeds possible. Cooling states are referred to by single
+> +  unsigned integers, where larger numbers mean greater heat dissipation. The
+> +  precise set of cooling states associated with a device should be defined in
+> +  a particular device's binding.
+> +
+> +select: true
+> +
+> +properties:
+> +  "#cooling-cells":
+> +    description:
+> +        Must be 2, in order to specify minimum and maximum cooling state used in
+> +        the cooling-maps reference. The first cell is the minimum cooling state
+> +        and the second cell is the maximum cooling state requested.
+> +    const: 2
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/thermal/thermal.h>
+> +
+> +    // Example 1: Cpufreq cooling device on CPU0
+> +    cpus {
+> +            #address-cells = <2>;
+> +            #size-cells = <0>;
+> +
+> +            CPU0: cpu@0 {
+> +                    device_type = "cpu";
+> +                    compatible = "qcom,kryo385";
+> +                    reg = <0x0 0x0>;
+> +                    enable-method = "psci";
+> +                    cpu-idle-states = <&LITTLE_CPU_SLEEP_0
+> +                                       &LITTLE_CPU_SLEEP_1
+> +                                       &CLUSTER_SLEEP_0>;
+> +                    capacity-dmips-mhz = <607>;
+> +                    dynamic-power-coefficient = <100>;
+> +                    qcom,freq-domain = <&cpufreq_hw 0>;
+> +                    #cooling-cells = <2>;
+> +                    next-level-cache = <&L2_0>;
+> +                    L2_0: l2-cache {
+> +                            compatible = "cache";
+> +                            next-level-cache = <&L3_0>;
+> +                            L3_0: l3-cache {
+> +                                    compatible = "cache";
+> +                            };
+> +                    };
+> +          };
+> +
+> +          /* ... */
+> +
+> +    };
+> +
+> +    /* ... */
+> +
+> +    thermal-zones {
+> +            cpu0-thermal {
+> +                    polling-delay-passive = <250>;
+> +                    polling-delay = <1000>;
+> +
+> +                    thermal-sensors = <&tsens0 1>;
+> +
+> +                    trips {
+> +                            cpu0_alert0: trip-point0 {
+> +                                    temperature = <90000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                            };
+> +                    };
+> +
+> +                    cooling-maps {
+> +                            map0 {
+> +                                    trip = <&cpu0_alert0>;
+> +                                    /* Corresponds to 1000MHz in OPP table */
+> +                                    cooling-device = <&CPU0 5 5>;
+> +                            };
+> +                    };
+> +            };
+> +
+> +            /* ... */
+> +    };
+> +...
+> 
+
+Apart from that, looks good:
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+Regards,
+Lukasz
