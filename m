@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7602DC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A44C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42312208E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF322077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hTimd5IY"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="IfBVo0qt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732142AbgDAItd (ORCPT
+        id S1732145AbgDAItk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:49:33 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41810 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgDAItc (ORCPT
+        Wed, 1 Apr 2020 04:49:40 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41837 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgDAItk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:49:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id v1so28673496edq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:49:31 -0700 (PDT)
+        Wed, 1 Apr 2020 04:49:40 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v1so28673967edq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:49:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UN+wHZJTrcu6c2DZIJ8HGRDVBKCDEPMCRCE7ZQEQTH8=;
-        b=hTimd5IY+hTrOkh1p7KqZ0axrIUJgA8aekcpldRM6K9XQupypeq6MkUu+ggRqryYZL
-         x3rcZjrA+Y0jKfVyqzmVLjKEqr3O6iCBN8GDPJzQJi0cEQ/7ObMmXUtXR9XRnlRU8ZiF
-         QkYVKtMu4mENT5W/pzpOUStrq0OytQ5oulJ0UhL1avGRyOevi9/UwPw4Ykxv3wnZ/OwP
-         HyQu22Ie3HIn0/IIyicOfJJ+SkzyBj7Hq8Ljhf/QIcUeGPjXdPcMfFQIvRwGIm43aWdr
-         ui6jSj1L0yFrnNz0X3pBByQOSEhf24bDK4BDfm5vSnLWL82Bjny7/+HfR7ecl+iDeNj+
-         l41w==
+        bh=A7+9v32j9cPB3QX5vXPFoTYuOQMb+jFtKmzdafzKlXc=;
+        b=IfBVo0qtkzx0IwrTLjMKGmOczvAfIcGCXFrucXhdytTeaMv3LlGABrbnLscvf6EhPu
+         ZipNSAsdlrGbSXI2CqQreu8FxLOGRWD8tJDVQkXpETIdmXHwd+Xv1jp44fy/mtTN32kt
+         fVa09PGK306kWlrf3zKeHF07SGJb0bHLqW0CIkn37zcb7BIrEg+bNikwEXJacTI+GagZ
+         hpxLEcN73/j3YUhCKXBElj08nNWzPs0hV3h929pXH5yevZyR1Cqzb0EOT5jcy3jgbKE7
+         d2Ahuxp5GjmVR/tbuNADZWn5ZmlTpD668O9WqG3hIA5ukj8ZWJtmtna2sM5J2LzKH6Sn
+         jAnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UN+wHZJTrcu6c2DZIJ8HGRDVBKCDEPMCRCE7ZQEQTH8=;
-        b=kxYMbJJzyw3kdk8cyHjVgqrUtdgio4heUhQPXYfrxvzOepQn7L2Co+uAEwQU6zbuR3
-         QIoogo3y3Yj2tKDOlzItAwDJVHPkJZ1TQJJLvA9O1cuhgQPmZqPfcJ1zDxow+3uVErMW
-         reMsjD/0Jfo77RNj9em+8Km42euyyIJu4FuTRg2g8gqS3i/yEMjjO90mGfFsjW7Ri7Pq
-         44wJFvJm+p3vDK7SefSxXme1giU67J5vorZGNjyYS/pjz1IYfccpBTcwfBLWrEikv2Il
-         wTvyCzL8H+JLCVc+Qwp1KheLN9dJqQMSAqJmdQNrh6O64DZ94v5u5gXFKqJTNCoDvL+J
-         afNg==
-X-Gm-Message-State: ANhLgQ1FgQPnUfCBuiuCTbhFSsBKI54mFV/GcFIYX8/WDp4F1YNQ4ipo
-        EyMCJxaSLMcD4iPi7oRhL4o7yhuQEJeSyschWdT9/w==
-X-Google-Smtp-Source: ADFU+vuTuxIfbgq1b9JfG+WohU6wvy4jaujfdFzqOb3NMAMPXWIOfeafCvEeGwbQtVd/xByPDwh7XT1QdUOquEPXjL8=
-X-Received: by 2002:a05:6402:3044:: with SMTP id bu4mr20560123edb.123.1585730971200;
- Wed, 01 Apr 2020 01:49:31 -0700 (PDT)
+        bh=A7+9v32j9cPB3QX5vXPFoTYuOQMb+jFtKmzdafzKlXc=;
+        b=hr/GhO4OZcxRFAhVLtuxDBVa4e3hmR1XMHh08Ps0lovoUglw1wCyjWTmQ2C4WCFE3j
+         bbMd9/JqvSh0OOTde0C56K07XgQYpG+Jx43nq3DIZAFgd+Mlt0UU4HDgZbqpi9fxa1K3
+         ezTlw8jGXVfqFQgzUMehidYjiZa/BsVPkhE4+9kNqJIUnYky7mJLNo/lC0h5yxLKHFW1
+         yogpnQJSFtsBc2Q5kXRp4EHCcJS16CuZMuyLvkM7eO7jl2Ogr7YQ3XnI+vzD2qbHmSiV
+         xFz3mgwAHB4yI2Ui990xqzaiQXcQs1XMN0JomTC6ovz3Uxfy4toDBWb1PNhuJIRveS9v
+         +LdA==
+X-Gm-Message-State: ANhLgQ1ZIPR57qG7hqy0cDnKaFCJjN2mo8KmCuBQFH7GsIB7kqMLo74Z
+        NSx+Eth+H1imGMR+rDV76NREEU0ht2o+m3CyQZ5oqw==
+X-Google-Smtp-Source: ADFU+vvi5v9sHbdO0IWcuuBEvZqkCqjH7pX1tPN0HKLi97q9NYRu1C93IYlcqCprR6w1SOFMCMFSMzwhs34udzF7ni0=
+X-Received: by 2002:a17:906:1e42:: with SMTP id i2mr18635550ejj.317.1585730979486;
+ Wed, 01 Apr 2020 01:49:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-8-alastair@d-silva.org>
-In-Reply-To: <20200327071202.2159885-8-alastair@d-silva.org>
+References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-9-alastair@d-silva.org>
+In-Reply-To: <20200327071202.2159885-9-alastair@d-silva.org>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 1 Apr 2020 01:49:19 -0700
-Message-ID: <CAPcyv4gUU4PbQK1YJLfOToLDmFWsWWLySwkqHuoqGDvKZJGQvg@mail.gmail.com>
-Subject: Re: [PATCH v4 07/25] ocxl: Add functions to map/unmap LPC memory
+Date:   Wed, 1 Apr 2020 01:49:28 -0700
+Message-ID: <CAPcyv4j4_owxEVjanwH5TiuMMJB3CaMannDzpXnaHedX7LuarQ@mail.gmail.com>
+Subject: Re: [PATCH v4 08/25] ocxl: Emit a log message showing how much LPC
+ memory was detected
 To:     "Alastair D'Silva" <alastair@d-silva.org>
 Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         "Oliver O'Halloran" <oohall@gmail.com>,
@@ -100,141 +101,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org> wrote:
 >
-> Add functions to map/unmap LPC memory
+> This patch emits a message showing how much LPC memory & special purpose
+> memory was detected on an OCXL device.
 >
-
-"map memory" is an overloaded term. I'm guessing this patch has
-nothing to do with mapping memory in the MMU. Is it updating hardware
-resource decoders to start claiming address space that was allocated
-previously?
-
 > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 > Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 > ---
->  drivers/misc/ocxl/core.c          | 51 +++++++++++++++++++++++++++++++
->  drivers/misc/ocxl/ocxl_internal.h |  3 ++
->  include/misc/ocxl.h               | 21 +++++++++++++
->  3 files changed, 75 insertions(+)
+>  drivers/misc/ocxl/config.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> index 2531c6cf19a0..75ff14e3882a 100644
-> --- a/drivers/misc/ocxl/core.c
-> +++ b/drivers/misc/ocxl/core.c
-> @@ -210,6 +210,56 @@ static void unmap_mmio_areas(struct ocxl_afu *afu)
->         release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+> index a62e3d7db2bf..69cca341d446 100644
+> --- a/drivers/misc/ocxl/config.c
+> +++ b/drivers/misc/ocxl/config.c
+> @@ -568,6 +568,10 @@ static int read_afu_lpc_memory_info(struct pci_dev *dev,
+>                 afu->special_purpose_mem_size =
+>                         total_mem_size - lpc_mem_size;
+>         }
+> +
+> +       dev_info(&dev->dev, "Probed LPC memory of %#llx bytes and special purpose memory of %#llx bytes\n",
+> +                afu->lpc_mem_size, afu->special_purpose_mem_size);
+
+A patch for a single log message is too fine grained for my taste,
+let's squash this into another patch in the series.
+
+> +
+>         return 0;
 >  }
 >
-> +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +       struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> +
-> +       if ((afu->config.lpc_mem_size + afu->config.special_purpose_mem_size) == 0)
-> +               return 0;
-> +
-> +       afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
-> +       if (afu->lpc_base_addr == 0)
-> +               return -EINVAL;
-> +
-> +       if (afu->config.lpc_mem_size > 0) {
-> +               afu->lpc_res.start = afu->lpc_base_addr + afu->config.lpc_mem_offset;
-> +               afu->lpc_res.end = afu->lpc_res.start + afu->config.lpc_mem_size - 1;
-> +       }
-> +
-> +       if (afu->config.special_purpose_mem_size > 0) {
-> +               afu->special_purpose_res.start = afu->lpc_base_addr +
-> +                                                afu->config.special_purpose_mem_offset;
-> +               afu->special_purpose_res.end = afu->special_purpose_res.start +
-> +                                              afu->config.special_purpose_mem_size - 1;
-> +       }
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
-> +
-> +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +       return &afu->lpc_res;
-> +}
-> +EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
-> +
-> +static void unmap_lpc_mem(struct ocxl_afu *afu)
-> +{
-> +       struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> +
-> +       if (afu->lpc_res.start || afu->special_purpose_res.start) {
-> +               void *link = afu->fn->link;
-> +
-> +               // only release the link when the the last consumer calls release
-> +               ocxl_link_lpc_release(link, dev);
-> +
-> +               afu->lpc_res.start = 0;
-> +               afu->lpc_res.end = 0;
-> +               afu->special_purpose_res.start = 0;
-> +               afu->special_purpose_res.end = 0;
-> +       }
-> +}
-> +
->  static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->  {
->         int rc;
-> @@ -251,6 +301,7 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
->
->  static void deconfigure_afu(struct ocxl_afu *afu)
->  {
-> +       unmap_lpc_mem(afu);
->         unmap_mmio_areas(afu);
->         reclaim_afu_pasid(afu);
->         reclaim_afu_actag(afu);
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index 2d7575225bd7..7b975a89db7b 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -52,6 +52,9 @@ struct ocxl_afu {
->         void __iomem *global_mmio_ptr;
->         u64 pp_mmio_start;
->         void *private;
-> +       u64 lpc_base_addr; /* Covers both LPC & special purpose memory */
-> +       struct resource lpc_res;
-> +       struct resource special_purpose_res;
->  };
->
->  enum ocxl_context_status {
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 357ef1aadbc0..d8b0b4d46bfb 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -203,6 +203,27 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
->
->  // AFU Metadata
->
-> +/**
-> + * ocxl_afu_map_lpc_mem() - Map the LPC system & special purpose memory for an AFU
-> + * Do not call this during device discovery, as there may me multiple
-
-s/me/be/
-
-
-> + * devices on a link, and the memory is mapped for the whole link, not
-> + * just one device. It should only be called after all devices have
-> + * registered their memory on the link.
-> + *
-> + * @afu: The AFU that has the LPC memory to map
-> + *
-> + * Returns 0 on success, negative on failure
-> + */
-> +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
-> +
-> +/**
-> + * ocxl_afu_lpc_mem() - Get the physical address range of LPC memory for an AFU
-> + * @afu: The AFU associated with the LPC memory
-> + *
-> + * Returns a pointer to the resource struct for the physical address range
-> + */
-> +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
-> +
->  /**
->   * ocxl_afu_config() - Get a pointer to the config for an AFU
->   * @afu: a pointer to the AFU to get the config for
 > --
 > 2.24.1
 >
