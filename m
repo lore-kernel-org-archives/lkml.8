@@ -2,147 +2,230 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B43C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDF2C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E360A206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:09:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfVSzmTw"
+	by mail.kernel.org (Postfix) with ESMTP id CDE0B2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732576AbgDATJC (ORCPT
+        id S1732642AbgDATJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:09:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43186 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732148AbgDATJC (ORCPT
+        Wed, 1 Apr 2020 15:09:45 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61598 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732148AbgDATJo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:09:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585768141;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fxjc2faGUuidInE7GQX8+k3Ww+5cqbigEP6zGWTotOQ=;
-        b=CfVSzmTwh+IhyjG2Y4OwNKtNCvAIC34Kl2zwxev+weZjloopS6xCegmSaTaacfYSVtgYn4
-        Ju58cBHeWT4VbygTyMh5BA1EEyztuaiBgiPp6m8/DtHVUb4B8+ATXA7/07/pXzUiihb6d9
-        MN2FEycwd30/Q2hbFslBAKPOJ5ybmAA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-m4nIgWddMrSTUt7mi-QG0Q-1; Wed, 01 Apr 2020 15:08:59 -0400
-X-MC-Unique: m4nIgWddMrSTUt7mi-QG0Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15BE38017FA;
-        Wed,  1 Apr 2020 19:08:58 +0000 (UTC)
-Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D5C950BEE;
-        Wed,  1 Apr 2020 19:08:57 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 14:08:55 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Julien Thierry <jthierry@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: Re: [PATCH 3/5] objtool: Support Clang non-section symbols in ORC
- generation
-Message-ID: <20200401190855.yvk4lc3ijaexoxal@treble>
-References: <cover.1585761021.git.jpoimboe@redhat.com>
- <9a9cae7fcf628843aabe5a086b1a3c5bf50f42e8.1585761021.git.jpoimboe@redhat.com>
- <20200401184953.GZ20730@hirez.programming.kicks-ass.net>
- <20200401190548.rodiauk3iolknvfe@treble>
+        Wed, 1 Apr 2020 15:09:44 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id ba57d8af24efef5a; Wed, 1 Apr 2020 21:09:41 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5.6 regression fix 1/2] ACPI: PM: Add acpi_s2idle_register_wake_callback()
+Date:   Wed, 01 Apr 2020 21:09:41 +0200
+Message-ID: <4023796.rWsessMiv5@kreacher>
+In-Reply-To: <daea7dad-73ac-3f2a-75a1-58017988ec89@redhat.com>
+References: <20200329223419.122796-1-hdegoede@redhat.com> <CAJZ5v0iapuqnfsQHhTQTWXdEtzX_MMTBUqdAzCej19AF9rtrNA@mail.gmail.com> <daea7dad-73ac-3f2a-75a1-58017988ec89@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200401190548.rodiauk3iolknvfe@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:05:51PM -0500, Josh Poimboeuf wrote:
-> On Wed, Apr 01, 2020 at 08:49:53PM +0200, Peter Zijlstra wrote:
-> > On Wed, Apr 01, 2020 at 01:23:27PM -0500, Josh Poimboeuf wrote:
+On Wednesday, April 1, 2020 8:26:16 PM CEST Hans de Goede wrote:
+> Hi,
+> 
+> On 4/1/20 6:32 PM, Rafael J. Wysocki wrote:
+> > On Mon, Mar 30, 2020 at 12:34 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> Since commit fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from
+> >> waking up the system") the SCI triggering without there being a wakeup
+> >> cause recognized by the ACPI sleep code will no longer wakeup the system.
+> >>
+> >> This works as intended, but this is a problem for devices where the SCI
+> >> is shared with another device which is also a wakeup source.
+> >>
+> >> In the past these, from the pov of the ACPI sleep code, spurious SCIs
+> >> would still cause a wakeup so the wakeup from the device sharing the
+> >> interrupt would actually wakeup the system. This now no longer works.
+> >>
+> >> This is a problem on e.g. Bay Trail-T and Cherry Trail devices where
+> >> some peripherals (typically the XHCI controller) can signal a
+> >> Power Management Event (PME) to the Power Management Controller (PMC)
+> >> to wakeup the system, this uses the same interrupt as the SCI.
+> >> These wakeups are handled through a special INT0002 ACPI device which
+> >> checks for events in the GPE0a_STS for this and takes care of acking
+> >> the PME so that the shared interrupt stops triggering.
+> >>
+> >> The change to the ACPI sleep code to ignore the spurious SCI, causes
+> >> the system to no longer wakeup on these PME events. To make things
+> >> worse this means that the INT0002 device driver interrupt handler will
+> >> no longer run, causing the PME to not get cleared and resulting in the
+> >> system hanging. Trying to wakeup the system after such a PME through e.g.
+> >> the power button no longer works.
+> >>
+> >> Add an acpi_s2idle_register_wake_callback() function which registers
+> >> a callback to be called from acpi_s2idle_wake() and when the callback
+> >> returns true, return true from acpi_s2idle_wake().
+> >>
+> >> The INT0002 driver will use this mechanism to check the GPE0a_STS
+> >> register from acpi_s2idle_wake() and to tell the system to wakeup
+> >> if a PME is signaled in the register.
+> >>
+> >> Fixes: fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+> >> Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > > 
-> > > @@ -105,8 +100,32 @@ static int create_orc_entry(struct elf *elf, struct section *u_sec, struct secti
-> > >  	}
-> > >  	memset(rela, 0, sizeof(*rela));
-> > >  
-> > > -	rela->sym = insn_sec->sym;
-> > > -	rela->addend = insn_off;
-> > > +	if (insn_sec->sym) {
-> > > +		rela->sym = insn_sec->sym;
-> > > +		rela->addend = insn_off;
-> > > +	} else {
-> > > +		/*
-> > > +		 * The Clang assembler doesn't produce section symbols, so we
-> > > +		 * have to reference the function symbol instead:
-> > > +		 */
-> > > +		rela->sym = find_symbol_containing(insn_sec, insn_off);
+> > I generally agree with the approach, but I would make some, mostly
+> > cosmetic, changes.
 > > 
-> > It's a good thing I made that a lot faster I suppose ;-)
-> 
-> :-)
-> 
-> > > +		if (!rela->sym) {
-> > > +			/*
-> > > +			 * Hack alert.  This happens when we need to reference
-> > > +			 * the NOP pad insn immediately after the function.
-> > > +			 */
-> > > +			rela->sym = find_symbol_containing(insn_sec,
-> > > +							   insn_off - 1);
+> > First off, I'd put the new code into drivers/acpi/wakeup.c.
 > > 
-> > Urgh, when does that happen? 
+> > I'd export one function from there to be called from
+> > acpi_s2idle_wake() and the install/uninstall routines for the users.
 > 
-> It happens naturally in the padding between functions, since objtool
-> doesn't traverse those instructions.  So they have undefined entries
-> like
+> Ok.
 > 
->  .text+68: sp:(und) bp:(und) type:call end:0
+> >> ---
+> >>   drivers/acpi/sleep.c | 70 ++++++++++++++++++++++++++++++++++++++++++++
+> >>   include/linux/acpi.h |  7 +++++
+> >>   2 files changed, 77 insertions(+)
+> >>
+> >> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> >> index e5f95922bc21..e360e51afa8e 100644
+> >> --- a/drivers/acpi/sleep.c
+> >> +++ b/drivers/acpi/sleep.c
+> >> @@ -943,6 +943,65 @@ static struct acpi_scan_handler lps0_handler = {
+> >>          .attach = lps0_device_attach,
+> >>   };
+> >>
+> >> +struct s2idle_wake_callback {
+> > 
+> > I'd call this acpi_wakeup_handler.
+> > 
+> >> +       struct list_head list;
+> > 
+> > list_node?
+> > 
+> >> +       bool (*function)(void *data);
+> > 
+> > bool (*wakeup)(void *context)?
+> > 
+> >> +       void *user_data;
+> > 
+> > context?
 > 
-> I suppose those aren't technically necessary.
+> Sure (for all of the above).
+> 
+> > 
+> >> +};
+> >> +
+> >> +static LIST_HEAD(s2idle_wake_callback_head);
+> >> +static DEFINE_MUTEX(s2idle_wake_callback_mutex);
+> >> +
+> >> +/*
+> >> + * Drivers which may share an IRQ with the SCI can use this to register
+> >> + * a callback which returns true when the device they are managing wants
+> >> + * to trigger a wakeup.
+> >> + */
+> >> +int acpi_s2idle_register_wake_callback(
+> >> +       int wake_irq, bool (*function)(void *data), void *user_data)
+> >> +{
+> >> +       struct s2idle_wake_callback *callback;
+> >> +
+> >> +       /*
+> >> +        * If the device is not sharing its IRQ with the SCI, there is no
+> >> +        * need to register the callback.
+> >> +        */
+> >> +       if (!acpi_sci_irq_valid() || wake_irq != acpi_sci_irq)
+> >> +               return 0;
+> >> +
+> >> +       callback = kmalloc(sizeof(*callback), GFP_KERNEL);
+> >> +       if (!callback)
+> >> +               return -ENOMEM;
+> >> +
+> >> +       callback->function = function;
+> >> +       callback->user_data = user_data;
+> >> +
+> >> +       mutex_lock(&s2idle_wake_callback_mutex);
+> >> +       list_add(&callback->list, &s2idle_wake_callback_head);
+> >> +       mutex_unlock(&s2idle_wake_callback_mutex);
+> >> +
+> >> +       return 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(acpi_s2idle_register_wake_callback);
+> >> +
+> >> +void acpi_s2idle_unregister_wake_callback(
+> >> +       bool (*function)(void *data), void *user_data)
+> >> +{
+> >> +       struct s2idle_wake_callback *cb;
+> >> +
+> >> +       mutex_lock(&s2idle_wake_callback_mutex);
+> >> +       list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
+> >> +               if (cb->function == function &&
+> >> +                   cb->user_data == user_data) {
+> >> +                       list_del(&cb->list);
+> >> +                       kfree(cb);
+> >> +                       break;
+> >> +               }
+> >> +       }
+> >> +       mutex_unlock(&s2idle_wake_callback_mutex);
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(acpi_s2idle_unregister_wake_callback);
+> >> +
+> >>   static int acpi_s2idle_begin(void)
+> >>   {
+> >>          acpi_scan_lock_acquire();
+> >> @@ -992,6 +1051,8 @@ static void acpi_s2idle_sync(void)
+> >>
+> >>   static bool acpi_s2idle_wake(void)
+> >>   {
+> >> +       struct s2idle_wake_callback *cb;
+> >> +
+> >>          if (!acpi_sci_irq_valid())
+> >>                  return pm_wakeup_pending();
+> >>
+> >> @@ -1025,6 +1086,15 @@ static bool acpi_s2idle_wake(void)
+> >>                  if (acpi_any_gpe_status_set() && !acpi_ec_dispatch_gpe())
+> >>                          return true;
+> >>
+> >> +               /*
+> >> +                * Check callbacks registered by drivers sharing the SCI.
+> >> +                * Note no need to lock, nothing else is running.
+> >> +                */
+> >> +               list_for_each_entry(cb, &s2idle_wake_callback_head, list) {
+> >> +                       if (cb->function(cb->user_data))
+> >> +                               return true;
+> >> +               }
+> > 
+> > AFAICS this needs to be done in acpi_s2idle_restore() too to clear the
+> > status bits in case one of these wakeup sources triggers along with a
+> > GPE or a fixed event and the other one wins the race.
+> 
+> The "wakeup" callback does not actually clear the interrupt source, just like
+> for normal interrupts it relies on the actual interrupt handling (which at this
+> point is still suspended) to do this.
 
-In fact, we could probably get substantial savings in the ORC table if
-we skipped those, i.e.
+Of course, you are right, sorry for the confusion.
 
-  .text+0: sp:sp+8 bp:(und) type:call end:0
-  .text+8: sp:(und) bp:(und) type:call end:0
-  .text+10: sp:sp+8 bp:(und) type:call end:0
-  .text+17: sp:sp+16 bp:(und) type:call end:0
-  .text+18: sp:sp+24 bp:prevsp-24 type:call end:0
-  .text+1c: sp:sp+32 bp:prevsp-24 type:call end:0
-  .text+5a: sp:sp+24 bp:prevsp-24 type:call end:0
-  .text+61: sp:sp+16 bp:(und) type:call end:0
-  .text+63: sp:sp+8 bp:(und) type:call end:0
-  .text+68: sp:(und) bp:(und) type:call end:0
-  .text+70: sp:sp+8 bp:(und) type:call end:0
-  .text+8c: sp:(und) bp:(und) type:call end:0
-  .text+90: sp:sp+8 bp:(und) type:call end:0
-  .text+cd: sp:(und) bp:(und) type:call end:0
-  .text+d0: sp:sp+8 bp:(und) type:call end:0
+What I meant was that the interrupt handler needed to run in acpi_s2idle_restore(),
+but that should be taken care of the acpi_os_wait_events_complete() in there
+which synchronizes the SCI among other things.
 
-would be compressed to
+Thanks!
 
-  .text+0: sp:sp+8 bp:(und) type:call end:0
-  .text+17: sp:sp+16 bp:(und) type:call end:0
-  .text+18: sp:sp+24 bp:prevsp-24 type:call end:0
-  .text+1c: sp:sp+32 bp:prevsp-24 type:call end:0
-  .text+5a: sp:sp+24 bp:prevsp-24 type:call end:0
-  .text+61: sp:sp+16 bp:(und) type:call end:0
-  .text+63: sp:sp+8 bp:(und) type:call end:0
 
-but I can do that in a separate patch, and if it works I can remove this
-hack.
-
--- 
-Josh
 
