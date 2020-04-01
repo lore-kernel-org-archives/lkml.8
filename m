@@ -2,82 +2,121 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14979C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E59F8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED9920719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:25:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585761914;
-	bh=M61UwKYGOJS+Q8aadIC4fJ14XpZ5PrjuyG5oVlO6NiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NsNsFXe4ABKgRUPghI6KC5Hw3HjLVdOyTaG7zy4JxU1kIrUi400j96iHngAZzs2ij
-	 Fw1Xe6pujKeC3rfArYiDEbU/mXMgDPKrN/e2y0P/wTZRxJGAATE6gnK/eDQIh0k+GM
-	 BkZlrkPIaav39lCnz/p1I8ptkRhFzsUQavwJ4AB0=
+	by mail.kernel.org (Postfix) with ESMTP id 5837020714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:29:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WP2Q/T7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732460AbgDARZO (ORCPT
+        id S1732606AbgDAR3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:25:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727661AbgDARZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:25:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 1 Apr 2020 13:29:13 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:50888 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726445AbgDAR3M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 13:29:12 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D97320714;
-        Wed,  1 Apr 2020 17:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585761911;
-        bh=M61UwKYGOJS+Q8aadIC4fJ14XpZ5PrjuyG5oVlO6NiU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W0AGl7Vu5hf7B0BitZ6vnf1Fqu7Lgf087/qYESxMn8/NEd4WVg0Ys8eOfAhcSBJ5K
-         vjyDW2ovw2AauP/bW2ja9ylp8XNgOZgHMDSWakNskIjloR91qzHyM4UWIG/B/10doZ
-         YIKrCi97Hw1QNw1tKdl9nz+/jsXDqJrUhnHnFAy0=
-Date:   Wed, 1 Apr 2020 19:22:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.6 00/10] 5.6.2-rc1 review
-Message-ID: <20200401172242.GA2582092@kroah.com>
-References: <20200401161413.974936041@linuxfoundation.org>
- <CAHk-=wiVBvO1b5UzfcHm6y4KLHOp3huFfGMdW21F6g25oUePLw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiVBvO1b5UzfcHm6y4KLHOp3huFfGMdW21F6g25oUePLw@mail.gmail.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 25C1AC0F86;
+        Wed,  1 Apr 2020 17:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585762152; bh=+pqAfs8F1mKnWz24eqJJvntFD5qLhFA4j1I4ISeo3no=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WP2Q/T7QDZZHQRwz/FuDbCuQSfJEVV8GGGvk0kh7md2q8+/9d9SpEacYx437dA/sk
+         /w3+9b3Vne+JK5pfCNqTRkw0VSvuh56AHo2i1RKmzbVq6UPHQJSCot/wKVOHzrvWoI
+         JlXk+BNWwtcakKTYGSVtCICQO/XFV3FlU/4jM/YaPGhzwdcaW0Yh2RhhEbXvq6mhU2
+         nqHNLytTbefWDmEYanhjkf3jbsnYgXAJsZBLW6Ikaqosxyqd/FGJgsb9k/EMP+TNUh
+         18po7usSHHm681N8Nc/W3szl6L7vq2SHcybioRKX01xD98Kb8xTHTcwiPvNoa/Qt3l
+         5FKNA25Wtl2qw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id E0543A005B;
+        Wed,  1 Apr 2020 17:29:08 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: stmmac: Fix VLAN filtering when HW does not support it
+Date:   Wed,  1 Apr 2020 19:29:03 +0200
+Message-Id: <42e493820f707c5a5d3375676ef6b6a96988f846.1585762111.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 10:06:47AM -0700, Linus Torvalds wrote:
-> On Wed, Apr 1, 2020 at 9:19 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.6.2 release.
-> 
-> Good. You made 5.6.1 so quickly that I didn't have time to react and
-> say that it makes little sense without the 802.11 fix, but you're
-> obviously making 5.6.2 quickly, so..
+If we don't have any filters available we can't rely upon the return
+code of stmmac_add_hw_vlan_rx_fltr() / stmmac_del_hw_vlan_rx_fltr(). Add
+a check for this.
 
-Yeah, 5.6.1 had to go out fast, sorry I missed this patch.  Luckily it
-seems that every distro vendor heard about it (or asked me about it)
-already, and have included it in their trees so the majority of users
-shouldn't hit this just yet.
+Fixes: ed64639bc1e0 ("net: stmmac: Add support for VLAN Rx filtering")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-And, if this passes Guenter's test builds quickly (hint), I can push it
-out quickly as well :)
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-thanks,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b77d2faa580f..bd35a3df871d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4570,9 +4570,13 @@ static int stmmac_vlan_rx_add_vid(struct net_device *ndev, __be16 proto, u16 vid
+ 		return ret;
+ 	}
+ 
+-	ret = stmmac_add_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
++	if (priv->hw->num_vlan) {
++		ret = stmmac_add_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
++		if (ret)
++			return ret;
++	}
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int stmmac_vlan_rx_kill_vid(struct net_device *ndev, __be16 proto, u16 vid)
+@@ -4585,9 +4589,12 @@ static int stmmac_vlan_rx_kill_vid(struct net_device *ndev, __be16 proto, u16 vi
+ 		is_double = true;
+ 
+ 	clear_bit(vid, priv->active_vlans);
+-	ret = stmmac_del_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
+-	if (ret)
+-		return ret;
++
++	if (priv->hw->num_vlan) {
++		ret = stmmac_del_hw_vlan_rx_fltr(priv, ndev, priv->hw, proto, vid);
++		if (ret)
++			return ret;
++	}
+ 
+ 	return stmmac_vlan_update(priv, is_double);
+ }
+-- 
+2.7.4
 
-greg k-h
