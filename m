@@ -2,228 +2,197 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABE4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC7CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F77A2074D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D824F2074D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 05:38:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="udpZj7uQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731744AbgDAFc0 convert rfc822-to-8bit (ORCPT
+        id S1731767AbgDAFiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 01:32:26 -0400
-Received: from mga03.intel.com ([134.134.136.65]:15821 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731683AbgDAFc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 01:32:26 -0400
-IronPort-SDR: gPwUEcifkcx41Vd8cG+0aLxavBDekgLZSOjAL5373185apDzOhglX51omoxjv4X14EfhjgGj7I
- CNjgqF2Z4A6Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 22:32:25 -0700
-IronPort-SDR: rRNDlEbmxX4+3bAhcoyohLz++3lRP7Sbg19yAvMYAjj8XmOxz4AqLrUH/r8idCM6hvu5OS7vuH
- O+iRvpjeYmpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="240347396"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 22:32:24 -0700
-Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 31 Mar 2020 22:32:24 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
- Wed, 1 Apr 2020 13:32:21 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: RE: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Topic: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
-Thread-Index: AQHWAvq+z2SPyfblHkGvV1oKjQsO9ahaFEoAgAB7VgCAAS14gP//zqQAgAEODYCABAXlIIAALvMAgAFssACAACIBAIABY/uQ
-Date:   Wed, 1 Apr 2020 05:32:21 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D803AFF@SHSMSX104.ccr.corp.intel.com>
-References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20200326092316.GA31648@infradead.org>
-        <20200326094442.5be042ce@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7ECB45@SHSMSX104.ccr.corp.intel.com>
-        <20200327074702.GA27959@infradead.org>
-        <20200327165335.397f24a3@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FE150@SHSMSX104.ccr.corp.intel.com>
-        <20200330090746.23c5599c@jacob-builder>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D8011A9@SHSMSX104.ccr.corp.intel.com>
- <20200331085444.44bee0bb@jacob-builder>
-In-Reply-To: <20200331085444.44bee0bb@jacob-builder>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 1 Apr 2020 01:38:25 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37411 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbgDAFiY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 01:38:24 -0400
+Received: by mail-pl1-f194.google.com with SMTP id x1so9163845plm.4;
+        Tue, 31 Mar 2020 22:38:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6I8wM9tu7YMp/CkfUvle+W5MuBU50+/cYhNxMO0BjO0=;
+        b=udpZj7uQVcu5ayU4gQH6yLbQlB+A4m3Tm8DB6emdqXGGmiRS5hdVk/r6ONl2kySkZf
+         5WBmeH+s+yHtZvc2Jjl5L1eMkBcmZ1cp1iYT33lFOaGSDwk+z3abeaXZVfrr2zv/bISl
+         aK1qpfVHwgaaKpAD8w7kpwAw6F7i9z9R03vS+tWXUkagJPk7VE8Olh59e+i3YDYqkDKF
+         crQOYh2g0wlriqgSavV3GDi1E8lXlBM02b5iwinr+VgSaq+Lhd8RLFGRBH34HLkNugqq
+         WqvNrozdms9o6B5I1vnpQ1dbxrnU2DeJHm6VQ87RNa1VYXM/myOsWlF17zZ8iTJCk6v8
+         RQ5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6I8wM9tu7YMp/CkfUvle+W5MuBU50+/cYhNxMO0BjO0=;
+        b=nio914EERLt+FSXbyodbdDIL2S7S1u5EJrBkFmxeoxAHw3F2qhrc5f/7uSwGsxv/5s
+         E8Bu01yw0CQSNEkEFyfaC+TdvFbTbrKl0PB5IF0P62IBYzvS85HjIgPmEevfs/P5mVEu
+         t+yGOkymQb5CXS96swcvLFJPivHwnidhqXgcnlTl2oZEN1u1jeGvvC4IMH8KVNCcXQRD
+         TVkDt7YhtVGtU/Tu7tgk0tS8etAiTbD+Ta+/MqoiiUv/8rP9MmRU9L2e/osQIOTFjBTX
+         0+17hcTf7JBGwcD4RAxlN/LPfFDAr2zHsVJA3mCmmJ+OpEFxcR6LJQUOK1PwNYfy69Rq
+         f8dw==
+X-Gm-Message-State: ANhLgQ0BISfNUL1OK97FUJh2AuKtzdLWFp4rhphVoDumTJ8ddNVt2okK
+        xDVaE8NuoypGr/uBPf5U4lw9wzt8VUoc7g==
+X-Google-Smtp-Source: ADFU+vuX5DuuAlcirzkkd+0eNIZ0rRmLL3H+pH/q4qG7T0YWkAJKz93Q8i3JSImZTKciZCpX+LcQLg==
+X-Received: by 2002:a17:902:b198:: with SMTP id s24mr20419425plr.89.1585719502973;
+        Tue, 31 Mar 2020 22:38:22 -0700 (PDT)
+Received: from nickserv.localdomain (c-67-188-225-242.hsd1.ca.comcast.net. [67.188.225.242])
+        by smtp.gmail.com with ESMTPSA id w69sm683077pfc.52.2020.03.31.22.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 22:38:22 -0700 (PDT)
+From:   Nick Terrell <nickrterrell@gmail.com>
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [PATCH v4 0/8] Add support for ZSTD-compressed kernel and initramfs
+Date:   Tue, 31 Mar 2020 22:39:05 -0700
+Message-Id: <20200401053913.216783-1-nickrterrell@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Sent: Tuesday, March 31, 2020 11:55 PM
-> 
-> On Tue, 31 Mar 2020 06:06:38 +0000
-> "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> 
-> > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > Sent: Tuesday, March 31, 2020 12:08 AM
-> > >
-> > > On Mon, 30 Mar 2020 05:40:40 +0000
-> > > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> > >
-> > > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > > Sent: Saturday, March 28, 2020 7:54 AM
-> > > > >
-> > > > > On Fri, 27 Mar 2020 00:47:02 -0700
-> > > > > Christoph Hellwig <hch@infradead.org> wrote:
-> > > > >
-> > > > > > On Fri, Mar 27, 2020 at 02:49:55AM +0000, Tian, Kevin wrote:
-> > > > > > > If those API calls are inter-dependent for composing a
-> > > > > > > feature (e.g. SVA), shouldn't we need a way to check them
-> > > > > > > together before exposing the feature to the guest, e.g.
-> > > > > > > through a iommu_get_uapi_capabilities interface?
-> > > > > >
-> > > > > > Yes, that makes sense.  The important bit is to have a
-> > > > > > capability flags and not version numbers.
-> > > > >
-> > > > > The challenge is that there are two consumers in the kernel for
-> > > > > this. 1. VFIO only look for compatibility, and size of each data
-> > > > > struct such that it can copy_from_user.
-> > > > >
-> > > > > 2. IOMMU driver, the "real consumer" of the content.
-> > > > >
-> > > > > For 2, I agree and we do plan to use the capability flags to
-> > > > > check content and maintain backward compatibility etc.
-> > > > >
-> > > > > For VFIO, it is difficult to do size look up based on capability
-> > > > > flags.
-> > > >
-> > > > Can you elaborate the difficulty in VFIO? if, as Christoph Hellwig
-> > > > pointed out, version number is already avoided everywhere, it is
-> > > > interesting to know whether this work becomes a real exception
-> > > > or just requires a different mindset.
-> > > >
-> > > From VFIO p.o.v. the IOMMU UAPI data is opaque, it only needs to do
-> > > two things:
-> > > 1. is the UAPI compatible?
-> > > 2. what is the size to copy?
-> > >
-> > > If you look at the version number, this is really a "version as
-> > > size" lookup, as provided by the helper function in this patch. An
-> > > example can be the newly introduced clone3 syscall.
-> > > https://lwn.net/Articles/792628/
-> > > In clone3, new version must have new size. The slight difference
-> > > here is that, unlike clone3, we have multiple data structures
-> > > instead of a single struct clone_args {}. And each struct has flags
-> > > to enumerate its contents besides size.
-> >
-> > Thanks for providing that link. However clone3 doesn't include a
-> > version field to do "version as size" lookup. Instead, as you said,
-> > it includes a size parameter which sounds like the option 3 (argsz)
-> > listed below.
-> >
-> Right, there is no version in clone3. size = version. I view this as
-> a 1:1 lookup.
-> 
-> > >
-> > > Besides breaching data abstraction, if VFIO has to check IOMMU
-> > > flags to determine the sizes, it has many combinations.
-> > >
-> > > We also separate the responsibilities into two parts
-> > > 1. compatibility - version, size by VFIO
-> > > 2. sanity check - capability flags - by IOMMU
-> >
-> > I feel argsz+flags approach can perfectly meet above requirement. The
-> > userspace set the size and flags for whatever capabilities it uses,
-> > and VFIO simply copies the parameters by size and pass to IOMMU for
-> > further sanity check. Of course the assumption is that we do provide
-> > an interface for userspace to enumerate all supported capabilities.
-> >
-> You cannot trust user for argsz. the size to be copied from user must
-> be based on knowledge in kernel. That is why we have this version to
-> size lookup.
-> 
-> In VFIO, the size to copy is based on knowledge of each VFIO UAPI
-> structures and VFIO flags. But here the flags are IOMMU UAPI flags. As
-> you pointed out in another thread, VFIO is one user.
+From: Nick Terrell <terrelln@fb.com>
 
-If that is the case, can we let VFIO only copy its own UAPI fields while 
-simply passing the user pointer of IOMMU UAPI structure to IOMMU
-driver for further size check and copy? Otherwise we are entering a
-dead end that VFIO doesn't want to parse a structure which is not
-defined by him while using version to represent the black box size
-is considered as a discarded scheme and doesn't scale well...
+Hi all,
 
-> 
-> > Is there anything that I overlooked here? I suppose there might be
-> > some difficulties that block you from going the argsz way...
-> >
-> > Thanks
-> > Kevin
-> >
-> > >
-> > > I think the latter matches what Christoph's comments. So we are in
-> > > agreement at the IOMMU level :)
-> > >
-> > > For example:
-> > > During guest PASID bind, IOMMU driver operates on the data passed
-> > > from VFIO and check format & flags to take different code path.
-> > >
-> > > #define IOMMU_PASID_FORMAT_INTEL_VTD	1
-> > > 	__u32 format;
-> > > #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
-> > > 	__u64 flags;
-> > >
-> > > Jacob
-> > >
-> > > > btw the most relevant discussion which I can find out now is here:
-> > > > 	https://lkml.org/lkml/2020/2/3/1126
-> > > >
-> > > > It mentioned 3 options for handling extension:
-> > > > --
-> > > > 1. Disallow adding new members to each structure other than reuse
-> > > > padding bits or adding union members at the end.
-> > > > 2. Allow extension of the structures beyond union, but union size
-> > > > has to be fixed with reserved spaces
-> > > > 3. Adopt VFIO argsz scheme, I don't think we need version for each
-> > > > struct anymore. argsz implies the version that user is using
-> > > > assuming UAPI data is extension only.
-> > > > --
-> > > >
-> > > > the first two are both version-based. Looks most guys agreed with
-> > > > option-1 (in this v2), but Alex didn't give his opinion at the
-> > > > moment. The last response from him was the raise of option-3 using
-> > > > argsz to avoid version. So, we also need hear from him. Alex?
-> > > >
-> > > > Thanks
-> > > > Kevin
-> > >
-> > > [Jacob Pan]
-> 
-> [Jacob Pan]
+This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+are supported on all architectures. The ZSTD-compressed kernel is only
+hooked up to x86 in this patch set.
 
-Thanks
-Kevin
+Zstandard requires slightly more memory during the kernel decompression
+on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+window size.
+
+Zstandard requires memory proprortional to the window size used during
+compression for decompressing the ramdisk image, since streaming mode is
+used. Newer versions of zstd (1.3.2+) list the window size of a file
+with `zstd -lv <file>'. The absolute maximum amount of memory required
+is just over 8 MB, but it can be controlled at compression time.
+
+This patch set has been boot tested with buildroot and QEMU based off
+of linux-5.6-rc6.
+
+On i386 and x86_64 I have tested the following configurations:
+* zstd compressed kernel and a separate zstd compressed initramfs
+* zstd compressed kernel and a built-in zstd compressed initramfs
+* gzip compressed kernel and a separate gzip compressed initramfs
+* gzip compressed kernel and a built-in gzip compressed initramfs
+
+On arm and aarch64 I tested the same configurations, except that the kernel is
+always gzip compressed.
+
+Facebook has been using v1 of these patches on x86_64 devices for more than 6
+months. When we switched from a xz compressed initramfs to a zstd compressed
+initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+seconds of boot time.
+
+Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+decompression time shrunk from 27 seconds to 8 seconds.
+
+The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+than the xz or lzma compressed kernels, and it decompresses faster than
+everything except lz4. See the table below for the measurement of an x86_64
+kernel ordered by compressed size:
+
+algo	size
+xz  	 6,509,792
+lzma	 6,856,576
+zstd	 7,399,157
+gzip	 8,522,527
+bzip	 8,629,603
+lzo 	 9,808,035
+lz4 	10,705,570
+none	32,565,672
+
+v1 -> v2:
+- Rebase
+  - usr/Makefile and init/Kconfig were changed so the patches were updated
+- No functional changes except to rebase
+- Split the patches up into smaller chunks
+
+v2 -> v3:
+- Add *.zst to the .gitignore in patch 8
+- Style nits in patch 3
+- Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+  1 through 3
+
+v3 -> v4:
+- Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+  With this change I switch from malloc() to large_malloc() for the
+  buffers.
+- Increase the maximum allowed window size from 8 MB to 128 MB, which is
+  the max that zstd in the kernel supports.
+
+Best,
+Nick Terrell
+
+Adam Borowski (1):
+  .gitignore: add ZSTD-compressed files
+
+Nick Terrell (7):
+  lib: prepare zstd for preboot environment
+  lib: prepare xxhash for preboot environment
+  lib: add zstd support to decompress
+  init: add support for zstd compressed kernel
+  usr: add support for zstd compressed initramfs
+  x86: bump ZO_z_extra_bytes margin for zstd
+  x86: Add support for ZSTD compressed kernel
+
+ .gitignore                        |   1 +
+ Documentation/x86/boot.rst        |   6 +-
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/boot/compressed/Makefile |   5 +-
+ arch/x86/boot/compressed/misc.c   |   4 +
+ arch/x86/boot/header.S            |   8 +-
+ arch/x86/include/asm/boot.h       |   6 +-
+ include/linux/decompress/unzstd.h |  11 +
+ init/Kconfig                      |  15 +-
+ lib/Kconfig                       |   4 +
+ lib/Makefile                      |   1 +
+ lib/decompress.c                  |   5 +
+ lib/decompress_unzstd.c           | 342 ++++++++++++++++++++++++++++++
+ lib/xxhash.c                      |  21 +-
+ lib/zstd/decompress.c             |   2 +
+ lib/zstd/fse_decompress.c         |   9 +-
+ lib/zstd/zstd_internal.h          |  14 +-
+ scripts/Makefile.lib              |  15 ++
+ usr/Kconfig                       |  20 ++
+ usr/Makefile                      |   1 +
+ 20 files changed, 464 insertions(+), 27 deletions(-)
+ create mode 100644 include/linux/decompress/unzstd.h
+ create mode 100644 lib/decompress_unzstd.c
+
+-- 
+2.26.0
+
