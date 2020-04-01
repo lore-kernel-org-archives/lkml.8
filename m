@@ -2,186 +2,134 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4DBC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B1EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B4720842
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1962078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 06:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="M2cJ07AQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731883AbgDAG3n (ORCPT
+        id S1731815AbgDAGcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 02:29:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:44855 "EHLO mga04.intel.com"
+        Wed, 1 Apr 2020 02:32:07 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31373 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731680AbgDAG3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 02:29:40 -0400
-IronPort-SDR: ZHMG/zhhzExjoNs56yppJfXM+QGOXht78UfnSYzqWua7tzbFRFwjGhzeqiifcHFLSd75M1zIvF
- A70VnbCf29AQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 23:29:39 -0700
-IronPort-SDR: 4Mw2HjpAHqmvI8RrApvWaf5zrGlWT1+VkjD3RjXkYXX1snTRxLG0idJB5QwUlJfG6pg06Ytkdz
- 86KM1VgDGiQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
-   d="scan'208";a="422582521"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga005.jf.intel.com with ESMTP; 31 Mar 2020 23:29:39 -0700
-Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 31 Mar 2020 23:29:39 -0700
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 31 Mar 2020 23:29:38 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.146]) with mapi id 14.03.0439.000;
- Wed, 1 Apr 2020 14:29:36 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC:     Auger Eric <eric.auger@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Jonathan Cameron" <jic23@kernel.org>
-Subject: RE: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
-Thread-Topic: [PATCH V10 08/11] iommu/vt-d: Add svm/sva invalidate function
-Thread-Index: AQHV/w5hchZ4XNV890+XBMGi6MGw3ahdsRPAgAGJtYCAAsrMAIAAtFqAgAEkbYA=
-Date:   Wed, 1 Apr 2020 06:29:35 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D803C33@SHSMSX104.ccr.corp.intel.com>
-References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1584746861-76386-9-git-send-email-jacob.jun.pan@linux.intel.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA0AB@SHSMSX104.ccr.corp.intel.com>
-        <3215b83c-81f7-a30f-fe82-a51f29d7b874@redhat.com>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D800D67@SHSMSX104.ccr.corp.intel.com>
- <20200331135807.4e9976ab@jacob-builder>
-In-Reply-To: <20200331135807.4e9976ab@jacob-builder>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1731589AbgDAGcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:32:07 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48sbvn111rz9txbS;
+        Wed,  1 Apr 2020 08:32:05 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=M2cJ07AQ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id N82vlwFNG6uA; Wed,  1 Apr 2020 08:32:05 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48sbvm6lDrz9txbR;
+        Wed,  1 Apr 2020 08:32:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585722724; bh=fz42DDV9ApxpNWS9T44dvSssW81bIergY+V0OGliRCc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=M2cJ07AQx+wEWbJgoO7fxKln758xBxks6FjTnnm5oYwoVzyuOkCV216Qwwh5oxJIK
+         9oTk8dh//opPicmXTptz+XB74i+IwhiG7ij7iZo9c5nnu3Na44QIvaxca3P08EB5RA
+         2+eZoW8s3LmzBjQlO4IA5//hYNUTkrWB6KqB4rV0=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BC48E8B7B3;
+        Wed,  1 Apr 2020 08:32:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id G8hXNfMZR6VY; Wed,  1 Apr 2020 08:32:05 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 57F1E8B778;
+        Wed,  1 Apr 2020 08:32:03 +0200 (CEST)
+Subject: Re: [PATCH v2 07/16] powerpc/watchpoint: Get watchpoint count
+ dynamically while disabling them
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
+        mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
+ <20200401061309.92442-8-ravi.bangoria@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <3c2312bb-9689-830e-3bc8-c828eddf369c@c-s.fr>
+Date:   Wed, 1 Apr 2020 08:32:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200401061309.92442-8-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBKYWNvYiBQYW4gPGphY29iLmp1bi5wYW5AbGludXguaW50ZWwuY29tPg0KPiBTZW50
-OiBXZWRuZXNkYXksIEFwcmlsIDEsIDIwMjAgNDo1OCBBTQ0KPiANCj4gT24gVHVlLCAzMSBNYXIg
-MjAyMCAwMjo0OToyMSArMDAwMA0KPiAiVGlhbiwgS2V2aW4iIDxrZXZpbi50aWFuQGludGVsLmNv
-bT4gd3JvdGU6DQo+IA0KPiA+ID4gRnJvbTogQXVnZXIgRXJpYyA8ZXJpYy5hdWdlckByZWRoYXQu
-Y29tPg0KPiA+ID4gU2VudDogU3VuZGF5LCBNYXJjaCAyOSwgMjAyMCAxMTozNCBQTQ0KPiA+ID4N
-Cj4gPiA+IEhpLA0KPiA+ID4NCj4gPiA+IE9uIDMvMjgvMjAgMTE6MDEgQU0sIFRpYW4sIEtldmlu
-IHdyb3RlOg0KPiA+ID4gPj4gRnJvbTogSmFjb2IgUGFuIDxqYWNvYi5qdW4ucGFuQGxpbnV4Lmlu
-dGVsLmNvbT4NCj4gPiA+ID4+IFNlbnQ6IFNhdHVyZGF5LCBNYXJjaCAyMSwgMjAyMCA3OjI4IEFN
-DQo+ID4gPiA+Pg0KPiA+ID4gPj4gV2hlbiBTaGFyZWQgVmlydHVhbCBBZGRyZXNzIChTVkEpIGlz
-IGVuYWJsZWQgZm9yIGEgZ3Vlc3QgT1MgdmlhDQo+ID4gPiA+PiB2SU9NTVUsIHdlIG5lZWQgdG8g
-cHJvdmlkZSBpbnZhbGlkYXRpb24gc3VwcG9ydCBhdCBJT01NVSBBUEkNCj4gPiA+ID4+IGFuZA0K
-PiA+ID4gZHJpdmVyDQo+ID4gPiA+PiBsZXZlbC4gVGhpcyBwYXRjaCBhZGRzIEludGVsIFZULWQg
-c3BlY2lmaWMgZnVuY3Rpb24gdG8gaW1wbGVtZW50DQo+ID4gPiA+PiBpb21tdSBwYXNzZG93biBp
-bnZhbGlkYXRlIEFQSSBmb3Igc2hhcmVkIHZpcnR1YWwgYWRkcmVzcy4NCj4gPiA+ID4+DQo+ID4g
-PiA+PiBUaGUgdXNlIGNhc2UgaXMgZm9yIHN1cHBvcnRpbmcgY2FjaGluZyBzdHJ1Y3R1cmUgaW52
-YWxpZGF0aW9uDQo+ID4gPiA+PiBvZiBhc3NpZ25lZCBTVk0gY2FwYWJsZSBkZXZpY2VzLiBFbXVs
-YXRlZCBJT01NVSBleHBvc2VzIHF1ZXVlDQo+ID4gIFsuLi5dDQo+ID4gIFsuLi5dDQo+ID4gPiB0
-bw0KPiA+ID4gPj4gKyAqIFZULWQgZ3JhbnVsYXJpdHkuIEludmFsaWRhdGlvbiBpcyB0eXBpY2Fs
-bHkgaW5jbHVkZWQgaW4gdGhlDQo+ID4gPiA+PiB1bm1hcA0KPiA+ID4gb3BlcmF0aW9uDQo+ID4g
-PiA+PiArICogYXMgYSByZXN1bHQgb2YgRE1BIG9yIFZGSU8gdW5tYXAuIEhvd2V2ZXIsIGZvciBh
-c3NpZ25lZA0KPiA+ID4gPj4gZGV2aWNlcw0KPiA+ID4gZ3Vlc3QNCj4gPiA+ID4+ICsgKiBvd25z
-IHRoZSBmaXJzdCBsZXZlbCBwYWdlIHRhYmxlcy4gSW52YWxpZGF0aW9ucyBvZg0KPiA+ID4gPj4g
-dHJhbnNsYXRpb24gY2FjaGVzIGluDQo+ID4gPiB0aGUNCj4gPiAgWy4uLl0NCj4gPiAgWy4uLl0N
-Cj4gPiAgWy4uLl0NCj4gPiA+DQo+IGludl90eXBlX2dyYW51X21hcFtJT01NVV9DQUNIRV9JTlZf
-VFlQRV9OUl1bSU9NTVVfSU5WX0dSQU5VXw0KPiA+ID4gPj4gTlJdID0gew0KPiA+ID4gPj4gKwkv
-Kg0KPiA+ID4gPj4gKwkgKiBQQVNJRCBiYXNlZCBJT1RMQiBpbnZhbGlkYXRpb246IFBBU0lEIHNl
-bGVjdGl2ZSAocGVyDQo+ID4gPiA+PiBQQVNJRCksDQo+ID4gPiA+PiArCSAqIHBhZ2Ugc2VsZWN0
-aXZlIChhZGRyZXNzIGdyYW51bGFyaXR5KQ0KPiA+ID4gPj4gKwkgKi8NCj4gPiA+ID4+ICsJezAs
-IDEsIDF9LA0KPiA+ID4gPj4gKwkvKiBQQVNJRCBiYXNlZCBkZXYgVExCcywgb25seSBzdXBwb3J0
-IGFsbCBQQVNJRHMgb3INCj4gPiA+ID4+IHNpbmdsZSBQQVNJRCAqLw0KPiA+ID4gPj4gKwl7MSwg
-MSwgMH0sDQo+ID4gPiA+DQo+ID4gPiA+IElzIHRoaXMgY29tYmluYXRpb24gY29ycmVjdD8gd2hl
-biBzaW5nbGUgUEFTSUQgaXMgYmVpbmcNCj4gPiA+ID4gc3BlY2lmaWVkLCBpdCBpcyBlc3NlbnRp
-YWxseSBhIHBhZ2Utc2VsZWN0aXZlIGludmFsaWRhdGlvbiBzaW5jZQ0KPiA+ID4gPiB5b3UgbmVl
-ZCBwcm92aWRlIEFkZHJlc3MgYW5kIFNpemUuDQo+ID4gPiBJc24ndCBpdCB0aGUgc2FtZSB3aGVu
-IEc9MT8gU3RpbGwgdGhlIGFkZHIvc2l6ZSBpcyB1c2VkLiBEb2Vzbid0DQo+ID4gPiBpdA0KPiA+
-DQo+ID4gSSB0aG91Z2h0IGFkZHIvc2l6ZSBpcyBub3QgdXNlZCB3aGVuIEc9MSwgYnV0IGl0IG1p
-Z2h0IGJlIHdyb25nLiBJJ20NCj4gPiBjaGVja2luZyB3aXRoIG91ciB2dC1kIHNwZWMgb3duZXIu
-DQo+ID4NCj4gDQo+ID4gPiBjb3JyZXNwb25kIHRvIElPTU1VX0lOVl9HUkFOVV9BRERSIHdpdGgN
-Cj4gPiA+IElPTU1VX0lOVl9BRERSX0ZMQUdTX1BBU0lEIGZsYWcNCj4gPiA+IHVuc2V0Pw0KPiA+
-ID4NCj4gPiA+IHNvIHswLCAwLCAxfT8NCj4gPg0KPiBJIGFtIG5vdCBzdXJlIEkgZ290IHlvdXIg
-bG9naWMuIFRoZSB0aHJlZSBmaWVsZHMgY29ycmVzcG9uZCB0bw0KPiAJSU9NTVVfSU5WX0dSQU5V
-X0RPTUFJTiwJLyogZG9tYWluLXNlbGVjdGl2ZQ0KPiBpbnZhbGlkYXRpb24gKi8NCj4gCUlPTU1V
-X0lOVl9HUkFOVV9QQVNJRCwJLyogUEFTSUQtc2VsZWN0aXZlIGludmFsaWRhdGlvbiAqLw0KPiAJ
-SU9NTVVfSU5WX0dSQU5VX0FERFIsCS8qIHBhZ2Utc2VsZWN0aXZlIGludmFsaWRhdGlvbiAqDQo+
-IA0KPiBGb3IgZGV2VExCLCB3ZSB1c2UgZG9tYWluIGFzIGdsb2JhbCBzaW5jZSB0aGVyZSBpcyBu
-byBkb21haW4uIFRoZW4gSQ0KPiBjYW1lIHVwIHdpdGggezEsIDEsIDB9LCB3aGljaCBtZWFucyB3
-ZSBjb3VsZCBoYXZlIGdsb2JhbCBhbmQgcGFzaWQNCj4gZ3JhbnUgaW52YWxpZGF0aW9uIGZvciBQ
-QVNJRCBiYXNlZCBkZXZUTEIuDQo+IA0KPiBJZiB0aGUgY2FsbGVyIGFsc28gcHJvdmlkZSBhZGRy
-IGFuZCBTIGJpdCwgdGhlIGZsdXNoIHJvdXRpbmUgd2lsbCBwdXQNCg0KImFsc28iIC0+ICJtdXN0
-IiwgYmVjYXVzZSB2dC1kIHJlcXVpcmVzIGFkZHIvc2l6ZSBtdXN0IGJlIHByb3ZpZGVkDQppbiBk
-ZXZ0bGIgZGVzY3JpcHRvciwgdGhhdCBpcyB3aHkgRXJpYyBzdWdnZXN0cyB7MCwgMCwgMX0uDQoN
-Cj4gdGhhdCBpbnRvIFFJIGRlc2NyaXB0b3IuIEkga25vdyB0aGlzIGlzIGEgbGl0dGxlIG9kZCwg
-YnV0IGZyb20gdGhlDQo+IGdyYW51IHRyYW5zbGF0aW9uIHAuby52LiBWVC1kIHNwZWMgaGFzIG5v
-IEcgYml0IGZvciBwYWdlIHNlbGVjdGl2ZQ0KPiBpbnZhbGlkYXRpb24uDQoNCldlIGRvbid0IG5l
-ZWQgc3VjaCBvZGQgd2F5IGlmIGNhbiBkbyBpdCBwcm9wZXJseS4g8J+Yig0KDQo+IA0KPiA+IEkg
-aGF2ZSBvbmUgbW9yZSBvcGVuOg0KPiA+DQo+ID4gSG93IGRvZXMgdXNlcnNwYWNlIGtub3cgd2hp
-Y2ggaW52YWxpZGF0aW9uIHR5cGUvZ3JhbiBpcyBzdXBwb3J0ZWQ/DQo+ID4gSSBkaWRuJ3Qgc2Vl
-IHN1Y2ggY2FwYWJpbGl0eSByZXBvcnRpbmcgaW4gWWkncyBWRklPIHZTVkEgcGF0Y2ggc2V0Lg0K
-PiA+IERvIHdlIHdhbnQgdGhlIHVzZXIva2VybmVsIGFzc3VtZSB0aGUgc2FtZSBjYXBhYmlsaXR5
-IHNldCBpZiB0aGV5IGFyZQ0KPiA+IGFyY2hpdGVjdHVyYWw/IEhvd2V2ZXIgdGhlIGtlcm5lbCBj
-b3VsZCBhbHNvIGRvIHNvbWUgb3B0aW1pemF0aW9uDQo+ID4gZS5nLiBoaWRlIGRldnRsYiBpbnZh
-bGlkYXRpb24gY2FwYWJpbGl0eSBnaXZlbiB0aGF0IHRoZSBrZXJuZWwNCj4gPiBhbHJlYWR5IGlu
-dmFsaWRhdGUgZGV2dGxiIGF1dG9tYXRpY2FsbHkgd2hlbiBzZXJ2aW5nIGlvdGxiDQo+ID4gaW52
-YWxpZGF0aW9uLi4uDQo+ID4NCj4gSW4gZ2VuZXJhbCwgd2UgYXJlIHRyZW5kaW5nIHRvIHVzZSBW
-RklPIGNhcGFiaWxpdHkgY2hhaW4gdG8gZXhwb3NlIGlvbW11DQo+IGNhcGFiaWxpdGllcy4NCj4g
-DQo+IEJ1dCBmb3IgYXJjaGl0ZWN0dXJhbCBmZWF0dXJlcyBzdWNoIGFzIHR5cGUvZ3JhbnUsIHdl
-IGhhdmUgdG8gYXNzdW1lDQo+IHRoZSBzYW1lIGNhcGFiaWxpdHkgYmV0d2VlbiBob3N0ICYgZ3Vl
-c3QuIEdyYW51IGFuZCB0eXBlcyBhcmUgbm90DQo+IGVudW1lcmF0ZWQgb24gdGhlIGhvc3QgSU9N
-TVUgZWl0aGVyLg0KPiANCj4gRm9yIGRldlRMQiBvcHRpbWl6YXRpb24sIEkgYWdyZWUgd2UgbmVl
-ZCB0byBleHBvc2UgYSBjYXBhYmlsaXR5IHRvDQo+IHRoZSBndWVzdCBzdGF0aW5nIHRoYXQgaW1w
-bGljaXQgZGV2dGxiIGludmFsaWRhdGlvbiBpcyBzdXBwb3J0ZWQuDQo+IE90aGVyd2lzZSwgaWYg
-TGludXggZ3Vlc3QgcnVucyBvbiBvdGhlciBPU2VzIG1heSBub3Qgc3VwcG9ydCBpbXBsaWNpdA0K
-PiBkZXZ0bGIgaW52YWxpZGF0aW9uLg0KPiANCj4gUmlnaHQgWWk/DQoNClRoYW5rcyBmb3IgZXhw
-bGFuYXRpb24uIFNvIHdlIGFyZSBhc3N1bWVkIHRvIHN1cHBvcnQgYWxsIG9wZXJhdGlvbnMNCmRl
-ZmluZWQgaW4gc3BlYywgc28gbm8gbmVlZCB0byBleHBvc2UgdGhlbSBvbmUtYnktb25lLiBGb3IN
-Cm9wdGltaXphdGlvbiwgSSdtIGZpbmUgdG8gZG8gaXQgbGF0ZXIuIA0KDQo+IA0KPiA+IFRoYW5r
-cw0KPiA+IEtldmluDQo+ID4NCj4gPiA+DQo+ID4gPiBUaGFua3MNCj4gPiA+DQo+ID4gPiBFcmlj
-DQo+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPj4gKwkvKiBQQVNJRCBjYWNoZSAqLw0KPiA+ID4gPg0K
-PiA+ID4gPiBQQVNJRCBjYWNoZSBpcyBmdWxseSBtYW5hZ2VkIGJ5IHRoZSBob3N0LiBHdWVzdCBQ
-QVNJRCBjYWNoZQ0KPiA+ID4gPiBpbnZhbGlkYXRpb24gaXMgaW50ZXJwcmV0ZWQgYnkgdklPTU1V
-IGZvciBiaW5kIGFuZCB1bmJpbmQNCj4gPiA+ID4gb3BlcmF0aW9ucy4gSSBkb24ndCB0aGluayB3
-ZSBzaG91bGQgYWNjZXB0IGFueSBQQVNJRCBjYWNoZQ0KPiA+ID4gPiBpbnZhbGlkYXRpb24gZnJv
-bSB1c2Vyc3BhY2Ugb3IgZ3Vlc3QuDQo+ID4gIFsuLi5dDQo+ID4gPg0KPiBpbnZfdHlwZV9ncmFu
-dV90YWJsZVtJT01NVV9DQUNIRV9JTlZfVFlQRV9OUl1bSU9NTVVfSU5WX0dSQU5VDQo+ID4gIFsu
-Li5dDQo+ID4gPiA+DQo+ID4gPiA+IGJ0dyBkbyB3ZSByZWFsbHkgbmVlZCBib3RoIG1hcCBhbmQg
-dGFibGUgaGVyZT8gQ2FuJ3Qgd2UganVzdA0KPiA+ID4gPiB1c2Ugb25lIHRhYmxlIHdpdGggdW5z
-dXBwb3J0ZWQgZ3JhbnVsYXJpdHkgbWFya2VkIGFzIGEgc3BlY2lhbA0KPiA+ID4gPiB2YWx1ZT8N
-Cj4gPiA+ID4NCj4gPiAgWy4uLl0NCj4gPiA+ID4NCj4gPiA+ID4gLUVOT1RTVVBQPw0KPiA+ID4g
-Pg0KPiA+ICBbLi4uXQ0KPiA+ID4gPg0KPiA+ID4gPiBncmFudWxhcml0eSA9PSBJT01NVV9JTlZf
-R1JBTlVfQUREUj8gb3RoZXJ3aXNlIGl0J3MgdW5jbGVhcg0KPiA+ID4gPiB3aHkgSU9NTVVfSU5W
-X0dSQU5VX0RPTUFJTiBhbHNvIG5lZWRzIHNpemUgY2hlY2suDQo+ID4gPiA+DQo+ID4gIFsuLi5d
-DQo+ID4gPiA+Pj4gYWRkcl9pbmZvLmFkZHIpLA0KPiA+ICBbLi4uXQ0KPiA+ICBbLi4uXQ0KPiA+
-ID4gPj4gKwkJCWlmIChpbmZvLT5hdHNfZW5hYmxlZCkgew0KPiA+ID4gPj4gKwkJCQlxaV9mbHVz
-aF9kZXZfaW90bGJfcGFzaWQoaW9tbXUsDQo+ID4gPiA+PiBzaWQsIGluZm8tDQo+ID4gPiA+Pj4g
-cGZzaWQsDQo+ID4gIFsuLi5dDQo+ID4gPiA+Pj4gcGZzaWQsDQo+ID4gPiA+PiArDQo+ID4gPiA+
-PiBpbnZfaW5mby0+YWRkcl9pbmZvLnBhc2lkLCBpbmZvLT5hdHNfcWRlcCwNCj4gPiA+ID4+ICsN
-Cj4gPiA+ID4+IGludl9pbmZvLT5hZGRyX2luZm8uYWRkciwgc2l6ZSwNCj4gPiA+ID4+ICsJCQkJ
-CQlncmFudSk7DQo+ID4gIFsuLi5dDQo+ID4gIFsuLi5dDQo+ID4gPiA+Pj4gcGFzaWRfaW5mby5w
-YXNpZCk7DQo+ID4gPiA+PiArDQo+ID4gPiA+DQo+ID4gPiA+IGFzIGVhcmxpZXIgY29tbWVudCwg
-d2Ugc2hvdWxkbid0IGFsbG93IHVzZXJzcGFjZSBvciBndWVzdCB0bw0KPiA+ID4gPiBpbnZhbGlk
-YXRlIFBBU0lEIGNhY2hlDQo+ID4gPiA+DQo+ID4gIFsuLi5dDQo+ID4gPiA+DQo+ID4NCj4gDQo+
-IFtKYWNvYiBQYW5dDQoNClRoYW5rcw0KS2V2aW4NCg==
+
+
+Le 01/04/2020 à 08:13, Ravi Bangoria a écrit :
+> Instead of disabling only one watchpoint, get num of available
+> watchpoints dynamically and disable all of them.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>   arch/powerpc/include/asm/hw_breakpoint.h | 15 +++++++--------
+>   1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+> index 4e4976c3248b..fae33c729ba9 100644
+> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+> @@ -78,14 +78,13 @@ extern void ptrace_triggered(struct perf_event *bp,
+>   			struct perf_sample_data *data, struct pt_regs *regs);
+>   static inline void hw_breakpoint_disable(void)
+>   {
+> -	struct arch_hw_breakpoint brk;
+> -
+> -	brk.address = 0;
+> -	brk.type = 0;
+> -	brk.len = 0;
+> -	brk.hw_len = 0;
+> -	if (ppc_breakpoint_available())
+> -		__set_breakpoint(&brk, 0);
+> +	int i;
+> +	struct arch_hw_breakpoint null_brk = {0};
+
+Those declaration should be in the block unsigned them below.
+
+> +
+> +	if (ppc_breakpoint_available()) {
+> +		for (i = 0; i < nr_wp_slots(); i++)
+> +			__set_breakpoint(&null_brk, i);
+> +	}
+
+I would have had a preference to the following, but that's detail I guess:
+
+	int i;
+	struct arch_hw_breakpoint null_brk = {0};
+
+	if (!ppc_breakpoint_available())
+		return;
+
+	for (i = 0; i < nr_wp_slots(); i++)
+		__set_breakpoint(&null_brk, i);
+
+>   }
+>   extern void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs);
+>   int hw_breakpoint_handler(struct die_args *args);
+> 
+
+Christophe
