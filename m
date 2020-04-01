@@ -2,127 +2,136 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE287C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BFBC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2ED20776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7FA206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:15:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IKO0/XKk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r51+mqUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732359AbgDALOv (ORCPT
+        id S1732386AbgDALPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:14:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56664 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732121AbgDALOv (ORCPT
+        Wed, 1 Apr 2020 07:15:35 -0400
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:38114 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732121AbgDALPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:14:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=f85WQu518Nbbswi60qxBOthydDcKu+TgGe5wZi2T2fM=; b=IKO0/XKkniYv6biDxNsdUL8f98
-        jeCmmLyeldPeIo41Vflx2vUeE2VAvBbHJI4X06mV6aAaRACzllUzNr1THL7wIrWHPHVT+Jh7PkofL
-        XvWjOgVNOaJoHFoawruPIoWsafa/uOCcFBlD6d5J2BgFUJBv42p/TESD9TRgnc9zX3eFshnqvyKpS
-        jGFZhvPgA0LvmlIuAvTiMQsV0pvT+dMEM3VbUbGrCIIRvWa29XgQ9pbn0RtvIQr1b+/pU8suEWm6g
-        DuNYUP0jyFaJwdMGkYblgNWowVQ8EDyD4O29pUN+EZg0pYaTBE7igtLQh3Atoh5oS3Vo7GO44TWHI
-        JTBD44vw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJbKO-0007W5-HH; Wed, 01 Apr 2020 11:14:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 111A830699C;
-        Wed,  1 Apr 2020 13:14:34 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E900429E261D4; Wed,  1 Apr 2020 13:14:33 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 13:14:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 08/13] ftrace: Add perf text poke events for ftrace
- trampolines
-Message-ID: <20200401111433.GD20713@hirez.programming.kicks-ass.net>
-References: <20200304090633.420-1-adrian.hunter@intel.com>
- <20200304090633.420-9-adrian.hunter@intel.com>
- <20200401100955.GY20713@hirez.programming.kicks-ass.net>
- <7e54c145-28d2-5175-6882-9f19e3939f13@intel.com>
+        Wed, 1 Apr 2020 07:15:34 -0400
+Received: by mail-pg1-f182.google.com with SMTP id x7so11958072pgh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 04:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PJvDhSSCxal8nc7/4hqNu5B0Qf//zaQn+mBl8x66a8M=;
+        b=r51+mqUYzvwPVGhqITkmqq1cqVhoNgG+Qllt6g/nZviVJMZ3eEa++/x8/0Iwi4Ufdc
+         Yl7X1fFryID9b+CPXS0JDQOOw/z0dlYKHWeK2NzJDndd/gGxTKFo3RBLpW4HYSl42AOJ
+         V0A6Tl/J27swinL+ADGMaTqzy4oZ05GAxCdW0ELq7NKr7zgb3sO7cwoDH3WqE+ItzWuL
+         m9G5NZq1fJ0iUxMjzR7J3X8fkrQF6WbM3Nchm4GJWiH2xQtHp+/yrVJeJtoWdYqno7ns
+         rF1gWOwzwoCzEODCl28aMYbHuGd8/FKnsrEyFR/vEHFeC0LzfV4Zi+dBwHxP1DdQ5h3J
+         r6tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PJvDhSSCxal8nc7/4hqNu5B0Qf//zaQn+mBl8x66a8M=;
+        b=Nk0rcCooa8y5W3Lagg/63LGVPUGYwLooyk8D/7NxfUAIIAUvNn3R+z83vA//k1fqiF
+         GqfMGaTtbaiPMyToOKgk/d1PPkm5Uc20bIfoRd/5OZCSpFmtEY1iL0Y4wdqbQZEvH/t/
+         EMgebmvS2nAysBRaFEZs4LyC4XsCy7HDl4t+TTNtTSPIGPPeVS0hs9yszcV8Xh8m16KP
+         BR4qe0hrV78qsSbKpZ53UDSmn9aJ+X+s5iMEtuqnBLCuo0JwyP7iWypoIs5pwoXWJFPj
+         Y80ig9QLTfLpJW6h/RUWbuzPG9HvgY/sRBvr6Rseslu4EVnmqvgQAQzPgUfRYNXXVBLb
+         YRlg==
+X-Gm-Message-State: AGi0Pub6hrW4FCrfB0xlmWC98QX4nOQfrZ5ZCiDG9cA4oRLvU09XdyQl
+        rcbh24tds1hFEYWDdDh2pXL6Cbgx96o=
+X-Google-Smtp-Source: APiQypK5w/tIU9iltgk0S//GSiFM4is2ST6A7jeGTJE5LnB3hYTQ3RTt0MsFB/En+OKzf7Let6Defw==
+X-Received: by 2002:aa7:82c3:: with SMTP id f3mr6600295pfn.228.1585739732992;
+        Wed, 01 Apr 2020 04:15:32 -0700 (PDT)
+Received: from localhost ([103.195.202.232])
+        by smtp.gmail.com with ESMTPSA id q12sm1358354pfs.48.2020.04.01.04.15.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 04:15:31 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, lukasz.luba@arm.com, mka@chromium.org,
+        daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v4 0/3] Convert thermal bindings to yaml
+Date:   Wed,  1 Apr 2020 16:45:24 +0530
+Message-Id: <cover.1585738725.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e54c145-28d2-5175-6882-9f19e3939f13@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:42:50PM +0300, Adrian Hunter wrote:
-> On 1/04/20 1:09 pm, Peter Zijlstra wrote:
-> > On Wed, Mar 04, 2020 at 11:06:28AM +0200, Adrian Hunter wrote:
-> >> Add perf text poke events for ftrace trampolines when created and when
-> >> freed.
-> > 
-> > If I'm not mistaken that ends up like so:
-> > 
-> > static void ftrace_update_trampoline(struct ftrace_ops *ops)
-> > {
-> > +       unsigned long trampoline = ops->trampoline;
-> > +
-> > 	arch_ftrace_update_trampoline(ops);
-> > +       if (ops->trampoline && ops->trampoline != trampoline &&
-> >> +	    (ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP)) {
-> >> +		/* Add to kallsyms before the perf events */
-> > +               ftrace_add_trampoline_to_kallsyms(ops);
-> >> +		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_OOL,
-> >> +				   ops->trampoline, ops->trampoline_size, false,
-> >> +				   FTRACE_TRAMPOLINE_SYM);
-> >> +		/*
-> >> +		 * Record the perf text poke event after the ksymbol register
-> >> +		 * event.
-> >> +		 */
-> >> +		perf_event_text_poke((void *)ops->trampoline, NULL, 0,
-> >> +				     (void *)ops->trampoline,
-> >> +				     ops->trampoline_size);
-> > 	}
-> > }
-> > 
-> > And afaict, that is wrong.
-> > 
-> > The thing is; arch_ftrace_update_trampoline() can actually *update* an
-> > existing trampoline, as per the name. Yes it also creates a trampoline
-> > if there isn't one already, but if there already is one, it will modify
-> > it in-place.
-> > 
-> > I see the appeal of having this event in generic code; but I'm thinking
-> > you'll need the update even in arch code anyway, at which point it'd
-> > probably be easier to do all of this in arch code.
-> 
-> For x86, we use text_poke_bp for updates which already does text_poke events
-> via text_poke_bp_batch.
+Hi all,
 
-Ah, indeed! Damn, I even wrote that code :/
+Here is a series splitting up the thermal bindings into 3 separate bindings
+in YAML, one each of the sensor, cooling-device and the thermal zones.
 
-> It might be reasonable to assume other architectures will also need to put
-> updates through a common text poker which will take care of text_poke events.
+A series to remove thermal.txt and change over all references to it will
+follow shortly. Another series to fixup problems found by enforcing this
+yaml definition across dts files will also follow.
 
-You'd better look, I recently rewrote the x86/ftrace code to be 'sane'
-and not re-implement all the text poking stuff itself.
+Changes since v3:
+- Clarify example by using cooling state numbers and a comment
+- Restrict thermal-sensors to a single reference to reflect actual code
+  where there is a one-to-one mapping between sensors and thermal zones
+- Add two optional properties that were missed in earlier submissions:
+  coefficients and sustainable-power
+- Improve description of hysteresis and contribution properties
+- Added Acks.
 
-But I suppose that any arch adding support for this can fix that up if
-needed.
+Changes since v2:
+- Addressed review comment from Rob
+- Added required properties for thermal-zones node
+- Added select: true to thermal-cooling-devices.yaml
+- Fixed up example to pass dt_binding_check
+
+Changes since v1:
+- Addressed review comments from Rob
+- Moved the license back to GPLv2, waiting for other authors to give
+  permission to relicense to BSD-2-Clause as well
+- Fixed up warnings thrown by dt_binding_check
+
+I have to add that the bindings as they exist today, don't really follow
+the "describe the hardware" model of devicetree. e.g. the entire
+thermal-zone binding is a software abstraction to tie arbitrary,
+board-specific trip points to cooling strategies. This doesn't fit well
+into the model where the same SoC in two different form-factor devices e.g.
+mobile and laptop, will have fairly different thermal profiles and might
+benefit from different trip points and mitigation heuristics. I've started
+some experiments with moving the thermal zone data to a board-specific
+platform data that is used to initialise a "thermal zone driver".
+
+In any case, if we ever move down that path, it'll probably end up being v2
+of the binding, so this series is still relevant.
+
+Regards,
+Amit
+
+Amit Kucheria (3):
+  dt-bindings: thermal: Add yaml bindings for thermal sensors
+  dt-bindings: thermal: Add yaml bindings for thermal cooling-devices
+  dt-bindings: thermal: Add yaml bindings for thermal zones
+
+ .../thermal/thermal-cooling-devices.yaml      | 116 ++++++
+ .../bindings/thermal/thermal-sensor.yaml      |  72 ++++
+ .../bindings/thermal/thermal-zones.yaml       | 341 ++++++++++++++++++
+ 3 files changed, 529 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+
+-- 
+2.20.1
+
