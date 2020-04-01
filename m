@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE868C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6D2C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE8F20719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1F52063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759410;
-	bh=oLOFW+1+YpmZ/GdNPoMFJoF4xFvKbGjf2wFL4yaJxQY=;
+	s=default; t=1585759414;
+	bh=tTMwHlnz8u/+d0nK3QZhBj+01CbopiVUQqYRQRBRiUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cBblWUEPIhY2SKd4qyg4JjksQHpcBmPk/suQv3XzDqYyE/WDMZhBkG0Wi1NT7tYws
-	 dE5OGr32siOzWpKNMoDrRP4nkc9XhA1WqvWHEETb0Jkke30vx1rlOA9YHgSEc5W/8f
-	 dZnIxMUbLiDGzmmlDp9v+RKUqda9R8bXv/kxcxqY=
+	b=NtcBKrh8f4izC8xGDPkir0zkaz/eZyQYMEjThQdeOI5mrGc8RIDIizp5kQef74+zD
+	 8ECDxhbQyAEWAG1dZbn21+uszXfsbnPAhn6LZhG7irMdB4elUNrIazjRf8uv5zZ1S/
+	 1ivcbnJ+4BQxNA3KK6ZvHStv821uCtNIj9lcDYi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389412AbgDAQn2 (ORCPT
+        id S2389628AbgDAQnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44236 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:43:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389459AbgDAQn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:43:26 -0400
+        id S2389459AbgDAQnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:43:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98BD2206F8;
-        Wed,  1 Apr 2020 16:43:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A61D32063A;
+        Wed,  1 Apr 2020 16:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759406;
-        bh=oLOFW+1+YpmZ/GdNPoMFJoF4xFvKbGjf2wFL4yaJxQY=;
+        s=default; t=1585759410;
+        bh=tTMwHlnz8u/+d0nK3QZhBj+01CbopiVUQqYRQRBRiUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2GuCZV9X4OyhYrWo0rNvJ++YDrLXSjT9tiT6Q8EkAnumLlwKMLwFdVAQidoLxlqOW
-         /OK89TaUFBaqR1ZxlE8sdXYBHyMW25/S2Z4IF8RKTl2hvMxAHjShde2yUzL7l4wZ+Y
-         +A/hVNTLLp9Nm7LuVWSdrhw/4lnuYS+8CUdWjsXM=
+        b=jeqfafqiNmYnG24ZScjenOS4bfNKFc3VOVthP3dNrcjLAKC5sJj9ifSUsiJ9v1tD4
+         VB33cP6bD4c65TFzNvJC4VmjPbziwumrebW3Uyik++qxDYkyPFa6TKpGCLefNkxY4/
+         0zKxYidGZMYz2Kc8IkaO6bWHW8zkdFM1xJZMVThI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 069/148] vxlan: check return value of gro_cells_init()
-Date:   Wed,  1 Apr 2020 18:17:41 +0200
-Message-Id: <20200401161600.166994286@linuxfoundation.org>
+Subject: [PATCH 4.14 070/148] hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
+Date:   Wed,  1 Apr 2020 18:17:42 +0200
+Message-Id: <20200401161600.234160355@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -61,49 +61,178 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 384d91c267e621e0926062cfb3f20cb72dc16928 ]
+[ Upstream commit 173756b86803655d70af7732079b3aa935e6ab68 ]
 
-gro_cells_init() returns error if memory allocation is failed.
-But the vxlan module doesn't check the return value of gro_cells_init().
+hsr_get_node_{list/status}() are not under rtnl_lock() because
+they are callback functions of generic netlink.
+But they use __dev_get_by_index() without rtnl_lock().
+So, it would use unsafe data.
+In order to fix it, rcu_read_lock() and dev_get_by_index_rcu()
+are used instead of __dev_get_by_index().
 
-Fixes: 58ce31cca1ff ("vxlan: GRO support at tunnel layer")`
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/vxlan.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ net/hsr/hsr_framereg.c |   10 ++--------
+ net/hsr/hsr_netlink.c  |   43 +++++++++++++++++++++----------------------
+ 2 files changed, 23 insertions(+), 30 deletions(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -2454,10 +2454,19 @@ static void vxlan_vs_add_dev(struct vxla
- /* Setup stats when device is created */
- static int vxlan_init(struct net_device *dev)
- {
-+	struct vxlan_dev *vxlan = netdev_priv(dev);
-+	int err;
-+
- 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
- 	if (!dev->tstats)
- 		return -ENOMEM;
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -468,13 +468,9 @@ int hsr_get_node_data(struct hsr_priv *h
+ 	struct hsr_port *port;
+ 	unsigned long tdiff;
  
-+	err = gro_cells_init(&vxlan->gro_cells, dev);
-+	if (err) {
-+		free_percpu(dev->tstats);
-+		return err;
-+	}
-+
+-
+-	rcu_read_lock();
+ 	node = find_node_by_AddrA(&hsr->node_db, addr);
+-	if (!node) {
+-		rcu_read_unlock();
+-		return -ENOENT;	/* No such entry */
+-	}
++	if (!node)
++		return -ENOENT;
+ 
+ 	ether_addr_copy(addr_b, node->MacAddressB);
+ 
+@@ -509,7 +505,5 @@ int hsr_get_node_data(struct hsr_priv *h
+ 		*addr_b_ifindex = -1;
+ 	}
+ 
+-	rcu_read_unlock();
+-
  	return 0;
  }
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -259,17 +259,16 @@ static int hsr_get_node_status(struct sk
+ 	if (!na)
+ 		goto invalid;
  
-@@ -2717,8 +2726,6 @@ static void vxlan_setup(struct net_devic
- 
- 	vxlan->dev = dev;
- 
--	gro_cells_init(&vxlan->gro_cells, dev);
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-					nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
 -
- 	for (h = 0; h < FDB_HASH_SIZE; ++h)
- 		INIT_HLIST_HEAD(&vxlan->fdb_head[h]);
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -321,12 +320,10 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF1_SEQ, hsr_node_if1_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_A);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF1_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
+@@ -336,20 +333,22 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF2_SEQ, hsr_node_if2_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_B);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF2_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
++	rcu_read_unlock();
++
+ 	genlmsg_end(skb_out, msg_head);
+ 	genlmsg_unicast(genl_info_net(info), skb_out, info->snd_portid);
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL, NULL);
+ 	return 0;
+@@ -359,6 +358,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
  }
+ 
+@@ -385,17 +385,16 @@ static int hsr_get_node_list(struct sk_b
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-				     nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
+-
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -415,14 +414,11 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	hsr = netdev_priv(hsr_dev);
+ 
+-	rcu_read_lock();
+ 	pos = hsr_get_next_node(hsr, NULL, addr);
+ 	while (pos) {
+ 		res = nla_put(skb_out, HSR_A_NODE_ADDR, ETH_ALEN, addr);
+-		if (res < 0) {
+-			rcu_read_unlock();
++		if (res < 0)
+ 			goto nla_put_failure;
+-		}
+ 		pos = hsr_get_next_node(hsr, pos, addr);
+ 	}
+ 	rcu_read_unlock();
+@@ -432,6 +428,8 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL, NULL);
+ 	return 0;
+@@ -441,6 +439,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
 
 
