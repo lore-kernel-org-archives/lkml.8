@@ -2,53 +2,51 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017A0C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02FFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EE920714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C2720719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585760136;
-	bh=tyQhYD7L0c6Qy7Pp19sm+Wi3FjaWbpivNpHwnNv5eh0=;
+	s=default; t=1585760140;
+	bh=PoS/vZy02sOSTwdVcSGleE6OxvDYPdVEMvHeK5kcE2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgToyHIhCMVjudcpfaRsW6/8lcceMhsDsMhtmGRs2ofnL0IKsx8PDY1QXOc5CTD/5
-	 9KRcIqUgVmn/RRC6wCYfhPJIn6+oukE/kqcrrKol2MItfbtqc0RpYHGrBmRWTfy8iZ
-	 X+orVDIhMOB/hGJYmB5TH+mZiESWUZAglILbwlPU=
+	b=uYPSCmeZjNh4rRitgXfeR5t++42EPKar9Nj/fupufuvFA1k9Sj6VxYyoEqKY1ssS7
+	 /z68LzGucliAozqSnwDAl4t+UVcrlrS5/tyAW8xG86IZL3XnNxyT6Xi4fOdkTEdryN
+	 RjaxmSYQZCyulW58tOY/aXaI2hZB08xLMUusVhvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733022AbgDAQYM (ORCPT
+        id S2387799AbgDAQzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:24:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47662 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387419AbgDAQYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:24:09 -0400
+        id S2387494AbgDAQYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:24:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F0352137B;
-        Wed,  1 Apr 2020 16:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ECD72137B;
+        Wed,  1 Apr 2020 16:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758248;
-        bh=tyQhYD7L0c6Qy7Pp19sm+Wi3FjaWbpivNpHwnNv5eh0=;
+        s=default; t=1585758251;
+        bh=PoS/vZy02sOSTwdVcSGleE6OxvDYPdVEMvHeK5kcE2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTVlwjZgF8qSicWSZniHXqYLpS+CckZhibWMPqo/LEc8TO4Ch9R/+Bb9M5ChQDtDI
-         ta615UC5LUo2Y61jDS5TNGUS+yFaFk/TxHVVWkTrZ9F90KJw/Tsvd4FYMT5IQdc+wQ
-         D18VtELhbxcYhLerPMeo35YURIo43Grk48pXNMUM=
+        b=Z/1iKvIWioApTIIZGlt6wAVBcQSPwTLmYhzUuOpMdxaQNejGGoZwxoUHC2E5nuV0S
+         3c2ZYyDbQ/ZaYlFXFPr3JA8nAWVU9j1An90v+rY9iQvOYPe6IBfMicpJ51BZRu6i1H
+         ikL0GNrppA5FpQlU8tG6Zw8mAw5+dOEUmut/mZHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 003/116] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
-Date:   Wed,  1 Apr 2020 18:16:19 +0200
-Message-Id: <20200401161542.904988600@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 030/116] hsr: use rcu_read_lock() in hsr_get_node_{list/status}()
+Date:   Wed,  1 Apr 2020 18:16:46 +0200
+Message-Id: <20200401161546.256704789@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,50 +59,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 18d200460cd73636d4f20674085c39e32b4e0097 ]
+[ Upstream commit 173756b86803655d70af7732079b3aa935e6ab68 ]
 
-The busy timeout for the CMD5 to put the eMMC into sleep state, is specific
-to the card. Potentially the timeout may exceed the host->max_busy_timeout.
-If that becomes the case, mmc_sleep() converts from using an R1B response
-to an R1 response, as to prevent the host from doing HW busy detection.
+hsr_get_node_{list/status}() are not under rtnl_lock() because
+they are callback functions of generic netlink.
+But they use __dev_get_by_index() without rtnl_lock().
+So, it would use unsafe data.
+In order to fix it, rcu_read_lock() and dev_get_by_index_rcu()
+are used instead of __dev_get_by_index().
 
-However, it has turned out that some hosts requires an R1B response no
-matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
-that, if the R1B gets enforced, the host becomes fully responsible of
-managing the needed busy timeout, in one way or the other.
-
-Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200311092036.16084-1-ulf.hansson@linaro.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/mmc/core/mmc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/hsr/hsr_framereg.c |   10 ++--------
+ net/hsr/hsr_netlink.c  |   43 +++++++++++++++++++++----------------------
+ 2 files changed, 23 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index f1fe446eee666..5ca53e225382d 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -1901,9 +1901,12 @@ static int mmc_sleep(struct mmc_host *host)
- 	 * If the max_busy_timeout of the host is specified, validate it against
- 	 * the sleep cmd timeout. A failure means we need to prevent the host
- 	 * from doing hw busy detection, which is done by converting to a R1
--	 * response instead of a R1B.
-+	 * response instead of a R1B. Note, some hosts requires R1B, which also
-+	 * means they are on their own when it comes to deal with the busy
-+	 * timeout.
- 	 */
--	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
-+	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && host->max_busy_timeout &&
-+	    (timeout_ms > host->max_busy_timeout)) {
- 		cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
- 	} else {
- 		cmd.flags = MMC_RSP_R1B | MMC_CMD_AC;
--- 
-2.20.1
-
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -466,13 +466,9 @@ int hsr_get_node_data(struct hsr_priv *h
+ 	struct hsr_port *port;
+ 	unsigned long tdiff;
+ 
+-
+-	rcu_read_lock();
+ 	node = find_node_by_AddrA(&hsr->node_db, addr);
+-	if (!node) {
+-		rcu_read_unlock();
+-		return -ENOENT;	/* No such entry */
+-	}
++	if (!node)
++		return -ENOENT;
+ 
+ 	ether_addr_copy(addr_b, node->MacAddressB);
+ 
+@@ -507,7 +503,5 @@ int hsr_get_node_data(struct hsr_priv *h
+ 		*addr_b_ifindex = -1;
+ 	}
+ 
+-	rcu_read_unlock();
+-
+ 	return 0;
+ }
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -259,17 +259,16 @@ static int hsr_get_node_status(struct sk
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-					nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
+-
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -321,12 +320,10 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF1_SEQ, hsr_node_if1_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_A);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF1_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
+@@ -336,20 +333,22 @@ static int hsr_get_node_status(struct sk
+ 	res = nla_put_u16(skb_out, HSR_A_IF2_SEQ, hsr_node_if2_seq);
+ 	if (res < 0)
+ 		goto nla_put_failure;
+-	rcu_read_lock();
+ 	port = hsr_port_get_hsr(hsr, HSR_PT_SLAVE_B);
+ 	if (port)
+ 		res = nla_put_u32(skb_out, HSR_A_IF2_IFINDEX,
+ 				  port->dev->ifindex);
+-	rcu_read_unlock();
+ 	if (res < 0)
+ 		goto nla_put_failure;
+ 
++	rcu_read_unlock();
++
+ 	genlmsg_end(skb_out, msg_head);
+ 	genlmsg_unicast(genl_info_net(info), skb_out, info->snd_portid);
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL, NULL);
+ 	return 0;
+@@ -359,6 +358,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
+@@ -385,17 +385,16 @@ static int hsr_get_node_list(struct sk_b
+ 	if (!na)
+ 		goto invalid;
+ 
+-	hsr_dev = __dev_get_by_index(genl_info_net(info),
+-				     nla_get_u32(info->attrs[HSR_A_IFINDEX]));
++	rcu_read_lock();
++	hsr_dev = dev_get_by_index_rcu(genl_info_net(info),
++				       nla_get_u32(info->attrs[HSR_A_IFINDEX]));
+ 	if (!hsr_dev)
+-		goto invalid;
++		goto rcu_unlock;
+ 	if (!is_hsr_master(hsr_dev))
+-		goto invalid;
+-
++		goto rcu_unlock;
+ 
+ 	/* Send reply */
+-
+-	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_KERNEL);
++	skb_out = genlmsg_new(NLMSG_GOODSIZE, GFP_ATOMIC);
+ 	if (!skb_out) {
+ 		res = -ENOMEM;
+ 		goto fail;
+@@ -415,14 +414,11 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	hsr = netdev_priv(hsr_dev);
+ 
+-	rcu_read_lock();
+ 	pos = hsr_get_next_node(hsr, NULL, addr);
+ 	while (pos) {
+ 		res = nla_put(skb_out, HSR_A_NODE_ADDR, ETH_ALEN, addr);
+-		if (res < 0) {
+-			rcu_read_unlock();
++		if (res < 0)
+ 			goto nla_put_failure;
+-		}
+ 		pos = hsr_get_next_node(hsr, pos, addr);
+ 	}
+ 	rcu_read_unlock();
+@@ -432,6 +428,8 @@ static int hsr_get_node_list(struct sk_b
+ 
+ 	return 0;
+ 
++rcu_unlock:
++	rcu_read_unlock();
+ invalid:
+ 	netlink_ack(skb_in, nlmsg_hdr(skb_in), -EINVAL, NULL);
+ 	return 0;
+@@ -441,6 +439,7 @@ nla_put_failure:
+ 	/* Fall through */
+ 
+ fail:
++	rcu_read_unlock();
+ 	return res;
+ }
+ 
 
 
