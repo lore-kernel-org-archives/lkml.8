@@ -2,173 +2,152 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED001C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86688C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF6820787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA8E20787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3sNiT6w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6svNZzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732918AbgDAS1S (ORCPT
+        id S1732968AbgDAS1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:27:18 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41182 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730420AbgDAS1S (ORCPT
+        Wed, 1 Apr 2020 14:27:40 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39545 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730420AbgDAS1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:27:18 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v1so1059839edq.8;
-        Wed, 01 Apr 2020 11:27:16 -0700 (PDT)
+        Wed, 1 Apr 2020 14:27:40 -0400
+Received: by mail-pf1-f195.google.com with SMTP id k15so403012pfh.6;
+        Wed, 01 Apr 2020 11:27:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qc8FdgkWFDlzCGPYLOnP9rFKt+4lOYRHOhNF4lWF83w=;
-        b=h3sNiT6w5xhV7LEni1uXvK3mEPsRMhJkj6EkwmrmqhNJ3+PmaeC4pDLym0QIDqoXxj
-         nXVOWLYT6+vf1kIyr3ySKn3ujiPXPq2GhWRPEWPGYYnJLC5Mt+WFdYo6sJXcQLnLRO4k
-         cymwVaZhmrSxhbS4NuSNUrUvfvOV1QxQ4MTO9EMiEVXDsWSys5BTFov5jWj0n3IeCk1q
-         VF0fOEBc2NIE80cWUxOb5qjfYlaeU6u22H8ao2LiQ9iq1dSAnlM0EWZkMe20+kpwi1tn
-         do56udx2eWFB9Uhfr9Y+4dmYSfAoPG+/Cx2xyRQUOYzKwLTQFX8FkOje8+GLOIF3hFE5
-         OXoA==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uUpYuFjHhyL4iKs3eHGl2AqFGO4G5IukqD+dL8L3Qec=;
+        b=A6svNZzsrF6znxBFejfSCZXxdhgoPwT6MX8p54TM/XRpzE0btZP4saV2K7InfRcWXr
+         6KiDBVv/Didu1vUtQK4xcwEAvNarHJge5UP9Cuq4qhIn3ZKY+giBG+TcVZD746/B/jxd
+         M/xNbKv2UuCt8gxhO//cUQFoB8Qw5RqyjarIkE0I/vVZpaPE4GGCoLlERoNhOQz/4NiJ
+         uLkTcgCRbhhtNt+VnXLtt6Z3IZ1Cr8W2Ipt3HzlvLZc7027GLeMwH9LH0PctsvNCpkpe
+         zqrWZVqAfDDTSTvHDwMSYp6Ypda3UArBC72/pHWQktkQyTgB/Dcf9u/5DYm/6Z9ZVt87
+         O0Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qc8FdgkWFDlzCGPYLOnP9rFKt+4lOYRHOhNF4lWF83w=;
-        b=f8KXIp70mUZhOPD0TvN9ZOLIMGCtjueSsnUVLnY2bLICBwAkgAlAULgRQ2UBEfP9t+
-         P8pFI3lfbeoaa6CHDNZNrmT60ioloHvUjDEp1dYON669QgqCxs++6ueS7MHLevcYhQNV
-         NGqEIl2MljdPXbn5POnpFk2TP3xQsTp4u3FW7r6YaAenrwEsDglTsJNarrSwdBFqzbbC
-         AYh0u/Eyy8e7M88FYdQ11ByVMzTHQXDdQTW7nbc/OU1vSlAXqP5gVGzDsbJycJsWC+2b
-         r6PYpSQ/stXmDce4M20aZGLbSeBkGXhTNA6sKxSHQwfKvH6fSiwAq7W1qK45LttmXbam
-         H/+Q==
-X-Gm-Message-State: ANhLgQ3eRP+L+16frRa4BihcZnZ7seRvBEjPn9lUtJySGg1xl0Xfxz/9
-        gmR5k1rnyxm+DWMPT7Wk+d9ZqrCg6M+5JOEDC8B58wv4ZWI=
-X-Google-Smtp-Source: ADFU+vt4AHASmjNfRn5JQa4Gc3qglj7ra6KhGxH+2qm9C0dVE3Fxo3wYrvhP6p1JqhsehGN7/QhDVsZ76LkLt0jfxCI=
-X-Received: by 2002:aa7:d602:: with SMTP id c2mr22785839edr.118.1585765635929;
- Wed, 01 Apr 2020 11:27:15 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uUpYuFjHhyL4iKs3eHGl2AqFGO4G5IukqD+dL8L3Qec=;
+        b=pRh8RmmV90Oos9F3HlPYwF0/w+n59QWvuZdbyGPnDkdENjhC9jEls9OwgeALvtsefc
+         XCaBcR/8+z9iKBsrtCmEOskhu8uq8NlskubAHajPw8JjQrvBxoMlpSDpuAZIym/65ODs
+         KDPSWZxy7bc6rnJwZKXooXuFeXyDqNkusCvaN017OSMD9pHAMqJKgpI/VJG+2P+Ewshy
+         H134oZhenHdYDUex1s7Q01hftBDmPmN4s676WKY9HGLYyVsys2XURwT/Gj+gbwcdjvxy
+         H4XRPyK8lKKDNNuNaskhSA//ZAFCta2tHnzEVNgNHgq0LKM8E5WHav06tIujgNq784a3
+         V2wg==
+X-Gm-Message-State: AGi0PubfsiU29f2z8oe8FAu6QycPQgluCvaOW26bKcKaiR9gIQnHHjR+
+        f2vD+0pQd8krjzF7nM1xAnkOAQrL
+X-Google-Smtp-Source: APiQypKmcc0GxX1WsJY/u/UivD4+6BubOnFwfhGBzCW6pS3HVRSAAHpOwkew7jE/NShKxAq2rfDnpA==
+X-Received: by 2002:a63:330f:: with SMTP id z15mr10482940pgz.104.1585765657829;
+        Wed, 01 Apr 2020 11:27:37 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x70sm1974900pfc.21.2020.04.01.11.27.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 11:27:35 -0700 (PDT)
+Subject: Re: [PATCH 5.6 00/10] 5.6.2-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
+References: <20200401161413.974936041@linuxfoundation.org>
+ <CAHk-=wiVBvO1b5UzfcHm6y4KLHOp3huFfGMdW21F6g25oUePLw@mail.gmail.com>
+ <20200401172242.GA2582092@kroah.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <a154825e-4979-c2b1-7ebe-5a1e551ad1fb@roeck-us.net>
+Date:   Wed, 1 Apr 2020 11:27:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200323225254.12759-1-grygorii.strashko@ti.com>
- <20200326.200136.1601946994817303021.davem@davemloft.net> <CA+h21hr8G24ddEgAbU_TfoNAe0fqUJ0_Uyp54Gxn5cvPrM6u9g@mail.gmail.com>
- <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com> <2d305c89-601c-5dee-06be-30257a26a392@ti.com>
- <cac3d501-cc36-73c5-eea8-aaa2d10105b0@ti.com> <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
-In-Reply-To: <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 1 Apr 2020 21:27:04 +0300
-Message-ID: <CA+h21hpAnWbnQihTVGyB-TyRYad+gWCdF7suzsXRFJg-nsU9xg@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
- support for k3 am65x/j721e soc
-To:     David Miller <davem@davemloft.net>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        peter.ujfalusi@ti.com, Rob Herring <robh@kernel.org>,
-        netdev <netdev@vger.kernel.org>, rogerq@ti.com,
-        devicetree@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>, kishon@ti.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200401172242.GA2582092@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On 4/1/20 10:22 AM, Greg Kroah-Hartman wrote:
+> On Wed, Apr 01, 2020 at 10:06:47AM -0700, Linus Torvalds wrote:
+>> On Wed, Apr 1, 2020 at 9:19 AM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> This is the start of the stable review cycle for the 5.6.2 release.
+>>
+>> Good. You made 5.6.1 so quickly that I didn't have time to react and
+>> say that it makes little sense without the 802.11 fix, but you're
+>> obviously making 5.6.2 quickly, so..
+> 
+> Yeah, 5.6.1 had to go out fast, sorry I missed this patch.  Luckily it
+> seems that every distro vendor heard about it (or asked me about it)
+> already, and have included it in their trees so the majority of users
+> shouldn't hit this just yet.
+> 
+> And, if this passes Guenter's test builds quickly (hint), I can push it
+> out quickly as well :)
+> 
 
-On Mon, 30 Mar 2020 at 21:14, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
-> Hi
->
-> On 30/03/2020 11:28, Sekhar Nori wrote:
-> > On 30/03/20 1:06 PM, Sekhar Nori wrote:
-> >> On 30/03/20 12:45 PM, Tero Kristo wrote:
-> >>> On 28/03/2020 03:53, Vladimir Oltean wrote:
-> >>>> Hi David,
-> >>>>
-> >>>> On Fri, 27 Mar 2020 at 05:02, David Miller <davem@davemloft.net> wrote:
-> >>>>>
-> >>>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> >>>>> Date: Tue, 24 Mar 2020 00:52:43 +0200
-> >>>>>
-> >>>>>> This v6 series adds basic networking support support TI K3
-> >>>>>> AM654x/J721E SoC which
-> >>>>>> have integrated Gigabit Ethernet MAC (Media Access Controller) into
-> >>>>>> device MCU
-> >>>>>> domain and named MCU_CPSW0 (CPSW2G NUSS).
-> >>>>>    ...
-> >>>>>
-> >>>>> Series applied, thank you.
-> >>>>
-> >>>> The build is now broken on net-next:
-> >>>>
-> >>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
-> >>>> (phandle_references):
-> >>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
-> >>>>
-> >>>> Reference to non-existent node
-> >>>> or label "mcu_conf"
-> >>>>
-> >>>>     also defined at
-> >>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
-> >>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
-> >>>> (phandle_references):
-> >>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
-> >>>>
-> >>>> Reference to non-existent node
-> >>>> or label "phy_gmii_sel"
-> >>>>
-> >>>>     also defined at
-> >>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
-> >>>>
-> >>>> As Grygorii said:
-> >>>>
-> >>>> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3
-> >>>> Platform
-> >>>> tree and provided here for testing purposes.
-> >>>
-> >>> Yeah, I think you are missing a dependency that was applied via the K3
-> >>> branch earlier. They are in linux-next now, but I am not so sure how
-> >>> much that is going to help you.
-> >>>
-> >>> You could just drop the DT patches from this merge and let me apply them
-> >>> via the platform branch.
-> >>
-> >> One other option would be that Dave merges your K3 tag which was sent to
-> >> ARM SoC to net-next. Its based on v5.6-rc1, has no other dependencies,
-> >> is already in linux-next, should be immutable and safe to merge. This
-> >> has the advantage that no rebase is necessary on net-next.
-> >>
-> >> git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux
-> >> tags/ti-k3-soc-for-v5.7
-> >
-> > FWIW, I was able to reproduce the build failure reported by Vladimir on
-> > net-next, merge Tero's tag (above) cleanly into it, and see that ARM64
-> > defconfig build on net-next succeeds after the merge.
->
-> Thank you Sekhar for checking this.
->
-> I'm very sorry for introducing this issue. I've tried hard to avoid such issue,
-> but still missed it (probably I have had to drop DT patches from last submission
-> and send them separately).
->
-> Sorry again.
->
-> --
-> Best regards,
-> grygorii
+Running ... but you submitted 7 branches all in one go, so it will take
+a while to complete. Results should be available sometime early in the
+evening (PDT).
 
-I think the ARM64 build is now also broken on Linus' master branch,
-after the net-next merge? I am not quite sure if the device tree
-patches were supposed to land in mainline the way they did.
-
-Thanks,
--Vladimir
+Guenter
