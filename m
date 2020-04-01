@@ -2,252 +2,104 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D409C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B022AC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB0320719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8558C20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="0b7o4o8o"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EDN83wE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732714AbgDARBg (ORCPT
+        id S1732911AbgDARCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:01:36 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:57696 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732304AbgDARBg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:01:36 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id 708BCC45B56;
-        Wed,  1 Apr 2020 19:01:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1585760493;
-        bh=NfVkgcJwROCOa0Gvoa39DfTa9hL2ePWFTZdlOJfOves=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0b7o4o8opumpRq8uti0QY+/V4D9f9CZxr/+OVdWXHS6y6lCGnYY4WrG1x255L6bgW
-         Qs77vBu629FCX61mDhm4DFrnYDaXL0p0vhjTqJLWocA4+eT7uogqDKA9y56w5EbMfW
-         RYcHqBpxnepFTV/QkvqTrMMUVUGpTiJm1HZf5524=
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Clemens Gruber <clemens.gruber@pqgruber.com>
-Subject: [PATCH v2 REBASED] pwm: pca9685: fix pwm/gpio inter-operation
-Date:   Wed,  1 Apr 2020 19:01:06 +0200
-Message-Id: <20200401170106.134037-1-clemens.gruber@pqgruber.com>
-X-Mailer: git-send-email 2.26.0
+        Wed, 1 Apr 2020 13:02:16 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36452 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732717AbgDARCQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 13:02:16 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 031H1uWo001438;
+        Wed, 1 Apr 2020 12:01:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585760516;
+        bh=tIPQqztfiZihK5VUVh3MvQYpWQeFXNG74Mpn2ahqY/U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EDN83wE7CB+aRHQLMQM1+WpkWHNQc/irLpH2Nd/n8PadAGVi1Bm6YxITO+LtcKnit
+         mDa4NlLAe3xxhC+0bI8fCvYP0fURJw+ZzGqUEK5QuJPhR7zorMItPAZ7d8KVtetVKy
+         uOwrnN/QE1XA3Z+rxpRiV942UBlNSIPNPJUENMcw=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 031H1uT7017807
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 1 Apr 2020 12:01:56 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 1 Apr
+ 2020 12:01:55 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 1 Apr 2020 12:01:55 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 031H1rni000525;
+        Wed, 1 Apr 2020 12:01:54 -0500
+Subject: Re: [PATCHv3 3/4] watchdog: Add K3 RTI watchdog support
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     <wim@linux-watchdog.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <aed89814-a78b-4a59-7673-bce5de34022d@roeck-us.net>
+ <20200304104214.8625-1-t-kristo@ti.com> <20200304220648.GA31640@roeck-us.net>
+ <ac261582-a101-c7c7-66e4-4ef20d037c7d@ti.com>
+ <422f7335-9774-9ec1-6b0f-f22f811746cf@roeck-us.net>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <7e15714e-efed-56ae-7ca7-fbfac031326c@ti.com>
+Date:   Wed, 1 Apr 2020 20:01:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <422f7335-9774-9ec1-6b0f-f22f811746cf@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <TheSven73@gmail.com>
+On 01/04/2020 18:55, Guenter Roeck wrote:
+> On 4/1/20 5:44 AM, Tero Kristo wrote:
+>> On 05/03/2020 00:06, Guenter Roeck wrote:
+>>> On Wed, Mar 04, 2020 at 12:42:14PM +0200, Tero Kristo wrote:
+>>>> Texas Instruments K3 SoCs contain an RTI (Real Time Interrupt) module
+>>>> which can be used as a watchdog. This IP provides a support for
+>>>> windowed watchdog mode, in which the watchdog must be petted within
+>>>> a certain time window. If it is petted either too soon, or too late,
+>>>> a watchdog error will be triggered.
+>>>>
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>
+>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>
+>> Whats the plan for merging this one + the DT binding doc? I can't see this in linux-next yet at least, I do see the watchdog core change from this series though.
+>>
+> 
+> It is in my watchdog-next branch at
+> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git.
+> 
+> Wim usually picks it up from there.
+> 
+> The core patch didn't depend on DT approval, so I (and Wim) picked it up
+> earlier.
 
-This driver allows pwms to be requested as gpios via gpiolib.
-Obviously, it should not be allowed to request a gpio when its
-corresponding pwm is already requested (and vice versa).
-So it requires some exclusion code.
+Ok thanks for clarification, I thought there was something like that 
+going in the background but decided to double check.
 
-Given that the pwm and gpio cores are not synchronized with
-respect to each other, this exclusion code will also require
-proper synchronization.
-
-Such a mechanism was in place, but was inadvertently removed
-by Uwe's clean-up patch.
-
-Upon revisiting the synchronization mechanism, we found that
-theoretically, it could allow two threads to successfully
-request conflicting pwms / gpios.
-
-Replace with a bitmap which tracks pwm in-use, plus a mutex.
-As long as pwm and gpio's respective request/free functions
-modify the in-use bitmap while holding the mutex, proper
-synchronization will be guaranteed.
-
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Link: https://lkml.org/lkml/2019/5/31/963
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Clemens Gruber <clemens.gruber@pqgruber.com>
-[cg: Tested on an i.MX6Q board with two NXP PCA9685 chips]
-
----
- drivers/pwm/pwm-pca9685.c | 85 ++++++++++++++++++++++-----------------
- 1 file changed, 48 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
-index 20bdc59a0cbb..76cd22bd6614 100644
---- a/drivers/pwm/pwm-pca9685.c
-+++ b/drivers/pwm/pwm-pca9685.c
-@@ -20,6 +20,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/pm_runtime.h>
-+#include <linux/bitmap.h>
- 
- /*
-  * Because the PCA9685 has only one prescaler per chip, changing the period of
-@@ -73,6 +74,7 @@ struct pca9685 {
- #if IS_ENABLED(CONFIG_GPIOLIB)
- 	struct mutex lock;
- 	struct gpio_chip gpio;
-+	DECLARE_BITMAP(pwms_inuse, PCA9685_MAXCHAN + 1);
- #endif
- };
- 
-@@ -82,51 +84,51 @@ static inline struct pca9685 *to_pca(struct pwm_chip *chip)
- }
- 
- #if IS_ENABLED(CONFIG_GPIOLIB)
--static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+static bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca, int pwm_idx)
- {
--	struct pca9685 *pca = gpiochip_get_data(gpio);
--	struct pwm_device *pwm;
-+	bool is_inuse;
- 
- 	mutex_lock(&pca->lock);
--
--	pwm = &pca->chip.pwms[offset];
--
--	if (pwm->flags & (PWMF_REQUESTED | PWMF_EXPORTED)) {
--		mutex_unlock(&pca->lock);
--		return -EBUSY;
-+	if (pwm_idx >= PCA9685_MAXCHAN) {
-+		/*
-+		 * "all LEDs" channel:
-+		 * pretend already in use if any of the PWMs are requested
-+		 */
-+		if (!bitmap_empty(pca->pwms_inuse, PCA9685_MAXCHAN)) {
-+			is_inuse = true;
-+			goto out;
-+		}
-+	} else {
-+		/*
-+		 * regular channel:
-+		 * pretend already in use if the "all LEDs" channel is requested
-+		 */
-+		if (test_bit(PCA9685_MAXCHAN, pca->pwms_inuse)) {
-+			is_inuse = true;
-+			goto out;
-+		}
- 	}
--
--	pwm_set_chip_data(pwm, (void *)1);
--
-+	is_inuse = test_and_set_bit(pwm_idx, pca->pwms_inuse);
-+out:
- 	mutex_unlock(&pca->lock);
--	pm_runtime_get_sync(pca->chip.dev);
--	return 0;
-+	return is_inuse;
- }
- 
--static bool pca9685_pwm_is_gpio(struct pca9685 *pca, struct pwm_device *pwm)
-+static void pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
- {
--	bool is_gpio = false;
--
- 	mutex_lock(&pca->lock);
-+	clear_bit(pwm_idx, pca->pwms_inuse);
-+	mutex_unlock(&pca->lock);
-+}
- 
--	if (pwm->hwpwm >= PCA9685_MAXCHAN) {
--		unsigned int i;
--
--		/*
--		 * Check if any of the GPIOs are requested and in that case
--		 * prevent using the "all LEDs" channel.
--		 */
--		for (i = 0; i < pca->gpio.ngpio; i++)
--			if (gpiochip_is_requested(&pca->gpio, i)) {
--				is_gpio = true;
--				break;
--			}
--	} else if (pwm_get_chip_data(pwm)) {
--		is_gpio = true;
--	}
-+static int pca9685_pwm_gpio_request(struct gpio_chip *gpio, unsigned int offset)
-+{
-+	struct pca9685 *pca = gpiochip_get_data(gpio);
- 
--	mutex_unlock(&pca->lock);
--	return is_gpio;
-+	if (pca9685_pwm_test_and_set_inuse(pca, offset))
-+		return -EBUSY;
-+	pm_runtime_get_sync(pca->chip.dev);
-+	return 0;
- }
- 
- static int pca9685_pwm_gpio_get(struct gpio_chip *gpio, unsigned int offset)
-@@ -161,6 +163,7 @@ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
- 
- 	pca9685_pwm_gpio_set(gpio, offset, 0);
- 	pm_runtime_put(pca->chip.dev);
-+	pca9685_pwm_clear_inuse(pca, offset);
- }
- 
- static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
-@@ -212,12 +215,17 @@ static int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- 	return devm_gpiochip_add_data(dev, &pca->gpio, pca);
- }
- #else
--static inline bool pca9685_pwm_is_gpio(struct pca9685 *pca,
--				       struct pwm_device *pwm)
-+static inline bool pca9685_pwm_test_and_set_inuse(struct pca9685 *pca,
-+						  int pwm_idx)
- {
- 	return false;
- }
- 
-+static inline void
-+pca9685_pwm_clear_inuse(struct pca9685 *pca, int pwm_idx)
-+{
-+}
-+
- static inline int pca9685_pwm_gpio_probe(struct pca9685 *pca)
- {
- 	return 0;
-@@ -399,7 +407,7 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct pca9685 *pca = to_pca(chip);
- 
--	if (pca9685_pwm_is_gpio(pca, pwm))
-+	if (pca9685_pwm_test_and_set_inuse(pca, pwm->hwpwm))
- 		return -EBUSY;
- 	pm_runtime_get_sync(chip->dev);
- 
-@@ -408,8 +416,11 @@ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- static void pca9685_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
-+	struct pca9685 *pca = to_pca(chip);
-+
- 	pca9685_pwm_disable(chip, pwm);
- 	pm_runtime_put(chip->dev);
-+	pca9685_pwm_clear_inuse(pca, pwm->hwpwm);
- }
- 
- static const struct pwm_ops pca9685_pwm_ops = {
--- 
-2.26.0
-
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
