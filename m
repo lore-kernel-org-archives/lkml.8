@@ -2,162 +2,113 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FECC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F3BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEA02077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50EE2077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:16:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QSpSRc4h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sSrlMl4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgDAKPT (ORCPT
+        id S1730764AbgDAKQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:15:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57998 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgDAKPS (ORCPT
+        Wed, 1 Apr 2020 06:16:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52553 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725860AbgDAKQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:15:18 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 031AFB50074640;
-        Wed, 1 Apr 2020 05:15:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585736111;
-        bh=VHWDppBeZMnct+fmlb85sd/m6PVJpfigJspsPqyup8Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QSpSRc4hvstCrq8bCBJgAGMf+nwXD9BVZFiWhDPTG8iTSasO43GTpmRL5uCpgNDOv
-         JQAdqyVILFKk97QretLTYP9rYwnhjv9EH6SxaZszW8Whs6D5mD6zA96DAOTe7hzxY6
-         k3G1CDcHs+GXkYZoiJuUFvlXlAgyt/cOISrEdmAc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 031AFAVn071292
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Apr 2020 05:15:11 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 1 Apr
- 2020 05:15:10 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 1 Apr 2020 05:15:10 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 031AF7q6122698;
-        Wed, 1 Apr 2020 05:15:08 -0500
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo> <638d7136-6a74-8069-5331-b2248c948ed4@ti.com>
- <20200331201014.GA2954599@ulmo>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <57ce30f0-00e1-cbe6-8412-5461b412b361@ti.com>
-Date:   Wed, 1 Apr 2020 15:45:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 1 Apr 2020 06:16:29 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t8so2563127wmi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 03:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b9ohpIeggQmJPpjoz9Sh0/yq4Y/ugE9//x5YLp0N6aY=;
+        b=sSrlMl4aHEfPclgAbp0hw+YGa0B3dxwTI0V/Yeh+mIefUyRXFVJhEqzB+R7e3oI99+
+         aOiFK3uJohxgGG8GEApUx7IdPtSJ2iCBT3UOK3uCrFa3Ca5IyzXcOcP1fQTuoV4f4VKw
+         KOJU8nLgsaVg4VmziET0fe//h1tk5bdF38O9bFNDJu5RHDrgkId3rXYN5ilmpBk0f1El
+         RDSS7tvogu/1qm23tlhcfpVAEJ6lLyp3LExvhdMHSw6POg2jBp0E8+R5SMrrUxDH56Mw
+         SrWz78qOP2HfJ8IXOB/4HFhJVedz+tQCxIpwIeNvI0ZoGTLenmS9OKuSInIODd/H5osn
+         SKAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=b9ohpIeggQmJPpjoz9Sh0/yq4Y/ugE9//x5YLp0N6aY=;
+        b=bmHg4hUCZ3jPtqSHDOCrVK5VYoXIYQWfqed4Opm0+DQyrl0t3+4aj9btIx+6UCzwWI
+         WDz0SQpv3FtYEyJN+HoFcTcoOGp/07dr0yf/+heRVwe6L5kyQwVyk8KYA1vSwrxUEDyS
+         wPkP/47iKmiMldLpm8fRpYKeBx+E0vc8swVNxBXq9EE0KV63OIV566hSIdxMkE6RcR4k
+         CX0IT/AilX5tBfoFOJijRoqBNdX8DlEp+MvdRRifWpgQ1ayL26Zj/vimjoMmOXw7XJt/
+         MFTjN28osU2h+l+1Z7CXNwOn6cF5cExk1uBhqneKf8DeIVQf4IiHJfgvys3OfKnfSkvs
+         tiFw==
+X-Gm-Message-State: AGi0PuYMBVX38B+vA18Sj6BSYYs0nHy2WZPJzou7wM586Boam12zxfwg
+        ppNI3axv2slDzoh+PfEI2yQ=
+X-Google-Smtp-Source: APiQypLqvtaoPl6tWHtIyOhb76eFNQRYHnS71OLLlpIsY4OF8fxN7Ii+oG7jvnwZVuFM6QInSpsKpA==
+X-Received: by 2002:a7b:c002:: with SMTP id c2mr3490813wmb.123.1585736185732;
+        Wed, 01 Apr 2020 03:16:25 -0700 (PDT)
+Received: from arch-thunder.localdomain (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id h2sm2004921wmb.16.2020.04.01.03.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 03:16:25 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 11:16:22 +0100
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] staging: greybus: fix a missing-check bug in
+ gb_lights_light_config()
+Message-ID: <20200401101622.tj2bhnacetwt5rce@arch-thunder.localdomain>
+References: <20200401030017.100274-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331201014.GA2954599@ulmo>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401030017.100274-1-chenzhou10@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
+Hi Chen Zhou,
+Thanks for the patch.
 
-On 01/04/20 1:40 AM, Thierry Reding wrote:
-> On Tue, Mar 31, 2020 at 08:59:47PM +0530, Lokesh Vutla wrote:
->> Hi Thierry,
->>
->> On 30/03/20 7:44 PM, Thierry Reding wrote:
->>> On Thu, Mar 12, 2020 at 07:40:42AM +0100, Uwe Kleine-König wrote:
->>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
->>>>> Only the Timer control register(TCLR) cannot be updated when the timer
->>>>> is running. Registers like Counter register(TCRR), loader register(TLDR),
->>>>> match register(TMAR) can be updated when the counter is running. Since
->>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
->>>>> timer for period/duty_cycle update.
->>>>
->>>> I'm not sure what is sensible here. Stopping the PWM for a short period
->>>> is bad, but maybe emitting a wrong period isn't better. You can however
->>>> optimise it if only one of period or duty_cycle changes.
->>>>
->>>> @Thierry, what is your position here? I tend to say a short stop is
->>>> preferable.
->>>
->>> It's not clear to me from the above description how exactly the device
->>> behaves, but I suspect that it may latch the values in those registers
->>> and only update the actual signal output once a period has finished. I
->>> know of a couple of other devices that do that, so it wouldn't be
->>> surprising.
->>>
->>> Even if that was not the case, I think this is just the kind of thing
->>> that we have to live with. Sometimes it just isn't possible to have all
->>> supported devices adhere strictly to an API. So I think the best we can
->>> do is have an API that loosely defines what's supposed to happen and
->>> make a best effort to implement those semantics. If a device deviates
->>> slightly from those expectations, we can always cross fingers and hope
->>> that things still work. And it looks like they are.
->>>
->>> So I think if Lokesh and Tony agree that this is the right thing to do
->>> and have verified that things still work after this, that's about as
->>> good as it's going to get.
->>
->> Yes this is needed especially in the use-case[0] that I am trying to enable
->> using PWM. In this case PWM cannot be stopped in between and needs to be updated
->> dynamically. Also hardware doesn't provide any restrictions on updating the
->> period. So IMHO, this might be the right thing to do.
->>
->> Tony did provide tested-by and I measured PWM signals on scope with these
->> changes. Let me know if any thing else is required?
->>
->> [0] https://sourceforge.net/p/linuxptp/mailman/message/36943248/
+On Wed, Apr 01, 2020 at 11:00:17AM +0800, Chen Zhou wrote:
+> In gb_lights_light_config(), 'light->name' is allocated by kstrndup().
+> It returns NULL when fails, add check for it.
 > 
-> From you measurements, can you tell whether or not the signal actually
-> gets updated in the middle of a period, or does it only get updated at
-> the end of a full period?
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 
-There is a corner case where period/duty-cycle gets updated in the middle of the
-cycle. So let me give more details on how it works:
+Acked-by: Rui Miguel Silva <rmfrfs@gmail.com>
 
-OMAP dual-mode timers with a upward  timer counter, can be configured in PWM
-mode. When the timer counter overflows it gets reloaded with the load value(Load
-register) and the pwm output goes up. When counter matches with match register,
-the output goes down. So the load register is used to calculate the period and
-similarly match register for duty cycle.
+------
+Cheers,
+     Rui
 
-When PWM is running and changing both duty cycle and period, we cannot prevent
-in software that the output might produce a period with mixed settings.
-Especially when the PWM signal is high the following cases can happen:
-1) When signal is high and new match value is > current timer counter. Then the
-duty cycle gets reflected in the current cycle.(Duty_cycle for current period=
-new match value -  previous load  value).
-2) When signal is high and new match value is < current timer counter. Then the
-period and duty cycle for the current cycle gets effected as well. Because the
-signal is pulled down only when counter matches with match register, and this
-happens only in the next cycle(after timer counter overflows). Then:
-	- new Period for current cycle = (current period + new period)
-	- new duty cycle for current cycle =  (current period + new duty_cycle).
-
-Rest all the cases the values gets reflected in the next cycle.
-
-As advised by Uwe, I have updated all these details in driver.
-
-Thanks and regards,
-Lokesh
-
-
+> ---
+>  drivers/staging/greybus/light.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/greybus/light.c b/drivers/staging/greybus/light.c
+> index d6ba25f..d2672b6 100644
+> --- a/drivers/staging/greybus/light.c
+> +++ b/drivers/staging/greybus/light.c
+> @@ -1026,7 +1026,8 @@ static int gb_lights_light_config(struct gb_lights *glights, u8 id)
+>  
+>  	light->channels_count = conf.channel_count;
+>  	light->name = kstrndup(conf.name, NAMES_MAX, GFP_KERNEL);
+> -
+> +	if (!light->name)
+> +		return -ENOMEM;
+>  	light->channels = kcalloc(light->channels_count,
+>  				  sizeof(struct gb_channel), GFP_KERNEL);
+>  	if (!light->channels)
+> -- 
+> 2.7.4
+> 
