@@ -2,110 +2,113 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E6DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAB2C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9443020714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:26:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ylqXajWE"
+	by mail.kernel.org (Postfix) with ESMTP id E181D2078C
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732483AbgDAM0g (ORCPT
+        id S1732502AbgDAM1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:26:36 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:51310 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgDAM0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:26:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bA2F3xYSXtxToYcDGgMY/bpcLo9r2/rBkw5fn89bMVc=; b=ylqXajWEGkF6Sqt0mYJLWvBd4P
-        EfrnpLHH5mnJJTenvfXH1elq4HtisN2p43CzGpYz20gO6yBTHt6Ssrq0nVta7D4C7lbLPNrVrFy8F
-        E3AQKnZsqN5RLqqk2/HGI4S/7dyl1yETbviZn/PY2dO/lAdigeI5AR1wogE81uAH0uV0MXhZxLe1V
-        S5QDsER+MfMdrdltaeQpjxn7kqeYJLw8lCGYxU162PBH2v6qqeLsefRS3EiGDSSoXHBMlLghgY4Q1
-        frR61c4vQyHRmyn2LPBk1yvva8CiIlcL1szhAcgNwnwrupUmYnkMNdXd1ZpbmoKoKkg9LcQxlbMdX
-        yVEXVdyQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJcRd-00044m-Ry; Wed, 01 Apr 2020 12:26:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 01A5730610E;
-        Wed,  1 Apr 2020 14:26:07 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DBF4D29D85C87; Wed,  1 Apr 2020 14:26:06 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 14:26:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     John Mathew <john.mathew@unikie.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, tsbogend@alpha.franken.de,
-        lukas.bulwahn@gmail.com, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@basemark.com
-Subject: Re: [RFC PATCH 2/3] docs: scheduler: Add scheduler overview
- documentation
-Message-ID: <20200401122606.GF20713@hirez.programming.kicks-ass.net>
-References: <20200401100029.1445-1-john.mathew@unikie.com>
- <20200401100029.1445-3-john.mathew@unikie.com>
- <20200401103520.GA20713@hirez.programming.kicks-ass.net>
- <9614b346-a848-3e01-eea7-6237b759dad6@redhat.com>
+        Wed, 1 Apr 2020 08:27:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:50510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbgDAM1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:27:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A7B730E;
+        Wed,  1 Apr 2020 05:27:03 -0700 (PDT)
+Received: from [10.37.12.63] (unknown [10.37.12.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A85E53F68F;
+        Wed,  1 Apr 2020 05:27:00 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <cover.1585738725.git.amit.kucheria@linaro.org>
+ <af3625a9cdf1a8f0e433d67e3d785b03aae7bc82.1585738725.git.amit.kucheria@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <d4b8bf55-e240-6181-4976-880846cee413@arm.com>
+Date:   Wed, 1 Apr 2020 13:26:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9614b346-a848-3e01-eea7-6237b759dad6@redhat.com>
+In-Reply-To: <af3625a9cdf1a8f0e433d67e3d785b03aae7bc82.1585738725.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:47:04PM +0200, Daniel Bristot de Oliveira wrote:
-> On 4/1/20 12:35 PM, Peter Zijlstra wrote:
-> >> +Scheduler State Transition
-> >> +==========================
-> >> +
-> >> +A very high level scheduler state transition flow with a few states can be
-> >> +depicted as follows.
-> >> +
-> >> +.. kernel-render:: DOT
-> >> +   :alt: DOT digraph of Scheduler state transition
-> >> +   :caption: Scheduler state transition
-> >> +
-> >> +   digraph sched_transition {
-> >> +      node [shape = point,  label="exisiting task\n calls fork()"]; fork
-> >> +      node [shape = box, label="TASK_NEW\n(Ready to run)"] tsk_new;
-> >> +      node [shape = box, label="TASK_RUNNING\n(Ready to run)"] tsk_ready_run;
-> >> +      node [shape = box, label="TASK_RUNNING\n(Running)"] tsk_running;
-> >> +      node [shape = box, label="TASK_DEAD\nEXIT_ZOMBIE"] exit_zombie;
-> >> +      node [shape = box, label="TASK_INTERRUPTIBLE\nTASK_UNINTERRUPTIBLE\nTASK_WAKEKILL"] tsk_int;
-> >> +      fork -> tsk_new [ label = "task\nforks" ];
-> >> +      tsk_new -> tsk_ready_run;
-> >> +      tsk_ready_run -> tsk_running [ label = "schedule() calls context_switch()" ];
-> >> +      tsk_running -> tsk_ready_run [ label = "task is pre-empted" ];
-> >> +      subgraph int {
-> >> +         tsk_running -> tsk_int [ label = "task needs to wait for event" ];
-> >> +         tsk_int ->  tsk_ready_run [ label = "event occurred" ];
-> >> +      }
-> >> +      tsk_int ->  exit_zombie [ label = "task exits via do_exit()" ];
-> >> +   }
-> > And that is a prime example of why I hates RST, it pretty much mandates
-> > you view this with something other than a text editor.
+Hi Amit,
+
+Apart from small mistake during probably copy-paste (please check
+below), looks good.
+
+On 4/1/20 12:15 PM, Amit Kucheria wrote:
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
 > 
-> The good thing about the dot format is that we can convert it to many other
-> formats, including text:
+> The thermal-zone binding is a software abstraction to capture the
+> properties of each zone - how often they should be checked, the
+> temperature thresholds (trips) at which mitigation actions need to be
+> taken and the level of mitigation needed at those thresholds.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v3:
+>   - Clarify example by using cooling state numbers and a comment
+>   - Restrict thermal-sensors to a single reference to reflect actual code
+>     where there is a one-to-one mapping between sensors and thermal zones
+>   - Add two optional properties that were missed in earlier submissions:
+>     coefficients and sustainable-power
+>   - Improve description of hysteresis and contribution properties
+> 
+>   .../bindings/thermal/thermal-zones.yaml       | 341 ++++++++++++++++++
+>   1 file changed, 341 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> 
 
-Oh, I know and love dot files, I generate them occasionally. But they
-stink as end-result, which is what it is here.
+[snip]
 
-If you can't read a document (or worse comment) in a code editor it's
-broken (and yes, I know some subsystems have a different opinion here).
+> +                    cooling-maps {
+> +                            map0 {
+> +                                    trip = <&cpu0_alert0>;
+> +                                    /* Corresponds to 1400MHz in OPP table */
+> +                                    cooling-device = <&CPU0 3 3>, <&CPU1 3 3>,
+> +                                                     <&CPU2 3 3>, <&CPU3 3 3>;
+> +                            };
+> +
+> +                            map1 {
+> +                                    trip = <&cpu0_alert1>;
+> +                                    /* Corresponds to 1400MHz in OPP table */
+
+s/1400MHz/1000MHz/
+1400MHZ is used in map0 as <&CPUx 3 3>, here we have '5 5'.
+
+
+> +                                    cooling-device = <&CPU0 5 5>, <&CPU1 5 5>,
+> +                                                     <&CPU2 5 5>, <&CPU3 5 5>;
+> +                            };
+> +                    };
+> +            };
+
+
+Apart from that, looks good:
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+Regards,
+Lukasz
