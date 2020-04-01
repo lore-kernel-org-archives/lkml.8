@@ -2,105 +2,100 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7ADC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6163CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3A62077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ids4QEDa"
+	by mail.kernel.org (Postfix) with ESMTP id 3756C2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbgDAWkA (ORCPT
+        id S2387867AbgDAWkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:40:00 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42436 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387830AbgDAWj7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:39:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585780799;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k+QivSXL5xhLG7M9lhqztlvCh/YTXTzVLqfa0HHMNH8=;
-        b=ids4QEDaAGpfUaMUzyz0WUmWZiPbIb3JzMxH/JRsCO9OAb3KyPGjRlMvX1wELi8mG6dlIS
-        AKImGokl0hHmtx+EOf1vjU1VZJAgeT276WsQfaKade2XzrFZeeGE7TiPVEPdtXY0SZnKaE
-        xIY2c2S4zQUfqoCTH2NgMG91b3CBqKk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-94-qsuGeAdaM0m_TotbpNGXTg-1; Wed, 01 Apr 2020 18:39:56 -0400
-X-MC-Unique: qsuGeAdaM0m_TotbpNGXTg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0915A800D4E;
-        Wed,  1 Apr 2020 22:39:55 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 749B389F0A;
-        Wed,  1 Apr 2020 22:39:51 +0000 (UTC)
-Date:   Wed, 1 Apr 2020 16:39:50 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>, kvm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] vfio: Ignore -ENODEV when getting MSI cookie
-Message-ID: <20200401163950.61741738@w520.home>
-In-Reply-To: <20200401102724.161712-1-andre.przywara@arm.com>
-References: <20200401102724.161712-1-andre.przywara@arm.com>
+        Wed, 1 Apr 2020 18:40:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:35883 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387854AbgDAWkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 18:40:03 -0400
+IronPort-SDR: pmx6LV7zty16kp3d743RranwYvgRwX5OojLt0wSaTlh1Ga2PaVlvGLQ/zcQDfcIjyA3k9McFGH
+ 2xWaFZf1ewrQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 15:40:02 -0700
+IronPort-SDR: wON8Mv2Y7vmNMgxffq6zVTWfkWxEp8c5nNy1rnrGL8PZHtpcaJbZ8VCC4w+pQacKjCPq0zOzu2
+ 5Jrbr6onsAug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,333,1580803200"; 
+   d="scan'208";a="328616975"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 01 Apr 2020 15:40:02 -0700
+Date:   Wed, 1 Apr 2020 15:45:50 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 06/10] iommu/ioasid: Convert to set aware allocations
+Message-ID: <20200401154550.3775be8f@jacob-builder>
+In-Reply-To: <20200401135525.GG882512@myrica>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585158931-1825-7-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200401135525.GG882512@myrica>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  1 Apr 2020 11:27:24 +0100
-Andre Przywara <andre.przywara@arm.com> wrote:
+On Wed, 1 Apr 2020 15:55:25 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-> When we try to get an MSI cookie for a VFIO device, that can fail if
-> CONFIG_IOMMU_DMA is not set. In this case iommu_get_msi_cookie() returns
-> -ENODEV, and that should not be fatal.
+> On Wed, Mar 25, 2020 at 10:55:27AM -0700, Jacob Pan wrote:
+> > The current ioasid_alloc function takes a token/ioasid_set then
+> > record it on the IOASID being allocated. There is no alloc/free on
+> > the ioasid_set.
+> > 
+> > With the IOASID set APIs, callers must allocate an ioasid_set before
+> > allocate IOASIDs within the set. Quota and other ioasid_set level
+> > activities can then be enforced.
+> > 
+> > This patch converts existing API to the new ioasid_set model.
+> > 
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
 > 
-> Ignore that case and proceed with the initialisation.
+> [...]
 > 
-> This fixes VFIO with a platform device on the Calxeda Midway (no MSIs).
+> > @@ -379,6 +391,9 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
+> > ioasid_t min, ioasid_t max, }
+> >  	data->id = id;
+> >  
+> > +	/* Store IOASID in the per set data */
+> > +	xa_store(&sdata->xa, id, data, GFP_KERNEL);  
 > 
-> Fixes: f6810c15cf973f ("iommu/arm-smmu: Clean up early-probing workarounds")
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> Acked-by: Robin Murphy <robin.murphy@arm.com>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I couldn't figure out why you're maintaining an additional xarray for
+> each set. We're already storing that data in active_allocator->xa,
+> why the duplication?  If it's for the gPASID -> hPASID translation
+> mentioned by the cover letter, maybe you could add this xa when
+> introducing that change?
 > 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 9fdfae1cb17a..85b32c325282 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -1787,7 +1787,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  
->  	if (resv_msi) {
->  		ret = iommu_get_msi_cookie(domain->domain, resv_msi_base);
-> -		if (ret)
-> +		if (ret && ret != -ENODEV)
->  			goto out_detach;
->  	}
->  
-
-Applied to vfio next branch for v5.7.  Thanks,
-
-Alex
-
+Sounds good. I will add that later. I was hoping to get common code in
+place.
