@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0C4C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A75DC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4415A2137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D607F20857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758190;
-	bh=wXpqnL02q/qtDYC/7Q+JdsgSjofZ4psHDjwuCxNroPE=;
+	s=default; t=1585758195;
+	bh=Fwzy4MXxBxnXPv0MQ/mbcyvD3ov/xjGsbmvfCvN9Zi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PoXdtL7/Z02Hsm4D/I+Jj+y3/U0mQgCbjbpjUJI70OtL8nUyTOuA6o5jGasXhGruH
-	 ighIGlt154FiNrY/A2bw6sZ+sOgiWlYy9TJhSf8PFN4Q5XhC3H56m4t/POuZ3fOI5A
-	 BDetIf+beg3MSvr0HopUz7Ty/MREEdwh5TfsSOCc=
+	b=G5/qxwEZ4BrJUjACKTzox7n6tzq7K3kfj/PBNg22p607Y81rZEoS1U+E9rmcyYZMh
+	 6h5KIuFsOiUQq6mCszLEh0YMTOSul665FdAnCwv+PfAdGMoDwczbW3aCWfS161oavn
+	 7lXtOxM9w6k3c7QEmSF6Y5mtH3I4SPekaeZ+cJeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387567AbgDAQXI (ORCPT
+        id S1732954AbgDAQXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:23:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733250AbgDAQXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:23:05 -0400
+        id S1733270AbgDAQXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:23:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2439621582;
-        Wed,  1 Apr 2020 16:23:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC8E921556;
+        Wed,  1 Apr 2020 16:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758184;
-        bh=wXpqnL02q/qtDYC/7Q+JdsgSjofZ4psHDjwuCxNroPE=;
+        s=default; t=1585758192;
+        bh=Fwzy4MXxBxnXPv0MQ/mbcyvD3ov/xjGsbmvfCvN9Zi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2ITqPlT4ID97AVimigOhRyVyMjFzKBVMqVliflxfSwvTSWu+qZz/DyHnhpfuYog9
-         2sXyLqpL3TwJV+olvJQRbDbFF7Zql4asqH4jtMZJU2TH+RqZ97F1TAtDUaCIghNYp/
-         G00RsB6ADLXH+3rgq8au/PjRbyvg/mGI9RRlyHuE=
+        b=UAoWNCoIWLXbtz65uulEvXjNQyjBHFIrOdgT2w/kJoN25sZ8tlM302befqCYWX8GC
+         b4ehBNISFnXab+307BQSgHYt3U4iDmYO4x5D1jgizvx2w0skY4s56NvKfcTVL9bW8Q
+         m8VsrO8RJXh2edbgc77yT9+m5FbtGa2fSPyngyqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zh-yuan Ye <ye.zh-yuan@socionext.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        stable@vger.kernel.org,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 011/116] net: cbs: Fix software cbs to consider packet sending time
-Date:   Wed,  1 Apr 2020 18:16:27 +0200
-Message-Id: <20200401161543.523486071@linuxfoundation.org>
+Subject: [PATCH 4.19 013/116] net: mvneta: Fix the case where the last poll did not process all rx
+Date:   Wed,  1 Apr 2020 18:16:29 +0200
+Message-Id: <20200401161543.745787529@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,65 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zh-yuan Ye <ye.zh-yuan@socionext.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-[ Upstream commit 961d0e5b32946703125964f9f5b6321d60f4d706 ]
+[ Upstream commit 065fd83e1be2e1ba0d446a257fd86a3cc7bddb51 ]
 
-Currently the software CBS does not consider the packet sending time
-when depleting the credits. It caused the throughput to be
-Idleslope[kbps] * (Port transmit rate[kbps] / |Sendslope[kbps]|) where
-Idleslope * (Port transmit rate / (Idleslope + |Sendslope|)) = Idleslope
-is expected. In order to fix the issue above, this patch takes the time
-when the packet sending completes into account by moving the anchor time
-variable "last" ahead to the send completion time upon transmission and
-adding wait when the next dequeue request comes before the send
-completion time of the previous packet.
+For the case where the last mvneta_poll did not process all
+RX packets, we need to xor the pp->cause_rx_tx or port->cause_rx_tx
+before claculating the rx_queue.
 
-changelog:
-V2->V3:
- - remove unnecessary whitespace cleanup
- - add the checks if port_rate is 0 before division
-
-V1->V2:
- - combine variable "send_completed" into "last"
- - add the comment for estimate of the packet sending
-
-Fixes: 585d763af09c ("net/sched: Introduce Credit Based Shaper (CBS) qdisc")
-Signed-off-by: Zh-yuan Ye <ye.zh-yuan@socionext.com>
-Reviewed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Fixes: 2dcf75e2793c ("net: mvneta: Associate RX queues with each CPU")
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_cbs.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvneta.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/sched/sch_cbs.c
-+++ b/net/sched/sch_cbs.c
-@@ -185,6 +185,11 @@ static struct sk_buff *cbs_dequeue_soft(
- 	s64 credits;
- 	int len;
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -2801,11 +2801,10 @@ static int mvneta_poll(struct napi_struc
+ 	/* For the case where the last mvneta_poll did not process all
+ 	 * RX packets
+ 	 */
+-	rx_queue = fls(((cause_rx_tx >> 8) & 0xff));
+-
+ 	cause_rx_tx |= pp->neta_armada3700 ? pp->cause_rx_tx :
+ 		port->cause_rx_tx;
  
-+	/* The previous packet is still being sent */
-+	if (now < q->last) {
-+		qdisc_watchdog_schedule_ns(&q->watchdog, q->last);
-+		return NULL;
-+	}
- 	if (q->credits < 0) {
- 		credits = timediff_to_credits(now - q->last, q->idleslope);
- 
-@@ -216,7 +221,12 @@ static struct sk_buff *cbs_dequeue_soft(
- 	credits += q->credits;
- 
- 	q->credits = max_t(s64, credits, q->locredit);
--	q->last = now;
-+	/* Estimate of the transmission of the last byte of the packet in ns */
-+	if (unlikely(atomic64_read(&q->port_rate) == 0))
-+		q->last = now;
-+	else
-+		q->last = now + div64_s64(len * NSEC_PER_SEC,
-+					  atomic64_read(&q->port_rate));
- 
- 	return skb;
- }
++	rx_queue = fls(((cause_rx_tx >> 8) & 0xff));
+ 	if (rx_queue) {
+ 		rx_queue = rx_queue - 1;
+ 		if (pp->bm_priv)
 
 
