@@ -2,140 +2,147 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A46BC2D0F1
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0999C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3612071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEp1tkj4"
+	by mail.kernel.org (Postfix) with ESMTP id CB4C62072E
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 02:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731672AbgDACYr (ORCPT
+        id S1731687AbgDACZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 22:24:47 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:39933 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731654AbgDACYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 22:24:46 -0400
-Received: by mail-pj1-f67.google.com with SMTP id z3so1987965pjr.4;
-        Tue, 31 Mar 2020 19:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=shlj4RT6R8fRfwyZrRLEKu0+VN6LrGrfcQUDPwc8A90=;
-        b=OEp1tkj4X3EvCpjYl5tr81Dqj54Yo/GIrvyy3Rsh4VHqNuOxHCJiyFlV5f/quN2THP
-         s5XDOuy2wFfOMIaS6ahllkTOAWY7HO8IBFTsRaNAv4zU/6jU9h2ZbGsy3A4JNX/qoKFL
-         OU0dk4WxRTfj0qTBzqeTBJJJ3lZ3yTTGJ/FDsorE+ISeI7xV8spDi+a0u+0cDDlEod5p
-         0ihlIBJAZUeUaXOr/t/22C4t21UtfahOmZTAEHErFxpk4ilyh8pIwYou4J1mo6kseWMh
-         dOZFzwYj64qOlzAlYhSAiKsZWncJGpahEYY/2rG72wi1b226GAO5Hbj0bRwA5wvJxHab
-         L+yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=shlj4RT6R8fRfwyZrRLEKu0+VN6LrGrfcQUDPwc8A90=;
-        b=FrlMCkT+oz8GBDNHm/Ieb/FTWFEx+0sSXgJG1Iif2bbMgfwpcx/518eP/j/XMjW4dj
-         bXjZtw/yL2jFuITH8Faq7pbUG+RVO1fP/1uaRT2tcLxo+Deg33c0TfSpEyX/kSPvZL/Q
-         VPzgmxL6P7S58g6gEyHGqxECSF5TsWUEZEtlt+3rjmty68yBOmBaMKixzt8mFpTnMJ4A
-         ZSgxFO/aKacto/hanF09bhOl3nJujJf008zN8lryyrG23owff9osdy6Dl/PHKPuyXUxK
-         mmdTLLcD/9ISHyzU0YOLW6FbhsgJn7W0Epvr+dvTzbhBcbZIbE8vXMRlq/12eKPk6TKS
-         BIhw==
-X-Gm-Message-State: ANhLgQ1q43SfJ/KCMF+Iflv8RwM5Nx8+f7wlDRKYMs/tEAy6Ut9YtY08
-        3Grp6Ec05iwBiOyZz6T0hzlrJgkl
-X-Google-Smtp-Source: ADFU+vvTOE8hPhBzXjnbKf/qzvOTDou6r0R+TSr4Tdw0gRaGRpvQ434RoKlDael8IWTrWRkluaVs1g==
-X-Received: by 2002:a17:902:7445:: with SMTP id e5mr19801540plt.308.1585707883104;
-        Tue, 31 Mar 2020 19:24:43 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r63sm375580pfr.42.2020.03.31.19.24.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 19:24:42 -0700 (PDT)
-Subject: Re: [PATCH 5.4 000/156] 5.4.29-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200331141448.508518662@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <a1878b59-6f43-2e3a-7e77-ff4ef15a91d9@roeck-us.net>
-Date:   Tue, 31 Mar 2020 19:24:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 31 Mar 2020 22:25:02 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2227 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731579AbgDACZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 22:25:02 -0400
+IronPort-SDR: mskuyxpvQriw9URqdjgV1kUhQe6svInKwFrT2eMmnKpQ5j5O8G6i0s82bTnl1kc57SQvL+tq6i
+ ySStTvXqt1Bg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 19:25:02 -0700
+IronPort-SDR: TEKnx2kKbIT40xo5i2aKSPEQj9sBD0onCN8ZiknGVHuh6htt3o18xyK/5ulbIZSm20MP2vXw7x
+ UHg+JM86z4zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,330,1580803200"; 
+   d="scan'208";a="267488669"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga002.jf.intel.com with ESMTP; 31 Mar 2020 19:24:58 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Subject: Re: [PATCH] /proc/PID/smaps: Add PMD migration entry parsing
+References: <20200331085604.1260162-1-ying.huang@intel.com>
+        <965DC015-7D6F-430D-8FB7-A24A814C13BE@nvidia.com>
+Date:   Wed, 01 Apr 2020 10:24:57 +0800
+In-Reply-To: <965DC015-7D6F-430D-8FB7-A24A814C13BE@nvidia.com> (Zi Yan's
+        message of "Tue, 31 Mar 2020 08:24:07 -0400")
+Message-ID: <87r1x8hrie.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200331141448.508518662@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 8:32 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.29 release.
-> There are 156 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 02 Apr 2020 14:12:16 +0000.
-> Anything received after that time might be too late.
-> 
+Zi Yan <ziy@nvidia.com> writes:
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 427 pass: 427 fail: 0
+> On 31 Mar 2020, at 4:56, Huang, Ying wrote:
+>>
+>> From: Huang Ying <ying.huang@intel.com>
+>>
+>> Now, when read /proc/PID/smaps, the PMD migration entry in page table is simply
+>> ignored.  To improve the accuracy of /proc/PID/smaps, its parsing and processing
+>> is added.
+>>
+>> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+>> Cc: Andrea Arcangeli <aarcange@redhat.com>
+>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Cc: Zi Yan <ziy@nvidia.com>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Alexey Dobriyan <adobriyan@gmail.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+>> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>>  fs/proc/task_mmu.c | 16 ++++++++++++----
+>>  1 file changed, 12 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>> index 8d382d4ec067..b5b3aef8cb3b 100644
+>> --- a/fs/proc/task_mmu.c
+>> +++ b/fs/proc/task_mmu.c
+>> @@ -548,8 +548,17 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
+>>         bool locked = !!(vma->vm_flags & VM_LOCKED);
+>>         struct page *page;
+>
+> Like Konstantin pointed out in another email, you could initialize page to NULL here.
+> Plus you do not need the “else-return” below, if you do that.
 
-Guenter
+Yes.  That looks better.  Will change this in the next version.
+
+>>
+>> -       /* FOLL_DUMP will return -EFAULT on huge zero page */
+>> -       page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
+>> +       if (pmd_present(*pmd)) {
+>> +               /* FOLL_DUMP will return -EFAULT on huge zero page */
+>> +               page = follow_trans_huge_pmd(vma, addr, pmd, FOLL_DUMP);
+>> +       } else if (unlikely(is_swap_pmd(*pmd))) {
+>
+> Should be:
+>           } else if (unlikely(thp_migration_support() && is_swap_pmd(*pmd))) {
+>
+> Otherwise, when THP migration is disabled and the PMD is under splitting, VM_BUG_ON
+> will be triggered.
+
+We hold the PMD page table lock when call smaps_pmd_entry().  How does
+PMD splitting trigger VM_BUG_ON()?
+
+>> +               swp_entry_t entry = pmd_to_swp_entry(*pmd);
+>> +
+>> +               VM_BUG_ON(!is_migration_entry(entry));
+>> +               page = migration_entry_to_page(entry);
+>> +       } else {
+>> +               return;
+>> +       }
+>>         if (IS_ERR_OR_NULL(page))
+>>                 return;
+>>         if (PageAnon(page))
+>> @@ -578,8 +587,7 @@ static int smaps_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>>
+>>         ptl = pmd_trans_huge_lock(pmd, vma);
+>>         if (ptl) {
+>> -               if (pmd_present(*pmd))
+>> -                       smaps_pmd_entry(pmd, addr, walk);
+>> +               smaps_pmd_entry(pmd, addr, walk);
+>>                 spin_unlock(ptl);
+>>                 goto out;
+>>         }
+>> --
+>> 2.25.0
+>
+> Everything else looks good to me. Thanks.
+>
+> With the fixes mentioned above, you can add
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+
+Thanks!
+
+Best Regards,
+Huang, Ying
