@@ -2,221 +2,136 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4285BC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B15DC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0917420772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F96A2054F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="s8lq9KtN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="suhRyftI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733062AbgDAVlD (ORCPT
+        id S1732960AbgDAVqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:41:03 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33254 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732637AbgDAVlC (ORCPT
+        Wed, 1 Apr 2020 17:46:02 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38209 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAVqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 17:41:02 -0400
-Received: by mail-qk1-f194.google.com with SMTP id v7so1840660qkc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 14:41:01 -0700 (PDT)
+        Wed, 1 Apr 2020 17:46:01 -0400
+Received: by mail-io1-f67.google.com with SMTP id m15so1399508iob.5;
+        Wed, 01 Apr 2020 14:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0RdWMZB6RJn98FXdUSZnSjFG7Se9Mrq9epKZxJ4TlZU=;
-        b=s8lq9KtNGitOmED9ThaQGTb5+/x0rpr3TJKyVHk/V41WssZvfEWTggpVH2Qs+oUCXQ
-         3zhK1WERFaKh2wtJ8usMb18qkenhhMbR6eEUemwBPcyrjYt0sJ5KDo1VpH86xwfB7zid
-         ugcuvNqf8khkGAEZ0WtHEHdhh0tN07ePRggoKzQa3bocnLkfVVfGKEt3fFN6lOSej2IT
-         cIpt8G9f9DnV5fLPC5Ctvsc0/ghdGF018LKW6vNrTQALlHX5wZ6O+/E7rzWH7OIQ66w5
-         /isdkpjq0WzlYNkOrWlcADEiGMujKBbHE+ByHfdaRm18AxBexuz/yBeUoOD1kdzWMDW9
-         vabA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ZRP/qYqZmgljQcfk8fAkDPQTdyvwm2pYv6AmDbYhUGk=;
+        b=suhRyftI4Gy2+MJ5rv8FN7pgMkGUoVLRr0bhwfI3ndzfflSjv40r3BE67H1Bx7tuhk
+         LMuand/y2Jva21avY4uWsdiM9RGKaM9/v7PXf7viRs0TWya+LHhUtFVsMMU4KphBiSpy
+         u/BMCsxsWqXRYpOnJehhRpCv+ggyuKhrbaJ1qUo3VcU3ei+tKhCnGdCgQ0eAVmkpet0T
+         5ghiMx58Jiy46KPH5VHYzwxqzcTAnrYskQ9wno1YdLGq8hr6Ye//Usp+9VJEcuAnLrx6
+         CeH1CEYeXYYFRet+PEHsilePNaXzzPW3sy/LRikThjyrUSCXxS5uxKePUvlijCcF8Yoo
+         PN8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0RdWMZB6RJn98FXdUSZnSjFG7Se9Mrq9epKZxJ4TlZU=;
-        b=sBgvrFKkq45B4KGASqb0jy0otMvZRKZ6q8STNm2aTFg0BOQKTIvgHpeRGI6PZr6ugp
-         YGLwNwerBNCVIfPOSA5ysxLufYM0du6W2Cc4pKly5ZSzsiR3hLzMi9aT8lqK6by/m5eV
-         s7cSmslaH8DcB41kkrEwIgZ4m6if2Nc49EhMOuUgUq6Q1dkJ/1IvnM4Y5OtiQtNMac8I
-         xaaeUTdJtB3e7U+J/IdMmWmi3KglR15JyHiP5X5NmaqivOg1sH1KXNTxinnIcqg2iu+d
-         MU7ZFFoUZZ4tpz1GHKow58xAHpvddiGlGiZQLHZ0G26qMJCYEToDLb18eN1I9W+BtRyS
-         ixpQ==
-X-Gm-Message-State: AGi0Pub+85K84boB5Tlsd23p4zF+93dpPUTmtNqxoaB/muZrMrnxUczM
-        lh1X5+LguJ48W2YZkAwht6fEeA==
-X-Google-Smtp-Source: APiQypIxrxO6hwyk+9NdzKlR3uKKCXFELr9z5SQnOCvSSKC8X1SAAg+Q+tEpT2bf897wOLX9h+OxAg==
-X-Received: by 2002:a37:87c7:: with SMTP id j190mr434836qkd.66.1585777261160;
-        Wed, 01 Apr 2020 14:41:01 -0700 (PDT)
-Received: from ovpn-113-105.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id s56sm2456990qtk.9.2020.04.01.14.40.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 14:41:00 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     peterz@infradead.org, mingo@redhat.com
-Cc:     juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        bsegall@google.com, mgorman@suse.de, paulmck@kernel.org,
-        tglx@linutronix.de, mpe@ellerman.id.au,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
-Date:   Wed,  1 Apr 2020 17:40:33 -0400
-Message-Id: <20200401214033.8448-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ZRP/qYqZmgljQcfk8fAkDPQTdyvwm2pYv6AmDbYhUGk=;
+        b=Kl8nTXyTPqy7RmavsgGcMMFyoCwlya6qcGaEkjkVR6by3tnQQ6HW3aNgQpvuW8Yy+a
+         6fzFSOTiLxAlkc2jR0mS/yMVWXWf32qJng0iS7XgzNZY4hcpNFwaISBoWobocPRh36t/
+         vww+NBe3+BZWr0F+anl9ojTlq8rVgx6fxTuUnnnxDBc7KP+VgQAmoWdPnmrRxNBttM7V
+         kIlCgXs/J6SSDOA26z40qoiL4j+kSGtAxPFrP9ikz+tGXuXZGqJ63j/NacIMyy8xowxH
+         cGeFp9lDZZ80XtoJH3WbhfB3z1v2fYCZSZOHjCrL0YpzODWH2qSCoD03MjJxEZ+6sOWJ
+         aZQw==
+X-Gm-Message-State: AGi0PuYKrGsHQkG1aNtKoxYG3o9p+imOSWv/zbF/oi5Ir8fqtEHPVHhM
+        dHTAmnyKSHkkYRWfcQLz5ySAl5pvdcnyZuTh/Sk=
+X-Google-Smtp-Source: APiQypIcnWZ+BXfbx3Tsbys7IrzHOzSrxnEk+DQptn0nlGqJUaEIQZPOvazNZ/xsnGPeaPujqeyfpO0tVSsQwP14Kbc=
+X-Received: by 2002:a02:a619:: with SMTP id c25mr290529jam.15.1585777560430;
+ Wed, 01 Apr 2020 14:46:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200328215123.GA130140@google.com> <97b916ad6ad03f39ccdf5b62fe7d7b9e10190708.camel@intel.com>
+In-Reply-To: <97b916ad6ad03f39ccdf5b62fe7d7b9e10190708.camel@intel.com>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Wed, 1 Apr 2020 16:45:49 -0500
+Message-ID: <CABhMZUWZOc8n0mU4wL7VX88w936HGaLJHFYVEpRdSUKqhbsdrw@mail.gmail.com>
+Subject: Re: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "helgaas@kernel.org" <helgaas@kernel.org>,
+        "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lukas@wunner.de" <lukas@wunner.de>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "stuart.w.hayes@gmail.com" <stuart.w.hayes@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+On Mon, Mar 30, 2020 at 12:43 PM Derrick, Jonathan
+<jonathan.derrick@intel.com> wrote:
+> On Sat, 2020-03-28 at 16:51 -0500, Bjorn Helgaas wrote:
+> > On Fri, Feb 07, 2020 at 04:59:58PM -0700, Jon Derrick wrote:
+> > > This set adds an emulation driver for PCIe Hotplug. There may be platforms with
+> > > specific configurations that can support hotplug but don't provide the logical
+> > > slot hotplug hardware. For instance, the platform may use an
+> > > electrically-tolerant interposer between the slot and the device.
+> > > ...
 
-In the CPU-offline process, it calls mmdrop() after idle entry and the
-subsequent call to cpuhp_report_idle_dead(). Once execution passes the
-call to rcu_report_dead(), RCU is ignoring the CPU, which results in
-lockdep complaining when mmdrop() uses RCU from either memcg or
-debugobjects below.
+> > There's a lot of good work in here, and I don't claim to understand
+> > the use case and all the benefits.
+> I've received more info that the customer use case is an AIC that
+> breaks out 1-4 M.2 cards which have been made hotplug tolerant.
+>
+> > But it seems like quite a lot of additional code and complexity in an
+> > area that's already pretty subtle, so I'm not yet convinced that it's
+> > all worthwhile.
+> >
+> > It seems like this would rely on Data Link Layer Link Active
+> > Reporting.  Is that something we could add to pciehp as a generic
+> > feature without making a separate driver for it?  I haven't looked at
+> > this for a while, but I would assume that if we find out that a link
+> > went down, pciehp could/should be smart enough to notice that even if
+> > it didn't come via the usual pciehp Slot Status path.
+> I had a plan to do V2 by intercepting bus_ops rather than indirecting
+> slot_ops in pciehp. That should touch /a lot/ less code.
 
-Fix it by cleaning up the active_mm state from BP instead. Every arch
-which has CONFIG_HOTPLUG_CPU should have already called idle_task_exit()
-from AP. The only exception is parisc because it switches them to
-&init_mm unconditionally (see smp_boot_one_cpu() and smp_cpu_init()),
-but the patch will still work there because it calls mmgrab(&init_mm) in
-smp_cpu_init() and then should call mmdrop(&init_mm) in finish_cpu().
+I assume this is something like pci_bus_set_ops() or
+pci_bus_set_aer_ops()?  Probably touches less code, but I'm not really
+a fan of either of those current situations because they make things
+magical -- there's a lot of stuff going on behind the curtain, and it
+makes another thing to consider when we evaluate every pciehp change.
 
-WARNING: suspicious RCU usage
------------------------------
-kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
+> The problem I saw with adding DLLLA as a primary signal in pciehp is
+> that most of the pciehp boilerplate relies on valid Slot register
+> logic. I don't know how reliable pciehp will be if there's no backing
+> slot register logic, emulated or real. Consider how many slot
+> capability reads are in hpc.
+>
+> I could add a non-slot flag check to each of those callers, but it
+> might be worse than the emulation alternative.
 
-other info that might help us debug this:
+I see what you mean -- there are quite a few reads of PCI_EXP_SLTSTA.
+I'm not 100% sure all of those really need to exist.  I would expect
+that we'd read it once in the ISR and then operate on that value.  So
+maybe there's some middle ground of restructuring to remove some of
+those reads and making the remaining few more generic.
 
-RCU used illegally from offline CPU!
-Call Trace:
- dump_stack+0xf4/0x164 (unreliable)
- lockdep_rcu_suspicious+0x140/0x164
- get_work_pool+0x110/0x150
- __queue_work+0x1bc/0xca0
- queue_work_on+0x114/0x120
- css_release+0x9c/0xc0
- percpu_ref_put_many+0x204/0x230
- free_pcp_prepare+0x264/0x570
- free_unref_page+0x38/0xf0
- __mmdrop+0x21c/0x2c0
- idle_task_exit+0x170/0x1b0
- pnv_smp_cpu_kill_self+0x38/0x2e0
- cpu_die+0x48/0x64
- arch_cpu_idle_dead+0x30/0x50
- do_idle+0x2f4/0x470
- cpu_startup_entry+0x38/0x40
- start_secondary+0x7a8/0xa80
- start_secondary_resume+0x10/0x14
+All that being said, I'm also sympathetic to Christoph's concern about
+cluttering pciehp to deal with non-standard topologies.  At some point
+if you need to do non-standard things you may have to write and
+maintain your own drivers.  I don't know where that point is yet.
 
-<Peter to sign off here>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/powerpc/platforms/powernv/smp.c |  1 -
- include/linux/sched/mm.h             |  2 ++
- kernel/cpu.c                         | 18 +++++++++++++++++-
- kernel/sched/core.c                  |  5 +++--
- 4 files changed, 22 insertions(+), 4 deletions(-)
-
-diff --git a/arch/powerpc/platforms/powernv/smp.c b/arch/powerpc/platforms/powernv/smp.c
-index 13e251699346..b2ba3e95bda7 100644
---- a/arch/powerpc/platforms/powernv/smp.c
-+++ b/arch/powerpc/platforms/powernv/smp.c
-@@ -167,7 +167,6 @@ static void pnv_smp_cpu_kill_self(void)
- 	/* Standard hot unplug procedure */
- 
- 	idle_task_exit();
--	current->active_mm = NULL; /* for sanity */
- 	cpu = smp_processor_id();
- 	DBG("CPU%d offline\n", cpu);
- 	generic_set_cpu_dead(cpu);
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index c49257a3b510..a132d875d351 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
- 		__mmdrop(mm);
- }
- 
-+void mmdrop(struct mm_struct *mm);
-+
- /*
-  * This has to be called after a get_task_mm()/mmget_not_zero()
-  * followed by taking the mmap_sem for writing before modifying the
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 2371292f30b0..244d30544377 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -3,6 +3,7 @@
-  *
-  * This code is licenced under the GPL.
-  */
-+#include <linux/sched/mm.h>
- #include <linux/proc_fs.h>
- #include <linux/smp.h>
- #include <linux/init.h>
-@@ -564,6 +565,21 @@ static int bringup_cpu(unsigned int cpu)
- 	return bringup_wait_for_ap(cpu);
- }
- 
-+static int finish_cpu(unsigned int cpu)
-+{
-+	struct task_struct *idle = idle_thread_get(cpu);
-+	struct mm_struct *mm = idle->active_mm;
-+
-+	/*
-+	 * idle_task_exit() will have switched to &init_mm, now
-+	 * clean up any remaining active_mm state.
-+	 */
-+	if (mm != &init_mm)
-+		idle->active_mm = &init_mm;
-+	mmdrop(mm);
-+	return 0;
-+}
-+
- /*
-  * Hotplug state machine related functions
-  */
-@@ -1549,7 +1565,7 @@ static struct cpuhp_step cpuhp_hp_states[] = {
- 	[CPUHP_BRINGUP_CPU] = {
- 		.name			= "cpu:bringup",
- 		.startup.single		= bringup_cpu,
--		.teardown.single	= NULL,
-+		.teardown.single	= finish_cpu,
- 		.cant_stop		= true,
- 	},
- 	/* Final state before CPU kills itself */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a2694ba82874..8787958339d5 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6200,13 +6200,14 @@ void idle_task_exit(void)
- 	struct mm_struct *mm = current->active_mm;
- 
- 	BUG_ON(cpu_online(smp_processor_id()));
-+	BUG_ON(current != this_rq()->idle);
- 
- 	if (mm != &init_mm) {
- 		switch_mm(mm, &init_mm, current);
--		current->active_mm = &init_mm;
- 		finish_arch_post_lock_switch();
- 	}
--	mmdrop(mm);
-+
-+	/* finish_cpu(), as ran on the BP, will clean up the active_mm state */
- }
- 
- /*
--- 
-2.21.0 (Apple Git-122.2)
-
+Bjorn
