@@ -2,173 +2,178 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1C3C10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402FFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0093A20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5B520714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 19:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdTGEWph"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHsJj8e/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732808AbgDATfj (ORCPT
+        id S1732781AbgDATit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 15:35:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38692 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732780AbgDATfi (ORCPT
+        Wed, 1 Apr 2020 15:38:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45753 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732637AbgDATit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 15:35:38 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c5so722027lfp.5;
-        Wed, 01 Apr 2020 12:35:35 -0700 (PDT)
+        Wed, 1 Apr 2020 15:38:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t7so1443148wrw.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 12:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cBGwSKFQoUy9yQfRkZN+LSw8IOHhJ+8pXF0jMXV6jtI=;
-        b=mdTGEWph6Vq2uaR0tc/iifpcG/c3qY0Hb5ngWLIUu1WnoAB8NR6sznifiUDpTOtJ5T
-         k93eZvr2OpbDPyQ5USWWW9Oy7KjsWFMwWkSA/D7XJsMJcHweC86r/DhV1IMy70nuroQY
-         tq030XM3aJzQO5Ancl7qtzJqtr8jtR1NKtV219bh8oMAqFDb2JN7l1hKeWJNXXr1XZi4
-         OYWDHN58geOD4f0vQdqNTHAKrnKjaPZGNPdDTaQqnTtYjFMGorBdnQ6LU4eFSZl4qsw4
-         m170l2Yoe1mnNa26wfjdo4vfd1YfITS1vQu3yN4ZYLIgoC/CsTu4WyWjADSghEhGhG54
-         /9lg==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TDGKY5QxIfDPhHRtGriV1dyv8mVg4yeuiltTMlYuWpg=;
+        b=pHsJj8e/dGUlOyMcKOnNs7DYjMar8IxtH14MFBn99rpKV5hm60COSxfYOQ2qyZuPHR
+         afL2e7VP77ycfk/gjC+z6YPTh/0TlI0k73emKvfsb1AbCTkYJgNo/8VclbxXJyT45nM6
+         pzBbDSZXOpcKSJ7iXP/krnr/pMlWlYV2T7oGHOXHBFtxE7GOThNXx0LluWaxh0eMa8hJ
+         g9Bz4bFzIzq1HnguSYW4hxdTfxPS/Ybhy77YP2ZOOnUXmN+/6OVXUEcwzm4DDOIb6n4L
+         BUBzncTT5dKjYct6BJekczZ7l+B6ite6CCqaWAgZLwqOWqQRi+bcxfyrb8ZoWDuCF9YM
+         a7qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cBGwSKFQoUy9yQfRkZN+LSw8IOHhJ+8pXF0jMXV6jtI=;
-        b=eQP2BuooJbzNqd7GaUaDm3ZUKQ2km6ZueE4aVnSJvrGxgrFmk5GCczstL4kVk7Q5XP
-         P4GDvnUAn9SJ7phMZey2lHl8bq4ii+hnAEzZHr6WcmM5wEdJ76HO8N/NSqWRAma8TiwL
-         +ubY70vtcD41cZg13TOvTj4bzB+olYP1+Q+qJ3ncSE4ofMyJ1DVVlz+hhf4TitDz39Km
-         h+YRpvSBIrBWr+yHU1CPhFzZC1o6PB73CYGpIJx+K9iN+7Vxtqpo5ianIV47KYWv7UmU
-         HFch23gN7tJUabC0YrPxcdxRj7XXjgTyqsfaMmxew4DVxHFgLAGIBgcibRcEpQbahwWt
-         K/sQ==
-X-Gm-Message-State: AGi0PuborGjxwcLopyQNGFXj3QryZ2bHv6Uv8Y98z0IzSyclbxfLcdPV
-        hz+aAH8LZqWUImM+AkIfGts=
-X-Google-Smtp-Source: APiQypKMfYt0DX+KfPnN+lhcxZl2+YbgbU5zIV42ErNExS24cFdhwcnLKz7tal7KIdh6r3bYoYQqZA==
-X-Received: by 2002:ac2:4116:: with SMTP id b22mr14730366lfi.172.1585769734597;
-        Wed, 01 Apr 2020 12:35:34 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id y124sm2292003lff.48.2020.04.01.12.35.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 12:35:31 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Wed, 1 Apr 2020 21:35:24 +0200
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        rcu@vger.kernel.org, willy@infradead.org, peterz@infradead.org,
-        neilb@suse.com, vbabka@suse.cz, mgorman@suse.de,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
- memory pattern
-Message-ID: <20200401193524.GA6821@pc636>
-References: <20200331160119.GA27614@pc636>
- <20200331183000.GD236678@google.com>
- <20200401122550.GA32593@pc636>
- <20200401134745.GV19865@paulmck-ThinkPad-P72>
- <20200401181601.GA4042@pc636>
- <20200401182615.GE19865@paulmck-ThinkPad-P72>
- <20200401183745.GA5960@pc636>
- <20200401185439.GG19865@paulmck-ThinkPad-P72>
- <20200401190548.GA6360@pc636>
- <20200401193405.GH19865@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TDGKY5QxIfDPhHRtGriV1dyv8mVg4yeuiltTMlYuWpg=;
+        b=YK1F/WyvWaah5LVo3QOrk7pjMlNi8zXjPH/QKTYKp4R3a6MwTD/YXLUNlh1U5yaGgu
+         D++s7QAgoS/DVwzOf45HQj01tfV2Em+QJlUAs36h/nFiiCLIYWdwDrobqJ2eHYbGxj+l
+         3Xz52df3MLDOQt/eLoQk91d7dwfVCjgp96j40lPfdWpWRXSpQN/keX6YfJlHCYPLH6y/
+         QwUzjAbUW9hQqqO2k+vP8bvAy/hOf8vcHWmaIMWJg7LldiS27PSzlwCFJbtcqwalXMzD
+         lUWfQBArKxZOsTPRWIy9eKvPc2GG+g+W2gHM6gF9IVbKz5Jtgqy3gxGUYkMXK15Ww91m
+         ujCw==
+X-Gm-Message-State: ANhLgQ08gup2gxFTDo97K6PndX7QwC/M7vr8+fYwuk6sdSp8BKm1IahI
+        nQLuGiuqGljOV/Iw2SuwXW0=
+X-Google-Smtp-Source: ADFU+vtPYnymWSVttuqGgkVi3HH4huwbdnr/Hn8XMMGnHRtA+ZI0c5iVSWxl1LHaKHayzgYovX+ceg==
+X-Received: by 2002:a5d:6888:: with SMTP id h8mr16423601wru.159.1585769926261;
+        Wed, 01 Apr 2020 12:38:46 -0700 (PDT)
+Received: from [10.230.186.223] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s2sm4241728wru.68.2020.04.01.12.38.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 12:38:45 -0700 (PDT)
+Subject: Re: [GIT PULL 1/3] bcm2835-dt-fixes-2020-03-27
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200327211632.32346-1-nsaenzjulienne@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <0db69929-ba6f-555f-7ed4-8a03dd398507@gmail.com>
+Date:   Wed, 1 Apr 2020 12:38:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401193405.GH19865@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200327211632.32346-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 12:34:05PM -0700, Paul E. McKenney wrote:
-> On Wed, Apr 01, 2020 at 09:05:48PM +0200, Uladzislau Rezki wrote:
-> > On Wed, Apr 01, 2020 at 11:54:39AM -0700, Paul E. McKenney wrote:
-> > > On Wed, Apr 01, 2020 at 08:37:45PM +0200, Uladzislau Rezki wrote:
-> > > > On Wed, Apr 01, 2020 at 11:26:15AM -0700, Paul E. McKenney wrote:
-> > > > > On Wed, Apr 01, 2020 at 08:16:01PM +0200, Uladzislau Rezki wrote:
-> > > > > > > > > 
-> > > > > > > > > Right. Per discussion with Paul, we discussed that it is better if we
-> > > > > > > > > pre-allocate N number of array blocks per-CPU and use it for the cache.
-> > > > > > > > > Default for N being 1 and tunable with a boot parameter. I agree with this.
-> > > > > > > > > 
-> > > > > > > > As discussed before, we can make use of memory pool API for such
-> > > > > > > > purpose. But i am not sure if it should be one pool per CPU or
-> > > > > > > > one pool per NR_CPUS, that would contain NR_CPUS * N pre-allocated
-> > > > > > > > blocks.
-> > > > > > > 
-> > > > > > > There are advantages and disadvantages either way.  The advantage of the
-> > > > > > > per-CPU pool is that you don't have to worry about something like lock
-> > > > > > > contention causing even more pain during an OOM event.  One potential
-> > > > > > > problem wtih the per-CPU pool can happen when callbacks are offloaded,
-> > > > > > > in which case the CPUs needing the memory might never be getting it,
-> > > > > > > because in the offloaded case (RCU_NOCB_CPU=y) the CPU posting callbacks
-> > > > > > > might never be invoking them.
-> > > > > > > 
-> > > > > > > But from what I know now, systems built with CONFIG_RCU_NOCB_CPU=y
-> > > > > > > either don't have heavy callback loads (HPC systems) or are carefully
-> > > > > > > configured (real-time systems).  Plus large systems would probably end
-> > > > > > > up needing something pretty close to a slab allocator to keep from dying
-> > > > > > > from lock contention, and it is hard to justify that level of complexity
-> > > > > > > at this point.
-> > > > > > > 
-> > > > > > > Or is there some way to mark a specific slab allocator instance as being
-> > > > > > > able to keep some amount of memory no matter what the OOM conditions are?
-> > > > > > > If not, the current per-CPU pre-allocated cache is a better choice in the
-> > > > > > > near term.
-> > > > > > > 
-> > > > > > As for mempool API:
-> > > > > > 
-> > > > > > mempool_alloc() just tries to make regular allocation taking into
-> > > > > > account passed gfp_t bitmask. If it fails due to memory pressure,
-> > > > > > it uses reserved preallocated pool that consists of number of
-> > > > > > desirable elements(preallocated when a pool is created).
-> > > > > > 
-> > > > > > mempoll_free() returns an element to to pool, if it detects that
-> > > > > > current reserved elements are lower then minimum allowed elements,
-> > > > > > it will add an element to reserved pool, i.e. refill it. Otherwise
-> > > > > > just call kfree() or whatever we define as "element-freeing function."
-> > > > > 
-> > > > > Unless I am missing something, mempool_alloc() acquires a per-mempool
-> > > > > lock on each invocation under OOM conditions.  For our purposes, this
-> > > > > is essentially a global lock.  This will not be at all acceptable on a
-> > > > > large system.
-> > > > > 
-> > > > It uses pool->lock to access to reserved objects, so if we have one memory
-> > > > pool per one CPU then it would be serialized.
-> > > 
-> > > I am having difficulty parsing your sentence.  It looks like your thought
-> > > is to invoke mempool_create() for each CPU, so that the locking would be
-> > > on a per-CPU basis, as in 128 invocations of mempool_init() on a system
-> > > having 128 hardware threads.  Is that your intent?
-> > > 
-> > In order to serialize it, you need to have it per CPU. So if you have 128
-> > cpus, it means:
-> > 
-> > <snip>
-> > for_each_possible_cpu(...)
-> >     cpu_pool = mempool_create();
-> > <snip>
-> > 
-> > but please keep in mind that it is not my intention, but i had a though
-> > about mempool API. Because it has pre-reserve logic inside.
-> 
-> OK, fair point on use of mempool API, but my guess is that extending
-> the current kfree_rcu() logic will be simpler.
-> 
-Agree :)
 
---
-Vlad Rezki
+
+On 3/27/2020 2:16 PM, Nicolas Saenz Julienne wrote:
+> Hi Florian,
+> 
+> The following changes since commit 55c7c0621078bd73e9d4d2a11eb36e61bc6fe998:
+> 
+>   ARM: dts: bcm283x: Fix vc4's firmware bus DMA limitations (2020-03-22 14:45:24 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/nsaenz/linux-rpi.git tags/bcm2835-dt-fixes-2020-03-27
+
+You would want to provide a public fetch URL for next pull requests, I
+fetched your tree so this is fine, but in case someone processes those
+messages in a semi automated way, they would not be able to pull from
+your tree here.
+
+> 
+> for you to fetch changes up to be08d278eb09210fefbad4c9b27d7843f1c096b2:
+> 
+>   ARM: dts: bcm283x: Add cells encoding format to firmware bus (2020-03-27 21:36:17 +0100)
+> 
+> ----------------------------------------------------------------
+> This patch is to be squashed into 55c7c0621078 ("ARM: dts: bcm283x: Fix
+> vc4's firmware bus DMA limitations") as it turned out to be faulty
+> 
+> ----------------------------------------------------------------
+
+Merged into devicetree/fixes, thanks Nicolas, looks like the offending
+commit has already been applied, though I had not gotten an email about
+it, so the fixup in place is no longer an option.
+
+> Nicolas Saenz Julienne (1):
+>       ARM: dts: bcm283x: Add cells encoding format to firmware bus
+> 
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+
+-- 
+Florian
