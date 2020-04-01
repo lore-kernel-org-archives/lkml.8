@@ -2,299 +2,136 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA78C10F26
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83EFC10F26
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9E420714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF9120714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="mnWZ82pq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YSiPpdaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732346AbgDAMSa (ORCPT
+        id S1732384AbgDAMUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:18:30 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35829 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732169AbgDAMSa (ORCPT
+        Wed, 1 Apr 2020 08:20:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37254 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732169AbgDAMUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:18:30 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k13so26732641qki.2;
-        Wed, 01 Apr 2020 05:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cYgn6RQydhxEk4Yg/z1Bm/e2sVRk32p5oBa766QTAqk=;
-        b=mnWZ82pqNPv0UXH2JHl3te3MYxNR553fID3X8WrACZm/1J602MoPR+mcCg7AmszPk3
-         zssmg/U6SuCeVojy8fm8nFWdO86Q13xCaXNse6jfC+hFTyOQL6btumPCb886B1/XsMJJ
-         Z343d2vMO94W49HMLzzXhHZChM6iTfzz+WX90=
+        Wed, 1 Apr 2020 08:20:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585743622;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WDTPFa8ZURJktfLOzCbfsD4S80g+FQC7hULNIYlAu7Y=;
+        b=YSiPpdaD2AFYP/UwgmCUWPKK59g1V9NyzHfu+50zSp2o/CheNx+h8702hRD8hppTBJO9TZ
+        4P7pM3DIHEg+aEUPd1euyhysdT7K1lDk2sTrjlPaHLLVY2lm4ThbOas3/I3RHQPLLQ143G
+        7Z8tzaCcWp6pT9aTQy0bIPSgd1ASkdQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-d6DRQ9hcPvacWHDTPR7XEQ-1; Wed, 01 Apr 2020 08:20:18 -0400
+X-MC-Unique: d6DRQ9hcPvacWHDTPR7XEQ-1
+Received: by mail-wm1-f69.google.com with SMTP id y1so2384649wmj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:20:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cYgn6RQydhxEk4Yg/z1Bm/e2sVRk32p5oBa766QTAqk=;
-        b=VQQF6yCu0jIscFmD0PNIu6PAVtEFPAmuPdZNiyveQGcNXrvlDk9aGf9Ks5LM4gDhM+
-         L9GJ+xDUjUR5HPSocJW93fzZEdRzYGpptttTd06PXm68/w5Nho3eeZ89xJ+Sl4P+UqW7
-         fp9nfRl0T03gb6cxNT7Zoz2yIfySwBOgh6pK406RjZ2LnKcJlvCkGeDZM3u6EtioiBAG
-         MDgfeumX/1L5Mv326w2nMqVGwaDguzH9wXRAjsFzONqICYhH4lhCA65wYrtyTPrHxlbO
-         DoTDB84pibixodKv/5AEF+JH7CNDL7EcbGbq2HOp31vGnDxRvkMbDvjwwW4AIy7FOaoy
-         F+Cw==
-X-Gm-Message-State: ANhLgQ2cTQUXe/w05EJ9QxV9tAVaKk/JBEWRL2wSPhY6B2lQFGd1ypKc
-        RoZzbHYlZCOKVJMfOUj9YBYpcBQ5/eX9hMCqHI4em/sx
-X-Google-Smtp-Source: ADFU+vsGJIiZgzJs5OL/Q4JZje/tqiDApfEfPU29WwaxIGq+J9716ZkBiwCe7NGvvIhWTP92hnvGqh2b7LnBXWG2nyg=
-X-Received: by 2002:a37:61d0:: with SMTP id v199mr9555105qkb.292.1585743508846;
- Wed, 01 Apr 2020 05:18:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WDTPFa8ZURJktfLOzCbfsD4S80g+FQC7hULNIYlAu7Y=;
+        b=Ikm3DJ8W3ooU26NI20vLykUDQ6JPpmCj4YaIxw6rrEgv5i82EyEETI9tzCdPdWnvH+
+         p3wHkGTCdOzYJnfvUPT2i37UkQOPrAf82/AQABB9ZPaLSEWeqgdTVuBs9pjzhTQGpaqd
+         97+hG07rH6y+C1Wg0gkjOwE8MbIThdkM4gGrKNxzTmbLR6Qqew8S+Acow54KHP52OdBY
+         RB+Oq1DQzjm0eCAX60vaKhpNabMZ7+SNO19yTw9Zy5zUtdvAZbxNbkg5racVHGVWjU1l
+         GsQr0wPSefOWlgGnpqV8XeEa78jrkGUQ/3dwvdE2IctIr2R3m3W8sU8vam3NNj3qyrwB
+         /XqQ==
+X-Gm-Message-State: AGi0PuZTuz9oHK9DfIqjkvWLrz5my67hUljXT19Cu2zJbTn4+CfuALU7
+        gWh7CkYKVB/BKpAZ2ZQyu0Ow/RKkTQtBWCMhlP8V+mptdu7YO9YtVvFjHSMC8TC46THM8c+Nw8T
+        0JTKXa3oew12geRcEHQqe6QvI
+X-Received: by 2002:a1c:7216:: with SMTP id n22mr3957796wmc.41.1585743617458;
+        Wed, 01 Apr 2020 05:20:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJGm9VynkGDD62kpREjFTDmdSlFXsNNAMFtPN11ojKIAP6F3bbB/QcM2CPWq2x/1zd9n90kRw==
+X-Received: by 2002:a1c:7216:: with SMTP id n22mr3957763wmc.41.1585743617216;
+        Wed, 01 Apr 2020 05:20:17 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.194.179])
+        by smtp.gmail.com with ESMTPSA id s15sm2646131wrt.16.2020.04.01.05.20.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 05:20:16 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 14:20:14 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     John Mathew <john.mathew@unikie.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@basemark.com
+Subject: Re: [RFC PATCH 2/3] docs: scheduler: Add scheduler overview
+ documentation
+Message-ID: <20200401122014.GW14300@localhost.localdomain>
+References: <20200401100029.1445-1-john.mathew@unikie.com>
+ <20200401100029.1445-3-john.mathew@unikie.com>
 MIME-Version: 1.0
-References: <20200401114023.GA29180@cnn>
-In-Reply-To: <20200401114023.GA29180@cnn>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 1 Apr 2020 12:18:17 +0000
-Message-ID: <CACPK8Xf+EOUk-HroNmPe5Pjgu6BdP8VU-m6mxQMpTtL1CYBn=A@mail.gmail.com>
-Subject: Re: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Sai Dasari <sdasari@fb.com>,
-        Vijay Khemka <vijaykhemka@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        manikandan.e@hcl.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401100029.1445-3-john.mathew@unikie.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 at 11:40, Manikandan Elumalai
-<manikandan.hcl.ers.epl@gmail.com> wrote:
->
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platform based on AST2500 SoC.
->
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
->
-> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> Acked-by     : Andrew Jeffery <andrew@aj.id.au>
-> Reviewed-by  : Vijay Khemka <vkhemka@fb.com>
-> ---
-> ---      v7 - Added multi-host SOL feature.
-> ---      v6 - Added device tree property for multi-host Mellanox NIC in the ncsi driver.
-> ---      v5 - Spell and contributor name correction.
-> ---           - License identifier changed to GPL-2.0-or-later.
-> ---           - aspeed-gpio.h removed.
-> ---           - FAN2 tacho channel changed.
-> ---      v4 - Bootargs removed.
-> ---      v3 - Uart1 Debug removed .
-> ---      v2 - LPC and VUART removed .
-> ---      v1 - Initial draft.
-> ---
-> ---
->  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 186 +++++++++++++++++++++
+Hi,
 
-You need to add the device tree to the makefile.
+On 01/04/20 13:00, John Mathew wrote:
+> Add documentation for
+>  -scheduler overview
+>  -scheduler state transtion
+>  -CFS overview
+>  -CFS data structs
+> 
+> Add rst for scheduler APIs and modify sched/core.c
+> to add kernel-doc comments.
+> 
+> Suggested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Co-developed-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
+> Signed-off-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
+> Signed-off-by: John Mathew <john.mathew@unikie.com>
+> ---
 
->  1 file changed, 186 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> new file mode 100644
-> index 0000000..bc83901
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> @@ -0,0 +1,186 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright (c) 2018 Facebook Inc.
-> +/dts-v1/;
-> +#include "aspeed-g5.dtsi"
+[...]
+
+> +Kernel forwards the tasks to each class based on the scheduling policy assigned
+> +to each task. Tasks assigned with SCHED_NORMAL, SCHED_IDLE and SCHED_BATCH
+> +go to fair_sched_class and tasks assigned with SCHED_RR and SCHED_FIFO go to
+> +rt_sched_class
+
+I think you also need to mention that SCHED_DEADLINE goes to
+dl_sched_class.
+
+[...]
+
+> +*poicy:* Value for scheduling policy. The possible values are:
 > +
-> +/ {
-> +       model = "Facebook Yosemitev2 BMC";
-> +       compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> +       aliases {
-> +               serial4 = &uart5;
-> +       };
-> +       chosen {
-> +               stdout-path = &uart5;
-> +       };
+> +* SCHED_NORMAL: Regular tasks use this policy.
 > +
-> +       memory@80000000 {
-> +               reg = <0x80000000 0x20000000>;
-> +       };
+> +* SCHED_BATCH:  Tasks which need to run longer  without pre-emption use this
+> +  policy. Suitable for batch jobs.
+> +* SCHED_IDLE: Policy used by background tasks.
 > +
-> +       iio-hwmon {
-> +               // VOLATAGE SENSOR
-> +               compatible = "iio-hwmon";
-> +               io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> +               <&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> +               <&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> +               <&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> +       };
-> +};
-> +
-> +&fmc {
-> +       status = "okay";
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +#include "openbmc-flash-layout.dtsi"
-> +       };
-> +};
-> +
-> +&spi1 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_spi1_default>;
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +               label = "pnor";
-> +       };
-> +};
-> +&uart1 {
-> +       // Host1 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd1_default
-> +                    &pinctrl_rxd1_default>;
-> +};
-> +
-> +&uart2 {
-> +       // Host2 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd2_default
-> +                    &pinctrl_rxd2_default>;
-> +
-> +};
-> +
-> +&uart3 {
-> +       // Host3 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd3_default
-> +                    &pinctrl_rxd3_default>;
-> +};
-> +
-> +&uart4 {
-> +       // Host4 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd4_default
-> +                    &pinctrl_rxd4_default>;
-> +};
-> +
-> +&uart5 {
-> +       // BMC Console
-> +       status = "okay";
-> +};
-> +
-> +&vuart {
-> +       // Virtual UART
-> +       status = "okay";
-> +};
-> +
-> +&mac0 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_rmii1_default>;
-> +       use-ncsi;
-> +       mlx,multi-host;
-> +};
-> +
-> +&adc {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_adc0_default
-> +                       &pinctrl_adc1_default
-> +                       &pinctrl_adc2_default
-> +                       &pinctrl_adc3_default
-> +                       &pinctrl_adc4_default
-> +                       &pinctrl_adc5_default
-> +                       &pinctrl_adc6_default
-> +                       &pinctrl_adc7_default
-> +                       &pinctrl_adc8_default
-> +                       &pinctrl_adc9_default
-> +                       &pinctrl_adc10_default
-> +                       &pinctrl_adc11_default
-> +                       &pinctrl_adc12_default
-> +                       &pinctrl_adc13_default
-> +                       &pinctrl_adc14_default
-> +                       &pinctrl_adc15_default>;
-> +};
-> +
-> +&i2c8 {
-> +       status = "okay";
-> +       //FRU EEPROM
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&i2c9 {
-> +       status = "okay";
-> +       tmp421@4e {
-> +       //INLET TEMP
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4e>;
-> +       };
-> +       //OUTLET TEMP
-> +       tmp421@4f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4f>;
-> +       };
-> +};
-> +
-> +&i2c10 {
-> +       status = "okay";
-> +       //HSC
-> +       adm1278@40 {
-> +               compatible = "adi,adm1278";
-> +               reg = <0x40>;
-> +       };
-> +};
-> +
-> +&i2c11 {
-> +       status = "okay";
-> +       //MEZZ_TEMP_SENSOR
-> +       tmp421@1f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x1f>;
-> +       };
-> +};
-> +
-> +&i2c12 {
-> +       status = "okay";
-> +       //MEZZ_FRU
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&pwm_tacho {
-> +       status = "okay";
-> +       //FSC
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +       fan@0 {
-> +               reg = <0x00>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> +       };
-> +       fan@1 {
-> +               reg = <0x01>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> +       };
-> +};
-> --
-> 2.7.4
->
+> +* SCHED_FIFO & SCHED_RR: These policies for real time tasks. Handled by real
+> +  time scheduler.
+
+Here as well. Maybe add also a pointer to related documentation?
+
+Documentation/scheduler/sched-deadline.txt
+
+Thanks,
+
+Juri
+
