@@ -2,103 +2,117 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A3AC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D835FC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8DCF20787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A502920787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ek2hrAHc"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Z6OECtHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbgDAAfk (ORCPT
+        id S1731539AbgDAAmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 20:35:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56215 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729514AbgDAAfk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 20:35:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585701339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nUYw2tAk2ElDzMusCcbVaLfYkke7kPKvnnUATst9aPY=;
-        b=ek2hrAHcUHA0w0cTgSM7Dfn1kh+joOfUleB0FDjaUPtNyr6eRAzr+ME0v9D3k77SiWWpFx
-        VcbdZwK/RaGVAzfNuWm5/mBi6GOnyAqxfmXcEfUiZuWFSE/5hi4Lo/6KmCuzFNBYxHzfVZ
-        OD8uPYQNNVoajwlc3K5mgOMgcEg4dG4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-201-KPhDReGPMu24VIfo0neQTg-1; Tue, 31 Mar 2020 20:35:36 -0400
-X-MC-Unique: KPhDReGPMu24VIfo0neQTg-1
-Received: by mail-wr1-f70.google.com with SMTP id b2so13275946wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 17:35:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nUYw2tAk2ElDzMusCcbVaLfYkke7kPKvnnUATst9aPY=;
-        b=mvh2HEeoKhLze2uP/sZ466Bik1vH72Xeo0nLz071A/pcD69g5df9RZHL0sRJis989N
-         r/0Y+Q8HrcAonulRiTkZRVVvdOZkXVKwn1jdaAtWUuKaqNbzPJb+gzvnz6FOZzL/9em2
-         H+M7wxFSQDZAuPG4F8VtmAwLlWAhbv173/39W3uT8o86VfGAHnP53+gxerZSZW4Yhjik
-         bgCnh5W4wHAzgJM/aL5zphc1+A1VZy+xXezecTJDw9GdUPIuXG3sTgXwTrJQgPg4kw3c
-         0XRazoXPhG9XLZIUzon38QjITCshnoWr5v12NAY22JU/0jhfIuZ40tAdiG7WYEUQga+o
-         mrVw==
-X-Gm-Message-State: ANhLgQ3pTD3FH7Xtj5fkkQuty9RLCmLacZJcFRn8ZZI5STMfANv7J5Vx
-        bBCdnBwxCvmXntcjmFgKavbnEO7tA0PJRZQWHiBUDvEnjFtbc4CoCF83qLaIJrwH6MSC6+cEchI
-        7QHyRjAneS/aX25pIgFf6zRcO
-X-Received: by 2002:a5d:6045:: with SMTP id j5mr22859745wrt.401.1585701335108;
-        Tue, 31 Mar 2020 17:35:35 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsu1SKpiUOGspGol9SelarOc4faOore5cmYKuXnJXLQ8H5FnAv74R3mri0v4DKf1Dgdrl2WkQ==
-X-Received: by 2002:a5d:6045:: with SMTP id j5mr22859728wrt.401.1585701334854;
-        Tue, 31 Mar 2020 17:35:34 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b55d:5ed2:8a41:41ea? ([2001:b07:6468:f312:b55d:5ed2:8a41:41ea])
-        by smtp.gmail.com with ESMTPSA id i21sm400563wmb.23.2020.03.31.17.35.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 17:35:34 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] KVM: LAPIC: Don't need to clear IPI delivery
- status in x2apic mode
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1585700362-11892-1-git-send-email-wanpengli@tencent.com>
- <1585700362-11892-2-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6de1a454-60fc-2bda-841d-f9ceb606d4c6@redhat.com>
-Date:   Wed, 1 Apr 2020 02:35:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 31 Mar 2020 20:42:42 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48681 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731331AbgDAAmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 20:42:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sS8Y2hdVz9sRf;
+        Wed,  1 Apr 2020 11:42:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585701759;
+        bh=WFELNxBHacJgMgQN1O6WllAKJIxtYTe1/pd8jb5qX6Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Z6OECtHM8wlQiLhq8UOE3HRa3cq+Vq7bjRoLNfPvDURV3rhLtQNcC/JdTsnrhtG0d
+         rYJvGR21BDgPnyvzI4ikNe0x3PaKIJuKQzFw9/YUkXyljLNovAf2DuyATPZolSMRdG
+         pW0DXWR34lEFH9+JgZXe35s5ypKuwxXyMCu5Adg45Ne8xVSiQnW/hLNaBsFbGPznLl
+         6jfPg1FnSBxwG0dJ35yzKjVK2GLQVStl/C82mqCxtmHCpMdlZd4A9BZEKSfKjMffHi
+         vpcItnixSsk+Z4xlugqUNAWXBZtH1a5RzvihkeIavu6bsVNDZzidVbGbE8hjS7i34m
+         l2Djhjk0cSIuw==
+Date:   Wed, 1 Apr 2020 11:42:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        Thara Gopinath <thara.gopinath@linaro.org>
+Subject: Re: linux-next: manual merge of the tip tree with the thermal tree
+Message-ID: <20200401114234.7b34320b@canb.auug.org.au>
+In-Reply-To: <20200325133240.50370c2f@canb.auug.org.au>
+References: <20200325133240.50370c2f@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1585700362-11892-2-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/kF/YPUadqgcYAQ9mWQXedRG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/04/20 02:19, Wanpeng Li wrote:
-> -		/* No delay here, so we always clear the pending bit */
-> -		val &= ~(1 << 12);
-> +		/* Immediately clear Delivery Status in xAPIC mode */
-> +		if (!apic_x2apic_mode(apic))
-> +			val &= ~(1 << 12);
+--Sig_/kF/YPUadqgcYAQ9mWQXedRG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This adds a conditional, and the old behavior was valid according to the
-SDM: "software should not assume the value returned by reading the ICR
-is the last written value".
+Hi all,
 
-Paolo
+On Wed, 25 Mar 2020 13:32:40 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the tip tree got a conflict in:
+>=20
+>   drivers/thermal/cpufreq_cooling.c
+>=20
+> between commit:
+>=20
+>   ff44f672d741 ("thermal/drivers/cpufreq_cooling: Fix return of cpufreq_s=
+et_cur_state")
+>=20
+> from the thermal tree and commit:
+>=20
+>   f12e4f66ab6a ("thermal/cpu-cooling: Update thermal pressure in case of =
+a maximum frequency capping")
+>=20
+> from the tip tree.
+>=20
+> I fixed it up (the latter seems to include the former, so I just used
+> the latter) and can carry the fix as necessary. This is now fixed as
+> far as linux-next is concerned, but any non trivial conflicts should be
+> mentioned to your upstream maintainer when your tree is submitted for
+> merging.  You may also want to consider cooperating with the maintainer
+> of the conflicting tree to minimise any particularly complex conflicts.
 
+This is now a conflict between the thermal tree and Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kF/YPUadqgcYAQ9mWQXedRG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6D43oACgkQAVBC80lX
+0GxtnggAi9sU2S4vvZ+S5pn+h+DvVlADmdzCqrCFv2TzB/GQ9XXnXD0oPflPG0Xl
+NBVH1rYBTOCnuzsb+wHiDOmG2tlAmAv/qvOdmr09OrZFZktHcNuG8yLORzeQyV/Q
+c6bKkb6UTQn58TT+lSKzr9f4x5GvYHP7e6gmsjs8KnDBsMdbAXabiYJVx7t/gWrx
+qQUp5fInN+4FPXBL1Uu31mLy9n03Il6vmqGrnUZhKMLPa4RGPFKUEmjsJMcIkzC7
+70yzJ3/Bl35KNXthKrI3K60Vnm/MeKiB9qI4lE8JmwOPCTszLUVX2UyQJNwdiaSC
+maEotRQQAJaxtCkGvBacLe7udnkHFQ==
+=3Qm3
+-----END PGP SIGNATURE-----
+
+--Sig_/kF/YPUadqgcYAQ9mWQXedRG--
