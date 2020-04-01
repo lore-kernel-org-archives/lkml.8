@@ -2,121 +2,242 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15680C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE222C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F7320776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996B320776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 12:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hnLy+qNE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6PhY4P1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbgDAMk1 (ORCPT
+        id S1732553AbgDAMkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:40:27 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:62211 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732444AbgDAMk1 (ORCPT
+        Wed, 1 Apr 2020 08:40:43 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32949 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732348AbgDAMkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 08:40:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585744827; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=okh+F3uuRWsQcBuPF9wQiYLctrs6AGc2NTsoVj41CDM=; b=hnLy+qNEyLx/da6TpZnk9Yx0M0gRXOeGgFnawGJ0lEFZZaecYUx/8+y61RoF2i+wYRRjbNMO
- 7iC+HZ3zJqXDMNmqgSkEfs1FaNp2zNRWF1+ZH1vPEhpIL4QI5VGJIbosDuMlBJ5PcN1G6YWa
- DakQpw+BrJJCEB0JNAF69M+z/uU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e848bba.7f09b4cc17a0-smtp-out-n02;
- Wed, 01 Apr 2020 12:40:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 07CCDC433F2; Wed,  1 Apr 2020 12:40:25 +0000 (UTC)
-Received: from [192.168.43.129] (unknown [106.222.15.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67440C433F2;
-        Wed,  1 Apr 2020 12:40:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67440C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [RFT PATCH v2 07/10] drivers: qcom: rpmh-rsc: Warning if
- tcs_write() used for non-active
-To:     Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        evgreen@chromium.org, Lina Iyer <ilina@codeaurora.org>,
-        swboyd@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200311231348.129254-1-dianders@chromium.org>
- <20200311161104.RFT.v2.7.I8e187cdfb7a31f5bb7724f1f937f2862ee464a35@changeid>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <339a7a7b-af4e-d6a9-4b48-2a603ea10172@codeaurora.org>
-Date:   Wed, 1 Apr 2020 18:10:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 1 Apr 2020 08:40:43 -0400
+Received: by mail-qk1-f196.google.com with SMTP id v7so26825116qkc.0;
+        Wed, 01 Apr 2020 05:40:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=5D5WlOb6fY8PPPchuMxt6wwTTWk93pwGqrVmb70psZE=;
+        b=B6PhY4P1o3H6vCWkDICINLnmhXpaNcwbLdsSG74t0WM+BQNQ09PuuSxzim/DpSE5Lk
+         yLC6dkJnDu3gn7B1G7aNUB/4muTOk3H+VAx8zBKpvjgNzx9+Xig+0T7q7OVFrozNxVfU
+         l/HZedpaErA43kty0NS6SqRoVPXEmRhhVdS7Mz7l7AYwnY254yF2+k1d0ifBYRW4ApyX
+         P7tir0gQEVt01T12a7f56H288FszPpdYpwOHVyK1SjkH4TZ1hxcAhcIUR88ik8shWERD
+         uRWvvmkf+SKWLFcZK1WbitA+belPTBnh5ozryCP0QX34cdz2EsnVewOVoLzPTvnjbDRc
+         QObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=5D5WlOb6fY8PPPchuMxt6wwTTWk93pwGqrVmb70psZE=;
+        b=rvJfcDgY7MMdE0Ww8m7DEyNfw+A7uSk1YG/zU6oVFSAeFdSQpm5Bkm1o4sejdzbbqO
+         8CV2NnFw6mbHNJA0cG8KnceyV1Je7guGBjjABWL7JfkDjvl28k3WYBcvdZEPobjWwdK0
+         DOsndggvigngQO95w2W+0BeItO40wOR4cBTIZKoy7X0LcSYFd/KcwUr8WceHbjt4wIrH
+         v6HtjkCrgxfpWBZ/lxlkbuVOIQjy0R0VbahR1gF+yjG6eVdo6uReNZCNMk9cmDi7r7Vt
+         MNMf2ZPb65/nkOaYXZcNblOdB2uFzqtU7APIAp0QLaLSHPn+DmwaAlRuIDam3iS3hlbJ
+         C2iA==
+X-Gm-Message-State: ANhLgQ3LAPioDRO0QNYq0mY/KegOBNlb/ivrLl1/MJPpoP8iXDKRZ4zu
+        +yTjrLjt5qkytwiKp/yz2PM=
+X-Google-Smtp-Source: ADFU+vsNIM4PtZ/nLBCtKhPniLVbeouoyyF0HhDwYjZSRNgbZVqU6rT2FNgQOKVrNMUOwSzyHVxCAg==
+X-Received: by 2002:a37:a84c:: with SMTP id r73mr10037918qke.370.1585744841383;
+        Wed, 01 Apr 2020 05:40:41 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id o81sm1340836qke.24.2020.04.01.05.40.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 05:40:40 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9615D409A3; Wed,  1 Apr 2020 09:40:37 -0300 (-03)
+Date:   Wed, 1 Apr 2020 09:40:37 -0300
+To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+Message-ID: <20200401124037.GA12534@kernel.org>
+References: <20200331085308.098696461@linuxfoundation.org>
+ <CA+G9fYsZjmf34pQT1DeLN_DDwvxCWEkbzBfF0q2VERHb25dfZQ@mail.gmail.com>
+ <CAHk-=whyW9TXfYxyxUW6hP9e0A=5MnOHrTarr4_k0hiddxq69Q@mail.gmail.com>
+ <20200331192949.GN9917@kernel.org>
+ <CAEUSe7_f8m0dLQT1jdU+87fNThnxMKuoGJkFuGpbT4OmpmE4iA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311161104.RFT.v2.7.I8e187cdfb7a31f5bb7724f1f937f2862ee464a35@changeid>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+In-Reply-To: <CAEUSe7_f8m0dLQT1jdU+87fNThnxMKuoGJkFuGpbT4OmpmE4iA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Em Tue, Mar 31, 2020 at 05:18:57PM -0600, Daniel D�az escreveu:
+> On Tue, 31 Mar 2020 at 13:29, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > Em Tue, Mar 31, 2020 at 11:20:37AM -0700, Linus Torvalds escreveu:
+> > > On Tue, Mar 31, 2020 at 11:08 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > > > Perf build broken on Linux next and mainline and now on stable-rc-5.6 branch.
 
-On 3/12/2020 4:43 AM, Douglas Anderson wrote:
-> tcs_write() is documented to only be useful for writing
-> RPMH_ACTIVE_ONLY_STATE.  Let's be loud if someone messes up.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v2: None
->
->   drivers/soc/qcom/rpmh-rsc.c | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 93f5d1fb71ca..ba489d18c20e 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -573,6 +573,12 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
->   	unsigned long flags;
->   	int ret;
->   
-> +	/*
-> +	 * It only makes sense to grab a whole TCS for ourselves if we're
-> +	 * triggering right away, which we only do for ACTIVE_ONLY.
-> +	 */
-> +	WARN_ON(msg->state != RPMH_ACTIVE_ONLY_STATE);
-> +
+> > > Strange. What is it that triggers the problem for you? It works fine
+> > > here.. The error looks like some kind of command line quoting error,
+> > > but I don't see the direct cause.
 
-Unnecessary check, we will never hit this warning. Lets not add such check.
+> > > Have you bisected the failure? Build failures should be particularly
+> > > easy and quick to bisect.
 
-Saying that you can modify this change to drop below check  from 
-rpmh_rsc_write_ctrl_data() as that never hit.
+> > Naresh, can you try with the patch below? There was some back and forth
+> > about a second patch in a series and this fell thru the cracks.
 
-         /* Data sent to this API will not be sent immediately */
-         if (msg->state == RPMH_ACTIVE_ONLY_STATE)
-                 return -EINVAL;
+> I tried that patch, did not help.
+ 
+> Bisection led to the expected merge, "perf-urgent-for-linus", so I
+> went one by one and found this commit: a7ffd416d804 ("perf python: Fix
+> clang detection when using CC=clang-version"). Specifically, the line
+> that fails is:
+ 
+>   cc_is_clang = b"clang version" in Popen([cc, "-v"],
+> stderr=PIPE).stderr.readline()
+ 
+> with:
+ 
+>   Traceback (most recent call last):
+>     File "util/setup.py", line 6, in <module>
+>       cc_is_clang = b"clang version" in Popen([cc, "-v"],
+> stderr=PIPE).stderr.readline()
+>     File "/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
+> line 394, in __init__
+>       errread, errwrite)
+>     File "/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
+> line 1047, in _execute_child
+>       raise child_exception
+>   OSError: [Errno 2] No such file or directory
+ 
+> There, the value for CC is "aarch64-linaro-linux-gcc
+> --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot".
 
-we always call rpmh_rsc_write_ctrl_data() for RPMH_SLEEP_STATE and 
-RPMH_WAKE_ONLY_STATE.
+Yeah, the assumption was that CC would be just the compiler, whatever
+options needed for compiling would be in CFLAGS, so the solution should
+be similar to the other patch, i.e. split CC and get the first word to
+use with 'cc -v', i.e.:
 
-Thanks,
-Maulik
->   	/* TODO: get_tcs_for_msg() can return -EAGAIN and nobody handles */
->   	tcs = get_tcs_for_msg(drv, msg);
->   	if (IS_ERR(tcs))
+  [perfbuilder@five ~]$ podman run --entrypoint=/bin/sh --rm -ti acmel/linux-perf-tools-build-ubuntu:18.04-x-arm64
+  $
+  [perfbuilder@five ~]$ podman run --entrypoint=/bin/bash --rm -ti acmel/linux-perf-tools-build-ubuntu:18.04-x-arm64
+  perfbuilder@92dcc3ff8814:/$ python3
+  Python 3.6.9 (default, Nov  7 2019, 10:44:02)
+  [GCC 8.3.0] on linux
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> from subprocess import Popen
+  >>> a = Popen(["aarch64-linux-gnu-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot", "-v"])
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "/usr/lib/python3.6/subprocess.py", line 729, in __init__
+      restore_signals, start_new_session)
+    File "/usr/lib/python3.6/subprocess.py", line 1364, in _execute_child
+      raise child_exception_type(errno_num, err_msg, err_filename)
+  FileNotFoundError: [Errno 2] No such file or directory: 'aarch64-linux-gnu-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot': 'aarch64-linux-gnu-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot'
+  >>> a = Popen(["aarch64-linux-gnu-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot".split()[0], "-v"])
+  >>> Using built-in specs.
+  COLLECT_GCC=aarch64-linux-gnu-gcc
+  COLLECT_LTO_WRAPPER=/usr/lib/gcc-cross/aarch64-linux-gnu/7/lto-wrapper
+  Target: aarch64-linux-gnu
+  Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 7.5.0-3ubuntu1~18.04' --with-bugurl=file:///usr/share/doc/gcc-7/README.Bugs --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++ --prefix=/usr --with-gcc-major-version-only --program-suffix=-7 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-libquadmath --disable-libquadmath-support --enable-plugin --enable-default-pie --with-system-zlib --enable-multiarch --enable-fix-cortex-a53-843419 --disable-werror --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=aarch64-linux-gnu --program-prefix=aarch64-linux-gnu- --includedir=/usr/aarch64-linux-gnu/include
+  Thread model: posix
+  gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
+  
+  >>>
 
+Can you please try the one-liner at the end of this message?
+
+> > And also, BTW, can you please send me instructions on how to get hold of
+> > the toolchain you use to crossbuild perf, so that I can add it to my set
+> > of test build containers?
+> 
+> It's an OE build, so it's bound to take quite a bit of space. I'll try
+> to get something dockerized so that it's easier to replicate.
+
+Thanks a lot!
+ 
+- Arnaldo
+
+From 2a88ba6ddf54a4340f5a5f896705d5e42561e210 Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Wed, 1 Apr 2020 09:33:59 -0300
+Subject: [PATCH 1/1] perf python: Fix clang detection to strip out options
+ passed in $CC
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The clang check in the python setup.py file expected $CC to be just the
+name of the compiler, not the compiler + options, i.e. all options were
+expected to be passed in $CFLAGS, this ends up making it fail in systems
+where CC is set to, e.g.:
+
+ "aarch64-linaro-linux-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot"
+
+Like this:
+
+  $ python3
+  >>> from subprocess import Popen
+  >>> a = Popen(["aarch64-linux-gnu-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot", "-v"])
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "/usr/lib/python3.6/subprocess.py", line 729, in __init__
+      restore_signals, start_new_session)
+    File "/usr/lib/python3.6/subprocess.py", line 1364, in _execute_child
+      raise child_exception_type(errno_num, err_msg, err_filename)
+  FileNotFoundError: [Errno 2] No such file or directory: 'aarch64-linux-gnu-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot': 'aarch64-linux-gnu-gcc --sysroot=/oe/build/tmp/work/juno-linaro-linux/perf/1.0-r9/recipe-sysroot'
+  >>>
+
+Make it more robust, covering this case, by passing cc.split()[0] as the
+first arg to popen().
+
+Reported-by: Daniel D�az <daniel.diaz@linaro.org>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 8a065a6f9713..347b2c0789e4 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -3,7 +3,7 @@ from subprocess import Popen, PIPE
+ from re import sub
+ 
+ cc = getenv("CC")
+-cc_is_clang = b"clang version" in Popen([cc, "-v"], stderr=PIPE).stderr.readline()
++cc_is_clang = b"clang version" in Popen([cc.split()[0], "-v"], stderr=PIPE).stderr.readline()
+ 
+ def clang_has_option(option):
+     return [o for o in Popen([cc, option], stderr=PIPE).stderr.readlines() if b"unknown argument" in o] == [ ]
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.21.1
+
