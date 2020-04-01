@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FA8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D389C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D825214DB
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDA12082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 10:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="17Zg3Wpo"
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="YsvhGe4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732216AbgDAKCx (ORCPT
+        id S1732228AbgDAKC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:02:53 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45361 "EHLO
+        Wed, 1 Apr 2020 06:02:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44564 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732183AbgDAKCw (ORCPT
+        with ESMTP id S1732218AbgDAKC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 06:02:52 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t17so25154638ljc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 03:02:50 -0700 (PDT)
+        Wed, 1 Apr 2020 06:02:56 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p14so25107390lji.11
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 03:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=unikie-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=AaFao30w/2kIvZw9/s29i3Jz2nxOQX8V+ssYL6KtF3U=;
-        b=17Zg3Wpouk9v5/Ehq3zgR62jsJKFeQ+fPaUc2Y++MpsQmdXkTm8RcYK2RySZ9NPHYV
-         HNiNbcDkZJD9/yNlzXN+EnEZJI2B4JySIc7zphD1V67dTLMs7do/s14X16DvRAk4XLhM
-         /XFrCsfmdipp0lzr5e4q9l9ROCJVxje1D1HwHLP/9RrAhuy4tX2xlcyNVReQeSs9NYcO
-         17DiqDI4rX4O6uUzUMDZ5NbNjdh+5j5bHqOHT8Vmc2AepTb1jaipKjZ6AUNgr6oMzg58
-         vQtVnBavMRB+TH8dit7v8YEn+iGBvEBrXWOcCeNbzNJ4XSgFlTAKx+zwchk6iahJkr8P
-         A8wQ==
+        bh=5rUEwjtblUviLjV80afy/WRz2oEQBxd1hdzm/u9iAj8=;
+        b=YsvhGe4vKyfCVK88GHK7cmxfN+88edT0VkuTqa5hX/rQBSbtnZ93EWNhss7glKq5Su
+         SJsnIU3ztgWFR7nILD+AhyzlfgtG1T0Rk1PnViK41gWRMAysB2xB+VD51DtZzkMTl0xJ
+         dZ6Wg8FO0Mkmr/qhmfW8Ta5DKip0ZcapxIKXy+BKTIAfsx09OyXpVnWblZFzIIlG1cF0
+         oYFY9aJvVcXmTxANNKIXk/yXak4IXTH1aSWyVIiSvDPVwHB730VxXxVab0yBjgI4wzo9
+         bJlM9EMOOLz4jRUFoxMNmU6gvTvic0O0cBEAQ8ujSigyo1TuoniecXiCVh/iqJRepz0d
+         uBCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=AaFao30w/2kIvZw9/s29i3Jz2nxOQX8V+ssYL6KtF3U=;
-        b=kmNx5yGz+KQAh/kH+s6HSRyInSk5GzmmHvhkaSqHv7/rsg54Cx529DE6/yx4pUCa7F
-         hZ3wwmxF/HPUFTUYtsteDjXkc1Vki6CH0cntgBUT3+ZMRXtXJT5MriTKO2R7C90nfDXJ
-         Yi9Xig3iYTLlPdi83v/8kYT3PC1Q0SjtXQgfWdamhFkLgDmhxt31/aj/oafcVPl7lZdC
-         AXETP4Tl51+PLS7Cmel2mB6gAa/Q//3Lgb1AgrV4e6VYXSSLeyhjxBcF+kqQGwDUpzOC
-         RXZ2O2EeQmhKJkQsBrG3t2G8grC4NNaaCAARMIU/UmhS8AfYQiFvdlIRXDzAaFikbLEB
-         fkaA==
-X-Gm-Message-State: AGi0PuYL09xVCHrlTKF4xMD/R/dN5MnTw8/nre99vfWbDHSDyeaM9yOT
-        n44ZJQx24DXaAN3KrI9hLUQ7wA==
-X-Google-Smtp-Source: APiQypLZl4DJFpCLnjmydDcHgDNB1XXhq0SYDjt1QtuF+kJ9RDVV+rM+eNjDgm482JKA7kO3qf3b+A==
-X-Received: by 2002:a2e:9912:: with SMTP id v18mr8656454lji.199.1585735369897;
-        Wed, 01 Apr 2020 03:02:49 -0700 (PDT)
+        bh=5rUEwjtblUviLjV80afy/WRz2oEQBxd1hdzm/u9iAj8=;
+        b=kHTZuanMPOYvhvVinv93L9TD1JrSAYqbCFP4yQmiz4IKgmDDEyutYEfq31/Gk/pMva
+         2kpoRK41L4hTfSKrndxVoMmsXZXD6M1cOMcPu9VVlejNNXptALfZo+eA8FjGiO3HL7zU
+         QTLYbd+WK56ppfEjq0eIP3X5gh1cdVrfmRE0zqfz0Neleqlws0UmLgAqCqmWd0R2SU9K
+         xqdF/ZURKNOuIh+j30UF5VZddxIoLGqwolqEX2cV0xK0jBfEnexVdi59TCXL2IMk4ZTk
+         cZmVRE4tZnuB4U8FxuuHnvk5e38AJCGj1iY3VOxwX1LYXWpcXUu8r7cb/Wv93ZBY9Zxd
+         qOlg==
+X-Gm-Message-State: AGi0PubqCSW+QSfCuoQBluqiJkN7D7g3zOwm+douKkYF15YHFmlNgOIo
+        gpTPqo4w7/gvbMcgB5bHQdXZaA==
+X-Google-Smtp-Source: APiQypJLawd1hdpMcOv6TsEpEcxgg/N7HHiLMBjxEQyZRGFiYXSIgPidJo2j84WUV78z8qhhHIleSw==
+X-Received: by 2002:a05:651c:105b:: with SMTP id x27mr3576327ljm.2.1585735373561;
+        Wed, 01 Apr 2020 03:02:53 -0700 (PDT)
 Received: from localhost.localdomain (dyvyn9m99j8s7-9xsphjt-4.rev.dnainternet.fi. [2001:14bb:440:beab:bd3f:1fbf:f66f:618f])
-        by smtp.googlemail.com with ESMTPSA id n14sm862986ljm.104.2020.04.01.03.02.48
+        by smtp.googlemail.com with ESMTPSA id n14sm862986ljm.104.2020.04.01.03.02.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 03:02:49 -0700 (PDT)
+        Wed, 01 Apr 2020 03:02:53 -0700 (PDT)
 From:   John Mathew <john.mathew@unikie.com>
 To:     linux-doc@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
@@ -66,9 +66,9 @@ Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
         linux-mips@vger.kernel.org, tglx@linutronix.de,
         mostafa.chamanara@basemark.com,
         John Mathew <john.mathew@unikie.com>
-Subject: [RFC PATCH 1/3] docs: scheduler: Restructure scheduler documentation.
-Date:   Wed,  1 Apr 2020 13:00:27 +0300
-Message-Id: <20200401100029.1445-2-john.mathew@unikie.com>
+Subject: [RFC PATCH 3/3] docs: scheduler: Add introduction to scheduler context-switch
+Date:   Wed,  1 Apr 2020 13:00:29 +0300
+Message-Id: <20200401100029.1445-4-john.mathew@unikie.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200401100029.1445-1-john.mathew@unikie.com>
 References: <20200401100029.1445-1-john.mathew@unikie.com>
@@ -77,170 +77,275 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new sections to enable addition of new documentation on
-the scheduler. Existing documentation is moved under the related
-new sections. The sections are
-  - overview
-  - cfs-sched-overview
-  - sched-features
-  - arch-specific.rst
-  - sched-debugging.rst
+Add documentation for introduction to
+ -context-switch
+ -x86 context-switch
+ -MIPS context switch
 
 Suggested-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Co-developed-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
+Signed-off-by: Mostafa Chamanara <mostafa.chamanara@basemark.com>
 Signed-off-by: John Mathew <john.mathew@unikie.com>
 ---
- Documentation/scheduler/arch-specific.rst     | 11 +++++++
- .../scheduler/cfs-sched-overview.rst          | 15 ++++++++++
- Documentation/scheduler/index.rst             | 29 ++++++++++---------
- Documentation/scheduler/overview.rst          |  5 ++++
- Documentation/scheduler/sched-debugging.rst   | 14 +++++++++
- Documentation/scheduler/sched-features.rst    | 20 +++++++++++++
- 6 files changed, 81 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/scheduler/arch-specific.rst
- create mode 100644 Documentation/scheduler/cfs-sched-overview.rst
- create mode 100644 Documentation/scheduler/overview.rst
- create mode 100644 Documentation/scheduler/sched-debugging.rst
- create mode 100644 Documentation/scheduler/sched-features.rst
+ Documentation/scheduler/arch-specific.rst     |  3 +
+ Documentation/scheduler/context-switching.rst | 71 +++++++++++++++++
+ Documentation/scheduler/index.rst             |  1 +
+ .../scheduler/mips-context-switch.rst         | 78 +++++++++++++++++++
+ .../scheduler/x86-context-switch.rst          | 59 ++++++++++++++
+ 5 files changed, 212 insertions(+)
+ create mode 100644 Documentation/scheduler/context-switching.rst
+ create mode 100644 Documentation/scheduler/mips-context-switch.rst
+ create mode 100644 Documentation/scheduler/x86-context-switch.rst
 
 diff --git a/Documentation/scheduler/arch-specific.rst b/Documentation/scheduler/arch-specific.rst
-new file mode 100644
-index 000000000000..c9c34863d994
---- /dev/null
+index c9c34863d994..65dc393b605f 100644
+--- a/Documentation/scheduler/arch-specific.rst
 +++ b/Documentation/scheduler/arch-specific.rst
-@@ -0,0 +1,11 @@
-+.. SPDX-License-Identifier: GPL-2.0+
+@@ -9,3 +9,6 @@ Architecture Specific Scheduler Implementation Differences
+ 
+ .. toctree::
+    :maxdepth: 2
 +
-+Architecture Specific Scheduler Implementation Differences
-+==========================================================
-+
-+.. class:: toc-title
-+
-+	   Table of contents
-+
-+.. toctree::
-+   :maxdepth: 2
-diff --git a/Documentation/scheduler/cfs-sched-overview.rst b/Documentation/scheduler/cfs-sched-overview.rst
++   x86-context-switch
++   mips-context-switch
+diff --git a/Documentation/scheduler/context-switching.rst b/Documentation/scheduler/context-switching.rst
 new file mode 100644
-index 000000000000..44dac92d9462
+index 000000000000..dd4ff63b1e97
 --- /dev/null
-+++ b/Documentation/scheduler/cfs-sched-overview.rst
-@@ -0,0 +1,15 @@
++++ b/Documentation/scheduler/context-switching.rst
+@@ -0,0 +1,71 @@
 +.. SPDX-License-Identifier: GPL-2.0+
 +
-+CFS
-+====
++==========================
++Process context switching
++==========================
 +
-+This documentation describes the linux CFS scheduler.
++Context Switching
++-----------------
 +
-+.. class:: toc-title
++Context switching, the switching from a running task to another, is handled by
++the :c:func:`context_switch()` function defined in kernel/sched.c . It is called
++by __schedule() when a new process has been selected to run.
 +
-+	   Table of contents
++ The execution flow is as follows:
 +
-+.. toctree::
-+   :maxdepth: 2
++* Calls prepare_task_switch() to prepare both previous and new task by
++  storing or changing some values in their task_struct.
 +
-+   sched-design-CFS
++
++* Calls macro :c:macro:`arch_start_context_switch()`
++  A facility to provide batching of the reload of page tables and  other process
++  state with the actual context switch code for  paravirtualized guests.  By
++  convention, only one of the batched  update (lazy) modes (CPU, MMU) should be
++  active at any given time,  entry should never be nested, and entry and exits
++  should always be  paired. This is for sanity of maintaining and reasoning about
++  the kernel code.  In this case, the exit (end of the context switch) is  in
++  architecture-specific code, and so doesn't need a generic definition.
++
++
++* The next few steps consists of handling the transfer of real and anonymous
++  address spaces between the switching tasks.  Four possible context switches are
++
++  - kernel task switching to another kernel task.
++  - user task switching to a kernel task.
++  - kernel task switching to user task,
++  - user task switching to  user task.
++
++For a kernel task switching to kernel task :c:func:`enter_lazy_tlb()` is called
++which is an architecture specific implementation to handle a context without an
++mm. Architectures implement lazy tricks to minimize tlb flushes here.
++Then the active address space from the previous task is borrowed (transferred)
++to the next task. The active address space of the previous task is set to NULL.
++
++For a user task switching to kernel task it will have a real address space. This
++address space is pinned by calling :c:func:`mmgrab()` . This makes sure that the
++address space will not get freed even after the previous task exits.
++
++For a user task switching to user task the architecture specific
++:c:func:`switch_mm_irqs_off()` or :c:func:`switch_mm()` functions. The main
++functionality of this calls is to switch the address space between the
++user space processes. This includes switching the page table pointers and
++ensuring that the new address space has a valid ASID.
++
++For a kernel task switching to a user task, the active address space of the
++kernel task is transferred to the user task and the active address space of the
++kernel task is set to NULL.
++
++* Next the  :c:func:`prepare_lock_switch()` function is called for a lockdep
++  release of the runqueue lock to handle the special case of the scheduler in which
++  the runqueue lock will be released by the next task.
++
++* Then the architecture specific implementation of the :c:func:`switch_to()`
++  function is called to switch the register state and the stack. This involves
++  saving and restoring stack information and the processor registers and any other
++  architecture-specific state that must be managed and restored on a per-process
++  basis.
++
++* Calls finish_task_switch()  must be called after the context switch,
++  paired with a prepare_task_switch() call before the context switch.It will
++  reconcile locking set up by prepare_task_switch, and do any other
++  architecture-specific cleanup actions.
 diff --git a/Documentation/scheduler/index.rst b/Documentation/scheduler/index.rst
-index 69074e5de9c4..83c718d05b9d 100644
+index 9772cf81fd96..289e06a68764 100644
 --- a/Documentation/scheduler/index.rst
 +++ b/Documentation/scheduler/index.rst
-@@ -1,23 +1,26 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
- ===============
- Linux Scheduler
- ===============
+@@ -18,6 +18,7 @@ specific implementation differences.
  
--.. toctree::
--    :maxdepth: 1
-+This documentation outlines the Linux kernel scheduler with its concepts,
-+details about the scheduler design and its data structures and architecture
-+specific implementation differences.
-+
- 
-+.. class:: toc-title
- 
--    completion
--    sched-arch
--    sched-bwc
--    sched-deadline
--    sched-design-CFS
--    sched-domains
--    sched-energy
--    sched-nice-design
--    sched-rt-group
--    sched-stats
-+	   Table of contents
-+
-+.. toctree::
-+    :maxdepth: 2
- 
--    text_files
-+    overview
-+    cfs-sched-overview
-+    sched-features
-+    arch-specific.rst
-+    sched-debugging.rst
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/scheduler/overview.rst b/Documentation/scheduler/overview.rst
+     overview
+     cfs-sched-overview
++    context-switching
+     sched-features
+     arch-specific.rst
+     sched-debugging.rst
+diff --git a/Documentation/scheduler/mips-context-switch.rst b/Documentation/scheduler/mips-context-switch.rst
 new file mode 100644
-index 000000000000..aee16feefc61
+index 000000000000..e917bbe1c104
 --- /dev/null
-+++ b/Documentation/scheduler/overview.rst
-@@ -0,0 +1,5 @@
++++ b/Documentation/scheduler/mips-context-switch.rst
+@@ -0,0 +1,78 @@
 +.. SPDX-License-Identifier: GPL-2.0+
 +
-+====================
-+Scheduler overview
-+====================
-diff --git a/Documentation/scheduler/sched-debugging.rst b/Documentation/scheduler/sched-debugging.rst
++==============================================
++MIPS Architecture And Scheduler implementation
++==============================================
++
++Multi-threading in MIPS CPUs
++-----------------------------
++The MIPS architecture defines four coprocessors.
++
++- CP0: supports virtual memory system and exception handling.
++- CP1: reserved for the floating point coprocessor, the FPU
++- CP2: available for specific implementations.
++- CP3: reserved for floating point operations in the release 1 implementation
++       of MIPS64.
++
++MIPS32 and MIPS64 architectures provide support for optional components known
++as Modules or Application Specific Extensions. The MT module enables the
++architecture to support multi-threaded implementations. This includes support
++for virtual processors and light weight thread contexts. Implementation of MT
++features depends on the individual MIPS cores. The virtual processing element (VPE)
++maintains a complete copy of the processor state as seen by the software system
++which includes interrupts, register set, and MMU. This enables a single processor
++to appear to an SMP operating system like two separate cores if it has 2 VPE's.
++For example two separate OS can run on each VPE such as Linux and and an RTOS.
++
++A lighter version of VPE enables threading at the user/application software level.
++It is called Thread Context (TC). TC, is the hardware state necessary to support
++a thread of execution. This includes a set of general purpose registers (GPRs),
++a program counter (PC), and some multiplier and coprocessor state. TC's have
++common execution unit. MIPS ISA provides instructions to utilize TC.
++
++The Quality of service block of the MT module allows the allocation of processor
++cycles to threads, and sets relative thread priorities. This enables 2 thread
++prioritization mechanisms. The user can prioritize one thread over the other as
++well as allocate a specific ratio of the cycles to specific threads. These
++mechanisms help to allocate bandwidth a set of threads effectively. QoS block
++improves system level determinism  and predictability. QosS block can be replaced
++by more application specific blocks.
++
++MIPS Context Switch
++-------------------
++
++Context switch behavior specific to MIPS begins in the way :c:macro:`switch_to()`
++macro is implemented. The main steps in the MIPS implementation of the macro are:
++
++* Handle the FPU affinity management feature . This feature is enabled by the
++  :c:macro:`CONFIG_MIPS_MT_FPAFF` at build time The macro checks if the FPU was
++  used in the most recent time slice. In case FPU was not used, the restriction of
++  having to run on a cpu with FPU is removed.
++* For the previous task, disable the fpu and clear the bit indicating the FPU was
++  used in this quantum for the task.
++* If fpu is enabled in the next task, check FCSR for any unmasked exceptions
++  pending, clear them and send a signal.
++* if MIPS DSP modules is enabled, save the dsp context of the previous task and
++  restore the dsp context of the next task.
++* If coprocessor 2 is present set the access allowed field of the coprocessor 2.
++* if coprocessor 2 access allowed field was set in previous task, clear it.
++* clear the the access allowed field of the coprocessor 2.
++* clear the llbit on MIPS release 6 such that instruction eretnc can be used
++  unconditionally when returning to userland in entry.S. LLbit is used to specify
++  operation for instructions that provide atomic read-modify-write. LLbit is set
++  when a linked load occurs and is tested by the conditional store. It is cleared,
++  during other CPU operation, when a store to the location would no longer be
++  atomic. In particular, it is cleared by exception return instructions.
++  eretnc instruction enables to return from interrupt, exception, or error trap
++  without clearing the LLbit.
++* clear the global variable ll_bit used by mips exception handler.
++* write the thread pointer to the mips userlocal register if the cpu supports
++  this feature. This register is not interpreted by hardware and can be used to
++  share data between privileged and unprivileged software.
++* if hardware watchpoint feature is enabled during build the watchpoint registers
++  are restored from the next task.
++* Finally the mips processor specific implementation of the :c:func:`resume()`
++  function is called. It restores the registers of the next task including the
++  stack pointer. The implementation is in assembly::
++
++    arch/mips/kernel/r4k_switch.S
+diff --git a/Documentation/scheduler/x86-context-switch.rst b/Documentation/scheduler/x86-context-switch.rst
 new file mode 100644
-index 000000000000..e332069f99d6
+index 000000000000..ae7b2e09453a
 --- /dev/null
-+++ b/Documentation/scheduler/sched-debugging.rst
-@@ -0,0 +1,14 @@
++++ b/Documentation/scheduler/x86-context-switch.rst
+@@ -0,0 +1,59 @@
 +.. SPDX-License-Identifier: GPL-2.0+
 +
-+Scheduler Debugging Interface
-+==============================
++X86 Context Switch
++------------------
 +
-+.. class:: toc-title
++The x86 architecture context switching logic is as follows.
++After the switching of MM in the scheduler :c:func:`context_switch()` the call
++to the x86 implementation of :c:macro:`switch_to()`
++is made.  For x86 arch it is located at ::
 +
-+	   Table of contents
++    arch/x86/include/asm/switch_to.h
 +
-+.. toctree::
-+   :maxdepth: 2
++Since 4.9, switch_to() has been broken in to two parts: a :c:func:`prepare_switch_to()`
++macro and the inline assembly portion of has been moved to an actual assembly
++file ::
 +
-+   sched-stats
-+   text_files
-diff --git a/Documentation/scheduler/sched-features.rst b/Documentation/scheduler/sched-features.rst
-new file mode 100644
-index 000000000000..1afbd9cc8d52
---- /dev/null
-+++ b/Documentation/scheduler/sched-features.rst
-@@ -0,0 +1,20 @@
-+.. SPDX-License-Identifier: GPL-2.0+
++    arch/x86/entry/entry_64.S
 +
-+Scheduler Features
-+=====================
++* There is still a C portion of the switch which occurs via a jump in the middle
++  of the assembly code. The source is located in arch/x86/kernel/process_64.c
++  since 2.6.24
 +
-+.. class:: toc-title
++The main function of the prepare_switch_to() is to handle the case when stack
++uses virtual memory. This is configured at build time and is mostly enable in
++most modern distributions. This function accesses the stack pointer to prevent a
++double fault.Switching to a stack that has top-level paging entry that is not
++present in the current MM will result in a page fault which will be promoted to
++double fault and the result is a panic. So it is necessary to probe the stack now
++so that the vmalloc_fault can fix the page tables.
 +
-+	   Table of contents
++The main steps of the inline assembly function __switch_to_asm() are:
 +
-+.. toctree::
-+   :maxdepth: 2
++* store the callee saved registers to the old stack which will be switched away from.
++* swaps the stack pointers between the old and the new task.
++* move the stack canary value to the current cpu's interrupt stack.
++* if return trampoline is enabled, overwrite all entries in the RSB on exiting
++  a guest, to prevent malicious branch target predictions from affecting the host
++  kernel.
++* restore all registers from the new stack previously pushed in reverse order.
 +
-+   sched-arch
-+   sched-bwc
-+   sched-deadline
-+   sched-domains
-+   sched-energy
-+   sched-nice-design
-+   sched-rt-group
-+   completion
++The main steps of the c function :c:func:`__switch_to()` which the assembly code
++jumps to is as follows:
++
++* retrieve the thread :c:type:`struct thread_struct <thread_struct>` and fpu
++  :c:type:`struct fpu <fpu>` structs from the next and previous tasks.
++* gets the current cpu TSS :c:type:`struct tss_struct <tss_struct>`
++* save the current FPU state while on the old task.
++* store the FS and GS segment registers before changing the thread local storage.
++* reload the GDT for the new tasks TLS.
++* save the ES and DS segments of the previous task and load the same from the
++  nest task.
++* load the FS and GS segment registers.
++* update the current task of the cpu.
++* update the top of stack pointer for the CPU for entry trampoline.
++* initialize FPU state for next task.
++* set sp0 to point to the entry trampoline stack.
++* call :c:func:`_switch_to_xtra()` to  handles debug registers, i/o bitmaps and
++  speculation mitigation.
++* Writes the task's CLOSid/RMID to IA32_PQR_MSR.
 -- 
 2.17.1
 
