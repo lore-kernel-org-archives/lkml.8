@@ -4,53 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE780C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0E1C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2332063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E2A20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:44:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759438;
-	bh=jh4q+6jp3bwJQC4FPQjc+xd9xxgENTXWRRQ6FFlQtsM=;
+	s=default; t=1585759441;
+	bh=ygHdJhsO906lJGTJ8k6CFbim+V5vV93ekw5ZmmpzKPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rasFKAVVWWTUd5MK7hrP+xlZYEGCfRRI3mibO0MK8tOsr2T3NEEtjFpAEalhrCy8L
-	 FD5q+Ni9u12CJeVFTTLF2SNY+d7bMHUJyVtwlID88V/gzqhoCLYlggNHPge3PS9HhQ
-	 /c1+genk8NuU9WdwHaCBTCCKvMeMucnT5Th51usA=
+	b=WoDvTWJz0tHcg+sf9XxKRlLxCJI9qtz+NIcG6WKHqXQh7kddes9z3MhqxN2d4C0/h
+	 ugrNfdXyD+wyDRzPojxlI2VfqeoN6CLqCEZ9Qh3xOAqB4QClkbEHKxAbORmlp0GrVh
+	 QbOt1hMCa0tqUUvdBuwOBeqiYSvsAgyLvZl/JUx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbgDAQn5 (ORCPT
+        id S2389676AbgDAQoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:43:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44850 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389512AbgDAQn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:43:56 -0400
+        id S2389512AbgDAQn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:43:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF92F2063A;
-        Wed,  1 Apr 2020 16:43:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B5E620719;
+        Wed,  1 Apr 2020 16:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759435;
-        bh=jh4q+6jp3bwJQC4FPQjc+xd9xxgENTXWRRQ6FFlQtsM=;
+        s=default; t=1585759437;
+        bh=ygHdJhsO906lJGTJ8k6CFbim+V5vV93ekw5ZmmpzKPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thn0UUtJQgFdny3eYszMUNRaruVhHMjCpcdkmqDurpQmeu7GlEE7oF+FzZhLJ0U66
-         p7nfsK4rB/nRBoT2hqBsv5cdDqlNL1NQZ8it4JpJHoOYFioD/9LoX9s9KpaU5COTAH
-         Gs3XvnwAED7JJySc/XLjhZ0Rlg7BRSxs8/ZnGtfk=
+        b=y5Rs7CVnHBkp7Uc8KkuwqVIhyqfTCFf/VJMKER/dvdkIUwzdKe4Vdbjk8tpFIlC31
+         0fWaF8NuxTodGomQJYEOqHErW2jDFOIDbuyS9NfORODZFTBcV0N+LvNPKXCbtu8ivy
+         epgx6sGQIbU6LivaICJJR3YhtVlLdIoyOBe9F494=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Joerg Roedel <jroedel@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 038/148] page-flags: fix a crash at SetPageError(THP_SWAP)
-Date:   Wed,  1 Apr 2020 18:17:10 +0200
-Message-Id: <20200401161556.412268483@linuxfoundation.org>
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 039/148] x86/mm: split vmalloc_sync_all()
+Date:   Wed,  1 Apr 2020 18:17:11 +0200
+Message-Id: <20200401161556.531289960@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -63,66 +69,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit d72520ad004a8ce18a6ba6cde317f0081b27365a upstream.
+commit 763802b53a427ed3cbd419dbba255c414fdd9e7c upstream.
 
-Commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped
-out") supported writing THP to a swap device but forgot to upgrade an
-older commit df8c94d13c7e ("page-flags: define behavior of FS/IO-related
-flags on compound pages") which could trigger a crash during THP
-swapping out with DEBUG_VM_PGFLAGS=y,
+Commit 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in
+__purge_vmap_area_lazy()") introduced a call to vmalloc_sync_all() in
+the vunmap() code-path.  While this change was necessary to maintain
+correctness on x86-32-pae kernels, it also adds additional cycles for
+architectures that don't need it.
 
-  kernel BUG at include/linux/page-flags.h:317!
+Specifically on x86-64 with CONFIG_VMAP_STACK=y some people reported
+severe performance regressions in micro-benchmarks because it now also
+calls the x86-64 implementation of vmalloc_sync_all() on vunmap().  But
+the vmalloc_sync_all() implementation on x86-64 is only needed for newly
+created mappings.
 
-  page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
-  page:fffff3b2ec3a8000 refcount:512 mapcount:0 mapping:000000009eb0338c index:0x7f6e58200 head:fffff3b2ec3a8000 order:9 compound_mapcount:0 compound_pincount:0
-  anon flags: 0x45fffe0000d8454(uptodate|lru|workingset|owner_priv_1|writeback|head|reclaim|swapbacked)
+To avoid the unnecessary work on x86-64 and to gain the performance
+back, split up vmalloc_sync_all() into two functions:
 
-  end_swap_bio_write()
-    SetPageError(page)
-      VM_BUG_ON_PAGE(1 && PageCompound(page))
+	* vmalloc_sync_mappings(), and
+	* vmalloc_sync_unmappings()
 
-  <IRQ>
-  bio_endio+0x297/0x560
-  dec_pending+0x218/0x430 [dm_mod]
-  clone_endio+0xe4/0x2c0 [dm_mod]
-  bio_endio+0x297/0x560
-  blk_update_request+0x201/0x920
-  scsi_end_request+0x6b/0x4b0
-  scsi_io_completion+0x509/0x7e0
-  scsi_finish_command+0x1ed/0x2a0
-  scsi_softirq_done+0x1c9/0x1d0
-  __blk_mqnterrupt+0xf/0x20
-  </IRQ>
+Most call-sites to vmalloc_sync_all() only care about new mappings being
+synchronized.  The only exception is the new call-site added in the
+above mentioned commit.
 
-Fix by checking PF_NO_TAIL in those places instead.
+Shile Zhang directed us to a report of an 80% regression in reaim
+throughput.
 
-Fixes: bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped out")
-Signed-off-by: Qian Cai <cai@lca.pw>
+Fixes: 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: "Huang, Ying" <ying.huang@intel.com>
-Acked-by: Rafael Aquini <aquini@redhat.com>
+Tested-by: Borislav Petkov <bp@suse.de>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>	[GHES]
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200310235846.1319-1-cai@lca.pw
+Link: http://lkml.kernel.org/r/20191009124418.8286-1-joro@8bytes.org
+Link: https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/4D3JPPHBNOSPFK2KEPC6KGKS6J25AIDB/
+Link: http://lkml.kernel.org/r/20191113095530.228959-1-shile.zhang@linux.alibaba.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/page-flags.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/mm/fault.c      |   26 ++++++++++++++++++++++++--
+ drivers/acpi/apei/ghes.c |    2 +-
+ include/linux/vmalloc.h  |    5 +++--
+ kernel/notifier.c        |    2 +-
+ mm/nommu.c               |   10 +++++++---
+ mm/vmalloc.c             |   11 +++++++----
+ 6 files changed, 43 insertions(+), 13 deletions(-)
 
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -264,7 +264,7 @@ static inline int TestClearPage##uname(s
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -272,7 +272,7 @@ static inline pmd_t *vmalloc_sync_one(pg
+ 	return pmd_k;
+ }
  
- __PAGEFLAG(Locked, locked, PF_NO_TAIL)
- PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
--PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
-+PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
- PAGEFLAG(Referenced, referenced, PF_HEAD)
- 	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
- 	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
+-void vmalloc_sync_all(void)
++static void vmalloc_sync(void)
+ {
+ 	unsigned long address;
+ 
+@@ -299,6 +299,16 @@ void vmalloc_sync_all(void)
+ 	}
+ }
+ 
++void vmalloc_sync_mappings(void)
++{
++	vmalloc_sync();
++}
++
++void vmalloc_sync_unmappings(void)
++{
++	vmalloc_sync();
++}
++
+ /*
+  * 32-bit:
+  *
+@@ -401,11 +411,23 @@ out:
+ 
+ #else /* CONFIG_X86_64: */
+ 
+-void vmalloc_sync_all(void)
++void vmalloc_sync_mappings(void)
+ {
++	/*
++	 * 64-bit mappings might allocate new p4d/pud pages
++	 * that need to be propagated to all tasks' PGDs.
++	 */
+ 	sync_global_pgds(VMALLOC_START & PGDIR_MASK, VMALLOC_END);
+ }
+ 
++void vmalloc_sync_unmappings(void)
++{
++	/*
++	 * Unmappings never allocate or free p4d/pud pages.
++	 * No work is required here.
++	 */
++}
++
+ /*
+  * 64-bit:
+  *
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -201,7 +201,7 @@ static int ghes_estatus_pool_expand(unsi
+ 	 * New allocation must be visible in all pgd before it can be found by
+ 	 * an NMI allocating from the pool.
+ 	 */
+-	vmalloc_sync_all();
++	vmalloc_sync_mappings();
+ 
+ 	return gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ }
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -106,8 +106,9 @@ extern int remap_vmalloc_range_partial(s
+ 
+ extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ 							unsigned long pgoff);
+-void vmalloc_sync_all(void);
+- 
++void vmalloc_sync_mappings(void);
++void vmalloc_sync_unmappings(void);
++
+ /*
+  *	Lowlevel-APIs (not for driver use!)
+  */
+--- a/kernel/notifier.c
++++ b/kernel/notifier.c
+@@ -552,7 +552,7 @@ NOKPROBE_SYMBOL(notify_die);
+ 
+ int register_die_notifier(struct notifier_block *nb)
+ {
+-	vmalloc_sync_all();
++	vmalloc_sync_mappings();
+ 	return atomic_notifier_chain_register(&die_chain, nb);
+ }
+ EXPORT_SYMBOL_GPL(register_die_notifier);
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -450,10 +450,14 @@ void vm_unmap_aliases(void)
+ EXPORT_SYMBOL_GPL(vm_unmap_aliases);
+ 
+ /*
+- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+- * have one.
++ * Implement a stub for vmalloc_sync_[un]mapping() if the architecture
++ * chose not to have one.
+  */
+-void __weak vmalloc_sync_all(void)
++void __weak vmalloc_sync_mappings(void)
++{
++}
++
++void __weak vmalloc_sync_unmappings(void)
+ {
+ }
+ 
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1769,7 +1769,7 @@ void *__vmalloc_node_range(unsigned long
+ 	 * First make sure the mappings are removed from all page-tables
+ 	 * before they are freed.
+ 	 */
+-	vmalloc_sync_all();
++	vmalloc_sync_unmappings();
+ 
+ 	/*
+ 	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
+@@ -2318,16 +2318,19 @@ int remap_vmalloc_range(struct vm_area_s
+ EXPORT_SYMBOL(remap_vmalloc_range);
+ 
+ /*
+- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+- * have one.
++ * Implement stubs for vmalloc_sync_[un]mappings () if the architecture chose
++ * not to have one.
+  *
+  * The purpose of this function is to make sure the vmalloc area
+  * mappings are identical in all page-tables in the system.
+  */
+-void __weak vmalloc_sync_all(void)
++void __weak vmalloc_sync_mappings(void)
+ {
+ }
+ 
++void __weak vmalloc_sync_unmappings(void)
++{
++}
+ 
+ static int f(pte_t *pte, pgtable_t table, unsigned long addr, void *data)
+ {
 
 
