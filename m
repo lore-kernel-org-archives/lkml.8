@@ -3,125 +3,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D649C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BBCC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197AC206D3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A3B20721
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387505AbgDAXyf (ORCPT
+        id S1733261AbgDAXzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:54:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46802 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732682AbgDAXye (ORCPT
+        Wed, 1 Apr 2020 19:55:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:35943 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732682AbgDAXzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:54:34 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031NYt6D027340;
-        Wed, 1 Apr 2020 19:53:49 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 304gsstyww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 19:53:49 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 031NpI4U002885;
-        Wed, 1 Apr 2020 23:53:48 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 301x77nuq5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 23:53:48 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031NrlTM57082224
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 23:53:47 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC82E7805E;
-        Wed,  1 Apr 2020 23:53:46 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EA327805F;
-        Wed,  1 Apr 2020 23:53:40 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.162.156])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 23:53:39 +0000 (GMT)
-Message-ID: <e304952f5177f85faff4560ded5aa1dad7af5fe2.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Enrico Weigelt <info@metux.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 01 Apr 2020 20:53:31 -0300
-In-Reply-To: <20200401092618.GW20713@hirez.programming.kicks-ass.net>
-References: <20200401000020.590447-1-leonardo@linux.ibm.com>
-         <20200401092618.GW20713@hirez.programming.kicks-ass.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-KDf7FjQwdoNO4X4hfXtK"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 1 Apr 2020 19:55:52 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jJnCz-0002IU-30; Thu, 02 Apr 2020 01:55:45 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 734D5100D52; Thu,  2 Apr 2020 01:55:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] x86 cleanups for v5.7
+In-Reply-To: <CAHk-=wijWvUfEkqUZRpvo9FCaJNsioS_qZT+iNWUdqQ6eO8Ozw@mail.gmail.com>
+References: <20200331080111.GA20569@gmail.com> <CAHk-=wjpBohNkBSxyPfC7w8165usbU5TuLohdbPs+D0bUYqJhQ@mail.gmail.com> <CAHk-=wijWvUfEkqUZRpvo9FCaJNsioS_qZT+iNWUdqQ6eO8Ozw@mail.gmail.com>
+Date:   Thu, 02 Apr 2020 01:55:44 +0200
+Message-ID: <87v9mioj5r.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
- phishscore=0 clxscore=1015 mlxlogscore=879 mlxscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010191
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linus,
 
---=-KDf7FjQwdoNO4X4hfXtK
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-Hello Peter,=20
+> On Tue, Mar 31, 2020 at 11:09 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> Lovely. This now makes my local boot-test tree be much closer to my
+>> upstream tree, since I've had my clang asm-goto stuff in my boot tree
+>> (and it had that series from Al).
+>
+> Side note: I've extended on the x86 uaccess cleanups a bit with a
+> couple of commits:
+>
+>   x86: start using named parameters for low-level uaccess asms
+>   x86: get rid of 'rtype' argument to __get_user_asm() macro
+>   x86: get rid of 'rtype' argument to __put_user_goto() macro
+>   x86: get rid of 'errret' argument to __get_user_xyz() macross
+>   x86: remove __put_user_asm() infrastructure
 
-On Wed, 2020-04-01 at 11:26 +0200, Peter Zijlstra wrote:
-> You might want to add a note to your asm/spinlock.h that you rely on
-> spin_unlock() unconditionally clearing a lock.
->=20
-> This isn't naturally true for all lock implementations. Consider ticket
-> locks, doing a surplus unlock will wreck your lock state in that case.
-> So anybody poking at the powerpc spinlock implementation had better know
-> you rely on this.
+A few comments:
 
-Good idea. I will add this to my changes and generate a v4.
+  - x86 starts the short log after the colon with an uppercase
+    letter
 
-Thank you,
+  - 'macross' is really gross :)
 
---=-KDf7FjQwdoNO4X4hfXtK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+  - All commits lack a Link:https//lore.kernel.org/r/$MSG-ID tag. That
+    might be an oversight or just reflecting the fact that these patches
+    have never seen a mailing list.
 
------BEGIN PGP SIGNATURE-----
+    If my brain hasn't gone into complete wishful thinking mode there is
+    general consenus that we want to have visability and traceability of
+    changes including those which come from maintainers for various good
+    reasons (The obvious 'fix a typo breaking the build' exempted).
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6FKXsACgkQlQYWtz9S
-ttT6PRAAlfpMg9qZK9Q7d5BJCzhUZdsE2wsPmmI7ynbk+XKYd4VHECBE6Lf7u1t+
-ShKanwxHRz0Bk1UxzP3UBLP5e7twvXcmgrZehNaT2kQd457B40Oli44JsBFZXsi4
-inN/HVcPaI+c5imygIb9tlae7hNX6XBfdj0sH4uRXcgafm/dJIRzc8OHUrfPBh7G
-GEDP72loBYwOqqt7n6nz03GCeHvV97Lq4frpx8fca70+u7+JH4gK9Hv21/gwuwSA
-yfF6vgY4xBMN7aWpeE+lw1A0xVfQv4aw6d4SgkDVUKTPV1jhWP44EfURwcyRl7ID
-OhOQ2ppYkuH7AIjCgaAYKClJ9JU/9TCRz2gJJ0/5ebZ6sPdD8fhcpz6WSQQMES6g
-mxhjXi2uram2KPf6OCA2TIyxgkRsez8XODU6qqxhV9QPxJjt8x0KeL2oHkl1SU7U
-H4u/ckxesRL0eFT/BbMCFaksPyQP9+GgzvRSPqueQHjjsqLf6zotwRCHVdF1diYg
-7FWKuFfNLHz19aq7M427+AhNTXhkSqzE5c2qa6MU+DMc31r1XRTJ9nCGB0omQ7h6
-NRaBkvn0ZXI0NlTBQXMVtrLfPJucsVM14PbTSgayttDQThAG9ulIHmeFsxQypTv/
-pB6LDSZVOdhFNI+RX/hG6GVIXpBoz7yZxeExeFWEYjYoOqMkKu0=
-=Ustc
------END PGP SIGNATURE-----
+    Of course that's at your discretion.
 
---=-KDf7FjQwdoNO4X4hfXtK--
+> which I _tried_ to make complete no-ops (comparing code generation
+> before and after). Sadly, one of them (the "get rid of 'rtype'
+> argument to __get_user_asm" one) causes gcc to pick different
+> registers for me because now the temporary variables have different
+> sizes.
+>
+> (The others cause line number data changes, of course, but I didn't
+> see any _code_ changes).
+>
+> So that one commit results in a lot of small noise changes to the
+> generated code for me, but the few I looked at closer all looked the
+> same (mostly just different register, sometimes odd improvements where
+> it avoided doing a stupid "andq $0xffffffff", and in one or two cases
+> it seemed to randomly just change the stack frame size, sometimes to
+> the better, sometimes to worse).
 
+From a quick check I can confirm that the resulting text changes are
+just random noise and I did not notice anything horrible in the
+generated code either.
+
+> The others should be purely semantically identical.
+>
+> It was all just small prep to make the patch I have for "asm goto with
+> outputs" have a smaller footprint - particularly when I try to then
+> make it work with compilers that don't have the capability, and I need
+> to have different output registers for that case.
+>
+> I'm not planning on actually doing that patch this merge window, it's
+> just not ready enough. But just in case somebody (Al?) is still
+> working on the uaccess.h file, letting you know about my preparatory
+> cleanups.
+
+See above.
+
+Thanks,
+
+        tglx
