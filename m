@@ -2,53 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE39C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D744FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747F72137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C882137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758426;
-	bh=CCq3L2C5b5am1LuV8X7wApOJDo5W0UFsM7e0KfQwLow=;
+	s=default; t=1585758429;
+	bh=SFOWE/27zqtS1mso7mCUfh5jR+5ME//znMimyV2p3wE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FAB+ZQRqyX1ElsrInH3C8NHvasAP0hm87yb/lEqBbRACN3karS1qm8iKHeksvPVec
-	 DSQYeboljXNHhTxxGpgKXu4ZYlv/GZjALQy0QnwgIb45cUa/Av+wdA06BD6aqL+pKS
-	 Jlgwo7Tz8zw2I0DQjilOEq3Clu0YX+e+AXfzu2PQ=
+	b=q0sRftZaNQuSJBqiewMqVEPkCEK7JGuPLPoEFZ+c9EH88Z4njb7qjXl1eO4Pan9xI
+	 YdQEscoiiIvxo7TlsBZFbowIfuXh8imFoZk7Gl5GNnmUqm9BOLfO3dftE4Y05u6jpQ
+	 4++8goHvxcU0xsjVN0tScOJXu3305JIGfXzDbISY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387753AbgDAQ1F (ORCPT
+        id S2387981AbgDAQ1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51624 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387954AbgDAQ06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:26:58 -0400
+        id S1732890AbgDAQ1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:27:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3600921582;
-        Wed,  1 Apr 2020 16:26:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4E3F20BED;
+        Wed,  1 Apr 2020 16:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758417;
-        bh=CCq3L2C5b5am1LuV8X7wApOJDo5W0UFsM7e0KfQwLow=;
+        s=default; t=1585758425;
+        bh=SFOWE/27zqtS1mso7mCUfh5jR+5ME//znMimyV2p3wE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TEp+pMwxEsesoXoHcyYRnP4xYYLNdz0puu6/evi07WLBvBgKjZtcQUSetWfql2dN3
-         k3iBW8fMim/FUlbxyB/SrSuZwkhnnQA9rI9tqI8+2VTfTUQ5LTRuwgnYEwe0GGQ+0g
-         fj8kBRXrnhaldLxEBO8FjXsR3VqPXLQgnYz1DPdY=
+        b=LnmwNSSbrQeUJG/zGNv/6GGHACrO4xwbhheShKX0j0VhXitpFOK0LAa8oKb/2M94I
+         uuAC7K0jShXBAykd3EJZHq4loXhryybZjTTKucgLSI2X54P7ASL5ZgJXJkpTk8idcl
+         DuXSsaKaUjhJzpFWT8Xm7DpwrYJl7BD8JhAfG9sI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dominik Czarnota <dominik.b.czarnota@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/116] sxgbe: Fix off by one in samsung driver strncpy size arg
-Date:   Wed,  1 Apr 2020 18:17:01 +0200
-Message-Id: <20200401161548.244119774@linuxfoundation.org>
+        stable@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
+        Pawel Dembicki <paweldembicki@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 080/116] USB: serial: option: add BroadMobi BM806U
+Date:   Wed,  1 Apr 2020 18:17:36 +0200
+Message-Id: <20200401161552.836037179@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,44 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dominik Czarnota <dominik.b.czarnota@gmail.com>
+From: Pawel Dembicki <paweldembicki@gmail.com>
 
-[ Upstream commit f3cc008bf6d59b8d93b4190e01d3e557b0040e15 ]
+commit 6cb2669cb97fc4fdf526127159ac59caae052247 upstream.
 
-This patch fixes an off-by-one error in strncpy size argument in
-drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c. The issue is that in:
+BroadMobi BM806U is an Qualcomm MDM9225 based 3G/4G modem.
+Tested hardware BM806U is mounted on D-Link DWR-921-C3 router.
 
-        strncmp(opt, "eee_timer:", 6)
+T:  Bus=01 Lev=01 Prnt=01 Port=01 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
+D:  Ver= 2.01 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=2020 ProdID=2033 Rev= 2.28
+S:  Manufacturer=Mobile Connect
+S:  Product=Mobile Connect
+S:  SerialNumber=f842866cfd5a
+C:* #Ifs= 5 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 
-the passed string literal: "eee_timer:" has 10 bytes (without the NULL
-byte) and the passed size argument is 6. As a result, the logic will
-also accept other, malformed strings, e.g. "eee_tiXXX:".
+Co-developed-by: Cezary Jackiewicz <cezary@eko.one.pl>
+Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This bug doesn't seem to have any security impact since its present in
-module's cmdline parsing code.
-
-Signed-off-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-index a9da1ad4b4f20..30cd087aa67c1 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-@@ -2282,7 +2282,7 @@ static int __init sxgbe_cmdline_opt(char *str)
- 	if (!str || !*str)
- 		return -EINVAL;
- 	while ((opt = strsep(&str, ",")) != NULL) {
--		if (!strncmp(opt, "eee_timer:", 6)) {
-+		if (!strncmp(opt, "eee_timer:", 10)) {
- 			if (kstrtoint(opt + 10, 0, &eee_timer))
- 				goto err;
- 		}
--- 
-2.20.1
-
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1996,6 +1996,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
+ 	  .driver_info = RSVD(4) },
++	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2033, 0xff),			/* BroadMobi BM806U */
++	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2060, 0xff),			/* BroadMobi BM818 */
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x4000, 0xff) },			/* OLICARD300 - MT6225 */
 
 
