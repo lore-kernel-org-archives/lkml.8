@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35225C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BEBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2EF20857
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCE120BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758468;
-	bh=rOotCIjwWgz/HVtDMOKtKcP6oZ6IWtFte9or8xVoQg8=;
+	s=default; t=1585758471;
+	bh=Wrk9OXZgPsOQlw2xzX5W6GJYysO13Yr7y4wFC6R2q4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tdOSa5dc+qek60y2FzAaSYkjqCgbw1myr+VXiX2XDbRx2rZXYUZ9cJ/3Aq+Dh6xXY
-	 IKJVSt/8yefvlL04SQZyRjvLVNZ226Jgcv3R3ngZH4gsu04KXXBvfSPkSaECuXga2y
-	 TH/wIUvXsxvNqiEgyyfoEWgD7LSndOdqhu7rgs54=
+	b=A645dyOjCiN6pbIbG0eMMKY5AgIB6gtOB4OzWQl9i45uUuJRnvmKKKEomgZ9xrMvs
+	 +dsbH2SJedK5TMKEaVNXHvctjSviEDpFU3HnBkA5UMe3wnKT+Mzk1H4iH62gsa/e2a
+	 Vijgm0ybt4SulX8gJn6ll3D03/7WxWSJctrD7bCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387778AbgDAQ1D (ORCPT
+        id S2387571AbgDAQ1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51686 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387657AbgDAQ1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:27:00 -0400
+        id S2387513AbgDAQ1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:27:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8946A21582;
-        Wed,  1 Apr 2020 16:26:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4702C20857;
+        Wed,  1 Apr 2020 16:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758420;
-        bh=rOotCIjwWgz/HVtDMOKtKcP6oZ6IWtFte9or8xVoQg8=;
+        s=default; t=1585758464;
+        bh=Wrk9OXZgPsOQlw2xzX5W6GJYysO13Yr7y4wFC6R2q4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOCCEeZ13mD9XhATh8K5lgAb24QLgFJH36AeBTOh5R5Uz/mxc5mMkTEbqzvuuWVjC
-         NfqF8eHKmvyRFphmhTdRUIFrNosolGIhpsdMbU2POIGFNP15xBrgRNH5twkP0yYNTt
-         LrXQ+WRfXeoEiTw8FfAquKK9xGwltz/je8ASYzwM=
+        b=E/VVwZL5cmNZP0JhmEIHNBPYXYxMQ2VCzykcf+aLck23JYkHcQ5fp91lyPqH04br4
+         lb4D19hEUYTrZDwDDLkErB/3/BCIR8fAFnVFke4PLIiSnRNkSUU+9qhRiqsoQziz3C
+         rmv4ItiiweWbSUppjsYhxjYpHkZndcDOrhOA3t7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 046/116] ftrace/x86: Anotate text_mutex split between ftrace_arch_code_modify_post_process() and ftrace_arch_code_modify_prepare()
-Date:   Wed,  1 Apr 2020 18:17:02 +0200
-Message-Id: <20200401161548.389053638@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.19 098/116] vt: selection, introduce vc_is_sel
+Date:   Wed,  1 Apr 2020 18:17:54 +0200
+Message-Id: <20200401161554.871695334@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,46 +58,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit 074376ac0e1d1fcd4fafebca86ee6158e7c20680 upstream.
+commit dce05aa6eec977f1472abed95ccd71276b9a3864 upstream.
 
-ftrace_arch_code_modify_prepare() is acquiring text_mutex, while the
-corresponding release is happening in ftrace_arch_code_modify_post_process().
+Avoid global variables (namely sel_cons) by introducing vc_is_sel. It
+checks whether the parameter is the current selection console. This will
+help putting sel_cons to a struct later.
 
-This has already been documented in the code, but let's also make the fact
-that this is intentional clear to the semantic analysis tools such as sparse.
-
-Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1906292321170.27227@cbobk.fhfr.pm
-
-Fixes: 39611265edc1a ("ftrace/x86: Add a comment to why we take text_mutex in ftrace_arch_code_modify_prepare()")
-Fixes: d5b844a2cf507 ("ftrace/x86: Remove possible deadlock between register_kprobe() and ftrace_run_update_code()")
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200219073951.16151-1-jslaby@suse.cz
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/ftrace.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/vt/selection.c |    5 +++++
+ drivers/tty/vt/vt.c        |    7 ++++---
+ drivers/tty/vt/vt_ioctl.c  |    2 +-
+ include/linux/selection.h  |    4 +++-
+ 4 files changed, 13 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -35,6 +35,7 @@
- #ifdef CONFIG_DYNAMIC_FTRACE
- 
- int ftrace_arch_code_modify_prepare(void)
-+    __acquires(&text_mutex)
- {
- 	mutex_lock(&text_mutex);
- 	set_kernel_text_rw();
-@@ -43,6 +44,7 @@ int ftrace_arch_code_modify_prepare(void
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -85,6 +85,11 @@ void clear_selection(void)
+ 	}
  }
  
- int ftrace_arch_code_modify_post_process(void)
-+    __releases(&text_mutex)
++bool vc_is_sel(struct vc_data *vc)
++{
++	return vc == sel_cons;
++}
++
+ /*
+  * User settable table: what characters are to be considered alphabetic?
+  * 128 bits. Locked by the console lock.
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -890,8 +890,9 @@ static void hide_softcursor(struct vc_da
+ 
+ static void hide_cursor(struct vc_data *vc)
  {
- 	set_all_modules_text_ro();
- 	set_kernel_text_ro();
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
++
+ 	vc->vc_sw->con_cursor(vc, CM_ERASE);
+ 	hide_softcursor(vc);
+ }
+@@ -901,7 +902,7 @@ static void set_cursor(struct vc_data *v
+ 	if (!con_is_fg(vc) || console_blanked || vc->vc_mode == KD_GRAPHICS)
+ 		return;
+ 	if (vc->vc_deccm) {
+-		if (vc == sel_cons)
++		if (vc_is_sel(vc))
+ 			clear_selection();
+ 		add_softcursor(vc);
+ 		if ((vc->vc_cursor_type & 0x0f) != 1)
+@@ -1210,7 +1211,7 @@ static int vc_do_resize(struct tty_struc
+ 		}
+ 	}
+ 
+-	if (vc == sel_cons)
++	if (vc_is_sel(vc))
+ 		clear_selection();
+ 
+ 	old_rows = vc->vc_rows;
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -43,7 +43,7 @@ char vt_dont_switch;
+ extern struct tty_driver *console_driver;
+ 
+ #define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+-#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_cons[i].d == sel_cons)
++#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
+ 
+ /*
+  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
+--- a/include/linux/selection.h
++++ b/include/linux/selection.h
+@@ -13,8 +13,8 @@
+ 
+ struct tty_struct;
+ 
+-extern struct vc_data *sel_cons;
+ struct tty_struct;
++struct vc_data;
+ 
+ extern void clear_selection(void);
+ extern int set_selection(const struct tiocl_selection __user *sel, struct tty_struct *tty);
+@@ -23,6 +23,8 @@ extern int sel_loadlut(char __user *p);
+ extern int mouse_reporting(void);
+ extern void mouse_report(struct tty_struct * tty, int butt, int mrx, int mry);
+ 
++bool vc_is_sel(struct vc_data *vc);
++
+ extern int console_blanked;
+ 
+ extern const unsigned char color_table[];
 
 
