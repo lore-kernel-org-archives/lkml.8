@@ -2,183 +2,185 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B996BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2655C2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3CD20678
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD055206DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 03:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eN6sShuN"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qQ7NU+um"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgDADXF (ORCPT
+        id S1731651AbgDADZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:23:05 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35694 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731556AbgDADXE (ORCPT
+        Tue, 31 Mar 2020 23:25:58 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36967 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbgDADZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:23:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id o3so18551941ioh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 20:23:03 -0700 (PDT)
+        Tue, 31 Mar 2020 23:25:58 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z24so19288220qtu.4
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 20:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tKHXS6/Mnrp6srBbnR262gLigKf8aMPoVYaaS/hPS9s=;
-        b=eN6sShuN0c7Oei1hyyHoiDdZJ5O6nb+kKREnHlHZ6WM+V+tPSLzKBnBo8ahtmpvqH8
-         2vEsbSgkslrKFZsOoZoqORstlEu3nMfbJL5q6icPCKeetVzyzxA+OCYqsn5SpB+7/iTK
-         671amErct+hOBEzjM6LXsMuFWOx6SGXXtuwD7iAxtQazgkzySGyqoUmA3RPXvBSNQKrL
-         7T+fUALYIE2kcSpzJAM/Tu3r/4pBfr8Dpz73muo/mrNyxS1qysN++hWEigA77a8rwkp2
-         eVtJIReJoMqh+r1PXWJCDlJ0bDNg7XW7AKd3giWORc3GRU++I++rUwceVhRZYuxt0Wzx
-         t/WA==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lFSYqvfFUF1ovFmHfTti7v5BOoCq3r1McUwFK2pG5RM=;
+        b=qQ7NU+umHMNwA8WeCSpEzAz0Gu5MdxXUX6+CVuha9v7EDQa88dMLlniS/0F/FsHdDl
+         y3yjMPhYDuajxnM6p54m0L+Qv6cvgEO76sYv69cGKusOR0qoihRASg8T531SA3XiX98o
+         sJVR4alD6PsLT7ri8Aw6JodYLSvDr8Vqkf7EI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tKHXS6/Mnrp6srBbnR262gLigKf8aMPoVYaaS/hPS9s=;
-        b=Wl1D6oHTLvjJk8N+1oCylX8gThrbnBK4AdmTsxb5+tDxqMki5Yi01Ofd+n7iUzo8yE
-         FDrNaiG3mh2LJoYLbLqi5t2MMxQJNS2TgfSM6FTd96v4mjMNdBp4TfEhXmejUxEhTWa9
-         6trXWqmv12XCN1WI4O+G0q+0hLzuuQftaXp9dHNqNJcrwCTi0H4cZKk4+rAZxG9/mq3D
-         rp1uOmuJdnfa2c4GOY5yjVg0J6vrTIOCVKdglJ1lFjsQY8Y6KFLprI0x+4za5+9wC/XY
-         FqSPjDq6nyx8IDDEFHgkR480dQ3Yi/Y2pcvl4w0pFGvfkE3lkTmIJzTwGLimWgz3bQvN
-         jfhA==
-X-Gm-Message-State: ANhLgQ1FR93pmGtSd4ehk/ZNZ89TKcP5wyaxgiGuVgVk/ilGr/TrrhmJ
-        3BYyMqids06V1t8wG8/tYgX4EQT0u3VGcGfxMpc=
-X-Google-Smtp-Source: ADFU+vu8eodPaphbTQkMDs3RZKUEfdF6DyNHOUHKskCPC86X60H32507rzCiT+ZZ5Y980apNclGYcroc7xZHLKpXD84=
-X-Received: by 2002:a05:6638:20d:: with SMTP id e13mr18318129jaq.56.1585711383185;
- Tue, 31 Mar 2020 20:23:03 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lFSYqvfFUF1ovFmHfTti7v5BOoCq3r1McUwFK2pG5RM=;
+        b=Ptq36ZCkXsP1omhcfWZFI2hrpS86OLDhz4efxmZuV7781fbHm9Fda7W3hDHEy4urq2
+         PA3+IRNzXyq0YEvpr+Tu6Dd47x+X1BHKSmkOtUMbNW5Bns1iGw6toFwBiRN6xBVIPScD
+         WnzPFA99LstQqZXI+Arp25yjd+a+xT1h/4amVt+lDAdfus9ufspS/3UJM39Fkewm2rS1
+         zTmw949buNUthOnnmuVcW5VNPfauUCI5SyJe54ss2a8YucTgJ8L4X9a7BvC/Vk5jZHV6
+         kKEZBwJr8THtRvsr5t8bmMRa/AVxgT+0OVn+DwSEFPL62+k/t90TVKMmpBXaUbYiWpPa
+         SIuw==
+X-Gm-Message-State: ANhLgQ0Z6FX1N4pAUtJTjT6noE1RHtB+FsNe+B+BjHwZr/wi+GCgl1Hf
+        CmJdeTaaPP3sSOHJ6sM6tf7bpQ==
+X-Google-Smtp-Source: ADFU+vtL2n03VIwQtnqW+IsY7DsD8p/H5OcQpXxMFlvAYLgwW2+c5WLD1AR6pXpDo7VO64CA/HRVzw==
+X-Received: by 2002:ac8:4449:: with SMTP id m9mr8439493qtn.175.1585711556906;
+        Tue, 31 Mar 2020 20:25:56 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id i20sm605141qkl.135.2020.03.31.20.25.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 20:25:56 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 23:25:55 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, rcu@vger.kernel.org, willy@infradead.org,
+        peterz@infradead.org, neilb@suse.com, vbabka@suse.cz,
+        mgorman@suse.de, Andrew Morton <akpm@linux-foundation.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH RFC] rcu/tree: Use GFP_MEMALLOC for alloc memory to free
+ memory pattern
+Message-ID: <20200401032555.GA175966@google.com>
+References: <20200331131628.153118-1-joel@joelfernandes.org>
+ <20200331145806.GB236678@google.com>
+ <20200331153450.GM30449@dhcp22.suse.cz>
+ <20200331160117.GA170994@google.com>
+ <877dz0yxoa.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20200327074308.GY11705@shao2-debian> <20200327175350.rw5gex6cwum3ohnu@linutronix.de>
-In-Reply-To: <20200327175350.rw5gex6cwum3ohnu@linutronix.de>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Wed, 1 Apr 2020 11:22:51 +0800
-Message-ID: <CAJhGHyDmw5Fwq5mgb1h=7GBegQKP2HQnPTxcRps-0PvGbC2PWg@mail.gmail.com>
-Subject: Re: [PATCH] workqueue: Don't double assign worker->sleeping
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     kernel test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>,
-        Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877dz0yxoa.fsf@notabene.neil.brown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Wed, Apr 01, 2020 at 09:19:49AM +1100, NeilBrown wrote:
+> On Tue, Mar 31 2020, Joel Fernandes wrote:
+> 
+> > On Tue, Mar 31, 2020 at 05:34:50PM +0200, Michal Hocko wrote:
+> >> On Tue 31-03-20 10:58:06, Joel Fernandes wrote:
+> >> [...]
+> >> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> >> > > index 4be763355c9fb..965deefffdd58 100644
+> >> > > --- a/kernel/rcu/tree.c
+> >> > > +++ b/kernel/rcu/tree.c
+> >> > > @@ -3149,7 +3149,7 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
+> >> > >  
+> >> > >  	if (!ptr)
+> >> > >  		ptr = kmalloc(sizeof(unsigned long *) +
+> >> > > -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
+> >> > > +				sizeof(struct rcu_head), GFP_MEMALLOC);
+> >> > 
+> >> > Just to add, the main requirements here are:
+> >> > 1. Allocation should be bounded in time.
+> >> > 2. Allocation should try hard (possibly tapping into reserves)
+> >> > 3. Sleeping is Ok but should not affect the time bound.
+> >> 
+> >> 
+> >> __GFP_ATOMIC | __GFP_HIGH is the way to get an additional access to
+> >> memory reserves regarless of the sleeping status.
+> >> 
+> >> Using __GFP_MEMALLOC is quite dangerous because it can deplete _all_ the
+> >> memory. What does prevent the above code path to do that?
+> >
+> > Can you suggest what prevents other users of GFP_MEMALLOC from doing that
+> > also? That's the whole point of having a reserve, in normal usage no one will
+> > use it, but some times you need to use it. Keep in mind this is not a common
+> > case in this code here, this is triggered only if earlier allocation attempts
+> > failed. Only *then* we try with GFP_MEMALLOC with promises to free additional
+> > memory soon.
+> 
+> I think that "soon" is the key point.  Users of __GFP_MEMALLOC certainly
+> must be working to free other memory, that other memory needs to be freed
+> "soon".  In particular - sooner than all the reserve is exhausted.  This
+> can require rate-limiting.  If one allocation can result in one page
+> being freed, that is good and it is probably OK to have 1000 allocations
+> resulting in 1000 pages being freed soon.  But 10 million allocation to
+> gain 10 million pages is not such a good thing and shouldn't be needed.
+> Once those first 1000 pages have been freed, you won't need
+> __GFP_MEMALLOC allocations any more, and you must be prepare to wait for
+> them.
+> 
+> So where does the rate-limiting happen in your proposal?  A GP can be
+> multiple milliseconds, which is time for lots of memory to be allocated
+> and for rcu-free queues to grow quite large.
+> 
+> You mention a possible fall-back of calling synchronize_rcu().  I think
+> that needs to be a fallback that happens well before __GFP_MEMALLOC is
+> exhausted.   You need to choose some maximum amount that you will
+> allocate, then use synchronize_rcu() (or probably the _expedited
+> version) after that.  The pool of reserves are certainly there for you
+> to use, but not for you to exhaust.
+> 
+> If you have your own rate-limiting, then I think __GFP_MEMALLOC is
+> probably OK, and also you *don't* want the memalloc to wait.  If memory
+> cannot be allocated immediately, you need to use your own fallback.
 
-If I don't miss all the issues you have listed, it is a good and straightforward
-fix, but I have concern that cmpxchg_local() might have performance impact
-on some non-x86 arch.
+Thanks a lot for explaining in detail, the RFC patch has served its purpose
+well ;-)
 
-The two issues as you have listed:
-1) WARN_ON_ONCE() on valid condition when interrupted(async-page-faulted)
-2) wq_worker_running() can be interrupted(async-page-faulted in virtual machine)
-and nr_running would be decreased twice.
+On discussing with RCU comrades, we agreed to not use GFP_MEMALLOC. But
+instead pre-allocate a cache (we do have a cache but it is not yet
+pre-allocated, just allocated on demand).
 
-For fixing issue one, we can just remove WARN_ON_ONCE() as this patch.
-For fixing issue two, ->sleeping in wq_worker_running() can be checked&modified
-under irq-disabled.  (we can't use preempt-disabled context here)
+About the rate limiting, we would fallback to synchronize_rcu() instead of
+sleeping in case of trobule. However I would like to add a warning if we ever
+hit the troublesome path mainly because that means we depleted the
+pre-allocated cache and perhaps the user should switch to adding an rcu_head
+in their structure to reduce latency. I'm adding that warning to my tree:
 
-thanks,
-Lai
-
-On Sat, Mar 28, 2020 at 1:53 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> The kernel test robot triggered a warning with the following race:
->    task-ctx                              interrupt-ctx
->  worker
->   -> process_one_work()
->     -> work_item()
->       -> schedule();
->          -> sched_submit_work()
->            -> wq_worker_sleeping()
->              -> ->sleeping = 1
->                atomic_dec_and_test(nr_running)
->          __schedule();                *interrupt*
->                                        async_page_fault()
->                                        -> local_irq_enable();
->                                        -> schedule();
->                                           -> sched_submit_work()
->                                             -> wq_worker_sleeping()
->                                                -> if (WARN_ON(->sleeping)) return
->                                           -> __schedule()
->                                             ->  sched_update_worker()
->                                               -> wq_worker_running()
->                                                  -> atomic_inc(nr_running);
->                                                  -> ->sleeping = 0;
->
->       ->  sched_update_worker()
->         -> wq_worker_running()
->           if (!->sleeping) return
->
-> In this context the warning is pointless everything is fine.
->
-> However, if the interrupt occurs in wq_worker_sleeping() between reading and
-> setting `sleeping' i.e.
->
-> |        if (WARN_ON_ONCE(worker->sleeping))
-> |                return;
->  *interrupt*
-> |        worker->sleeping = 1;
->
-> then pool->nr_running will be decremented twice in wq_worker_sleeping()
-> but it will be incremented only once in wq_worker_running().
->
-> Replace the assignment of `sleeping' with a cmpxchg_local() to ensure
-> that there is no double assignment of the variable. The variable is only
-> accessed from the local CPU. Remove the WARN statement because this
-> condition can be valid.
->
-> An alternative would be to move `->sleeping' to `->flags' as a new bit
-> but this would require to acquire the pool->lock in wq_worker_running().
->
-> Fixes: 6d25be5782e48 ("sched/core, workqueues: Distangle worker accounting from rq lock")
-> Link: https://lkml.kernel.org/r/20200327074308.GY11705@shao2-debian
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  kernel/workqueue.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index 4e01c448b4b48..dc477a2a3ce30 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -846,11 +846,10 @@ void wq_worker_running(struct task_struct *task)
->  {
->         struct worker *worker = kthread_data(task);
->
-> -       if (!worker->sleeping)
-> +       if (cmpxchg_local(&worker->sleeping, 1, 0) == 0)
->                 return;
->         if (!(worker->flags & WORKER_NOT_RUNNING))
->                 atomic_inc(&worker->pool->nr_running);
-> -       worker->sleeping = 0;
->  }
->
->  /**
-> @@ -875,10 +874,9 @@ void wq_worker_sleeping(struct task_struct *task)
->
->         pool = worker->pool;
->
-> -       if (WARN_ON_ONCE(worker->sleeping))
-> +       if (cmpxchg_local(&worker->sleeping, 0, 1) == 1)
->                 return;
->
-> -       worker->sleeping = 1;
->         spin_lock_irq(&pool->lock);
->
->         /*
-> --
-> 2.26.0
->
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 4be763355c9fb..6172e6296dd7d 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -110,6 +110,10 @@ module_param(rcu_fanout_exact, bool, 0444);
+ static int rcu_fanout_leaf = RCU_FANOUT_LEAF;
+ module_param(rcu_fanout_leaf, int, 0444);
+ int rcu_num_lvls __read_mostly = RCU_NUM_LVLS;
++/* Silence the kvfree_rcu() complaint (warning) that it blocks */
++int rcu_kfree_nowarn;
++module_param(rcu_kfree_nowarn, int, 0444);
++
+ /* Number of rcu_nodes at specified level. */
+ int num_rcu_lvl[] = NUM_RCU_LVL_INIT;
+ int rcu_num_nodes __read_mostly = NUM_RCU_NODES; /* Total # rcu_nodes in use. */
+@@ -3266,6 +3270,12 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+ 	 * state.
+ 	 */
+ 	if (!success) {
++		/*
++		 * Please embed an rcu_head and pass it along if you hit this
++		 * warning. Doing so would avoid long kfree_rcu() latencies.
++		 */
++		if (!rcu_kfree_nowarn)
++			WARN_ON_ONCE(1);
+ 		debug_rcu_head_unqueue(ptr);
+ 		synchronize_rcu();
+ 		kvfree(ptr);
