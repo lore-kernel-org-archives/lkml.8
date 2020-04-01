@@ -2,183 +2,110 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A82C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AEDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3842077D
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95DB22077D
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Pk0X3Ada"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cvdIZiUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbgDAJcc (ORCPT
+        id S1732102AbgDAJdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:32:32 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:17653 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726335AbgDAJcc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:32:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585733551; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=O4mfO68j0oUFthZ8BDymyBRZQeDPJ5DqwOJdqb9xXjc=;
- b=Pk0X3Ada9U+D2p3ZzCfdTrUP5wfUktvxx1Ic3FPnYSOqqQusDj/+wecyDVfBs1Xip+SB7lNv
- 131MOWaMIXAxvGeePKZ2aYs6ef7JrXRINEPUpjiRHEMSHoIeDG5pUo8kx4puJ5L5UjyKW5vg
- /LJiSYpL6rBmCN2YvBA+lnVH5Vs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e845fa6.7f8810132c38-smtp-out-n03;
- Wed, 01 Apr 2020 09:32:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E3642C43636; Wed,  1 Apr 2020 09:32:21 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Wed, 1 Apr 2020 05:33:16 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58780 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727541AbgDAJdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 05:33:16 -0400
+Received: from zn.tnic (p200300EC2F0BCE001428728FF98D3445.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:ce00:1428:728f:f98d:3445])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16FF4C433D2;
-        Wed,  1 Apr 2020 09:32:21 +0000 (UTC)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E4F391EC013F;
+        Wed,  1 Apr 2020 11:33:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585733594;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=vUv/lbJ4IeUM8v6YQUNQdmYTTdjt5W9ALsyTWkj5050=;
+        b=cvdIZiUlXVMwZAWWu+rebyz6DuUQgk418JgIURTEFPeDyUFSFYnJyD+nmj204a50rLQH3F
+        an6+bBJyJvt3fWIWgkmrp5vNY8OoluShWL7YZHP5xBMNRjejEerUNZ2i2pihKIU6FEWtrS
+        IM63WzlbD0+JKpoZr3TOVqrwb/4glZI=
+Date:   Wed, 1 Apr 2020 11:33:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
+        Chris Mason <clm@fb.com>, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, gregkh@linuxfoundation.org,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH v4 6/8] x86: bump ZO_z_extra_bytes margin for zstd
+Message-ID: <20200401093310.GA13748@zn.tnic>
+References: <20200401053913.216783-1-nickrterrell@gmail.com>
+ <20200401053913.216783-7-nickrterrell@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 01 Apr 2020 15:02:21 +0530
-From:   kalyan_t@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM
- sleep
-In-Reply-To: <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-References: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
- <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-Message-ID: <2922a0c64ec61c3d74d516e44dca2d71@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200401053913.216783-7-nickrterrell@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-31 21:30, Doug Anderson wrote:
-> Hi,
+On Tue, Mar 31, 2020 at 10:39:11PM -0700, Nick Terrell wrote:
+> From: Nick Terrell <terrelln@fb.com>
 > 
-> On Tue, Mar 31, 2020 at 6:58 AM Kalyan Thota <kalyan_t@codeaurora.org> 
-> wrote:
->> 
->> "The PM core always increments the runtime usage counter
->> before calling the ->suspend() callback and decrements it
->> after calling the ->resume() callback"
->> 
->> DPU and DSI are managed as runtime devices. When
->> suspend is triggered, PM core adds a refcount on all the
->> devices and calls device suspend, since usage count is
->> already incremented, runtime suspend was not getting called
->> and it kept the clocks on which resulted in target not
->> entering into XO shutdown.
->> 
->> Add changes to force suspend on runtime devices during pm sleep.
->> 
->> Changes in v1:
->>  - Remove unnecessary checks in the function
->>     _dpu_kms_disable_dpu (Rob Clark).
->> 
->> Changes in v2:
->>  - Avoid using suspend_late to reset the usagecount
->>    as suspend_late might not be called during suspend
->>    call failures (Doug).
->> 
->> Changes in v3:
->>  - Use force suspend instead of managing device usage_count
->>    via runtime put and get API's to trigger callbacks (Doug).
->> 
->> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> ---
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 2 ++
->>  drivers/gpu/drm/msm/dsi/dsi.c           | 2 ++
->>  drivers/gpu/drm/msm/msm_drv.c           | 4 ++++
->>  3 files changed, 8 insertions(+)
+> Bump the ZO_z_extra_bytes margin for zstd.
 > 
-> This looks much saner to me.  Thanks!  I assume it still works fine
-> for you?  I'm still no expert on how all the pieces of DRM drivers
-> work together, but at least there's not a bunch of strange fiddling
-> with pm_runtime state and hopefully it will avoid weird corner
-> cases...
+> Zstd needs 3 bytes per 128 KB, and has a 22 byte fixed overhead.
+> Zstd needs to maintain 128 KB of space at all times, since that is
+> the maximum block size. See the comments regarding in-place
+> decompression added in lib/decompress_unzstd.c for details.
 > 
---- Yes, verified the change on trogdor device, and display can suspend 
-with the change.
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Terrell <terrelln@fb.com>
+> ---
+>  arch/x86/boot/header.S | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c 
->> b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> index ce19f1d..b886d9d 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
->> @@ -1123,6 +1123,8 @@ static int __maybe_unused 
->> dpu_runtime_resume(struct device *dev)
->> 
->>  static const struct dev_pm_ops dpu_pm_ops = {
->>         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, 
->> NULL)
->> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                               pm_runtime_force_resume)
->>  };
->> 
->>  static const struct of_device_id dpu_dt_match[] = {
->> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c 
->> b/drivers/gpu/drm/msm/dsi/dsi.c
->> index 55ea4bc2..62704885 100644
->> --- a/drivers/gpu/drm/msm/dsi/dsi.c
->> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
->> @@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device 
->> *pdev)
->> 
->>  static const struct dev_pm_ops dsi_pm_ops = {
->>         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, 
->> msm_dsi_runtime_resume, NULL)
->> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                               pm_runtime_force_resume)
->>  };
->> 
->>  static struct platform_driver dsi_driver = {
->> diff --git a/drivers/gpu/drm/msm/msm_drv.c 
->> b/drivers/gpu/drm/msm/msm_drv.c
->> index 7d985f8..2b8c99c 100644
->> --- a/drivers/gpu/drm/msm/msm_drv.c
->> +++ b/drivers/gpu/drm/msm/msm_drv.c
->> @@ -1051,6 +1051,8 @@ static int msm_pm_suspend(struct device *dev)
->>                 return ret;
->>         }
->> 
->> +       pm_runtime_force_suspend(dev);
-> 
-> nit: check return value of pm_runtime_force_suspend()?
-> 
-> 
->> +
->>         return 0;
->>  }
->> 
->> @@ -1063,6 +1065,8 @@ static int msm_pm_resume(struct device *dev)
->>         if (WARN_ON(!priv->pm_state))
->>                 return -ENOENT;
->> 
->> +       pm_runtime_force_resume(dev);
-> 
-> nit: check return value of pm_runtime_force_resume()?
-> 
-> 
-> -Doug
+> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+> index 97d9b6d6c1af..b820875c5c95 100644
+> --- a/arch/x86/boot/header.S
+> +++ b/arch/x86/boot/header.S
+> @@ -536,8 +536,14 @@ pref_address:		.quad LOAD_PHYSICAL_ADDR	# preferred load addr
+>  # the size-dependent part now grows so fast.
+>  #
+>  # extra_bytes = (uncompressed_size >> 8) + 65536
+> +#
+> +# ZSTD compressed data grows by at most 3 bytes per 128K, and only has a 22
+> +# byte fixed overhead but has a maximum block size of 128K, so it needs a
+> +# larger margin.
+> +#
+> +# extra_bytes = (uncompressed_size >> 8) + 131072
+>  
+> -#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 65536)
+> +#define ZO_z_extra_bytes	((ZO_z_output_len >> 8) + 131072)
+>  #if ZO_z_output_len > ZO_z_input_len
+>  # define ZO_z_extract_offset	(ZO_z_output_len + ZO_z_extra_bytes - \
+>  				 ZO_z_input_len)
+> -- 
+
+So why is this change unconditional if only this compression alg. needs
+it?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
