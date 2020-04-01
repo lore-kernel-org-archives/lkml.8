@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916E3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A316CC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63C142073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B002073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:40:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="o2rK4Uth"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vJPkEeJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732118AbgDAIkA (ORCPT
+        id S1732009AbgDAIjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:40:00 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15086 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732106AbgDAIj6 (ORCPT
+        Wed, 1 Apr 2020 04:39:51 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30396 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726368AbgDAIjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:39:58 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0318bDf7029926;
-        Wed, 1 Apr 2020 10:39:48 +0200
+        Wed, 1 Apr 2020 04:39:49 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0318cr5K028133;
+        Wed, 1 Apr 2020 10:39:37 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=AXPGvtsGWLkKS+I+Kb5oNNnn9+C77me7iOpHlW+3zcQ=;
- b=o2rK4UthE6AKyCuj0SYoVrYUCVidIzLFNlRGTavaWhQWcnIoRCgA7JWWZjMohNlJopee
- ff/oGy12rIApLRdk9tja8gjo+Uml7m90DS/277dhBsDmMmJEssgX3bf5MPmdq9uVK/M0
- 0si38uSlJ5hsFS5eUV3OK05ebF56jwpvtxglNyfL+4LTbeCWSOVAQzZCfopslerPiV0f
- hvtoCMNssPenODnWCdl4CZDU4b9yoom8V8YXuZaRXOb+m2RSBlNxf3dHy+9XisJ6x8Dv
- Tjq9+9BtxGroFTr3HbMzWTBVo71ojDlO8DMsQ9uup/Q+PrcaYw3o46Qwdlq6Bn0rJHbp kg== 
+ bh=qWbSrOJCI90YANyiMWSeBsBNnDP7Y5LT4/yIPcQXcb4=;
+ b=vJPkEeJ1tq13Gf3gmUvInOrPmt92KtOS4VIptuWs8OsdY3Tp8MM+RY0gKkaLN4qqx/IZ
+ Zm4jGHI0TEmvX2kloUlQIpyDYJA4veKdvEcuSpo+hn5Ub84LdZ00GNllm7xX4OLEjPU+
+ 45OdGZHk5muRW8gpayvGXPkbGQOQlnpDuGZbNb883amyX2Fqc4w+PGE+nko3LkT0otEe
+ 5oH/cMlkNCR17N+KL393LjWu52fHK2rUvWFzYC1A4i246b3beI6LqMI3e0fpQZoo5LEv
+ 7qNaTrDRTHLe7YQ2o+mN1+DPbw6YHn+ugngiCKLILHzdA7Gdg/u8KftjulsZz6kdX5vr 9Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301vkdvakg-1
+        by mx07-00178001.pphosted.com with ESMTP id 302y53x221-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 10:39:48 +0200
+        Wed, 01 Apr 2020 10:39:37 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AF8AC100034;
-        Wed,  1 Apr 2020 10:39:47 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0A77B100034;
+        Wed,  1 Apr 2020 10:39:35 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A321121CA8E;
-        Wed,  1 Apr 2020 10:39:47 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr 2020 10:39:47
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F197C21CA8F;
+        Wed,  1 Apr 2020 10:39:34 +0200 (CEST)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr 2020 10:39:34
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <fabrice.gasnier@st.com>, <lee.jones@linaro.org>,
@@ -58,16 +58,16 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v6 6/6] ARM: mach-stm32: select low power timer for STM32MP157
-Date:   Wed, 1 Apr 2020 10:39:09 +0200
-Message-ID: <20200401083909.18886-7-benjamin.gaignard@st.com>
+Subject: [PATCH v6 1/6] dt-bindings: mfd: Document STM32 low power timer bindings
+Date:   Wed, 1 Apr 2020 10:39:04 +0200
+Message-ID: <20200401083909.18886-2-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200401083909.18886-1-benjamin.gaignard@st.com>
 References: <20200401083909.18886-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE3.st.com
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
@@ -76,25 +76,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make MACH_STM32MP157 select CLKSRC_STM32_LP to get a broadcast timer.
+Add a subnode to STM low power timer bindings to support timer driver
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/mach-stm32/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+version 6:
+- only use one interrupt
 
-diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
-index 57699bd8f107..d78f55b7b1d0 100644
---- a/arch/arm/mach-stm32/Kconfig
-+++ b/arch/arm/mach-stm32/Kconfig
-@@ -46,6 +46,7 @@ if ARCH_MULTI_V7
- config MACH_STM32MP157
- 	bool "STMicroelectronics STM32MP157"
- 	select ARM_ERRATA_814220
-+	select CLKSRC_STM32_LP
- 	default y
+version 5:
+- the previous has been acked-by Rob but since I have docummented
+  interrupts and interrupt-names properties I haven't applied it here.
+
+version 4:
+- change compatible and subnode names
+- document wakeup-source property
+
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml   | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+index 1a4cc5f3fb33..2a99b2296d2b 100644
+--- a/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
++++ b/Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+@@ -33,12 +33,17 @@ properties:
+     items:
+       - const: mux
  
- endif # ARMv7-A
++  interrupts:
++    maxItems: 1
++
+   "#address-cells":
+     const: 1
+ 
+   "#size-cells":
+     const: 0
+ 
++  wakeup-source: true
++
+   pwm:
+     type: object
+ 
+@@ -81,6 +86,16 @@ patternProperties:
+     required:
+       - compatible
+ 
++  timer:
++    type: object
++
++    properties:
++      compatible:
++        const: st,stm32-lptimer-timer
++
++    required:
++      - compatible
++
+ required:
+   - "#address-cells"
+   - "#size-cells"
+@@ -94,11 +109,13 @@ additionalProperties: false
+ examples:
+   - |
+     #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
+     timer@40002400 {
+       compatible = "st,stm32-lptimer";
+       reg = <0x40002400 0x400>;
+       clocks = <&timer_clk>;
+       clock-names = "mux";
++      interrupts-extended = <&exti 47 IRQ_TYPE_LEVEL_HIGH>;
+       #address-cells = <1>;
+       #size-cells = <0>;
+ 
+@@ -115,6 +132,10 @@ examples:
+       counter {
+         compatible = "st,stm32-lptimer-counter";
+       };
++
++      timer {
++        compatible = "st,stm32-lptimer-timer";
++      };
+     };
+ 
+ ...
 -- 
 2.15.0
 
