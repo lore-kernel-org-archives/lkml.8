@@ -2,53 +2,52 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B958CC2BA13
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0F7C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B66C212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0146D206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759086;
-	bh=vHUjieBU5aslM55rEOP09v3yMqm7chbEbPX1sJ1IF44=;
+	s=default; t=1585759090;
+	bh=SLuziyPDhy/Krr1/3ovv/97FsHO/PgRPxTZKFAYm9Mc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECC3u8aBQ2QA1L/9jA3q4ooRBfxiy6ji45Vfi3XuZRxpsuxmwxxeqNLxj2IZHEwQV
-	 QdKcTuV6/8522tGzsmxromI3HHGR54aEMLnxFWaVmtpWdztSmZlOYILU6NSSAUCive
-	 wOdkk1FXxDEfOpZhl0pS0RhtXyrqW+z8yV0EBACo=
+	b=AqpQlzBFFwqc3SaGvc5nAxfb5/VPo+5R29EBeW61roGBobZSk5K1zJjuX0sLYj3Zx
+	 8uqEHgQc4bPbFg4Lhi5UySsMenc9wqoC465e0rga31+4r4v0dCypHQdCtKS99fwajg
+	 KAjLUbN3mjheO6liWwXP2TgHD18hnwlmDPtdrYao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389063AbgDAQiF (ORCPT
+        id S2388911AbgDAQiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:38:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37460 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:38:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388751AbgDAQiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:38:01 -0400
+        id S2388751AbgDAQiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:38:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C587206F8;
-        Wed,  1 Apr 2020 16:38:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A764E20772;
+        Wed,  1 Apr 2020 16:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759080;
-        bh=vHUjieBU5aslM55rEOP09v3yMqm7chbEbPX1sJ1IF44=;
+        s=default; t=1585759086;
+        bh=SLuziyPDhy/Krr1/3ovv/97FsHO/PgRPxTZKFAYm9Mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gpg2W2U5QDv1NuUBUYQzxIWJ0eMemTzvBlJWtErVfTAFcUgItZ8G4NkscwuUSeLBh
-         PQ4cmdkpmZD3joqu738GU/6d2L9t3t6SoVe0+3VnU0d8tfr9Wz9GT3z2h14FPdUe5F
-         IsOoLuVwDC9NVAkKakBU/pMYjUyRnXEVUgZo1zKY=
+        b=jLvPAOa9gQHMD/POCaeggS9ebTkPdlMHz58EjSBfgJoPcHzF4IoJ8urjMLbCTPaBa
+         jKM5NFeBTr6H4R8OnfAoGu4Lo8DHk9i9Bxu+OovXovzyZcBMuQ9GqjZ7TiL0w0/9kp
+         ZdKrAYlUfmB7imfISiHHiA1qRiMXRZEVTrspuqFA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.9 070/102] vti6: Fix memory leak of skb if input policy check fails
-Date:   Wed,  1 Apr 2020 18:18:13 +0200
-Message-Id: <20200401161544.369456064@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 072/102] Input: raydium_i2c_ts - fix error codes in raydium_i2c_boot_trigger()
+Date:   Wed,  1 Apr 2020 18:18:15 +0200
+Message-Id: <20200401161544.760720853@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -61,39 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Torsten Hilbrich <torsten.hilbrich@secunet.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 2a9de3af21aa8c31cd68b0b39330d69f8c1e59df upstream.
+[ Upstream commit 32cf3a610c35cb21e3157f4bbf29d89960e30a36 ]
 
-The vti6_rcv function performs some tests on the retrieved tunnel
-including checking the IP protocol, the XFRM input policy, the
-source and destination address.
+These functions are supposed to return negative error codes but instead
+it returns true on failure and false on success.  The error codes are
+eventually propagated back to user space.
 
-In all but one places the skb is released in the error case. When
-the input policy check fails the network packet is leaked.
-
-Using the same goto-label discard in this case to fix this problem.
-
-Fixes: ed1efb2aefbb ("ipv6: Add support for IPsec virtual tunnel interfaces")
-Signed-off-by: Torsten Hilbrich <torsten.hilbrich@secunet.com>
-Reviewed-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 48a2b783483b ("Input: add Raydium I2C touchscreen driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200303101306.4potflz7na2nn3od@kili.mountain
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_vti.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/raydium_i2c_ts.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/ipv6/ip6_vti.c
-+++ b/net/ipv6/ip6_vti.c
-@@ -315,7 +315,7 @@ static int vti6_rcv(struct sk_buff *skb)
+diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
+index 76cdc145c0912..1f5b6b5b1018a 100644
+--- a/drivers/input/touchscreen/raydium_i2c_ts.c
++++ b/drivers/input/touchscreen/raydium_i2c_ts.c
+@@ -441,7 +441,7 @@ static int raydium_i2c_write_object(struct i2c_client *client,
+ 	return 0;
+ }
  
- 		if (!xfrm6_policy_check(NULL, XFRM_POLICY_IN, skb)) {
- 			rcu_read_unlock();
--			return 0;
-+			goto discard;
+-static bool raydium_i2c_boot_trigger(struct i2c_client *client)
++static int raydium_i2c_boot_trigger(struct i2c_client *client)
+ {
+ 	static const u8 cmd[7][6] = {
+ 		{ 0x08, 0x0C, 0x09, 0x00, 0x50, 0xD7 },
+@@ -466,10 +466,10 @@ static bool raydium_i2c_boot_trigger(struct i2c_client *client)
  		}
+ 	}
  
- 		ipv6h = ipv6_hdr(skb);
+-	return false;
++	return 0;
+ }
+ 
+-static bool raydium_i2c_fw_trigger(struct i2c_client *client)
++static int raydium_i2c_fw_trigger(struct i2c_client *client)
+ {
+ 	static const u8 cmd[5][11] = {
+ 		{ 0, 0x09, 0x71, 0x0C, 0x09, 0x00, 0x50, 0xD7, 0, 0, 0 },
+@@ -492,7 +492,7 @@ static bool raydium_i2c_fw_trigger(struct i2c_client *client)
+ 		}
+ 	}
+ 
+-	return false;
++	return 0;
+ }
+ 
+ static int raydium_i2c_check_path(struct i2c_client *client)
+-- 
+2.20.1
+
 
 
