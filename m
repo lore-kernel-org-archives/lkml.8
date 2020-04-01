@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ED0C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C1FC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB52520714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE8E20714
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759807;
-	bh=wyLKa9e4fnj7moQyCDcCfUz9jCeCcmM9gRIIhMtIa1U=;
+	s=default; t=1585759808;
+	bh=m6uTusX3QKM1rf4TxbnopD7lVV6EztOv2sZpf0uTwsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2TLfJxgMCWrGAq/CcUFHi+sGRaCTzXtt57jAZGB9vJnNrSIHdBZWahJT+PX4EwM9
-	 2xNwD0LytW+Fo26IzXwyByixvWdmeX7lN1MqSNTWmWIlUMbdFsF5AIaJ/r0OFZTcGO
-	 BSkIg2haphKyiTbiAbQEnSpR8NWU6kcoiOFF3NnY=
+	b=jrhwkeXae906I8KSVoz4+1kdwxzUwfj2AtDeFXw/yyKAXknlXpdkAsQL/r3JzfAVp
+	 DBcRYIK1oCIOtpmIrVAeaaZwyri+t0K/maIc0Ysiiawpj28BW1ruhAlCncYV/gKmlb
+	 HHMd3BvRXw3Tnue/1Mok6DU1gGsI98udcX6Q8uF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389394AbgDAQuF (ORCPT
+        id S2389377AbgDAQk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41356 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389388AbgDAQlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:41:04 -0400
+        id S2389197AbgDAQkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:40:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A43632063A;
-        Wed,  1 Apr 2020 16:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3E672063A;
+        Wed,  1 Apr 2020 16:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759264;
-        bh=wyLKa9e4fnj7moQyCDcCfUz9jCeCcmM9gRIIhMtIa1U=;
+        s=default; t=1585759247;
+        bh=m6uTusX3QKM1rf4TxbnopD7lVV6EztOv2sZpf0uTwsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RuqE3lBkJPCG/+7LfI/0XWTzFXhxbMIRwfq21rIRCa+9k1JvP0imH+B5HR4BDicA3
-         tVIfEY06Nq77okbxiMI9v1W7Y7A581Fujh5RihlmYF/IK/7ek/ehTY5IlVCtuWX0H5
-         JmrXbJhUjT/Qdo5S2Z+T7D0Yljd9x1F8VTJkJWcA=
+        b=ZkJUQoc15MrI7IMXEKsW+s4rjUApJBX+PXkgbhq3oFs0khxN7/8DCn2DGlvJhKiR+
+         IkPHNt4GYMDr6TUvqXk6kpD9psXiBWFOxZ/cx6WnOeWnryuEelIMrYnBMSqu33Xizg
+         5g3FZjbnvCUxgWB1IXrJgJoRoapaWatXRtUEEYvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 025/148] ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
-Date:   Wed,  1 Apr 2020 18:16:57 +0200
-Message-Id: <20200401161554.916207936@linuxfoundation.org>
+        stable@vger.kernel.org, Alberto Mattea <alberto@mattea.info>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.14 020/148] usb: xhci: apply XHCI_SUSPEND_DELAY to AMD XHCI controller 1022:145c
+Date:   Wed,  1 Apr 2020 18:16:52 +0200
+Message-Id: <20200401161554.357387148@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,46 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Alberto Mattea <alberto@mattea.info>
 
-commit 5461e0530c222129dfc941058be114b5cbc00837 upstream.
+commit 16263abc12d09871156a1c8650fb651f0e552f5e upstream.
 
-The return value checks in snd_pcm_plug_alloc() are covered with
-snd_BUG_ON() macro that may trigger a kernel WARNING depending on the
-kconfig.  But since the error condition can be triggered by a weird
-user space parameter passed to OSS layer, we shouldn't give the kernel
-stack trace just for that.  As it's a normal error condition, let's
-remove snd_BUG_ON() macro usage there.
+This controller timeouts during suspend (S3) with
+[  240.521724] xhci_hcd 0000:30:00.3: WARN: xHC save state timeout
+[  240.521729] xhci_hcd 0000:30:00.3: ERROR mismatched command completion event
+thus preventing the system from entering S3.
+Moreover it remains in an undefined state where some connected devices stop
+working until a reboot.
+Apply the XHCI_SUSPEND_DELAY quirk to make it suspend properly.
 
-Reported-by: syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200312155730.7520-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+CC: stable@vger.kernel.org
+Signed-off-by: Alberto Mattea <alberto@mattea.info>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200306150858.21904-3-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_plugin.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-pci.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_su
- 		while (plugin->next) {
- 			if (plugin->dst_frames)
- 				frames = plugin->dst_frames(plugin, frames);
--			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
-+			if ((snd_pcm_sframes_t)frames <= 0)
- 				return -ENXIO;
- 			plugin = plugin->next;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
-@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_su
- 		while (plugin->prev) {
- 			if (plugin->src_frames)
- 				frames = plugin->src_frames(plugin, frames);
--			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
-+			if ((snd_pcm_sframes_t)frames <= 0)
- 				return -ENXIO;
- 			plugin = plugin->prev;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -140,7 +140,8 @@ static void xhci_pci_quirks(struct devic
+ 		xhci->quirks |= XHCI_AMD_PLL_FIX;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_AMD &&
+-		(pdev->device == 0x15e0 ||
++		(pdev->device == 0x145c ||
++		 pdev->device == 0x15e0 ||
+ 		 pdev->device == 0x15e1 ||
+ 		 pdev->device == 0x43bb))
+ 		xhci->quirks |= XHCI_SUSPEND_DELAY;
 
 
