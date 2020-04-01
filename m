@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3ECC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8EAC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A0620658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF1320658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758071;
-	bh=5XjkFM5wyNFBP6SLOe9dlSinzdyO5temJPYtDJ7S7Ak=;
+	s=default; t=1585758075;
+	bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yi2m4+8uHk/LFVwEzGtqPPNEyhE0es+i6GYKYGzDS9gxVGj3a2f+/WAJpx0oslc1F
-	 Ix3QivaHInRm/d53RxK219GpObBLbo0M24MmJ7MHdxvl7dxhWSkX+qEuaOw0VajaD3
-	 z6sDAwYOeQxOOhzTax6M4qVO+jK9qjiZ/yRXKwr8=
+	b=gzz1L+xoZoWMkT6XlxQykDJeihYI1FejLaF/j/9PPV1WgFAdjs2Ze+e5CPnzOGfq6
+	 Ajsv/u7haWwIubpWasYplvjm16gK67ip6BP7C/AOo0fVDvLEAkSVkJjvImO0hmM2zL
+	 t2rsJmL22ujUVLPijhnP7MEXHblilhIwb4pixxAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732442AbgDAQVK (ORCPT
+        id S1733253AbgDAQVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732273AbgDAQUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:20:55 -0400
+        id S1733230AbgDAQVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:21:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE38320658;
-        Wed,  1 Apr 2020 16:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E47220658;
+        Wed,  1 Apr 2020 16:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758055;
-        bh=5XjkFM5wyNFBP6SLOe9dlSinzdyO5temJPYtDJ7S7Ak=;
+        s=default; t=1585758068;
+        bh=LgPj8+2ycUOEbuzcx4Slc6l4LdVpqf9vUNx2DlNUndY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKPbn95pjqt5LXWfcdgWNDKemfix1ypownDEKIBSlMBBOUoVGkLD1pZH/LaywUwPh
-         4zgS8mfdfUVVW7p8RHPr1eYLnGSRNrMJLv8anXSoWR3pvLmLqz2ngCOlSbwtpG75U6
-         3aaBBwms00ftrKqb+hPnIKwmHLLZNZX94s8Ix9TI=
+        b=K0TzFrJrZn7a6At3Ns4LsavwEJIFvs3wqJXtYGhgsyEglJoNqnqBYeSTkRYhAXvKW
+         x94jIcGTcahIq5gIBGR8vCfUzREX84/SX7Yzwla/Lwpi9YeMNXz24soME4aS6NbW+K
+         tTmimMKIsQAPq4altFt+dU3XQZHHiqJcQdklVIeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 5.5 07/30] vt: switch vt_dont_switch to bool
-Date:   Wed,  1 Apr 2020 18:17:11 +0200
-Message-Id: <20200401161420.268112172@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.5 26/30] ARM: dts: imx6: phycore-som: fix arm and soc minimum voltage
+Date:   Wed,  1 Apr 2020 18:17:30 +0200
+Message-Id: <20200401161433.901882726@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.345528747@linuxfoundation.org>
 References: <20200401161414.345528747@linuxfoundation.org>
@@ -58,57 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit f400991bf872debffb01c46da882dc97d7e3248e upstream.
+commit 636b45b8efa91db05553840b6c0120d6fa6b94fa upstream.
 
-vt_dont_switch is pure boolean, no need for whole char.
+The current set minimum voltage of 730000µV seems to be wrong. I don't
+know the document which specifies that but the imx6qdl datasheets says
+that the minimum voltage should be 0.925V for VDD_ARM (LDO bypassed,
+lowest opp) and 1.15V for VDD_SOC (LDO bypassed, lowest opp).
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200219073951.16151-6-jslaby@suse.cz
+Fixes: ddec5d1c0047 ("ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt_ioctl.c |    6 +++---
- include/linux/vt_kern.h   |    2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -39,7 +39,7 @@
- #include <linux/kbd_diacr.h>
- #include <linux/selection.h>
+--- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+@@ -107,14 +107,14 @@
+ 		regulators {
+ 			vdd_arm: buck1 {
+ 				regulator-name = "vdd_arm";
+-				regulator-min-microvolt = <730000>;
++				regulator-min-microvolt = <925000>;
+ 				regulator-max-microvolt = <1380000>;
+ 				regulator-always-on;
+ 			};
  
--char vt_dont_switch;
-+bool vt_dont_switch;
- 
- static inline bool vt_in_use(unsigned int i)
- {
-@@ -1026,12 +1026,12 @@ int vt_ioctl(struct tty_struct *tty,
- 	case VT_LOCKSWITCH:
- 		if (!capable(CAP_SYS_TTY_CONFIG))
- 			return -EPERM;
--		vt_dont_switch = 1;
-+		vt_dont_switch = true;
- 		break;
- 	case VT_UNLOCKSWITCH:
- 		if (!capable(CAP_SYS_TTY_CONFIG))
- 			return -EPERM;
--		vt_dont_switch = 0;
-+		vt_dont_switch = false;
- 		break;
- 	case VT_GETHIFONTMASK:
- 		ret = put_user(vc->vc_hi_font_mask,
---- a/include/linux/vt_kern.h
-+++ b/include/linux/vt_kern.h
-@@ -135,7 +135,7 @@ extern int do_unbind_con_driver(const st
- 			     int deflt);
- int vty_init(const struct file_operations *console_fops);
- 
--extern char vt_dont_switch;
-+extern bool vt_dont_switch;
- extern int default_utf8;
- extern int global_cursor_default;
- 
+ 			vdd_soc: buck2 {
+ 				regulator-name = "vdd_soc";
+-				regulator-min-microvolt = <730000>;
++				regulator-min-microvolt = <1150000>;
+ 				regulator-max-microvolt = <1380000>;
+ 				regulator-always-on;
+ 			};
 
 
