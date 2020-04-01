@@ -2,115 +2,200 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94390C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2218C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FBA20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585785135;
-	bh=Jz0/Tmfi38wg1zgHfPE4PHQZ5xpHWkQUEbAm/9nBj/M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Jb9rOGuv/cn7aK/AGwpxBhX7dE4IKbvR6eR75cLSEGSL4sHfkMDy1hiZr9mxdSmu6
-	 2FYAa87RELC1ErNwNq/Rt7SrRES9nH4Saso7NG3HYaG49RmjMvcS1aBpvUlo6ocxJC
-	 fCedH9dQlTFqiP6ieu7N4jrflhy5vfrVHesnq0GA=
+	by mail.kernel.org (Postfix) with ESMTP id 9791220787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:52:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g7KGE2ct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733297AbgDAXv7 (ORCPT
+        id S2387441AbgDAXwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:51:59 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44030 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732872AbgDAXv6 (ORCPT
+        Wed, 1 Apr 2020 19:52:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45527 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732872AbgDAXwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:51:58 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g27so1296360ljn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:51:57 -0700 (PDT)
+        Wed, 1 Apr 2020 19:52:16 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t4so610634plq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H9rQ+4MX6AGqiS4gDh7zcouPJInPh/6Vm7fyt3tgD0k=;
-        b=JX+jSiMzF2RZC7X1UHsV906x8DewgkAwWN6EQ17vLXZEJQX6swhg/zVI1vxFEEZxIH
-         PbSD0KAyottCcGb/rT1bEA1sm5NRoFsrhBrQoH3A79V86rZeArdSk7sJvXfa6DN/8YJY
-         Q2hGYFvnvtsGpe9Mfmd01M2hX1hq6hVJbWiug=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=39o7ZeExYpkfTbZoKHgoBseO9KDqeuMtrYpVQ76wHvQ=;
+        b=g7KGE2ct8ZghoiGIERIsopK2WwcCW24r4+BhCyOrIrAO9QA+wACwNYk8KWp7X1ZSF2
+         3ccANG0k3AmbQKvv9Eguif8ww/gMmCGxH7hyLdiqEBSuH5Bt1qIodKPF261uREWWKGGX
+         SV9XzvvE2ok1Ob9eWNoW+M3pLPzRQ39oCDuo+up1xltLUYMcqEa4tHITqqupbx2UMnZC
+         pI3toKLL+KgyHH96V5JHLBew/9cRjcSxFLTDw6f72T0jREZj3xjIO7loC5jxZkZ04F0G
+         d3eB/yjwJk7bJAfQDKjQ4W0ciZ/r73QQbuMpRaIbnZ4t0brMs0Pj2r2b9uuSJCFU3BmZ
+         ZjUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H9rQ+4MX6AGqiS4gDh7zcouPJInPh/6Vm7fyt3tgD0k=;
-        b=W5J6M+KedCrXbsu2pmh9mLHHxfmoaLr2wjg6HNNZLvJxb5Xb0Q+/Ht7ASSMHHDBsxC
-         iI9wQKFqxIE+MUW6SAeofQgjorqI1NT1Cml0EAFI7u9ptvAJGs+1WawI0Q+HtVEdg4ip
-         zX2XOl0Fygun370D4yjt/7gJLSKJxF90nHxVFWHOa14SgV3SFXL4sBerpBJ76l/KBub7
-         XVdsuN2yIOFql6KC5B3O3/r+7eXGcc3eJLsJ/bA6ESVqc4yLiQX87/V3HkQYoV9J5XYL
-         e+B9ic68l9oBLVHDOb9rw6oI5cvyZFY6ndlNDb/dE6mVKcbL0z31ksCEqzLYvWXbYHBd
-         mwNA==
-X-Gm-Message-State: AGi0PuZpDEoPhyADFghdhTStg6pM59PWBiqZi9XgGI/cpnLVLRY+UENF
-        PjuFYICswl9wQSFU+2X0u+Evanv05ng=
-X-Google-Smtp-Source: APiQypLpiarPRvPKED2Ve1Wc0l8u50MEair+E8rV477f/0XPCsiIGFv+IYlfebXLiv5g4I/mIQviIA==
-X-Received: by 2002:a2e:954e:: with SMTP id t14mr326020ljh.253.1585785115610;
-        Wed, 01 Apr 2020 16:51:55 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id m8sm2070608lji.12.2020.04.01.16.51.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Apr 2020 16:51:54 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id 19so1316159ljj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:51:54 -0700 (PDT)
-X-Received: by 2002:a2e:8652:: with SMTP id i18mr373016ljj.265.1585785113845;
- Wed, 01 Apr 2020 16:51:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=39o7ZeExYpkfTbZoKHgoBseO9KDqeuMtrYpVQ76wHvQ=;
+        b=m8S78sKtyzcVlgl1HO51VF2eKOJok4TPKmpna7ABXuzrKsr2iv3Ucz+FCK6jGWqwlY
+         V/Hj6E//wwuScC4d0HC2JJ5QK9axp//o8Hftin1tq6vZ2G/I1LC7UT48rk10i2nbwPbq
+         NT52zPkzin2/8/qdqsv9OOhYIxYpldvmHdP9nqzCAZMdvVhuZPmFHRhhSWbr2LY2DzXg
+         +udCDrOe8Rg2IVempFysyP2gZom/WglBDIG6zlEZkHd8PdnrwRHL8UTUOTV2wtFK3gIf
+         196/HaLZJjVIpsYGrxmxfOuEbknPPYuk6MbI/s9bbQuvA0NygvMH3Co6FXyNTVVZGOuO
+         0tNQ==
+X-Gm-Message-State: AGi0PuZhj8GYDlUXAL4/8KKeSWHbJNOhr2YETBQ+9yx5n8wdA4N8FhGI
+        G5fybSFeMvg9rtTXrfwvdyDxew==
+X-Google-Smtp-Source: APiQypLd+V9fUOfcYn6J9ceh3M1sNQNMmr8IkTNDiIx6b9iFuOJavZ+5tEa5M0Ne+AMErvILIozTxQ==
+X-Received: by 2002:a17:902:8b82:: with SMTP id ay2mr332388plb.221.1585785133978;
+        Wed, 01 Apr 2020 16:52:13 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id i197sm2401468pfe.137.2020.04.01.16.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 16:52:13 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 16:52:11 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     ansuelsmth@gmail.com
+Cc:     'Stanimir Varbanov' <svarbanov@mm-sol.com>,
+        'Sham Muthayyan' <smuthayy@codeaurora.org>,
+        'Andy Gross' <agross@kernel.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: R: [PATCH 07/12] pcie: qcom: add tx term offset support
+Message-ID: <20200401235211.GK254911@minitux>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+ <20200320183455.21311-7-ansuelsmth@gmail.com>
+ <20200401204007.GG254911@minitux>
+ <006501d60870$3cf99fc0$b6ecdf40$@gmail.com>
 MIME-Version: 1.0
-References: <20200324215049.GA3710@pi3.com.pl> <202003291528.730A329@keescook>
- <87zhbvlyq7.fsf_-_@x220.int.ebiederm.org> <CAG48ez3nYr7dj340Rk5-QbzhsFq0JTKPf2MvVJ1-oi1Zug1ftQ@mail.gmail.com>
-In-Reply-To: <CAG48ez3nYr7dj340Rk5-QbzhsFq0JTKPf2MvVJ1-oi1Zug1ftQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 1 Apr 2020 16:51:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjz0LEi68oGJSQzZ--3JTFF+dX2yDaXDRKUpYxtBB=Zfw@mail.gmail.com>
-Message-ID: <CAHk-=wjz0LEi68oGJSQzZ--3JTFF+dX2yDaXDRKUpYxtBB=Zfw@mail.gmail.com>
-Subject: Re: [PATCH] signal: Extend exec_id to 64bits
-To:     Jann Horn <jannh@google.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Adam Zabrocki <pi3@pi3.com.pl>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <006501d60870$3cf99fc0$b6ecdf40$@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 4:37 PM Jann Horn <jannh@google.com> wrote:
->
-> GCC will generate code for this without complaining, but I think it'll
-> probably generate a tearing store on 32-bit platforms:
+On Wed 01 Apr 14:55 PDT 2020, ansuelsmth@gmail.com wrote:
 
-This is very much a "we don't care" case.
+> > On Fri 20 Mar 11:34 PDT 2020, Ansuel Smith wrote:
+> > 
+> > > From: Sham Muthayyan <smuthayy@codeaurora.org>
+> > >
+> > > Add tx term offset support to pcie qcom driver
+> > > need in some revision of the ipq806x soc
+> > >
+> > > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-qcom.c | 61
+> > ++++++++++++++++++++++----
+> > >  1 file changed, 52 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> > b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > index ecc22fd27ea6..8009e3117765 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > > @@ -45,7 +45,13 @@
+> > >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+> > >
+> > >  #define PCIE20_PARF_PHY_CTRL			0x40
+> > > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	(0x1f << 16)
+> > > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		(x << 16)
+> > > +
+> > >  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> > > +#define REF_SSP_EN				BIT(16)
+> > > +#define REF_USE_PAD				BIT(12)
+> > > +
+> > >  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+> > >  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+> > >  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+> > > @@ -77,6 +83,18 @@
+> > >  #define DBI_RO_WR_EN				1
+> > >
+> > >  #define PERST_DELAY_US				1000
+> > > +/* PARF registers */
+> > > +#define PCIE20_PARF_PCS_DEEMPH			0x34
+> > > +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
+> > > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
+> > > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
+> > > +
+> > > +#define PCIE20_PARF_PCS_SWING			0x38
+> > > +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
+> > > +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
+> > > +
+> > > +#define PCIE20_PARF_CONFIG_BITS			0x50
+> > > +#define PHY_RX0_EQ(x)				(x << 24)
+> > >
+> > >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+> > >  #define SLV_ADDR_SPACE_SZ			0x10000000
+> > > @@ -97,6 +115,7 @@ struct qcom_pcie_resources_2_1_0 {
+> > >  	struct reset_control *phy_reset;
+> > >  	struct reset_control *ext_reset;
+> > >  	struct regulator_bulk_data
+> > supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+> > > +	uint8_t phy_tx0_term_offset;
+> > >  };
+> > >
+> > >  struct qcom_pcie_resources_1_0_0 {
+> > > @@ -184,6 +203,16 @@ struct qcom_pcie {
+> > >
+> > >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> > >
+> > > +static inline void
+> > > +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
+> > > +{
+> > > +	u32 val = readl(addr);
+> > > +
+> > > +	val &= ~clear_mask;
+> > > +	val |= set_mask;
+> > > +	writel(val, addr);
+> > > +}
+> > > +
+> > >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+> > >  {
+> > >  	gpiod_set_value_cansleep(pcie->reset, 1);
+> > > @@ -277,6 +306,10 @@ static int
+> > qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+> > >  	if (IS_ERR(res->ext_reset))
+> > >  		return PTR_ERR(res->ext_reset);
+> > >
+> > > +	if (of_property_read_u8(dev->of_node, "phy-tx0-term-offset",
+> > > +				&res->phy_tx0_term_offset))
+> > > +		res->phy_tx0_term_offset = 0;
+> > 
+> > The appropriate way is to encode differences in hardware is to use
+> > different compatibles for the two different versions of the hardware.
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> 
+> So a better way to handle this would be to check the SoC compatible?
+> AFAIK a different offset is only needed on ipq8064 revision 2 and ipq8065
+> but
+> it looks bad to add a special code just for that 2 SoC. 
+> I would prefer to handle this with the offset definition but If you think
+> this would be
+> the right way, I will follow that. Waiting for your response about this.
+> 
 
-It's literally testing a sequence counter for equality. If you get
-tearing in the high bits on the write (or the read), you'd still need
-to have the low bits turn around 4G times to get a matching value.
+Yes, please do this by having different compatibles for the different
+revisions of the hardware block.
 
-So no. We're not doing atomics for the 32-bit case. That's insane.
+You should be able to use the same implementation for the two
+compatibles, just make the phy_tx0_term_offset depends on which was
+used.
 
-               Linus
+Regards,
+Bjorn
