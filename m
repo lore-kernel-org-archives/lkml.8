@@ -2,108 +2,151 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B4DC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E321BC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F012078C
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B1OBTGwN"
+	by mail.kernel.org (Postfix) with ESMTP id BBCD92063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387570AbgDAQ4z (ORCPT
+        id S1732817AbgDAQ5I convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:56:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:56526 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732784AbgDAQUL (ORCPT
+        Wed, 1 Apr 2020 12:57:08 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41323 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733269AbgDAQ5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:20:11 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031GIeiP192555;
-        Wed, 1 Apr 2020 16:19:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=wf5Epvd2PkMi8L7E/eRCUSR0FOvN4Hz0yrwmht90YC0=;
- b=B1OBTGwNefZz4cvyBMFGvInJhvACIyJVqEmEJQzCbvhwtMRqnux8ubHv88gUbJgRISwc
- sgQmJYNDDopM8HVE9vyndAjbTtCMdIoiwwuWNaKk9Fq4z0IJsf82fb26GoPVQzVprvNE
- jH21TQWFzyg+ARWRC5s1+eg0c1gnH48JZE/Pn220xQB2xncVFBUZfdqqti5OQqxdAP3a
- xZ8NYJsN91wJTh/BMvle72pBf1hqadkuN3ealpyD49mz+IuVUHtzBFpryfpcFtHy++I9
- gvkQFQO+C0rK+UPXM/DX+49O9GfxjF/ObUeOj/4KTwr59M/btMolfsLq8nOLGAXPI0Ow TQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 303aqhpxbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Apr 2020 16:19:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 031GGsu9071569;
-        Wed, 1 Apr 2020 16:17:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 302g2gwbn7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Apr 2020 16:17:56 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 031GHspi005974;
-        Wed, 1 Apr 2020 16:17:54 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 01 Apr 2020 09:17:54 -0700
-Date:   Wed, 1 Apr 2020 12:18:10 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Hildenbrand <david@redhat.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
-Message-ID: <20200401161810.xvqikca2x46yqrlx@ca-dmjordan1.us.oracle.com>
-References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
- <20200401154217.GQ22681@dhcp22.suse.cz>
- <dfc0014a-9b85-5eeb-70ea-d622ccf5d988@redhat.com>
- <20200401160048.GU22681@dhcp22.suse.cz>
- <20200401160929.jwekhr24tb44odea@ca-dmjordan1.us.oracle.com>
- <20200401161243.GW22681@dhcp22.suse.cz>
+        Wed, 1 Apr 2020 12:57:08 -0400
+Received: by mail-ot1-f68.google.com with SMTP id f52so237893otf.8;
+        Wed, 01 Apr 2020 09:57:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZyTZQ9ScLYyXr8uy25TVZM268D8wsSCH+8ypLUnJOFM=;
+        b=gRytOR6k+DyXweCVLepsCqlAVbnAwqt7RTLVhahoDIJXA1Hm3kdZE3UyDTjNPqNsI1
+         MFBI0/O5sCtjIpogBMNtp0at4CYx00dYBGzvOWDCDNy7iX+6q+gH7ebWh5W3JQfRuG6/
+         1ei3x3pDwHthqTQZe4gvJKkq088yd0ViPuasSfhvLO7NpyFGh98tGJAoCP+xtlmM/aGI
+         TVu+E5wXfROB/cKQ5eLdJTBulrLsexoJqQY5zFgRz+G9On+B1PvHPnmkMxNoUeqBv2Al
+         n5FXSgGrooVcnQ1g7mk1kUsU5te/CO7jJhHPIB9f/5qviHh2U3ZY/+H5eQefilja3MMk
+         5fDA==
+X-Gm-Message-State: ANhLgQ0V8D0fe16BD0lYqPnFZVQVJYJi00RXlU3mc3AuDUAKyLaZpg+u
+        PzOvQUGMAL6LrRNt6PCDC90v9Doo6ACp+b/abPM=
+X-Google-Smtp-Source: ADFU+vufihEvibArYWJjTrCmDu7dXZgc3PqH8LVxCwqiESC/QDCUaa5LpicQzIvHFS3WT4dVXp+EAe0ygrg1OSHe3UQ=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr6414778otl.145.1585760227154;
+ Wed, 01 Apr 2020 09:57:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401161243.GW22681@dhcp22.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004010141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9578 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004010141
+References: <20200401153513.423683-1-mylene.josserand@collabora.com> <20200401153513.423683-3-mylene.josserand@collabora.com>
+In-Reply-To: <20200401153513.423683-3-mylene.josserand@collabora.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 1 Apr 2020 18:56:55 +0200
+Message-ID: <CAMuHMdXvFOKqmZ-MLJV4SAeLN-PDzqPvMvbVpcD=jyip9tbdnA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] clk: rockchip: rk3288: Handle clock tree for rk3288w
+To:     =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@collabora.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        kever.yang@rock-chips.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 06:12:43PM +0200, Michal Hocko wrote:
-> On Wed 01-04-20 12:09:29, Daniel Jordan wrote:
-> > On Wed, Apr 01, 2020 at 06:00:48PM +0200, Michal Hocko wrote:
-> > > On Wed 01-04-20 17:50:22, David Hildenbrand wrote:
-> > > > On 01.04.20 17:42, Michal Hocko wrote:
-> > > > > This needs a double checking but I strongly believe that the lock can be
-> > > > > simply dropped in this path.
-> > 
-> > This is what my fix does, it limits the time the resize lock is held.
-> 
-> Just remove it from the deferred intialization and add a comment that we
-> deliberately not taking the lock here because abc
+Hi Mylène,
 
-I think it has to be a little more involved because of the window where
-interrupts might allocate during deferred init, as Vlastimil pointed out a few
-years ago when the change was made.  I'll explain myself in the changelog.
+On Wed, Apr 1, 2020 at 5:35 PM Mylène Josserand
+<mylene.josserand@collabora.com> wrote:
+> The revision rk3288w has a different clock tree about
+> "hclk_vio" clock, according to the BSP kernel code.
+>
+> This patch handles this difference by detecting which SOC it is
+> and creating the div accordingly. Because we are using
+> soc_device_match function, we need to delay the registration
+> of this clock later than others to have time to get SoC revision.
+>
+> Otherwise, because of CLK_OF_DECLARE uses, clock tree will be
+> created too soon to have time to detect SoC's revision.
+>
+> Signed-off-by: Mylène Josserand <mylene.josserand@collabora.com>
+
+Thanks for your patch!
+
+> --- a/drivers/clk/rockchip/clk-rk3288.c
+> +++ b/drivers/clk/rockchip/clk-rk3288.c
+> @@ -914,10 +923,15 @@ static struct syscore_ops rk3288_clk_syscore_ops = {
+>         .resume = rk3288_clk_resume,
+>  };
+>
+> +static const struct soc_device_attribute rk3288w[] = {
+> +       { .soc_id = "RK32xx", .revision = "RK3288w" },
+> +       { /* sentinel */ }
+> +};
+> +
+> +static struct rockchip_clk_provider *ctx;
+> +
+>  static void __init rk3288_clk_init(struct device_node *np)
+>  {
+> -       struct rockchip_clk_provider *ctx;
+> -
+>         rk3288_cru_base = of_iomap(np, 0);
+>         if (!rk3288_cru_base) {
+>                 pr_err("%s: could not map cru region\n", __func__);
+> @@ -955,3 +969,17 @@ static void __init rk3288_clk_init(struct device_node *np)
+>         rockchip_clk_of_add_provider(np, ctx);
+>  }
+>  CLK_OF_DECLARE(rk3288_cru, "rockchip,rk3288-cru", rk3288_clk_init);
+> +
+> +static int __init rk3288_hclkvio_register(void)
+> +{
+
+This function will always be called, even when running a (multi-platform)
+kernel on a non-rk3288 platform.  So you need some protection against
+that.
+
+> +       /* Check for the rk3288w revision as clock tree is different */
+> +       if (soc_device_match(rk3288w))
+> +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branch,
+> +                                              ARRAY_SIZE(rk3288w_hclkvio_branch));
+> +       else
+> +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch,
+> +                                              ARRAY_SIZE(rk3288_hclkvio_branch));
+
+Note that soc_device_match() returns a struct soc_device_attribute
+pointer.  If you would store the rockchip_clk_branch array pointer and
+size in rk3288w[...].data (i.e. a pointer to a struct containing that
+info), for both the r83288w and normal rk3288 variants, you could
+simplify this to:
+
+    attr = soc_device_match(rk3288w);
+    if (attr) {
+            struct rk3288_branch_array *p = attr->data;
+            rockchip_clk_register_branches(ctx, p->branches, p->len);
+    }
+
+That would handle the not-running-on-rk3288 issue as well.
+
+> +
+> +       return 0;
+> +}
+> +subsys_initcall(rk3288_hclkvio_register);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
