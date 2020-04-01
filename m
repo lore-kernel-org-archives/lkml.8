@@ -2,125 +2,88 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D995C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4EFC2D0F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1B12206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUI7+JbE"
+	by mail.kernel.org (Postfix) with ESMTP id 46D3820776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585739927;
+	bh=sYBeYzQQ4hfKuB0dBhCd6enF1aFyI2NQI0caO8q7VE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MhkN8ktyZjM4iSRHMmo6JRPNwQ390HaBQeyWHfVlYq+HMqtgcct95HF42rLkJ0e9r
+	 FYQZIuvy5l0Ofl2HG8U8bNAXBmTyKgTVH/rVsD/+G3ae2obTxEbda8Basd5+0HMzgl
+	 THK6qVQD//fy+hit0Y/hxF07agSZ+F0Oc9T9EtTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732494AbgDALQ1 (ORCPT
+        id S1732433AbgDALSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:16:27 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34361 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732258AbgDALQ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:16:27 -0400
-Received: by mail-lf1-f65.google.com with SMTP id e7so20131412lfq.1;
-        Wed, 01 Apr 2020 04:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c2W2ZCFW75Hzmvi2Z1dJsLhmnnF1F/Vk/OMpx9dRAIs=;
-        b=XUI7+JbE+o6HCbh48Ajper+T9aduNVwgn25i5zLtWNFdwmmUv7rwocoqrBzVOX7aYa
-         bBnZ2Iug7N46NS8+5H8HqK0ZQasjJ7Rb7LQkyFzTcNUpQPZVCphn0HsowdOFduqukIBn
-         Jmu7oygcvyVAu903qPvzJoN4nUXJUY+cuRGWrIzoWIKPwHqslX6sDJIFKC63tAmVdC9s
-         rof7ApkRn1hX/TtzYFhq9Gi6hkmXW/P7kOSGZQHcfxp2PAcTHZ9hMSQomfzV44+IkBdW
-         n0PJQAqIcONDp8dct4Sxa99cu1CaVw8lQXE7FkmL6rcVpHcL9KrHwPAAdnb2ey/rZNOM
-         UrJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c2W2ZCFW75Hzmvi2Z1dJsLhmnnF1F/Vk/OMpx9dRAIs=;
-        b=FfeWjXd1sl5L0FoM0j43sEvaH3msG1hC0AZAMhiKubr25UofP3feec/3HmNzpy9bQz
-         KVhtszJ0/xa3GZ3y5v05sJpmsPmj5zjoqwNNZb44djkDSAA2T7c4ClhwDleBBVhEvRKO
-         kPeAiwgAUHb7DD8qk09ZRlAyGXUdIp4Z/31H8QRtm1KQiComovrH8E3ZpBJ50jHwCjip
-         cLWuLHf5ISAserwg51HkmStluWg/RXp5ecOwnBorVDFrp26naLkr/2qTVS3VbzLliFPv
-         eGXwLGxeXoLC1gAjiSSHeXkXuBUoTv0tWcuhohsecTbVOq75jA5pvgqGH8qcG0jxV2cL
-         MPSA==
-X-Gm-Message-State: AGi0PubfiwvIy7cJ6X7uxnXAUYt7lW4eYnhG2rDB6EczkxGIS+ycy8ev
-        087KCsCx7JwdkbxMinF/MGM=
-X-Google-Smtp-Source: APiQypIcnkCb/DlDilD9iXAqcdBzVfyD1VeNAdgN2eI+5gP75WI1nFFQaeH22bZ3Y5FynCt5ivP/BQ==
-X-Received: by 2002:ac2:4113:: with SMTP id b19mr4809568lfi.70.1585739784413;
-        Wed, 01 Apr 2020 04:16:24 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.103.226])
-        by smtp.gmail.com with ESMTPSA id w24sm1002776ljh.57.2020.04.01.04.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 04:16:23 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id B6BE74617E0; Wed,  1 Apr 2020 14:16:22 +0300 (MSK)
-Date:   Wed, 1 Apr 2020 14:16:22 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-man <linux-man@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com,
-        "devi R.K" <devi.feb27@gmail.com>,
-        Marc Lehmann <debian-reportbug@plan9.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Andrei Vagin <avagin@gmail.com>
-Subject: Re: timer_settime() and ECANCELED
-Message-ID: <20200401111622.GQ3197@uranus>
-References: <CAKgNAkgiZna0yQzkdZQ92CJzjBcxX6eEu1cg24Oeu2pXRcSv8A@mail.gmail.com>
+        Wed, 1 Apr 2020 07:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732150AbgDALSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 07:18:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 212BD206E9;
+        Wed,  1 Apr 2020 11:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585739925;
+        bh=sYBeYzQQ4hfKuB0dBhCd6enF1aFyI2NQI0caO8q7VE8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e13ePXmJYdal5tuhVDXMd7BZprXIsrO0LCHM28pDaCKfYRgMw9k/KiPHA83HHC/n2
+         VD3eaSllUzsX166M8EyPGmN2DQqtVVBf2Duw4GLB6t9U88ZCTF9Yu5EDdKaWYsp1iu
+         6iU0DDuwPxwmMlL8mLJgUxcAvH4S9oVA+DbYkQxk=
+Date:   Wed, 1 Apr 2020 13:18:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Woody Suwalski <terraluna977@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
+Message-ID: <20200401111843.GC2144013@kroah.com>
+References: <20200331085308.098696461@linuxfoundation.org>
+ <6cdfe0e5-408f-2d88-cb08-c7675d78637c@gmail.com>
+ <20200401055152.GA1903194@kroah.com>
+ <20200401055309.GA1903746@kroah.com>
+ <2e853806-264d-cf74-4298-146900ab32a1@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgNAkgiZna0yQzkdZQ92CJzjBcxX6eEu1cg24Oeu2pXRcSv8A@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <2e853806-264d-cf74-4298-146900ab32a1@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 11:01:18AM +0200, Michael Kerrisk (man-pages) wrote:
-> Hello Thomas, et al,
-> 
-> Following on from our discussion of read() on a timerfd [1], I
-> happened to remember a Debian bug report [2] that points out that
-> timer_settime() can fail with the error ECANCELED, which is both
-> surprising and odd (because despite the error, the timer does get
-> updated).
-> 
-> The relevant kernel code (I think, from your commit [3]) seems to be
-> the following in timerfd_setup():
-> 
->         if (texp != 0) {
->                 if (flags & TFD_TIMER_ABSTIME)
->                         texp = timens_ktime_to_host(clockid, texp);
->                 if (isalarm(ctx)) {
->                         if (flags & TFD_TIMER_ABSTIME)
->                                 alarm_start(&ctx->t.alarm, texp);
->                         else
->                                 alarm_start_relative(&ctx->t.alarm, texp);
->                 } else {
->                         hrtimer_start(&ctx->t.tmr, texp, htmode);
->                 }
-> 
->                 if (timerfd_canceled(ctx))
->                         return -ECANCELED;
->         }
-> 
-> Using a small test program [4] shows the behavior. The program loops,
-> repeatedly calling timerfd_settime() (with a delay of a few seconds
-> before each call). In another terminal window, enter the following
-> command a few times:
-> 
->     $ sudo date -s "5 seconds"       # Add 5 secs to wall-clock time
-> 
-> I see behavior as follows (the /sudo date -s "5 seconds"/ command was
-> executed before loop iterations 0, 2, and 4):
+On Wed, Apr 01, 2020 at 07:06:47AM -0400, Woody Suwalski wrote:
+> Greg Kroah-Hartman wrote:
+> > On Wed, Apr 01, 2020 at 07:51:52AM +0200, Greg Kroah-Hartman wrote:
+> > > On Tue, Mar 31, 2020 at 11:06:16PM -0400, Woody Suwalski wrote:
+> > > > Greg Kroah-Hartman wrote:
+> > > > I think you have missed the
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=be8c827f50a0bcd56361b31ada11dc0a3c2fd240
+> > > It should come in soon, in another release or so, when the next set of
+> > > networking patches get sent to me.
+> > And also didn't hit Linus's tree until after this set of -rc patches
+> > went out, so it's not like I missed it or anything :)
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> My bad. It was supposed to be: I think that that patch should be considered
+> soon...
 
-Hi Michael, I can be wrong (since I didn't look into timerfd code
-for long time) but I guess if we wanna preserve the timer value
-we will have to lock timekeeper which is inacceptable. Thus looks
-like this is a tradeoff in a sake of speed (not sure though, better
-wait for Thomas reply)
+It will be, give us a chance.  I know the normal problem of "the only
+drivers that matter are the ones I use" applies here, but luckily I
+don't use that driver :)
+
+thanks,
+
+greg k-h
