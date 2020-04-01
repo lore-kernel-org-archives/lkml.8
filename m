@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24186C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE30C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C40C2137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD592063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758707;
-	bh=gKGesIHjum9IG4MYIu7b8532lXP7SNN8UJqqO0x5J88=;
+	s=default; t=1585758711;
+	bh=lAmqBsu/wsjKubuOe6/NouZ1wxhMs0q8L+D/vXUHWWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xeHAdpbbXzWZ4JWXL/NjGPXMLlDBO9O9cd5xyIxFeIrYgadH1njrnZdBmtAVhY5d6
-	 sYGr1vtSzZfeY5iDIk+UK1ppp4V5aj9NqlfewYj5esZ6AmmqTTUdqllOQoTrVcTQD4
-	 UMlrh5MBPqUnkitUAE1Alf+CuVP0R/X8nk+QiIOE=
+	b=QPCvEgVdo3LavTZQHuJA7g65jdZ9CHKLQfZ+WtYUOXSb2DhzPk0y0XBhg5H16M8mZ
+	 dijbT+PA8dk6fDJmQGSspB2ClVqUuuLcOnbywwoBQrb3KJbq6AjeSz9B9kv/mJbP/h
+	 uXtPwOaZgnFpAw4qoxrcY3BnDTN2X7hohFHmY1Xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388347AbgDAQbp (ORCPT
+        id S2387437AbgDAQbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388338AbgDAQbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:31:42 -0400
+        id S2387493AbgDAQbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:31:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 908D62137B;
-        Wed,  1 Apr 2020 16:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6317A2063A;
+        Wed,  1 Apr 2020 16:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758701;
-        bh=gKGesIHjum9IG4MYIu7b8532lXP7SNN8UJqqO0x5J88=;
+        s=default; t=1585758705;
+        bh=lAmqBsu/wsjKubuOe6/NouZ1wxhMs0q8L+D/vXUHWWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SKGp3H0Eyh8nz1EnXVOkb/FwFohr8x9RrxLOWxa1/GvnSboWzWVimocllxNfgG2lz
-         Z2kCNnHANVyaSYSdBrprnJkDKPRbO8/A+bpOJnd3tn9WradPwJDuktCl5m2wdnELSb
-         WJAfYqHHrMyXkGzHzhVpzgoEW8WaHF5AYc/yp6j4=
+        b=B+q+WYlAs/V1gLYKjDEG+4rTR3ngi0eyx+BCF3QfF43I01aPBjyygk4ZAPpx+g4Bn
+         FvyibC7briWIoGBVpAksTn6NQtCU21dDNQ88ZZG2rOtFhUkNBfajBE3h+63DHNCdRT
+         XsiGWY9dhvrB65hCYJgAHKglcoE9w1nxyLCSEXVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Wilcox <willy@linux.intel.com>,
-        Konstantin Khlebnikov <koct9i@gmail.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Jan Kara <jack@suse.com>, Neil Brown <neilb@suse.de>,
-        Ross Zwisler <ross.zwisler@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Sabrina Dubroca <sd@queasysnail.net>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 48/91] drivers/hwspinlock: use correct radix tree API
-Date:   Wed,  1 Apr 2020 18:17:44 +0200
-Message-Id: <20200401161530.338453012@linuxfoundation.org>
+Subject: [PATCH 4.4 49/91] net: ipv4: dont let PMTU updates increase route MTU
+Date:   Wed,  1 Apr 2020 18:17:45 +0200
+Message-Id: <20200401161530.542598128@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -65,41 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox <willy@linux.intel.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit b76ba4af4ddd6a06f7f65769e7be1bc56556cdf5 ]
+[ Upstream commit 28d35bcdd3925e7293408cdb8aa5f2aac5f0d6e3 ]
 
-radix_tree_is_indirect_ptr() is an internal API.  The correct call to
-use is radix_tree_deref_retry() which has the appropriate unlikely()
-annotation.
+When an MTU update with PMTU smaller than net.ipv4.route.min_pmtu is
+received, we must clamp its value. However, we can receive a PMTU
+exception with PMTU < old_mtu < ip_rt_min_pmtu, which would lead to an
+increase in PMTU.
 
-Fixes: c6400ba7e13a ("drivers/hwspinlock: fix race between radix tree insertion and lookup")
-Signed-off-by: Matthew Wilcox <willy@linux.intel.com>
-Cc: Konstantin Khlebnikov <koct9i@gmail.com>
-Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Jan Kara <jack@suse.com>
-Cc: Neil Brown <neilb@suse.de>
-Cc: Ross Zwisler <ross.zwisler@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+To fix this, take the smallest of the old MTU and ip_rt_min_pmtu.
+
+Before this patch, in case of an update, the exception's MTU would
+always change. Now, an exception can have only its lock flag updated,
+but not the MTU, so we need to add a check on locking to the following
+"is this exception getting updated, or close to expiring?" test.
+
+Fixes: d52e5a7e7ca4 ("ipv4: lock mtu in fnhe when received PMTU < net.ipv4.route.min_pmtu")
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwspinlock/hwspinlock_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/route.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
-index d50c701b19d67..4074441444fed 100644
---- a/drivers/hwspinlock/hwspinlock_core.c
-+++ b/drivers/hwspinlock/hwspinlock_core.c
-@@ -313,7 +313,7 @@ int of_hwspin_lock_get_id(struct device_node *np, int index)
- 		hwlock = radix_tree_deref_slot(slot);
- 		if (unlikely(!hwlock))
- 			continue;
--		if (radix_tree_is_indirect_ptr(hwlock)) {
-+		if (radix_tree_deref_retry(hwlock)) {
- 			slot = radix_tree_iter_retry(&iter);
- 			continue;
- 		}
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 42132ac2c497e..988c132319c48 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -985,21 +985,22 @@ out:	kfree_skb(skb);
+ static void __ip_rt_update_pmtu(struct rtable *rt, struct flowi4 *fl4, u32 mtu)
+ {
+ 	struct dst_entry *dst = &rt->dst;
++	u32 old_mtu = ipv4_mtu(dst);
+ 	struct fib_result res;
+ 	bool lock = false;
+ 
+ 	if (ip_mtu_locked(dst))
+ 		return;
+ 
+-	if (ipv4_mtu(dst) < mtu)
++	if (old_mtu < mtu)
+ 		return;
+ 
+ 	if (mtu < ip_rt_min_pmtu) {
+ 		lock = true;
+-		mtu = ip_rt_min_pmtu;
++		mtu = min(old_mtu, ip_rt_min_pmtu);
+ 	}
+ 
+-	if (rt->rt_pmtu == mtu &&
++	if (rt->rt_pmtu == mtu && !lock &&
+ 	    time_before(jiffies, dst->expires - ip_rt_mtu_expires / 2))
+ 		return;
+ 
 -- 
 2.20.1
 
