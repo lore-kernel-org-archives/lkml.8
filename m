@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F249C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8A7C2BA14
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51AF420658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E903320658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758889;
-	bh=BpWYZrwKdqfE+uexcPKn0ExxFg0Gix+xR4+7w2Z0C4U=;
+	s=default; t=1585758894;
+	bh=u0oxV+ZE30Cvfe5WC10gcHtQGNHrKMYUrIi5VvOstjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ZEzh1RGCWFTDlP2z1S6+8IMwbZdZrpkxVkwZBeQKnwGMuIuNSn6dWL3yHgfD4O+1
-	 dUkekUUF73q0zd/RA/wQyLCT6ou/kBt2X7nWOMmX3NzKEkSjeGxcQ15XUksrecE+6K
-	 Cv6+SbvBoUVGz1JNLL6mZGwV0SnZOCOvw9Nf3v5M=
+	b=F6TckmZVKWnXrew0FlN8jzZHn3zbTD2ggDC093Ns9frz5T7TF/VJSxifbAu9gEY5H
+	 AiDnyIeEgxutHyzUoRa9PWh596jND05IHkQ3pmGdeXi5NgrBKWEr0mt15b/4tZ1kDg
+	 SRpaFcwLUxAjiA2Mc7j+HUE6p7HnJjyBCYjHrY3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388693AbgDAQer (ORCPT
+        id S2388701AbgDAQew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:34:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387470AbgDAQeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:34:46 -0400
+        id S2387470AbgDAQes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:34:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31BC620658;
-        Wed,  1 Apr 2020 16:34:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA5A220772;
+        Wed,  1 Apr 2020 16:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758885;
-        bh=BpWYZrwKdqfE+uexcPKn0ExxFg0Gix+xR4+7w2Z0C4U=;
+        s=default; t=1585758888;
+        bh=u0oxV+ZE30Cvfe5WC10gcHtQGNHrKMYUrIi5VvOstjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FAfyAd5WKwUFP4dW39zN+bTougxLKngCuM4Nd1qoP0MscvMiEd4eovRX0V4k8uuFy
-         IVxyKLLqy0ZgFnnMuiBMiNebIUEFBA2hdiDHQsfvWiWElZ8F/8irxfp2FP/4NipuPa
-         EzXO/+EbMrpuUSrJWkl0ECRVMYmSFEzTYhcteIi4=
+        b=B45Su2g70v1/QLDJlC4mKjHNh1uhagr+TrNU2Jkpxl0PQUpiOJfCAgVif+5Zp3LK+
+         7da1L9ZvzOE5u6S27Mla2BO+MoWoGyq85ePe2k9HX74hdOFwBMpj+UHq9pnAbmK/B3
+         64a6TL5ChKxzqeN9aLMWnZDhEG+IJMobM8pzaPEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Andreas Steinmetz <ast@domdv.de>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 013/102] ALSA: line6: Fix endless MIDI read loop
-Date:   Wed,  1 Apr 2020 18:17:16 +0200
-Message-Id: <20200401161534.366414610@linuxfoundation.org>
+Subject: [PATCH 4.9 014/102] ALSA: seq: virmidi: Fix running status after receiving sysex
+Date:   Wed,  1 Apr 2020 18:17:17 +0200
+Message-Id: <20200401161534.606275488@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -62,53 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 upstream.
+commit 4384f167ce5fa7241b61bb0984d651bc528ddebe upstream.
 
-The MIDI input event parser of the LINE6 driver may enter into an
-endless loop when the unexpected data sequence is given, as it tries
-to continue the secondary bytes without termination.  Also, when the
-input data is too short, the parser returns a negative error, while
-the caller doesn't handle it properly.  This would lead to the
-unexpected behavior as well.
+The virmidi driver handles sysex event exceptionally in a short-cut
+snd_seq_dump_var_event() call, but this missed the reset of the
+running status.  As a result, it may lead to an incomplete command
+right after the sysex when an event with the same running status was
+queued.
 
-This patch addresses those issues by checking the return value
-correctly and handling the one-byte event in the parser properly.
+Fix it by clearing the running status properly via alling
+snd_midi_event_reset_decode() for that code path.
 
-The bug was reported by syzkaller.
-
-Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
+Reported-by: Andreas Steinmetz <ast@domdv.de>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
-Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/3b4a4e0f232b7afbaf0a843f63d0e538e3029bfd.camel@domdv.de
+Link: https://lore.kernel.org/r/20200316090506.23966-2-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/driver.c  |    2 +-
- sound/usb/line6/midibuf.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/core/seq/seq_virmidi.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -306,7 +306,7 @@ static void line6_data_received(struct u
- 				line6_midibuf_read(mb, line6->buffer_message,
- 						LINE6_MIDI_MESSAGE_MAXLEN);
- 
--			if (done == 0)
-+			if (done <= 0)
- 				break;
- 
- 			line6->message_length = done;
---- a/sound/usb/line6/midibuf.c
-+++ b/sound/usb/line6/midibuf.c
-@@ -163,7 +163,7 @@ int line6_midibuf_read(struct midi_buffe
- 			int midi_length_prev =
- 			    midibuf_message_length(this->command_prev);
- 
--			if (midi_length_prev > 0) {
-+			if (midi_length_prev > 1) {
- 				midi_length = midi_length_prev - 1;
- 				repeat = 1;
- 			} else
+--- a/sound/core/seq/seq_virmidi.c
++++ b/sound/core/seq/seq_virmidi.c
+@@ -95,6 +95,7 @@ static int snd_virmidi_dev_receive_event
+ 			if ((ev->flags & SNDRV_SEQ_EVENT_LENGTH_MASK) != SNDRV_SEQ_EVENT_LENGTH_VARIABLE)
+ 				continue;
+ 			snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
++			snd_midi_event_reset_decode(vmidi->parser);
+ 		} else {
+ 			len = snd_midi_event_decode(vmidi->parser, msg, sizeof(msg), ev);
+ 			if (len > 0)
 
 
