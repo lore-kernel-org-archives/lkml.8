@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A53EC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0818C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68F320B1F
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7A120857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585757961;
-	bh=K8SpIw2adgr5Nz4CqNMwL+oky9vY+IXX71FWKu/zc4I=;
+	s=default; t=1585757964;
+	bh=7degDOeCs59BBBBJ9Nmvb+EqwBBNDXJkLd6Ox/OUxjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2mHqAyiyQ6NLlwue3srRl6SzcSUG3wMUcxiSMtbQP/v574ZTioFr8vpXDDRvGHO25
-	 98vJvWmxPAW5JrphAou7GS9w9LSpumw5szhHiUWBIleoxUnq/f8R3giIp71XGO3U2s
-	 F8S0t8oCNYoE1bejGteRswQFbYcCq2HEzX0i1JkA=
+	b=W3VIYusN3ZP/1Wr8pSr+AE4irwQaMqguUCUCAwa0J7LkR1tZSCN7pjN2R2aV/wxv7
+	 fF6c7Qd0pt1ncHWwWGgkxrqSin6oJ5jfAFkyD3xIA5uM20NoCCLnbnPL76X4JkkZEM
+	 b8aaiL1ml27HfD0OWiiNBYf0FpcutFpG6zeiIRwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732250AbgDAQTU (ORCPT
+        id S1732296AbgDAQTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41582 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:19:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726205AbgDAQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:19:19 -0400
+        id S1726205AbgDAQTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:19:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F127A20658;
-        Wed,  1 Apr 2020 16:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F3C120857;
+        Wed,  1 Apr 2020 16:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585757959;
-        bh=K8SpIw2adgr5Nz4CqNMwL+oky9vY+IXX71FWKu/zc4I=;
+        s=default; t=1585757962;
+        bh=7degDOeCs59BBBBJ9Nmvb+EqwBBNDXJkLd6Ox/OUxjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MuGbYTwdoXxnwFsq+udiotU60srb1u5399mmivzTCYrgBogtqqLHs9EbhkIhqR/ZI
-         TPoM3egTWONdFjgc7PcuLAnO9PZe8YTnsPat5umv2AeE6LaZElHxa8DPLUg2brL0Ez
-         VidKLvvwuNTVd8Xcb6WSif7rFCUFoiTe9hiz3ohI=
+        b=InVHBjK//tS9W0lMT59ozkiGD0e1mm6Yi2JmpvGtuOXrOdwxpJYhg3+T84HuDwm8U
+         eJEjZiUWHDhqPFenLdW4o5xl1wGdtgfdO74ZOzk8sAj9Df2E06yeJs16nONeJoGhfK
+         5rKD2THZ9T10EKMrx/rjZbj6CXnPXMIISU5J+j3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.6 01/10] bpf: update jmp32 test cases to fix range bound deduction
-Date:   Wed,  1 Apr 2020 18:17:17 +0200
-Message-Id: <20200401161416.121489863@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Georg=20M=C3=BCller?= <georgmueller@gmx.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.6 10/10] platform/x86: pmc_atom: Add Lex 2I385SW to critclk_systems DMI table
+Date:   Wed,  1 Apr 2020 18:17:26 +0200
+Message-Id: <20200401161423.073400358@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161413.974936041@linuxfoundation.org>
 References: <20200401161413.974936041@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,53 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Georg Müller <georgmueller@gmx.net>
 
-[ no upstream commit ]
+commit 95b31e35239e5e1689e3d965d692a313c71bd8ab upstream.
 
-Since commit f2d67fec0b43 ("bpf: Undo incorrect __reg_bound_offset32 handling")
-has been backported to stable, we also need to update related test cases that
-started to (expectedly) fail on stable. Given the functionality has been reverted
-we need to move the result to REJECT.
+The Lex 2I385SW board has two Intel I211 ethernet controllers. Without
+this patch, only the first port is usable. The second port fails to
+start with the following message:
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+    igb: probe of 0000:02:00.0 failed with error -2
+
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Tested-by: Georg Müller <georgmueller@gmx.net>
+Signed-off-by: Georg Müller <georgmueller@gmx.net>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/bpf/verifier/jmp32.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/platform/x86/pmc_atom.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/tools/testing/selftests/bpf/verifier/jmp32.c
-+++ b/tools/testing/selftests/bpf/verifier/jmp32.c
-@@ -783,7 +783,8 @@
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -385,6 +385,14 @@ static const struct dmi_system_id critcl
  	},
- 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
- 	.fixup_map_hash_48b = { 4 },
--	.result = ACCEPT,
-+	.result = REJECT,
-+	.errstr = "R8 unbounded memory access",
- 	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
- },
- {
-@@ -811,7 +812,8 @@
- 	},
- 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
- 	.fixup_map_hash_48b = { 4 },
--	.result = ACCEPT,
-+	.result = REJECT,
-+	.errstr = "R8 unbounded memory access",
- 	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
- },
- {
-@@ -839,6 +841,7 @@
- 	},
- 	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
- 	.fixup_map_hash_48b = { 4 },
--	.result = ACCEPT,
-+	.result = REJECT,
-+	.errstr = "R8 unbounded memory access",
- 	.flags = F_NEEDS_EFFICIENT_UNALIGNED_ACCESS,
- },
+ 	{
+ 		/* pmc_plt_clk* - are used for ethernet controllers */
++		.ident = "Lex 2I385SW",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Lex BayTrail"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "2I385SW"),
++		},
++	},
++	{
++		/* pmc_plt_clk* - are used for ethernet controllers */
+ 		.ident = "Beckhoff CB3163",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
 
 
