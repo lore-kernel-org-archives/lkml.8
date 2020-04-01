@@ -2,52 +2,51 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B28F9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903ABC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2AF2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438B42063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759713;
-	bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
+	s=default; t=1585759719;
+	bh=qE4wI/YmgYd269gq4GjKASsaQYbhmZhfm+nlt51al0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ntqy1aR5PsNtB7oE8Rd5PITQPIZHljINW/YyOx2UzdpivqwqouEcLGz4aHKmJLfS2
-	 6whkf74D5TAYT+qiVnUcrN95FTssNmL4whlF08haGXXeOuMtDtFPp2N6wJQL01VYCR
-	 Lmd8l6K3EmtIv0Y2+AJV6JrjeWrXj+TmQ27CGllw=
+	b=YtNEfan0fOAq1Cfb+FuiJLeez/7qupjPLOlK8hZYkPnk/ai8eA4KlGcUufVgCk2If
+	 rd5r36v/5rRmXj8FdYulU3G/Y7ziRUyq8xHyGf7rhJfLbOZ1kDW4CjcmPpHvOhTx+3
+	 QPm8VCJ4Xm3ajPSmRLAes6j7BduWKfWyO9XsMq2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389755AbgDAQq1 (ORCPT
+        id S2389909AbgDAQqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:46:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389934AbgDAQqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:46:24 -0400
+        id S2387438AbgDAQqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:46:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 362DB2063A;
-        Wed,  1 Apr 2020 16:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3F02216FD;
+        Wed,  1 Apr 2020 16:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759583;
-        bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
+        s=default; t=1585759564;
+        bh=qE4wI/YmgYd269gq4GjKASsaQYbhmZhfm+nlt51al0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=preZccWftvEH++3qt4VoN2MY1xdXE5FAcdIttiDSf6uXtbEMZ/6qOUiKSo6TzuYHL
-         fmP+ueI6XyNoJS0zKRu0lLB1CUMnE7DLiR27b8622KwPY3kOGqdellDaQFPYHSU23m
-         RkiGGzvEfl20Cub2ECpuucKVNKIKXaycASrMlFNY=
+        b=S5KslfK5+DBGREWvgwqX3BOJ4MGckChzJKMPk2K2aNF7PJh1Mr2ygsf0s0oyHkHNA
+         tPUhrpqu1YiW3HCZMaQNLIggZaGcjmWWwA/ivI2BT/jzA2c4wtMBHYV3WwnGymcuvG
+         ICpYEUcMrQadqUwZnCDYY5icLo9Esw6az4LLOvjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Gilbert <floppym@gentoo.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 075/148] cpupower: avoid multiple definition with gcc -fno-common
-Date:   Wed,  1 Apr 2020 18:17:47 +0200
-Message-Id: <20200401161600.559036786@linuxfoundation.org>
+        stable@vger.kernel.org, Pawel Dembicki <paweldembicki@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 116/148] USB: serial: option: add Wistron Neweb D19Q1
+Date:   Wed,  1 Apr 2020 18:18:28 +0200
+Message-Id: <20200401161603.628215431@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,90 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Gilbert <floppym@gentoo.org>
+From: Pawel Dembicki <paweldembicki@gmail.com>
 
-[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
+commit dfee7e2f478346b12ea651d5c28b069f6a4af563 upstream.
 
-Building cpupower with -fno-common in CFLAGS results in errors due to
-multiple definitions of the 'cpu_count' and 'start_time' variables.
+This modem is embedded on dlink dwr-960 router.
+The oem configuration states:
 
-./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-multiple definition of `cpu_count';
-./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-first defined here
-...
-./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
-multiple definition of `start_time';
-./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
-first defined here
+T: Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 2 Spd=480 MxCh= 0
+D: Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs= 1
+P: Vendor=1435 ProdID=d191 Rev=ff.ff
+S: Manufacturer=Android
+S: Product=Android
+S: SerialNumber=0123456789ABCDEF
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E: Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E: Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E: Ad=84(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
+E: Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E: Ad=86(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
+E: Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E: Ad=88(I) Atr=03(Int.) MxPS= 8 Ivl=32ms
+E: Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E: Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E: Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
 
-The -fno-common option will be enabled by default in GCC 10.
+Tested on openwrt distribution
 
-Bug: https://bugs.gentoo.org/707462
-Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 2116df9ad8325..c097a3748674f 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -83,7 +83,7 @@ static struct pci_access *pci_acc;
- static struct pci_dev *amd_fam14h_pci_dev;
- static int nbp1_entered;
- 
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- #ifdef DEBUG
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index 5b3205f162174..5277df27191f3 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -21,7 +21,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
- 
- static unsigned long long **previous_count;
- static unsigned long long **current_count;
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- static int cpuidle_get_count_percent(unsigned int id, double *percent,
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-index 05f953f0f0a0c..80a21cb67d94f 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-@@ -29,6 +29,8 @@ struct cpuidle_monitor *all_monitors[] = {
- 0
- };
- 
-+int cpu_count;
-+
- static struct cpuidle_monitor *monitors[MONITORS_MAX];
- static unsigned int avail_monitors;
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index 9e43f3371fbc6..3558bbae2b5dc 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -18,7 +18,7 @@
- #define CSTATE_NAME_LEN 5
- #define CSTATE_DESC_LEN 60
- 
--int cpu_count;
-+extern int cpu_count;
- 
- /* Hard to define the right names ...: */
- enum power_range_e {
--- 
-2.20.1
-
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1994,6 +1994,8 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
++	{ USB_DEVICE_INTERFACE_CLASS(0x1435, 0xd191, 0xff),			/* Wistron Neweb D19Q1 */
++	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
+ 	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
 
 
