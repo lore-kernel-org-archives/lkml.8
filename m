@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9A3C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7602DC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963AA2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42312208E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="kLE+aEwc"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hTimd5IY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732135AbgDAItU (ORCPT
+        id S1732142AbgDAItd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:49:20 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38383 "EHLO
+        Wed, 1 Apr 2020 04:49:33 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41810 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgDAItT (ORCPT
+        with ESMTP id S1726536AbgDAItc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:49:19 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e5so28687734edq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:49:16 -0700 (PDT)
+        Wed, 1 Apr 2020 04:49:32 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v1so28673496edq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 01:49:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YHe1e/PC2z37detN1WQKWhENlwvS1+8e4Z52I+6QrPI=;
-        b=kLE+aEwcdBdp4prVWbr9R8fJ2ZzRMy5+F1Ca6z4r+7CzfVe6RxQ00SoxWbDNsoD0Cy
-         fV1yu7SwsOeaWGVWZh46H+MtDeqae2qVQkKe4WWeeYkZnviQNIdUSKf8Lh3SjqVNz6se
-         YSV3dRb/umlg6z5c2M2QZnchxfa40SgZm56m7gvallcRODKH/eyWB9HwxqycTbXwnrTe
-         Y7dmdqtVkiMAJ+LAArUaYX9RSx33PVlLwdSLUYf4zesHgSZUS1vf///WXbRQqoEuXBs+
-         67JWd8tnzIGSNbauwMZgZO2HXvHeGapmN5qVoMtz+G0FP7DOFOvTfM9qmiMh/UEvPsb/
-         ePGA==
+        bh=UN+wHZJTrcu6c2DZIJ8HGRDVBKCDEPMCRCE7ZQEQTH8=;
+        b=hTimd5IY+hTrOkh1p7KqZ0axrIUJgA8aekcpldRM6K9XQupypeq6MkUu+ggRqryYZL
+         x3rcZjrA+Y0jKfVyqzmVLjKEqr3O6iCBN8GDPJzQJi0cEQ/7ObMmXUtXR9XRnlRU8ZiF
+         QkYVKtMu4mENT5W/pzpOUStrq0OytQ5oulJ0UhL1avGRyOevi9/UwPw4Ykxv3wnZ/OwP
+         HyQu22Ie3HIn0/IIyicOfJJ+SkzyBj7Hq8Ljhf/QIcUeGPjXdPcMfFQIvRwGIm43aWdr
+         ui6jSj1L0yFrnNz0X3pBByQOSEhf24bDK4BDfm5vSnLWL82Bjny7/+HfR7ecl+iDeNj+
+         l41w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YHe1e/PC2z37detN1WQKWhENlwvS1+8e4Z52I+6QrPI=;
-        b=L81Yb6tExMdojBwiWOvXhaXNFF3nDbioaU+9wAev4T5M2h1UDjlKZk7USDGBZi+fj3
-         UjdXzGjQmPCucJ3RakJ4SZeun8JZE5P06+n4DF/Ir9qsbuwRdhrqGecRTyfhftuy+GOQ
-         kyUCRiWB7wszWo+pUl4QSsd5IywPrhOyy1dHgAmRTXj3Z4dME+DxcOznbJcjxcOvhCG/
-         w0Jf6Y5TQ1elhpuZlI/DZO78RfmV17gE6uKlOaGMA/zg2aMSy2pLpNFBQwF6fnjR7vJe
-         kEEfsdkVYIfNvQpKNB+J3Ua9Dd1F/DwiJt78cT9QV/MztwtS8/Fgtq8cTn1P4kBXUH/j
-         3Fog==
-X-Gm-Message-State: ANhLgQ3XeLZNp7/KAQUxiUjTwJsgTBHxiBOavR/p+uwdTJc1K1f/HKDt
-        Cl4zJBJ6/WU61QgWQDcza7Z/YAAbV3DCVodaPovFAg==
-X-Google-Smtp-Source: ADFU+vuD7X7woQG83wztP9MaJVXOOkR2dKZNHdzkuewDZ1eAHCWISkaX44mK03UXD+Yvj6aUPY6FlPTcybndxfLUP5U=
-X-Received: by 2002:aa7:c609:: with SMTP id h9mr19214445edq.93.1585730956083;
- Wed, 01 Apr 2020 01:49:16 -0700 (PDT)
+        bh=UN+wHZJTrcu6c2DZIJ8HGRDVBKCDEPMCRCE7ZQEQTH8=;
+        b=kxYMbJJzyw3kdk8cyHjVgqrUtdgio4heUhQPXYfrxvzOepQn7L2Co+uAEwQU6zbuR3
+         QIoogo3y3Yj2tKDOlzItAwDJVHPkJZ1TQJJLvA9O1cuhgQPmZqPfcJ1zDxow+3uVErMW
+         reMsjD/0Jfo77RNj9em+8Km42euyyIJu4FuTRg2g8gqS3i/yEMjjO90mGfFsjW7Ri7Pq
+         44wJFvJm+p3vDK7SefSxXme1giU67J5vorZGNjyYS/pjz1IYfccpBTcwfBLWrEikv2Il
+         wTvyCzL8H+JLCVc+Qwp1KheLN9dJqQMSAqJmdQNrh6O64DZ94v5u5gXFKqJTNCoDvL+J
+         afNg==
+X-Gm-Message-State: ANhLgQ1FgQPnUfCBuiuCTbhFSsBKI54mFV/GcFIYX8/WDp4F1YNQ4ipo
+        EyMCJxaSLMcD4iPi7oRhL4o7yhuQEJeSyschWdT9/w==
+X-Google-Smtp-Source: ADFU+vuTuxIfbgq1b9JfG+WohU6wvy4jaujfdFzqOb3NMAMPXWIOfeafCvEeGwbQtVd/xByPDwh7XT1QdUOquEPXjL8=
+X-Received: by 2002:a05:6402:3044:: with SMTP id bu4mr20560123edb.123.1585730971200;
+ Wed, 01 Apr 2020 01:49:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-6-alastair@d-silva.org>
-In-Reply-To: <20200327071202.2159885-6-alastair@d-silva.org>
+References: <20200327071202.2159885-1-alastair@d-silva.org> <20200327071202.2159885-8-alastair@d-silva.org>
+In-Reply-To: <20200327071202.2159885-8-alastair@d-silva.org>
 From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 1 Apr 2020 01:49:04 -0700
-Message-ID: <CAPcyv4jd2mjiTo7NSm_Q=SbCB6EmPvqvDN4u85j2ufUZ0meGig@mail.gmail.com>
-Subject: Re: [PATCH v4 05/25] ocxl: Address kernel doc errors & warnings
+Date:   Wed, 1 Apr 2020 01:49:19 -0700
+Message-ID: <CAPcyv4gUU4PbQK1YJLfOToLDmFWsWWLySwkqHuoqGDvKZJGQvg@mail.gmail.com>
+Subject: Re: [PATCH v4 07/25] ocxl: Add functions to map/unmap LPC memory
 To:     "Alastair D'Silva" <alastair@d-silva.org>
 Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
         "Oliver O'Halloran" <oohall@gmail.com>,
@@ -100,389 +100,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Sun, Mar 29, 2020 at 10:23 PM Alastair D'Silva <alastair@d-silva.org> wrote:
 >
-> This patch addresses warnings and errors from the kernel doc scripts for
-> the OpenCAPI driver.
+> Add functions to map/unmap LPC memory
 >
-> It also makes minor tweaks to make the docs more consistent.
->
+
+"map memory" is an overloaded term. I'm guessing this patch has
+nothing to do with mapping memory in the MMU. Is it updating hardware
+resource decoders to start claiming address space that was allocated
+previously?
+
 > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+> Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 > ---
->  drivers/misc/ocxl/config.c        | 24 ++++----
->  drivers/misc/ocxl/ocxl_internal.h |  9 +--
->  include/misc/ocxl.h               | 96 ++++++++++++-------------------
->  3 files changed, 55 insertions(+), 74 deletions(-)
-
-Looks good.
-
-
+>  drivers/misc/ocxl/core.c          | 51 +++++++++++++++++++++++++++++++
+>  drivers/misc/ocxl/ocxl_internal.h |  3 ++
+>  include/misc/ocxl.h               | 21 +++++++++++++
+>  3 files changed, 75 insertions(+)
 >
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index c8e19bfb5ef9..a62e3d7db2bf 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -273,16 +273,16 @@ static int read_afu_info(struct pci_dev *dev, struct ocxl_fn_config *fn,
+> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+> index 2531c6cf19a0..75ff14e3882a 100644
+> --- a/drivers/misc/ocxl/core.c
+> +++ b/drivers/misc/ocxl/core.c
+> @@ -210,6 +210,56 @@ static void unmap_mmio_areas(struct ocxl_afu *afu)
+>         release_fn_bar(afu->fn, afu->config.global_mmio_bar);
 >  }
 >
->  /**
-> - * Read the template version from the AFU
-> - * dev: the device for the AFU
-> - * fn: the AFU offsets
-> - * len: outputs the template length
-> - * version: outputs the major<<8,minor version
-> + * read_template_version() - Read the template version from the AFU
-> + * @dev: the device for the AFU
-> + * @fn: the AFU offsets
-> + * @len: outputs the template length
-> + * @version: outputs the major<<8,minor version
->   *
->   * Returns 0 on success, negative on failure
->   */
->  static int read_template_version(struct pci_dev *dev, struct ocxl_fn_config *fn,
-> -               u16 *len, u16 *version)
-> +                                u16 *len, u16 *version)
->  {
->         u32 val32;
->         u8 major, minor;
-> @@ -476,16 +476,16 @@ static int validate_afu(struct pci_dev *dev, struct ocxl_afu_config *afu)
->  }
->
->  /**
-> - * Populate AFU metadata regarding LPC memory
-> - * dev: the device for the AFU
-> - * fn: the AFU offsets
-> - * afu: the AFU struct to populate the LPC metadata into
-> + * read_afu_lpc_memory_info() - Populate AFU metadata regarding LPC memory
-> + * @dev: the device for the AFU
-> + * @fn: the AFU offsets
-> + * @afu: the AFU struct to populate the LPC metadata into
->   *
->   * Returns 0 on success, negative on failure
->   */
->  static int read_afu_lpc_memory_info(struct pci_dev *dev,
-> -                               struct ocxl_fn_config *fn,
-> -                               struct ocxl_afu_config *afu)
-> +                                   struct ocxl_fn_config *fn,
-> +                                   struct ocxl_afu_config *afu)
+> +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
+> +{
+> +       struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
+> +
+> +       if ((afu->config.lpc_mem_size + afu->config.special_purpose_mem_size) == 0)
+> +               return 0;
+> +
+> +       afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
+> +       if (afu->lpc_base_addr == 0)
+> +               return -EINVAL;
+> +
+> +       if (afu->config.lpc_mem_size > 0) {
+> +               afu->lpc_res.start = afu->lpc_base_addr + afu->config.lpc_mem_offset;
+> +               afu->lpc_res.end = afu->lpc_res.start + afu->config.lpc_mem_size - 1;
+> +       }
+> +
+> +       if (afu->config.special_purpose_mem_size > 0) {
+> +               afu->special_purpose_res.start = afu->lpc_base_addr +
+> +                                                afu->config.special_purpose_mem_offset;
+> +               afu->special_purpose_res.end = afu->special_purpose_res.start +
+> +                                              afu->config.special_purpose_mem_size - 1;
+> +       }
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
+> +
+> +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
+> +{
+> +       return &afu->lpc_res;
+> +}
+> +EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
+> +
+> +static void unmap_lpc_mem(struct ocxl_afu *afu)
+> +{
+> +       struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
+> +
+> +       if (afu->lpc_res.start || afu->special_purpose_res.start) {
+> +               void *link = afu->fn->link;
+> +
+> +               // only release the link when the the last consumer calls release
+> +               ocxl_link_lpc_release(link, dev);
+> +
+> +               afu->lpc_res.start = 0;
+> +               afu->lpc_res.end = 0;
+> +               afu->special_purpose_res.start = 0;
+> +               afu->special_purpose_res.end = 0;
+> +       }
+> +}
+> +
+>  static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
 >  {
 >         int rc;
->         u32 val32;
+> @@ -251,6 +301,7 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+>
+>  static void deconfigure_afu(struct ocxl_afu *afu)
+>  {
+> +       unmap_lpc_mem(afu);
+>         unmap_mmio_areas(afu);
+>         reclaim_afu_pasid(afu);
+>         reclaim_afu_actag(afu);
 > diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index 345bf843a38e..198e4e4bc51d 100644
+> index 2d7575225bd7..7b975a89db7b 100644
 > --- a/drivers/misc/ocxl/ocxl_internal.h
 > +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -122,11 +122,12 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
->                                 struct ocxl_fn_config *fn, int afu_idx);
+> @@ -52,6 +52,9 @@ struct ocxl_afu {
+>         void __iomem *global_mmio_ptr;
+>         u64 pp_mmio_start;
+>         void *private;
+> +       u64 lpc_base_addr; /* Covers both LPC & special purpose memory */
+> +       struct resource lpc_res;
+> +       struct resource special_purpose_res;
+>  };
 >
->  /**
-> - * Update values within a Process Element
-> + * ocxl_link_update_pe() - Update values within a Process Element
-> + * @link_handle: the link handle associated with the process element
-> + * @pasid: the PASID for the AFU context
-> + * @tid: the new thread id for the process element
->   *
-> - * link_handle: the link handle associated with the process element
-> - * pasid: the PASID for the AFU context
-> - * tid: the new thread id for the process element
-> + * Returns 0 on success
->   */
->  int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
->
+>  enum ocxl_context_status {
 > diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 0a762e387418..357ef1aadbc0 100644
+> index 357ef1aadbc0..d8b0b4d46bfb 100644
 > --- a/include/misc/ocxl.h
 > +++ b/include/misc/ocxl.h
-> @@ -62,8 +62,7 @@ struct ocxl_context;
->  // Device detection & initialisation
+> @@ -203,6 +203,27 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
 >
->  /**
-> - * Open an OpenCAPI function on an OpenCAPI device
-> - *
-> + * ocxl_function_open() - Open an OpenCAPI function on an OpenCAPI device
->   * @dev: The PCI device that contains the function
->   *
->   * Returns an opaque pointer to the function, or an error pointer (check with IS_ERR)
-> @@ -71,8 +70,7 @@ struct ocxl_context;
->  struct ocxl_fn *ocxl_function_open(struct pci_dev *dev);
->
->  /**
-> - * Get the list of AFUs associated with a PCI function device
-> - *
-> + * ocxl_function_afu_list() - Get the list of AFUs associated with a PCI function device
->   * Returns a list of struct ocxl_afu *
->   *
->   * @fn: The OpenCAPI function containing the AFUs
-> @@ -80,8 +78,7 @@ struct ocxl_fn *ocxl_function_open(struct pci_dev *dev);
->  struct list_head *ocxl_function_afu_list(struct ocxl_fn *fn);
->
->  /**
-> - * Fetch an AFU instance from an OpenCAPI function
-> - *
-> + * ocxl_function_fetch_afu() - Fetch an AFU instance from an OpenCAPI function
->   * @fn: The OpenCAPI function to get the AFU from
->   * @afu_idx: The index of the AFU to get
->   *
-> @@ -92,23 +89,20 @@ struct list_head *ocxl_function_afu_list(struct ocxl_fn *fn);
->  struct ocxl_afu *ocxl_function_fetch_afu(struct ocxl_fn *fn, u8 afu_idx);
->
->  /**
-> - * Take a reference to an AFU
-> - *
-> + * ocxl_afu_get() - Take a reference to an AFU
->   * @afu: The AFU to increment the reference count on
->   */
->  void ocxl_afu_get(struct ocxl_afu *afu);
->
->  /**
-> - * Release a reference to an AFU
-> - *
-> + * ocxl_afu_put() - Release a reference to an AFU
->   * @afu: The AFU to decrement the reference count on
->   */
->  void ocxl_afu_put(struct ocxl_afu *afu);
->
->
->  /**
-> - * Get the configuration information for an OpenCAPI function
-> - *
-> + * ocxl_function_config() - Get the configuration information for an OpenCAPI function
->   * @fn: The OpenCAPI function to get the config for
->   *
->   * Returns the function config, or NULL on error
-> @@ -116,8 +110,7 @@ void ocxl_afu_put(struct ocxl_afu *afu);
->  const struct ocxl_fn_config *ocxl_function_config(struct ocxl_fn *fn);
->
->  /**
-> - * Close an OpenCAPI function
-> - *
-> + * ocxl_function_close() - Close an OpenCAPI function
->   * This will free any AFUs previously retrieved from the function, and
->   * detach and associated contexts. The contexts must by freed by the caller.
->   *
-> @@ -129,8 +122,7 @@ void ocxl_function_close(struct ocxl_fn *fn);
->  // Context allocation
->
->  /**
-> - * Allocate an OpenCAPI context
-> - *
-> + * ocxl_context_alloc() - Allocate an OpenCAPI context
->   * @context: The OpenCAPI context to allocate, must be freed with ocxl_context_free
->   * @afu: The AFU the context belongs to
->   * @mapping: The mapping to unmap when the context is closed (may be NULL)
-> @@ -139,14 +131,13 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
->                         struct address_space *mapping);
->
->  /**
-> - * Free an OpenCAPI context
-> - *
-> + * ocxl_context_free() - Free an OpenCAPI context
->   * @ctx: The OpenCAPI context to free
->   */
->  void ocxl_context_free(struct ocxl_context *ctx);
->
->  /**
-> - * Grant access to an MM to an OpenCAPI context
-> + * ocxl_context_attach() - Grant access to an MM to an OpenCAPI context
->   * @ctx: The OpenCAPI context to attach
->   * @amr: The value of the AMR register to restrict access
->   * @mm: The mm to attach to the context
-> @@ -157,7 +148,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr,
->                                 struct mm_struct *mm);
->
->  /**
-> - * Detach an MM from an OpenCAPI context
-> + * ocxl_context_detach() - Detach an MM from an OpenCAPI context
->   * @ctx: The OpenCAPI context to attach
->   *
->   * Returns 0 on success, negative on failure
-> @@ -167,7 +158,7 @@ int ocxl_context_detach(struct ocxl_context *ctx);
->  // AFU IRQs
->
->  /**
-> - * Allocate an IRQ associated with an AFU context
-> + * ocxl_afu_irq_alloc() - Allocate an IRQ associated with an AFU context
->   * @ctx: the AFU context
->   * @irq_id: out, the IRQ ID
->   *
-> @@ -176,7 +167,7 @@ int ocxl_context_detach(struct ocxl_context *ctx);
->  int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
->
->  /**
-> - * Frees an IRQ associated with an AFU context
-> + * ocxl_afu_irq_free() - Frees an IRQ associated with an AFU context
->   * @ctx: the AFU context
->   * @irq_id: the IRQ ID
->   *
-> @@ -185,7 +176,7 @@ int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
->  int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
->
->  /**
-> - * Gets the address of the trigger page for an IRQ
-> + * ocxl_afu_irq_get_addr() - Gets the address of the trigger page for an IRQ
->   * This can then be provided to an AFU which will write to that
->   * page to trigger the IRQ.
->   * @ctx: The AFU context that the IRQ is associated with
-> @@ -196,7 +187,7 @@ int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
->  u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id);
->
->  /**
-> - * Provide a callback to be called when an IRQ is triggered
-> + * ocxl_irq_set_handler() - Provide a callback to be called when an IRQ is triggered
->   * @ctx: The AFU context that the IRQ is associated with
->   * @irq_id: The IRQ ID
->   * @handler: the callback to be called when the IRQ is triggered
-> @@ -213,8 +204,7 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
 >  // AFU Metadata
 >
+> +/**
+> + * ocxl_afu_map_lpc_mem() - Map the LPC system & special purpose memory for an AFU
+> + * Do not call this during device discovery, as there may me multiple
+
+s/me/be/
+
+
+> + * devices on a link, and the memory is mapped for the whole link, not
+> + * just one device. It should only be called after all devices have
+> + * registered their memory on the link.
+> + *
+> + * @afu: The AFU that has the LPC memory to map
+> + *
+> + * Returns 0 on success, negative on failure
+> + */
+> +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
+> +
+> +/**
+> + * ocxl_afu_lpc_mem() - Get the physical address range of LPC memory for an AFU
+> + * @afu: The AFU associated with the LPC memory
+> + *
+> + * Returns a pointer to the resource struct for the physical address range
+> + */
+> +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
+> +
 >  /**
-> - * Get a pointer to the config for an AFU
-> - *
-> + * ocxl_afu_config() - Get a pointer to the config for an AFU
+>   * ocxl_afu_config() - Get a pointer to the config for an AFU
 >   * @afu: a pointer to the AFU to get the config for
->   *
->   * Returns a pointer to the AFU config
-> @@ -222,27 +212,24 @@ int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
->  struct ocxl_afu_config *ocxl_afu_config(struct ocxl_afu *afu);
->
->  /**
-> - * Assign opaque hardware specific information to an OpenCAPI AFU.
-> - *
-> - * @dev: The PCI device associated with the OpenCAPI device
-> + * ocxl_afu_set_private() - Assign opaque hardware specific information to an OpenCAPI AFU.
-> + * @afu: The OpenCAPI AFU
->   * @private: the opaque hardware specific information to assign to the driver
->   */
->  void ocxl_afu_set_private(struct ocxl_afu *afu, void *private);
->
->  /**
-> - * Fetch the hardware specific information associated with an external OpenCAPI
-> - * AFU. This may be consumed by an external OpenCAPI driver.
-> - *
-> - * @afu: The AFU
-> + * ocxl_afu_get_private() - Fetch the hardware specific information associated with
-> + * an external OpenCAPI AFU. This may be consumed by an external OpenCAPI driver.
-> + * @afu: The OpenCAPI AFU
->   *
->   * Returns the opaque pointer associated with the device, or NULL if not set
->   */
-> -void *ocxl_afu_get_private(struct ocxl_afu *dev);
-> +void *ocxl_afu_get_private(struct ocxl_afu *afu);
->
->  // Global MMIO
->  /**
-> - * Read a 32 bit value from global MMIO
-> - *
-> + * ocxl_global_mmio_read32() - Read a 32 bit value from global MMIO
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -251,11 +238,10 @@ void *ocxl_afu_get_private(struct ocxl_afu *dev);
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u32 *val);
-> +                           enum ocxl_endian endian, u32 *val);
->
->  /**
-> - * Read a 64 bit value from global MMIO
-> - *
-> + * ocxl_global_mmio_read64() - Read a 64 bit value from global MMIO
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -264,11 +250,10 @@ int ocxl_global_mmio_read32(struct ocxl_afu *afu, size_t offset,
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u64 *val);
-> +                           enum ocxl_endian endian, u64 *val);
->
->  /**
-> - * Write a 32 bit value to global MMIO
-> - *
-> + * ocxl_global_mmio_write32() - Write a 32 bit value to global MMIO
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -277,11 +262,10 @@ int ocxl_global_mmio_read64(struct ocxl_afu *afu, size_t offset,
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u32 val);
-> +                            enum ocxl_endian endian, u32 val);
->
->  /**
-> - * Write a 64 bit value to global MMIO
-> - *
-> + * ocxl_global_mmio_write64() - Write a 64 bit value to global MMIO
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -290,11 +274,10 @@ int ocxl_global_mmio_write32(struct ocxl_afu *afu, size_t offset,
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u64 val);
-> +                            enum ocxl_endian endian, u64 val);
->
->  /**
-> - * Set bits in a 32 bit global MMIO register
-> - *
-> + * ocxl_global_mmio_set32() - Set bits in a 32 bit global MMIO register
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -303,11 +286,10 @@ int ocxl_global_mmio_write64(struct ocxl_afu *afu, size_t offset,
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u32 mask);
-> +                          enum ocxl_endian endian, u32 mask);
->
->  /**
-> - * Set bits in a 64 bit global MMIO register
-> - *
-> + * ocxl_global_mmio_set64() - Set bits in a 64 bit global MMIO register
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -316,11 +298,10 @@ int ocxl_global_mmio_set32(struct ocxl_afu *afu, size_t offset,
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u64 mask);
-> +                          enum ocxl_endian endian, u64 mask);
->
->  /**
-> - * Set bits in a 32 bit global MMIO register
-> - *
-> + * ocxl_global_mmio_clear32() - Set bits in a 32 bit global MMIO register
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -329,11 +310,10 @@ int ocxl_global_mmio_set64(struct ocxl_afu *afu, size_t offset,
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u32 mask);
-> +                            enum ocxl_endian endian, u32 mask);
->
->  /**
-> - * Set bits in a 64 bit global MMIO register
-> - *
-> + * ocxl_global_mmio_clear64() - Set bits in a 64 bit global MMIO register
->   * @afu: The AFU
->   * @offset: The Offset from the start of MMIO
->   * @endian: the endianness that the MMIO data is in
-> @@ -342,7 +322,7 @@ int ocxl_global_mmio_clear32(struct ocxl_afu *afu, size_t offset,
->   * Returns 0 for success, negative on error
->   */
->  int ocxl_global_mmio_clear64(struct ocxl_afu *afu, size_t offset,
-> -                               enum ocxl_endian endian, u64 mask);
-> +                            enum ocxl_endian endian, u64 mask);
->
->  // Functions left here are for compatibility with the cxlflash driver
->
 > --
 > 2.24.1
 >
