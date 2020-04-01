@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A11FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11099C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91C820719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D893420842
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 23:40:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ANRbvwnG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nq6MKW8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbgDAXkd (ORCPT
+        id S2387460AbgDAXkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 19:40:33 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:55562 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387406AbgDAXkc (ORCPT
+        Wed, 1 Apr 2020 19:40:36 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:55791 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387406AbgDAXke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 19:40:32 -0400
-Received: by mail-qt1-f201.google.com with SMTP id o10so1490394qtk.22
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:40:30 -0700 (PDT)
+        Wed, 1 Apr 2020 19:40:34 -0400
+Received: by mail-ua1-f74.google.com with SMTP id u3so508097uau.22
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=IJbUqAZoaZbcftRq/6j3id1/PIehiPTgOI+a+J70oz0=;
-        b=ANRbvwnGcWbAdfV/0DjJdBoS7WfxjOUDLjkOX9FtAUuCLbTkQc5Vm8o6ng/9PBOcUY
-         L6MzCBafGFHQFw0rNrH4auccGNPaPKJNj+HpgTHoBWXw7BQjkZfJIHTbYJ6sZ0BA9S3F
-         O6Vn/WOdYUJgQQLy63630NocVAVp9jwoCH4XrQH+/Fv5R1aKyB3lxsyIqCX1tUrpJwj0
-         Qi+KwVhq0Slp3zyedKe2fB9ucOgRqCCUdONtXtPmT1r6OHeb0SdjyW9B1WjDT4e5TZPV
-         2myHWCmxlbzh/TkmW60y51EO559ilCvJOjt5rQHupor2MTeFh3WLhaSrOLLXq/3CpZrJ
-         ZRuw==
+        bh=fw+yQGCuc66qsKCfiv8tB1DIU00RCb9NXGODIc5CbC0=;
+        b=nq6MKW8vjnHoYBrrSdgrb6aBTxh5KddIzu2+cqAx2OoMKkLD+wRnUXxzXIQimi/+a6
+         4mJoy8SbmZZ3TsRLZttKMCW5dr36evrm1pVnAOpHUUQbKcV74xvQH1HWrYJ/kooFxPNg
+         PY8MPRvTYRDUutFZYQMT9CZrwpeS+Xq23fWt8D/yXCNr0jcM186DzC4tHon6PbCECHAa
+         31Jj8Ft/k0174vHBzQRTgF8sJj9sppQBujsrtc47DqepxZRJ3hv0cCxg/ytP5KeqXQzj
+         jE9spyDT41erJsPEr0AW957Bm3biGat/1lzMTOxQg7ZtgUK3isnD8LvUHQVj+NkfKUMe
+         VPhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=IJbUqAZoaZbcftRq/6j3id1/PIehiPTgOI+a+J70oz0=;
-        b=IJUUzrpfuEHvscovIzokYi6qFzysKkzA3SJQCTS/oiBVsu4hnZm9UtoVcRiJ1Xgpiz
-         Cuef/5ZOaQ27sjLLS0we99KAGPxhyRQ06RVio9XiKkiqvZvzcMx9+hx513kaAxpzpYLk
-         oBbUf865jfMMrvYY7bZ8oX+04WnX4VNeun284+kd/US+2ETKMvWU5yDEEsXa0rGh8XQi
-         /i9uJ3E//+JQR+REEJTwdfT5foH6sv/b/AxexAUhAgicr6Nsc7A2TcovnWCU8hvZJFEI
-         fg8imMDfxgPnCMRmeJYK/idfK+sFl/8wOxzyexEVWxXI8p175stz8wqsSHjk9daau2e/
-         xlgA==
-X-Gm-Message-State: AGi0PubAPnhmCxWsIThL2Ryp6RVSS9FbNzGSlO5rAFmTPu9craK62rBk
-        p9RC+unHNC4eerEVmRPEzP7WGWsjHV07
-X-Google-Smtp-Source: APiQypJj1nzy0xxZiK/ancIXb99LI/aD6DB8ovIp38LT8P7v9l2KUFKyZzm4EK63vqAlR6TV4bnqFDCVobNf
-X-Received: by 2002:a05:6214:2c4:: with SMTP id g4mr618723qvu.65.1585784430080;
- Wed, 01 Apr 2020 16:40:30 -0700 (PDT)
-Date:   Wed,  1 Apr 2020 16:39:42 -0700
+        bh=fw+yQGCuc66qsKCfiv8tB1DIU00RCb9NXGODIc5CbC0=;
+        b=MdkSTNwdqo5cMsRaFGw80uUHvpjbWLp8GWPJNtpLXBPYTsofNQ/4fWSEWnywLHQsKW
+         o/Wy7rqUXNhGy4yGtXBOVQXhpqbs/titY/jGPnwRR+kf6QLHlR10dqYGwhSCLh0iC5Al
+         j8HZT2g9byLnSbRtxKJsjNwCVvWTyL1YSHst4aCBweEYKpCke1jHNDRwiPumAKtkwogr
+         xh3SCHMuqkZ3gxeE2DnJ3jTwq5wUSFOxPAEIqR5V5h1yG4knUluo/v92whcG/Nr9E017
+         eMpEMX2UPZykHFQusYWOAT2SwAXWsEl+f2TowiGlP1AdPrI4YavHV1szzE5NHrXoqZCN
+         3u/A==
+X-Gm-Message-State: AGi0PuYByQl+UZgv9L5d+meriLtkzWPQc/ZpjFJTB/nCr8T6HJ5MggGw
+        MLV+GPL+WqciQqZtvN9cM1tVYPw/8MdC
+X-Google-Smtp-Source: APiQypKQvIHLrjwvEpYASJdHdxgbmPDO3zEzH/O+p7qQIf12N1bBJDDBy1z77NKJwFa4iDlbqyR7DzlT8sXH
+X-Received: by 2002:a67:7f8a:: with SMTP id a132mr309716vsd.147.1585784432486;
+ Wed, 01 Apr 2020 16:40:32 -0700 (PDT)
+Date:   Wed,  1 Apr 2020 16:39:43 -0700
 In-Reply-To: <20200401233945.133550-1-irogers@google.com>
-Message-Id: <20200401233945.133550-3-irogers@google.com>
+Message-Id: <20200401233945.133550-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20200401233945.133550-1-irogers@google.com>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH 2/5] tools api fs: make xxx__mountpoint() more scalable
+Subject: [PATCH 3/5] perf synthetic-events: save 4kb from 2 stack frames
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -81,165 +81,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+Reuse an existing char buffer to avoid two PATH_MAX sized char buffers.
+Reduces stack frame sizes by 4kb.
 
-The xxx_mountpoint() interface provided by fs.c finds
-mount points for common pseudo filesystems. The first
-time xxx_mountpoint() is invoked, it scans the mount
-table (/proc/mounts) looking for a match. If found, it
-is cached. The price to scan /proc/mounts is paid once
-if the mount is found.
+perf_event__synthesize_mmap_events before 'sub $0x45b8,%rsp' after
+'sub $0x35b8,%rsp'.
 
-When the mount point is not found, subsequent calls to
-xxx_mountpoint() scan /proc/mounts over and over again.
-There is no caching.
+perf_event__get_comm_ids before 'sub $0x2028,%rsp' after
+'sub $0x1028,%rsp'.
 
-This causes a scaling issue in perf record with hugeltbfs__mountpoint().
-The function is called for each process found in synthesize__mmap_events().
-If the machine has thousands of processes and if the /proc/mounts has many
-entries this could cause major overhead in perf record. We have observed
-multi-second slowdowns on some configurations.
+The performance impact of this change is negligible.
 
-As an example on a laptop:
-
-Before:
-$ sudo umount /dev/hugepages
-$ strace -e trace=openat -o /tmp/tt perf record -a ls
-$ fgrep mounts /tmp/tt
-285
-
-After:
-$ sudo umount /dev/hugepages
-$ strace -e trace=openat -o /tmp/tt perf record -a ls
-$ fgrep mounts /tmp/tt
-1
-
-One could argue that the non-caching in case the moint point is not found
-is intentional. That way subsequent calls may discover a moint point if
-the sysadmin mounts the filesystem. But the same argument could be made
-against caching the mount point. It could be unmounted causing errors.
-It all depends on the intent of the interface. This patch assumes it
-is expected to scan /proc/mounts once. The patch documents the caching
-behavior in the fs.h header file.
-
-An alternative would be to just fix perf record. But it would solve
-the problem with hugetlbs__mountpoint() but there could be similar
-issues (possibly down the line) with other xxx_mountpoint() calls
-in perf or other tools.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/fs/fs.c | 17 +++++++++++++++++
- tools/lib/api/fs/fs.h | 12 ++++++++++++
- 2 files changed, 29 insertions(+)
+ tools/perf/util/synthetic-events.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 027b18f7ed8c..82f53d81a7a7 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -90,6 +90,7 @@ struct fs {
- 	const char * const	*mounts;
- 	char			 path[PATH_MAX];
- 	bool			 found;
-+	bool			 checked;
- 	long			 magic;
- };
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 3f28af39f9c6..1f3d8d4bb879 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -70,7 +70,6 @@ int perf_tool__process_synth_event(struct perf_tool *tool,
+ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+ 				    pid_t *tgid, pid_t *ppid)
+ {
+-	char filename[PATH_MAX];
+ 	char bf[4096];
+ 	int fd;
+ 	size_t size = 0;
+@@ -80,11 +79,11 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+ 	*tgid = -1;
+ 	*ppid = -1;
  
-@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
- 		.name	= "sysfs",
- 		.mounts	= sysfs__fs_known_mountpoints,
- 		.magic	= SYSFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__PROCFS] = {
- 		.name	= "proc",
- 		.mounts	= procfs__known_mountpoints,
- 		.magic	= PROC_SUPER_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__DEBUGFS] = {
- 		.name	= "debugfs",
- 		.mounts	= debugfs__known_mountpoints,
- 		.magic	= DEBUGFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__TRACEFS] = {
- 		.name	= "tracefs",
- 		.mounts	= tracefs__known_mountpoints,
- 		.magic	= TRACEFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__HUGETLBFS] = {
- 		.name	= "hugetlbfs",
- 		.mounts = hugetlbfs__known_mountpoints,
- 		.magic	= HUGETLBFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__BPF_FS] = {
- 		.name	= "bpf",
- 		.mounts = bpf_fs__known_mountpoints,
- 		.magic	= BPF_FS_MAGIC,
-+		.checked = false,
- 	},
- };
+-	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
++	snprintf(bf, sizeof(bf), "/proc/%d/status", pid);
  
-@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
+-	fd = open(filename, O_RDONLY);
++	fd = open(bf, O_RDONLY);
+ 	if (fd < 0) {
+-		pr_debug("couldn't open %s\n", filename);
++		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
  	}
  
- 	fclose(fp);
-+	fs->checked = true;
- 	return fs->found = found;
- }
+@@ -280,9 +279,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       struct machine *machine,
+ 				       bool mmap_data)
+ {
+-	char filename[PATH_MAX];
+ 	FILE *fp;
+ 	unsigned long long t;
++	char bf[BUFSIZ];
+ 	bool truncation = false;
+ 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
+ 	int rc = 0;
+@@ -292,15 +291,15 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	if (machine__is_default_guest(machine))
+ 		return 0;
  
-@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
+-	snprintf(filename, sizeof(filename), "%s/proc/%d/task/%d/maps",
+-		 machine->root_dir, pid, pid);
++	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
++		machine->root_dir, pid, pid);
  
- 	fs->found = true;
-+	fs->checked = true;
- 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
- 	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
-@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
- 	if (fs->found)
- 		return (const char *)fs->path;
+-	fp = fopen(filename, "r");
++	fp = fopen(bf, "r");
+ 	if (fp == NULL) {
+ 		/*
+ 		 * We raced with a task exiting - just return:
+ 		 */
+-		pr_debug("couldn't open %s\n", filename);
++		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
+ 	}
  
-+	/* the mount point was already checked for the mount point
-+	 * but and did not exist, so return NULL to avoid scanning again.
-+	 * This makes the found and not found paths cost equivalent
-+	 * in case of multiple calls.
-+	 */
-+	if (fs->checked)
-+		return NULL;
-+
- 	return fs__get_mountpoint(fs);
- }
+@@ -308,7 +307,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	t = rdclock();
  
-diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-index 936edb95e1f3..aa222ca30311 100644
---- a/tools/lib/api/fs/fs.h
-+++ b/tools/lib/api/fs/fs.h
-@@ -18,6 +18,18 @@
- 	const char *name##__mount(void);	\
- 	bool name##__configured(void);		\
+ 	while (1) {
+-		char bf[BUFSIZ];
+ 		char prot[5];
+ 		char execname[PATH_MAX];
+ 		char anonstr[] = "//anon";
+@@ -320,10 +318,10 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			break;
  
-+/*
-+ * The xxxx__mountpoint() entry points find the first match mount point for each
-+ * filesystems listed below, where xxxx is the filesystem type.
-+ *
-+ * The interface is as follows:
-+ *
-+ * - If a mount point is found on first call, it is cached and used for all
-+ *   subsequent calls.
-+ *
-+ * - If a mount point is not found, NULL is returned on first call and all
-+ *   subsequent calls.
-+ */
- FS(sysfs)
- FS(procfs)
- FS(debugfs)
+ 		if ((rdclock() - t) > timeout) {
+-			pr_warning("Reading %s time out. "
++			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
+ 				   "You may want to increase "
+ 				   "the time limit by --proc-map-timeout\n",
+-				   filename);
++				   machine->root_dir, pid, pid);
+ 			truncation = true;
+ 			goto out;
+ 		}
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
 
