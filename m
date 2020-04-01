@@ -2,97 +2,103 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694DFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EDEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 387C420CC7
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:38:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K+Oe4lla"
+	by mail.kernel.org (Postfix) with ESMTP id 0540E2137B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585755507;
+	bh=JY2tia3QTbcpPhzJVXSZeQLMXu9NqEKkkJz+HlA2Qeg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ZpGUMz1AhEunOHpi8Li9Nc2lZftZZL6MgP7PBj3Efvz6hhPjwwuv8jBooRzzCYgkp
+	 7BrxLT5nF+hlqi6Y8whfYkQjH5VRFQOpNyh5jTVEZhvfD+Q8Mwq36t5rSiJ9DxVXGm
+	 OySNFBqwDf+CcW+jb613qYoBmnNQkt6UzhDfXVEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732949AbgDAPiV (ORCPT
+        id S1733005AbgDAPi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:38:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40546 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732789AbgDAPiU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:38:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SZEua1exB+fJhLXEKQKY3fxy8SCkkGqIypKBr5G5eFs=; b=K+Oe4llapIfkNedKpC+wpB1023
-        jkFGXLrQNgvhUix8rVaz6J9wf4Ef7fSnIKa/FWx1+qIlPcXm1TU0LRLky4chWFzkm+PpoOMcKQ6rE
-        3mGpiJFbwe2HXCupHAWEFn2iEQ2reEOaW4xRbK+DxFBMbKhfXp/4VrZ6S3oHIhwVUUwiOjfYqL4dF
-        P8U964wDbeFdhnQ0MxWqGeG7AVjvb7N8jpE7zvddjPbBlFobzWSrksIfDuQeRyY4AvR2GN7REEn+j
-        MeZA1UCjE0DAzioqAUoM4c+WbUyDSh1qN8gK4ZdCe9j4F2Pgb9zbyTC41B/aiZHHjoG3zZlE1NxHz
-        pU0eD8VA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJfRV-0004bR-3F; Wed, 01 Apr 2020 15:38:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 1 Apr 2020 11:38:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732789AbgDAPiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:38:25 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ED71C3060FD;
-        Wed,  1 Apr 2020 17:38:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A117C2041897F; Wed,  1 Apr 2020 17:38:10 +0200 (CEST)
-Date:   Wed, 1 Apr 2020 17:38:10 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
-Message-ID: <20200401153810.GV20696@hirez.programming.kicks-ass.net>
-References: <20200330200254.GV20713@hirez.programming.kicks-ass.net>
- <20200331111652.GH20760@hirez.programming.kicks-ass.net>
- <20200331202315.zialorhlxmml6ec7@treble>
- <20200331204047.GF2452@worktop.programming.kicks-ass.net>
- <20200331211755.pb7f3wa6oxzjnswc@treble>
- <20200331212040.7lrzmj7tbbx2jgrj@treble>
- <20200331222703.GH2452@worktop.programming.kicks-ass.net>
- <20200401141402.m4klvezp5futb7ff@treble>
- <20200401142226.GU20696@hirez.programming.kicks-ass.net>
- <20200401143916.h5keq55yabetyv5u@treble>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D47AA20CC7;
+        Wed,  1 Apr 2020 15:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585755504;
+        bh=JY2tia3QTbcpPhzJVXSZeQLMXu9NqEKkkJz+HlA2Qeg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=etY4MTJchQkys0FTpGM43fY7tc5bu8tvTwdDl5PLjFd400uw69SG+aBNAABBGVNjA
+         5GcekwAa0sHV5AUTdOXMq1+qcXGZ11v7vP+NbeCP6WRdaDd/7ql+F3vx1DSvhCu0cQ
+         eJjghtByaGBJIX+1oFic1eiavQ1fKiQoip3RGHY4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A550835227CD; Wed,  1 Apr 2020 08:38:24 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 08:38:24 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, dvyukov@google.com,
+        glider@google.com, andreyknvl@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        apw@canonical.com, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] checkpatch: Warn about data_race() without comment
+Message-ID: <20200401153824.GX19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200401101714.44781-1-elver@google.com>
+ <9de4fb8fa1223fc61d6d8d8c41066eea3963c12e.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401143916.h5keq55yabetyv5u@treble>
+In-Reply-To: <9de4fb8fa1223fc61d6d8d8c41066eea3963c12e.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:39:16AM -0500, Josh Poimboeuf wrote:
-> On Wed, Apr 01, 2020 at 04:22:26PM +0200, Peter Zijlstra wrote:
+On Wed, Apr 01, 2020 at 08:17:52AM -0700, Joe Perches wrote:
+> On Wed, 2020-04-01 at 12:17 +0200, Marco Elver wrote:
+> > Warn about applications of data_race() without a comment, to encourage
+> > documenting the reasoning behind why it was deemed safe.
+> []
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+> > @@ -5833,6 +5833,14 @@ sub process {
+> >  			}
+> >  		}
+> >  
+> > +# check for data_race without a comment.
+> > +		if ($line =~ /\bdata_race\s*\(/) {
+> > +			if (!ctx_has_comment($first_line, $linenr)) {
+> > +				WARN("DATA_RACE",
+> > +				     "data_race without comment\n" . $herecurr);
+> > +			}
+> > +		}
+> > +
+> >  # check for smp_read_barrier_depends and read_barrier_depends
+> >  		if (!$file && $line =~ /\b(smp_|)read_barrier_depends\s*\(/) {
+> >  			WARN("READ_BARRIER_DEPENDS",
+> 
+> Sensible enough but it looks like ctx_has_comment should
+> be updated to allow c99 comments too, but that should be
+> a separate change from this patch.
+> 
+> Otherwise, this style emits a message:
+> 
+> WARNING: data_race without comment
+> #135: FILE: kernel/rcu/tasks.h:135:
+> +	int i = data_race(rtp->gp_state); // Let KCSAN detect update races
+> 
 
-> > > > @@ -366,6 +367,13 @@ create_trampoline(struct ftrace_ops *ops
-> > > >  	if (WARN_ON(ret < 0))
-> > > >  		goto fail;
-> > > > 
-> > > > +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-> > > > +		ip = ftrace_regs_caller_ret;
-> > > > +		ret = probe_kernel_read(ip, (void *)retq, RET_SIZE);
-> > > > +		if (WARN_ON(ret < 0))
-> > > > +			goto fail;
-> > > > +	}
-> > > > +
+Yes, please!
 
-> Right, but 'ip' needs to point to the trampoline's version of
-> 'ftrace_regs_caller_ret', not the original ftrace_64 version.
-
-Duh,
-
-		ip = trampline + (ftrace_regs_caller_ret - ftrace_regs_caller);
-
-it is.
-
-Luckily this would've triggerd a splat the first time I'd have actually
-booted this, because the regular text is RO, while the trampoline is
-still RW here. Still, good spotting.
+							Thanx, Paul
