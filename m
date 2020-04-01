@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DA7C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9485C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390EC212CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843C920BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758443;
-	bh=BHMbDdgp7RbDFwD7URLVyuS3BFawG8VCdPBkWkNinL0=;
+	s=default; t=1585758446;
+	bh=geW8g/zgMtpsvWyl8WVV6/zn4IibVD0sHG7/PIWjju0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fhp5duEBwzWAk1DmaYW0NvS32yWt29YZACfbOMlyHduqvkahlpniJc72bISw781Dx
-	 ADE0EiCBi/n0Wr8MN7Ec4ZYAm7OeGD4QRG8HwQFH+MRx37Ju7o/69znJC2F/kGv9lJ
-	 WGGAx/C++4fdc/QaygsxTEvCzic5Vh9tZlDAjues=
+	b=fJkF+kg/E+8CAEhPfUgyHzGCaGENp6dUhyBKz76+L3qi16DSYl7MQZC6Giw2ejHgX
+	 4IXTwTs9S1h/eIBvLK0ylxg+NxLuCkstTPsNJTHJKhex5VB0BqFtLQ91cfwDUdyYW0
+	 0MGXLO8aSObRB4zEKh1CcTk+UGsXJ9sbKW6E/kSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388019AbgDAQ1W (ORCPT
+        id S2388000AbgDAQ1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388014AbgDAQ1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:27:20 -0400
+        id S1733256AbgDAQ1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:27:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 772A720BED;
-        Wed,  1 Apr 2020 16:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4C72137B;
+        Wed,  1 Apr 2020 16:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758440;
-        bh=BHMbDdgp7RbDFwD7URLVyuS3BFawG8VCdPBkWkNinL0=;
+        s=default; t=1585758432;
+        bh=geW8g/zgMtpsvWyl8WVV6/zn4IibVD0sHG7/PIWjju0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aT0AKtmIpQtaRNpUcKXzaz+SvjLYowjYGGZb3cHCMXeLu9Vfy1wu33Cr7e8s1E1fG
-         1YMkHgWLT1k6BGzul8PGknk/Nvbwfjlg65H5qQejv89AgtPMiWVnxmL+ooekoiSb5q
-         7xKEbe5GGSEocB8NeoljnRVzK0xSBzlsb1+N67SQ=
+        b=lYS3zwEuJ52KexXsgU7kNTeNvIKFjHM6HmgVbg9C1AASV6xvgQdkx2g1zjDrthRJh
+         wV9awTctH+8yesiWZqVOeQ3eAtLebVYu2HbrpRn5SBBNOaCLGcpEqRj8k0jj4+PKfn
+         /oaCS4ISSjzQBMt0aI0Sm6AjQ9P7cONjQJha+ZKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 092/116] media: ov519: add missing endpoint sanity checks
-Date:   Wed,  1 Apr 2020 18:17:48 +0200
-Message-Id: <20200401161554.186885704@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 090/116] ahci: Add Intel Comet Lake H RAID PCI ID
+Date:   Wed,  1 Apr 2020 18:17:46 +0200
+Message-Id: <20200401161553.919143189@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,55 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 998912346c0da53a6dbb71fab3a138586b596b30 upstream.
+commit 32d2545462c6cede998267b86e57cda5d1dc2225 upstream.
 
-Make sure to check that we have at least one endpoint before accessing
-the endpoint array to avoid dereferencing a NULL-pointer on stream
-start.
+Add the PCI ID to the driver list to support this new device.
 
-Note that these sanity checks are not redundant as the driver is mixing
-looking up altsettings by index and by number, which need not coincide.
-
-Fixes: 1876bb923c98 ("V4L/DVB (12079): gspca_ov519: add support for the ov511 bridge")
-Fixes: b282d87332f5 ("V4L/DVB (12080): gspca_ov519: Fix ov518+ with OV7620AE (Trust spacecam 320)")
-Cc: stable <stable@vger.kernel.org>     # 2.6.31
-Cc: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/gspca/ov519.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/ata/ahci.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/usb/gspca/ov519.c
-+++ b/drivers/media/usb/gspca/ov519.c
-@@ -3487,6 +3487,11 @@ static void ov511_mode_init_regs(struct
- 		return;
- 	}
- 
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	reg_w(sd, R51x_FIFO_PSIZE, packet_size >> 5);
- 
-@@ -3613,6 +3618,11 @@ static void ov518_mode_init_regs(struct
- 		return;
- 	}
- 
-+	if (alt->desc.bNumEndpoints < 1) {
-+		sd->gspca_dev.usb_err = -ENODEV;
-+		return;
-+	}
-+
- 	packet_size = le16_to_cpu(alt->endpoint[0].desc.wMaxPacketSize);
- 	ov518_reg_w32(sd, R51x_FIFO_PSIZE, packet_size & ~7, 2);
- 
+--- a/drivers/ata/ahci.c
++++ b/drivers/ata/ahci.c
+@@ -409,6 +409,7 @@ static const struct pci_device_id ahci_p
+ 	{ PCI_VDEVICE(INTEL, 0xa252), board_ahci }, /* Lewisburg RAID*/
+ 	{ PCI_VDEVICE(INTEL, 0xa256), board_ahci }, /* Lewisburg RAID*/
+ 	{ PCI_VDEVICE(INTEL, 0xa356), board_ahci }, /* Cannon Lake PCH-H RAID */
++	{ PCI_VDEVICE(INTEL, 0x06d7), board_ahci }, /* Comet Lake-H RAID */
+ 	{ PCI_VDEVICE(INTEL, 0x0f22), board_ahci_mobile }, /* Bay Trail AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x0f23), board_ahci_mobile }, /* Bay Trail AHCI */
+ 	{ PCI_VDEVICE(INTEL, 0x22a3), board_ahci_mobile }, /* Cherry Tr. AHCI */
 
 
