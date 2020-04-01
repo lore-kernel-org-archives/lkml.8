@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6597CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4EBF2063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C931206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585760063;
-	bh=QQ6ebnUvoHQNHZ6qn9BQCIRm9XiS9wC5bt9itZPaTN4=;
+	s=default; t=1585760076;
+	bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OVzFFWAtDl+AKvG+WUFtZGpRBZk5Qi/98G7lLStnKNM+yBn8jSUBnLqdAyB9OnYhZ
-	 j1XHe/HrkyAKqBllwgPQ2o8VBrTWcihc4igDz+16NiYeWIKGj0x7ANznKDRL7E7J0u
-	 EAbyjFIwMe3B5GZyynvctmv3NXIYioTVWoXhUxvo=
+	b=kIHhOvCDRQvSleYKXiDfn2FunitKUoVVn4kP4k6Ry104eD3DRVOGFWKUpMSBX04hy
+	 ro+tKOxrZsoM++VqasoN/FnRcc781f+N51Fa9oT8xbeFrBb9FKpHP7I71vWdBumuAu
+	 A40Ro51pUwzhXQ9Q40vZfY9xa+cNElc+b/dRjHqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387967AbgDAQyW (ORCPT
+        id S2388161AbgDAQye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:54:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:54:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732974AbgDAQ3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:29:14 -0400
+        id S2387513AbgDAQ1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:27:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E32E21556;
-        Wed,  1 Apr 2020 16:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C05FB20857;
+        Wed,  1 Apr 2020 16:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758553;
-        bh=QQ6ebnUvoHQNHZ6qn9BQCIRm9XiS9wC5bt9itZPaTN4=;
+        s=default; t=1585758470;
+        bh=62H8q4wS2U8H3WVXq49tHHl0V1M2VnJlDoEkzXF2fzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u23VVfiimhdMvSiiSGONrSdsdQzuqTEyKrfOP1du7n+GXhVaxoDt+BTw17UC0517Z
-         POQuzB5/grHoLSAmgFIBEn/2nXY/DEXKmYcktF2ah9xGGvo2v55rS9b6u2bF7Mfga7
-         ejcZcRsEj4Q+VOsjca5SpBMazr3a3QuOK87+6cOc=
+        b=GKo1aaCno4AHwmPHexijbulR2ayfiovO5eU2PfVDKUit39Opv++nqz/R7HkDIlRWZ
+         w7Tbyp8YDTM3mG62aCqFbVy4lhpmaxBkYKLhoyupxDjsTeZIfhmtb+PDc3T+Ir2EsE
+         t4wKQMupz6A0p1aT+lrePYrNRHHK4UkGpeeJMZnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6d2e7f6fa90e27be9d62@syzkaller.appspotmail.com,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH 4.19 088/116] staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
-Date:   Wed,  1 Apr 2020 18:17:44 +0200
-Message-Id: <20200401161553.679384428@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 4.19 099/116] vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
+Date:   Wed,  1 Apr 2020 18:17:55 +0200
+Message-Id: <20200401161554.972628750@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -60,31 +58,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Jiri Slaby <jslaby@suse.cz>
 
-commit a1f165a6b738f0c9d744bad4af7a53909278f5fc upstream.
+commit e587e8f17433ddb26954f0edf5b2f95c42155ae9 upstream.
 
-We should cancel hw->usb_work before kfree(hw).
+These two were macros. Switch them to static inlines, so that it's more
+understandable what they are doing.
 
-Reported-by: syzbot+6d2e7f6fa90e27be9d62@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1585120006-30042-1-git-send-email-hqjagain@gmail.com
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200219073951.16151-2-jslaby@suse.cz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wlan-ng/prism2usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/tty/vt/vt_ioctl.c |   29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
---- a/drivers/staging/wlan-ng/prism2usb.c
-+++ b/drivers/staging/wlan-ng/prism2usb.c
-@@ -180,6 +180,7 @@ static void prism2sta_disconnect_usb(str
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -40,10 +40,25 @@
+ #include <linux/selection.h>
  
- 		cancel_work_sync(&hw->link_bh);
- 		cancel_work_sync(&hw->commsqual_bh);
-+		cancel_work_sync(&hw->usb_work);
+ char vt_dont_switch;
+-extern struct tty_driver *console_driver;
  
- 		/* Now we complete any outstanding commands
- 		 * and tell everyone who is waiting for their
+-#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+-#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
++static inline bool vt_in_use(unsigned int i)
++{
++	extern struct tty_driver *console_driver;
++
++	return console_driver->ttys[i] && console_driver->ttys[i]->count;
++}
++
++static inline bool vt_busy(int i)
++{
++	if (vt_in_use(i))
++		return true;
++	if (i == fg_console)
++		return true;
++	if (vc_is_sel(vc_cons[i].d))
++		return true;
++
++	return false;
++}
+ 
+ /*
+  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
+@@ -289,7 +304,7 @@ static int vt_disallocate(unsigned int v
+ 	int ret = 0;
+ 
+ 	console_lock();
+-	if (VT_BUSY(vc_num))
++	if (vt_busy(vc_num))
+ 		ret = -EBUSY;
+ 	else if (vc_num)
+ 		vc = vc_deallocate(vc_num);
+@@ -311,7 +326,7 @@ static void vt_disallocate_all(void)
+ 
+ 	console_lock();
+ 	for (i = 1; i < MAX_NR_CONSOLES; i++)
+-		if (!VT_BUSY(i))
++		if (!vt_busy(i))
+ 			vc[i] = vc_deallocate(i);
+ 		else
+ 			vc[i] = NULL;
+@@ -648,7 +663,7 @@ int vt_ioctl(struct tty_struct *tty,
+ 			state = 1;	/* /dev/tty0 is always open */
+ 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
+ 							++i, mask <<= 1)
+-				if (VT_IS_IN_USE(i))
++				if (vt_in_use(i))
+ 					state |= mask;
+ 			ret = put_user(state, &vtstat->v_state);
+ 		}
+@@ -661,7 +676,7 @@ int vt_ioctl(struct tty_struct *tty,
+ 	case VT_OPENQRY:
+ 		/* FIXME: locking ? - but then this is a stupid API */
+ 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
+-			if (! VT_IS_IN_USE(i))
++			if (!vt_in_use(i))
+ 				break;
+ 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
+ 		goto setint;		 
 
 
