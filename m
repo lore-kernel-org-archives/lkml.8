@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8A7C2BA14
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FC1C2BA12
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E903320658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63DB206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758894;
-	bh=u0oxV+ZE30Cvfe5WC10gcHtQGNHrKMYUrIi5VvOstjo=;
+	s=default; t=1585758900;
+	bh=0vKhX8eqkC4hibNoWu6IOHcT8SXG4FHJa/n34WYhQYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6TckmZVKWnXrew0FlN8jzZHn3zbTD2ggDC093Ns9frz5T7TF/VJSxifbAu9gEY5H
-	 AiDnyIeEgxutHyzUoRa9PWh596jND05IHkQ3pmGdeXi5NgrBKWEr0mt15b/4tZ1kDg
-	 SRpaFcwLUxAjiA2Mc7j+HUE6p7HnJjyBCYjHrY3U=
+	b=eSFj/sHWOMvf6xfxF6ZN2Xf8XwaxbAOZgWEZRKS4rjpiSG9kS5zoHcBT5DMLiKC7V
+	 IHCJcFl3UaCsILVviK1yMjjRiTVFDOkyyddL49Ohlj2G5VYaStjqbhvvqW3sT6nyn8
+	 AEwpHv8laAw+O626X2IgC42LFdb9av4cJEab8OPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388701AbgDAQew (ORCPT
+        id S2388581AbgDAQe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:34:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33488 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:34:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387470AbgDAQes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:34:48 -0400
+        id S2387470AbgDAQe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:34:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA5A220772;
-        Wed,  1 Apr 2020 16:34:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BABD206F8;
+        Wed,  1 Apr 2020 16:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758888;
-        bh=u0oxV+ZE30Cvfe5WC10gcHtQGNHrKMYUrIi5VvOstjo=;
+        s=default; t=1585758895;
+        bh=0vKhX8eqkC4hibNoWu6IOHcT8SXG4FHJa/n34WYhQYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B45Su2g70v1/QLDJlC4mKjHNh1uhagr+TrNU2Jkpxl0PQUpiOJfCAgVif+5Zp3LK+
-         7da1L9ZvzOE5u6S27Mla2BO+MoWoGyq85ePe2k9HX74hdOFwBMpj+UHq9pnAbmK/B3
-         64a6TL5ChKxzqeN9aLMWnZDhEG+IJMobM8pzaPEQ=
+        b=tSd28sPxh166ufdM1x4KBkVAJ9r+cmxk835BLo9Hi2dl5N/ArQMiHO6+Lcb7NIhNf
+         cOpyeaOG9P4ag7uQElnAE+o/Pq+klqkPXe3HWxFwnrR/hDkhUIlKPXFJ7roMA8k3ZX
+         pLjiIkqOPuwkjDlJ+WTnP8vbibfCTvjPXiofVsv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Steinmetz <ast@domdv.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 014/102] ALSA: seq: virmidi: Fix running status after receiving sysex
-Date:   Wed,  1 Apr 2020 18:17:17 +0200
-Message-Id: <20200401161534.606275488@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 015/102] ALSA: seq: oss: Fix running status after receiving sysex
+Date:   Wed,  1 Apr 2020 18:17:18 +0200
+Message-Id: <20200401161534.887920857@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -61,37 +60,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 4384f167ce5fa7241b61bb0984d651bc528ddebe upstream.
+commit 6c3171ef76a0bad892050f6959a7eac02fb16df7 upstream.
 
-The virmidi driver handles sysex event exceptionally in a short-cut
-snd_seq_dump_var_event() call, but this missed the reset of the
-running status.  As a result, it may lead to an incomplete command
-right after the sysex when an event with the same running status was
-queued.
+This is a similar bug like the previous case for virmidi: the invalid
+running status is kept after receiving a sysex message.
 
-Fix it by clearing the running status properly via alling
-snd_midi_event_reset_decode() for that code path.
+Again the fix is to clear the running status after handling the sysex.
 
-Reported-by: Andreas Steinmetz <ast@domdv.de>
 Cc: <stable@vger.kernel.org>
 Link: https://lore.kernel.org/r/3b4a4e0f232b7afbaf0a843f63d0e538e3029bfd.camel@domdv.de
-Link: https://lore.kernel.org/r/20200316090506.23966-2-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200316090506.23966-3-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_virmidi.c |    1 +
+ sound/core/seq/oss/seq_oss_midi.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/sound/core/seq/seq_virmidi.c
-+++ b/sound/core/seq/seq_virmidi.c
-@@ -95,6 +95,7 @@ static int snd_virmidi_dev_receive_event
- 			if ((ev->flags & SNDRV_SEQ_EVENT_LENGTH_MASK) != SNDRV_SEQ_EVENT_LENGTH_VARIABLE)
- 				continue;
- 			snd_seq_dump_var_event(ev, (snd_seq_dump_func_t)snd_rawmidi_receive, vmidi->substream);
-+			snd_midi_event_reset_decode(vmidi->parser);
- 		} else {
- 			len = snd_midi_event_decode(vmidi->parser, msg, sizeof(msg), ev);
- 			if (len > 0)
+--- a/sound/core/seq/oss/seq_oss_midi.c
++++ b/sound/core/seq/oss/seq_oss_midi.c
+@@ -615,6 +615,7 @@ send_midi_event(struct seq_oss_devinfo *
+ 		len = snd_seq_oss_timer_start(dp->timer);
+ 	if (ev->type == SNDRV_SEQ_EVENT_SYSEX) {
+ 		snd_seq_oss_readq_sysex(dp->readq, mdev->seq_device, ev);
++		snd_midi_event_reset_decode(mdev->coder);
+ 	} else {
+ 		len = snd_midi_event_decode(mdev->coder, msg, sizeof(msg), ev);
+ 		if (len > 0)
 
 
