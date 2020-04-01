@@ -2,101 +2,96 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAE6C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C68C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245C12063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416562071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585763138;
+	bh=rZPZXjTAMDwe5Cky3FeT9r7yAafZIOkFwvPk3a6wdUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Twq/u1xDXeetX8byuw4eraA/fno6kQ6FE0K+2sMEznMbu7pM/iHxNRsJZslyqGX5F
+	 +fg5IecyV2u4rnG86kUulE8U+g8+3DBdSC+kmx+3J5mXXf1HDTiU7huTEarmA3v0Ms
+	 67jY3CPoaHkLXIuKOKSFXmmx+hVMvgjCMtVQv8oY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732680AbgDARmr (ORCPT
+        id S1732765AbgDARph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:42:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:35565 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732196AbgDARmq (ORCPT
+        Wed, 1 Apr 2020 13:45:37 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50493 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732196AbgDARpg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:42:46 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jJhNy-0007ix-O2; Wed, 01 Apr 2020 19:42:42 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 19A9A103A01; Wed,  1 Apr 2020 19:42:42 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, arul.jeniston@gmail.com,
-        "devi R.K" <devi.feb27@gmail.com>,
-        Marc Lehmann <debian-reportbug@plan9.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>
-Subject: Re: timer_settime() and ECANCELED
-In-Reply-To: <CAKgNAkgiZna0yQzkdZQ92CJzjBcxX6eEu1cg24Oeu2pXRcSv8A@mail.gmail.com>
-Date:   Wed, 01 Apr 2020 19:42:42 +0200
-Message-ID: <87pncrf6gd.fsf@nanos.tec.linutronix.de>
+        Wed, 1 Apr 2020 13:45:36 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t128so673166wma.0;
+        Wed, 01 Apr 2020 10:45:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UwqDTvsisPwfePCehfqr6A88g6Iv1ZMZQoZxC5C+jkQ=;
+        b=AhP9xt+tFIItFgOSVdMrHojPCTwCvdlJp1g6h8sqHMr8jxj6SOaDxm+vQfCBqb9rWq
+         WLcJ85un5JpW69ES4eMihXsuJqN+dfvUjUOGv3tSOz8NG+e9Ir6ZaPZ6LM5ZydqHdG4o
+         9Yasr9+RWD8vlAzihcwx1Amo63Bko6VDSdszamRBqzT4NgwqC4rfpPiSE3ZyMye1Q0ax
+         R9dXQc8TxufuKmN1WK9Z5/VyYM0N8QVUFQVsqlU2HIcPYUIHPSUhEMtbMbOCpUkK4RgB
+         WFPc0UTT4GG9M+raqHb6l7k2XAhKUpYrbWeZtmN2ul4rwyY3hq9JBXv/6IJ7QtrQz2kM
+         0boA==
+X-Gm-Message-State: AGi0PuZqvmisjwkbJ3PLO2lt1JkmVEoy5is6FJxuH7QtOTBIuEeYCRxl
+        VcFz3vs9FM52ZFBDPNFk0Rmy4pAU
+X-Google-Smtp-Source: APiQypLeUEHvXYR2K3Q/4pSafCxa25hrl6/8SYqqEtMpnqTrGOVzbzKiNNFirdcEgOYfWPNvD2uz1Q==
+X-Received: by 2002:a05:600c:2197:: with SMTP id e23mr212700wme.90.1585763134625;
+        Wed, 01 Apr 2020 10:45:34 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id d18sm3998416wrn.9.2020.04.01.10.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 10:45:33 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 18:45:31 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: linux-next: build failure after merge of the hyperv tree
+Message-ID: <20200401174531.by77tjkc2w33fplw@debian>
+References: <20200331172335.2f71021b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331172335.2f71021b@canb.auug.org.au>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael,
+On Tue, Mar 31, 2020 at 05:23:35PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the hyperv tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> ERROR: modpost: "panic_on_oops" [drivers/hv/hv_vmbus.ko] undefined!
+> 
+> Caused by commit
+> 
+>   a6a5aa4b0179 ("x86/Hyper-V: Report crash data in die() when panic_on_oops is set")
+> 
+> I have reverted that commit for today.
 
-"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
-> Following on from our discussion of read() on a timerfd [1], I
-> happened to remember a Debian bug report [2] that points out that
-> timer_settime() can fail with the error ECANCELED, which is both
-> surprising and odd (because despite the error, the timer does get
-> updated).
-...
-> (1) If the wall-clock is changed before the first timerfd_settime()
-> call, the call succeeds. This is of course expected.
-> (2) If the wall-clock is changed after a timerfd_settime() call, then
-> the next timerfd_settime() call fails with ECANCELED.
-> (3) Even if the timerfd_settime() call fails, the timer is still updated(!).
->
-> Some questions:
-> (a) What is the rationale for timerfd_settime() failing with ECANCELED
-> in this case? (Currently, the manual page says nothing about this.)
-> (b) It seems at the least surprising, but more likely a bug, that
-> timerfd_settime() fails with ECANCELED while at the same time
-> successfully updating the timer value.
+I will remove that patch from hyperv-next. I have been busy with other
+things on Monday and Tuesday, so sorry for not paying close attention.
 
-Really good question and TBH I can't remember why this is implemented in
-the way it is, but I have a faint memory that at least (a) is
-intentional.
+Wei.
 
-After staring at the code for a while I came up with the following
-answers:
-
-(a): If the clock was set event ("date -s ...") which triggered the
-     cancel was not yet consumed by user space via read(), then that
-     information would get lost because arming the timer to the new
-     value has to reset the state.
-
-(b): Arming the timer in that case is indeed very questionable, but it
-     could be argued that because the clock was set event happened with
-     the old expiry value that the new expiry value is not affected.
-     
-     I'd be happy to change that and not arm the timer in the case of a
-     pending cancel, but I fear that some user space already depends on
-     that behaviour.
-
-Thanks,
-
-        tglx
-
-
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
 
