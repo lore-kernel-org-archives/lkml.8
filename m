@@ -2,297 +2,247 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208F2C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6C6C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FFA20776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uO1rue67"
+	by mail.kernel.org (Postfix) with ESMTP id 65C9520776
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 11:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732485AbgDALke (ORCPT
+        id S1732255AbgDALqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 07:40:34 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53972 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732360AbgDALkd (ORCPT
+        Wed, 1 Apr 2020 07:46:34 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:55491 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgDALqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 07:40:33 -0400
-Received: by mail-pj1-f66.google.com with SMTP id l36so2587130pjb.3;
-        Wed, 01 Apr 2020 04:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=frwB9HCh+bckiKeVXR7fySiqWLZJB1ugfHiteg0Zg6A=;
-        b=uO1rue67YuGneI+FwjSH0oNn4qzb32FAY5QIxDM4BPM5usA6Lb7PjtcdiCwpCpEChd
-         ZM+Tt5RcPC8q2HWJ0QGK0WVzo8SVB4KIoHppAhEyiPTZubVgvvhI8vkKnzyUboO6TAhg
-         EpY9pjBDnGA3N+5w8yE0YqafS83l6hJo8SC6cYn4dZnzWocGzMyrCU0rh1k/k0S4rcdP
-         lWs+XOGKcPsfAx5Sd26YkgYkq9+rGQNVvIgGsolBqbYwvL3CmWJXUSPz2OQ9K9o2FQjJ
-         KAmel9efYIMF2LfVxOkyQB807tl8m6B8SHRGiqurpEhyUHghwp+oDA5XUhdz7biLrGEs
-         qkPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=frwB9HCh+bckiKeVXR7fySiqWLZJB1ugfHiteg0Zg6A=;
-        b=d4SlZ0lR2vlTb+2uRZf1It+Lc1b8fZbSzVovton6s8YvAS+4CK217WI5d63m7Ow+x/
-         KPx3PbRCxJxq7s45BQORyUrkRhCu8475eVHauEnevt53r7rIMqjUcWMfqhZL4aXpIzQf
-         TmPhJIAuOWqutKVkGzET4WaPofX4HU4INDnBvZksc+oJoMqdYQWsC77bqxhkZKElxKO2
-         aVqtXlOwb5P/cVFyeE7mjiqFd5/uLZx8/0ReUSSvJeb5m5IFm/kx0XHuCNFwUzuvovGc
-         ZaSrJtKYNrQA/j02ZbiX04W6N923f0rrWjxKdl1BBDYXlhY7FONV9Zm/1/aO2Vz0OExx
-         6YyA==
-X-Gm-Message-State: AGi0Pub4KkKfx+XU6XjXFa1e69CE1Xgtt0SBa/2TgwpLCNrfNIvc18ca
-        1shMQuZXqZeD3rM7nc3JhQym014sg8c=
-X-Google-Smtp-Source: APiQypJ0ytCgLWwK/pGbVcTMZm+D7llsACYyxAi+SvlJPVMzHdnrHgN18R3C3SuNS09Mw7LpjMxbtQ==
-X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr4407221pjq.100.1585741231649;
-        Wed, 01 Apr 2020 04:40:31 -0700 (PDT)
-Received: from cnn ([2402:3a80:463:99ca:94f8:dc27:324a:484e])
-        by smtp.gmail.com with ESMTPSA id f5sm1418767pfq.63.2020.04.01.04.40.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 04:40:30 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 17:10:23 +0530
-From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-To:     andrew@aj.id.au, joel@jms.id.au
-Cc:     sdasari@fb.com, vijaykhemka@fb.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        openbmc@lists.ozlabs.org, manikandan.e@hcl.com
-Subject: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20200401114023.GA29180@cnn>
+        Wed, 1 Apr 2020 07:46:34 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jJbp7-0004aH-Db; Wed, 01 Apr 2020 11:46:21 +0000
+Date:   Wed, 1 Apr 2020 13:46:20 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc:     Adrian Reber <areber@redhat.com>, Andrei Vagin <avagin@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: clone3: allow creation of time namespace with offset
+Message-ID: <20200401114620.465d3zw7nymqgqww@wittgenstein>
+References: <20200319081137.GC223854@dcbz.redhat.com>
+ <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
+ <20200319102955.i7slokibkkysz6g6@wittgenstein>
+ <20200320183355.GA118769@gmail.com>
+ <20200324160945.orcm75avj2ol3eop@wittgenstein>
+ <20200324162546.GG358599@dcbz.redhat.com>
+ <20200324175649.fqkwiuvs2drk26ln@wittgenstein>
+ <20200325075836.GK358599@dcbz.redhat.com>
+ <20200325112652.sx66bhad7cqdsatm@wittgenstein>
+ <78979e3f-293e-998a-0d7b-40da2616afcf@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <78979e3f-293e-998a-0d7b-40da2616afcf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platform based on AST2500 SoC.
+On Wed, Apr 01, 2020 at 01:40:25PM +0200, Michael Kerrisk (man-pages) wrote:
+> On 3/25/20 12:26 PM, Christian Brauner wrote:
+> > On Wed, Mar 25, 2020 at 08:58:36AM +0100, Adrian Reber wrote:
+> >> On Tue, Mar 24, 2020 at 06:56:49PM +0100, Christian Brauner wrote:
+> >>> On Tue, Mar 24, 2020 at 05:25:46PM +0100, Adrian Reber wrote:
+> >>>> On Tue, Mar 24, 2020 at 05:09:45PM +0100, Christian Brauner wrote:
+> >>>>> On Fri, Mar 20, 2020 at 11:33:55AM -0700, Andrei Vagin wrote:
+> >>>>>> On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
+> >>>>>>> On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
+> >>>>>>>> On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
+> >>>>>>>>
+> >>>>>>>>> With Arnd's idea of only using nanoseconds, timens_offset would then
+> >>>>>>>>> contain something like this:
+> >>>>>>>>>
+> >>>>>>>>> struct timens_offset {
+> >>>>>>>>>         __aligned_s64 monotonic_offset_ns;
+> >>>>>>>>>         __aligned_s64 boottime_offset_ns;
+> >>>>>>>>> };
+> >>>>>>>>>
+> >>>>>>>>> I kind of prefer adding boottime and monotonic directly to struct clone_args
+> >>>>>>>>>
+> >>>>>>>>>         __aligned_u64 tls;
+> >>>>>>>>>         __aligned_u64 set_tid;
+> >>>>>>>>>         __aligned_u64 set_tid_size;
+> >>>>>>>>> +       __aligned_s64 monotonic_offset_ns;
+> >>>>>>>>> +       __aligned_s64 boottime_offset_ns;
+> >>>>>>>>>  };
+> >>>>>>>>
+> >>>>>>>> I would also prefer the second approach using two 64-bit integers
+> >>>>>>>> instead of a pointer, as it keeps the interface simpler to implement
+> >>>>>>>> and simpler to interpret by other tools.
+> >>>>>>>
+> >>>>>>> Why I don't like has two reasons. There's the scenario where we have
+> >>>>>>> added new extensions after the new boottime member and then we introduce
+> >>>>>>> another offset. Then you'd be looking at:
+> >>>>>>>
+> >>>>>>> __aligned_u64 tls;
+> >>>>>>> __aligned_u64 set_tid;
+> >>>>>>> __aligned_u64 set_tid_size;
+> >>>>>>> + __aligned_s64 monotonic_offset_ns;
+> >>>>>>> + __aligned_s64 boottime_offset_ns;
+> >>>>>>> __aligned_s64 something_1
+> >>>>>>> __aligned_s64 anything_2
+> >>>>>>> + __aligned_s64 sometime_offset_ns
+> >>>>>>>
+> >>>>>>> which bothers me just by looking at it. That's in addition to adding two
+> >>>>>>> new members to the struct when most people will never set CLONE_NEWTIME.
+> >>>>>>> We'll also likely have more features in the future that will want to
+> >>>>>>> pass down more info than we want to directly expose in struct
+> >>>>>>> clone_args, e.g. for a long time I have been thinking about adding a
+> >>>>>>> struct for CLONE_NEWUSER that allows you to specify the id mappings you
+> >>>>>>> want the new user namespace to get. We surely don't want to force all
+> >>>>>>> new info into the uppermost struct. So I'm not convinced we should here.
+> >>>>>>
+> >>>>>> I think here we can start thinking about a netlink-like interface.
+> >>>>>
+> >>>>> I think netlink is just not a great model for an API and I would not
+> >>>>> want us to go down that route.
+> >>>>>
+> >>>>> I kept thinking about this for a bit and I think that we will end up
+> >>>>> growing more namespace-related functionality. So one thing that came to
+> >>>>> my mind is the following layout:
+> >>>>>
+> >>>>> struct {
+> >>>>> 	struct {
+> >>>>> 		__s64 monotonic;
+> >>>>> 		__s64 boot;
+> >>>>> 	} time;
+> >>>>> } namespaces;
+> >>>>>
+> >>>>> struct _clone_args {
+> >>>>> 	__aligned_u64 flags;
+> >>>>> 	__aligned_u64 pidfd;
+> >>>>> 	__aligned_u64 child_tid;
+> >>>>> 	__aligned_u64 parent_tid;
+> >>>>> 	__aligned_u64 exit_signal;
+> >>>>> 	__aligned_u64 stack;
+> >>>>> 	__aligned_u64 stack_size;
+> >>>>> 	__aligned_u64 tls;
+> >>>>> 	__aligned_u64 set_tid;
+> >>>>> 	__aligned_u64 set_tid_size;
+> >>>>> 	__aligned_u64 namespaces;
+> >>>>> 	__aligned_u64 namespaces_size;
+> >>>>> };
+> >>>>>
+> >>>>> Then when we end up adding id mapping support for CLONE_NEWUSER we can
+> >>>>> extend this with:
+> >>>>>
+> >>>>> struct {
+> >>>>> 	struct {
+> >>>>> 		__aligned_u64 monotonic;
+> >>>>> 		__aligned_u64 boot;
+> >>>
+> >>> s/__aligned_u64/__s64/g
+> >>>
+> >>> Sorry, leftover from my first draft.
+> >>>
+> >>>>> 	} time;
+> >>>>>
+> >>>>> 	struct {
+> >>>>> 		/* id mapping members */
+> >>>>> 	} user;
+> >>>>> } namespaces;
+> >>>>>
+> >>>>> Thoughts? Other ideas?
+> >>>>
+> >>>> Works for me.
+> >>>>
+> >>>> If we add the user namespace id mappings and then at some point a third
+> >>>> element for the time namespace appears it would also start to be mixed.
+> >>>> Just as you mentioned that a few mails ago.
+> >>>
+> >>> I think you misunderstand me or I'm misunderstanding you. That new time
+> >>> namespace member would go into struct time {} so
+> >>>
+> >>> struct {
+> >>> 	struct {
+> >>> 		__s64 monotonic;
+> >>> 		__s64 boot;
+> >>> 		__s64 someothertime;
+> >>> 	} time;
+> >>>
+> >>> 	struct {
+> >>> 		/* id mapping members */
+> >>> 	} user;
+> >>> } namespaces;
+> 
+> So far, this seems like the least worst approach to me :-).
+> 
+> I think it's reasonable to assume that there will be another
+> time NS offset to add one day. I don't think anyone expected
+> CLOCK_BOOTIME (added in 2011) at the time that CLOCK_MONOTONIC
+> appeared (as part of the POSIX timers API in Linux 2.6.0 2003);
+> similarly, we probably can't conceive now what clock might be
+> added in the future that should also be governed by time
+> namespaces.
+> 
+> 
+> But...
+> 
+> >> My question was about how does the kernel know how 'struct namespaces'
+> >> is structured. How can an older kernel (which only is aware of two
+> >> clocks) deal with a, like in this example, third clock. Will the size
+> >> '__aligned_u64 namespaces_size' be used for versioning?
+> > 
+> > Yes, that would be the idea.
+> 
+> The idea implied here (if I understand correctly) of "binary chop
+> on the structure size to see what your kernel supports" is pretty
+> clunky, IMO. It's worth at least considering alternatives. 
+> For example, seccomp has a number of interesting interfaces to
+> discover what the running kernel supports [1]. Maybe it is worth
+> considering something similar for clone3()?
 
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
+Yes, that's definitely something I've been thinking about and I've also
+discussed this publicly on the libc-alpha mailing list since Florian
+(Weimer) wants this for glibc. _But_ I didn't want to simply go my own
+way and so Aleksa and I stuck our heads together and tried to come up
+with a generic way that e.g. would work for both openat2() and for
+clone3(), in fact we tried to come up with a generic way that could
+potentially be used by any syscall that makes use of the new
+copy_struct_from_user() helper that Aleksa and I pushed upstream. We
+haven't yet gotten around to actually try and implementing our ideas.
+I'll try to get around to this during this cycle (/me makes note to "sit
+down" with Aleksa). We'll definitely take a look at seccomp and cgroups
+too.
 
-Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-Acked-by     : Andrew Jeffery <andrew@aj.id.au>
-Reviewed-by  : Vijay Khemka <vkhemka@fb.com>
----
----      v7 - Added multi-host SOL feature.
----      v6 - Added device tree property for multi-host Mellanox NIC in the ncsi driver.
----      v5 - Spell and contributor name correction.
----           - License identifier changed to GPL-2.0-or-later.
----           - aspeed-gpio.h removed.
----           - FAN2 tacho channel changed.
----      v4 - Bootargs removed.
----      v3 - Uart1 Debug removed .
----      v2 - LPC and VUART removed .
----      v1 - Initial draft.
----
----
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 186 +++++++++++++++++++++
- 1 file changed, 186 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+Christian
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..bc83901
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (c) 2018 Facebook Inc.
-+/dts-v1/;
-+#include "aspeed-g5.dtsi"
-+
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+&uart1 {
-+	// Host1 Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart2 {
-+	// Host2 Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd2_default
-+		     &pinctrl_rxd2_default>;
-+
-+};
-+
-+&uart3 {
-+	// Host3 Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd3_default
-+		     &pinctrl_rxd3_default>;
-+};
-+
-+&uart4 {
-+	// Host4 Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd4_default
-+		     &pinctrl_rxd4_default>;
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&vuart {
-+	// Virtual UART
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+	mlx,multi-host;
-+};
-+
-+&adc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+			&pinctrl_adc1_default
-+			&pinctrl_adc2_default
-+			&pinctrl_adc3_default
-+			&pinctrl_adc4_default
-+			&pinctrl_adc5_default
-+			&pinctrl_adc6_default
-+			&pinctrl_adc7_default
-+			&pinctrl_adc8_default
-+			&pinctrl_adc9_default
-+			&pinctrl_adc10_default
-+			&pinctrl_adc11_default
-+			&pinctrl_adc12_default
-+			&pinctrl_adc13_default
-+			&pinctrl_adc14_default
-+			&pinctrl_adc15_default>;
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+	//FRU EEPROM
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+	tmp421@4e {
-+	//INLET TEMP
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	//OUTLET TEMP
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+	//HSC
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+	//MEZZ_TEMP_SENSOR
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+	//MEZZ_FRU
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	//FSC
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+};
--- 
-2.7.4
-
+> 
+> Cheers,
+> 
+> Michael
+> 
+> [1]
+> /proc/sys/kernel/seccomp/actions_avail (see seccomp(2))
+> SECCOMP_GET_ACTION_AVAIL (see secommp(2))
+> cgroups also provides something similar in the form of
+> /sys/kernel/cgroup/features (see cgroups(7))
+> 
+> -- 
+> Michael Kerrisk
+> Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+> Linux/UNIX System Programming Training: http://man7.org/training/
