@@ -2,122 +2,139 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5477C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B509DC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6EC206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0FD206E9
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yhv+Hz2o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KJntRMJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732712AbgDARL4 (ORCPT
+        id S1732738AbgDARNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:11:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36033 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731749AbgDARL4 (ORCPT
+        Wed, 1 Apr 2020 13:13:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40874 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732137AbgDARNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:11:56 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c23so379606pgj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 10:11:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ywdn6l6e79P51vHdgecSOxS4zrcLOxx18s21Mj2y7ps=;
-        b=Yhv+Hz2oABjk7BKrt6qg5xfPrivu0TcnP8vMRm+7jyihELFRTcTdSAhIKSy5lNVSA2
-         8YO9HLQueqtkif7qArWq8LTRbNzz4cUj8yQCV2dL/lzwmbR1OhqiIfNkNh6TDBTdIO3X
-         KxmynXcOupREvKmYKe3rGk6Fq6WQ0y2jDY6kSCpoOVcyDQAvEi3eFMzCq/qHZ+wmkc9W
-         aXyfXpmYXKBozFm8g9qaPhJvxNE+ptEGVDd0rr2xx0XLkpLG1gzk2WgTeZ3mZ+40b2kb
-         lSCUP+NTTYdNFAbXfX1sdtCwhugsbiIhV8gfv/ciXinEuhG7ge+uXMbgBb5og6R9+pe6
-         DIgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ywdn6l6e79P51vHdgecSOxS4zrcLOxx18s21Mj2y7ps=;
-        b=HQ7SPH0PsqSNEDd8VwUR7ZNhaiYkk6bMEdoJGBcw2o5FXZZl0sPDD8ZWqeV+74/5VD
-         Y1/y+ZnW5mx72Pb5WuyVAVd20TCYjRtMCslm9G8G+7K9f8ZnPZfd6WqVaxiJHuEzYl6w
-         4aLTyONf5xOcUcBEH3iWvf/kwwnZMz/e9nfKw6i5WX811tq8pFuUaf2sdUMUhg1lZjb1
-         ByF23CYq7+J6de0Yn1zxYe4tv3xmVBX5BqOiTiy7GhAmq0VRBFDuO/7KGX/0SAVkx7KG
-         5h8tJ4w1rlNhoKIJ59C34MwCVoFTQImJCKtkXjkyquI34JxiW0KVranGRyy/icx5FLoS
-         +ekw==
-X-Gm-Message-State: ANhLgQ0voPtaXz/dgp0uWcVZji1u8gxNUnsWTvhC4dQsBRR8dAKjl1O6
-        2CS8G8OrzWpX7gBYn2Y3g3qyPqmVxos=
-X-Google-Smtp-Source: ADFU+vvFXPFLSMH5htgZcgYj1rKspo8NCiNyZwvpJ2FfIcCZdwMSvk+So2KkHg0oeHBfsbpDa8Oe/w==
-X-Received: by 2002:a63:e856:: with SMTP id a22mr22432040pgk.283.1585761114870;
-        Wed, 01 Apr 2020 10:11:54 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id b11sm567585pfr.155.2020.04.01.10.11.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 10:11:54 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 11:11:52 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/16] perf cs-etm: Implement ->evsel_is_auxtrace()
- callback
-Message-ID: <20200401171152.GA12742@xps15>
-References: <20200401101613.6201-1-adrian.hunter@intel.com>
- <20200401101613.6201-6-adrian.hunter@intel.com>
+        Wed, 1 Apr 2020 13:13:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=wdgTSKNxkD1QrwAjRgDdie5nQ4gbwZFe8HVIvvfYi0s=; b=KJntRMJ8Qks9UoOE0UgBNQ4Dyr
+        oTcjRKMZ6Jf3Gk/IJlNgmVLKtTXcnPwXUsOSjEOz5uphzyUiBLQJo5o7PNsl5LrPcwVNnSiAKVvsb
+        EyuIe9gLPIJpM69FvjZNpfYVsJZoOmOs+Ik5+N0tX3FfjD3I1dSBXGZWHv9ASkPKrJValKJth9X0/
+        6qWTivVQG1Q4mPA/b4MTBvIzD3/W8/Z5t1IHR66LpXrQnSzPUGwU9UDR5BWrWiQvR8AWjNiN+T4wg
+        qrl22e1u2+csSEP8rhDaM5Xz9aNdmcjZXcpO4P4n77fobZ+0b07wCIh/WYLt/XTgeqmcKmYcvVp2R
+        +8bmJBbA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jJgvR-0000rx-7y; Wed, 01 Apr 2020 17:13:13 +0000
+Subject: Re: mmotm 2020-03-30-18-46 uploaded (VDPA + vhost)
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>
+References: <20200331014748.ajL0G62jF%akpm@linux-foundation.org>
+ <969cacf1-d420-223d-7cc7-5b1b2405ec2a@infradead.org>
+ <20200331143437-mutt-send-email-mst@kernel.org>
+ <9c03fee8-af1a-2035-b903-611a631094b0@infradead.org>
+ <20200331152106-mutt-send-email-mst@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <cd94bd62-57c4-b82e-0434-8a470a9ea613@infradead.org>
+Date:   Wed, 1 Apr 2020 10:13:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401101613.6201-6-adrian.hunter@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200331152106-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 01:16:02PM +0300, Adrian Hunter wrote:
-> Implement ->evsel_is_auxtrace() callback.
+On 3/31/20 12:22 PM, Michael S. Tsirkin wrote:
+> On Tue, Mar 31, 2020 at 11:42:47AM -0700, Randy Dunlap wrote:
+>> On 3/31/20 11:37 AM, Michael S. Tsirkin wrote:
+>>> On Tue, Mar 31, 2020 at 11:27:54AM -0700, Randy Dunlap wrote:
+>>>> On 3/30/20 6:47 PM, akpm@linux-foundation.org wrote:
+>>>>> The mm-of-the-moment snapshot 2020-03-30-18-46 has been uploaded to
+>>>>>
+>>>>>    http://www.ozlabs.org/~akpm/mmotm/
+>>>>>
+>>>>> mmotm-readme.txt says
+>>>>>
+>>>>> README for mm-of-the-moment:
+>>>>>
+>>>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>>>
+>>>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>>>> more than once a week.
+>>>>>
+>>>>> You will need quilt to apply these patches to the latest Linus release (5.x
+>>>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+>>>>> http://ozlabs.org/~akpm/mmotm/series
+>>>>>
+>>>>> The file broken-out.tar.gz contains two datestamp files: .DATE and
+>>>>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+>>>>> followed by the base kernel version against which this patch series is to
+>>>>> be applied.
+>>>>>
+>>>>> This tree is partially included in linux-next.  To see which patches are
+>>>>> included in linux-next, consult the `series' file.  Only the patches
+>>>>> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+>>>>> linux-next.
+>>>>>
+>>>>>
+>>>>> A full copy of the full kernel tree with the linux-next and mmotm patches
+>>>>> already applied is available through git within an hour of the mmotm
+>>>>> release.  Individual mmotm releases are tagged.  The master branch always
+>>>>> points to the latest release, so it's constantly rebasing.
+>>>>>
+>>>>> 	https://github.com/hnaz/linux-mm
+>>>>
+>>>> on i386:
+>>>>
+>>>> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_init':
+>>>> vdpa.c:(.init.text+0x52): undefined reference to `__vdpa_register_driver'
+>>>> ld: drivers/vhost/vdpa.o: in function `vhost_vdpa_exit':
+>>>> vdpa.c:(.exit.text+0x14): undefined reference to `vdpa_unregister_driver'
+>>>>
+>>>>
+>>>>
+>>>> drivers/virtio/vdpa/ is not being built. (confusing!)
+>>>>
+>>>> CONFIG_VIRTIO=m
+>>>> # CONFIG_VIRTIO_MENU is not set
+>>>> CONFIG_VDPA=y
+>>>
+>>> Hmm. OK. Can't figure it out. CONFIG_VDPA is set why isn't
+>>> drivers/virtio/vdpa/ built?
+>>> we have:
+>>>
+>>
+>> Ack.  Hopefully Yamada-san can tell us what is happening here.
 > 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->  tools/perf/util/cs-etm.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 62d2f9b9ce1b..3c802fde4954 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -631,6 +631,16 @@ static void cs_etm__free(struct perf_session *session)
->  	zfree(&aux);
->  }
->  
-> +static bool cs_etm__evsel_is_auxtrace(struct perf_session *session,
-> +				      struct evsel *evsel)
-> +{
-> +	struct cs_etm_auxtrace *aux = container_of(session->auxtrace,
-> +						   struct cs_etm_auxtrace,
-> +						   auxtrace);
-> +
-> +	return evsel->core.attr.type == aux->pmu_type;
-> +}
-> +
->  static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
->  {
->  	struct machine *machine;
-> @@ -2618,6 +2628,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->  	etm->auxtrace.flush_events = cs_etm__flush_events;
->  	etm->auxtrace.free_events = cs_etm__free_events;
->  	etm->auxtrace.free = cs_etm__free;
-> +	etm->auxtrace.evsel_is_auxtrace = cs_etm__evsel_is_auxtrace;
->  	session->auxtrace = &etm->auxtrace;
+> OK I pushed a fix (moving the vdpa subsystem up a level) and pushed into
+> my tree, refs/heads/next .  Seems to build fine now, but I'd appreciate
+> it if you can give it a spin.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+This now builds successfully on linux-next of 20200401.
 
->  
->  	etm->unknown_thread = thread__new(999999999, 999999999);
-> -- 
-> 2.17.1
-> 
+Thanks.
+
+-- 
+~Randy
+
