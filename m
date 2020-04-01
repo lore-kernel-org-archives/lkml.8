@@ -2,90 +2,99 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC94C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7077CC2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5357220719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4845320719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 08:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WE3GrsX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731849AbgDAI1K (ORCPT
+        id S1731949AbgDAI1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:27:10 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45114 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgDAI1K (ORCPT
+        Wed, 1 Apr 2020 04:27:40 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49056 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726406AbgDAI1k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:27:10 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c9so25035573otl.12;
-        Wed, 01 Apr 2020 01:27:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8PWg6iL0RHDv3oeRI76vFJ9XdDEyjVI5/xkAD0j0fj0=;
-        b=kDzYxx38wK4dX1g7csnk6susgl0kMoY6gjnlu+klerEJbk8dze54Pq0hoN4ih4vpaZ
-         oSHl6ICBa1858xnEi6X22DruSM3R2/8Ux8+sS+z0uh1FYOohsWksCMYpVAnS2YybZ0zq
-         ECe7DxMMGE1kl+/hftLSoGiAapnZ1TFZjFGXtMeMbBKdOp6KNIJv33T8k1NBLSrjrZCA
-         hArB1Lh5votq8NqX5JKpa5xewuYSmi/XTuvoNkbXAQ4d9X0kkSBGbKVe6l5YPTXCLkom
-         YHd8Jwh+ud0NpVEPOuQJ+XXqmnE8n8a2RYS3oA3IdNRhQt0V6gF2thnAVvWdpwOKYRV1
-         0FEA==
-X-Gm-Message-State: ANhLgQ02gbsXGbEGrdeHvYlqpKo/bq+cPLKH3AY+4taUn857vrH3aorz
-        h2WBtabALTwnvny9DjEBXG7GmSYJtgZpwN+hnaY=
-X-Google-Smtp-Source: ADFU+vu5WCM8zr8UCxmvvPoHlaAcgIaE2nkkFI0Wude6ubPSLKcv/F/AiyEuwwF11uWc1fLXdqIdiOyHeUQC8aBj8T4=
-X-Received: by 2002:a05:6830:15c2:: with SMTP id j2mr15135322otr.107.1585729629608;
- Wed, 01 Apr 2020 01:27:09 -0700 (PDT)
+        Wed, 1 Apr 2020 04:27:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585729658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=A6T4NzJaYrpl8sbGk+/56cI+lPm3tJ8OvumXbnFWNJs=;
+        b=WE3GrsX+tVaULntMaSkIy2VRSqX8a/4hfCWWemEUdjaH3Y+n1sgPy4c72DiCzINxw5nr77
+        W2+hxNlTVD0/9GKnml0V3R2qYo9mbGRj7tErnpBu1AbwW80hrCu5mkmsR5Cw6mFWfenosA
+        Lta1hQumAfvWZgF79KFKDxqXQDj7xFA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-28-LPl4n2IlPVKc88TP8mowIg-1; Wed, 01 Apr 2020 04:27:37 -0400
+X-MC-Unique: LPl4n2IlPVKc88TP8mowIg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AEE58800D53;
+        Wed,  1 Apr 2020 08:27:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4BEC296B72;
+        Wed,  1 Apr 2020 08:27:30 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com>
+References: <CAJfpegvvMVoNp1QeXEZiNucCeuUeDP4tKqVfq2F4koQKzjKmvw@mail.gmail.com> <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk> <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <50caf93782ba1d66bd6acf098fb8dcb0ecc98610.camel@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
 MIME-Version: 1.0
-References: <20200401190810.7a2cfa07@canb.auug.org.au> <20200401191810.1c06ead6@canb.auug.org.au>
-In-Reply-To: <20200401191810.1c06ead6@canb.auug.org.au>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 Apr 2020 10:26:58 +0200
-Message-ID: <CAMuHMdVqexMZKj8xtMb3NdV64xrq4ppiq0sLMfHdtft4stZZTQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: turn of_pinctrl_get() into a static inline
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2465265.1585729649.1@warthog.procyon.org.uk>
+Date:   Wed, 01 Apr 2020 09:27:29 +0100
+Message-ID: <2465266.1585729649@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-On Wed, Apr 1, 2020 at 10:18 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> On Wed, 1 Apr 2020 19:08:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > This avoids the overheads of an EXPORTed function.
-> >
-> > Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  drivers/pinctrl/devicetree.c    | 6 ------
-> >  include/linux/pinctrl/pinctrl.h | 9 +++------
-> >  2 files changed, 3 insertions(+), 12 deletions(-)
-> >
-> > This is not even build tested, but is this what you meant, Geert?
->
-> Actually this won't work because get_pinctrl_dev_from_of_node() is
-> declared in the private header file drivers/pinctrl/core.h :-(
+> According to dhowell's measurements processing 100k mounts would take
+> about a few seconds of system time (that's the time spent by the
+> kernel to retrieve the data,
 
-Indeed :-(
+But the inefficiency of mountfs - at least as currently implemented - scales
+up with the number of individual values you want to retrieve, both in terms of
+memory usage and time taken.
 
-Just realized this myself, while reviewing your patch.
-Sorry for the bad suggestion.
+With fsinfo(), I've tried to batch values together where it makes sense - and
+there's no lingering memory overhead - no extra inodes, dentries and files
+required.
 
-Gr{oetje,eeting}s,
+David
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
