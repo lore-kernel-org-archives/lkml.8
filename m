@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A44C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93D8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC07F21556
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB5720857
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758367;
-	bh=4btCm3r6OFM4VXHy3zm0hcExY2XF+cm+/dbwO1g2CeE=;
+	s=default; t=1585758371;
+	bh=HLkyMYABj1W/nqkEG7+IVskAU2nhYu7XZVp+KIkbBEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DAtl3ijtEzZhUEVlNtzCjIG0i0nTuqq7v1Ojal3Hnsbow+fkrXHQY5/GGOQPMBaie
-	 +oXhJRDEAVqwk9vL7hWla038fDFUVi6aSErXmvEtcQLKDKOp8zw9Jf/M1T64S/2OL4
-	 81juVcyln3baHy7hJ1bTFJyqq01tvNZmo9agTR70=
+	b=uJrGkWKz6L7svtMoSwr9JkMCZOLzuo0kAfdnwaeyKSbXuGW1Pa4Wmggx7MiwcEajD
+	 EpkvcC/a/1O2jCUmd5QJvD9FWBwAxgJm1lQvx3BCIZ2mbn69pgNyAZlo1s54vs8044
+	 l/HZXob57F89M0iJbwbu5j3QzQdfQC/Mdpss1Gxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387870AbgDAQ0E (ORCPT
+        id S2387874AbgDAQ0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387867AbgDAQ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:26:01 -0400
+        id S2387868AbgDAQ0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:26:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B35CB20BED;
-        Wed,  1 Apr 2020 16:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41C45212CC;
+        Wed,  1 Apr 2020 16:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758359;
-        bh=4btCm3r6OFM4VXHy3zm0hcExY2XF+cm+/dbwO1g2CeE=;
+        s=default; t=1585758361;
+        bh=HLkyMYABj1W/nqkEG7+IVskAU2nhYu7XZVp+KIkbBEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIQK70NX6De+h/kTvI01mSCGGihG9zAb9rXyGdZ49pSbNKu5MS0ve3ZWBa9oTFUdN
-         5l++51KWyVZfDXYnBHkI0F9A8B+Mokv9xd0yHDE1dwrCFgVnewPUBz4vuB1+VYhnFO
-         cjsQomcjSeQcHEdxBpejXmtt8+63who3vvxf49dA=
+        b=d6Mk5FMf3rGDvqj8ovZiQo9A3CnZyvoE88q91N8qFeXmtnAY9bb/PCEhIGtFH5dBF
+         7ZNdqSlmrTGxZ/y8yeqS8kwVzZwuaMpXe1oBX80nbAZs2pRcg3sYRt4YGVX4AiEIk2
+         qeXA1WfkEhzBhrzcDSWuFaZpfjiH244ornpYerVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raed Salem <raeds@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
         Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.19 065/116] xfrm: handle NETDEV_UNREGISTER for xfrm device
-Date:   Wed,  1 Apr 2020 18:17:21 +0200
-Message-Id: <20200401161551.715984732@linuxfoundation.org>
+Subject: [PATCH 4.19 066/116] vti[6]: fix packet tx through bpf_redirect() in XinY cases
+Date:   Wed,  1 Apr 2020 18:17:22 +0200
+Message-Id: <20200401161551.770608190@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
 References: <20200401161542.669484650@linuxfoundation.org>
@@ -61,34 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raed Salem <raeds@mellanox.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-commit 03891f820c2117b19e80b370281eb924a09cf79f upstream.
+commit f1ed10264ed6b66b9cd5e8461cffce69be482356 upstream.
 
-This patch to handle the asynchronous unregister
-device event so the device IPsec offload resources
-could be cleanly released.
+I forgot the 4in6/6in4 cases in my previous patch. Let's fix them.
 
-Fixes: e4db5b61c572 ("xfrm: policy: remove pcpu policy cache")
-Signed-off-by: Raed Salem <raeds@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 95224166a903 ("vti[6]: fix packet tx through bpf_redirect()")
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/xfrm/xfrm_device.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/Kconfig   |    1 +
+ net/ipv4/ip_vti.c  |   36 +++++++++++++++++++++++++++++-------
+ net/ipv6/ip6_vti.c |   32 +++++++++++++++++++++++++-------
+ 3 files changed, 55 insertions(+), 14 deletions(-)
 
---- a/net/xfrm/xfrm_device.c
-+++ b/net/xfrm/xfrm_device.c
-@@ -332,6 +332,7 @@ static int xfrm_dev_event(struct notifie
- 		return xfrm_dev_feat_change(dev);
+--- a/net/ipv4/Kconfig
++++ b/net/ipv4/Kconfig
+@@ -302,6 +302,7 @@ config SYN_COOKIES
  
- 	case NETDEV_DOWN:
-+	case NETDEV_UNREGISTER:
- 		return xfrm_dev_down(dev);
+ config NET_IPVTI
+ 	tristate "Virtual (secure) IP: tunneling"
++	depends on IPV6 || IPV6=n
+ 	select INET_TUNNEL
+ 	select NET_IP_TUNNEL
+ 	depends on INET_XFRM_MODE_TUNNEL
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -208,17 +208,39 @@ static netdev_tx_t vti_xmit(struct sk_bu
+ 	int mtu;
+ 
+ 	if (!dst) {
+-		struct rtable *rt;
++		switch (skb->protocol) {
++		case htons(ETH_P_IP): {
++			struct rtable *rt;
+ 
+-		fl->u.ip4.flowi4_oif = dev->ifindex;
+-		fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
+-		rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
+-		if (IS_ERR(rt)) {
++			fl->u.ip4.flowi4_oif = dev->ifindex;
++			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++			if (IS_ERR(rt)) {
++				dev->stats.tx_carrier_errors++;
++				goto tx_error_icmp;
++			}
++			dst = &rt->dst;
++			skb_dst_set(skb, dst);
++			break;
++		}
++#if IS_ENABLED(CONFIG_IPV6)
++		case htons(ETH_P_IPV6):
++			fl->u.ip6.flowi6_oif = dev->ifindex;
++			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++			if (dst->error) {
++				dst_release(dst);
++				dst = NULL;
++				dev->stats.tx_carrier_errors++;
++				goto tx_error_icmp;
++			}
++			skb_dst_set(skb, dst);
++			break;
++#endif
++		default:
+ 			dev->stats.tx_carrier_errors++;
+ 			goto tx_error_icmp;
+ 		}
+-		dst = &rt->dst;
+-		skb_dst_set(skb, dst);
  	}
- 	return NOTIFY_DONE;
+ 
+ 	dst_hold(dst);
+--- a/net/ipv6/ip6_vti.c
++++ b/net/ipv6/ip6_vti.c
+@@ -454,15 +454,33 @@ vti6_xmit(struct sk_buff *skb, struct ne
+ 	int mtu;
+ 
+ 	if (!dst) {
+-		fl->u.ip6.flowi6_oif = dev->ifindex;
+-		fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
+-		dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
+-		if (dst->error) {
+-			dst_release(dst);
+-			dst = NULL;
++		switch (skb->protocol) {
++		case htons(ETH_P_IP): {
++			struct rtable *rt;
++
++			fl->u.ip4.flowi4_oif = dev->ifindex;
++			fl->u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
++			rt = __ip_route_output_key(dev_net(dev), &fl->u.ip4);
++			if (IS_ERR(rt))
++				goto tx_err_link_failure;
++			dst = &rt->dst;
++			skb_dst_set(skb, dst);
++			break;
++		}
++		case htons(ETH_P_IPV6):
++			fl->u.ip6.flowi6_oif = dev->ifindex;
++			fl->u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
++			dst = ip6_route_output(dev_net(dev), NULL, &fl->u.ip6);
++			if (dst->error) {
++				dst_release(dst);
++				dst = NULL;
++				goto tx_err_link_failure;
++			}
++			skb_dst_set(skb, dst);
++			break;
++		default:
+ 			goto tx_err_link_failure;
+ 		}
+-		skb_dst_set(skb, dst);
+ 	}
+ 
+ 	dst_hold(dst);
 
 
