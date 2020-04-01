@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76132C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55394C2D0F2
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB572137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4CD214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758152;
-	bh=5XjkFM5wyNFBP6SLOe9dlSinzdyO5temJPYtDJ7S7Ak=;
+	s=default; t=1585758155;
+	bh=mR+5OGoU1pNR0jhdMMwChIxKedYFniCIAotdRFpImVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xF5a61z4VoYkuMPTO8EA5LN3qMZ1X5icXHgiwfktwlciiZHI6knO3htenUPzLoIPQ
-	 aaqpAD46AM0lyvQsxnLrLGqZxdDkUjZsYhCzoVTt4FJ1DBP7mWIQuJqRNsEZhVfiVW
-	 21xG5EdAwZ8oAJJdXWXO/iLQwIbXAoE9a91p/Tn4=
+	b=qTJ1rODqxTr/fGya2BolGHrpfE2kqo4jI8xbJ/8ziOETegYvHjjC4aIq9XEZgG05i
+	 5bEDXEiVxmwPo9JeKubg5I8z8pEGRYH9PAjrKj6xZiyxMeSgJutO3QZrMGz8qd53EG
+	 UqFr0m/KMLLa0yin7FOiUtogwp+s3MKZ1fekVaDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387498AbgDAQWa (ORCPT
+        id S2387507AbgDAQWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45510 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387490AbgDAQW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:22:27 -0400
+        id S1732285AbgDAQW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:22:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09DA320857;
-        Wed,  1 Apr 2020 16:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EF32214D8;
+        Wed,  1 Apr 2020 16:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758146;
-        bh=5XjkFM5wyNFBP6SLOe9dlSinzdyO5temJPYtDJ7S7Ak=;
+        s=default; t=1585758149;
+        bh=mR+5OGoU1pNR0jhdMMwChIxKedYFniCIAotdRFpImVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bsn7Pm3GzV/N+m5bk9rqQUBd/osEuMiYExqV9l3+a3ib/352fz3GyPpmbSLoSu0tB
-         zrJu+ITtz8iqNtWQciYopXlp2na3o5AggTmYxyujVJYIVIbSQsY/RD+rdzvTzbNAy6
-         Jeh1dmAZ4nTWwkX4HrvYJ9fdBHq1Q1NVa6C/DPpA=
+        b=LqvQne52wVcTWMwCqcdNpvckwqkDObKMQCdQGu4EV6kwlGDftBEbnYIbOitGtmXb1
+         xWMEIY52CGE4zf/HNwh3EBcCIio1BFwnfETvX2PkIRkX+EFUFSfMwDKs0lnL76cNgd
+         HUCEOIkwTT6xO/YMcJsd1cjMD1i9AwdXi9zzTYwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 5.4 06/27] vt: switch vt_dont_switch to bool
-Date:   Wed,  1 Apr 2020 18:17:34 +0200
-Message-Id: <20200401161420.251719596@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 5.4 07/27] vt: vt_ioctl: remove unnecessary console allocation checks
+Date:   Wed,  1 Apr 2020 18:17:35 +0200
+Message-Id: <20200401161420.381086324@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161414.352722470@linuxfoundation.org>
 References: <20200401161414.352722470@linuxfoundation.org>
@@ -58,57 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Slaby <jslaby@suse.cz>
+From: Eric Biggers <ebiggers@google.com>
 
-commit f400991bf872debffb01c46da882dc97d7e3248e upstream.
+commit 1aa6e058dd6cd04471b1f21298270014daf48ac9 upstream.
 
-vt_dont_switch is pure boolean, no need for whole char.
+The vc_cons_allocated() checks in vt_ioctl() and vt_compat_ioctl() are
+unnecessary because they can only be reached by calling ioctl() on an
+open tty, which implies the corresponding virtual console is allocated.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200219073951.16151-6-jslaby@suse.cz
+And even if the virtual console *could* be freed concurrently, then
+these checks would be broken since they aren't done under console_lock,
+and the vc_data is dereferenced before them anyway.
+
+So, remove these unneeded checks to avoid confusion.
+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20200224080326.295046-1-ebiggers@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt_ioctl.c |    6 +++---
- include/linux/vt_kern.h   |    2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/vt/vt_ioctl.c |   16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
 --- a/drivers/tty/vt/vt_ioctl.c
 +++ b/drivers/tty/vt/vt_ioctl.c
-@@ -39,7 +39,7 @@
- #include <linux/kbd_diacr.h>
- #include <linux/selection.h>
- 
--char vt_dont_switch;
-+bool vt_dont_switch;
- 
- static inline bool vt_in_use(unsigned int i)
+@@ -350,22 +350,13 @@ int vt_ioctl(struct tty_struct *tty,
  {
-@@ -1026,12 +1026,12 @@ int vt_ioctl(struct tty_struct *tty,
- 	case VT_LOCKSWITCH:
- 		if (!capable(CAP_SYS_TTY_CONFIG))
- 			return -EPERM;
--		vt_dont_switch = 1;
-+		vt_dont_switch = true;
- 		break;
- 	case VT_UNLOCKSWITCH:
- 		if (!capable(CAP_SYS_TTY_CONFIG))
- 			return -EPERM;
--		vt_dont_switch = 0;
-+		vt_dont_switch = false;
- 		break;
- 	case VT_GETHIFONTMASK:
- 		ret = put_user(vc->vc_hi_font_mask,
---- a/include/linux/vt_kern.h
-+++ b/include/linux/vt_kern.h
-@@ -135,7 +135,7 @@ extern int do_unbind_con_driver(const st
- 			     int deflt);
- int vty_init(const struct file_operations *console_fops);
+ 	struct vc_data *vc = tty->driver_data;
+ 	struct console_font_op op;	/* used in multiple places here */
+-	unsigned int console;
++	unsigned int console = vc->vc_num;
+ 	unsigned char ucval;
+ 	unsigned int uival;
+ 	void __user *up = (void __user *)arg;
+ 	int i, perm;
+ 	int ret = 0;
  
--extern char vt_dont_switch;
-+extern bool vt_dont_switch;
- extern int default_utf8;
- extern int global_cursor_default;
+-	console = vc->vc_num;
+-
+-
+-	if (!vc_cons_allocated(console)) { 	/* impossible? */
+-		ret = -ENOIOCTLCMD;
+-		goto out;
+-	}
+-
+-
+ 	/*
+ 	 * To have permissions to do most of the vt ioctls, we either have
+ 	 * to be the owner of the tty, or have CAP_SYS_TTY_CONFIG.
+@@ -1195,14 +1186,9 @@ long vt_compat_ioctl(struct tty_struct *
+ {
+ 	struct vc_data *vc = tty->driver_data;
+ 	struct console_font_op op;	/* used in multiple places here */
+-	unsigned int console = vc->vc_num;
+ 	void __user *up = compat_ptr(arg);
+ 	int perm;
  
+-
+-	if (!vc_cons_allocated(console)) 	/* impossible? */
+-		return -ENOIOCTLCMD;
+-
+ 	/*
+ 	 * To have permissions to do most of the vt ioctls, we either have
+ 	 * to be the owner of the tty, or have CAP_SYS_TTY_CONFIG.
 
 
