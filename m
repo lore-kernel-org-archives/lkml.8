@@ -2,72 +2,102 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E060C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CA8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54088206E9
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D842071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:53:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wtlmw4dp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389499AbgDAWxi (ORCPT
+        id S2389527AbgDAWxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:53:38 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:42412 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389479AbgDAWxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:53:38 -0400
-Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1jJmEK-0004Od-Hj; Thu, 02 Apr 2020 09:53:05 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 02 Apr 2020 09:53:04 +1100
-Date:   Thu, 2 Apr 2020 09:53:04 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+6a6bca8169ffda8ce77b@syzkaller.appspotmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        David Miller <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: KCSAN: data-race in glue_cbc_decrypt_req_128bit /
- glue_cbc_decrypt_req_128bit
-Message-ID: <20200401225304.GA16019@gondor.apana.org.au>
-References: <0000000000009d5cef05a22baa95@google.com>
- <20200331202706.GA127606@gmail.com>
- <CACT4Y+ZSTjPmPmiL_1JEdroNZXYgaKewDBEH6RugnhsDVd+bUQ@mail.gmail.com>
- <CANpmjNPkzTSwtJhRXWE0DYi8mToDufuOztjE4h9KopZ11T+q+w@mail.gmail.com>
- <20200401162028.GA201933@gmail.com>
+        Wed, 1 Apr 2020 18:53:43 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55945 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389504AbgDAWxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 18:53:42 -0400
+Received: by mail-pj1-f66.google.com with SMTP id fh8so713178pjb.5;
+        Wed, 01 Apr 2020 15:53:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qukBrnnromGiSCTnyz4L9HyTen8DUq+f4oJWku7HGRc=;
+        b=Wtlmw4dpm0UzBF2ljJcSpqIpYf97R9uDwQrPvVTbaSenQDwQi3zvynD1LIClNrkmgr
+         v32L1eIqgqLy8+C0tdcrFx4NIBZ+wCN4R412gfu4QxRCwZ/sfOT+dVSTGIlEgQDGKtGc
+         Mg2L1WUgME8bLCAaxIKdcIbhbxS3s9IFK/YwjeBMFT7Vb2xPaA7fb+x64nCK4sIPQ7xi
+         OT9fFgOcgErtV+krCWbMjDBk81Ulu08eQ45eeJHeZI25BbvV06cZq4TegLtjkQiD05oj
+         h5vYGZaD//05KrmpM84Jafe7Po1SM+DipPPAjmVtfyugjt6UBeOGQ0szs/M0DCyqRWvN
+         8BtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qukBrnnromGiSCTnyz4L9HyTen8DUq+f4oJWku7HGRc=;
+        b=fsnN4NEthXjtf5VOkHrGrqUOel+mbpR5CBdCVgoHLXzzdxhI/lcS7NKpcFjRx5a5V2
+         WzYpkIVP33JDIrvVRdExZHX3eQfIfEvjvHiuLLuM5rCD1LHrcfx4dWqBRf16Cg69bQRN
+         lp5fhRRFNnzFrSIW/AcCfyWFR3gKP28BWTnOm1yAtK+dw5rJMviEDO/aeUCeODipozUI
+         6NpOktm862h6p+stVd9pTh+xM+dhzb4+lpWR30GI3YAZmeR0hp+MeRAqFD0cjIw6WqAf
+         /KeB3mCfipY9G9INr4N5AoOFyexAViGZBIrBol1232UCVg0bfKNG9Hw4jp/fWtpNcAA1
+         f2kA==
+X-Gm-Message-State: AGi0PuYWyKksAV4lc2Ih5qIytaj+0kXmGkKsDfVGlTNJQA4zYMKHt9U0
+        9xd5IhWPZXwBtOo/526O8juGoCir
+X-Google-Smtp-Source: APiQypKdEp028ZPQjbmb21Al2LBskm5n5yoA6i/WOLkLRtbqs/InmFgJatpLUGky6jX9D+uBLxMQRg==
+X-Received: by 2002:a17:902:242:: with SMTP id 60mr133733plc.245.1585781621214;
+        Wed, 01 Apr 2020 15:53:41 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id m68sm2554947pjb.0.2020.04.01.15.53.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 15:53:40 -0700 (PDT)
+Subject: Re: [PATCH] iommu/vt-d: add NUMA awareness to intel_alloc_coherent()
+To:     Eric Dumazet <edumazet@google.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Benjamin Serebrin <serebrin@google.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, netdev <netdev@vger.kernel.org>
+References: <1517438756.3715.108.camel@gmail.com>
+ <20180202185301.GA8232@infradead.org>
+ <CANn89i+FBn3fttEyU_znAd-+8BgM7VZogFeeZPA7_zubChFpBA@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <34c70805-44f5-6697-3ebf-2f4d56779454@gmail.com>
+Date:   Wed, 1 Apr 2020 15:53:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401162028.GA201933@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CANn89i+FBn3fttEyU_znAd-+8BgM7VZogFeeZPA7_zubChFpBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:20:28AM -0700, Eric Biggers wrote:
->
-> The issue is that fixing it would require adding READ_ONCE() / WRITE_ONCE() in
-> hundreds of different places, affecting most crypto-related .c files.
 
-I don't think we should be doing that.  This is exactly the same
-as using sendfile(2) and modifying the data during the send.  As
-long as you don't trigger behaviours such as crashes or uncontrolled
-execution then it's fine.  The output is simply undefined.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On 2/2/18 10:59 AM, Eric Dumazet wrote:
+> On Fri, Feb 2, 2018 at 10:53 AM, Christoph Hellwig <hch@infradead.org> wrote:
+>> I've got patches pending to replace all that code with
+>> dma_direct_alloc, which will do the right thing.  They were
+>> submitted for 4.16, and I will resend them after -rc1.
+> 
+> I see, thanks Christoph !
+> 
+
+Hi Christoph 
+
+It seems 4.16 has shipped ( :) ) , and intel_alloc_coherent() still has no NUMA awareness.
+
+Should I respin https://lore.kernel.org/patchwork/patch/884326/
+
+Thanks !
