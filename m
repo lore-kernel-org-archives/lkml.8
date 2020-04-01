@@ -2,206 +2,108 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB50C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705F8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EAB20772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379972071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5JZaFqZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/fKiL+5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732756AbgDARgS (ORCPT
+        id S1732769AbgDARh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:36:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35172 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732137AbgDARgS (ORCPT
+        Wed, 1 Apr 2020 13:37:27 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32985 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726901AbgDARh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:36:18 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d5so1093703wrn.2;
-        Wed, 01 Apr 2020 10:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=hVnY+iUETxvaa53KF+7YlVvPnziBRpZNnbmz4JpnwDM=;
-        b=d5JZaFqZvsBaz5wutHwy1rZca+QVneLtZZWozxNbYfuM2tiqTCszBuWe6nInOEc3rY
-         lizhQAnK4KprShLY0a0l90Q0NiZztyjhvmMS4PtF7S0QGyTvOkmlyIxoHcVH1JjiplXA
-         j+3tdCU0D9BMXbYagczDDHnaKTwIBx4JATf153M6Xdats0fOV/ALmNYVJ2rqrYVb2KSL
-         bQhvuO03+FnQ2ABKfnC2SDfEhwVcZMlQI9NwHqN09RlLmwOHRcVdt8CIWQx7s+m8U+/P
-         67SoOFv8dnNWzuJ9Jn0St6XJYQOLSeE/xyhQW3rIRCxVqzbwM5R/UkIW//dqpkKiTuRM
-         u5oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=hVnY+iUETxvaa53KF+7YlVvPnziBRpZNnbmz4JpnwDM=;
-        b=DVMYeNpQDz725h0mcuv2qRNSxUymLAzGxNSHl8CELwfkKGcVhuoHjDKnNVaGeRfFaS
-         Ky1tJa6lca1pT4M7vZVhAzUFzrr1KbquhLsoZCY5xT9DuHQdOQ/OXxgnFc2Y1AjK5WEe
-         YG1KwWa3CCcwPOPpXdi4jYeEwLJUITw6ULfKcSGGr0BvVY8IQr7PLoJTrn7FV5QUIUv3
-         +q9N7RYtTMOz45Svp4BW0bUCKzm228aFmA336fab9tPlJ9cX5Y65USPyWdK99p007t7k
-         OsNPdcck+fdN8djvWkdlVyswBt0sT90R2fi/5dqz+uCPdyiZPNT5HJ83l6OP8Yq/OjFG
-         hxPQ==
-X-Gm-Message-State: ANhLgQ1R79JVW281aInusVNfSAPTkkM0TzwkqdV2VWwPhtLTmE/ycP+Y
-        BRVmN1vLKGCWjfNpRMJEQ7N5h0t4bHzL4qV/Lzw=
-X-Google-Smtp-Source: ADFU+vuHCaEDXrO+7S2ZUFMtSBmkn1kVDPA6g9ATFQebVzqniiUTC1RS/20eGcww7xUVGOka0VrAoCruRq/o7Ksf7wY=
-X-Received: by 2002:adf:a319:: with SMTP id c25mr27093384wrb.197.1585762575967;
- Wed, 01 Apr 2020 10:36:15 -0700 (PDT)
+        Wed, 1 Apr 2020 13:37:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585762645;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bN9sAxxrxI0QKUe5EmcfAyEAD1O55pPC904an2QRe7s=;
+        b=b/fKiL+5HJaCivkLTAvMjRfEEqi1w643XkH66KOf6RF2imLUmOkPt/cfCWfpgKyCjTiA5B
+        j61klu7et+RwxIJScW2T9034mrYpFIDqhDOA4EwriuNuqmxS1yAKslrBC9uCwVVZ4g6VBW
+        XhB/u3KHULhjh5ViPLMxFDzP3Bf3wl8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-444-5qC2-SH4MpmplGeB9sW4Bw-1; Wed, 01 Apr 2020 13:37:13 -0400
+X-MC-Unique: 5qC2-SH4MpmplGeB9sW4Bw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 541381005055;
+        Wed,  1 Apr 2020 17:37:12 +0000 (UTC)
+Received: from treble (ovpn-118-135.phx2.redhat.com [10.3.118.135])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8627C391;
+        Wed,  1 Apr 2020 17:37:11 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 12:37:09 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Julien Thierry <jthierry@redhat.com>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        mbenes@suse.cz, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] objtool,ftrace: Implement UNWIND_HINT_RET_OFFSET
+Message-ID: <20200401173709.xzfuwmbz4b6lvsfy@treble>
+References: <20200330190205.k5ssixd5hpshpjjq@treble>
+ <20200330200254.GV20713@hirez.programming.kicks-ass.net>
+ <20200331111652.GH20760@hirez.programming.kicks-ass.net>
+ <20200331202315.zialorhlxmml6ec7@treble>
+ <20200331204047.GF2452@worktop.programming.kicks-ass.net>
+ <20200331211755.pb7f3wa6oxzjnswc@treble>
+ <20200331212040.7lrzmj7tbbx2jgrj@treble>
+ <20200331222703.GH2452@worktop.programming.kicks-ass.net>
+ <d2cad75e-1708-f0bf-7f88-194bcb29e61d@redhat.com>
+ <20200401170910.GX20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200401053913.216783-1-nickrterrell@gmail.com>
-In-Reply-To: <20200401053913.216783-1-nickrterrell@gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 1 Apr 2020 19:36:20 +0200
-Message-ID: <CA+icZUVBqpaeL3KYoasA9nViFEUofA6DUZ5=ZeV48Q19i1QNMQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/8] Add support for ZSTD-compressed kernel and initramfs
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, gregkh@linuxfoundation.org,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200401170910.GX20730@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 7:38 AM Nick Terrell <nickrterrell@gmail.com> wrote:
+On Wed, Apr 01, 2020 at 07:09:10PM +0200, Peter Zijlstra wrote:
+> On Wed, Apr 01, 2020 at 04:43:35PM +0100, Julien Thierry wrote:
+> 
+> > > +static bool has_modified_stack_frame(struct instruction *insn, struct insn_state *state)
+> > >   {
+> > > +	u8 ret_offset = insn->ret_offset;
+> > >   	int i;
+> > > 
+> > > -	if (state->cfa.base != initial_func_cfi.cfa.base ||
+> > > -	    state->cfa.offset != initial_func_cfi.cfa.offset ||
+> > > -	    state->stack_size != initial_func_cfi.cfa.offset ||
+> > > -	    state->drap)
+> > > +	if (state->cfa.base != initial_func_cfi.cfa.base || state->drap)
+> > > +		return true;
+> > > +
+> > > +	if (state->cfa.offset != initial_func_cfi.cfa.offset &&
+> > > +	    !(ret_offset && state->cfa.offset == initial_func_cfi.cfa.offset + ret_offset))
+> > 
+> > Isn't that the same thing as "state->cfa.offset !=
+> > initial_func_cfi.cfa.offset + ret_offset" ?
+> 
+> I'm confused on what cfa.offset is, sometimes it increase with
+> stack_size, sometimes it doesn't.
 >
-> From: Nick Terrell <terrelln@fb.com>
->
-> Hi all,
->
-> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
-> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
-> are supported on all architectures. The ZSTD-compressed kernel is only
-> hooked up to x86 in this patch set.
->
-> Zstandard requires slightly more memory during the kernel decompression
-> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
-> window size.
->
-> Zstandard requires memory proprortional to the window size used during
-> compression for decompressing the ramdisk image, since streaming mode is
-> used. Newer versions of zstd (1.3.2+) list the window size of a file
-> with `zstd -lv <file>'. The absolute maximum amount of memory required
-> is just over 8 MB, but it can be controlled at compression time.
->
-> This patch set has been boot tested with buildroot and QEMU based off
-> of linux-5.6-rc6.
->
-> On i386 and x86_64 I have tested the following configurations:
-> * zstd compressed kernel and a separate zstd compressed initramfs
-> * zstd compressed kernel and a built-in zstd compressed initramfs
-> * gzip compressed kernel and a separate gzip compressed initramfs
-> * gzip compressed kernel and a built-in gzip compressed initramfs
->
-> On arm and aarch64 I tested the same configurations, except that the kernel is
-> always gzip compressed.
->
-> Facebook has been using v1 of these patches on x86_64 devices for more than 6
-> months. When we switched from a xz compressed initramfs to a zstd compressed
-> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
-> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
-> seconds of boot time.
->
-> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
-> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
-> decompression time shrunk from 27 seconds to 8 seconds.
->
-> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
-> than the xz or lzma compressed kernels, and it decompresses faster than
-> everything except lz4. See the table below for the measurement of an x86_64
-> kernel ordered by compressed size:
->
-> algo    size
-> xz       6,509,792
-> lzma     6,856,576
-> zstd     7,399,157
-> gzip     8,522,527
-> bzip     8,629,603
-> lzo      9,808,035
-> lz4     10,705,570
-> none    32,565,672
->
-> v1 -> v2:
-> - Rebase
->   - usr/Makefile and init/Kconfig were changed so the patches were updated
-> - No functional changes except to rebase
-> - Split the patches up into smaller chunks
->
-> v2 -> v3:
-> - Add *.zst to the .gitignore in patch 8
-> - Style nits in patch 3
-> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
->   1 through 3
->
-> v3 -> v4:
-> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
->   With this change I switch from malloc() to large_malloc() for the
->   buffers.
-> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
->   the max that zstd in the kernel supports.
->
+> ISTR that for the ftrace case it was indeed cfa.offset + 8, but for the
+> IRET case below (where it is now not used anymore) it was cfa.offset
+> (not cfa.offset + 40, which I was expecting).
 
-Hi Nick,
+It depends on the value of cfa.base.  If cfa.base is CFI_SP, then
+cfa.offset changes with stack_size.  If cfa.base is CFI_BP (i.e. if the
+function uses a frame pointer), then cfa.offset is constant (the
+distance between RBP on the stack and the previous frame).
 
-thanks for version 4.
+-- 
+Josh
 
-I have re-tested against Linux v5.6 final and it boots fine with a
-ZSTD-compressed initramfs on Debian/testing AMD64.
-
-Regards,
-- Sedat -
-
-> Best,
-> Nick Terrell
->
-> Adam Borowski (1):
->   .gitignore: add ZSTD-compressed files
->
-> Nick Terrell (7):
->   lib: prepare zstd for preboot environment
->   lib: prepare xxhash for preboot environment
->   lib: add zstd support to decompress
->   init: add support for zstd compressed kernel
->   usr: add support for zstd compressed initramfs
->   x86: bump ZO_z_extra_bytes margin for zstd
->   x86: Add support for ZSTD compressed kernel
->
->  .gitignore                        |   1 +
->  Documentation/x86/boot.rst        |   6 +-
->  arch/x86/Kconfig                  |   1 +
->  arch/x86/boot/compressed/Makefile |   5 +-
->  arch/x86/boot/compressed/misc.c   |   4 +
->  arch/x86/boot/header.S            |   8 +-
->  arch/x86/include/asm/boot.h       |   6 +-
->  include/linux/decompress/unzstd.h |  11 +
->  init/Kconfig                      |  15 +-
->  lib/Kconfig                       |   4 +
->  lib/Makefile                      |   1 +
->  lib/decompress.c                  |   5 +
->  lib/decompress_unzstd.c           | 342 ++++++++++++++++++++++++++++++
->  lib/xxhash.c                      |  21 +-
->  lib/zstd/decompress.c             |   2 +
->  lib/zstd/fse_decompress.c         |   9 +-
->  lib/zstd/zstd_internal.h          |  14 +-
->  scripts/Makefile.lib              |  15 ++
->  usr/Kconfig                       |  20 ++
->  usr/Makefile                      |   1 +
->  20 files changed, 464 insertions(+), 27 deletions(-)
->  create mode 100644 include/linux/decompress/unzstd.h
->  create mode 100644 lib/decompress_unzstd.c
->
-> --
-> 2.26.0
->
