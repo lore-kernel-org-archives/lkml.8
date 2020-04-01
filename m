@@ -2,218 +2,287 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68229C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098E6C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4482137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585755652;
-	bh=55DIQUMPnN3dUhv747Rs4JVQiYpVrBL9TjR0jiURsaI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=f+TRnuBR0FGPWmIgzFelgQWmPLiCTcOSmuNWUsmdOUZeN1nuYf6RNPpeAPvU1QHRU
-	 Y4IoKoOC8rENbJ+0govenct6foNNiJG5gPvyoAdZ0G3b/e/8mdf1a7Smo+DsJ1kCKs
-	 7hpLR7ZYhN6RH84NHyctM3BBVlIDi8ItvsxATCmQ=
+	by mail.kernel.org (Postfix) with ESMTP id CF2F0212CC
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733139AbgDAPkv (ORCPT
+        id S1733078AbgDAPmM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 11:42:12 -0400
+Received: from mga05.intel.com ([192.55.52.43]:44580 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732861AbgDAPkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:40:51 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D353212CC;
-        Wed,  1 Apr 2020 15:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585755650;
-        bh=55DIQUMPnN3dUhv747Rs4JVQiYpVrBL9TjR0jiURsaI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ugbwDSle2bptSQOpzxRPCOJl3PA7exzHP6Pm6ABjBZ4TJaBS5OP9LONr23TCltZos
-         gQCzmHyvKDJVb00PlkM/XdNK9lBGas3sd24/yXTiDO8YxwfTugQuPjRlAoIlxGiCgb
-         Zzts3AxAUccM4LeOQ6k9v+TEPAQyiraFDEaK1DR8=
-Subject: Re: [PATCH 5.6 00/23] 5.6.1-rc1 review
-To:     Woody Suwalski <terraluna977@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200331085308.098696461@linuxfoundation.org>
- <6cdfe0e5-408f-2d88-cb08-c7675d78637c@gmail.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <9762570c-c83f-10d4-ecec-0d0427c2d2a3@kernel.org>
-Date:   Wed, 1 Apr 2020 09:40:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1732864AbgDAPmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:42:12 -0400
+IronPort-SDR: LwXidoGh19uoLftaXqooDzABiqcExvCcK1FKLzx24g5LvVepMVRbQYm3cLDMJYxDyFlxw0h3XD
+ LetWC8QPemBQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 08:42:11 -0700
+IronPort-SDR: rgCl/iz8Ek08zmzuVmldpgZqfvojhQHg1defdVYSXAfYoo4olQfaqbZ1R5j8j90i2P1BvHtIXv
+ XhCaL5zD5Xlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,332,1580803200"; 
+   d="scan'208";a="328495700"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 01 Apr 2020 08:42:11 -0700
+Date:   Wed, 1 Apr 2020 08:47:59 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Alex Williamson" <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH V10 11/11] iommu/vt-d: Add custom allocator for IOASID
+Message-ID: <20200401084759.575b38c4@jacob-builder>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA146@SHSMSX104.ccr.corp.intel.com>
+References: <1584746861-76386-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1584746861-76386-12-git-send-email-jacob.jun.pan@linux.intel.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D7FA146@SHSMSX104.ccr.corp.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <6cdfe0e5-408f-2d88-cb08-c7675d78637c@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 9:06 PM, Woody Suwalski wrote:
-> Greg Kroah-Hartman wrote:
->> This is the start of the stable review cycle for the 5.6.1 release.
->> There are 23 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
->>
->> Responses should be made by Thu, 02 Apr 2020 08:50:37 +0000.
->> Anything received after that time might be too late.
->>
->> The whole patch series can be found in one patch at:
->>     https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.1-rc1.gz 
->>
->> or in the git tree and branch at:
->>     git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git 
->> linux-5.6.y
->> and the diffstat can be found below.
->>
->> thanks,
->>
->> greg k-h
->>
->> -------------
->> Pseudo-Shortlog of commits:
->>
->> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>      Linux 5.6.1-rc1
->>
->> Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
->>      media: v4l2-core: fix a use-after-free bug of sd->devnode
->>
->> Johan Hovold <johan@kernel.org>
->>      media: xirlink_cit: add missing descriptor sanity checks
->>
->> Johan Hovold <johan@kernel.org>
->>      media: stv06xx: add missing descriptor sanity checks
->>
->> Johan Hovold <johan@kernel.org>
->>      media: dib0700: fix rc endpoint lookup
->>
->> Johan Hovold <johan@kernel.org>
->>      media: ov519: add missing endpoint sanity checks
->>
->> Eric Biggers <ebiggers@google.com>
->>      libfs: fix infoleak in simple_attr_read()
->>
->> Kai-Heng Feng <kai.heng.feng@canonical.com>
->>      ahci: Add Intel Comet Lake H RAID PCI ID
->>
->> Michał Mirosław <mirq-linux@rere.qmqm.pl>
->>      staging: wfx: annotate nested gc_list vs tx queue locking
->>
->> Michał Mirosław <mirq-linux@rere.qmqm.pl>
->>      staging: wfx: fix init/remove vs IRQ race
->>
->> Michał Mirosław <mirq-linux@rere.qmqm.pl>
->>      staging: wfx: add proper "compatible" string
->>
->> Qiujun Huang <hqjagain@gmail.com>
->>      staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
->>
->> Qiujun Huang <hqjagain@gmail.com>
->>      staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
->>
->> Larry Finger <Larry.Finger@lwfinger.net>
->>      staging: rtl8188eu: Add ASUS USB-N10 Nano B1 to device table
->>
->> Dan Carpenter <dan.carpenter@oracle.com>
->>      staging: kpc2000: prevent underflow in cpld_reconfigure()
->>
->> Johan Hovold <johan@kernel.org>
->>      media: usbtv: fix control-message timeouts
->>
->> Johan Hovold <johan@kernel.org>
->>      media: flexcop-usb: fix endpoint sanity check
->>
->> Mans Rullgard <mans@mansr.com>
->>      usb: musb: fix crash with highmen PIO and usbmon
->>
->> Qiujun Huang <hqjagain@gmail.com>
->>      USB: serial: io_edgeport: fix slab-out-of-bounds read in 
->> edge_interrupt_callback
->>
->> Matthias Reichl <hias@horus.com>
->>      USB: cdc-acm: restore capability check order
->>
->> Pawel Dembicki <paweldembicki@gmail.com>
->>      USB: serial: option: add Wistron Neweb D19Q1
->>
->> Pawel Dembicki <paweldembicki@gmail.com>
->>      USB: serial: option: add BroadMobi BM806U
->>
->> Pawel Dembicki <paweldembicki@gmail.com>
->>      USB: serial: option: add support for ASKEY WWHC050
->>
->> Daniel Borkmann <daniel@iogearbox.net>
->>      bpf: Undo incorrect __reg_bound_offset32 handling
->>
->>
->> -------------
->>
->> Diffstat:
->>
->>   Makefile                                           |  4 +--
->>   drivers/ata/ahci.c                                 |  1 +
->>   drivers/media/usb/b2c2/flexcop-usb.c               |  6 ++--
->>   drivers/media/usb/dvb-usb/dib0700_core.c           |  4 +--
->>   drivers/media/usb/gspca/ov519.c                    | 10 ++++++
->>   drivers/media/usb/gspca/stv06xx/stv06xx.c          | 19 +++++++++-
->>   drivers/media/usb/gspca/stv06xx/stv06xx_pb0100.c   |  4 +++
->>   drivers/media/usb/gspca/xirlink_cit.c              | 18 +++++++++-
->>   drivers/media/usb/usbtv/usbtv-core.c               |  2 +-
->>   drivers/media/usb/usbtv/usbtv-video.c              |  5 +--
->>   drivers/media/v4l2-core/v4l2-device.c              |  1 +
->>   drivers/staging/kpc2000/kpc2000/core.c             |  4 +--
->>   drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
->>   .../bindings/net/wireless/siliabs,wfx.txt          |  7 ++--
->>   drivers/staging/wfx/bus_sdio.c                     | 15 ++++----
->>   drivers/staging/wfx/bus_spi.c                      | 41 
->> +++++++++++++---------
->>   drivers/staging/wfx/main.c                         | 21 ++++++-----
->>   drivers/staging/wfx/main.h                         |  1 -
->>   drivers/staging/wfx/queue.c                        | 16 ++++-----
->>   drivers/staging/wlan-ng/hfa384x_usb.c              |  2 ++
->>   drivers/staging/wlan-ng/prism2usb.c                |  1 +
->>   drivers/usb/class/cdc-acm.c                        | 18 +++++-----
->>   drivers/usb/musb/musb_host.c                       | 17 +++------
->>   drivers/usb/serial/io_edgeport.c                   |  2 +-
->>   drivers/usb/serial/option.c                        |  6 ++++
->>   fs/libfs.c                                         |  8 +++--
->>   kernel/bpf/verifier.c                              | 19 ----------
->>   27 files changed, 149 insertions(+), 104 deletions(-)
->>
->>
-> I think you have missed the
-> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=be8c827f50a0bcd56361b31ada11dc0a3c2fd240 
+On Sat, 28 Mar 2020 10:22:41 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
+
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Saturday, March 21, 2020 7:28 AM
+> > 
+> > When VT-d driver runs in the guest, PASID allocation must be
+> > performed via virtual command interface. This patch registers a
+> > custom IOASID allocator which takes precedence over the default
+> > XArray based allocator. The resulting IOASID allocation will always
+> > come from the host. This ensures that PASID namespace is system-
+> > wide.
+> > 
+> > Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> > Signed-off-by: Liu, Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-iommu.c | 84
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/intel-iommu.h |  2 ++
+> >  2 files changed, 86 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index a76afb0fd51a..c1c0b0fb93c3
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -1757,6 +1757,9 @@ static void free_dmar_iommu(struct intel_iommu
+> > *iommu)
+> >  		if (ecap_prs(iommu->ecap))
+> >  			intel_svm_finish_prq(iommu);
+> >  	}
+> > +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap))
+> > +
+> > ioasid_unregister_allocator(&iommu->pasid_allocator); +
+> >  #endif
+> >  }
+> > 
+> > @@ -3291,6 +3294,84 @@ static int copy_translation_tables(struct
+> > intel_iommu *iommu)
+> >  	return ret;
+> >  }
+> > 
+> > +#ifdef CONFIG_INTEL_IOMMU_SVM
+> > +static ioasid_t intel_ioasid_alloc(ioasid_t min, ioasid_t max,
+> > void *data)  
 > 
+> the name is too generic... can we add vcmd in the name to clarify
+> its purpose, e.g. intel_vcmd_ioasid_alloc?
 > 
-> Without it 5.6 is completely broken on iwlwifi.
+I feel the intel_ prefix is a natural extension of a generic API, we do
+that for other IOMMU APIs, right?
+
+> > +{
+> > +	struct intel_iommu *iommu = data;
+> > +	ioasid_t ioasid;
+> > +
+> > +	if (!iommu)
+> > +		return INVALID_IOASID;
+> > +	/*
+> > +	 * VT-d virtual command interface always uses the full 20
+> > bit
+> > +	 * PASID range. Host can partition guest PASID range based
+> > on
+> > +	 * policies but it is out of guest's control.
+> > +	 */
+> > +	if (min < PASID_MIN || max > intel_pasid_max_id)
+> > +		return INVALID_IOASID;
+> > +
+> > +	if (vcmd_alloc_pasid(iommu, &ioasid))
+> > +		return INVALID_IOASID;
+> > +
+> > +	return ioasid;
+> > +}
+> > +
+> > +static void intel_ioasid_free(ioasid_t ioasid, void *data)
+> > +{
+> > +	struct intel_iommu *iommu = data;
+> > +
+> > +	if (!iommu)
+> > +		return;
+> > +	/*
+> > +	 * Sanity check the ioasid owner is done at upper layer,
+> > e.g. VFIO
+> > +	 * We can only free the PASID when all the devices are
+> > unbound.
+> > +	 */
+> > +	if (ioasid_find(NULL, ioasid, NULL)) {
+> > +		pr_alert("Cannot free active IOASID %d\n", ioasid);
+> > +		return;
+> > +	}  
+> 
+> However the sanity check is not done in default_free. Is there a
+> reason why using vcmd adds such  new requirement?
+> 
+Since we don't support nested guest. This vcmd allocator is only used
+by the guest IOMMU driver not VFIO. We expect IOMMU driver to have
+control of the free()/unbind() ordering.
+
+For default_free, it can come from user space and host VFIO which can
+be out of order. But we will solve that issue with the blocking
+notifier.
+
+> > +	vcmd_free_pasid(iommu, ioasid);
+> > +}
+> > +
+> > +static void register_pasid_allocator(struct intel_iommu *iommu)
+> > +{
+> > +	/*
+> > +	 * If we are running in the host, no need for custom
+> > allocator
+> > +	 * in that PASIDs are allocated from the host system-wide.
+> > +	 */
+> > +	if (!cap_caching_mode(iommu->cap))
+> > +		return;  
+> 
+> is it more accurate to check against vcmd capability?
+> 
+I think this is sufficient. The spec says if vcmd is present, we must
+use it but not the other way.
+
+> > +
+> > +	if (!sm_supported(iommu)) {
+> > +		pr_warn("VT-d Scalable Mode not enabled, no PASID
+> > allocation\n");
+> > +		return;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Register a custom PASID allocator if we are running in
+> > a guest,
+> > +	 * guest PASID must be obtained via virtual command
+> > interface.
+> > +	 * There can be multiple vIOMMUs in each guest but only one
+> > allocator
+> > +	 * is active. All vIOMMU allocators will eventually be
+> > calling the same  
+> 
+> which one? the first or last?
+> 
+All allocators share the same ops, so first=last. IOASID code will
+inspect the ops function and see if they are shared with others then
+use the same ops.
+
+> > +	 * host allocator.
+> > +	 */
+> > +	if (ecap_vcs(iommu->ecap) && vccap_pasid(iommu->vccap)) {
+> > +		pr_info("Register custom PASID allocator\n");
+> > +		iommu->pasid_allocator.alloc = intel_ioasid_alloc;
+> > +		iommu->pasid_allocator.free = intel_ioasid_free;
+> > +		iommu->pasid_allocator.pdata = (void *)iommu;
+> > +		if
+> > (ioasid_register_allocator(&iommu->pasid_allocator)) {
+> > +			pr_warn("Custom PASID allocator failed,
+> > scalable mode disabled\n");
+> > +			/*
+> > +			 * Disable scalable mode on this IOMMU if
+> > there
+> > +			 * is no custom allocator. Mixing SM
+> > capable vIOMMU
+> > +			 * and non-SM vIOMMU are not supported.
+> > +			 */
+> > +			intel_iommu_sm = 0;  
+> 
+> since you register an allocator for every vIOMMU, means previously
+> registered allocators should also be unregistered here?
+> 
+True, but it is not necessary for two reasons:
+1. This should not happen unless something went seriously wrong.
+All vIOMMU shares the same alloc/free function, so they are put under
+the same bucket by IOASID. So the case for the first vIOMMU to succeed
+then fail in later vIOMMU registration should not happen. Unless kernel
+run out of memory etc.
+
+2. Once SM is disabled, there is no user of ioasid allocator.
+
+> > +		}
+> > +	}
+> > +}
+> > +#endif
+> > +
+> >  static int __init init_dmars(void)
+> >  {
+> >  	struct dmar_drhd_unit *drhd;
+> > @@ -3408,6 +3489,9 @@ static int __init init_dmars(void)
+> >  	 */
+> >  	for_each_active_iommu(iommu, drhd) {
+> >  		iommu_flush_write_buffer(iommu);
+> > +#ifdef CONFIG_INTEL_IOMMU_SVM
+> > +		register_pasid_allocator(iommu);
+> > +#endif
+> >  		iommu_set_root_entry(iommu);
+> >  		iommu->flush.flush_context(iommu, 0, 0, 0,
+> > DMA_CCMD_GLOBAL_INVL);
+> >  		iommu->flush.flush_iotlb(iommu, 0, 0, 0,
+> > DMA_TLB_GLOBAL_FLUSH);
+> > diff --git a/include/linux/intel-iommu.h
+> > b/include/linux/intel-iommu.h index 9cbf5357138b..9c357a325c72
+> > 100644 --- a/include/linux/intel-iommu.h
+> > +++ b/include/linux/intel-iommu.h
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/iommu.h>
+> >  #include <linux/io-64-nonatomic-lo-hi.h>
+> >  #include <linux/dmar.h>
+> > +#include <linux/ioasid.h>
+> > 
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/iommu.h>
+> > @@ -563,6 +564,7 @@ struct intel_iommu {
+> >  #ifdef CONFIG_INTEL_IOMMU_SVM
+> >  	struct page_req_dsc *prq;
+> >  	unsigned char prq_name[16];    /* Name for PRQ interrupt */
+> > +	struct ioasid_allocator_ops pasid_allocator; /* Custom
+> > allocator for PASIDs */
+> >  #endif
+> >  	struct q_inval  *qi;            /* Queued invalidation
+> > info */ u32 *iommu_state; /* Store iommu states between suspend and
+> > resume.*/
+> > --
+> > 2.7.4  
 > 
 
-I am seeing this on my primary laptop with Linux 5.6. I switched
-back to Linux 5.6-rc7 for now. Is this issue introduced in 5.6
-when Dave's networking pull? 5.6-rc7 is just fine.
-
-wifi authentication keeps on failing and can't connect at all.
-
-Just about to report this for 5.6 and saw this thread.
-
-thanks,
--- Shuah
-
-
+[Jacob Pan]
