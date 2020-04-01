@@ -2,92 +2,130 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC30C2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C007FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61762137B
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758431;
-	bh=BnHMfLKSlEEZOYXt4hU79GmREPU4Jt27p42+IrsEE9c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FSA+VAZE2n4FJGd5DN+8v8st7RH2av09z9LhKzBTd05PA0dh2UzyTJerLevZ1MiFa
-	 x/YyRhMYkMmoy1Mjwv5esxWYpsEeSg8GvE85iRicFe7Oxfy48wmYb1W9WasRNozS9m
-	 2zhN4X7qifBgcJmbc2JS+e9DFIuGdq4+8Ejvl/ec=
+	by mail.kernel.org (Postfix) with ESMTP id 663CF20BED
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Rh7xnvV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387992AbgDAQ1K (ORCPT
+        id S2387810AbgDAQ1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387979AbgDAQ1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:27:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D4B62137B;
-        Wed,  1 Apr 2020 16:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758428;
-        bh=BnHMfLKSlEEZOYXt4hU79GmREPU4Jt27p42+IrsEE9c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Siuz1Qda8TCk5Bhdz1D7dQb5E+ruSZE5ENdiTkK1WnvmjgtwxS5G+3HrfUumb4j95
-         veR4VaaOVXlW/mLmQ1tFZ8PHwL7NH4n6W3xn4Y0DaIJUb8b3CR6joXTO9rMxzTqU0Y
-         9GPLKMYwUMU6hVq2wmImFMP47lhJOmVRXDhfQs/c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 089/116] staging: wlan-ng: fix use-after-free Read in hfa384x_usbin_callback
-Date:   Wed,  1 Apr 2020 18:17:45 +0200
-Message-Id: <20200401161553.792638732@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200401161542.669484650@linuxfoundation.org>
-References: <20200401161542.669484650@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 1 Apr 2020 12:27:16 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37763 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387986AbgDAQ1O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:27:14 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g23so155638otq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 09:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z6etzW/Wlmpzc10GfWj1n2fg+ZHJsESBLfASbR0Ngog=;
+        b=Rh7xnvV1Jjpe8HCPzeDbsT0qlX2Dq/F5CNcch7nJmW88seFl28DzOKq779NGl4fJP6
+         kZcarkrWvs2xKDSx/BKS4ljBBHTZa3AQNaNYPmVX3J+DPyequ5mn+R0wFp4kv6c27QDe
+         dg/2ayJkHU7oOEp99SLCGG+uWwa/nTVSGu3cN2AleL7/RTCojjlngMZJzKMflgnsnK04
+         5BkwdhtHZqaZJEdYHDQV7PVK/6+woacjQ1GYHHIcQTL04n4/Wfzv3fJrX9Lqy62tuMQE
+         RF+m+hIQF1zG9DSV9BNMDXSI/UKxUxCVMOae3jn6P5+1X6w6nadDPnnmashubwidiQ8N
+         Rz0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z6etzW/Wlmpzc10GfWj1n2fg+ZHJsESBLfASbR0Ngog=;
+        b=U47D1hJLX//acGBLKAMN24Z53EOjMjrW0bMYJ6hzBxgdCQPLzJkDPrhL8uyQTF7S9D
+         P6W7W082fADZe6fnOhrLf1qID4K5zUlQclSavbyELbWRYK8fjUDEMJj4EpDgltbUAbVe
+         FQoex9/7SwKUn64fom59rLo5wkBH1dTQkqo9Uzd2cakE9ojGe35TzH/8QDgPe5Hxkhi8
+         ybHKZ1jc5AdPEVwlgBglemMSknfAQTGAzrJV+vwxvpNiP+pgnogSfcUDZVkRrNnpEcps
+         1yBQkdncCzOeeQju6L9oUGbhhcbRTvtzGUsTRjUL6ekeNyEEwR+EGyzQoz9il/6GXhC4
+         LdTQ==
+X-Gm-Message-State: ANhLgQ0DuCwTVwrxse9W5PSuKTKuw08sEEE6BuR+4dW0LLfAGqJmkC1q
+        rdqHsnUkUO7iuedcYBguMPeW36pzbFIlHdoNMrfoWGqBpGQ=
+X-Google-Smtp-Source: ADFU+vvKgnFp9rspmykzhEanYhz/OKqP05HsLNsMveCdWplY4tf3BFByR2bGW/mxVNvhQGG+HpVk5gUY5nxF4PrgO+U=
+X-Received: by 2002:a05:6830:18eb:: with SMTP id d11mr17642312otf.243.1585758433464;
+ Wed, 01 Apr 2020 09:27:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200330164328.2944505-1-robert.marko@sartura.hr>
+ <20200330164328.2944505-2-robert.marko@sartura.hr> <20200331163103.GA27585@bogus>
+ <CA+HBbNEnH+0g0GK+xMGF48vJbLH3Ud2VY6yDOAxdgbRra3Y25A@mail.gmail.com> <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Wed, 1 Apr 2020 18:27:02 +0200
+Message-ID: <CA+HBbNEcrHgB1_ydaOaPKEWB6L6vrWNf=DYxt5YwdCoqYpLEqw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+On Wed, Apr 1, 2020 at 5:45 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Mar 31, 2020 at 10:39 AM Robert Marko <robert.marko@sartura.hr> wrote:
+> >
+> > On Tue, Mar 31, 2020 at 6:31 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Mon, 30 Mar 2020 18:43:29 +0200, Robert Marko wrote:
+> > > > This patch adds the binding documentation for the HS/SS USB PHY found
+> > > > inside Qualcom Dakota SoCs.
+> > > >
+> > > > Signed-off-by: John Crispin <john@phrozen.org>
+> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > > Cc: Luka Perkov <luka.perkov@sartura.hr>
+> > > > ---
+> > > > Changes from v4 to v5:
+> > > > * Replace tabs with whitespaces
+> > > > * Add maintainer property
+> > > >
+> > > >  .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 48 +++++++++++++++++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+> > > >
+> > >
+> > > My bot found errors running 'make dt_binding_check' on your patch:
+> > >
+> > > Error: Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dts:21.25-26 syntax error
+> > > FATAL ERROR: Unable to parse input tree
+> > > scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml' failed
+> > > make[1]: *** [Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml] Error 1
+> > > make[1]: *** Waiting for unfinished jobs....
+> > > Makefile:1262: recipe for target 'dt_binding_check' failed
+> > > make: *** [dt_binding_check] Error 2
+> > >
+> > > See https://patchwork.ozlabs.org/patch/1264091
+> > >
+> > > If you already ran 'make dt_binding_check' and didn't see the above
+> > > error(s), then make sure dt-schema is up to date:
+> > >
+> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> > >
+> > > Please check and re-submit.
+> > Hi Rob,
+> > I tested locally before submitting and it will pass.
+>
+> Impossible. Your example has defines, but there are no include files listed.
+I don't know how it passed, but I definitively tested with make
+dtbs_check and then make dt_binding_check
+It could possibly be old DT schema files, I updated today and now it pops up.
+I will fix it and send a new version ASAP.
 
-commit 1165dd73e811a07d947aee218510571f516081f6 upstream.
-
-We can't handle the case length > WLAN_DATA_MAXLEN.
-Because the size of rxfrm->data is WLAN_DATA_MAXLEN(2312), and we can't
-read more than that.
-
-Thanks-to: Hillf Danton <hdanton@sina.com>
-Reported-and-tested-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200326131850.17711-1-hqjagain@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/staging/wlan-ng/hfa384x_usb.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/staging/wlan-ng/hfa384x_usb.c
-+++ b/drivers/staging/wlan-ng/hfa384x_usb.c
-@@ -3494,6 +3494,8 @@ static void hfa384x_int_rxmonitor(struct
- 	     WLAN_HDR_A4_LEN + WLAN_DATA_MAXLEN + WLAN_CRC_LEN)) {
- 		pr_debug("overlen frm: len=%zd\n",
- 			 skblen - sizeof(struct p80211_caphdr));
-+
-+		return;
- 	}
- 
- 	skb = dev_alloc_skb(skblen);
-
-
+Thanks
+>
+> Rob
