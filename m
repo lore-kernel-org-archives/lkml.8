@@ -2,117 +2,110 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D835FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4252CC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A502920787
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8A520787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 00:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Z6OECtHM"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="RWI+XKWf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbgDAAmm (ORCPT
+        id S1731572AbgDAAnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 31 Mar 2020 20:42:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48681 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbgDAAmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 31 Mar 2020 20:42:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48sS8Y2hdVz9sRf;
-        Wed,  1 Apr 2020 11:42:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585701759;
-        bh=WFELNxBHacJgMgQN1O6WllAKJIxtYTe1/pd8jb5qX6Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Z6OECtHM8wlQiLhq8UOE3HRa3cq+Vq7bjRoLNfPvDURV3rhLtQNcC/JdTsnrhtG0d
-         rYJvGR21BDgPnyvzI4ikNe0x3PaKIJuKQzFw9/YUkXyljLNovAf2DuyATPZolSMRdG
-         pW0DXWR34lEFH9+JgZXe35s5ypKuwxXyMCu5Adg45Ne8xVSiQnW/hLNaBsFbGPznLl
-         6jfPg1FnSBxwG0dJ35yzKjVK2GLQVStl/C82mqCxtmHCpMdlZd4A9BZEKSfKjMffHi
-         vpcItnixSsk+Z4xlugqUNAWXBZtH1a5RzvihkeIavu6bsVNDZzidVbGbE8hjS7i34m
-         l2Djhjk0cSIuw==
-Date:   Wed, 1 Apr 2020 11:42:34 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        Thara Gopinath <thara.gopinath@linaro.org>
-Subject: Re: linux-next: manual merge of the tip tree with the thermal tree
-Message-ID: <20200401114234.7b34320b@canb.auug.org.au>
-In-Reply-To: <20200325133240.50370c2f@canb.auug.org.au>
-References: <20200325133240.50370c2f@canb.auug.org.au>
+        Tue, 31 Mar 2020 20:43:12 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39931 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731331AbgDAAnM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 31 Mar 2020 20:43:12 -0400
+Received: by mail-qt1-f196.google.com with SMTP id f20so20259699qtq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 31 Mar 2020 17:43:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=29l1Cx3EQRTg+9C3FuFocy47P0Q9W5pPReVeNSwur6o=;
+        b=RWI+XKWfSaDXusY29+11maE3rke9eaax5k1NXL5V9s98nlLQhJPNZ2LnX2kCDNSbFK
+         GGEqZ3xA9w34hAVSlAySVBdYgSLzJPzitgoYCw2moesOic+Frdo4IM1fs2gszhJyJllw
+         dCGmFewutA47Tm/igpqUDGnir/3efzX6vIkAX6O4zsQbbrXLLquizZDKw6Uk76Boe3zU
+         vKuNi0JYie6zKdtWajostEv0sbOV3Ny/W+WOzH5GXP51U3bAEZ8kbGfPPLJyQmkX4+j8
+         9EXLT2JSRXvuw/cvedQKJK8Gd8Hr/lkohg8/CyqTajxurMpQKGLWx0qorUnnEoKNr1DS
+         C8Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=29l1Cx3EQRTg+9C3FuFocy47P0Q9W5pPReVeNSwur6o=;
+        b=V8X2cLvFzFJZStzOYYY0vUQxzkeLUeXuZTp8x4CCqCwEga9f8fwFQK3cizGWs0dQZP
+         D/4IX5X+OeQvSOtH29qn3WHZnUnpDSMyUpgQ++3+2HaQEQImPVe3YJMNeXptTpmudaZF
+         Fw9pHB3drzhDtfGMmEIy6i3I90XcyPH9hrKKgSFSieEMdsa7WZknoPQglaatxNPvyz0h
+         h92R+82F79zHPYfLrtZQPlq2vuIShTOg/jQjXOTuPD5mMKFlVteibJBauwG9HhwkLj9R
+         wAOs1LHchI2PcnFS3roQpn/tFL4X8WICA9DQHs0FM6NBJFWyfZ81Krnv8KBJuiAirIUC
+         aOPg==
+X-Gm-Message-State: ANhLgQ2DdAkjN+ZAo6EbctUenK09CofS61BC9C9+JY/J2jA/1AcLazQN
+        V8qkgpeX8Jpmidt+yBBzZG6qgA==
+X-Google-Smtp-Source: ADFU+vsa9O48OZ0BTiH0JIAZqbnWZeB9KY6uad99GDtbM5YxMPs8wVGAqMTdKHx3aP9ZXRMIqGiC3g==
+X-Received: by 2002:ac8:2d88:: with SMTP id p8mr8191570qta.346.1585701789565;
+        Tue, 31 Mar 2020 17:43:09 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id t6sm430247qkd.60.2020.03.31.17.43.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 17:43:08 -0700 (PDT)
+Message-ID: <5ccaf0509d415643338abdd04493a4c6f4a77c9f.camel@massaru.org>
+Subject: Re: [PATCH 5.5 000/171] 5.5.14-rc2 review
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>
+Date:   Tue, 31 Mar 2020 21:43:04 -0300
+In-Reply-To: <20200331141450.035873853@linuxfoundation.org>
+References: <20200331141450.035873853@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kF/YPUadqgcYAQ9mWQXedRG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kF/YPUadqgcYAQ9mWQXedRG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2020-03-31 at 17:32 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.14 release.
+> There are 171 patches in this series, all will be posted as a
+> response
+> to this one.  If anyone has any issues with these being applied,
+> please
+> let me know.
+> 
+> Responses should be made by Thu, 02 Apr 2020 14:12:02 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	
+> https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.14-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-
+> stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Hi all,
+Compiled, booted, and no regressions on my machine.
 
-On Wed, 25 Mar 2020 13:32:40 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the tip tree got a conflict in:
->=20
->   drivers/thermal/cpufreq_cooling.c
->=20
-> between commit:
->=20
->   ff44f672d741 ("thermal/drivers/cpufreq_cooling: Fix return of cpufreq_s=
-et_cur_state")
->=20
-> from the thermal tree and commit:
->=20
->   f12e4f66ab6a ("thermal/cpu-cooling: Update thermal pressure in case of =
-a maximum frequency capping")
->=20
-> from the tip tree.
->=20
-> I fixed it up (the latter seems to include the former, so I just used
-> the latter) and can carry the fix as necessary. This is now fixed as
-> far as linux-next is concerned, but any non trivial conflicts should be
-> mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
+BR,
+Vitor
 
-This is now a conflict between the thermal tree and Linus' tree.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kF/YPUadqgcYAQ9mWQXedRG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6D43oACgkQAVBC80lX
-0GxtnggAi9sU2S4vvZ+S5pn+h+DvVlADmdzCqrCFv2TzB/GQ9XXnXD0oPflPG0Xl
-NBVH1rYBTOCnuzsb+wHiDOmG2tlAmAv/qvOdmr09OrZFZktHcNuG8yLORzeQyV/Q
-c6bKkb6UTQn58TT+lSKzr9f4x5GvYHP7e6gmsjs8KnDBsMdbAXabiYJVx7t/gWrx
-qQUp5fInN+4FPXBL1Uu31mLy9n03Il6vmqGrnUZhKMLPa4RGPFKUEmjsJMcIkzC7
-70yzJ3/Bl35KNXthKrI3K60Vnm/MeKiB9qI4lE8JmwOPCTszLUVX2UyQJNwdiaSC
-maEotRQQAJaxtCkGvBacLe7udnkHFQ==
-=3Qm3
------END PGP SIGNATURE-----
-
---Sig_/kF/YPUadqgcYAQ9mWQXedRG--
