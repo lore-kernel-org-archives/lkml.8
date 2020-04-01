@@ -2,339 +2,203 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57BCC2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E374FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACFB20719
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE00C20719
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 20:34:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732838AbgDAUcC (ORCPT
+        id S1732671AbgDAUe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:32:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46951 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732411AbgDAUcC (ORCPT
+        Wed, 1 Apr 2020 16:34:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19398 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732337AbgDAUe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 16:32:02 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJk1m-0008RE-83; Wed, 01 Apr 2020 22:31:58 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJk1l-0000ae-0p; Wed, 01 Apr 2020 22:31:57 +0200
-Date:   Wed, 1 Apr 2020 22:31:56 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-Message-ID: <20200401203156.d7x5ynnnhob3jyoo@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <20200330141436.GG2431644@ulmo>
- <20200330191654.waoocllctanh5nk5@pengutronix.de>
- <20200331204559.GB2954599@ulmo>
- <20200401082227.sxtarbttsmmhs2of@pengutronix.de>
- <20200401182833.GB2978178@ulmo>
+        Wed, 1 Apr 2020 16:34:28 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031KY51k182798
+        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 16:34:27 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 304mcbqumk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 16:34:27 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
+        Wed, 1 Apr 2020 21:34:23 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 1 Apr 2020 21:34:17 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031KXE0t50528760
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Apr 2020 20:33:14 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 255F7A405B;
+        Wed,  1 Apr 2020 20:34:18 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65BB9A405F;
+        Wed,  1 Apr 2020 20:34:12 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.38.236])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  1 Apr 2020 20:34:12 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de, kjain@linux.ibm.com
+Subject: [PATCH v8 0/7]  powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
+Date:   Thu,  2 Apr 2020 02:03:33 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200401182833.GB2978178@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-TM-AS-GCONF: 00
+x-cbid: 20040120-0028-0000-0000-000003F03BF9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040120-0029-0000-0000-000024B5C36C
+Message-Id: <20200401203340.31402-1-kjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004010165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thierry,
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-On Wed, Apr 01, 2020 at 08:28:33PM +0200, Thierry Reding wrote:
-> On Wed, Apr 01, 2020 at 10:22:27AM +0200, Uwe Kleine-König wrote:
-> > On Tue, Mar 31, 2020 at 10:45:59PM +0200, Thierry Reding wrote:
-> > > I think there's a fine line to be walked here. I agree that we should
-> > > aim to have as much consistency between drivers as possible. At the same
-> > > time I think we need to be pragmatic. As Lokesh said, the particular use
-> > > case here requires this type of on-the-fly adjustment of the PWM period
-> > > without stopping and restarting the PWM. It doesn't work otherwise. So
-> > > th alternative that you're proposing is to say that we don't support
-> > > that use-case, even though it works just fine given this particular
-> > > hardware. That's not really an option.
-> > 
-> > I understand your opinion here. The situation now is that in current
-> > mainline the driver stops the hardware for reconfiguration and it
-> > doesn't fit Lokesh's use case so he changed to on-the-fly update
-> > (accepting that maybe a wrong period is emitted). What if someone relies
-> > on the old behaviour? What if in a year someone comes and claims the
-> > wrong period is bad for their usecase and changes back to
-> > stop-to-update?
-> 
-> Relying on that old behaviour is wrong.  If you really need to rely on
-> the PWM being stopped before reconfiguration, then you should
-> explicitly request that by first disabling the PWM, then reconfiguring
-> it and then reenabling it.
+So to enable JSON file support to "hv_24x7" interface, patchset reads
+total number of sockets details in sysfs under 
+"/sys/devices/hv_24x7/interface/".
 
-You got me wrong here. See below.
+Second patch of the patchset adds expr_scanner_ctx object to hold user
+data for the expr scanner, which can be used to hold runtime parameter.
 
-> > When I write a consumer driver, do I have a chance to know how the PWM,
-> > that I happen to use, behaves? To be able to get my consumer driver
-> > reliable I might need to know that however.
-> 
-> No, there's currently no way of knowing. As such, I think the most
-> sensible thing to do at this point is to work with the API in order to
-> get the behaviour that you want.
+Patch 4 & 6 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
 
-I want to switch from (duty_cycle, period) = (d1, p1) to
-(duty_cycle, period) = (d2, p2) without seeing (d1, p2) or (d2, p1) on
-the wire. How do I do this with Lokesh's patch applied?
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
 
-In my eyes this is something sensible to rely on. I agree that relying
-on a stop implemented by the driver is broken, but not wanting to seeing
-a (d1, p2) is sane.
+Applied and tested all these patches cleanly on top of jiri's flex changes
+with the changes done by Kan Liang for "Support metric group constraint"
+patchset and made required changes.
 
-> Now if you're unlucky the driver won't support that and you'll notice
-> eventually. But there's also nothing you can do about that if the
-> hardware doesn't work that way. Even if the PWM framework had a way of
-> querying these types of peculiarities it wouldn't really proved much of
-> an advantage since the driver would just refuse to probe rather than
-> attempting to do this and maybe succeeding because you got lucky.
+Also apply this patch on top of the fix patch send earlier
+for printing metric name incase overlapping events.
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=37cd7f65bf71a48f25eeb6d9be5dacb20d008ea6
 
-It depends on the use case. If it's about a display that then has no
-backlight the damage is limited. If however I drive a step motor that
-rotates a laser some unexpected behaviour that only happens once in
-100000 cases and so isn't catched during development is quite bad.
+Changelog:
+v7 -> v8
+- Add test case for testing parsing of "?" in metric expression
+- Reaname variables name to runtime
 
-> > > > > I know this is perhaps cheating a little, or turning a blind eye, but I
-> > > > > don't know what the alternative would be. Do we want to tell people that
-> > > > > a given PWM controller can't be used if it doesn't work according to our
-> > > > > expectations? That's hard to argue if that controller works just fine
-> > > > > for all known use-cases.
-> > > > 
-> > > > I'd like have some official policy here which of the alternatives is the
-> > > > preferred cheat.
-> > > > 
-> > > > The situation here is that period and duty_cycle cannot be updated
-> > > > atomically. So the two options are:
-> > > > 
-> > > >  - stop shortly
-> > > >  - update with hardware running and maybe emit a broken period
-> > > 
-> > > I think we can already support both of those with the existing API. If
-> > > a consumer wants to stop the PWM while reconfiguring, they should be
-> > > able to do pwm_enable(), pwm_config(), pwm_enable() (or the atomic
-> > > equivalent) and for the second case they can just do pwm_config() (or
-> > > the atomic equivalent).
-> > 
-> > Yes, the consumer can force the stop and update. But assume I'm "only" a
-> > consumer driver author and I want: atomic update and if this is not
-> > possible I prefer "stop-to-update" over "on-the-fly-and-maybe-faulty".
-> > So I cannot benefit from a good driver/hardware that can do atomic
-> > updates? Or I have to patch each driver that I actually use to use
-> > stop-to-update?
-> 
-> You could do what everybody does and just assume that atomic update
-> works.
+v6 -> v7
+- Spit patchset into two patch series one for kernel changes and other
+  for tool side changes.
+- Made changes Suggested by Jiri, including rather then reading runtime
+  parameter from metric name, actually add it in structure egroup and
+  metric_expr.
+- As we don't need to read runtime parameter from metric name,
+  now I am not appending it and rather just printing it in
+  generic_metric function.
 
-There are people out there that are more demanding. If you have 1000000
-machines in the field and only then find out that they all fail to
-operate correctly with a certain small but positive probability and you
-have to send someone to each machine to fix that, that's bad.
+Kernel Side changes patch series: https://lkml.org/lkml/2020/3/27/58
 
-> If it works with the particular PWM device/driver that you
-> have that may be all you care about. Obviously that may not be true
-> for a different chip.
-> 
-> On the other hand, if you absolutely must ensure that there must never
-> be any glitches whatsoever but don't care whether the PWM goes through a
-> disable/enable sequence, then doing so explicitly is going to be your
-> best bet. From a consumer driver point of view it isn't going to matter
-> because even if we had a way of distinguishing between these
-> capabilities you'd still have to have code to deal with both.
+v5 -> v6
+- resolve compilation issue due to rearranging patch series.
+- Rather then adding new function to take careof case for runtime param
+  in metricgroup__add_metric, using metricgroup__add_metric_param itself
+  for that work.
+- Address some optimization suggested like using directly file path
+  rather then adding new macro in header.c
+- Change commit message on patch where we are adding "?" support
+  by adding simple example.
 
-There is a nice upside however: You have a good chance to notice this
-problem before the 1000000 devices are shipped to production and then
-escalate the problem and let the responsible people make an informed
-choice.
+v4 -> v5
+- Using sysfs__read_int instead of sysfs__read_ull while reading
+  parameter value in powerpc/util/header.c file.
 
-> So the only relevant use-case here would be if you had a requirement to
-> perform on-the-fly-and-strictly-correct updates. The API doesn't give
-> those kinds of guarantees. So we would need an extension that consumers
-> can query to determine whether what they want to do will work.
-> 
-> But like I said above, the chances that you will run into this are slim
-> because use-cases are typically known ahead of time and devices are
-> designed to be able to support them. So if you build a device that needs
-> to support these strict requirements, then you need to make sure the
-> hardware supports it, too. And when the hardware supports it, then the
-> driver should implement ->config() or ->apply() in a way that allows
-> this.
+- Using asprintf rather then malloc and sprintf 
+  Suggested by Arnaldo Carvalho de Melo
 
-In my bubble that sometimes fails. The hardware is done and only then
-someone notices that a certain case wasn't considered.
+- Break patch 6 from previous version to two patch,
+  - One to add refactor current "metricgroup__add_metric" function
+    and another where actually "?" handling infra added.
 
-> > > Some hardware may actually require the PWM to be disabled before
-> > > reconfiguring, so they won't be able to strictly adhere to the second
-> > > use-case.
-> > > 
-> > > But as discussed above, I don't want to strive for a lowest common
-> > > denominator that would preclude some more specific use-cases from
-> > > working if the hardware supports it.
-> > > 
-> > > So I think we should aim for drivers to implement the semantics as
-> > > closely as possible. If the hardware doesn't support some of these
-> > > requirements strictly while a particular use-case depends on that, then
-> > > that just means that the hardware isn't compatible with that use-case.
-> > > Chances are that the system just isn't going to be designed to support
-> > > that use-case in the first place if the hardware can't do it.
-> > > 
-> > > The sysfs interface is a bit of a special case here because it isn't
-> > > possible to know what use-cases people are going to come up with.
-> > 
-> > In my eyes the sysfs interface isn't special here. You also don't know
-> > what the OMAP PWM hardware is used for.
-> 
-> But platform designers will know what their device will be used for.
+- Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
+  rather then making it global variable. Thanks Jiri for
+  adding this structure to hold user data for the expr scanner.
 
-Right. But if you rely on the people chosing the components for the
-platform to notice that the SoC's PWM has a glitch that is bad for the
-use case I think that's naive.
+- Add runtime param as agrugement to function 'expr__find_other'
+  and 'expr__parse' and made changes on references accordingly.
 
-> > > It's most likely that they'll try something and if it doesn't work
-> > > they can see if a driver patch can improve things.
-> > 
-> > So either the group who prefers "stop-to-update" or the group who
-> > prefers "on-the-fly-and-maybe-faulty" has to carry a system specific
-> > driver patch?
-> 
-> No, the group that prefers "stop-to-update" should make that explicit
-> and write a consumer driver that first disables, then reconfigured and
-> then reenables the PWM.
+v3 -> v4
+- Apply these patch on top of Kan liang changes.
+  As suggested by Jiri.
 
-Both groups prefer atomic updates, and just prefer different cluches if
-atomic isn't possible. So doing an explicit stop is bad. Also I'd expect
-the timing of a driver doing the stop is better than when the consumer
-explicitly stops.
+v2 -> v3
+- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+  with comment rather then adding 0 to event_count value.
+  Suggested by: Sukadev Bhattiprolu
 
-> If they don't *need* to update the PWM on the fly, then performing two
-> additional steps that would be happening anyway won't matter, right?
+- Apply tool side changes require to replace "?" on Jiri's flex patch
+  series and made all require changes to make it compatible with added
+  flex change.
 
-I don't agree here. Moreover the consumer might be preempted between
-stop and reconfiguration. (And you don't want to disable preemption over
-a pwm-API calls as they might take quite some time assuming they block
-until periods are completed.)
+v1 -> v2
+- Rename hv-24x7 metric json file as nest_metrics.json
 
-> > > One possible extension that I can imagine would be to introduce some
-> > > sort of capability structure that drivers can fill in to describe the
-> > > behaviour of the hardware. Drivers like pwm-omap-dmtimer, for example,
-> > > could describe that they are able to change the period and/or duty cycle
-> > > while the PWM is on. There could be another capability bit that says
-> > > that the current period will finish before new settings are applied. Yet
-> > > another capability could describe that duty-cycle and period can be
-> > > applied atomically. Consumers could then check those capabilities to see
-> > > if they match their requirements.
-> > > 
-> > > But then again, I think that would just make things overly complicated.
-> > > None of the existing consumers need that, so it doesn't seem like there
-> > > is much demand for that feature. In practice I suspect most consumers
-> > > work fine despite potentially small deviations in how the PWM behaves.
-> > 
-> > I think the status quo is what I asked about above: People use sysfs and
-> > if the PWM behaves different than needed, the driver is patched and most
-> > of the time not mainlined. If your focus is to support a certain
-> > industrial system with a defined use case, this is fine. If however you
-> > target for an universal framework that works for any combination of
-> > consumer + lowlevel driver without patching (that at least is able to
-> > diagnose: This PWM cannot provide what my consumer needs), this is bad.
-> 
-> Again, my response to this is: how is this going to be beneficial? In
-> practice the way that this would work is that the consumer driver would
-> fail if presented with a PWM that doesn't meet the strict requirements.
-> Now if the requirements really are that strict, then that sounds like a
-> good idea.
-> 
-> But one issue I foresee with this is that we'll end up giving consumers
-> too much of a toolkit to restrict things. What if the consumer driver
-> author assumes wrongly that a given set of requirements exists?
+Jiri Olsa (2):
+  perf expr: Add expr_ prefix for parse_ctx and parse_id
+  perf expr: Add expr_scanner_ctx object
 
-If you want to catch usage errors you're doomed anyhow.
+Kajol Jain (5):
+  perf/tools: Refactoring metricgroup__add_metric function
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  perf/tests/expr: Added test for runtime param in metric expression
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
 
-> What if for some combination of hardware that doesn't strictly conform
-> to those requirements it might still work?
-
-Then this is a bug that can be fixed. And it's a bug that is not in the
-PWM framework's area, so we even don't really have to care.
-
-> Sometimes you may not notice the difference, at other times there may
-> be some impact like a visual glitch or so, but that may be something
-> that users are willing to accept rather than not have support at all.
-
-If laxer requirements are ok, they shouldn't request strict ones.
-
-> > Also this means that whenever a system designer changes something on
-> > their machine (kernel update, different hardware, an new usecase for a
-> > PWM) they might have to reverify if the given PWM driver behaves as
-> > needed.
-> 
-> I don't expect this type of change to happen very often.
-
-Yeah, I also expect that most things don't break on such a change. But
-Lokesh's patch is an example that justifies to be vigilant because the
-implemented change in behaviour is a good one for Lokesh but might break
-things for someone else. And I don't expect that the common test
-coverage to be that good to catch the glitch during test.
-
-> There's always going to be some type of fine-tuning before a driver's
-> behaviour is completely stabilized. And then there could still always
-> be other factors impacting behaviour that aren't even related to the
-> PWM framework.
-
-I think I don't get what you intend to say here. I understand "As
-updating the kernel might make a PLL unstable, changing behaviour for
-the PWM is fine."
-
-> I suspect that most people will have an array of tests to validate that
-> everything still works after a kernel update. Obviously we don't want a
-> new kernel to behave completely differently, but we're not talking about
-> that here. This is merely dropping a needless disable/enable from a
-> configuration. If somebody was relying on this happening they were wrong
-> to rely on it to begin with because the API does not guarantee it.
-> 
-> > My suggestion for now is to start documenting how the drivers behave
-> > expanding how limitations are documented in some drivers. So maybe
-> > change from "Limitations" to "Implementation and Hardware Details"?
-> 
-> Yes, collecting such information is always a good idea.
-
-So Lokesh's patch should at least be amended to add something like
-
- * Limitations:
- * - When changing both duty cycle and period, we cannot prevent in
- *   software that the output might produce a period with mixed
- *   settings (new period length and old duty cycle) without stopping
- *   the hardware.
-
-at the top of the driver.
-
-Best regards
-Uwe
+ tools/perf/arch/powerpc/util/header.c         |  8 ++
+ .../arch/powerpc/power9/nest_metrics.json     | 19 +++++
+ tools/perf/tests/expr.c                       | 20 +++--
+ tools/perf/util/expr.c                        | 25 +++---
+ tools/perf/util/expr.h                        | 19 +++--
+ tools/perf/util/expr.l                        | 37 ++++++---
+ tools/perf/util/expr.y                        |  6 +-
+ tools/perf/util/metricgroup.c                 | 78 +++++++++++++------
+ tools/perf/util/metricgroup.h                 |  2 +
+ tools/perf/util/stat-display.c                |  2 -
+ tools/perf/util/stat-shadow.c                 | 19 +++--
+ 11 files changed, 164 insertions(+), 71 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.21.0
+
