@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AA8C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481D0C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7FB020658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:42:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C90220787
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759380;
-	bh=VpYtFSS+pOeTXko6e0++dBytGJph34OFTaLPe23W6WA=;
+	s=default; t=1585759383;
+	bh=djQitzta4QaRWdGV9GFztf7b9uyHKwRNMDOOAo0CP6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yR2d1jvCoz49MwQLensUHSDLI0n/s95rVHwsCg4ls38L9li4rLzX1tdLSNerS8T3E
-	 pdmQj0kOUU1OkGxoIUMXGiUWW/gwR0mDD6qwXR/qWp+NXxTDobpzZYu8RbDD2xiup8
-	 s1Uaup5tHyXH3ae768AgEX/sBI3bGEb5r7v1XYLI=
+	b=1z9sVZQVKDD/8fa/gYPMeV4niUeBTMR/GeGbQRq3FJtmq4S26GlwUKiSqBxX3SrFU
+	 /GRy4Gk8FGIyoXqHHzeN7NRKZaR9MysK5Gcp2134BFOIedKfAcCejRWITmv54YVAJQ
+	 FLMwz/Qz2IIHOiMXeHplfFeWof1SoylflLgVkVl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389082AbgDAQm6 (ORCPT
+        id S1732570AbgDAQnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:42:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43574 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389275AbgDAQm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:42:56 -0400
+        id S2389571AbgDAQm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:42:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCDA420658;
-        Wed,  1 Apr 2020 16:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70EF220719;
+        Wed,  1 Apr 2020 16:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759374;
-        bh=VpYtFSS+pOeTXko6e0++dBytGJph34OFTaLPe23W6WA=;
+        s=default; t=1585759376;
+        bh=djQitzta4QaRWdGV9GFztf7b9uyHKwRNMDOOAo0CP6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1UvmL11rdG/vQHEqfvFkJbYKtLPQ4qyxFOz3DPELaZajgea30oZ+neQ5YK6+oF6x8
-         ZSuRENfX5kAWvhtlbGAIVf2sLr/C1N3DfX3RgxqqkwS/XKvUFjmjVj6VZtxJHRnLdD
-         eMPNmSWvK3kKLarmVilIkTRAm+BcE5KwqsFpWa38=
+        b=ethdZpDsI/jo4B1i7ElpMydIEqkNNRdQ6fWwadxVDqWj4ellDMXMFgbPzhC3G+H/W
+         neevHgOVdTtWu0XqYIINpW0+H1XZBUVuceKPISLDaelTLEEPOluyEzkUzEKc9marvj
+         JxWgMA1TgmvWvWjNYuyFWyDMhwxC3VmMq0FGodYk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Rosen <jrosen@cisco.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
+        Pawel Dembicki <paweldembicki@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 060/148] net/packet: tpacket_rcv: avoid a producer race condition
-Date:   Wed,  1 Apr 2020 18:17:32 +0200
-Message-Id: <20200401161558.661288044@linuxfoundation.org>
+Subject: [PATCH 4.14 061/148] net: qmi_wwan: add support for ASKEY WWHC050
+Date:   Wed,  1 Apr 2020 18:17:33 +0200
+Message-Id: <20200401161559.166346148@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,157 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Pawel Dembicki <paweldembicki@gmail.com>
 
-[ Upstream commit 61fad6816fc10fb8793a925d5c1256d1c3db0cd2 ]
+[ Upstream commit 12a5ba5a1994568d4ceaff9e78c6b0329d953386 ]
 
-PACKET_RX_RING can cause multiple writers to access the same slot if a
-fast writer wraps the ring while a slow writer is still copying. This
-is particularly likely with few, large, slots (e.g., GSO packets).
+ASKEY WWHC050 is a mcie LTE modem.
+The oem configuration states:
 
-Synchronize kernel thread ownership of rx ring slots with a bitmap.
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
+D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1690 ProdID=7588 Rev=ff.ff
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=813f0eef6e6e
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=84(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=86(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=88(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
 
-Writers acquire a slot race-free by testing tp_status TP_STATUS_KERNEL
-while holding the sk receive queue lock. They release this lock before
-copying and set tp_status to TP_STATUS_USER to release to userspace
-when done. During copying, another writer may take the lock, also see
-TP_STATUS_KERNEL, and start writing to the same slot.
+Tested on openwrt distribution.
 
-Introduce a new rx_owner_map bitmap with a bit per slot. To acquire a
-slot, test and set with the lock held. To release race-free, update
-tp_status and owner bit as a transaction, so take the lock again.
-
-This is the one of a variety of discussed options (see Link below):
-
-* instead of a shadow ring, embed the data in the slot itself, such as
-in tp_padding. But any test for this field may match a value left by
-userspace, causing deadlock.
-
-* avoid the lock on release. This leaves a small race if releasing the
-shadow slot before setting TP_STATUS_USER. The below reproducer showed
-that this race is not academic. If releasing the slot after tp_status,
-the race is more subtle. See the first link for details.
-
-* add a new tp_status TP_KERNEL_OWNED to avoid the transactional store
-of two fields. But, legacy applications may interpret all non-zero
-tp_status as owned by the user. As libpcap does. So this is possible
-only opt-in by newer processes. It can be added as an optional mode.
-
-* embed the struct at the tail of pg_vec to avoid extra allocation.
-The implementation proved no less complex than a separate field.
-
-The additional locking cost on release adds contention, no different
-than scaling on multicore or multiqueue h/w. In practice, below
-reproducer nor small packet tcpdump showed a noticeable change in
-perf report in cycles spent in spinlock. Where contention is
-problematic, packet sockets support mitigation through PACKET_FANOUT.
-And we can consider adding opt-in state TP_KERNEL_OWNED.
-
-Easy to reproduce by running multiple netperf or similar TCP_STREAM
-flows concurrently with `tcpdump -B 129 -n greater 60000`.
-
-Based on an earlier patchset by Jon Rosen. See links below.
-
-I believe this issue goes back to the introduction of tpacket_rcv,
-which predates git history.
-
-Link: https://www.mail-archive.com/netdev@vger.kernel.org/msg237222.html
-Suggested-by: Jon Rosen <jrosen@cisco.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Jon Rosen <jrosen@cisco.com>
+Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |   21 +++++++++++++++++++++
- net/packet/internal.h  |    5 ++++-
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2204,6 +2204,7 @@ static int tpacket_rcv(struct sk_buff *s
- 	struct timespec ts;
- 	__u32 ts_status;
- 	bool is_drop_n_account = false;
-+	unsigned int slot_id = 0;
- 	bool do_vnet = false;
- 
- 	/* struct tpacket{2,3}_hdr is aligned to a multiple of TPACKET_ALIGNMENT.
-@@ -2300,6 +2301,13 @@ static int tpacket_rcv(struct sk_buff *s
- 	if (!h.raw)
- 		goto drop_n_account;
- 
-+	if (po->tp_version <= TPACKET_V2) {
-+		slot_id = po->rx_ring.head;
-+		if (test_bit(slot_id, po->rx_ring.rx_owner_map))
-+			goto drop_n_account;
-+		__set_bit(slot_id, po->rx_ring.rx_owner_map);
-+	}
-+
- 	if (do_vnet &&
- 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
- 				    sizeof(struct virtio_net_hdr),
-@@ -2405,7 +2413,10 @@ static int tpacket_rcv(struct sk_buff *s
- #endif
- 
- 	if (po->tp_version <= TPACKET_V2) {
-+		spin_lock(&sk->sk_receive_queue.lock);
- 		__packet_set_status(po, h.raw, status);
-+		__clear_bit(slot_id, po->rx_ring.rx_owner_map);
-+		spin_unlock(&sk->sk_receive_queue.lock);
- 		sk->sk_data_ready(sk);
- 	} else {
- 		prb_clear_blk_fill_status(&po->rx_ring);
-@@ -4298,6 +4309,7 @@ static int packet_set_ring(struct sock *
- {
- 	struct pgv *pg_vec = NULL;
- 	struct packet_sock *po = pkt_sk(sk);
-+	unsigned long *rx_owner_map = NULL;
- 	int was_running, order = 0;
- 	struct packet_ring_buffer *rb;
- 	struct sk_buff_head *rb_queue;
-@@ -4383,6 +4395,12 @@ static int packet_set_ring(struct sock *
- 			}
- 			break;
- 		default:
-+			if (!tx_ring) {
-+				rx_owner_map = bitmap_alloc(req->tp_frame_nr,
-+					GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO);
-+				if (!rx_owner_map)
-+					goto out_free_pg_vec;
-+			}
- 			break;
- 		}
- 	}
-@@ -4412,6 +4430,8 @@ static int packet_set_ring(struct sock *
- 		err = 0;
- 		spin_lock_bh(&rb_queue->lock);
- 		swap(rb->pg_vec, pg_vec);
-+		if (po->tp_version <= TPACKET_V2)
-+			swap(rb->rx_owner_map, rx_owner_map);
- 		rb->frame_max = (req->tp_frame_nr - 1);
- 		rb->head = 0;
- 		rb->frame_size = req->tp_frame_size;
-@@ -4443,6 +4463,7 @@ static int packet_set_ring(struct sock *
- 	}
- 
- out_free_pg_vec:
-+	bitmap_free(rx_owner_map);
- 	if (pg_vec)
- 		free_pg_vec(pg_vec, order, req->tp_block_nr);
- out:
---- a/net/packet/internal.h
-+++ b/net/packet/internal.h
-@@ -70,7 +70,10 @@ struct packet_ring_buffer {
- 
- 	unsigned int __percpu	*pending_refcnt;
- 
--	struct tpacket_kbdq_core	prb_bdqc;
-+	union {
-+		unsigned long			*rx_owner_map;
-+		struct tpacket_kbdq_core	prb_bdqc;
-+	};
- };
- 
- extern struct mutex fanout_mutex;
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1139,6 +1139,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x1435, 0xd181, 4)},	/* Wistron NeWeb D18Q1 */
+ 	{QMI_FIXED_INTF(0x1435, 0xd181, 5)},	/* Wistron NeWeb D18Q1 */
+ 	{QMI_QUIRK_SET_DTR(0x1508, 0x1001, 4)},	/* Fibocom NL668 series */
++	{QMI_FIXED_INTF(0x1690, 0x7588, 4)},    /* ASKEY WWHC050 */
+ 	{QMI_FIXED_INTF(0x16d8, 0x6003, 0)},	/* CMOTech 6003 */
+ 	{QMI_FIXED_INTF(0x16d8, 0x6007, 0)},	/* CMOTech CHE-628S */
+ 	{QMI_FIXED_INTF(0x16d8, 0x6008, 0)},	/* CMOTech CMU-301 */
 
 
