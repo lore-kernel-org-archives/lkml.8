@@ -2,263 +2,155 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2A7C2D0F3
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241DDC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98ED20658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDB3A20658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1X71f5r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ehRqrzZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733153AbgDAPto (ORCPT
+        id S1733169AbgDAPub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:49:44 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37057 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732683AbgDAPto (ORCPT
+        Wed, 1 Apr 2020 11:50:31 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26189 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732683AbgDAPub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:49:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so653709wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 08:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C/6o2vAlNYHnEoJMtN8wwi/oRzeStDRZUTB/Nd2Hv7M=;
-        b=V1X71f5rZiDGmnBfh3sBWCp7T9Jp+5xgMJtds1xfZSu8D+O/hvzseXEbwd0hbE/ic5
-         x2TkT+43IaifgxbqN3WD5qF0jkxiEJn/vxu7PJRb8DLrWPo6nyc2sc0xJTT/Dgr5U/Ks
-         I+dljP0laNt/dwhmWSN9NgnGnsQ5TIJIRWzDiczColatMsLZ4AxN0FV2nGqCjw0hr5vA
-         Zoy0T/CjYuH6DlYK8xB91i5btiy69jf9MTCkULGVja5Tvk+K0iLwEzJSa0OqQVJ5Ulf2
-         xfg3KFSYDoo0qFQSaOx3myBfeqcG6DhAd2eTiiX5P4BHoNaXawbCHD7VO9oOVywNrhMn
-         kYog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C/6o2vAlNYHnEoJMtN8wwi/oRzeStDRZUTB/Nd2Hv7M=;
-        b=Ccovi9ArqJL2KgUyTb/XHqZljoAQcVwazEEJyRattmDWsoiRLcpa9vir6hhUBvNRUW
-         dmD1l8stVBJfzqaTaaJG0hHq+C5V1ev8xfj1zpYCpVsz6ati4ymdaWvnUjNj3qnhAXnl
-         fgGdSm3QCyd5v2eCfn+ha/KJPBwoVzJVXclbwc02zf21YBysxYR+aJtqaLUEpaTS/6s8
-         8NFEBA4CE/571mJEiXdFGGeBYIJrOqCVe595v/88vsMSMqL2CzyNbDqdMOH0KSddO6mG
-         UhukZzQVRZVwqj5ERdBdyY6kwP6PhywKEVVmRyWNDJt/07336eY6BAQ5weeuupurdkmu
-         BZxw==
-X-Gm-Message-State: ANhLgQ1uLOuEm0LLmHu+ulcAOBGkrAPB3CW/Eh7L0Eq7sUpSqVuQNfXw
-        psVmfD/FzhNvKruDai0pX7h3zg==
-X-Google-Smtp-Source: ADFU+vsj+IPnTlTnW8cEeiZkmxOp3zrZSNdsM6O5dJ55cTv7aer2xndG3sAVVLsjPUulI2AMAH/7/g==
-X-Received: by 2002:adf:84a3:: with SMTP id 32mr25563249wrg.378.1585756181494;
-        Wed, 01 Apr 2020 08:49:41 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
-        by smtp.gmail.com with ESMTPSA id s131sm3258684wmf.35.2020.04.01.08.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 08:49:40 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 17:49:32 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Bharat Bhushan <bbhushan2@marvell.com>, joro@8bytes.org,
-        mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        eric.auger.pro@gmail.com, eric.auger@redhat.com
-Subject: Re: [RFC PATCH v2] iommu/virtio: Use page size bitmap supported by
- endpoint
-Message-ID: <20200401154932.GA1124215@myrica>
-References: <20200401113804.21616-1-bbhushan2@marvell.com>
- <b75beb74-89ce-fd6a-6207-3c0d7f479215@arm.com>
+        Wed, 1 Apr 2020 11:50:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585756229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=MjqfeRTdRC8LEOSd5HEM6MwCYpBAvCtPMAXjjID4MOM=;
+        b=ehRqrzZibp/fXt3w1jbTMLA9mGM9N6AV45D57HxeTYxjTpYW7n/1dmTxepQpujhq679I3f
+        46w3Ka8Hnhz7jmn2WKEcRY8xrs6h7QmgjTp8sielunNHDSVYD/IstGstyhw/pJ+O1ZsaCF
+        ztiF/StfKWWWA18CbMBDepnkUoggI60=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-TOK24culP82nTpsogF2azg-1; Wed, 01 Apr 2020 11:50:26 -0400
+X-MC-Unique: TOK24culP82nTpsogF2azg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A01AA101FC69;
+        Wed,  1 Apr 2020 15:50:24 +0000 (UTC)
+Received: from [10.36.114.59] (ovpn-114-59.ams2.redhat.com [10.36.114.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 031E219C70;
+        Wed,  1 Apr 2020 15:50:22 +0000 (UTC)
+Subject: Re: [PATCH v3] mm: fix tick timer stall during deferred page init
+To:     Michal Hocko <mhocko@kernel.org>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200311123848.118638-1-shile.zhang@linux.alibaba.com>
+ <20200401154217.GQ22681@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <dfc0014a-9b85-5eeb-70ea-d622ccf5d988@redhat.com>
+Date:   Wed, 1 Apr 2020 17:50:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b75beb74-89ce-fd6a-6207-3c0d7f479215@arm.com>
+In-Reply-To: <20200401154217.GQ22681@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:00:13PM +0100, Robin Murphy wrote:
-> On 2020-04-01 12:38 pm, Bharat Bhushan wrote:
-> > Different endpoint can support different page size, probe
-> > endpoint if it supports specific page size otherwise use
-> > global page sizes.
-> > 
-> > Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
-> > ---
-> >   drivers/iommu/virtio-iommu.c      | 33 +++++++++++++++++++++++++++----
-> >   include/uapi/linux/virtio_iommu.h |  7 +++++++
-> >   2 files changed, 36 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-> > index cce329d71fba..c794cb5b7b3e 100644
-> > --- a/drivers/iommu/virtio-iommu.c
-> > +++ b/drivers/iommu/virtio-iommu.c
-> > @@ -78,6 +78,7 @@ struct viommu_endpoint {
-> >   	struct viommu_dev		*viommu;
-> >   	struct viommu_domain		*vdomain;
-> >   	struct list_head		resv_regions;
-> > +	u64				pgsize_bitmap;
-> >   };
-> >   struct viommu_request {
-> > @@ -415,6 +416,20 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
-> >   	return ret;
-> >   }
-> > +static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-> > +				    struct virtio_iommu_probe_pgsize_mask *mask,
-> > +				    size_t len)
-> > +
-> > +{
-> > +	u64 pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
-> > +
-> > +	if (len < sizeof(*mask))
-> > +		return -EINVAL;
-> > +
-> > +	vdev->pgsize_bitmap = pgsize_bitmap;
-> > +	return 0;
-> > +}
-> > +
-> >   static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
-> >   			       struct virtio_iommu_probe_resv_mem *mem,
-> >   			       size_t len)
-> > @@ -494,11 +509,13 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
-> >   	while (type != VIRTIO_IOMMU_PROBE_T_NONE &&
-> >   	       cur < viommu->probe_size) {
-> >   		len = le16_to_cpu(prop->length) + sizeof(*prop);
-> > -
-
-Whitespace change
-
-> >   		switch (type) {
-> >   		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
-> >   			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
-> >   			break;
-> > +		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-> > +			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-> > +			break;
-> >   		default:
-> >   			dev_err(dev, "unknown viommu prop 0x%x\n", type);
-> >   		}
-> > @@ -607,16 +624,23 @@ static struct iommu_domain *viommu_domain_alloc(unsigned type)
-> >   	return &vdomain->domain;
-> >   }
-> > -static int viommu_domain_finalise(struct viommu_dev *viommu,
-> > +static int viommu_domain_finalise(struct viommu_endpoint *vdev,
-> >   				  struct iommu_domain *domain)
-> >   {
-> >   	int ret;
-> >   	struct viommu_domain *vdomain = to_viommu_domain(domain);
-> > +	struct viommu_dev *viommu = vdev->viommu;
-> >   	vdomain->viommu		= viommu;
-> >   	vdomain->map_flags	= viommu->map_flags;
-> > -	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
-> > +	/* Devices in same domain must support same size pages */
+On 01.04.20 17:42, Michal Hocko wrote:
+> I am sorry but I have completely missed this patch.
 > 
-> AFAICS what the code appears to do is enforce that the first endpoint
-> attached to any domain has the same pgsize_bitmap as the most recently
-> probed viommu_dev instance, then ignore any subsequent endpoints attached to
-> the same domain. Thus I'm not sure that comment is accurate.
+> On Wed 11-03-20 20:38:48, Shile Zhang wrote:
+>> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
+>> initialise the deferred pages with local interrupts disabled. It is
+>> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
+>> initializing deferred pages").
+>>
+>> On machine with NCPUS <= 2, the 'pgdatinit' kthread could be bound to
+>> the boot CPU, which could caused the tick timer long time stall, system
+>> jiffies not be updated in time.
+>>
+>> The dmesg shown that:
+>>
+>>     [    0.197975] node 0 initialised, 32170688 pages in 1ms
+>>
+>> Obviously, 1ms is unreasonable.
+>>
+>> Now, fix it by restore in the pending interrupts for every 32*1204 pages
+>> (128MB) initialized, give the chance to update the systemd jiffies.
+>> The reasonable demsg shown likes:
+>>
+>>     [    1.069306] node 0 initialised, 32203456 pages in 894ms
+>>
+>> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages").
 > 
+> I dislike this solution TBH. It effectivelly conserves the current code
+> and just works around the problem. Why do we hold the IRQ lock here in
+> the first place? This is an early init code and a very limited code is
+> running at this stage. Certainly nothing memory hotplug related which
+> should be the only path really interested in the resize lock AFAIR.
 
-Yes viommu_domain_finalise() is only called once. What I had in mind is
-something like:
+Yeah, I don't think ACPI and friends are up yet.
 
----- 8< ----
-diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-index 750f69c49b95..8303b7b513ff 100644
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -639,6 +639,29 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
- 	return 0;
- }
- 
-+/*
-+ * Check whether the endpoint's capabilities are compatible with other endpoints
-+ * in the domain. Report any inconsistency.
-+ */
-+static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
-+					  struct viommu_domain *vdomain)
-+{
-+	struct device *dev = vdev->dev;
-+
-+	if (vdomain->viommu != vdev->viommu) {
-+		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-+		return false;
-+	}
-+
-+	if (vdomain->domain.pgsize_bitmap != vdev->pgsize_bitmap) {
-+		dev_err(dev, "incompatible domain bitmap 0x%lx != 0x%lx\n",
-+			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void viommu_domain_free(struct iommu_domain *domain)
- {
- 	struct viommu_domain *vdomain = to_viommu_domain(domain);
-@@ -670,9 +693,8 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		 * owns it.
- 		 */
- 		ret = viommu_domain_finalise(vdev, domain);
--	} else if (vdomain->viommu != vdev->viommu) {
--		dev_err(dev, "cannot attach to foreign vIOMMU\n");
--		ret = -EXDEV;
-+	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
-+		ret = -EINVAL;
- 	}
- 	mutex_unlock(&vdomain->mutex);
----- >8 ----
-
-> 
-> > +	if ((domain->pgsize_bitmap != viommu->pgsize_bitmap) &&
-> > +	    (domain->pgsize_bitmap != vdev->pgsize_bitmap))
-> > +		return -EINVAL;
-> > +
-> > +	domain->pgsize_bitmap = vdev->pgsize_bitmap;
-> > +
-> >   	domain->geometry	= viommu->geometry;
-> >   	ret = ida_alloc_range(&viommu->domain_ids, viommu->first_domain,
-> > @@ -657,7 +681,7 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
-> >   		 * Properly initialize the domain now that we know which viommu
-> >   		 * owns it.
-> >   		 */
-> > -		ret = viommu_domain_finalise(vdev->viommu, domain);
-> > +		ret = viommu_domain_finalise(vdev, domain);
-> >   	} else if (vdomain->viommu != vdev->viommu) {
-> >   		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-> >   		ret = -EXDEV;
-> > @@ -875,6 +899,7 @@ static int viommu_add_device(struct device *dev)
-> >   	vdev->dev = dev;
-> >   	vdev->viommu = viommu;
-> > +	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
-> >   	INIT_LIST_HEAD(&vdev->resv_regions);
-> >   	fwspec->iommu_priv = vdev;
-> > diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-> > index 237e36a280cb..dc9d3f40bcd8 100644
-> > --- a/include/uapi/linux/virtio_iommu.h
-> > +++ b/include/uapi/linux/virtio_iommu.h
-> > @@ -111,6 +111,7 @@ struct virtio_iommu_req_unmap {
-> >   #define VIRTIO_IOMMU_PROBE_T_NONE		0
-> >   #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-> > +#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
-> >   #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
-> > @@ -119,6 +120,12 @@ struct virtio_iommu_probe_property {
-> >   	__le16					length;
-> >   };
-> > +struct virtio_iommu_probe_pgsize_mask {
-> > +	struct virtio_iommu_probe_property	head;
-> > +	__u8					reserved[4];
-> > +	__u64					pgsize_bitmap;
-
-Should be __le64
-
+-- 
 Thanks,
-Jean
 
-> > +};
-> > +
-> >   #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
-> >   #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
-> > 
+David / dhildenb
+
