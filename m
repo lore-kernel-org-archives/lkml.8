@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6756BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79056C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3795F206CC
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0FD2071A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 18:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="afjvmvT8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTyvF19Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733238AbgDASb6 (ORCPT
+        id S1733161AbgDASbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:31:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41014 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733222AbgDASbz (ORCPT
+        Wed, 1 Apr 2020 14:31:47 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27669 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733100AbgDASbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 14:31:55 -0400
+        Wed, 1 Apr 2020 14:31:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585765914;
+        s=mimecast20190719; t=1585765904;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=llTIL35PX5iqkNs81sn7AmE5iXzxb/+U8qroVemQZv0=;
-        b=afjvmvT8TIFwBzk9ZX+NSBhuRwyzmhVTChhRane+fvAJ4OOyUS/geU2tujspEkBC/8lIL6
-        Dvv+rFI5v1RlmXEFlhsTKIK+U85fB8VpOj0i1qZTO9eGsDLTY6Zxnnmwcov3huWy1jicyh
-        tsIEudiuYyfd9LvG+8PHTQK14PB96ik=
+        bh=fIbrzyY4x2dDshfQvekivpaQWVNdI7eJS4Vzy1eNZrs=;
+        b=GTyvF19Zy/ksHDH+V6GjYKP1jP2djzEB0cpI02zc+L0Z9BqS+uPOZDS8p96rgLben+aK1i
+        hhetb1KWbL5tX9c5gMxH5UjL2Z6tICuztLV5WP68CrSv62nN8sIB7HUErMJx42THbyQwya
+        eF5K/NZXbmZDKl1SFutqdKCrLjAEK+c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-QXjaH43yPP-2MoWvCy39JQ-1; Wed, 01 Apr 2020 14:31:51 -0400
-X-MC-Unique: QXjaH43yPP-2MoWvCy39JQ-1
+ us-mta-381--rH99g2rMGOu0v-bwNUH9Q-1; Wed, 01 Apr 2020 14:31:37 -0400
+X-MC-Unique: -rH99g2rMGOu0v-bwNUH9Q-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1D198017F6;
-        Wed,  1 Apr 2020 18:31:49 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21C84149C0;
+        Wed,  1 Apr 2020 18:31:36 +0000 (UTC)
 Received: from eperezma.remote.csb (ovpn-113-73.ams2.redhat.com [10.36.113.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 583ED96F83;
-        Wed,  1 Apr 2020 18:31:47 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BCC396F83;
+        Wed,  1 Apr 2020 18:31:33 +0000 (UTC)
 From:   =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
 To:     "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     "virtualization@lists.linux-foundation.org" 
@@ -57,9 +57,9 @@ Cc:     "virtualization@lists.linux-foundation.org"
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Cornelia Huck <cohuck@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH v4 7/7] tools/virtio: Make --reset reset ring idx
-Date:   Wed,  1 Apr 2020 20:31:18 +0200
-Message-Id: <20200401183118.8334-8-eperezma@redhat.com>
+Subject: [PATCH v4 3/7] vhost: batching fetches
+Date:   Wed,  1 Apr 2020 20:31:14 +0200
+Message-Id: <20200401183118.8334-4-eperezma@redhat.com>
 In-Reply-To: <20200401183118.8334-1-eperezma@redhat.com>
 References: <20200401183118.8334-1-eperezma@redhat.com>
 MIME-Version: 1.0
@@ -71,125 +71,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Michael S. Tsirkin" <mst@redhat.com>
+
+With this patch applied, new and old code perform identically.
+
+Lots of extra optimizations are now possible, e.g.
+we can fetch multiple heads with copy_from/to_user now.
+We can get rid of maintaining the log array.  Etc etc.
+
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
 ---
- drivers/virtio/virtio_ring.c | 29 +++++++++++++++++++++++++++++
- tools/virtio/linux/virtio.h  |  2 ++
- tools/virtio/virtio_test.c   | 28 +++++++++++++++++++++++++++-
- 3 files changed, 58 insertions(+), 1 deletion(-)
+ drivers/vhost/test.c  |  2 +-
+ drivers/vhost/vhost.c | 47 ++++++++++++++++++++++++++++++++++++++-----
+ drivers/vhost/vhost.h |  5 ++++-
+ 3 files changed, 47 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 58b96baa8d48..f9153a381f72 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -1810,6 +1810,35 @@ int virtqueue_add_inbuf_ctx(struct virtqueue *vq,
- }
- EXPORT_SYMBOL_GPL(virtqueue_add_inbuf_ctx);
+diff --git a/drivers/vhost/test.c b/drivers/vhost/test.c
+index 9a3a09005e03..02806d6f84ef 100644
+--- a/drivers/vhost/test.c
++++ b/drivers/vhost/test.c
+@@ -119,7 +119,7 @@ static int vhost_test_open(struct inode *inode, struc=
+t file *f)
+ 	dev =3D &n->dev;
+ 	vqs[VHOST_TEST_VQ] =3D &n->vqs[VHOST_TEST_VQ];
+ 	n->vqs[VHOST_TEST_VQ].handle_kick =3D handle_vq_kick;
+-	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV,
++	vhost_dev_init(dev, vqs, VHOST_TEST_VQ_MAX, UIO_MAXIOV + 64,
+ 		       VHOST_TEST_PKT_WEIGHT, VHOST_TEST_WEIGHT, NULL);
 =20
-+#ifndef __KERNEL__
-+
-+/**
-+ * virtqueue_reset_free_head - Reset to 0 the members of split ring.
-+ * @vq: Virtqueue to reset.
-+ *
-+ * At this moment, is only meant for debug the ring index change, do not=
- use
-+ * in production.
-+ */
-+void virtqueue_reset_free_head(struct virtqueue *_vq)
-+{
-+	struct vring_virtqueue *vq =3D to_vvq(_vq);
-+
-+	// vq->last_used_idx =3D 0;
-+	vq->num_added =3D 0;
-+
-+	vq->split.queue_size_in_bytes =3D 0;
-+	vq->split.avail_flags_shadow =3D 0;
-+	vq->split.avail_idx_shadow =3D 0;
-+
-+	memset(vq->split.desc_state, 0, vq->split.vring.num *
-+			sizeof(struct vring_desc_state_split));
-+
-+	vq->free_head =3D 0;
-+}
-+EXPORT_SYMBOL_GPL(virtqueue_reset_free_head);
-+
-+#endif
-+
- /**
-  * virtqueue_kick_prepare - first half of split virtqueue_kick call.
-  * @_vq: the struct virtqueue
-diff --git a/tools/virtio/linux/virtio.h b/tools/virtio/linux/virtio.h
-index b751350d4ce8..5d33eab6b814 100644
---- a/tools/virtio/linux/virtio.h
-+++ b/tools/virtio/linux/virtio.h
-@@ -65,4 +65,6 @@ struct virtqueue *vring_new_virtqueue(unsigned int inde=
-x,
- 				      const char *name);
- void vring_del_virtqueue(struct virtqueue *vq);
-=20
-+void virtqueue_reset_free_head(struct virtqueue *vq);
-+
- #endif
-diff --git a/tools/virtio/virtio_test.c b/tools/virtio/virtio_test.c
-index 93d81cd64ba0..bf21ece30594 100644
---- a/tools/virtio/virtio_test.c
-+++ b/tools/virtio/virtio_test.c
-@@ -49,6 +49,7 @@ struct vdev_info {
-=20
- static const struct vhost_vring_file no_backend =3D { .fd =3D -1 },
- 				     backend =3D { .fd =3D 1 };
-+static const struct vhost_vring_state null_state =3D {};
-=20
- bool vq_notify(struct virtqueue *vq)
+ 	f->private_data =3D n;
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 6ca658c21e15..0395229486a9 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -299,6 +299,7 @@ static void vhost_vq_reset(struct vhost_dev *dev,
  {
-@@ -218,10 +219,33 @@ static void run_test(struct vdev_info *dev, struct =
-vq_info *vq,
- 			}
-=20
- 			if (reset) {
-+				struct vhost_vring_state s =3D { .index =3D 0 };
-+				int i;
-+				vq->vring.avail->idx =3D 0;
-+				vq->vq->num_free =3D vq->vring.num;
-+
-+				// Put everything in free lists.
-+				for (i =3D 0; i < vq->vring.num-1; i++)
-+					vq->vring.desc[i].next =3D
-+						cpu_to_virtio16(&dev->vdev,
-+								i + 1);
-+				vq->vring.desc[vq->vring.num-1].next =3D 0;
-+				virtqueue_reset_free_head(vq->vq);
-+
-+				r =3D ioctl(dev->control, VHOST_GET_VRING_BASE,
-+					  &s);
-+				assert(!r);
-+
-+				s.num =3D 0;
-+				r =3D ioctl(dev->control, VHOST_SET_VRING_BASE,
-+					  &null_state);
-+				assert(!r);
-+
- 				r =3D ioctl(dev->control, VHOST_TEST_SET_BACKEND,
- 					  &backend);
- 				assert(!r);
-=20
-+				started =3D completed;
-                                 while (completed > next_reset)
- 					next_reset +=3D completed;
- 			}
-@@ -243,7 +267,9 @@ static void run_test(struct vdev_info *dev, struct vq=
-_info *vq,
- 	test =3D 0;
- 	r =3D ioctl(dev->control, VHOST_TEST_RUN, &test);
- 	assert(r >=3D 0);
--	fprintf(stderr, "spurious wakeups: 0x%llx\n", spurious);
-+	fprintf(stderr,
-+		"spurious wakeups: 0x%llx started=3D0x%lx completed=3D0x%lx\n",
-+		spurious, started, completed);
+ 	vq->num =3D 1;
+ 	vq->ndescs =3D 0;
++	vq->first_desc =3D 0;
+ 	vq->desc =3D NULL;
+ 	vq->avail =3D NULL;
+ 	vq->used =3D NULL;
+@@ -367,6 +368,11 @@ static int vhost_worker(void *data)
+ 	return 0;
  }
 =20
- const char optstring[] =3D "h";
++static int vhost_vq_num_batch_descs(struct vhost_virtqueue *vq)
++{
++	return vq->max_descs - UIO_MAXIOV;
++}
++
+ static void vhost_vq_free_iovecs(struct vhost_virtqueue *vq)
+ {
+ 	kfree(vq->descs);
+@@ -389,6 +395,9 @@ static long vhost_dev_alloc_iovecs(struct vhost_dev *=
+dev)
+ 	for (i =3D 0; i < dev->nvqs; ++i) {
+ 		vq =3D dev->vqs[i];
+ 		vq->max_descs =3D dev->iov_limit;
++		if (vhost_vq_num_batch_descs(vq) < 0) {
++			return -EINVAL;
++		}
+ 		vq->descs =3D kmalloc_array(vq->max_descs,
+ 					  sizeof(*vq->descs),
+ 					  GFP_KERNEL);
+@@ -1570,6 +1579,7 @@ long vhost_vring_ioctl(struct vhost_dev *d, unsigne=
+d int ioctl, void __user *arg
+ 		vq->last_avail_idx =3D s.num;
+ 		/* Forget the cached index value. */
+ 		vq->avail_idx =3D vq->last_avail_idx;
++		vq->ndescs =3D vq->first_desc =3D 0;
+ 		break;
+ 	case VHOST_GET_VRING_BASE:
+ 		s.index =3D idx;
+@@ -2136,7 +2146,7 @@ static int fetch_indirect_descs(struct vhost_virtqu=
+eue *vq,
+ 	return 0;
+ }
+=20
+-static int fetch_descs(struct vhost_virtqueue *vq)
++static int fetch_buf(struct vhost_virtqueue *vq)
+ {
+ 	unsigned int i, head, found =3D 0;
+ 	struct vhost_desc *last;
+@@ -2149,7 +2159,11 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+ 	/* Check it isn't doing very strange things with descriptor numbers. */
+ 	last_avail_idx =3D vq->last_avail_idx;
+=20
+-	if (vq->avail_idx =3D=3D vq->last_avail_idx) {
++	if (unlikely(vq->avail_idx =3D=3D vq->last_avail_idx)) {
++		/* If we already have work to do, don't bother re-checking. */
++		if (likely(vq->ndescs))
++			return vq->num;
++
+ 		if (unlikely(vhost_get_avail_idx(vq, &avail_idx))) {
+ 			vq_err(vq, "Failed to access avail idx at %p\n",
+ 				&vq->avail->idx);
+@@ -2240,6 +2254,24 @@ static int fetch_descs(struct vhost_virtqueue *vq)
+ 	return 0;
+ }
+=20
++static int fetch_descs(struct vhost_virtqueue *vq)
++{
++	int ret =3D 0;
++
++	if (unlikely(vq->first_desc >=3D vq->ndescs)) {
++		vq->first_desc =3D 0;
++		vq->ndescs =3D 0;
++	}
++
++	if (vq->ndescs)
++		return 0;
++
++	while (!ret && vq->ndescs <=3D vhost_vq_num_batch_descs(vq))
++		ret =3D fetch_buf(vq);
++
++	return vq->ndescs ? 0 : ret;
++}
++
+ /* This looks in the virtqueue and for the first available buffer, and c=
+onverts
+  * it to an iovec for convenient access.  Since descriptors consist of s=
+ome
+  * number of output then some number of input descriptors, it's actually=
+ two
+@@ -2265,7 +2297,7 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+ 	if (unlikely(log))
+ 		*log_num =3D 0;
+=20
+-	for (i =3D 0; i < vq->ndescs; ++i) {
++	for (i =3D vq->first_desc; i < vq->ndescs; ++i) {
+ 		unsigned iov_count =3D *in_num + *out_num;
+ 		struct vhost_desc *desc =3D &vq->descs[i];
+ 		int access;
+@@ -2311,14 +2343,19 @@ int vhost_get_vq_desc(struct vhost_virtqueue *vq,
+ 		}
+=20
+ 		ret =3D desc->id;
++
++		if (!(desc->flags & VRING_DESC_F_NEXT))
++			break;
+ 	}
+=20
+-	vq->ndescs =3D 0;
++	vq->first_desc =3D i + 1;
+=20
+ 	return ret;
+=20
+ err:
+-	vhost_discard_vq_desc(vq, 1);
++	for (i =3D vq->first_desc; i < vq->ndescs; ++i)
++		if (!(vq->descs[i].flags & VRING_DESC_F_NEXT))
++			vhost_discard_vq_desc(vq, 1);
+ 	vq->ndescs =3D 0;
+=20
+ 	return ret;
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index e5f295e5ffcc..cc82918158d2 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -81,6 +81,7 @@ struct vhost_virtqueue {
+=20
+ 	struct vhost_desc *descs;
+ 	int ndescs;
++	int first_desc;
+ 	int max_descs;
+=20
+ 	struct file *kick;
+@@ -229,7 +230,7 @@ void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
+ 			  struct vhost_iotlb_map *map);
+=20
+ #define vq_err(vq, fmt, ...) do {                                  \
+-		pr_debug(pr_fmt(fmt), ##__VA_ARGS__);       \
++		pr_err(pr_fmt(fmt), ##__VA_ARGS__);       \
+ 		if ((vq)->error_ctx)                               \
+ 				eventfd_signal((vq)->error_ctx, 1);\
+ 	} while (0)
+@@ -255,6 +256,8 @@ static inline void vhost_vq_set_backend(struct vhost_=
+virtqueue *vq,
+ 					void *private_data)
+ {
+ 	vq->private_data =3D private_data;
++	vq->ndescs =3D 0;
++	vq->first_desc =3D 0;
+ }
+=20
+ /**
 --=20
 2.18.1
 
