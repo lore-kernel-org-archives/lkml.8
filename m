@@ -2,103 +2,127 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D511C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ECAC2D0F0
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB9E20714
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585761412;
-	bh=ZyIh3CjNdBB0NeqOV693cQN3fLIfvPegTmTl9Q3Z8N4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xOCIHPE5FEamtoMCCedYRPv8uejNOSm+vewpewNDcTgK4tttBYLBOoYq/0T9Tzux4
-	 Br2mu9tV/Dru+U+HcBCItXcbZ7s9KWCaxVYl0OuZaq3RXyr/730FiukAL7YA7FOkcL
-	 WuGnWEt9KYPjkiWipmZIn15USWFL9c03fzY1Dyww=
+	by mail.kernel.org (Postfix) with ESMTP id 4EC982082F
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 17:18:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NR5IMmGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732286AbgDARQv (ORCPT
+        id S1732444AbgDARSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:16:51 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33983 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbgDARQu (ORCPT
+        Wed, 1 Apr 2020 13:18:13 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60556 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgDARSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 13:16:50 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 14so456418qtp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 10:16:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=I4nVUN8Fl1U/E6c2DFWbzy6mvM74REswZBIVWpFMG4Q=;
-        b=N1OqeoyX3B7AzY4HqIyXrY10aYDOz+DB6MWQ4Eo606xk3M+S76dpICY7We3cDvburv
-         oww9uwBgJFHPGl1pdv7xRIWaKuZu0suz2Ny3vsENIHhk4xGiOzOsd7rKbrwsKoyPewMo
-         Y05GrJkP8yDK7Z+FJovXA70LgiHu9ErE06v2d0udxjX3peKsknRiaRySoSsBM9ydGkEr
-         jRH39flIY7vO5dvVvp3GZ6gUjdoka9injZmWYbjVWBeo7dIkqRKnNbsYbr/Qz9htJDrJ
-         bzsHa8PXgm/tqM5deUcY3DhnmbQ/+DU3GjB2RuPOe6H9Rc94MDTkEf520MCehZdfCYFl
-         E9Nw==
-X-Gm-Message-State: ANhLgQ3LvZPn3VoEnBCljKuuj0AX+/hOnrTcONnZubFcbm+j2U5oQ7zg
-        abqvjiBWRGcyNtFVgVHlM4yp/Xhxkx0=
-X-Google-Smtp-Source: ADFU+vvTRvImvV3aNtF7AhVEARXKL8ON52ViSDcsc8sDM2BNwKkDS0A+NZIGjwqUHcsapsaaI7hi+w==
-X-Received: by 2002:aed:3eec:: with SMTP id o41mr11618313qtf.343.1585761409167;
-        Wed, 01 Apr 2020 10:16:49 -0700 (PDT)
-Received: from dennisz-mbp.thefacebook.com ([163.114.130.1])
-        by smtp.gmail.com with ESMTPSA id c12sm1803313qkg.30.2020.04.01.10.16.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 10:16:48 -0700 (PDT)
-From:   Dennis Zhou <dennis@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH] percpu: update copyright emails to dennis@kernel.org
-Date:   Wed,  1 Apr 2020 12:16:44 -0500
-Message-Id: <20200401171644.44676-1-dennis@kernel.org>
-X-Mailer: git-send-email 2.13.5
+        Wed, 1 Apr 2020 13:18:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pO60vM3lpUeaQgdjLjnsu19Yae3+toam0LF12vfn/pQ=; b=NR5IMmGLlT/tSbBz6nUV9G6au
+        i0nTRoOb/xOx8pY+vvJT8u0K8H7+mzQOh0hKG4rONPcoT+kgj7AwyR6aqNef24RruNMk974G3ssPa
+        qmLYstpsxoUQoBt/2LbuQnUMLKJHGnFmqrrtmHhf5vX8eDvaAXSJTk2hZOIwFStNRS7FTzGlZqgiJ
+        o44AejSrhGOGI0WlEvJF6URXMOfnvFt2AM4cMEGLrhtjgpFci+bbfPcbpr0bGB+e8v+f3t2iVx0ts
+        aB3SLBgSzdF2hL2MpCI4gyxQroS3IG+RLcIXiIdlf1Y5xqzl5EDsdNwBdScCwSm/gQD4tC9mhhf0g
+        C7ON0AG+Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60904)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jJgzy-000764-ND; Wed, 01 Apr 2020 18:17:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jJgzs-0000s7-1D; Wed, 01 Apr 2020 18:17:48 +0100
+Date:   Wed, 1 Apr 2020 18:17:48 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        netdev@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH] net: phy: at803x: fix clock sink configuration on
+ ATH8030 and ATH8035
+Message-ID: <20200401171747.GW25745@shell.armlinux.org.uk>
+References: <20200401095732.23197-1-o.rempel@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401095732.23197-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there are 3 emails tied to me in the kernel tree, I'd rather
-dennis@kernel.org be the only one.
+On Wed, Apr 01, 2020 at 11:57:32AM +0200, Oleksij Rempel wrote:
+> The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
+> for the values that comprise the fields, not zero-bits-set.
+> 
+> This patch fixes the clock frequency configuration for ATH8030 and
+> ATH8035 Atheros PHYs by removing the erroneous "~".
+> 
+> To reproduce this bug, configure the PHY  with the device tree binding
+> "qca,clk-out-frequency" and remove the machine specific PHY fixups.
+> 
+> Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
+> Reported-by: Russell King <linux@armlinux.org.uk>
 
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
----
-This'll just make it easier to keep track of me. I've applied it to
-for-5.7.
+Please replace this with:
 
- mm/percpu-stats.c | 2 +-
- mm/percpu.c       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-diff --git a/mm/percpu-stats.c b/mm/percpu-stats.c
-index a5a8b22816ff..32558063c3f9 100644
---- a/mm/percpu-stats.c
-+++ b/mm/percpu-stats.c
-@@ -3,7 +3,7 @@
-  * mm/percpu-debug.c
-  *
-  * Copyright (C) 2017		Facebook Inc.
-- * Copyright (C) 2017		Dennis Zhou <dennisz@fb.com>
-+ * Copyright (C) 2017		Dennis Zhou <dennis@kernel.org>
-  *
-  * Prints statistics about the percpu allocator and backing chunks.
-  */
-diff --git a/mm/percpu.c b/mm/percpu.c
-index e9844086b236..d7e3bc649f4e 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -6,7 +6,7 @@
-  * Copyright (C) 2009		Tejun Heo <tj@kernel.org>
-  *
-  * Copyright (C) 2017		Facebook Inc.
-- * Copyright (C) 2017		Dennis Zhou <dennisszhou@gmail.com>
-+ * Copyright (C) 2017		Dennis Zhou <dennis@kernel.org>
-  *
-  * The percpu allocator handles both static and dynamic areas.  Percpu
-  * areas are allocated in chunks which are divided into units.  There is
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
+
+Thanks.
+
+> ---
+>  drivers/net/phy/at803x.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> index 481cf48c9b9e4..31f731e6df720 100644
+> --- a/drivers/net/phy/at803x.c
+> +++ b/drivers/net/phy/at803x.c
+> @@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
+>  		 */
+>  		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
+>  		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
+> -			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
+> -			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
+> +			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
+> +			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
+>  		}
+>  	}
+>  
+> -- 
+> 2.26.0.rc2
+> 
+> 
+
 -- 
-2.24.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
