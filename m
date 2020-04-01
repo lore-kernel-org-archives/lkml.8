@@ -2,153 +2,92 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77B0C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C569120776
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E992078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 13:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="Qhd9G2/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732654AbgDANAs (ORCPT
+        id S1732665AbgDANBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:00:48 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:58090 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732632AbgDANAq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:00:46 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031D03cM014943;
-        Wed, 1 Apr 2020 09:00:29 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3020e6myqn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 09:00:27 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 031D0PRi051091
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 1 Apr 2020 09:00:26 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 1 Apr 2020 06:00:24 -0700
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 1 Apr 2020 06:00:24 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 1 Apr 2020 06:00:24 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 031D0Hmx023654;
-        Wed, 1 Apr 2020 09:00:22 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>
-CC:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <lorenzo.bianconi83@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/3] staging: iio: ad5933: use iio_device_attach_kfifo_buffer() helper
-Date:   Wed, 1 Apr 2020 15:59:36 +0300
-Message-ID: <20200401125936.6398-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200401125936.6398-1-alexandru.ardelean@analog.com>
-References: <20200401125936.6398-1-alexandru.ardelean@analog.com>
+        Wed, 1 Apr 2020 09:01:31 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:33303 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732534AbgDANBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 09:01:31 -0400
+Received: from [192.168.1.3] (212-5-158-187.ip.btc-net.bg [212.5.158.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 46D27CFAB;
+        Wed,  1 Apr 2020 16:01:28 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1585746088; bh=zOxr38VY0D/4MvUtAz2wio+gKJ7DGco1NKhyuLfJmn8=;
+        h=Subject:To:Cc:From:Date:From;
+        b=Qhd9G2/BG12qd1SDazQPmx/WmHsy9p48aY/i3sjh8ZIHSkbpC5XWyUwla8MDCe2S1
+         qG+nuRYhknQUP+HGtMu5LAq/sOu5YKLtaRHxABuWzyPzaWTXD4XwEzEj7dKVLEBbCf
+         xBri1yb9Ai+wCyVXP/CaF+u+bMbgGknITT3QxXq1Y1fcY7R4Jw9sIOtPuo2FwqIpcA
+         DL6lcJxub/XtnH5n1dwBz5jlzahrpsyjNR3QyIdEvnrLLB+2KzcllP5PXqtCl1AlpH
+         XOHRsXt+++1YW1mSVy49pxGSO3qzriGhIJFg27paMHABECqRWJyr1DqaszAXbE++Zf
+         53q9cL4CvjVSQ==
+Subject: Re: [PATCH 01/12] pcie: qcom: add missing ipq806x clocks in pcie
+ driver
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <416ed5fa-4e22-68cc-1c80-be720e72ad55@mm-sol.com>
+Date:   Wed, 1 Apr 2020 16:01:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=990
- spamscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
- clxscore=1015 phishscore=0 suspectscore=2 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010118
+In-Reply-To: <20200320183455.21311-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver calls iio_kfifo_allocate() vs devm_iio_kfifo_allocate(). But
-the conversion is still simpler here, and cleans-up/reduces some error
-paths.
+Hi Ansuel,
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- .../staging/iio/impedance-analyzer/ad5933.c   | 28 ++++---------------
- 1 file changed, 5 insertions(+), 23 deletions(-)
+As Bjorn already mentioned please make cover-letter in next version of
+the patchset so that we know what is the purpose of the patches.
 
-diff --git a/drivers/staging/iio/impedance-analyzer/ad5933.c b/drivers/staging/iio/impedance-analyzer/ad5933.c
-index af0bcf95ee8a..7bde93c6dd74 100644
---- a/drivers/staging/iio/impedance-analyzer/ad5933.c
-+++ b/drivers/staging/iio/impedance-analyzer/ad5933.c
-@@ -602,22 +602,6 @@ static const struct iio_buffer_setup_ops ad5933_ring_setup_ops = {
- 	.postdisable = ad5933_ring_postdisable,
- };
- 
--static int ad5933_register_ring_funcs_and_init(struct iio_dev *indio_dev)
--{
--	struct iio_buffer *buffer;
--
--	buffer = iio_kfifo_allocate();
--	if (!buffer)
--		return -ENOMEM;
--
--	iio_device_attach_buffer(indio_dev, buffer);
--
--	/* Ring buffer functions - here trigger setup related */
--	indio_dev->setup_ops = &ad5933_ring_setup_ops;
--
--	return 0;
--}
--
- static void ad5933_work(struct work_struct *work)
- {
- 	struct ad5933_state *st = container_of(work,
-@@ -738,26 +722,25 @@ static int ad5933_probe(struct i2c_client *client,
- 	indio_dev->dev.parent = &client->dev;
- 	indio_dev->info = &ad5933_info;
- 	indio_dev->name = id->name;
--	indio_dev->modes = (INDIO_BUFFER_SOFTWARE | INDIO_DIRECT_MODE);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->channels = ad5933_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(ad5933_channels);
- 
--	ret = ad5933_register_ring_funcs_and_init(indio_dev);
-+	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
-+					     &ad5933_ring_setup_ops);
- 	if (ret)
- 		goto error_disable_mclk;
- 
- 	ret = ad5933_setup(st);
- 	if (ret)
--		goto error_unreg_ring;
-+		goto error_disable_mclk;
- 
- 	ret = iio_device_register(indio_dev);
- 	if (ret)
--		goto error_unreg_ring;
-+		goto error_disable_mclk;
- 
- 	return 0;
- 
--error_unreg_ring:
--	iio_kfifo_free(indio_dev->buffer);
- error_disable_mclk:
- 	clk_disable_unprepare(st->mclk);
- error_disable_reg:
-@@ -772,7 +755,6 @@ static int ad5933_remove(struct i2c_client *client)
- 	struct ad5933_state *st = iio_priv(indio_dev);
- 
- 	iio_device_unregister(indio_dev);
--	iio_kfifo_free(indio_dev->buffer);
- 	regulator_disable(st->reg);
- 	clk_disable_unprepare(st->mclk);
- 
+I've the impression that you want to use pcie-qcom platform driver as an
+endpoint, am I wrong?
+
+I'll review the patches these days.
+
+On 3/20/20 8:34 PM, Ansuel Smith wrote:
+> Aux and Ref clk are missing in pcie qcom driver.
+> Add support in the driver to fix pcie inizialization
+> in ipq806x
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
+>  1 file changed, 33 insertions(+), 5 deletions(-)
+
+
 -- 
-2.17.1
-
+regards,
+Stan
