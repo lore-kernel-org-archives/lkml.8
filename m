@@ -2,127 +2,175 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F04FC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E7BC2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4632071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B9720772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="NvO71/kN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732780AbgDAVwy (ORCPT
+        id S1732821AbgDAVzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:52:54 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58472 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732357AbgDAVwx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 17:52:53 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 825C18030886;
-        Wed,  1 Apr 2020 21:52:49 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GdA5Bpm0qipx; Thu,  2 Apr 2020 00:52:47 +0300 (MSK)
-Date:   Thu, 2 Apr 2020 00:52:58 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache
- drivers
-Message-ID: <20200401215258.jnemcpeac5wf3hyu@ubsrv2.baikal.int>
-References: <20200306130731.938808030702@mail.baikalelectronics.ru>
- <20200306153246.9373B80307C4@mail.baikalelectronics.ru>
- <20200401150612.addu2gzahrarpgep@ubsrv2.baikal.int>
- <CAK8P3a0+3xqLa9-Xsu-WWd5XZZ=4mPzwHhOmGSc9y9W=92L9Uw@mail.gmail.com>
+        Wed, 1 Apr 2020 17:55:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33086 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732357AbgDAVzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 17:55:17 -0400
+IronPort-SDR: hDrvLfXTRpr7d8ZVKwBKkjlPeoCE50hjSyzuE8hDfhI+BitszEF0TUf0WR55ocfp9wPIfDt7rz
+ KzZaOXo/RLWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 14:55:16 -0700
+IronPort-SDR: SI31RKCH03Ysov5qWPvre2uuILxLP9cHATE/L26X929Gs2tMWByNHH+K7u320bQiUxWs3ZRhkW
+ qqI/SWl0GI+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,333,1580803200"; 
+   d="scan'208";a="449377887"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Apr 2020 14:55:16 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 14:55:16 -0700
+Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
+ ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 1 Apr 2020 14:55:15 -0700
+Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
+ orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 1 Apr 2020 14:55:15 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 1 Apr 2020 14:55:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JPWE7hoUHPzGH8RvOtRYnPPQfHvaFGKkWrPDPG5F/S2Xhv1c4hnNG+aYye1YaAMKf+/zodUBnTRCLxw2yyTr1bgPcMk1O5+Mac8T/PUrrScyzzazQM6WkdHzxDw6gVzNH2E7MZuSdk9DsiP0449fj0IRk+HLS87Ed/YnQMfEz3zg9bjOtMxv3ogPEi88gIuM/PJBT0r2qKho4tL7I/5U3CSMa33qv46orXh4WNHdojJRGA9rC5m/VrCdwVMQOyvNfD4syhXHxezb2ggpS+R00CIetXAlSYGS/3UV6bS0N/U4agWdfrrHH/HPz9mNgDeK0kaMLrHzuxKZBpvmHdCKQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vJDvoaAezW4adzYrGxcBsycGI2MfGbNpsin64ag4K8s=;
+ b=K74WECsGDIkrXlUTVr73yWmORawDUjFotQc0aR7F9tVf/FTsMVApttJScVtgdPdSFqBDL268mxlK6hyVGkZBh/vM8CPvLvs0DS7y8oH5H98ZTKl3ulHIXAgNncRb7/38J6JcZqSI6dulmDPjFWchFiQwZjsJGenhQgreRRhaHPFLyYOKmxg1ciHQ/rVc4TcFsJJbmDgTE5Fn0zzlvizshSKe71mCr33WeoNdrUyf1JtKztv0HfzBNB1N5gtfQ6ZjVzejAI0aCfAeIu6tVM7tt5d+bqFqhMTcyeeTLzoKqArOxUuco+45F5rTDmTv8pwNXXsqBfg0Tp/3dxR/Pq7oFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vJDvoaAezW4adzYrGxcBsycGI2MfGbNpsin64ag4K8s=;
+ b=NvO71/kNKYTu0dyOMrLLLCyFf0TVeG49oZ76xgd3IA8biE+PZauOTbpCiBiNKAVmg2JRhQBJosweFfIWO2fxGf+y/w8ZpJPVs7KHTGVGwpNp7kuXdI85ZLz4nwKCdYk+Qu+qtSWZYzDggFYpX6R/yixqd7hoCwKIHbjx6gcNF+M=
+Received: from CY4PR11MB1719.namprd11.prod.outlook.com (2603:10b6:903:2d::23)
+ by CY4PR11MB1589.namprd11.prod.outlook.com (2603:10b6:910:e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Wed, 1 Apr
+ 2020 21:55:07 +0000
+Received: from CY4PR11MB1719.namprd11.prod.outlook.com
+ ([fe80::e43e:7b93:3758:44ad]) by CY4PR11MB1719.namprd11.prod.outlook.com
+ ([fe80::e43e:7b93:3758:44ad%11]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
+ 21:55:07 +0000
+From:   "Kaneda, Erik" <erik.kaneda@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jan Engelhardt <jengelh@inai.de>,
+        "Moore, Robert" <robert.moore@intel.com>
+CC:     "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] acpica: clear global_lock bits at FACS initialization
+Thread-Topic: [PATCH] acpica: clear global_lock bits at FACS initialization
+Thread-Index: AQHWBnGD5Rg0jHRzck+SrWIXSlQtE6hj/kIAgADEq9A=
+Date:   Wed, 1 Apr 2020 21:55:06 +0000
+Message-ID: <CY4PR11MB171939B742CF12CD476E6BCEF0C90@CY4PR11MB1719.namprd11.prod.outlook.com>
+References: <20200330085852.31328-1-jengelh@inai.de>
+ <CAJZ5v0iMJYG1ptdoeiHVo21NqhWBVPw691LJ5=3oRMA7OMQ91Q@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iMJYG1ptdoeiHVo21NqhWBVPw691LJ5=3oRMA7OMQ91Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=erik.kaneda@intel.com; 
+x-originating-ip: [192.55.52.216]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a80edad-53e1-4e2e-4340-08d7d6875754
+x-ms-traffictypediagnostic: CY4PR11MB1589:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR11MB1589737B63D1ABF741E9368FF0C90@CY4PR11MB1589.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1719.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(376002)(366004)(136003)(346002)(396003)(186003)(4326008)(76116006)(53546011)(316002)(8936002)(66446008)(64756008)(2906002)(66476007)(54906003)(6636002)(66946007)(7696005)(71200400001)(6506007)(52536014)(66556008)(9686003)(966005)(110136005)(33656002)(81156014)(8676002)(478600001)(81166006)(55016002)(26005)(5660300002)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XvfGNJqpDk0+kCJRgvg4ggRdv/XdcLHn3DgveaUZ1gkrUQUoK04zGQIZnhr54dv3x845Ao/HmJs1MRoj/75M/pdZSeK0aidcR/LVoIPUwOnVchYSilL7AWPFhqq+c2kINpLGe5/jb0kcOAkFkw/51E6bJ3LS2+Y8tI3BoD1YGKtJkeCRSYSR7MhuVawp5QF5ftROa7Ax3ExYiet62c84lTgKX7L1XtI0z+P+Wuqsg0nF4rjsmxUYOwCcIgUTFuANDdctWoTIYgPIeDQeB6U/mtwkvhznspvf5s9JoyKVGrrCncKBDdenswxkDIf3yEcLcC7qZfh6gIKjGFEa0KllTmxAAWRRbcQSiNapSn5FALeytXJ+PYWZWQskTEj6RJ3QmaA8hJ17UMiPCG5FC33gXHTrm2c6Q/hTI1Kw+ID92WzVyw3LJNviJ27CT/HInLZ0wT0ZyRD564xPlfcPrPnZBj3CACOwBIS6hcdKqegYIAwY2sHA9tlURTX3bj6cfnK5zsAIBeiRlumb+LmJD5pQ1w==
+x-ms-exchange-antispam-messagedata: IBOJ4kyrksnfT5+v69Xxf1wqWijwe+YG7KmcNSii7reiiSdtyEz8xCLCgZ69WevsiviK+tWHq8YVxVerPJ81vawOMIwY9we2OEghEnbRQZp6wtJu4qNxIICNQHAw9eZGGNNgJ/QB09R6rdoRcDu8Mg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0+3xqLa9-Xsu-WWd5XZZ=4mPzwHhOmGSc9y9W=92L9Uw@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a80edad-53e1-4e2e-4340-08d7d6875754
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 21:55:06.8994
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nMnLhZF8EGWwd0QGrx5X/mpSXZE/y8ModrHCE9SQ9Qxb2OQ26YP/lisctuNpkiXrhQVth/Pm7O3IdMx/yfMAQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR11MB1589
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:10:20PM +0200, Arnd Bergmann wrote:
-> On Wed, Apr 1, 2020 at 5:06 PM Sergey Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> > On Fri, Mar 06, 2020 at 04:19:47PM +0100, Arnd Bergmann wrote:
-> > > On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > From: Serge Semin <fancer.lancer@gmail.com>
-> > > >
-> > > > Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
-> > > > system controller provides three vendor-specific blocks. In particular
-> > > > there are two Errors Handler Blocks to detect and report an info regarding
-> > > > any problems discovered on the AXI and APB buses. These are the main buses
-> > > > utilized by the SoC devices to interact with each other. In addition there
-> > > > is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
-> > > > L2-to-RAM latencies. All of this functionality is implemented in the
-> > > > APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
-> > > > subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
-> > > > framework of this patchset.
-> > > >
-> > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > > commit 98d54f81e36b ("Linux 5.6-rc4").
-> > >
-> > > I have no objection to the drivers, but I wonder if these should be
-> > > in drivers/bus and drivers/memory instead of drivers/soc, which have
-> > > similar drivers already. The driver for the L2 cache is not really a
-> > > memory controller driver, but it may be close enough, and we
-> > > already have a couple of different things in there.
-> > >
-> 
-> > Regarding l2 driver. Do you really think that L2 cache should be in
-> > drivers/memory? First there is no any cache-related drivers in that
-> > subsystem (at least I couldn't find any). Second the Baikal-T1
-> > L2-cache-RAM config block has just indirect connection with RAM.
-> > The block just tunes the L2-cache<->RAM stall clock cycles up on
-> > WS/Tag/Data RAM IO-operations. This config seems more SoC-specific,
-> > than memory-like. Do you think that the driver should still be in
-> > drivers/memory?
-> 
-> Either way could work, and both locations are a bit of a dumping
-> ground for different kinds of drivers. My preference would be
-> drivers/memory, but if anyone has a strong opinion the other way,
-> drivers/soc would be acceptable as well.
-> 
-> > On the other hand the block is part of the System Controller. I could
-> > just embed the l2-cache driver functionality into the System Controller
-> > MFD driver. Though honestly IMHO the functionality should live in
-> > a dedicated driver and drivers/soc is a better place for it. I also have
-> > doubts this part will be well accepted by Lee (drivers/mfd maintainer).
-> >
-> > So what do you think?
-> 
-> If you make it a combined driver with the system controller,
-> drivers/soc would be the most logical place. drivers/mfd should
-> only be used for a multiplexer with child drivers doing the
-> actual functionality.
-> 
->         Arnd
-
-I see. Thanks for the comment. I'll move the l2-cache driver to the
-drivers/memory then and send a new patchset referring to this discussion
-when it's ready. I'll make sure it'll be Cc'ed to you too.
-
-Regards,
--Sergey
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYWNwaS1vd25l
+ckB2Z2VyLmtlcm5lbC5vcmcgPGxpbnV4LWFjcGktDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4g
+T24gQmVoYWxmIE9mIFJhZmFlbCBKLiBXeXNvY2tpDQo+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwg
+MSwgMjAyMCAyOjEyIEFNDQo+IFRvOiBKYW4gRW5nZWxoYXJkdCA8amVuZ2VsaEBpbmFpLmRlPjsg
+S2FuZWRhLCBFcmlrDQo+IDxlcmlrLmthbmVkYUBpbnRlbC5jb20+OyBNb29yZSwgUm9iZXJ0IDxy
+b2JlcnQubW9vcmVAaW50ZWwuY29tPg0KPiBDYzogV3lzb2NraSwgUmFmYWVsIEogPHJhZmFlbC5q
+Lnd5c29ja2lAaW50ZWwuY29tPjsgQUNQSSBEZXZlbCBNYWxpbmcgTGlzdA0KPiA8bGludXgtYWNw
+aUB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4g
+a2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gYWNwaWNhOiBj
+bGVhciBnbG9iYWxfbG9jayBiaXRzIGF0IEZBQ1MgaW5pdGlhbGl6YXRpb24NCj4gDQo+IE9uIE1v
+biwgTWFyIDMwLCAyMDIwIGF0IDEwOjU4IEFNIEphbiBFbmdlbGhhcmR0IDxqZW5nZWxoQGluYWku
+ZGU+IHdyb3RlOg0KPiA+DQpIaSBKYW4sDQoNCkkndmUgYmVlbiByZWFkaW5nIHRoZSBBQ1BJIHNw
+ZWMgYW5kIHRoZXJlJ3Mgbm90aGluZyBzdGF0ZWQgYWJvdXQgd2hhdCB0aGUNCmluaXRpYWwgc3Rh
+dGUgb2YgdGhlIGxvY2sgc2hvdWxkIGJlLi4uIFRoaXMgcGF0Y2ggaXMgYXNzdW1pbmcgdGhhdCB0
+aGUgbG9jayBzaG91bGQNCmJlIGZyZWUgd2hlbiB0aGUgRkFDUyBpcyBiZWluZyBpbml0aWFsaXpl
+ZCBhbmQgSSBkb24ndCB0aGluayB0aGlzIGlzIGEgc2FmZQ0KYXNzdW1wdGlvbiB0byBtYWtlLg0K
+DQpXaGF0IGlmIHRoaXMgaXMgYSBsZWdpdGltYXRlIGFjcXVpc2l0aW9uIGJ5IGFuIFNNSSBoYW5k
+bGVyIHZlcnkgZWFybHkgaW4gT1MgYm9vdD8NCg0KPiA+IFdoZW4gdGhlIGZpcm13YXJlIFJPTSBz
+dXBwbGllcyBhIEZBQ1MgdGFibGUgd2l0aCBnYXJiYWdlLCBhbmQgdGhlDQo+ID4gZmlybXdhcmUg
+Y29kZSBkb2VzIG5vdCBjbGVhciB0aGUgZ2xvYmFsX2xvY2sgZmllbGQgYmVmb3JlIGJvb3Rpbmcg
+dG8gYQ0KPiA+IGxvYWRlci9PUywgdGhlIGdhcmJhZ2UgYnl0ZXMgaW4gdGhhdCBmaWVsZCAobGlr
+ZSAweGZmZmZmZmZmKSBjYW4NCj4gPiBpbmRpY2F0ZSB0aGF0IHRoZSBsb2NrIGlzIHRha2VuIHdo
+ZW4gaXQgaXMgbm90LCB0aGVyZWJ5IHByZXZlbnRpbmcNCj4gPiBvYnRhaW5pbmcgc2FpZCBsb2Nr
+IGV2ZW4gdGhvdWdoIGl0IGlzIG90aGVyd2lzZSBwZXJmZWN0bHkgdXNhYmxlIGlmDQo+ID4gdGhl
+IGZpZWxkIHdlcmUgbm90IHByZXBvcHVsYXRlZCB3aXRoIGdhcmJhZ2UuDQoNCkhvdyBkbyB3ZSBr
+bm93IHRoYXQgdGhlIGxvY2sgaXMgdGFrZW4gd2hlbiBpdCBpcyBub3Q/DQoNCkVyaWsNCj4gPg0K
+PiA+IFJlc2V0IHRoZSBsb2NrIHRvIGEga25vd24gZ29vZCBzdGF0ZSB1cG9uIEFDUEkgaW5pdGlh
+bGl6YXRpb24uDQo+ID4NCj4gPiBSZWZlcmVuY2VzOiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5v
+cmcvc2hvd19idWcuY2dpP2lkPTIwNjU1Mw0KPiA+IFNpZ25lZC1vZmYtYnk6IEphbiBFbmdlbGhh
+cmR0IDxqZW5nZWxoQGluYWkuZGU+DQo+IA0KPiBCb2IsIEVyaWssIHBsZWFzZSBsZXQgbWUga25v
+dyBpZiB5b3Ugd2FudCBtZSB0byBhcHBseSB0aGlzIGRpcmVjdGx5IG9yIHlvdQ0KPiBwcmVmZXIg
+dG8gcm91dGUgaXQgdGhyb3VnaCB0aGUgdXBzdHJlYW0uDQo+IA0KPiA+IC0tLQ0KPiA+DQo+ID4g
+IGRyaXZlcnMvYWNwaS9hY3BpY2EvdGJ1dGlscy5jIHwgMyArKysNCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYWNwaS9h
+Y3BpY2EvdGJ1dGlscy5jDQo+ID4gYi9kcml2ZXJzL2FjcGkvYWNwaWNhL3RidXRpbHMuYyBpbmRl
+eCBjNWYwYjhlYzcwY2MuLjI2YmRiYzU4NWQ3ZQ0KPiA+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZl
+cnMvYWNwaS9hY3BpY2EvdGJ1dGlscy5jDQo+ID4gKysrIGIvZHJpdmVycy9hY3BpL2FjcGljYS90
+YnV0aWxzLmMNCj4gPiBAQCAtNTYsNiArNTYsOSBAQCBhY3BpX3N0YXR1cyBhY3BpX3RiX2luaXRp
+YWxpemVfZmFjcyh2b2lkKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZmYWNzKSk7DQo+ID4gICAgICAgICAg
+ICAgICAgIGFjcGlfZ2JsX0ZBQ1MgPSBmYWNzOw0KPiA+ICAgICAgICAgfQ0KPiA+ICsgICAgICAg
+LyogQ2xlYXIgcG90ZW50aWFsIGdhcmJhZ2UgZnJvbSB0aGUgaW5pdGlhbCBGQUNTIHRhYmxlLiAq
+Lw0KPiA+ICsgICAgICAgaWYgKGZhY3MgIT0gTlVMTCkNCj4gPiArICAgICAgICAgICAgICAgZmFj
+cy0+Z2xvYmFsX2xvY2sgJj0gfjB4MzsNCj4gPg0KPiA+ICAgICAgICAgLyogSWYgdGhlcmUgaXMg
+bm8gRkFDUywganVzdCBjb250aW51ZS4gVGhlcmUgd2FzIGFscmVhZHkgYW4NCj4gPiBlcnJvciBt
+c2cgKi8NCj4gPg0KPiA+IC0tDQo+ID4gMi4yNi4wDQo+ID4NCg==
