@@ -2,71 +2,104 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D00AC2D0F2
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3FAC2BA12
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB3021775
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC95206F8
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585758960;
+	bh=Dxdis/KJKogw06PdKI7YE6I+j6JbrgSMNU1dghE2T48=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JoOvm2ecLi5lA9uXIdSiDJ1k23VEEVs0vgHCPyl8pJwWNyMakpSBCW+9/1D5O6pX5
+	 dozwnr0yFF7TnAEFh7T1VU097cCEksupjA+dARUiu/Phug83hbYoAe67nnA2ka60Ls
+	 uZnKpCP6pBGCNdv7PjdAB/TDUlDEMhMEFar1DNEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388563AbgDAQf4 (ORCPT
+        id S2388802AbgDAQf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 1 Apr 2020 12:35:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388795AbgDAQf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 1 Apr 2020 12:35:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37407 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388782AbgDAQfu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:35:50 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jJgLB-0004e6-Uh; Wed, 01 Apr 2020 16:35:46 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Leo Liu <leo.liu@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amdgpu/vcn: fix spelling mistake "fimware" -> "firmware"
-Date:   Wed,  1 Apr 2020 17:35:45 +0100
-Message-Id: <20200401163545.263372-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A55220857;
+        Wed,  1 Apr 2020 16:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585758955;
+        bh=Dxdis/KJKogw06PdKI7YE6I+j6JbrgSMNU1dghE2T48=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MTJbRmISy47bfK4xp6NBU4z6Tr0KkFwJ82zrrWv6Td0Rjrdf+0rlHgW8iXvkxg6dm
+         RFAkVUrhQwOcs1Ts8SCaRKP1QlqaixtuMOgI3/3cv5vJMB1qHZLIwDjQmLGzxQ3XDa
+         DOAn/eSH53tsEeYXjWyGiM06wq4YXvQC9jXqaY5w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 003/102] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+Date:   Wed,  1 Apr 2020 18:17:06 +0200
+Message-Id: <20200401161532.006689044@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
+References: <20200401161530.451355388@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-There is a spelling mistake in a dev_err error message. Fix it.
+[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
+has RAM above 32-bit boundary (accessible with LPAE config) though the
+PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
+property in PCIe RC DT nodes to indicate the host bridge can access
+only 32 bits.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-index 328b6ceb80de..d653a18dcbc3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vcn.c
-@@ -187,7 +187,7 @@ int amdgpu_vcn_sw_init(struct amdgpu_device *adev)
- 				PAGE_SIZE, AMDGPU_GEM_DOMAIN_VRAM, &adev->vcn.inst[i].fw_shared_bo,
- 				&adev->vcn.inst[i].fw_shared_gpu_addr, &adev->vcn.inst[i].fw_shared_cpu_addr);
- 		if (r) {
--			dev_err(adev->dev, "VCN %d (%d) failed to allocate fimware shared bo\n", i, r);
-+			dev_err(adev->dev, "VCN %d (%d) failed to allocate firmware shared bo\n", i, r);
- 			return r;
- 		}
- 	}
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index a1a928064b53d..f94064c687789 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -282,6 +282,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -319,6 +320,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 -- 
-2.25.1
+2.20.1
+
+
 
