@@ -2,154 +2,123 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0B9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB87C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AD920772
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B4B20772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 09:07:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="L8xIjD8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbgDAJGf (ORCPT
+        id S1732127AbgDAJHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:06:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21860 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728087AbgDAJGf (ORCPT
+        Wed, 1 Apr 2020 05:07:09 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:34378 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726536AbgDAJHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 05:06:35 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03194pdU052399
-        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 05:06:34 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 303vfj5msa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 05:06:33 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 1 Apr 2020 10:06:20 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 Apr 2020 10:06:16 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03196Qud46858552
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 09:06:26 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD68542041;
-        Wed,  1 Apr 2020 09:06:25 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 881914203F;
-        Wed,  1 Apr 2020 09:06:22 +0000 (GMT)
-Received: from [9.199.48.114] (unknown [9.199.48.114])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 09:06:22 +0000 (GMT)
-Subject: Re: [PATCH v2 09/16] powerpc/watchpoint: Convert
- thread_struct->hw_brk to an array
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200401061309.92442-1-ravi.bangoria@linux.ibm.com>
- <20200401061309.92442-10-ravi.bangoria@linux.ibm.com>
- <e5af5ed7-b9df-e334-1bdb-e7f82ae32697@c-s.fr>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Wed, 1 Apr 2020 14:36:21 +0530
+        Wed, 1 Apr 2020 05:07:09 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03192xIJ005415;
+        Wed, 1 Apr 2020 11:06:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=pUAdDfLled6exIm4UEQprNwjkf9bN4q2badOB4c9Qto=;
+ b=L8xIjD8MknhHPdT0rYy8MHIoHmlmI1rzGA91bzR/kSpQLIGCIB++70TZcLOkQUAL/5f0
+ wqt3IXVbg6WG2RPqtp3KtS1Weiv5FeWtwBXDcAUFCHKxaU9l9sjyUyL6W7l+ZllirYON
+ liszlxjdtfxgpQ7kykCuFWC68Nxmh4YOlO6EL/Bijt0jcEGi9nvT1YfRw99xQlGZBceR
+ hmpxZnTGkwAiQ/joABX5oyyc/z57neg/RZClbtgP2xzrA/pmufv0AsHXxBGWu/UOGA4a
+ yPqmudtlIVqLZ87RjHjqjpYfNcxtAzTclnzgSNos+qbSaV6yeuSx2Tz/RcNxWZm34uz+ RQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 301xbmm2xc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 11:06:50 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7597310002A;
+        Wed,  1 Apr 2020 11:06:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5871221D6FA;
+        Wed,  1 Apr 2020 11:06:44 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr
+ 2020 11:06:39 +0200
+Subject: Re: [PATCH v2 8/8] dt-bindings: arm: stm32: document
+ lxa,stm32mp157c-mc1 compatible
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200326220213.28632-1-a.fatoum@pengutronix.de>
+ <20200326220213.28632-8-a.fatoum@pengutronix.de>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <c0be1d2f-8e89-6786-86be-0f851e8b3441@st.com>
+Date:   Wed, 1 Apr 2020 11:06:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <e5af5ed7-b9df-e334-1bdb-e7f82ae32697@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200326220213.28632-8-a.fatoum@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040109-0008-0000-0000-000003685CC0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040109-0009-0000-0000-00004A89E462
-Message-Id: <a1bd4536-9313-120e-b747-1a4a31b8da73@linux.ibm.com>
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ahmad
 
->>   static void set_debug_reg_defaults(struct thread_struct *thread)
->>   {
->> -    thread->hw_brk.address = 0;
->> -    thread->hw_brk.type = 0;
->> -    thread->hw_brk.len = 0;
->> -    thread->hw_brk.hw_len = 0;
->> -    if (ppc_breakpoint_available())
->> -        set_breakpoint(&thread->hw_brk);
->> +    int i;
->> +
->> +    for (i = 0; i < nr_wp_slots(); i++) {
+On 3/26/20 11:02 PM, Ahmad Fatoum wrote:
+> Document the STM32MP157 based Linux Automation MC-1 device tree
+> compatible.
 > 
-> Maybe you could add the following that you added other places:
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> ---
+
+Sorry my mailer has lost the cover-letter mail, so consider I respond to 
+to the whole series.
+
+Thanks for adding a new stm32 board and more importantly to have 
+standardize pins name, I appreciate it.
+
+Series applied on stm32-next.
+
+Regards
+Alex
+
+
+>   v1 -> v2:
+>   - Added Rob's Ack
+> ---
+>   Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
+>   1 file changed, 1 insertion(+)
 > 
->      struct arch_hw_breakpoint null_brk = {0};
+> diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> index 1fcf306bd2d1..71ea3f04ab9c 100644
+> --- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> +++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> @@ -38,6 +38,7 @@ properties:
+>         - items:
+>             - enum:
+>                 - arrow,stm32mp157a-avenger96 # Avenger96
+> +              - lxa,stm32mp157c-mc1
+>                 - st,stm32mp157c-ed1
+>                 - st,stm32mp157a-dk1
+>                 - st,stm32mp157c-dk2
 > 
-> Then do
-> 
->      thread->hw_brk[i] = null_brk;
-
-Yes that's better.
-
-[...]
-
->> +static void switch_hw_breakpoint(struct task_struct *new)
->> +{
->> +    int i;
->> +
->> +    for (i = 0; i < nr_wp_slots(); i++) {
->> +        if (unlikely(!hw_brk_match(this_cpu_ptr(&current_brk[i]),
->> +                       &new->thread.hw_brk[i]))) {
->> +            __set_breakpoint(&new->thread.hw_brk[i], i);
->> +        }
-> 
-> Or could be:
-> 
->          if (likely(hw_brk_match(this_cpu_ptr(&current_brk[i]),
->                      &new->thread.hw_brk[i])))
->              continue;
->          __set_breakpoint(&new->thread.hw_brk[i], i);
-> 
-
-Sure.
-
-[...]
-
->> @@ -128,8 +131,10 @@ static void do_signal(struct task_struct *tsk)
->>        * user space. The DABR will have been cleared if it
->>        * triggered inside the kernel.
->>        */
->> -    if (tsk->thread.hw_brk.address && tsk->thread.hw_brk.type)
->> -        __set_breakpoint(&tsk->thread.hw_brk, 0);
->> +    for (i = 0; i < nr_wp_slots(); i++) {
->> +        if (tsk->thread.hw_brk[i].address && tsk->thread.hw_brk[i].type)
->> +            __set_breakpoint(&tsk->thread.hw_brk[i], i);
->> +    }
-> 
-> thread.hwbrk also exists when CONFIG_PPC_ADV_DEBUG_REGS is selected.
-> 
-> You could replace the #ifndef CONFIG_PPC_ADV_DEBUG_REGS by an if (!IS_ENABLED(CONFIG_PPC_ADV_DEBUG_REGS)) and then no need of an ifdef when declaring the int i;
-
-Makes sense. Will change it.
-
-Ravi
-
