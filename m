@@ -2,109 +2,127 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EB5C2D0F3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E16C43331
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EAB20714
+	by mail.kernel.org (Postfix) with ESMTP id 34E2F206F6
 	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 15:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JoZlrTrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733152AbgDAPEH (ORCPT
+        id S1733143AbgDAPEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:04:07 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29004 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732929AbgDAPEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 11:04:07 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031EqsJa011860;
-        Wed, 1 Apr 2020 17:03:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=ia/w/Dr7BasELP+Rh61NrAVeUw12Ky4ZCp/8xxycRqk=;
- b=JoZlrTrSP5foMhcxBSj+XDsO/Way7ED7GXPtjVK7Np3kufuxQAgb7/DZ3BWZZePZK3HI
- SMYe6oFoZViQhNFXcDLqrZ0be6N3HOXdDbqTP8I6jLbtwN9smYR8xaNB/yGZmsO0XoM6
- yEVQJ7ErGYLBBgQus4qHBPJgqJWM7jr499hYCAVL2hFI1Yz6GNZD8Eq60Lm+d6n3Docw
- i0E5o5/qDrNPikpBP218jGQ91iiT7hwpvf3OIpkzNguksFrlVfHOZw3kZqEtILwxn0hp
- fXCu09/lOTJSGLb4cuuu6As03Ff9FYgEaRZVuCDrXG584Yt7vuG7KRi8XyFvYVzAWkBX vQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 302y5402um-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 17:03:54 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE7E9100034;
-        Wed,  1 Apr 2020 17:03:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7486A2B3A4B;
-        Wed,  1 Apr 2020 17:03:49 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Apr 2020 17:03:49
- +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH v2] ARM: dts: stm32: add cortex-M4 pdds management in Cortex-M4 node
-Date:   Wed, 1 Apr 2020 17:03:39 +0200
-Message-ID: <20200401150339.7933-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Apr 2020 11:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733129AbgDAPEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 11:04:05 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEA13206F6;
+        Wed,  1 Apr 2020 15:04:03 +0000 (UTC)
+Date:   Wed, 1 Apr 2020 11:04:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>,
+        lkp@lists.01.org
+Subject: Re: [tracing] cd8f62b481:
+ BUG:sleeping_function_called_from_invalid_context_at_mm/slab.h
+Message-ID: <20200401110401.23cda3b3@gandalf.local.home>
+In-Reply-To: <20200401102112.35036490@gandalf.local.home>
+References: <20200319232731.799117803@goodmis.org>
+        <20200326091256.GR11705@shao2-debian>
+        <20200401230700.d9ddb42b3459dca98144b55c@kernel.org>
+        <20200401102112.35036490@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add declarations related to the syscon pdds for deep sleep management.
+On Wed, 1 Apr 2020 10:21:12 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
-v2: patch rebasing
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 6519b7afc499..7f1466253ca8 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -3487,6 +3487,14 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+>  	 */
+>  	if (iter->ent && iter->ent != iter->temp) {
+>  		if (!iter->temp || iter->temp_size < iter->ent_size) {
+> +			/*
+> +			 * This function is only used to add markers between
+> +			 * events that are far apart (see trace_print_lat_context()),
+> +			 * but if this is called in an atomic context (like NMIs)
+> +			 * we can't call kmalloc(), thus just return NULL.
+> +			 */
+> +			if (in_atomic() || irqs_disabled())
+> +				return NULL;
+>  			kfree(iter->temp);
+>  			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
+>  			if (!iter->temp)
 
- arch/arm/boot/dts/stm32mp151.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Peter informed me on IRC not to use in_atomic() as it doesn't catch
+spin_locks when CONFIG_PREEMPT is not defined.
 
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 5260818543e5..a40772eac487 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -1124,6 +1124,11 @@
- 			};
- 		};
+As the issue is just with ftrace_dump(), I'll have it use a static buffer
+instead of 128 bytes. Which should be big enough for most events, and if
+not, then it will just miss the markers.
+
+-- Steve
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6519b7afc499..8c9d6a75abbf 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3472,6 +3472,8 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
+ 	return next;
+ }
  
-+		pwr_mcu: pwr_mcu@50001014 {
-+			compatible = "syscon";
-+			reg = <0x50001014 0x4>;
-+		};
++#define IGNORE_TEMP		((struct trace_iterator *)-1L)
 +
- 		exti: interrupt-controller@5000d000 {
- 			compatible = "st,stm32mp1-exti", "syscon";
- 			interrupt-controller;
-@@ -1700,6 +1705,7 @@
- 			resets = <&rcc MCU_R>;
- 			st,syscfg-holdboot = <&rcc 0x10C 0x1>;
- 			st,syscfg-tz = <&rcc 0x000 0x1>;
-+			st,syscfg-pdds = <&pwr_mcu 0x0 0x1>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.17.1
-
+ /* Find the next real entry, without updating the iterator itself */
+ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+ 					  int *ent_cpu, u64 *ent_ts)
+@@ -3480,6 +3482,17 @@ struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+ 	int ent_size = iter->ent_size;
+ 	struct trace_entry *entry;
+ 
++	/*
++	 * This function is only used to add markers between
++	 * events that are far apart (see trace_print_lat_context()),
++	 * but if this is called in an atomic context (like NMIs)
++	 * kmalloc() can't be called.
++	 * That happens via ftrace_dump() which will initialize
++	 * iter->temp to IGNORE_TEMP. In such a case, just return NULL.
++	 */
++	if (iter->temp == IGNORE_TEMP)
++		return NULL;
++
+ 	/*
+ 	 * The __find_next_entry() may call peek_next_entry(), which may
+ 	 * call ring_buffer_peek() that may make the contents of iter->ent
+@@ -9203,6 +9216,8 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+ 
+ 	/* Simulate the iterator */
+ 	trace_init_global_iter(&iter);
++	/* Force not using the temp buffer */
++	iter.temp = IGNORE_TEMP;
+ 
+ 	for_each_tracing_cpu(cpu) {
+ 		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
