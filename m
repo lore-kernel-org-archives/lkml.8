@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021D2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8B1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8AFE206F8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9482E2063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759403;
-	bh=NawbuyTVM8YNV6WtPzNC5TWsO3Kns5RAMv/5SI2fH4A=;
+	s=default; t=1585759407;
+	bh=+4TU2j85QaBbPTyUaEv5pNZ13HPIguW05u2KrMkHw/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aE7Pa85naNWBBpSLQgNvErYBlmYCcYdxnBtaMC234w71fQ2KA2whShqRbLY+73ah4
-	 stB6N9n81CPQB43neY6A4KyQfZvEzxgJ1+da34Y2LybLhNF+VIRWFxLx2Y27BhBC7J
-	 uDYZPnZil9EYFX63vECsGLrrpK3/fbDzjBTsRfxs=
+	b=oeAcO6RJKzLPxMZGOFMoGTrGyQwdIAp5wVuwHl6nqIxdIdDfemfojSvrH+O+9xwTI
+	 VHv2cl1dhka6yR7XDrJuDFjZ39TifH6uxjXozw5uc4r6QIp5n3X5cy+SlozwZ+/7Aq
+	 mzlE+6zJyq1oOECFi1rJYDobq9GdVDXFjCYysiu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389615AbgDAQnW (ORCPT
+        id S2389620AbgDAQn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:43:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:43:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389607AbgDAQnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:43:19 -0400
+        id S2389459AbgDAQnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:43:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 506C9206F8;
-        Wed,  1 Apr 2020 16:43:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 122302063A;
+        Wed,  1 Apr 2020 16:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759398;
-        bh=NawbuyTVM8YNV6WtPzNC5TWsO3Kns5RAMv/5SI2fH4A=;
+        s=default; t=1585759403;
+        bh=+4TU2j85QaBbPTyUaEv5pNZ13HPIguW05u2KrMkHw/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMKMiAS82DDmXemO4Xnau+rFRb1RVb66EbTmoZ6VkqgzgRxKhkmG61y+vJwcXc8Cy
-         dbgieYXKRuBvHpiO7rneaOJz1CVs6TAvK8dJYrJ+ghOziAXoaT2fBMX1LLLy0gxaVc
-         zgkmuPBG6LcJ6I/FOy/OpjzRGdAW8/7SJilaMeMg=
+        b=uMN/i5A+XGiVHPr6o4RABs2aYLIgShs6j5Z6Cj5nCSx2Q8rjVpY52/b4FkzrkeaQ0
+         bHBxCAxg/8jaDvmSSr8+aD+VhvLzfHAvbfPfd4FclsSK+g8mJGE71V/uYsX43GZMln
+         jPUtVBfYp+sSdsVqEFY62lOqqSpPOlJEpuUnknD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Edwin Peer <edwin.peer@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Andrew Smith <andrew.smith@digi.com>,
+        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 067/148] bnxt_en: fix memory leaks in bnxt_dcbnl_ieee_getets()
-Date:   Wed,  1 Apr 2020 18:17:39 +0200
-Message-Id: <20200401161600.044598431@linuxfoundation.org>
+Subject: [PATCH 4.14 068/148] net: dsa: mt7530: Change the LINK bit to reflect the link status
+Date:   Wed,  1 Apr 2020 18:17:40 +0200
+Message-Id: <20200401161600.097576252@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161552.245876366@linuxfoundation.org>
 References: <20200401161552.245876366@linuxfoundation.org>
@@ -60,71 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Edwin Peer <edwin.peer@broadcom.com>
+From: "René van Dorst" <opensource@vdorst.com>
 
-[ Upstream commit 62d4073e86e62e316bea2c53e77db10418fd5dd7 ]
+[ Upstream commit 22259471b51925353bd7b16f864c79fdd76e425e ]
 
-The allocated ieee_ets structure goes out of scope without being freed,
-leaking memory. Appropriate result codes should be returned so that
-callers do not rely on invalid data passed by reference.
+Andrew reported:
 
-Also cache the ETS config retrieved from the device so that it doesn't
-need to be freed. The balance of the code was clearly written with the
-intent of having the results of querying the hardware cached in the
-device structure. The commensurate store was evidently missed though.
+After a number of network port link up/down changes, sometimes the switch
+port gets stuck in a state where it thinks it is still transmitting packets
+but the cpu port is not actually transmitting anymore. In this state you
+will see a message on the console
+"mtk_soc_eth 1e100000.ethernet eth0: transmit timed out" and the Tx counter
+in ifconfig will be incrementing on virtual port, but not incrementing on
+cpu port.
 
-Fixes: 7df4ae9fe855 ("bnxt_en: Implement DCBNL to support host-based DCBX.")
-Signed-off-by: Edwin Peer <edwin.peer@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+The issue is that MAC TX/RX status has no impact on the link status or
+queue manager of the switch. So the queue manager just queues up packets
+of a disabled port and sends out pause frames when the queue is full.
+
+Change the LINK bit to reflect the link status.
+
+Fixes: b8f126a8d543 ("net-next: dsa: add dsa support for Mediatek MT7530 switch")
+Reported-by: Andrew Smith <andrew.smith@digi.com>
+Signed-off-by: RenÃ© van Dorst <opensource@vdorst.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/dsa/mt7530.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_dcb.c
-@@ -387,24 +387,26 @@ static int bnxt_dcbnl_ieee_getets(struct
+--- a/drivers/net/dsa/mt7530.c
++++ b/drivers/net/dsa/mt7530.c
+@@ -549,7 +549,7 @@ mt7530_mib_reset(struct dsa_switch *ds)
+ static void
+ mt7530_port_set_status(struct mt7530_priv *priv, int port, int enable)
  {
- 	struct bnxt *bp = netdev_priv(dev);
- 	struct ieee_ets *my_ets = bp->ieee_ets;
-+	int rc;
+-	u32 mask = PMCR_TX_EN | PMCR_RX_EN;
++	u32 mask = PMCR_TX_EN | PMCR_RX_EN | PMCR_FORCE_LNK;
  
- 	ets->ets_cap = bp->max_tc;
- 
- 	if (!my_ets) {
--		int rc;
--
- 		if (bp->dcbx_cap & DCB_CAP_DCBX_HOST)
- 			return 0;
- 
- 		my_ets = kzalloc(sizeof(*my_ets), GFP_KERNEL);
- 		if (!my_ets)
--			return 0;
-+			return -ENOMEM;
- 		rc = bnxt_hwrm_queue_cos2bw_qcfg(bp, my_ets);
- 		if (rc)
--			return 0;
-+			goto error;
- 		rc = bnxt_hwrm_queue_pri2cos_qcfg(bp, my_ets);
- 		if (rc)
--			return 0;
-+			goto error;
-+
-+		/* cache result */
-+		bp->ieee_ets = my_ets;
- 	}
- 
- 	ets->cbs = my_ets->cbs;
-@@ -413,6 +415,9 @@ static int bnxt_dcbnl_ieee_getets(struct
- 	memcpy(ets->tc_tsa, my_ets->tc_tsa, sizeof(ets->tc_tsa));
- 	memcpy(ets->prio_tc, my_ets->prio_tc, sizeof(ets->prio_tc));
- 	return 0;
-+error:
-+	kfree(my_ets);
-+	return rc;
- }
- 
- static int bnxt_dcbnl_ieee_setets(struct net_device *dev, struct ieee_ets *ets)
+ 	if (enable)
+ 		mt7530_set(priv, MT7530_PMCR_P(port), mask);
 
 
