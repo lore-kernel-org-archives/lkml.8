@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07C4C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50ADC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BCF214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCA9214DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585758698;
-	bh=AABPsAeS0WRMB4og4yRTksa1AlhSg3dQrMGyJCKVP4o=;
+	s=default; t=1585758701;
+	bh=VsRh+mYVWjw3vw5igl7CNXGZG/GfmVCNJmJHfY/fTPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jwb5MtofL2b316S9RqmqIQm7Cj2LiOuZav+ueA4P5SO3xiasGIq4vEUW+fjWCfbBr
-	 IRzxdqk1nGChh3Kb4jc22gl7Xvx9fo7sS5mfe17EN2DCbaIk+H3w+J4qd2+76feVfH
-	 N1SaNMX/+NbJ6JEw2nFh4W5Fc9n+OMfuX5Ra7qXQ=
+	b=Lbe40A60kO+aXwbxA79Z57HjSlcYU+sF2Ml7Ocq3LG/KjhPwh3G2FIoXVpVGDXNWW
+	 0v/HZFXS3uFemiEfRDlzSg1DdSjf7rJ6/KUNPrVMzh0ilT57m68pfflJedi+vZ4JzJ
+	 72OxzFnDZxfx+FR0nD3dlKkAJQjubgPaduR/BRU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbgDAQbh (ORCPT
+        id S2388333AbgDAQbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:31:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57672 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:31:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388268AbgDAQb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:31:27 -0400
+        id S2388318AbgDAQba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:31:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 857E221582;
-        Wed,  1 Apr 2020 16:31:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6152063A;
+        Wed,  1 Apr 2020 16:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585758686;
-        bh=AABPsAeS0WRMB4og4yRTksa1AlhSg3dQrMGyJCKVP4o=;
+        s=default; t=1585758690;
+        bh=VsRh+mYVWjw3vw5igl7CNXGZG/GfmVCNJmJHfY/fTPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uaQLsueOzp0ePOhLJXFXE/xK6j0hCRI//gt4qAfqa4oidaXcIqV7UoG3QeNRdxctT
-         5xunwQgiOtwq9Ws56x/pOxI4i74o9/FlWu9YawGF9yAPwl3k4gXXvgEMft0e+E4Upt
-         ORHs+Y/LDyZOfSONQlWf3qG8AKhNGCVErupLl7Xo=
+        b=x768Jh3xL9+lCVSDWisBdriW/RhABiFxOnaUNZw3fu1JNT7hAH9QmwEmnxRk8i2Pm
+         Cb3vIgikpDcaJfSCUH9o1eCAbGrn8tBzobx8AZ0uhfNU/yIiqNzw+gQC7nB/E+qE9F
+         +rfEFGk3WzvvzHuult0wrrYY3rT0Dc3CdMk3qNuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com,
-        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 44/91] vhost: Check docket sk_family instead of call getname
-Date:   Wed,  1 Apr 2020 18:17:40 +0200
-Message-Id: <20200401161528.834152308@linuxfoundation.org>
+Subject: [PATCH 4.4 45/91] IB/ipoib: Do not warn if IPoIB debugfs doesnt exist
+Date:   Wed,  1 Apr 2020 18:17:41 +0200
+Message-Id: <20200401161529.019824784@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161512.917494101@linuxfoundation.org>
 References: <20200401161512.917494101@linuxfoundation.org>
@@ -63,59 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugenio Pérez <eperezma@redhat.com>
+From: Alaa Hleihel <alaa@mellanox.com>
 
-[ Upstream commit 42d84c8490f9f0931786f1623191fcab397c3d64 ]
+[ Upstream commit 14fa91e0fef8e4d6feb8b1fa2a807828e0abe815 ]
 
-Doing so, we save one call to get data we already have in the struct.
+netdev_wait_allrefs() could rebroadcast NETDEV_UNREGISTER event
+multiple times until all refs are gone, which will result in calling
+ipoib_delete_debug_files multiple times and printing a warning.
 
-Also, since there is no guarantee that getname use sockaddr_ll
-parameter beyond its size, we add a little bit of security here.
-It should do not do beyond MAX_ADDR_LEN, but syzbot found that
-ax25_getname writes more (72 bytes, the size of full_sockaddr_ax25,
-versus 20 + 32 bytes of sockaddr_ll + MAX_ADDR_LEN in syzbot repro).
+Remove the WARN_ONCE since checks of NULL pointers before calling
+debugfs_remove are not needed.
 
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Reported-by: syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com
-Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 771a52584096 ("IB/IPoIB: ibX: failed to create mcg debug file")
+Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/net.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ drivers/infiniband/ulp/ipoib/ipoib_fs.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 1459dc9fd7010..5efac33c29dcb 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -815,11 +815,7 @@ static int vhost_net_release(struct inode *inode, struct file *f)
- 
- static struct socket *get_raw_socket(int fd)
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_fs.c b/drivers/infiniband/ulp/ipoib/ipoib_fs.c
+index 09396bd7b02d2..63be3bcdc0e38 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_fs.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_fs.c
+@@ -281,8 +281,6 @@ void ipoib_delete_debug_files(struct net_device *dev)
  {
--	struct {
--		struct sockaddr_ll sa;
--		char  buf[MAX_ADDR_LEN];
--	} uaddr;
--	int uaddr_len = sizeof uaddr, r;
-+	int r;
- 	struct socket *sock = sockfd_lookup(fd, &r);
+ 	struct ipoib_dev_priv *priv = netdev_priv(dev);
  
- 	if (!sock)
-@@ -831,12 +827,7 @@ static struct socket *get_raw_socket(int fd)
- 		goto err;
- 	}
- 
--	r = sock->ops->getname(sock, (struct sockaddr *)&uaddr.sa,
--			       &uaddr_len, 0);
--	if (r)
--		goto err;
--
--	if (uaddr.sa.sll_family != AF_PACKET) {
-+	if (sock->sk->sk_family != AF_PACKET) {
- 		r = -EPFNOSUPPORT;
- 		goto err;
- 	}
+-	WARN_ONCE(!priv->mcg_dentry, "null mcg debug file\n");
+-	WARN_ONCE(!priv->path_dentry, "null path debug file\n");
+ 	debugfs_remove(priv->mcg_dentry);
+ 	debugfs_remove(priv->path_dentry);
+ 	priv->mcg_dentry = priv->path_dentry = NULL;
 -- 
 2.20.1
 
