@@ -2,141 +2,227 @@ Return-Path: <SRS0=sqB7=5R=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DB4C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73D6C2D0F3
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABFF52071A
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4E020772
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733069AbgDAWD0 (ORCPT
+        id S1733018AbgDAWHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:03:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732357AbgDAWD0 (ORCPT
+        Wed, 1 Apr 2020 18:07:50 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58510 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAWHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 18:03:26 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031M36Km127910
-        for <linux-kernel@vger.kernel.org>; Wed, 1 Apr 2020 18:03:24 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 303uj4tqby-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 01 Apr 2020 18:03:24 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 1 Apr 2020 23:03:08 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 1 Apr 2020 23:03:05 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 031M3JRr52625636
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Apr 2020 22:03:19 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED503A405E;
-        Wed,  1 Apr 2020 22:03:18 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 528B2A4053;
-        Wed,  1 Apr 2020 22:03:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.185.67])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  1 Apr 2020 22:03:18 +0000 (GMT)
-Subject: [GIT PULL] integrity subsystem updates for v5.7
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Wed, 01 Apr 2020 18:03:17 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040122-4275-0000-0000-000003B7D5C7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040122-4276-0000-0000-000038CD29D9
-Message-Id: <1585778597.5188.665.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_04:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- impostorscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010179
+        Wed, 1 Apr 2020 18:07:50 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0D7828030886;
+        Wed,  1 Apr 2020 22:07:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KYpXvjdddVu8; Thu,  2 Apr 2020 01:07:46 +0300 (MSK)
+Date:   Thu, 2 Apr 2020 01:07:50 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Convert
+ mti,gic to DT schema
+Message-ID: <20200401220750.wsoxsxr547aewtgt@ubsrv2.baikal.int>
+References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
+ <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200324174325.14213-3-Sergey.Semin@baikalelectronics.ru>
+ <20200331210248.GA27684@bogus>
+ <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
+ <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Apr 01, 2020 at 08:13:58AM -0600, Rob Herring wrote:
+> On Wed, Apr 1, 2020 at 4:19 AM Sergey Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > On Tue, Mar 31, 2020 at 03:02:48PM -0600, Rob Herring wrote:
+> > > On Tue, Mar 24, 2020 at 08:43:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > >
+> > > > Modern device tree bindings are supposed to be created as YAML-files
+> > > > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
+> > > > text binding with YAML file. As before the binding file states that the
+> > > > corresponding dts node is supposed to be compatible with MIPS Global
+> > > > Interrupt Controller indicated by the "mti,gic" compatible string and
+> > > > to provide a mandatory interrupt-controller and '#interrupt-cells'
+> > > > properties. There might be optional registers memory range,
+> > > > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
+> > > > specified.
+> > > >
+> > > > MIPS GIC also includes a free-running global timer, per-CPU count/compare
+> > > > timers, and a watchdog. Since currently the GIC Timer is only supported the
+> > > > DT schema expects an IRQ and clock-phandler charged timer sub-node with
+> > > > "mti,mips-gic-timer" compatible string.
+> > > >
+> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > > Cc: Paul Burton <paulburton@kernel.org>
+> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > > > Cc: Alessandro Zummo <a.zummo@towertech.it>
+> > > > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Cc: linux-rtc@vger.kernel.org
+> > > >
+> > > > ---
+> > > >
+> > > > I don't really know who is the corresponding driver maintainer, so I
+> > > > added to the maintainers schema Paul since he used to be looking for the
+> > > > MIPS arch and Thomas looking after it now. Any idea what email should be
+> > > > specified there instead?
+> > > >
+> > > > Similarly to the previous patch the "oneOf: - required: ..." pattern isn't
+> > > > working here. Supposedly due to the script' dtschema/lib.py
+> > > > interrupts/interrupts-extended fixup.
+> > > > ---
+> > > >  .../interrupt-controller/mips-gic.txt         |  67 --------
+> > > >  .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
+> > > >  2 files changed, 152 insertions(+), 67 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> > > > deleted file mode 100644
+> > > > index 173595305e26..000000000000
+> > > > --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+> > > > +++ /dev/null
+> > > > @@ -1,67 +0,0 @@
+> > > > -MIPS Global Interrupt Controller (GIC)
+> > > > -
+> > > > -The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
+> > > > -It also supports local (per-processor) interrupts and software-generated
+> > > > -interrupts which can be used as IPIs.  The GIC also includes a free-running
+> > > > -global timer, per-CPU count/compare timers, and a watchdog.
+> > > > -
+> > > > -Required properties:
+> > > > -- compatible : Should be "mti,gic".
+> > > > -- interrupt-controller : Identifies the node as an interrupt controller
+> > > > -- #interrupt-cells : Specifies the number of cells needed to encode an
+> > > > -  interrupt specifier.  Should be 3.
+> > > > -  - The first cell is the type of interrupt, local or shared.
+> > > > -    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
+> > > > -  - The second cell is the GIC interrupt number.
+> > > > -  - The third cell encodes the interrupt flags.
+> > > > -    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
+> > > > -    flags.
+> > > > -
+> > > > -Optional properties:
+> > > > -- reg : Base address and length of the GIC registers.  If not present,
+> > > > -  the base address reported by the hardware GCR_GIC_BASE will be used.
+> > > > -- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
+> > > > -  to which the GIC may not route interrupts.  Valid values are 2 - 7.
+> > > > -  This property is ignored if the CPU is started in EIC mode.
+> > > > -- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
+> > > > -  reserved for IPIs.
+> > > > -  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
+> > > > -  of the reserved range.
+> > > > -  If not specified, the driver will allocate the last 2 * number of VPEs in the
+> > > > -  system.
+> > > > -
+> > > > -Required properties for timer sub-node:
+> > > > -- compatible : Should be "mti,gic-timer".
+> > > > -- interrupts : Interrupt for the GIC local timer.
+> > > > -
+> > > > -Optional properties for timer sub-node:
+> > > > -- clocks : GIC timer operating clock.
+> > > > -- clock-frequency : Clock frequency at which the GIC timers operate.
+> > > > -
+> > > > -Note that one of clocks or clock-frequency must be specified.
+> > > > -
+> > > > -Example:
+> > > > -
+> > > > -   gic: interrupt-controller@1bdc0000 {
+> > > > -           compatible = "mti,gic";
+> > > > -           reg = <0x1bdc0000 0x20000>;
+> > > > -
+> > > > -           interrupt-controller;
+> > > > -           #interrupt-cells = <3>;
+> > > > -
+> > > > -           mti,reserved-cpu-vectors = <7>;
+> > > > -           mti,reserved-ipi-vectors = <40 8>;
+> > > > -
+> > > > -           timer {
+> > > > -                   compatible = "mti,gic-timer";
+> > > > -                   interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
+> > > > -                   clock-frequency = <50000000>;
+> > > > -           };
+> > > > -   };
+> > > > -
+> > > > -   uart@18101400 {
+> > > > -           ...
+> > > > -           interrupt-parent = <&gic>;
+> > > > -           interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
+> > > > -           ...
+> > > > -   };
+> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..1e47c0cdc231
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> > > > @@ -0,0 +1,152 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > >
+> > > Do you have rights to add BSD?
+> > >
+> >
+> > My manager said we can submitted the DT schema bindings under both GPL and
+> > BSD licenses. Though I don't know what license was of the legacy binding file.
+> 
+> Anything in the kernel without an explicit license is GPL-2.0-only.
+> 
+> > BTW Rob, you ask about the license very often whether I set pure GPL-2.0
+> > or dual-license header. Just wondering is it some kind of protocol to make
+> > sure a submitter has got proper rights to submit the binding?
+> 
+> New bindings should be dual GPL/BSD. Converted bindings should be
+> relicensed if the authors of the original agree or you should maintain
+> GPL-2.0-only.
+> 
+> Rob
 
-There's just a couple of updates for linux-5.7:
-- A new Kconfig option to enable IMA architecture specific runtime
-policy rules needed for secure and/or trusted boot, as requested.
+Ah. ok. I didn't know that the legacy bindings have GPL-2.0 license by
+default. Thanks. I'll keep it in mind in patchsets with bindings conversion.
 
-- Some message cleanup (eg. pr_fmt, additional error messages).
-
-thanks,
-
-Mimi
-
-
-The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
-
-  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
-
-for you to fetch changes up to 9e2b4be377f0d715d9d910507890f9620cc22a9d:
-
-  ima: add a new CONFIG for loading arch-specific policies (2020-03-12 07:43:57 -0400)
-
-----------------------------------------------------------------
-Mimi Zohar (1):
-      Merge branch 'next-integrity.logging-cleanup' into next-integrity
-
-Nayna Jain (1):
-      ima: add a new CONFIG for loading arch-specific policies
-
-Tushar Sugandhi (3):
-      IMA: Update KBUILD_MODNAME for IMA files to ima
-      IMA: Add log statements for failure conditions
-      integrity: Remove duplicate pr_fmt definitions
-
- arch/powerpc/Kconfig                         | 1 +
- arch/s390/Kconfig                            | 1 +
- arch/s390/kernel/Makefile                    | 2 +-
- arch/x86/Kconfig                             | 1 +
- arch/x86/kernel/Makefile                     | 4 +---
- include/linux/ima.h                          | 3 +--
- security/integrity/digsig.c                  | 2 --
- security/integrity/digsig_asymmetric.c       | 2 --
- security/integrity/evm/evm_crypto.c          | 2 --
- security/integrity/evm/evm_main.c            | 2 --
- security/integrity/evm/evm_secfs.c           | 2 --
- security/integrity/ima/Kconfig               | 7 +++++++
- security/integrity/ima/Makefile              | 6 +++---
- security/integrity/ima/ima_asymmetric_keys.c | 2 --
- security/integrity/ima/ima_crypto.c          | 2 --
- security/integrity/ima/ima_fs.c              | 2 --
- security/integrity/ima/ima_init.c            | 2 --
- security/integrity/ima/ima_kexec.c           | 1 -
- security/integrity/ima/ima_main.c            | 5 +++--
- security/integrity/ima/ima_policy.c          | 2 --
- security/integrity/ima/ima_queue.c           | 2 --
- security/integrity/ima/ima_queue_keys.c      | 2 --
- security/integrity/ima/ima_template.c        | 2 --
- security/integrity/ima/ima_template_lib.c    | 2 --
- security/integrity/integrity.h               | 6 ++++++
- 25 files changed, 25 insertions(+), 40 deletions(-)
-
+Regards,
+-Sergey
