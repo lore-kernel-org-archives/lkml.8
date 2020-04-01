@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C43C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3E1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E975520658
-	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9441420658
+	for <linux-kernel@archiver.kernel.org>; Wed,  1 Apr 2020 16:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585759159;
-	bh=a+jLHopsBjMxVre/ncOSnv38JEf7TJM4qEJ2WI7ZDDo=;
+	s=default; t=1585759164;
+	bh=PypZaYTitvy8LolVwS7vpU9UNlmKNFoE56b6Iu85KzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ozou2PcS8gRxIS1Xq/zSsaxh7WB0P7y1s1woW4U0p+/lgpRc4yj3+umrQ5MpXcaD5
-	 oxD/svaj1QxPtyVoPBMT8WydSHzYdhftDMyV66my4xsrYsiIsozlOgdFGyI9fM1EH7
-	 Cr+/T/t7iVk5gS38IVvA5XbcLUsYSDZSwu6NhWYY=
+	b=bHykJ1Ejn03Y3M8fW1kFqvVJj+Ur2trJriVqbwrpdn2rkzzfrAjOFbJl7R0vIWoO/
+	 +SoGmE3VZOdflSYW+RNfeYMfp/Zd4/L0pjWhBYe35zLj1oK1d0tp8tzdAdDjNu4Ph3
+	 iYXAXt3IxW2uiga858X5oQTEU3krXH226mau7rC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389187AbgDAQjS (ORCPT
+        id S2389061AbgDAQjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:39:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39180 "EHLO mail.kernel.org"
+        Wed, 1 Apr 2020 12:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388964AbgDAQjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:39:16 -0400
+        id S2388964AbgDAQjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 1 Apr 2020 12:39:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F05820658;
-        Wed,  1 Apr 2020 16:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8D4B20719;
+        Wed,  1 Apr 2020 16:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585759155;
-        bh=a+jLHopsBjMxVre/ncOSnv38JEf7TJM4qEJ2WI7ZDDo=;
+        s=default; t=1585759158;
+        bh=PypZaYTitvy8LolVwS7vpU9UNlmKNFoE56b6Iu85KzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VaiQmQrip2C3Nc7XFP2eBu/iZXh83LKsGj9P3kgTreUckgArmvmrynobcyCYP36/u
-         5KS5oQDRUYw1hc03u1xNZSzwObmGemlFE/cSF5hEaPU2AED7GbqmGigiv0HhqpjImL
-         3HC+6UKtUD2oraUsvoWFnnT76XZf9kr3QHixd+Yo=
+        b=JjCmaOS3yMqg3ReQ09WE+TAlQ10YdNhjqkEwAqgAkNEzPgA908BlNcZNwJMbsSU1C
+         U7Imki1BQXcFccFyAweCGuk6oOFtHtmPQrvVZ3BgrRKsLSJJL4Gjz2WB4D3MBn3B0e
+         8w0W4vObLbmZKH7SVcPFqzyqO6YaQspHllq64SLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.9 095/102] vt: vt_ioctl: remove unnecessary console allocation checks
-Date:   Wed,  1 Apr 2020 18:18:38 +0200
-Message-Id: <20200401161548.023659142@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+522643ab5729b0421998@syzkaller.appspotmail.com,
+        Jiri Slaby <jslaby@suse.cz>, Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 4.9 096/102] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual console
+Date:   Wed,  1 Apr 2020 18:18:39 +0200
+Message-Id: <20200401161548.146147636@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200401161530.451355388@linuxfoundation.org>
 References: <20200401161530.451355388@linuxfoundation.org>
@@ -60,79 +62,173 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit 1aa6e058dd6cd04471b1f21298270014daf48ac9 upstream.
+commit ca4463bf8438b403596edd0ec961ca0d4fbe0220 upstream.
 
-The vc_cons_allocated() checks in vt_ioctl() and vt_compat_ioctl() are
-unnecessary because they can only be reached by calling ioctl() on an
-open tty, which implies the corresponding virtual console is allocated.
+The VT_DISALLOCATE ioctl can free a virtual console while tty_release()
+is still running, causing a use-after-free in con_shutdown().  This
+occurs because VT_DISALLOCATE considers a virtual console's
+'struct vc_data' to be unused as soon as the corresponding tty's
+refcount hits 0.  But actually it may be still being closed.
 
-And even if the virtual console *could* be freed concurrently, then
-these checks would be broken since they aren't done under console_lock,
-and the vc_data is dereferenced before them anyway.
+Fix this by making vc_data be reference-counted via the embedded
+'struct tty_port'.  A newly allocated virtual console has refcount 1.
+Opening it for the first time increments the refcount to 2.  Closing it
+for the last time decrements the refcount (in tty_operations::cleanup()
+so that it happens late enough), as does VT_DISALLOCATE.
 
-So, remove these unneeded checks to avoid confusion.
+Reproducer:
+	#include <fcntl.h>
+	#include <linux/vt.h>
+	#include <sys/ioctl.h>
+	#include <unistd.h>
 
+	int main()
+	{
+		if (fork()) {
+			for (;;)
+				close(open("/dev/tty5", O_RDWR));
+		} else {
+			int fd = open("/dev/tty10", O_RDWR);
+
+			for (;;)
+				ioctl(fd, VT_DISALLOCATE, 5);
+		}
+	}
+
+KASAN report:
+	BUG: KASAN: use-after-free in con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
+	Write of size 8 at addr ffff88806a4ec108 by task syz_vt/129
+
+	CPU: 0 PID: 129 Comm: syz_vt Not tainted 5.6.0-rc2 #11
+	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
+	Call Trace:
+	 [...]
+	 con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
+	 release_tty+0xa8/0x410 drivers/tty/tty_io.c:1514
+	 tty_release_struct+0x34/0x50 drivers/tty/tty_io.c:1629
+	 tty_release+0x984/0xed0 drivers/tty/tty_io.c:1789
+	 [...]
+
+	Allocated by task 129:
+	 [...]
+	 kzalloc include/linux/slab.h:669 [inline]
+	 vc_allocate drivers/tty/vt/vt.c:1085 [inline]
+	 vc_allocate+0x1ac/0x680 drivers/tty/vt/vt.c:1066
+	 con_install+0x4d/0x3f0 drivers/tty/vt/vt.c:3229
+	 tty_driver_install_tty drivers/tty/tty_io.c:1228 [inline]
+	 tty_init_dev+0x94/0x350 drivers/tty/tty_io.c:1341
+	 tty_open_by_driver drivers/tty/tty_io.c:1987 [inline]
+	 tty_open+0x3ca/0xb30 drivers/tty/tty_io.c:2035
+	 [...]
+
+	Freed by task 130:
+	 [...]
+	 kfree+0xbf/0x1e0 mm/slab.c:3757
+	 vt_disallocate drivers/tty/vt/vt_ioctl.c:300 [inline]
+	 vt_ioctl+0x16dc/0x1e30 drivers/tty/vt/vt_ioctl.c:818
+	 tty_ioctl+0x9db/0x11b0 drivers/tty/tty_io.c:2660
+	 [...]
+
+Fixes: 4001d7b7fc27 ("vt: push down the tty lock so we can see what is left to tackle")
+Cc: <stable@vger.kernel.org> # v3.4+
+Reported-by: syzbot+522643ab5729b0421998@syzkaller.appspotmail.com
+Acked-by: Jiri Slaby <jslaby@suse.cz>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20200224080326.295046-1-ebiggers@kernel.org
+Link: https://lore.kernel.org/r/20200322034305.210082-2-ebiggers@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt_ioctl.c |   21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
+ drivers/tty/vt/vt.c       |   23 ++++++++++++++++++++++-
+ drivers/tty/vt/vt_ioctl.c |   12 ++++--------
+ 2 files changed, 26 insertions(+), 9 deletions(-)
 
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -754,6 +754,17 @@ static void visual_init(struct vc_data *
+ 	vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+ }
+ 
++static void vc_port_destruct(struct tty_port *port)
++{
++	struct vc_data *vc = container_of(port, struct vc_data, port);
++
++	kfree(vc);
++}
++
++static const struct tty_port_operations vc_port_ops = {
++	.destruct = vc_port_destruct,
++};
++
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ {
+ 	struct vt_notifier_param param;
+@@ -779,6 +790,7 @@ int vc_allocate(unsigned int currcons)	/
+ 
+ 	vc_cons[currcons].d = vc;
+ 	tty_port_init(&vc->port);
++	vc->port.ops = &vc_port_ops;
+ 	INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+ 
+ 	visual_init(vc, currcons, 1);
+@@ -2897,6 +2909,7 @@ static int con_install(struct tty_driver
+ 
+ 	tty->driver_data = vc;
+ 	vc->port.tty = tty;
++	tty_port_get(&vc->port);
+ 
+ 	if (!tty->winsize.ws_row && !tty->winsize.ws_col) {
+ 		tty->winsize.ws_row = vc_cons[currcons].d->vc_rows;
+@@ -2932,6 +2945,13 @@ static void con_shutdown(struct tty_stru
+ 	console_unlock();
+ }
+ 
++static void con_cleanup(struct tty_struct *tty)
++{
++	struct vc_data *vc = tty->driver_data;
++
++	tty_port_put(&vc->port);
++}
++
+ static int default_color           = 7; /* white */
+ static int default_italic_color    = 2; // green (ASCII)
+ static int default_underline_color = 3; // cyan (ASCII)
+@@ -3056,7 +3076,8 @@ static const struct tty_operations con_o
+ 	.throttle = con_throttle,
+ 	.unthrottle = con_unthrottle,
+ 	.resize = vt_resize,
+-	.shutdown = con_shutdown
++	.shutdown = con_shutdown,
++	.cleanup = con_cleanup,
+ };
+ 
+ static struct cdev vc0_cdev;
 --- a/drivers/tty/vt/vt_ioctl.c
 +++ b/drivers/tty/vt/vt_ioctl.c
-@@ -353,22 +353,13 @@ int vt_ioctl(struct tty_struct *tty,
- {
- 	struct vc_data *vc = tty->driver_data;
- 	struct console_font_op op;	/* used in multiple places here */
--	unsigned int console;
-+	unsigned int console = vc->vc_num;
- 	unsigned char ucval;
- 	unsigned int uival;
- 	void __user *up = (void __user *)arg;
- 	int i, perm;
- 	int ret = 0;
+@@ -313,10 +313,8 @@ static int vt_disallocate(unsigned int v
+ 		vc = vc_deallocate(vc_num);
+ 	console_unlock();
  
--	console = vc->vc_num;
--
--
--	if (!vc_cons_allocated(console)) { 	/* impossible? */
--		ret = -ENOIOCTLCMD;
--		goto out;
+-	if (vc && vc_num >= MIN_NR_CONSOLES) {
+-		tty_port_destroy(&vc->port);
+-		kfree(vc);
 -	}
--
--
- 	/*
- 	 * To have permissions to do most of the vt ioctls, we either have
- 	 * to be the owner of the tty, or have CAP_SYS_TTY_CONFIG.
-@@ -1202,18 +1193,10 @@ long vt_compat_ioctl(struct tty_struct *
- {
- 	struct vc_data *vc = tty->driver_data;
- 	struct console_font_op op;	/* used in multiple places here */
--	unsigned int console;
- 	void __user *up = (void __user *)arg;
- 	int perm;
- 	int ret = 0;
++	if (vc && vc_num >= MIN_NR_CONSOLES)
++		tty_port_put(&vc->port);
  
--	console = vc->vc_num;
--
--	if (!vc_cons_allocated(console)) { 	/* impossible? */
--		ret = -ENOIOCTLCMD;
--		goto out;
--	}
--
- 	/*
- 	 * To have permissions to do most of the vt ioctls, we either have
- 	 * to be the owner of the tty, or have CAP_SYS_TTY_CONFIG.
-@@ -1273,7 +1256,7 @@ long vt_compat_ioctl(struct tty_struct *
- 		arg = (unsigned long)compat_ptr(arg);
- 		goto fallback;
- 	}
--out:
-+
  	return ret;
+ }
+@@ -336,10 +334,8 @@ static void vt_disallocate_all(void)
+ 	console_unlock();
  
- fallback:
+ 	for (i = 1; i < MAX_NR_CONSOLES; i++) {
+-		if (vc[i] && i >= MIN_NR_CONSOLES) {
+-			tty_port_destroy(&vc[i]->port);
+-			kfree(vc[i]);
+-		}
++		if (vc[i] && i >= MIN_NR_CONSOLES)
++			tty_port_put(&vc[i]->port);
+ 	}
+ }
+ 
 
 
